@@ -15,7 +15,7 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 */
 
 #include "eif_portable.h"
-#include "eif_project.h" /* for egc_ce_type */
+#include "eif_project.h"
 #include "rt_macros.h"
 #include "rt_malloc.h"
 #include "rt_except.h"
@@ -187,6 +187,8 @@ rt_public void rt_init_store(
 	void (*st_write_function) (char *),
 	void (*make_header_function) (void),
 	int accounting_type);
+
+rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype);
 
 #ifndef EIF_THREADS
 /*
@@ -1215,17 +1217,13 @@ rt_private void gen_object_write(char *object)
 			if (flags & EO_TUPLE) {
 				buffer_write (object, count * sizeof(EIF_TYPED_ELEMENT));
 			} else {
-				char *vis_name;
 				uint32 dgen;
 				int16 *dynamic_types;
 				int32 *patterns;
 				int nb_gen;
 				struct cecil_info *info;
 
-				vis_name = System(o_type).cn_generator;
-
-					/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
-				info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+				info = cecil_info_for_dynamic_type (o_type);
 				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
@@ -1424,18 +1422,13 @@ rt_private void object_write(char *object)
 			if (flags & EO_TUPLE) {
 				object_tuple_write (object);
 			} else {
-				char *vis_name;
 				uint32 dgen, dgen_typ;
 				int16 *dynamic_types;
 				int32 *patterns;
 				int nb_gen;
-
-
 				struct cecil_info *info;
-				vis_name = System(o_type).cn_generator;
 
-					/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
-				info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
+				info = cecil_info_for_dynamic_type (o_type);
 				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
@@ -1567,11 +1560,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 				s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		if (EIF_IS_EXPANDED_TYPE(System(i))) {
-			info = (struct cecil_info *) ct_value(&egc_ce_exp_type, vis_name);
-		} else {
-			info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
-		}
+		info = cecil_info_for_dynamic_type (i);
 		if ((info != NULL) && (info->nb_param > 0)) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -1749,11 +1738,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
 		}
 
-		if (EIF_IS_EXPANDED_TYPE(System(i))) {
-			info = (struct cecil_info *) ct_value(&egc_ce_exp_type, vis_name);
-		} else {
-			info = (struct cecil_info *) ct_value(&egc_ce_type, vis_name);
-		}
+		info = cecil_info_for_dynamic_type (i);
 		if ((info != NULL) && (info->nb_param > 0)) {	/* Is the type a generic one ? */
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -1825,6 +1810,51 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 }
 #endif
 
+/*
+doc:	<routine name="cecil_info_for_dynamic_type" export="private">
+doc:		<summary>Find CECIL information about a class given by its dynamic type.</summary>
+doc:		<param name="dtype" type="uint32">Dynamic type of the class we are looking for.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+
+rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype)
+{
+	struct cecil_info *result;
+	struct cnode node = System(dtype);
+	char *l_name;
+	char *l_class_name = node.cn_generator;
+	int l_free_needed = 1;
+
+	if (EIF_NEEDS_EXPANDED_KEYWORD(node)) {
+		l_name = eif_malloc (10 + strlen (l_class_name));
+		l_name [0] = '\0';
+		strcat (l_name, "expanded ");
+		strcat (l_name, l_class_name);
+	} else if (EIF_NEEDS_REFERENCE_KEYWORD(node)) {
+		l_name = eif_malloc (11 + strlen (l_class_name));
+		l_name [0] = '\0';
+		strcat (l_name, "reference ");
+		strcat (l_name, l_class_name);
+	} else {
+		l_name = l_class_name;
+		l_free_needed = 0;
+	}
+
+	if (EIF_IS_EXPANDED_TYPE(node)) {
+		result = (struct cecil_info *) ct_value(&egc_ce_exp_type, l_name);
+	} else {
+		result = (struct cecil_info *) ct_value(&egc_ce_type, l_name);
+	}
+
+	if (l_free_needed) {
+		eif_free (l_name);
+	}
+
+	return result;
+}
+
 rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
 	char *name = System (dtype).cn_names[attrib_index];
@@ -1893,16 +1923,12 @@ rt_private void widr_type_attributes (int16 dtype)
 		widr_type_attribute (dtype, i);
 }
 
-rt_private void widr_type_generics (int16 dtype, int is_expanded, char *class_name)
+rt_private void widr_type_generics (int16 dtype)
 {
 	/* Write generic information: "nb_generics {meta_type}*" */
 	struct cecil_info *info;
 	
-	if (is_expanded) {
-		info = (struct cecil_info*) ct_value (&egc_ce_exp_type, class_name);
-	} else {
-		info = (struct cecil_info*) ct_value (&egc_ce_type, class_name);
-	}
+	info = cecil_info_for_dynamic_type (dtype);
 	if ((info == NULL) || (info->nb_param == 0)) {
 			/* Non-generic case */
 		int16 zero = 0;
@@ -1962,7 +1988,7 @@ rt_private void widr_type (int16 dtype)
 	widr_multi_int32 (&flags, 1);
 	widr_multi_int16 (&dtype, 1);
 
-	widr_type_generics (dtype, flags & EIF_IS_EXPANDED_FLAG, class_name);
+	widr_type_generics (dtype);
 #ifdef RECOVERABLE_DEBUG
 	printf ("\n");
 #endif

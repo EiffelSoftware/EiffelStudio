@@ -22,6 +22,7 @@
 #include "rt_garcol.h"
 #include "rt_wbench.h"
 #include "eif_memory.h"
+#include "rt_macros.h"
 #include <string.h>
 
 #define dprintf(n) if (DEBUG & n) printf
@@ -192,8 +193,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	uint32 t_size;						/* Target size */
 	register3 EIF_REFERENCE s_ref;
 	register4 EIF_REFERENCE t_ref;
-	register5 long count;				/* Common count */
-	register6 long elem_size;			/* Common element size */
+	register5 EIF_INTEGER count;				/* Common count */
+	register6 EIF_INTEGER elem_size;			/* Common element size */
 	EIF_REFERENCE s_field, t_field;
 
 	if (source == target)
@@ -205,22 +206,22 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	t_size = t_zone->ov_size & B_SIZE;
 
 	/* First condition: same count */
-	s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
-	t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
+	s_ref = RT_SPECIAL_INFO_WITH_ZONE(source, s_zone);
+	t_ref = RT_SPECIAL_INFO_WITH_ZONE(target, t_zone);
 
 #ifdef DEBUG
 	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
-		source, *(long *) s_ref,
-		target, *(long *) t_ref);
+		source, RT_SPECIAL_COUNT_WITH_INFO (s_ref),
+		target, RT_SPECIAL_COUNT_WITH_INFO (t_ref));
 #endif
 
-	count = *(long *) s_ref;
-	if (count != *(long *) t_ref)
+	count = RT_SPECIAL_COUNT_WITH_INFO(s_ref);
+	if (count != RT_SPECIAL_COUNT_WITH_INFO(t_ref))
 		return EIF_FALSE;
    
 	/* Second condition: same element size */
-	elem_size = *(long *) (s_ref + sizeof(long));
-	if (elem_size != *(long *) (t_ref + sizeof(long)))
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (s_ref);
+	if (elem_size != RT_SPECIAL_ELEM_SIZE_WITH_INFO(t_ref))
 		return EIF_FALSE;
 
 	s_flags = s_zone->ov_flags;
@@ -314,7 +315,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 	union overhead *zone = HEADER(target);	/* Target header */
 	uint32 flags;							/* Target flags */
 	EIF_REFERENCE s_ref, t_ref, t_field, s_field;
-	long count, elem_size;
+	EIF_INTEGER count, elem_size;
 
 	flags = zone->ov_flags;
 
@@ -335,8 +336,8 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			return EIF_TRUE;
 
 		/* Evaluation of the count of the target special object */
-		t_ref = (EIF_REFERENCE) (target + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		count = *(long *) t_ref;
+		t_ref = RT_SPECIAL_INFO_WITH_ZONE(target, zone);
+		count = RT_SPECIAL_COUNT_WITH_INFO(t_ref);
 
 		/* Traversal of references */
 		if (!(flags & EO_COMP)) {
@@ -369,7 +370,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			/* Special objects filled with (non-special) expanded objects.
 			 * we call then standard isomorphism test on normal objects.
 			 */
-			elem_size = *(long *) (t_ref + sizeof(long));
+			elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(t_ref);
 			for (
 				s_ref = source+OVERHEAD, t_ref = target+OVERHEAD;
 				count > 0;

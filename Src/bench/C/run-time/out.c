@@ -24,6 +24,7 @@
 #include "eif_globals.h"
 #include "rt_malloc.h"
 #include "rt_wbench.h"
+#include "rt_macros.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include <stdio.h>
@@ -319,18 +320,17 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Object header */
 	register5 uint32 flags;		/* Object flags */
-	register3 long count;		/* Element count */
-	register4 long elem_size;	/* Element size */
+	register3 EIF_INTEGER count;		/* Element count */
+	register4 EIF_INTEGER elem_size;	/* Element size */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;
-	long old_count;
+	EIF_INTEGER old_count;
 	uint32 dtype;
 
 	zone = HEADER(object);
-	o_ref = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-	count = *(long *) o_ref;
-	old_count = count;
-	elem_size = *(long *) (o_ref + sizeof(long));
+	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+	old_count = count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
 	flags = zone->ov_flags;
 	dtype = (int) Deif_bid(flags);
 

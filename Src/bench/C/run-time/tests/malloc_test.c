@@ -125,10 +125,9 @@ rt_private void check_ref(char *object)
 	if (flags & EO_SPEC) {
 		if (!(flags & EO_REF))
 			return;
-		size = (zone->ov_size & B_SIZE) - LNGPAD_2;
-		refs = *(long *) (object + size);
+		refs = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		if (flags & EO_COMP)
-			size = *(long *) (object + size + sizeof(long)) + OVERHEAD;
+			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(refs);
 		else
 			size = REFSIZ;
 	} else

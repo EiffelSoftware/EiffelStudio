@@ -40,6 +40,10 @@ feature -- Events for error dialogs
 	Cmd_ignore: INTEGER is 8
 			-- The `ignore' button of the dialog has been clicked
 
+feature -- Upper constants value
+
+	command_count: INTEGER is 8
+
 end -- class EV_DIALOG_EVENTS_CONSTANTS_IMP
 
 --|----------------------------------------------------------------

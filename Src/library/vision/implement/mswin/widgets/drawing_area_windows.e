@@ -167,29 +167,29 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_input_action (command: COMMAND; arg: ANY) is
+	add_input_action (a_command: COMMAND; arg: ANY) is
 			-- Add `a_command' to the list of action to be executed when
 			-- a key is pressed or when a mouse button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		do
-			left_button_press_actions.add (Current, command, arg)
-			right_button_press_actions.add (Current, command, arg)
-			middle_button_press_actions.add (Current, command, arg)
-			character_actions.add (Current, command, arg)
+			left_button_press_actions.add (Current, a_command, arg)
+			right_button_press_actions.add (Current, a_command, arg)
+			middle_button_press_actions.add (Current, a_command, arg)
+			character_actions.add (Current, a_command, arg)
 		end
 
 feature -- Removal
 
-	remove_input_action (command: COMMAND; arg: ANY) is
+	remove_input_action (a_command: COMMAND; arg: ANY) is
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when a key is pressed or when a mouse button
 			-- is pressed.
 		do
-			left_button_press_actions.remove (Current, command, arg)
-			right_button_press_actions.remove (Current, command, arg)
-			middle_button_press_actions.remove (Current, command, arg)
-			character_actions.remove (Current, command, arg)
+			left_button_press_actions.remove (Current, a_command, arg)
+			right_button_press_actions.remove (Current, a_command, arg)
+			middle_button_press_actions.remove (Current, a_command, arg)
+			character_actions.remove (Current, a_command, arg)
 		end
 
 feature -- Basic operations

@@ -126,18 +126,18 @@ feature -- Element change
 			activate_actions.add (Current, a_command, argument)
 		end
 
-	add_arm_action (command: COMMAND; arg: ANY) is
+	add_arm_action (a_command: COMMAND; arg: ANY) is
 			-- Add a_command to the list of action to execute when
 			-- current push button is armed.
 		do
-			arm_actions.add (Current, command, arg)
+			arm_actions.add (Current, a_command, arg)
 		end
 
-	add_release_action (command: COMMAND; arg: ANY) is
+	add_release_action (a_command: COMMAND; arg: ANY) is
 			-- Add a_command to the list of action to execute when
 			-- current push button is released.
 		do
-			release_actions.add (Current, command, arg)
+			release_actions.add (Current, a_command, arg)
 		end
 
 feature -- Removal
@@ -149,18 +149,18 @@ feature -- Removal
 			activate_actions.remove (Current, a_command, argument)
 		end
 
-	remove_arm_action (command: COMMAND; arg: ANY) is
+	remove_arm_action (a_command: COMMAND; arg: ANY) is
 			-- Remove a_command from the list of action to execute when
 			-- current push button is armed.
 		do
-			arm_actions.remove (Current, command, arg)
+			arm_actions.remove (Current, a_command, arg)
 		end
 
-	remove_release_action (command: COMMAND; arg: ANY) is
+	remove_release_action (a_command: COMMAND; arg: ANY) is
 			-- Remove a_command from the list of action to execute when
 			-- current push button is released.
 		do
-			release_actions.remove (Current, command, arg)
+			release_actions.remove (Current, a_command, arg)
 		end
 
 feature -- Behavior

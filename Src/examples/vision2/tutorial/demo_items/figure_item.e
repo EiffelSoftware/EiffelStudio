@@ -8,27 +8,12 @@ deferred class
 	FIGURE_ITEM
 
 inherit
-	DEMO_ITEM
+	DEMO_ITEM [FIGURE_WINDOW]
 		redefine
-			demo_window, activate
+			activate
 		end
-
-feature {NONE} -- Initialization
-
-	create_demo is
-			-- Create the demo_window.
-		do
-			if demo_window = Void then
-				!! demo_window.make (demo_page)
-			end
-		end
-
-
 
 feature -- Access
-
-	demo_window: FIGURE_WINDOW
-			-- Demo window associated to the item
 
 	figure: EV_FIGURE is
 			-- Current figure associated tothe item.
@@ -38,32 +23,12 @@ feature -- Access
 
 feature {DEMO_ITEM} -- Execution commands
 
-
-
 	activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent
-		local
-			cur: EV_WIDGET
 		do
-			-- First, we set the demo on the first page.
-			if current_demo.item = Void or else current_demo.item /= demo_window then
-				cur := current_demo.item
-				if cur /= Void then
-					cur.set_parent (Void)
-				end
-				if demo_window = Void then
-					create_demo
-				else
-					demo_window.set_parent (demo_page)
-				end
-				current_demo.put (demo_window)
-				example_page.set_text(clone(read_text(example_path)))
-				class_page.set_text(clone(read_text(class_path)))
-				set_docs_path("documentation/figure_documentation.txt")
-				text_page.set_text(clone(read_text(docs_path)))	
-			end
+			{DEMO_ITEM} Precursor (arg, ev_data)
 			demo_window.set_figure (figure)
 		end
 

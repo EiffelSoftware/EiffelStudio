@@ -11,22 +11,7 @@ inherit
 	FIGURE_ITEM
 
 creation
-	make
-
-feature {NONE} -- Initialization
-
-	make (par: EV_TREE_ITEM_HOLDER) is
-			-- Create the item and the demo that
-			-- goes with it.
-		do
-			make_with_title (par, "EV_SQUARE")
-			set_example_path("demo_items/square_item.e")
-			set_class_path("ev_square")
-		end
-
-
-
-
+	make_with_title
 
 feature -- Access
 

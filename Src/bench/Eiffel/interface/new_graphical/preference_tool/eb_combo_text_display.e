@@ -51,7 +51,7 @@ feature -- Implementation
 			resources.extend (rd)
 			Create arg.make (rd)
 			Create cmd.make (~change_selection)
-			i.add_activate_command (cmd, arg)
+			i.add_select_command (cmd, arg)
 		end
 
 feature -- Cursor movement

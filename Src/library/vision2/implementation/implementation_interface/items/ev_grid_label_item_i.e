@@ -9,7 +9,8 @@ class
 inherit
 	EV_GRID_ITEM_I
 		redefine
-			interface
+			interface,
+			redraw
 		end
 		
 	EV_FONTABLE_I
@@ -68,6 +69,21 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_font: EV_FONT
 		-- Font used to display `text' on screen
+		
+	redraw (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE) is
+			-- Redraw `Current'.
+		local
+			back_color: EV_COLOR
+		do
+			back_color := internal_background_color
+			if back_color = Void then
+				back_color := parent_grid_i.background_color
+			end
+			drawable.set_foreground_color (back_color)
+			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+			drawable.set_foreground_color (foreground_color)
+			drawable.draw_ellipsed_text_top_left (an_x, a_y, text, a_width)
+		end
 
 feature {EV_ANY_I} -- Implementation
 

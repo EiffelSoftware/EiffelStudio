@@ -260,6 +260,24 @@ feature -- Resizing
 			max_height = max_height
 		end
 
+feature -- Event - command association
+
+	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	add_move_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 	
 	application: EV_APPLICATION

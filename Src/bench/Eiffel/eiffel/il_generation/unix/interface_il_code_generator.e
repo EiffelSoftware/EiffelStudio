@@ -118,6 +118,15 @@ feature -- IL Generation
 				loop
 					l_formal := type_features.item_for_iteration
 					generate_feature (l_formal, False, False, False)
+					type_features.forth
+				end
+
+				from
+					type_features.start
+				until
+					type_features.after
+				loop
+					l_formal := type_features.item_for_iteration
 					generate_type_feature (l_formal)
 					type_features.forth
 				end

@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_bar_new)
 			feature {EV_GTK_EXTERNALS}.gtk_menu_bar_set_shadow_type (c_object, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 0, 10 + App_implementation.default_font_height)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 		

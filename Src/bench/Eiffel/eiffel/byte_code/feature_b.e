@@ -172,6 +172,8 @@ feature -- IL code generation
 			return_type: TYPE_I
 			class_type: CLASS_TYPE
 			native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
+			special_array_class_type: SPECIAL_CLASS_TYPE
+			is_special_handled: BOOLEAN
 			invariant_checked: BOOLEAN
 			class_c: CLASS_C
 			local_number: INTEGER
@@ -195,8 +197,7 @@ feature -- IL code generation
 					-- Find location of feature.
 				target_type := il_generator.implemented_type (written_in, cl_type)
 
-				class_type := cl_type.associated_class_type
-				class_c := class_type.associated_class
+				class_c := cl_type.base_class
 
 				invariant_checked := class_c.assertion_level.check_invariant
 						and then class_c.has_invariant
@@ -230,7 +231,7 @@ feature -- IL code generation
 				if
 					System.il_verifiable
 					and then not target_type.is_expanded and then not target_type.is_none
-					and then not cl_type.base_class.is_native_array
+					and then not class_c.is_native_array
 				then
 						-- Generate cast in case we are currently calling the
 						-- creation procedure of a typed creation or a typed
@@ -247,6 +248,24 @@ feature -- IL code generation
 					il_generator.duplicate_top
 				end
 
+				if class_c.is_special_array then
+					special_array_class_type ?= cl_type.associated_class_type
+					check
+						special_array_class_type_not_void: special_array_class_type /= Void
+					end
+					inspect
+						feature_name_id
+					when
+						feature {PREDEFINED_NAMES}.Item_name_id,
+						feature {PREDEFINED_NAMES}.Infix_at_name_id,
+						feature {PREDEFINED_NAMES}.Put_name_id
+					then
+						special_array_class_type.prepare_generate_il (feature_name_id, cl_type)
+						is_special_handled := True
+					else
+					end
+				end
+				
 				if parameters /= Void then
 						-- Generate parameters if any.
 					parameters.generate_il
@@ -257,13 +276,25 @@ feature -- IL code generation
 
 				need_generation := True
 
-				if cl_type.base_class.is_native_array then
-					native_array_class_type ?= class_type
+				if class_c.is_native_array then
+					native_array_class_type ?= cl_type.associated_class_type
 					check
 						native_array_class_type_not_void: native_array_class_type /= Void
 					end
 					need_generation := False
 					native_array_class_type.generate_il (feature_name_id, cl_type)
+					if System.il_verifiable then
+						if 
+							not return_type.is_expanded and then
+							not return_type.is_none and then
+							not return_type.is_void
+						then
+							il_generator.generate_check_cast (return_type, return_type)
+						end
+					end
+				elseif is_special_handled then
+					special_array_class_type.generate_il (feature_name_id, cl_type)
+					need_generation := False
 					if System.il_verifiable then
 						if 
 							not return_type.is_expanded and then

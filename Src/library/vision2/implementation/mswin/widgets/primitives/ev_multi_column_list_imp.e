@@ -82,15 +82,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_with_text (txt: ARRAY [STRING]) is         
-			-- Create a list widget with `par' as parent,
-			-- and as many columns as the number of titles
-			-- given.
-		do
-			make_with_size (txt.count)
-			set_columns_title (txt)
-		end
-
 feature -- Access
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -222,46 +213,10 @@ feature -- Element change
 			{WEL_LIST_VIEW} Precursor (txt, column - 1)
 		end
 
-	set_columns_title (txt: ARRAY [STRING]) is         
-			-- Make `txt' the new titles of the columns.
-		local
-			i: INTEGER
-			list_i: INTEGER
-		do
-			from
-				i := txt.lower
-				list_i := 1
-			until
-				i = txt.upper + 1
-			loop
-				set_column_title (txt @ i, list_i)
-				i := i + 1
-				list_i := list_i + 1
-			end
-		end
-
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		do
 			{WEL_LIST_VIEW} Precursor (value, column - 1)
-		end
-
-	set_columns_width (value: ARRAY [INTEGER]) is         
-			-- Make `value' the new values of the columns width.
-		local
-			i: INTEGER
-			list_i: INTEGER
-		do
-			from
-				i := value.lower
-				list_i := 1
-			until
-				i = value.upper + 1
-			loop
-				set_column_width (value @ i, list_i)
-				i := i + 1
-				list_i := list_i + 1
-			end
 		end
 
 	set_rows_height (value: INTEGER) is

@@ -165,9 +165,6 @@ feature {NONE} -- Implementation
 
 	arguments: HASH_TABLE [STRING, STRING]
 			-- Feature arguments
-
-	qualified_call: BOOLEAN
-			-- Does current target correspond to a qualified call?
 	
 feature {NONE} -- Implementation
 

@@ -1,0 +1,450 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTThe ASCII character set.R TTThis class may be used as ancestor by classes needing its facilities.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>ASCII Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ASCII"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		The </SPAN><A CLASS="eclass" HREF="../../base/support/ascii.html">ASCII</A><SPAN CLASS="estring"> character set.</SPAN>
+<SPAN CLASS="estring">		This class may be used as ancestor by classes needing its facilities.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/support/ascii.html">ASCII</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_character_set_size"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_character_set_size">Character_set_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+
+	<A NAME="f_last_ascii"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_last_ascii">Last_ascii</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A>
+
+	<A NAME="f_first_printable"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_first_printable">First_printable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+
+	<A NAME="f_last_printable"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_last_printable">Last_printable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">126</SPAN></A>
+
+	<A NAME="f_letter_layout"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_letter_layout">Letter_layout</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">70</SPAN></A>
+
+	<A NAME="f_case_diff"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_case_diff">Case_diff</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Lower_a</SPAN><SPAN CLASS="ecomment"> - </SPAN><SPAN CLASS="equoted">Upper_a</SPAN><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_buf_overflow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_buf_overflow">Buf_overflow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-9</SPAN></A>
+
+	<A NAME="f_overflow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_overflow">Overflow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-8</SPAN></A>
+
+	<A NAME="f_break"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_break">Break</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-7</SPAN></A>
+
+	<A NAME="f_home_arrow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_home_arrow">Home_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-6</SPAN></A>
+
+	<A NAME="f_right_arrow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_right_arrow">Right_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-5</SPAN></A>
+
+	<A NAME="f_left_arrow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_left_arrow">Left_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-4</SPAN></A>
+
+	<A NAME="f_down_arrow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_down_arrow">Down_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-3</SPAN></A>
+
+	<A NAME="f_up_arrow"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_up_arrow">Up_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2</SPAN></A>
+
+	<A NAME="f_nul"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_nul">Nul</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+
+	<A NAME="f_ctrl_a"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_a">Ctrl_a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+
+	<A NAME="f_soh"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_soh">Soh</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+
+	<A NAME="f_ctrl_b"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_b">Ctrl_b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+
+	<A NAME="f_stx"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_stx">Stx</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+
+	<A NAME="f_ctrl_c"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_c">Ctrl_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+
+	<A NAME="f_etx"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_etx">Etx</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+
+	<A NAME="f_ctrl_d"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_d">Ctrl_d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+
+	<A NAME="f_eot"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_eot">Eot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+
+	<A NAME="f_ctrl_e"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_e">Ctrl_e</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+
+	<A NAME="f_enq"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_enq">Enq</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+
+	<A NAME="f_ctrl_f"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_f">Ctrl_f</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+
+	<A NAME="f_ack"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ack">Ack</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+
+	<A NAME="f_ctrl_g"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_g">Ctrl_g</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+
+	<A NAME="f_bel"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_bel">Bel</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+
+	<A NAME="f_ctrl_h"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_h">Ctrl_h</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+
+	<A NAME="f_bs"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_bs">Bs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+
+	<A NAME="f_back_space"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_back_space">Back_space</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+
+	<A NAME="f_ctrl_i"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_i">Ctrl_i</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+
+	<A NAME="f_ht"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ht">Ht</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+
+	<A NAME="f_tabulation"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_tabulation">Tabulation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+
+	<A NAME="f_ctrl_j"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_j">Ctrl_j</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+
+	<A NAME="f_nl"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_nl">Nl</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+
+	<A NAME="f_line_feed"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_line_feed">Line_feed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+
+	<A NAME="f_ctrl_k"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_k">Ctrl_k</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
+
+	<A NAME="f_vt"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_vt">Vt</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
+
+	<A NAME="f_ctrl_l"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_l">Ctrl_l</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A>
+
+	<A NAME="f_np"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_np">Np</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A>
+
+	<A NAME="f_ctrl_m"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_m">Ctrl_m</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A>
+
+	<A NAME="f_cr"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_cr">Cr</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A>
+
+	<A NAME="f_carriage_return"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_carriage_return">Carriage_return</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A>
+
+	<A NAME="f_ctrl_n"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_n">Ctrl_n</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">14</SPAN></A>
+
+	<A NAME="f_so"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_so">So</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">14</SPAN></A>
+
+	<A NAME="f_ctrl_o"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_o">Ctrl_o</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A>
+
+	<A NAME="f_si"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_si">Si</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A>
+
+	<A NAME="f_ctrl_p"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_p">Ctrl_p</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+
+	<A NAME="f_dle"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dle">Dle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+
+	<A NAME="f_ctrl_q"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_q">Ctrl_q</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">17</SPAN></A>
+
+	<A NAME="f_dc1"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dc1">Dc1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">17</SPAN></A>
+
+	<A NAME="f_ctrl_r"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_r">Ctrl_r</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A>
+
+	<A NAME="f_dc2"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dc2">Dc2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A>
+
+	<A NAME="f_ctrl_s"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_s">Ctrl_s</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A>
+
+	<A NAME="f_dc3"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dc3">Dc3</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A>
+
+	<A NAME="f_ctrl_t"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_t">Ctrl_t</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A>
+
+	<A NAME="f_dc4"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dc4">Dc4</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A>
+
+	<A NAME="f_ctrl_u"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_u">Ctrl_u</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">21</SPAN></A>
+
+	<A NAME="f_nak"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_nak">Nak</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">21</SPAN></A>
+
+	<A NAME="f_ctrl_v"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_v">Ctrl_v</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">22</SPAN></A>
+
+	<A NAME="f_syn"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_syn">Syn</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">22</SPAN></A>
+
+	<A NAME="f_ctrl_w"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_w">Ctrl_w</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">23</SPAN></A>
+
+	<A NAME="f_etb"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_etb">Etb</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">23</SPAN></A>
+
+	<A NAME="f_ctrl_x"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_x">Ctrl_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A>
+
+	<A NAME="f_can"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_can">Can</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A>
+
+	<A NAME="f_ctrl_y"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_y">Ctrl_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">25</SPAN></A>
+
+	<A NAME="f_em"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_em">Em</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">25</SPAN></A>
+
+	<A NAME="f_ctrl_z"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_z">Ctrl_z</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">26</SPAN></A>
+
+	<A NAME="f_sub"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_sub">Sub</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">26</SPAN></A>
+
+	<A NAME="f_ctrl_lbracket"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_lbracket">Ctrl_lbracket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">27</SPAN></A>
+
+	<A NAME="f_esc"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_esc">Esc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">27</SPAN></A>
+
+	<A NAME="f_ctrl_backslash"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_backslash">Ctrl_backslash</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">28</SPAN></A>
+
+	<A NAME="f_fs"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_fs">Fs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">28</SPAN></A>
+
+	<A NAME="f_ctrl_rbracket"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_rbracket">Ctrl_rbracket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">29</SPAN></A>
+
+	<A NAME="f_gs"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_gs">Gs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">29</SPAN></A>
+
+	<A NAME="f_ctrl_circumflex"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_circumflex">Ctrl_circumflex</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">30</SPAN></A>
+
+	<A NAME="f_rs"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_rs">Rs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">30</SPAN></A>
+
+	<A NAME="f_ctrl_underlined"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_underlined">Ctrl_underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">31</SPAN></A>
+
+	<A NAME="f_us"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_us">Us</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">31</SPAN></A>
+
+	<A NAME="f_blank"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_blank">Blank</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+
+	<A NAME="f_sp"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_sp">Sp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+
+	<A NAME="f_exclamation"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_exclamation">Exclamation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33</SPAN></A>
+
+	<A NAME="f_doublequote"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_doublequote">Doublequote</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">34</SPAN></A>
+
+	<A NAME="f_number_sign"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_number_sign">Number_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">35</SPAN></A>
+
+	<A NAME="f_dollar"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dollar">Dollar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">36</SPAN></A>
+
+	<A NAME="f_percent"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_percent">Percent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">37</SPAN></A>
+
+	<A NAME="f_ampersand"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ampersand">Ampersand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">38</SPAN></A>
+
+	<A NAME="f_singlequote"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_singlequote">Singlequote</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">39</SPAN></A>
+
+	<A NAME="f_lcurly"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lcurly">Lcurly</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">40</SPAN></A>
+
+	<A NAME="f_rcurly"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_rcurly">Rcurly</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">41</SPAN></A>
+
+	<A NAME="f_star"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_star">Star</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">42</SPAN></A>
+
+	<A NAME="f_plus"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_plus">Plus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">43</SPAN></A>
+
+	<A NAME="f_comma"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_comma">Comma</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">44</SPAN></A>
+
+	<A NAME="f_minus"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_minus">Minus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">45</SPAN></A>
+
+	<A NAME="f_dot"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_dot">Dot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">46</SPAN></A>
+
+	<A NAME="f_slash"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_slash">Slash</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">47</SPAN></A>
+
+	<A NAME="f_zero"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_zero">Zero</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">48</SPAN></A>
+
+	<A NAME="f_one"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_one">One</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">49</SPAN></A>
+
+	<A NAME="f_two"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_two">Two</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">50</SPAN></A>
+
+	<A NAME="f_three"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_three">Three</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">51</SPAN></A>
+
+	<A NAME="f_four"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_four">Four</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">52</SPAN></A>
+
+	<A NAME="f_five"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_five">Five</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">53</SPAN></A>
+
+	<A NAME="f_six"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_six">Six</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">54</SPAN></A>
+
+	<A NAME="f_seven"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_seven">Seven</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">55</SPAN></A>
+
+	<A NAME="f_eight"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_eight">Eight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">56</SPAN></A>
+
+	<A NAME="f_nine"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_nine">Nine</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">57</SPAN></A>
+
+	<A NAME="f_colon"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_colon">Colon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">58</SPAN></A>
+
+	<A NAME="f_semicolon"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_semicolon">Semicolon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">59</SPAN></A>
+
+	<A NAME="f_lessthan"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lessthan">Lessthan</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">60</SPAN></A>
+
+	<A NAME="f_equal_sign"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_equal_sign">Equal_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">61</SPAN></A>
+
+	<A NAME="f_greaterthan"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_greaterthan">Greaterthan</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">62</SPAN></A>
+
+	<A NAME="f_questmark"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_questmark">Questmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">63</SPAN></A>
+
+	<A NAME="f_commercial_at"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_commercial_at">Commercial_at</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A>
+
+	<A NAME="f_upper_a"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_a">Upper_a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65</SPAN></A>
+
+	<A NAME="f_upper_b"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_b">Upper_b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">66</SPAN></A>
+
+	<A NAME="f_upper_c"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_c">Upper_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">67</SPAN></A>
+
+	<A NAME="f_upper_d"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_d">Upper_d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">68</SPAN></A>
+
+	<A NAME="f_upper_e"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_e">Upper_e</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">69</SPAN></A>
+
+	<A NAME="f_upper_f"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_f">Upper_f</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">70</SPAN></A>
+
+	<A NAME="f_upper_g"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_g">Upper_g</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">71</SPAN></A>
+
+	<A NAME="f_upper_h"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_h">Upper_h</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">72</SPAN></A>
+
+	<A NAME="f_upper_i"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_i">Upper_i</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">73</SPAN></A>
+
+	<A NAME="f_upper_j"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_j">Upper_j</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">74</SPAN></A>
+
+	<A NAME="f_upper_k"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_k">Upper_k</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">75</SPAN></A>
+
+	<A NAME="f_upper_l"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_l">Upper_l</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">76</SPAN></A>
+
+	<A NAME="f_upper_m"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_m">Upper_m</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">77</SPAN></A>
+
+	<A NAME="f_upper_n"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_n">Upper_n</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">78</SPAN></A>
+
+	<A NAME="f_upper_o"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_o">Upper_o</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">79</SPAN></A>
+
+	<A NAME="f_upper_p"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_p">Upper_p</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">80</SPAN></A>
+
+	<A NAME="f_upper_q"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_q">Upper_q</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">81</SPAN></A>
+
+	<A NAME="f_upper_r"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_r">Upper_r</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">82</SPAN></A>
+
+	<A NAME="f_upper_s"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_s">Upper_s</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">83</SPAN></A>
+
+	<A NAME="f_upper_t"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_t">Upper_t</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">84</SPAN></A>
+
+	<A NAME="f_upper_u"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_u">Upper_u</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">85</SPAN></A>
+
+	<A NAME="f_upper_v"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_v">Upper_v</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">86</SPAN></A>
+
+	<A NAME="f_upper_w"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_w">Upper_w</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">87</SPAN></A>
+
+	<A NAME="f_upper_x"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_x">Upper_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">88</SPAN></A>
+
+	<A NAME="f_upper_y"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_y">Upper_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">89</SPAN></A>
+
+	<A NAME="f_upper_z"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_upper_z">Upper_z</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">90</SPAN></A>
+
+	<A NAME="f_lbracket"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lbracket">Lbracket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">91</SPAN></A>
+
+	<A NAME="f_backslash"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_backslash">Backslash</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">92</SPAN></A>
+
+	<A NAME="f_rbracket"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_rbracket">Rbracket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">93</SPAN></A>
+
+	<A NAME="f_circumflex"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_circumflex">Circumflex</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">94</SPAN></A>
+
+	<A NAME="f_underlined"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_underlined">Underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">95</SPAN></A>
+
+	<A NAME="f_grave_accent"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_grave_accent">Grave_accent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">96</SPAN></A>
+
+	<A NAME="f_lower_a"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_a">Lower_a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">97</SPAN></A>
+
+	<A NAME="f_lower_b"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_b">Lower_b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">98</SPAN></A>
+
+	<A NAME="f_lower_c"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_c">Lower_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">99</SPAN></A>
+
+	<A NAME="f_lower_d"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_d">Lower_d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">100</SPAN></A>
+
+	<A NAME="f_lower_e"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_e">Lower_e</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">101</SPAN></A>
+
+	<A NAME="f_lower_f"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_f">Lower_f</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">102</SPAN></A>
+
+	<A NAME="f_lower_g"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_g">Lower_g</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">103</SPAN></A>
+
+	<A NAME="f_lower_h"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_h">Lower_h</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">104</SPAN></A>
+
+	<A NAME="f_lower_i"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_i">Lower_i</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">105</SPAN></A>
+
+	<A NAME="f_lower_j"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_j">Lower_j</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">106</SPAN></A>
+
+	<A NAME="f_lower_k"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_k">Lower_k</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">107</SPAN></A>
+
+	<A NAME="f_lower_l"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_l">Lower_l</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">108</SPAN></A>
+
+	<A NAME="f_lower_m"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_m">Lower_m</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">109</SPAN></A>
+
+	<A NAME="f_lower_n"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_n">Lower_n</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">110</SPAN></A>
+
+	<A NAME="f_lower_o"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_o">Lower_o</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">111</SPAN></A>
+
+	<A NAME="f_lower_p"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_p">Lower_p</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">112</SPAN></A>
+
+	<A NAME="f_lower_q"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_q">Lower_q</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">113</SPAN></A>
+
+	<A NAME="f_lower_r"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_r">Lower_r</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">114</SPAN></A>
+
+	<A NAME="f_lower_s"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_s">Lower_s</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">115</SPAN></A>
+
+	<A NAME="f_lower_t"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_t">Lower_t</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">116</SPAN></A>
+
+	<A NAME="f_lower_u"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_u">Lower_u</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">117</SPAN></A>
+
+	<A NAME="f_lower_v"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_v">Lower_v</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">118</SPAN></A>
+
+	<A NAME="f_lower_w"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_w">Lower_w</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">119</SPAN></A>
+
+	<A NAME="f_lower_x"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_x">Lower_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">120</SPAN></A>
+
+	<A NAME="f_lower_y"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_y">Lower_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">121</SPAN></A>
+
+	<A NAME="f_lower_z"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_lower_z">Lower_z</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">122</SPAN></A>
+
+	<A NAME="f_opening_brace"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_opening_brace">Opening_brace</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">123</SPAN></A>
+
+	<A NAME="f_bar"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_bar">Bar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">124</SPAN></A>
+
+	<A NAME="f_closing_brace"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_closing_brace">Closing_brace</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">125</SPAN></A>
+
+	<A NAME="f_tilde"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_tilde">Tilde</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">126</SPAN></A>
+
+	<A NAME="f_ctrl_questmark"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_ctrl_questmark">Ctrl_questmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A>
+
+	<A NAME="f_del"><A CLASS="efeature" HREF="../../base/support/ascii.html#f_del">Del</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ASCII<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="ascii_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ASCII"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

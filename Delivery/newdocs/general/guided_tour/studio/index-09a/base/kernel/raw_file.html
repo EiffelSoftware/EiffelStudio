@@ -1,0 +1,294 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Files, viewed as persistent sequences of bytes">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>RAW_FILE Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="RAW_FILE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Files, viewed as persistent sequences of bytes"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/file.html">FILE</A>
+		<SPAN CLASS="ekeyword">rename</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_index">index</A> <SPAN CLASS="ekeyword">as</SPAN> <A CLASS="efeature" HREF="../../base/kernel/file.html#f_position">position</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_reopen">file_reopen</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_open">file_open</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_dopen">file_dopen</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make">make</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_open_read">make_open_read</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_open_write">make_open_write</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_open_append">make_open_append</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_open_read_write">make_open_read_write</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_create_read_write">make_create_read_write</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/kernel/file.html#f_make_open_read_append">make_open_read_append</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_support_storable"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_support_storable">Support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can medium be used to an Eiffel structure?</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
+
+	<A NAME="f_put_integer"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putint">putint</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pib">file_pib</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_putint"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_integer">put_integer</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pib">file_pib</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_boolean"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putbool">putbool</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/file.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'%/1/'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/file.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'%U'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_putbool"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">b</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_boolean">put_boolean</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">b</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/file.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'%/1/'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/file.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'%U'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_real"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real.html">REAL</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putreal">putreal</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_prb">file_prb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_putreal"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real.html">REAL</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value of </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_real">put_real</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_prb">file_prb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_double"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putdouble">putdouble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pdb">file_pdb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_putdouble"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Write binary value </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> at current position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_put_double">put_double</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pdb">file_pdb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Input</SPAN>
+
+	<A NAME="f_read_integer"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_integer">read_integer</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new integer</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readint">readint</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_integer">last_integer</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gib">file_gib</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_readint"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readint">readint</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new integer</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_integer">read_integer</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_integer">last_integer</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gib">file_gib</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_read_real"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_real">read_real</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new real</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readreal">readreal</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_real">last_real</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_grb">file_grb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_readreal"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readreal">readreal</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new real</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_real">read_real</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_real">last_real</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_grb">file_grb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_read_double"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_double">read_double</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new double</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readdouble">readdouble</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_double">last_double</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gdb">file_gdb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_readdouble"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_readdouble">readdouble</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read the binary representation of a new double</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from file. Make result available in </SPAN><A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_read_double">read_double</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_last_double">last_double</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gdb">file_gdb</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/file.html#f_file_pointer">file_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_file_gib"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gib">file_gib</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Get an integer from </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *): EIF_INTEGER | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_grb"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_grb">file_grb</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real.html">REAL</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a real from </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *): EIF_REAL | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_gdb"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_gdb">file_gdb</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read a double from </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *): EIF_DOUBLE | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_open"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_open">file_open</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">how</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> File pointer for file </SPAN><SPAN CLASS="equoted">f_name</SPAN><SPAN CLASS="ecomment">, in mode </SPAN><SPAN CLASS="equoted">how</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">alias</SPAN>
+			<SPAN CLASS="estring">"file_binary_open"</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_dopen"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_dopen">file_dopen</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fd</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">how</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> File pointer for file of descriptor </SPAN><SPAN CLASS="equoted">fd</SPAN><SPAN CLASS="ecomment"> in mode </SPAN><SPAN CLASS="equoted">how</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (which must fit the way </SPAN><SPAN CLASS="equoted">fd</SPAN><SPAN CLASS="ecomment"> was obtained).</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">alias</SPAN>
+			<SPAN CLASS="estring">"file_binary_dopen"</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_reopen"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_reopen">file_reopen</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">how</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> File pointer to </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment">, reopened to have new name </SPAN><SPAN CLASS="equoted">f_name</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a mode specified by </SPAN><SPAN CLASS="equoted">how</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">alias</SPAN>
+			<SPAN CLASS="estring">"file_binary_reopen"</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_pib"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pib">file_pib</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> to end of </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *, EIF_INTEGER) | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_prb"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_prb">file_prb</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/real.html">REAL</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">r</SPAN><SPAN CLASS="ecomment"> to end of </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *, EIF_REAL) | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_file_pdb"><A CLASS="efeature" HREF="../../base/kernel/raw_file.html#f_file_pdb">file_pdb</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> to end of </SPAN><SPAN CLASS="equoted">file</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">not_plain_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/kernel/io_medium.html#f_is_plain_text">is_plain_text</A>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>RAW_FILE<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="raw_file_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="RAW_FILE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

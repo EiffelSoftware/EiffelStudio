@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Platform independent abstraction of a shared library">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>SHARED_LIBRARY Flat contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SHARED_LIBRARY"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Platform independent abstraction of a shared library"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../base/desc/general/shared_library_flatshort.html">SHARED_LIBRARY</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_library_name"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_flatshort.html#f_library_name">library_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/string_flatshort.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of shared library</SPAN>
+</A>
+	<A NAME="f_t_array"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_array">T_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_boolean"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_boolean">T_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_character"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_character">T_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_double"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_double">T_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_integer"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_integer">T_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_no_type"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_no_type">T_no_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_pointer"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_pointer">T_pointer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_real"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_real">T_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_reference"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_reference">T_reference</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_short_integer"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_short_integer">T_short_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_t_string"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_t_string">T_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_error_code"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_flatshort.html#f_error_code">error_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current status of the library</SPAN>
+</A>
+	<A NAME="f_library_freed"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_library_freed">Library_freed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_meaningful"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_flatshort.html#f_meaningful">meaningful</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the library currently loaded?</SPAN>
+</A>
+	<A NAME="f_no_error"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_no_error">No_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_no_library"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_no_library">No_library</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_no_routine"><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_no_routine">No_routine</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/desc/general/shared_library_constants_flatshort.html">SHARED_LIBRARY_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">meaningful_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/desc/general/shared_library_flatshort.html#f_meaningful">meaningful</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/desc/general/shared_library_flatshort.html#f_error_code">error_code</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/desc/general/shared_library_constants_flatshort.html#f_no_error">no_error</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_flatshort.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any_flatshort.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any_flatshort.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>SHARED_LIBRARY<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="shared_library_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SHARED_LIBRARY"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

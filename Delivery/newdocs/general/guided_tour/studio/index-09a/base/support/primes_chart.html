@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Prime number properties">
+<META NAME="names" CONTENT="primes">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>PRIMES Chart</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="PRIMES"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/primes_chart.html">PRIMES</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../base/support/index.html">base.support</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Prime number properties"</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/countable_sequence_chart.html">COUNTABLE_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`after' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_after">After</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`all_lower_primes' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_all_lower_primes">all_lower_primes</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../base/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`exhausted' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_exhausted">exhausted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`extendible' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`for_all' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_for_all">for_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`full' was declared in INFINITE"><A CLASS="efeature" HREF="../../base/structures/storage/infinite.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`higher_prime' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_higher_prime">higher_prime</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`i_th' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_i_th">i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`index' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_index">index</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`index_of' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_index_of">index_of</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_empty' was declared in INFINITE"><A CLASS="efeature" HREF="../../base/structures/storage/infinite.html#f_is_empty">Is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_inserted' was declared in COLLECTION"><A CLASS="efeature" HREF="../../base/structures/access/collection.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_prime' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_is_prime">is_prime</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`lower_prime' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_lower_prime">lower_prime</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../base/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`occurrences' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`off' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`prunable' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_prunable">Prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`readable' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_readable">Readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`smallest_odd_prime' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_smallest_odd_prime">Smallest_odd_prime</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`smallest_prime' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/primes.html#f_smallest_prime">Smallest_prime</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`there_exists' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_there_exists">there_exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`writable' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_writable">Writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../base/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN>
+	<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../base/structures/access/container.html#f_compare_references">compare_references</A></SPAN>
+	<SPAN TITLE="`do_all' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_do_all">do_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`do_if' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_do_if">do_if</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`forth' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_forth">forth</A></SPAN>
+	<SPAN TITLE="`search' was declared in LINEAR"><A CLASS="efeature" HREF="../../base/structures/traversing/linear.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`start' was declared in COUNTABLE_SEQUENCE"><A CLASS="efeature" HREF="../../base/support/countable_sequence.html#f_start">start</A></SPAN>
+
+<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="primes_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="PRIMES"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Formatter for non-integral numbers">
+<META NAME="names" CONTENT="format_double">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>FORMAT_DOUBLE Chart</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_DOUBLE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/format_double_chart.html">FORMAT_DOUBLE</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../base/support/index.html">base.support</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Formatter for non-integral numbers"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_double.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/double_math_chart.html">DOUBLE_MATH</A>
+	<A CLASS="eclass" HREF="../../base/support/format_integer_chart.html">FORMAT_INTEGER</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`after_decimal_separate' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_after_decimal_separate">after_decimal_separate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`bracketted_negative' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_bracketted_negative">bracketted_negative</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`centered' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_centered">centered</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`decimal' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_decimal">decimal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`decimals' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_decimals">decimals</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`fill_character' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_fill_character">fill_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`formatted' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_formatted">formatted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`ignore_sign' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_ignore_sign">ignore_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`justification' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_justification">justification</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`leading_sign' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_leading_sign">leading_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`left_justified' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_left_justified">left_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`no_separator' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_no_separator">no_separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`not_justified' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_not_justified">not_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`right_justified' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_right_justified">right_justified</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`separator' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_separator">separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`show_sign' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_show_sign">show_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`show_sign_negative' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_show_sign_negative">show_sign_negative</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`show_sign_positive' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_show_sign_positive">show_sign_positive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`sign_format' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_format">sign_format</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`sign_string' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_string">sign_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`trailing_sign' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_trailing_sign">trailing_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`width' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`zero_not_shown' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_zero_not_shown">zero_not_shown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`asterisk_fill' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_asterisk_fill">asterisk_fill</A></SPAN>
+	<SPAN TITLE="`blank_fill' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_blank_fill">blank_fill</A></SPAN>
+	<SPAN TITLE="`bracket_negative' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_bracket_negative">bracket_negative</A></SPAN>
+	<SPAN TITLE="`center_justify' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_center_justify">center_justify</A></SPAN>
+	<SPAN TITLE="`comma_decimal' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_comma_decimal">comma_decimal</A></SPAN>
+	<SPAN TITLE="`comma_separate' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_comma_separate">comma_separate</A></SPAN>
+	<SPAN TITLE="`dollar_fill' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_dollar_fill">dollar_fill</A></SPAN>
+	<SPAN TITLE="`dot_separate' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_dot_separate">dot_separate</A></SPAN>
+	<SPAN TITLE="`hide_zero' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_hide_zero">hide_zero</A></SPAN>
+	<SPAN TITLE="`left_justify' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_left_justify">left_justify</A></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`no_justify' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_no_justify">no_justify</A></SPAN>
+	<SPAN TITLE="`no_separate_after_decimal' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_no_separate_after_decimal">no_separate_after_decimal</A></SPAN>
+	<SPAN TITLE="`point_decimal' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_point_decimal">point_decimal</A></SPAN>
+	<SPAN TITLE="`remove_separator' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_remove_separator">remove_separator</A></SPAN>
+	<SPAN TITLE="`right_justify' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_right_justify">right_justify</A></SPAN>
+	<SPAN TITLE="`separate_after_decimal' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_separate_after_decimal">separate_after_decimal</A></SPAN>
+	<SPAN TITLE="`set_decimals' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_set_decimals">set_decimals</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_defaults' was declared in FORMAT_INTEGER as `make'"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_make">set_defaults</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_fill' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_set_fill">set_fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_separator' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_set_separator">set_separator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_sign' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_set_sign">set_sign</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_width' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`show_zero' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_show_zero">show_zero</A></SPAN>
+	<SPAN TITLE="`sign_cr_dr' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_cr_dr">sign_cr_dr</A></SPAN>
+	<SPAN TITLE="`sign_dr_cr' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_dr_cr">sign_dr_cr</A></SPAN>
+	<SPAN TITLE="`sign_floating_dollar' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_floating_dollar">sign_floating_dollar</A></SPAN>
+	<SPAN TITLE="`sign_floating_dollar_signed' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_floating_dollar_signed">sign_floating_dollar_signed</A></SPAN>
+	<SPAN TITLE="`sign_ignore' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_ignore">sign_ignore</A></SPAN>
+	<SPAN TITLE="`sign_leading' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_leading">sign_leading</A></SPAN>
+	<SPAN TITLE="`sign_negative_only' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_negative_only">sign_negative_only</A></SPAN>
+	<SPAN TITLE="`sign_normal' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_normal">sign_normal</A></SPAN>
+	<SPAN TITLE="`sign_positive_only' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_positive_only">sign_positive_only</A></SPAN>
+	<SPAN TITLE="`sign_show' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_show">sign_show</A></SPAN>
+	<SPAN TITLE="`sign_trailing' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_sign_trailing">sign_trailing</A></SPAN>
+	<SPAN TITLE="`unbracket_negative' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_unbracket_negative">unbracket_negative</A></SPAN>
+	<SPAN TITLE="`underscore_separate' is declared in `Current'"><A CLASS="efeature" HREF="../../base/support/format_double.html#f_underscore_separate">underscore_separate</A></SPAN>
+	<SPAN TITLE="`zero_fill' was declared in FORMAT_INTEGER"><A CLASS="efeature" HREF="../../base/support/format_integer.html#f_zero_fill">zero_fill</A></SPAN>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">separate all</SPAN>
+
+<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_DOUBLE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>

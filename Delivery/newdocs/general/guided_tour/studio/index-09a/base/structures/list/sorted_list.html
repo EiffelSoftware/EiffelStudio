@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="index, cursor, membership, min, max">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTSequential lists where the cells are sorted in ascending orderR TTaccording to the relational operators of PART_COMPARABLE">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="names" CONTENT="sorted_list, sorted_struct, sequence">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>SORTED_LIST Text</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SORTED_LIST"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Sequential lists where the cells are sorted in ascending order</SPAN>
+<SPAN CLASS="estring">		according to the relational operators of </SPAN><A CLASS="eclass" HREF="../../../base/kernel/part_comparable.html">PART_COMPARABLE</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> sorted_list<SPAN CLASS="esymbol">,</SPAN> sorted_struct<SPAN CLASS="esymbol">,</SPAN> sequence
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> index<SPAN CLASS="esymbol">,</SPAN> cursor<SPAN CLASS="esymbol">,</SPAN> membership<SPAN CLASS="esymbol">,</SPAN> min<SPAN CLASS="esymbol">,</SPAN> max
+	<SPAN CLASS="eitag">contents</SPAN><SPAN CLASS="esymbol">:</SPAN> generic
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../../base/structures/list/sorted_list.html">SORTED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/list/part_sorted_list.html">PART_SORTED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_min"><A CLASS="efeature" HREF="../../../base/structures/list/sorted_list.html#f_min">min</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Minimum item</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_first">first</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">min_is_first</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_first">first</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_max"><A CLASS="efeature" HREF="../../../base/structures/list/sorted_list.html#f_max">max</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum item</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_last">last</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">max_is_last</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_last">last</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_median"><A CLASS="efeature" HREF="../../../base/structures/list/sorted_list.html#f_median">median</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Median item</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_i_th">i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_div">//</A> <SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">median_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_i_th">i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_div">//</A> <SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>SORTED_LIST<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="sorted_list_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="SORTED_LIST"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

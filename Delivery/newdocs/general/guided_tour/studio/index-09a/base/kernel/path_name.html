@@ -1,0 +1,296 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Path name abstraction">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>PATH_NAME Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="PATH_NAME"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Path name abstraction"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/kernel/path_name.html">PATH_NAME</A>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A>
+		<SPAN CLASS="ekeyword">rename</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_make">make</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">string_make</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_make_from_string">make_from_string</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">string_make_from_string</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_extend">extend</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">string_extend</SPAN>
+		<SPAN CLASS="ekeyword">export</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ekeyword">all</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/structures/access/container.html#f_empty">empty</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_wipe_out">wipe_out</A><SPAN CLASS="esymbol">,</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/path_name.html">PATH_NAME</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/kernel/to_special.html#f_area">area</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_make">make</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create path name object.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_make">string_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create path name object and initialize it with the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> path name </SPAN><SPAN CLASS="equoted">p</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">0</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_make">string_make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
+
+	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the path name equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">o_area</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/kernel/to_special.html#f_area">area</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ekeyword">True</SPAN>
+			<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">o_area</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/to_special.html#f_area">area</A><SPAN CLASS="esymbol">;</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_path_name_compare">eif_path_name_compare</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><A CLASS="efeature" HREF="../../base/kernel/to_special.html#f_area">area</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">o_area</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_is_directory_name_valid"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dir_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">dir_name</SPAN><SPAN CLASS="ecomment"> a valid subdirectory part for the operating system?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">dir_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">any</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">any</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">dir_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_is_directory_name_valid">eif_is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">any</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_is_volume_name_valid"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_volume_name_valid">is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">vol_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">vol_name</SPAN><SPAN CLASS="ecomment"> a valid volume name for the operating system?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">vol_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">any</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">any</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">vol_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_is_volume_name_valid">eif_is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">any</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_is_valid"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the path name valid for the operating system?</SPAN>
+		<SPAN CLASS="ekeyword">deferred</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_volume"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_set_volume">set_volume</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">volume_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the volume part of the path name to </SPAN><SPAN CLASS="equoted">volume_name</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">string_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">volume_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_volume_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_volume_name_valid">is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">volume_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">empty_path_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">volume_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_extend"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Append the subdirectory </SPAN><SPAN CLASS="equoted">directory_name</SPAN><SPAN CLASS="ecomment"> to the path name.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/path_name.html">PATH_NAME</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_set_subdirectory">set_subdirectory</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">string_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">directory_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">5</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_capacity">capacity</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/string.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">str1</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<SPAN CLASS="elocal">str2</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_append_directory">eif_append_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_set_subdirectory"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_set_subdirectory">set_subdirectory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Append the subdirectory </SPAN><SPAN CLASS="equoted">directory_name</SPAN><SPAN CLASS="ecomment"> to the path name.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/path_name.html">PATH_NAME</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_extend">extend</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">string_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">directory_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">5</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_capacity">capacity</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/string.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">str1</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<SPAN CLASS="elocal">str2</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_append_directory">eif_append_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_set_directory"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_set_directory">set_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the absolute directory part of the path name to </SPAN><SPAN CLASS="equoted">directory_name</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">string_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">directory_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any.html">ANY</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">5</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_capacity">capacity</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">new_size</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/string.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">str1</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<SPAN CLASS="elocal">str2</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_to_c">to_c</A>
+			<A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_set_directory">eif_set_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="esymbol">$</SPAN><SPAN CLASS="elocal">str2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_extend_from_array"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_extend_from_array">extend_from_array</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Append the subdirectories from </SPAN><SPAN CLASS="equoted">directories</SPAN><SPAN CLASS="ecomment"> to the path name.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">array_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">directories</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">nb</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_lower">lower</A>
+				<SPAN CLASS="elocal">nb</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_upper">upper</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">nb</SPAN>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_is_valid">is_valid</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Externals</SPAN>
+
+	<A NAME="f_eif_is_volume_name_valid"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_is_volume_name_valid">eif_is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_CHARACTER *): EIF_BOOLEAN | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_is_directory_name_valid"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_is_directory_name_valid">eif_is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_CHARACTER *): EIF_BOOLEAN | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_append_directory"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_append_directory">eif_append_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_REFERENCE, EIF_CHARACTER *, EIF_CHARACTER *) | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_set_directory"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_set_directory">eif_set_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_REFERENCE, EIF_CHARACTER *, EIF_CHARACTER *) | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_path_name_compare"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_path_name_compare">eif_path_name_compare</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_CHARACTER *, EIF_CHARACTER *, EIF_INTEGER): EIF_BOOLEAN | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_volume_name"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_volume_name">eif_volume_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_CHARACTER *): EIF_REFERENCE | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_eif_extracted_paths"><A CLASS="efeature" HREF="../../base/kernel/path_name.html#f_eif_extracted_paths">eif_extracted_paths</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C (EIF_CHARACTER *): EIF_REFERENCE | %"eif_path_name.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>PATH_NAME<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="path_name_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="PATH_NAME"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

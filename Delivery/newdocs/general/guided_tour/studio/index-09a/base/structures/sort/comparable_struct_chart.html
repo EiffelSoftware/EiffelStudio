@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="min, max">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTData structures whose items may be comparedR TTaccording to a total order relation">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="names" CONTENT="comparable_struct">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>COMPARABLE_STRUCT Chart</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="COMPARABLE_STRUCT"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/sort/comparable_struct_chart.html">COMPARABLE_STRUCT</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/comparable_chart.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/structures/sort/index.html">base.structures.sort</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Data structures whose items may be compared</SPAN>
+		<SPAN CLASS="estring">according to a total order relation"</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/traversing/bilinear_chart.html">BILINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`after' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`before' was declared in BILINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_before">before</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`exhausted' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_exhausted">exhausted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`for_all' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_for_all">for_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`index_of' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_index_of">index_of</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_empty' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in TRAVERSABLE"><A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`linear_representation' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`max' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/sort/comparable_struct.html#f_max">max</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`min' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/sort/comparable_struct.html#f_min">min</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`min_max_available' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/sort/comparable_struct.html#f_min_max_available">min_max_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`occurrences' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`off' was declared in BILINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`there_exists' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_there_exists">there_exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`back' was declared in BILINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_back">back</A></SPAN>
+	<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN>
+	<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A></SPAN>
+	<SPAN TITLE="`do_all' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_do_all">do_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`do_if' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_do_if">do_if</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">test</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/tuple_chart.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`finish' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_finish">finish</A></SPAN>
+	<SPAN TITLE="`forth' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_forth">forth</A></SPAN>
+	<SPAN TITLE="`search' was declared in BILINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`start' was declared in TRAVERSABLE"><A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_start">start</A></SPAN>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">empty constraint</SPAN>
+
+<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="comparable_struct_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="COMPARABLE_STRUCT"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>

@@ -1,0 +1,81 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>HASH_TABLE Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../root_cluster/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../root_cluster/index.html">root_cluster</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Hash tables, used to store items identified by hashable keys"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="sample/../../reference/kernel/any_chart.html">ANY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`conflict' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`current_keys' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dead_key' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_dead_key">dead_key</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`found' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`found_item' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_found_item">found_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`inserted' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`position' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_position">position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`prunable' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`removed' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replaced' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_key' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/hash_table.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

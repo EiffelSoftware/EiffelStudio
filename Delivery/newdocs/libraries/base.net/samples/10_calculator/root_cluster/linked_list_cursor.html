@@ -1,0 +1,53 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>LINKED_LIST_CURSOR Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Cursors for linked lists"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">external_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"ISE.Examples.Calculator.LinkedListCursor"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../root_cluster/linked_list_cursor.html">LINKED_LIST_CURSOR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/linked_list_cursor.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">active_element</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../root_cluster/linked_list_cursor.html#f_active">active</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">aft</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bef</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non_void_active_element</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">active_element</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="sample/../../reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">active_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/linked_list_cursor.html#f_active">active</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">active_element</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">after_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/linked_list_cursor.html#f_after">after</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">aft</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">before_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/linked_list_cursor.html#f_before">before</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">bef</SPAN><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>LINKED_LIST_CURSOR<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

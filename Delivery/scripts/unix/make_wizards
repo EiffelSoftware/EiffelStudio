@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 remtrace Retrieve all source files
 remtrace The wizards

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 INITIAL_DIR=`pwd`
 
@@ -50,6 +50,7 @@ default_make
 remtrace gel
 cd $INITIAL_DIR/library/gel/glib
 configure
+make
 cd $INITIAL_DIR
 
 

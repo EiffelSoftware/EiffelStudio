@@ -201,7 +201,7 @@ feature -- IL code generation
 							system.il_verifiable and then not r_type.is_expanded
 							and then not r_type.is_none
 						then
-							il_generator.generate_check_cast (r_type, r_type)
+							il_generator.generate_check_cast (Void, r_type)
 						end
 					end
 				end

@@ -83,9 +83,6 @@ feature {NONE}-- Initialization
 			select_directory_button.select_actions.extend (agent display_directory_dialog)
 			ok_button.select_actions.extend (agent ok_pressed)
 			cancel_button.select_actions.extend (agent cancel_pressed)
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
-			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 
 				-- Call `user_initialization'.
 			user_initialization

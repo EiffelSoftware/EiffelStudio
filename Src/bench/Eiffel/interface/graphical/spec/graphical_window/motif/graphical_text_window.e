@@ -32,7 +32,7 @@ inherit
 			total_width as maximum_width,
 			total_height as current_y
 		undefine
-			copy, setup
+			copy, setup, context_data_useful
 		end;
 	SCROLLED_DRAWING_AREA
 		rename
@@ -42,7 +42,7 @@ inherit
 			total_width as maximum_width,
 			total_height as current_y
 		undefine
-			copy, setup
+			copy, setup, context_data_useful
 		redefine
 			set_background_color, execute
 		select
@@ -61,7 +61,8 @@ feature {NONE}
 			tool := a_tool;
 			initialize_transport;
 			list_make (30);
-			set_action ("!c<Btn3Down>", Current, new_tooler)
+			set_action ("!c<Btn3Down>", Current, new_tooler_action)
+			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
 			highlighted_line := Void;
 			selected_clickable_text := Void;
 			!! text.make (0);
@@ -411,18 +412,9 @@ end
 feature -- Execution
 
 	execute (arg: ANY) is
-		local
-			but_data: BUTTON_DATA;
-			st: STONE;
 		do
-			if arg = new_tooler then
-				but_data ?= context_data;
-				update_before_transport (but_data);
-				st := focus;
-				if st /= Void then
-					Project_tool.receive (st);
-					deselect_all
-				end
+			if arg = new_tooler_action or else arg = super_melt_action then
+				process_action (arg)
 			else
 				old_execute (arg)
 			end

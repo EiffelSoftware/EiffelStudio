@@ -17,10 +17,8 @@ feature -- Properties
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
-			-- Display error message
+			-- No need for an error message.
 		do
-			st.add_string ("Assembly could not be signed because `mscorsn.dll' was not found.")
-			st.add_new_line
 		end
 
 end -- class VISM

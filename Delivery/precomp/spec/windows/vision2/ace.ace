@@ -1,0 +1,61 @@
+system
+	vision2
+
+root
+	ANY
+
+default
+	assertion(check)
+	assertion(require)
+	assertion(ensure)
+	assertion(loop)
+	assertion(invariant)
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(no)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+	precompiled("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
+
+cluster
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"CVS"; "table_eiffel3"; "desc"; 
+		end
+
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"; "release"; "obsolete"; "CVS"; "components"; 
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\C_library\zlib"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

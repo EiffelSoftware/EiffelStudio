@@ -1,0 +1,26 @@
+system
+	wel
+
+root
+	ANY
+
+default
+	assertion (all);
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
+
+cluster 
+	-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end
+
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+external
+	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+
+end -- system wel

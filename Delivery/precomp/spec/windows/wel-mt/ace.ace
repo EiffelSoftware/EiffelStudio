@@ -1,0 +1,33 @@
+system
+	wel_mt
+
+root
+	ANY
+
+default
+	assertion (all);
+	multithreaded (yes);
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base-mt");
+
+cluster 
+	-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end
+
+		-- Thread Library
+	thread:			"$ISE_EIFFEL\library\thread";
+
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
+		exclude
+			"wel_init_commctrl_ex.e"
+		end
+
+external
+	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib"
+
+end -- system wel

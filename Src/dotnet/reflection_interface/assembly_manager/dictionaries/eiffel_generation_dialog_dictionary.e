@@ -62,7 +62,7 @@ feature -- Access
 			external_name: "Title"
 		end
 
-	Window_height: INTEGER is 300
+	Window_height: INTEGER is 280
 		indexing
 			description: "Window height"
 			external_name: "WindowHeight"

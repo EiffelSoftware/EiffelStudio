@@ -173,7 +173,7 @@ feature -- IL code generation
 				else
 						-- External class with a standard Eiffel feature can
 						-- only be a NATIVE_ARRAY.
-					call.generate_il
+					call.generate_il_call (False)
 				end
 
 				call.set_parent (Void)

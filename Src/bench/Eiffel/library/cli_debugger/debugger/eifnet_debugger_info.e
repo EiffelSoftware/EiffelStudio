@@ -633,7 +633,7 @@ feature -- JIT info
 			if optimized_jit_debugging_enabled then
 				a_module.enable_jit_debugging (True, True)			
 			else
-				a_module.enable_jit_debugging (False, False)
+				a_module.enable_jit_debugging (True, False)
 			end
 			
 			l_module_key_name := module_key (a_module.get_name)

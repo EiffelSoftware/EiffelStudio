@@ -9,8 +9,11 @@ indexing
 class
 	MEL_FONT_LIST_ENTRY
 
-creation
+inherit
 
+	MEL_MEMORY
+
+creation
 	make_from_existing, 
 	make_from_font_struct,
 	make_default_from_font_struct,
@@ -59,37 +62,7 @@ feature {NONE} -- Initialization
 						$ext1, XmFONT_IS_FONT, $ext2)
 		end;
 
-	make_from_existing (a_handle: POINTER) is
-			-- Create a MEL resource from an `a_handle'
-			-- for display `a_display'.
-		require
-			a_handle_not_null: a_handle /= default_pointer
-		do
-			handle := a_handle;
-		ensure
-			set: handle = a_handle
-		end
-
 feature -- Access
-
-	handle: POINTER;
-			-- Handle to C
-
-	is_valid: BOOLEAN is
-			-- Is the resource valid?
-		do
-			Result := handle /= default_pointer
-		ensure
-			valid_result: Result implies handle /= default_pointer
-		end;
-
-	is_destroyed: BOOLEAN is
-			-- Is the resource destroyed?
-		do
-			Result := not is_valid
-		ensure
-			valid_result : Result = not is_valid
-		end;
 
 	font_struct: MEL_FONT_STRUCT is
 			-- Font structure of entry
@@ -125,15 +98,11 @@ feature -- Access
 
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free the font list entry.
-		require
-			not_destroyed: not is_destroyed
 		do	
 			xm_font_list_entry_free (handle);
 			handle := default_pointer
-		ensure
-			is_destroyed: is_destroyed
 		end;
 
 feature {NONE} -- External features

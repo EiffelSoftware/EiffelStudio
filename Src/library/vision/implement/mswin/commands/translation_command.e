@@ -104,7 +104,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 			from
 				t := 1
 			variant
-				special_translations.count - t
+				special_translations.count + 1 - t
 			until
 				t > special_translations.count or special_translation_number /= 0
 			loop
@@ -139,7 +139,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 			from 
 				!!modifier.make (0)
 			variant
-				s.count - place
+				s.count + 1 - place
 			until
 				place > s.count or else s.item (place) = '<'
 			loop            
@@ -166,7 +166,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 			from
 				!!action.make (0)
 			variant
-				s.count - place
+				s.count + 2 - place
 			until
 				place > s.count or else s.item(place) = '>'
 			loop

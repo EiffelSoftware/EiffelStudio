@@ -156,7 +156,7 @@ feature -- Element change
 			from
 				act.start
 			variant
-				act.count - act.index
+				act.count + 1 - act.index
 			until
 				act.after
 			loop

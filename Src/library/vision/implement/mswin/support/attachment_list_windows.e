@@ -26,7 +26,7 @@ feature -- Access
 				c := cursor
 				start
 			variant
-				count - index
+				count + 1 - index
 			until
 				after or item.widget = w
 			loop
@@ -120,7 +120,7 @@ feature -- Status setting
 			from
 				start
 			variant
-				count - index
+				count + 1 - index
 			until
 				after
 			loop
@@ -145,7 +145,7 @@ feature -- Status setting
 					Result := item.height (form)
 					forth
 				variant
-					count - index
+					count + 1 - index
 				until
 					after
 				loop
@@ -181,7 +181,7 @@ feature -- Status setting
 					Result := item.width (form)
 					forth
 				variant
-					count - index
+					count + 1 - index
 				until
 					after
 				loop
@@ -215,7 +215,7 @@ feature -- Status setting
 				c := cursor
 				processing := true
 			variant
-				100 - i
+				100 + 1 - i
 			until
 				i > 100 or not processing
 			loop
@@ -223,7 +223,7 @@ feature -- Status setting
 					start
 					processing := false
 				variant
-					count - index
+					count + 1 - index
 				until
 					after
 				loop

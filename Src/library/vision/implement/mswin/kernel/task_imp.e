@@ -90,7 +90,7 @@ feature -- Basic operations
 					c := actions.cursor
 					actions.start
 				variant
-					actions.count - actions.index
+					actions.count + 1 - actions.index
 				until
 					actions.after
 				loop

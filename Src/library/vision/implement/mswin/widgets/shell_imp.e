@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			from
 				local_children.start
 			variant
-				local_children.count - local_children.index
+				local_children.count + 1 - local_children.index
 			until
 				local_children.off
 			loop	

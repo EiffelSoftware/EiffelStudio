@@ -463,7 +463,7 @@ feature -- Status setting
 				new_pos := 1
 				number := 1
 			variant
-				a_name.count - pos
+				a_name.count + 1 - pos
 			until
 				(pos > a_name.count) or (number = 13) or (new_pos = 0)
 			loop

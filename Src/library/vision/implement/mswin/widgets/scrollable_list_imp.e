@@ -1002,7 +1002,7 @@ feature {NONE} -- Implementation
 				pos := index
 				start
 			variant
-				count - index
+				count + 1 - index
 			until
 				after
 			loop

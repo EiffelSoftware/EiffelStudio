@@ -31,7 +31,7 @@ feature {TOGGLE_B_IMP} -- Element change
 			from
 				toggle_list.start
 			variant
-				toggle_list.count - toggle_list.index
+				toggle_list.count + 1 - toggle_list.index
 			until
 				toggle_list.after
 			loop

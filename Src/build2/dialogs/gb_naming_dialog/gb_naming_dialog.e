@@ -10,6 +10,13 @@ class
 
 inherit
 	GB_NAMING_DIALOG_IMP
+	
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
 
 create 
 	make_with_values
@@ -30,6 +37,7 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent name_field.set_focus)
 				-- We must never return a void, name.
 			name := ""
+			set_icon_pixmap (Icon_build_window @ 1)
 		end
 	
 	make_with_values (initial_name, a_title, prompt, an_invalid_message: STRING; a_validation_agent: like validation_agent) is

@@ -44,7 +44,7 @@ feature
 
 	rout_info_table: ROUT_INFO_TABLE;
 			-- Global routine info table
-			-- rout_id --> (origin/offset)			
+			-- rout_id --> (origin/offset)
 
 	sorter: CLASS_SORTER;
 			-- Topological sorter on classes
@@ -471,7 +471,7 @@ end;
 	record_new_class_i (a_class: CLASS_I) is
 			-- Record a new CLASS_I
 			-- Used during the time check and the genericity check after pass1
-		do	
+		do
 			new_class := True;
 			new_classes.put_front (a_class);
 		end;
@@ -538,7 +538,7 @@ end;
 
 					-- Mark the class to remove uncompiled
 				a_class.lace_class.set_compiled_class (Void);
-		
+
 					-- Remove its types
 				from
 					types := a_class.types;
@@ -701,7 +701,7 @@ end;
 feature -- Recompilation 
 
 	recompile is
-			-- Incremetal recompilation of the system.	
+			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error;
 		do
@@ -1127,7 +1127,7 @@ end;
 						end;
 						class_type.set_is_changed (False);
 					end;
-				
+
 					types.forth
 				end;
 				pass4_controler.changed_classes.forth
@@ -1189,7 +1189,6 @@ end;
 	make_update is
 			-- Produce the update file resulting of the consecutive
 			-- melting process after the system has been frozen.
-		
 		local
 			id_list: LINKED_LIST [INTEGER];
 			a_class: CLASS_C;
@@ -1334,7 +1333,7 @@ end;
 			write_int (file_pointer, -1);
 
 				-- Update the dispatch table
-			dispatch_table.make_update (Update_file);	
+			dispatch_table.make_update (Update_file);
 
 				-- Open the file for reading byte code for melted features
 				-- Update the execution table
@@ -1403,10 +1402,10 @@ end;
 						end;
 						i := i + 1;
 					end;
-		
+
 						-- End mark
 					Byte_array.append_short_integer (-1);
-	
+
 						-- Cecil structure
 					make_cecil_tables;
 					Cecil2.make_byte_code (Byte_array);
@@ -1441,7 +1440,7 @@ end;
 			Byte_array.clear;
 			from
 				i := 1;
-				nb := Type_id_counter.value;		
+				nb := Type_id_counter.value;
 			until
 				i > nb
 			loop
@@ -1594,14 +1593,14 @@ end;
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
-	
+
 					a_class.generate_descriptor_tables;
 
 					id_list.forth
 				end;
 			else
 				from
-					descriptors := m_desc_server.current_keys;		
+					descriptors := m_desc_server.current_keys;
 					i := 1;
 					nb := descriptors.count;
 				until
@@ -1636,7 +1635,7 @@ end;
 							temp.to_upper;
 						io.error.putstring (temp);
 						io.error.new_line;
-	
+
 						a_class.generate_descriptor_tables;
 					end;
 					id_list.forth
@@ -1752,55 +1751,6 @@ end;
 			Update_file.close;
 		end;
 
-	real_shake is
-			-- Rebuild `dispatch_table' and `execution_table'
-		local
-			new_exec: like execution_table;
-			new_dispatch: like dispatch_table;
-			dispatch_unit: DISPATCH_UNIT;
-			execution_unit: EXECUTION_UNIT;
-			external_unit: EXT_EXECUTION_UNIT;
-			info: EXTERNAL_INFO;		
-		do
-
-			update_valid_body_ids;
-
-			from
-				!!new_exec.init;
-				!!new_dispatch.init;
-
-				dispatch_table.start
-			until
-				dispatch_table.after
-			loop
-				dispatch_unit := dispatch_table.item_for_iteration;
-				if dispatch_unit.is_valid then
-					execution_unit := dispatch_unit.execution_unit;
-
-					new_dispatch.put (dispatch_unit);
-					dispatch_unit := new_dispatch.last_unit;
-
-					new_exec.put (execution_unit);
-					execution_unit := new_exec.last_unit;
-
-					dispatch_unit.set_execution_unit (execution_unit);				
-					if execution_unit.is_external then
-						external_unit ?= execution_unit;
-						check
-							externals.has (external_unit.external_name);
-						end;
-						info := externals.item (external_unit.external_name);
-						info.set_execution_unit (external_unit);
-					end;
-				end;
-
-				dispatch_table.forth;
-			end;
-
-			execution_table.copy (new_exec);
-			dispatch_table.copy (new_dispatch);
-		end;
-
 	update_valid_body_ids is
 		local
 			id_list: LINKED_LIST [INTEGER];
@@ -1844,14 +1794,14 @@ end;
 				execution_table.after
 			loop
 				exec_unit := execution_table.item_for_iteration;
-				if exec_unit.is_valid and then exec_unit.is_external then
+				if exec_unit.is_external and then exec_unit.is_valid then
 					external_unit ?= exec_unit;
 					check
 						externals.has (external_unit.external_name);
 					end;
 					info := externals.item (external_unit.external_name);
 					info.set_execution_unit (external_unit);
-				end;	
+				end;
 				execution_table.forth
 			end;
 
@@ -1865,7 +1815,6 @@ end;
 
 		end;
 
-	
 feature -- Final mode generation
 
 	in_final_mode: BOOLEAN is
@@ -1890,7 +1839,7 @@ feature -- Final mode generation
 				-- and `exception_stack_managed'
 			old_remover_off := remover_off;
 			old_exception_stack_managed := exception_stack_managed
-		
+
 				-- Should dead code be removed?
 			if not remover_off then
 				remover_off := 
@@ -2080,6 +2029,16 @@ feature -- Dead code removal
 			good_argument: f /= Void;
 		do
 			Result := remover_off or else remover.is_alive (f)
+		end;
+
+feature -- In-lining optimization
+
+	optimization: BOOLEAN;
+			-- Is in-lining done?
+
+	set_optimization (b: BOOLEAN) is
+		do
+			optimization := b;
 		end;
 
 feature
@@ -2871,7 +2830,7 @@ feature -- Plug and Makefile file
 						clone (Encoder.table_name (Initialization_id))
 				dispose_name := 
 						clone (Encoder.table_name (Dispose_id))
-	
+
 				Plug_file.putstring ("extern char *(*");
 				Plug_file.putstring (init_name);
 				Plug_file.putstring ("[])();%N");
@@ -2888,7 +2847,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("void (*eif_arrmake)() = ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring (";%N");
-			
+
 				--Pointer on `set_count' of class STRING
 			Plug_file.putstring ("void (*eif_strset)() = ");
 			Plug_file.putstring (set_count_name);
@@ -3048,7 +3007,7 @@ feature -- Main file generation
 			Initialization_file.putstring ("%
 				%#include %"macros.h%"%N%
 				%#include %"struct.h%"%N%N");
-		
+
 			if not final_mode then
 				Initialization_file.putstring ("int rcst = ");
 				Initialization_file.putint (static_type);
@@ -3064,7 +3023,7 @@ feature -- Main file generation
 				end;
 				Initialization_file.putstring (";%N%N");
 			end;
-	
+
 			Initialization_file.putstring ("%
 				%void emain(argc, argv)%N%
 				%int argc;%N%
@@ -3097,7 +3056,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("rcdt");
 			end;
 			Initialization_file.putstring (");%N");
-	
+
 			if final_mode then
 				if creation_name /= Void then
 					Initialization_file.putchar ('%T');
@@ -3174,7 +3133,7 @@ feature -- Workbench routine info table file generation
 				f := Rout_info_file;
 				f.open_write;
 				f.putstring (Rout_info_table.C_string);
-				f.close;	
+				f.close;
 			end;
 		end;
 
@@ -3323,7 +3282,7 @@ feature -- Purge of compilation files
 			m_desc_server.purge;
 			rep_server.purge;
 		end;
-	
+
 feature -- Conveniences
 
 	set_system_name (s: STRING) is
@@ -3407,6 +3366,7 @@ feature -- Conveniences
 	reset_system_level_options is
 		do
 			remover_off := False;
+			optimization := False;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 			Rescue_status.set_fail_on_rescue (False)

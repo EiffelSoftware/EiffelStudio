@@ -264,7 +264,7 @@ feature -- Generation
 					file.open_write_c
 
 					if final_mode then
-						!! extern_decl_file.make_open_append (extern_declaration_filename)
+						!! extern_decl_file.make_open_write (extern_declaration_filename)
 					else
 						extern_decl_file := file
 					end

@@ -104,74 +104,84 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	namespace: STRING
+			-- Namespace specified for a class in Ace file.
+			-- Used for IL code generation.
+
 	internal_namespace: STRING
-			-- Associated namespace of Current.
+			-- Stored associated namespace of Current.
 			-- Used for IL code generation.
 
 feature -- Status report
 
-	namespace: STRING is
+	actual_namespace: STRING is
 			-- Associated namespace of current class. Result depends
 			-- on settings from `System.use_cluster_as_namespace' and
 			-- from `System.use_all_cluster_as_namespace'.
 		require
 			il_generation: System.il_generation
+			compiled_class: is_compiled
 		local
 			l_start_name: STRING
 			l_namespace: STRING
 		do
-				-- We need to clone as the result maybe used for string operation and we do not 
-				-- want it to change some internal data from Current.
-			l_namespace := clone (internal_namespace)
-			
-			if
-				not System.use_all_cluster_as_namespace and then
-				not System.use_cluster_as_namespace
-			then
-					-- Simply use given namespace if any.
-				Result := l_namespace
+			if compiled_class.is_precompiled then
+				Result := internal_namespace
 			else
-					-- Now either one or both of `System.use_cluster_as_namespace' or 
-					-- `System.use_all_cluster_as_namespace' is True.
-					
-				if not System.use_all_cluster_as_namespace then
-						-- In this case, it means that `System.use_cluster_as_namespace' is True.
-					if l_namespace /= Void then
-						Result := l_namespace
+					-- We need to clone as the result maybe used for string operation and we do not 
+					-- want it to change some internal data from Current.
+				l_namespace := clone (namespace)
+				
+				if
+					not System.use_all_cluster_as_namespace and then
+					not System.use_cluster_as_namespace
+				then
+						-- Simply use given namespace if any.
+					Result := l_namespace
+				else
+						-- Now either one or both of `System.use_cluster_as_namespace' or 
+						-- `System.use_all_cluster_as_namespace' is True.
+						
+					if not System.use_all_cluster_as_namespace then
+							-- In this case, it means that `System.use_cluster_as_namespace' is True.
+						if l_namespace /= Void then
+							Result := l_namespace
+						else
+							Result := clone (cluster.top_of_recursive_cluster.cluster_name)
+						end
 					else
-						Result := clone (cluster.top_of_recursive_cluster.cluster_name)
-					end
-				else
-					l_start_name := cluster.top_of_recursive_cluster.cluster_name
-					
-					check
-						l_start_name_exists:
-							cluster.cluster_name.substring (1, l_start_name.count).
-								is_equal (l_start_name)
-					end
-					
-					Result := clone (cluster.cluster_name)
+						l_start_name := cluster.top_of_recursive_cluster.cluster_name
+						
+						check
+							l_start_name_exists:
+								cluster.cluster_name.substring (1, l_start_name.count).
+									is_equal (l_start_name)
+						end
+						
+						Result := clone (cluster.cluster_name)
 
-					if l_namespace /= Void then
-						Result.replace_substring (l_namespace, 1, l_start_name.count)
-					elseif not System.use_cluster_as_namespace then
-						Result.remove_head (l_start_name.count)
+						if l_namespace /= Void then
+							Result.replace_substring (l_namespace, 1, l_start_name.count)
+						elseif not System.use_cluster_as_namespace then
+							Result.remove_head (l_start_name.count)
+						end
 					end
 				end
-			end
-			
+				
 
-			if System.system_namespace /= Void then
-				if Result /= Void then
-					Result.prepend_character ('.')
-					Result.prepend (System.system_namespace)
-				else
-					Result := clone (System.system_namespace)
+				if System.system_namespace /= Void then
+					if Result /= Void then
+						Result.prepend_character ('.')
+						Result.prepend (System.system_namespace)
+					else
+						Result := clone (System.system_namespace)
+					end
 				end
-			end
 
-			if Result = Void then
-				Result := ""
+				if Result = Void then
+					Result := ""
+				end
+				internal_namespace := Result
 			end
 		ensure
 			result_not_void: Result /= Void	
@@ -247,12 +257,12 @@ feature -- Access
 		do
 		end
 
-	compiled: BOOLEAN is
+	is_compiled, compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do
 			Result := compiled_class /= Void
 		ensure
-			compiled: Result implies compiled_class /= Void
+			is_compiled: Result implies compiled_class /= Void
 		end; 
 
 	date_has_changed: BOOLEAN is
@@ -296,14 +306,14 @@ feature -- Setting
 		end
 
 	set_namespace (s: STRING) is
-			-- Assign `s' to `internal_namespace'.
+			-- Assign `s' to `namespace'.
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		do
-			internal_namespace := s
+			namespace := s
 		ensure
-			internal_namespace_set: internal_namespace = s
+			namespace_set: namespace = s
 		end
 	
 	set_file_details (s: like name; b: like base_name) is 
@@ -372,7 +382,7 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			optimize_level := No_optimize
 			debug_level := No_debug
 			visible_level := Visible_default
-			internal_namespace := Void
+			namespace := Void
 		end
 
 	set_changed (b: BOOLEAN) is

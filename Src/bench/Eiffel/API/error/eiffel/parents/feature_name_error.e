@@ -27,14 +27,15 @@ feature -- Output
 			print_error_message (st);
 			st.add_string ("Class: ");
 			e_class.append_signature (st);
+			st.add_new_line;
 			if feature_name /= Void then
-				st.add_string ("%NFeature name: ");
-				st.add_string (feature_name);
-				st.add_new_line;
+				st.add_string ("Feature name: ");
+				st.add_string (feature_name)
 			else
-				st.add_string ("%NFeature: invariant%N");
+				st.add_string ("Feature: invariant")
 			end;
-			build_explain (st);
+			st.add_new_line;
+			build_explain (st)
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

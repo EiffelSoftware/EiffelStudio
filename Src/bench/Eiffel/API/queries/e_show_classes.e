@@ -64,7 +64,8 @@ feature -- Execution
 						a_classi.append_name (structured_text)
 					end;
 					structured_text.add_new_line;
-					structured_text.add_string ("%T-- Cluster: ");
+					structured_text.add_indent;
+					structured_text.add_string ("-- Cluster: ");
 					structured_text.add_string (a_classi.cluster.cluster_name);
 					structured_text.add_new_line;
 					sorted_classes.forth

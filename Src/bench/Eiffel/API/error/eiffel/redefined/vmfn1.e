@@ -46,7 +46,8 @@ feature -- Output
 			a_feature.append_signature (st, a_feature.written_class);
 			st.add_string (" Version from: ");
 			a_feature.written_class.append_name (st);
-			st.add_string ("%NFeature: ");
+			st.add_new_line;
+			st.add_string ("Feature: ");
 			inherited_feature.append_signature (st, inherited_feature.written_class);
 			st.add_string (" inherited from: ");
 			parent.append_name (st);

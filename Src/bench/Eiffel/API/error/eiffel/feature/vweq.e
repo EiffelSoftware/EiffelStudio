@@ -33,7 +33,8 @@ feature -- Output
 		do
 			st.add_string ("Left-hand type: ");
 			left_type.append_to (st);
-			st.add_string ("%NRight-hand type: ");
+			st.add_new_line;
+			st.add_string ("Right-hand type: ");
 			right_type.append_to (st);
 			st.add_new_line
 		end

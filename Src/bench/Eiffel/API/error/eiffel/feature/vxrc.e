@@ -26,10 +26,11 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if is_deferred then
-				st.add_string ("Kind of routine: deferred%N");
+				st.add_string ("Kind of routine: deferred")
 			else
-				st.add_string ("Kind of routine: external%N");
+				st.add_string ("Kind of routine: external")
 			end;
+			st.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

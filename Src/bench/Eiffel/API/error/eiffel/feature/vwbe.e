@@ -30,7 +30,8 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 		do
 			st.add_string (where);
-			st.add_string ("%NExpression type: ");
+			st.add_new_line;
+			st.add_string ("Expression type: ");
 			type.append_to (st);
 			st.add_new_line;
 		end;

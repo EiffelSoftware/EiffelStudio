@@ -51,7 +51,8 @@ feature -- Output
 		do
 			st.add_string ("Invalid feature name: ");
 			st.add_string (feature_name);
-			st.add_string ("%NIn Redefine clause for parent: ");
+			st.add_new_line;
+			st.add_string ("In Redefine clause for parent: ");
 			parent.append_name (st);
 			st.add_new_line;
 		end;

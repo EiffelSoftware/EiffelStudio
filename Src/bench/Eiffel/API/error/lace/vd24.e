@@ -26,7 +26,8 @@ feature -- Output
 			put_class_name (st);
 			st.add_string ("First cluster: ");
 			st.add_string (other_cluster.cluster_name);
-			st.add_string ("%NSecond cluster: ");
+			st.add_new_line;
+			st.add_string ("Second cluster: ");
 			st.add_string (cluster.cluster_name);
 			st.add_new_line;
 		end;

@@ -51,19 +51,24 @@ feature -- Output
 			st.add_string ("Class: ");
 			associated_class.append_name (st);
 			if a_feature /= Void then
-				st.add_string ("%NFeature: ");
+				st.add_new_line;
+				st.add_string ("Feature: ");
 				a_feature.append_name (st, associated_class);
 			else
-				st.add_string ("%NFeature: invariant")
+				st.add_new_line;
+				st.add_string ("Feature: invariant")
 			end;
-			st.add_string ("%NObsolete feature: ");
+			st.add_new_line;
+			st.add_string ("Obsolete feature: ");
 			obsolete_feature.append_signature 
 					(st, obsolete_feature.written_class);
 			st.add_string (" (class ");
 			obsolete_class.append_name (st);
-			st.add_string (")%NObsolete message: ");
-			st.add_string (obsolete_feature.obsolete_message);
+			st.add_string (")");
 			st.add_new_line;
+			st.add_string ("Obsolete message: ");
+			st.add_string (obsolete_feature.obsolete_message);
+			st.add_new_line
 		end;
 
 feature {ACCESS_FEAT_AS_B} -- Setting

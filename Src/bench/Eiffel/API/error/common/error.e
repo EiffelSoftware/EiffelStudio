@@ -74,7 +74,8 @@ feature -- Output
 			if subcode /= 0 then
 				st.add_char ('(');
 				st.add_int (subcode);
-				st.add_string (")%N");
+				st.add_string (")");
+				st.add_new_line
 			else
 				st.add_new_line;
 			end;
@@ -109,12 +110,19 @@ feature -- Output
 				end;
 				file.close;
 			else
-				st.add_string ("%NNo help available for this error%N%
-							%(cannot read file: ");
+				st.add_new_line;
+				st.add_string ("No help available for this error");
+				st.add_new_line;
+				st.add_string ("(cannot read file: ");
 				st.add_string (file_name);
-				st.add_string (")%N%
-							%%NAn error message should always be available.%N%
-							%Please contact ISE.%N%N");
+				st.add_string (")");
+				st.add_new_line;
+				st.add_new_line;
+				st.add_string ("An error message should always be available.");
+				st.add_new_line;
+				st.add_string ("Please contact ISE.");
+				st.add_new_line;
+				st.add_new_line
 			end;
 		end;
 

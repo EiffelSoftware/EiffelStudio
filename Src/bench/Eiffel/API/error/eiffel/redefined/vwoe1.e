@@ -44,7 +44,8 @@ feature -- Output
 		do
 			st.add_string ("Formal type: ");
 			formal_type.append_to (st);
-			st.add_string ("%NActual type: ");
+			st.add_new_line;
+			st.add_string ("Actual type: ");
 			actual_type.append_to (st);
 			st.add_new_line;
 		end;

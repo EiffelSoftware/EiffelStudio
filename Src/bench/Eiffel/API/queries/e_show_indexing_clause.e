@@ -69,7 +69,7 @@ feature -- Execution
 			until
 				sorted_class_names.after
 			loop
-				structured_text.add_string ("%T");
+				structured_text.add_indent;
 				a_classi := classes.item (sorted_class_names.item);
 				a_class := a_classi.compiled_eclass;
 				if a_class /= Void then
@@ -110,7 +110,9 @@ feature -- Execution
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							structured_text.add_string ("%N%T%T");
+							structured_text.add_new_line;
+							structured_text.add_indent;
+							structured_text.add_indent;
 							structured_text.add_string (index_tag);
 							structured_text.add_string (": ")
 							index_list := index.index_list;

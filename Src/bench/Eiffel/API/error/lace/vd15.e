@@ -26,13 +26,14 @@ feature -- Output
 		do
 			st.add_string ("Option: ");
 			st.add_string (option_name);
+			st.add_new_line;
 			if option_value /= Void then
-				st.add_string ("%NInvalid option value: ");
+				st.add_string ("Invalid option value: ");
 				st.add_string (option_value);
-				st.add_new_line
 			else
-				st.add_string ("%NNo option value%N");
+				st.add_string ("No option value");
 			end;
+			st.add_new_line
 		end;
 
 feature {OPTION_SD} -- Setting

@@ -58,7 +58,9 @@ feature -- Execution
 						if feat /= Void then
 							class_name := e_class.name;
 							feat.append_signature (structured_text, e_class);
-							structured_text.add_string ("%N%TFrom class ");
+							structured_text.add_new_line;
+							structured_text.add_indent;
+							structured_text.add_string ("From class ");
 							e_class.append_signature (structured_text);
 							structured_text.add_new_line;
 						end

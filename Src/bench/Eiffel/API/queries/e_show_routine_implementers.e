@@ -48,9 +48,12 @@ feature -- Execution
 				i > rout_id_set.count
 			loop
 				rout_id := rout_id_set.item (i);
-				structured_text.add_string ("%NClass history branch #");
+				structured_text.add_new_line;
+				structured_text.add_string ("Class history branch #");
 				structured_text.add_int (i);
-				structured_text.add_string ("%N-----------------------%N");
+				structured_text.add_new_line;
+				structured_text.add_string ("-----------------------");
+				structured_text.add_new_line;
 				from
 					classes.start;
 				until

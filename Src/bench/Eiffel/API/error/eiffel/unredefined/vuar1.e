@@ -30,20 +30,19 @@ feature -- Output
 		do
 			if called_feature /= Void then
 				print_called_feature (st);
-				st.add_string ("%NNumber of actuals: ");
+				st.add_new_line;
+				st.add_string ("Number of actuals: ");
 				st.add_int (argument_count);
 				st.add_string (" Number of formals: ");
 				st.add_int (called_feature.argument_count);
-				st.add_new_line;
 			elseif called_local /= Void then
 				st.add_string ("Local variable name: ");
 				st.add_string (called_local);
-				st.add_new_line
 			elseif called_arg /= Void then
 				st.add_string ("Argument name: ");
 				st.add_string (called_arg);
-				st.add_new_line
 			end;
+			st.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

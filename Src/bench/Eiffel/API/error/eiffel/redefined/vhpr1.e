@@ -31,7 +31,8 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		do
-			st.add_string ("Names of classes involved in cycle:%N");
+			st.add_string ("Names of classes involved in cycle:");
+			st.add_new_line;
 			from
 				involved_classes.start
 			until

@@ -31,17 +31,17 @@ feature {NONE} -- Implementation
 
 	displayed: LINKED_LIST [E_CLASS];
 
-	tabs (i: INTEGER): STRING is
+	add_tabs (st:STRUCTURED_TEXT; i: INTEGER) is
+			-- Add `i' tabs to `structured_text'.
 		local
 			j: INTEGER
 		do
 			from
 				j := 1;
-				!!Result.make (i)
 			until
 				j > i
 			loop
-				Result.append_character ('%T');
+				st.add_indent;
 				j := j + 1
 			end;
 		end;
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 					descendants.after
 				loop
 					descendant_class := descendants.item;
-					st.add_string (tabs (i));
+					add_tabs (st, i);
 					descendant_class.append_signature (st);
 					if displayed.has (descendant_class) then
 						if not descendant_class.descendants.empty then

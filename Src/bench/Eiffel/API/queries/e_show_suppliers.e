@@ -26,7 +26,9 @@ feature -- Output
 		do
 			structured_text.add_string ("Suppliers of class ");
 			current_class.append_signature (structured_text);
-			structured_text.add_string (":%N%N");
+			structured_text.add_string (":");
+			structured_text.add_new_line;
+			structured_text.add_new_line;
 			from	
 				suppliers := sorted_list (current_class.suppliers.e_classes);
 				suppliers.start
@@ -35,7 +37,7 @@ feature -- Output
 			loop
 				a_supplier := suppliers.item.compiled_eclass;
 				if (current_class /= a_supplier) then
-					structured_text.add_char ('%T');
+					structured_text.add_indent;
 					a_supplier.append_signature (structured_text);
 					structured_text.add_new_line
 				end;

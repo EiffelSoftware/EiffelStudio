@@ -25,7 +25,9 @@ feature -- Execution
 		do
 			structured_text.add_string ("Clients of class ");
 			current_class.append_signature (structured_text);
-			structured_text.add_string (":%N%N");
+			structured_text.add_string (":");
+			structured_text.add_new_line;
+			structured_text.add_new_line;
 			from	
 				clients := sorted_list (current_class.clients);
 				clients.start;
@@ -34,7 +36,7 @@ feature -- Execution
 			loop
 				a_client := clients.item.compiled_eclass;
 				if (current_class /= a_client) then
-					structured_text.add_char ('%T');
+					structured_text.add_indent;
 					a_client.append_signature (structured_text);
 					structured_text.add_new_line;
 				end;

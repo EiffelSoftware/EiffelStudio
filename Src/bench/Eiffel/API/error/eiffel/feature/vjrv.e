@@ -30,7 +30,8 @@ feature -- Output
 		do
 			st.add_string ("Target name: ");
 			st.add_string (target_name);
-			st.add_string ("%NTarget type: ");
+			st.add_new_line;
+			st.add_string ("Target type: ");
 			target_type.append_to (st);
 		end;
 

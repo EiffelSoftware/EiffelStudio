@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			until
 				i > indent
 			loop
-				st.add_string ("%T");
+				st.add_indent;
 				i := i + 1
 			end
 		end;

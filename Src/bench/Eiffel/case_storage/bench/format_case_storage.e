@@ -50,7 +50,9 @@ feature -- Execution
 					if not d.exists or else not d.is_readable then
 						output_window.put_string ("Directory ");
 						output_window.put_string (case_storage_path);
-						output_window.put_string ("%Nis not readable. Please check permission.%N")
+						output_window.new_line;
+						output_window.put_string ("is not readable. Please check permission.")
+						output_window.new_line;
 					else
 						!! fn.make_from_string (Case_storage_path);
 						fn.set_file_name (System_name);	
@@ -63,16 +65,20 @@ feature -- Execution
 							convert_to_case_format;
 							remove_old_classes;
 							clear_shared_case_information;
-							output_window.put_string ("Finished storing EiffelCase project.%N");
+							output_window.put_string ("Finished storing EiffelCase project.");
 						else
-							output_window.put_string ("EiffelCase project is up to date.%N");
+							output_window.put_string ("EiffelCase project is up to date.");
 						end;
+						output_window.new_line;
 					end;
 					output_window.display
 				else
-					output_window.put_string ("Project is in an unstable state.%N");
-					output_window.put_string ("Make sure that the system has been%N");
-					output_window.put_string ("successfully compiled.%N");
+					output_window.put_string ("Project is in an unstable state.");
+					output_window.new_line;
+					output_window.put_string ("Make sure that the system has been");
+					output_window.new_line;
+					output_window.put_string ("successfully compiled.");
+					output_window.new_line;
 					output_window.display
 				end;
 			else

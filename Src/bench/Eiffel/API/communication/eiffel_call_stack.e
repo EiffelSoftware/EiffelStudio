@@ -32,9 +32,14 @@ feature -- Output
 	display_stack (st: STRUCTURED_TEXT) is
 			-- Display callstack in `st'.
 		do
-			st.add_string ("%NCall stack:%N%N");
-			st.add_string ("Object		  Class		  Routine%N");
-			st.add_string ("------		  -----		  -------%N");
+			st.add_new_line;
+			st.add_string ("Call stack:");
+			st.add_new_line;
+			st.add_new_line;
+			st.add_string ("Object		  Class		  Routine");
+			st.add_new_line;
+			st.add_string ("------		  -----		  -------");
+			st.add_new_line;
 			from
 				start
 			until

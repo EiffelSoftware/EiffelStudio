@@ -49,10 +49,10 @@ feature -- Output
 			if e_feature /= Void then
 				st.add_string ("In feature: ");
 				e_feature.append_name (st, e_feature.written_class);
-				st.add_new_line;
 			else
-				st.add_string ("In inheritance clause%N");
+				st.add_string ("In inheritance clause");
 			end;
+			st.add_new_line;
 			if entity_name /= Void then
 				st.add_string ("Entity name: ");
 				st.add_string (entity_name);
@@ -60,7 +60,8 @@ feature -- Output
 			end;
 			st.add_string ("Invalid type: ");
 			type.append_to (st);
-			st.add_string ("%NBase class: ");
+			st.add_new_line;
+			st.add_string ("Base class: ");
 			base_class.append_signature (st);
 			st.add_new_line;
 		end;

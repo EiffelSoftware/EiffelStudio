@@ -49,18 +49,22 @@ feature -- Output
 			nclass := new_feature.written_class;
 			st.add_string ("First feature: ");
 			old_feature.append_signature (st, oclass);
-			st.add_string ("%NVersion from: ");
+			st.add_new_line;
+			st.add_string ("Version from: ");
 			oclass.append_name (st);
-			st.add_string ("%NSecond feature: ");
+			st.add_new_line;
+			st.add_string ("Second feature: ");
 			new_feature.append_signature (st, nclass);
-			st.add_string ("%NVersion from: ");
+			st.add_new_line;
+			st.add_string ("Version from: ");
 			nclass.append_name (st);
 			st.add_new_line;
 		end;
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Different numbers of arguments%N");
+			st.add_string ("Different numbers of arguments");
+			st.add_new_line;
 			print_signatures (st);
 		end;
 

@@ -348,13 +348,11 @@ feature -- Access
 			Result := name.hash_code
 		end;
 
-	callers (in_class: E_CLASS; 
-			cl_class: E_CLASS): SORTED_TWO_WAY_LIST [STRING] is
-			-- Callers for feature from class `in_class'
+	callers (cl_class: E_CLASS): SORTED_TWO_WAY_LIST [STRING] is
+			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'
 		require
-			valid_in_class: in_class /= Void;
-			valid_cl_class: in_class.clients.has (cl_class)
+			valid_cl_class: associated_class.clients.has (cl_class)
 		local
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;
@@ -363,7 +361,7 @@ feature -- Access
 		do
 			!! Result.make;
 			dep := Depend_server.item (cl_class.id);
-			!! current_d.make (in_class.id, id);
+			!! current_d.make (associated_class.id, id);
 			from
 				-- Loop through the features of each client
 				-- of current_class.
@@ -536,6 +534,16 @@ feature {NONE} -- Implementation
     associated_class_id: CLASS_ID
             -- Class id where the feature was evaluated in
 
+	is_dynamic: BOOLEAN is
+			-- Is the feature dynamic?
+		do
+			if Compilation_modes.is_extending then
+				Result := associated_feature_i.is_dynamic
+			end
+		end
+
+feature {COMPILER_EXPORTER} -- Implementation
+
 	associated_feature_i: FEATURE_I is
 			-- Assocated feature_i
 		local
@@ -544,14 +552,6 @@ feature {NONE} -- Implementation
 			s_table := associated_class.compiled_info.feature_table.origin_table;
 			Result := s_table.item (rout_id_set.first)
 		end;
-
-	is_dynamic: BOOLEAN is
-			-- Is the feature dynamic?
-		do
-			if Compilation_modes.is_extending then
-				Result := associated_feature_i.is_dynamic
-			end
-		end
 
 feature {FEATURE_I} -- Setting
 

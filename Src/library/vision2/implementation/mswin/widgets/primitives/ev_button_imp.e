@@ -67,7 +67,7 @@ inherit
 	WEL_BITMAP_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			shown as is_displayed,
@@ -125,6 +125,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	text: STRING is
 			-- Return text of button, Void if button has no text.
@@ -209,24 +222,6 @@ feature -- Element change
 			{WEL_BITMAP_BUTTON} Precursor (txt)
 			set_default_minimum_size
 		end
-
-feature -- Event - command association
-
---|FIXME	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add 'cmd' to the list of commands to be executed
---|FIXME			-- the button is pressed.
---|FIXME		do
---|FIXME			add_command (Cmd_click, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_click_commands is	
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the button is pressed.
---|FIXME		do
---|FIXME			remove_command (Cmd_click)
---|FIXME		end
 
 feature {NONE} -- WEL Implementation
 
@@ -317,6 +312,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/02/23 20:23:41  rogers
+--| Added wel parenting compiler hack. Removed old command association.
+--|
 --| Revision 1.38  2000/02/19 05:58:51  oconnor
 --| removed old command stuff
 --|

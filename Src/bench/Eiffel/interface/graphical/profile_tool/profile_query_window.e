@@ -21,8 +21,11 @@ inherit
 
 	WINDOW_ATTRIBUTES
 
+	WINDOWS
+
 creation
 	make
+	
 
 feature {NONE} -- Initialization
 
@@ -53,17 +56,38 @@ feature -- Access
 			fn_not_void: fn /= Void;
 			fn_not_empty: not fn.empty
 		local
-			ptf: PLAIN_TEXT_FILE
+			ptf: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
+			aok: BOOLEAN
 		do
-			!! ptf.make_create_read_write (fn);
-			ptf.putstring ("Options:%N========%N%N");
-			ptf.putstring (profiler_options.image);
-			ptf.putstring ("%NQuery:%N======%N%N");
-			ptf.putstring (profiler_query.image);
-			ptf.putstring ("%NResults:%N========%N%N");
-			ptf.putstring (text_window.text);
-			ptf.new_line;
-			ptf.close
+			!! ptf.make (fn)
+			aok := True
+			if ptf.exists and then not ptf.is_plain then
+				aok := False
+				warner (Current).gotcha_call (Warning_messages.w_Not_a_plain_file (fn))
+			elseif ptf.exists and then ptf.is_writable then
+				aok := False
+				warner (Current).custom_call (Void, 
+					Warning_messages.w_File_exists (fn), 
+					Interface_names.b_Overwrite, Void, Interface_names.b_Cancel)
+			elseif ptf.exists and then not ptf.is_writable then
+				aok := False
+				warner (Current).gotcha_call (Warning_messages.w_Not_writable (fn))
+			elseif not ptf.is_creatable then
+				aok := False
+				warner (Current).gotcha_call (Warning_messages.w_Not_creatable (fn))
+			end
+
+			if aok then
+				!! ptf.make_create_read_write (fn);
+				ptf.putstring ("Options:%N========%N%N");
+				ptf.putstring (profiler_options.image);
+				ptf.putstring ("%NQuery:%N======%N%N");
+				ptf.putstring (profiler_query.image);
+				ptf.putstring ("%NResults:%N========%N%N");
+				ptf.putstring (text_window.text);
+				ptf.new_line;
+				ptf.close
+			end
 		end
 
 feature -- Status Setting

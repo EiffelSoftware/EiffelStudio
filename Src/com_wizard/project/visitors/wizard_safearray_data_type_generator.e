@@ -12,8 +12,7 @@ inherit
 
 feature -- Basic operations
 
-	process (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Process SAFEARRAY
 		require
 			valid_descriptor: a_safearray_descriptor /= Void
@@ -47,114 +46,73 @@ feature -- Basic operations
 			c_type.append ("SAFEARRAY * ")
 			local_counter := counter (a_safearray_descriptor)
 
-			if 
-				is_unsigned_char (an_element_type) or
-				is_character (an_element_type)
-			then
+			if is_unsigned_char (an_element_type) or is_character (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_char")
 				ec_function_name.append ("ccom_ec_safearray_char")
 				eiffel_type.append ("ECOM_ARRAY %(CHARACTER%)")
-
-			elseif 
-				is_integer2 (an_element_type) or 
-				is_unsigned_short (an_element_type)
-			then
+			elseif is_integer2 (an_element_type) or is_unsigned_short (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_short")
 				ec_function_name.append ("ccom_ec_safearray_short")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-
-			elseif 
-				is_integer4 (an_element_type) or
-				is_unsigned_long (an_element_type) or
-				element_visitor.is_enumeration or
-				is_int (an_element_type) or
-				is_unsigned_int (an_element_type)
-			then
+			elseif is_integer4 (an_element_type) or is_unsigned_long (an_element_type) or element_visitor.is_enumeration or is_int (an_element_type) or is_unsigned_int (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_long")
 				ec_function_name.append ("ccom_ec_safearray_long")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
-
-			elseif 
-				is_long_long (an_element_type) 
-			then
+			elseif is_long_long (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_int64")
 				ec_function_name.append ("ccom_ec_safearray_int64")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER_64%)")
-
-			elseif 
-				is_unsigned_long_long (an_element_type) 
-			then
+			elseif is_unsigned_long_long (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_int64")
 				ec_function_name.append ("ccom_ec_safearray_uint64")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER_64%)")
-								
 			elseif is_real4 (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_float")
 				ec_function_name.append ("ccom_ec_safearray_float")
 				eiffel_type.append ("ECOM_ARRAY %(REAL%)")
-
 			elseif is_real8 (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_double")
 				ec_function_name.append ("ccom_ec_safearray_double")
 				eiffel_type.append ("ECOM_ARRAY %(DOUBLE%)")
-
 			elseif is_boolean (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_boolean")
 				ec_function_name.append ("ccom_ec_safearray_boolean")
 				eiffel_type.append ("ECOM_ARRAY %(BOOLEAN%)")
-
 			elseif is_date (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_date")
 				ec_function_name.append ("ccom_ec_safearray_date")
 				eiffel_type.append ("ECOM_ARRAY %(DATE_TIME%)")
-
-			elseif 
-				is_error (an_element_type) or
-				is_hresult (an_element_type)
-			then
+			elseif is_error (an_element_type) or is_hresult (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_hresult")
 				ec_function_name.append ("ccom_ec_safearray_hresult")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_HRESULT%)")
-
 			elseif is_variant (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_variant")
 				ec_function_name.append ("ccom_ec_safearray_variant")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_VARIANT%)")
-
 			elseif is_currency (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_currency")
 				ec_function_name.append ("ccom_ec_safearray_currency")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_CURRENCY%)")
-
 			elseif is_bstr (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_bstr")
 				ec_function_name.append ("ccom_ec_safearray_bstr")
 				eiffel_type.append ("ECOM_ARRAY %(STRING%)")
-
 			elseif is_dispatch (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_dispatch")
 				ec_function_name.append ("ccom_ec_safearray_dispatch")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_AUTOMATION_INTERFACE%)")
-
-			elseif 
-				is_unknown (an_element_type) 
-			then
+			elseif is_unknown (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_unknown")
 				ec_function_name.append ("ccom_ec_safearray_unknown")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_UNKNOWN_INTERFACE%)")
-
 			elseif is_decimal (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_decimal")
 				ec_function_name.append ("ccom_ec_safearray_decimal")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_DECIMAL%)")
-
-			elseif
-				element_visitor.is_interface_pointer or 
-				element_visitor.is_coclass_pointer
-			then
+			elseif element_visitor.is_interface_pointer or element_visitor.is_coclass_pointer then
 				need_generate_ce := True
 				need_generate_ec := True
-
 				pointed_data_type_descriptor ?= a_safearray_descriptor.array_element_descriptor
 				check
 					non_void_pointed_descriptor: pointed_data_type_descriptor /= Void
@@ -164,35 +122,23 @@ feature -- Basic operations
 				eiffel_type.append (Open_bracket)
 				eiffel_type.append (element_visitor.eiffel_type)
 				eiffel_type.append (Close_bracket)
-
 				ce_function_name.append ("ccom_ce_safearray_interface")
 				ce_function_name.append_integer (local_counter)
-
 				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
-
 				ce_function_return_type := Eif_reference.twin
-
 				ce_function_body := safearray_interface_ce_function_body (pointed_data_type_descriptor)
-
 				ec_function_name.append ("ccom_ec_safearray_interface")
 				ec_function_name.append_integer (local_counter)
-
 				ec_function_return_type := c_type.twin
-
 				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
-
 				ec_function_body := safearray_interface_ec_function_body (pointed_data_type_descriptor)
-
-			elseif
-				element_visitor.is_structure
-			then
+			elseif element_visitor.is_structure then
 				need_generate_ce := True
 				need_generate_ec := True
-
 				user_defined_element_descriptor ?= a_safearray_descriptor.array_element_descriptor
 				check 
 					non_void_user_defined_element_descriptor: user_defined_element_descriptor /= Void
@@ -202,35 +148,23 @@ feature -- Basic operations
 				eiffel_type.append (Open_bracket)
 				eiffel_type.append (element_visitor.eiffel_type)
 				eiffel_type.append (Close_bracket)
-
 				ce_function_name.append ("ccom_ce_safearray_structure")
 				ce_function_name.append_integer (local_counter)
-
 				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
-
 				ce_function_return_type := Eif_reference.twin
-
 				ce_function_body := safearray_record_ce_function_body (user_defined_element_descriptor)
-
 				ec_function_name.append ("ccom_ec_safearray_structure")
 				ec_function_name.append_integer (local_counter)
-
 				ec_function_return_type := c_type.twin
-
 				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
-
 				ec_function_body := safearray_record_ec_function_body (user_defined_element_descriptor)
-
-			elseif
-				is_safearray (an_element_type)
-			then
+			elseif is_safearray (an_element_type) then
 				need_generate_ce := True
 				need_generate_ec := True
-
 				element_safearray_descriptor ?= a_safearray_descriptor.array_element_descriptor
 				check 
 					non_void_safearray_element_descriptor: element_safearray_descriptor /= Void
@@ -240,29 +174,20 @@ feature -- Basic operations
 				eiffel_type.append (Open_bracket)
 				eiffel_type.append (element_visitor.eiffel_type)
 				eiffel_type.append (Close_bracket)
-
 				ce_function_name.append ("ccom_ce_safearray_safearray")
 				ce_function_name.append_integer (local_counter)
-
 				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
-
 				ce_function_return_type := Eif_reference.twin
-
 				ce_function_body := safearray_safearray_ce_function_body (element_safearray_descriptor)
-
 				ec_function_name.append ("ccom_ec_safearray_safearray")
 				ec_function_name.append_integer (local_counter)
-
 				ec_function_return_type := c_type.twin
-
 				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
-
 				ec_function_body := safearray_safearray_ec_function_body (element_safearray_descriptor)
-
 			else
 				create tmp_string.make (100)
 				tmp_string.append ("Unknown type of SAFEARRAY element: ")
@@ -277,18 +202,18 @@ feature -- Basic operations
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_string: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_element_c_type, l_element_eiffel_type, tmp_string: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 			library_guid, element_guid: ECOM_GUID
 			library_guid_str, element_guid_str: STRING
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 		do
-			a_visitor := a_record_descriptor.visitor
+			l_visitor := a_record_descriptor.visitor
 			check
-				is_structure: a_visitor.is_structure
+				is_structure: l_visitor.is_structure
 			end
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
 			library_guid := a_record_descriptor.library_descriptor.guid
 			library_guid_str := library_guid.to_definition_string
 			element_guid := a_record_descriptor.library_descriptor.descriptors.item (a_record_descriptor.type_descriptor_index).guid
@@ -304,97 +229,109 @@ feature -- Basic operations
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (a_lcid)
 
-			Result :=
-				"%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T%
-				%EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1, eif_element_tid = -1;%R%N%T%
-				%EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T%
-				%EIF_INTEGER * tmp_index = 0;%R%N%T%
-				%int dimensions = 0, loop_control = 0, i = 0;%R%N%T%
-				%EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T%
-				%EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T%
-				%SAFEARRAYBOUND * array_bound = 0;%R%N%T%
-				%SAFEARRAY * c_safe_array = 0;%R%N%T%
-				%EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T%
-				%EIF_PROCEDURE p_array_create = 0, p_array_put = 0, p_set_shared = 0;%R%N%T%
-				%long * c_index = 0;%R%N%T" +
-				tmp_element_c_type + " * an_element = 0;%R%N%T%
-				%HRESULT hr;%R%N%T%
-				%IRecordInfo * pRecInfo = 0;%R%N%T%
-				%%R%N%T%
-				%eif_safe_array = eif_protect (a_ref);%R%N%T%
-				%ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type + "%)%");%R%N%T%
-				%int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%
-				%eif_element_tid = eif_type_id (%"" + tmp_element_eiffel_type + "%");%R%N%T%
-				%dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T%
-				%f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T%
-				%tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T%
-				%lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T%
-				%%R%N%T%
-				%tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T%
-				%element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T%
-				%%R%N%T%
-				%tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T%
-				%upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T%
-				%%R%N%T%
-				%array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T%
-				%for (i = 0; i < dimensions; i++)%R%N%T%
-				%%<%R%N%T%T%
-					%array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T%
-					%array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T%
-				%%>%R%N%T%
-				%GUID library_guid = " + library_guid_str + ";%R%N%T%
-				%GUID element_guid = " + element_guid_str + ";%R%N%T%
-				%hr = GetRecordInfoFromGuids (library_guid, " + tmp_string + ", element_guid, &pRecInfo);%R%N%T%
-				%if (FAILED (hr))%
-				%%<%R%N%T%T%
-					%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%
-				%%>%R%N%T%
-				%c_safe_array = SafeArrayCreateEx (VT_RECORD, dimensions, array_bound, pRecInfo);%R%N%T%
-				%if (c_safe_array == NULL)%R%N%T%
-				%%<%R%N%T%T%
-					%enomem ();%R%N%T%
-				%%>%R%N%T%
-				%f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T%
-				%p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T%
-				%p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T%
-				%p_set_shared = eif_procedure (%"set_shared%", eif_element_tid);%R%N%T%
-				%eif_index = eif_create (int_array_tid);%R%N%T%
-				%R%Nstcall = 0;%R%N%T%
-				%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T%
-					%(eif_access (eif_index), 1, dimensions);%R%N%T%
-				%c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T%
-				%tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T%
-				%memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T%
-				%%R%N%T%
-				%do%R%N%T%
-				%%<%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T%
-					%for (i = 0; i < dimensions; i++)%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T%
-					%%>%R%N%T%T%
-					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T%
-						%(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T%
-					%(FUNCTION_CAST (void, (EIF_REFERENCE)) p_set_shared) (eif_access (eif_element));%R%N%T%T%
-					%an_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%R%N%T%T%
-					%eif_wean (eif_element);%R%N%T%T%
-					%hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T%
-					%if (FAILED (hr))%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%
-					%%>%R%N%T%T%
-					%loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T%
-				%%> while (loop_control != 0);%R%N%T%
-				%free (array_bound);%R%N%T%
-				%free (c_index);%R%N%T%
-				%free (tmp_index);%R%N%T%
-				%eif_wean (tmp_object1);%R%N%T%
-				%eif_wean (tmp_object2);%R%N%T%
-				%eif_wean (tmp_object3);%R%N%T%
-				%eif_wean (eif_index);%R%N%T%
-				%eif_wean (eif_safe_array);%R%N%T%
-				%return c_safe_array;"
-						
+			create Result.make (2048)
+			Result.append ("%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1, eif_element_tid = -1;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * tmp_index = 0;%R%N%T")
+			Result.append ("int dimensions = 0, loop_control = 0, i = 0;%R%N%T")
+			Result.append ("EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T")
+			Result.append ("EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T")
+			Result.append ("SAFEARRAYBOUND * array_bound = 0;%R%N%T")
+			Result.append ("SAFEARRAY * c_safe_array = 0;%R%N%T")
+			Result.append ("EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T")
+			Result.append ("EIF_PROCEDURE p_array_create = 0, p_array_put = 0, p_set_shared = 0;%R%N%T")
+			Result.append ("long * c_index = 0;%R%N%T")
+			Result.append (l_element_c_type)
+			Result.append (" * an_element = 0;%R%N%T")
+			Result.append ("HRESULT hr;%R%N%T")
+			Result.append ("IRecordInfo * pRecInfo = 0;%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("eif_safe_array = eif_protect (a_ref);%R%N%T")
+			Result.append ("ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T")
+			Result.append ("int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T")
+			Result.append ("eif_element_tid = eif_type_id (%"")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%");%R%N%T")
+			Result.append ("dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T")
+			Result.append ("f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T")
+			Result.append ("tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T")
+			Result.append ("element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T")
+			Result.append ("array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("GUID library_guid = ")
+			Result.append (library_guid_str)
+			Result.append (";%R%N%T")
+			Result.append ("GUID element_guid = ")
+			Result.append (element_guid_str)
+			Result.append (";%R%N%T")
+			Result.append ("hr = GetRecordInfoFromGuids (library_guid, ")
+			Result.append (tmp_string)
+			Result.append (", element_guid, &pRecInfo);%R%N%T")
+			Result.append ("if (FAILED (hr))")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("c_safe_array = SafeArrayCreateEx (VT_RECORD, dimensions, array_bound, pRecInfo);%R%N%T")
+			Result.append ("if (c_safe_array == NULL)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("enomem ();%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T")
+			Result.append ("p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T")
+			Result.append ("p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T")
+			Result.append ("p_set_shared = eif_procedure (%"set_shared%", eif_element_tid);%R%N%T")
+			Result.append ("eif_index = eif_create (int_array_tid);%R%N%T")
+			Result.append ("R%Nstcall = 0;%R%N%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T")
+			Result.append ("(eif_access (eif_index), 1, dimensions);%R%N%T")
+			Result.append ("c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T")
+			Result.append ("tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T")
+			Result.append ("memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("do%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T")
+			Result.append ("(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) p_set_shared) (eif_access (eif_element));%R%N%T%T")
+			Result.append ("an_element = (")
+			Result.append (l_element_c_type)
+			Result.append (" *) eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%R%N%T%T")
+			Result.append ("eif_wean (eif_element);%R%N%T%T")
+			Result.append ("hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T")
+			Result.append ("if (FAILED (hr))%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T")
+			Result.append ("%> while (loop_control != 0);%R%N%T")
+			Result.append ("free (array_bound);%R%N%T")
+			Result.append ("free (c_index);%R%N%T")
+			Result.append ("free (tmp_index);%R%N%T")
+			Result.append ("eif_wean (tmp_object1);%R%N%T")
+			Result.append ("eif_wean (tmp_object2);%R%N%T")
+			Result.append ("eif_wean (tmp_object3);%R%N%T")
+			Result.append ("eif_wean (eif_index);%R%N%T")
+			Result.append ("eif_wean (eif_safe_array);%R%N%T")
+			Result.append ("return c_safe_array;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -405,13 +342,13 @@ feature -- Basic operations
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_string: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_element_c_type, l_element_eiffel_type, tmp_string: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 		do
-			a_visitor := a_safearray_descriptor.visitor
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
+			l_visitor := a_safearray_descriptor.visitor
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
 
 			create tmp_string.make (100)
 			tmp_string.append_integer (major_ver_number)
@@ -420,100 +357,99 @@ feature -- Basic operations
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (a_lcid)
 
-			Result :=
-				"%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T%
-				%EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1;%R%N%T%
-				%EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T%
-				%EIF_INTEGER * tmp_index = 0;%R%N%T%
-				%int dimensions = 0, loop_control = 0, i = 0;%R%N%T%
-				%EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T%
-				%EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T%
-				%SAFEARRAYBOUND * array_bound = 0;%R%N%T%
-				%SAFEARRAY * c_safe_array = 0;%R%N%T%
-				%EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T%
-				%EIF_PROCEDURE p_array_create = 0, p_array_put = 0;%R%N%T%
-				%long * c_index = 0;%R%N%T" +
-				tmp_element_c_type + " an_element = 0;%R%N%T%
-				%HRESULT hr;%R%N%T%
-				%%R%N%T%
-				%eif_safe_array = eif_protect (a_ref);%R%N%T%
-				%ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type + "%)%");%R%N%T%
-				%int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%
-				%dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T%
-				%f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T%
-				%tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T%
-				%lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T								%
-				%%R%N%T%
-				%tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T%
-				%element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T								%
-				%%R%N%T%
-				%tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T%
-				%upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T								%
-				%%R%N%T%
-				%array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T%
-				%for (i = 0; i < dimensions; i++)%R%N%T%
-				%%<%R%N%T%T%
-					%array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T%
-					%array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T%
-				%%>%R%N%T%
-				%c_safe_array = SafeArrayCreateEx ("
+			create Result.make (2048)
+			Result.append ("%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * tmp_index = 0;%R%N%T")
+			Result.append ("int dimensions = 0, loop_control = 0, i = 0;%R%N%T")
+			Result.append ("EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T")
+			Result.append ("EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T")
+			Result.append ("SAFEARRAYBOUND * array_bound = 0;%R%N%T")
+			Result.append ("SAFEARRAY * c_safe_array = 0;%R%N%T")
+			Result.append ("EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T")
+			Result.append ("EIF_PROCEDURE p_array_create = 0, p_array_put = 0;%R%N%T")
+			Result.append ("long * c_index = 0;%R%N%T")
+			Result.append (l_element_c_type)
+			Result.append (" an_element = 0;%R%N%T")
+			Result.append ("HRESULT hr;%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("eif_safe_array = eif_protect (a_ref);%R%N%T")
+			Result.append ("ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T")
+			Result.append ("int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T")
+			Result.append ("dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T")
+			Result.append ("f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T")
+			Result.append ("tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T								")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T")
+			Result.append ("element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T								")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T								")
+			Result.append ("%R%N%T")
+			Result.append ("array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T")
+			Result.append ("array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("c_safe_array = SafeArrayCreateEx (")
+			Result.append_integer (l_visitor.vt_type)
+			Result.append (", dimensions, array_bound, NULL);%R%N%T")
+			Result.append ("if (c_safe_array == NULL)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("enomem ();%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T")
+			Result.append ("p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T")
+			Result.append ("p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T")
+			Result.append ("eif_index = eif_create (int_array_tid);%R%N%T")
+			Result.append ("R%Nstcall = 0;%R%N%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T")
+			Result.append ("(eif_access (eif_index), 1, dimensions);%R%N%T")
+			Result.append ("c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T")
+			Result.append ("tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T")
+			Result.append ("memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("do%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T")
+			Result.append ("(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T")
+			Result.append ("an_element = ")
 
-				Result.append_integer (a_visitor.vt_type)
-
-				Result.append (", dimensions, array_bound, NULL);%R%N%T%
-				%if (c_safe_array == NULL)%R%N%T%
-				%%<%R%N%T%T%
-					%enomem ();%R%N%T%
-				%%>%R%N%T%
-				%f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T%
-				%p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T%
-				%p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T%
-				%eif_index = eif_create (int_array_tid);%R%N%T%
-				%R%Nstcall = 0;%R%N%T%
-				%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T%
-					%(eif_access (eif_index), 1, dimensions);%R%N%T%
-				%c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T%
-				%tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T%
-				%memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T%
-				%%R%N%T%
-				%do%R%N%T%
-				%%<%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T%
-					%for (i = 0; i < dimensions; i++)%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T%
-					%%>%R%N%T%T%
-					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T%
-						%(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T%
-					%an_element = ")
-
-					if a_visitor.need_generate_ec then
-						Result.append (Generated_ec_mapper)
-					else
-						Result.append (Ec_mapper)
-					end
-					Result.append (Dot)
-					Result.append (a_visitor.ec_function_name)
-
-					Result.append (" (eif_access (eif_element));%R%N%T%T%
-					%eif_wean (eif_element);%R%N%T%T%
-					%hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T%
-					%if (FAILED (hr))%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%
-					%%>%R%N%T%T%
-					%loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T%
-				%%> while (loop_control != 0);%R%N%T%
-				%free (array_bound);%R%N%T%
-				%free (c_index);%R%N%T%
-				%free (tmp_index);%R%N%T%
-				%eif_wean (tmp_object1);%R%N%T%
-				%eif_wean (tmp_object2);%R%N%T%
-				%eif_wean (tmp_object3);%R%N%T%
-				%eif_wean (eif_index);%R%N%T%
-				%eif_wean (eif_safe_array);%R%N%T%
-				%return c_safe_array;")
-						
+			if l_visitor.need_generate_ec then
+				Result.append (Generated_ec_mapper)
+			else
+				Result.append (Ec_mapper)
+			end
+			Result.append (".")
+			Result.append (l_visitor.ec_function_name)
+			Result.append (" (eif_access (eif_element));%R%N%T%T")
+			Result.append ("eif_wean (eif_element);%R%N%T%T")
+			Result.append ("hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T")
+			Result.append ("if (FAILED (hr))%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T")
+			Result.append ("%> while (loop_control != 0);%R%N%T")
+			Result.append ("free (array_bound);%R%N%T")
+			Result.append ("free (c_index);%R%N%T")
+			Result.append ("free (tmp_index);%R%N%T")
+			Result.append ("eif_wean (tmp_object1);%R%N%T")
+			Result.append ("eif_wean (tmp_object2);%R%N%T")
+			Result.append ("eif_wean (tmp_object3);%R%N%T")
+			Result.append ("eif_wean (eif_index);%R%N%T")
+			Result.append ("eif_wean (eif_safe_array);%R%N%T")
+			Result.append ("return c_safe_array;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -525,25 +461,25 @@ feature -- Basic operations
 		require
 			non_void_interface_descriptor: an_interface_pointer_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type: STRING
+			l_element_c_type, l_element_eiffel_type: STRING
 			tmp_string, tmp_element_ec_function: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 			library_guid, element_guid: ECOM_GUID
 			library_guid_str, element_guid_str: STRING
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 			an_interface_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 		do
-			a_visitor := an_interface_pointer_descriptor.visitor
+			l_visitor := an_interface_pointer_descriptor.visitor
 			check
-				is_interface_pointer: a_visitor.is_interface_pointer
+				is_interface_pointer: l_visitor.is_interface_pointer
 			end
 			an_interface_descriptor ?= an_interface_pointer_descriptor.pointed_data_type_descriptor
 			check
 				non_void_interface_descriptor: an_interface_descriptor /= Void
 			end
 
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
 			library_guid := an_interface_descriptor.library_descriptor.guid
 			library_guid_str := library_guid.to_definition_string
 			element_guid := an_interface_descriptor.library_descriptor.descriptors.item (an_interface_descriptor.type_descriptor_index).guid
@@ -553,11 +489,11 @@ feature -- Basic operations
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
 			
 			create tmp_element_ec_function.make (100)
-			if not a_visitor.need_generate_ce then
+			if not l_visitor.need_generate_ce then
 				tmp_element_ec_function.append (Ce_mapper)
 				tmp_element_ec_function.append (Dot)
 			end
-			tmp_element_ec_function.append (a_visitor.ec_function_name)
+			tmp_element_ec_function.append (l_visitor.ec_function_name)
 
 
 			create tmp_string.make (100)
@@ -567,88 +503,98 @@ feature -- Basic operations
 			tmp_string.append (Comma_space)
 			tmp_string.append_integer (a_lcid)
 
-			Result :=
-				"%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T%
-				%EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1, eif_element_tid = -1;%R%N%T%
-				%EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T%
-				%EIF_INTEGER * tmp_index = 0;%R%N%T%
-				%int dimensions = 0, loop_control = 0, i = 0;%R%N%T%
-				%EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T%
-				%EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T%
-				%SAFEARRAYBOUND * array_bound = 0;%R%N%T%
-				%SAFEARRAY * c_safe_array = 0;%R%N%T%
-				%EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T%
-				%EIF_PROCEDURE p_array_create = 0, p_array_put = 0;%R%N%T%
-				%long * c_index = 0;%R%N%T" +
-				tmp_element_c_type + " an_element = 0;%R%N%T%
-				%HRESULT hr;%R%N%T%
-				%%R%N%T%
-				%eif_safe_array = eif_protect (a_ref);%R%N%T%
-				%ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type + "%)%");%R%N%T%
-				%int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%
-				%eif_element_tid = eif_type_id (%"" + tmp_element_eiffel_type + "%");%R%N%T%
-				%dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T%
-				%f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T%
-				%tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T%
-				%lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T%
-				%%R%N%T%
-				%tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T%
-				%element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T%
-				%%R%N%T%
-				%tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T%
-				%upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T%
-				%%R%N%T%
-				%array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T%
-				%for (i = 0; i < dimensions; i++)%R%N%T%
-				%%<%R%N%T%T%
-					%array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T%
-					%array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T%
-				%%>%R%N%T%
-				%GUID element_guid = " + element_guid_str + ";%R%N%T%
-				%c_safe_array = SafeArrayCreateEx (VT_UNKNOWN, dimensions, array_bound, &element_guid);%R%N%T%
-				%if (c_safe_array == NULL)%R%N%T%
-				%%<%R%N%T%T%
-					%enomem ();%R%N%T%
-				%%>%R%N%T%
-				%f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T%
-				%p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T%
-				%p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T%
-				%eif_index = eif_create (int_array_tid);%R%N%T%
-				%R%Nstcall = 0;%R%N%T%
-				%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T%
-					%(eif_access (eif_index), 1, dimensions);%R%N%T%
-				%c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T%
-				%tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T%
-				%memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T%
-				%%R%N%T%
-				%do%R%N%T%
-				%%<%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T%
-					%for (i = 0; i < dimensions; i++)%R%N%T%T%
-					%%<%R%N%T%T%T	%
-						%c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T%
-					%%>%R%N%T%T%
-					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T%
-						%(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T%
-					%an_element = (" + tmp_element_c_type + ") " + tmp_element_ec_function + "(eif_access (eif_element));%R%N%T%T%
-					%eif_wean (eif_element);%R%N%T%T%
-					%hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T%
-					%if (FAILED (hr))%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%
-					%%>%R%N%T%T%
-					%loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T%
-				%%> while (loop_control != 0);%R%N%T%
-				%free (array_bound);%R%N%T%
-				%free (c_index);%R%N%T%
-				%free (tmp_index);%R%N%T%
-				%eif_wean (tmp_object1);%R%N%T%
-				%eif_wean (tmp_object2);%R%N%T%
-				%eif_wean (tmp_object3);%R%N%T%
-				%eif_wean (eif_index);%R%N%T%
-				%eif_wean (eif_safe_array);%R%N%T%
-				%return c_safe_array;"
-						
+			create Result.make (2048)
+			Result.append ("%TEIF_OBJECT eif_safe_array = 0, eif_element = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID ecom_array_tid = -1, int_array_tid = -1, eif_element_tid = -1;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indexes = 0, * element_counts = 0, * upper_indexes = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * tmp_index = 0;%R%N%T")
+			Result.append ("int dimensions = 0, loop_control = 0, i = 0;%R%N%T")
+			Result.append ("EIF_POINTER_FUNCTION f_to_c = 0;%R%N%T")
+			Result.append ("EIF_OBJECT tmp_object1 = 0, tmp_object2 = 0, tmp_object3 = 0, eif_index = 0;%R%N%T")
+			Result.append ("SAFEARRAYBOUND * array_bound = 0;%R%N%T")
+			Result.append ("SAFEARRAY * c_safe_array = 0;%R%N%T")
+			Result.append ("EIF_REFERENCE_FUNCTION f_array_item = 0;%R%N%T")
+			Result.append ("EIF_PROCEDURE p_array_create = 0, p_array_put = 0;%R%N%T")
+			Result.append ("long * c_index = 0;%R%N%T")
+			Result.append (l_element_c_type)
+			Result.append (" an_element = 0;%R%N%T")
+			Result.append ("HRESULT hr;%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("eif_safe_array = eif_protect (a_ref);%R%N%T")
+			Result.append ("ecom_array_tid = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T")
+			Result.append ("int_array_tid = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T")
+			Result.append ("eif_element_tid = eif_type_id (%"")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%");%R%N%T")
+			Result.append ("dimensions = (int) eif_field (eif_access (eif_safe_array), %"dimension_count%", EIF_INTEGER);%R%N%T")
+			Result.append ("f_to_c = eif_pointer_function (%"to_c%", int_array_tid);%R%N%T")
+			Result.append ("tmp_object1 = eif_protect (eif_field (eif_access (eif_safe_array), %"lower_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("lower_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object1)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object2 = eif_protect (eif_field (eif_access (eif_safe_array), %"element_counts%", EIF_REFERENCE));%R%N%T")
+			Result.append ("element_counts = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object2)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("tmp_object3 = eif_protect (eif_field (eif_access (eif_safe_array), %"upper_indices%", EIF_REFERENCE));%R%N%T")
+			Result.append ("upper_indexes = (EIF_INTEGER *) ((FUNCTION_CAST (EIF_POINTER, (EIF_REFERENCE))f_to_c)(eif_access (tmp_object3)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("array_bound = (SAFEARRAYBOUND *) malloc (dimensions * sizeof (SAFEARRAYBOUND));%R%N%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("array_bound %(i%).lLbound = (long) lower_indexes %(dimensions - i - 1%);%R%N%T%T")
+			Result.append ("array_bound %(i%).cElements = (long) element_counts %(dimensions - i - 1%);%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("GUID element_guid = ")
+			Result.append (element_guid_str)
+			Result.append (";%R%N%T")
+			Result.append ("c_safe_array = SafeArrayCreateEx (VT_UNKNOWN, dimensions, array_bound, &element_guid);%R%N%T")
+			Result.append ("if (c_safe_array == NULL)%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("enomem ();%R%N%T")
+			Result.append ("%>%R%N%T")
+			Result.append ("f_array_item = eif_reference_function (%"item%", ecom_array_tid);%R%N%T")
+			Result.append ("p_array_create = eif_procedure (%"make%", int_array_tid);%R%N%T")
+			Result.append ("p_array_put = eif_procedure (%"put%", int_array_tid);%R%N%T")
+			Result.append ("eif_index = eif_create (int_array_tid);%R%N%T")
+			Result.append ("R%Nstcall = 0;%R%N%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))p_array_create)%R%N%T%T")
+			Result.append ("(eif_access (eif_index), 1, dimensions);%R%N%T")
+			Result.append ("c_index = (long *) malloc (dimensions *sizeof (long));%R%N%T")
+			Result.append ("tmp_index = (EIF_INTEGER *) malloc (dimensions * sizeof (EIF_INTEGER));%R%N%T")
+			Result.append ("memcpy (tmp_index, lower_indexes, (dimensions * sizeof (EIF_INTEGER)));%R%N%T")
+			Result.append ("%R%N%T")
+			Result.append ("do%R%N%T")
+			Result.append ("%<%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), tmp_index, dimensions, EIF_INTEGER);%R%N%T%T")
+			Result.append ("for (i = 0; i < dimensions; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T	")
+			Result.append ("c_index [i] = (long) tmp_index [dimensions - i - 1];%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%R%N%T%T%T")
+			Result.append ("(eif_access (eif_safe_array), eif_access (eif_index)));%R%N%T%T")
+			Result.append ("an_element = (")
+			Result.append (l_element_c_type)
+			Result.append (") ")
+			Result.append (tmp_element_ec_function)
+			Result.append ("(eif_access (eif_element));%R%N%T%T")
+			Result.append ("eif_wean (eif_element);%R%N%T%T")
+			Result.append ("hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%R%N%T%T")
+			Result.append ("if (FAILED (hr))%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T")
+			Result.append ("%>%R%N%T%T")
+			Result.append ("loop_control = rt_ce.ccom_safearray_next_index (dimensions, lower_indexes, upper_indexes, tmp_index);%R%N%T")
+			Result.append ("%> while (loop_control != 0);%R%N%T")
+			Result.append ("free (array_bound);%R%N%T")
+			Result.append ("free (c_index);%R%N%T")
+			Result.append ("free (tmp_index);%R%N%T")
+			Result.append ("eif_wean (tmp_object1);%R%N%T")
+			Result.append ("eif_wean (tmp_object2);%R%N%T")
+			Result.append ("eif_wean (tmp_object3);%R%N%T")
+			Result.append ("eif_wean (eif_index);%R%N%T")
+			Result.append ("eif_wean (eif_safe_array);%R%N%T")
+			Result.append ("return c_safe_array;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -660,118 +606,124 @@ feature -- Basic operations
 		require
 			non_void_interface_descriptor: a_interface_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_element_c_type, l_element_eiffel_type, l_element_ce_function: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			a_visitor := a_interface_descriptor.visitor
+			l_visitor := a_interface_descriptor.visitor
 			check
-				is_interface_pointer: a_visitor.is_interface_pointer
+				is_interface_pointer: l_visitor.is_interface_pointer
 			end
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
-			tmp_element_ce_function := a_visitor.ce_function_name
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
+			l_element_ce_function := l_visitor.ce_function_name
 
-			Result := "%T%
-				%EIF_INTEGER dim_count = 0;%R%N%T%
-				%EIF_INTEGER * lower_indices = 0;%R%N%T%
-				%EIF_INTEGER * upper_indices = 0;%R%N%T%
-				%EIF_INTEGER * element_counts = 0;%R%N%T%
-				%EIF_INTEGER * index = 0;%R%N%T%
-				%long * sa_indices = 0;%R%N%T%
-				%int i = 0;%R%N%T%
-				%long tmp_long = 0;%R%N%T%
-				%HRESULT hr = 0;%R%N%T%
-				%EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T%
-				%EIF_TYPE_ID int_array_id = -1, type_id = -1;%R%N%T%
-				%EIF_PROCEDURE make = 0, put = 0;%R%N%T" + 
-				tmp_element_c_type + "sa_element = 0;%R%N%T%
-				%EIF_OBJECT eif_array_element = 0;%R%N%R%N%T%
-				%if (a_safearray != NULL)%R%N%T%
-				%{%R%N%T%T%
-					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T%
-					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T%
-					%for (i = 0; i < dim_count; i++)%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%T%
-							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T%
-							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-					%%>%R%N%R%N%T%T%
-					%%
-					%// Create array of lower indices%R%N%T%T%
-					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", int_array_id);%R%N%T%T%
-					%eif_lower_indices = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						% (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of element counts%R%N%T%T%
-					%eif_element_counts = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						%(eif_access (eif_element_counts), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of indices%R%N%T%T%
-					%eif_index = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						% (eif_access (eif_index), 1, dim_count);%R%N%T%T%
-					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", type_id);%R%N%T%T%
-					%put = eif_procedure (%"put%", type_id);%R%N%T%T%
-					%result = eif_create (type_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T%T%
-						% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T%
-					%// Initialize `result' to contents of SAFEARRAY%R%N%T%T%
-					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T%
-					%do%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T%
-						%for (i = 0; i < dim_count; i++)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%R%N%T%T%T%
-						%if (hr != S_OK)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%eif_array_element = eif_protect (" + Generated_ce_mapper + "." + tmp_element_ce_function + "(sa_element));%R%N%T%T%T%
-						%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T%
-						%eif_wean (eif_array_element);%R%N%T%T%
-					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T%
-					%// free memory%R%N%T%T%
-					%free (lower_indices);%R%N%T%T%
-					%free (element_counts);%R%N%T%T%
-					%free (upper_indices);%R%N%T%T%
-					%free (index);%R%N%T%T%
-					%free (sa_indices);%R%N%T%T%
-					%eif_wean (eif_lower_indices);%R%N%T%T%
-					%eif_wean (eif_element_counts);%R%N%T%T%
-					%eif_wean (eif_index);%R%N%T%T%
-					%return eif_wean (result);%R%N%T%
-				%}%R%N%T%
-				%else%R%N%T%T%
-					%return NULL;"
+			create Result.make (2048)
+			Result.append ("%TEIF_INTEGER dim_count = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * upper_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * element_counts = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * index = 0;%R%N%T")
+			Result.append ("long * sa_indices = 0;%R%N%T")
+			Result.append ("int i = 0;%R%N%T")
+			Result.append ("long tmp_long = 0;%R%N%T")
+			Result.append ("HRESULT hr = 0;%R%N%T")
+			Result.append ("EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID int_array_id = -1, type_id = -1;%R%N%T")
+			Result.append ("EIF_PROCEDURE make = 0, put = 0;%R%N%T")
+			Result.append (l_element_c_type)
+			Result.append (" sa_element = 0;%R%N%T")
+			Result.append ("EIF_OBJECT eif_array_element = 0;%R%N%R%N%T")
+			Result.append ("if (a_safearray != NULL)%R%N%T")
+			Result.append ("{%R%N%T%T")
+			Result.append ("dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T")
+			Result.append ("lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T%T")
+			Result.append ("lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T")
+			Result.append ("element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("%>%R%N%R%N%T%T")
+			Result.append ("// Create array of lower indices%R%N%T%T")
+			Result.append ("int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", int_array_id);%R%N%T%T")
+			Result.append ("eif_lower_indices = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append (" (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of element counts%R%N%T%T")
+			Result.append ("eif_element_counts = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append ("(eif_access (eif_element_counts), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of indices%R%N%T%T")
+			Result.append ("eif_index = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append (" (eif_access (eif_index), 1, dim_count);%R%N%T%T")
+			Result.append ("type_id = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", type_id);%R%N%T%T")
+			Result.append ("put = eif_procedure (%"put%", type_id);%R%N%T%T")
+			Result.append ("result = eif_create (type_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T%T")
+			Result.append (" (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T")
+			Result.append ("// Initialize `result' to contents of SAFEARRAY%R%N%T%T")
+			Result.append ("memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T")
+			Result.append ("do%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%R%N%T%T%T")
+			Result.append ("if (hr != S_OK)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("eif_array_element = eif_protect (")
+			Result.append (Generated_ce_mapper)
+			Result.append (".")
+			Result.append (l_element_ce_function)
+			Result.append ("(sa_element));%R%N%T%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T")
+			Result.append ("eif_wean (eif_array_element);%R%N%T%T")
+			Result.append ("%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T")
+			Result.append ("// free memory%R%N%T%T")
+			Result.append ("free (lower_indices);%R%N%T%T")
+			Result.append ("free (element_counts);%R%N%T%T")
+			Result.append ("free (upper_indices);%R%N%T%T")
+			Result.append ("free (index);%R%N%T%T")
+			Result.append ("free (sa_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_lower_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_element_counts);%R%N%T%T")
+			Result.append ("eif_wean (eif_index);%R%N%T%T")
+			Result.append ("return eif_wean (result);%R%N%T")
+			Result.append ("}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -782,125 +734,130 @@ feature -- Basic operations
 		require
 			non_void_record_descriptor: a_record_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_element_c_type, l_element_eiffel_type, l_element_ce_function: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			a_visitor := a_record_descriptor.visitor
+			l_visitor := a_record_descriptor.visitor
 			check
-				a_visitor.is_structure
+				l_visitor.is_structure
 			end
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
-			tmp_element_ce_function := a_visitor.ce_function_name
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
+			l_element_ce_function := l_visitor.ce_function_name
 
-			Result := "%T%
-				%EIF_INTEGER dim_count = 0;%R%N%T%
-				%EIF_INTEGER * lower_indices = 0;%R%N%T%
-				%EIF_INTEGER * upper_indices = 0;%R%N%T%
-				%EIF_INTEGER * element_counts = 0;%R%N%T%
-				%EIF_INTEGER * index = 0;%R%N%T%
-				%long * sa_indices = 0;%R%N%T%
-				%int i = 0;%R%N%T%
-				%long tmp_long = 0;%R%N%T%
-				%HRESULT hr = 0;%R%N%T%
-				%EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T%
-				%EIF_TYPE_ID int_array_id = -1, type_id = -1, element_id = -1;%R%N%T%
-				%EIF_PROCEDURE make = 0, put = 0;%R%N%T" + 
-				tmp_element_c_type + " * sa_element = 0;%R%N%T%
-				%EIF_OBJECT eif_array_element = 0;%R%N%R%N%T%
-				%%
-				%if (a_safearray != NULL)%R%N%T%
-				%{%R%N%T%T%
-					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T%
-					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T%
-					%for (i = 0; i < dim_count; i++)%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%T%
-							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T%
-							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-					%%>%R%N%R%N%T%T%
-					%%
-					%// Create array of lower indices%R%N%T%T%
-					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", int_array_id);%R%N%T%T%
-					%eif_lower_indices = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						% (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of element counts%R%N%T%T%
-					%eif_element_counts = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						% (eif_access (eif_element_counts), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of indices%R%N%T%T%
-					%eif_index = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						% (eif_access (eif_index), 1, dim_count);%R%N%T%T%
-					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", type_id);%R%N%T%T%
-					%put = eif_procedure (%"put%", type_id);%R%N%T%T%
-					%result = eif_create (type_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T% 
-						% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T%
-					%// Initialize `result' to contents of SAFEARRAY%R%N%T%T%
-					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T%
-					%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%R%N%T%T%
-					%make = eif_procedure (%"make%", element_id);%R%N%T%T%
-					%do%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T%
-						%for (i = 0; i < dim_count; i++)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%eif_array_element = eif_create (element_id);%R%N%T%T%T%
-						%R%Nstcall = 0;%R%N%T%T%T%
-						%(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (eif_array_element));%R%N%T%T%T%
-						%sa_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_array_element), %"item%", EIF_POINTER);%R%N%T%T%T%
-						%hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);%R%N%T%T%T%
-						%if (hr != S_OK)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,EIF_REFERENCE))put) %R%N%T%T%T%T%
-							%(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T%
-						%eif_wean (eif_array_element);%R%N%T%T%
-					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T%
-					%// free memory%R%N%T%T%
-					%free (lower_indices);%R%N%T%T%
-					%free (element_counts);%R%N%T%T%
-					%free (upper_indices);%R%N%T%T%
-					%free (index);%R%N%T%T%
-					%free (sa_indices);%R%N%T%T%
-					%eif_wean (eif_lower_indices);%R%N%T%T%
-					%eif_wean (eif_element_counts);%R%N%T%T%
-					%eif_wean (eif_index);%R%N%T%T%
-					%return eif_wean (result);%R%N%T%
-				%}%R%N%T%
-				%else%R%N%T%T%
-					%return NULL;"
+			create Result.make (2048)
+			Result.append ("%TEIF_INTEGER dim_count = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * upper_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * element_counts = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * index = 0;%R%N%T")
+			Result.append ("long * sa_indices = 0;%R%N%T")
+			Result.append ("int i = 0;%R%N%T")
+			Result.append ("long tmp_long = 0;%R%N%T")
+			Result.append ("HRESULT hr = 0;%R%N%T")
+			Result.append ("EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID int_array_id = -1, type_id = -1, element_id = -1;%R%N%T")
+			Result.append ("EIF_PROCEDURE make = 0, put = 0;%R%N%T")
+			Result.append (l_element_c_type)
+			Result.append ("* sa_element = 0;%R%N%T")
+			Result.append ("EIF_OBJECT eif_array_element = 0;%R%N%R%N%T")
+			Result.append ("if (a_safearray != NULL)%R%N%T")
+			Result.append ("{%R%N%T%T")
+			Result.append ("dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T")
+			Result.append ("lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T%T")
+			Result.append ("lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T")
+			Result.append ("element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("%>%R%N%R%N%T%T")
+			Result.append ("// Create array of lower indices%R%N%T%T")
+			Result.append ("int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", int_array_id);%R%N%T%T")
+			Result.append ("eif_lower_indices = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append (" (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of element counts%R%N%T%T")
+			Result.append ("eif_element_counts = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append (" (eif_access (eif_element_counts), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of indices%R%N%T%T")
+			Result.append ("eif_index = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append (" (eif_access (eif_index), 1, dim_count);%R%N%T%T")
+			Result.append ("type_id = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", type_id);%R%N%T%T")
+			Result.append ("put = eif_procedure (%"put%", type_id);%R%N%T%T")
+			Result.append ("result = eif_create (type_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T")
+			Result.append (" (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T")
+			Result.append ("// Initialize `result' to contents of SAFEARRAY%R%N%T%T")
+			Result.append ("memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T")
+			Result.append ("element_id = eif_type_id (%"")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", element_id);%R%N%T%T")
+			Result.append ("do%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("eif_array_element = eif_create (element_id);%R%N%T%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (eif_array_element));%R%N%T%T%T")
+			Result.append ("sa_element = (")
+			Result.append (l_element_c_type)
+			Result.append (" *) eif_field (eif_access (eif_array_element), %"item%", EIF_POINTER);%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);%R%N%T%T%T")
+			Result.append ("if (hr != S_OK)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,EIF_REFERENCE))put) %R%N%T%T%T%T")
+			Result.append ("(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T")
+			Result.append ("eif_wean (eif_array_element);%R%N%T%T")
+			Result.append ("%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T")
+			Result.append ("// free memory%R%N%T%T")
+			Result.append ("free (lower_indices);%R%N%T%T")
+			Result.append ("free (element_counts);%R%N%T%T")
+			Result.append ("free (upper_indices);%R%N%T%T")
+			Result.append ("free (index);%R%N%T%T")
+			Result.append ("free (sa_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_lower_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_element_counts);%R%N%T%T")
+			Result.append ("eif_wean (eif_index);%R%N%T%T")
+			Result.append ("return eif_wean (result);%R%N%T")
+			Result.append ("}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -911,131 +868,132 @@ feature -- Basic operations
 		require
 			non_void_safearray_descriptor: a_safearray_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
-			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_element_c_type, l_element_eiffel_type, l_element_ce_function: STRING
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			a_visitor := a_safearray_descriptor.visitor
+			l_visitor := a_safearray_descriptor.visitor
 			check
-				is_safearray: is_array (a_visitor.vt_type)
+				is_safearray: is_array (l_visitor.vt_type)
 			end
-			tmp_element_c_type := a_visitor.c_type
-			tmp_element_eiffel_type := a_visitor.eiffel_type
-			tmp_element_ce_function := a_visitor.ce_function_name
+			l_element_c_type := l_visitor.c_type
+			l_element_eiffel_type := l_visitor.eiffel_type
+			l_element_ce_function := l_visitor.ce_function_name
 
-			Result := "%T%
-				%EIF_INTEGER dim_count = 0;%R%N%T%
-				%EIF_INTEGER * lower_indices = 0;%R%N%T%
-				%EIF_INTEGER * upper_indices = 0;%R%N%T%
-				%EIF_INTEGER * element_counts = 0;%R%N%T%
-				%EIF_INTEGER * index = 0;%R%N%T%
-				%long * sa_indices = 0;%R%N%T%
-				%int i = 0;%R%N%T%
-				%long tmp_long = 0;%R%N%T%
-				%HRESULT hr = 0;%R%N%T%
-				%EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T%
-				%EIF_TYPE_ID int_array_id = -1, type_id = -1, element_id = -1;%R%N%T%
-				%EIF_PROCEDURE make = 0, put = 0;%R%N%T" + 
-				tmp_element_c_type + "sa_element = 0;%R%N%T%
-				%EIF_OBJECT eif_array_element = 0;%R%N%R%N%T%
-				%%
-				%if (a_safearray != NULL)%R%N%T%
-				%{%R%N%T%T%
-					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T%
-					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T%
-					%sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T%
-					%for (i = 0; i < dim_count; i++)%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%T%
-							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T%
-						%if (SUCCEEDED (hr))%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T%
-							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%else%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-					%%>%R%N%R%N%T%T%
-					%%
-					%// Create array of lower indices%R%N%T%T%
-					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", int_array_id);%R%N%T%T%
-					%eif_lower_indices = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						%  (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of element counts%R%N%T%T%
-					%eif_element_counts = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						%  (eif_access (eif_element_counts), 1, dim_count);%R%N%T%T%
-					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T%
-					%// Create array of indices%R%N%T%T%
-					%eif_index = eif_create (int_array_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T%
-						%  (eif_access (eif_index), 1, dim_count);%R%N%T%T%
-					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%R%N%T%T%
-					%make = eif_procedure (%"make%", type_id);%R%N%T%T%
-					%put = eif_procedure (%"put%", type_id);%R%N%T%T%
-					%result = eif_create (type_id);%R%N%T%T%
-					%R%Nstcall = 0;%R%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T%T%
-						%  (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T%
-					%// Initialize `result' to contents of SAFEARRAY%R%N%T%T%
-					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T%
-					%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%R%N%T%T%
-					%make = eif_procedure (%"make%", element_id);%R%N%T%T%
-					%do%R%N%T%T%
-					%%<%R%N%T%T%T%
-						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T%
-						%for (i = 0; i < dim_count; i++)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-						%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%R%N%T%T%T%
-						%if (hr != S_OK)%R%N%T%T%T%
-						%%<%R%N%T%T%T%T%
-							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T%
-						%%>%R%N%T%T%T%
-
-						%eif_array_element = eif_protect ("
-
-						if a_visitor.need_generate_ce then
-							Result.append (Generated_ce_mapper)
-						else
-							Result.append (Ce_mapper)
-						end
-						Result.append (Dot)
-						Result.append (tmp_element_ce_function)
-						Result.append (" (sa_element));%R%N%T%T%T%
-						%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T%
-						%eif_wean (eif_array_element);%R%N%T%T%
-					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T%
-					%// free memory%R%N%T%T%
-					%free (lower_indices);%R%N%T%T%
-					%free (element_counts);%R%N%T%T%
-					%free (upper_indices);%R%N%T%T%
-					%free (index);%R%N%T%T%
-					%free (sa_indices);%R%N%T%T%
-					%eif_wean (eif_lower_indices);%R%N%T%T%
-					%eif_wean (eif_element_counts);%R%N%T%T%
-					%eif_wean (eif_index);%R%N%T%T%
-					%return eif_wean (result);%R%N%T%
-				%}%R%N%T%
-				%else%R%N%T%T%
-					%return NULL;")
+			create Result.make (2048)
+			Result.append ("%TEIF_INTEGER dim_count = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * upper_indices = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * element_counts = 0;%R%N%T")
+			Result.append ("EIF_INTEGER * index = 0;%R%N%T")
+			Result.append ("long * sa_indices = 0;%R%N%T")
+			Result.append ("int i = 0;%R%N%T")
+			Result.append ("long tmp_long = 0;%R%N%T")
+			Result.append ("HRESULT hr = 0;%R%N%T")
+			Result.append ("EIF_OBJECT result = 0, eif_lower_indices = 0, eif_element_counts = 0, eif_index = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID int_array_id = -1, type_id = -1, element_id = -1;%R%N%T")
+			Result.append ("EIF_PROCEDURE make = 0, put = 0;%R%N%T") 
+			Result.append (l_element_c_type)
+			Result.append (" sa_element = 0;%R%N%T")
+			Result.append ("EIF_OBJECT eif_array_element = 0;%R%N%R%N%T")
+			Result.append ("if (a_safearray != NULL)%R%N%T")
+			Result.append ("{%R%N%T%T")
+			Result.append ("dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%R%N%T%T")
+			Result.append ("lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%R%N%T%T")
+			Result.append ("sa_indices = (long *) calloc (dim_count, sizeof (long));%R%N%R%N%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T%T")
+			Result.append ("lower_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%R%N%T%T%T")
+			Result.append ("if (SUCCEEDED (hr))%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("upper_indices%(i%) = (EIF_INTEGER)tmp_long;%R%N%T%T%T%T")
+			Result.append ("element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("else%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("%>%R%N%R%N%T%T")
+			Result.append ("// Create array of lower indices%R%N%T%T")
+			Result.append ("int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", int_array_id);%R%N%T%T")
+			Result.append ("eif_lower_indices = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append ("  (eif_access (eif_lower_indices), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of element counts%R%N%T%T")
+			Result.append ("eif_element_counts = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append ("  (eif_access (eif_element_counts), 1, dim_count);%R%N%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%R%N%T%T")
+			Result.append ("// Create array of indices%R%N%T%T")
+			Result.append ("eif_index = eif_create (int_array_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%R%N%T%T%T")
+			Result.append ("  (eif_access (eif_index), 1, dim_count);%R%N%T%T")
+			Result.append ("type_id = eif_type_id (%"ECOM_ARRAY %(")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%)%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", type_id);%R%N%T%T")
+			Result.append ("put = eif_procedure (%"put%", type_id);%R%N%T%T")
+			Result.append ("result = eif_create (type_id);%R%N%T%T")
+			Result.append ("R%Nstcall = 0;%R%N%T%T")
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%R%N%T%T%T")
+			Result.append ("  (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%R%N%T%T")
+			Result.append ("// Initialize `result' to contents of SAFEARRAY%R%N%T%T")
+			Result.append ("memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%R%N%T%T")
+			Result.append ("element_id = eif_type_id (%"")
+			Result.append (l_element_eiffel_type)
+			Result.append ("%");%R%N%T%T")
+			Result.append ("make = eif_procedure (%"make%", element_id);%R%N%T%T")
+			Result.append ("do%R%N%T%T")
+			Result.append ("%<%R%N%T%T%T")
+			Result.append ("eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%R%N%T%T%T")
+			Result.append ("for (i = 0; i < dim_count; i++)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("sa_indices %(i%) = index %(dim_count - 1 - i%);%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%R%N%T%T%T")
+			Result.append ("if (hr != S_OK)%R%N%T%T%T")
+			Result.append ("%<%R%N%T%T%T%T")
+			Result.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T%T%T")
+			Result.append ("%>%R%N%T%T%T")
+			Result.append ("eif_array_element = eif_protect (")
+			if l_visitor.need_generate_ce then
+				Result.append (Generated_ce_mapper)
+			else
+				Result.append (Ce_mapper)
+			end
+			Result.append (".")
+			Result.append (l_element_ce_function)
+			Result.append (" (sa_element));%R%N%T%T%T")
+			Result.append ("FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%R%N%T%T%T")
+			Result.append ("eif_wean (eif_array_element);%R%N%T%T")
+			Result.append ("%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%R%N%T%T")
+			Result.append ("// free memory%R%N%T%T")
+			Result.append ("free (lower_indices);%R%N%T%T")
+			Result.append ("free (element_counts);%R%N%T%T")
+			Result.append ("free (upper_indices);%R%N%T%T")
+			Result.append ("free (index);%R%N%T%T")
+			Result.append ("free (sa_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_lower_indices);%R%N%T%T")
+			Result.append ("eif_wean (eif_element_counts);%R%N%T%T")
+			Result.append ("eif_wean (eif_index);%R%N%T%T")
+			Result.append ("return eif_wean (result);%R%N%T")
+			Result.append ("}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty

@@ -122,29 +122,29 @@ feature -- Dynamic Library file
 				-- Generation of the header of the C_dynamic_lib_file
 					!! C_dynamic_lib_file.make (C_dynamic_lib_file_name)
 					C_dynamic_lib_file.open_write
-					C_dynamic_lib_file.put_string("/*****************%N")
-					C_dynamic_lib_file.put_string(" *** EDYNLIB.C ***%N")
-					C_dynamic_lib_file.put_string(" *****************/%N%N")
+					C_dynamic_lib_file.putstring("/*****************%N")
+					C_dynamic_lib_file.putstring(" *** EDYNLIB.C ***%N")
+					C_dynamic_lib_file.putstring(" *****************/%N%N")
 					
-					C_dynamic_lib_file.put_string("#include %"egc_dynlib.h%"%N")
+					C_dynamic_lib_file.putstring("#include %"egc_dynlib.h%"%N")
 
-					C_dynamic_lib_file.put_string("%N")
+					C_dynamic_lib_file.putstring("%N")
 
 				-- Generation of the header of the Dynamic_lib_def_file
 					!! Dynamic_lib_def_file.make (dynamic_lib_def_file_name)
 					Dynamic_lib_def_file.open_write
 
-					Dynamic_lib_def_file.put_string("LIBRARY ")
-					Dynamic_lib_def_file.put_string(system_name)
-					Dynamic_lib_def_file.put_string(".dll%N")
+					Dynamic_lib_def_file.putstring("LIBRARY ")
+					Dynamic_lib_def_file.putstring(system_name)
+					Dynamic_lib_def_file.putstring(".dll%N")
 					system_name.to_upper
-					Dynamic_lib_def_file.put_string("DESCRIPTION ")
-					Dynamic_lib_def_file.put_string(system_name)
-					Dynamic_lib_def_file.put_string(".DLL%N")
-					Dynamic_lib_def_file.put_string("%NEXPORTS%N")
-					Dynamic_lib_def_file.put_string("%N;System")
-					Dynamic_lib_def_file.put_string("%N%Tinit_rt")
-					Dynamic_lib_def_file.put_string("%N%Treclaim_rt%N") --FIXME
+					Dynamic_lib_def_file.putstring("DESCRIPTION ")
+					Dynamic_lib_def_file.putstring(system_name)
+					Dynamic_lib_def_file.putstring(".DLL%N")
+					Dynamic_lib_def_file.putstring("%NEXPORTS%N")
+					Dynamic_lib_def_file.putstring("%N;System")
+					Dynamic_lib_def_file.putstring("%N%Tinit_rt")
+					Dynamic_lib_def_file.putstring("%N%Treclaim_rt%N") --FIXME
 
 				-- generation of everything
 				from
@@ -153,11 +153,11 @@ feature -- Dynamic Library file
 					dynamic_lib_exports.after
 				loop
 					if (dynamic_lib_exports.item_for_iteration /= Void) then
-						Dynamic_lib_def_file.put_string( "%N; CLASS [" )
+						Dynamic_lib_def_file.putstring( "%N; CLASS [" )
 
 						class_name := clone(dynamic_lib_exports.item_for_iteration.item.dl_class.name_in_upper)
-						Dynamic_lib_def_file.put_string(class_name)
-						Dynamic_lib_def_file.put_string( "]%N" )
+						Dynamic_lib_def_file.putstring(class_name)
+						Dynamic_lib_def_file.putstring( "]%N" )
 
 						from
 							dynamic_lib_exports.item_for_iteration.start
@@ -169,32 +169,32 @@ feature -- Dynamic Library file
 								internal_creation_name := Void
 
 								dl_exp := dynamic_lib_exports.item_for_iteration.item
-								C_dynamic_lib_file.put_string ("/***************************%N * ")
-								C_dynamic_lib_file.put_string (class_name)
+								C_dynamic_lib_file.putstring ("/***************************%N * ")
+								C_dynamic_lib_file.putstring (class_name)
 
 								if (dl_exp.dl_creation /= Void) and then (dl_exp.dl_routine.id /= dl_exp.dl_creation.id) then
-										C_dynamic_lib_file.put_string (" (")
-										C_dynamic_lib_file.put_string (dl_exp.dl_creation.name)
-										C_dynamic_lib_file.put_string (")")
+										C_dynamic_lib_file.putstring (" (")
+										C_dynamic_lib_file.putstring (dl_exp.dl_creation.name)
+										C_dynamic_lib_file.putstring (")")
 										internal_creation_name := dl_exp.dl_creation.body_id.feature_name (dl_exp.dl_class.types.first.id)
 								elseif (dl_exp.dl_creation = Void) then
-										C_dynamic_lib_file.put_string (" (!!)")
+										C_dynamic_lib_file.putstring (" (!!)")
 								end
 								if (dl_exp.dl_routine /= Void) then
 									feature_name := clone(dl_exp.dl_routine.name)
 									internal_feature_name := dl_exp.dl_routine.body_id.feature_name (dl_exp.dl_class.types.first.id)
 									args:= dl_exp.dl_routine.arguments
 
-									Dynamic_lib_def_file.put_string("%T")
-									Dynamic_lib_def_file.put_string(feature_name)
+									Dynamic_lib_def_file.putstring("%T")
+									Dynamic_lib_def_file.putstring(feature_name)
 
-									C_dynamic_lib_file.put_string (" : ")
-									C_dynamic_lib_file.put_string (feature_name)
-									C_dynamic_lib_file.put_string(" <")
-									C_dynamic_lib_file.put_string (internal_feature_name)
-									C_dynamic_lib_file.put_string("> ")
+									C_dynamic_lib_file.putstring (" : ")
+									C_dynamic_lib_file.putstring (feature_name)
+									C_dynamic_lib_file.putstring(" <")
+									C_dynamic_lib_file.putstring (internal_feature_name)
+									C_dynamic_lib_file.putstring("> ")
 
-									C_dynamic_lib_file.put_string ("%N ***************************/")
+									C_dynamic_lib_file.putstring ("%N ***************************/")
 
 
 									-- GENERATION OF THE C-CODE
@@ -208,38 +208,38 @@ feature -- Dynamic Library file
 									-- DECLARATION OF THE EXTERNAL (THE CREATION PROCEDURE, AND THE ROUTINE CALLED)
 									----- Creation function
 									if internal_creation_name /=Void then
-										C_dynamic_lib_file.put_string ("%Nextern void ")
-										C_dynamic_lib_file.put_string (internal_creation_name)
-										C_dynamic_lib_file.put_string (" (EIF_REFERENCE);")
+										C_dynamic_lib_file.putstring ("%Nextern void ")
+										C_dynamic_lib_file.putstring (internal_creation_name)
+										C_dynamic_lib_file.putstring (" (EIF_REFERENCE);")
 									end
 
 									----- Routine function
-									C_dynamic_lib_file.put_string ("%Nextern ")
+									C_dynamic_lib_file.putstring ("%Nextern ")
 									return_type := clone ( cecil_type(dl_exp.dl_routine.type) )
-									C_dynamic_lib_file.put_string (return_type)
+									C_dynamic_lib_file.putstring (return_type)
 										
-									C_dynamic_lib_file.put_string (" ")
-									C_dynamic_lib_file.put_string (internal_feature_name)
-									C_dynamic_lib_file.put_string (" (EIF_REFERENCE")
+									C_dynamic_lib_file.putstring (" ")
+									C_dynamic_lib_file.putstring (internal_feature_name)
+									C_dynamic_lib_file.putstring (" (EIF_REFERENCE")
 									if args /= Void then
 										from
 											args.start
 										until 
 											args.after
 										loop
-											C_dynamic_lib_file.put_string (", ")
-											C_dynamic_lib_file.put_string (cecil_type(args.item))
+											C_dynamic_lib_file.putstring (", ")
+											C_dynamic_lib_file.putstring (cecil_type(args.item))
 											args.forth
 										end
 									end
-									C_dynamic_lib_file.put_string (");")
+									C_dynamic_lib_file.putstring (");")
 
 									-- DEFINITION OF THE FUNCTION TO BE EXPORTED
-									C_dynamic_lib_file.put_string ("%N")
-									C_dynamic_lib_file.put_string (return_type)
-									C_dynamic_lib_file.put_string (" ")
-									C_dynamic_lib_file.put_string (feature_name)
-									C_dynamic_lib_file.put_string (" (")
+									C_dynamic_lib_file.putstring ("%N")
+									C_dynamic_lib_file.putstring (return_type)
+									C_dynamic_lib_file.putstring (" ")
+									C_dynamic_lib_file.putstring (feature_name)
+									C_dynamic_lib_file.putstring (" (")
 
 									if argument_names /= Void then
 										from 
@@ -247,51 +247,51 @@ feature -- Dynamic Library file
 										until
 											argument_names.after
 										loop
-											C_dynamic_lib_file.put_string (cecil_type(args.i_th (argument_names.index)))
-											C_dynamic_lib_file.put_string(" ")
-											C_dynamic_lib_file.put_string(argument_names.item)
+											C_dynamic_lib_file.putstring (cecil_type(args.i_th (argument_names.index)))
+											C_dynamic_lib_file.putstring(" ")
+											C_dynamic_lib_file.putstring(argument_names.item)
 											if not argument_names.islast then
-												C_dynamic_lib_file.put_string(", ")
+												C_dynamic_lib_file.putstring(", ")
 											end
 											argument_names.forth
 										end
 									else
-										C_dynamic_lib_file.put_string("void")
+										C_dynamic_lib_file.putstring("void")
 									end
 
-									C_dynamic_lib_file.put_string (")")
-									C_dynamic_lib_file.put_string ("%N{")
+									C_dynamic_lib_file.putstring (")")
+									C_dynamic_lib_file.putstring ("%N{")
 
 										--INFORMATION ABOUT THE FEATURE
 									if internal_creation_name /= Void then
-										C_dynamic_lib_file.put_string ("%N%T/* Creation : ")
-										C_dynamic_lib_file.put_string (internal_creation_name)
-										C_dynamic_lib_file.put_string ("; */")
+										C_dynamic_lib_file.putstring ("%N%T/* Creation : ")
+										C_dynamic_lib_file.putstring (internal_creation_name)
+										C_dynamic_lib_file.putstring ("; */")
 									end
-									C_dynamic_lib_file.put_string ("%N%T/* Feature  : ")
-									C_dynamic_lib_file.put_string (internal_feature_name)
-									C_dynamic_lib_file.put_string (" ;*/")
+									C_dynamic_lib_file.putstring ("%N%T/* Feature  : ")
+									C_dynamic_lib_file.putstring (internal_feature_name)
+									C_dynamic_lib_file.putstring (" ;*/")
 
 										--LOCAL VARIABLES
-									C_dynamic_lib_file.put_string ("%N%TEIF_OBJ main_obj;")
-									C_dynamic_lib_file.put_string ("%N%TEIF_PROC ep;")
-									C_dynamic_lib_file.put_string ("%N%TEIF_TYPE_ID eti;")
+									C_dynamic_lib_file.putstring ("%N%TEIF_OBJ main_obj;")
+									C_dynamic_lib_file.putstring ("%N%TEIF_PROC ep;")
+									C_dynamic_lib_file.putstring ("%N%TEIF_TYPE_ID eti;")
 									if not return_type.is_equal("void") then
-										C_dynamic_lib_file.put_string ("%N%T")
-										C_dynamic_lib_file.put_string (return_type)
-										C_dynamic_lib_file.put_string (" Return_Value ;")
+										C_dynamic_lib_file.putstring ("%N%T")
+										C_dynamic_lib_file.putstring (return_type)
+										C_dynamic_lib_file.putstring (" Return_Value ;")
 									end -- When the feature return a value.
 										
 
 										--INITIALIZATION DYNAMIC_LIB and RT
-									C_dynamic_lib_file.put_string ("%N%TDYNAMIC_LIB_RT_INITIALIZE(")
+									C_dynamic_lib_file.putstring ("%N%TDYNAMIC_LIB_RT_INITIALIZE(")
 
 									if argument_names /= Void then
 										C_dynamic_lib_file.put_integer (argument_names.count+1)
 									else
 										C_dynamic_lib_file.put_integer (1)
 									end
-									C_dynamic_lib_file.put_string (");%N")
+									C_dynamic_lib_file.putstring (");%N")
 
 										-- AFFECTION OF THE LOCAL VARIABLES `l[i]'
 									if argument_names /= Void then
@@ -301,13 +301,13 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
-												C_dynamic_lib_file.put_string ("%N%Tl[")
+												C_dynamic_lib_file.putstring ("%N%Tl[")
 												C_dynamic_lib_file.put_integer (argument_names.index)
-												C_dynamic_lib_file.put_string ("] = (")
-												C_dynamic_lib_file.put_string ( cecil_type(args.i_th(argument_names.index)) )
-												C_dynamic_lib_file.put_string (") ")
-												C_dynamic_lib_file.put_string(argument_names.item)
-												C_dynamic_lib_file.put_string (" ;"); 
+												C_dynamic_lib_file.putstring ("] = (")
+												C_dynamic_lib_file.putstring ( cecil_type(args.i_th(argument_names.index)) )
+												C_dynamic_lib_file.putstring (") ")
+												C_dynamic_lib_file.putstring(argument_names.item)
+												C_dynamic_lib_file.putstring (" ;"); 
 											end
 											argument_names.forth
 										end
@@ -315,7 +315,7 @@ feature -- Dynamic Library file
 
 
 										-- CALCULATE THE MAIN OBJECT.
-									C_dynamic_lib_file.put_string ("%N%Tl[0] = RTLN(")
+									C_dynamic_lib_file.putstring ("%N%Tl[0] = RTLN(")
 
 									if Context.workbench_mode then
 										C_dynamic_lib_file.putstring ("RTUD(");
@@ -324,25 +324,25 @@ feature -- Dynamic Library file
 									else
 										C_dynamic_lib_file.putint (dl_exp.dl_class.actual_type.type_i.type_id - 1);
 									end
-									C_dynamic_lib_file.put_string (");")
+									C_dynamic_lib_file.putstring (");")
 
 										--CALL THE CREATION ROUTINE
 									if internal_creation_name /= Void then
-										C_dynamic_lib_file.put_string ("%N%T/* Call the creation routine */%N%T")
-										C_dynamic_lib_file.put_string (internal_creation_name)
-										C_dynamic_lib_file.put_string (" (l[0]);")
+										C_dynamic_lib_file.putstring ("%N%T/* Call the creation routine */%N%T")
+										C_dynamic_lib_file.putstring (internal_creation_name)
+										C_dynamic_lib_file.putstring (" (l[0]);")
 									end
 									
 										--CALL THE ROUTINE
-									C_dynamic_lib_file.put_string ("%N%N%T/* Call the routine */")
-									C_dynamic_lib_file.put_string ("%N%T")
+									C_dynamic_lib_file.putstring ("%N%N%T/* Call the routine */")
+									C_dynamic_lib_file.putstring ("%N%T")
 									if not return_type.is_equal("void") then
-										C_dynamic_lib_file.put_string ("Return_Value = (")
-										C_dynamic_lib_file.put_string (return_type)
-										C_dynamic_lib_file.put_string (") ")
+										C_dynamic_lib_file.putstring ("Return_Value = (")
+										C_dynamic_lib_file.putstring (return_type)
+										C_dynamic_lib_file.putstring (") ")
 									end -- When the feature return a value.
-									C_dynamic_lib_file.put_string (internal_feature_name)
-									C_dynamic_lib_file.put_string ("(l[0]")
+									C_dynamic_lib_file.putstring (internal_feature_name)
+									C_dynamic_lib_file.putstring ("(l[0]")
 
 									if argument_names /= Void then
 										from
@@ -351,33 +351,33 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
-												C_dynamic_lib_file.put_string (", l[")
+												C_dynamic_lib_file.putstring (", l[")
 												C_dynamic_lib_file.put_integer (argument_names.index)
-												C_dynamic_lib_file.put_string ("]")
+												C_dynamic_lib_file.putstring ("]")
 											else
-												C_dynamic_lib_file.put_string (", ")
-												C_dynamic_lib_file.put_string (argument_names.item)
+												C_dynamic_lib_file.putstring (", ")
+												C_dynamic_lib_file.putstring (argument_names.item)
 											end
 											argument_names.forth
 										end
 									end
 									
-									C_dynamic_lib_file.put_string (");")
-									C_dynamic_lib_file.put_string ("%N%TDYNAMIC_LIB_RT_END;")
+									C_dynamic_lib_file.putstring (");")
+									C_dynamic_lib_file.putstring ("%N%TDYNAMIC_LIB_RT_END;")
 									if not return_type.is_equal("void") then
-										C_dynamic_lib_file.put_string ("%N%Treturn (")
-										C_dynamic_lib_file.put_string (return_type)
-										C_dynamic_lib_file.put_string (") Return_Value;")
+										C_dynamic_lib_file.putstring ("%N%Treturn (")
+										C_dynamic_lib_file.putstring (return_type)
+										C_dynamic_lib_file.putstring (") Return_Value;")
 									end -- When the feature return a value.
-									C_dynamic_lib_file.put_string ("%N}%N")
+									C_dynamic_lib_file.putstring ("%N}%N")
 
 								end
 								if (dl_exp.dl_index /= 0) then
-									Dynamic_lib_def_file.put_string (" @ ")
+									Dynamic_lib_def_file.putstring (" @ ")
 									Dynamic_lib_def_file.put_integer (dl_exp.dl_index)
 								end
-								Dynamic_lib_def_file.put_string ("%N")
-								C_dynamic_lib_file.put_string ("%N")
+								Dynamic_lib_def_file.putstring ("%N")
+								C_dynamic_lib_file.putstring ("%N")
 							end
 
 							dynamic_lib_exports.item_for_iteration.forth
@@ -688,9 +688,9 @@ feature -- Plug and Makefile file
 			Plug_file.putint (system.character_ref_dtype - 1)
 			Plug_file.putstring (";%N%Tegc_doub_ref_dtype = ")
 			Plug_file.putint (system.double_ref_dtype - 1)
-			Plug_file.put_string (";%N%Tegc_point_ref_dtype = ")
+			Plug_file.putstring (";%N%Tegc_point_ref_dtype = ")
 			Plug_file.put_integer (system.pointer_ref_dtype - 1)
-			Plug_file.put_string (";%N");	
+			Plug_file.putstring (";%N");	
 		end
 
 	generate_make_file is

@@ -35,9 +35,16 @@ feature -- Access
 			end
 		end
 
-	Finish_freezing_script: STRING is "finish_freezing"
+	Finish_freezing_script: STRING is 
 			-- Name of post-eiffel compilation processing to launch
 			-- C code.
+		once
+			if is_windows then
+				Result := "finish_freezing.exe"
+			else
+				Result := "finish_freezing"
+			end
+		end
 
 	Preobj: STRING is
 			-- Name of C library used in precompiled library.

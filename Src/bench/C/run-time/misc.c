@@ -247,8 +247,22 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	return (EIF_INTEGER) 0;
 
 #else
-	char *new_string; /* %%ss moved from above */
-	int l1, l2; /* %%ss moved from above */
+
+	return eif_safe_putenv (v, k);	/* Use a safe Eiffel putenv using environment variables */
+#endif
+}
+
+rt_public EIF_INTEGER eif_safe_putenv (EIF_OBJ v, EIF_OBJ k) 
+{
+	/* Safe Eiffel putenv using environment variables. This has been added
+	 * for EiffelWeb, because on windows we needed to deal with environment
+	 * variables and not registry keys which was done with eif_putenv.
+	 * We make a copy of the string with malloc, so that the it will not
+     * be collected by the GC.
+	 */
+
+	char *new_string; 
+	int l1, l2;
 
 	l1 = strlen(k);
 	l2 = strlen(v);
@@ -261,7 +275,6 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	strcat (new_string, v);
 
 	return (EIF_INTEGER) putenv (new_string);
-#endif
 }
 
 rt_public EIF_OBJ eif_getenv (EIF_OBJ k)

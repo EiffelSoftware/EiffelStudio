@@ -22,7 +22,9 @@ feature
 				retrieve_project;
 				if not error_occurred then
 					!!stone.make (system);
-					text := stone.origin_text;
+					if stone.is_valid then
+						text := stone.origin_text
+					end;
 					if text /= Void then
 						output_window.put_string (text);
 						output_window.new_line;

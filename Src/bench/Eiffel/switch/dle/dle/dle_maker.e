@@ -188,6 +188,12 @@ feature -- Access
 			Result := "libdle.so"
 		end;
 
+	run_time: STRING is
+			-- No run-time needs to be linked
+		do
+			Result := ""
+		end;
+
 invariant
 
 	dynamic_system: System.is_dynamic

@@ -258,9 +258,15 @@ feature -- Type check, byte code and dead code removal
 					-- Note: the following conditional instruction will not be executed
 					-- if the class type of the constraint id not generic since in that
 					-- case `Result' would not be formal.
-				if last_type.is_formal and then Result.is_formal then
-					formal_type ?= Result
-					Result := last_constrained.generics.item (formal_type.position)
+				if last_type.is_formal then
+					if Result.is_formal then
+						formal_type ?= Result
+					else
+						formal_type ?= Result.actual_type
+					end
+					if formal_type /= Void then
+						Result := last_constrained.generics.item (formal_type.position)
+					end
 				end
 				Result := Result.conformance_type
 				context.pop (count)

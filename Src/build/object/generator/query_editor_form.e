@@ -28,7 +28,6 @@ feature -- Creation
 			-- Create current form.
 		do
 			{FORM} Precursor (a_name, a_parent)
-			print (realized)
 			create_interface
 		end
 

@@ -112,7 +112,6 @@ feature {EV_WINDOW} -- Initialization
 		do
 			{EV_CONTAINER_IMP} Precursor (par)
 			!! child_cell
-			initialize_list (command_count)
 			resize_type := 3
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
@@ -509,8 +508,10 @@ feature {NONE} -- Implementation
 			-- Can the user close the window?
 			-- Yes by default.
 		do
-			if (command_list @ Cmd_close) = Void then
+			if (command_list = Void) or else 
+					(command_list @ Cmd_close) = Void then
 				Result := True
+				interface.remove_implementation
 			else
 				execute_command (Cmd_close, Void)
 				Result := False

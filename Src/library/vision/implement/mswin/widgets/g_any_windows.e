@@ -303,6 +303,14 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
+	default_actions: ACTIONS_MANAGER is
+			-- Event handler for scrollable list default events
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
 	single_actions: ACTIONS_MANAGER is
 			-- Event handler for single events
 		once

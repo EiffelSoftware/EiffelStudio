@@ -7,7 +7,7 @@ inherit
 			is_feature_pointer,
 			same_as,
 			description, sk_value, hash_code, generate_cecil_value,
-			generated_id
+			generated_id, typecode
 		end
 
 feature
@@ -18,6 +18,12 @@ feature
 			Result := C_pointer
 		end
 
+	typecode: INTEGER is
+			-- Typecode for TUPLE element.
+		do
+			Result := feature {SHARED_TYPECODE}.pointer_code
+		end
+		
 	is_feature_pointer: BOOLEAN is True
 			-- Is the type a feature pointer type ?
 

@@ -1,5 +1,5 @@
 system
-	"ESI.Compiler"
+	"ISE.Compiler"
 
 root
 	ecom_ise_registration: make
@@ -71,7 +71,6 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
@@ -320,7 +319,7 @@ cluster
 		exclude
 			"CVS"; 
 		end
-		
+
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude
 			"CVS"; 
@@ -361,7 +360,7 @@ cluster
 
 	preference_tool (interface):		"$\graphical\preference_tool"
 		exclude
-			"eb_flat_short_data.e"
+			"eb_flat_short_data.e"; 
 		end
 
 	profile_tool (interface):		"$\graphical\profile_tool"
@@ -372,6 +371,7 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
+assembly
 external
 
 	include_path:
@@ -380,11 +380,11 @@ external
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\com_compiler\Clib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -401,6 +401,5 @@ external
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"corguids.lib",
 		"mscorsn.lib"
-
 
 end

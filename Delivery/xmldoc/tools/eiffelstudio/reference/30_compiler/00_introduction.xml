@@ -14,7 +14,7 @@
 				<label>making external calls from Eiffel</label>
 			</link>.
 		</paragraph>        
-		<paragraph>You can find more advanced technologies relative to the Eiffel Software Eiffel compiler and environment in the 
+		<paragraph>You can find more advanced technologies relative to the Eiffel Software compiler and environment in the 
 			<link>
 				<url>/technologies/index.xml</url>
 				<label>technologies</label>
@@ -25,7 +25,7 @@
 			<line_break/>
 			<link>
 				<url>/general/guided_tour/language/index.xml</url>
-				<label>General        overview of the Eiffel language</label>
+				<label>General overview of the Eiffel language</label>
 			</link>
 		</seealso>
 	</paragraph></document>

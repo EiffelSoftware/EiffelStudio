@@ -39,6 +39,7 @@
  */
 #define RTLN(x) emalloc(x)
 #define RTLB(x)	bmalloc(x)
+#define RTMB(x) makebit(x)
 #ifdef WORKBENCH
 #define RTUD(x) fdtypes[x]  /* Updated dynamic type */
 #endif

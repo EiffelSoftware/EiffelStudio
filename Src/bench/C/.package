@@ -2,8 +2,8 @@
 : Do not hand edit; run packinit again if changes are to be made.
 packver='3.0160000000000000142'
 : Basic variables
-package=Eiffel3
-baserev=3
+package=Eiffel4
+baserev=4
 patchbranch=1
 copyright=' '
 mydiff='diff -c'

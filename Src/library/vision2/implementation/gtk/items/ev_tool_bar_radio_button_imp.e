@@ -59,13 +59,13 @@ feature {NONE} -- Implementation
 			--end
 		end
 
-	on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
+	--on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
 			-- Button's selected state set to flag.
-		do
+	--	do
 			--if is_selected and not group.just_selected (Current) then
 			--	set_selected(False)
 			--end	
-		end
+	--	end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -101,6 +101,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/07 23:19:52  brendel
+--| Commented function that takes EV_RADIO (obsolete) as argument.
+--|
 --| Revision 1.12  2000/04/05 17:01:28  king
 --| Updated to inherit from tb select button
 --|

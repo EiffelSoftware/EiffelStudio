@@ -126,24 +126,25 @@ feature -- Settings
 		require
 			buffer_exists: buffer /= Void
 			shared_include_queue_not_void: shared_include_queue /= Void
-			shared_include_queue_not_empty: not shared_include_queue.is_empty
 		local
 			queue: like shared_include_queue
 			l_names_heap: like Names_heap
 		do
 			queue := shared_include_queue
-			l_names_heap := Names_heap
-			from
-				queue.start
-			until
-				queue.after
-			loop
-				buffer.putstring ("#include ")
-				buffer.putstring (l_names_heap.item (queue.item_for_iteration))
-				buffer.new_line
-				queue.forth
+			if not queue.is_empty then
+				l_names_heap := Names_heap
+				from
+					queue.start
+				until
+					queue.after
+				loop
+					buffer.putstring ("#include ")
+					buffer.putstring (l_names_heap.item (queue.item_for_iteration))
+					buffer.new_line
+					queue.forth
+				end
+				queue.wipe_out
 			end
-			queue.wipe_out
 		end
 
 	generate_header (buffer: GENERATION_BUFFER) is
@@ -167,13 +168,6 @@ feature -- Settings
 			local_type_tables: SEARCH_TABLE [STRING]
 			local_onces: HASH_TABLE [TYPE_C, STRING]
 		do
-			if not shared_include_queue.is_empty then
-				buffer.end_c_specific_code
-					-- generate the include files required by externals
-				generate_header_files (buffer)
-				buffer.start_c_specific_code
-			end
-
 			from
 				local_routines := routines
 				local_routines.start

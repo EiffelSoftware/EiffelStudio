@@ -2,15 +2,15 @@
 -- The servers are indexed on type_id and contains linked set
 -- of rout_id.
 
-class STAT_CALL_SERVER inherit
+class STAT_CALL_SERVER
 
+inherit
 	DELAY_SERVER [DLE_STATIC_CALLS, INTEGER_ID]
 		redefine
 			clear
 		end
 
 creation
-
 	make
 	
 feature -- Access
@@ -66,14 +66,9 @@ feature -- Server
 
 	Delayed: SEARCH_TABLE [INTEGER_ID] is
 			-- Cache for delayed items
-		local
-			csize: INTEGER
 		once
-			csize := Cache.cache_size;
-			!!Result.make ((3 * csize) // 2)
-		end;
-
-	Size_limit: INTEGER is 40;
+			!!Result.make ((3 * Cache.cache_size) // 2)
+		end
 
 	clear is
 			-- Clear deletes the files in the server.
@@ -94,5 +89,13 @@ feature -- Server
 			cache.wipe_out;
 			set_current_id
 		end;
+
+feature -- Server parameters
+
+	Size_limit: INTEGER is 200
+			-- Size of the STAT_CALL_SERVER file (200 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end -- class STAT_CALL_SERVER

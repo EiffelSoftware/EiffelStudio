@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 		
-	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+	EV_LIST_ITEM_LIST_IMP
 		redefine
 			initialize,
 			interface
@@ -178,7 +178,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_ITEM_LIST_IMP} Precursor
+			{EV_LIST_ITEM_LIST_IMP} Precursor
 		end
 
 feature -- Status report
@@ -273,81 +273,10 @@ feature {NONE} -- Implementation
 			internal_copy_list
 		end
 
-	internal_copy_list is
-			-- Take an empty list and initialize all the children with
-			-- the contents of `ev_children'.
-		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-			original_index: INTEGER
-		do
-			original_index := index
-			if not ev_children.empty then
-				from
-					list := ev_children
-					list.start
-				until
-					list.after
-				loop
-					graphical_insert_item (list.item.interface, list.index - 1)
-					list.forth
-				end
-			end
-			interface.go_i_th (original_index)
-		ensure
-			index_not_changed: index = old index
-		end
-
-	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
-			-- Insert `item_imp' at the `an_index' position.
-		do
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (item_imp)
-			graphical_insert_item (item_imp.interface, an_index - 1)
-		end
-
-	graphical_insert_item (item_imp: EV_LIST_ITEM; an_index: INTEGER) is
-			-- Insert `item_imp' at the `an_index' position of the
-			-- graphical object.
-		do
-			if item_imp.text = Void then
-				insert_string_at ("", an_index)
-			else
-				insert_string_at (item_imp.text, an_index)
-			end
-		end
-
-	remove_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Remove `itemm' from the list.
-		local
-			child_id: INTEGER
-		do
-			child_id := ev_children.index_of (item_imp, 1)
-			delete_string (child_id - 1)
-			ev_children.go_i_th (child_id)
-			ev_children.remove
-		end
-
 feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	index_of_item_imp (li_imp: EV_LIST_ITEM_IMP): INTEGER is
-			-- Index of `li_imp' in `ev_children'.
-		require
-			li_imp_not_void: li_imp /= Void
-			ev_children_has_li_imp: ev_children.has (li_imp)
-		do
-			Result := ev_children.index_of (li_imp, 1)
-		ensure
-			Result_within_bounds:
-				Result > 0 and then Result <= ev_children.count
-			correct_index:
-				(ev_children @ Result) = li_imp
-		end
 
 	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
 			-- Is `li_imp' selected?
-		require
-			li_imp_not_void: li_imp /= Void
-			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
 			pos: INTEGER
 		do
@@ -365,9 +294,6 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
 			-- Set `li_imp' selected.
-		require
-			li_imp_not_void: li_imp /= Void
-			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
 			pos: INTEGER
 		do
@@ -377,15 +303,10 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			else
 				ss_select_item (pos - 1)
 			end
-		ensure
-			li_imp_selected: li_imp.is_selected
 		end
 
 	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
 			-- Set `li_imp' deselected.
-		require
-			li_imp_not_void: li_imp /= Void
-			ev_children_has_li_imp: ev_children.has (li_imp)
 		local
 			pos: INTEGER
 		do
@@ -395,23 +316,17 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			else
 				ss_unselect
 			end
-		ensure
-			li_imp_deselected: not li_imp.is_selected
 		end
 
 	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
 			-- Set `li_imp'.`text' to `a_text'.
-		require
-			li_imp_not_void: li_imp /= Void
-			ev_children_has_li_imp: ev_children.has (li_imp)
-			a_text_not_void: a_text /= Void
 		local
 			pos: INTEGER
 		do
 			pos := index_of_item_imp (li_imp)
 			delete_string (pos - 1)
 			insert_string_at (a_text, pos - 1)
-		ensure
+		ensure then
 			a_text_set:
 				a_text.is_equal (i_th_text (index_of_item_imp (li_imp) - 1))
 		end
@@ -741,6 +656,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/30 17:43:56  brendel
+--| Moved common features with EV_COMBO_BOX up to EV_LIST_ITEM_LIST_IMP.
+--|
 --| Revision 1.55  2000/03/29 22:12:11  brendel
 --| Added `set_item_imp_text'.
 --| Improved contracts.

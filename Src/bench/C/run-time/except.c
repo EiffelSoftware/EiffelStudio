@@ -143,6 +143,7 @@ rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
 
 /* Exception recovery mechanism */
 rt_public void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
+rt_public void exclear(EIF_CONTEXT_NOARG);			/* Clears the exception stack */
 rt_private char *backtrack(EIF_CONTEXT_NOARG);		/* Backtrack in the calling stack */
 rt_private void excur(EIF_CONTEXT_NOARG);			/* Current exception code in previous level */
 rt_private void exorig(EIF_CONTEXT_NOARG);			/* Original exception code in previous level */
@@ -1063,7 +1064,7 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 	register1 struct ex_vect *top;		/* Top of calling stack */
 	register2 struct ex_vect *trace;	/* The stack trace entry */
 
-	while (top = extop(&eif_stack)) {	/* While bottom not reached */
+	while ((top = extop(&eif_stack))) {	/* While bottom not reached */
 
 		/* Whether or not there is a rescue clause for the top of the stack
 		 * (indicated by the jmp_buf pointer), we need to push the current
@@ -1269,7 +1270,7 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
-	while (top = extop(&eif_stack)) {	/* Find last enclosing call */
+	while ((top = extop(&eif_stack))) {	/* Find last enclosing call */
 		type = top->ex_type;			/* Type of the current vector */
 		if (type == EX_CALL || type == EX_RESC || type == EX_RETY)
 			break;						/* We found a calling record */
@@ -1288,7 +1289,7 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 		echmem = 0;				/* We seem to have recovered from out of mem */
 		echorg = 0;				/* No more original exception */
 	} else {					/* Normal case (should rarely occur) */
-		while (top = extop(&eif_trace)) {
+		while ((top = extop(&eif_trace))) {
 			if (top->ex_type == EN_ILVL && top->ex_lvl == echlvl)
 				break;			/* Found matching level record */
 			expop(&eif_trace);	/* Will panic if we underflow */
@@ -1306,6 +1307,41 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
+	EIF_END_GET_CONTEXT
+}
+
+
+/* Clears the exception stack */
+rt_public void exclear(EIF_CONTEXT_NOARG)
+{
+	EIF_GET_CONTEXT
+	register1 struct ex_vect *top;		/* Top of calling stack */
+
+	/* If 'echval' is set to zero, then no exception occurred, so return
+	 * immediately. Otherwise, pop off the stack until we reach an execution
+	 * vector, which will be popped off by the normal ending of the routine.
+	 * (The generated C code does not optimize the call to exok() by first
+	 * testing the value of 'echval', nor does the interpreter hence the test
+	 * here--RAM).
+	 */
+
+	if (echval == 0) return; /* No exception occurred */
+
+	SIGBLOCK;			/* Critical section, protected against signals */
+
+	/* Now deal with the trace stack. If the exception level is 0, we can reset
+	 * the whole stack. Otherwise, we have to unwind it until we find the
+	 * "New level" pseudo-vector.
+	 */
+
+	while ((top = extop(&eif_trace)))
+	  expop(&eif_trace);	/* Will panic if we underflow */
+
+	echval = 0;			/* No more pending exception */
+	echmem = 0;			/* We have recovered from this out of mem */
+	echorg = 0;			/* No more original exception */
+
+	SIGRESUME;			/* End of critical section, dispatch queued signals */
 	EIF_END_GET_CONTEXT
 }
 
@@ -1410,7 +1446,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 	poped = 0;		/* If top is the EN_ILVL vector, then we come from eviol */
 	echorg = 0;		/* Signals not found (yet) */
 
-	while (top = extop(&eif_trace)) {
+	while ((top = extop(&eif_trace))) {
 		if (top->ex_type == EN_ILVL && top->ex_lvl == (echlvl - 1)) {
 			if (poped == 0) {			/* First one, nothing at this level */
 				echorg = echval;		/* Current exception is original */
@@ -2670,6 +2706,7 @@ rt_public char *eename(long ex)
 		e_string = exception_string(ex);
 		return makestr(e_string, strlen(e_string));
 	}
+	return (0); /* to avoid a warning */
 }
 
 rt_public void eecatch(EIF_CONTEXT long ex)

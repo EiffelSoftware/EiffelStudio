@@ -59,13 +59,12 @@ EIF_OBJ request_handler ()
 	recv_packet (readfd(sp), &rqst);
 
 	switch (rqst.rq_type) {
+		default: /* default should not be encountered, but
+				as long as other cases do not compile... */
 		case DEAD:
 			eif_string = makestr("Nothing", 7);
 			(failure_hdlr_set)(eif_access(failure_handler), eif_string); 
 			return eif_access(failure_handler);
-			break;
-		default:
-			break;
 	}
 /*
 		case APP_JOB_DONE:

@@ -40,7 +40,7 @@ feature {NONE}
 					new_file.putchar ('%N')
 				end;
 				new_file.close;
-                if text_window.file_name /= Void then
+                if Lace.file_name = Void then
 					-- Not a format shown
 --					Lace.set_file_name (name_chooser.selected_file);
 					text_window.set_file_name (name_chooser.selected_file);

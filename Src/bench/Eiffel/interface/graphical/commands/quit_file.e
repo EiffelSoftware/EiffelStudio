@@ -15,6 +15,7 @@ feature
 			init (c, a_text_window)
 		end;
 
+
 feature {NONE}
 
 	work (argument: ANY) is
@@ -22,13 +23,13 @@ feature {NONE}
 		do
 			if argument = warner then
 				-- The user has been warned that he will lose his stuff
-				text_window.tool.destroy
+				text_window.tool.destroy;
 			else
 				-- First click on open
 				if text_window.changed then
 					warner.call (Current, l_File_changed)
 				else
-					text_window.tool.destroy
+					text_window.tool.destroy;
 				end
 			end
 		end;
@@ -44,6 +45,6 @@ feature
 	
 feature {NONE}
 
-	command_name: STRING is do Result := l_Exit end
+	command_name: STRING is do Result := l_Exit end;
 
 end

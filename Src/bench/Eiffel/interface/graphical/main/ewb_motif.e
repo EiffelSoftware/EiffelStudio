@@ -8,7 +8,7 @@ indexing
 class EWB_MOTIF
 
 inherit
-	EWB_UNIX
+	EWB
 		redefine
 			init_toolkit
 		end;

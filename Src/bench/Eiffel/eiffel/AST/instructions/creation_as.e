@@ -398,9 +398,7 @@ feature -- Type check, byte code and dead code removal
 				create_info := local_type.create_info
 			elseif access.is_attribute then
 				attribute_b ?= access
-				create create_feat
-				create_feat.set_feature_id (attribute_b.attribute_id)
-				create_feat.set_feature_name (attribute_b.attribute_name)
+				create create_feat.make (attribute_b.attribute_id, attribute_b.attribute_name_id)
 				create_info := create_feat
 			end
 			Creation_types.insert (create_info)
@@ -434,8 +432,8 @@ feature -- Type check, byte code and dead code removal
 				-- executable.
 			create_feat ?= create_info
 			if create_feat /= Void then
-				rout_id := context.a_class.feature_table.item
-					(create_feat.feature_name).rout_id_set.first
+				rout_id := context.a_class.feature_table.item_id
+					(create_feat.feature_name_id).rout_id_set.first
 				type_set := System.type_set
 				if not type_set.has (rout_id) then
 						-- Found a new routine id having a type table

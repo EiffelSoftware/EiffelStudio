@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_VARKIND
+	EOLE_VAR_KIND
 
 feature 
 

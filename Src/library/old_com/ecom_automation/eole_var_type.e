@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_VARTYPE
+	EOLE_VAR_TYPE
 
 feature -- Access
 

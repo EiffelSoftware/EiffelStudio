@@ -28,3 +28,4 @@ end -- class AUTOMATION_SERVER_MAIN_WINDOW
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

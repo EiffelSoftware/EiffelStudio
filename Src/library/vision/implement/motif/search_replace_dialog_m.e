@@ -34,7 +34,7 @@ inherit
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable, created_dialog_automatically, create_widget
 		redefine
-			parent, set_default
+			parent, set_default, children_list
 		end;
 
 	MEL_FORM_DIALOG
@@ -474,8 +474,16 @@ feature {NONE} -- Implementation
 			buttons_form.manage
 		end
 
-end -- class SEARCH_REPLACE_DIALOG_M
+feature {NONE} -- Implementation
 
+    children_list: LIST [POINTER] is
+            -- List of children C widget points to be used
+            -- for resouce settting
+        do
+            Result := descendents
+        end
+
+end -- class SEARCH_REPLACE_DIALOG_M
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

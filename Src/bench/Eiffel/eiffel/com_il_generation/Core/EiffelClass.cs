@@ -15,15 +15,17 @@ using System.Runtime.InteropServices;
 
 internal class EiffelClass
 {
-	public EiffelClass( ModuleBuilder ModuleB )
+	public EiffelClass ()
 	{
 		Interfaces = new System.Collections.ArrayList();
 		BaseType = EiffelReflectionEmit.NoValue;
-		Module = ModuleB;
 		#if ASSERTIONS
 			TypeBuilderCreated = false;
 		#endif
 	}
+	
+	// Associated ModuleBuilder
+	protected ModuleBuilder module;
 	
 	// Type ID
 	public int TypeID, InterfaceID;
@@ -78,6 +80,9 @@ internal class EiffelClass
 
 	// SetTypeID routine
 	public MethodBuilder set_type_id;
+
+	private string source_file_name = null;
+			// Location of Eiffel source file defining Current.
 
 	// Set `FeatureID' of `FeatureIDTable' to be invariant
 	// routine.
@@ -139,6 +144,36 @@ internal class EiffelClass
 			}
 			return InternalDefaultConstructor;
 		}
+	}
+
+	public void set_module (ModuleBuilder a_module)
+		// Assign `a_module' to `module'.
+	{
+		module = a_module;
+	}
+
+	public void set_source_file_name (string a_file_name)
+		// Assign `a_file_name' to `source_file_name'.
+	{
+		source_file_name = a_file_name;
+	}
+
+	public void create_document ()
+		// When debugging is enabled associated `source_file_name' to module to
+		// create `Document' used for generating debug information.
+	{
+		#if ASSERTIONS
+			if( TypeBuilderCreated )
+				throw new ApplicationException( "SetDocument: Type Builder already created" );
+		#endif
+
+			// Create Document associated to current class.
+		Document = module.DefineDocument (source_file_name, new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
+			new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
+			System.Guid.Empty);
+
+			// Not needed anymore.
+		source_file_name = null;
 	}
 
 	// Set `IsDeferred' with `val'
@@ -230,16 +265,6 @@ internal class EiffelClass
 	public void SetArrayElementName ( String a_name )
 	{
 		ArrayElementName = a_name;
-	}
-	
-	// Set `Document' with `Doc'
-	public void SetDocument( System.Diagnostics.SymbolStore.ISymbolDocumentWriter Doc )
-	{
-		#if ASSERTIONS
-			if( TypeBuilderCreated )
-				throw new ApplicationException( "SetDocument: Type Builder already created" );
-		#endif
-		Document = Doc;
 	}
 	
 	// Set `IsInterface' with `true'
@@ -337,20 +362,20 @@ internal class EiffelClass
 			ParentType = EiffelReflectionEmit.ObjectType;
 		if( IsDeferred && !IsInterface )
 		{
-			Builder = Module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
+			Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
 			DefineDefaultConstructor();
 		}
 		else
 		{
 			if( IsInterface )
-					Builder = Module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract, null,  LocalInterfaces );
+					Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract, null,  LocalInterfaces );
 			else
 				{
 					if( IsExpanded )
-						Builder = Module.DefineType( Name, TypeAttributes.Public, ParentType, LocalInterfaces );
+						Builder = module.DefineType( Name, TypeAttributes.Public, ParentType, LocalInterfaces );
 					else
 					{
-						Builder = Module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Class, ParentType, LocalInterfaces );
+						Builder = module.DefineType( Name, TypeAttributes.Public | TypeAttributes.Class, ParentType, LocalInterfaces );
 						DefineDefaultConstructor();
 					}
 				}
@@ -435,9 +460,6 @@ internal class EiffelClass
 		}
 	}
 
-	// Module that contains type
-	protected ModuleBuilder Module;
-	
 #if ASSERTIONS
 	// Was `CreateTypeBuilder' called?
 	protected bool TypeBuilderCreated;

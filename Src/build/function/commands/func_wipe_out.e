@@ -38,6 +38,7 @@ feature {NONE}
 				ol := edited_function.output_list;
 				duplicate_lists (il, ol);
 				edited_function.wipe_out;
+				update_interface;
 				update_history
 			end
 		end; -- work

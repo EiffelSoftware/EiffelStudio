@@ -34,9 +34,42 @@ inherit
 			{NONE} all
 		end
 
+feature -- Access
 
+	dispatch_interface: BOOLEAN
+			-- Is coclass contained dispatch interface?
+			
 feature {NONE} -- Implementation
 
+	excepinfo_initialization: STRING is
+			-- EXCEPINFO structure initialization.
+		do
+			create Result.make (100)
+			if dispatch_interface then
+				Result.append (New_line_tab)
+				Result.append (Excepinfo_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Open_parenthesis)
+				Result.append (Excepinfo)
+				Result.append (Asterisk)
+				Result.append (Close_parenthesis)
+				Result.append (Co_task_mem_alloc)
+				Result.append (Space_open_parenthesis)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append (Excepinfo)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				Result.append (Semicolon)
+				
+				Result.append (New_line_tab)
+				Result.append ("if (excepinfo != NULL)%N%T%T")
+				Result.append ("memset (excepinfo, %'\0%', sizeof (EXCEPINFO));")
+			end
+		ensure
+			non_void_initialization: Result /= Void
+		end
+	
 	release_interface (a_name: STRING): STRING is
 			-- Code to release interface
 		require

@@ -378,12 +378,10 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						-- Now remove the window from the directory.
 					Command_handler.Delete_object_command.delete_object (window_item.object)
 				end
-				
+
 				create command_delete_directory.make (a_directory.text)
 				command_delete_directory.execute
 				
-				
-				unparent_tree_node (a_directory)
 					-- Update project so it may be saved.
 				system_status.enable_project_modified
 				command_handler.update

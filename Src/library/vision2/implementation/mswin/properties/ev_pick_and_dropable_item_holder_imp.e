@@ -143,6 +143,30 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 		deferred
 		end
 
+	set_capture is
+			-- Grab user input.
+			-- Works only on current windows thread.
+		deferred
+		end
+
+	release_capture is
+			-- Release user input.
+			-- Works only on current windows thread.
+		deferred
+		end
+
+	set_heavy_capture is
+			-- Grab user input.
+			-- Works on all windows threads.
+		deferred
+		end
+
+	release_heavy_capture is
+			-- Release user input
+			-- Works on all windows threads.
+		deferred
+		end
+
 feature -- Initialization
 
 feature -- Access

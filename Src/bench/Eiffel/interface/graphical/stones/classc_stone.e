@@ -59,9 +59,9 @@ feature -- dragging
 			-- Is Current an element with recorded structures information?
 			-- Yes. (FIXME?)
 		do
-			if not Error_handler.has_error then
+			--if not Error_handler.has_error then
 				Result := true
-			end
+			--end
 		end
 
 end

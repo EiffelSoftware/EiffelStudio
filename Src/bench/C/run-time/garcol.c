@@ -1885,11 +1885,11 @@ private int sweep_from_space()
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					dtype = zone->ov_flags & EO_TYPE;	/* Dispose ptr */
+					dtype = next->ov_flags & EO_TYPE;	/* Dispose ptr */
 					if (Disp_rout(dtype)) {				/* Exists ? */
 						gc_status = g_data.status;      /* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
-						DISP(dtype,(char *) (zone + 1));/* Call it */
+						DISP(dtype,(char *) (next + 1));/* Call it */
 						g_data.status = gc_status;		/* Restore previous GC status */
 					}
 

@@ -164,8 +164,8 @@ feature
 
 	deselect_all is
 		do
-			set_cursor_position (0);
-			highlight_selected (0,0)
+			--set_cursor_position (0);
+			highlight_selected (cursor_position, cursor_position)
 		end;
 
 	clean is

@@ -2492,10 +2492,13 @@ io.error.putstring ("Clickable signature change dump%N");
 		local
 			ast_clicks: CLICK_LIST
 		do
-			if Error_handler.has_error then
-				ast_clicks := Tmp_ast_server.item (id).click_list
-			else
+			--if Error_handler.has_error then
+				--ast_clicks := Tmp_ast_server.item (id).click_list
+			--else
+			if not Tmp_ast_server.has (id) then
 				ast_clicks := Ast_server.item (id).click_list
+			else
+				ast_clicks := Tmp_ast_server.item (id).click_list
 			end;
 			Result := ast_clicks.clickable_stones (Current)
 		end;

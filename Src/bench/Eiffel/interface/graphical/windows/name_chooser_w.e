@@ -86,9 +86,9 @@ feature -- Graphical Interface
 			last_caller_recorded: last_caller = a_command
 		end;
 
-	set_window (wind: TEXT_WINDOW) is
+	set_window (wind: COMPOSITE) is
 		do
-			window ?= wind.tool
+			window := wind
 		end;
 
 feature {NONE} -- Properties
@@ -110,7 +110,6 @@ feature {NONE} -- Implementation
 				last_caller.execute (Current)
 			else
 				!! mp.set_watch_cursor;
-				project_tool.set_changed (false);
 				if not project_tool.initialized then
 					discard_licence;
 					exit

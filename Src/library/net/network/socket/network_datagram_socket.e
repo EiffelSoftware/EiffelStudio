@@ -27,7 +27,7 @@ inherit
 			address as socket_address,
 			set_peer_address as socket_set_peer_address
 		undefine
-			is_valid_peer_address
+			is_valid_peer_address, create_from_descriptor
 		end
 
 creation

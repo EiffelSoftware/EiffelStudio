@@ -13,20 +13,20 @@ class
 
 inherit
 
-	STREAM_SOCKET
-		rename
-			address as old_socket_address,
-			set_peer_address as old_socket_set_peer_address
-		undefine
-			is_valid_peer_address
-		end
-
 	NETWORK_SOCKET
 		undefine
 			support_storable
 		select
 			address,
 			set_peer_address
+		end
+
+	STREAM_SOCKET
+		rename
+			address as old_socket_address,
+			set_peer_address as old_socket_set_peer_address
+		undefine
+			is_valid_peer_address, create_from_descriptor
 		end
 
 creation {NETWORK_STREAM_SOCKET}

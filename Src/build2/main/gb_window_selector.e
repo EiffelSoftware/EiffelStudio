@@ -192,6 +192,7 @@ feature -- Access
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_titled_window_main_small_color"))
 			Result.select_actions.extend (agent change_root_window)
+			Result.drop_actions.extend (agent change_root_window_on_drop)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -429,6 +430,20 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
+	change_root_window_on_drop (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+			-- Change the root window of the project to `titled_window_object'.
+		require
+			titled_window_object_not_void: titled_window_object /= Void
+		do
+			titled_window_object.set_as_root_window
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		ensure
+			root_window_set: object_handler.root_window_object = titled_window_object
+		end
+		
+
 	change_root_window is
 			-- Ensure that window currently displayed in the layout constructor is the main
 			-- window.
@@ -446,8 +461,7 @@ feature {NONE} -- Implementation
 			system_status.enable_project_modified
 			command_handler.update
 		end
-		
-		
+
 	add_new_directory is
 			-- Display a dialog for inputting a new name, that is only valid if
 			-- not contained in `directory_names'. Create a new dialog

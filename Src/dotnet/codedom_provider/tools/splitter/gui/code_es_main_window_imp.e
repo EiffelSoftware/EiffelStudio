@@ -118,7 +118,7 @@ feature {NONE}-- Initialization
 			output_buttons_box.extend (l_ev_cell_3)
 			output_buttons_box.extend (exit_button)
 			
-			set_minimum_width (600)
+			set_minimum_width (450)
 			disable_user_resize
 			set_title ("eSplitter")
 			file_menu.set_text ("File")

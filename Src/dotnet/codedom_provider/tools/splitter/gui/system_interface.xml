@@ -26,7 +26,7 @@
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Minimum_width>600</Minimum_width>
+<EV_WIDGET><Minimum_width>450</Minimum_width>
 	</EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
 	<Title><![CDATA[eSplitter]]></Title>

@@ -32,8 +32,6 @@ feature -- Output
 		
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
-		require
-			non_void_message: a_message /= Void
 		do
 			input_pipe.put_string (a_message + "%N")
 		end	

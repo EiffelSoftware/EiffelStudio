@@ -239,11 +239,8 @@ feature -- Basic operations
 							grid_item_interface := dynamic_content_function.last_result
 							if grid_item_interface /= Void then
 								grid_item := grid_item_interface.implementation
-								if grid.is_content_partially_dynamic then
-									grid.set_item (current_index_in_row, current_index_in_column, grid_item.interface)
-								else
-									grid_item.set_parent_grid_i (grid)
-								end
+									-- Note that the item is added to the grid in both partial and complete dynamic modes.
+								grid.set_item (current_index_in_row, current_index_in_column, grid_item.interface)
 								grid_item_exists := True
 							end
 						end

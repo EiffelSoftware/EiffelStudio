@@ -112,9 +112,17 @@ feature -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
+			a_tbb: EV_TOOL_BAR_BUTTON_IMP
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
+			
+			a_tbb ?= v_imp
+			
+			if a_tbb /= Void then
+				a_tbb.initialize_button_box
+			end
+			
 			add_to_container (v, v_imp)
 			gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
 			add_radio_button (v)

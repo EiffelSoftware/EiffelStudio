@@ -114,6 +114,15 @@ feature -- Status setting
 			par := parent_imp.list_widget
 			if par /= NULL then
 				C.gtk_list_select_child (par, c_object);
+--| FIXME hack to ensure the element is selected.				
+				if
+					C.g_list_find (
+						C.gtk_list_struct_selection (par),
+						c_object
+					) = NULL
+				then
+					C.gtk_list_select_child (par, c_object);
+				end
 			end
 		end
 
@@ -174,6 +183,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/06/14 21:16:40  etienne
+--| Hacked code to ensure proper selection.
+--|
 --| Revision 1.36  2001/06/07 23:08:01  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

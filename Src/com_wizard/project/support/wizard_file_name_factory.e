@@ -43,6 +43,15 @@ feature -- Basic operations
 			a_generator.create_file_name (Current)
 		end
 
+	create_c_alias_file_name (a_writer: WIZARD_WRITER_C_FILE) is
+			-- Create new file name according to `a_writer'.
+		require
+			non_void_writer: a_writer /= Void
+		do
+			transient_writer := a_writer
+			process_c_common
+		end
+
 	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- File name for generated Eiffel to C structure mapper
 		do

@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 						if not shared_wizard_environment.abort then
 							start
 							set_title (Runtime_functions_generation)
-							set_range (6)
+							set_range (8)
 							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
 							step
 							Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
@@ -300,6 +300,10 @@ feature {NONE} -- Implementation
 							Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
 							step
 							Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+							step
+							Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
+							step
+							Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 							step
 							parent.add_warning (Generation_Successful)
 						end

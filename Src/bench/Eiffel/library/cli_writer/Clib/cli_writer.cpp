@@ -84,20 +84,6 @@ rt_public EIF_POINTER new_fusion_support ()
   return ifs;
 }
 
-rt_public EIF_POINTER c_get_bstr (EIF_POINTER a_uni_string)
-    /* Get a BSTR from a LPWSTR */
-{
-    BSTR pBStr = SysAllocString ((LPWSTR) a_uni_string);
-
-    return pBStr;
-}
-
-rt_public void c_free_bstr (EIF_POINTER a_bstr)
-  /* Free memory associated with 'a_bstr' */
-{
-  SysFreeString ( (BSTR) a_bstr);
-}
-
 /*
 feature -- Unmanaged Metadata API
 */

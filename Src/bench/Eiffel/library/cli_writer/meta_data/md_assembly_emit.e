@@ -79,16 +79,18 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_file (file_name: UNI_STRING; public_key: MD_PUBLIC_KEY_TOKEN;
+	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER;
 			file_flags: INTEGER): INTEGER
 		is
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void
-			public_key_not_void: public_key /= Void
+			file_name_not_empty: not file_name.is_empty
+			hash_value_not_void: hash_value /= Void
+			hash_value_not_empty: hash_value.count > 0
 		do
-			last_call_success := c_define_file (item, file_name.item, public_key.item.item,
-				public_key.item.count, file_flags, $Result)
+			last_call_success := c_define_file (item, file_name.item, hash_value.item,
+				hash_value.count, file_flags, $Result)
 		ensure
 			success: last_call_success = 0
 			valid_result: Result > 0

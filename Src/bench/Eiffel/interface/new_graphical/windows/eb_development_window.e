@@ -3248,7 +3248,7 @@ feature {EB_TOOL} -- Implementation / Commands
 			end
 		end
 		
-feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
+feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool handling
 
 	all_tool_windows: ARRAYED_LIST [EB_TOOL_WINDOW]
 		-- All tool windows under the control of `Current'.
@@ -3286,6 +3286,15 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
 				end
 			end
 		end
+		
+	remove_all_tool_windows is
+			-- Ensure `all_tool_windows' is empty
+		do
+			all_tool_windows.wipe_out
+		ensure
+			tool_windows_empty: all_tool_windows.is_empty
+		end
+		
 		
 	window_moved (x_pos, y_pos: INTEGER) is
 			-- `Current' has been moved, so move all associated tool windows within `all_tool_windows'.

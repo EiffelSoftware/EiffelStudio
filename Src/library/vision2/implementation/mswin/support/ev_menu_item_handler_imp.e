@@ -37,7 +37,7 @@ feature -- Basic operations
 			-- general list
 		local
 			ht: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_ITEM_IMP]
 			it: EV_MENU_ITEM_IMP
 		do
 			-- Initializations
@@ -55,8 +55,10 @@ feature -- Basic operations
 				until
 					cc.after
 				loop
-					it := cc.item
-					ht.put (it, it.id)
+					it ?= cc.item
+					if it /= Void then
+						ht.put (it, it.id)
+					end
 					cc.forth
 				end
 			end
@@ -67,7 +69,8 @@ feature -- Basic operations
 			-- general list
 		local
 			ht: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
-			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			it: EV_MENU_ITEM_IMP
 		do
 			-- Initializations
 			ht := menu_items
@@ -81,7 +84,10 @@ feature -- Basic operations
 				until
 					cc.after
 				loop
-					ht.remove (cc.item.id)
+					it ?= cc.item
+					if it /= Void then
+						ht.remove (it.id)
+					end
 					cc.forth
 				end
 			end

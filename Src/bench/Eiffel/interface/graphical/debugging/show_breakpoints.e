@@ -53,7 +53,7 @@ feature -- Formatting
 				else
 					tool ?= text_window.tool;
 					if tool /= Void then
-						tool.showtext_command.execute (stone)
+						tool.showtext_frmt_holder.execute (stone)
 					end;
 					if e_feature.body_id = 0 then
 							--FIXME need specify error message

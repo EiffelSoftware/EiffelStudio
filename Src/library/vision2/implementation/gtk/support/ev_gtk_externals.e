@@ -14474,13 +14474,13 @@ feature -- External C functions
 --			"C (GtkScale*): gint | <gtk/gtk.h>"
 --		end
 
---	gtk_scale_set_digits (a_scale: POINTER; a_digits: INTEGER) is
---			-- void    gtk_scale_set_digits      (GtkScale        *scale,
---			-- 				   gint             digits);
---			-- (from C_GTK_SCALE)
---		external
---			"C (GtkScale*, gint) | <gtk/gtk.h>"
---		end
+	gtk_scale_set_digits (a_scale: POINTER; a_digits: INTEGER) is
+			-- void    gtk_scale_set_digits      (GtkScale        *scale,
+			-- 				   gint             digits);
+			-- (from C_GTK_SCALE)
+		external
+			"C (GtkScale*, gint) | <gtk/gtk.h>"
+		end
 
 	gtk_scale_set_draw_value (a_scale: POINTER; a_draw_value: BOOLEAN) is
 			-- void    gtk_scale_set_draw_value  (GtkScale        *scale,

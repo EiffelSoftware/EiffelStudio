@@ -70,9 +70,21 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             }
 }
 
+/* To store previous value of `debug_mode' */
+static int saved_debug_mode = 0;
+
 void set_debug_mode (int a_debug_mode)
 {
-	debug_mode = a_debug_mode;
+	if (a_debug_mode == 0) {
+			/* We are disabling debugger here, therefore we need to save
+			 * previous state of debugger so that we can correctly restore
+			 * it later when we want to enable it again. */
+		saved_debug_mode = debug_mode;
+		debug_mode = a_debug_mode;
+	} else {
+			/* Restore previous state of debugger. */
+		debug_mode = saved_debug_mode;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -96,6 +108,15 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.15  2003/11/12 17:48:34  manus
+// Fixed bug in which when a vision2 application using capture was launched
+// outside the EiffelStudio debugger as soon as you had something that would
+// normally trigger a communication with EiffelStudio while debugging it would
+// fail with the following message:
+// Cannot serialize request, 5
+// Because there were no EiffelStudio debugger. Now we make sure that `debug_mode'
+// is properly restored.
+//
 // Revision 1.14  2003/10/22 01:14:06  king
 // Added set_debug_mode that was previous inline Eiffel code
 // Placed here because it doesn't compile with older C compilers (gcc 2.95)

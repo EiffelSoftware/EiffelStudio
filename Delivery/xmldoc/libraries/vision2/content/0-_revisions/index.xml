@@ -16,6 +16,29 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
+				<bold>EV_TEXT</bold>
+				<list ordered="false">
+					<item>
+						Weakened a number of preconditions that required a non empty final line, which was unecessary. Removed the obsolete feature `put_new_line' and made `last_line_not_empty' obsolete as it is unecessary and can be queried via `line'.
+					</item>
+					<item>
+						Added `line_number_from_position' which returns the line on which a paticular caret position resides.
+					</item>
+				</list>
+			</item>
+			<item>
+				<bold>EV_ACTIVE_LIST</bold> - New class added which replaces all occurances of ACTIVE_LIST within the interface. This prevents the EiffelVision implementation from being "unhooked" by user modification through the interface. The class is completely backwards comaptible, and does not require any modifications to your code. Classes such as EV_ACCELERATOR_LIST and EV_FONT incorporate this change.
+			</item>
+			<item>
+				<bold>EV_DOCKABLE_SOURCE</bold> - Added features `is_external_docking_relative', `enable_external_docking_relative' and `disable_external_docking_relative'. This permits you to dock a source to an EV_DOCKABLE_DIALOG that is not displayed relative to the original top window.
+			</item>
+			<item>
+				<bold>EV_RICH_TEXT</bold> - New class, providing a text control with support for character formatting and colors on a character by character basis. Supporting classes EV_CHARACTER_FORMAT and EV_CHARACTER_FORMAT_EFFECTS added.
+			</item>
+			<item>
+				<bold>EV_ENVIRONMENT</bold> - Added `fonts' which returns a list of all fonts available on the system.
+			</item>
+			<item>
 				<bold>EV_APPLICATION</bold> - Added `captured_widget' which returns the EV_WIDGET currently captured in the system, or `Void' if none.
 			</item>
 			<item>
@@ -33,6 +56,9 @@
 				<bold>Platform independent</bold>
 				<list ordered="false">
 					<item>
+						<bold>EV_DRAWABLE</bold> - `draw_text' and `draw_text_top_left' now both support text containing new line characters.
+					</item>
+					<item>
 						<bold>EV_APPLICATION</bold> - `focused_widget' had a side effect which may modify the index of some containers.
 					</item>
 					<item>
@@ -48,6 +74,25 @@
 				<list ordered="false">
 					<item>
 						<bold>EV_WINDOW</bold> - `move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.
+					</item>
+					<item>
+						<bold>EV_FONT</bold> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.
+    					</item>
+					<item> 	<bold>EV_SCROLL_BAR</bold> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.
+					</item>
+					<item>
+						<bold>EV_TEXT</bold>
+						<list ordered="false">
+							<item>
+								Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.
+							</item>
+							<item>
+								Modified `insert_text' so that the control is no longer scrolled to the top as a result. The original position is now maintained wherever possible.
+							</item>	
+							<item>
+								Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'
+							</item>
+						</list>
 					</item>
 				</list>
 			</item>

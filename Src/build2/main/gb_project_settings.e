@@ -12,6 +12,8 @@ inherit
 	ANY
 	
 	GB_CONSTANTS
+	
+	GB_SHARED_TOOLS
 
 create
 	default_create,
@@ -59,6 +61,15 @@ feature -- Access
 		
 	project_name: STRING
 		-- Name of project.
+		
+	client_of_window: BOOLEAN
+		-- Should generated code use EV_WINDOW as client?
+		-- If False, then we inherit EV_WINDOW.
+		
+	load_cancelled: BOOLEAN
+		-- Was last call to `load' cancelled by user?
+		-- This can only occur if the file was in an old format, and
+		-- they selected not to update to current format.
 	
 feature -- Basic operation
 
@@ -78,6 +89,7 @@ feature -- Basic operation
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
 			data.extend ([attributes_local_string, attributes_local.out])
+			data.extend ([client_of_window_string, client_of_window.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -90,25 +102,41 @@ feature -- Basic operation
 			file_handler_not_void: file_handler /= Void
 		local
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
+			dialog: GB_TWO_BUTTON_ERROR_DIALOG
 		do
+			load_cancelled := False
+				-- Reset in case this is the second attempt at loading.
 			data := file_handler.load_file (a_file_name)
 				-- We only retrieve the data if the
 				-- loading completed succcessfully.
 			if file_handler.last_load_successful then
 				check
 					data_not_void: data /= Void
-					data_count_is_8: data.count = 8
 				end
-				set_string_attribute (data @ 1, agent set_project_name (?))
-				set_string_attribute (data @ 2, agent set_project_location (?))
-				set_string_attribute (data @ 3, agent set_main_window_class_name (?))
-				set_string_attribute (data @ 4, agent set_application_class_name (?))
-				set_boolean_attribute (data @ 5, agent enable_complete_project, agent disable_complete_project)
-				set_boolean_attribute (data @ 6, agent enable_grouped_locals, agent disable_grouped_locals)
-				set_boolean_attribute (data @ 7, agent enable_debugging_output, agent disable_debugging_output)
-				set_boolean_attribute (data @ 8, agent enable_attributes_local, agent disable_attributes_local)
+				if data.count = 9 then
+					set_string_attribute (data @ 1, agent set_project_name (?))
+					set_string_attribute (data @ 2, agent set_project_location (?))
+					set_string_attribute (data @ 3, agent set_main_window_class_name (?))
+					set_string_attribute (data @ 4, agent set_application_class_name (?))
+					set_boolean_attribute (data @ 5, agent enable_complete_project, agent disable_complete_project)
+					set_boolean_attribute (data @ 6, agent enable_grouped_locals, agent disable_grouped_locals)
+					set_boolean_attribute (data @ 7, agent enable_debugging_output, agent disable_debugging_output)
+					set_boolean_attribute (data @ 8, agent enable_attributes_local, agent disable_attributes_local)
+					set_boolean_attribute (data @ 9, agent enable_client_of_window, agent disable_client_of_window)
+				else
+					create dialog.make_with_text (invalid_bpr_file)
+					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
+					dialog.show_modal_to_window (main_window)
+				end
 			end
 		end
+		
+	cancel_load is
+			-- Assign `true' to `load_cancelled'.
+		do
+			load_cancelled := True
+		end
+		
 
 feature -- Status Setting
 
@@ -150,6 +178,18 @@ feature -- Status Setting
 			project_name := name
 		ensure
 			project_name.is_equal (name)
+		end
+		
+	enable_client_of_window is
+			-- Assign `True' to `client_of_window'.
+		do
+			client_of_window := True
+		end
+		
+	disable_client_of_window is
+			-- Assign `False' to `client_of_window'.
+		do
+			client_of_window := False
 		end
 		
 		
@@ -220,6 +260,8 @@ feature {NONE} --Implementation
 	attributes_local_string: STRING is "Attributes_local"
 	
 	project_name_string: STRING is "Project_name"
+	
+	client_of_window_string: STRING is "Client_of_window"
 	
 	set_string_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Call `an_agent' with `temp_tuple' @ 2 string.

@@ -73,8 +73,11 @@ feature -- Basic Operation
 			else
 				new_object := object_handler.deep_object_from_id (new_id)
 			end
+			
+			if not original_object.expanded_in_box then
+				new_object.disable_expanded_in_box
+			end
 			object_handler.replace_object (original_object, new_object)
-			original_object.layout_item.update_pixmap
 			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)

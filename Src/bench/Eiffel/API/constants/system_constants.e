@@ -123,6 +123,8 @@ feature {NONE}
 
 	Finished_file_for_make: STRING is "finished"
 
+	Local_assemblies: STRING is "Assemblies"
+
 	W_code: STRING is "W_code"
 
 	project_extension: STRING is "epr"
@@ -157,7 +159,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0907")
+			Result.append_string ("0914")
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
 		end

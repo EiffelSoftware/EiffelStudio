@@ -378,7 +378,7 @@ feature -- Status report
 				create a_wel_string.make (Result)
 				nb := cwin_get_window_text (item, a_wel_string.item, length)
 				Result := a_wel_string.string
-				Result.head (nb)
+				Result.keep_head (nb)
 			else
 				create Result.make (0)
 			end

@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			if not headers.after then
 				str := clone (headers.item)
 				pos := str.index_of (' ', 1)
-				str.tail (str.count - pos)
+				str.remove_head (pos)
 				content_length := str.to_integer
 				is_count_valid := True
 			else

@@ -37,7 +37,7 @@ feature -- Access
 			nb := cwin_get_module_file_name (item, a_wel_string.item,
 				Max_name_length + 1)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty

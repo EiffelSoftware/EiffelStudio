@@ -500,7 +500,7 @@ feature -- Status report
 			create a_wel_string.make (Result)
 			nb := cwin_get_menu_string (item, an_id, a_wel_string.item, Max_name_length + 1, Mf_bycommand)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end

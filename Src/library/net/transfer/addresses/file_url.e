@@ -85,7 +85,7 @@ feature {NONE} -- Basic operations
 			-- Analyze URL.
 		do
 			if address.substring_index ("localhost", 1) = 1 then
-				address.head(9) -- The string "localhost" is 9 characters long.
+				address.keep_head (9) -- The string "localhost" is 9 characters long.
 			end
 			create name.make_from_string (address)
 		end

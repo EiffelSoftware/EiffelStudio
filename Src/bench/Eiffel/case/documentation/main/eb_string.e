@@ -174,8 +174,8 @@ feature -- Removal
 			leading_phrase_has_char: leading_phrase /= Void and then not leading_phrase.is_empty
 			trailing_phrase_has_char: trailing_phrase /= Void and then not trailing_phrase.is_empty
 		do
-			leading_phrase.head (leading_phrase.count - 1)
-			trailing_phrase.tail (trailing_phrase.count - 1)
+			leading_phrase.remove_tail (1)
+			trailing_phrase.remove_head (1)
 		end
 
 feature -- Cursor movement
@@ -248,7 +248,7 @@ feature -- Cursor movement
 					word_item.is_empty or else word_item.item (word_item.count) /= '.'
 				loop
 					trailing_phrase.precede ('.')
-					word_item.head (word_item.count - 1)
+					word_item.remove_tail (1)
 				end
 			end
 		end

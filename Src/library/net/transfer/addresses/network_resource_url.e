@@ -150,29 +150,29 @@ feature {NONE} -- Basic operations
 			if pos > 1 and address.substring_index ("//", 1) = 0 and
 				address.substring_index (Service + ":", 1) = 0 then
 				host := address.substring (1, pos - 1)
-				address.tail (address.count - pos)
+				address.remove_head (pos)
 				path := clone (address)
 				if not host.is_empty and has_username and 
 					host.occurrences ('@') = 1 then
 					pos := host.index_of ('@', 1)
 					username := host.substring (1, pos - 1)
-					host.tail (host.count - pos)
+					host.remove_head (pos)
 					if not username.is_empty and 
 						username.occurrences (':') = 1 then
 						pos := username.index_of (':', 1)
 						password := username.substring (pos + 1, username.count)
-						username.head (pos - 1)
+						username.keep_head (pos - 1)
 					end
 				end
 				if not host.is_empty and host.occurrences (':') <= 1 then
 					pos := host.index_of (':', 1)
 					if pos = host.count then
-						host.head (host.count - 1)
+						host.remove_tail (1)
 						pos := 0
 					elseif pos > 0 and 
 						host.substring (pos + 1, host.count).is_integer then
 						port := host.substring (pos + 1, host.count).to_integer
-						host.tail (host.count - pos)
+						host.remove_head (pos)
 					end
 				end
 				host.to_lower

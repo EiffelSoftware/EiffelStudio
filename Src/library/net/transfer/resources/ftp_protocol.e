@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			str := clone (last_reply)
 			str.left_adjust
 			pos := str.index_of (' ', 1)
-			str.head (pos - 1)
+			str.keep_head (pos - 1)
 			code := str.to_integer
 			from 
 				i := 1 
@@ -516,9 +516,9 @@ feature {NONE} -- Implementation
 		do
 			pos := s.index_of ('(', 1)
 			tail := clone (s)
-			tail.tail (s.count - pos)
+			tail.remove_head (pos)
 			pos := tail.index_of (' ', 1)
-			tail.head (pos - 1)
+			tail.keep_head (pos - 1)
 			resource_size := tail.to_integer
 			if resource_size > 0 then is_count_valid := True end
 		end

@@ -199,7 +199,7 @@ feature -- Status report
 				nb := cwin_send_message_result (item, Em_getline, i, a_wel_string.to_integer)
 				a_wel_string.set_null_character (nb)
 				Result := a_wel_string.string
-				Result.head (nb)
+				Result.keep_head (nb)
 			else
 				create Result.make (0)
 			end

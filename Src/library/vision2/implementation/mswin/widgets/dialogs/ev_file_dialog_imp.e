@@ -86,7 +86,7 @@ feature -- Element change
 				filter_name.item (1) = '*' and
 				filter_name.item (2) = '.'
 			then
-				filter_name.tail (filter_name.count - 2)
+				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
 				filter_name.append (" Files (")
 				filter_name.append (a_filter)

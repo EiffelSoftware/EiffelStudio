@@ -91,7 +91,7 @@ feature {NONE} -- Execution
 					class_i := Void
 				end
 			elseif at_pos = class_name.count then
-				class_name.head (class_name.count - 1);
+				class_name.remove_tail (1);
 				execute
 			else
 				cluster_name := class_name.substring (at_pos + 1, class_name.count);

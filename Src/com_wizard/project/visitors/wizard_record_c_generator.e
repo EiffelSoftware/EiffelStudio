@@ -52,22 +52,6 @@ feature -- Access
 			forward_def.append (Open_curly_brace)
 			forward_def.append (New_line)
 			
---			if windows_structures.has (a_descriptor.c_type_name) then
---				a_windows_structure := windows_structures.item (a_descriptor.c_type_name)
---				forward_def.append (Hash_if_ndef)
---				forward_def.append (Space)
---				forward_def.append (a_windows_structure.file_protector)
---				forward_def.append (New_line)
---				if 
---					a_windows_structure.structure_protector /= Void and then 
---					not a_windows_structure.structure_protector.empty
---				then
---					forward_def.append (Hash_if_ndef)
---					forward_def.append (Space)
---					forward_def.append (a_windows_structure.structure_protector)
---					forward_def.append (New_line)
---				end
---			end
 			forward_def.append (typedef)
 			forward_def.append (Space)
 			if a_descriptor.is_union then
@@ -81,17 +65,6 @@ feature -- Access
 			forward_def.append (Space)
 			forward_def.append (a_descriptor.c_type_name)
 			forward_def.append (Semicolon)
---			if a_windows_structure /= Void then
---				forward_def.append (New_line)
---				forward_def.append (Hash_end_if)
---				if 
---					a_windows_structure.structure_protector /= Void and then 
---					not a_windows_structure.structure_protector.empty
---				then
---					forward_def.append (New_line)
---					forward_def.append (Hash_end_if)
---				end
---			end
 			forward_def.append (New_line)
 			forward_def.append (Close_curly_brace)
 			c_writer.add_other_forward (forward_def)
@@ -103,26 +76,6 @@ feature -- Access
 			struct_def.append (New_line)
 			struct_def.append (Open_curly_brace)
 			struct_def.append (New_line)
-
---			if a_windows_structure /= Void then
---				struct_def.append (Hash_if_ndef)
---				struct_def.append (Space)
---				struct_def.append (a_windows_structure.file_protector)
---				struct_def.append (New_line)
---				if 
---					a_windows_structure.structure_protector /= Void and then 
---					not a_windows_structure.structure_protector.empty
---				then
---					struct_def.append (Hash_if_ndef)
---					struct_def.append (Space)
---					struct_def.append (a_windows_structure.structure_protector)
---					struct_def.append (New_line)
---					struct_def.append (Hash_define)
---					struct_def.append (Space)
---					struct_def.append (a_windows_structure.structure_protector)
---					struct_def.append (New_line)
---				end
---			end
 
 			if a_descriptor.is_union then
 				struct_def.append (Union)
@@ -157,17 +110,7 @@ feature -- Access
 			end
 			struct_def.append (Close_curly_brace)
 			struct_def.append (Semicolon)
---			if windows_structures.has (a_descriptor.c_type_name) then
---				struct_def.append (New_line)
---				struct_def.append (Hash_end_if)
---				if 
---					a_windows_structure.structure_protector /= Void and then 
---					not a_windows_structure.structure_protector.empty
---				then
---					struct_def.append (New_line)
---					struct_def.append (Hash_end_if)
---				end
---			end
+
 			struct_def.append (New_line)
 			struct_def.append (Close_curly_brace)
 

@@ -57,30 +57,6 @@ feature -- Basic Operations
 			serialize_consumed_types			
 		end
 
-	consume_from_name (aname: ASSEMBLY_NAME) is
-			-- Generate XML for assembly with name `aname'.
-		require
-			non_void_name: aname /= Void
-			signed_name: aname.get_public_key_token /= Void
-		local
-			ass: ASSEMBLY
-			retried: BOOLEAN
-		do
-			if not retried then
-				ass := feature {ASSEMBLY}.load_assembly_name (aname)
-				check
-					assembly_loaded: ass /= Void
-				end
-				consume (ass)
-			else
-					-- An error occured
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.name))
-			end
-		rescue
-			retried := True
-			retry
-		end
-		
 	is_assembly_modified (ass: ASSEMBLY; apath: STRING): BOOLEAN is
 			-- is the assembly 'ass' newer than the version in the specified path 'apath'
 		require

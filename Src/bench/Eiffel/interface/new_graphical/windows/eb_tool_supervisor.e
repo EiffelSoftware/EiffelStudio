@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			create feature_tool_mgr.make
 			create class_tool_mgr.make
 			create object_tool_mgr.make
-			create explain_tool_mgr.make
+			create cluster_tool_mgr.make
 --			Graphical_resources.add_user (Current)	
 		end
 
@@ -55,8 +55,8 @@ feature {ANY} -- Not permanent exportation
 	object_tool_mgr: EB_OBJECT_TOOL_LIST
 		-- Manager for object tools
 
-	explain_tool_mgr: EB_EXPLAIN_TOOL_LIST
-		-- Manager for explain tools
+	cluster_tool_mgr: EB_CLUSTER_TOOL_LIST
+		-- Manager for cluster tools
 
 feature -- Properties
 
@@ -102,16 +102,16 @@ feature -- Properties
 			project_tool.add_object_entry (Result)
 		end
 
-	new_explain_tool: EB_EXPLAIN_TOOL is
-			-- Create an explain tool in a new window
+	new_cluster_tool: EB_CLUSTER_TOOL is
+			-- Create an cluster tool in a new window
 		local
-			ex_win: EB_EXPLAIN_WINDOW
+			cl_win: EB_CLUSTER_WINDOW
 		do
-			create ex_win.make_top_level
-			Result := ex_win.tool
+			create cl_win.make_top_level
+			Result := cl_win.tool
 
-			explain_tool_mgr.extend (Result)
-			Project_tool.add_explain_entry (Result)
+			cluster_tool_mgr.extend (Result)
+			Project_tool.add_cluster_entry (Result)
 		end
 
 	class_tools_count: INTEGER is
@@ -132,10 +132,10 @@ feature -- Properties
 			Result := object_tool_mgr.count
 		end	
 
-	explain_tools_count: INTEGER is
-			-- number of active explain tools
+	cluster_tools_count: INTEGER is
+			-- number of active cluster tools
 		do
-			Result := explain_tool_mgr.count
+			Result := cluster_tool_mgr.count
 		end	
 
 	has_active_editor_tools: BOOLEAN is
@@ -195,20 +195,20 @@ feature -- Graphical Interface
 			f_t: EB_FEATURE_TOOL
 			c_t: EB_CLASS_TOOL
 			o_t: EB_OBJECT_TOOL
-			e_t: EB_EXPLAIN_TOOL
+			cl_t: EB_CLUSTER_TOOL
 		do
 			f_t ?= ed
 			c_t ?= ed
 			o_t ?= ed
-			e_t ?= ed
+			cl_t ?= ed
 			if f_t /= Void then
 				feature_tool_mgr.remove_editor (f_t)
 			elseif c_t /= Void then
 				class_tool_mgr.remove_editor (c_t)
 			elseif o_t /= Void then
 				object_tool_mgr.remove_editor (o_t)
-			elseif e_t /= Void then
-				explain_tool_mgr.remove_editor (e_t)
+			elseif cl_t /= Void then
+				cluster_tool_mgr.remove_editor (cl_t)
 			else
 					-- tool MUST be destroyed.
 				ed.destroy
@@ -230,7 +230,7 @@ feature -- Graphical Interface
 			feature_tool_mgr.hide_editors
 			class_tool_mgr.hide_editors
 			object_tool_mgr.hide_editors
-			explain_tool_mgr.hide_editors
+			cluster_tool_mgr.hide_editors
 		end
 
 	show_all_editors is
@@ -239,7 +239,7 @@ feature -- Graphical Interface
 			feature_tool_mgr.show_editors
 			class_tool_mgr.show_editors
 			object_tool_mgr.show_editors
-			explain_tool_mgr.show_editors
+			cluster_tool_mgr.show_editors
 		end
 
 	close_all_editors is
@@ -248,13 +248,13 @@ feature -- Graphical Interface
 			feature_tool_mgr.close_editors
 			class_tool_mgr.close_editors
 			object_tool_mgr.close_editors
-			explain_tool_mgr.close_editors
+			cluster_tool_mgr.close_editors
 		end
 
 	raise_all_editors is
 			-- Raise all the editors.
 		do
-			explain_tool_mgr.raise_editors
+			cluster_tool_mgr.raise_editors
 			object_tool_mgr.raise_editors
 			feature_tool_mgr.raise_editors
 			class_tool_mgr.raise_editors
@@ -265,9 +265,9 @@ feature -- Graphical Interface
 			class_tool_mgr.raise_editors
 		end
 
-	raise_explain_tools is
+	raise_cluster_tools is
 		do
-			explain_tool_mgr.raise_editors
+			cluster_tool_mgr.raise_editors
 		end
 
 	raise_object_tools is
@@ -365,7 +365,7 @@ feature -- Update
 --				feature_tool_mgr.update_graphical_resources
 --				class_tool_mgr.update_graphical_resources
 --				object_tool_mgr.update_graphical_resources
---				explain_tool_mgr.update_graphical_resources
+--				cluster_tool_mgr.update_graphical_resources
 --				need_to_resynchronize := False
 --			end
 		end	

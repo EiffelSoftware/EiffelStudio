@@ -121,29 +121,6 @@ feature -- PND
 		do
 			check do_not_call: False end
 		end
-		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
---	check_callback is
---			-- 
---		local
---			check_list_par: EV_CHECKABLE_LIST_IMP
---		do
---			check_list_par ?= parent_imp
---			if
---				check_list_par /= Void
---			then
---				if check_list_par.is_item_checked (interface) then
---					if check_list_par.check_actions_internal /= Void then
---						check_list_par.check_actions_internal.call ([interface])
---					end
---				else
---					if check_list_par.uncheck_actions_internal /= Void then
---						check_list_par.uncheck_actions_internal.call ([interface])
---					end
---				end
---			end
---		end
 
 feature -- Status report
 
@@ -201,16 +178,16 @@ feature -- Element change
 		do
 			pixmap := a_pix.twin
 			if parent_imp /= Void then
-			--	parent_imp.set_row_pixmap (index, internal_pixmap)
+				parent_imp.set_row_pixmap (parent_imp.index_of (interface, 1), pixmap)
 			end
 		end
 
 	remove_pixmap is
 			-- Remove the rows pixmap.
 		do
-			--internal_pixmap := Void
+			pixmap := Void
 			if parent_imp /= Void then
-			--	parent_imp.remove_row_pixmap (index)
+				parent_imp.remove_row_pixmap (parent_imp.index_of (interface, 1))
 			end
 		end
 	

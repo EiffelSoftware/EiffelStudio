@@ -290,6 +290,7 @@ feature
 			struct_ext: STRUCT_EXTENSION_I
 			inline_ext: INLINE_EXTENSION_I
 			buf: GENERATION_BUFFER
+			type_c: TYPE_C
 		do
 			if encapsulated then
 				is_struct_extension := extension.is_struct
@@ -323,7 +324,8 @@ feature
 					struct_ext.generate_struct_access (buf, external_name, parameters)
 				elseif is_inline_extension and then not_polymorphic then
 					inline_ext ?= extension
-					inline_ext.generate_inline_access (buf, parameters)
+					type_c := real_type (type).c_type
+					inline_ext.generate_inline_access (buf, parameters, type_c)
 				elseif is_cpp_extension and then not_polymorphic then
 					cpp_ext ?= extension
 					cpp_ext.generate (external_name, parameters)

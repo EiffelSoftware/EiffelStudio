@@ -98,7 +98,7 @@ feature -- Initialization
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some external C function.
 		require
-			c_string_exists: c_string /= Void
+			c_string_exists: c_string /= default_pointer
 		local
 			length: INTEGER
 		do
@@ -107,6 +107,24 @@ feature -- Initialization
 			str_cpy ($area, c_string, length);
 			count := length
 		end;
+
+	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER) is
+			-- Reset contents of string from substring of `c_string',
+			-- a string created by some external C function.
+		require
+			c_string_exists: c_string /= default_pointer
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+		local
+			length: INTEGER
+		do
+			length := end_pos - start_pos + 1;
+			make_area (length);
+			str_take (c_string, $area, start_pos, end_pos);
+			count := length
+		ensure
+			valid_count: count = end_pos - start_pos + 1
+		end
 
 	setup (other: like Current) is
 			-- Perform actions on a freshly created object so that
@@ -263,7 +281,7 @@ feature -- Comparison
 			other_area: like area
 		do
 			other_area := other.area;
-			Result := str_cmp ($other_area, $area, other.count, count)>0
+			Result := str_cmp ($other_area, $area, other.count, count) > 0
 		end;
 
 feature -- Status report

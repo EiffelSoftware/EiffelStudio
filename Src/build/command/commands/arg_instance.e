@@ -8,12 +8,11 @@ indexing
 class ARG_INSTANCE 
 
 inherit
-
 	TYPE_DATA
  
 creation
-
-	session_init, storage_init
+	session_init,
+	storage_init
 	
 feature -- creation
 
@@ -22,7 +21,7 @@ feature -- creation
 			type := other.type
 		end
 
-	storage_init (t: CONTEXT_TYPE c: CONTEXT) is
+	storage_init (t: CONTEXT_TYPE [CONTEXT]; c: CONTEXT) is
 			-- Create `Current' as an instantiated argument
 			-- after retrieving information from the BUILDGEN.
 		do
@@ -64,7 +63,7 @@ feature {NONE} -- Attributes
 
 feature -- Attributes
 
-	type: CONTEXT_TYPE 
+	type: CONTEXT_TYPE [like context]
 			-- Type of current argument
 
 	context: CONTEXT

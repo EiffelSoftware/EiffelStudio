@@ -7,16 +7,16 @@ indexing
 class ARG 
 
 inherit
-
 	TYPE_DATA
 
 creation
-
-	session_init, storage_init, set
+	session_init,
+	storage_init,
+	set
 	
-feature 
+feature -- Initialization 
 
-	set (t: CONTEXT_TYPE; p: CMD) is
+	set (t: CONTEXT_TYPE [CONTEXT]; p: CMD) is
 			-- Set type to `t' and 
 			-- parent `p'
 		do
@@ -24,14 +24,14 @@ feature
 			set_parent (p)
 		end
 
-	session_init (other: CONTEXT_TYPE) is
+	session_init (other: CONTEXT_TYPE [CONTEXT]) is
 		do
 			set_type (other)
 		ensure
 			Type_set: type /= Void
 		end
 
-	storage_init (other: CONTEXT_TYPE) is
+	storage_init (other: CONTEXT_TYPE [CONTEXT]) is
 		do
 			set_type (other)
 		ensure
@@ -40,9 +40,9 @@ feature
 
 feature -- Pick and drop data
 
-	type: CONTEXT_TYPE
+	type: CONTEXT_TYPE [CONTEXT]
 
-	set_type (other: CONTEXT_TYPE) is
+	set_type (other: CONTEXT_TYPE [CONTEXT]) is
 		do
 			type := other
 		end

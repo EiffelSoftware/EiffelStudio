@@ -32,10 +32,14 @@
 #include "eif_lmalloc.h"
 
 #ifdef EIF_VMS
+#include <assert>
 #include <lib$routines>
 #include <descrip>
 #include <dvidef>
-#include <ssdef>
+#include <ssdef>	/* SS$_ symbols */
+#include <fab>		/* RMS FAB definitions */
+#include <nam>		/* RMS NAM (name block) definitions */
+#include <starlet>	/* system, rms services - sys$parse et. al. */
 #pragma message disable (NEEDCONSTEXT,ADDRCONSTEXT)	/* skip non-constant extension warnings */
 #define DX_BUF(d,buf) DX d = { sizeof buf, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
 /* VMS filenames or types (.extensions) may contain any of the following. */
@@ -192,15 +196,20 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 	/* VMS filenames are of the form [ <name> ] [ . [ <ext> ] ] */
 	/* where <name> and <ext> start with an alphabetic and may be followed */
 	/* by up to 38 alphanumeric chars. Alphabetic are A-Z, $, _.   */
-	/* but we want to allow unix syntax also */
-
-	if (p && *p && *p != '$' && strlen(p) <= 39) {
-	    /* ***VMS_FIXME*** */
-	    size_t len = strspn (p, vms_valid_filename_chars);
-	    if (len == strlen(p))
+	/* but since those restrictions may be relaxed, lets ask the system. */
+	if (p && *p) {
+	    /* perform a parse on the name supplied */
+	    struct FAB fab = cc$rms_fab;
+	    struct NAM nam = cc$rms_nam;
+	    VMS_STS sts;
+	    fab.fab$l_fna = p; fab.fab$b_fns = strlen(p);
+	    fab.fab$l_nam = &nam;
+	    nam.nam$b_nop |= NAM$M_SYNCHK;	/* request syntax check only, no lookup */    
+	    sts = sys$parse (&fab);    
+	    if (VMS_SUCCESS(sts))
 		return EIF_TRUE;
 	}
-	else return EIF_FALSE;
+	return EIF_FALSE;
 
 #else
 		/* Unix implement */
@@ -508,10 +517,6 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 
 
 #ifdef EIF_VMS
-#include <fab>
-#include <nam>
-#include <starlet>	/* system, rms services - sys$parse et. al. */
-#include <assert>
 
 /* does the path end in a VMS terminator (dev:[dir] or dev:)? Boolean result. */
 rt_public int eifrt_vms_has_path_terminator (const char* path)

@@ -449,7 +449,14 @@ feature {NONE} -- Implementation
 
 	reorder_child (v: like item; a_position: INTEGER) is
 			-- Move `v' to `a_position' in Current.
+		local
+			item_imp: EV_TREE_NODE_IMP
 		do
+			item_imp ?= v.implementation
+			--| FIXME The gtk actual tree item move needs implementing.
+			ev_children.prune_all (item_imp)
+			ev_children.go_i_th (a_position)
+			ev_children.put_left (item_imp)	
 		end
 
 	remove_i_th (a_position: INTEGER) is

@@ -56,7 +56,7 @@ feature
 			if not result_type.is_void then
 				type_i := context.real_type (result_type);
 				if
-					type_i.is_expanded or else type_i.is_bit then	
+					type_i.is_expanded or else type_i.is_bit
 				then
 					context.mark_result_used;
 				end;

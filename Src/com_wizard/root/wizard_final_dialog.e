@@ -6,6 +6,11 @@ class
 
 inherit
 	WEL_MODAL_DIALOG
+		redefine
+			on_ok,
+			setup_dialog,
+			notify
+		end
 
 	APPLICATION_IDS
 		export
@@ -13,6 +18,11 @@ inherit
 		end
 
 	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
+	WIZARD_OUTPUT_LEVEL
 		export
 			{NONE} all
 		end
@@ -30,8 +40,14 @@ feature {NONE} -- Initialization
 		do
 			make_by_id (a_parent, Wizard_final_dialog_constant)
 			create id_ok.make_by_id (Current, Idok)
-			create generate_static.make_by_id (Current, Generate_static_constant)
+			create final_static.make_by_id (Current, Final_static_constant)
+			create final2_static.make_by_id (Current, Final2_static_constant)
+			create final3_static.make_by_id (Current, Final3_static_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
+			create minimum_radio.make_by_id (Current, Minimum_radio_constant)
+			create standard_radio.make_by_id (Current, Standard_radio_constant)
+			create maximum_radio.make_by_id (Current, Maximum_radio_constant)
+			create help_button.make_by_id (Current, Help_button_constant)
 		end
 
 feature -- Access
@@ -39,11 +55,67 @@ feature -- Access
 	id_ok: WEL_PUSH_BUTTON
 			-- Generate button
 
-	generate_static: WEL_STATIC
+	final_static: WEL_STATIC
+			-- Final dialog information
+
+	final2_static: WEL_STATIC
+			-- Final dialog information
+
+	final3_static: WEL_STATIC
 			-- Final dialog information
 
 	id_cancel: WEL_PUSH_BUTTON
 			-- Back button
+
+	minimum_radio: WEL_RADIO_BUTTON
+			-- Minimum output radio button
+
+	standard_radio: WEL_RADIO_BUTTON
+			-- Standard output radio button
+
+	maximum_radio: WEL_RADIO_BUTTON
+			-- Maximum output radio button
+
+	help_button: WEL_PUSH_BUTTON
+			-- Help button
+
+feature -- Behavior
+
+	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+			-- Process `control_id' control notification.
+		do
+			if control = help_button then
+		--		Help_dialog.activate
+			end
+		end
+
+	setup_dialog is
+			-- Initialize dialog's controls.
+		do
+			minimum_radio.set_unchecked
+			standard_radio.set_unchecked
+			maximum_radio.set_unchecked
+			if shared_wizard_environment.output_level = Output_all then
+				maximum_radio.set_checked
+			elseif shared_wizard_environment.output_level = Output_none then
+				minimum_radio.set_checked
+			else 
+				standard_radio.set_checked
+			end
+		end
+
+	on_ok is
+			-- Process Generate button activation.
+		do
+			if minimum_radio.checked then
+				Shared_wizard_environment.set_no_output
+			elseif maximum_radio.checked then
+				Shared_wizard_environment.set_all_output
+			else
+				Shared_wizard_environment.set_warning_output
+			end
+			Precursor {WEL_MODAL_DIALOG}
+		end
 
 end -- class WIZARD_FINAL_DIALOG
 

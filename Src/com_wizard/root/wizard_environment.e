@@ -7,6 +7,11 @@ class
 inherit
 	STORABLE
 
+	WIZARD_OUTPUT_LEVEL
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -68,6 +73,9 @@ feature -- Access
 	return_code: INTEGER
 			-- Last return code
 
+	Output_level: INTEGER
+			-- Output level
+
 feature -- Element Change
 
 	set_in_process_server (a_boolean: BOOLEAN) is
@@ -78,6 +86,30 @@ feature -- Element Change
 			in_process_server_set: in_process_server = a_boolean
 		end
 	
+	set_warning_output is
+			-- Set `output_level' with `Output_warnings'.
+		do
+			output_level := Output_warnings
+		ensure
+			output_level_set: output_level = Output_warnings
+		end
+
+	set_all_output is
+			-- Set `output_level' with `Output_all'.
+		do
+			output_level := Output_all
+		ensure
+			output_level_set: output_level = Output_all
+		end
+
+	set_no_output is
+			-- Set `output_level' with `Output_none
+		do
+			output_level := Output_none
+		ensure
+			output_level_set: output_level = Output_none
+		end
+
 	set_local_server (a_boolean: BOOLEAN) is
 			-- Set `local_server' with `a_boolean'.
 		do

@@ -99,17 +99,26 @@ BEGIN
                     117,138,55,10
 END
 
-Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 187, 97
+Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "EiffelCOM Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Generate",IDOK,115,60,50,14
-    PUSHBUTTON      "<< Back",IDCANCEL,23,61,50,14
-    CTEXT           "The Wizard is now going to generate the files.",
-                    Generate_Static,14,7,159,11
-    CTEXT           "The file ""generated.txt"" will contain a summary of all the generated files.",
-                    Generate2_Static,18,25,151,26
+    DEFPUSHBUTTON   "Generate",IDOK,115,247,50,14
+    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
+    GROUPBOX        "Output Level",Output_level_Static,115,99,65,57
+    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,10,100,145
+    PUSHBUTTON      "Help",Help_Button,130,10,50,14
+    CONTROL         "Maximum",Maximum_Radio,"Button",BS_AUTORADIOBUTTON,119,
+                    114,55,10
+    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
+                    119,127,55,10
+    CONTROL         "Minimum",Minimum_Radio,"Button",BS_AUTORADIOBUTTON,119,
+                    140,55,10
+    CTEXT           "A summary of all generated classes will be available in the file ""generated.txt""",
+                    Final_Static2,24,182,134,20
+    CTEXT           "Ready to start generation.",Final_Static,23,169,137,14
 END
 
 
@@ -150,7 +159,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 180
         TOPMARGIN, 7
-        BOTTOMMARGIN, 90
+        BOTTOMMARGIN, 267
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -188,6 +197,48 @@ END
 //
 
 Toolbar_Bitmap          BITMAP  DISCARDABLE     "toolbar.bmp"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Interactive Software Engineering Inc.\0"
+            VALUE "FileDescription", "Wizard Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "Wizard\0"
+            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "OriginalFilename", "Wizard.rc\0"
+            VALUE "ProductName", "Interactive Software Engineering Inc. Wizard Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

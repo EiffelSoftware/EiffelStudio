@@ -19,11 +19,11 @@
 #define IDL_Static                      1008
 #define Browse_Button                   1009
 #define Generate_Edit                   1010
-#define Generate_Static                 1011
 #define Browse2_Button                  1012
 #define In_Process_Check                1013
 #define Local_Check                     1014
 #define Remote_Check                    1015
+#define Generate_Static					1016
 #define About_Button                    1017
 #define Help_Button                     1018
 #define Client_Check                    1019
@@ -39,10 +39,16 @@
 #define Standard_Radio                  1027
 #define Virtual_Table2_Radio            1027
 #define Proxy_Stub_Static               1028
+#define Minimum_Radio                   1029
 #define Proxy_Stub_File_Edit            1030
 #define Output_Progress                 1031
 #define Output_Static                   1032
 #define Generate2_Static                1035
+#define Output_level_Static             1036
+#define Maximum_Radio                   1037
+#define Final_Static2                   1038
+#define Final_Static                    1039
+#define Final_Static3                   1040
 #define Location_Static                 -1
 
 // Next default values for new objects
@@ -51,7 +57,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1036
+#define _APS_NEXT_CONTROL_VALUE         1040
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -27,7 +27,7 @@ inherit
 
 	SHARED_MEL_DISPLAY
 		undefine
-			copy, setup, is_equal, consistent
+			copy, is_equal
 		end
 
 creation

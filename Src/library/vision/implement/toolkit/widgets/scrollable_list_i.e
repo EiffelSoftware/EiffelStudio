@@ -12,14 +12,14 @@ inherit
 
 	FONTABLE_I
 		undefine
-			copy, setup
+			copy, is_equal
 		end
 
 	PRIMITIVE_I
 		rename
 			cursor as screen_cursor
 		undefine
-			copy, setup
+			copy, is_equal
 		end
 
 	ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]

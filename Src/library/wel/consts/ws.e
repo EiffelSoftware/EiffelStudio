@@ -218,6 +218,13 @@ feature -- Extended window styles
 		alias
 			"WS_EX_TRANSPARENT"
 		end
+		
+	Ws_ex_clientedge: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_CLIENTEDGE"
+		end
 
 feature -- Miscellaneous
 

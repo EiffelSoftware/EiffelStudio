@@ -236,13 +236,13 @@ feature -- Element change
 
 feature -- Basic operation
 
-	search (str: STRING): INTEGER is
+	search (str: STRING; start: INTEGER): INTEGER is
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start
 			-- index in the text, otherwise, it returns
 			-- `Void'
 		do
-			Result := find (str, True, 0) + 1
+			Result := find (str, True, start) + 1
 		end
 
 	index_from_position (value_x, value_y: INTEGER): INTEGER is

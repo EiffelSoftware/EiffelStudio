@@ -55,15 +55,58 @@ feature -- Definition
 					feature {MD_HASH_IDS}.sha1, assembly_name.item, assembly_info.item,
 					assembly_flags, $Result)
 			else
-				last_call_success := c_define_assembly (item, public_key.item.item, public_key.item.count,
-					feature {MD_HASH_IDS}.sha1, assembly_name.item, assembly_info.item,
-					assembly_flags, $Result)				
+				last_call_success := c_define_assembly (item, public_key.item.item,
+					public_key.item.count, feature {MD_HASH_IDS}.sha1, assembly_name.item,
+					assembly_info.item, assembly_flags, $Result)				
 			end
 		ensure
 			success: last_call_success = 0
 			valid_result: Result > 0
 		end
 
+	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
+			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
+		is
+				-- Ensure that `type_name' type defined in `implementation_token' with
+				-- `type_def_token' and `type_flags' is exported from Current assembly.
+		require
+			type_name_not_void: type_name /= Void
+		do
+			last_call_success := c_define_exported_type (item, type_name.item, implementation_token,
+				type_def_token, type_flags, $Result)
+		ensure
+			success: last_call_success = 0
+			valid_result: Result > 0
+		end
+
+	define_file (file_name: UNI_STRING; public_key: MD_PUBLIC_KEY_TOKEN;
+			file_flags: INTEGER): INTEGER
+		is
+			-- Define a new entry in file table.
+		require
+			file_name_not_void: file_name /= Void
+			public_key_not_void: public_key /= Void
+		do
+			last_call_success := c_define_file (item, file_name.item, public_key.item.item,
+				public_key.item.count, file_flags, $Result)
+		ensure
+			success: last_call_success = 0
+			valid_result: Result > 0
+		end
+
+	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER
+			offset, resource_flags: INTEGER): INTEGER
+		is
+			-- Define a new entry in manifest resource table.
+		require
+		do
+			last_call_success := c_define_manifest_resource (item, resource_name.item,
+				implementation_token, offset, resource_flags, $Result)	
+		ensure
+			success: last_call_success = 0
+			valid_result: Result > 0
+		end
+			
 feature {NONE} -- Implementation
 
 	c_define_assembly (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
@@ -72,11 +115,58 @@ feature {NONE} -- Implementation
 		is
 			-- Call `IMetaDataAssemblyEmit->DefineAssembly'.
 		external
-			"C++ IMetaDataAssemblyEmit signature (void *, ULONG, ULONG, LPCWSTR, ASSEMBLYMETADATA *, DWORD, mdAssembly *): EIF_INTEGER use <cor.h>"
+			"[
+				C++ IMetaDataAssemblyEmit signature
+					(void *, ULONG, ULONG, LPCWSTR, ASSEMBLYMETADATA *,
+					DWORD, mdAssembly *): EIF_INTEGER
+				use <cor.h>
+			]"
 		alias
 			"DefineAssembly"
 		end
+
+	c_define_exported_type (an_item: POINTER; type_name: POINTER; implementation_token: INTEGER;
+			type_def_token: INTEGER; type_flags: INTEGER; exported_type_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataAssemblyEmit->DefineExportedType'.
+		external
+			"[
+				C++ IMetaDataAssemblyEmit signature
+					(LPCWSTR, mdToken, mdTypeDef, DWORD, mdExportedType *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineExportedType"
+		end
+		
+	c_define_file (an_item: POINTER; file_name: POINTER; hash_value: POINTER; hash_length: INTEGER;
+			file_flags: INTEGER; file_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataAssemblyEmit->DefineFile'.
+		external
+			"[
+				C++ IMetaDataAssemblyEmit signature
+					(LPCWSTR, void *, ULONG, DWORD, mdFile *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineFile"
+		end
 	
+	c_define_manifest_resource (an_item: POINTER; resource_name: POINTER;
+			implementation_token, offset, resource_flags: INTEGER; resource_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataAssemblyEmit->DefineManifestResource'.
+		external
+			"[
+				C++ IMetaDataAssemblyEmit signature
+					(LPCWSTR, mdToken, DWORD, DWORD, mdManifestResource *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineManifestResource"
+		end
+
 	c_define_assembly_ref (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
 			assembly_name: POINTER; assembly_metadata: POINTER; hash_value: POINTER;
 			hash_length: INTEGER; assembly_flags: INTEGER; assembly_token: POINTER): INTEGER

@@ -24,7 +24,7 @@ inherit
 
 feature {GB_XML_STORE} -- Output
 
-	generate_xml (element: XML_ELEMENT) is
+	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
 			frame: EV_FRAME
@@ -35,7 +35,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	modify_from_xml (element: XML_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
@@ -53,7 +53,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-		generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
+		generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.

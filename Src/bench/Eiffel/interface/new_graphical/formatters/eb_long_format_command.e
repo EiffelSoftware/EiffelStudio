@@ -22,8 +22,10 @@ feature -- Execution
 		do
 			if argument = Void then
 				s := f.tool.stone
-			else
+			elseif argument /= Callback then
 				s ?= argument.first
+			else
+				process
 			end
 			if s /= Void and then s.clickable then
 --				not data.control_key_pressed then
@@ -38,6 +40,8 @@ feature -- Execution
 feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 
 	process is
+		local
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 				-- The user wants to execute this format,
 				-- even though it's a long format.
@@ -47,8 +51,7 @@ feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 					f.format (s)
 --					mp.restore
 			else
---				create wd.make_with_text (f.tool_parent, Warning_messages.w_File_changed,
---					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+				create csd.make_and_launch (f.tool, Current, Callback)
 			end
 		end
 
@@ -60,5 +63,10 @@ feature {EB_CONFIRM_FORMATTING_DIALOG} -- callbacks
 feature -- Implementation
 
 	s: STONE
+
+	callback: EV_ARGUMENT1 [ANY] is
+		once
+			create Result.make (Void)
+		end
 
 end -- class EB_LONG_FORMAT_COMMAND

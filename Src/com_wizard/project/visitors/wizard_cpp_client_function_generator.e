@@ -14,29 +14,24 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; 
+					a_function: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
-			non_void_descriptor: a_descriptor /= Void
+			non_void_function: a_function /= Void
 			non_void_interface_name: interface_name /= Void
 			valid_interface_name: not interface_name.empty
 		local
-			ccom_func_name: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create ccom_feature_writer.make
 			create c_header_files.make
 			create visitor
 
-			func_desc := a_descriptor
+			func_desc := a_function
 
 			-- Set function name used in ccom
-			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
-				ccom_func_name := external_feature_name (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
-			else
-				ccom_func_name := external_feature_name (a_descriptor.interface_eiffel_name)
-			end
-			ccom_feature_writer.set_name (ccom_func_name)
+			ccom_feature_writer.set_name (external_feature_name (a_function.eiffel_name (a_component)))
 			ccom_feature_writer.set_comment (func_desc.description)
 
 			-- Argument for ccom feature
@@ -81,7 +76,6 @@ feature {NONE} -- Implementation
 
 			if func_desc.argument_count > 0 then
 				create pointer_var.make
-
 
 				-- Create call function argument list
 				arguments := func_desc.arguments

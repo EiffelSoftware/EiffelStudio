@@ -44,7 +44,6 @@ feature
 	add_cecil_objects is
 		do
 			cecil_rt_basket.extend ("network.o");
-			cecil_rt_basket.extend ("console.o");
 			cecil_rt_basket.extend ("wmath.o");
 			cecil_rt_basket.extend ("wmalloc.o");
 			cecil_rt_basket.extend ("wgarcol.o");
@@ -86,8 +85,10 @@ feature
 			cecil_rt_basket.extend ("update.o");
 			cecil_rt_basket.extend ("wbench.o");
 			cecil_rt_basket.extend ("wrun_idr.o");
+			cecil_rt_basket.extend ("console.o");
 			cecil_rt_basket.extend ("wpath_name.o");
 			cecil_rt_basket.extend ("wobject_id.o");
+			cecil_rt_basket.extend ("wdle.o");
 		end;
 
 	add_eiffel_objects is

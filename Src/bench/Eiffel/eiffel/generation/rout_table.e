@@ -78,7 +78,7 @@ feature
 		end;
 
 	generate (file: INDENT_FILE) is
-			-- Generation of the routine table in file "_rout.c".
+			-- Generation of the routine table in file "erout*.c".
 		local
 			entry: ROUT_ENTRY;
 			i, nb, min_id, max_id: INTEGER;
@@ -142,5 +142,61 @@ feature
 
 	workbench_c_type: STRING is "struct ca_info";
 			-- Associated C item structure name
+
+feature -- DLE
+
+	was_polymorphic (type_id: INTEGER): BOOLEAN is
+			-- Was the table in the extendible system polymorphic from
+			-- entry indexed by `type_id' to the maximum entry id?
+		local
+			pos, first_body_id: INTEGER;
+			second_type_id: INTEGER;
+			entry: ROUT_ENTRY;
+			cl_type: CLASS_TYPE;
+			first_class: CLASS_C;
+			found: BOOLEAN;
+			is_deferred: BOOLEAN
+		do
+			pos := index;
+				-- If it is not a poofter finalization
+				-- we have a quicker algorithm handy.
+			if not System.poofter_finalization then
+					-- Go to the entry of type id greater or equal than
+					-- `type_id': note that deferred feature have no
+					-- entries in the tables.
+				goto_used (type_id);
+			else
+				start
+			end;
+			from
+				is_deferred := True;
+				cl_type := System.class_type_of_id (type_id);
+				first_class := cl_type.associated_class
+			until
+				after or else Result
+			loop
+				entry := item;
+				second_type_id := entry.type_id;
+				if second_type_id = type_id then
+					is_deferred := False
+				end;
+				cl_type := System.class_type_of_id (second_type_id);
+				if cl_type.associated_class.conform_to (first_class) then
+					if entry.was_used then
+						if found then
+							Result := entry.body_id /= first_body_id;
+						else
+							found := True;
+							first_body_id := entry.body_id;
+						end;
+					end;
+				end;
+				forth
+			end;
+			if not Result then
+				Result := is_deferred and then found
+			end;
+			go_i_th (pos);
+		end;
 
 end

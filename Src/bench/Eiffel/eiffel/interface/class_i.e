@@ -11,6 +11,7 @@ inherit
 	SHARED_OPTIMIZE_LEVEL;
 	SHARED_DEBUG_LEVEL;
 	SHARED_VISIBLE_LEVEL;
+	SHARED_DYNAMIC_CALLS;
 	SHARED_WORKBENCH;
 	SYSTEM_CONSTANTS;
 	COMPARABLE
@@ -74,6 +75,9 @@ feature
 	visible_level: VISIBLE_I;
 			-- Visible level
 
+	dynamic_calls: DYNAMIC_I;
+			-- Feature calls that have to be dynamically bound
+
 	make is
 			-- initialization
 		do
@@ -100,6 +104,7 @@ end;
 			optimize_level := No_optimize;
 			debug_level := No_debug;
 			visible_level := Visible_default;
+			dynamic_calls := No_dynamic
 		end;
 
 	set_class_name (s: STRING) is
@@ -273,6 +278,26 @@ end;
 			end;
 		end;
 
+	set_dynamic_calls (d: DYNAMIC_I) is
+			-- Assign `d' to `dynamic_calls'.
+		local
+			other_partial, partial: DYNAMIC_FEAT_I;
+			new_partial: DYNAMIC_FEAT_I
+		do
+			if not dynamic_calls.is_all then
+				if d.is_all or dynamic_calls.is_no then
+					dynamic_calls := d
+				elseif dynamic_calls.is_partial and d.is_partial then
+					partial ?= dynamic_calls;
+					other_partial ?= d;
+					!! new_partial.make;
+					new_partial.merge (partial);
+					new_partial.merge (other_partial);
+					dynamic_calls := new_partial
+				end
+			end
+		end;
+
 	set_visible_level (v: VISIBLE_I) is
 			-- Assign `v' to `visible_level'.
 		do
@@ -306,6 +331,7 @@ end;
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
+			dynamic_calls := other.dynamic_calls
 		end;
 
 feature -- Comparison

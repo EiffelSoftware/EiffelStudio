@@ -823,7 +823,8 @@ feature -- Byte code computation
 	melted: BOOLEAN is
 			-- Is the feature melted ?
 		do
-			Result := body_id > System.frozen_level;
+			Result := body_id > System.dle_frozen_level or
+				(body_id > System.frozen_level and body_id <= System.dle_level)
 		end;
 
 	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
@@ -1880,16 +1881,21 @@ feature -- Debugging
 		local
 			wc: CLASS_C
 		do
-			if (not is_external)
-				and then (not is_attribute)
-				and then (not is_constant)
-				and then (not is_deferred)
-				and then (not is_unique)
-			then
-				wc := written_class;
-				Result := (not wc.is_basic)
-					and then (not wc.is_special)
-					and then (wc.has_types)
+			if not is_dynamic then
+					-- DLE temporary constraint:
+					-- Cannot debug routines from the DC-set.
+
+				if (not is_external)
+					and then (not is_attribute)
+					and then (not is_constant)
+					and then (not is_deferred)
+					and then (not is_unique)
+				then
+					wc := written_class;
+					Result := (not wc.is_basic)
+						and then (not wc.is_special)
+						and then (wc.has_types)
+				end
 			end
 		end;
 
@@ -1947,17 +1953,11 @@ feature -- Debugging
 
 			-- Compute the real body id.
 			eu :=  du.execution_unit;
-			if System.frozen_level < eu.real_body_id then
-					-- The feature is already melted, the entry
-					-- in the run time melted table can be reused.
-				Result.set_real_body_id (eu.real_body_id)
-			else
-					-- The feature is frozen. Ask the execution
-					-- table to generate a new body id.	
-				new_body_id := Execution_table.debuggable_body_id;
-				Result.set_real_body_id (new_body_id);
+			if eu.real_body_id <= System.frozen_level then
 				Result.set_was_frozen
 			end;
+			new_body_id := Execution_table.debuggable_body_id (eu.real_body_id);
+			Result.set_real_body_id (new_body_id);
 
 			-- Compute the list of breakable AST nodes
 			-- (will be used when generating the byte
@@ -2155,5 +2155,22 @@ feature -- Inlining
 				Result := not (wc.is_special or else wc.is_basic)
 			end
 		end
+
+feature -- DLE
+
+	is_dynamic: BOOLEAN is
+			-- Is the feature part of the DC-set?
+		do
+			Result := valid_body_id and then real_body_id > System.dle_level
+		end;
+
+	was_used: BOOLEAN is
+			-- Was the feature used in the static system?
+		require
+			dynamic_system: System.is_dynamic;
+			final_mode: System.in_final_mode
+		do
+			Result := System.was_used (Current)
+		end;
 
 end

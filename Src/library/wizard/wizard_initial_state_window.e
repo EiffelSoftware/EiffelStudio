@@ -41,6 +41,9 @@ feature -- Basic Operations
 			message.set_background_color (white_color)
 			message.align_text_left
 
+			create choice_box
+			choice_box.set_background_color (white_color)			
+
 			display_state_text
 			create message_and_title_box
 			message_and_title_box.set_background_color (white_color)			
@@ -49,6 +52,7 @@ feature -- Basic Operations
 			message_and_title_box.extend (title)
 			message_and_title_box.disable_item_expand (title)
 			message_and_title_box.extend (message)
+			message_and_title_box.extend (choice_box)
 
 			local_pixmap := pixmap.ev_clone
 			local_pixmap.set_minimum_height (312)
@@ -88,5 +92,6 @@ feature -- Basic Operations
 			pixmap_icon.set_with_named_file (fi)
 		end
 
+	choice_box: EV_VERTICAL_BOX
 
 end -- class WIZARD_INITIAL_STATE_WINDOW

@@ -28,6 +28,10 @@
 #define TRUE	1
 #endif
 
+#ifndef max
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
+#endif
+
 /* File format detected */
 #define FILEFORMAT_UNKNOWN	0
 #define FILEFORMAT_BMP		1
@@ -672,8 +676,10 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned char 	*pImage;		// Pointer on a DIB structure
 	unsigned char 	*pAlphaData;	// Pointer on the Alpha data
 	unsigned char 	*pAlphaImage;	// Pointer on a DIB structure
+#ifdef EIF_WIN32
 	unsigned long 	iData;
 	unsigned long 	iAlphaData;
+#endif
 	unsigned long 	sRowSize;		// Size in bytes of a scan line
 	unsigned long 	row;			// Current scan line
 	unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;

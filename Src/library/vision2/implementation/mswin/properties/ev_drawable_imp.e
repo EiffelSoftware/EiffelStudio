@@ -303,28 +303,16 @@ feature -- Drawing operations
 			release_dc
 		end
 
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left at (`x', `y') using `font'.
+		do
+			internal_draw_text (x, y, a_text, False)
+		end
+
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_top_left (x, y - internal_font.ascent, a_text)
-		end
-
-	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
-		do
-			get_dc
-			if not internal_initialized_text_color then
-				dc.set_text_color (wel_fg_color)
-				internal_initialized_text_color := True
-			end
-
-			if not internal_initialized_font then
-				dc.select_font (wel_font)
-				internal_initialized_font := True
-			end
-				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
-			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, 10, 10), Dt_expandtabs | dt_noclip | Dt_noprefix)
-			release_dc
+			internal_draw_text (x, y, a_text, True)
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -879,6 +867,31 @@ feature -- Filling operations
 		end
 
 feature {NONE} -- Implementation
+
+	internal_draw_text (x, y: INTEGER; a_text: STRING; draw_at_baseline: BOOLEAN) is
+			-- Draw `a_text' with top left at (`x', `y') using `font'.
+		local
+			a_text_alignment: INTEGER
+		do
+			get_dc
+			if not internal_initialized_text_color then
+				dc.set_text_color (wel_fg_color)
+				internal_initialized_text_color := True
+			end
+
+			if not internal_initialized_font then
+				dc.select_font (wel_font)
+				internal_initialized_font := True
+			end
+				-- Note that the size of the rectangle does not matter as we use the `dt_noclip' flag.
+			if draw_at_baseline then
+				dc.set_text_alignment (ta_baseline | ta_left)
+			else
+				dc.set_text_alignment (ta_top | ta_left)
+			end
+			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, 1, 1), Dt_expandtabs | dt_noclip | Dt_noprefix)
+			release_dc
+		end
 
 	wel_drawing_mode: INTEGER
 			-- The WEL equivalent for the drawing_mode_* selected.

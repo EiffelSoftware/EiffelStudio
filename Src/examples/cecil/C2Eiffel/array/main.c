@@ -46,8 +46,11 @@ int main (int argc,char **argv,char **envp) {
 	printf ("Enter 10 integers:\n");
 	c_array = (EIF_INTEGER *) malloc (10*sizeof (EIF_INTEGER));
 		/* Set C array */
-	for (i = 0; i < 10; i++) 
+	for (i = 0; i < 10; i++) {
+		printf ("Enter element %d: ", i + 1);
 		scanf ("%ld", c_array+i);
+	}
+	printf ("\n");
 
 		/* Set Eiffel array from C array */
 	for (i = 0; i < 10; i++) 

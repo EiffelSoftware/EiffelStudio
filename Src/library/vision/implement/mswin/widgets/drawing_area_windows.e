@@ -204,6 +204,7 @@ feature -- Basic operations
 			expose_data: EXPOSE_DATA
 			coord: COORD_XY
 			clip: CLIP
+			msg_box: WEL_MSG_BOX
 		do
 			!! printer_dc.make
 			if printer_dc.exists then
@@ -226,8 +227,9 @@ feature -- Basic operations
 				drawing_dc := old_dc
 				painting := false
 			else
-				t := message_box ("No default printer set.  Printing unavailable.", 
-					"Printer Not Set", mb_iconstop + mb_ok)
+				!! msg_box.make
+				msg_box.basic_message_box (Void, "No default printer set. Printing unavailable.", 
+					"Printer Not Set", Mb_iconstop + Mb_ok)
 			end
 		end
 
@@ -344,7 +346,6 @@ feature -- WEL
 		end
 
 end -- class DRAWING_AREA_WINDOWS
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -68,10 +68,18 @@ feature -- Initialization
 				process_nesting
 
 					-- Initializes client/supplier relations.
-				process_syntax_features (external_class.fields)
-				process_syntax_features (external_class.constructors)
-				process_syntax_features (external_class.procedures)
-				process_syntax_features (external_class.functions)
+				if external_class.fields /= Void then
+					process_syntax_features (external_class.fields)
+				end
+				if external_class.constructors /= Void then
+					process_syntax_features (external_class.constructors)
+				end
+				if external_class.procedures /= Void then
+					process_syntax_features (external_class.procedures)
+				end
+				if external_class.functions /= Void then
+					process_syntax_features (external_class.functions)
+				end
 
 					-- Create abstract syntax tree.
 				create l_ast
@@ -130,10 +138,20 @@ feature -- Initialization
 			l_constructors := external_class.constructors
 			l_procedures := external_class.procedures
 			l_functions := external_class.functions
-			nb := l_fields.count + l_constructors.count +
-				l_procedures.count + l_functions.count
+			if l_fields /= Void then
+				nb := l_fields.count
+			end
+			if l_constructors /= Void then
+				create creators.make (l_constructors.count)
+				nb := nb + l_constructors.count
+			end
+			if l_procedures /= Void then
+				nb := nb + l_procedures.count
+			end
+			if l_functions /= Void then
+				nb := nb + l_functions.count
+			end
 
-			create creators.make (l_constructors.count)
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
 			create l_orig_tbl.make (nb)
@@ -146,10 +164,18 @@ feature -- Initialization
 			add_features_of_any (l_feat_tbl)
 
 				-- Initializes feature table.
-			process_features (l_feat_tbl, l_fields)
-			process_features (l_feat_tbl, l_constructors)
-			process_features (l_feat_tbl, l_procedures)
-			process_features (l_feat_tbl, l_functions)
+			if l_fields /= Void then
+				process_features (l_feat_tbl, l_fields)
+			end
+			if l_constructors /= Void then
+				process_features (l_feat_tbl, l_constructors)
+			end
+			if l_procedures /= Void then
+				process_features (l_feat_tbl, l_procedures)
+			end
+			if l_functions /= Void then
+				process_features (l_feat_tbl, l_functions)
+			end
 
 				-- Clean `overloaded_names' to remove non-overloaded routines.
 			clean_overloaded_names (l_feat_tbl)
@@ -376,7 +402,7 @@ feature -- Query
 				-- It should not be Void, since we were able to parse it before, but it
 				-- is possible that someone might remove the file or other external
 				-- events, so we protect our call.
-			if l_consumed_type /= Void then
+			if l_consumed_type /= Void and l_consumed_type.properties /= Void then
 				l_properties := l_consumed_type.properties
 				from
 					i := l_properties.lower

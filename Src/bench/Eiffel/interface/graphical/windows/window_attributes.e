@@ -9,6 +9,8 @@ inherit
 	
 	EB_CONSTANTS
 
+	WEL_COLOR_CONSTANTS
+
 feature -- Setting
 
 	set_composite_attributes (composite: COMPOSITE) is
@@ -34,15 +36,13 @@ feature -- Setting
 			fontable: FONTABLE;
 			manager: MANAGER;
 			terminal: TERMINAL_OUI;
-			bg_color, fg_color: COLOR;
+			fg_color: COLOR;
 			font: FONT
+			color_imp: COLOR_IMP
+			my_brush: WEL_BRUSH
 		do
-			bg_color := Graphical_resources.background_color.actual_value;
 			fg_color := Graphical_resources.foreground_color.actual_value;
 			font := Graphical_resources.font.actual_value;
-			if bg_color /= Void then
-				widget.set_background_color (bg_color)
-			end;
 			if fg_color /= Void then
 				primitive ?= widget;
 				if primitive /= Void then

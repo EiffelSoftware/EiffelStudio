@@ -56,7 +56,7 @@ feature
 			-- cancel button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_cancel_action (a_command, argument)
 		end;
@@ -66,7 +66,7 @@ feature
 			-- help button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_help_action (a_command, argument)
 		end;
@@ -76,7 +76,7 @@ feature
 			-- ok button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
 		end;
@@ -119,7 +119,7 @@ feature
 			-- cancel button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
 		end;
@@ -129,7 +129,7 @@ feature
 			-- help button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_help_action (a_command, argument)
 		end;
@@ -139,7 +139,7 @@ feature
 			-- ok button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
 		end; 
@@ -149,7 +149,7 @@ feature
 			-- by default this label is `cancel'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /= Void
 		do
 			implementation.set_cancel_label (a_label)
 		end;
@@ -162,12 +162,21 @@ feature
 			implementation.set_center_alignment
 		end;
 
-	set_end_alignment is
-			-- Set message alignment to end.
+	set_right_alignment is
+			-- Set message alignment to right.
 		require
 			exists: not destroyed
 		do
-			implementation.set_end_alignment
+			implementation.set_right_alignment
+		end;
+
+	set_end_alignment is
+			-- Set message alignment to right.
+		obsolete "Use ``set_right_alignment'' instead."
+		require
+			exists: not destroyed
+		do
+			implementation.set_right_alignment
 		end;
 
 	set_help_label (a_label: STRING) is
@@ -175,7 +184,7 @@ feature
 			-- by default this label is `help'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /= Void
 		do
 			implementation.set_help_label (a_label)
 		end;
@@ -184,7 +193,7 @@ feature
 			-- Set `a_message' as message.
 		require
 			exists: not destroyed;
-			not_message_void: not (a_message = Void)
+			not_message_void: a_message /= Void
 		do
 			implementation.set_message (a_message)
 		end;
@@ -194,17 +203,26 @@ feature
 			-- by default this label is `ok'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /= Void
 		do
 			implementation.set_ok_label (a_label)
 		end;
 
-	set_start_alignment is
+	set_left_alignment is
 			-- Set message alignment to beginning.
 		require
 			exists: not destroyed;
 		do
-			implementation.set_start_alignment
+			implementation.set_left_alignment
+		end;
+
+	set_start_alignment is 
+			-- Set message alignment to beginning.
+		obsolete "Use ``set_left_alignment'' instead."
+		require
+			exists: not destroyed;
+		do
+			implementation.set_left_alignment
 		end;
 
 	show_cancel_button is

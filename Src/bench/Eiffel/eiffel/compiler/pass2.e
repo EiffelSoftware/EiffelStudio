@@ -16,7 +16,8 @@ inherit
 			changed_classes, execute, make, remove_class
 		select
 			remove_class
-		end
+		end;
+	COMPILER_EXPORTER
 
 creation
 

@@ -14,7 +14,10 @@ inherit
 		undefine
 			copy, setup
 		end;
-
+	COMPILER_EXPORTER
+		undefine
+			copy, setup
+		end;
 
 creation
 

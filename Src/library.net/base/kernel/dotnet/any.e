@@ -158,6 +158,21 @@ feature -- Comparison
 
 feature -- Duplication
 
+	frozen twin: like Current is
+			-- New object equal to `Current'
+			-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
+		local
+			l_temp: BOOLEAN
+		do
+			l_temp := feature {ISE_RUNTIME}.check_assert (False)
+			Result ?= feature {ISE_RUNTIME}.standard_clone (Current)
+			Result.copy (Current)
+			l_temp := feature {ISE_RUNTIME}.check_assert (l_temp)
+		ensure
+			twin_not_void: Result /= Void
+			is_equal: Result.is_equal (Current)
+		end
+	
 	copy (other: like Current) is
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
@@ -188,14 +203,11 @@ feature -- Duplication
 			--
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
-		local
-			temp: BOOLEAN
+		obsolete
+			"Use `twin' instead."
 		do
 			if other /= Void then
-				temp := feature {ISE_RUNTIME}.check_assert (False)
-				Result ?= feature {ISE_RUNTIME}.standard_clone (other)
-				Result.copy (other)
-				temp := feature {ISE_RUNTIME}.check_assert (temp)
+				Result := other.twin
 			end
 		ensure
 			equal: equal (Result, other)
@@ -205,6 +217,8 @@ feature -- Duplication
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
 			-- Always uses default copying semantics.
+		obsolete
+			"Use `standard_twin' instead."
 		do
 			if other /= Void then
 					-- No need for removing assertions checking
@@ -226,9 +240,19 @@ feature -- Duplication
 			equal: standard_equal (Result, Current)
 		end
 
+	frozen deep_twin: like Current is
+			-- New object structure recursively duplicated from Current.
+		do
+			Result := feature {ISE_RUNTIME}.deep_clone (Current)
+		ensure
+			deep_equal: deep_equal (Current, Result)
+		end
+
 	frozen deep_clone (other: ANY): like other is
 			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
+		obsolete
+			"Use `deep_twin' instead."
 		do
 			if other /= Void then
 				Result ?= feature {ISE_RUNTIME}.deep_clone (other)
@@ -239,15 +263,11 @@ feature -- Duplication
 
 	frozen deep_copy (other: like Current) is
 			-- Effect equivalent to that of:
-			-- 		`temp' := `deep_clone' (`other');
-			--		`copy' (`temp')
+			--		`copy' (`other' . `deep_twin')
 		require
 			other_not_void: other /= Void
-		local
-			temp: like Current
 		do
-			temp := deep_clone (other)
-			copy (temp)
+			copy (other.deep_twin)
 		ensure
 			deep_equal: deep_equal (Current, other)
 		end

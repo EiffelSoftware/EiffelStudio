@@ -46,15 +46,21 @@ feature -- Access
 			-- `Result' is current clipboard content.
 		local
 			a_success: INTEGER
+			clipboard_string, compound_text_string: ANY
+			edit_chars: POINTER
 		do
+			clipboard_string := ("CLIPBOARD").to_c
+			compound_text_string := ("COMPOUND_TEXT").to_c
 			a_success := C.gtk_selection_convert (
 				clipboard_widget,
-				C.gdk_atom_intern (eiffel_to_c ("CLIPBOARD"), 0),
-				C.gdk_atom_intern (eiffel_to_c ("COMPOUND_TEXT"), 0),
+				C.gdk_atom_intern ($clipboard_string, 0),
+				C.gdk_atom_intern ($compound_text_string, 0),
 				C.GDK_CURRENT_TIME
 			)
 			create Result.make (0)
-			Result.from_c (C.gtk_editable_get_chars (clipboard_widget, 0, -1))
+			edit_chars := C.gtk_editable_get_chars (clipboard_widget, 0, -1)
+			Result.from_c (edit_chars)
+			C.g_free (edit_chars)
 			if Result.is_equal ("") then
 				Result := Void
 			end
@@ -67,15 +73,17 @@ feature -- Status Setting
 		local
 			a_success: INTEGER
 			clip_text: STRING
+			temp_string: ANY
 		do
 			if a_text /= Void then
 				clip_text := a_text
 			else
 				clip_text := ""
 			end
+			temp_string := clip_text.to_c
 			C.gtk_text_set_point (clipboard_widget, 0)
 			a_success := C.gtk_text_forward_delete (clipboard_widget, C.gtk_text_get_length (clipboard_widget))
-			C.gtk_text_insert (clipboard_widget, NULL, NULL, NULL, eiffel_to_c (clip_text), -1)
+			C.gtk_text_insert (clipboard_widget, NULL, NULL, NULL, $temp_string, -1)
 			C.gtk_editable_select_region (clipboard_widget, 0, -1)
 
      			a_success := C.gtk_selection_owner_set (

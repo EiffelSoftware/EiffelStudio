@@ -30,19 +30,17 @@ feature {NONE} -- Implementation
 
 	load is
 			-- Load font specified in `full_name'.
+		local
+			temp_string: ANY
 		do
-			c_object := C.gdk_font_load (eiffel_to_c (full_name))
+			temp_string := full_name.to_c
+			c_object := C.gdk_font_load ($temp_string)
 		end
 
 	destroy is
 			-- Unreference font.
 		do
 			C.gdk_font_unref (c_object)
-		end
-
-	C: EV_C_EXTERNALS is
-		once
-			create Result
 		end
 
 feature -- Access

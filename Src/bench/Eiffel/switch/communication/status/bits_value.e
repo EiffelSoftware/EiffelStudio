@@ -77,6 +77,11 @@ feature -- Access
 			Result := Eiffel_system.bit_class.compiled_class
 		end;
 
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		do
+		end
+
 feature -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is

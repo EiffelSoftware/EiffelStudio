@@ -10,7 +10,7 @@ class CHARACTER_VALUE
 inherit
 	DEBUG_VALUE [CHARACTER]
 		redefine
-			append_type_and_value, append_value, type_and_value
+			append_type_and_value, append_value, type_and_value, dump_value
 		end
 
 	CHARACTER_ROUTINES
@@ -20,6 +20,21 @@ inherit
 
 creation {RECV_VALUE, ATTR_REQUEST}
 	make, make_attribute
+
+feature -- Access
+
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		local
+			val: ANY
+			cval: CHARACTER_REF
+		do
+			val := value
+			cval ?= val
+			if cval /= Void then
+				create Result.make_character (cval.item)
+			end
+		end
 
 feature -- Output
 

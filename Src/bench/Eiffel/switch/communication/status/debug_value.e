@@ -51,8 +51,6 @@ feature -- Access
 	value: G
 			-- Value of object.
 
-feature -- Access
-
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
 		local
@@ -86,16 +84,71 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		local
+			int8val: INTEGER_8_REF
+			int16val: INTEGER_16_REF
+			intval: INTEGER_REF
+			int64val: INTEGER_64_REF
+			realval: REAL_REF
+			dblval: DOUBLE_REF
+			wcval: WIDE_CHARACTER_REF
+			ptrval: POINTER_REF
+			val: ANY
+		do
+			val := value
+			intval ?= val
+			if intval /= Void then
+				create Result.make_integer (intval.item)
+			else
+				ptrval ?= val
+				if ptrval /= Void then
+					create Result.make_pointer (ptrval.item)
+				else
+					dblval ?= val
+					if dblval /= Void then
+						create Result.make_double (dblval.item)
+					else
+						realval ?= val
+						if realval /= Void then
+							create Result.make_real (realval.item)
+						else
+							int8val ?= val
+							if int8val /= Void then
+								create Result.make_integer (int8val.to_integer)
+							else
+								int16val ?= val
+								if int16val /= Void then
+									create Result.make_integer (int16val.to_integer)
+								else
+									int64val ?= val
+									if int64val /= Void then
+										create Result.make_integer (int64val.to_integer)
+									else
+										wcval ?= val
+										if wcval /= Void then
+											-- Blarf!
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
 feature -- Output
 
-	 append_type_and_value (st: STRUCTURED_TEXT) is 
+	append_type_and_value (st: STRUCTURED_TEXT) is 
 		do 
 			dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
 			st.add_string (value.out)
 		end;
 
-	 append_value (st: STRUCTURED_TEXT) is 
+	append_value (st: STRUCTURED_TEXT) is 
 		do 
 			st.add_string (value.out)
 		end;

@@ -54,6 +54,11 @@ feature -- Access
 	item_number: INTEGER
 			-- number of the object in the local list, attribute list, etc...
 
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		deferred
+		end
+
 feature -- Comparison
 
 	infix "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is
@@ -131,7 +136,7 @@ feature -- Output
 			valid_kind: Result >= Immediate_value and then Result <= Special_value
 		end
 
-feature {ONCE_REQUEST, CALL_STACK_ELEMENT, ATTR_REQUEST, EXPANDED_VALUE, SPECIAL_VALUE, DEBUG_DYNAMIC_EVAL_HOLE}
+feature {CALL_STACK_ELEMENT, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_DEBUG}
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application

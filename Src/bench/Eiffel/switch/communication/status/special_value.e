@@ -104,6 +104,12 @@ feature -- Access
 			end
 		end
 
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		do
+			create Result.make_object (address)
+		end
+
 feature -- Output
 
 	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is

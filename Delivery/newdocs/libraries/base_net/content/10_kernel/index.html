@@ -1,0 +1,93 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelBase Kernel</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+	<BODY>
+		<H1>The Kernel</H1>
+        <p>The kernel cluster contains basic concepts close to the language
+        level and a set of classes to cover common needs, mainly storage of
+        objects and exception handling.</p>
+        <p>There are two kinds of classes: interfaces, that are fully
+        deferred and classes that are either partly deferred or totally
+        effective. Indeed, multiple inheritance is not allowed in Eiffel.NET, but
+        there is no limit in the number of interfaces a class implements. And
+        then, in order to stick to EiffelBase inheritance structure and design,
+        kernel classes have only one base type but inherit as many interfaces as
+        needed.</p>
+        <p>For now, the kernel cluster contains:</p>
+        <ul>
+          <li><b>Interfaces</b>:<br>
+            These classes are fully deferred. They describe
+            features a concrete class must be able to provide when implemented.
+           	<ul>
+           		<li>The <a href="../../reference/10_kernel/container_chart.html"> CONTAINER</a> interface describes objects that serve to store and
+            access collections of objects. Traversal and access criteria are
+            described by two descendant branches (see <a href="interfaces.html#Container"> Container</a> for more
+                  details).</li>
+            	<li><a href="../../reference/10_kernel/box_chart.html">BOX</a> and <a href="../../reference/10_kernel/finite_chart.html"> FINITE</a> describe how
+            encapsulated items of Container can be reached (see <a href="interfaces.html#Container"> Box</a> and
+                  <a href="interfaces.html#Finite"> Finite</a>
+                  for more details).</li>
+            	<li><a href="../../reference/10_kernel/traversable_chart.html">TRAVERSABLE</a> and
+                  <a href="../../reference/10_kernel/linear_chart.html">
+            LINEAR</a> how these elements can be traversed, for e.g. in one or two
+                  ways (see <a href="interfaces.html#Container"> Traversable</a> and
+                  <a href="interfaces.html#Linear"> Linear</a> for more details).</li>
+  	          <li><a href="../../reference/10_kernel/table_chart.html">TABLE</a> interface also describes objects that serve to
+            store and access items, but in this case, each item is associated
+            with a key.</li>
+            </ul>
+          </li>
+            </ul>
+        <ul>
+          <li><b>Classes</b>:<br>
+            These classes are partly or totally implemented. They represent the
+            most commonly used types in Eiffel.NET.
+
+          	<ul>
+          		<li>Class <a href="../../reference/10_kernel/any_chart.html">ANY</a>: the universal class defining facilities
+                  accessible to all other classes. Every developer-defined class
+                  is a descendant of this class (see <a href="generated_classes.html#ANY"> Any</a> for more details).</li>
+          		<li>Classes describing the basic types:&nbsp;<a href="../../reference/10_kernel/boolean_chart.html">BOOLEAN</a>,
+                  <a href="../../reference/10_kernel/character_chart.html">CHARACTER</a>,
+                  <a href="../../reference/10_kernel/double_chart.html">DOUBLE</a>,
+                  <a href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+                  <a href="../../reference/10_kernel/integer_8_chart.html">INTEGER_8</a>,
+                  <a href="../../reference/10_kernel/integer_16_chart.html">INTEGER_16</a>,
+                  <a href="../../reference/10_kernel/integer_64_chart.html"> INTEGER_64</a> and
+                  <a href="../../reference/10_kernel/real_chart.html"> REAL</a>
+                  (see respectively <a href="generated_classes.html#BOOLEAN">Boolean</a>,
+                  <a href="generated_classes.html#CHARACTER">Character</a>, <a href="generated_classes.html#DOUBLE">Double</a>,
+                  <a href="generated_classes.html#INTEGER">Integer</a>, <a href="generated_classes.html#INTEGER_8">Integer_8</a>,
+                  <a href="generated_classes.html#INTEGER_16">Integer_16</a>, <a href="generated_classes.html#INTEGER_64">Integer_64</a>
+                  and <a href="generated_classes.html#REAL">Real</a> for more details).</li>
+          		<li>Arrays: class <a href="../../reference/10_kernel/array_chart.html"> ARRAY</a> (see
+                  <a href="array.html"> Array</a> for more details).</li>
+          		<li>Strings: class <a href="../../reference/10_kernel/string_chart.html"> STRING</a> (see
+                  <a href="generated_classes.html#STRING"> String</a> for more details).</li>
+          		<li>Pointer: class <a href="../../reference/10_kernel/pointer_chart.html"> POINTER</a> (see
+                  <a href="generated_classes.html#POINTER"> Pointer</a> for more details).</li>
+          		<li>Tuples: class <a href="../../reference/10_kernel/tuple_chart.html"> TUPLE</a> (see
+                  <a href="tuples.html"> Tuple</a> for more details).</li>
+          		<li>Class <a href="../../reference/10_kernel/hash_table_chart.html"> HASH_TABLE</a> objects in .NET have exactly the same behavior as
+            in EiffelBase&nbsp; (see <a href="file:///D:/Src/Delivery/newdocs/libraries/base/content/20_structures/60_table.html">Hash_Table</a>
+                  for more details).</li>
+            	<li>Classes <a href="../../reference/10_kernel/exceptions_chart.html"> EXCEPTIONS</a> and
+                  <a href="../../reference/10_kernel/exception_manager_chart.html"> EXCEPTION_MANAGER</a> provide control over the exception handling
+            mechanism, in particular for applications that need to handle
+            different types of exception in different ways (see <a href="exceptions.html"> Exceptions</a> and
+                  <a href="exceptions.html#EXCEPTION_MANAGER">
+                  Exception_manager</a> for more details).</li>
+            	<li>Class <a href="../../reference/10_kernel/enum_chart.html"> ENUM</a> provides the base class for enumerations (see
+                  <a href="generated_classes.html#ENUM">
+                  Enum</a> for more details).</li>
+            	<li>Class <a href="../../reference/10_kernel/value_type_chart.html"> VALUE_TYPE</a> provides the base class for value types
+                  (see <a href="generated_classes.html#VALUE_TYPE"> Value_type</a> for more details).</li>
+            </ul>
+          </li>
+        </ul>
+	</BODY>
+</HTML>

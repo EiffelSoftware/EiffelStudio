@@ -1,0 +1,147 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelBase Data Structures, Tables</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+
+	<BODY>
+        <h1>TUPLE</h1>
+        <p>A new Kernel Library class is introduced: <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>.<br>
+        Alone among all classes, class <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        has a variable number of generic parameters. <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>,
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [X], <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [X,
+        Y], <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [X, Y, Z] and so on are all valid types, assuming valid types X, Y, Z
+        and so on.<br>
+        Conformance rules:</p>
+        <pre>[CONF1]
+	For n &gt;= 0
+		<a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>[U<sub>1</sub>, U<sub>2</sub>, ..., U<sub>n</sub>, U<sub>n+1</sub>] conforms to
+		<a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>[U<sub>1</sub>, U<sub>2</sub>, ..., U<sub>n</sub>]</pre>
+        <ul>
+          <ul>
+            <p>(and hence to <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+            [T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>] if each of the U<sub>i</sub>
+            conforms to each of the T<sub>i</sub> for 1 &lt;= i &lt;= n.)</p>
+          </ul>
+        </ul>
+        <p>In particular all tuple types conform to <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>,
+        with no parameter.
+        <pre>[CONF2]
+	For n &gt;= 0
+		If *every* one of the types T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub> conforms
+		to a type T, then <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>[T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>] conforms
+		to ARRAY [T].</pre>
+        <p>Definition: a &quot;tuple type&quot; is any type based on class <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>,
+        i.e. any type of the form <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>] for any n (including
+        0, for which there is no generic parameter).&nbsp;
+        <ul>
+          (Note 1: CONF1 should be understood in terms of the underlying
+          mathematical model. Mathematically, <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+          [T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>] is the set TUPLE<sub>n</sub>
+          of all partial functions f from N+ (the set of non-negative integers)
+          to T<sub>1</sub> U T<sub>2</sub> U ... T<sub>n</sub>, such that:&nbsp;
+          <ul>
+            <li>The domain of f contains the interval 1..n (in other words, f is
+              defined for any i such that 1 &lt;= i &lt;= n).
+            <li>For 1 &lt;= i &lt;= n, f (i) is a member of T<sub>i</sub>.</li>
+          </ul>
+          <p>With this definition, TUPLE<sub>n</sub> is indeed a subset of TUPLE<sub>n+1</sub>,
+          and in particular TUPLE<sub>0</sub>, the empty set, is a subset of
+          TUPLE<sub>n</sub> for any n.)</p>
+        </ul>
+        <p>Semantics: an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>] is a tuple whose
+        first element is an instance of T<sub>1</sub>, the second element being
+        an instance of T<sub>2</sub> etc. (The precise definition is the
+        mathematical one given in note 1.) Note that there can be more than n
+        elements to the tuple: for example a tuple with first element 5 and
+        second element &quot;FOO&quot; is an instance of all of the following
+        tuple types: <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>;
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>];
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/string_chart.html">STRING</a>].</p>
+        <ul>
+          (Note 2: It may seem restrictive at first to permit only one class, <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>,
+          to have an arbitrary number of actual generic parameters. Why not have
+          a general mechanism for declaring any class C so that all of C [X], C
+          [X, Y] etc. are valid? But in fact this is not really a restriction.
+          To obtain this effect without any complicated language convention,
+          just declare C as
+          <pre>	C [G -&gt; <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>]</pre>
+          <p>and then use the generic derivations
+          <pre>	C [<a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>[X]]
+	C [<a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>[X, Y]]</pre>
+          and so on. This also makes it possible to have the effect of some
+          fixed parameters and some variable ones, as in
+          <pre>	C [G, H, I -&gt; <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>]</pre>
+          <p>so we have all the necessary flexibility.)</p>
+        </ul>
+        <h3>Tuple expressions</h3>
+        Let e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub> be expressions of
+        respective types T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>. Then
+        the expression
+        <pre>	[e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub>]</pre>
+        <p>denotes an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [T<sub>1</sub>, T<sub>2</sub>, ..., T<sub>n</sub>], whose first element
+        is e<sub>1</sub>, the second element being e<sub>2</sub> etc.<br>
+        Tuple expressions can be nested: whereas
+        <pre>	[1, 2, 3]</pre>
+        <p>is a tuple with three elements (representing an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>]),
+        <pre>	 [1, [2, 3]]</pre>
+        <p>is a tuple with two elements, the second one itself a tuple; the
+        overall expression represents an instance of <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> [<a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>,
+        <a class="eclass" href="../../reference/10_kernel/integer_chart.html">INTEGER</a>].<br>
+        As a special case of tuple expression syntax, the delimiters [ and ] are
+        replaced by parentheses for the tuple representing the actual argument
+        list of a routine call (see section 4).
+        <h3>What have we gained?</h3>
+        <p>First we have solved the only case in the Eiffel language in which an
+        expression has no precisely defined type: polymorphic manifest arrays.
+        We don't have manifest arrays any more, but manifest tuples, with a
+        precisely defined type. No incompatibility is introduced thanks to rule
+        CONF2. The original syntax for manifest arrays, Result := &lt;&lt;e<sub>1</sub>,
+        e<sub>2</sub>, ..., e<sub>n</sub>&gt;&gt;, will continue to be
+        supported.<br>
+        Second, we can define functions that return multiple results. This is a
+        quite significant increase in expressive power. No common language has
+        that. (You have to go to Lisp and functional languages.) Just define <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+        [...] as the result type; in the function, you will write things like
+        <pre>	 Result := [e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n</sub>]</pre>
+        <p>Also, from a theoretical viewpoint, feature calls are simpler and
+        more homogeneous: every feature takes exactly one tuple as argument and
+        returns exactly one tuple as a result. (Either of these tuples may be
+        empty: the first for a feature with no argument, the second for a
+        procedure.) The syntax for a call becomes
+        <pre>	Feature Arguments</pre>
+        <p>with Arguments defined as
+        <pre>	Tuple_expression</pre>
+        <p>where the Tuple_expression uses the form given in section 2 but with
+        the outermost [ and ] delimiters replaced by parentheses to conform to
+        usual practice. So the call
+        <pre>	f (a, b, c)</pre>
+        <p>which we continue to think of as having three arguments a, b and c,
+        formally has only one tuple argument [a, b, c]. This is of course not to
+        be confused with a call of the form
+        <pre>	g ([a, b, c])tr</pre>
+        <p>which has one argument (a tuple with three elements) in both the
+        ordinary and the formal sense.</p>
+        <h3>Temporary limitations</h3>
+        <p>The implementation of tuples has the following limitations:
+        <ul>
+          <li>Conformance of <a class="eclass" href="../../reference/10_kernel/array_chart.html">ARRAY</a>
+            types to <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a>
+            types is not yet fully supported.
+          <li>Class <a href="../../reference/10_kernel/tuple_chart.html">TUPLE</a> does not have features such as first and second. You must use item
+            and, in most cases, an assignment attempt.</li>
+        </ul>
+	</BODY>
+</HTML>

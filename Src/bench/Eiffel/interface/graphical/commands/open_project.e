@@ -59,7 +59,7 @@ feature {NONE}
 					name_chooser.set_window (text_window);
 					name_chooser.call (Current)
 				end
-			elseif argument = warner then
+			elseif argument = Void then
 				discard_licence;
 				exit
 			end
@@ -129,13 +129,12 @@ feature
 					project_tool.set_title (project_dir.name);
 					project_tool.set_initialized
 				else	
-					warner.set_window (text_window);
-					warner.custom_call (Current, temp, " OK ", Void, Void);
+					warner (text_window).custom_call (Current, temp, 
+						" OK ", Void, Void);
 				end
 			else
 				retried := False;
-				warner.set_window (text_window);
-				warner.custom_call (Current, 
+				warner (text_window).custom_call (Current, 
 								w_Cannot_retrieve_project (project_dir.name), 
 								" OK ", Void, Void)
 			end
@@ -176,7 +175,17 @@ feature
 					precomp_r.set_precomp_dir;
 				end;
 				System.server_controler.init;
-				Universe.update_cluster_paths
+				Universe.update_cluster_paths;
+				if is_project_writable then
+					Project_read_only.set_item (false)
+				elseif is_project_readable then
+					Project_read_only.set_item (true);
+					warner (text_window).custom_call (Current, 
+							w_Read_only_project, " OK ", "Exit", Void)
+				else
+					warner (text_window).custom_call (Current, 
+							w_Cannot_open_project, Void, "Exit", Void)
+				end;
 			else
 				retried := False;
 					-- This is a big hack to enable clean exit
@@ -185,16 +194,42 @@ feature
 					workbench_file.close
 				end;
 				project_tool.set_initialized;
-				warner.set_window (text_window);
-				warner.custom_call (Current, 
+				warner (text_window).custom_call (Current, 
 							w_Project_corrupted (project_dir.name), 
-							"Exit now", Void, Void)
+							Void, "Exit now", Void)
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then
 				retried := True;
 				retry
 			end
+		end;
+
+	is_project_readable: BOOLEAN is
+			-- May the project be used for browsing and debugging?
+		do
+			Result := 
+				(Update_file.exists and then Update_file.is_readable) and then 
+				System.server_controler.is_readable
+		end;
+
+	is_project_writable: BOOLEAN is
+			-- May the project be both compiled and used for browsing?
+		local
+			w_code_dir, f_code_dir, comp_dir: RAW_FILE;
+			project_file: RAW_FILE
+		do
+			!! w_code_dir.make (Workbench_generation_path);
+			!! f_code_dir.make (Final_generation_path);
+			!! comp_dir.make (Compilation_path);
+			!! project_file.make (Project_file_name);
+			Result := project_file.is_writable and then
+				Update_file.exists and then
+				(Update_file.is_readable and Update_file.is_writable) and then
+				(w_code_dir.exists and then w_code_dir.is_writable) and then 
+				(f_code_dir.exists and then f_code_dir.is_writable) and then
+				(f_code_dir.exists and then comp_dir.is_writable) and then
+				System.server_controler.is_writable
 		end;
 
 	symbol: PIXMAP is

@@ -26,7 +26,7 @@ clean:
 
 mtnet.lib: $(OBJS)
 	$(RM) $@
-	$(AR) -OUT:$@ $(OBJS) wsock32.lib user32.lib
+	$(AR) -OUT:$@ $(OBJS)
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc

@@ -9,10 +9,10 @@ RM = del
 SOURCES =  $(LSRCS)
 OBJECTS =  $(OBJS) $(WOBJS)
 
-all:: net.lib
+all:: clean net.lib
 
-.c.obb:
-	$(CC) -o $@ -c $(CFLAGS) $<
+.c.obj:
+	$(CC) -c $(CFLAGS) $<
 
 SMODE = network.c network_r.c hostname.c syncpoll.c storable.c
 
@@ -25,16 +25,12 @@ OBJS = \
 	syncpoll.obj \
 	storable.obj
 
-local_clean:: remove
-
-all:: net.lib
-
-local_realclean::
-	$(RM) net.lib
+clean:
+	$(RM) *.obj
 
 net.lib: $(OBJS)
 	$(RM) $@
-	$(AR) $@ /c +networkr.obj +network.obj +storable.obj
+	$(AR) $@ /c +networkr.obj +network.obj +hostname.obj +syncpoll.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\bcc mkdir ..\spec\bcc

@@ -128,8 +128,6 @@ feature -- Tool generation
 
 	generate_command is
 			-- Generate the associated command.
-		local
-			temp_string: STRING
 		do
 			!! generated_command.make
 			generated_command.set_internal_name ("")
@@ -190,8 +188,11 @@ feature {NONE} -- Code generation
 			Result.append ("]%N%NWINDOWS%N%Ncreation%N%N%Tmake%N%Nfeature%N%N")
 		end
 
+
 	feature_execute: STRING is
 			-- Generate feature `execute'.
+		local
+			a_query_editor_form: QUERY_EDITOR_FORM
 		do
 			!! Result.make (0)
 			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%T%N")
@@ -201,7 +202,10 @@ feature {NONE} -- Code generation
 			until
 				form_list.after
 			loop
-				Result.append (form_list.item.generate_eiffel_text (perm_wind.entity_name))
+				a_query_editor_form := form_list.item
+				if a_query_editor_form.managed then
+					Result.append (a_query_editor_form.generate_eiffel_text (perm_wind.entity_name))
+				end
 				form_list.forth
 			end
 			Result.append ("%T%Tend%N%N")

@@ -40,11 +40,11 @@ feature -- Merging
 
 feature -- Cursor for iteration
 
-    position_for_iteration : INTEGER is
-        obsolete "Use pos_for_iter"
-        do
-            Result := pos_for_iter
-        end
+	position_for_iteration : INTEGER is
+		obsolete "Use pos_for_iter"
+		do
+			Result := pos_for_iter
+		end
 
 	go (p: INTEGER) is
 			-- set position_for_iteration to p

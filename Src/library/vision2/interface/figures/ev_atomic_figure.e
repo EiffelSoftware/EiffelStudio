@@ -85,7 +85,7 @@ feature -- Miscellaneous
 			a_world: EV_FIGURE_WORLD
 			a_projector: EV_STANDARD_PROJECTION
 		do
-			create p.make_with_size (100, 200)
+			create p.make_with_size (300, 100)
 			create a_world
 			a_world.extend (Current)
 			create a_projector.make (a_world, p)

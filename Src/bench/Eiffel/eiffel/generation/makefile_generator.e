@@ -446,20 +446,41 @@ feature -- Generation, Header
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
-				%CPP = $cpp%N%
-				%CFLAGS = $optimize $ccflags $large ");
+				%CPP = $cpp%N")
+
+			if Lace.ace_options.has_multithreaded then
+				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");
+			else
+				Make_file.putstring ("CFLAGS = $optimize $ccflags $large ");
+			end
+
 			if System.has_separate then
 				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
 			end;
+
 			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
-				%CPPFLAGS = $optimize $cppflags $large ");
+			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+
+			if Lace.ace_options.has_multithreaded then
+				Make_file.putstring ("CPPFLAGS = $optimize $mtcppflags $large ");
+			else
+				Make_file.putstring ("CPPFLAGS = $optimize $cppflags $large ");
+			end
+
 			if System.has_separate then
 				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
 			end;
+
 			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
-				%LDFLAGS = $ldflags%N%
+			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+
+			if Lace.ace_options.has_multithreaded then
+				Make_file.putstring ("LDFLAGS = $mtldflags%N")
+			else
+				Make_file.putstring ("LDFLAGS = $ldflags%N")
+			end
+
+			Make_file.putstring ("%
 				%LIBS = $libs%N%
 				%MAKE = make%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%

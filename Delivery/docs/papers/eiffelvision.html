@@ -1,0 +1,249 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center">
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<h1><a name="Introduction">Introduction</a></h1>
+<p>In this documentation we will explain you how to use EiffelVision in you
+Projects:</p>
+<ul>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Technical Information">Technical Information</a></li>
+  <li><a href="#Getting Started">Getting Started</a></li>
+  <li><a href="#How to configure your Ace file">How to configure your Ace file</a></li>
+  <li><a href="#Some working examples">Some working examples</a></li>
+</ul>
+<p>A pdf documentation of EiffelVision is available here.
+<p>The EiffelVision library provides a solution to one of the central needs of
+software developers: a high-level approach to graphical development. In
+particular, EiffelVision is one of the few products that support both
+&quot;GUI&quot; programming (managing windows, panels, buttons and other user
+interface objects) and graphical manipulations (geometric figures - circles,
+polygons and the like, including complex figures of an arbitrary level of
+nesting).</p>
+<p>EiffelVision is a key element of our technology; all of our current products
+(e.g. EiffelBench, EiffelBuild, EiffelCase, ArchiText) use it, and most of our
+customers' applications also rely on it. We are putting considerable effort into
+building the next generation of EiffelVision so that it will continue to support
+the needs of our customers.
+<p>Portability is a key concern in EiffelVision. Even though the product evolved
+in part from a Motif library, it also supports Windows programming.
+<p>Even though we hear frequent siren calls - including on comp.lang.eiffel - of
+the form &quot;Forget about portability, all we need is a good [fill in some API
+here, usually Windows] encapsulation&quot;, we think it is our duty to Eiffel
+users, and one of the major attractions of a such a library, to provide a
+platform-independent solution, even if not all users are concerned about
+portability yet.
+<p>In fact, the relationship between portability and adaptation to specific
+platforms is not necessarily &quot;either-or&quot;. This realization explains
+the current direction of evolution for EiffelVision.
+<p>Taking a critical look at EiffelVision, one may make two comments that at
+first sight appear contradictory:
+<ul>
+  <li>For some, EiffelVision is too abstract: they feel that it is not close
+    enough to, say, the Windows API.<br>
+    <br>
+  </li>
+  <li>For others, EiffelVision is not abstract enough: the library's view of how
+    its users should do things is still influenced by its Motif origins.<br>
+  </li>
+</ul>
+<p>Both of these criticisms are to a certain extent justified; but one can
+answer them without contradiction. It is possible to make EiffelVision:
+<ul>
+  <li>1. More abstract, by removing anything that is Motif-specific or just
+    Motifish.<br>
+    <br>
+  </li>
+  <li>2. More concrete, by building platform-specific layers for each of the
+    important APIs: Windows, X/Motif etc.<br>
+  </li>
+</ul>
+<p>This is the basis of the new EiffelVision architecture.</p>
+<p>&nbsp;</p>
+<h1><a name="Technical Information">Technical Information</a></h1>
+<p>Task 1 is the natural evolution of EiffelVision. Cleaned up from some Motif
+specificities, made more general and more powerful, EiffelVision will be even
+more simple and intuitive to use, allowing a beginner to put together a
+graphical application very quickly. The result, of course, will be fully
+portable.
+<p>Task 2 has led to the design of a new library: <a href="http://www.eiffel.com/doc/manuals/technology/library/wel/page.html">WEL</a>
+(the Windows Eiffel Library). WEL is an encapsulation of the Windows graphical
+API, meant for those developers who are focusing on Windows and want to have
+access to the entire set of mechanisms of that platform.
+<p>Similarly, the Motif-specific part is now encapsulated in a new library: <a href="http://www.eiffel.com/products/mel.html">MEL</a>
+(the Motif Eiffel Library).
+<p>EiffelVision, WEL, MEL and similar libraries are not separate developments:
+the platform-specific parts of New EiffelVision are entirely programmed on top
+of WEL in the Windows implementation and MEL in the Unix and VMS
+implementations. So WEL and MEL are not separate developments: they are the
+platform-specific parts of EiffelVision. The following picture represents the
+new architecture:<center>
+<table border="0" cellPadding="6" width="846" height="204">
+  <tbody>
+    <tr>
+      <td bgcolor="#008080" width="55" height="63"><font size="-1"><i>Portable<br>
+        level</i></font></td>
+      <td align="middle" bgColor="#FFFFCC" colSpan="7" width="703" height="63">
+        <p align="center"><span style="background-color: #FFFFCC"><br>
+        <font size="+2"><b>EiffelVision</b></font><br>
+        <br>
+        </span></p>
+      </td>
+    </tr>
+    <tr>
+      <td bgcolor="#008080" width="55" height="113"><font size="-1"><i>Platform-<br>
+        specific<br>
+        level</i></font></td>
+      <td bgcolor="#FFFFCC" width="67" height="113">&nbsp;</td>
+      <td align="middle" bgColor="#00ffff" width="63" height="113"><b><font size="3">MEL</font></b><br>
+        <br>
+        (Motif<br>
+        Eiffel<br>
+        Library)</td>
+      <td bgcolor="#FFFFCC" width="76" height="113">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="middle" bgColor="#ff8800" width="72" height="113"><b><font size="3">WEL</font></b><font size="+1"><br>
+        </font><br>
+        (Windows<br>
+        Eiffel<br>
+        Library)</td>
+      <td bordercolor="#FFFFCC" bgcolor="#FFFFCC" width="62" height="113">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td align="middle" bgColor="#adff9f" vAlign="center" width="119" height="113"><font size="+5"><b>&nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;</b><br>
+        </font></td>
+      <td bgcolor="#FFFFCC" width="62" height="113">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+</center>
+<p>For a user, the rationale for using either library level is clear:
+<ul>
+  <li>The platform-specific level (WEL, MEL, ...) provides access to all of
+    Windows and most of Motif, at the expense of portability.<br>
+    <br>
+  </li>
+  <li>The EiffelVision level guarantees portability, but not all
+    platform-specific facilities will be available (although it is likely that
+    any really useful facility which is not present in EiffelVision at a certain
+    stage will find its way into it at a later release, implemented through the
+    native mechanisms on some platforms and emulated elsewhere).</li>
+</ul>
+<p>It is also possible to mix both level, for example to take advantage of
+platform-specific GUI facilities on some platforms while keeping most of the
+software portable.
+<p>This approach provides a comprehensive solution to user needs.
+<p>Perhaps the most interesting aspect of WEL is that it does more than just
+cover the needs of some Eiffel developers for a direct interface to Windows
+graphical mechanisms. The other audience includes anyone interested in writing
+graphical applications under Windows simply, safely and effectively - whether or
+not such a person is already an Eiffel user. To such people, WEL provides a much
+nicer interface than the other techniques that we know of. This is due to the
+benefits of the Eiffel approach -- abstraction, inheritance, command classes,
+reusable components from <a href="http://www.eiffel.com/products/base.html">EiffelBase</a>
+etc.</p>
+<p>&nbsp;</p>
+<h1><a name="Getting Started">Getting Started</a></h1>
+<p>To use EiffelVision, you need to install WEL, MEL or GTK. But these library
+should be installed once you have installed Eiffel Bench.</p>
+<p><b><u>Remarks :</u></b></p>
+<p>The following classes have been made obsolete from&nbsp;<br>
+version 3.3.7:<br>
+<br>
+Kernel classe:<br>
+IO_HANDLER<br>
+<br>
+Oui widget classes:<br>
+LABEL_G, PUSH_BG, SEPARATOR_G, TOGGLE_BG, SCROLL_LIST<br>
+LIST_MAN, MESSAGE, PROMPT<br>
+<br>
+Context data classes:<br>
+CIRCNOT_DATA, FOCSOUT_DATA, MAPREQ_DATA, SELCLR_DATA<br>
+CIRCREQ_DATA, FOCUSIN_DATA, MESSAGE_DATA, SELNOT_DATA<br>
+CLRMAP_DATA, GRAPEXP_DATA, MULTIPL_DATA, SELREQ_DATA<br>
+CONFNOT_DATA, GRAVNOT_DATA, NOEXP_DATA, TOGGLE_DATA<br>
+CONFREQ_DATA, KEYMAP_DATA, PROPERT_DATA, UNMAP_DATA<br>
+CREATE_DATA, LEAVE_DATA, REPAREN_DATA, VISIBLE_DATA<br>
+DESTROY_DATA, MAPNOT_DATA, RESIZE_DATA, ENTER_DATA&nbsp;<br>
+MAPPING_DATA, SCALE_DATA<br>
+<br>
+To include these obsolete classes into your application<br>
+you must follow these steps:<br>
+<br>
+1. If you are using MOTIF, change the declaration of the toolkit&nbsp;<br>
+   initialization from MOTIF to OBSOLETE_MOTIF (for windows, change&nbsp;<br>
+   the declaration from MS_WINDOWS to OBSOLETE_MS_WINDOWS)<br>
+2. Include the following clusters into your Ace file:<br>
+   obsolete_oui:    "$EIFFEL4/library/vision/obsolete/oui";<br>
+   obsolete_toolkit:"$EIFFEL4/library/vision/obsolete/toolkit";<br>
+   obsolete_motif:  "$EIFFEL4/library/vision/obsolete/motif";</p>
+<h1><a name="How to configure your Ace file">How to configure your Ace file</a></h1>
+<p>In order to use EiffelVision in an Eiffel Project, you have to include in your
+project, the right clusters and the right external files. Thus, you need to
+configure your Ace file.<br>
+You can get all the information about Ace files <a href="lace.html">here</a>.</p>
+<p>However, we <b>strongly</b> recommend you to use the precompiled version of
+EiffelVision, as the compilation of this library is pretty long.</p>
+<p>If you wish or you need to compile EiffelVision you can include all the
+following clusters. :</p>
+<p><font color="#FF0000">-- EiffelVision<br>
+</font><br>
+<b>        vision:                 	"$EIFFEL4/library/vision";<br>
+	vision_kernel (vision):         "$/oui/kernel";<br>
+	vision_widgets (vision):        "$/oui/widgets";<br>
+	vision_context_data (vision):	"$/oui/context_data";<br>
+<br>
+	vision_figures (vision):	"$/figures";<br>
+	vision_tools (vision):		"$/tools";</b></p>
+<p><font color="#FF0000">	-- Toolkit<br>
+</font><br>
+<b>	vision_toolkit (vision):		"$/implement/toolkit";<br>
+	vision_toolkit_kernel (vision_toolkit):	"$/kernel";<br>
+	vision_toolkit_widgets (vision_toolkit):	"$/widgets";<br>
+	vision_toolkit_support (vision_toolkit):	"$/support";</b><br>
+<br>
+<font color="#FF0000">	-- Implementation clusters for x/Motif<br>
+</font><br>
+<b>	vision_imp (vision):          		"$/implement/motif";<br>
+	vision_imp_kernel (vision_imp):         "$/kernel";<br>
+	vision_imp_widgets (vision_imp):        "$/widgets";<br>
+	vision_imp_support (vision_imp):        "$/support";<br>
+<br>
+        vision_imp_x (vision):      		"$/implement/x";<br>
+        vision_imp_x_kernel (vision_imp_x):  	"$/kernel";<br>
+        vision_imp_x_support (vision_imp_x):    "$/support";</b></p>
+<p>If you want to use MEL library you can include in your Ace file :</p>
+<p><b>all mel: &quot;$EIFFEL4/library/mel/&quot;;</b></p>
+<p>If you want to use WEL library, you can include in your Ace file :</p>
+<p><b>all wel: &quot;$EIFFEL4/library/wel/&quot;;</b></p>
+<p>To see some Working Example of Ace file, you can check our <a href="#Some working examples">Examples</a>.&nbsp;</p>
+<p>A pdf documentation of EiffelVision is also available here.</p>
+<h1><a name="Some working examples">Some working examples</a></h1>
+<p>We developed a few examples using EiffelVision that you can try to see how to
+use this library.</p>
+<p>They are located in <b>&quot;$EIFFEL4/examples/vision&quot;</b></p>
+<p>&nbsp;</p>
+&nbsp;
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

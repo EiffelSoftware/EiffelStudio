@@ -44,7 +44,7 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			-- to corresponding lists input_list
 			-- and output_list.
 		require
-			valid_editor: func_editor /= Void
+--			valid_editor: func_editor /= Void
 		local
 			drop_command: FUNC_DROP
 		do
@@ -52,10 +52,11 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 				add (input_data, output_data)
 				!!drop_command;
 				drop_command.execute (Current);
---				accept_pair;
 				reset_input_data
 				reset_output_data
-				func_editor.reset_stones
+				if func_editor /= Void then
+					func_editor.reset_stones
+				end
 			end
 		end;
 

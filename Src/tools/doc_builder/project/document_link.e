@@ -98,14 +98,10 @@ feature -- Access
 							
 								-- If match is false here
 							if not l_match then
-								if l_filename_arr.count > l_url_arr.count then
-									l_no_parents := l_filename_arr.count - (l_last_match_index)
-								else
-									l_no_parents := cnt - l_last_match_index
-								end
 								from									
+									l_no_parents := l_filename_arr.count - (l_last_match_index)
 								until
-									l_no_parents = 0
+									l_no_parents <= 0
 								loop				
 									l_filename.extend ("..")	
 									l_no_parents := l_no_parents - 1

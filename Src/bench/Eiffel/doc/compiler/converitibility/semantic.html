@@ -80,6 +80,12 @@ blind for basic type conversions (it does what it is told to do).</p>
 sufficient export status for the current processed class, we should raise an 
 error.</p>
 <p>&nbsp;</p>
+<h2>Infix checking</h2>
+<p>When checking for &quot;a op b&quot; (a of type A, b of type B), we check first if `op' 
+is an operation of `a', then if `B' conforms or converts to the type of the 
+expected parameter of `op'. If not, we check if `A' converts to `B' and if `B' 
+has an infix routine `op' whose argument is of type B.</p>
+<p>&nbsp;</p>
 <h2>Incrementality</h2>
 <p>If a conversion routine is added or removed, what should we do? During degree 
 3, each time we record a conversion feature, we record a depend unit, so at 
@@ -104,6 +110,29 @@ we check that if A has a convert_to structure, that it contains B.</p>
 <h2>Generated code</h2>
 <p>Nothing special, at degree 3 during byte code generation we have inserted the 
 required byte code information for this. We do a blind generation.</p>
+
+<p>&nbsp;</p>
+
+<h2>Library changes</h2>
+
+<h3>INTEGER_8</h3>
+
+<p>converts to: INTEGER_16, INTEGER_32, INTEGER_64, REAL, DOUBLE</p>
+
+<h3>INTEGER_16</h3>
+
+<p>converts to: INTEGER_32, INTEGER_64, REAL, DOUBLE</p>
+
+<h3>INTEGER_32</h3>
+
+<p>converts to: INTEGER_64, REAL, DOUBLE</p>
+
+<h3>INTEGER_64</h3>
+
+<p>converts to: REAL, DOUBLE</p>
+
+<h3>REAL</h3>
+<p>converts to: DOUBLE</p>
 
 </body>
 

@@ -565,16 +565,16 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	position_in_parent (a_dockable_source: EV_DOCKABLE_SOURCE_IMP): INTEGER is
+	position_in_parent (a_dockable_source: EV_DOCKABLE_SOURCE_I): INTEGER is
 			-- `Result' is position of `a_widget' within its `parent'.
 		local
 			cell: EV_CELL
 			box: EV_BOX
-			a_widget: EV_WIDGET_IMP
-			a_tool_bar_button: EV_TOOL_BAR_BUTTON_IMP
+			a_widget: EV_WIDGET
+			a_tool_bar_button: EV_TOOL_BAR_BUTTON
 			tool_bar: EV_TOOL_BAR
 		do
-			a_widget ?= a_dockable_source
+			a_widget ?= a_dockable_source.interface
 			if a_widget /= Void then
 				cell ?= a_widget.parent
 				if cell /= Void then
@@ -582,15 +582,15 @@ feature {NONE} -- Implementation
 				end
 				box ?= a_widget.parent
 				if box /= Void then
-					Result := box.index_of (a_widget.interface, 1)
+					Result := box.index_of (a_widget, 1)
 				end
 			else
-				a_tool_bar_button ?= a_dockable_source
+				a_tool_bar_button ?= a_dockable_source.interface
 				check
 					source_was_widget_or_tool_bar_button: a_tool_bar_button /= Void
 				end
 				tool_bar ?= a_tool_bar_button.parent
-				Result := tool_bar.index_of (a_tool_bar_button.interface, 1)
+				Result := tool_bar.index_of (a_tool_bar_button, 1)
 			end
 		end
 

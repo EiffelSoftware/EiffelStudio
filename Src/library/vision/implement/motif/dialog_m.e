@@ -310,14 +310,14 @@ feature {NONE} -- External features
 		alias
 			"to_left_xm_string"
 		end;
-	d_from_xm_string (scr_obj: POINTER; name1: ANY): STRING is
+	d_from_xm_string (scr_obj: POINTER; name1: POINTER): STRING is
 		external
 			"C"
 		alias
 			"from_xm_string"
 		end;
 
-	d_set_boolean (value1: POINTER; value2: BOOLEAN; s_name: ANY) is
+	d_set_boolean (value1: POINTER; value2: BOOLEAN; s_name: POINTER) is
 		external
 			"C"
 		alias

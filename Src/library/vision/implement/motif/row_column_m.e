@@ -153,7 +153,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_row_column (r_name: ANY; scr_obj: POINTER;
+	create_row_column (r_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

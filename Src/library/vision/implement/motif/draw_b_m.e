@@ -88,7 +88,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_draw_b (d_name: ANY; scr_obj: POINTER;
+	create_draw_b (d_name: POINTER; scr_obj: POINTER;
 					man: BOOLEAN): POINTER is
 		external
 			"C"

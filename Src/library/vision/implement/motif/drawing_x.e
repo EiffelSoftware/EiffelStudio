@@ -466,7 +466,7 @@ feature {NONE} -- External features
 		end;
 
 	x_draw_string (dspl_pointer, wndw_obj, gc: POINTER; val1,
-					val2: INTEGER; t_name: ANY; count: INTEGER) is
+					val2: INTEGER; t_name: POINTER; count: INTEGER) is
 		external
 			"C"
 		alias
@@ -527,7 +527,7 @@ feature {NONE} -- External features
 		end;
 
 	x_draw_image_string (dspl_pointer, wndw_obj, gc: POINTER; val1,
-					val2: INTEGER; t_name: ANY; count: INTEGER) is
+					val2: INTEGER; t_name: POINTER; count: INTEGER) is
 		external
 			"C"
 		alias

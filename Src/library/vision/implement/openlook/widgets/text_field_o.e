@@ -181,7 +181,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_text_field (name: ANY; parent: POINTER): POINTER is
+	create_text_field (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

@@ -99,7 +99,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- External features
 
-	create_dialog_shell (s_name: ANY; scr_obj: POINTER): POINTER is
+	create_dialog_shell (s_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

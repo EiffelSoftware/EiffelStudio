@@ -111,7 +111,7 @@ feature
 
 feature {NONE} -- External features
 
-	add_action (scr_obj: POINTER; obj: G_ANY_I; cb: POINTER; oui: WIDGET; res: ANY) is
+	add_action (scr_obj: POINTER; obj: G_ANY_I; cb: POINTER; oui: WIDGET; res: POINTER) is
 		external
 			"C"
 		end; 

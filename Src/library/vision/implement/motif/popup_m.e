@@ -46,7 +46,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_popup (p_name: ANY; scr_obj: POINTER): POINTER is
+	create_popup (p_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -190,7 +190,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_pulldown (p_name: ANY; scr_obj: POINTER): POINTER is
+	create_pulldown (p_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

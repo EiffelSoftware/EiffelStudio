@@ -40,7 +40,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_radio_box (name: ANY; parent: POINTER): POINTER is
+	create_radio_box (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

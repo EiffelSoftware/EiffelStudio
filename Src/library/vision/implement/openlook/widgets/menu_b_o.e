@@ -47,7 +47,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_menu_button (name: ANY; parent: POINTER): POINTER is
+	create_menu_button (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;

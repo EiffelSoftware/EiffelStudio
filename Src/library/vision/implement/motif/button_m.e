@@ -88,7 +88,7 @@ feature -- Text
 
 feature {NONE} -- External features
 
-	from_xm_string (scr_obj: POINTER; l_name: ANY): STRING is
+	from_xm_string (scr_obj: POINTER; l_name: POINTER): STRING is
 		external
 			"C"
 		end;

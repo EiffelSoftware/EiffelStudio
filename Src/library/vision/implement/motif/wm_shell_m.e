@@ -467,7 +467,7 @@ $ext_name)
 
 feature {NONE} -- External features
 
-	m_wm_shell_set_int (scr_obj: POINTER; value: INTEGER; name: ANY) is
+	m_wm_shell_set_int (scr_obj: POINTER; value: INTEGER; name: POINTER) is
 		external
 			"C"
 		alias
@@ -481,28 +481,28 @@ feature {NONE} -- External features
             "c_get_pixmap"
         end;
 
-	m_wm_shell_get_string (scr_obj: POINTER; name: ANY): STRING is
+	m_wm_shell_get_string (scr_obj: POINTER; name: POINTER): STRING is
 		external
 			"C"
 		alias
 			"get_string"
 		end;
 
-	m_wm_shell_set_string (scr_obj: POINTER; name1, name2: ANY) is
+	m_wm_shell_set_string (scr_obj: POINTER; name1, name2: POINTER) is
 		external
 			"C"
 		alias
 			"set_string"
 		end;
 
-	m_wm_shell_get_int (scr_obj: POINTER; name: ANY): INTEGER is
+	m_wm_shell_get_int (scr_obj: POINTER; name: POINTER): INTEGER is
 		external
 			"C"
 		alias
 			"get_int"
 		end;
 
-	m_wm_set_pixmap (scr_obj, pix: POINTER; resource: ANY) is
+	m_wm_set_pixmap (scr_obj, pix: POINTER; resource: POINTER) is
 		external
 			"C"
 		alias

@@ -69,7 +69,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_bulletin_d (b_name: ANY; scr_obj: POINTER): POINTER is
+	create_bulletin_d (b_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

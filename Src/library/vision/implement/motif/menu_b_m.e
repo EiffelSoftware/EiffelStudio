@@ -91,7 +91,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_menu_b (m_name: ANY; scr_obj: POINTER;
+	create_menu_b (m_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

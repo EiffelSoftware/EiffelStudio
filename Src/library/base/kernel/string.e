@@ -482,7 +482,7 @@ feature -- Element change
 			if count = capacity then
 				resize (count + additional_space)
 			end;
-			str_cprepend ($area, $c, count);
+			str_cprepend ($area, c, count);
 			count := count + 1
  		ensure
  		  new_count: count = old count + 1;
@@ -634,7 +634,7 @@ feature -- Removal
 		require else
 			true
 		do
-			count := str_rmall ($area, $c, count)
+			count := str_rmall ($area, c, count)
 		ensure then
 			changed_count: count = (old count) - (old occurrences (c))
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
@@ -979,19 +979,19 @@ feature {STRING, IO_MEDIUM, TEXT_FILLER} -- Implementation
 
 feature {STRING} -- Implementation
 
-	str_code (c_string: like area; i: INTEGER): INTEGER is
+	str_code (c_string: POINTER; i: INTEGER): INTEGER is
 			-- Numeric code of `i'-th character in `c_string'
 		external
 			"C"
 		end;
 
-	hashcode (c_string: like area; len: INTEGER): INTEGER is
+	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
 			-- Hash code value of `c_string'
 		external
 			"C"
 		end;
 
-	str_search (c_str: like area; c: CHARACTER; i, len: INTEGER): INTEGER is
+	str_search (c_str: POINTER; c: CHARACTER; i, len: INTEGER): INTEGER is
 			-- Index of first occurrence of `c' in `c_str',
 			-- equal or following  `i'-th position
 			-- 0 if no occurrence
@@ -1021,28 +1021,28 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 
-	str_ljustify (c_string: like area; length,cap: INTEGER) is
+	str_ljustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Left justify in a field of `capacity' 
 			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
 
-	str_cjustify (c_string: like area; length,cap: INTEGER) is
+	str_cjustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Center justify in a field of `capacity' 
 			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
 
-	str_rjustify (c_string: like area; length,cap: INTEGER) is
+	str_rjustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Right justify in a field of `capacity' 
 			-- the `c_string' of length `length'
 		external
 			"C"
 		end;
 
-	str_cmp (this, other: like area; this_len, other_len: INTEGER ): INTEGER is
+	str_cmp (this, other: POINTER; this_len, other_len: INTEGER ): INTEGER is
 			-- Compare `this' and `other' C strings.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'
@@ -1050,44 +1050,44 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 
-	str_lower (c_string: like area; length: INTEGER) is
+	str_lower (c_string: POINTER; length: INTEGER) is
 			-- Convert `c_string' to lower case.
 		external
 			"C"
 		end;
 
-	str_upper (c_string: like area; length: INTEGER) is
+	str_upper (c_string: POINTER; length: INTEGER) is
 			-- Convert `c_string' to upper case.
 		external
 			"C"
 		end;
 
-	str_reverse (c_string: like area; length: INTEGER) is
+	str_reverse (c_string: POINTER; length: INTEGER) is
 			-- In-place reverse string `c_string'.
 		external
 			"C"
 		end;
 
-	str_atoi (c_string: like area; length: INTEGER): INTEGER is
+	str_atoi (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Value of integer in `c_string'
 		external
 			"C"
 		end;
 
-	str_ator (c_string: like area; length: INTEGER): REAL is
+	str_ator (c_string: POINTER; length: INTEGER): REAL is
 			-- Value of real in `c_string'
 		external
 			"C"
 		end;
 
-	str_atod (c_string: like area; length: INTEGER): DOUBLE is
+	str_atod (c_string: POINTER; length: INTEGER): DOUBLE is
 			-- Value of double in `c_string'
 		external
 			"C"
 		end;
 
 	
-	str_mirror (c_string, new_string: like area; length: INTEGER) is
+	str_mirror (c_string, new_string: POINTER; length: INTEGER) is
 			-- Build a new string into `new_string' which is the
 			-- mirror copy of the original string held in `c_string'.
 		external
@@ -1095,25 +1095,25 @@ feature {STRING} -- Implementation
 		end;
 	
 
-	str_cpy (to_str: like area; from_str: POINTER; length_from: INTEGER) is
+	str_cpy (to_str: POINTER; from_str: POINTER; length_from: INTEGER) is
 			-- Copy `length_from' characters from `from_str' into `to_str'.
 		external
 			"C"
 		end;
 
-	str_blank (c_string: like area; n: INTEGER) is
+	str_blank (c_string: POINTER; n: INTEGER) is
 			-- Fill `c_string' with `n' blanks.
 		external
 			"C"
 		end;
 
-	str_fill (c_string: like area; n: INTEGER; c: CHARACTER) is
+	str_fill (c_string: POINTER; n: INTEGER; c: CHARACTER) is
 			-- Fill `c_string' with `n' `c's.
 		external
 			"C"
 		end;
 
-	str_tail (c_string: like area; n, length: INTEGER) is
+	str_tail (c_string: POINTER; n, length: INTEGER) is
 			-- Remove all characters in `c_string'
 			-- except for the last `n'.
 		external
@@ -1121,26 +1121,26 @@ feature {STRING} -- Implementation
 		end;
 
 
-	str_take (other_string, c_string: like area; n1, n2: INTEGER) is
+	str_take (other_string, c_string: POINTER; n1, n2: INTEGER) is
 			-- Make `c_string' the substring of `other_string'
 			-- from `n1' .. `n2'.
 		external
 			"C"
 		end;
 
-	str_cprepend (c_string: like area; c: CHARACTER; length: INTEGER) is
+	str_cprepend (c_string: POINTER; c: CHARACTER; length: INTEGER) is
 			-- Prepend `c' to `c_string'.
 		external
 			"C"
 		end;
 
-	str_append (c_str, other_str: like area; c_len, other_len: INTEGER) is
+	str_append (c_str, other_str: POINTER; c_len, other_len: INTEGER) is
 			-- Append `other_str' to `c_str'.
 		external
 			"C"
 		end;
 
-	str_insert (c_string, other_string: like area; c_length, other_length,
+	str_insert (c_string, other_string: POINTER; c_length, other_length,
 			position: INTEGER) is
 			-- Insert `other_string' into `c_string' at `position'.
 			-- Insertion occurs at the left of `position'.
@@ -1148,13 +1148,13 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 
-	str_rmchar (c_string: like area; length, i: INTEGER) is
+	str_rmchar (c_string: POINTER; length, i: INTEGER) is
 			-- Remove `i'-th character from `c_string'.
 		external
 			"C"
 		end;
 
-	str_replace (c_string, other_string: like area; c_length, other_length,
+	str_replace (c_string, other_string: POINTER; c_length, other_length,
 			star_post, end_pos: INTEGER) is
 			-- Replace substring (`start_pos', `end_pos') from `c_string'
 			-- by `other_string'.
@@ -1162,28 +1162,28 @@ feature {STRING} -- Implementation
 			"C"
 		end;
 
-	str_rmall (c_string: like area; c: CHARACTER; length: INTEGER): INTEGER is
+	str_rmall (c_string: POINTER; c: CHARACTER; length: INTEGER): INTEGER is
 			-- Remove all occurrences of `c' in `c_string'.
 			-- Return new number of character making up `c_string'
 		external
 			"C"
 		end;
 
-	str_left (c_string: like area; length: INTEGER): INTEGER is
+	str_left (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Remove all leading whitespace from `c_string'.
 			-- Return the new number of characters making `c_string'
 		external
 			"C"
 		end;
 
-	str_right (c_string: like area; length: INTEGER): INTEGER is
+	str_right (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Remove all trailing whitespace from `c_string'.
 			-- Return the new number of characters making `c_string'
 		external
 			"C"
 		end;
 
-	str_resize (a: like area; newsize: INTEGER): like area is
+	str_resize (a: POINTER; newsize: INTEGER): like area is
 			-- Area which can accomodate
 			-- at least `newsize' characters
 		external

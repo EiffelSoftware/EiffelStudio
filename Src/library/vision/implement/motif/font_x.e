@@ -555,19 +555,23 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	c_string_width (value: POINTER; font_name: ANY): INTEGER is
+	c_string_width (value: POINTER; font_name: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	x_load_query_font (scr_obj: POINTER; font_name: ANY): POINTER is
+	x_load_query_font (scr_obj: POINTER; font_name: POINTER): POINTER is
 		external
-			"C"
+			"C (Display *, char *):EIF_POINTER | <X11/Xlib.h>"
+		alias
+			"XLoadQueryFont"
 		end;
 
 	x_free_font (scr_obj: POINTER; value: POINTER) is
 		external
-			"C"
+			"C (Display *, XFontStruct *) | <X11/Xlib.h>"
+		alias
+			"XFreeFont"
 		end;
 
 	c_descent (value: POINTER): INTEGER is

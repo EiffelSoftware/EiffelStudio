@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- External features
 
-	create_check_box (cb_name: ANY; scr_obj: POINTER; 
+	create_check_box (cb_name: POINTER; scr_obj: POINTER; 
 				man: BOOLEAN): POINTER is
 		external
 			"C"

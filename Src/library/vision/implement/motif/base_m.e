@@ -52,7 +52,7 @@ feature {NONE} -- Creation
 feature {NONE} -- External features
 
 	xt_create_app_shell (src_obj: POINTER; 
-			b_name, a_name: ANY): POINTER is
+			b_name, a_name: POINTER): POINTER is
 		external
 			"C"
 		end;

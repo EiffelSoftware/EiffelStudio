@@ -43,7 +43,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- External features
 
-	create_frame (f_name: ANY; scr_obj: POINTER;
+	create_frame (f_name: POINTER; scr_obj: POINTER;
 					man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -300,7 +300,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_option_b (i_name: ANY; scr_obj: POINTER; 
+	create_option_b (i_name: POINTER; scr_obj: POINTER; 
 			man: BOOLEAN): POINTER is
 		external
 			"C"

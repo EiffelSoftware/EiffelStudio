@@ -77,7 +77,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_popup (name: ANY; parent: POINTER): POINTER is
+	create_popup (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -221,7 +221,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scroll_list (l_name: ANY; scr_obj: POINTER;
+	create_scroll_list (l_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -55,7 +55,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_scrolled_w (name: ANY; parent: POINTER): POINTER is
+	create_scrolled_w (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

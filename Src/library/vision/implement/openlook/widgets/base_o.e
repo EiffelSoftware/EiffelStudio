@@ -47,7 +47,7 @@ feature
 
 feature {NONE} -- External features
 
-	xt_create_app_shell (parent: POINTER; name1, name2: ANY): POINTER is
+	xt_create_app_shell (parent: POINTER; name1, name2: POINTER): POINTER is
 
 		external
 			"C"

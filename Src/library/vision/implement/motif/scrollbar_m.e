@@ -287,7 +287,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scrollbar (s_name: ANY; scr_obj: POINTER;
+	create_scrollbar (s_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -50,7 +50,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_radio_box (b_name: ANY; scr_obj: POINTER;
+	create_radio_box (b_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -99,7 +99,7 @@ feature -- Status setting
 
 feature {NONE} -- External
 
-	eif_getenv (s : ANY): POINTER is
+	eif_getenv (s : POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
 			"C"	
@@ -117,7 +117,7 @@ feature {NONE} -- External
 			"C"
 		end;
 
-	system_call (s : ANY): INTEGER is
+	system_call (s : POINTER): INTEGER is
 			-- Pass to the operating system a request to execute `s'.
 		external
 			"C"

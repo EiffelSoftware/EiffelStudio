@@ -196,7 +196,7 @@ feature
 
 feature {NONE} -- External features
 
-	xm_text_field_append (scr_obj: POINTER; name: ANY) is
+	xm_text_field_append (scr_obj: POINTER; name: POINTER) is
 		external
 			"C"
 		end;
@@ -211,7 +211,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_field_replace (scr_obj: POINTER; from_pos, to_pos: INTEGER; t_name: ANY) is
+	xm_text_field_replace (scr_obj: POINTER; from_pos, to_pos: INTEGER; t_name: POINTER) is
 		external
 			"C"
 		end;
@@ -221,12 +221,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_field_insert (scr_obj: POINTER; position: INTEGER; name: ANY) is
+	xm_text_field_insert (scr_obj: POINTER; position: INTEGER; name: POINTER) is
 		external
 			"C"
 		end;
 
-	create_text_field (t_name: ANY; scr_obj: POINTER;
+	create_text_field (t_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"
@@ -237,7 +237,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_text_field_set_string (scr_obj: POINTER; t_name: ANY) is
+	xm_text_field_set_string (scr_obj: POINTER; t_name: POINTER) is
 		external
 			"C"
 		end;

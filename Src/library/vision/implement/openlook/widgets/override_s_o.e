@@ -74,7 +74,7 @@ feature
 
 feature {NONE} -- External features
 
-	xt_create_override_shell (name: ANY; parent: POINTER): POINTER is
+	xt_create_override_shell (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

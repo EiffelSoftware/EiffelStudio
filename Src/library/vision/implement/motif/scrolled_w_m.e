@@ -141,7 +141,7 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-    create_scrolled_w (sw_name: ANY; scr_obj: POINTER;
+    create_scrolled_w (sw_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
             "C"

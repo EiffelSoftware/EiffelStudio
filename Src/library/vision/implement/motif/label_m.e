@@ -119,12 +119,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	from_xm_string (scr_obj: POINTER; l_name: ANY): STRING is
+	from_xm_string (scr_obj: POINTER; l_name: POINTER): STRING is
 		external
 			"C"
 		end;
 
-    create_label (l_name: ANY; scr_obj: POINTER;
+    create_label (l_name: POINTER; scr_obj: POINTER;
 				man: BOOLEAN): POINTER is
         external
             "C"

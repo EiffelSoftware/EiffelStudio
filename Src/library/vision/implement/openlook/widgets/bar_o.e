@@ -70,7 +70,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_bar (name: ANY; scr_obj: POINTER): POINTER is
+	create_bar (name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end; 

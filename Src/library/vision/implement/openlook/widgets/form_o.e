@@ -672,7 +672,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_form (name: ANY; parent: POINTER): POINTER is
+	create_form (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

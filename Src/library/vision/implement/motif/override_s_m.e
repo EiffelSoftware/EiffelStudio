@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- External features
 
-	xt_create_override_shell (o_name: ANY; scr_obj: POINTER): POINTER is
+	xt_create_override_shell (o_name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -646,13 +646,13 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scale (s_name: ANY; scr_obj: POINTER;
+	create_scale (s_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;
 
-	from_xm_string (scr_obj: POINTER; name: ANY): STRING is
+	from_xm_string (scr_obj: POINTER; name: POINTER): STRING is
 		external
 			"C"
 		end;
@@ -662,12 +662,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	get_cardinal (scr_obj: POINTER; c_name: ANY): INTEGER is
+	get_cardinal (scr_obj: POINTER; c_name: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	get_widget_children (scr_obj: POINTER; c_name: ANY): POINTER is
+	get_widget_children (scr_obj: POINTER; c_name: POINTER): POINTER is
 		external
 			"C"
 		end;

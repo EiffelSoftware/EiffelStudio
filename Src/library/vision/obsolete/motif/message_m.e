@@ -281,7 +281,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_message (i_name: ANY; scr_obj: POINTER;
+	create_message (i_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

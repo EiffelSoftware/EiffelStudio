@@ -119,12 +119,12 @@ feature
 
 feature {NONE} -- External features
 
-	create_pict_color_b (name: ANY; parent: POINTER): POINTER is
+	create_pict_color_b (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;
 
- 	set_openlook_pixmap (scr_obj, pix: POINTER; resource: ANY) is
+ 	set_openlook_pixmap (scr_obj, pix: POINTER; resource: POINTER) is
 	  	external
 		  	"C"
 	  	end; 

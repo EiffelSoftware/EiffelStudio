@@ -97,7 +97,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_label (name: ANY; parent: POINTER): POINTER is
+	create_label (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end; 

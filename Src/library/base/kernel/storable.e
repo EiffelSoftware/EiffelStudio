@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			"eretrieve"
 		end;
 
-	c_basic_store (file_handle: INTEGER; object: STORABLE) is
+	c_basic_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			"estore"
 		end;
 
-	c_general_store (file_handle: INTEGER; object: STORABLE) is
+	c_general_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			"eestore"
 		end;
 
-	c_independent_store (file_handle: INTEGER; object: STORABLE) is
+	c_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external

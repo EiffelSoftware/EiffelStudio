@@ -252,7 +252,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_toggle_b_gadget (t_name: ANY; scr_obj: POINTER;
+	create_toggle_b_gadget (t_name: POINTER; scr_obj: POINTER;
 			man: BOOLEAN): POINTER is
 		external
 			"C"

@@ -61,7 +61,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_info_d (name: ANY; scr_obj: POINTER): POINTER is
+	create_info_d (name: POINTER; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_stat (name, stat_buf: ANY) is
+	file_stat (name, stat_buf: POINTER) is
 			-- Get information from file `name' into `stat_buf'
 		external
 			"C"
@@ -271,13 +271,13 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_eaccess (stat_buf: ANY; which: INTEGER): BOOLEAN is
+	file_eaccess (stat_buf: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access tests using effective ID.
 		external
 			"C"
 		end;
 
-	file_info (stat_buf: ANY; which: INTEGER): INTEGER is
+	file_info (stat_buf: POINTER; which: INTEGER): INTEGER is
 			-- Extract information `which' from information buffer
 		external
 			"C"

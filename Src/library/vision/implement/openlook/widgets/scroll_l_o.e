@@ -99,7 +99,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_scrolling_list (name: ANY; parent: POINTER): POINTER is
+	create_scrolling_list (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;

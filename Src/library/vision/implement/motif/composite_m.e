@@ -59,12 +59,12 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	get_cardinal (scr_obj: POINTER; c_name: ANY): INTEGER is
+	get_cardinal (scr_obj: POINTER; c_name: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	get_widget_children (scr_obj: POINTER; c_name: ANY): POINTER is
+	get_widget_children (scr_obj: POINTER; c_name: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -74,7 +74,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_bulletin (name: ANY; parent: POINTER): POINTER is
+	create_bulletin (name: POINTER; parent: POINTER): POINTER is
 		external
 			"C"
 		end;

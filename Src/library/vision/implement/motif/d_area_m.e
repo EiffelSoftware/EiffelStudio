@@ -165,7 +165,7 @@ feature
 
 feature {NONE} -- External features
 
-	create_drawing_area (a_name: ANY; scr_obj: POINTER; 
+	create_drawing_area (a_name: POINTER; scr_obj: POINTER; 
 				man: BOOLEAN): POINTER is
 		external
 			"C"

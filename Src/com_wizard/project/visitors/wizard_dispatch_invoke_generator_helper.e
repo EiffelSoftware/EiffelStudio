@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_GUIDS
+		export 
+			{NONE} all
+		end
+
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export 
 			{NONE} all
@@ -174,9 +179,9 @@ feature -- Basic operations
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
-				create Result.make_from_string (iunknown_guid_string)
+				Result := Iunknown_guid
 			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
-				create Result.make_from_string (idispatch_guid_string)
+				Result := Idispatch_guid
 			else
 				check 
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or

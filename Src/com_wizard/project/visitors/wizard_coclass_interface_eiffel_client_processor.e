@@ -21,7 +21,6 @@ feature -- Basic operations
 			eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
 			source_generator: WIZARD_SOURCE_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
-			remove_from_system_interfaces (an_interface.implemented_interface)
 			create eiffel_server_visitor
 			eiffel_server_visitor.visit (an_interface.implemented_interface)
 

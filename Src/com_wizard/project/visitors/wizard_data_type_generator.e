@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	ce_function_name: STRING

@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FORBIDDEN_NAMES
+		export
+			{NONE} all
+		end
+
 	WIZARD_VARIABLE_NAME_MAPPER
 
 feature -- Basic operations

@@ -18,6 +18,14 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		rename
+			interface as dictionary_interface,
+			component as dictionary_component
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	make (a_component: WIZARD_COMPONENT_DESCRIPTOR;
@@ -85,8 +93,8 @@ feature -- Basic Operations
 		do
 			if a_function_generator.function_renamed then
 				inherit_clause.add_rename (a_function_generator.original_name, a_function_generator.changed_name)
-				tmp_original_name := vartype_namer.user_precondition_name (a_function_generator.original_name)
-				tmp_changed_name := vartype_namer.user_precondition_name (a_function_generator.changed_name)
+				tmp_original_name := user_precondition_name (a_function_generator.original_name)
+				tmp_changed_name := user_precondition_name (a_function_generator.changed_name)
 				inherit_clause.add_rename (tmp_original_name, tmp_changed_name)
 			end
 		end

@@ -12,6 +12,11 @@ inherit
 
 	WIZARD_WRITER_C
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 

@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_GUIDS
+		export 
+			{NONE} all
+		end
+
 	ECOM_FUNC_KIND
 		export
 			{NONE} all

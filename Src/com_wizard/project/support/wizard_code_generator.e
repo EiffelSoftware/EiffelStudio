@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 	WIZARD_SPECIAL_TYPE_LIBRARIES
 		export
 			{NONE} all

@@ -23,14 +23,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATION_ENVIRONMENT
-		rename
-			interface as dictionary_interface,
-			component as dictionary_component
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	interface: WIZARD_INTERFACE_DESCRIPTOR

@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_ALIAS_DESCRIPTOR is

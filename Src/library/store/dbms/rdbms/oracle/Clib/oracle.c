@@ -783,8 +783,8 @@ int ora_is_null_data(int no_desc, int i) {
 
 
 char date[19];
-char d[2];
-char y[4];
+char d[3] = { (char) 0, (char) 0, (char) 0 };
+char y[5] = { (char) 0, (char) 0, (char) 0, (char) 0, (char) 0 };
 
 static char *default_date = "11/11/1111 11:11:11";
 
@@ -799,9 +799,9 @@ int ora_get_date_data (int no_des, int i)
 		{
 			//memcpy (&date, default_date, sizeof(date));
 			return 0;
-		}
-		else
+		} else {
 			memcpy (&date, def [no_des] [i-1].buf, sizeof(date));
+		}
 		return 1;
 
 	}

@@ -6,7 +6,7 @@ inherit
 
 	TOPOLOGICAL
 		rename
-			id as class_id,
+			id as topological_id,
 			successors as descendants
 		end;
 	IDABLE;
@@ -63,7 +63,7 @@ feature
 	generics: EIFFEL_LIST [FORMAL_DEC_AS];
 			-- Formal generical parameters
 
-	class_id: INTEGER;
+	topological_id: INTEGER;
 			-- Unique number for a class. Could change during a topological
 			-- sort on classes.
 
@@ -185,11 +185,11 @@ feature
 	create_conformance_table is
 			-- Creation of the conformance table
 		require
-			class_id_is_processed: class_id > 0;
+			topological_id_is_processed: topological_id > 0;
 		do
 				-- Once the topological sort is done, we can create
 				-- a well-sized conformance table
-			conformance_table.resize (1, class_id);
+			conformance_table.resize (1, topological_id);
 		end;
 
 	already_compiled: BOOLEAN is
@@ -216,7 +216,6 @@ feature
 			old_syntactical_suppliers: like syntactical_suppliers;
 			file: UNIX_FILE;
 			class_file_name: STRING;
-			vsrc1: VSRC1;
 			vd22: VD22;
 			vd21: VD21;
 		do
@@ -280,16 +279,6 @@ feature
 				-- Initialization of the current class
 			init (ast, class_info);
 
-				-- Check non-genericity of root class
-			if 	Current = System.root_class.compiled_class
-				and then
-				generics /= Void
-			then
-				!!vsrc1;
-				vsrc1.set_class_id (id);
-				Error_handler.insert_error (vsrc1);
-			end;
-
 				-- Check sum error
 			Error_handler.checksum;
 			check
@@ -348,7 +337,7 @@ feature -- Building conformance table
 			-- during second pass must see their conformance table
 			-- processed/re-processed by this routine.
 		require
-			class_id_processed: class_id > 0;
+			topological_id_processed: topological_id > 0;
 		do
 			create_conformance_table;
 			build_conformance_table_of (Current);
@@ -360,13 +349,13 @@ feature -- Building conformance table
 		require
 			good_argument: cl /= Void;
 			conformance_table_exists: cl.conformance_table /= Void;
-			class_id_processed: class_id > 0;
-			conformance: class_id <= cl.class_id;
+			topological_id_processed: topological_id > 0;
+			conformance: topological_id <= cl.topological_id;
 		local
 			a_parent: CLASS_C;
 		do
 			from
-				cl.conformance_table.put (True, class_id);
+				cl.conformance_table.put (True, topological_id);
 				parents.start;
 			until
 				parents.offright
@@ -381,9 +370,9 @@ feature -- Propagation of second pass
 	
 	propagate_pass2 is
 			-- Ask the compiler to recalculate the feature table for the
-			-- direct descendants. In case the feature table of the current
-			-- class varied between two compilations, then the feature
-			-- tables of the direct descendants nust be recalculated.
+			-- direct descendants. The feature table of the current
+			-- class  has varied between two compilations, the feature
+			-- tables of the direct descendants must be recalculated.
 		local
 			descendant: like Current;
 			local_cursor: LINKABLE [CLASS_C];
@@ -481,6 +470,7 @@ feature -- Third pass: byte code production and type check
 					-- to be updated
 				if Depend_server.has (id) then
 					dependances := Depend_server.disk_item (id);
+--					dependances.update
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
@@ -523,6 +513,19 @@ feature -- Third pass: byte code production and type check
 						feature_changed := 
 							(not propagators.melted_empty_intersection
 																(f_suppliers));
+
+						if not feature_changed then
+							from
+								f_suppliers.start
+							until
+								f_suppliers.offright or else feature_changed
+							loop
+								if System.class_of_id (f_suppliers.item.id) = Void then
+									feature_changed := True
+								end;
+								f_suppliers.forth
+							end;
+						end;
 
 						if feature_changed then
 								-- Automatic melting of the feature
@@ -1238,7 +1241,7 @@ feature
 --				local_cursor := local_cursor.right
 --			end;
 		end;
-			
+
 	remove_relations is
 			-- Remove client/supplier and parent/descendant relations
 			-- of the current class.
@@ -1271,53 +1274,57 @@ feature
 			parents_exists: parents /= Void;
 		local
 			des: like descendants;
+			c: CLASS_C;
 		do
 			from
 				parents.start;
 			until
 				parents.offright
 			loop
-				des := parents.item.associated_class.descendants;
-				des.start;
-				des.search_same (Current);
-				if not des.offright then
-					des.remove;
+				c := parents.item.associated_class;
+				if c /= Void then
+					des := c.descendants;
+					des.start;
+					des.search_same (Current);
+					if not des.offright then
+						des.remove;
+					end;
 				end;
 				parents.forth;
 			end;
 		end;
 
-	change_name (new_class_name: STRING) is
-			-- Change class name of current class and trigger recompilation
-			-- of clients
-		require
-			good_argument: new_class_name /= Void
-		local
-			local_cursor: LINKABLE [CLASS_C]
-		do
-debug ("ACTIVITY")
-	io.error.putstring ("%Tchanging name of ");
-	io.error.putstring (class_name);
-	io.error.putstring (": ");
-	io.error.putstring (new_class_name);
-	io.error.new_line;
-end;
-			cluster.classes.change_key (new_class_name, class_name);
-			lace_class.set_class_name (new_class_name);
-			check
-				cluster_modified: cluster.classes.changed
-			end;
-			from
-				local_cursor := syntactical_clients.first_element
-			until
-				local_cursor = Void
-			loop
-				Workbench.change_class (local_cursor.item.lace_class);
-				local_cursor := local_cursor.right
-			end
-		ensure
-			class_name = new_class_name
-		end;
+--	change_name (new_class_name: STRING) is
+--			-- Change class name of current class and trigger recompilation
+--			-- of clients
+--		require
+--			good_argument: new_class_name /= Void
+--		local
+--			local_cursor: LINKABLE [CLASS_C]
+--		do
+----debug ("ACTIVITY")
+--	io.error.putstring ("%Tchanging name of ");
+--	io.error.putstring (class_name);
+--	io.error.putstring (": ");
+--	io.error.putstring (new_class_name);
+--	io.error.new_line;
+----end;
+--			cluster.classes.change_key (new_class_name, class_name);	
+--			lace_class.set_class_name (new_class_name);
+--			check
+--				cluster_modified: cluster.classes.changed
+--			end;
+--			from
+--				local_cursor := syntactical_clients.first_element
+--			until
+--				local_cursor = Void
+--			loop
+--				Workbench.change_class (local_cursor.item.lace_class);
+--				local_cursor := local_cursor.right
+--			end
+--		ensure
+--			class_name = new_class_name
+--		end;
 
 	check_generics is
 			-- Check validity formal generic parameter declaration.
@@ -1418,6 +1425,28 @@ feature -- Parent checking
 
 feature -- Supplier checking
 
+	check_suppliers_and_parents is
+			-- Check the suppliers and the parents before a recompilation
+			-- of a system
+		local
+			a_class: CLASS_C;
+		do
+			from
+				syntactical_suppliers.start
+			until
+				syntactical_suppliers.offright
+			loop
+				a_class := syntactical_suppliers.item.supplier;
+				Universe.compute_last_class (a_class.class_name, cluster);
+				if Universe.last_class /= a_class.lace_class then
+						-- one of the suppliers has changed (different CLASS_I)
+						-- recompile the client (Current class)
+					Workbench.change_class (lace_class);
+				end;
+				syntactical_suppliers.forth
+			end;
+		end;
+
 	check_suppliers (supplier_list: LINKED_LIST [ID_AS]) is
 			-- Check the supplier ids of the current parsed class
 			-- and add perhaps classes to the system.
@@ -1508,13 +1537,29 @@ feature -- Supplier checking
 			end;
 		end;
 
-	check_root_class (feat_tbl: FEATURE_TABLE) is
+	check_non_genericity_of_root_class is
+		-- Check non-genericity of root class
+		require
+			is_root_class: Current = System.root_class.compiled_class
+		local
+			vsrc1: VSRC1;
+		do
+			if
+				generics /= Void
+			then
+				!!vsrc1;
+				vsrc1.set_class_id (id);
+				Error_handler.insert_error (vsrc1);
+				Error_handler.checksum;
+			end;
+		end;
+
+	check_root_class_creators is
 			-- Check creation procedures of root class
 		require
 			is_root: Current = System.root_class.compiled_class;
-			good_argument: feat_tbl /= Void;
-			associated_table: feat_tbl.feat_tbl_id = id;
 		local
+			feat_tbl: like feature_table;
 			creation_proc: FEATURE_I;
 			creation_name, system_creation: STRING;
 			error: BOOLEAN;
@@ -1522,6 +1567,7 @@ feature -- Supplier checking
 			arg_type: TYPE_A;
 			vd27: VD27;
 		do
+			feat_tbl := feature_table;
 			if creators /= Void then
 				from
 					creators.start
@@ -1560,6 +1606,7 @@ feature -- Supplier checking
 				!!vd27;
 				Error_handler.insert_error (vd27);
 			end;
+			Error_handler.checksum;
 		end;
 
 	Array_of_string: GEN_TYPE_A is
@@ -1582,13 +1629,7 @@ feature -- Order relation for inheritance and topological sort
 	infix "<" (other: like Current): BOOLEAN is
 			-- Order relation on classes
 		do
-			if context.in_topological_sort then
-					-- In case of topological sort
-				Result := sort_criteria (0) < other.sort_criteria (0);
-			else
-					-- Usual case
-				Result := class_id < other.class_id;
-			end;
+			Result := topological_id < other.topological_id;
 		end;
 
 	nb_heirs: INTEGER is
@@ -1607,45 +1648,18 @@ feature -- Order relation for inheritance and topological sort
 			end;
 		end;
 
-	sort_criteria (last: INTEGER): INTEGER is
-			-- Criteria of topological sort
-		local
-			local_cursor: LINKABLE [CLASS_C]
-		do
-			Result := last;
-			if Result <= System.nb_classes then
-					-- The sorting criteria for the topological sort is
-					-- the number of heirs. But this can only be evaluated
-					-- properly if there is no cycle in the inheritance
-					-- graph (like feature `nb_heirs'). But the total
-					-- number of heirs is necessarily less than the number
-					-- of classes in the system. So, if Result is greater
-					-- than `System.count', there is a cycle and the sorter
-					-- will fail.
-				from
-					local_cursor := descendants.first_element
-				until
-					local_cursor = Void
-				loop
-					Result := Result + 1;
-					Result := local_cursor.item.sort_criteria (Result);
-					local_cursor := local_cursor.right
-				end;
-			end;
-		end;
-
 	conform_to (other: CLASS_C): BOOLEAN is
 			-- Is `other' an ancestor of Current ?
 		require
 			good_argument: other /= Void;
 			conformance_table_exists: conformance_table /= Void;
 		do
-			Result := 	other.class_id <= class_id
+			Result := 	other.topological_id <= topological_id
 							-- A parent has necessarily a class id
 							-- less or equal than the one of the heir class
 						and then
 							-- Check conformance table
-						conformance_table.item (other.class_id);
+						conformance_table.item (other.topological_id);
 		end;
 
 	valid_creation_procedure (fn: STRING): BOOLEAN is
@@ -1660,10 +1674,10 @@ feature -- Order relation for inheritance and topological sort
 
 feature -- Convenience features
 
-	set_class_id (i: INTEGER) is
-			-- Assign `i' to `class_id'.
+	set_topological_id (i: INTEGER) is
+			-- Assign `i' to `topological_id'.
 		do
-			class_id := i;
+			topological_id := i;
 		end;
 
 	set_changed (b: BOOLEAN) is
@@ -2182,8 +2196,10 @@ feature -- PS
 	signature: STRING is
 		local
 			formal_dec: FORMAL_DEC_AS;
-			constraint_type: TYPE_A
+			constraint_type: TYPE_A;
+			error: BOOLEAN;
 		do
+			if not error then
 			!!Result.make (50);
 			Result.append (class_name);
 			if generics /= Void then
@@ -2209,7 +2225,18 @@ feature -- PS
 				end;
 				Result.append ("]")
 			end;
-			Result.to_upper
+			Result.to_upper;
+			end;
+		rescue
+			-- FIX ME ?
+			!!Result.make (50);
+			Result.append (class_name);
+			if generics /= Void then
+				Result.append (" [ ... ]");
+			end;
+			Result.to_upper;
+			error := True;
+			retry;
 		end;
 
 	feature_named (n: STRING): FEATURE_I is

@@ -21,7 +21,7 @@ feature
 			-- Check validity of class STRING
 		local
 			set_count_feat: FEATURE_I;
-			stop, error: BOOLEAN;
+			stop, error, done: BOOLEAN;
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
 			to_special_p, parent_t: CL_TYPE_A
@@ -51,15 +51,23 @@ feature
 				Error_handler.insert_error (special_error);
 			end;
 			
-			-- Third check if class has only one creation procedure with
+			-- Third check if class has one creation procedure with
 			-- one integer argument
-			error := creators = Void or else creators.count /= 1;
+			error := creators = Void
 			if not error then
-				creators.start;
-				creat_feat := feature_table.item
-												(creators.key_for_iteration);
-				error := not creat_feat.same_signature
-												(Make_signature);
+				from
+					creators.start
+				until
+					done or else creators.after
+				loop
+					creat_feat := feature_table.item (creators.key_for_iteration);
+					if creat_feat.same_signature (Make_signature) then
+						done := True
+					else
+						creators.forth
+					end
+				end
+				error := not done
 			end;
 			if error then
 				!!special_error.make (Case_6, Current);

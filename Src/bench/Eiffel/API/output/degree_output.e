@@ -83,6 +83,33 @@ feature -- Start output features
 		do
 		end;
 
+	put_case_message (a_message: STRING) is
+			-- Put `a_message' to the output window.
+		do
+			io.error.putstring (a_message);
+			io.error.new_line
+		end;
+
+	put_start_reverse_engineering (total_num: integer) is
+			-- initialize the reverse engineering part.
+		do
+			total_number := total_num;
+			processed := 0;
+		end;
+
+	put_string (a_message: STRING) is
+			-- Put `a_message' to output window.
+		do
+			io.error.putstring (a_message);
+			io.error.new_line
+		end;
+
+	put_resynchronizing_breakpoints_message is
+			-- Put a message to indicate that the 
+			-- breakpoints are being resynchronized.
+		do
+		end;
+
 feature -- Output on per class
 
 	put_degree_6 (a_cluster: CLUSTER_I) is
@@ -112,9 +139,9 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_5: current_degree = 5
 		do
-			processed := processed + 1;
 			total_number := nbr_to_go + processed;
-			display_degree (degree_5_message, nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_5_message, nbr_to_go, a_class.name_in_upper);
+			processed := processed + 1;
 		end;
 
 	put_degree_4 (a_class: E_CLASS; nbr_to_go: INTEGER) is
@@ -126,9 +153,9 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_4: current_degree = 4
 		do
-			processed := processed + 1;
 			total_number := nbr_to_go + processed;
-			display_degree (degree_4_message, nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_4_message, nbr_to_go, a_class.name_in_upper);
+			processed := processed + 1;
 		end;
 
 	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
@@ -237,6 +264,38 @@ feature -- Output on per class
 			end
 		end;
 
+	put_case_cluster_message (a_name: STRING) is
+			-- Put message to indicate that `a_name' is being
+			-- analyzed.
+		require
+			name_not_void: a_name /= Void
+		local	
+			str: STRING
+		do	
+			str := clone (a_name);
+			str.to_lower;
+			io.error.putstring (case_cluster_message);
+			io.error.putstring (str);
+			io.error.new_line
+		end;
+
+	put_case_class_message (a_class: E_CLASS) is
+			-- Put message to indicate that `a_class' is being
+			-- analyzed for case.
+		require
+			class_not_void: a_class /= Void
+		do
+			display_degree (case_class_message, 
+					total_number - processed, a_class.name_in_upper)
+			processed := processed + 1;
+		end;
+
+	skip_case_class is
+			-- Process the skipping of a case class.
+		do
+			processed := processed + 1;
+		end;
+
 feature {NONE} -- Implementation
 
 	processed: INTEGER;
@@ -263,7 +322,7 @@ feature {NONE} -- Implementation
 			perc := 100 - (nbr_to_go*100//total_number);
 			if perc < 10 then
 				Result.append ("  ");
-			else
+			elseif perc < 100 then
 				Result.extend (' ')
 			end;
 			Result.append_integer (perc);
@@ -312,5 +371,7 @@ feature {NONE} -- Constants
 	melting_changes_message: STRING is "Melting changes";
 	freezing_system_message: STRING is "Freezing system";
 	removing_dead_code_message: STRING is "Removing dead code";
+	case_class_message: STRING is "Analyzing class ";
+	case_cluster_message: STRING is "Analyzing cluster ";
 
 end -- class degree_output

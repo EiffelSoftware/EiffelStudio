@@ -290,7 +290,7 @@ feature -- Implementation
 					if bool then
 						set_part_owner_drawn (counter, 0 ,0)
 					else
-						set_text_part (clist.index - 1, clist.item.text)
+						set_text_part (clist.index - 1, clist.item.wel_text)
 					end
 					child_found := True
 				end
@@ -434,6 +434,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/10 18:33:44  brendel
+--| Corrected call to set_text_part that cannot take empty text.
+--|
 --| Revision 1.25  2000/04/05 21:16:13  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

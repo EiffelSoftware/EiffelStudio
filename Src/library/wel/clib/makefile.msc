@@ -1,12 +1,16 @@
 # wel.lib - Makefile for Microsoft C
 
 CC = cl
+# Finalized Version
 CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+
+# Debug Version
+#CFLAGS = -c -Zi -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj diskspace.obj
+OBJ = disptchr.obj enumfont.obj estream.obj msgboxpa.obj registry.obj diskspace.obj dynload.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@

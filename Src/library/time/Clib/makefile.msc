@@ -1,0 +1,21 @@
+# datetime.lib - Makefile for Microsoft C
+
+CC = cl
+
+# Finalized version
+CFLAGS = -nologo -c -Ox -W1 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = datetime.obj
+
+datetime.lib: $(OBJ)
+	if exist $@ del $@
+	lib /NOLOGO /OUT:$@ $(OBJ)
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
+	del $@
+	del *.obj

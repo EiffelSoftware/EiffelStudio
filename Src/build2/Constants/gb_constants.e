@@ -300,7 +300,7 @@ feature -- Generation constants
 			-- String representing an indent two
 			-- tabs less than `indent'.
 		once
-			Result := "%R%N%T"
+			Result := "%N%T"
 		end
 
 	Local_object_name_prepend_string: STRING is "l_"

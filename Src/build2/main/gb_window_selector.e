@@ -61,6 +61,18 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_FILE_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -221,6 +233,51 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
+	directory_of_window (selector_item: GB_WINDOW_SELECTOR_ITEM): GB_WINDOW_SELECTOR_DIRECTORY_ITEM is
+			-- `Result' is all objects represented in `Current'.
+			-- No paticular order is guaranteed.
+		local
+			layout_item: GB_WINDOW_SELECTOR_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			found: BOOLEAN
+		do
+			from
+				start
+			until
+				off or found
+			loop
+				layout_item ?= item
+				if layout_item = selector_item then
+					Result := Void
+					found := True
+				elseif layout_item = Void then
+					directory_item ?= item
+					check
+						item_was_directory: directory_item /= Void
+					end
+					from
+						directory_item.start
+					until
+						directory_item.off or found
+					loop
+						layout_item ?= directory_item.item
+						check
+							item_was_layout_item: layout_item /= Void
+						end
+						if layout_item = selector_item then
+							Result := directory_item
+							found := True
+						end
+						directory_item.forth
+					end
+				end
+				forth
+			end
+			check
+				found: found
+			end
+		end
+		
 		
 feature -- Status setting
 
@@ -265,6 +322,41 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			count_increased: count = old count + 1
 		end
 		
+feature {GB_COMMAND_NAME_CHANGE} -- Implementation
+
+	generated_path: FILE_NAME is
+			-- `Result' is generated directory for current project.
+		do
+			create Result.make_from_string (system_status.current_project_settings.project_location)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	update_class_files_of_window (window_object: GB_TITLED_WINDOW_OBJECT; old_name, new_name: STRING) is
+			-- Rename generated files representing `window_object' to reflect a name change on `window_object'
+			-- from `old_name' to `new_name'.
+		require
+			window_object_not_void: window_object /= Void
+			old_name_valid: old_name /= Void and then not old_name.is_empty
+			new_name_valid: new_name /= Void and then not new_name.is_empty
+		local
+			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			file_name: FILE_NAME
+		do
+			directory_object := directory_of_window (window_object.window_selector_item)
+			file_name := generated_path
+			if directory_object /= Void then
+				file_name.extend (directory_object.text)
+			end
+			
+			rename_file_if_exists (file_name, old_name + ".e", new_name + ".e")
+				--| FIXME must now go into class, and change name.
+			
+			rename_file_if_exists (file_name, old_name + Class_implementation_extension.as_lower + ".e",
+				new_name + Class_implementation_extension.as_lower + ".e")
+				--| FIXME must now go into class, and change name.
+		end
+
 feature {GB_XML_LOAD} -- Implementation
 
 	update_displayed_names is

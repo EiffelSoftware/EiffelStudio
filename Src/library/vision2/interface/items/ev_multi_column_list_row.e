@@ -97,15 +97,6 @@ feature {NONE} -- Implementation
 			implementation.update
 		end
 
-feature -- Obsolete
-
-	columns: INTEGER is
-		obsolete
-			"Use count"
-		do
-			Result := count
-		end
-
 end -- class EV_MULTI_COLUMN_LIST_ROW
 
 --!-----------------------------------------------------------------------------

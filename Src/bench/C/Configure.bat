@@ -151,7 +151,7 @@ goto end
 :clean
 del cleanup.bat
 echo @echo off > cleanup.bat
-echo rem created by Make clean in $Eiffel3\c
+echo rem created by Make clean in $Eiffel4\c
 echo del %%1\*.err >> cleanup.bat
 echo del %%1\make.bat >> cleanup.bat
 echo del %%1\*.tr2 >> cleanup.bat

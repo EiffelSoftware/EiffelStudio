@@ -83,7 +83,7 @@ rt_public void update(char ignore_updt)
 #define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
 
-	inipath = eif_getenv ("ES3INI");
+	inipath = eif_getenv ("ES4INI");
 	GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
 	WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
 	if (strlen(buf))
@@ -93,7 +93,7 @@ rt_public void update(char ignore_updt)
 
 #define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
-meltpath = win_eif_getenv ("MELT_PATH", "es3");
+meltpath = win_eif_getenv ("MELT_PATH", "es4");
 
 #elif defined __VMS
 

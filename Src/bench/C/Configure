@@ -770,7 +770,7 @@ true)
 esac
 
 : set package name
-package=Eiffel3
+package=Eiffel4
 first=`echo $package | sed -e 's/^\(.\).*/\1/'`
 last=`echo $package | sed -e 's/^.\(.*\)/\1/'`
 case "`echo AbyZ | tr '[:lower:]' '[:upper:]' 2>/dev/null`" in
@@ -1000,7 +1000,7 @@ if $needman; then
 	cat <<EOH
  
 This installation shell script will examine your system and ask you questions
-to determine how the Eiffel3 package should be installed. If you get
+to determine how the Eiffel4 package should be installed. If you get
 stuck on a question, you may use a ! shell escape to start a subshell or
 execute a command.  Many of the questions will have default answers in square
 brackets; typing carriage return will give you the default.

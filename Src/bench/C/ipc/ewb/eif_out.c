@@ -22,7 +22,7 @@ long code;
 	
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 0: %ld from es3", code);
+    add_log(100, "sending request 0: %ld from es4", code);
 #endif
 
 	Request_Clean (rqst);
@@ -39,7 +39,7 @@ long info1;
 
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 1: %ld from es3", code);
+    add_log(100, "sending request 1: %ld from es4", code);
 #endif
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
@@ -56,7 +56,7 @@ long info2;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 2: %ld from es3", code);
+    add_log(100, "sending request 2: %ld from es4", code);
 #endif
 
 	Request_Clean (rqst);
@@ -76,7 +76,7 @@ long info3;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 3: %ld from es3", code);
+    add_log(100, "sending request 3: %ld from es4", code);
 #endif
 
 	Request_Clean (rqst);
@@ -98,14 +98,14 @@ rt_public EIF_BOOLEAN recv_ack ()
 
 
 #ifdef USE_ADD_LOG
-    add_log(100, "receiving request : %ld for es3", pack.rq_type);
+    add_log(100, "receiving request : %ld for es4", pack.rq_type);
 #endif
 
 	switch (pack.rq_type) {
 	case ACKNLGE:
 
 #ifdef USE_ADD_LOG
-	    add_log(100, "acknowledge request : %ld for es3", pack.rq_ack.ak_type);
+	    add_log(100, "acknowledge request : %ld for es4", pack.rq_ack.ak_type);
 #endif
 		switch (pack.rq_ack.ak_type) {
 		case AK_OK:
@@ -133,7 +133,7 @@ rt_public EIF_BOOLEAN recv_dead ()
 		return (EIF_BOOLEAN) 0;
 
 #ifdef USE_ADD_LOG
-    add_log(100, "receiving request : %ld for es3", pack.rq_type);
+    add_log(100, "receiving request : %ld for es4", pack.rq_type);
 #endif
 
 	switch (pack.rq_type) {

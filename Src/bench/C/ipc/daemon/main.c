@@ -27,8 +27,8 @@
 #include <stdlib.h>
 
 
-#define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
-#define EWB			"/bin/es3 -bench"	/* Ewb process within Eiffel dir */
+#define EIFFEL4		"/usr/lib/Eiffel4"	/* Default installation directory */
+#define EWB			"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
 
 /* Function declaration */
 rt_public void dexit();			/* Daemon's exit */
@@ -61,7 +61,7 @@ char **argv;
 	STREAM *sp;			/* Stream used to talk to the child */
 	Pid_t pid;			/* Pid of the spawned child */
 	char *ewb_path;		/* Path leading to the ewb executable */
-	char *eiffel3;		/* Eiffel 3 installation directory */
+	char *eiffel4;		/* Eiffel 3 installation directory */
 	char *platform;
 	char *eif_timeout;	/* Timeout specified in environment variable */
 
@@ -100,14 +100,14 @@ char **argv;
 #endif
 
 	/* To find out where the ewb process is located, we use the environment
-	 * variable EIFFEL3 to get the path to the Eiffel 3.0 directory. Then the
+	 * variable EIFFEL4 to get the path to the Eiffel 3.0 directory. Then the
 	 * ewb process is in the bin/ subdirectory. In the name of standardization,
-	 * the /usr/lib/Eiffel3 path is used when the EIFFEL3 variable is not set.
+	 * the /usr/lib/Eiffel4 path is used when the EIFFEL4 variable is not set.
 	 */
 	
-	eiffel3 = getenv("EIFFEL3");		/* Installation directory */
-	if (eiffel3 == (char *) 0) {		/* Environment variable not set */
-		print_err_msg(stderr, "The environment variable EIFFEL3 is not set\n");
+	eiffel4 = getenv("EIFFEL4");		/* Installation directory */
+	if (eiffel4 == (char *) 0) {		/* Environment variable not set */
+		print_err_msg(stderr, "The environment variable EIFFEL4 is not set\n");
 		exit (1);
 	}
 	platform = getenv ("PLATFORM");
@@ -122,7 +122,7 @@ char **argv;
 		exit(1);
 	}
 	
-	strcpy(ewb_path, eiffel3);			/* Base name */
+	strcpy(ewb_path, eiffel4);			/* Base name */
 	strcat(ewb_path, "/bench/spec/");
 	strcat(ewb_path, platform);
 	strcat(ewb_path, EWB);				/* Append process name */
@@ -132,7 +132,7 @@ char **argv;
 		FIXME
 		FIXME
 		FIXME
-		check that es3 exists
+		check that es4 exists
 	*/
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */

@@ -67,9 +67,14 @@ feature {COMPILER_EXPORTER}
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
+		local
+			l_type: TYPE_A
 		do
 				-- If `other' is expanded, then it does not conform to NONE.
-			Result := not other.is_expanded
+				-- But it should not be `VOID_A' since VOID_A is only used as
+				-- return type for procedure
+			l_type := other.actual_type
+			Result := not l_type.is_expanded and not l_type.is_void
 		end
 
 end -- class NONE_A

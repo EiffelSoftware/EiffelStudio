@@ -71,7 +71,7 @@ feature -- Access
 			Result := Interface_names.s_Object_stone
 		end;
 
-	signature: STRING is
+	stone_signature: STRING is
 		do
 			!! Result.make (0);
 			Result.append (name);
@@ -83,7 +83,7 @@ feature -- Access
  
 	icon_name: STRING is
 		do
-			Result := signature
+			Result := stone_signature
 		end;
  
 	clickable: BOOLEAN is True;

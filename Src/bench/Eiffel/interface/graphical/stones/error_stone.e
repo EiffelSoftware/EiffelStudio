@@ -95,7 +95,7 @@ feature -- Access
 
 	click_list: ARRAY [CLICK_STONE] is do end;
 
-	signature: STRING is do Result := code end;
+	stone_signature: STRING is do Result := code end;
 
 	icon_name: STRING is
 		do

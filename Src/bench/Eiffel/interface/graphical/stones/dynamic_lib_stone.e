@@ -24,7 +24,7 @@ feature -- Access
 --			!! Result.make (Eiffel_ace.click_list, Void)
 		end
  
-	signature: STRING is
+	stone_signature: STRING is
 		do
 			Result := ""
 		end

@@ -63,9 +63,9 @@ feature -- Access
 			Result := Cursors.cur_X_Class
 		end;
 
-	signature: STRING is
+	stone_signature: STRING is
 		do
-			Result := e_class.signature
+			Result := e_class.class_signature
 		end;
 
 	icon_name: STRING is
@@ -78,7 +78,7 @@ feature -- Access
 		do
 			!!Result.make (20);
 			Result.append ("Class: ");
-			Result.append (signature);
+			Result.append (stone_signature);
 			Result.append ("  ");
 			Result.append ("Cluster: ");
 			Result.append (e_class.cluster.cluster_name);

@@ -28,7 +28,7 @@ feature -- Initialization
 	make is
 			-- Initialze Current
 		do
-			{TWO_WAY_LIST} precursor
+			{TWO_WAY_LIST} Precursor
 			General_resources.add_user (Current)
 		end
 
@@ -46,7 +46,7 @@ feature -- Resource Update
 		do
 			if old_res = General_resources.history_size then
 				if new_res.actual_value >= 1 and new_res.actual_value <= 100 then
-					{RESOURCE_USER} precursor (old_res, new_res)
+					{RESOURCE_USER} Precursor (old_res, new_res)
 					rearrange_history
 				end
 			end
@@ -71,17 +71,17 @@ feature -- Element change
 			if
 				not do_not_update and then v /= Void and then
 				(empty or else not v.same_as (last) or else
-				not equal (v.signature, last.signature))
+				not equal (v.stone_signature, last.stone_signature))
 			then
 				if
 					not empty and then
 					not islast and then
-					(not item.same_as (last) or else not equal (item.signature, last.signature))
+					(not item.same_as (last) or else not equal (item.stone_signature, last.stone_signature))
 				then
-					{TWO_WAY_LIST} precursor (item)
+					{TWO_WAY_LIST} Precursor (item)
 				end
 
-				{TWO_WAY_LIST} precursor (v)
+				{TWO_WAY_LIST} Precursor (v)
 
 				rearrange_history				
 

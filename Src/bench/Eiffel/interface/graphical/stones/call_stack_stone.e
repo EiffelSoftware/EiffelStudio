@@ -51,21 +51,21 @@ feature -- Access
  
 	stone_name: STRING is 
 		do 
-			Result := signature
+			Result := stone_signature
 		end;
 
-	signature: STRING is "";
+	stone_signature: STRING is "";
  
 	click_list: ARRAY [CLICK_STONE] is do end;
 
 	origin_text: STRING is 
 		do
-			Result := signature
+			Result := stone_signature
 		end
 
 	icon_name: STRING is
 		do
-			Result := signature
+			Result := stone_signature
 		end;
  
 	clickable: BOOLEAN is

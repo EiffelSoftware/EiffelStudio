@@ -86,7 +86,7 @@ feature -- Access
 			Result := Interface_names.s_Showstops 
 		end;
 
-	signature: STRING is "";
+	stone_signature: STRING is "";
  
 	header: STRING is "Stop point";
 
@@ -96,7 +96,7 @@ feature -- Access
 
 	icon_name: STRING is
 		do
-			Result := signature
+			Result := stone_signature
 		end;
  
 	clickable: BOOLEAN is

@@ -78,7 +78,9 @@ feature {NONE}
 				end				
 			end
 		rescue
-			clean_on_dispose_debug_output (3, item, $Current, 0)		
+			debug ("com_object")
+				clean_on_dispose_debug_output (3, item, $Current, 0)
+			end
 			item := default_pointer
 			retry
 		end		

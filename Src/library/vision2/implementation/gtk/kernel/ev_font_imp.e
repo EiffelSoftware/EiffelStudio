@@ -25,11 +25,13 @@ creation
 feature {NONE} -- Initialization
 
  	make is
- 			-- Create a font.
- 		do
-			check
-                                not_yet_implemented: False
-                        end
+ 			-- Create the default font.
+		local
+			a: ANY 
+		do
+			!! system_name.make_default
+			a := full_name.to_c
+			widget := gdk_font_load ($a)	
  		end
 
 	make_by_name (str: STRING) is
@@ -38,7 +40,8 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			a := str.to_c
+			!! system_name.make_by_name (str)
+			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
 
@@ -77,17 +80,23 @@ feature -- Measurement
 
 	height: INTEGER is
 			-- Height of the font
+			-- In points.
 		do
+			Result := (system_name.point_size).to_integer
 		end
 
 	width: INTEGER is
 			-- Average width of the current font
 		do
+			Result := (system_name.average_width).to_integer
 		end
 
 	maximum_width: INTEGER is
 			-- Width of the widest character in the font
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 		
 	string_width (str: STRING): INTEGER is
@@ -103,14 +112,14 @@ feature -- Measurement
 			-- Horizontal resolution of screen for which the font
 			-- is designed`
 		do
-			Result := system_name.resolution_x
+			Result := (system_name.resolution_x).to_integer
 		end
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font
 			-- is designed
 		do
-			Result := system_name.resolution_y
+			Result := (system_name.resolution_y).to_integer
 		end
 
 feature -- Status report
@@ -121,9 +130,23 @@ feature -- Status report
 			Result := widget = default_pointer
 		end
 
-	is_proportional: BOOLEAN is
-			-- Is the font proportional ?
+	is_bold: BOOLEAN is
+			-- Is the font bold?
 		do
+			Result := system_name.weight = "bold" or
+				system_name.weight = "demibold"
+		end
+
+	is_italic: BOOLEAN is
+			-- Is the font italic?
+		do
+			Result := system_name.slant = "I"
+		end
+
+	is_proportional: BOOLEAN is
+			-- Is the font proportional?
+		do
+			Result := system_name.spacing = "P"
 		end
 
  	is_standard: BOOLEAN is
@@ -157,7 +180,7 @@ feature -- Status setting
 			else
 				system_name.set_weight ("Medium")
 			end
-			a := full_name.to_c
+			a := system_name.basic_name.to_c
 			widget := gdk_font_load ($a)
 			if widget = default_pointer then
 				io.put_string ("The bold format is not availbale for this font.%N")
@@ -179,7 +202,7 @@ feature -- Status setting
 			else
 				system_name.set_slant ("R")
 			end
-			a := full_name.to_c
+			a := system_name.basic_name.to_c
 			widget := gdk_font_load ($a)
 			if widget = default_pointer then
 				io.put_string ("The italic format is not available for this font.%N")
@@ -187,11 +210,6 @@ feature -- Status setting
 				a := full_name.to_c
 				widget := gdk_font_load ($a)
 			end
-		end
-
-	set_underline (flag: BOOLEAN) is
-			-- Set underline characters if `flag', unset otherwise.
-		do
 		end
 
 feature -- Element change

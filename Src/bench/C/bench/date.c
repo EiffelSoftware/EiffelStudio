@@ -23,44 +23,50 @@
 #endif
 
 EIF_INTEGER eif_date(char *path)
-{
 	/* Return last modification time of file of path `path' */
-
-	static struct stat info;
-#ifdef EIF_WIN32
-	static struct timeb current_time;
-	ftime (&current_time);
-	if (current_time.dstflag == 1)
-			/* We are not in the same daylight saving zone (here we are in summer)
-			 * and thus in order to save in the default daylight saving zone
-			 * (the winter) we need to remove 3600 seconds from the given time */
-		return (-1 == stat(path,&info)) ? (EIF_INTEGER) -1L : ((EIF_INTEGER) info.st_mtime - 3600);
-	else
-#endif
-			/* Since we are in the default daylight saving zone, we just
-			 * use the value given by the operating system */
-		return (-1 == stat(path,&info)) ? (EIF_INTEGER) -1L : (EIF_INTEGER) info.st_mtime;
-}
-
-EIF_BOOLEAN eif_file_has_changed(char *path, EIF_INTEGER date)
 {
-	/* Check to see if the directory `path' has changed after `date' */
-
-	static struct stat info;
 #ifdef EIF_WIN32
-	static struct timeb current_time;
+		/* On NTFS file system, windows store UTC file stamps in 100 of nanoseconds
+		 * starting from January 1st 0. Converted in seconds, this time is greater
+		 * than 2^32 therefore we substract the EPOCH date January 1st 1970 to get
+		 * a 32 bits representation of the date.
+		 * FIXME: Manu 01/28/2004: On FAT file system, the date is in local time,
+		 * meaning that the code below does not compensate if you change your timezone
+		 * and will return a different date value for the same stamp just because
+		 * you are in different time zone.
+		 */
+	static ULARGE_INTEGER epoch_date;
+	static int done = 0;
 
-	ftime (&current_time);
-	if (current_time.dstflag == 1)
-			/* We are not in the same daylight saving zone (here we are in summer)
-			 * and thus in order to save in the default daylight saving zone
-			 * (the winter) we need to remove 3600 seconds from the given time */
-		return (stat(path,&info) == -1) ? EIF_TRUE :  EIF_TEST(date != ((EIF_INTEGER) info.st_mtime - 3600));
-	else
+	WIN32_FIND_DATA l_find_data;
+	HANDLE l_file_handle;
+	ULARGE_INTEGER l_date;
+
+	l_file_handle = FindFirstFile(path, &l_find_data);
+	if (l_file_handle == INVALID_HANDLE_VALUE) {
+		return -1;
+	} else {
+			/* We do not need the file handle anymore, so we close it to
+			 * avoir handle leak. */
+		FindClose (l_file_handle);
+		if (done == 0) {
+				/* Lazy initialization of `epoch_date'. */
+			SYSTEMTIME epoch;
+			FILETIME epoch_file;
+
+			done = 1;
+			memset (&epoch, 0, sizeof(SYSTEMTIME));
+			epoch.wYear = 1970;
+			epoch.wMonth = 1;
+			epoch.wDay = 1;
+			SystemTimeToFileTime (&epoch, &epoch_file);
+			memcpy (&epoch_date, &epoch_file, sizeof (ULARGE_INTEGER));
+		}
+		memcpy (&l_date, &(l_find_data.ftLastWriteTime), sizeof (ULARGE_INTEGER));
+		return (EIF_INTEGER) ((l_date.QuadPart - epoch_date.QuadPart) / 10000000i64);
+	}
+#else
+	static struct stat info;
+	return (-1 == stat(path,&info)) ? (EIF_INTEGER) -1L : (EIF_INTEGER) info.st_mtime;
 #endif
-			/* Since we are in the default daylight saving zone, we just
-			 * use the value given by the operating system */
-		return (stat(path,&info) == -1) ? EIF_TRUE :  EIF_TEST(date != (EIF_INTEGER) info.st_mtime);
-
 }
-

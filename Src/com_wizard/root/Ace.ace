@@ -1,61 +1,101 @@
--- This Ace file requires the following environment variables:
--- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
-
 system
-	com_wizard
+	"com_wizard"
 
 root
-	APPLICATION(root_cluster): "make"
+	application: make
 
 default
 	assertion (no)
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+
+-- This Ace file requires the following environment variables:
+-- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
 --	assertion (all)
+-- EiffelBase
+-- WEL
+-- EiffelCOM
+-- EiffelTime
 
 cluster
-	
-	root_cluster: "..\root"
+	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
 
-	all e2_idl: "..\eiffeltoidl";
 
-	descriptors: "..\project\descriptors"
+	all e2_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
+
+
+	descriptors:		"$EIFFEL_SRC\com_wizard\project\descriptors"
 		default
-			assertion (all)
-		end;
-	
-	visitors: "..\project\visitors"
+			assertion (no)
+			assertion (check)
+			assertion (require)
+			assertion (ensure)
+			assertion (loop)
+			assertion (invariant)
+		end
+
+	visitors:		"$EIFFEL_SRC\com_wizard\project\visitors"
 		default
-			assertion (all)
-		end;
+			assertion (no)
+			assertion (check)
+			assertion (require)
+			assertion (ensure)
+			assertion (loop)
+			assertion (invariant)
+		end
 
-	gui: "..\project\gui"
+	gui:		"$EIFFEL_SRC\com_wizard\project\gui"
 
-	support: "..\project\support"
+
+	support:		"$EIFFEL_SRC\com_wizard\project\support"
 		default
-			assertion (all)
-		end;
+			assertion (no)
+			assertion (check)
+			assertion (require)
+			assertion (ensure)
+			assertion (loop)
+			assertion (invariant)
+		end
 
-	wizard_library_constants: "..\project\library\constants"
+	wizard_library_constants:		"$EIFFEL_SRC\com_wizard\project\library\constants"
 
-	wizard_library_interfaces: "..\project\library\interfaces"
+
+	wizard_library_interfaces:		"$EIFFEL_SRC\com_wizard\project\library\interfaces"
 		visible
-			ECOM_TYPE_INFO;
-		end;
+			ecom_type_info
+				end
+		end
 
-	wizard_library_structures: "..\project\library\structures"
+	wizard_library_structures:		"$EIFFEL_SRC\com_wizard\project\library\structures"
 		option
-			assertion (require):ECOM_SAFE_ARRAY_BOUND;
+			assertion (require): ecom_safe_array_bound
 		visible
-			ECOM_TYPE_LIB_FIND_NAME_RESULT;
-			ECOM_SAFE_ARRAY_BOUND
-				export
-					"make_by_pointer"
-				end;
-			ECOM_CUST_DATA_ITEM;
-			ECOM_DLL_ENTRY;
-			ECOM_DOCUMENTATION;
-		end;
+			ecom_type_lib_find_name_result
+				end
+			ecom_safe_array_bound
+				end
+			ecom_cust_data_item
+				end
+			ecom_dll_entry
+				end
+			ecom_documentation
+				end
+		end
 
-	-- EiffelBase
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "CVS"; 
@@ -66,37 +106,42 @@ cluster
 				end
 		end
 
-	-- WEL
-	all wel:						"$EIFFEL_SRC\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 		default
 			assertion (no)
-		end;
+		end
 
-	-- EiffelCOM
-	ecom_constants:					"$EIFFEL_SRC\library\com\Constants"
+	ecom_constants:		"$EIFFEL_SRC\library\com\Constants"
 
-	ecom_Interfaces:					"$EIFFEL_SRC\library\com\Interfaces"
 
-	ecom_Support:					"$EIFFEL_SRC\library\com\Support"
+	ecom_interfaces:		"$EIFFEL_SRC\library\com\Interfaces"
 
-	ecom_Structures:					"$EIFFEL_SRC\library\com\Structures"
+
+	ecom_support:		"$EIFFEL_SRC\library\com\Support"
+
+
+	ecom_structures:		"$EIFFEL_SRC\library\com\Structures"
 		visible
-			ECOM_CURRENCY;
-			ECOM_DECIMAL;
-		end;
+			ecom_currency
+				end
+			ecom_decimal
+				end
+		end
 
-	-- EiffelTime
-	all time:						"$EIFFEL_SRC\library\time"
+	all time:		"$EIFFEL_SRC\library\time"
 		exclude
-			"french";
-			"german"
-		end;
+			"french"; "german"; 
+		end
 
 external
-	include_path:	"$EIFFEL_SRC\library\wel\spec\windows\include",
-					"$EIFFEL_SRC\library\com\spec\windows\include"
 
-	object: 		"$EIFFEL_SRC\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-					"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib";
+	include_path:
+		"$EIFFEL_SRC\library\wel\spec\windows\include",
+		"$EIFFEL_SRC\library\com\spec\windows\include"
+
+	object:
+		"$EIFFEL_SRC\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib"
+
 end

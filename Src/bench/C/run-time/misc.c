@@ -155,6 +155,10 @@ char *s;
 {
 	EIF_INTEGER result;
 
+#ifdef __WATCOMC__
+	extern void wmhandler_yield();
+#endif
+
 	Signal_t (*old_signal_hdlr)();
 
 #ifdef SIGCLD
@@ -162,8 +166,11 @@ char *s;
 #endif
 #ifdef __WATCOMC__
 	result = WinExec (s, SW_SHOWNORMAL);
-	if (result > 32)
+	if (result > 32){
+		while (GetModuleUsage(result))
+			wmhandler_yield();
 		result = 0;
+		}
 #else
 	result = (EIF_INTEGER) system (s);
 #endif
@@ -188,13 +195,14 @@ EIF_OBJ v,k;
 #ifdef __WATCOMC__
 	EIF_INTEGER result;
 	char *ini;
+	extern char **_argv;
 
-	if ((ini = (char *) calloc (strlen(eif_argv[0])+1,1)) == (char *)0)
+	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
 		return (EIF_INTEGER) -1;
 
-	strncpy (ini,eif_argv[0], rindex(eif_argv[0],'.')-eif_argv[0]);
+	strncpy (ini,_argv[0], rindex(_argv[0],'.')-_argv[0]);
 	strcat (ini, ".INI");
-	result = WritePrivateProfileString("Environment", eif_access (v), eif_access (k), ini);
+	result = WritePrivateProfileString("Environment", eif_access (k), eif_access (v), ini);
 	free (ini);
 	return (result ? 0 : -1);  /* Non zero indicate ok - yuk */
 #else
@@ -218,11 +226,12 @@ EIF_OBJ k;
 #ifdef __WATCOMC__
 	char *ini;
 	static buf[128];
+	extern char **_argv;
 
-	if ((ini = (char *) calloc (strlen(eif_argv[0])+1,1)) == (char *)0)
+	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
 		return (EIF_INTEGER) 0;
 
-	strncpy (ini, eif_argv[0], rindex(eif_argv[0],'.')-eif_argv[0]);
+	strncpy (ini, _argv[0], rindex(_argv[0],'.')-_argv[0]);
 	strcat (ini, ".INI");
 	GetPrivateProfileString ("Environment", k, "", buf, 128, ini);
 	free (ini);

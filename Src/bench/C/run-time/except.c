@@ -311,6 +311,7 @@ char *object;			/* The object on which the routine is applied */
 
 	vector->ex_type = EX_CALL;		/* Signals entry in a new routine */
 	vector->ex_retry = 0;			/* Function not retried (yet!) */
+	vector->ex_rescue = 0;			/* Function not rescued (yet!) */
 	vector->ex_jbuf = (char *) 0;	/* As far as we know, no rescue clause */
 	vector->ex_rout = name;			/* Set the routine name */
 	vector->ex_orig = origin;		/* And its origin (where it was written) */

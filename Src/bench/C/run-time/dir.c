@@ -67,8 +67,6 @@ DIR *dirp;
 {
 #ifdef HAS_REWINDDIR
 	rewinddir(dirp);
-#else
-	fprintf (stderr, "rewinddir is not available\n");
 #endif
 }
 

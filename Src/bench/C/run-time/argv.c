@@ -25,31 +25,31 @@ public int arg_number()
 	return eif_argc;
 }
 
-public void arg_init(argc, argv)
-int argc;
-char **argv;
+public void arg_init(eargc, eargv)
+int eargc;
+char **eargv;
 {
 	/* Save command-line arguments array and number */
 
 	extern void fatal_error();
 	int i;
 
-	eif_argc = argc;					/* Save number of arguments */
+	eif_argc = eargc;					/* Save number of arguments */
 
 	/* Allocate memory for array duplication */
-	eif_argv = (char **) cmalloc((argc + 1) * sizeof(char *));
+	eif_argv = (char **) cmalloc((eargc + 1) * sizeof(char *));
 	if (eif_argv == (char **)0)
 		fatal_error(error);
 
 	/* Duplicate arguments array */
-	for (i = 0; i < argc; i++) {
-		eif_argv[i] = cmalloc(strlen(argv[i]) + 1);
+	for (i = 0; i < eargc; i++) {
+		eif_argv[i] = cmalloc(strlen(eargv[i]) + 1);
 		if (eif_argv[i] == (char *)0)
 			fatal_error(error);
-		strcpy (eif_argv[i], argv[i]);
+		strcpy (eif_argv[i], eargv[i]);
 	}
 
-	eif_argv[argc] = (char *)0;
+	eif_argv[eargc] = (char *)0;
 }
 
 public char *arg_option(num)

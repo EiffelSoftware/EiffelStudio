@@ -35,6 +35,8 @@ feature {NONE} -- Initialization
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+		set_dialog_tabs
+		create action_window.make (Current, tab_list)
 		end
 	
 

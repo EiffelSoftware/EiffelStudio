@@ -113,6 +113,8 @@ feature {NONE} -- Initialization
 			if dialog /= Void then
 				dialog.close_request_actions.wipe_out
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
+				parent_area.linear_representation.prune_all (tool)
+				parent_area.external_representation.extend (tool)
 			end
 			if parent /= Void then
 				parent.prune (Current)
@@ -146,10 +148,10 @@ feature {NONE} -- Initialization
 			parented_in_dialog: parent_dockable_dialog (tool) = dialog
 		do
 			tool.parent.prune_all (tool)
-			parent_area.linear_representation.prune_all (tool)
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
 			parent_window (parent_area).lock_update
+			parent_area.external_representation.prune_all (tool)
 			parent_area.insert_widget (tool, display_name, original_parent_position.min (parent_area.count + 1))
 			parent_window (parent_area).unlock_update
 		ensure

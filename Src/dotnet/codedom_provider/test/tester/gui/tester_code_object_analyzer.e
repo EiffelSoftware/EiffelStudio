@@ -55,6 +55,8 @@ feature -- Basic Operation
 			l_comment: SYSTEM_DLL_CODE_COMMENT
 			l_import: SYSTEM_DLL_CODE_NAMESPACE_IMPORT
 			l_member: SYSTEM_DLL_CODE_TYPE_MEMBER
+			l_base_types: SYSTEM_DLL_CODE_TYPE_REFERENCE_COLLECTION
+			i, l_count: INTEGER
 		do
 			l_compile_unit ?= a_object
 			if l_compile_unit /= Void then
@@ -113,6 +115,23 @@ feature -- Basic Operation
 											elseif l_type.is_struct then
 												l_base_index := Struct_group
 												description := "struct " + l_type.name
+											end
+											l_base_types := l_type.base_types
+											if l_base_types /= Void then
+												from
+													l_count := l_base_types.count
+													if l_count > 0 then
+														description.append (" : ")
+														description.append (l_base_types.item (0).base_type)
+														i := 1
+													end
+												until
+													i = l_count
+												loop
+													description.append (", ")
+													description.append (l_base_types.item (i).base_type)
+													i := i + 1
+												end
 											end
 											l_type_attributes := l_type.type_attributes
 											if l_type_attributes & feature {TYPE_ATTRIBUTES}.Nested_assembly = feature {TYPE_ATTRIBUTES}.Nested_assembly then

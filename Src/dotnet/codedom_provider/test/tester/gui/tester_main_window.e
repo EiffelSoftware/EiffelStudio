@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
 			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
 			tree_bottom_split_area.set_first (codedoms_tree)
+			tree_bottom_split_area.set_split_position (3000)
 			Event_manager.set_output_displayer (agent display_output)
 			make
 			close_request_actions.extend (agent on_close)

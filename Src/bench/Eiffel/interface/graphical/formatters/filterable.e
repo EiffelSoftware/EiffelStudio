@@ -1,4 +1,9 @@
--- Formatters to which a filter is applicable
+indexing
+
+	description:	
+		"Formatters to which a filter is applicable.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class FILTERABLE
 
@@ -9,7 +14,7 @@ inherit
 			filter
 		end
 
-feature
+feature -- Filtering; Implementation
 
 	filter (filtername: STRING) is
 			-- Filter the `Current' format with `filtername'.
@@ -34,6 +39,8 @@ feature
 				restore_cursors
 			end
 		end;
+
+feature -- Filtering; Properties
 
 	filtered_text (stone: STONE; filtername: STRING): STRING is
 			-- Output of `filtername' applied to `stone'
@@ -164,13 +171,15 @@ feature
 			-- Suffix of the file name where the filtered output text is stored;
 			-- Void if it has not been specified in the filter specification
 
-feature {NONE}
+feature {NONE} -- Attributes
 
 	filter_context_text (stone: STONE): STRUCTURED_TEXT is
 		require
 			not_stone_void: stone /= Void
 		deferred
 		end;
+
+feature {NONE} -- Implementation
 
 	display_filter_header (stone: STONE; filtername: STRING) is
 			-- Show header.

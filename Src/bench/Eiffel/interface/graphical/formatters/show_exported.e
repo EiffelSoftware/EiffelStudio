@@ -1,4 +1,9 @@
--- Command to display exported features of a class.
+indexing
+
+	description:	
+		"Command to display exported features of a class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_EXPORTED
 
@@ -13,12 +18,14 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -30,11 +37,21 @@ feature
 			Result := bm_Dark_showexported 
 		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showexported end;
+	command_name: STRING is
+		do
+			Result := l_Showexported
+		end;
 
-	title_part: STRING is do Result := l_Exported_of end;
+	title_part: STRING is
+		do
+			Result := l_Exported_of
+		end;
+
+	post_fix: STRING is "exp";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 		local
@@ -50,6 +67,4 @@ feature {NONE}
 			text_window.display_header ("Searching for exported features...")
 		end;
 
-	post_fix: STRING is "exp";
-
-end
+end -- class SHOW_EXPORTED

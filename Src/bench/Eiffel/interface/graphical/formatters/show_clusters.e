@@ -1,5 +1,9 @@
+indexing
 
--- Command to display clusters in lists.
+	description:	
+		"Command to display clusters in lists.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_CLUSTERS 
 
@@ -13,13 +17,15 @@ inherit
 creation
 
 	make
-	
-feature 
+
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
 		do 
 			init (c, a_text_window)
 		end; 
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,12 +37,21 @@ feature
 			Result := bm_Dark_showclusters 
 		end;
  
-	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showclusters end;
+	command_name: STRING is
+		do
+			Result := l_Showclusters
+		end;
 
-	title_part: STRING is do Result := l_Clusters_of end;
+	title_part: STRING is
+		do
+			Result := l_Clusters_of
+		end;
+
+	post_fix: STRING is "clu";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Show universe: clusters in class lists, in `text_window'.
@@ -52,7 +67,5 @@ feature {NONE}
 		do
 			text_window.display_header ("Exploring the system's clusters...")
 		end;
-
-	post_fix: STRING is "clu";
 
 end

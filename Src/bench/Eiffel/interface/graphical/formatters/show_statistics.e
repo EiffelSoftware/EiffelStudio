@@ -1,4 +1,9 @@
--- Statistics
+indexing
+
+	description:	
+		"Statistics";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_STATISTICS 
 
@@ -13,12 +18,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
 		do 
 			init (c, a_text_window)
 		end; 
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -30,12 +37,21 @@ feature
 			Result := bm_Dark_showstatistics
 		end;
  
-	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showstatistics end;
+	command_name: STRING is
+		do
+			Result := l_Showstatistics
+		end;
 
-	title_part: STRING is do Result := l_Statistics_of end;
+	title_part: STRING is
+		do
+			Result := l_Statistics_of
+		end;
+
+	post_fix: STRING is "sta";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Show indexing clause of classes, in `text_window'.
@@ -51,7 +67,5 @@ feature {NONE}
 		do
 			text_window.display_header ("Exploring system to compute statistics...")
 		end;
-
-	post_fix: STRING is "sta";
 
 end -- class SHOW_STATISTICS

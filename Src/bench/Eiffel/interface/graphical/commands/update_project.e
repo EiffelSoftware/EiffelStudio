@@ -1,5 +1,9 @@
+indexing
 
--- Command to update the Eiffel
+	description:	
+		"Command to update the Eiffel.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class UPDATE_PROJECT
 
@@ -14,40 +18,54 @@ inherit
 		end;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	SHARED_BENCH_RESOURCES;
-	SHARED_MELT_ONLY;
+	SHARED_BENCH_RESOURCES
 
 creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command, and set an action.
 		do
 			init (c, a_text_window);
 			set_action ("!c<Btn1Down>", Current, generate_code_only)
 		end;
 
-	text_window: PROJECT_TEXT;
+feature -- Properties
 
-feature {NONE}
+	symbol: PIXMAP is
+			-- Pixmap for the button.
+		once
+			Result := bm_Update
+		end;
+
+	text_window: PROJECT_TEXT;
+			-- Text of the project tool.
+
+feature -- Status Setting
+
+	set_run_after_melt (b: BOOLEAN) is
+			-- Request for the system to be executed after a
+			-- successful melt compilation or not.
+			-- Assign `b' to `run_after_melt'.
+		do
+			run_after_melt2 := b
+		end;
+
+feature {NONE} -- Implementation
 
 	reset_debugger is
+			-- Kill the application, if it is running.
 		do
 			if Application.is_running then
 				Application.kill
 			end;
 		end;
 
-	not_saved: BOOLEAN is
-			-- Has the text of some tool been edited and not saved?
-		do
-			Result := window_manager.class_win_mgr.changed or
-				system_tool.text_window.changed
-		end;
-
 	compile (argument: ANY) is
+			-- Compile, in the one way or the other.
 		local
 			rescued: BOOLEAN;
 			temp: STRING;
@@ -129,6 +147,7 @@ feature {NONE}
 		end;
 
 	launch_c_compilation (argument: ANY) is
+			-- Launch the C compilation.
 		do
 			error_window.put_string ("System recompiled%N");
 			if start_c_compilation then
@@ -141,14 +160,8 @@ feature {NONE}
 			end;
 		end;
 
-	finalization_error: BOOLEAN is
-			-- Has a validity error been detected during the
-			-- finalization? This happens with DLE dealing
-			-- with statically bound feature calls
-		do
-		end;
-
 	confirm_and_compile (argument: ANY) is
+			-- Ask for a confirmation, and thereafter compile.
 		do
 			if
 				not Application.is_running or else
@@ -174,6 +187,41 @@ feature {NONE}
 			end
 		end;
 
+	perform_compilation (argument: ANY) is
+			-- The real compilation. (This is melting.)
+		do
+			Eiffel_project.melt
+		end
+
+	load_default_ace is
+			-- Load the default ace file.
+		require
+			project_tool.initialized
+		local
+			file_name: STRING;
+		do
+			!!file_name.make (50);
+			file_name.append (Default_ace_name);
+			system_tool.text_window.show_file_content (file_name);
+			system_tool.text_window.set_changed (True)
+		end;
+
+feature {NONE} -- Attributes
+
+	not_saved: BOOLEAN is
+			-- Has the text of some tool been edited and not saved?
+		do
+			Result := window_manager.class_win_mgr.changed or
+				system_tool.text_window.changed
+		end;
+
+	finalization_error: BOOLEAN is
+			-- Has a validity error been detected during the
+			-- finalization? This happens with DLE dealing
+			-- with statically bound feature calls
+		do
+		end;
+
 	end_run_confirmed: BOOLEAN;
 			-- Was the last confirmer popped up to confirm the end of run?
 
@@ -194,22 +242,28 @@ feature {NONE}
 			-- rely on it after a confirmation when we resume 
 			-- (i.e. re-execute) the command
 
-	perform_compilation (argument: ANY) is
+	retried: BOOLEAN;
+			-- Is this already tried?
+
+	compilation_allowed: BOOLEAN is
+			-- Is a compilation allowed?
 		do
-			Eiffel_project.melt
+			Result := True
 		end
 
-feature
-
-	set_run_after_melt (b: BOOLEAN) is
-			-- Request for the system to be executed after a
-			-- successful melt compilation or not.
-			-- Assign `b' to `run_after_melt'.
+	c_code_directory: STRING is
+			-- Directory where the C code is stored.
 		do
-			run_after_melt2 := b
+			Result := Workbench_generation_path
 		end;
 
-feature {NONE}
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Update
+		end;
+
+feature {NONE} -- Implementation; Execution
 
 	work (argument: ANY) is
 			-- Recompile the project.
@@ -286,41 +340,4 @@ feature {NONE}
 			end;
 		end;
 
-	retried: BOOLEAN;
-
-feature {NONE}
-
-	compilation_allowed: BOOLEAN is
-		do
-			Result := True
-		end
-
-	load_default_ace is
-		require
-			project_tool.initialized
-		local
-			file_name: STRING;
-		do
-			!!file_name.make (50);
-			file_name.append (Default_ace_name);
-			system_tool.text_window.show_file_content (file_name);
-			system_tool.text_window.set_changed (True)
-		end;
-
-	c_code_directory: STRING is
-		do
-			Result := Workbench_generation_path
-		end;
-
-feature
-
-	symbol: PIXMAP is
-		once
-			Result := bm_Update
-		end;
-
-feature {NONE}
-
-	command_name: STRING is do Result := l_Update end;
-
-end
+end -- class UPDATE_PORJECT

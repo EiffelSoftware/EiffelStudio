@@ -1,4 +1,9 @@
--- Command to display class external routines.
+indexing
+
+	description:	
+		"Command to display class external routines.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_EXTERNALS 
 
@@ -14,12 +19,14 @@ creation
 	make
 
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -30,13 +37,22 @@ feature
 		once 
 			Result := bm_Dark_showexternals 
 		end;
- 
-	
-feature {NONE}
 
-	command_name: STRING is do Result := l_Showexternals end;
+feature {NONE} -- Properties
 
-	title_part: STRING is do Result := l_Externals_of end;
+	command_name: STRING is
+		do
+			Result := l_Showexternals
+		end;
+
+	title_part: STRING is
+		do
+			Result := l_Externals_of
+		end;
+
+	post_fix: STRING is "ext";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 		local
@@ -52,6 +68,4 @@ feature {NONE}
 			text_window.display_header ("Searching for external features...")
 		end;
 
-	post_fix: STRING is "ext";
-
-end
+end -- class SHOW_EXTERNALS

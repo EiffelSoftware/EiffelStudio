@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to stop debugging.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class DEBUG_QUIT 
 
 inherit
@@ -14,9 +21,10 @@ creation
 
 	make, non_gui_make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window);
 			!!request.make (Rqst_quit);
@@ -25,11 +33,15 @@ feature
 		end;
 
 	non_gui_make is
+			-- Initialization routine for the non GUI version.
 		do
 			!!request.make (Rqst_quit)
 		end;
 
+feature -- Processing
+
 	exit_now is
+			-- Force an immediate exit.
 		do
 			work (kill_it);
 		end;
@@ -40,7 +52,35 @@ feature
 			if request.recv_dead then end
 		end;
 
-feature {NONE}
+feature -- Output
+
+	termination_processing is
+			-- Print the termination message to the debug_window
+			-- and reset the object windows.
+		do
+			debug_window.clear_window;
+			debug_window.put_string ("System terminated%N");
+			debug_window.display;
+			window_manager.object_win_mgr.reset
+			if Application.status.e_feature /= Void then
+				Application.status.set_is_stopped (False);
+				-- *** FIXME
+				-- To be fixed: remove above instruction
+				-- and have extra routine named `remove_stoppoint'
+				Window_manager.routine_win_mgr.show_stoppoint
+						(Application.status.e_feature, Application.status.break_index)
+			end
+		end;
+
+feature -- Properties
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Debug_quit 
+		end;
+ 
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Continue execution.
@@ -64,38 +104,15 @@ feature {NONE}
 			end;
 		end;
 
-feature -- Output
+feature {NONE} -- Attributes
 
-	termination_processing is
-			-- Print the termination message to the debug_window
-			-- and reset the object windows.
+	command_name: STRING is
+			-- Name of the command.
 		do
-			debug_window.clear_window;
-			debug_window.put_string ("System terminated%N");
-			debug_window.display;
-			window_manager.object_win_mgr.reset
-			if Application.status.e_feature /= Void then
-				Application.status.set_is_stopped (False);
-				-- *** FIXME
-				-- To be fixed: remove above instruction
-				-- and have extra routine named `remove_stoppoint'
-				Window_manager.routine_win_mgr.show_stoppoint
-						(Application.status.e_feature, Application.status.break_index)
-			end
+			Result := l_Debug_quit
 		end;
-
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Debug_quit 
-		end;
- 
-	
-feature {NONE}
-
-	command_name: STRING is do Result := l_Debug_quit end;
 
 	request: EWB_REQUEST;
+			-- Request of some sort.
 
-end
+end -- class DEBUG_QUIT

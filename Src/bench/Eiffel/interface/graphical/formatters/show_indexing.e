@@ -1,4 +1,9 @@
--- Indexing clause of classes in the universe.
+indexing
+
+	description:	
+		"Indexing clause of classes in the universe.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_INDEXING 
 
@@ -13,12 +18,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
 		do 
 			init (c, a_text_window)
 		end; 
+
+feature -- Porperties
 
 	symbol: PIXMAP is 
 		once 
@@ -29,13 +36,22 @@ feature
 		once 
 			Result := bm_Dark_showindexing 
 		end;
- 
-	
-feature {NONE}
 
-	command_name: STRING is do Result := l_Showindexing end;
+feature {NONE} -- Properties
 
-	title_part: STRING is do Result := l_Indexing_of end;
+	command_name: STRING is
+		do
+			Result := l_Showindexing
+		end;
+
+	title_part: STRING is
+		do
+			Result := l_Indexing_of
+		end;
+
+	post_fix: STRING is "ind";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Show indexing clause of classes, in `text_window'.
@@ -51,7 +67,5 @@ feature {NONE}
 		do
 			text_window.display_header ("Searching system for indexing clauses...")
 		end;
-
-	post_fix: STRING is "ind";
 
 end -- class SHOW_INDEXING

@@ -1,4 +1,9 @@
--- Command to display the history of a feature
+indexing
+
+	description:	
+		"Command to display the history of a feature.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_PAST
 
@@ -14,12 +19,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,14 +38,22 @@ feature
 			Result := bm_Dark_showaversions 
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showpast end;
+	command_name: STRING is
+		do
+			Result := l_Showpast
+		end;
 
-	title_part: STRING is do Result := l_Past end;
+	title_part: STRING is
+		do
+			Result := l_Past
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (f: FEATURE_STONE)  is
-			-- Display history of `f;
+			-- Display history of `f'.
 		local
 			cmd: E_SHOW_ROUTINE_ANCESTORS;
 		do
@@ -54,4 +69,4 @@ feature {NONE}
 			text_window.display_header ("Searching system for ancestor versions...")
 		end;
 
-end
+end -- class SHOW_PAST

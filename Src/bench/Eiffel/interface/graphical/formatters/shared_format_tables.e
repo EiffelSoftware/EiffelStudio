@@ -1,10 +1,17 @@
+indexing
+
+	description:	
+		"Tables used by all formatters";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class SHARED_FORMAT_TABLES
 
 inherit
 
 	SHARED_BENCH_RESOURCES
 
-feature
+feature -- Properties
 
 	flat_context_text (stone: CLASSC_STONE): STRUCTURED_TEXT is
 			-- Format context of the flat form of `stone'
@@ -142,7 +149,9 @@ feature
 				end
 			end
 		end;
-		
+
+feature -- Clearing tables
+
 	clear_format_tables is
 			-- Clear all the format tables (after a compilation)
 		do
@@ -155,7 +164,7 @@ feature
 			history_list.wipe_out
 		end;
 
-feature {NONE} -- Implementation
+feature {NONE} -- Attributes
 
 	History_size: INTEGER is
 		once
@@ -209,6 +218,8 @@ feature {NONE} -- Implementation
 		once
 			!!Result.make
 		end;
+
+feature {NONE} -- Implementation
 
 	record_in_history (stone: HASHABLE_STONE; 
 					table: HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]) is

@@ -1,4 +1,9 @@
--- Command to display the routines clients
+indexing
+
+	description:	
+		"Command to display the routines clients.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_ROUTCLIENTS
 
@@ -14,12 +19,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,11 +38,19 @@ feature
 			Result := bm_Dark_showcallers 
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showsenders end;
+	command_name: STRING is
+		do
+			Result := l_Showsenders
+		end;
 
-	title_part: STRING is do Result := l_Senders end;
+	title_part: STRING is
+		do
+			Result := l_Senders
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (f: FEATURE_STONE)  is
 			-- Display Senders of `c'.
@@ -54,4 +69,4 @@ feature {NONE}
 			text_window.display_header ("Searching system for callers...")
 		end;
 
-end
+end -- class SHOW_ROUTCLIENTS

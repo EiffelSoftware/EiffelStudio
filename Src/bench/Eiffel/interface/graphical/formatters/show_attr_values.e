@@ -1,8 +1,11 @@
--- Command to display values of attributes of a given object. 
+indexing
 
-class 
+	description:	
+		"Command to display values of attributes of a given object.";
+	date: "$Date$";
+	revision: "$Revision$"
 
-	SHOW_ATTR_VALUES
+class SHOW_ATTR_VALUES
 
 inherit
 
@@ -16,31 +19,45 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: OBJECT_TEXT) is
+			-- Intialize the command. Default indentation is 2.
 		do
 			init (c, a_text_window);
 			indent := 2
 		end;
 
+feature -- Properties
+
 	text_window: OBJECT_TEXT;
+			-- Text of the object tool.
 
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Showattributes 
 		end;
 	
 	dark_symbol: PIXMAP is 
+			-- Dark version of `symbol'.
 		once 
 			Result := bm_Dark_showattributes 
 		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showattributes end;
+	command_name: STRING is
+		do
+			Result := l_Showattributes
+		end;
 
-	title_part: STRING is do Result := l_Attrvalues_of end;
+	title_part: STRING is
+		do
+			Result := l_Attrvalues_of
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (object: OBJECT_STONE) is
 		local

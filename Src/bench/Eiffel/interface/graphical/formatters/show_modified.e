@@ -1,4 +1,9 @@
--- Classes modified since last compilation.
+indexing
+
+	description:	
+		"Classes modified since last compilation.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_MODIFIED 
 
@@ -13,13 +18,15 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
 		do 
 			init (c, a_text_window);
 			do_format := true
 		end; 
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -32,11 +39,21 @@ feature
 		end;
  
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showmodified end;
+	command_name: STRING is
+		do
+			Result := l_Showmodified
+		end;
 
-	title_part: STRING is do Result := l_Modified_of end;
+	title_part: STRING is
+		do
+			Result := l_Modified_of
+		end;
+
+	post_fix: STRING is "mod";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Show modified classes list, in `text_window'.
@@ -56,6 +73,4 @@ feature {NONE}
 			text_window.display_header ("Searching system for modified classes...")
 		end;
 
-	post_fix: STRING is "mod";
-
-end
+end -- class SHOW_MODIFIED

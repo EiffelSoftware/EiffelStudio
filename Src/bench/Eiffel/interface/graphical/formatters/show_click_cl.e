@@ -1,5 +1,10 @@
--- Command to make all elements in a class clickable and to
--- display the result in the class text.
+indexing
+
+	description:	
+		"Command to make all elements in a class clickable %
+			%and to display the result in the class text.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_CLICK_CL
 
@@ -18,24 +23,32 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
+feature -- Properties
+
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Clickable 
 		end;
  
 	dark_symbol: PIXMAP is 
+			-- Dark version of `symbol'.
 		once 
 			Result := bm_Dark_clickable
 		end;
  
 	text_window: CLASS_TEXT;
+			-- Text of offended class.
+
+feature -- Formatting
 
 	format (stone: CLASSC_STONE) is
 			-- Show special format of `stone' in class text `text_window',
@@ -108,11 +121,22 @@ feature
 			end
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showclick end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Showclick
+		end;
 
-	title_part: STRING is do Result := l_Click_form_of end;
+	title_part: STRING is
+		do
+			Result := l_Click_form_of
+		end;
+
+	post_fix: STRING is "clk";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
@@ -130,6 +154,4 @@ feature {NONE}
 			end
 		end;
 
-	post_fix: STRING is "clk";
-
-end
+end -- class SHOW_CLICK_CL

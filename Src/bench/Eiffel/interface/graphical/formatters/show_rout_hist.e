@@ -1,4 +1,9 @@
--- Command to display the the class history of a feature
+indexing
+
+	description:	
+		"Command to display the the class history of a feature/";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_ROUT_HIST
 
@@ -14,12 +19,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,14 +38,22 @@ feature
 			Result := bm_Dark_showhistory
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showhistory end;
+	command_name: STRING is
+		do
+			Result := l_Showhistory
+		end;
 
-	title_part: STRING is do Result := l_History end;
+	title_part: STRING is
+		do
+			Result := l_History
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (f: FEATURE_STONE)  is
-			-- Display history of `f;
+			-- Display history of `f'.
 		local
 			cmd: E_SHOW_ROUTINE_IMPLEMENTERS;
 		do
@@ -54,4 +69,4 @@ feature {NONE}
 			text_window.display_header ("Searching system for implementers...")
 		end;
 
-end
+end -- class SHOW_ROUT_HIST

@@ -219,23 +219,6 @@ feature -- Access
 			Result := (other /= Void) and then (internal_string_builder = other.internal_string_builder)
 		end
 
-	has (c: CHARACTER): BOOLEAN is
-			-- Does string include `c'?
-		local
-			counter: INTEGER
-		do
-			if not is_empty then
-				from
-					counter := 1
-				until
-					counter > count or else (item (counter) = c)
-				loop
-					counter := counter + 1
-				end
-				Result := (counter <= count)
-			end
-		end
-
 	index_of (c: CHARACTER; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `c' at or after `start';
 			-- 0 if none.
@@ -289,6 +272,39 @@ feature -- Access
 		ensure
 			correct_place: Result > 0 implies item (Result) = c
 			-- forall x : Result..last, item (x) /= c
+		end
+
+	substring_index_in_bounds (other: STRING; start_pos, end_pos: INTEGER): INTEGER is
+			-- Position of first occurrence of `other' at or after `start_pos'
+			-- and to or before `end_pos';
+			-- 0 if none.
+		require
+			other_nonvoid: other /= Void
+			other_notempty: not other.is_empty
+			start_pos_large_enough: start_pos >= 1
+			start_pos_small_enough: start_pos <= count
+			end_pos_large_enough: end_pos >= start_pos
+			end_pos_small_enough: end_pos <= count
+		do
+			-- FIXME
+		ensure
+			correct_place: Result > 0 implies
+				substring (Result, Result + other.count - 1).is_equal (other)
+			-- forall x : start_pos..Result
+			--	not substring (x, x+other.count -1).is_equal (other)
+		end
+
+	string: STRING is
+			-- New STRING having same character sequence as `Current'.
+		do
+			create Result.make (count)
+			Result.append (Current)
+		ensure
+			string_not_void: Result /= Void
+			string_type: Result.same_type ("")
+			first_item: count > 0 implies Result.item (1) = item (1)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (
+				substring (2, count).string)
 		end
 
 	substring_index (other: STRING; start: INTEGER): INTEGER is
@@ -374,6 +390,16 @@ feature -- Comparison
 			Result := other.to_cil.equals (to_cil)
 		end
 
+	same_string (other: STRING): BOOLEAN is
+			-- Do `Current' and `other' have same character sequence?
+		require
+			other_not_void: other /= Void
+		do
+			Result := string.is_equal (other.string)
+		ensure
+			definition: Result = string.is_equal (other.string)
+		end
+
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
 		do
@@ -381,6 +407,33 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	has (c: CHARACTER): BOOLEAN is
+			-- Does string include `c'?
+		local
+			counter: INTEGER
+		do
+			if not is_empty then
+				from
+					counter := 1
+				until
+					counter > count or else (item (counter) = c)
+				loop
+					counter := counter + 1
+				end
+				Result := (counter <= count)
+			end
+		end
+
+	has_substring (other: STRING): BOOLEAN is
+			-- Does `Current' contain `other'?
+		require
+			other_not_void: other /= Void
+		do
+			if other.count <= count then
+				Result := substring_index (other, 1) > 0
+			end
+		end
 
 	extendible: BOOLEAN is True
 			-- May new items be added? (Answer: yes.)
@@ -555,7 +608,7 @@ feature -- Element change
 			--     item (index_pos + i) = other.item (start_pos + i)
 		end
 
-	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
+	replace_substring (s: STRING; start_pos, end_pos: INTEGER) is
 			-- Copy the characters of `s' to positions
 			-- `start_pos' .. `end_pos'.
 		require
@@ -608,7 +661,9 @@ feature -- Element change
 				i := i + 1
 			end
 		ensure
-			new_count: count = old count + s.count - end_pos + start_pos - 1
+			new_count: count = old count + old s.count - end_pos + start_pos - 1
+			replaced: is_equal (old (substring (1, start_pos - 1) +
+				s + substring (end_pos + 1, count)))
 		end
 
 	replace_substring_all (original, new: like Current) is
@@ -626,7 +681,7 @@ feature -- Element change
 	replace_blank is
 			-- Replace all current characters with blanks.
 		do
-			replace_character (' ')
+			fill_with (' ')
 		ensure
 			same_size: (count = old count) and (capacity = old capacity)
 			-- all_blank: For every `i' in 1..`count, `item' (`i') = `Blank'
@@ -642,7 +697,7 @@ feature -- Element change
 			-- all_blank: For every `i' in 1..`capacity', `item' (`i') = `Blank'
 		end
 
-	replace_character (c: CHARACTER) is
+	fill_with (c: CHARACTER) is
 			-- Replace all current characters with characters all equal to `c'.
 		local
 			i, cnt: INTEGER
@@ -660,11 +715,22 @@ feature -- Element change
 			-- all_char: For every `i' in 1..`count', `item' (`i') = `c'
 		end
 
+	replace_character (c: CHARACTER) is
+			-- Replace every character with `c'.
+		obsolete
+			"ELKS 2001: use `fill_with' instead'"
+		do
+			fill_with (c)
+		ensure
+			same_count: (count = old count) and (capacity = old capacity)
+			filled: occurrences (c) = count
+		end
+
 	fill_character (c: CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
 		do
 			set_count (capacity)
-			replace_character (c)
+			fill_with (c)
 		ensure
 			filled: full
 			same_size: (count = capacity) and (capacity = old capacity)
@@ -935,19 +1001,40 @@ feature -- Element change
 		do
 			insert_string (s, i)
 		ensure
-			new_count: count = old count + s.count
+			inserted: is_equal (old substring (1, i - 1)
+				+ old clone (s) + old substring (i, count))
 		end
 
 	insert_string (s: STRING; i: INTEGER) is
-			-- Add `s' to the left of position `i' in current string.
+			-- Insert `s' at index `i', shifting characters between ranks 
+			-- `i' and `count' rightwards.
 		require
 			string_exists: s /= Void
-			index_small_enough: i <= count
-			index_large_enough: i > 0
+			valid_insertion_index: 1 <= i and i <= count + 1
 		do
-			internal_string_builder := internal_string_builder.insert_integer_32_string (i - 1, s.to_cil)
+			if i = count + 1 then
+				append (s)
+			else
+				internal_string_builder := internal_string_builder.insert_integer_32_string (i - 1, s.to_cil)
+			end
 		ensure
-			new_count: count = old count + s.count
+			inserted: is_equal (old substring (1, i - 1)
+				+ old clone (s) + old substring (i, count))
+		end
+
+	insert_character (c: CHARACTER; i: INTEGER) is
+			-- Insert `c' at index `i', shifting characters between ranks 
+			-- `i' and `count' rightwards.
+		require
+			valid_insertion_index: 1 <= i and i <= count + 1
+		do
+			if i = count + 1 then
+				append_character (c)
+			else
+				internal_string_builder := internal_string_builder.insert_integer_32_character (i - 1, c)
+			end
+		ensure
+			new_count: count = old count + 1
 		end
 
 feature -- Removal
@@ -976,6 +1063,29 @@ feature -- Removal
 			end
 		ensure
 			removed: is_equal (old substring (n.min (count) + 1, count))
+		end
+
+	remove_substring (start_index, end_index: INTEGER) is
+			-- Remove all characters from `start_index'
+			-- to `end_index' inclusive.
+		require
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i > end_index - start_index
+			loop
+				remove (start_index)
+				i := i + 1
+			end
+		ensure
+			removed: is_equal (old substring (1, start_index - 1) +
+					old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER) is

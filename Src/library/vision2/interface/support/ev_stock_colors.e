@@ -7,12 +7,6 @@ indexing
 class
 	EV_DEFAULT_COLORS
 
-inherit
-	WEL_COLOR_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	Color_dialog: EV_COLOR is

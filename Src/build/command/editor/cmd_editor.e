@@ -343,7 +343,7 @@ feature {NONE} -- Interface
 			-- (currently only context stones)
 			-- may be dropped
 
-	label_text: TEXT;
+	label_text: TEXT_FIELD;
 			-- Text field used to specify
 			-- labels of currently edited
 			-- command
@@ -423,7 +423,7 @@ feature {NONE}
 			!! argument_sw.make (Widget_names.scroll1, argument_form)
 			!! arguments.make (Widget_names.icon_box1, argument_sw, Current)
 			!! label_text.make (Widget_names.label, label_form)
-			label_text.set_single_line_mode;
+--			label_text.set_single_line_mode;
 			!! new_label.make (Widget_names.new_label_label, label_form)
 			!! label_sw.make (Widget_names.scroll2, label_form)
 			!! labels.make (Widget_names.icon_box3, label_sw, Current)
@@ -456,6 +456,7 @@ feature {NONE}
 			label_form.attach_right (label_text, 0);
 			label_form.attach_left_widget (new_label, label_text, 5)
 			label_form.attach_top_widget (label_text, label_sw, 1);
+			label_form.attach_top_widget (new_label, label_sw, 1);
 			label_form.attach_left (label_sw, 0)
 			label_form.attach_right (label_sw, 0);
 			label_form.attach_bottom (label_sw, 0);
@@ -502,13 +503,13 @@ feature {NONE}
 			edit_bar_form.attach_left_widget (inherit_hole, trash_hole, 0);
 --samik			edit_bar_form.attach_left_widget (trash_hole, focus_label, 0);
 --samik			edit_bar_form.attach_right_widget (undoable_t, focus_label, 0)
-			edit_bar_form.attach_right_widget (generate_button, undoable_t, 0)
+			edit_bar_form.attach_right_widget (generate_button, undoable_t, 15)
 			edit_bar_form.attach_right_widget (popup_cname, generate_button, 0)
 			edit_bar_form.attach_right_widget (instance_button, popup_cname, 0)
 			edit_bar_form.attach_right_widget (popup_instances_button, instance_button, 0)
 			edit_bar_form.attach_right_widget (popup_contexts_button, popup_instances_button, 0)
-			edit_bar_form.attach_right_widget (close_b, popup_contexts_button, 0)
 			edit_bar_form.attach_top (close_b, 0)
+			edit_bar_form.attach_right_widget (close_b, popup_contexts_button, 0)
 			edit_bar_form.attach_right (close_b, 0)
 
 		end

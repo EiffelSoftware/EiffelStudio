@@ -278,7 +278,7 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 
 rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
 {
-	/* Return the count of a special object */
+	/* Return the count of a special or TUPLE object */
 
 	EIF_REFERENCE ref; 
 

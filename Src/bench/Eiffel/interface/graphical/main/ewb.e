@@ -13,7 +13,8 @@ inherit
 		end
 	SHARED_LICENSE;
 	SHARED_RESCUE_STATUS;
-	EXCEPTIONS
+	EXCEPTIONS;
+	SHARED_RESOURCES
 
 feature -- Licence managment
 
@@ -50,6 +51,10 @@ feature
 						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
 					die (-1)
 				end;
+
+					-- Read the resource files
+				if resources /= Void then end;
+
 				if argument_count = 1 and then
 					argument (1).is_equal ("-bench")
 				then

@@ -192,7 +192,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+	void ccom_define_entry_point(  /* [in] */ EIF_INTEGER creation_type_id,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
 
 
 	/*-----------------------------------------------------------

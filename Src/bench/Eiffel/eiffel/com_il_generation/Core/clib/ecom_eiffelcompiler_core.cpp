@@ -3,9 +3,9 @@
 -----------------------------------------------------------*/
 
 #include "ecom_EiffelCompiler_Core.h"
-static const CLSID CLSID_Core_ = {0x9daf83a1,0x15d7,0x3a80,{0xab,0x8f,0x0e,0x03,0x4f,0x47,0x9c,0x3f}};
+static const CLSID CLSID_Core_ = {0xcb46cf82,0x135c,0x371f,{0xb9,0xaf,0x38,0xda,0x1e,0x58,0xa6,0x4d}};
 
-static const IID IID_ICore_ = {0x9f1ca01d,0xe32f,0x3689,{0x98,0x16,0x79,0xaf,0x32,0x02,0x17,0x8a}};
+static const IID IID_ICore_ = {0x851b57f7,0xe416,0x36e2,{0xaf,0xf4,0x84,0xfc,0x9f,0x1f,0x57,0x9e}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -924,7 +924,7 @@ void ecom_EiffelCompiler::Core::ccom_create_feature_description()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelCompiler::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+void ecom_EiffelCompiler::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER creation_type_id,  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -941,12 +941,14 @@ void ecom_EiffelCompiler::Core::ccom_define_entry_point(  /* [in] */ EIF_INTEGER
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	LONG tmp_creation_type_id = 0;
+	tmp_creation_type_id = (LONG)creation_type_id;
 	LONG tmp_type_id = 0;
 	tmp_type_id = (LONG)type_id;
 	LONG tmp_feature_id = 0;
 	tmp_feature_id = (LONG)feature_id;
 	
-	hr = p_ICore->DefineEntryPoint(tmp_type_id,tmp_feature_id);
+	hr = p_ICore->DefineEntryPoint(tmp_creation_type_id,tmp_type_id,tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

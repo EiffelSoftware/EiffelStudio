@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			default_create
 
 			set_minimum_height (20)
+			key_press_actions.extend (agent on_key_pushed)
 		end
 
 feature -- Status report
@@ -90,7 +91,6 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					raise ("No feature table")
 				end
 				if class_text /= Void then
-					key_press_actions.extend (agent on_key_pushed)
 					from 
 						fcl.start
 					until
@@ -205,7 +205,6 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					raise ("No feature table.")
 				end
 				if class_text /= Void then
-					key_press_actions.extend (agent on_key_pushed)
 					from 
 						l_clauses.start
 					until

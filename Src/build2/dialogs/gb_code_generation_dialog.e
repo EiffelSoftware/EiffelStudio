@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 				-- Build the widgets
 			create class_entry.make_with_text ("NEW_CLASS")
 			class_entry.change_actions.extend (agent update_file_entry)
-			create file_entry.make_with_text ("new_class")
+			create file_entry.make_with_text ("new_class.e")
 			create horizontal_box
 			create directory_entry.make_with_text ("None chosen")
 			create directory_b.make_with_text_and_action ("Select", agent choose_directory)
@@ -144,11 +144,16 @@ feature {NONE} -- Implementation
 
 	create_new_class is
 			-- Create a new class
+		local
+			code_generator: GB_CODE_GENERATOR
 		do
-			io.putstring ("Creating new class%N")
-			io.putstring (class_entry.text.out + "%N")
-			io.putstring (file_entry.text.out + "%N")
-			io.putstring (directory_entry.text.out + "%N")
+			create code_generator
+				-- If we select a drive and not a directory, we already have the directory separator in the directory string.
+			if (directory_entry.text @ (directory_entry.text.count)).is_equal (operating_environment.directory_separator) then
+				code_generator.generate (directory_entry.text + file_entry.text, class_entry.text)
+			else
+				code_generator.generate (directory_entry.text + operating_environment.directory_separator.out + file_entry.text, class_entry.text)
+			end
 		end
 
 	on_show_actions is

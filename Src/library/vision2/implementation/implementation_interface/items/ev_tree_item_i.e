@@ -28,6 +28,7 @@ inherit
 feature -- Access
 
 	parent_tree: EV_TREE is
+			-- Root tree that item is held within
 		deferred
 		end
 
@@ -103,6 +104,9 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/24 20:11:48  king
+--| Changed comment in parent_tree
+--|
 --| Revision 1.25  2000/02/22 21:38:35  king
 --| Removed redundant command association features, inheriting from item_list
 --|

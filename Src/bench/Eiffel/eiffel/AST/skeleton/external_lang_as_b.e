@@ -27,7 +27,7 @@ feature -- Properties
 	need_encapsulation: BOOLEAN is
 			-- Is an encapsulation needed?
 		do
-			Result := extension /= Void
+			Result := extension /= Void and then extension.need_encapsulation
 		end
 
 feature

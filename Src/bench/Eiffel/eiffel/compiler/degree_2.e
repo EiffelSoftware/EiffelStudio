@@ -116,16 +116,16 @@ feature -- Processing
 				from i := 1 until nb = 0 loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_2_needed then
-									debug ("ACTIVITY", "SKELETON")
-										io.error.put_string ("%T")
-										io.error.put_string (a_class.name)
-										io.error.put_new_line
-									end
+							debug ("ACTIVITY", "SKELETON")
+								io.error.put_string ("%T")
+								io.error.put_string (a_class.name)
+								io.error.put_new_line
+							end
 						if a_class.has_types then
 								-- Process skeleton(s) for `a_class'.
 							a_class.process_skeleton
 							check
-								has_class_type: not a_class.types.is_empty
+								has_class_type: a_class.has_types
 							end
 							if not il_generation then
 									-- Check validity of special classes ARRAY,
@@ -142,15 +142,18 @@ feature -- Processing
 				from i := 1 until nb = 0 loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_2_needed then
-									debug ("ACTIVITY", "SKELETON")
-										io.error.put_string ("%T")
-										io.error.put_string (a_class.name)
-										io.error.put_new_line
-									end
+							debug ("ACTIVITY", "SKELETON")
+								io.error.put_string ("%T")
+								io.error.put_string (a_class.name)
+								io.error.put_new_line
+							end
 							-- Process skeleton(s) for `a_class'.
 						a_class.process_skeleton
 						check
-							has_class_type: not a_class.types.is_empty
+								-- A generic class that is visible but not in system
+								-- might have `has_types' set to False, but no other
+								-- classes should be like that.
+							has_class_type: not a_class.has_visible implies a_class.has_types
 						end
 						if not il_generation then
 								-- Check validity of special classes ARRAY,

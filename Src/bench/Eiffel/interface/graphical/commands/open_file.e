@@ -28,23 +28,24 @@ creation
 feature -- Callbacks
 
 	loose_changes is
-			-- Useless here
+			-- The user has eventually been warned that he will lose his stuff
+			-- but he decided to open the file anyway without saving the file
+			-- first.
 		do
-			-- Do Nothing
+			open_file
 		end;
 
 	save_changes (argument: ANY) is
 			-- The user has eventually been warned that he will lose his stuff
-		local
-			chooser: NAME_CHOOSER_W
+			-- and he want to save the file before going on.
 		do
+				-- Save file.
 			if tool.save_cmd_holder /= Void then
 				tool.save_cmd_holder.associated_command.execute (Void)
 			end
 
-			chooser := name_chooser (popup_parent);
-			chooser.set_open_file;
-			chooser.call (Current) 
+				-- Then open a new one.
+			open_file
 		end;
 	
 feature -- Properties
@@ -75,6 +76,11 @@ feature {NONE} -- Implementation
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then
+							-- Mark the Window not changed so that format processing can be done.
+							-- This is required when opening a file on top of a modified file, otherwise
+							-- it does not have any impact.
+						text_window.set_changed (false);
+
 						if not Project_tool.initialized then
 							tool.show_file (f);
 						else
@@ -106,15 +112,23 @@ feature {NONE} -- Implementation
 					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
-					chooser := name_chooser (popup_parent);
-					chooser.set_open_file;
-					chooser.set_pattern ("*.e")
-					chooser.set_pattern_name ("Eiffel Class File (*.e)")
-
-					chooser.call (Current) 
+					open_file
 				end
 			end
 		end;
+
+	open_file is
+			-- Display the dialog box to open a file
+			-- and then open the file.
+		local
+			chooser: NAME_CHOOSER_W
+		do
+			chooser := name_chooser (popup_parent);
+			chooser.set_open_file;
+			chooser.set_pattern ("*.e")
+			chooser.set_pattern_name ("Eiffel Class File (*.e)")
+			chooser.call (Current)
+		end
 
 feature {NONE} -- Attributes
 

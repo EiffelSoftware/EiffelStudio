@@ -685,9 +685,6 @@ feature {NONE} -- Implementation
 
 	build_stack_info (a_target_container: EV_TREE) is
 			-- Create the tree that contains call stack info
-		local
-			module_item: EV_TREE_ITEM
-			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
 		do
 			if Application.call_stack_is_empty then
 				build_exception_info (a_target_container)

@@ -21,6 +21,10 @@ feature -- Error messages
 			"Cannot remove group!%NGroup type %%X is being used.";
 	Cannot_remove_cmd_er: STRING is 
 			"Cannot remove command %%X!%NCommand has descendants.";
+	Cannot_remove_argument_er: STRING is 
+			"Cannot remove inherited argument %%X!";
+	Cannot_remove_label_er: STRING is 
+			"Cannot remove inherited label %%X!";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
@@ -55,8 +59,6 @@ feature -- Error messages
 	Empty_project_name_er: STRING is "You must specify a project name !";
 	Eb_project_not_exists_er: STRING is 
 			"Project directory :%N %%X does not exist!";
-	Not_eb_project_er: STRING is 
-			"Project directory :%N %%X is not an Eiffel build project!";
 	Remove_init_state_er: STRING is "Cannot remove initial state!";
 	Remove_parent_er: STRING is "Cannot remove parent for predefined command!";
 	Retrieve_er: STRING is 
@@ -81,5 +83,9 @@ feature -- Question messages
 	Save_project_qu: STRING is "Project is not saved. Save project?";
 	Open_project_qu: STRING is "Application not saved, open a new application ?"
 	Create_project_qu: STRING is "Application not saved, create a new application ?"
+	Save_as_project_qu: STRING is "Application not saved, save application as ...?"
+	Not_eb_project_qu: STRING is 
+			"Project directory :%N%%X%N is not an Eiffel build project!%
+			%%NDo you wish to create this project?";
 
 end

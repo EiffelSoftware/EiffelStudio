@@ -77,9 +77,10 @@ feature
 			loop
 				attr_name := clone (c_tread);
 				type_name := clone (c_tread);
-				if type_name.is_equal ("Void") then
-					!REFERENCE_ATTR!attr.make (attr_name, class_c, Void, "Void")
-				elseif type_name.is_equal ("BOOLEAN") then
+--				if type_name.is_equal ("Void") then
+--					!REFERENCE_ATTR!attr.make (attr_name, class_c, Void, "Void")
+--				else
+				if type_name.is_equal ("BOOLEAN") then
 					!BOOLEAN_ATTR!attr.make (attr_name, class_c, clone(c_tread))
 				elseif type_name.is_equal ("INTEGER") then
 					!INTEGER_ATTR!attr.make (attr_name, class_c, clone(c_tread))

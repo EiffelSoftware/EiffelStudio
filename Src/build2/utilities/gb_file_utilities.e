@@ -11,16 +11,16 @@ class
 
 feature -- Basic operations
 
-	rename_file_if_exists (directory_path: FILE_NAME; old_name, new_name: STRING) is
+	rename_file_if_exists (directory_path: DIRECTORY; old_name, new_name: STRING) is
 			-- Rename file named `old_name' in directory `directory_path' to
 			-- `new_name' in the same directory. Do nothing if the old file does not exist.
 		local
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			create new_file_name.make_from_string (directory_path)
+			create new_file_name.make_from_string (directory_path.name)
 			new_file_name.extend (new_name)
-			create old_file_name.make_from_string (directory_path)
+			create old_file_name.make_from_string (directory_path.name)
 			old_file_name.extend (old_name)
 			create file.make (old_file_name)
 			if file.exists then
@@ -28,14 +28,14 @@ feature -- Basic operations
 			end
 		end
 		
-	move_file_between_directories (original, new: FILE_NAME; file_name: STRING) is
+	move_file_between_directories (original, new: DIRECTORY; file_name: STRING) is
 			-- Move file named `file_name' from `original' directory to `new_directory'.
 		local
 			file: RAW_FILE
 			new_file_name, old_file_name: FILE_NAME
 		do
-			create new_file_name.make_from_string (new)
-			create old_file_name.make_from_string (original)
+			create new_file_name.make_from_string (new.name)
+			create old_file_name.make_from_string (original.name)
 			new_file_name.extend (file_name)
 			old_file_name.extend (file_name)
 			create file.make (old_file_name)
@@ -44,13 +44,13 @@ feature -- Basic operations
 			end
 		end
 		
-	delete_file (directory: FILE_NAME; a_file_name: STRING) is
+	delete_file (directory: DIRECTORY; a_file_name: STRING) is
 			-- Delete file named `a_file_name' from directory `directory'.
 		local
 			file: RAW_FILE
 			file_name: FILE_NAME
 		do
-			create file_name.make_from_string (directory)
+			create file_name.make_from_string (directory.name)
 			file_name.extend (a_file_name)
 			create file.make (file_name)
 			if file.exists then
@@ -58,13 +58,14 @@ feature -- Basic operations
 			end
 		end
 		
-	restore_file (directory: FILE_NAME; a_file_name, contents: STRING) is
-			--
+	restore_file (directory: DIRECTORY; a_file_name, contents: STRING) is
+			-- Restore plain text file file named `a_file_name' in
+			-- `directory' with contents `contents'.
 		local
 			file_name: FILE_NAME
 			file: PLAIN_TEXT_FILE
 		do
-			create file_name.make_from_string (directory)
+			create file_name.make_from_string (directory.name)
 			file_name.extend (a_file_name)
 			create file.make (file_name)
 			file.open_write
@@ -72,8 +73,7 @@ feature -- Basic operations
 			file.putstring (contents)
 			file.close
 		end
-		
-		
+
 	delete_directory (directory: DIRECTORY) is
 			-- Remove `directory'.
 		require
@@ -92,7 +92,6 @@ feature -- Basic operations
 		ensure
 			directory_exists: directory.exists
 		end
-		
 		
 	delete_directory_and_content (directory: DIRECTORY) is
 			-- Removed `directory' and all content from disk.

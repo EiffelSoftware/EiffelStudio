@@ -14,6 +14,7 @@ feature
 			arguments := std.arguments
 			body_index := std.body_index
 			feature_name_id := std.feature_name_id
+			escaped_feature_name_id := std.escaped_feature_name_id
 			locals := std.locals
 			old_expressions := std.old_expressions
 			pattern_id := std.pattern_id

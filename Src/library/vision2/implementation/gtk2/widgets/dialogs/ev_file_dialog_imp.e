@@ -172,7 +172,8 @@ feature -- Element change
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)				
 			end
 
-			create a_cs.make ("*.*")
+			create a_cs.make ("*")
+					-- File filter uses a globbing pattern so this is the only filter that can show all files
 			a_filter_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
 			create a_cs.make ("All files *.*")
@@ -276,7 +277,11 @@ feature {NONE} -- Implementation
 						until
 							filter_string_list.off
 						loop
-							create a_cs.make (filter_string_list.item)
+							if filter_string_list.item.is_equal ("*.*") then
+								create a_cs.make ("*")
+							else
+								create a_cs.make (filter_string_list.item)
+							end
 							feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
 							filter_string_list.forth
 						end

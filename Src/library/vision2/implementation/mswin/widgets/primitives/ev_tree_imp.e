@@ -26,6 +26,7 @@ inherit
 			on_left_button_down,
 			on_middle_button_down,
 			on_right_button_down,
+			on_mouse_move,
 			on_key_down,
 			interface
 		end
@@ -415,6 +416,18 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the mouse move.
+		local
+			it: EV_TREE_ITEM_IMP
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			if it /= Void then
+				it.interface.pointer_motion_actions.call ([x_pos, y_pos, 0.0, 0.0, 0.0, 0, 0])
+			end
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -489,6 +502,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/03/13 17:55:41  rogers
+--| Redefined on_mouse_move so the pointer_motion_actions can be called on the child.
+--|
 --| Revision 1.45  2000/03/13 17:45:46  rogers
 --| Removed on_left_button_up, on_middle_button_up and on_right_button_up. Added internal propogate_pointer_press and find_item_at position.
 --|

@@ -10,8 +10,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_character, type_i, associated_class, same_as,
-			internal_conform_to
+			is_character, type_i, associated_class, same_as
 		end
 
 create
@@ -24,6 +23,7 @@ feature -- Initialization
 			-- Otherwise a wide character.
 		do
 			is_wide := w
+			cl_make (associated_class.class_id)
 		ensure
 			is_wide_set: is_wide = w
 		end
@@ -61,22 +61,6 @@ feature -- Access
 		end
 
 feature {COMPILER_EXPORTER}
-
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
-		local
-			char: like Current
-		do
-			if in_generics then
-				Result := same_as (other)
-			else
-				Result := Precursor {BASIC_A} (other, False)
-				if not Result and then other.is_character then
-					char ?= other
-					Result := is_wide or else not char.is_wide
-				end
-			end
-		end
 
 	type_i: CHAR_I is
 			-- C type

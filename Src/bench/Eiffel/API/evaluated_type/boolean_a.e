@@ -9,7 +9,18 @@ inherit
 	BASIC_A
 		redefine
 			is_boolean, type_i, associated_class, same_as,
-			internal_conform_to
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of BOOLEAN_A.
+		do
+			make (associated_class.class_id)
 		end
 
 feature -- Property
@@ -33,20 +44,10 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
-		do
-			if in_generics then
-				Result := other.is_boolean
-			else
-				Result := precursor {BASIC_A} (other, False)
-			end
-		end
-
 	type_i: BOOLEAN_I is
 			-- C type
 		do
-			create Result
+			Result := boolean_c_type
 		end
 
 end -- class BOOLEAN_A

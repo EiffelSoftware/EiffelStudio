@@ -164,6 +164,9 @@ interface IEiffelClassDescriptor: IUnknown
   [helpstring ("Class description.")]
   HRESULT description ([out, retval] BSTR * return_value);
   
+  [helpstring ("Class external name.")]
+    HRESULT external_name ([out, retval] BSTR * return_value);
+  
   [helpstring ("List of names of class features.")]
   HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
 
@@ -225,6 +228,9 @@ interface IEiffelFeatureDescriptor: IUnknown
 {
   [helpstring ("Feature name.")]
   HRESULT name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Feature external name.")]
+  HRESULT external_name ([out, retval] BSTR * return_value);
 
   [helpstring ("Name of class where feature is written in.")]
   HRESULT written_class ([out, retval] BSTR * return_value);

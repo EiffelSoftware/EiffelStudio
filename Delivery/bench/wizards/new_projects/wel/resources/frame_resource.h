@@ -1,11 +1,11 @@
-// Resource include file.
+/* Resource include file. */
 #include <windows.h>
 
-// Main Frame, icon, menu, ...
+/* Main Frame, icon, menu, ... */
 #define IDR_MAINFRAME 128
 #define IDM_MAINFRAME 129
 
-// Menu commands
+/* Menu commands */
 #define CMD_FILE_NEW					1000
 #define CMD_FILE_OPEN					1001
 #define CMD_FILE_CLOSE					1002

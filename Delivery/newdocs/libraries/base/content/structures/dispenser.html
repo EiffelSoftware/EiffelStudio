@@ -2,44 +2,101 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures</TITLE>
-		<LINK REL=StyleSheet HREF="../../../default.css">
+		<TITLE>EiffelBase Data Structures, Dispensers</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>Data Structures Overview</H1>
+		<H1>Dispensers</H1>
 			<P>
-				The data structures cluster of EiffelBase includes classes that cover a wide
-				range a data structures classes for you to reuse in your systems. The cluster
-				is divided into a number of subclusters. Each subcluster contains one or more
-				<B>deferred</B> classes, which provide the general high-level abstractions;
-				other classes in the cluster inherit from the deferred ones.</P>
+				A dispenser is called that way because of the image of a vending machine (a dispenser)
+				of a rather primitive nature, in which there is only one button. If you press the button
+				and the dispenser is not empty, you get one of its items in the exit tray at the bottom, but
+				you do not choose that item: the machine does. There is also an input slot at the top, into
+				which you may deposit new items; but you have no control over the order in which
+				successive button press operations will retrieve these items.
 			<P>
-				The highest-level class is <A HREF="../reference/structures/access/container.html">
-				CONTAINER</A>, with the following heirs:
-				<UL>
-					<LI><A HREF="../reference/structures/access/collection.html">COLLECTION</A>
-					, which describes containers through their access properties (defining how
-					to access a container's items, for	example through an index or according to
-					a last-in, first-out policy).</LI>
-					<LI><A HREF="../reference/structures/traversing/traversable.html">TRAVERSABLE</A>
-					, which considers their traversal properties, such as sequential or hierarchical.</LI>
-					<LI><A HREF="../reference/structures/storage/box.html">BOX</A>,
-					which describes their storage properties, such as being bounded or unbounded.</LI>
-				</UL>
-			</P>
+				The deferred class <A HREF="../../reference/structures/dispenser/dispenser.html">
+				DISPENSER</A> provides the facilities which will be shared by all specialized classes.
+				In fact, the interface of all dispenser classes is nearly identical, with the exception of
+				a few extra possibilities offered by priority queues. Many kinds of dispenser are possible,
+				each defined by the relation that the machine defines between the order in which items
+				are inserted and the order in which they are	returned. The Base libraries support three
+				important categories - stacks, queues, and priority queues:
+			<UL>
+				<LI>A stack is a dispenser with a last-in, first-out (LIFO) internal policy: items come
+				out in the reverse order of their insertion. Each button press returns the last
+				deposited item.
+				<LI>A queue is a dispenser with a first-in, first-out (FIFO) internal policy: items come
+				out in the order of their insertion. Each button press returns the oldest item
+				deposited and not yet removed.
+				<LI>In a priority queue, items have an associated notion of order; the element that
+				comes out at any given time is the largest of those which are in the dispenser.
+			</UL>
+			<H2>Stacks</H2>
 			<P>
-				The documentation further discuss:
-				<UL>
-					<LI>The <A HREF="taxonomy.html">taxonomy</A> of the
-					abstract container structures.</LI>
-					<LI>The <A HREF="list.html">list-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="dispenser.html">dispenser-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="tree.html">tree-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="set.html">set-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="table.html">table-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="iteration.html">iteration mechanisms</A>.</LI>
-				</UL>
+				Stacks - dispensers with a LIFO retrieval policy - are a ubiquitous structure in software
+				development. Their most famous application is to parsing (syntactic analysis), but many
+				other types of systems use one or more stacks.
+				Class <A HREF="../../reference/structures/dispenser/stack.html">STACK</A> describes
+				general stacks, without commitment to a representation. This is a deferred class which
+				may not be directly instantiated. The fundamental operations are
+				<A HREF="../../reference/structures/dispenser/stack.html#f_put"> put </A>(add
+				an element at end of queue),
+				<A HREF="../../reference/structures/dispenser/stack.html#f_item">item</A> (retrieve
+				the oldest element, non-destructively),
+				<A HREF="../../reference/structures/dispenser/stack.html#f_remove">remove</A>
+				(remove the oldest element),
+				<A HREF="../../reference/structures/dispenser/stack.html#f_is_empty">is_empty</A>
+				(test for empty queue).<BR>
+				Three effective heirs are provided:
+			<UL>
+				<LI><A HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
+				: stacks implemented as linked lists, with no limit on the number of items (
+				<A HREF="../../reference/structures/dispenser/linked_stack.html#f_count">count</A>).
+				<LI><A HREF="../../reference/structures/dispenser/bounded_stack.html">BOUNDED_STACK
+				</A>: stacks implemented as arrays. For such stacks, the maximum number of items
+				(<A HREF="../../reference/structures/dispenser/bounded_stack.html#f_capacity">capacity
+				</A>) is set at creation time.
+				<LI><A HREF="../../reference/structures/dispenser/arrayed_stack.html">ARRAYED_STACK</A>
+				: also implemented as arrays, but in this case there is no limit on the number of items; the
+				interface is the same as
+				<A HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
+				except for	the creation procedure. If the number of elements exceeds the initially allocated
+				capacity, the array will simply be resized.
+			</UL>
+			<H2>Queues</H2>
 			<P>
+				Class <A HREF="../../reference/structures/dispenser/queue.html">QUEUE</A> describes
+				general queues, without commitment to a representation. This is a deferred class which
+				may not be directly instantiated. Three non-deferred heirs are also provided, distinguished
+				by the same properties as their stack counterparts:
+			<UL>
+				<LI><A HREF="../../reference/structures/dispenser/linked_queue.html">LINKED_QUEUE</A>.
+				<LI><A HREF="../../reference/structures/dispenser/bounded_queue.html">BOUNDED_QUEUE</A>.
+				<LI><A HREF="../../reference/structures/dispenser/arrayed_queue.html">ARRAYED_QUEUE</A>.
+			</UL>
+			<H2>Priority Queues</H2>
+			<P>
+				In a priority queue, each item has an associated priority value, and there is an order
+				relation on these values. The item returned by item or removed by remove is the
+				element with the highest priority.	The most general class is
+				<A HREF="../../reference/structures/dispenser/priority_queue.html">PRIORITY_QUEUE</A>
+				, which is deferred. Two effective variants are provided:
+			<UL>
+				<LI><A HREF="../../reference/structures/dispenser/linked_priority_queue.html">
+				LINKED_PRIORITY_QUEUE</A>, a linked list implementation.
+				<LI><A HREF="../../reference/structures/dispenser/heap_priority_queue.html">
+				HEAP_PRIORITY_QUEUE</A> which is more efficient and is to be preferred in
+				most cases. A heap is organized like a binary tree, although physically stored in
+				an array; elements with a high priority percolate towards the root.
+			</UL>
+			<P>
+				Because it must be possible to compare priorities, the type of the items must
+				conform to <A HREF="../../reference/structures/kernel/part_comparable.html">
+				PART_COMPARABLE</A>. Constrained genericity ensures this; all the priority
+				queue classes have a formal generic parameter constrained by
+				<A HREF="../../reference/structures/kernel/part_comparable.html">
+				PART_COMPARABLE</A>.
 	</BODY>
 </HTML>

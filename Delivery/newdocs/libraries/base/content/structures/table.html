@@ -2,44 +2,177 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures</TITLE>
+		<TITLE>EiffelBase Data Structures, Tables</TITLE>
 		<LINK REL=StyleSheet HREF="../../../../default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>Data Structures Overview</H1>
+		<H1>Hash Tables</H1>
 			<P>
-				The data structures cluster of EiffelBase includes classes that cover a wide
-				range a data structures classes for you to reuse in your systems. The cluster
-				is divided into a number of subclusters. Each subcluster contains one or more
-				<B>deferred</B> classes, which provide the general high-level abstractions;
-				other classes in the cluster inherit from the deferred ones.</P>
-			<P>
-				The highest-level class is <A HREF="../reference/structures/access/container.html">
-				CONTAINER</A>, with the following heirs:
-				<UL>
-					<LI><A HREF="../reference/structures/access/collection.html">COLLECTION</A>
-					, which describes containers through their access properties (defining how
-					to access a container's items, for	example through an index or according to
-					a last-in, first-out policy).</LI>
-					<LI><A HREF="../reference/structures/traversing/traversable.html">TRAVERSABLE</A>
-					, which considers their traversal properties, such as sequential or hierarchical.</LI>
-					<LI><A HREF="../reference/structures/storage/box.html">BOX</A>,
-					which describes their storage properties, such as being bounded or unbounded.</LI>
-				</UL>
+				Hash tables are a convenient mechanism to	store and retrieve
+				objects identified by unique keys.
+				<H2>Why use hash tables?</H2>
+				The main advantage of hash tables is the efficiency of the basic operations: store
+				(<A HREF="../../reference/structures/table/hash_table.html#f_put">put</A>) and
+				retrieve
+				(<A HREF="../../reference/structures/table/hash_table.html#f_item">item</A>,
+				<A HREF="../../reference/structures/table/hash_table.html#f_remove">remove</A>).<BR>
+				The idea behind hash tables is to try to emulate the data structure that provides the
+				ultimate in efficiency: the array. On an array <SPAN CLASS="elocal">a</SPAN>,
+				for some integer <SPAN CLASS="elocal">i</SPAN> whose value lies
+				within the bounds of<SPAN CLASS="elocal">a</SPAN>, the basic operations are
+			<P CLASS="code">
+				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html">put</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
+				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
+				<SPAN CLASS="elocal">a</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f__infix_@">@</A>
+				<SPAN CLASS="elocal">i</SPAN>
 			</P>
 			<P>
-				The documentation further discuss:
-				<UL>
-					<LI>The <A HREF="taxonomy.html">taxonomy</A> of the
-					abstract container structures.</LI>
-					<LI>The <A HREF="list.html">list-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="dispenser.html">dispenser-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="tree.html">tree-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="set.html">set-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="table.html">table-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="iteration.html">iteration mechanisms</A>.</LI>
-				</UL>
+				The first causes the value of a at index <SPAN CLASS="elocal">i</SPAN> to be
+				<SPAN CLASS="elocal">x</SPAN>; the second (and the third, which is
+				simply a syntactical variant) access the value at index <SPAN CLASS="elocal">i</SPAN>
+				and assign it to <SPAN CLASS="elocal">x</SPAN>. With the usual
+				computer architectures, these operations are very fast: because arrays items are stored
+				contiguously in memory, a computer will need just one addition (base address plus
+				index) and one memory access to perform a
+				<A CLASS="elocal" HREF="../../reference/structures/table/hash_table.html#f_put">put</A> or
+				<A CLASS="elocal" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>.<BR>
+				Not only are the operation times small; they are constant (or more precisely
+				bounded by a constant). This is a great advantage over structures such as lists or trees
+				which you must traverse at least in part to retrieve an item, so that access and
+				modification times grow with the number of items. With an array, disregarding the
+				influence of other factors such as memory paging, the time for a put or item is for all
+				practical purposes the same whether the array has five items or five hundred thousand.
+				These properties make arrays excellent data structures for keeping objects.
+				Unfortunately, they are only applicable if the objects satisfy three requirements:
+			<UL>
+				<LI><B>A1</B>. For each object there must be an associated integer, which for the purpose of this
+				discussion we may call the object’s index (since it will serve as index for the
+				object in the array.)
+				<LI><B>A2</B>. No two objects may have the same index.
+				<LI><B>A3</B>. If we want to avoid wasting huge amount of storage, all the indices must lie in a
+				contiguous or almost contiguous range.
+			</UL>
 			<P>
+				Hash tables may be viewed as a rehabilitation mechanism for objects that do not
+				naturally possess these three properties. If we are unable to find a natural index, we can
+				sometimes devise an artificial one. To do so we must be able to find a key. Each key
+				must uniquely identify the corresponding object; this is the same as property <B>A2</B>,
+				making keys similar to indices. But keys are not necessarily integers (violating property
+				<B>A1</B>), although it must be possible to associate an integer with each key. The mechanism
+				that maps keys to integers is called the hashing function.<BR>
+				Thanks to the hashing mechanism we will indeed be able to store suitable objects
+				into arrays, approaching the optimal efficiency of this data structure. The efficiency will
+				not be quite as good, however, for two reasons:
+			<UL>
+				<LI>We must pay the price of computing the hash function whenever we store or
+				retrieve an object.
+				<LI>Different keys may hash into the same integer value, requiring extra processing
+				to find an acceptable index.
+			</UL>
+			<P>
+				With good implementations, however, it is possible to use hash tables with a
+				performance that is not much worse than that of arrays and, most importantly, may be
+				treated as if the time for a put, an item or a remove were constant. This will mean that
+				you can consider operations such as
+			<P CLASS="code">
+				<SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature"  HREF="../../reference/structures/table/hash_table.html#f_put">put</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
+				<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			</P>
+			<P>
+				where <SPAN CLASS="elocal">h</SPAN> is a hash-table and <SPAN CLASS="elocal">k</SPAN>
+				is a key (for example a string) as conceptually equivalent	to the array operations mentioned above.<BR>
+				The quality of a hashed implementation will depend both on the data structure that
+				will store the objects, and on the choice of hashing function. Class
+				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> attempts to
+				address the first concern; for the second, client developers will be responsible for choosing
+				the proper hashing function, although Base provides a few predefined functions, in particular
+				for class <A HREF="../../reference/structures/table/string.html">STRING</A>.
+			<H2>When hash tables are appropriate</H2>
+			<P>
+				You may keep objects in a hash table if for each one of these objects you can find a key
+				that uniquely identifies it. The objects and their keys may be of many possible kinds:
+			<UL>
+				<LI><B>H1</B>. In a simple example, the objects are integers; each integer serves as its own key.
+				(More precisely we will use its absolute value, since it is convenient to have non-negative
+				keys only.) This case is of more than theoretical interest, since it makes
+				hash tables appropriate for storing a set of integers with widely scattered values,
+				for which simple array storage would be a waste of space (see requirement <B>A3</B>
+				above).
+				<LI><B>H2</B>. Frequently, the objects will be composite, that is to say, instances of a developer-defined
+				class, and one of the attributes of that class, of type
+				<A HREF="../../reference/structures/kernel/string.html">STRING</A>, can serve as
+				the key. For example if you were writing an Eiffel compiler you would probably
+				need to keep a data structure that includes information about classes of the
+				system. Each class is represented by an object with several fields describing the
+				properties of the class; one of these fields, the class name, corresponding to an
+				attribute of type <A HREF="../../reference/structures/kernel/string.html">STRING</A>, will serve as key.
+				<LI><B>H3</B>. Instead of being the full object (as in case <B>H1</B>) or one of the object’s fields (as in
+				case <B>H2</B>), the key may have to be computed through a function of the generating
+				class, which will take into account several attributes of the class (that is to say,
+				for each object, several fields).
+			</UL>
+			<P>
+				What this practically means is that in all cases you will need, in the generating class
+				of the objects to be stored, a query (attribute or function) that gives the key. The type of
+				the key is highly variable but must in all cases be a descendant of
+				<A HREF="../../reference/structures/kernel/hashable.html">HASHABLE</A>. This is
+				true of both
+				<A HREF="../../reference/structures/kernel/integer.html">INTEGER</A> (case <B>H1</B>)
+				and <A HREF="../../reference/structures/kernel/string.html">STRING</A> (case <B>H2</B>).
+				The requirements for being a
+				<A HREF="../../reference/structures/kernel/hashable.html">HASHABLE</A> are not harsh:
+				all you need is a function hash_code that returns a non-negative integer.
+			<H2>Using hash tables</H2>
+			<P>
+				Class <A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> takes two
+				generic parameters:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN>
+				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A> [G, H -> HASHABLE] ...
+			</P>
+			<P>
+				G represents the type of the objects to be stored in the hash table, H the type of
+				their keys.<BR>
+				When viewed as an implementation of containers,
+				<A HREF="../../reference/structures/table/hash_table.html">HASH_TABLE</A>, in a strict sense, represents
+				bags rather than sets: unlike the other classes in this chapter, it allows an object to have two or
+				more distinct occurrences in a single container. But this is only true if we consider a hash table
+				as a repository of objects of type G. In reality each item of the table is identified by a pair of
+				values, one from G and one from H. Because the keys must uniquely identify objects, the hash
+				table viewed as a container of such pairs is indeed a set.
+				The creation procedure
+				<A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_make">make</A>
+				takes an integer argument, as in
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">my_table</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_make">make</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS ="esymbol">)</SPAN>
+			</P>
+			<P>
+				The value of <SPAN CLASS="elocal">n</SPAN> indicates how many items the hash table is expected to have to
+				accommodate. This number of items is not a hardwired size, just information passed to
+				the class. In particular:
+			<UL>
+				<LI>The actual size of the underlying array representation will be higher than n since
+				efficient operation of hash table algorithms require the presence of enough
+				breathing space - unoccupied positions.
+				<LI>If the number of items in the table grows beyond the initial allocation, the table
+				will automatically be resized.
+			</UL>
+			<P>
+				It is useful, however, to use a reasonable <SPAN CLASS="elocal">n</SPAN> upon creation: not too large to avoid
+				wasting space, but not too small to avoid frequent applications of resizing, an expensive
+				operation.
 	</BODY>
 </HTML>

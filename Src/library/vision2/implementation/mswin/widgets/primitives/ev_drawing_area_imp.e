@@ -61,7 +61,8 @@ inherit
 			on_right_button_double_click,
 			on_key_up,
 			on_kill_focus,
-			on_set_focus
+			on_set_focus,
+			on_accelerator_command
 		redefine
 			on_size,
 			on_key_down,

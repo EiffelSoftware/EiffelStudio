@@ -51,7 +51,8 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_draw_item,
-			on_menu_command
+			on_menu_command,
+			on_accelerator_command
 		redefine
 			default_ex_style,
 			default_style,

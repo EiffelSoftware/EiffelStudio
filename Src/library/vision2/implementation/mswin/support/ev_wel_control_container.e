@@ -16,7 +16,6 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
-				-- We undefine the features refined by EV_CONTAINER_IMP
 			set_width,
 			set_height,
 			remove_command,
@@ -33,7 +32,8 @@ inherit
 			on_kill_focus,
 			on_draw_item,
 			background_brush,
-			on_menu_command
+			on_menu_command,
+			on_accelerator_command
 		redefine
 			default_style,
 			default_ex_style

@@ -309,4 +309,17 @@ feature -- Inlining
 
 	can_be_inlined: BOOLEAN is False
 
+feature {NONE} -- Implementation
+
+	new_api_feature: E_CONSTANT is
+			-- API feature creation
+		local
+			t: TYPE_A
+		do
+			t ?= type;
+			!! Result.make (feature_name, feature_id);
+			Result.set_type (t);
+			Result.set_value (value.string_value);
+		end;
+
 end

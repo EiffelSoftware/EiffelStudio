@@ -7,7 +7,8 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
-	SHARED_LACE_PARSER
+	SHARED_LACE_PARSER;
+	COMPILER_EXPORTER
 
 feature
 
@@ -94,7 +95,8 @@ end;
 			extendible_r: EXTENDIBLE_R;
 			old_system: SYSTEM_I;
 			precomp_project_name: STRING;
-			extendible_project_name: STRING
+			extendible_project_name: STRING;
+			sys: SYSTEM_I
 		do
 			if root_ast /= Void then
 				if not_first_parsing = False then
@@ -108,12 +110,15 @@ end;
 						!!precomp_r;
 						precomp_r.retrieve_precompiled (precomp_project_name);
 					else
-						System.make;
+						!! sys;
+						Workbench.set_system (sys)
+						sys.make;
 					end
 				else
 						-- This is just for validity check wrt DLE.
 					extendible_project_name := root_ast.extendible_project_name
 				end;
+				System.set_extendible (Compilation_modes.is_extendible)
 				not_first_parsing := True;
 
 					-- When finalizing a DC-set, the DR-set must

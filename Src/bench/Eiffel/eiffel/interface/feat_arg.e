@@ -299,4 +299,30 @@ feature {FEATURE_I} -- Case storage
 			end
 		end;
 
+feature {FEATURE_I}
+
+	api_args: E_FEATURE_ARGUMENTS is
+		local
+			i, c: INTEGER;
+			args: like Current;
+			t: TYPE_A
+		do
+			args := Current;
+			if args /= Void then
+				c := args.count;
+				!! Result.make (c);
+				from
+					i := 1;
+				until
+					i > c
+				loop
+					t ?= args.i_th (i);
+					Result.put_i_th (t, i);
+					i := i + 1
+				end;
+				Result.set_argument_names (args.argument_names);
+			end;   
+		end
+		
+
 end

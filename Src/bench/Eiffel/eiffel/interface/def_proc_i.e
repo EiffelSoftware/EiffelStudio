@@ -2,10 +2,19 @@ class DEF_PROC_I
 
 inherit
 
-	PROCEDURE_I
+	PROCEDURE_I			
+		rename
+			update_api as old_update_api
 		redefine
 			is_deferred, has_poly_unit, to_generate_in,
 			to_melt_in, can_be_inlined
+		end
+	PROCEDURE_I			
+		redefine
+			is_deferred, has_poly_unit, to_generate_in,
+			to_melt_in, can_be_inlined, update_api
+		select
+			update_api
 		end
 	
 feature 
@@ -60,5 +69,13 @@ feature
 feature -- Inlining
 
 	can_be_inlined: BOOLEAN is False
+
+feature {NONE} -- Implementation
+
+	update_api (f: E_ROUTINE) is
+		do
+			old_update_api (f);
+			f.set_deferred (True);
+		end;
 
 end

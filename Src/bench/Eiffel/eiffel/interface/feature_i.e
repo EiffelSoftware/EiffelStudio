@@ -747,7 +747,7 @@ feature -- Check
 					-- best we can do is to search through the
 					-- class ast and find the feature as
 					class_ast := Tmp_ast_server.item (written_in)
-					Result := class_ast.feature_with_name (feature_name)
+					Result ?= class_ast.feature_with_name (feature_name)
 				end
 			end;
 		end;
@@ -1812,75 +1812,20 @@ feature -- PS
 			Result_exists: Result /= Void
 		end;
 
-	signature: STRING is
-		obsolete "Use append_clickable_signature"
-			-- Signature of Current feature
-		do
-			!!Result.make (50);
-			Result.append (feature_name);
-			if arguments /= Void then
-				Result.append (" (");
-				from
-					arguments.start
-				until
-					arguments.after
-				loop
-					Result.append (arguments.argument_names.i_th (arguments.index));
-					Result.append (": ");
-					Result.append (arguments.item.dump);
-					arguments.forth;
-					if not arguments.after then
-						Result.append ("; ")
-					end
-				end;
-				Result.append (")")
-			end;
-			if not type.is_void then
-				Result.append (": ");
-				Result.append (type.dump)
-			end
-		end;
-
 	append_clickable_signature (a_clickable: CLICK_WINDOW; c: CLASS_C) is
 			-- Append the signature of current feature in `a_clickable'
-		local
-			error: BOOLEAN
+		obsolete
+			"Use e_feature `append_clickable_signature'"
 		do
-			if not Error then
-			append_clickable_name (a_clickable, c);
-			if arguments /= Void then
-				a_clickable.put_string (" (");
-				from
-					arguments.start
-				until
-					arguments.after
-				loop
-					a_clickable.put_string (arguments.argument_names.i_th (arguments.index));
-					a_clickable.put_string (": ");
-					arguments.item.append_clickable_signature (a_clickable);
-					arguments.forth;
-					if not arguments.after then
-						a_clickable.put_string ("; ")
-					end
-				end;
-				a_clickable.put_char (')')
-			end;
-			if not type.is_void then
-				a_clickable.put_string (": ");
-				type.append_clickable_signature (a_clickable);
-			end;
-			end;
+			api_feature.append_clickable_signature (a_clickable, c.e_class)
 		end;
 
 	append_clickable_name (a_clickable: CLICK_WINDOW; c: CLASS_C) is
 			-- Append the name of the feature in `a_clickable'
+		obsolete
+			"Use e_feature `append_clickable_name'"
 		do
-			a_clickable.put_clickable_string (stone (c), feature_name);
-		end;
-
-	stone (c: CLASS_C): FEATURE_STONE is
-		do
-			!! Result.make (Current, c);
+			api_feature.append_clickable_name (a_clickable, c.e_class)
 		end;
 
 feature -- Debugging
@@ -2179,6 +2124,42 @@ feature -- DLE
 			final_mode: System.in_final_mode
 		do
 			Result := System.was_used (Current)
+		end;
+
+feature -- Api creation
+
+	api_feature: E_FEATURE is
+			-- API representation of Current
+		local
+			bi: INTEGER
+		do
+			Result := new_api_feature;
+			Result.set_written_in (written_in);
+			bi := body_index;
+			if bi /= 0 then
+				Result.set_body_id (Body_index_table.item (bi));
+			end;
+			Result.set_is_origin (is_origin);
+			Result.set_export_status (export_status)
+			Result.set_is_frozen (is_frozen)
+			Result.set_is_infix (is_infix)
+			-- Result.set_is_dynamic (is_dynamic)
+			-- FIXME can't set this at this point since
+			-- creating the api can be done at any time
+			-- and is_dynamic has the nasty side effect of
+			-- real_body_id which I do not really want to
+			-- invoke.
+			Result.set_is_prefix (is_prefix)
+			Result.set_rout_id_set (rout_id_set)
+		end;		
+
+feature {NONE} -- Implementation
+
+	new_api_feature: E_FEATURE is
+			-- API feature creation
+		deferred
+		ensure
+			non_void_result: Result /= Void
 		end;
 
 end

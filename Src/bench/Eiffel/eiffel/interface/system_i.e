@@ -2098,6 +2098,7 @@ end
 			exec_unit: EXECUTION_UNIT
 			external_unit: EXT_EXECUTION_UNIT
 			info: EXTERNAL_INFO
+			exec_table: EXECUTION_TABLE
 		do
 				-- Real shake compresses the dispatch and execution tables
 				-- Not called because the descriptors must be reprocessed
@@ -2105,15 +2106,16 @@ end
 
 			update_valid_body_ids
 
-			execution_table.shake
+			exec_table := execution_table
+			exec_table.shake
 			dispatch_table.shake
 
 			from
-				execution_table.start
+				exec_table.start
 			until
-				execution_table.after
+				exec_table.after
 			loop
-				exec_unit := execution_table.item_for_iteration
+				exec_unit := exec_table.item_for_iteration
 				if exec_unit.is_external and then exec_unit.is_valid then
 					external_unit ?= exec_unit
 					check
@@ -2122,13 +2124,13 @@ end
 					info := externals.item (external_unit.external_name)
 					info.set_execution_unit (external_unit)
 				end
-				execution_table.forth
+				exec_table.forth
 			end
 
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
-			frozen_level := execution_table.frozen_level
-			execution_table.set_levels
+			frozen_level := exec_table.frozen_level
+			exec_table.set_levels
 
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication

@@ -22,7 +22,7 @@ inherit
 			make, make_filled
 		end
 
-creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
+creation {ARRAY_AS, TUPLE_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
 	make, make_filled
 
 feature {NONE} -- Initialization
@@ -161,3 +161,4 @@ feature {AST_EIFFEL, FORMAT_CONTEXT} -- Output
 		end;
 
 end -- class EIFFEL_LIST
+

@@ -10,9 +10,6 @@ deferred class COMPOSITE_I
 inherit
 
 	WIDGET_I
-
-
-
 	
 feature 
 
@@ -20,23 +17,6 @@ feature
 			-- Count of managed children
 		deferred
 		end; -- children_count
-
-	child_list: POINTER is
-		deferred
-		end;
-
-	set_child_list is
-		require
-			has_child: children_count > 0;
-		deferred
-		end;
-
-	get_ith_child (pos: INTEGER): POINTER is
-		require
-			enough_children: pos <= children_count;
-			positive_child: pos >= 0;
-		deferred
-		end;
 
 end -- class COMPOSITE_I
 

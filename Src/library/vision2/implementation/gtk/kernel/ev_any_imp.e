@@ -80,29 +80,19 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 	destroy is
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
-		local
-			item_imp: EV_ITEM_IMP
-			widget_imp: EV_WIDGET_IMP
 		do
 			if not is_destroyed then
-				item_imp ?= Current
-				if item_imp /= Void and then item_imp.parent_imp /= Void then
-						item_imp.parent_imp.interface.prune_all (item_imp.interface)
-				else
-					widget_imp ?= Current
-					if widget_imp /= Void and then widget_imp.parent_imp /= Void then
-						widget_imp.parent_imp.interface.prune_all (widget_imp.interface)
-					end
-				end
 				is_destroyed := True
-				if internal_id /= 0 then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-				end	
-	
-					-- Windows are explicitly reffed on initialization as they are toplevel widgets.
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-				c_object := NULL
+				
+				if c_object /= NULL then
+					-- Some objects do not set `c_object'
+					if internal_id /= 0 then
+							feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+					end	
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+					c_object := NULL
+				end
 			end
 		ensure then
 			c_object_detached: c_object = NULL
@@ -209,13 +199,15 @@ feature {NONE} -- Implementation
 			if not is_destroyed and then not is_in_final_collect then
 					-- Destroy has not been explicitly called.
 					-- This is incase events are fired from the calls to gtk upon disposal
-				if internal_id /= 0 then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-				end			
-				--| This is the signal attached in ev_any_imp.c
-				--| used for GC/Ref-Counting interaction.
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+				if c_object /= NULL then
+					if internal_id /= 0 then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+					end			
+					--| This is the signal attached in ev_any_imp.c
+					--| used for GC/Ref-Counting interaction.
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+				end
 			end
 			Precursor {IDENTIFIED}
 		end

@@ -61,6 +61,7 @@ feature -- Access
 			l_gen_type: CODE_GENERATED_TYPE
 			i: INTEGER
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
+			l_found: BOOLEAN
 		do
 			if internal_eiffel_name = Void then
 				internal_eiffel_name := Name_formatter.formatted_variable_name (name)
@@ -70,15 +71,23 @@ feature -- Access
 					from
 						l_features := l_gen_type.features
 						l_features.search (internal_eiffel_name)
-						if l_features.found then
+						l_found := l_features.found
+						if not l_found then
+							l_found := l_gen_type.parents.has_feature (internal_eiffel_name)
+						end
+						if l_found then
 							internal_eiffel_name.append ("_2")
 						end
 						i := 2
 					until
-						not l_features.found
+						not l_found
 					loop
 						l_features.search (internal_eiffel_name)
-						if l_features.found then
+						l_found := l_features.found
+						if not l_found then
+							l_found := l_gen_type.parents.has_feature (internal_eiffel_name)
+						end
+						if l_found then
 							internal_eiffel_name.keep_head (internal_eiffel_name.last_index_of ('_', internal_eiffel_name.count))
 							internal_eiffel_name.append (i.out)
 						end

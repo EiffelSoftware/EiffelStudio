@@ -16,7 +16,11 @@ inherit
 			target_features,
 			target_feature,
 			add_local,
-			add_argument
+			add_argument,
+			flush_completion_features,
+			flush_completion_features_user_precondition,
+			initialize_feature,
+			initialize_feature_user_precondition
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -41,6 +45,7 @@ feature {NONE} -- Initialization
 		do
 			create locals.make (10)
 			create arguments.make (5)
+			create completion_features.make (5)
 			set_standard_call
 		end
 
@@ -60,25 +65,35 @@ feature -- Access
 			lookup_name: STRING
 			target_type: TYPE
 			ids: HASH_TABLE [TYPE, STRING]
+			cf: COMPLETION_FEATURE
 		do
 			if not retried then
 				ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (file_name))
+				targets := target.split ('.')
+				if targets.last.is_empty then
+					targets.finish
+					targets.remove
+				end
 				if ci /= Void and then ci.compiled and then ci.compiled_class.has_feature_table then
 					qualified_call := False
 					class_i := ci
 					feature_table := ci.compiled_class.feature_table
 					fi := feature_table.item (feature_name)
 					Inst_context.set_cluster (ci.cluster)
-					if fi /= Void then
-						targets := target.split ('.')
-						if targets.last.is_empty then
-							targets.finish
-							targets.remove
+					if fi = Void then
+						cf := completion_feature (feature_name, file_name)
+						if cf /= Void then
+							fi := feature_i_from_completion_feature (cf)
 						end
+					end
+					if fi /= Void then
 						if targets.count = 1 then
 							feature_table.search (targets.first)
 							if feature_table.found then
 								create Result.make_with_class_i_and_feature_i (ci, feature_table.found_item)
+							end
+							if Result = Void then
+								Result := completion_feature (target, file_name)
 							end
 						else
 							targets.finish
@@ -94,6 +109,12 @@ feature -- Access
 									target_type := feature_table.found_item.type
 								end
 							end
+							if target_type = Void then
+								cf := completion_feature (targets.first, file_name)
+								if cf /= Void then
+									target_type := type_from_type_name (cf.return_type)
+								end
+							end
 							if target_type /= Void and then not target_type.is_void then
 								targets.start
 								targets.remove
@@ -105,6 +126,28 @@ feature -- Access
 									end
 								end
 							end
+						end
+					end
+				else
+					-- if there is no compiled class then only complete for current class calls
+					cf := completion_feature (targets.first, file_name)
+					if cf /= Void then
+						if targets.count = 1 then
+							Result := cf
+							-- need implementation in parser.y to retrieve current class before this code can be used
+--						else
+--							target_type := type_from_type_name (cf.return_type)
+--							if target_type /= Void and then not target_type.is_void then
+--								targets.start
+--								targets.remove
+--								feature_table := recursive_lookup (target_type, targets)
+--								if feature_table /= Void then
+--									feature_table.search (lookup_name)
+--									if feature_table.found then
+--										create Result.make_with_class_i_and_feature_i (create {CLASS_I}.make ("ANY"), feature_table.found_item)
+--									end
+--								end
+--							end
 						end
 					end
 				end
@@ -138,67 +181,74 @@ feature -- Access
 			l_image_indexes: ECOM_ARRAY [INTEGER]
 			l_image_index_enum: ECOM_TAG_EIF_ENTITY_IMAGES_ENUM
 			l_image_index: INTEGER
+			retried: BOOLEAN
 		do
-			create l_image_index_enum
-			l_entries := completion_list_for_target (target, feature_name, file_name)
-			if l_entries /= Void then
-				create l_names.make (1, <<1>>, <<l_entries.count>>)
-				create l_signatures.make (1, <<1>>, <<l_entries.count>>)
-				create l_image_indexes.make (1, <<1>>, <<l_entries.count>>)
-				
-				from 
-					l_index := 1
-				until
-					l_index > l_entries.count
-				loop
-					l_entry := l_entries.i_th (l_index)
-					l_names.put (l_entry.name, <<l_index>>)
-					l_signatures.put (l_entry.signature, <<l_index>>)
-	
-					create l_bool_ref
-					l_entry.is_feature (l_bool_ref)
-					if l_bool_ref.item then
-						l_feature_descriptor ?= l_entry
-						if l_feature_descriptor /= Void then
-							if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
-								l_image_index := l_image_index_enum.Eif_entity_images_frozen_once
-							elseif l_feature_descriptor.is_attribute then
-								if l_feature_descriptor.is_obsolete then
+			if not retried then
+				create l_image_index_enum
+				l_entries := completion_list_for_target (target, feature_name, file_name)
+				if l_entries /= Void then
+					create l_names.make (1, <<1>>, <<l_entries.count>>)
+					create l_signatures.make (1, <<1>>, <<l_entries.count>>)
+					create l_image_indexes.make (1, <<1>>, <<l_entries.count>>)
+					
+					from 
+						l_index := 1
+					until
+						l_index > l_entries.count
+					loop
+						l_entry := l_entries.i_th (l_index)
+						l_names.put (clone (l_entry.name), <<l_index>>)
+						l_signatures.put (clone (l_entry.signature), <<l_index>>)
+		
+						create l_bool_ref
+						l_entry.is_feature (l_bool_ref)
+						if l_bool_ref.item then
+							l_feature_descriptor ?= l_entry
+							if l_feature_descriptor /= Void then
+								if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_once
+								elseif l_feature_descriptor.is_attribute then
+									if l_feature_descriptor.is_obsolete then
+										l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+									elseif l_feature_descriptor.is_frozen then
+										l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+									else
+										l_image_index := l_image_index_enum.Eif_entity_images_attribute
+									end
+								elseif l_feature_descriptor.is_once then
+									if l_feature_descriptor.is_obsolete then
+										l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+									elseif l_feature_descriptor.is_frozen then
+										l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+									else
+										l_image_index := l_image_index_enum.Eif_entity_images_once
+									end
+								elseif l_feature_descriptor.is_obsolete then
 									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+								elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_external
 								elseif l_feature_descriptor.is_frozen then
-									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_feature
+								elseif l_feature_descriptor.is_external then
+									l_image_index := l_image_index_enum.Eif_entity_images_external_feature
+								elseif l_feature_descriptor.is_deferred then
+									l_image_index := l_image_index_enum.Eif_entity_images_deferred
 								else
-									l_image_index := l_image_index_enum.Eif_entity_images_attribute
+									l_image_index := l_image_index_enum.Eif_entity_images_feature
 								end
-							elseif l_feature_descriptor.is_once then
-								if l_feature_descriptor.is_obsolete then
-									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
-								elseif l_feature_descriptor.is_frozen then
-									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
-								else
-									l_image_index := l_image_index_enum.Eif_entity_images_once
-								end
-							elseif l_feature_descriptor.is_obsolete then
-								l_image_index := l_image_index_enum.Eif_entity_images_obsolete
-							elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
-								l_image_index := l_image_index_enum.Eif_entity_images_frozen_external
-							elseif l_feature_descriptor.is_frozen then
-								l_image_index := l_image_index_enum.Eif_entity_images_frozen_feature
-							elseif l_feature_descriptor.is_external then
-								l_image_index := l_image_index_enum.Eif_entity_images_external_feature
-							elseif l_feature_descriptor.is_deferred then
-								l_image_index := l_image_index_enum.Eif_entity_images_deferred
 							else
-								l_image_index := l_image_index_enum.Eif_entity_images_feature
+								l_image_index := l_image_index_enum.Eif_entity_images_variable
 							end
 						else
 							l_image_index := l_image_index_enum.Eif_entity_images_variable
 						end
-					else
-						l_image_index := l_image_index_enum.Eif_entity_images_variable
+						l_image_indexes.put (l_image_index, <<l_index>>)
+						l_index := l_index + 1
 					end
-					l_image_indexes.put (l_image_index, <<l_index>>)
-					l_index := l_index + 1
+				else
+					create l_names.make_empty
+					create l_signatures.make_empty
+					create l_image_indexes.make_empty
 				end
 			else
 				create l_names.make_empty
@@ -212,29 +262,128 @@ feature -- Access
 			non_void_names: return_names /= Void
 			non_void_signatures: return_signatures /= Void
 			non_void_image_indexes: return_image_indexes /= Void
+		rescue
+			retried := True
+			retry
 		end
 		
 feature -- Basic Operations
 
 		add_local (name: STRING; type: STRING) is
 				-- Add local variable used for solving member completion list.
+			local
+				l_name: STRING
 			do
 				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
-					locals.put (name, type)
+					l_name := clone (name)
+					l_name.to_lower
+					locals.put (l_name, type)
 				end
 			end
 
 		add_argument (name: STRING; type: STRING) is
 				-- Add argument used for solving member completion list.
+			local
+				l_name: STRING
 			do
 				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
-					arguments.put (name, type)
+					l_name := clone (name)
+					l_name.to_lower
+					arguments.put (l_name, type)
 				end
-			end		
+			end	
+			
+		flush_completion_features (a_file_name: STRING) is
+				-- clear all `completion_features' in `a_file_name'
+			require else
+				non_void_file_name: a_file_name /= Void
+				valid_file_name: not a_file_name.is_empty
+			local
+				l_file_name: STRING
+			do
+				l_file_name := clone (a_file_name)
+				l_file_name.to_lower
+				from
+					completion_features.start
+				until
+					completion_features.after
+				loop
+					if completion_features.item.file_name.is_equal (l_file_name) then
+						completion_features.remove
+					else
+						completion_features.forth
+					end
+				end
+			end
+		
+		initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+				-- Initialize a feature for completion without compltation
+			require else
+				non_void_name: a_name /= Void
+				valid_name: not a_name.is_empty
+				non_void_file_name: a_file_name /= Void
+				valid_file_name: not a_file_name.is_empty
+				valid_arguments: a_arguments /= Void implies a_arguments.string_array /= Void
+				valid_argument_types: a_argument_types /= Void implies a_argument_types.string_array /= Void
+				matching_argument_count: (a_arguments /= Void and a_argument_types /= Void) implies a_arguments.string_array.count = a_argument_types.string_array.count
+			local
+				l_feature: COMPLETION_FEATURE
+				l_ci: CLASS_I
+				l_fi: FEATURE_I
+				l_arguments: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
+				l_ecom_arguments: ECOM_ARRAY [STRING]
+				l_ecom_types: ECOM_ARRAY [STRING]
+				l_index: INTEGER
+				l_upper_bound: INTEGER
+			do
+				if a_name /= Void and a_file_name /= Void and then not a_name.is_empty and then not a_file_name.is_empty then
+					l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
+					if l_ci /= Void then
+						if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
+							l_fi := l_ci.compiled_class.feature_table.item (a_name)
+						end
+					end
+					if l_fi = Void then
+						if a_arguments /= Void and a_argument_types /= Void then
+							l_ecom_arguments := a_arguments.string_array
+							l_ecom_types :=	a_argument_types.string_array
+						end
+						if l_ecom_arguments /= Void and l_ecom_types/= Void and then l_ecom_arguments.count > 0 and then l_ecom_types.count > 0 then
+							create l_arguments.make (l_ecom_arguments.count)
+							from
+								l_index := l_ecom_arguments.lower_indices.item (1)
+								l_upper_bound := l_ecom_arguments.upper_indices.item (1)
+							until
+								l_index > l_upper_bound
+							loop
+								l_arguments.extend (create {PARAMETER_DESCRIPTOR}.make (l_ecom_arguments.item (<<l_index>>), l_ecom_types.item (<<l_index>>)))
+								l_index := l_index + 1
+							end
+						end
+						if a_return_type = Void then
+							create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name)
+						else
+							create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name)
+						end
+						completion_features.extend (l_feature)							
+					end
+				end
+			end
+			
+		flush_completion_features_user_precondition (a_file_name: STRING): BOOLEAN is
+			do
+				Result := False
+			end
+			
+		initialize_feature_user_precondition (a_name: STRING; a_arguments, a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING): BOOLEAN is
+			do
+				Result := False
+			end
+			
 
 feature {NONE} -- Implementation
 
-	completion_list_for_target (target: STRING; feature_name: STRING; file_name: STRING): ARRAYED_LIST [COMPLETION_ENTRY] is
+	completion_list_for_target (a_target: STRING; feature_name: STRING; file_name: STRING): ARRAYED_LIST [COMPLETION_ENTRY] is
 			-- Features accessible from target.
 		local
 			ci: CLASS_I
@@ -246,8 +395,9 @@ feature {NONE} -- Implementation
 			i, old_count: INTEGER
 			variable_list: SORTABLE_ARRAY [COMPLETION_ENTRY]
 			retried: BOOLEAN
-			arrayed_list: ARRAYED_LIST [COMPLETION_ENTRY]
 			features: SORTABLE_ARRAY [FEATURE_DESCRIPTOR]
+			cf: COMPLETION_FEATURE
+			target: STRING
 		do
 			if not retried then
 				ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (file_name))
@@ -256,20 +406,38 @@ feature {NONE} -- Implementation
 					feature_table := ci.compiled_class.feature_table
 					fi := feature_table.item (feature_name)
 					Inst_context.set_cluster (ci.cluster)
+					if fi = Void then
+						cf := completion_feature (feature_name, file_name)
+						if cf /= Void then
+							fi := feature_i_from_completion_feature (cf)	
+						end
+					end
 					if fi /= Void then
+						target := clone (a_target)
+						target.to_lower
 						ids := feature_variables (fi, feature_table)
 						if target.occurrences ('.') = 0 then
+							create variable_list.make (1, ids.count + completion_features.count)
 							from
 								ids.start
 								i := 1
-								create variable_list.make (1, ids.count)
 							until
 								ids.after
 							loop
 								variable_list.put (create {VARIABLE_DESCRIPTOR}.make (ids.key_for_iteration, ids.key_for_iteration + ": " + ids.item_for_iteration.dump), i)
-								i := i + 1
+								i := i + 1									
 								ids.forth
 							end
+							from
+								completion_features.start
+							until
+								completion_features.after
+							loop
+								variable_list.put (completion_features.item, i)
+								i := i + 1
+								completion_features.forth
+							end
+							
 							features := features_list_from_table (feature_table)
 							old_count := variable_list.count
 							variable_list.resize (1, old_count + features.count)
@@ -294,6 +462,12 @@ feature {NONE} -- Implementation
 									target_type := feature_table.found_item.type
 								else
 									target_type := type_of_target (targets.first, feature_table, ids)
+								end
+							end
+							if target_type = Void then
+								cf := completion_feature (targets.first, file_name)
+								if cf /= Void then
+									target_type := type_from_type_name (cf.return_type)	
 								end
 							end
 							if target_type /= Void and then not target_type.is_void then
@@ -649,7 +823,44 @@ feature {NONE} -- Implementation
 			extracted_type_void_if_not_extracted: not type_extracted implies extracted_type = Void
 			extracted_type_not_void_if_extracted: type_extracted implies extracted_type /= Void
 		end
-	
+		
+	completion_feature (a_feature_name: STRING; a_file_name: STRING): COMPLETION_FEATURE is
+			-- does `completion_features' contain `a_feature_name' for file `a_file_name'
+		require
+			non_void_feature_name: a_feature_name /= Void
+			valid_feature_name: not a_feature_name.is_empty
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
+		local
+			l_target: STRING
+		do
+			from
+				completion_features.start
+			until
+				completion_features.after or Result /= Void
+			loop
+				l_target := clone (a_feature_name)
+				l_target.to_lower
+				if l_target.is_equal (completion_features.item.name) then
+					l_target := clone (a_file_name)
+					l_target.to_lower
+					if l_target.is_equal (completion_features.item.file_name) then
+						Result := completion_features.item
+					end
+				end
+				completion_features.forth
+			end	
+		end
+		
+	feature_i_from_completion_feature (a_completion_feature: COMPLETION_FEATURE): FEATURE_I is
+			-- create a FEATURE_I from `a_completion_feature'
+		require
+			non_void_completion_feature: a_completion_feature /= Void
+		do
+			-- we only need an FEATURE_I object 
+			Result := create {R_DYN_FUNC_I}
+		end		
+		
 	type_extracted: BOOLEAN
 			-- Was last call to `extract_type' successful?
 	
@@ -689,7 +900,7 @@ feature {NONE} -- Implementation
 	call_type: INTEGER
 			-- Analyzed target call type
 			--| Can be one of the following unique values
-	
+			
 	Standard_call, Agent_call, Static_call, Creation_call, Precursor_call: INTEGER is unique
 			-- Possible values for `call_type'
 
@@ -723,6 +934,9 @@ feature {NONE} -- Implementation
 	locals, arguments: HASH_TABLE [STRING, STRING]
 			-- Local variables and arguments used to solve member completion list.
 			
+	completion_features: ARRAYED_LIST [COMPLETION_FEATURE]
+			-- Uncomplided features use to solve member completion.
+			
 	qualified_call: BOOLEAN
 			-- is current target a qualified call (with '.')
 
@@ -731,5 +945,6 @@ invariant
 	valid_call_type: call_type = Standard_call or call_type = Static_call or
 						call_type = Creation_call or call_type = Precursor_call or
 						call_type = Agent_call
+	non_void_completion_features: completion_features /= Void
 
 end -- class COMPLETION_INFORMATION

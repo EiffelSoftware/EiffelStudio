@@ -415,7 +415,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			lv_item.set_image (image_index)
 			lv_item.set_iitem (position - 1)
 			wel_replace_item (lv_item)
-			set_column_width (-1, 0)
+			set_column_width (lvscw_autosize, 0)
 		end
 
 	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER) is
@@ -428,7 +428,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			lv_item.set_image (0)
 			lv_item.set_iitem (position - 1)
 			wel_replace_item (lv_item)
-			set_column_width (-1, 0)
+			set_column_width (lvscw_autosize, 0)
 		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
@@ -444,7 +444,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				-- We set the index within the list item
 			item_imp.lv_item.set_iitem (an_index - 1)
 			wel_insert_item (litem)
-			set_column_width (-1, 0) -- Autosize
+			set_column_width (lvscw_autosize, 0) -- Autosize
 		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -455,7 +455,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				--| Setting a text of an item causes this feature to be called.
 				--| We must autosize the column width in case the text is wider
 				--| than the text of any items already contained in `Current'.
-			set_column_width (-1, 0)
+			set_column_width (lvscw_autosize, 0)
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -465,7 +465,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 		do
 			an_index := ev_children.index_of (item_imp, 1) - 1
 			delete_item (an_index)
-			set_column_width (-1, 0) -- Autosize
+			set_column_width (lvscw_autosize, 0) -- Autosize
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
@@ -558,7 +558,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 
 				-- We must now force the list to recompute the need
 				-- for a horizontal scroll bar.
-			set_column_width (-1, 0)
+			set_column_width (lvscw_autosize, 0)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
@@ -753,7 +753,6 @@ feature {EV_ANY_I} -- Implementation
 				end
 				new_reg := reg.combine (temp_reg, Rgn_diff)
 				temp_reg.delete
-				reg.delete
 						-- Erase the background in `new_reg'.
 				paint_dc.fill_region (new_reg, brush)
 				new_reg.delete
@@ -785,6 +784,8 @@ feature {EV_ANY_I} -- Implementation
 					-- There are no children , so erase all of `reg'.
 				paint_dc.fill_region (reg, brush)
 			end
+			reg.delete
+			brush.delete
 		end
 		
 	background_color: EV_COLOR is

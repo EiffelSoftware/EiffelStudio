@@ -40,8 +40,6 @@ feature -- Initialization
 				msg_string := ("Makefile translation completed with errors.%N")
 				if c_error then
 					append_c_error_msg (msg, msg_string)
-				else
-					msg_string.append (msg)
 				end
 			else
 				box_style := Mb_iconinformation

@@ -344,7 +344,7 @@ feature -- Drawing operations
 			check
 				valid_cast: pix_imp /= Void
 			end
-			dc.draw_bitmap (pix_imp.dc.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
+			dc.draw_bitmap (pix_imp.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
 		end
 
 feature -- Filling operations

@@ -42,12 +42,12 @@ feature -- Status setting
 			table.set_child_position (homogeneous_tb, 9, 0, 10, 2)
 			!! set_h_c
 			box_widget ?= active_widget
-			!! a.make_2 (box_widget, homogeneous_tb)
+			!! a.make (box_widget, homogeneous_tb)
 			homogeneous_tb.add_click_command (set_h_c, a)
 			
 			!! spacing_entry.make_with_label (table, "Spacing:")
 			table.set_child_position (spacing_entry.box, 9, 2, 10, 4)
-			!! a2.make_2 (box_widget, spacing_entry)
+			!! a2.make (box_widget, spacing_entry)
 			!! set_spacing_c
 			spacing_entry.add_activate_command (set_spacing_c, a2)
 		end

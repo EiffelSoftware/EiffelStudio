@@ -23,9 +23,15 @@ feature -- Access
 
 	title: STRING is
 			-- Console application title
+		local
+			title_pointer: POINTER
+			null_pointer: POINTER
 		do
 			create Result.make (0)
-			Result.from_c (cwel_startup_info_title (item))
+			title_pointer := cwel_startup_info_title (item)
+			if title_pointer /= null_pointer then
+				Result.from_c (title_pointer)
+			end
 		end
 
 	x_offset: INTEGER is
@@ -132,11 +138,9 @@ feature -- Element Change
 			-- Set `title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
-		local
-			a_wel_string: WEL_STRING
 		do
-			create a_wel_string.make (a_title)
-			cwel_startup_info_set_title (item, a_wel_string.item)
+			create internal_title.make (a_title)
+			cwel_startup_info_set_title (item, internal_title.item)
 		ensure
 			title_set: title.is_equal (a_title)
 		end
@@ -280,6 +284,11 @@ feature {NONE} -- Measurement
 			Result := c_size_of_startup_info
 		end
 
+feature {NONE} -- Implementation
+
+	internal_title: WEL_STRING
+			-- WEL_STRING object associated with the title		
+			
 feature {NONE} -- Externals
 
 	c_size_of_startup_info: INTEGER is

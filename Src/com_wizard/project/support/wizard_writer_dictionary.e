@@ -238,6 +238,8 @@ feature -- C keywords -- 3
 
 	Sizeof: STRING is "sizeof"
 
+	Break: STRING is "break"
+
 	C_void_pointer: STRING is "void *"
 
 	Void_c_keyword: STRING is "void"

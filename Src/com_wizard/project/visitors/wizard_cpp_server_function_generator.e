@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 				Result.append (Eif_reference)
 			end
 			Result.append (Space)
-			Result.append (Return_value_name)
+			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Eiffel_function_variable_name)
 		end

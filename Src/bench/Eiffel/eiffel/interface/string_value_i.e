@@ -50,7 +50,7 @@ feature
 		do
 			class_type ?= t;
 			Result := 	class_type /= Void
-						and then class_type.base_class_id = System.string_id
+						and then class_type.class_id = System.string_id
 		end;
 
 	generate_il is

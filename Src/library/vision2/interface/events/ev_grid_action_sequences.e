@@ -28,6 +28,23 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+		
+	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
+			-- Actions to be performed when a screen pointer moves over a grid.
+			-- Arguments (with names for clarity):
+			
+			-- x_pos: INTEGER		The x position of the motion relative to the left edge of the viewable
+			--						area of the grid. 
+			-- y_pos: INTEGER		The y position of the motion relative to the top of the viewable
+			--						area of the grid.
+			-- item: EV_GRID_ITEM	If the motion occurred above an item, this is the pointed item, otherwise
+			--						this argument is set to `Void'.
+		do
+			Result := implementation.pointer_motion_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 end
 

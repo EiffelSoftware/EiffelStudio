@@ -521,6 +521,29 @@ feature -- Messages
 		do
 		end
 
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- and Wm_ctlcolorscrollbar messages.
+			-- To change its default colors, the color-control `control'
+			-- needs :
+			-- 1. a background color and a foreground color to be selected
+			--    in the `paint_dc',
+			-- 2. a backgound brush to be returned to the system.
+ 		require
+			exists: exists
+			control_not_void: control /= Void
+			control_exists: control.exists
+			paint_dc_not_void: paint_dc /= Void
+			paint_dc_exists: paint_dc.exists
+		do
+				-- Typical implementation:
+				-- paint_dc.set_text_color (control.foreground_color)
+				-- paint_dc.set_background_color (control.background_color)
+				-- !! brush.make_solid (control.background_color)
+				-- set_message_return_value (brush.to_integer)
+				-- disable_default_processing
+		end
+
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 			-- Wm_getminmaxinfo message.
 			-- The size or position of the window is about to
@@ -806,7 +829,7 @@ feature {NONE} -- Implementation
 			on_window_pos_changing (wp)
 		end
 
-	on_wm_color (wparam, lparam: INTEGER) is
+	on_wm_ctlcolor (wparam, lparam: INTEGER) is
 			-- Common routine for Wm_ctlcolor messages.
 		require
 			exists: exists
@@ -821,11 +844,7 @@ feature {NONE} -- Implementation
 				control ?= windows.item (hwnd_control)
 				if control /= Void and then control.exists then
 					!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
-					paint_dc.set_text_color (control.foreground_color)
-					paint_dc.set_background_color (control.background_color)
-					!! brush.make_solid (control.background_color)
-					set_message_return_value (brush.to_integer)
-					disable_default_processing
+					on_color_control (control, paint_dc)
 				end
 			end
 		end
@@ -873,15 +892,13 @@ feature {WEL_DISPATCHER}
 			if msg = Wm_paint then
 				on_wm_paint (wparam)
 			elseif msg = Wm_ctlcolorstatic then
-				on_wm_color (wparam, lparam)
-			elseif msg = Wm_ctlcolorbtn then
-				on_wm_color (wparam, lparam)
+				on_wm_ctlcolor (wparam, lparam)
 			elseif msg = Wm_ctlcoloredit then
-				on_wm_color (wparam, lparam)
+				on_wm_ctlcolor (wparam, lparam)
 			elseif msg = Wm_ctlcolorlistbox then
-				on_wm_color (wparam, lparam)
+				on_wm_ctlcolor (wparam, lparam)
 			elseif msg = Wm_ctlcolorscrollbar then
-				on_wm_color (wparam, lparam)
+				on_wm_ctlcolor (wparam, lparam)
 			elseif msg = Wm_command then
 				on_wm_command (wparam, lparam)
 			elseif msg = Wm_syscommand then

@@ -338,7 +338,9 @@ feature
 			-- Close class selector, object tool generator
 			-- and object command generator.
 		do
-			hide
+			if realized then
+				hide
+			end
 			close_object_windows
 			main_panel.class_importer_entry.set_toggle_off
 		end

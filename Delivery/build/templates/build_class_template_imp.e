@@ -14,16 +14,20 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		<LOCAL>
+			internal_font: EV_FONT
+			internal_pixmap: EV_PIXMAP
 		do
 			<PRECURSOR>
 			<CREATE>
+			create internal_font
+			create internal_pixmap
 			<BUILD>
 			<SET>
 			<EVENT_CONNECTION>
 
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
-			--close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 
 				-- Call `user_initialization'.
 			user_initialization

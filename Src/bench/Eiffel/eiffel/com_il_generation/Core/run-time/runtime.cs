@@ -63,7 +63,7 @@ feature -- Assertions
 
 		if (
 			(!in_assertion ()) &&
-			((is_final) || (is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant)))
+			((is_final) || (o != null && is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant)))
 		) {
 			target = o as EIFFEL_TYPE_INFO;
 			if (target != null) {

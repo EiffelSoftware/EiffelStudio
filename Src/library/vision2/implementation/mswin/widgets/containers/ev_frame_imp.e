@@ -14,12 +14,15 @@ inherit
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		redefine
+			client_x,
+			client_y,
 			client_width,
 			client_height,
-			child_minwidth_changed,
-			child_minheight_changed,
 			set_default_minimum_size,
-			update_display
+			compute_minimum_width,
+			compute_minimum_height,
+			resize_from_minimum,
+			resize_proportionnaly
 		end
 
 	EV_FONTABLE_IMP
@@ -30,7 +33,6 @@ inherit
 		redefine
 			make,
 			on_paint,
-			move_and_resize,
 			top_level_window_imp
 		end
 
@@ -54,6 +56,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	client_x: INTEGER is
+			-- Left of the client area.
+		do
+			Result := box_width
+		end
+
+	client_y: INTEGER is
+			-- Top of the client area.
+		do
+			Result := box_text_height + box_width
+		end
 
 	client_width: INTEGER is
 			-- Width of the client area of container
@@ -79,8 +93,11 @@ feature -- Status setting
 		do
 			!! dc.make (Current)
 			dc.get
-			set_minimum_height (box_text_height + 2 * box_width)
-			set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			internal_set_minimum_height (box_text_height + 2 * box_width)
+			internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			if parent_imp /= Void then
+				notify_change (1 + 2)
+			end
 			dc.release
 		end
 
@@ -98,43 +115,39 @@ feature -- Element change
 
 feature {NONE} -- Implementation for automatic size compute.
 
-	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
 		do
-			set_minimum_width (value + 2 * box_width)
-		end
-
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
-		do
-			set_minimum_height (value + box_text_height + 2 * box_width)
-		end
-
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, True)
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_width, 
-										client_width, client_height)
+				internal_set_minimum_width (child.minimum_width + 2 * box_width)
 			end
 		end
 
-	update_display is
-			-- Feature that update the actual container.
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
 		do
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_width, client_width, client_height)
+				internal_set_minimum_height (child.minimum_height + box_text_height + 2 * box_width)
+			end
+		end
+
+	resize_from_minimum (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Resize from the minimum size of the children
+		do
+			move_and_resize (a_x, a_y, a_width, a_height, True)
+			if child /= Void then
+				child.set_move_and_size (box_width, box_text_height + box_width, 
+					client_width, client_height)
+			end
+		end
+
+	resize_proportionnaly (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Resize everything by difference with the current size.
+		do
+			move_and_resize (a_x, a_y, a_width, a_height, True)
+			if child /= Void then
+				child.set_move_and_size (box_width, box_text_height + box_width, 
+					client_width, client_height)
 			end
 		end
 
@@ -189,11 +202,11 @@ feature {NONE} -- WEL Implementation
 			dc.get
 			dc.select_font (a_font)
 			if child /= Void then
-				set_minimum_height (box_text_height + 2 * box_width + child.minimum_height)
-				set_minimum_width (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width)
+				internal_set_minimum_height (box_text_height + 2 * box_width + child.minimum_height)
+				internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10 + child.minimum_width)
 			else
-				set_minimum_height (box_text_height + 2 * box_width)
-				set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+				internal_set_minimum_height (box_text_height + 2 * box_width)
+				internal_set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
 			end
 			dc.release
 		end

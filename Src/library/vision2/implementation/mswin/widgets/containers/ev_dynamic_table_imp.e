@@ -18,8 +18,8 @@ inherit
 			remove_child,
 			child_added,
 			set_child_position,
-			child_minwidth_changed,
-			child_minheight_changed
+			compute_minimum_width,
+			compute_minimum_height
 		end
 
 creation
@@ -64,12 +64,7 @@ feature -- Status settings
 			table_child.set_attachment (top + 1, left + 1, bottom + 1, right + 1)
 
 			-- If it was already_displayed, we need to propagate the change
-			update_display
---			if already_displayed then
---				child_minwidth_changed (child_imp.minimum_width, child_imp)
---				child_minheight_changed (child_imp.minimum_height, child_imp)
---				parent_ask_resize (child_cell.width, child_cell.height)
---			end
+			notify_change (1 + 2)
 		end
 
 feature -- Element change
@@ -119,54 +114,56 @@ feature -- Assertion
 
 feature {NONE} -- Implementation
 
-	child_minheight_changed (min: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_height because the child did.
-			-- The second loop is not necessary.
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
+			-- No need for the second loop.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			tchild: EV_TABLE_CHILD_IMP
+			cur: CURSOR
 		do
-			if already_displayed then
-				list := ev_children
-				clear_line (rows_value)
-				-- A first loop for the children that take only one cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.bottom_attachment - tchild.top_attachment = 1) then
-						first_body_loop (rows_value, tchild.widget.minimum_height, tchild.bottom_attachment)
-					end
-					list.forth
+			list := ev_children
+			clear_line (columns_value)
+			-- A first loop for the children that take only one cell
+			from
+				cur := list.cursor
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.right_attachment - tchild.left_attachment = 1) then
+					first_body_loop (columns_value, tchild.widget.minimum_width, tchild.right_attachment)	
 				end
+				list.forth
 			end
+			list.go_to (cur)
 		end
-	
-	child_minwidth_changed (min: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_width because the child did.
-			-- The second loop is not necessary.
+
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+			-- No need for the second loop.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			tchild: EV_TABLE_CHILD_IMP
+			cur: CURSOR
 		do
-			if already_displayed then
-				list := ev_children
-				clear_line (columns_value)
-				-- A first loop for the children that take only one cell
-				from
-					list.start
-				until
-					list.after
-				loop
-					tchild := list.item
-					if (tchild.right_attachment - tchild.left_attachment = 1) then
-						first_body_loop (columns_value, tchild.widget.minimum_width, tchild.right_attachment)	
-					end
-					list.forth
+			list := ev_children
+			clear_line (rows_value)
+			-- A first loop for the children that take only one cell
+			from
+				cur := list.cursor
+				list.start
+			until
+				list.after
+			loop
+				tchild := list.item
+				if (tchild.bottom_attachment - tchild.top_attachment = 1) then
+					first_body_loop (rows_value, tchild.widget.minimum_height, tchild.bottom_attachment)
 				end
-			end	
+				list.forth
+			end
+			list.go_to (cur)
 		end
 
 end -- class EV_DYNAMIC_TABLE_IMP

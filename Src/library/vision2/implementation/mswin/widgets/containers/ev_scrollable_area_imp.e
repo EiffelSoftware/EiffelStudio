@@ -12,11 +12,6 @@ inherit
 	EV_SCROLLABLE_AREA_I
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
-		redefine
-			child_minwidth_changed,
-			child_minheight_changed,
-			update_display
-		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		redefine
@@ -77,13 +72,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	update_display is
-			-- Do nothing for a non manager container.
-		do
-		end
-
 feature {NONE} -- Implementation for automatic size compute.
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
@@ -110,24 +98,6 @@ feature {NONE} -- Implementation for automatic size compute.
 					change_vertical_range (child.height)
 				end
 			end
-		end
-
-	child_minwidth_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
-		do
-		end
-
-	child_minheight_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the minimum width of the container because
-			-- the child changed his own minimum width.
-			-- By default, the minimum width of a container is
-			-- the one of its child, to change this, just use
-			-- set_minimum_width
-		do
 		end
 
 feature {NONE} -- WEL Implementation

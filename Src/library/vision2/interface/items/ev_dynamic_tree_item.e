@@ -13,26 +13,21 @@ class
 
 inherit
 	
-	EV_TREE_NODE_LIST
-		rename
-			changeable_comparison_criterion as old_changeable_comparison_criterion
+	EV_TREE_NODE
 		export
-			{NONE} all
+			{NONE} sequential_occurrences, fill, is_inserted, dl_force, readable,
+			writable, first, index_set, infix "@", isfirst, islast, last, put, valid_cursor,
+			valid_index, extendible, prunable, prune_all, before, is_equal, append, back, count,
+			cursor, extend, force, full, go_i_th, go_to, i_th, index_of, merge_left, merge_right,
+			move, prune, put_front, put_i_th, put_left, put_right, remove, remove_left,
+			remove_right, replace, retrieve_item_by_data, retrieve_items_by_data, same, swap,
+			wipe_out, item_by_data, find_item_recursively_by_data, has_recursively,
+			recursive_do_all, retrieve_item_recursively_by_data, retrieve_items_recursively_by_data
 		undefine
-			index_of, is_equal, search, occurrences, has, is_in_default_state,
-			item, index, after, is_empty, start, finish, forth
+			forth, finish, start, is_empty, index, after, item
 		redefine
 			implementation,
 			parent_of_items_is_current
-		end
-	
-	EV_TREE_NODE
-		undefine
-			off
-		redefine
-			implementation
-		select
-			changeable_comparison_criterion, parent
 		end
 		
 creation
@@ -100,6 +95,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 			not_Void: a_subtree_function /= Void
+			valid_operands: a_subtree_function.valid_operands ([])
 		do
 			if subtree_function /= Void then
 				remove_subtree_function
@@ -281,9 +277,7 @@ feature -- Contract support
 	is_expandable: BOOLEAN is
 			-- Is `Current' able to expand or collapse?
 		do
-			if subtree_function /= Void then
-				Result := True	
-			end
+			Result := parent_tree /= Void and subtree_function /= Void
 		end
 		
 feature {NONE} -- Contract support

@@ -247,19 +247,18 @@ feature -- Element change
 						other_first_element /= Void;
 						other_last_element /= Void
 					end;
-				if empty or else isfirst then
-					if empty then
-						last_element := other_last_element;
-					else
-						other_last_element.put_right (first_element);
-					end;
+				if empty then
+					last_element := other_last_element;
 					first_element := other_first_element;
 					active := first_element;
+				elseif isfirst then
+					other_last_element.put_right (first_element);
+					first_element := other_first_element;
 				elseif after then
 					other_first_element.put_left (last_element);
 					last_element := other_last_element;
 					active := last_element;
-				elseif not before then
+				else
 					other_first_element.put_left (active.left);
 					active.put_left (other_last_element);
 				end;

@@ -544,7 +544,6 @@ feature
 			-- Set new position of widget
 		require
 			valid_parent: parent /= Void;
-			parent_is_bulletin: parent.is_bulletin
 		local
 			eb_bulletin: SCALABLE;
 			not_managed: BOOLEAN
@@ -621,6 +620,11 @@ feature
 			if widget.realized and then widget.shown then
 				widget.hide
 			end
+		end;
+
+	shown: BOOLEAN is
+		do
+			Result := widget.shown
 		end;
 
 	show is
@@ -912,11 +916,11 @@ feature
 		do
 			previous_bg_color := widget.background_color;
 			if equal (previous_bg_color.name, 
-				Context_const.selected_color.name) 
+				Resources.selected_color.name) 
 			then
-				widget.set_background_color (Context_const.second_selected_color);
+				widget.set_background_color (Resources.second_selected_color);
 			else	
-				widget.set_background_color (Context_const.selected_color);
+				widget.set_background_color (Resources.selected_color);
 			end
 		ensure
 			valid_previouse_color: previous_bg_color /= Void
@@ -1355,7 +1359,7 @@ feature {CONTEXT}
 				Result.append (fg_color_name);
 				Result.append ("%");%N%T%T%T");
 				Result.append (context_name);
-				Result.append ("set_foreground (a_color);%N");
+				Result.append ("set_foreground_color (a_color);%N");
 			end;
 			if not Result.empty then
 				Result.prepend (comment_text);
@@ -1591,7 +1595,8 @@ feature
 
 	retrieve_oui_widget is
 		local
-			parent_widget: COMPOSITE
+			parent_widget: COMPOSITE;
+			temp_w: TEMP_WIND_C
 		do
 			if parent /= Void then
 				parent_widget ?= parent.widget;
@@ -1607,7 +1612,13 @@ feature
 				child.retrieve_oui_widget;
 				child_forth
 			end;
-			if not is_window then
+			if is_window then
+				widget.realize;
+				temp_w ?= Current;
+				if temp_w /= Void then
+					show
+				end
+			else
 				widget.manage;
 			end;
 			retrieved_node := Void;

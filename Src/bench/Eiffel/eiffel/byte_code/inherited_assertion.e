@@ -211,6 +211,12 @@ feature -- Inherited precondition
 				precondition_start;
 				precondition_context_init;	
 				precondition_list.item.make_byte_code (ba);
+				from 
+				until 
+					ba.forward_marks4.count = 0 
+				loop 
+					ba.write_forward4;
+				end;
 				ba.append (Bc_goto_body);
 				ba.mark_forward;
 				context.set_is_prec_first_block (False);
@@ -220,6 +226,12 @@ feature -- Inherited precondition
 			loop
 				precondition_context_init;	
 				precondition_list.item.make_byte_code (ba);
+				from 
+				until 
+					ba.forward_marks4.count = 0 
+				loop 
+					ba.write_forward4;
+				end;
 				ba.append (Bc_goto_body);
 				ba.mark_forward;
 				precondition_forth

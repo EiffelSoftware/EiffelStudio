@@ -21,7 +21,7 @@
 						<list ordered="true">
 							<item>Start Visual Studio .NET</item>
 							<item>Choose Open Project from the File menu.</item>
-							<item>Navigate to <italic><Eiffel_ENViSioN!_installation_path>\compiler\examples\(.net version)\calculator\</italic> and select <italic>calculator.eifp</italic></item>
+							<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\calculator\</italic> and select <italic>calculator.eifp</italic></item>
 							<item>Clicking open loads the selected project</item>
 						</list>
 					</output>
@@ -32,7 +32,7 @@
 							<item>Browse to <italic>Eiffel54\examples\base\calculator\</italic></item>
 							<item>Choose the Ace file</item>
 							<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
-							<item>Click bold>OK</bold>.</item>
+							<item>Click <bold>OK</bold>.</item>
 						</list>
 					</output>
 				<paragraph>

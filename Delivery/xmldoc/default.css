@@ -165,30 +165,6 @@ pre, code, .code
 	width: 90%;
 }
 
-code
-{
-	font: courier new, courier, mono;
-	margin: 20px 25px 20px 35px;	
-	padding-left: .5em;
-	padding-right: .5em;
-	padding-top: .5em;
-	padding-bottom: .5em;
-	background: #efeedf;
-	width: 90%;
-}
-
-.code 
-{
-	font: courier new, courier, mono;
-	margin: 20px 25px 20px 35px;	
-	padding-left: .5em;
-	padding-right: .5em;
-	padding-top: .5em;
-	padding-bottom: .5em;
-	background: #efeedf;
-	width: 90%;
-}
-
 span, div 
 {
 	padding-bottom: 0.4mm; 

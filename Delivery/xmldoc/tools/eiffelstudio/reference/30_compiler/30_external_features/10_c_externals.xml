@@ -79,7 +79,7 @@ extern size_t one_param_return(FILE *f);</code_block>
 		<keyword>alias</keyword>
 			"one_param_return"
 		<keyword>end</keyword></code_block>
-		<anchors>macros</anchor>
+		<anchor>macros</anchor>
 		<heading>
 			<size>2</size>Macros
 		</heading>

@@ -372,7 +372,49 @@ feature -- Access
 		ensure
 			new_count_correct: a_string.count = old a_string.count + count
 		end
+		
+	show_element (element: XM_ELEMENT; window: EV_TITLED_WINDOW) is
+			-- Show contents of `element' in a dialog displayed modally to `window'.
+		require
+			element_not_void: element /= Void
+			window_not_void: window /= Void
+			window_displayed: window.is_displayed
+		local
+			dialog: EV_DIALOG
+			vertical_box: EV_VERTICAL_BOX
+			text: EV_TEXT
+			cancel_button: EV_BUTTON
+			namespace: XM_NAMESPACE
+			document: XM_DOCUMENT
+			formater: XM_FORMATTER
+			last_string: KL_STRING_OUTPUT_STREAM
+			string: STRING
+		do		
+			create namespace.make_default
+			create document.make
+			document.set_root_element (element)
+			create last_string.make ("")
+			create formater.make
+			formater.set_output (last_string)
+			formater.process_document (document)
 
+			create dialog
+			dialog.set_minimum_size (400, 600)
+			create vertical_box
+			dialog.extend (vertical_box)
+			create text
+			vertical_box.extend (text)
+			create cancel_button.make_with_text ("Cancel")
+			vertical_box.extend (cancel_button)
+			vertical_box.disable_item_expand (cancel_button)
+			cancel_button.select_actions.extend (agent dialog.destroy)
+			dialog.set_default_cancel_button (cancel_button)
+			string := last_string.string
+			process_xml_string (string)
+			text.set_text (string)
+			dialog.show_modal_to_window (window)
+		end
+		
 feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN is

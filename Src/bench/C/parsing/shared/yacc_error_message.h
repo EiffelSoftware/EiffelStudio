@@ -191,7 +191,7 @@ char* yacc_error_message_list[]=
 /* 185 */ "",
 /* 186 */ "",
 /* 187 */ "",
-	/* 188 */ "The number of generic parameters is limited to 8",
+/* 188 */ "The number of generic parameters is limited to 8",
 /* 189 */ "",
 /* 190 */ "",
 /* 191 */ "",

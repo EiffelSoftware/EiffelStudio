@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 		do
 			{EV_MENU_ITEM} Precursor
 			{EV_MENU_ITEM_LIST} Precursor
-			create item_select_actions
 		end
 
 feature -- Standard operations
@@ -49,32 +48,21 @@ feature -- Standard operations
 	show is
 			-- Pop up on the current pointer position.
 		do
-			check
-				to_be_implemented: False
-			end
+			implementation.show
 		end
 
 	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		do
-			check
-				to_be_implemented: False
-			end
+			implementation.show_at (a_widget, a_x, a_y)
 		end
-
-feature -- Event handling
-
-	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when a menu item is selected.
 
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_I	
 			-- Responsible for interaction with the native graphics toolkit.
 
-invariant
-	item_select_actions_not_void: is_useable implies item_select_actions /= Void
 end -- class EV_MENU
 
 --!-----------------------------------------------------------------------------
@@ -98,6 +86,10 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/22 21:34:12  brendel
+--| Moved item_select_actions up to menu item list, because it also
+--| applies to menu bars.
+--|
 --| Revision 1.24  2000/03/20 20:25:15  oconnor
 --| added item_select_actions
 --|

@@ -43,7 +43,6 @@ class STRING inherit
 		end;
 
 creation
-
 	make
 
 feature {NONE} -- Initialization

@@ -94,6 +94,27 @@ feature -- Purge of compilation files
 			server_controler.remove_useless_files
 		end
 
+	prepare_before_saving (normal_compilation: BOOLEAN) is
+		do
+				-- Purges server files only if it is not a precompilation.
+			if normal_compilation then
+				purge
+			end
+
+			feat_tbl_server.cache.wipe_out
+			depend_server.cache.wipe_out
+			rep_depend_server.cache.wipe_out
+			class_info_server.cache.wipe_out
+			inv_byte_server.cache.wipe_out
+			byte_server.cache.wipe_out
+			ast_server.cache.wipe_out
+			m_feat_tbl_server.cache.wipe_out
+			m_feature_server.cache.wipe_out
+			m_rout_id_server.cache.wipe_out
+			m_desc_server.cache.wipe_out
+			rep_server.cache.wipe_out
+		end
+
 feature -- Access
 
 	classes: CLASS_C_SERVER;

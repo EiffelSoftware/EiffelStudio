@@ -23,7 +23,6 @@ inherit
 
 	EV_TEXTABLE_IMP
 		rename
-			--FIXME why doesn't EV_SIMPLE_ITEM inherit EV_TEXTABLE??
 			interface as textable_interface
 		end
 
@@ -59,6 +58,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/22 21:36:02  king
+--| Removed corrected fixme
+--|
 --| Revision 1.7  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

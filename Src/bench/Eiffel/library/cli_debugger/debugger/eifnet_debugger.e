@@ -600,6 +600,23 @@ feature -- Easy access
 		end
 		
 feature -- Function Evaluation
+
+	icd_function_by_feature (ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugClass for `a_class_c'.`a_feat'
+		local
+			l_feat_i : FEATURE_I
+			l_feat_tok: INTEGER
+			l_class_c: CLASS_C			
+		do
+			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
+			
+			if l_feat_tok = 0 then
+				l_feat_tok := feature_token (ct, a_feat.external_name)
+			end
+			if l_feat_tok > 0 then
+				Result := icd_function_by_token (ct, l_feat_tok)				
+			end
+		end	
 		
 	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_f_name'

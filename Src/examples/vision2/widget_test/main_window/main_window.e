@@ -31,6 +31,10 @@ feature {NONE} -- Initialization
 			event_selector: EVENT_SELECTOR
 			documentation_display: DOCUMENTATION_DISPLAY
 		do
+				-- The first type change agent that we register locks the update, so
+				-- that the user does not see the changes taking place.
+			register_type_change_agent (agent lock_current)
+			
 				-- Create the editor and parent.
 			create editor
 			object_editor.extend (editor)
@@ -46,11 +50,22 @@ feature {NONE} -- Initialization
 				-- Create the documentation display
 			create documentation_display.make_with_text (flat_short_display)
 			register_type_change_agent (agent documentation_display.update_for_type_change)
+
 			
-			create event_selector.make_with_list (event_selector_list, event_output)
+			create event_selector.make_with_list_and_handler (event_selector_list, event_handler)
 			register_type_change_agent (agent event_selector.rebuild)
 			
+				-- Register a change agent which parents the new test widget.
 			register_type_change_agent (agent parent_test_widget)
+			
+				-- Register a change agent which removes the start up screen.
+			register_type_change_agent (agent remove_first_screen)
+			
+				-- The last type change agent we register unlocks the current
+				-- window, so that we can see any changes to the interface.
+			register_type_change_agent (agent unlock_current)
+			
+			setup_initial_screen
 		end
 
 feature {NONE} -- Implementation
@@ -81,6 +96,85 @@ feature {NONE} -- Implementation
 			scrollable_widget_area.set_item_width (310)
 			
 			widget_holder.extend (a_widget)
+				-- Now clear recorded events, as a widget has changed.
+			clear_events
+		end
+		
+	select_all_events is
+			-- Select all events in `event_selector_list'.
+		do
+			from
+				event_selector_list.start
+			until
+				event_selector_list.off
+			loop
+				event_selector_list.check_item (event_selector_list.item)
+				event_selector_list.forth
+			end
+		end
+		
+	clear_all_events is
+			-- Clear all events in `event_selector_list'.
+		do
+			from
+				event_selector_list.start
+			until
+				event_selector_list.off
+			loop
+				event_selector_list.uncheck_item (event_selector_list.item)
+				event_selector_list.forth
+			end
+		end
+		
+	clear_events is
+			-- Reset `event_selector_list'.
+		do
+			event_handler.reset	
+		end
+		
+	event_handler: ORDERED_STRING_HANDLER is
+			-- Once access to an ORDERED_STRING_HANDLER.
+		once
+			create Result.make_with_textable (event_output)
+		end
+		
+	setup_initial_screen is
+			-- Display initial start up scren which will be displayed until a
+			-- widget type is selected.
+		local
+			label: EV_LABEL
+		do
+			main_split_area.prune (main_box)
+			create label.make_with_text ("Please select a widget to begin exploration")
+			main_split_area.extend (label)
+			label.set_background_color ((create {EV_STOCK_COLORS}).white)
+		end
+		
+	remove_first_screen (v: EV_WIDGET) is
+			-- Remove initial start up screen.
+			-- Note that this is called every time the widget type
+			-- changes, but will do nothing after the first time.
+		do
+			if not main_split_area.has (main_box) then
+				main_split_area.go_to_second
+				main_split_area.replace (main_box)
+			end
+		ensure
+			main_split_area.has (main_box)
+		end
+		
+	lock_current (v: EV_WIDGET) is
+			-- Calls `lock_update' but with a signature that allows
+			-- it to be registered as a type change agent.
+		do
+			lock_update
+		end
+		
+	unlock_current (v: EV_WIDGET) is
+			-- Calls `unlock_update' but with a signature that allows
+			-- it to be registered as a type change agent.
+		do
+			unlock_update
 		end
 
 end -- class MAIN_WINDOW

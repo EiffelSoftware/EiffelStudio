@@ -105,6 +105,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	list: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
+			-- List of all the items
+		do
+			Result := implementation
+		end
+
 	cursor: CURSOR is
 			-- Current cursor position
 		do

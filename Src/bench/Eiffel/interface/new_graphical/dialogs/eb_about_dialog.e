@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			create Result.make (50)
 			if license.is_licensed then
 				if license.username /= Void then
-					Result := l_Registered + license.username + "%R%N%R%N"
+					Result := l_Registered + license.username + "%N%N"
 				end
 			else
 				Result := l_Unregistered_version

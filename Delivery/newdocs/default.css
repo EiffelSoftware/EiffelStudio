@@ -27,7 +27,7 @@ LI {
 	MARGIN-BOTTOM=.5em;
 }
 
-UL P.LABEL, OL P.LABEL {
+UL {
 	MARGIN-TOP=.5em;
 }
 
@@ -56,19 +56,6 @@ PRE, CODE, .code {
 	PADDING-BOTTOM: .5em;
 	BACKGROUND=#EFEEDF;
 	WIDTH: 450px;
-}
-
-PRE B, CODE B {
-	LETTER-SPACING: .1em; /* opens kerning on bold in Syntax/Code */
-}
-
-PRE.SYNTAX {
-	PADDING: 4px 8px;
-	CURSOR: text;
-	MARGIN-TOP: 1em;
-	MARGIN-BOTTOM: 1em; 
-		BORDER-WIDTH: 1px;
-	BORDER-STYLE: solid;
 }
 
 TD, SPAN, DIV {
@@ -236,4 +223,10 @@ A:hover {
 	BORDER-STYLE: solid;
 	BORDER-COLOR: #999999;
 	PADDING: 4px 8px;
+}
+
+.figuretitle {
+	MARGIN_TOP=.5em;
+	MARGIN_BOTTOM=3em;
+	FONT-WEIGHT=bold;
 }

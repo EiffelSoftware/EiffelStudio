@@ -73,7 +73,7 @@ rt_shared long nomark(char *);
 rt_private long chknomark(char *, struct htable *, long);
 #endif
 
-rt_shared void traversal(char *object, int accounting)
+rt_shared void traversal(char *object, int p_accounting)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
@@ -105,7 +105,7 @@ rt_shared void traversal(char *object, int accounting)
 		 * operation.
 		 */
 
-		if (accounting & TR_MAP) {
+		if (p_accounting & TR_MAP) {
 			epush(&loc_stack, (char *) &object);		/* Protection against GC */
 			if (flags & EO_SPEC)
 				new = spclone(object);
@@ -128,7 +128,7 @@ rt_shared void traversal(char *object, int accounting)
 		obj_nb++; 					/* Count the number of objects traversed */
 	}
 
-	if (accounting & TR_ACCOUNT)	/* Possible accounting */
+	if (p_accounting & TR_ACCOUNT)	/* Possible accounting */
 		account[flags & EO_TYPE] = (char) 1;	/* This type is present */
 
 	zone->ov_flags = flags;			/* Mark the object */
@@ -155,7 +155,7 @@ rt_shared void traversal(char *object, int accounting)
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
 				if (0 != reference)		/* Non void reference */
-					traversal(reference, accounting);
+					traversal(reference, p_accounting);
 			}
 		else {
 			/* Special object filled with expanded objects which are
@@ -164,7 +164,7 @@ rt_shared void traversal(char *object, int accounting)
 			int offset = OVERHEAD;
 			elem_size = *(long *) (object_ref + sizeof(long));
 			for (i = 0; i < count; i++, offset += elem_size)
-				traversal(object + offset, accounting);
+				traversal(object + offset, p_accounting);
 		}
     } else {
 		/* Normal object */
@@ -175,7 +175,7 @@ rt_shared void traversal(char *object, int accounting)
 		for (i = 0; i < count; i++) {
 			reference = *((char **) object + i);
 			if ((char *) 0 != reference)
-				traversal(reference, accounting);
+				traversal(reference, p_accounting);
 		}
 	}
 

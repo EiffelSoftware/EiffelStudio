@@ -117,10 +117,7 @@ feature {NONE} -- Execution
 				if classi /= Void then
 					display_choice (classi.class_i)
 				elseif classc /= Void then
-					display_choice (classc.e_class.lace_class)
-				else
-					!! output_list.make
-					choice.popup (Current, output_list, Interface_names.t_Select_class_version)
+ 					display_choice (classc.e_class.lace_class)
 				end
 			end
 		end

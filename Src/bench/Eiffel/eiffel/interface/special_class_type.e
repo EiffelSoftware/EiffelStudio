@@ -123,21 +123,19 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					buffer.putstring ("%T*(Current + arg2 * sizeof(char)) = arg1;");
+					buffer.putstring ("%T*((EIF_CHARACTER *) Current + arg2) = arg1;");
 				when C_long then
-					buffer.putstring ("%T*(long *)(Current + arg2 * sizeof(long)) = arg1;");
+					buffer.putstring ("%T*((EIF_INTEGER *) Current + arg2) = arg1;");
 				when C_float then
-					buffer.putstring ("%T*(float *)(Current + arg2 * sizeof(float)) = arg1;");
+					buffer.putstring ("%T*((EIF_REAL *) Current + arg2) = arg1;");
 				when C_double then
-					buffer.putstring ("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
-				when C_ref then
-					--! Could be bit or ref
-					buffer.putstring ("%TRTAS(arg1, Current);%N");
-					buffer.putstring ("%T*(char **)(Current + arg2 * "); 
-					type_c.generate_size (buffer);
-					buffer.putstring (") = arg1;");
+					buffer.putstring ("%T*((EIF_DOUBLE *) Current + arg2) = arg1;");
 				when C_pointer then
-					buffer.putstring ("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
+					buffer.putstring ("%T*((EIF_POINTER *) Current + arg2) = arg1;");
+				when C_ref then
+						--! Could be bit or ref
+					buffer.putstring ("%TRTAS(arg1, Current);%N");
+					buffer.putstring ("%T*((EIF_REFERENCE *) Current + arg2) = arg1;");
 				end;
 			end;
 
@@ -227,20 +225,18 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					buffer.putstring ("%Treturn *(Current + arg1 * sizeof(char));");
+					buffer.putstring ("%Treturn *((EIF_CHARACTER *) Current + arg1);");
 				when C_long then
-					buffer.putstring ("%Treturn *(long *)(Current + arg1 * sizeof(long));");
+					buffer.putstring ("%Treturn *((EIF_INTEGER *) Current + arg1);");
 				when C_float then
-					buffer.putstring ("%Treturn *(float *)(Current + arg1 * sizeof(float));");
+					buffer.putstring ("%Treturn *((EIF_REAL *) Current + arg1);");
 				when C_double then
-					buffer.putstring ("%Treturn *(double *)(Current + arg1 * sizeof(double));");
-				when C_ref then
-					--! Could be bit or ref
-					buffer.putstring ("%Treturn *(char **)(Current + arg1 * ");
-					type_c.generate_size (buffer);
-					buffer.putstring (");");
+					buffer.putstring ("%Treturn *((EIF_DOUBLE *) Current + arg1);");
 				when C_pointer then
-					buffer.putstring ("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
+					buffer.putstring ("%Treturn *((EIF_POINTER *) Current + arg1);");
+				when C_ref then
+						--! Could be bit or ref
+					buffer.putstring ("%Treturn *((EIF_REFERENCE *) Current + arg1);");
 				end;
 			end;
 

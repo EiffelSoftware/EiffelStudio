@@ -7,12 +7,7 @@ inherit
 			is_valid, synchronized_stone, is_equal
 		end;
 
-	SHARED_DEBUG
-		redefine
-			is_equal
-		end;
-
-	OBJECT_ADDR
+	SHARED_APPLICATION_EXECUTION
 		redefine
 			is_equal
 		end;
@@ -82,9 +77,9 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result := Run_info.is_running and then
-					Run_info.is_stopped and then
-					is_hector_addr (object_address)
+			Result := Application.is_running and then
+					Application.is_stopped and then
+					Application.is_valid_object_address (object_address)
 		end;
 
 	synchronized_stone: OBJECT_STONE is

@@ -109,11 +109,11 @@ feature -- IL code generation
 			-- Does call originate from a reference type?
 		require
 			a_type_not_void: a_type /= Void
-			a_type_has_associated_class: a_type.associated_class_type.associated_class /= Void
+			a_type_has_associated_class: a_type.base_class /= Void
 		local
 			class_c: CLASS_C
 		do
-			class_c := a_type.associated_class_type.associated_class
+			class_c := a_type.base_class
 			Result := written_in /= class_c.class_id
 		end
 
@@ -327,7 +327,7 @@ end
 				gen ?= context.current_type
 				if gen /= Void and then instant_context_type.is_true_expanded then
 					cl_type ?= instant_context_type
-					associated_class := cl_type.associated_class_type.associated_class
+					associated_class := cl_type.base_class
 					feat_tbl := associated_class.feature_table
 					Result := feat_tbl.item_id (feature_name_id).feature_id
 				end

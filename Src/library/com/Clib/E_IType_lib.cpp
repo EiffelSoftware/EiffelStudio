@@ -118,6 +118,7 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
 // complete help file name and path, and
 // context identifier for library help topic in help file
 {
+	EIF_GET_CONTEXT
 	EIF_OBJECT Result = NULL;
 	EIF_OBJECT name = NULL;
 	EIF_OBJECT doc_string = NULL;

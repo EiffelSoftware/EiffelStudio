@@ -15,6 +15,7 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 
 // Transform BSTR into Eiffel STRING object
 {
+	EIF_GET_CONTEXT
 	EIF_OBJ name;
 	EIF_TYPE_ID eif_string_id;
 	EIF_PROC string_make;

@@ -418,9 +418,10 @@ feature {NONE} -- Implementation
 							check
 								name_exists: element_info /= Void
 							end
-							if info.parent /= Void then
-								info.parent.set_actual_child_name (element_info.data)
-							end
+								-- We must assign an empty string if we are a window,
+								-- as the name is not required, as any settings are
+								-- applied to the window without requiring the window to
+								-- be named. Look at a generated code example.
 							if current_type.is_equal (Ev_titled_window_string) then
 								info.set_name ("")
 							else

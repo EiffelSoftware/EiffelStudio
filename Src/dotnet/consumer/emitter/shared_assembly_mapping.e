@@ -1,5 +1,7 @@
 indexing
 	description: "Assembly ids mapping"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SHARED_ASSEMBLY_MAPPING

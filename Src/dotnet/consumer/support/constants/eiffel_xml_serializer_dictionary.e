@@ -1,5 +1,7 @@
 indexing
 	description: "String constants used for Eiffel XML serialization"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EIFFEL_XML_SERIALIZER_DICTIONARY

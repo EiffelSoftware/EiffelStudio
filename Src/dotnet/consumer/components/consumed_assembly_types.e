@@ -1,5 +1,7 @@
 indexing
 	description: "Table of consumed types for a given assembly"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_ASSEMBLY_TYPES

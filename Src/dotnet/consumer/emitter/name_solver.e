@@ -1,5 +1,7 @@
 indexing
 	description: "Generate unique names"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	NAME_SOLVER

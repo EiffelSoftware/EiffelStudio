@@ -6,6 +6,8 @@ indexing
 					Does not deserialize attributes of type INTEGER_64,
 					INTEGER_16, INTEGER_8 and BIT.
 				]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EIFFEL_XML_DESERIALIZER

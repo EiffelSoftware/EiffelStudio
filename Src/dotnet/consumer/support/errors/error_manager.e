@@ -1,5 +1,7 @@
 indexing
 	description: "Associate error code with error messages"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ERROR_MANAGER

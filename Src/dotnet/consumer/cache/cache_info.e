@@ -1,5 +1,7 @@
 indexing
 	description: "EAC information - serialized"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_INFO

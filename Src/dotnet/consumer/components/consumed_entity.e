@@ -1,5 +1,7 @@
 indexing
 	description: ".NET entity (member or constructor) as seen by Eiffel"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_ENTITY

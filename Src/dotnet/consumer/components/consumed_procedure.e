@@ -1,5 +1,7 @@
 indexing
 	description: ".NET method as seen by Eiffel"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_PROCEDURE

@@ -60,7 +60,12 @@ feature -- Status setting
 			-- Must be in a multi column list.
 		require
 			has_parent: parent /= Void
-		deferred
+		do
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
 		end
 
 feature -- Basic operations
@@ -97,6 +102,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/23 19:20:05  king
+--| Made toggle platform independent
+--|
 --| Revision 1.33  2000/03/23 18:17:35  brendel
 --| Revised in compliance with new interface.
 --|

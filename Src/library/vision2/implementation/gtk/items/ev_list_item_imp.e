@@ -11,44 +11,72 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_ITEM_IMP
+		rename
+			set_parent as widget_set_parent,
+			parent_imp as widget_parent_imp
 		redefine
+			make,
+			make_with_text,
 			create_text_label
 		end
 
 creation
-	make, make_with_text
+	make,
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_LIST) is
+	make is
 			-- Create an item with an empty name.
 		do
 			widget := gtk_list_item_new
-			show		
-			initialize
+			gtk_object_ref (widget)		
+			box := gtk_hbox_new (False, 0)
+			gtk_widget_show (box)
+			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 	
-	make_with_text (par: EV_LIST; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create an item with `txt' as label.
 		local
 			a: ANY
 		do
-			make (par)
+			make
 			create_text_label (txt)
-
---			a ?= txt.to_c
---			widget := gtk_list_item_new_with_label ($a)
---			initialize
 		end
 
-	initialize is
-			-- Common initialization for buttons
+	make_with_pixmap (pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent and `pix'
+			-- as pixmap.
 		do
-			box := gtk_hbox_new (False, 0)
-			gtk_widget_show (box)
-			gtk_container_add (GTK_CONTAINER (widget), box)
-		end			
+			make
+			-- Not implemented
+		end
 
+	make_with_all (txt: STRING; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `pix' as pixmap.
+		do
+			make_with_text (txt)
+			-- Not implemented
+		end
+
+feature -- Acces
+
+	parent: EV_LIST is
+			-- Parent of the current item.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
+		end
+
+	parent_imp: EV_LIST_IMP
+			-- Parent of the Current item
 
 feature -- Status report
 
@@ -112,6 +140,30 @@ feature -- Status setting
 			gtk_box_pack_start (GTK_BOX (box), label_widget, False, True, 0)
 		end			
 
+feature -- element change
+
+	set_parent (par: EV_LIST) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		local
+			par_imp: EV_LIST_IMP
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				show
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				parent_imp ?= par_imp
+				par_imp.add_item (Current)
+				gtk_object_unref (widget)
+			end
+		end
 
 feature -- Event : command association
 

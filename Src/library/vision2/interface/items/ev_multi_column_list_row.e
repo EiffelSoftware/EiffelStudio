@@ -12,16 +12,11 @@ class
 	EV_MULTI_COLUMN_LIST_ROW
 
 inherit
+
 	EV_COMPOSED_ITEM
 		rename
 			count as columns,
 			set_count as set_columns
-		redefine
-			implementation,
-			create_action_sequences
-		end
-
-	EV_PICK_AND_DROPABLE
 		redefine
 			implementation,
 			create_action_sequences
@@ -91,7 +86,6 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 		do
 			{EV_COMPOSED_ITEM} Precursor
-			{EV_PICK_AND_DROPABLE} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -124,6 +118,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/10 01:28:03  king
+--| Removed inheritence from PND
+--|
 --| Revision 1.29  2000/03/09 01:19:27  king
 --| Now inheriting from PND
 --|

@@ -4,6 +4,16 @@ cvs co Src/build2
 REM Check out bitmaps from Build delivery
 cvs co Delivery/build/bitmaps
 
+REM Check out files from vision2_tour
+cvs co Delivery/vision2_tour
+
+REM Copy template files
+XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
+
+REM Copy png files for tests
+XCOPY /Y /E /I Delivery\png .\png
+
+
 REM Copy constants and eiffel environment to interface.
 XCOPY /Y Src\Build2\constants\gb_constants.e .\interface
 XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
@@ -14,6 +24,11 @@ XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
 
 REM Copy icons for different widget types across. The /E option moves the whole directory structure.
 XCOPY /Y /E /I Delivery\build\bitmaps .\bitmaps
+
+REM Copy icons for standard buttons.
+XCOPY /Y Delivery\vision2_tour\bitmaps\ico\documentation.ico .\bitmaps\ico\
+XCOPY /Y Delivery\vision2_tour\bitmaps\ico\testing.ico .\bitmaps\ico\
+XCOPY /Y Delivery\vision2_tour\bitmaps\ico\properties.ico .\bitmaps\ico\
 
 REM Copy modified vision2 interface files needed.
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface

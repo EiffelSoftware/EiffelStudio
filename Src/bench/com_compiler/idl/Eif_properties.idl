@@ -11,141 +11,171 @@ interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
 
 [
-  oleautomation,
+  dual, object,
   uuid (C212FAAB-FAA8-48b9-9D4E-2D0CA4EB3354),
   helpstring ("Eiffel Project Properties.")
 ]
-interface IEiffelProjectProperties: IUnknown
+interface IEiffelProjectProperties: IDispatch
 {
-  [helpstring ("Open Ace file.")]
+  [id (101), propget, helpstring ("Open Ace file.")]
   HRESULT open_ace_file ([in] BSTR ace_file_name);
   
-  [helpstring ("Application name.")]
+  [id (DISPID_VALUE), propget, helpstring ("Application name.")]
   HRESULT application_name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Root class name.")]
+  [id (DISPID_VALUE), propput, helpstring ("Application name.")]
+  HRESULT application_name ([in] BSTR a_name);
+
+  [id (103), propget, helpstring ("Root class name.")]
   HRESULT root_class_name ([out, retval] BSTR * return_value);
+
+  [id (103), propput, helpstring ("Root class name.")]
+  HRESULT root_class_name ([in] BSTR a_name);
   
-  [helpstring ("Creation procedure name.")]
-  HRESULT creation_procedure ([out, retval] BSTR * return_value);
+  [id (104), propget, helpstring ("Creation routine name.")]
+  HRESULT creation_routine ([out, retval] BSTR * return_value);
   
-  [helpstring ("Are preconditions checked?")]
-  HRESULT require_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (104), propput, helpstring ("Creation routine name.")]
+  HRESULT creation_routine ([in] BSTR a_routine);
   
-  [helpstring ("Are postconditions checked?")]
-  HRESULT ensure_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (105), propget, helpstring ("Should preconditions be evaluated?")]
+  HRESULT evaluate_require ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (105), propput, helpstring ("Should preconditions be evaluated?")]
+  HRESULT evaluate_require ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Are check statements checked?")]
-  HRESULT check_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (106), propget, helpstring ("Should postconditions be evaluated?")]
+  HRESULT evaluate_ensure ([out, retval] VARIANT_BOOL * return_value);
+    
+  [id (106), propput, helpstring ("Should postconditions be evaluated?")]
+  HRESULT evaluate_ensure ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Are loop assertions checked?")]
-  HRESULT loop_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (107), propget, helpstring ("Should check assertions be evaluated?")]
+  HRESULT evaluate_check ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Are invariants checked?")]
-  HRESULT invariant_checked ([out, retval] VARIANT_BOOL *return_value);
+  [id (107), propput, helpstring ("Should check assertions be evaluated?")]
+  HRESULT evaluate_check ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Define whether preconditions should be checked.")]
-  HRESULT check_require ([in] VARIANT_BOOL * new_value);
+  [id (108), propget, helpstring ("Should loop assertions be evaluated?")]
+  HRESULT evaluate_loop ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Define whether postconditions should be checked.")]
-  HRESULT check_ensure ([in] VARIANT_BOOL * new_value);
+  [id (108), propput, helpstring ("Should loop assertions be evaluated?")]
+  HRESULT evaluate_loop ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Define whether check statements should be checked.")]
-  HRESULT check_check ([in] VARIANT_BOOL * new_value);
+  [id (109), propget, helpstring ("Should class invariants be evaluated?")]
+  HRESULT evaluate_invariant ([out, retval] VARIANT_BOOL *return_value);
   
-  [helpstring ("Define whether loop assertions should be checked.")]
-  HRESULT check_loop ([in] VARIANT_BOOL * new_value);
+  [id (109), propput, helpstring ("Should class invariants be evaluated?")]
+  HRESULT evaluate_invariant ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Define whether invariants should be checked.")]
-  HRESULT check_invariant ([in] VARIANT_BOOL * new_value);
-  
-  [helpstring ("Program arguments.")]
+  [id (110), propget, helpstring ("Program arguments.")]
   HRESULT arguments ([out, retval] BSTR * return_value);
   
-  [helpstring ("Set new arguments.")]
-  HRESULT set_arguments ([in] BSTR new_arguments); 
+  [id (110), propput, helpstring ("Program arguments.")]
+  HRESULT arguments ([in] BSTR new_arguments); 
 
-  [helpstring ("Are line numbers generated?")]
-  HRESULT line_number_generation ([out, retval] VARIANT_BOOL *return_value);
+  [id (111), propget, helpstring ("Are line numbers generated?")]
+  HRESULT generate_line_numbers ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Define whether line numbers should be generated.")]
-  HRESULT generate_line_numbers ([in] VARIANT_BOOL * new_value);
+  [id (111), propput, helpstring ("Define whether line numbers should be generated.")]
+  HRESULT generate_line_numbers ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Clusters in current project (IEiffelClusterProperties).")]
+  [id (112), propget, helpstring ("List of clusters in current project (list of IEiffelClusterProperties*).")]
   HRESULT clusters ([out, retval] VARIANT * return_value);
 
-  [helpstring ("Add a cluster to the project.")]
+  [id (113), helpstring ("Add a cluster to the project.")]
   HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR cluster_path);
   
-  [helpstring ("Remove a cluster from the project.")]
+  [id (114), helpstring ("Remove a cluster from the project.")]
   HRESULT remove_cluster ([in] BSTR cluster_name);
 
-  [helpstring ("Cluster properties.")]
+  [id (115), helpstring ("Cluster properties.")]
   HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
   
-  [helpstring ("Imported assemblies.")]
+  [id (116), propget, helpstring ("Imported assemblies.")]
   HRESULT assemblies ([out, retval] SAFEARRAY (BSTR) * return_value);
   
-  [helpstring ("Add an assembly to the project.")]
+  [id (117), helpstring ("Add an assembly to the project.")]
   HRESULT add_assembly ([in] BSTR assembly_path);
   
-  [helpstring ("Remove an assembly from the project.")]
+  [id (118), helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_path);  
 };
 
 [
-  oleautomation,
+  dual, object,
   uuid (5D0B0013-F831-4ff6-A443-7B30882A5EB8),
   helpstring ("Eiffel Cluster Properties (for Ace file).")
 ]
-interface IEiffelClusterProperties: IUnknown
+interface IEiffelClusterProperties: IDispatch
 {
-  [helpstring ("Cluster name.")]
+  [id (DISPID_VALUE), propget, helpstring ("Cluster name.")]
   HRESULT name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Full path to cluster.")]
+  [id (DISPID_VALUE), propput, helpstring ("Cluster name.")]
+  HRESULT name ([in] BSTR a_name);
+
+  [id (200), propget, helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([out, retval] BSTR * path);
+
+  [id (200), propput, helpstring ("Full path to cluster.")]
+  HRESULT cluster_path ([in] BSTR path);
   
-  [helpstring ("Is override?.")]
-  HRESULT is_override ([out, retval] VARIANT_BOOL * return_value);
+  [id (201), propget, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  HRESULT override ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Is library?.")]
+  [id (201), propput, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  HRESULT override ([in] VARIANT_BOOL a_bool);
+  
+  [id (202), propget, helpstring ("Should this cluster be treated as library?")]
   HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Is all?.")]
-  HRESULT is_all ([out, retval] VARIANT_BOOL * return_value);
+  [id (202), propput, helpstring ("Should this cluster be treated as library?")]
+  HRESULT is_library ([in] VARIANT_BOOL a_bool);
+  
+  [id (203), propget, helpstring ("Should all subclusters be included?")]
+  HRESULT all ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (203), propput, helpstring ("Should all subclusters be included?")]
+  HRESULT all ([in] VARIANT_BOOL return_value);
+  
+  [id (204), propget, helpstring ("Should use system default?")]
+  HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Are preconditions checked?")]
-  HRESULT require_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (204), propput, helpstring ("Should use system default?")]
+  HRESULT use_system_default ([in] VARIANT_BOOL new_value);  
+
+  [id (205), propget, helpstring ("Should preconditions be evaluated by default?")]
+  HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
+
+  [id (205), propput, helpstring ("Should preconditions be evaluated by default?")]
+  HRESULT evaluate_require_by_default ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Are postconditions checked?")]
-  HRESULT ensure_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (206), propget, helpstring ("Should postconditions be evaluated by default?")]
+  HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
+    
+  [id (206), propput, helpstring ("Should postconditions be evaluated by default?")]
+  HRESULT evaluate_ensure_by_default ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Are check statements checked?")]
-  HRESULT check_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (207), propget, helpstring ("Should check assertions be evaluated by default?")]
+  HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Are loop assertions checked?")]
-  HRESULT loop_checked ([out, retval] VARIANT_BOOL * return_value);
+  [id (207), propput, helpstring ("Should check assertions be evaluated by default?")]
+  HRESULT evaluate_check_by_default ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Are invariants checked?")]
-  HRESULT invariant_checked ([out, retval] VARIANT_BOOL *return_value);
+  [id (208), propget, helpstring ("Should loop assertions be evaluated by default?")]
+  HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
   
-  [helpstring ("Define whether preconditions should be checked.")]
-  HRESULT check_require ([in] VARIANT_BOOL * new_value);
+  [id (208), propput, helpstring ("Should loop assertions be evaluated by default?")]
+  HRESULT evaluate_loop_by_default ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Define whether postconditions should be checked.")]
-  HRESULT check_ensure ([in] VARIANT_BOOL * new_value);
+  [id (209), propget, helpstring ("Should class invariants be evaluated by default?")]
+  HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
   
-  [helpstring ("Define whether check statements should be checked.")]
-  HRESULT check_check ([in] VARIANT_BOOL * new_value);
+  [id (209), propput, helpstring ("Should class invariants be evaluated by default?")]
+  HRESULT evaluate_invariant_by_default ([in] VARIANT_BOOL new_value);
   
-  [helpstring ("Define whether loop assertions should be checked.")]
-  HRESULT check_loop ([in] VARIANT_BOOL * new_value);
-  
-  [helpstring ("Define whether invariants should be checked.")]
-  HRESULT check_invariant ([in] VARIANT_BOOL * new_value);  
-  
-  [helpstring ("Excluded directories.")]
+  [helpstring ("List of excluded directories.")]
   HRESULT excluded ([out, retval] SAFEARRAY (BSTR) * return_value);
   
   [helpstring ("Add a directory to exclude.")]
@@ -153,15 +183,6 @@ interface IEiffelClusterProperties: IUnknown
   
   [helpstring ("Remove a directory to exclude.")]
   HRESULT remove_exclude ([in] BSTR dir_name);  
-  
-  [helpstring ("Included directories.")]
-  HRESULT included ([out, retval] SAFEARRAY (BSTR) * return_value);
-  
-  [helpstring ("Add a directory to exclude.")]
-  HRESULT add_include ([in] BSTR dir_name);
-  
-  [helpstring ("Remove a directory to exclude.")]
-  HRESULT remove_include ([in] BSTR dir_name);  
 };
 
 [

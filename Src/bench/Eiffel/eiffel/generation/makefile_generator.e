@@ -125,11 +125,14 @@ feature -- Object basket managment
 	add_in_system_basket (base_name: STRING) is
 		local	
 			object_name: STRING
+			string_list: LINKED_LIST [STRING]
 		do
 			!!object_name.make (0)
 			object_name.append (base_name)
 			object_name.append (".o")
-			system_basket.extend (object_name)
+			string_list := system_basket
+			string_list.extend (object_name)
+			string_list.forth 
 		end
 
 	add_common_objects is

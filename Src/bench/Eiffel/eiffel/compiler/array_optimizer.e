@@ -217,6 +217,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring (" as a descendant of ARRAY%N")
 end
 				array_descendants.extend (a_class)
+				array_descendants.forth
 				an_id := a_class.id
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table

@@ -55,6 +55,13 @@ feature {NONE} -- GTK C functions for widgets
 			"C | <gtk/gtk.h>"
 		end
 
+	c_gtk_widget_has_focus (w: POINTER): BOOLEAN is
+		external 
+			"C [macro <gtk/gtk.h>] (GtkWidget *): EIF_BOOLEAN"
+		alias
+			"GTK_WIDGET_HAS_FOCUS"
+		end
+
 	gtk_widget_destroy (w: POINTER) is
 		external
 			"C | <gtk/gtk.h>"

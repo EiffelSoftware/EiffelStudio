@@ -122,6 +122,9 @@ feature -- Access: IL code generation
 	system_namespace: STRING
 			-- Top namespace of all generated Eiffel classes.
 
+	il_quick_finalization: BOOLEAN
+			-- Should finalization skip generation of single class modules?
+
 feature -- Update
 
 	set_system_namespace (n: STRING) is
@@ -463,6 +466,14 @@ feature -- Update
 			finalize_set: private_finalize
 		end
 
+	set_il_quick_finalization is
+			-- Skip generation of single class modules
+		do
+			il_quick_finalization := True
+		ensure
+			il_quick_finalization_set: il_quick_finalization
+		end
+		
 feature {SYSTEM_I} -- Implementation
 
 	internal_msil_classes_per_module: INTEGER

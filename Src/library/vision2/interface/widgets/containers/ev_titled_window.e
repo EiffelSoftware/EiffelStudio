@@ -57,13 +57,15 @@ feature -- Access
 		end
 
 	icon_name: STRING is
-			-- Alternative name, displayed when window is minimised.
+			-- Name displayed when `Current is minimized.
+			-- If `is_empty' then `title' is displayed.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.icon_name
 		ensure
 			bridge_ok: equal (Result, implementation.icon_name)
+			result_not_void: Result /= Void
 		end 
 
 	icon_pixmap: EV_PIXMAP is
@@ -154,21 +156,21 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			an_icon_name_not_void: an_icon_name /= Void
-			an_icon_name_not_empty: not an_icon_name.is_empty
 		do
 			implementation.set_icon_name (an_icon_name)
 		ensure
 			icon_name_assigned: icon_name.is_equal (an_icon_name)
+			cloned: icon_name /= an_icon_name
 		end
 
 	remove_icon_name is
-			-- Make `icon_name' `Void'.
+			-- Make `icon_name' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_icon_name
+			set_icon_name ("")
 		ensure
-			icon_name_removed: icon_name = Void
+			icon_name_removed: icon_name.is_empty
 		end
 		
 

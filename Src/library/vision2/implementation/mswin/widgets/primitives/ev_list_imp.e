@@ -27,22 +27,18 @@ inherit
 			make
 		end
 
-	WEL_SINGLE_SELECTION_LIST_BOX
+   WEL_LIST_BOX
 		rename
 			make as wel_make,
 			parent as wel_parent,
-			destroy as wel_desroy,
+			destroy as wel_destroy,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
-			-- The signatures are differents in WEL and Vision.
-			selected_item as single_selected_item,
-			select_item as single_select_item
+			select_item as wel_select_item
 		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
@@ -57,60 +53,21 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
+			on_set_cursor,
 			wel_background_color,
 			wel_foreground_color,
 			default_process_message
 		redefine
-			selected,
+			wel_select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style,
 			default_process_message
-		select
-			single_select_item
 		end
 
-	WEL_MULTIPLE_SELECTION_LIST_BOX
-		rename
-			make as wel_make,
-			destroy as wel_destroy,
-			parent as wel_parent,
-			set_parent as wel_set_parent,
-			background_color as wel_background_color,
-			foreground_color as wel_foreground_color,
-			font as wel_font,
-			set_font as wel_set_font,
-			-- The signatures are differents in WEL and Vision.
-			selected_items as multiple_selected_items,
-			select_item as multiple_select_item
-		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
-			remove_command,
-			set_width,
-			set_height,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_key_down,
-			on_key_up,
-			on_set_focus,
-			on_kill_focus,
-			wel_background_color,
-			wel_foreground_color,
-			default_process_message
-		redefine
-			selected,
-			on_lbn_dblclk,
-			on_lbn_selchange,
-			default_style,
-			default_process_message
-		select
-			wel_destroy
+	WEL_LBS_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -124,9 +81,10 @@ feature {NONE} -- Initialization
 			-- use set_selection to change it into a multiple
 			-- selection list.
 		do
-			wel_make (default_parent.item, 0, 0, 0, 0, 0)
+			internal_window_make (default_parent.item, Void,
+				default_style, 0, 0, 0, 0, 0, default_pointer)
+			id := 0
 			!! ev_children.make (2)
-			is_multiple_selection := False
 		end	
 
 feature -- Access
@@ -136,7 +94,7 @@ feature -- Access
 			-- selection, it gives the last selected item.
 		do
 			if not is_multiple_selection and selected then
-				Result ?= (ev_children.i_th (single_selected_item + 1)).interface
+				Result ?= (ev_children.i_th (selected_index + 1)).interface
 			end
 		end
 
@@ -146,37 +104,44 @@ feature -- Status report
 			-- Is at least one item selected ?
 		do
 			if is_multiple_selection then
-				Result := {WEL_MULTIPLE_SELECTION_LIST_BOX}	Precursor
+				Result := count_selected_items > 0
 			else
-				Result := {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
+				Result := cwin_send_message_result (item,
+					Lb_getcursel, 0, 0) /= Lb_err
 			end
 		end
 
-	is_multiple_selection: BOOLEAN
+	is_multiple_selection: BOOLEAN is
 			-- True if the user can choose several items,
 			-- False otherwise
+		do
+			Result := flag_set (style, Lbs_multiplesel)
+		end
 
 feature -- Status setting
 
 	select_item (index: INTEGER) is
 			-- Select item at the one-based `index'.
-			-- We cannot redefine this feature because 
-			-- of the postconditions.
 		do
-			if is_multiple_selection then
-				multiple_select_item (index - 1)
-			else
-				single_select_item (index - 1)
-			end
+			wel_select_item (index - 1)
+		end
+
+	select_all is
+			-- Select all the items of the list.
+		require
+			multiple_selection: is_multiple_selection
+		do
+			select_items (0, count - 1)			
 		end
 
 	deselect_item (index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
 			if is_multiple_selection then
-				unselect_item (index)
+				cwin_send_message (item, Lb_setsel, 0, index - 1)
 			else
-				unselect
+				cwin_send_message (item, Lb_setcursel, -1, 0)
+				last_selected_item := Void
 			end
 		end
 
@@ -184,9 +149,10 @@ feature -- Status setting
 			-- Clear the selection of the list.
 		do
 			if is_multiple_selection then
-				unselect_all
+				unselect_items (0, count - 1)
 			else
-				unselect
+				cwin_send_message (item, Lb_setcursel, -1, 0)
+				last_selected_item := Void
 			end
 		end
 
@@ -197,10 +163,13 @@ feature -- Status setting
 			wel_imp: WEL_WINDOW
 		do
 			if not is_multiple_selection then
-				is_multiple_selection := True
+				last_selected_item := Void
 				wel_imp ?= parent_imp
 				wel_destroy
-				wel_make (wel_imp, 0, 0, 0, 0, 0)
+				internal_window_make (wel_imp, Void,
+					default_style + Lbs_multiplesel,
+				   	0, 0, 0, 0, 0, default_pointer)
+				id := 0
 				copy_list
 			end
 		end
@@ -212,10 +181,12 @@ feature -- Status setting
 			wel_imp: WEL_WINDOW
 		do
 			if is_multiple_selection then
-				is_multiple_selection := False
 				wel_imp ?= parent_imp
 				wel_destroy
-				wel_make (wel_imp, 0, 0, 0, 0, 0)
+				internal_window_make (wel_imp, Void,
+					default_style, 0, 0, 0, 0, 0,
+				    default_pointer)
+				id := 0
 				copy_list
 			end
 		end
@@ -255,15 +226,18 @@ feature {NONE} -- Implementation
 	copy_list is
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
+		local
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
-			if not ev_children.empty then
+			list := ev_children
+			if not list.empty then
 				from
-					ev_children.start
+					list.start
 				until
-				ev_children.after
+					list.after
 				loop
-					add_string (ev_children.item.text)
-					ev_children.forth
+					add_string (list.item.text)
+					list.forth
 				end
 			end
 		end
@@ -273,33 +247,38 @@ feature {NONE} -- Implementation
 			-- We call the selection command of the list and the select
 			-- command of the item if necessary.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			last, actual: EV_LIST_ITEM_IMP
 		do
-			if selected then
-				if is_multiple_selection then
-					item_imp := ev_children @ (caret_index + 1)
-					if item_imp.is_selected then
-						item_imp.execute_command (Cmd_item_activate, Void)
-						last_selected_item := item_imp
-					else
-						item_imp.execute_command (Cmd_item_deactivate, Void)
-					end
-					execute_command (Cmd_selection, Void)
+			-- A local variable for speed
+			last := last_selected_item
+
+			-- In multiple selection mode, no `last_selected_item'
+			-- has no use.
+			if is_multiple_selection then
+				actual := ev_children @ (caret_index + 1)
+				if actual.is_selected then
+					actual.execute_command (Cmd_item_activate, Void)
 				else
-					item_imp := ev_children @ (single_selected_item + 1)
-					if last_selected_item /= item_imp then
-						item_imp.execute_command (Cmd_item_activate, Void)
-						if last_selected_item /= Void then
-							last_selected_item.execute_command (Cmd_item_deactivate, Void)
-						end
-						last_selected_item := item_imp
-						execute_command (Cmd_selection, Void)
-					end
+					actual.execute_command (Cmd_item_deactivate, Void)
 				end
+
+			-- Another treatment in single selection mode.
 			else
-				last_selected_item := Void
-				execute_command (Cmd_selection, Void)
+				if selected then
+					actual := ev_children @ (selected_index + 1)
+					if last /= Void and then last /= actual then
+						last.execute_command (Cmd_item_deactivate, Void)
+					end
+					last_selected_item := actual
+					actual.execute_command (Cmd_item_activate, Void)
+				else
+					last_selected_item := Void
+					last.execute_command (Cmd_item_deactivate, Void)
+				end
 			end
+
+			-- We launch the command of the list
+			execute_command (Cmd_selection, Void)
 		end
 
 	on_lbn_dblclk is
@@ -307,15 +286,17 @@ feature {NONE} -- Implementation
 			-- Send the event to the current selected item or to the one
 			-- that has the focus.
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			actual: EV_LIST_ITEM_IMP
 		do
+			-- In multiple selection mode, the item can be selected or
+			-- unselected.
 			if is_multiple_selection then
-				item_imp := ev_children @ (caret_index + 1)
+				actual := ev_children @ (caret_index + 1)
 			else
-				item_imp := ev_children @ (single_selected_item + 1)
+				actual := ev_children @ (selected_index + 1)
 			end
-			if item_imp /= Void then
-				item_imp.execute_command (Cmd_item_dblclk, Void)
+			if actual /= Void then
+				actual.execute_command (Cmd_item_dblclk, Void)
 			end
 		end
 
@@ -327,9 +308,6 @@ feature {NONE} -- Implementation : WEL features
 						+ Ws_tabstop + Ws_border + Ws_vscroll
 						+ Lbs_notify --+ Lbs_ownerdrawfixed 
 						+ Lbs_hasstrings + Lbs_nointegralheight
-			if is_multiple_selection then
-				Result := Result + Lbs_multiplesel
-			end
 		end
 
 	default_process_message (msg, wparam, lparam: INTEGER) is
@@ -376,6 +354,96 @@ feature {NONE} -- Implementation : WEL features
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+feature {NONE} -- Copy of WEL features
+
+	wel_select_item (index: INTEGER) is
+			-- Select item at the one-based `index'.
+		do
+			if is_multiple_selection then
+				cwin_send_message (item, Lb_setsel, 1, index)
+			else
+				cwin_send_message (item, Lb_setcursel, index, 0)
+				last_selected_item := ev_children @ (index + 1)
+			end
+		end
+
+ 	selected_index: INTEGER is
+ 			-- Zero-based index of the selected item
+ 		require
+ 			exists: exists
+			single_selection: not is_multiple_selection
+ 			selected: selected
+ 		do
+ 			Result := cwin_send_message_result (item,
+				Lb_getcursel, 0, 0)
+ 		ensure
+ 			result_large_enough: Result >= 0
+ 			result_small_enough: Result < count
+ 		end
+
+	select_items (start_index, end_index: INTEGER) is
+			-- Select items between `start_index'
+			-- and `end_index' (zero-based index).
+		require
+			multiple_selection: is_multiple_selection
+			exists: exists
+			valid_range: end_index >= start_index
+			start_index_small_enough: start_index < count
+			start_index_large_enough: start_index >= 0
+			end_index_small_enough: end_index < count
+			end_index_large_enough: end_index >= 0
+			valid_range: end_index >= start_index
+		do
+			cwin_send_message (item, Lb_selitemrange, 1,
+				cwin_make_long (start_index, end_index))
+		ensure
+			selected: selected
+			-- For every `i' in `start_index'..`end_index',
+			-- `is_selected' (`i') = True
+		end
+
+	unselect_items (start_index, end_index: INTEGER) is
+			-- Unselect items between `start_index'
+			-- and `end_index' (zero-based index).
+		require
+			multiple_selection: is_multiple_selection
+			exists: exists
+			valid_range: end_index >= start_index
+			start_index_small_enough: start_index < count
+			start_index_large_enough: start_index >= 0
+			end_index_small_enough: end_index < count
+			end_index_large_enough: end_index >= 0
+			valid_range: end_index >= start_index
+		do
+			cwin_send_message (item, Lb_selitemrange, 0,
+				cwin_make_long (start_index, end_index))
+		ensure
+			-- For every `i' in `start_index'..`end_index',
+			-- `is_selected' (`i') = False
+		end
+
+	count_selected_items: INTEGER is
+			-- Number of items selected
+		require
+			exits: exists
+			multiple_selection: is_multiple_selection
+		do
+			Result := cwin_send_message_result (item,
+				Lb_getselcount, 0, 0)
+		ensure
+			result_large_enough: Result >= 0
+			result_small_enough: Result <= count
+		end
+
+	caret_index: INTEGER is
+			-- Index of the item that has the focus
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Lb_getcaretindex, 0, 0)
 		end
 
 end -- class EV_LIST_IMP

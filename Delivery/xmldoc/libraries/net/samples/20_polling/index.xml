@@ -5,7 +5,7 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example, you must compile two projects: 
-			<italic>client</italic and 
+			<italic>client</italic> and 
 			<italic>server.</italic>
 		</paragraph>
 		<paragraph> To compile the 

@@ -67,6 +67,10 @@ TD {
 	BACKGROUND=#EEEDDE;	
 }
 
+TD.title {
+	BACKGROUND=#DDDCCD;
+}
+
 IMG {
 	BORDER=none; 
 }

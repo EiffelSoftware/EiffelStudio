@@ -115,18 +115,20 @@ feature -- Setting
 			body_set: body = b
 		end;
 
-	set_booleans (is_d, is_e, is_r, is_att: BOOLEAN) is
+	set_booleans (is_d, is_e, is_r, is_att, is_exp: BOOLEAN) is
 			-- Set all booleans for Current.
 		do
-			is_deferred := is_d;
-			is_effective := is_e;
-			is_redefined := is_r;
+			is_deferred := is_d
+			is_effective := is_e
+			is_redefined := is_r
 			is_attribute := is_att
+			is_expanded := is_exp
 		ensure
 			booleans_are_set: is_deferred = is_d and then
 								is_effective = is_e and then
 								is_attribute = is_att and then
-								is_redefined = is_r
+								is_redefined = is_r and then
+								is_expanded = is_exp
 		end;
 
 	set_is_deferred is

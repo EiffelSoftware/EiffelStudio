@@ -28,6 +28,9 @@
 private fnptr set_proc;
 private fnptr send_proc;
 
+/* tnh added prototype */
+extern EIF_INTEGER eif_system();
+
 void async_shell_pass_address(send_address, set_address)
 fnptr send_address, set_address;
 {
@@ -62,6 +65,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	DIR *dirp;
 	char *cmd, *current_dir;
 
+ #ifndef __VMS
 		/* First copy `finish_freezing' if it does not exist */
 	dirp = (DIR *)dir_open(eif_access(c_code_dir));
 
@@ -79,12 +83,12 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 		}
 	(void) closedir(dirp);
 
+ #endif
 		/* Go to the C code directory and start finish_freezing */
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 	(void) eif_system("finish_freezing");
 	chdir(current_dir);
-
 	xfree(current_dir);
 #endif
 }
@@ -92,7 +96,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 void eif_gr_call_finish_freezing(request, c_code_dir, freeze_cmd_name)
 EIF_OBJ request, c_code_dir, freeze_cmd_name;
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
 #else
 	DIR *dirp;
@@ -188,6 +192,20 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	fclose (fi);
 	fclose (fo);
 
+#elif defined __VMS
+	char *cmd;
+
+	cmd = cmalloc(15 + strlen(eif_access(driver_name)) + 
+		 strlen(eif_access(c_code_dir)),
+		 strlen(eif_access(system_name)) );
+	if (cmd == (char *)0)
+		enomem();
+
+	sprintf(cmd, "COPY %s %s%s", eif_access(driver_name),
+		 eif_access(c_code_dir), eif_access(system_name));
+	printf("%s\n",cmd);
+	(void) eif_system(cmd);
+	xfree(cmd);
 #else
 	char *cmd;
 
@@ -196,7 +214,9 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 	if (cmd == (char *)0)
 		enomem();
 
-	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
+	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name),
+		 eif_access(driver_name), eif_access(c_code_dir),
+		 eif_access(system_name));
 
 	(void) eif_system(cmd);
 	xfree(cmd);
@@ -207,7 +227,7 @@ void eif_gr_link_driver (request, c_code_dir, system_name, prelink_command_name,
 EIF_OBJ request;
 EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;

@@ -7,12 +7,12 @@ root
 default
 
         assertion (require);
-        precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+        precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base")
 
 cluster
 
 	-- EiffelNet
-	net:				"$EIFFEL4/library/net";
+	net:				"$EIFFEL5/library/net";
 	abstract_socket (net):		"$/abstract/socket";
 	net_socket (net):		"$/network/socket";
 	local_socket (net):		"$/local/socket";
@@ -27,6 +27,6 @@ cluster
 external
 	-- External EiffelNet library 
         object:
-                "$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
--- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+                "$(EIFFEL5)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+-- win		"$(EIFFEL5)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

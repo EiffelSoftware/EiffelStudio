@@ -7,13 +7,13 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/mel")
+	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/mel")
 
 cluster
 
 		-- EiffelVision
 
-	vision:							"$EIFFEL4/library/vision";
+	vision:							"$EIFFEL5/library/vision";
 	vision_kernel (vision):			"$/oui/kernel";
 	vision_widgets (vision):		"$/oui/widgets";
 	vision_context_data (vision):	"$/oui/context_data";
@@ -41,11 +41,11 @@ cluster
 external
 
 	include_path:
-		"\$(EIFFEL4)/library/mel/Clib";
+		"\$(EIFFEL5)/library/mel/Clib";
 
 	object:
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
+		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
 		"-lXm -lXt -lX11"
 
 end

@@ -7,21 +7,21 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base")
 
 cluster
 
 -- MEL
-	all mel:				"$EIFFEL4/library/mel/"
+	all mel:				"$EIFFEL5/library/mel/"
 
 external
  
 	include_path:
-		"\$(EIFFEL4)/library/mel/Clib";
+		"\$(EIFFEL5)/library/mel/Clib";
  
 	object:
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
+		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
 		"-lXm -lXt -lX11"
  
 end

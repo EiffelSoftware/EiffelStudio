@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that provide common attributes for tansport mechanisms."
+	description: "Objects that provide common attributes for transport mechanisms."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,6 +8,39 @@ class
 	EV_SHARED_TRANSPORT_I
 
 feature -- Access EV_PICK_AND_DROPABLE.
+		
+	over_valid_target: BOOLEAN
+			-- Is the cursor over a target that accepts `pebble'?
+
+	default_accept_cursor: EV_CURSOR is
+			-- Used in lieu of a user defined `accept_cursor'.
+		once
+			Result := Default_pixmaps.Standard_cursor
+		end
+
+	default_deny_cursor: EV_CURSOR is
+			-- Used in lieu of a user defined `deny_cursor'.
+		once
+			Result := Default_pixmaps.No_cursor
+		end
+		
+	rubber_band_is_drawn: BOOLEAN
+			-- Is a rubber band line currently on the screen?
+			
+	global_pnd_targets: ARRAYED_LIST [INTEGER] is
+			-- Shortcut to EV_APPLICATION.pnd_targets.
+		local
+			env: EV_ENVIRONMENT
+		once
+			create env
+			Result := env.application.implementation.pnd_targets
+		end
+		
+	Default_pixmaps: EV_STOCK_PIXMAPS is
+			-- Default pixmaps
+		once
+			create Result
+		end
 
 feature -- Access EV_DRAGABLE_SOURCE.
 		

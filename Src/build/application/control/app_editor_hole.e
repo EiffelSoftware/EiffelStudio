@@ -16,10 +16,6 @@ feature {NONE}
 			register
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := app_editor.focus_label
--- samik		end;
 
 	target: WIDGET is
 		do

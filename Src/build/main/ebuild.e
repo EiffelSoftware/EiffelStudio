@@ -7,7 +7,6 @@ inherit
 	ARGUMENTS;
 	WINDOWS;
 	SHARED_BUILD_LICENSE;
--- samik	GRAPHICS;
 	UNIX_SIGNALS
 		rename
 			meaning as sig_meanging,
@@ -15,10 +14,10 @@ inherit
 			catch as sig_catch
 		end;
 
--- added by samik
+	-- added by samik
 creation
 	make
--- end of samik
+	-- end of samik
 
 feature 
 

@@ -62,9 +62,6 @@ feature {NONE}
 		do
 			make_page (cat);
 			extend (selection_ev);
-			-- added by samik
-	--		set_focus_string (Focus_labels.list_label)
-			-- end of samik
 		end;
 		
 end 

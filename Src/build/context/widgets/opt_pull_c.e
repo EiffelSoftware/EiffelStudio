@@ -22,7 +22,6 @@ inherit
 		select
 			context_initialization
 		end;
--- samik	G_ANY
 
 feature 
 

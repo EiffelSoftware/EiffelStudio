@@ -30,7 +30,6 @@ feature {NONE}
 	make is 
 		do
 			old_make (command_catalog)
---samik			associated_catalog := command_catalog;
 			reset_commands
 		end;
 

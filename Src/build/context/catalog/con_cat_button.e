@@ -2,16 +2,7 @@ class CON_CAT_BUTTON
 
 inherit
 
-	COMMAND;
---	CONSTANTS;
---	PICT_COLOR_B
---		rename
---			make as button_make
-		-- added by samik
-  --      undefine
-      --      init_toolkit
-    --    -- end of samik     
-		--end;		
+	COMMAND
 	WINDOWS
 		select
 			init_toolkit

@@ -286,7 +286,6 @@ feature -- Interface
 		local
 			close_b: CLOSE_WINDOW_BUTTON;
 			del_com: DELETE_WINDOW;
---samik			focus_label: FOCUS_LABEL;
 			top_form, form: FORM
 		do
 				-----------------
@@ -295,7 +294,6 @@ feature -- Interface
 			shell_make (Widget_names.history_window, a_screen);
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form1, form);
---samik			!! focus_label.initialize (top_form);
 			!! list.make (Widget_names.list, form);
 			!! row_column.make (Widget_names.row_column, form);
 			!! undo_button.make (Widget_names.undo_label, row_column);
@@ -305,11 +303,7 @@ feature -- Interface
 				----------------------
 				-- Perform attachments
 				----------------------
---samik			top_form.attach_top (focus_label, 0);
---samik			top_form.attach_left (focus_label, 0);
---samik			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
---samik			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (close_b, 0);
 			form.attach_left (top_form, 0);
 			form.attach_right (top_form, 0);

@@ -23,7 +23,6 @@ inherit
 		select
 			create_context, full_name
 		end;
--- samik	G_ANY
 
 feature 
 

@@ -74,8 +74,6 @@ feature
 
 	format_list: FORMAT_LIST;
 
-    --samik	focus_label: FOCUS_LABEL;
-
 	make (a_name: STRING a_screen: SCREEN) is
 		local
 			i: INTEGER
@@ -114,7 +112,6 @@ feature
 			!!focus_area_form.make (Widget_names.form1, top_form);
 
 			!! context_hole.make (Current, focus_area_form);
---samik			!! focus_label.initialize (focus_area_form);
 			!! trash_hole.make (focus_area_form);
 			!! close_button.make (Current, focus_area_form)
 			!! first_separator.make (Widget_names.separator, top_form)
@@ -126,16 +123,12 @@ feature
 			formats_rc.set_preferred_count (1)
 			formats_rc.set_spacing (5)
 
---samik			focus_area_form.attach_top (focus_label, 0)
 			focus_area_form.attach_top (close_button, 0)
 			focus_area_form.attach_top (context_hole, 0)
 			focus_area_form.attach_top (trash_hole, 0)
 			focus_area_form.attach_right (close_button, 0)
 			focus_area_form.attach_left (context_hole, 0)
 			focus_area_form.attach_left_widget (context_hole, trash_hole, 0)
---samik			focus_area_form.attach_left_widget (trash_hole, focus_label, 0)
-	--samik		focus_area_form.attach_right_widget (close_button, focus_label, 0)
---samik			focus_area_form.attach_bottom (focus_label, 0)
 			focus_area_form.attach_bottom (context_hole, 0)
 			focus_area_form.attach_bottom (trash_hole, 0)
 			focus_area_form.attach_bottom (close_button, 0)

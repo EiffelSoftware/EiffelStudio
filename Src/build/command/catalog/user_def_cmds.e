@@ -13,16 +13,11 @@ feature {NONE}
 	make (i: INTEGER) is
 		do
 			old_make (command_catalog)
---samik			associated_catalog := command_catalog;
---			focus_string := clone (Focus_labels.user_label);
---			focus_string.append_integer (i);
 		end;
 
 	reset_commands is
 		do
 		end;
-
--- samik	focus_string: STRING;	
 
 	symbol: PIXMAP is
 		do

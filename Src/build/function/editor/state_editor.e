@@ -151,11 +151,6 @@ feature
 
 feature {NONE}
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := menu_bar.focus_label
--- samik		end;
-
 	create_output_stone (a_parent: COMPOSITE) is
 		do
 			!!output_stone.make (Current);

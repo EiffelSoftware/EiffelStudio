@@ -5,19 +5,12 @@ inherit
 	COLOR_STONE
 		rename
 			make as old_make
--- samik		redefine
--- samik			focus_string
 		end
 
 creation
 	make
 
 feature {NONE}
-
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Context_const.default_value
--- samik		end
 
 	make (a_parent: COMPOSITE; ed: CONTEXT_EDITOR) is
 		require

@@ -65,11 +65,6 @@ feature {NONE}
 			Result := Current
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := command_catalog.focus_label
--- samik		end;
-
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);

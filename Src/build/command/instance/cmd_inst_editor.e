@@ -111,8 +111,6 @@ feature {NONE}
 
 feature 
 
---samik	focus_label: FOCUS_LABEL
-
 	destroy is
 		do
 			trash_hole.unregister;
@@ -140,7 +138,6 @@ feature
 			end;
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form, form);
---samik			!! focus_label.initialize (top_form);
 			!! command_hole.make (Current, top_form);
 			!! instance_hole.make (Current, top_form);
 			!! trash_hole.make (top_form);
@@ -155,8 +152,6 @@ feature
 			top_form.attach_top (trash_hole, 0);
 			top_form.attach_top (command_hole, 0);
 			top_form.attach_top (close_b, 0);
---samik			top_form.attach_top (focus_label, 0);
---samik			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (close_b, 0);
 			top_form.attach_bottom (instance_hole, 0);
 			top_form.attach_bottom (command_hole, 0);
@@ -164,8 +159,6 @@ feature
 			top_form.attach_left (instance_hole, 0);
 			top_form.attach_left_widget (instance_hole, command_hole, 0);
 			top_form.attach_left_widget (command_hole, trash_hole, 0);
---samik			top_form.attach_left_widget (trash_hole, focus_label, 0);
---samik			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
 
 			form.attach_left (top_form, 0);

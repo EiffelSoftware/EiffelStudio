@@ -78,12 +78,8 @@ feature {NONE}
 
 			form1.attach_top (help_hole, 0);
 			form1.attach_top (close_b, 0);
---samik			form1.attach_top (focus_label, 0);
 			form1.attach_left (help_hole, 2);
---samik			form1.attach_left_widget (help_hole, focus_label, 0);
---samik			form1.attach_right_widget (close_b, focus_label, 0);
 			form1.attach_right (close_b, 2);
---samik			form1.attach_bottom (focus_label, 2);
 			form1.attach_bottom (help_hole, 2);
 			form1.attach_bottom (close_b, 2);
 

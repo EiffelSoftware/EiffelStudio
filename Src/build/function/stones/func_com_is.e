@@ -5,10 +5,10 @@ inherit
 
 
 	COM_INST_IS
-        -- added by samik
-        undefine
-            init_toolkit
-        -- end of samik 
+		-- added by samik
+		undefine
+			init_toolkit
+		-- end of samik 
 		end;
 	FUNCTION_ELEMENT
 		rename

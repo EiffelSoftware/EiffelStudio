@@ -23,11 +23,6 @@ feature {NONE}
 			set_focus_string (Focus_labels.create_instance_label)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := command_catalog.focus_label
--- samik		end;
-
 	target: WIDGET is
 		do
 			Result := Current

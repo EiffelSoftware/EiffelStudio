@@ -6,10 +6,10 @@ inherit
 	EB_TEXT_FIELD
 		rename
 			make as old_create
-		-- added by samik
-        undefine
-            init_toolkit
-        -- end of samik
+-- added by samik
+		undefine
+			init_toolkit
+-- end of samik
 		end;
 	HOLE
 		redefine

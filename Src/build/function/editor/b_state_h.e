@@ -39,11 +39,6 @@ feature
 			set_focus_string (Focus_labels.state_label)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := associated_editor.focus_label
--- samik		end;
-
 	target: WIDGET is
 		do
 			Result := Current

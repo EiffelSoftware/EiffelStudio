@@ -24,6 +24,6 @@ cluster
 		end
 
 		-- .NET System
-	all external_assemblies ($root_cluster): "external_assemblies"
+	all external_assemblies: "<FL_LOCATION>\external_assemblies"
 
 end

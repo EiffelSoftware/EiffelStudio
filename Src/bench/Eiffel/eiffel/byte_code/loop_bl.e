@@ -22,9 +22,6 @@ inherit
 
 feature
 
-	label: INTEGER;
-			-- The loop label used by the 'goto' statement.
-
 	analyze is
 			-- Builds a proper context (for C code).
 		local
@@ -33,8 +30,6 @@ feature
 			if from_part /= Void then
 				from_part.analyze;
 			end;
-			context.inc_label;
-			label := context.label;
 			context.init_propagation;
 			stop.propagate (No_register);
 			stop.analyze;
@@ -92,9 +87,13 @@ feature
 					generate_end_final_mode_test
 				end;
 			end;
-			context.generate_label (label);
 			stop.generate;
-            generated_file.putstring ("if (!(");
+				-- The code for the evaluation of the expression is
+				-- generated twice, once before the while and once at
+				-- the end of the while body.
+				-- FIXME: maybe if the expression is too complex, we should
+				-- use the old mechanism (pre 3.2.5) with label and goto
+            generated_file.putstring ("while (!(");
             stop.print_register;
             generated_file.putstring (")) {");
             generated_file.new_line;
@@ -125,8 +124,7 @@ feature
 			if compound /= Void then
 				compound.generate;
 			end;
-			generated_file.putstring ("goto ");
-			context.print_label (label);
+			stop.generate;
 			generated_file.putchar (';');
 			generated_file.new_line;
 			generated_file.exdent;

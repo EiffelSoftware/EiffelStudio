@@ -20,7 +20,7 @@ inherit
 			is_equal
 		end
 		
-	CODE_HTML_CONSTANTS
+	TEMPLATE_CONSTANTS
 		undefine
 			copy,
 			is_equal

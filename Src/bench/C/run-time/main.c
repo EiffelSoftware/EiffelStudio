@@ -17,6 +17,7 @@
 #include "garcol.h"
 #include "except.h"
 #include "sig.h"
+#include "err_msg.h"
 #ifdef WORKBENCH
 #include "interp.h"
 #include "update.h"
@@ -201,7 +202,7 @@ int sig;
 	 * and exit.
 	 */
 	
-	fprintf(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
+	print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
 		ename, sig, signame(sig));
 
 	exit(2);							/* Really abnormal termination */

@@ -10,7 +10,7 @@
 	External C routine Eiffel-Yacc interface
 */
 
-#include <stdio.h>
+#include "err_msg.h"
 #include "yacc.h"
 
 /*
@@ -429,7 +429,7 @@ char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6, *arg7;
 void internal_error (s)
 char *s;
 {
-	fprintf(stderr,"Internal Error: %s\n", s);
+	print_err_msg(stderr,"Internal Error: %s\n", s);
 	exit (1);
 }
 

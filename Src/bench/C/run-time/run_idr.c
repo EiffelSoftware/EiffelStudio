@@ -13,6 +13,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include <sys/types.h>
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
@@ -24,6 +25,7 @@
 #include "eiffel.h"
 #include "bits.h"
 #include "../idrs/idrf.h"
+
 
 
 #define IDRF_SIZE 1024
@@ -142,7 +144,7 @@ IDR *bu;
 	read_size = ntohs (read_size);
 #ifdef DEBUG
 	if (read_size > idrs_size (bu))
-		fprintf (stderr, "Too large %d info for %d buffer\n", read_size, idrs_size (bu));
+		print_err_msg(stderr, "Too large %d info for %d buffer\n", read_size, idrs_size (bu));
 #endif
 
 	amount_left = read_size;
@@ -165,7 +167,7 @@ IDR *bu;
 
 #ifdef DEBUG
 	if (send_size == 0)
-		fprintf (stderr, "send size equal zero");
+		print_err_msg(stderr, "send size equal zero");
 #endif
 
 	host_send = htons (send_size);
@@ -274,12 +276,12 @@ int size;
 				*(lp + i) = lower;		/* long machine and we are only a 4 byte*/
 				if (upper & 0x80000000){
 					if (lower & 0x80000000)
-						fprintf (stderr, "64 bit int truncated to 32 bit \n");
+						print_err_msg(stderr, "64 bit int truncated to 32 bit \n");
 					*(lp + (i++)) |= 0x80000000;
 				} else {
 					i++;
 					if (upper)
-						fprintf (stderr, "64 bit int truncated to 32 bit \n");
+						print_err_msg(stderr, "64 bit int truncated to 32 bit \n");
 				}
 							/*long machine only take the lower 4 bytes*/
 							/* This will cause lost of data but l am */

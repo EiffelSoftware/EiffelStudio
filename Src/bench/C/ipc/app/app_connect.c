@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include <sys/types.h>
 #include "logfile.h"
 #include <errno.h>
@@ -59,7 +60,7 @@ private void compute_sock_name()
 
 	name = getenv("ISED");
 	if (name == (char *) 0) {
-		fprintf(stderr, "variable ISED is not set\n");
+		print_err_msg(stderr, "variable ISED is not set\n");
 		exit(1);
 	}
 	strncpy(spath, name, MAXPATH - 1);

@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include "shared.h"
 #include <sys/types.h>
 #ifdef I_SYS_SOCKET
@@ -63,14 +64,14 @@ char *host;			/* The host we wish to connect to */
 	 */
 	if (isdigit(*host)) {	/* Starts with number: Internet address */
 		if (-1 == (peer_addr.sin_addr.s_addr = inet_addr(host))) {
-			fprintf(stderr, "%s: %s is not a valid internet address\n",
+			print_err_msg(stderr, "%s: %s is not a valid internet address\n",
 					name, host);
 			return -1;
 		}
 	} else {				/* Full name (alias) */
 		hp = gethostbyname(host);
 		if (hp == (struct hostent *) 0) {
-			fprintf(stderr, "%s: %s not found in /etc/hosts\n",
+			print_err_msg(stderr, "%s: %s not found in /etc/hosts\n",
 					name, host);
 			return -1;
 		}
@@ -81,7 +82,7 @@ char *host;			/* The host we wish to connect to */
 	if (sp == (struct servent *) 0) {	/* Do that only once */
 		sp = getservbyname(SERVICE, "tcp");
 		if (sp == (struct servent *) 0) {
-			fprintf(stderr, "%s: %s not found in /etc/services\n",
+			print_err_msg(stderr, "%s: %s not found in /etc/services\n",
 					name, SERVICE);
 			return -1;
 		}
@@ -92,7 +93,7 @@ char *host;			/* The host we wish to connect to */
 	cs = socket(AF_INET, SOCK_STREAM, 0);
 	if (cs == -1) {
 		perror(name);
-		fprintf(stderr, "%s: unable to create socket\n", name);
+		print_err_msg(stderr, "%s: unable to create socket\n", name);
 		return -1;
 	}
 
@@ -102,7 +103,7 @@ char *host;			/* The host we wish to connect to */
 	
 	if (connect(cs, &peer_addr, sizeof(struct sockaddr_in)) == -1) {
 		/* This is the most expected error */
-		fprintf(stderr, "%s: unable to connect to %s\n", name, host);
+		print_err_msg(stderr, "%s: unable to connect to %s\n", name, host);
 		return -1;
 	}
 
@@ -114,7 +115,7 @@ char *host;			/* The host we wish to connect to */
 	addrlen = sizeof(struct sockaddr_in);
 	if (getsockname(cs, &addr, &addrlen) == -1) {
 		perror(name);
-		fprintf(stderr, "%s: unable to read socket address\n", name);
+		print_err_msg(stderr, "%s: unable to read socket address\n", name);
 		return -1;
 	}
 
@@ -124,7 +125,7 @@ char *host;			/* The host we wish to connect to */
 	 */
 	if (-1 == setsockopt(cs, SOL_SOCKET, SO_KEEPALIVE, 0, 0)) {
 		perror("setsockopt");
-		fprintf(stderr, "%s: unable to set SO_KEEPALIVE\n", name);
+		print_err_msg(stderr, "%s: unable to set SO_KEEPALIVE\n", name);
 		return -1;
 	}
 #endif
@@ -143,7 +144,7 @@ int cs;			/* The connected socket */
 	
 	if (close(cs) == -1) {	/* Close connected socket */
 		perror(name);
-		fprintf(stderr, "%s: unable to close a socket (fd = %d)\n",
+		print_err_msg(stderr, "%s: unable to close a socket (fd = %d)\n",
 			name, cs);
 		return -1;
 	}

@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include <sys/types.h>
 #include "logfile.h"
 #include "stream.h"
@@ -163,7 +164,7 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 			putenv (envstring); 
 
 			execvp(argv[0], argv);
-			fprintf (stderr,"ERROR could not launch '%s'", argv[0]);
+			print_err_msg(stderr,"ERROR could not launch '%s'", argv[0]);
 #ifdef USE_ADD_LOG
 			reopen_log();
 			add_log(1, "SYSERR: exec: %m (%e)");

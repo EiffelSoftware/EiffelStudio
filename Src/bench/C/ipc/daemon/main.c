@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "err_msg.h"
 #include <sys/types.h>
 #include <stdio.h>
 #include "proto.h"
@@ -93,18 +94,18 @@ char **argv;
 	
 	eiffel3 = getenv("EIFFEL3");		/* Installation directory */
 	if (eiffel3 == (char *) 0) {		/* Environment variable not set */
-		fprintf (stderr, "The environment variable EIFFEL3 is not set\n");
+		print_err_msg(stderr, "The environment variable EIFFEL3 is not set\n");
 		exit (1);
 	}
 	platform = getenv ("PLATFORM");
 	if (platform == (char *) 0) {		/* Environment variable not set */
-		fprintf (stderr, "The environment variable PLATFORM is not set\n");
+		print_err_msg(stderr, "The environment variable PLATFORM is not set\n");
 		exit (1);
 	}
 
 	ewb_path = (char *) malloc(2048);
 	if (ewb_path == (char *) 0) {
-		fprintf(stderr, "%s: out of memory\n", progname);
+		print_err_msg(stderr, "%s: out of memory\n", progname);
 		exit(1);
 	}
 	
@@ -115,7 +116,7 @@ char **argv;
 
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
-		fprintf(stderr, "%s: could not launch %s\n", progname, ewb_path);
+		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
 		exit(1);
 	}
 

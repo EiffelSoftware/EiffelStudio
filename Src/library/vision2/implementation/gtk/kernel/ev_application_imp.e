@@ -316,7 +316,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 				pnd_targets.after
 			loop
 				trg ?= id_object (pnd_targets.item)
-				if trg = Void then
+				if trg = Void or else trg.is_destroyed then
 					pnd_targets.prune_all (pnd_targets.item)
 				else
 					if

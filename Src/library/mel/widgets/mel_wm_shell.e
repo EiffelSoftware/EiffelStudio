@@ -75,9 +75,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNiconMask)
+			Result := get_xt_pixmap (Current, XmNiconMask)
 		ensure
-			icon_mask_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)
 		end;
 
 	icon_pixmap: MEL_PIXMAP is
@@ -85,12 +86,13 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNiconPixmap)
+			Result := get_xt_pixmap (Current, XmNiconPixmap)
 		ensure
-			icon_pixmap_is_valid: Result /= Void and then Result.is_valid
+			icon_pixmap_is_valid: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
-	icon_window is
+	icon_window: POINTER is
 			-- The ID of a window that serves as the application's icon.
 		require
 			exists: not is_destroyed
@@ -333,22 +335,24 @@ feature -- Status setting
 			-- Set `icon_mask' to `a_mask'.
 		require
 			exists: not is_destroyed;
-			a_mask_is_valid: a_mask /= Void and then a_mask.is_valid
+			valid_mask: a_mask /= Void and then a_mask.is_valid;
+			same_display: a_mask.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNiconMask, a_mask)
 		ensure
-			icon_mask_set: icon_mask.is_equal (a_mask)
+			set: icon_mask.is_equal (a_mask)
 		end;
 
 	set_icon_pixmap (a_pixmap: MEL_PIXMAP) is
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNiconPixmap, a_pixmap)
 		ensure
-			icon_pixmap_set: icon_pixmap.is_equal (a_pixmap)
+			set: icon_pixmap.is_equal (a_pixmap)
 		end;
 
 	set_icon_window is
@@ -564,7 +568,6 @@ invariant
 
 --	max_aspect_greater_than_min_aspect:
 --		(max_aspect_x / max_aspect_y) >= (min_aspect_x / min_aspect_y)
-		-- This is not working, although it should.
 
 end -- class MEL_WM_SHELL
 

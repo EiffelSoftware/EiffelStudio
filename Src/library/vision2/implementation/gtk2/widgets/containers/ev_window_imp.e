@@ -50,7 +50,8 @@ inherit
 			show,
 			parent_imp
 		redefine
-			interface
+			interface,
+			on_key_event
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -332,7 +333,7 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
-			Precursor (a_key, a_key_string, a_key_press)
+			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
 			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then

@@ -32,13 +32,15 @@
 </ul>
 <h2>Other notes</h2>
 <p>The behavior mimics the behavior under Windows (no inode, no user, etc).
-<p>File descriptors are there for base compatibility only, they are not natively supported and may cause bugs.
+<p>File descriptors are supported, but they require a C call: they are not natively supported by .NET.
 <p>Haven't figured out yet how to implement the retrieve process.
 <p>Reopening files doesn't work. reopen* only closes the file and opens another one, according to the parameter name.
 <p>Link doesn't do anything. I believe it was already the case on Windows anyway.
 <p>Adding and removing permissions on files is not supported.
 <p>extend and copy_to seem buggy to me (extend does a put_character, copy_to erases the contents of last_string (which is a side effect)),
 but those are the behaviors in Base.
+<p>There is no precondition on put*!! There is definitely a design issue here.
+<p>There is no way to read a boolean in a file. This seems crappy (it is possible to write one).
 
 </body>
 

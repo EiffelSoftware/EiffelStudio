@@ -1,5 +1,5 @@
 indexing
-	description: "Syatem clusters."
+	description: "System clusters."
 	date: "$Date$"
 	revision: "$Revision$"
 

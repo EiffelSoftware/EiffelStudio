@@ -56,7 +56,8 @@ feature -- Status setting
 			-- Destroy actual object.
 		local
 		do
-			parent_imp := Void	
+			parent_imp := Void
+			is_destroyed := True
 		end
 
 	enable_select is

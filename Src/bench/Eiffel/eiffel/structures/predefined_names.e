@@ -102,6 +102,7 @@ feature -- Constants
 	memory_alloc_name_id: INTEGER is 92
 	memory_free_name_id: INTEGER is 93
 	from_integer_name_id: INTEGER is 94
+	finalize_name_id: INTEGER is 95
 	
 			-- Predefined name IDs constants
 

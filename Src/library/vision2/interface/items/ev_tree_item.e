@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
@@ -175,6 +174,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/01 18:09:03  oconnor
+--| released
+--|
 --| Revision 1.31  2000/02/24 20:52:13  king
 --| Inheriting from pick and dropable
 --|

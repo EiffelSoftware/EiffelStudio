@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			"C (char *, struct stat *) | %"eif_file.h%""
 		end
 
-	file_access (f_name: ANY; which: INTEGER): BOOLEAN is
+	file_access (f_name: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real ID.
 		external
 			"C (char *, EIF_INTEGER): EIF_BOOLEAN | %"eif_file.h%""

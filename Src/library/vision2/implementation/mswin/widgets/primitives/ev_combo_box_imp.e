@@ -66,7 +66,8 @@ inherit
 			on_kill_focus,
 			set_foreground_color,
 			set_background_color,
-			tooltip_window
+			tooltip_window,
+			destroy
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -942,6 +943,13 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := cwin_hi_word (cwin_send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
+		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+			wipe_out
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 		
 feature {NONE} -- Feature that should be directly implemented by externals

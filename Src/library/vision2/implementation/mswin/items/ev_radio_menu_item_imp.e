@@ -14,7 +14,8 @@ inherit
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
-			on_activate
+			on_activate,
+			destroy
 		end
 
 creation
@@ -24,21 +25,35 @@ feature -- Status report
 
 	is_peer (peer: EV_RADIO_MENU_ITEM): BOOLEAN is
 			-- Is this item in same group as peer?
+		local
+			peer_imp: EV_RADIO_MENU_ITEM_IMP
 		do
-			Result := True
---			check
---				not_yet_implemented: False
---			end
+			peer_imp ?= peer.implementation
+			check
+				valid_peer: peer_imp /= Void
+			end
+			Result := group.has (peer_imp)
 		end
 
 feature -- Status Setting
 
 	set_peer (peer: EV_RADIO_MENU_ITEM) is
 			-- Put in same group as peer.
+		local
+			a_group: EV_MENU_GROUP_IMP
+			peer_imp: EV_RADIO_MENU_ITEM_IMP
 		do
---			check
---				not_yet_implemented: False
---			end
+			peer_imp ?= peer.implementation
+			check
+				valid_peer: peer_imp /= Void
+			end
+			if peer_imp.group /= Void then
+				set_group (peer_imp.group)
+			else
+				!! a_group.make
+				set_group (a_group)
+				peer_imp.set_group (a_group)
+			end
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -46,9 +61,33 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 	on_activate is
 			-- Is called by the menu when the item is activate.
 		do
---			parent_imp.uncheck_radio_items
+			if group /= Void then
+				group.uncheck_other_items (Current)
+			end
 			set_state (True)
 			execute_command (Cmd_item_activate, Void)
+		end
+
+feature {EV_RADIO_MENU_ITEM_IMP} -- Implementation
+
+	group: EV_MENU_GROUP_IMP
+			-- Current group of the item
+
+	set_group (a_group: EV_MENU_GROUP_IMP) is
+			-- Make `a_group' the current group and add the 
+			-- item to it.
+		do
+			a_group.add_item (Current)
+			group := a_group
+		end
+
+feature {NONE} -- Implementation
+
+	destroy is
+			-- Destroy the current item.
+		do
+			group.remove_item (Current)
+			parent.remove_item (id)
 		end
 
 end -- class EV_RADIO_MENU_ITEM_IMP

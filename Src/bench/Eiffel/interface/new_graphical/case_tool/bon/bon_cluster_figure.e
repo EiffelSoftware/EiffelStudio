@@ -63,8 +63,8 @@ feature -- Initialization
 			resizer_bottom_right.disable_snapping
 			resizer_bottom_right.point.set_origin (point)
 			resizer_bottom_right.extend (resize_area_bottom_right)
-			resizer_bottom_right.move_actions.extend (~on_resizer_bottom_right_move)
-			resizer_bottom_right.move_actions.force_extend (~update_scrollable_area_size)
+			resizer_bottom_right.move_actions.extend (agent on_resizer_bottom_right_move)
+			resizer_bottom_right.move_actions.force_extend (agent update_scrollable_area_size)
 			resizer_bottom_right.set_pointer_style (Default_pixmaps.Sizenwse_cursor)
 			resizer_bottom_right.start_actions.extend (agent start_capture)
 			resizer_bottom_right.end_actions.extend (agent stop_capture)
@@ -76,11 +76,11 @@ feature -- Initialization
 			resizer_top_left.disable_snapping
 			resizer_top_left.point.set_origin (point)
 			resizer_top_left.extend (resize_area_top_left)
-			resizer_top_left.start_actions.extend (~on_resizer_start)
-			resizer_top_left.move_actions.extend (~on_resizer_top_left_move)
-			resizer_top_left.end_actions.extend (~on_resizer_end)
+			resizer_top_left.start_actions.extend (agent on_resizer_start)
+			resizer_top_left.move_actions.extend (agent on_resizer_top_left_move)
+			resizer_top_left.end_actions.extend (agent on_resizer_end)
 			resizer_top_left.set_pointer_style (Default_pixmaps.Sizenwse_cursor)
-			resizer_top_left.move_actions.force_extend (~update_scrollable_area_size)
+			resizer_top_left.move_actions.force_extend (agent update_scrollable_area_size)
 			resizer_top_left.enable_snapping
 			resizer_top_left.start_actions.extend (agent start_capture)
 			resizer_top_left.end_actions.extend (agent stop_capture)
@@ -95,11 +95,11 @@ feature -- Initialization
 			resizer_top_right.disable_snapping
 			resizer_top_right.point.set_origin (point)
 			resizer_top_right.extend (resize_area_top_right)
-			resizer_top_right.start_actions.extend (~on_resizer_start)
-			resizer_top_right.move_actions.extend (~on_resizer_top_right_move)
-			resizer_top_right.end_actions.extend (~on_resizer_end)
+			resizer_top_right.start_actions.extend (agent on_resizer_start)
+			resizer_top_right.move_actions.extend (agent on_resizer_top_right_move)
+			resizer_top_right.end_actions.extend (agent on_resizer_end)
 			resizer_top_right.set_pointer_style (Default_pixmaps.Sizenesw_cursor)
-			resizer_top_right.move_actions.force_extend (~update_scrollable_area_size)
+			resizer_top_right.move_actions.force_extend (agent update_scrollable_area_size)
 			resizer_top_right.enable_snapping
 			resizer_top_right.start_actions.extend (agent start_capture)
 			resizer_top_right.end_actions.extend (agent stop_capture)
@@ -114,11 +114,11 @@ feature -- Initialization
 			resizer_bottom_left.disable_snapping
 			resizer_bottom_left.point.set_origin (point)
 			resizer_bottom_left.extend (resize_area_bottom_left)
-			resizer_bottom_left.start_actions.extend (~on_resizer_start)
-			resizer_bottom_left.move_actions.extend (~on_resizer_bottom_left_move)
-			resizer_bottom_left.end_actions.extend (~on_resizer_end)
+			resizer_bottom_left.start_actions.extend (agent on_resizer_start)
+			resizer_bottom_left.move_actions.extend (agent on_resizer_bottom_left_move)
+			resizer_bottom_left.end_actions.extend (agent on_resizer_end)
 			resizer_bottom_left.set_pointer_style (Default_pixmaps.Sizenesw_cursor)
-			resizer_bottom_left.move_actions.force_extend (~update_scrollable_area_size)
+			resizer_bottom_left.move_actions.force_extend (agent update_scrollable_area_size)
 			resizer_bottom_left.enable_snapping
 			resizer_bottom_left.start_actions.extend (agent start_capture)
 			resizer_bottom_left.end_actions.extend (agent stop_capture)
@@ -139,29 +139,29 @@ feature -- Initialization
 			name_moving_area.point_a.set_origin (name_area.point_a)
 			name_moving_area.point_b.set_origin (name_moving_area.point_a)
 			name_moving_area.set_pointer_style (Default_pixmaps.Sizeall_cursor)
-			name_moving_area.pointer_double_press_actions.extend (~on_name_double_click)
+			name_moving_area.pointer_double_press_actions.extend (agent on_name_double_click)
 		
 			name_mover.hide
 			name_mover.disable_snapping
 			name_mover.point.set_origin (center_point)
 			name_mover.extend (name_moving_area)
-			name_mover.set_real_position_agent (~reset_mover_coordinates)
+			name_mover.set_real_position_agent (agent reset_mover_coordinates)
 			name_mover.start_actions.extend (agent start_capture)
 			name_mover.end_actions.extend (agent stop_capture)
 
 			create name_figures.make
 
-			pointer_button_press_actions.extend (~button_press)
-			move_actions.force_extend (~update)
-			move_actions.force_extend (~update_scrollable_area_size)
-			start_actions.extend (~save_position)
-			start_actions.extend (~set_pointer_style (Default_pixmaps.Sizeall_cursor))
+			pointer_button_press_actions.extend (agent button_press)
+			move_actions.force_extend (agent update)
+			move_actions.force_extend (agent update_scrollable_area_size)
+			start_actions.extend (agent save_position)
+			start_actions.extend (agent set_pointer_style (Default_pixmaps.Sizeall_cursor))
 			start_actions.extend (agent start_capture)
 			end_actions.extend (agent stop_capture)
-			end_actions.extend (~set_pointer_style (Default_pixmaps.Standard_cursor))
-			end_actions.extend (~update_cluster_size)
-			end_actions.extend (~extend_history)
-			end_actions.extend (~update_area_bounds)
+			end_actions.extend (agent set_pointer_style (Default_pixmaps.Standard_cursor))
+			end_actions.extend (agent update_cluster_size)
+			end_actions.extend (agent extend_history)
+			end_actions.extend (agent update_area_bounds)
 		end
 		
 feature -- Access

@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	generated_code: STRING is
@@ -83,7 +88,7 @@ feature {NONE} -- Implementation
 						l_string.append (a_file_name)
 						l_string.append ("%N")
 						l_string.append ("File backed up with extension %".bac%"")
-						message_output.add_warning (Current, l_string)
+						message_output.add_warning (l_string)
 						file_delete (backup_file_name (a_file_name))
 						file_copy (a_file_name, backup_file_name (a_file_name))
 					end
@@ -96,9 +101,8 @@ feature {NONE} -- Implementation
 					l_file.close
 				end
 			else
-				l_string.append ("Cannot write file: ")
-				l_string.append (a_file_name)
-				message_output.add_error (Current, l_string)
+				environment.set_abort (File_write_error)
+				environment.set_error_data (a_file_name)
 			end
 		rescue
 			if not failed_on_rescue then

@@ -6,6 +6,11 @@ class
 		
 feature -- MACROS
 
+	gtk_signal_emit_by_name (a_object: POINTER; a_signal: POINTER) is
+		external
+			"C(GtkObject*, gchar*) | <gtk/gtk.h>"
+		end
+
 	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
 		external
 			"C [macro <gtk/gtk.h>]"
@@ -4325,12 +4330,12 @@ feature -- External C functions
 --			"C (GMainLoop*): gboolean | <gtk/gtk.h>"
 --		end
 
---	g_main_iteration (a_may_block: BOOLEAN): BOOLEAN is
---			-- gboolean	g_main_iteration	(gboolean	may_block);
---			-- (from C_GLIB)
---		external
---			"C (gboolean): gboolean | <gtk/gtk.h>"
---		end
+	g_main_iteration (a_may_block: BOOLEAN): BOOLEAN is
+			-- gboolean	g_main_iteration	(gboolean	may_block);
+			-- (from C_GLIB)
+		external
+			"C (gboolean): gboolean | <gtk/gtk.h>"
+		end
 
 --	g_main_new (a_is_running: BOOLEAN): POINTER is
 --			-- GMainLoop*	g_main_new		(gboolean	 is_running);

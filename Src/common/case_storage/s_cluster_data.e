@@ -54,6 +54,14 @@ feature -- Setting values
         do
             chart := ch;
         end;
+
+feature -- Comparison
+
+    infix "<" (other: like Current): BOOLEAN is
+            -- Is Current's name before or after other's name?
+        do
+            Result := (- view_id) < (- other.view_id)
+        end;
  
 feature
 

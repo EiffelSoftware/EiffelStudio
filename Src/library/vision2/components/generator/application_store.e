@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that generate XML output from a Vision2 system"
-	author: "Julian Rogers"
 	date: "$Date$"
 	revision: "$Revision$"
 

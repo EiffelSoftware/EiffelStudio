@@ -1,6 +1,5 @@
 indexing
 	description: "Test class for application_generator."
-	author: "Julian Rogers"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,8 +20,5 @@ feature -- Create
 			prepare
 			launch
 		end
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class TEST_CLASS

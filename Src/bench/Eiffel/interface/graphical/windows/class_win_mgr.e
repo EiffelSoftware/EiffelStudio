@@ -15,5 +15,5 @@ creation
 feature {NONE}
 
 	editor_type: CLASS_W;
-	
+
 end 

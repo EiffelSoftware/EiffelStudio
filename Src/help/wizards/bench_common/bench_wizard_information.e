@@ -18,7 +18,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Assign default values
 		do
-			project_location := "C:\projects\my_project"
+			if not platform_is_unix then
+				project_location := "C:\projects\my_project"
+			else
+				project_location := Home + "/my_project"
+			end
 			compile_project := True
 			project_name := "my_project"
 			ace_location := ""
@@ -64,5 +68,19 @@ feature -- Access
 
 	compile_project: BOOLEAN
 			-- Should the project be compiled upon generation?
+
+feature {NONE} -- Implementation
+
+	Execution_environment: EXECUTION_ENVIRONMENT is
+			-- Execution environment we are in.
+		once
+			create Result
+		end
+
+	Home: STRING is
+			-- HOME name.
+		once
+			Result := Execution_environment.get ("HOME")
+		end
 
 end -- class BENCH_WIZARD_INFORMATION

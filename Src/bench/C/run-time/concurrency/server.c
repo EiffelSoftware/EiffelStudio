@@ -98,7 +98,6 @@ char *config_file;
 #endif
 
 	_concur_sock = c_concur_make_server(_concur_pid);
-	set_mask(_concur_sock);
 	for(; _concur_sock < 0; ) {
 		_concur_pid = _concur_pid + constant_port_skip;
 		if (_concur_pid > constant_max_port ) {
@@ -106,6 +105,7 @@ char *config_file;
 		}
 		_concur_sock = c_concur_make_server(_concur_pid);
 	}
+	set_mask(_concur_sock);
 	c_concur_set_non_blocking(_concur_sock);
 		
 	con_make(config_file);
@@ -146,8 +146,8 @@ EIF_OBJ s1;
 }
 
 
-CONNECTION  *setup_connection(hostn, port)
-char *hostn;
+CONNECTION  *setup_connection(haddr, port)
+EIF_INTEGER haddr;
 EIF_INTEGER port;
 {
 /* used to create an proxy(a C-structure) which does not
@@ -159,12 +159,12 @@ EIF_INTEGER port;
 
 	EIF_INTEGER sock;
 
-	if (port < 0 || !hostn) 
+	if (port < 0) 
 		return NULL;
 	else {
 		ret = (CONNECTION *)malloc(sizeof(CONNECTION));
 		valid_memory(ret);
-		ret->hostaddr = c_get_addr_from_name(hostn);
+		ret->hostaddr = haddr;
 		ret->pid = port;
 		ret->count = 0;
 		ret->reservation = -1;
@@ -603,9 +603,15 @@ EIF_INTEGER s;
 	printf(GET_CMD_MSG1, _concur_pid, s, command_text(_concur_command));	
 #endif
 	if (!valid_command(_concur_command)) {
-		add_nl;
-		sprintf(crash_info, CURAPPERR3, error_info(), command_text(_concur_command));
-		c_raise_concur_exception(exception_unexpected_request);
+		if (_concur_exception_has_happened) {
+			_concur_command = constant_not_defined;
+			_concur_para_num = 0;
+			return;
+		} else {
+			add_nl;
+			sprintf(crash_info, CURAPPERR3, error_info(), command_text(_concur_command));
+			c_raise_concur_exception(exception_unexpected_request);
+		}
 	}
 	if (_concur_command >= 0) {
 		/* Now, get OID */
@@ -638,9 +644,11 @@ EIF_INTEGER s;
 
 	if (_concur_command == constant_report_error) {
 		get_data(s);
-		add_nl;
-		sprintf(crash_info, CURAPPERR11);
-		c_raise_concur_exception(exception_unexpected_request);
+		if (!_concur_exception_has_happened) {
+			add_nl;
+			sprintf(crash_info, CURAPPERR11);
+			c_raise_concur_exception(exception_unexpected_request);
+		}
 	}
 
 	return;
@@ -824,8 +832,13 @@ EIF_INTEGER s;
 					has_sep_obj = 1;
 				break;
 			default:
-				sprintf(_concur_crash_info, CURERR3, _concur_paras[idx].type);
-				c_raise_concur_exception(exception_network_connection_crash);
+				if (_concur_exception_has_happened) {
+					_concur_command = constant_not_defined;
+					_concur_para_num = 0;
+				} else {
+					sprintf(_concur_crash_info, CURERR3, _concur_paras[idx].type);
+					c_raise_concur_exception(exception_network_connection_crash);
+				}
 		}
 #ifdef DISP_MSG
 		printf("\n");
@@ -1634,7 +1647,6 @@ EIF_OBJ direct_sep;
 	int rc;
 	EIF_INTEGER new_sock;
 
-
 	sep = henter(direct_sep);
 	sep_obj_id = eif_type_id("SEP_OBJ");
 	c_set_host_port = eif_proc("set_host_port", sep_obj_id);	
@@ -1642,7 +1654,6 @@ EIF_OBJ direct_sep;
 	c_set_oid = eif_proc("set_oid", sep_obj_id);	
 	c_set_proxy_id = eif_proc("set_proxy_id", sep_obj_id);
 
-	c_concur_set_non_blocking(_concur_sock);
 	for(_concur_command=constant_not_defined; _concur_command!=constant_sep_child_info; ) {
 		_concur_command = constant_not_defined;
 		if (child) {
@@ -1794,8 +1805,6 @@ EIF_OBJ direct_sep;
 				child->count = 1;
 				child->reservation = 0;
 				child->sock = new_sock;
-				child->hostaddr = CURGI(0);
-				child->pid = CURGI(1);
 #ifdef COMBINE_CREATION_WITH_INIT
 				/* keep the PARAMETER ARRAY's environment */
 				tmp_command = _concur_command;
@@ -1837,7 +1846,6 @@ EIF_OBJ direct_sep;
 		}
 		
 	}
-/*	c_concur_set_non_blocking(_concur_sock);*/
 	new_sock = c_concur_make_client(CURGI(1), CURGI(0));
 	(c_set_sock)(eif_access(sep), new_sock);
 	add_to_server_list(CURGI(0), CURGI(1), new_sock);	
@@ -1845,9 +1853,6 @@ EIF_OBJ direct_sep;
 
 	sep = eif_wean(sep);/* free the separate object from hector */
 
-/*
-printf("%d Exit from Wait_sep_child after setting up <%s, %d, %d>\n", _concur_pid, c_get_name_from_addr(child->hostaddr), child->pid, child->sock);
-*/
 	return;
 }
 
@@ -2263,13 +2268,10 @@ void default_rescue() {
 #else
 #endif
 #else
-	RTED;
 	RTEX;
+	RTED;
     RTSN;
-/*
     RTDA;
-*/
-	int as_level;
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur1", 0, root_obj);
@@ -2278,6 +2280,8 @@ void default_rescue() {
 
 
 #ifdef ERROR_STACK
+add_nl;
+printf("%d(%s) Error Message: <%s>\n", _concur_pid, _concur_class_name_of_root_obj, _concur_crash_info);
 failure();
 #endif
 	_concur_exception_has_happened = 1;
@@ -2308,7 +2312,12 @@ failure();
 		strcpy(err_msg, "Detected Crash Happened Here: \n    ");	
 	}	
 	else {
-		_concur_para_num -= 2;
+		if (_concur_para_num > 2)
+		/* The error message sent by daemon only contains error message, not expanded
+		 * with host address and port ID. In the case, we should not decrease 
+		 * `_concur_para_num' by 2.
+		 */
+			_concur_para_num -= 2;
 		if (_concur_parent == NULL) 
 			strcpy(err_msg, "Called From(root): \n    ");
 		else 
@@ -2349,14 +2358,14 @@ failure();
 	if (_concur_command != constant_report_error)
 		_concur_command = constant_report_error;
 	(_concur_para_num)++;	
+	_concur_para_num += 2;
+	CURPI(_concur_hostaddr, _concur_para_num-2);
+	CURPI(_concur_pid, _concur_para_num-1);
 
 	if (_concur_parent != NULL) {
 		if (_concur_parent->sock == constant_alive_socket) 
 			_concur_parent->sock = c_concur_make_client(_concur_parent->pid, _concur_parent->hostaddr);
 		if (_concur_parent->sock >= 0) {
-			_concur_para_num += 2;
-			CURPI(_concur_hostaddr, _concur_para_num-2);
-			CURPI(_concur_pid, _concur_para_num-1);
 			send_command(_concur_parent->sock);
 			c_close_socket(_concur_parent->sock);
 			_concur_parent->sock = -2;
@@ -2368,7 +2377,9 @@ failure();
 	}
 	else {
 		if (_concur_root_of_the_application) {
+			_concur_para_num -= 2;
 			print_run_time_error_message();
+			_concur_para_num += 2;
 		}
 		else {
 		}
@@ -2403,7 +2414,10 @@ rescue:
 #ifdef SIGNAL
 	CONCUR_RESC_RETRY;
 #else
+	RTTS;
+	RTPS;
 	RTER;
+	RTEF;
 #endif
 }
 
@@ -2432,13 +2446,10 @@ void release_system_lists_in_rescue() {
 #else
 #endif
 #else
-	RTED;
 	RTEX;
+	RTED;
     RTSN;
-/*
     RTDA;
-*/
-	int as_level;
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur3", 0, root_obj);
@@ -2509,7 +2520,10 @@ rescue:
 #else
 	RTEU;
 	RTXS(0);
+	RTTS;
+	RTPS;
 	RTER;
+	RTEF;
 #endif
 }
 
@@ -2525,10 +2539,10 @@ void release_child_list() {
 #else
 #endif
 #else
-	RTED;
 	RTEX;
+	RTED;
     RTSN;
-	int as_level; /* RTDA;*/
+	RTDA;
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur14", 0, root_obj);
@@ -2569,7 +2583,10 @@ rescue:
 #else
 	RTEU;
 	RTXS(0);
+	RTTS;
+	RTPS;
 	RTER;
+	RTEF;
 #endif
 }
 /*-----------------------------------------------------------------------*/
@@ -2878,8 +2895,26 @@ cli1=cli1->next) {
 void process_connection() {
 	EIF_INTEGER new_sock;
     CLIENT * recv;
+	EIF_INTEGER command_bak;
+	EIF_INTEGER para_num_bak;
+	PARAMETER *paras_bak;
+	EIF_INTEGER paras_size_bak;
+	EIF_BOOLEAN message_backed=0;
 
-	c_concur_set_non_blocking(_concur_sock);
+	if (_concur_sock < 0)
+		return;
+	
+	if (_concur_command == constant_report_error) {
+		command_bak = _concur_command;
+		para_num_bak = _concur_para_num;
+		paras_bak = _concur_paras;
+		paras_size_bak = _concur_paras_size;
+		message_backed = 1;
+		_concur_paras = NULL;
+		_concur_paras_size = 0L;
+	}
+		
+
 	new_sock = c_concur_accept(_concur_sock);
 	while (new_sock >= 0) {
 	/* we got a connection.  so get the first
@@ -2906,9 +2941,13 @@ void process_connection() {
 				c_close_socket(new_sock);
 				for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child, cur_child=cur_child->next);
 				if (!cur_child) {
-					add_nl;
-					sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
-					c_raise_concur_exception(exception_implementation_error);
+					if (_concur_exception_has_happened) 
+						break;
+					else {
+						add_nl;
+						sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
+						c_raise_concur_exception(exception_implementation_error);
+					}
 				}
 				if (!bak_child)
 					_concur_child_list = cur_child->next;
@@ -2932,9 +2971,13 @@ void process_connection() {
 				c_close_socket(new_sock);
 				for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child, cur_child=cur_child->next);
 				if (!cur_child) {
-					add_nl;
-					sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
-					c_raise_concur_exception(exception_implementation_error);
+					if (_concur_exception_has_happened) 
+						break;
+					else {
+						add_nl;
+						sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
+						c_raise_concur_exception(exception_implementation_error);
+					}
 				}
 				if (!bak_child)
 					_concur_child_list = cur_child->next;
@@ -2986,13 +3029,50 @@ void process_connection() {
 			print_ref_table_and_exported_object();
 #endif
 			break;
+		case constant_sep_child:
+			/* The purpose that we accept the request here is just to tell the
+			 * pending child to terminate. The branch may be executed only when
+			 * the enclosing procedure is called from `default_rescue'.
+			 */
+			directly_get_cmd_data(new_sock);
+			if (_concur_command != constant_sep_child_info) {
+				c_concur_close_socket(new_sock);
+				break;
+			}
+		case constant_sep_child_info:
+			/* The purpose that we accept the request here is just to tell the
+			 * pending child to terminate. The branch may be executed only when
+			 * the enclosing procedure is called from `default_rescue'.
+			 */
+			c_concur_close_socket(new_sock);
+			new_sock = c_concur_make_client(CURGI(1), CURGI(0));	
+			if (new_sock >= 0) {
+				_concur_command = constant_stop_execution;
+				_concur_para_num = 0;
+				send_command(new_sock);
+				c_close_socket(new_sock);
+			}
+			break;
 		default:
-			add_nl;
-			sprintf(crash_info, CURAPPERR4, command_text(_concur_command), _concur_para_num);
-			c_raise_concur_exception(exception_network_connection_crash);
-	}
+			if (_concur_exception_has_happened) {
+				c_concur_close_socket(new_sock);
+			} else {
+				add_nl;
+				sprintf(crash_info, CURAPPERR4, command_text(_concur_command), _concur_para_num);
+				c_raise_concur_exception(exception_network_connection_crash);
+			}
+	} /* end of switch */
 	new_sock = c_concur_accept(_concur_sock);
+	} /* end of While */
+
+	if (message_backed) {
+		free_parameter_array(_concur_paras, _concur_paras_size);
+		_concur_command = command_bak;
+		_concur_paras = paras_bak;
+		_concur_paras_size = paras_size_bak;
+		_concur_para_num = para_num_bak;
 	}
+	return;
 }
 
 

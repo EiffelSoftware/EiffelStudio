@@ -151,7 +151,7 @@ extern double _concur_begin_tms;
 extern Timeval _concur_begin_tms;
 #endif
 
-extern char _concur_error_msg[100];
+extern char _concur_error_msg[constant_errno_text_len+1];
 
 extern char _concur_root_of_the_application;
 
@@ -299,8 +299,8 @@ extern void extend_string();
 /* From "subs.c" */
 extern EIF_INTEGER inttoa();
 extern EIF_INTEGER longtoa();
-extern EIF_INTEGER rtoa();
-extern EIF_INTEGER dtoa();
+extern EIF_INTEGER realtoa();
+extern EIF_INTEGER doutoa();
 extern void c_get_host_name();
 extern char * c_get_name_from_addr();
 extern EIF_INTEGER c_get_addr_from_name();

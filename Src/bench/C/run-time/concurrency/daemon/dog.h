@@ -105,6 +105,7 @@
 #define tDISP                   
 #define tTESTNAME               
 #define DEAD               
+/* If you want to get rid of defunct procedure, define DEAD */
 #define tWAIT               
 
 #define tTEST                   
@@ -116,6 +117,10 @@
 #define CREATE_SEP_OBJ                  -601
 #define REPORT_ERROR                    -1001
 #define START_SEP_OBJ_OK                -1004
+#define constant_time_of_daemon_waiting_child	30
+/* If time out for the period, daemon thinks that the new-created separate
+ * object is dead . The time unit: second.
+ */
 
 
 #define HOSTNAME_LEN             50

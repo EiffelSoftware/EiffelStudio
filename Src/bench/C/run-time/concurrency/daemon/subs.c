@@ -423,6 +423,8 @@ void do_init();
 
 EIF_INTEGER c_get_host_name(char *buf, int len) {
     int tmp;
+	struct hostent *host;
+
 #ifdef EIF_WIN32
     do_init();
 #endif
@@ -430,6 +432,13 @@ EIF_INTEGER c_get_host_name(char *buf, int len) {
     if (tmp == -1) {
         return -1;
     }
+	host=gethostbyname(buf);
+	if (!host) 
+		return -1;
+	if ((int)strlen(host->h_name)>len) 
+		return -1;
+	strcpy(buf, host->h_name);
+
 
     return 0;
 }

@@ -79,7 +79,8 @@ feature {NONE}
 			init_values (false);
 			!! to_refresh.make;
 			clear_window;
-			add_expose_action (Current, Void)
+			add_expose_action (Current, Void);
+			old_set_background_color (g_Bg_color)
 		end;
 
 feature -- Properties
@@ -161,10 +162,10 @@ feature -- Status setting
 			mel_sw: MEL_SCROLLED_WINDOW;
 			mel_color: MEL_PIXEL
 		do
-			old_set_background_color (g_Bg_color);
 			mel_sw ?= scrolled_window.implementation;
 			mel_color ?= g_Bg_color.implementation;
 			mel_sw.clip_window.set_background_color (mel_color);
+			old_set_background_color (g_Bg_color)
 		end;
 
 	set_tab_length (i: INTEGER) is
@@ -177,7 +178,7 @@ feature -- Status setting
 			!! tab_spaces.make (0);
 			tab_spaces.extend (' ');
 			tab_spaces.multiply (i);
-			tab_pixel_length := g_Text_font.width_of_string (tab_spaces)
+			tab_pixel_length := g_Default_text_font.width_of_string (tab_spaces)
 			if not text.empty then
 				cur := cursor;
 				last_format := tool.last_format;
@@ -337,6 +338,7 @@ feature -- Update
 			-- Update Current stone and related information
 			-- before transport using button data `but_data'.
 		do
+			deselect_all;
 			find_clickable (but_data);
 			if selected_clickable_text /= Void then
 				selected_clickable_text.select_clickable (drawing,

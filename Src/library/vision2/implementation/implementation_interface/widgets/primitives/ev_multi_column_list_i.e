@@ -572,7 +572,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Called when a column width has been changed.
 		require
 			a_column_positive: a_column > 0
-			a_width_positive: a_width > 0
+			a_width_positive: a_width >= 0
 		deferred
 		end
 

@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	add_constructor (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Add constructor.
 		do
---			cpp_class_writer.add_constructor (constructor (an_interface))
+
 		end
 
 	constructor (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is

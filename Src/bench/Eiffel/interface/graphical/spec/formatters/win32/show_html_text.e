@@ -57,7 +57,7 @@ feature -- format
 								if filed_stone.file_name /= Void then
 									error := true;
 									warner (popup_parent).gotcha_call 	
-									(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
+										(Warning_messages.w_Cannot_read_file (filed_stone.file_name))
 								else
 									error := true;
 									warner (popup_parent).gotcha_call 
@@ -139,6 +139,8 @@ feature {NONE}
 			-- the names of the features
 		local
 			g_window: GRAPHICAL_TEXT_WINDOW
+			imp: TABBED_TEXT_WINDOWS
+			html_format: WEL_CHARACTER_FORMAT
 			click_item: CLICK_STONE
 			click_array: ARRAY [CLICK_STONE]
 			i: INTEGER
@@ -154,19 +156,21 @@ feature {NONE}
 							i := click_array.lower
 							count := click_array.upper
 							g_window.set_changed (True)
-							g_window.implementation.hide_selection
-							top_position := g_window.implementation.top_character_position
+							imp := g_window.implementation
+							html_format := g_window.html_format
+							imp.hide_selection
+							top_position := imp.top_character_position
 						until
 							i > count or else click_array.item (i) = Void
 						loop
 							click_item := click_array.item (i)
-							g_window.implementation.wel_set_selection (click_item.start_position, click_item.end_position)
-							g_window.implementation.set_character_format_word (g_window.html_format);
+							imp.wel_set_selection (click_item.start_position, click_item.end_position)
+							imp.set_character_format_word (html_format);
 							i := i + 1
 						end
-						g_window.implementation.set_top_character_position (top_position)
-						g_window.implementation.wel_set_selection (top_position, top_position)
-						g_window.implementation.show_selection
+						imp.set_top_character_position (top_position)
+						imp.wel_set_selection (top_position, top_position)
+						imp.show_selection
 						g_window.set_changed (False)
 					end
 				end

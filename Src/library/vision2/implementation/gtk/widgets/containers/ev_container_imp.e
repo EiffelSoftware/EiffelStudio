@@ -16,15 +16,6 @@ inherit
 	
 	EV_WIDGET_IMP
 	
-feature {EV_CONTAINER}
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			gtk_container_add (widget, child_imp.widget)
-		end
-	
-
 feature -- Access
 	
 	client_width: INTEGER is
@@ -42,6 +33,16 @@ feature -- Access
                                 not_yet_implemented: False
                         end		
 		end
+
+feature {EV_CONTAINER} -- Element change
+	
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite
+		do
+			gtk_container_add (widget, child_imp.widget)
+		end
+	
+
 end
 
 --|----------------------------------------------------------------

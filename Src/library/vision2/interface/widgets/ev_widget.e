@@ -14,25 +14,31 @@ class EV_WIDGET
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
-                        -- Create a widget with `parent' as parent and
+        make (par: EV_CONTAINER) is
+                        -- Create a widget with `par' as parent and
                         -- call `set_default'. 
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
 			-- widgets with parents (Put call to 
 			-- Precursor at the end of creation routine).
                 require
-                        valid_parent: parent /= Void
+                        valid_parent: par /= Void
 		do
+			parent := par
 			-- For effective widgets, create widget_imp
-			set_default (parent)
+			set_default 
                 ensure
-                        parent_set: parent.child = Current
+                        parent_set: parent.child = Current and par = parent
  			exists: not destroyed
 		end
 	
+feature -- Access
+	
+	parent: EV_CONTAINER
+	
+	
 feature -- Status report
-
+	
 	destroyed: BOOLEAN is
 			-- Is Current widget destroyed?  
 			-- (= implementation does not exist)
@@ -446,7 +452,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-        set_default (parent: EV_CONTAINER) is
+        set_default is
                         -- Do the necessary initialization after 
                         -- creation 
                         -- Set default values of Current widget.

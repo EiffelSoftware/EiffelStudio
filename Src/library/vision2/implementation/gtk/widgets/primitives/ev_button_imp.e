@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
+        make (par: EV_CONTAINER) is
                         -- Create a gtk push button.
                 local
                         a: ANY

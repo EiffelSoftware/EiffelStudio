@@ -29,12 +29,12 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
+        make (par: EV_CONTAINER) is
                         -- Create a wel push button.
 		local
 			cont_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= parent.implementation
+			cont_imp ?= par.implementation
 			check
 				valid_container: cont_imp /= Void
 			end

@@ -19,7 +19,7 @@ inherit
 			implementation
 		end
 	
-feature {NONE} -- Status report
+feature -- Status report
 	
 	get_expand (box_child: EV_WIDGET): BOOLEAN is
 			-- Is the box expanded to fill the area 

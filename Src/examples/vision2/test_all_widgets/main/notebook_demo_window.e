@@ -1,14 +1,14 @@
 indexing
 
 	description: 
-	"BOX_DEMO_WINDOW, demo window to test box widget. Belongs to EiffelVision example."
+	"NOTEBOOK_DEMO_WINDOW, demo window to test notebook widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 class 
-	BOX_DEMO_WINDOW
+	NOTEBOOK_DEMO_WINDOW
 
 inherit
 
@@ -21,16 +21,17 @@ creation
 
 feature -- Access
 
-	main_widget: EV_HORIZONTAL_BOX is
+	main_widget: EV_NOTEBOOK is
 		once
 			!!Result.make (Current)
 		end
 	
 feature -- Access
 
-	button1: EV_BUTTON
-	button2: EV_BUTTON
-	button3: EV_BUTTON
+	button1,
+	button2,
+	button3,
+	button4: EV_BUTTON
 			-- Push buttons
 feature -- Status setting
 	
@@ -39,6 +40,7 @@ feature -- Status setting
 			!!button1.make (main_widget)
 			!!button2.make (main_widget)
 			!!button3.make (main_widget)
+			!!button4.make (main_widget)
 			set_values
 --			set_commands
 		end
@@ -47,10 +49,16 @@ feature -- Status setting
 	
 	set_values is
 		do
-			set_title ("Box demo")
-			button1.set_text ("Press me")
-			button2.set_text ("Me too!")
-			button3.set_text ("Me too!")
+			set_title ("Notebook demo")
+			button1.set_text ("1")
+			button2.set_text ("2")
+			button3.set_text ("3")
+			button3.set_height (40)
+			button4.set_text ("4")
+			main_widget.append_page (button1, "Page 1")
+			main_widget.append_page (button2, "Page 2")
+			main_widget.append_page (button3, "Page 3")
+			main_widget.append_page (button4, "Page 4")
 		end
 
 

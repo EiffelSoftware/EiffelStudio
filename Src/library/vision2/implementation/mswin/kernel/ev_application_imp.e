@@ -20,12 +20,12 @@ inherit
 			message_loop
  		end
 
-	WEL_ICC_CONSTANTS
+	WEL_CONSTANTS
 		export
 			{NONE} all
 		end
 
-	WEL_WS_CONSTANTS
+	WEL_ICC_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_application (Current)
 			create_dispatcher
+			create blocking_windows_stack.make (5)
 			init_instance
 			init_application
 		end
@@ -72,9 +73,17 @@ feature -- Basic operation
 				if msg.last_boolean_result then
 					process_message (msg)
 				else
-					done := True
+					if not internal_idle_actions.empty then
+						internal_idle_actions.call ([])
+					elseif not interface.idle_actions.empty then 
+						interface.idle_actions.call ([])
+					else
+						done := true
+					end
 				end
 			end
+				-- Signal to Windows to our thread is now
+				-- idle.
 			c_sleep (0)
 		end
 
@@ -83,6 +92,22 @@ feature -- Basic operation
 		do
 			c_sleep (msec)
 		end
+
+	has_blocking_window: BOOLEAN is
+			-- Has the application a blocking window. The blocking 
+			-- window is the window that receive user input.
+		do
+			Result := not blocking_windows_stack.empty
+		ensure
+			blocking_window_useable:
+				Result implies blocking_window /= Void
+		end
+
+	blocking_window: EV_WINDOW_IMP
+			-- Get the current blocking window. 
+			-- The blocking window is the window that 
+			-- receive user input and this is the only
+			-- one.
 
 feature -- Root window
 
@@ -109,6 +134,34 @@ feature -- Element change
 			else
 				set_application_main_window (main_window)
 			end
+		end
+
+	set_blocking_window (a_window_imp: EV_WINDOW_IMP) is
+			-- Set the blocking window to `a_window'. The
+			-- blocking window is the window that receive
+			-- user input.
+		do
+			blocking_windows_stack.extend (a_window_imp)
+			blocking_window := blocking_windows_stack.item
+		ensure
+			has_blocking_window: has_blocking_window
+			blocking_window_set: equal (blocking_window, a_window_imp)
+		end
+
+	remove_blocking_window (a_window: EV_WINDOW_IMP) is
+			-- Remove the current blocking window. 
+			-- The blocking window is the window that 
+			-- receive user input.
+		require
+			a_window_is_current_blocking_window:
+				equal(a_window, blocking_window)
+		do
+			blocking_windows_stack.remove
+			if blocking_windows_stack.empty then
+				blocking_window := Void
+			else
+				blocking_window := blocking_windows_stack.item
+			end				
 		end
 
 feature -- Status report
@@ -167,9 +220,10 @@ feature {NONE} -- WEL Implemenation
 
 feature {NONE} -- Implementation
 
-	quit_requested: BOOLEAN
-			-- Has a Wm_quit message been processed?
-			-- Or has destroy been called?
+	blocking_windows_stack: ARRAYED_STACK [EV_WINDOW_IMP]
+			-- Windows that are bloking window. The top
+			-- window represent the window that is the
+			-- real current blocking window.
 
 	message_loop is
 			-- Windows message loop.
@@ -180,7 +234,14 @@ feature {NONE} -- Implementation
 			from
 				create msg.make
 			until
-				quit_requested
+				(quit_requested) or
+					(
+					has_blocking_window 
+					and (
+						blocking_window.is_destroyed or 
+						(not blocking_window.is_show_requested)
+						)
+					)
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -197,6 +258,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	quit_requested: BOOLEAN
+			-- Has a Wm_quit message been processed?
+			-- Or has destroy been called?
+
 	process_message (msg: WEL_MSG) is
 			-- Dispatch `msg'.
 			--| Different from WEL because of accelerators.
@@ -209,18 +274,107 @@ feature {NONE} -- Implementation
 				else
 					dlg := cwin_get_last_active_popup (main_window.wel_item)
 					if is_dialog (dlg) then
+						-------------------------------------------
+						-- A Window Dialog is Present 
+						-------------------------------------------
 						msg.process_dialog_message (dlg)
 						if not msg.last_boolean_result then
 							msg.translate
 							msg.dispatch
 						end
+					elseif has_blocking_window then
+						-------------------------------------------
+						-- A Vision2 Dialog is Present 
+						-------------------------------------------
+						process_blocked_message (msg)
 					else
-						--| FIXME Accelerators to be implemented.
+						-------------------------------------------
+						-- No Dialog is Present, Default behaviour
+						-------------------------------------------
 						msg.translate
 						msg.dispatch
 					end
 				end
 			end
+		end
+
+	process_blocked_message (msg: WEL_MSG) is
+			-- Dispatch the message when a Vision2 dialog box
+			-- is present.
+		do
+			if blocking_window.is_control_in_window(msg.hwnd) then
+				msg.translate
+				msg.dispatch
+			else
+				if authorized_messages.has(msg.message) then
+					msg.translate
+					msg.dispatch
+--|---------------------------------------------------------------------------------
+--|FIXME: BEGIN DEBUGGING CODE (ARNAUD)
+--|---------------------------------------------------------------------------------
+				elseif unauthorized_messages.has(msg.message) then
+					-- do nothing
+				else
+					io.putstring ("Unknown message:%N")
+					io.putstring (" hwnd   = "+msg.hwnd.hash_code.out+"%N")
+					io.putstring (" msg    = "+msg.message.out+"%N")
+					io.putstring (" lparam = "+msg.lparam.out+"%N")
+					io.putstring (" wparam = "+msg.wparam.out+"%N%N")
+				end
+--|---------------------------------------------------------------------------------
+--|FIXME: END DEBUGGING CODE (ARNAUD)
+--|---------------------------------------------------------------------------------
+			end
+		end
+
+	authorized_messages: ARRAY[INTEGER] is 
+		once
+			create Result.make (0, 6)
+			Result.put (Wel_window_constants.Wm_paint,           0)
+			Result.put (Wel_window_constants.Wm_erasebkgnd,      1)
+			Result.put (Wel_window_constants.Wm_setredraw,       2)
+			Result.put (Wel_window_constants.Wm_initmenupopup,   3)
+			Result.put (Wel_window_constants.Wm_initdialog,      4)
+			Result.put (Wel_window_constants.Wm_timer,           5)
+			Result.put (Wel_window_constants.Wm_initmenu,        6)
+		end
+
+	unauthorized_messages: ARRAY[INTEGER] is 
+		once
+			create Result.make (0, 32)
+			Result.put (Wel_window_constants.Wm_mousemove,       0)
+			Result.put (Wel_window_constants.Wm_nchittest,       1)
+			Result.put (Wel_window_constants.Wm_ncmousemove,     2)
+			Result.put (Wel_window_constants.Wm_lbuttondown,     3)
+			Result.put (Wel_window_constants.Wm_mbuttondown,     4)
+			Result.put (Wel_window_constants.Wm_rbuttondown,     5)
+			Result.put (Wel_window_constants.Wm_lbuttonup,       6)
+			Result.put (Wel_window_constants.Wm_mbuttonup,       7)
+			Result.put (Wel_window_constants.Wm_rbuttonup,       8)
+			Result.put (Wel_window_constants.Wm_lbuttondblclk,   9)
+			Result.put (Wel_window_constants.Wm_mbuttondblclk,   10)
+			Result.put (Wel_window_constants.Wm_rbuttondblclk,   11)
+			Result.put (Wel_window_constants.Wm_nclbuttondown,   12)
+			Result.put (Wel_window_constants.Wm_ncmbuttondown,   13)
+			Result.put (Wel_window_constants.Wm_ncrbuttondown,   14)
+			Result.put (Wel_window_constants.Wm_nclbuttonup,     15)
+			Result.put (Wel_window_constants.Wm_ncmbuttonup,     16)
+			Result.put (Wel_window_constants.Wm_ncrbuttonup,     17)
+			Result.put (Wel_window_constants.Wm_nclbuttondblclk, 18)
+			Result.put (Wel_window_constants.Wm_ncmbuttondblclk, 19)
+			Result.put (Wel_window_constants.Wm_ncrbuttondblclk, 20)
+			Result.put (Wel_window_constants.Wm_keyup,           21)
+			Result.put (Wel_window_constants.Wm_keydown,         22)
+			Result.put (Wel_window_constants.Wm_syskeyup,        23)
+			Result.put (Wel_window_constants.Wm_syskeydown,      24)
+			Result.put (Wel_window_constants.Wm_syschar,         25)
+			Result.put (Wel_window_constants.Wm_sysdeadchar,     26)
+			Result.put (Wel_window_constants.Wm_char,            27)
+			Result.put (Wel_window_constants.Wm_deadchar,        28)
+			Result.put (Wel_window_constants.Wm_hscroll,         29)
+			Result.put (Wel_window_constants.Wm_vscroll,         30)
+			Result.put (Wel_window_constants.Wm_syscommand,      31)
+			Result.put (Wel_window_constants.Wm_enable,          32)
 		end
 
 feature {NONE} -- Inapplicable
@@ -308,6 +462,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/05/03 00:32:08  pichery
+--| Merged class EV_APPLICATION_IMP and
+--| EV_MODAL_EMULATION_IMP.
+--|
 --| Revision 1.35  2000/04/26 16:28:42  brendel
 --| Added call to post_launch_actions.
 --|

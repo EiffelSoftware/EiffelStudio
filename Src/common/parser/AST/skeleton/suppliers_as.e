@@ -1,4 +1,8 @@
--- Abstract description for the supplier type set of a class
+indexing
+
+	description: "Abstract description for the supplier type set of a class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SUPPLIERS_AS
 
@@ -52,4 +56,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+end -- class SUPPLIERS_AS

@@ -1,4 +1,8 @@
--- Abstract description of an Eiffel prefixed feature name
+indexing
+
+	description: "Abstract description of an Eiffel prefixed feature name.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PREFIX_AS
 
@@ -30,4 +34,4 @@ feature
 			Result := True;
 		end;
 
-end
+end -- class PREFIX_AS

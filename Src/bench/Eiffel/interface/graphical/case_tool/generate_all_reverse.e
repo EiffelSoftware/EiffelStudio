@@ -21,6 +21,7 @@ feature
 		format_case: FORMAT_CASE_STORAGE
 	do
 		!! aa
+		aa.set_parent_window (case_window.Project_tool.implementation)
 		!! bb.make ( case_window )
 		!! format_case.make (bb,
 			aa,TRUE )

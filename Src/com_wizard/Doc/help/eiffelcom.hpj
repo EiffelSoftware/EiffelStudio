@@ -2,6 +2,7 @@
 
 [OPTIONS]
 COMPRESS=12 Hall Zeck
+REVISIONS=No
 LCID=0x409 0x6 0x0 ; English (United States)
 REPORT=Yes
 FTS=3
@@ -20,6 +21,7 @@ wizard.rtf
 [MAP]
 IDH_code_type_dialog=732        ; Generated Code Type Dialog
 IDH_definition_file_dialog=733              ; Definition File Dialog
+IDH_destination_folder_dialog=738         ; Destination File Dialog
 IDH_eiffel_project_dialog=734             ; Eiffel Project File Dialog
 IDH_final_dialog=737            ; Final Dialog
 IDH_idl_marshling_dialog=735            ; IDL Marshalling Definition Dialog
@@ -27,4 +29,4 @@ IDH_main_win=731        ; Introduction Dialog
 IDH_type_lib_marshaling_dialog=736          ; Type Marshalling Definition Dialog
 
 [WINDOWS]
-ECOM="EiffelCOM Help",(541,102,469,684),53508,,,f3; EiffelCOM help files
+ECOM="EiffelCOM Help",(541,102,469,684),28932,,,f2; EiffelCOM help files

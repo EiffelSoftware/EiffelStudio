@@ -9,7 +9,7 @@ deferred class ICONED_COMMAND
 
 inherit
 
-	COMMAND_W
+	TOOL_COMMAND
 		redefine
 			execute
 		end;
@@ -21,19 +21,6 @@ inherit
 		end;
 	SHARED_ACCELERATOR
 
-feature {NONE} -- Implementation
-
-	init (a_text_window: TEXT_WINDOW) is
-			-- Initialize a command with the `symbol' icon,
-			-- `a_text_window' is passed as argument to the activation action.
-		require
-			a_text_window_not_void: a_text_window /= Void
-		do
-			text_window := a_text_window
-		ensure
-			text_window_set: equal (text_window, a_text_window)
-		end;
-
 feature -- Callbacks
 
 	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
@@ -41,10 +28,6 @@ feature -- Callbacks
 		end;
 
 feature -- Properties
-
-	text_window: TEXT_WINDOW;
-			-- Text window which staus tells if we want to execute 
-			-- or not, and usually the target of the command
 
 	symbol: PIXMAP is
 			 -- Icon for current command
@@ -77,11 +60,6 @@ feature -- Properties
 
 	holder: EB_HOLDER;
 			-- Holder of Current.
-
-	name: STRING is
-			-- Name of the command.
-		deferred
-		end;
 
 	is_sensitive: BOOLEAN is
 			-- Can Current be executed?

@@ -129,18 +129,22 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 			show_title_row
-			
-			if old_list_widget /= Default_pointer then
-				C.gtk_container_remove (scroll_window, old_list_widget)
-			end
-			C.gtk_container_add (scroll_window, list_widget)
 
 			from
 				ev_children.start
 			until
 				ev_children.after
 			loop
+				i := C.c_gtk_clist_append_row (list_widget)
+				update_child (ev_children.item, ev_children.index)
+				ev_children.forth
 			end
+			
+			if old_list_widget /= Default_pointer then
+				C.gtk_container_remove (scroll_window, old_list_widget)
+			end
+			C.gtk_container_add (scroll_window, list_widget)
+
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
@@ -471,7 +475,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_text_on_position (a_row, a_column: INTEGER; a_text: STRING) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 		local
 			a: ANY
 		do
@@ -503,28 +507,25 @@ feature {NONE} -- Implementation
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			a_curs: CURSOR
 		do
-			if list_widget = Default_pointer then
-				if v.count > 0 then
-					create_list (v.count)
-				else
-					create_list (1)
-				end
-			end
-
 			item_imp ?= v.implementation
-			--| FIXME N/A item_imp.set_column_count (column_count)
 			item_imp.set_parent_imp (Current)
 
 			-- update the list of rows of the column list:
 			ev_children.force (item_imp)
 
-			-- add an empty row to the gtk column list:
-			an_index := C.c_gtk_clist_append_row (list_widget)
-
-			-- add text in the gtk column list row:
-			
-			if v.count <= column_count then
+			if list_widget = Default_pointer then
+				if v.count = 0 then
+					create_list (1)
+				end
 			end
+
+			if v.count > column_count then
+				create_list (v.count)
+			else
+				-- add row to the existing gtk column list:
+				an_index := C.c_gtk_clist_append_row (list_widget)
+				update_child (item_imp, ev_children.count)
+			end		
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -625,6 +626,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/27 22:36:35  king
+--| Corrected add_to_container to deal with all row situations
+--|
 --| Revision 1.49  2000/03/27 17:18:44  brendel
 --| columns -> column_count
 --|

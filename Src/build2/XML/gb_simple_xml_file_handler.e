@@ -29,11 +29,6 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	XM_CALLBACKS_NULL
-		export
-			{NONE} all
-		end
 		
 	CDATA_HANDLER
 		export

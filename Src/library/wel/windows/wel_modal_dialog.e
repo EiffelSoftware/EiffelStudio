@@ -21,18 +21,19 @@ feature -- Basic operations
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
+				-- `cwin_end_dialog' does not send the WM_DESTROY message
+				-- to its children and therefore we need to do it manually
 			from
 				dialog_children.start
 			until
 				dialog_children.off
 			loop
-				dialog_children.item.set_exists (False)
-				unregister_window (dialog_children.item)
-				dialog_children.item.set_item (default_pointer)
+				dialog_children.item.destroy_from_dialog
 				dialog_children.forth
 			end
 			result_id := a_result
 			cwin_end_dialog (item, a_result)
+			destroy_item
 		end
 
 feature {NONE} -- Implementation
@@ -45,7 +46,6 @@ feature {NONE} -- Implementation
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		do
 			item := cwel_temp_dialog_value
-			exists := True
 			register_window (Current)
 
 				-- Initialise the common controls
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 					cwel_dialog_procedure_address)
 			end
 			if result_id = -1 then
-				exists := False
+				destroy_item
 			end
 		end
 

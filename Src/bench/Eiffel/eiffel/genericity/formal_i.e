@@ -80,4 +80,10 @@ feature
 			False
 		end;
 
+	cecil_value: INTEGER is
+		do
+		ensure then
+			False
+		end;
+
 end

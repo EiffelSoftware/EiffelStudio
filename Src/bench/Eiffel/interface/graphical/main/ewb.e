@@ -93,13 +93,10 @@ feature
 			discard_licence;
 			if not Rescue_status.fail_on_rescue then
 				retried := True;
---				io.error.putstring
---					("ISE Eiffel3: Session aborted%N");
---				io.error.putstring
---					("Exception tag: ");
---				io.error.putstring
---					(programmer_exception_name);
---				io.error.new_line;
+				io.error.putstring ("ISE Eiffel3: Session aborted%N");
+				io.error.putstring ("Exception tag: ");
+				io.error.putstring (programmer_exception_name);
+				io.error.new_line;
 				retry
 			end;
 		end;

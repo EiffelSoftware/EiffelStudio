@@ -6,7 +6,10 @@ class SKELETON
 inherit
 
 	GENERIC_SKELETON;
-	SHARED_LEVEL;
+	SHARED_LEVEL
+		export
+			{ANY} all
+		end;
 	SHARED_WORKBENCH;
 	SHARED_ENCODER;
 	SHARED_CODE_FILES;
@@ -97,7 +100,7 @@ feature
 			old_pos: INTEGER;
 		do
 			from
-				old_pos := position;
+				old_pos := index;
 				goto (level);
 			until
 				after or else item.level > level
@@ -105,7 +108,7 @@ feature
 				Result := Result + 1;
 				forth;
 			end;
-			go (old_pos);
+			go_i_th (old_pos);
 		end;
 
 	go_reference is
@@ -237,7 +240,7 @@ feature
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
 		do
-			go (pos);
+			go_i_th (pos);
 			generate (file);
 		end;
 
@@ -249,8 +252,8 @@ feature
 			pos <= count;
 			good_argument: file /= Void;
 			good_context: file.is_open_write or else file.is_open_append;
-	   do
-			go (pos);
+		do
+			go_i_th (pos);
 			file.putint (workbench_offset);
 		end;
 
@@ -296,7 +299,7 @@ feature
 				level
 			when Reference_level then
 				file.putstring ("REFACS(");
-				file.putint (position - 1);
+				file.putint (index - 1);
 				file.putchar (')');
 			when Character_level then
 				nb_ref := nb_reference;
@@ -304,7 +307,7 @@ feature
 				file.putstring ("CHROFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putstring (") + CHRACS(");
-				file.putint (position - nb_ref - 1);
+				file.putint (index - nb_ref - 1);
 				file.putchar (')');
 			when Integer_level then
 				nb_ref := nb_reference;
@@ -315,7 +318,7 @@ feature
 				file.putchar (',');
 				file.putint (nb_character);
 				file.putstring (") + LNGACS(");
-				file.putint (position - nb_ref - nb_char - 1);
+				file.putint (index - nb_ref - nb_char - 1);
 				file.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
@@ -329,7 +332,7 @@ feature
 				file.putchar (',');
 				file.putint (nb_int);
 				file.putstring (") + FLTACS(");
-				file.putint (position - nb_ref - nb_char - nb_int - 1);
+				file.putint (index - nb_ref - nb_char - nb_int - 1);
 				file.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
@@ -347,7 +350,7 @@ feature
 				file.putint (nb_flt);
 				file.putstring (") + PTRACS(");
 				file.putint
-						(position - nb_ref - nb_char - nb_int - nb_flt - 1);
+						(index - nb_ref - nb_char - nb_int - nb_flt - 1);
 				file.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
@@ -368,7 +371,7 @@ feature
 				file.putint (nb_ptr);
 				file.putstring (") + DBLACS(");
 				file.putint
-				(position - nb_ref - nb_char - nb_int - nb_flt - nb_ptr -1);
+				(index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr -1);
 				file.putchar (')');
 			else
 				nb_ref := nb_reference;
@@ -393,10 +396,10 @@ feature
 				file.putchar (')');
 				if level = Bits_level then
 					from
-						pos := position;
+						pos := index;
 						go_bits;
 					until
-						position >= pos
+						index >= pos
 					loop
 						file.putstring ("+OVERHEAD+BITOFF(");
 						bit_desc ?= item;
@@ -407,7 +410,7 @@ feature
 					file.putstring ("+OVERHEAD");
 				else
 					from
-						pos := position;
+						pos := index;
 						go_bits;
 					until
 						after or else item.level /= Bits_level
@@ -421,7 +424,7 @@ feature
 					from
 						go_expanded;
 					until
-						position >= pos
+						index >= pos
 					loop
 						file.putstring ("+OVERHEAD+");
 						expanded_desc ?= item;
@@ -450,25 +453,25 @@ feature
 			inspect
 				level
 			when Reference_level then
-				Result := refacs (position - 1);
+				Result := refacs (index - 1);
 			when Character_level then
 				nb_ref := nb_reference;
 				Result := 
 					chroff (nb_ref + nb_expanded) +
-					chracs (position - nb_ref - 1);
+					chracs (index - nb_ref - 1);
 			when Integer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				Result := 
 					lngoff (nb_ref+nb_expanded, nb_char) +
-					lngacs (position - nb_ref - nb_char - 1);
+					lngacs (index - nb_ref - nb_char - 1);
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				Result :=
 					fltoff (nb_ref+nb_expanded, nb_char, nb_int) +
-					fltacs (position - nb_ref - nb_char - nb_int - 1); 
+					fltacs (index - nb_ref - nb_char - nb_int - 1); 
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -476,7 +479,7 @@ feature
 				nb_flt := nb_real;
 				Result :=
 					ptroff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt) +
-					ptracs (position - nb_ref - nb_char - nb_int - nb_flt - 1);
+					ptracs (index - nb_ref - nb_char - nb_int - nb_flt - 1);
 			when Double_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -486,7 +489,7 @@ feature
 				Result :=
 					dbloff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr) +
 					dblacs
-				(position - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1);
+				(index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1);
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -499,10 +502,10 @@ feature
 					(nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl);
 				if level = Bits_level then
 					from
-						pos := position;
+						pos := index;
 						go_bits;
 					until
-						position >= pos
+						index >= pos
 					loop
 						bit_desc ?= item;
 						Result := Result + ovhsiz + bitoff(bit_desc.value);
@@ -511,7 +514,7 @@ feature
 					Result := Result + ovhsiz;
 				else
 					from
-						pos := position;
+						pos := index;
 						go_bits;
 					until
 						after or else item.level /= Bits_level
@@ -523,7 +526,7 @@ feature
 					from
 						go_expanded;
 					until
-						position >= pos
+						index >= pos
 					loop
 						expanded_desc ?= item;
 						exp_skel := expanded_desc.class_type.skeleton;

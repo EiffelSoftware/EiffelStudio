@@ -32,11 +32,11 @@ feature
 
 	aok: BOOLEAN;
 
-	make (comp: COMPOSITE; text: CLASS_TEXT) is
+	make (composite: COMPOSITE; text: CLASS_TEXT) is
 		do
 			class_text := text;
 			!!create; !!cancel; !!clust;
-			form_d_make ("New Class", comp);
+			form_d_make ("New Class", composite);
 			set_title ("New Class");
 			!!class_l.make ("", Current);
 			!!message.make ("", Current);

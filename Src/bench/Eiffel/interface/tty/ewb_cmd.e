@@ -336,7 +336,9 @@ feature {NONE} -- I/O
 
 	prompt_finish_freezing (finalized_dir: BOOLEAN) is
 		do
-			io.error.putstring ("You must now run %"finish_freezing%" in:%N%T");
+			io.error.putstring ("You must now run %"");
+			io.error.putstring (Finish_freezing_script);
+			io.error.putstring ("%" in:%N%T");
 			if finalized_dir then
 				io.error.putstring (Final_generation_path)	
 			else

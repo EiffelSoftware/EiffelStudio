@@ -7,6 +7,7 @@ inherit
 
 	PROJECT_CONTEXT;
 	SHARED_WORKBENCH;
+	SHARED_DEBUG;
 	ICONED_COMMAND
 		redefine
 			licence_checked
@@ -36,6 +37,7 @@ feature {NONE}
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (false);
 					restore_cursors;
+					quit_cmd.exit_now;
 					discard_license;
 					exit
 				else

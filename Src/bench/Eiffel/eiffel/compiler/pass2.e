@@ -71,6 +71,7 @@ feature
 				and then
 					current_class.generics /= Void
 				then
+					System.set_current_class (current_class);
 					current_class.check_constraint_genericity;
 				end;
 				changed_classes.forth

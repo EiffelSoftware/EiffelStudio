@@ -6,7 +6,8 @@ inherit
 		rename
 			is_void as cl_type_is_void
 		redefine
-			is_basic, is_reference, c_type, base_class, is_valid
+			is_basic, is_reference, c_type, base_class, is_valid,
+			cecil_value
 		end;
 	TYPE_C
 		undefine
@@ -86,6 +87,11 @@ feature
 			reg.print_register;
 			file.putstring (" = ");
 			value.print_register;
+		end;
+
+	cecil_value: INTEGER is
+		do
+			Result := sk_value
 		end;
 
 end

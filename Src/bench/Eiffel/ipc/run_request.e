@@ -7,7 +7,8 @@ inherit
 	EWB_REQUEST
 		redefine
 			send
-		end
+		end;
+	WINDOWS
 
 creation
 
@@ -40,7 +41,14 @@ feature
 				if status then
 					send_rqst_1 (Rqst_resume, Resume_cont);
 				end;
-				run_info.set_is_running (true);
+				debug_window.clear_window;
+				if status then
+					debug_window.put_string ("Application is running%N");
+					run_info.set_is_running (true);
+				else
+					debug_window.put_string ("Unable to launch application%N");
+				end;
+				debug_window.display;					
 			end;
 		end;
 

@@ -207,6 +207,7 @@ feature
 			file: UNIX_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
+			gc_on: BOOLEAN;
 		do
 			!!file.make (file_name);
 				-- Check if the file to parse is readable
@@ -235,15 +236,20 @@ feature
 
 				-- Call Yacc
 			class_file_name := file_name;
+			gc_on := collecting;
 			collection_off;
 			Result := c_parse (file.file_pointer, $class_file_name);
-			collection_on;
+			if gc_on then
+				collection_on;
+			end;
 			file.close;
 			Error_handler.checksum;
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				collection_on;
+				if gc_on then
+					collection_on;
+				end;
 				if not (file = Void or else file.is_closed) then
 					file.close;
 				end;
@@ -880,6 +886,10 @@ end;
 					-- Clean context if error
 				ast_context.clear2;
 					-- Clean the caches if error
+-- FIXME
+-- can we loose some of the information in the cache ?????
+-- (for some other classes for which pass3 was successfull)
+
 				tmp_ast_server.cache.wipe_out
 				tmp_body_server.cache.wipe_out
 				tmp_rep_feat_server.cache.wipe_out

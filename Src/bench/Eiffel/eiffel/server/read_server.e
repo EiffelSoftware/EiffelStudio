@@ -9,6 +9,8 @@ deferred class READ_SERVER [T -> IDABLE]
 inherit
 
 	SHARED_SERVER
+		export
+			{ANY} all
 		undefine
 			twin
 		end;

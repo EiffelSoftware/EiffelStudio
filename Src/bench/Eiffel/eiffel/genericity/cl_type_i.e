@@ -187,4 +187,13 @@ feature
 			end;
 		end;
 
+	cecil_value: INTEGER is
+		do
+			if not is_expanded then
+				Result := Sk_dtype
+			else
+				Result := Sk_exp + base_id
+			end;
+		end;
+
 end

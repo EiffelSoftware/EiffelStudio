@@ -13,4 +13,10 @@ feature
 			!!Result.make
 		end;
 
+	quit_cmd: DEBUG_QUIT is
+			-- Kills the child if any
+		once
+			!!Result.do_nothing
+		end;
+
 end

@@ -34,4 +34,7 @@ feature {NONE}
 	Sk_void: INTEGER is 0;
 			-- Hexa value 0x00000000
 
+	Sk_dtype: INTEGER is 65535;
+			-- Hexa value 0x0000ffff
+
 end

@@ -157,4 +157,9 @@ feature
 		deferred
 		end;
 
+	cecil_value: INTEGER is
+			-- Generate type value for cecil (byte_code)
+		deferred
+		end;
+
 end

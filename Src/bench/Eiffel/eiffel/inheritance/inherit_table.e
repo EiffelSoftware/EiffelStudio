@@ -11,6 +11,8 @@ inherit
 			merge as extend_table_merge
 		end;
 	SHARED_SERVER
+		export
+			{ANY} all
 		undefine
 			twin
 		end;

@@ -5,7 +5,8 @@ inherit
 	BASIC_I
 		redefine
 			dump, is_none, is_void, is_basic, same_as,
-			description, sk_value, generate_cecil_value, hash_code
+			description, sk_value, generate_cecil_value, hash_code,
+			cecil_value
 		end;
 	SHARED_C_LEVEL;
 
@@ -97,6 +98,11 @@ feature
 			-- Generate SK value associated to the current type.
 		do
 			Result := Sk_ref;
+		end;
+
+	cecil_value: INTEGER is
+		do
+			Result := Sk_dtype
 		end;
 
 	generate_union (file: UNIX_FILE) is

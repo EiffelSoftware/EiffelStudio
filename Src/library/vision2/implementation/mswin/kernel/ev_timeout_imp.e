@@ -32,6 +32,11 @@ feature {NONE} -- Initialization
 		--	internal_timeout.add_timeout (Current)
 		end
 
+	initialize is 
+		do 
+			is_initialized := True
+		end
+
 feature -- Access
 
 	period: INTEGER
@@ -42,6 +47,12 @@ feature -- Access
 
 	argument: EV_ARGUMENT
 			-- Argument associated with the timeout.
+			
+	interval: INTEGER
+
+	set_interval (an_interval: INTEGER) is do end
+			-- Assign `an_interval' in milliseconds to `interval'.
+			-- Zero disables.
 
 --	count: INTEGER
 			-- Number of times the command has been executed including
@@ -83,7 +94,7 @@ feature -- Basic operation
 			-- Ajouter un event data with delay et count.
 		do
 			count := count + 1
-			command.execute (argument, Void)
+	--		command.execute (argument, Void)
 		end
 
 feature {NONE} -- Implementation
@@ -117,6 +128,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/19 04:34:55  oconnor
+--| removed command code, implemented deferred features
+--|
 --| Revision 1.2  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -23,7 +23,7 @@ feature -- Access
  
 	click_list: CLICK_STONE_ARRAY is
 		do
-			!! Result.make (Eiffel_project.lace_click_list, Void)
+			!! Result.make (Eiffel_ace.click_list, Void)
 		end;
  
 	signature: STRING is
@@ -42,16 +42,29 @@ feature -- Access
 
 	header: STRING is "Ace";
  
-	stone_type: INTEGER is do Result := System_type end;
+	stone_type: INTEGER is 
+		do 
+			Result := System_type 
+		end;
 
 	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with
-			-- Current stone during transport.
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := cur_System
 		end;
  
-	stone_name: STRING is do Result := l_System end;
+	x_stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := cur_X_system
+		end;
+ 
+	stone_name: STRING is 
+		do 
+			Result := l_System 
+		end;
  
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?

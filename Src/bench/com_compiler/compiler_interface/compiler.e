@@ -197,16 +197,14 @@ feature -- Basic Operations
 			-- Compile.
 		local
 			rescued: BOOLEAN
-			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
-						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						set_piped_output (l_pipe)
+						set_piped_output (output_pipe_name)
 						Eiffel_project.melt
-						l_pipe.close
+						close_output_pipe
 					else
 						set_default_output
 						Eiffel_project.melt
@@ -220,6 +218,7 @@ feature -- Basic Operations
 			end
 		rescue
 			last_exception := exception_trace
+			close_output_pipe
 			rescued := True
 			retry
 		end
@@ -241,16 +240,14 @@ feature -- Basic Operations
 			-- Finalize
 		local
 			rescued: BOOLEAN
-			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
-						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						set_piped_output (l_pipe)
+						set_piped_output (output_pipe_name)
 						Eiffel_project.finalize (False)
-						l_pipe.close
+						close_output_pipe
 					else
 						set_default_output
 						Eiffel_project.finalize (False)
@@ -264,6 +261,7 @@ feature -- Basic Operations
 			end
 		rescue
 			last_exception := exception_trace
+			close_output_pipe
 			rescued := True
 			retry
 		end
@@ -284,16 +282,14 @@ feature -- Basic Operations
 			-- Precompile
 		local
 			rescued: BOOLEAN
-			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
-						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
-						set_piped_output (l_pipe)
+						set_piped_output (output_pipe_name)
 						Eiffel_project.precompile (True)
-						l_pipe.close
+						close_output_pipe
 					else
 						set_default_output
 						Eiffel_project.precompile (True)
@@ -306,6 +302,7 @@ feature -- Basic Operations
 				output_error
 			end
 		rescue
+			close_output_pipe
 			last_exception := exception_trace
 			rescued := True
 			retry
@@ -441,22 +438,32 @@ feature -- User Preconditions
 		
 feature {NONE} -- Implementation
 
-	set_piped_output (a_pipe: WEL_PIPE) is
+	set_piped_output (a_pipe_name: STRING) is
 			-- set correct output object for output type (piped or not piped)
 		require
-			non_void_pipe: a_pipe /= Void
-			input_pipe_open: not a_pipe.input_closed
+			non_void_pipe_name: a_pipe_name /= Void
+			valid_pipe_name: not a_pipe_name.is_empty
+			pipe_already_open: output_pipe /= Void implies output_pipe.input_closed
 		local
 			l_degree_output: COM_PIPED_DEGREE_OUTPUT
 			l_err_displayer: DEFAULT_ERROR_DISPLAYER
 			l_output_win: COM_PIPED_OUTPUT_WINDOW
 		do
 			if not Eiffel_project.is_compiling then
-				create l_degree_output.make (a_pipe)
-				create l_output_win.make (a_pipe)
+				create output_pipe.make_named (a_pipe_name, feature {WEL_PIPE}.outbound)
+				create l_degree_output.make (output_pipe)
+				create l_output_win.make (output_pipe)
 				create l_err_displayer.make (l_output_win)
 				Eiffel_project.set_degree_output (l_degree_output)
 				Eiffel_project.set_error_displayer (l_err_displayer)
+			end
+		end
+		
+	close_output_pipe is
+			-- close output pipe
+		do
+			if output_pipe /= Void then
+				output_pipe.close
 			end
 		end
 		
@@ -489,5 +496,8 @@ feature {NONE} -- Implementation
 
 	last_exception: STRING
 			-- Last exception trace
+			
+	output_pipe: WEL_PIPE
+			-- pipe to send output to
 				
 end -- class COMPILER

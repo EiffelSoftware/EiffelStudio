@@ -198,17 +198,17 @@
 			</xs:element>
 			<xs:element name="class_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Eiffel class name</xs:documentation>
+					<xs:documentation>Class name formatting</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="cluster_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Eiffel cluster name</xs:documentation>
+					<xs:documentation>Cluster name formatting</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="feature_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation>Eiffel feature name</xs:documentation>
+					<xs:documentation>Feature name formatting</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="syntax" type="xs:string" minOccurs="0" maxOccurs="unbounded">
@@ -629,6 +629,21 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="vertical_alignment" type="xs:string" minOccurs="0"/>
+			<xs:element name="class_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For class name formatting (inline)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="feature_name" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For feature name formatting (inline)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cluster_name" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For cluster name formatting (inline)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:choice>
 		<xs:attribute name="style" type="xs:string" use="optional"/>
 		<xs:attribute name="output" type="xs:string" use="optional"/>
@@ -740,6 +755,21 @@
 			<xs:element name="italic" type="xs:string" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>For italic text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="class_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For class name formatting (inline)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="feature_name" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For feature name formatting (inline)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cluster_name" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For cluster name formatting (inline)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="line_break" minOccurs="0" maxOccurs="unbounded">

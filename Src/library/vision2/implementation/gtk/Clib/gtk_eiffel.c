@@ -1983,6 +1983,16 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
  *
  *********************************/
 
+EIF_POINTER c_gtk_progress_bar_new_with_adjustment (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap)
+{
+  GtkAdjustment *adj;
+  
+  /* The page size is only relevant for scrollbars. */
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, 0.0);
+
+  return (EIF_POINTER) gtk_progress_bar_new_with_adjustment (adj);
+}
+
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 {
 	GtkProgressBarStyle style;

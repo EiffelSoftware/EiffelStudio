@@ -35,6 +35,9 @@ extern "C" {
 
 #ifdef ISE_GC
 
+/* Runtime configuration */
+#define EIF_GSZ_ALLOC_OPTIMIZATION
+
 /*
  * Type of requests for meminfo().
  */

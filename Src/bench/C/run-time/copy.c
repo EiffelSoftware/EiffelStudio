@@ -299,27 +299,11 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	CHECK ("Object is old and has reference to new one",
 		   (flags & EO_OLD) && !(HEADER (clone)->ov_flags & EO_OLD));
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF))
-		/* In this special case, we have to remember 
-		 * the couple (special<->item index)
-		 * in the special_rem_table.	-- ET
-		 */
-	{
-		special_erembq (enclosing, offset >> EIF_REFERENCE_BITS);
-		CHECK ("clone is referenced from enclosing", *(EIF_REFERENCE *) (enclosing + offset) == clone);
-	}
-	else if (flags & EO_REM)			/* Old object is already remembered */
-			return clone;				/* No further action necessary */
-	else
-		erembq(enclosing);				/* Then remember the enclosing object */
-#else	/* EIF_REM_SET_OPTIMIZATION */
 	if (flags & EO_REM)					/* Old object is already remembered */
-			return clone;					/* No further action necessary */
+		return clone;					/* No further action necessary */
 	else
 		erembq(enclosing);				/* Then remember the enclosing object */
 		
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif /* ISE_GC */
 	
 	return clone;
@@ -355,15 +339,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 		*(EIF_REFERENCE *) (enclosing + offset) = clone;
 		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
 #ifdef ISE_GC
-#ifdef EIF_REM_SET_OPTIMIZATION
-		if ((HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC)) == (EO_REF | EO_SPEC)) {
-			RTAS_OPT (clone, offset >> EIF_REFERENCE_BITS, enclosing);
-		} else {
-			RTAS(clone, enclosing);
-		}
-#else	/* EIF_REM_SET_OPTIMIZATION */
 		RTAS(clone, enclosing);
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif /* ISE_GC */
 		return;
 	}
@@ -465,27 +441,12 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		t_flags = HEADER(enclosing)->ov_flags;
 		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-		if (
-			(t_flags & EO_OLD) &&			/* Object is old */
-			refers_new_object(target)	/* And copied refers to new objects */
-		)
-		{
-			if ((t_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-					/* Only remember the couple (special<->new object index). */
-				if (-2 == eif_promote_special (enclosing))
-					eif_panic ("There must be a young reference.");
-			} else if (!(t_flags & EO_REM))	/* normal object not remembered. */
-				erembq(enclosing);		/* Then remember the enclosing object */
-		}
-#else	/* EIF_REM_SET_OPTIMIZATION */
 		if (
 			t_flags & EO_OLD &&			/* Object is old */
 			!(t_flags & EO_REM)	&&		/* Not remembered */
 			refers_new_object(target)	/* And copied refers to new objects */
 		)
 			erembq(enclosing);			/* Then remember the enclosing object */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif /* ISE_GC */
 
 		if (s_flags & EO_COMP) {
@@ -529,16 +490,10 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 
 	flags = HEADER(target)->ov_flags;
 	CHECK ("Not forwarded", !(HEADER (target)->ov_flags & B_FWD));
-#ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF)) 
-			/* Do we need to check if it holds young references? */
-		eif_promote_special (target);	/* Promote it, if necessary. */
-#else	/* EIF_REM_SET_OPTIMIZATION */
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
 			/* May it hold new references? */
 			eremb(target);	/* Remember it, even if not needed, to fasten
 								copying process. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif /* ISE_GC */
 }
 
@@ -711,16 +666,10 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	 */
 
 	flags = HEADER(target)->ov_flags;
-#ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF)) 
-			/* Do we need to check if it holds young references? */
-		eif_promote_special (target);	/* Promote it, if necessary. */
-#else	/* EIF_REM_SET_OPTIMIZATION */
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
 			/* May it hold new references? */
 			eremb(target);	/* Remember it, even if not needed, to fasten
 								copying process. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif /* ISE_GC */
 
 }	/* spsubcopy () */

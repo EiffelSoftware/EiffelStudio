@@ -211,7 +211,6 @@ ESRC = \
 
 
 MT_LOBJ = \
-	MTeif_special_table.o \
 	MTcompress.o \
 	MToption.o	\
 	MTconsole.o \
@@ -260,7 +259,6 @@ MT_LOBJ = \
 	MTrout_obj.o
 
 LOBJ = \
-	eif_special_table.o \
 	compress.o \
 	option.o	\
 	object_id.o \
@@ -310,7 +308,6 @@ LOBJ = \
 
 WOBJ = \
 	$(NETWORK) \
-	eif_special_table.o \
 	compress.o \
 	console.o \
 	woption.o \
@@ -364,7 +361,6 @@ WOBJ = \
 
 MT_WOBJ = \
 	$(MTNETWORK) \
-	MTeif_special_table.o \
 	MTcompress.o \
 	MTconsole.o \
 	MTwoption.o \
@@ -418,7 +414,6 @@ MT_WOBJ = \
 
 EOBJ = \
 	woption.o \
-	eif_special_table.o \
 	compress.o \
 	console.o \
 	wmalloc.o \
@@ -883,9 +878,6 @@ MTeif_rw_lock.o: eif_rw_lock.c
 MTeif_threads.o: eif_threads.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-MTeif_special_table.o: eif_special_table.c
-	$(CC) -c $(JMTCFLAGS)  $? -o $@
-
 MTgen_conf.o: gen_conf.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
@@ -1230,4 +1222,5 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+
 

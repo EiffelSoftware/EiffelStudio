@@ -43,9 +43,6 @@
 #include <stdio.h>		/* For stream flushing */
 
 #include "rt_assert.h" 				/* For assertions checking. */
-#ifdef EIF_REM_SET_OPTIMIZATION
-#include "eif_special_table.h" 		/* For special table interface. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #if ! defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"		/* For exitprf */
 #endif
@@ -74,61 +71,8 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
 #endif
 
-
-/* Select recursive marking is none is choosen */
-#ifndef HYBRID_MARKING
-#ifndef ITERATIVE_MARKING
-#define RECURSIVE_MARKING
-#endif
-#endif
-
-/* Make sure only one marking method is active */
-#ifdef RECURSIVE_MARKING
-#undef ITERATIVE_MARKING
-#undef HYBRID_MARKING
-#define MARK_SWITCH recursive_mark
-#define GEN_SWITCH generation_mark
-#endif
-
-#ifdef HYBRID_MARKING
-#undef RECURSIVE_MARKING
-#undef ITERATIVE_MARKING
 #define MARK_SWITCH hybrid_mark
 #define GEN_SWITCH hybrid_gen_mark
-#endif
-
-#ifdef ITERATIVE_MARKING
-#undef RECURSIVE_MARKING
-#undef HYBRID_MARKING
-#warning "Iterative marking"
-#define MARK_SWITCH iterative_mark
-#define GEN_SWITCH it_gen_mark
-#if LNGSIZ == 4
-#define LAST_REF 0x80000000
-#else
-#define LAST_REF 0x8000000000000000
-#endif
-#define fdprintf(n,p) \
-	if ( \
-			DEBUG & (n) && MARK_DEBUG & (p) \
-	) printf
-#ifndef EIF_THREADS
-rt_private struct stack path_stack = {	/* Keeps track of explored nodes */ 
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
-};
-rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */ 
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
-};
-#endif /* EIF_THREADS */
-#endif	/* ITERATIVE_MARKING */
 
 /*#define DEBUG 63 */				/* Debugging level */
 /*#define MEMCHK		*/		/* Activate memory checking */
@@ -269,25 +213,32 @@ rt_private struct stack rem_set = {			/* Remembered set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
 };
-
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_private struct special_table *special_rem_set = NULL;
-			/* Remembered special table for special objects. */ 
-#endif
 
 rt_shared struct stack moved_set = {			/* Moved objects set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
 };
+	/* Stack containing objects that are not yet traversed because
+	 * it could generate a stack overflow during GC */
+rt_private struct stack overflow_stack_set = {
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
+};
+	/* Number of elements in `overflow_stack_set' */
+rt_private uint32 overflow_stack_count = 0;
+	/* Current depth of marking calls */
+rt_private uint32 overflow_stack_depth = 0;
+rt_shared uint32 overflow_stack_limit = 0;
 
-
-#ifdef EIF_MEMORY_OPTIMIZATION
 	/********************************************************************
 	 * Memory set: Record memory objects in the GS zone.		 		*
 	 * It is traversed to call the 'dispose' routine when it is garbage.*
@@ -297,10 +248,15 @@ rt_public struct stack memory_set =
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,	/* st_top */
+	(EIF_REFERENCE *) 0,	/* st_end */
 };
-#endif	/* EIF_MEMORY_OPTIMIZATION */
+
+	/* Signature of marking functions. They take the address where
+	 * reference is stored (to be updated by `mark_overflow_stack'
+	 * if we are too deep in the call stack) and return new location
+	 * of object. */
+typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
 
 #endif
 
@@ -350,16 +306,9 @@ rt_public EIF_REFERENCE root_obj = NULL;
 #ifdef ISE_GC
 
 #ifdef DEBUG
-rt_private int nb_items(register1 struct stack *);	
+rt_private int nb_items(register1 struct stack *);	/* Number of items held in a stack */
 #endif
-									/* Number of items held in a stack */
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_shared int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem_set? */
-rt_shared int is_in_special_rem_set (EIF_REFERENCE obj);
-									/* Is obj in special_rem_set? */
-
 /* Automatic invokations of GC */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 rt_public int acollect(void);				/* Collection based on threshold */
 rt_public int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
 
@@ -376,20 +325,16 @@ rt_private int mark_and_sweep(void);		/* Mark and sweep algorithm */
 #endif /* ISE_GC */
 rt_public void reclaim(void);				/* Reclaim all the objects */
 #ifdef ISE_GC
+rt_private void internal_marking(MARKER marking, int moving);
 rt_private void full_mark(EIF_CONTEXT_NOARG);			/* Marks all reachable objects */
 rt_private void full_sweep(void);			/* Removes all un-marked objects */
 rt_private void run_collector(void);		/* Wrapper for full collections */
 rt_private void clean_up(void);			/* After collection, time to clean up */
 
 /* Stack markers */
-rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);	/* Marks a collector's stack */
-rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);			/* Marks a collector's stack */
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_private void mark_special_table (register struct special_table *spt, 
-									register EIF_REFERENCE (*marker) (EIF_REFERENCE),
-									register int move);
-										/* Mark special table. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 MARKER marker, register6 int move);	/* Marks a collector's stack */
+rt_private void mark_stack(register5 struct stack *stk, register4 MARKER marker, register6 int move);			/* Marks a collector's stack */
+rt_private void mark_overflow_stack(register4 MARKER marker, register6 int move);
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void); /* Update the object id stack */
 #endif
@@ -419,27 +364,11 @@ rt_public void erembq(EIF_REFERENCE obj);				/* Quick version (no GC call) of er
 rt_public void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
 									/* Quick version (no GC call) of eremb 
 									 * for special objects full of references.*/
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_rem_remove (EIF_REFERENCE obj);
-			/* Remove `obj' in special_rem_set. */
-rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);
-			/* Replace `old' by `val' in special_rem_set. */
-rt_private int update_special_rem_set(void);	
-					/* Update remembered set for special object full of references.*/
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-#ifdef EIF_MEMORY_OPTIMIZATION
 rt_private void update_memory_set (void);		/* Update memory set */
-#endif	/* EIF_MEMORY_OPTIMIZATION */
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all, I think--RAM */
-rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE));		/* Marks expanded reference in stack */
+rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker);		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
-#ifdef EIF_ASSERTIONS
-rt_private int refers_new_object_not_updated(register EIF_REFERENCE object);
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-rt_private int	all_subreferences_processed (EIF_REFERENCE root);
-#endif
-#endif
 rt_shared int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
@@ -458,27 +387,13 @@ rt_shared int st_extend(register struct stack *stk, register int size);			/* Ext
 #ifdef ISE_GC
 
 /* Marking algorithm */
-#ifdef RECURSIVE_MARKING
-rt_private EIF_REFERENCE recursive_mark(EIF_REFERENCE root);	/* Recursively mark reachable objects */
-rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root);	/* A recursive mark with on-the-fly copy */
-#endif
+rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *root);		/* Mark all reachable objects */
+rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *root);	/* hybrid_mark with on-the-fly copy */
 
-#ifdef HYBRID_MARKING
-rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root);		/* Mark all reachable objects */
-rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root);	/* hybrid_mark with on-the-fly copy */
-#endif
-
-#ifdef ITERATIVE_MARKING
-rt_private EIF_REFERENCE iterative_mark(EIF_REFERENCE root);	/* Iteratively mark reachable objects */
-rt_private EIF_REFERENCE it_gen_mark(EIF_REFERENCE root);		/* Iterative mark with on-the-fly copy */
-rt_private EIF_REFERENCE ntop(register1 struct stack *stk);	/* Returns the top element of a stack */
-rt_private EIF_REFERENCE nget(register1 struct stack *stk);	/* Pops the top element of a stack */
-#endif
-
-rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);		/* Marks the exception stacks */
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 MARKER marker, register6 int move);		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
-rt_private void mark_op_stack(struct opstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move);		/* Marks operational stack */
+rt_private void mark_op_stack(struct opstack *stk, register4 MARKER marker, register5 int move);		/* Marks operational stack */
 #endif
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
@@ -937,10 +852,6 @@ rt_public void reclaim(void)
 	
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-	if (special_rem_set)
-		spt_free (special_rem_set);	/* Free special_rem_set */
-#endif
 #endif
 
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
@@ -1027,32 +938,42 @@ rt_private void run_collector(void)
 #endif
 }
 
-rt_private void full_mark(EIF_CONTEXT_NOARG)
+rt_private void full_mark (EIF_CONTEXT_NOARG)
 {
 	/* Mark phase -- Starting from the root object and the subsidiary
 	 * roots in the local stack, we recursively mark all the reachable
 	 * objects. At the beginning of this phase, it is assumed that no
 	 * object is marked.
 	 */
+		/* Initialize our overflow depth */
+	overflow_stack_depth = 0;
+
+		/* Perform marking */
+	root_obj = MARK_SWITCH(&root_obj);	/* Primary root */
+	internal_marking (MARK_SWITCH, g_data.status &(GC_PART | GC_GEN));
+}
+
+rt_private void internal_marking(MARKER marking, int moving)
+	/* Generic marking of all stacks. This code is common to `full_mark' and
+	 * `mark_new_generation'
+	 */
+{
 #ifdef EIF_THREADS
 	int i;
 #endif
-	int moving = g_data.status & (GC_PART | GC_GEN);	/* Objects may move? */
-
-	root_obj = MARK_SWITCH(root_obj);	/* Primary root */
 
 #ifndef EIF_THREADS
 	/* The regular Eiffel variables have their values stored directly within
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_stack(&loc_set, MARK_SWITCH, moving);
+	mark_stack(&loc_set, marking, moving);
 
 	/* The stack of local variables holds the addresses of variables
 	 * in the process's stack which refers to the objects, hence the
 	 * double indirection necessary to reach the objects.
 	 */
-	mark_stack(&loc_stack, MARK_SWITCH, moving);
+	mark_stack(&loc_stack, marking, moving);
 
 	/* Once functions are old objects that are always alive in the system.
 	 * They are all gathered in a stack and always belong to the old
@@ -1060,69 +981,69 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * locals, a double indirection is necessary.
 	 */
 #if defined WORKBENCH
-	mark_simple_stack(&once_set, MARK_SWITCH, moving);
+	mark_simple_stack(&once_set, marking, moving);
 #else
-	mark_stack(&once_set, MARK_SWITCH, moving);
+	mark_stack(&once_set, marking, moving);
 #endif
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
 	 */
-	mark_simple_stack(&hec_stack, MARK_SWITCH, moving);
-	mark_simple_stack(&hec_saved, MARK_SWITCH, moving);
+	mark_simple_stack(&hec_stack, marking, moving);
+	mark_simple_stack(&hec_saved, marking, moving);
 
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.
 	 */
-	mark_op_stack(&op_stack, MARK_SWITCH, moving);
+	mark_op_stack(&op_stack, marking, moving);
 
 	/* The exception stacks are scanned. It is more to update the references on
 	 * objects than to ensure these objects are indeed alive...
 	 */
-	mark_ex_stack(&eif_stack, MARK_SWITCH, moving);
-	mark_ex_stack(&eif_trace, MARK_SWITCH, moving);
+	mark_ex_stack(&eif_stack, marking, moving);
+	mark_ex_stack(&eif_trace, marking, moving);
 
 #else
 	if (exception_stack_managed) {
 		/* The exception stacks are scanned. It is more to update the references on
 		 * objects than to ensure these objects are indeed alive...
 		 */
-		mark_ex_stack(&eif_stack, MARK_SWITCH, moving);
-		mark_ex_stack(&eif_trace, MARK_SWITCH, moving);
+		mark_ex_stack(&eif_stack, marking, moving);
+		mark_ex_stack(&eif_trace, marking, moving);
 	}
 #endif
 #else /* EIF_THREADS */
 	for (i = 0; i < loc_set_list.count; i++)
-		mark_stack(loc_set_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
 
 	for (i = 0; i < loc_stack_list.count; i++)
-		mark_stack(loc_stack_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
 
-	mark_stack(&global_once_set, MARK_SWITCH, moving);
+	mark_stack(&global_once_set, marking, moving);
 
 	for (i = 0; i < once_set_list.count; i++)
-		mark_simple_stack(once_set_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
 
 	for (i = 0; i < hec_stack_list.count; i++)
-		mark_simple_stack(hec_stack_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
 	for (i = 0; i < hec_saved_list.count; i++)
-		mark_simple_stack(hec_saved_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_simple_stack(hec_saved_list.threads.sstack[i], marking, moving);
 
 #ifdef WORKBENCH
 	for (i = 0; i < opstack_list.count; i++)
-		mark_op_stack(opstack_list.threads.opstack[i], MARK_SWITCH, moving);
+		mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 	for (i = 0; i < eif_stack_list.count; i++)
-		mark_ex_stack(eif_stack_list.threads.xstack[i], MARK_SWITCH, moving);
+		mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
 	for (i = 0; i < eif_trace_list.count; i++)
-		mark_ex_stack(eif_trace_list.threads.xstack[i], MARK_SWITCH, moving);
+		mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
 
 #else
 	if (exception_stack_managed) {
 		for (i = 0; i < eif_stack_list.count; i++)
-			mark_ex_stack(eif_stack_list.threads.xstack[i], MARK_SWITCH, moving);
+			mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
 		for (i = 0; i < eif_trace_list.count; i++)
-			mark_ex_stack(eif_trace_list.threads.xstack[i], MARK_SWITCH, moving);
+			mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
 	}
 #endif
 
@@ -1131,7 +1052,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #ifdef CONCURRENT_EIFFEL
 	/* The separate_object_id_set records object referenced by other processors */
-	mark_simple_stack(&separate_object_id_set, MARK_SWITCH, moving);
+	mark_simple_stack(&separate_object_id_set, marking, moving);
 #endif
 
 	/* The object id stacks record the objects referenced by an identifier. Those objects
@@ -1139,228 +1060,12 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 */
 	if (moving) update_object_id_stack();
 #endif
+
+	/* process overflow_stack_set */
+	mark_overflow_stack(marking, moving);
 }
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_private void mark_special_table (register struct special_table *spt, register EIF_REFERENCE (*marker) (EIF_REFERENCE), register int move)
-{
-	/* 
-	 * Mark the special table: The special table is an optmized rem_set
-	 * table, which recorded the special objects, full of references and
-	 * their indices to the new references that they references. This
-	 * prevent from spending time in scanning the old sub-references.
-	 * -- ET
-	 */
- 
-	EIF_GET_CONTEXT
 
-	EIF_REFERENCE	*container, ref;			/* Special object. */
-	union overhead	*zone;				/* Special object malloc info zone. */
-	EIF_INTEGER	ofst;				/* Index of item in special. */
-	int		i;				/* Index. */
-
-
-#ifndef NDEBUG
-	int old_count;			/* For postcondition checking */
-#endif	/* !NDEBUG */
-	REQUIRE ("GC_FAST mode", g_data.status & GC_FAST);
-
-	if (spt == (struct special_table *) 0)	/* Table not created yet. */
-		return;
-
-#ifndef NDEBUG
-	old_count = spt->count;
-#endif
-	/* Initialization. */
-
-	REQUIRE ("Not empty", spt->h_keys != (EIF_INTEGER *) 0);
-	REQUIRE ("Not empty", spt->h_values != (EIF_REFERENCE *) 0);
-	REQUIRE ("Special table coherent", spt->count <= spt->h_size);
-
-#ifdef MARK_SPECIAL_TABLE_DEBUG
-	printf ("MARK_SPECIAL_TABLE: count = %d\n", spt->count);
-#endif /* MARK_SPECIAL_TABLE_DEBUG */
-
-
-	for (i = 0; i < spt->count ; i++)
-			/* It is very important to access directly to the `count' value 
-			 * of the table,since it can increase during the following marking. 
-			 * -- ET
-		 	 */
-	{
-		ref = spt->h_values [i];
-		CHECK ("ref_not_null", ref != (EIF_REFERENCE) 0);
-		zone = HEADER (ref);
-
-#ifdef MARK_SPECIAL_TABLE_DEBUG
-	printf ("MARK_SPECIAL_TABLE: object %x\n", ref);
-#endif	/* MARK_SPECIAL_TABLE_DEBUG */
-
-		CHECK ("Full of references", zone->ov_flags & EO_REF);
-		CHECK ("Special object", zone->ov_flags & EO_SPEC);
-		CHECK ("Not forwarded", !(zone->ov_size & B_FWD));
-		CHECK ("Not expanded", !(zone->ov_flags & EO_EXP));
-		CHECK ("Not composite", !(zone->ov_flags & EO_COMP));
-		CHECK ("Old object", zone->ov_flags & EO_OLD);
-		CHECK ("Remembered object", zone->ov_flags & EO_REM);
-		CHECK ("Eiffel object", !(zone->ov_flags & EO_C));
-		
-
-	/***************************************
-	 * Marking of special remembered object*
-	 ***************************************/
-
-		if (!(zone->ov_flags & EO_MARK))
-			/* The object has not been processed yet. 
-			 * It must be referenced from an old object. */
-		{
-			zone->ov_flags |= EO_MARK;	/* Mark it. */	
-			CHECK ("Object marked", HEADER (spt->h_values [i])->ov_flags & EO_MARK);
-			CHECK ("Object marked", HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
-		}
-		
-			
-	/****************************************
-	 * Marking of items. 					*
-	 ****************************************/
-
-
-		/* Initializations. */
-
-		ofst = spt->h_keys [i];
-		if (ofst == -1)
-			continue;				/* No new reference, pass it. */
-		container = (EIF_REFERENCE *) (ref + ofst * sizeof (EIF_REFERENCE));
-		if (*container == (EIF_REFERENCE) 0)
-			continue;				/* Skip Void elements. */
-
-
-#ifdef MARK_SPECIAL_TABLE_DEBUG
-/****************************** Debug. *************************************/
-		iz = HEADER (*container);	/* Fetch malloc info zone for item. */
-
-		printf("MARK_SPECIAL_TABLE: marking at 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
-			spt->h_values [i],
-			HEADER(
-				zone->ov_size & B_FWD ? zone->ov_fwd : spt->h_values [i]
-			)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE,
-			zone->ov_size & B_FWD ? "forwarded" : "",
-			zone->ov_flags & EO_REM ? "rem" : "",
-			zone->ov_flags & EO_OLD ? "old" : "",
-			zone->ov_flags & EO_MARK ? "marked" : "",
-			zone->ov_flags & EO_REF ? "ref" : "",
-			zone->ov_flags & EO_COMP ? "cmp" : "",
-			zone->ov_flags & EO_SPEC ? "spec" : "",
-			*container,
-			spt->h_keys [i],
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_TYPE,
-			iz->ov_size & B_SIZE,
-			iz->ov_size & B_FWD ? "forwarded" : "",
-			((HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_AGE) >> 24) / 2,
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_OLD ? "old " : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_REM ? "remembered" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_MARK ? "marked" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_REF ? "ref" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_COMP ? "comp" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_SPEC ? "spec" : ""
-		);
-#endif	/* MARK_SPECIAL_TABLE_DEBUG */
-/************************ End of debug. ********************************/
-		
-
-
-		/* Actual marking and update of items. */
-
-		if (move) 	/* May Item move? */
-		{
-			if (
-				(g_data.status & GC_FAST) &&
-				(*container > sc_to.sc_arena) && 
-				(*container <= sc_to.sc_end)
-			)	
-						/* Is it in the generational scavenge `to' zone? */
-							
-	 		{
-						/* Then, it's a twin and it is already processed. */
-			
-#ifdef MARK_SPECIAL_TABLE_DEBUG
-				printf ("MARK_SPECIAL_TABLE:Item %x is already processed!\n", *container);
-#endif	/* MARK_SPECIAL_TABLE_DEBUG */
-
-				CHECK ("Not forwarded twice", !(HEADER (*container)->ov_size & B_FWD));	
-				CHECK ("Not marked and still in scavenge zone", !(HEADER (*container)->ov_flags & EO_MARK));	
-				spt->h_keys [i] = -2;		/* Mark it as a twin, -2 by convention. */
-				continue;			/* Next reference. */
-			}
-			else		/* Not a twin, then mark it. */
-			{
-				*container = marker (*container);
-			}
-		}
-		else 				/* Then, Item does not move. */
-		{
-			(void) marker(*container);			/* Mark it. */
-			CHECK ("Object marked", HEADER (*container)->ov_flags & EO_MARK);
-		}
-
-		CHECK ("Must be marked or not forwarded.",
-				(HEADER (*container)->ov_flags & EO_MARK)
-				|| !(HEADER (*container)->ov_size & B_FWD));
-		CHECK ("Special cannot reference a special directly.",
-			!(HEADER (*container)->ov_flags & EO_SPEC));
-	}	/* for ... */
-
-#ifndef NDEBUG
-	ENSURE ("Table kept", spt == special_rem_set);	
-
-		/* Special table must have grown or
-		 * kept the same size during marking.*/
-	ENSURE ("Has grown", old_count <= spt->count);
-
-		/* `special_rem_set' must not move. */
-	for (i = 0; i < spt->count; i ++)
-	{
-		ref = spt->h_values [i];
-		ENSURE ("ref not null", ref != (EIF_REFERENCE) 0);
-		ENSURE ("ref is in special_rem_set", ref == (special_rem_set->h_values) [i]);
-		ENSURE ("ref is not forwarded", !(HEADER(ref)->ov_size & B_FWD));
-		ENSURE ("ref is marked", HEADER (ref)->ov_flags & EO_MARK);
-		ENSURE ("ref is special", HEADER (ref)->ov_flags & EO_SPEC);
-		ENSURE ("ref is full of references", HEADER (ref)->ov_flags & EO_REF);
-		if (spt->h_keys [i] >= 0) {
-			ref = (EIF_REFERENCE) (ref + spt->h_keys [i] * sizeof (EIF_REFERENCE));
-			ref = * (EIF_REFERENCE *) ref;
-			if (ref)
-				ENSURE ("*ref is not forwarded", !(HEADER (ref)->ov_size & B_FWD));	
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-			ENSURE (all_subreferences_processed (special_rem_set->h_values [i]));	/* Checking coherence. */
-#endif
-		}
-	}
-	/*********************** End of postconditions. ****************/
-#endif
-
-}	/* mark_special_table () */
-
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
-rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 MARKER marker, register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
@@ -1512,7 +1217,7 @@ rt_private void update_object_id_stack(void)
 }
 #endif /* !CUSTOM || NEED_OBJECT_ID_H */
 
-rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
+rt_private void mark_stack(register5 struct stack *stk, register4 MARKER marker, register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
@@ -1584,7 +1289,7 @@ rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE 
 	}
 }
 
-rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE))
+rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker)
 		 				/* Expanded reference to be marked */
 						/* The routine used to mark objects */
 {
@@ -1609,13 +1314,18 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marke
 	if (zone->ov_size & B_FWD)
 		return zone->ov_fwd;		/* Already forwarded, i.e. traversed */
 
-	if (!(zone->ov_flags & EO_EXP))
-		return (marker)(root);		/* Mark non-expanded objects directly */
+	if (!(zone->ov_flags & EO_EXP)) {
+			/* It is guaranteed that first call to `marker' will not put it
+			 * in `overflow_stack_set', therefore giving the address of
+			 * `root' is ok. */
+		return (marker)(&root);		/* Mark non-expanded objects directly */
+	}
 
 	offset = zone->ov_size & B_SIZE;
 	enclosing = root - offset;
 
-	new = (marker)(enclosing);		/* Traverse enclosing, save new location */
+		/* See remark above for `overflow_stack_set' */
+	new = (marker)(&enclosing);		/* Traverse enclosing, save new location */
 	if (new == enclosing)			/* Object did not move */
 		return root;				/* Neither did the expanded object */
 
@@ -1624,7 +1334,7 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marke
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-rt_private void mark_op_stack(struct opstack *stk, EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move)
+rt_private void mark_op_stack(struct opstack *stk, register4 MARKER marker, register5 int move)
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
 {
@@ -1800,7 +1510,7 @@ rt_private void mark_op_stack(struct opstack *stk, EIF_CONTEXT register4 EIF_REF
 #endif
 /* End of workbench-specific marking functions */
 
-rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 MARKER marker, register6 int move)
 							 		/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
@@ -1890,212 +1600,58 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERE
 	}
 }
 
-#ifdef RECURSIVE_MARKING
-rt_private EIF_REFERENCE recursive_mark(EIF_REFERENCE root)
-
+rt_private void mark_overflow_stack(register4 MARKER marker, register6 int move)
+	/* The routine used to mark objects */
+	/* Are the objects expected to move? */
 {
-	EIF_GET_CONTEXT
-	/* Recursively mark all the objects referenced by the root object.
-	 * I carefully avoided declaring things in registers, because as this
-	 * is a recursive routine, the time we would otherwise spend in saving
-	 * and backing up the registers to/from stack would be prohibitive--RAM.
-	 * The function returns the address of the (possibly moved) object.
+	/* Loop over the `overflow_stack_set' stack, using the supplied marker to recursively
+	 * mark the objects. The 'move' flag is a flag which tells us whether the
+	 * objects are expected to move or not (to avoid useless writing
+	 * indirections). Stack holds indirect references to objects.
 	 */
+	register1 EIF_REFERENCE *object;		/* For looping over subsidiary roots */
+	register2 int roots;			/* Number of roots in each chunk */
+	register3 struct stchunk *s;	/* To walk through each stack's chunk */
+	struct stack stk;				/* Copy of current `overflow_stack_set' */
+	int done;						/* Top of stack not reached yet */
 
-	union overhead *zone;		/* Malloc info zone fields */
-	uint32 flags;				/* Eiffel flags */
-	long offset;				/* Reference's offset */
-	uint32 size;				/* Size of an item (for array of expanded) */
-	EIF_REFERENCE *object;				/* Sub-objects scanned */
+	while (overflow_stack_count > 0) {
+			/* Copy `overflow_stack' to `stk', as we will iterate through `stk'.
+			 * We do this process as long as `overflow_stack_count' is not null. */
+		memcpy(&stk, &overflow_stack_set, sizeof(struct stack));
+		memset(&overflow_stack_set, 0, sizeof(struct stack));
+		overflow_stack_count = 0;
+		done = 0;
 
-	/* If 'root' is a void reference, return immediately */
-	if (root == (EIF_REFERENCE) 0)
-		return (EIF_REFERENCE) 0;
+		CHECK("Stack created", stk.st_top != NULL);	/* Stack should be created since count > 0 */
 
-	zone = HEADER(root);			/* Malloc info zone */
-	flags = zone->ov_flags;			/* Fetch Eiffel flags */
-
-#ifdef DEBUG
-	if (zone->ov_size & B_FWD) {
-		dprintf(16)("recursive_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
-			root,
-			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	} else {
-		dprintf(16)("recursive_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
-			root,
-			zone->ov_flags & EO_MARK ? "marked " : "",
-			zone->ov_flags & EO_OLD ? "old " : "",
-			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	}
-	flush;
-#endif
-
-	/* Deal with scavenging here, namely scavenge the reached object if it
-	 * belongs to a 'from' space. Leave a forwarding pointer behind and mark
-	 * the object as forwarded. Scavenging while marking avoids another pass
-	 * for scavenging the 'from' zone and another entire pass to update the
-	 * references, so it should be a big win--RAM. Note that scavenged objects
-	 * are NOT marked: the fact that they have been forwarded is the mark.
-	 * The expanded objects are never scavenged (only the object which holds
-	 * them is).
-	 */
-	offset = (uint32) g_data.status;	/* Garbage collector's status */
-
-	if (offset & (GC_PART | GC_GEN)) {
-
-		/* If we enter here, then we are currently running a scavenging
-		 * algorithm of some sort. Depending on the garbage collector's flag,
-		 * we are able to see if the current object is in a 'from' zone (i.e.
-		 * has to be scavenged). Note that the generation scavenging process
-		 * does not usually call this routine (tenuring can fail, and we are
-		 * in a process that is not allowed to fail). Here, the new generation
-		 * is simply scavenged, with no tenuring.
-		 * Detecting whether an object is in the scavenge zone or not is easy
-		 * and fast: all the objects in the scavenge zone have their B_BUSY
-		 * flag reset.
-		 */
-
-		size = zone->ov_size;
-		if (size & B_FWD)				/* Can't be true if expanded */
-			return zone->ov_fwd;		/* So it has been already processed */
-
-		/* Even though the object could be in the scavenging "from" zone, it
-		 * might be a C one, i.e. it cannot move and would be marked with
-		 * EO_MARK by the scavenging process. Hence the test here.
-		 */
-
-		if (flags & (EO_MARK | EO_C))	/* Already marked or C object */
-			return root;				/* Object processed and did not move */
-
-		if (
-			(offset & GC_GEN) && !(size & B_BUSY)
-		) {
-			root = scavenge(root, &sc_to);	/* Simple scavenging */
-			zone = HEADER(root);			/* Update zone */
-			flags = zone->ov_flags;			/* And Eiffel flags */
-			goto marked;					/* I hate those--necessary here */
-		} else if (
-			(offset & GC_PART) &&
-			(root > ps_from.sc_arena && root <= ps_from.sc_end)
-		) {
-			root = scavenge(root, &ps_to);	/* Partial scavenge */
-			zone = HEADER(root);			/* Update zone */
-			flags = zone->ov_flags;			/* And Eiffel flags */
-			goto marked;					/* Forwarding goto--not so bad */
-		}
-
-	}
-
-	/* This part of code, until the 'marked' label is executed only when the
-	 * object does not belong any scavenging space, or no scavenging is to
-	 * ever be done.
-	 */
-
-	/* If current object is already marked, it has been (or is)
-	 * studied. So return immediately. Idem if object is a C one.
-	 */
-	if (flags & (EO_MARK | EO_C))
-		return root;
-
-	/* Expanded objects have no 'ov_size' field. Instead, they have a
-	 * pointer to the object which holds them. This is needed by the
-	 * scavenging process, so that we can update the internal references
-	 * to the expanded in the scavenged object.
-	 * It's useless to mark an expanded, because it has only one reference
-	 * on itself, in the object which holds it.
-	 */
-	if (!(flags & EO_EXP)) {		/* Object is not expanded */
-		flags |= EO_MARK;			/* Mark it now, to avoid loops */
-		zone->ov_flags = flags;
-	}
-
-marked:		/* I need this goto label to avoid code duplication */
-
-	/* Now explore all the references of the current object.
-	 * For each object of type 'type', References(type) gives the number
-	 * of references in the objects. The references are placed at the
-	 * beginning of the data space by the Eiffel compiler. Expanded
-	 * objects have a reference to them, so no special treatment is
-	 * required. Special objects full of references are also explored.
-	 */
-
-	if (flags & EO_SPEC) {				/* Special object */
-
-		EIF_REFERENCE o_ref;
-
-		/* Special objects may have no references (e.g. an array of
-		 * integer or a string), so we have to skip those.
-		 */
-		if (!(flags & EO_REF))
-			return root;				/* Skip if no references */
-
-		/* At the end of the special data zone, there are two long integers
-		 * which give informations to the run-time about the content of the
-		 * zone: the first is the 'count', i.e. the number of items, and the
-		 * second is the size of each item (for expandeds, the overhead of the
-		 * header is not taken into account).
-		 */
-
-		o_ref = RT_SPECIAL_INFO_WITH_ZONE(root, zone);
-		offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get the count (# of items) */
-
-		/* Treat arrays of expanded object here, because we have a special
-		 * way of looping over the array (we must take the size of each item
-		 * into account). Code below is somewhat duplicated with the normal
-		 * code for regular objects or arrays of references, but this is because
-		 * we have to increment our pointers by size and I do not want to
-		 * to slow down the normal loop--RAM.
-		 */
-		 if (flags & EO_COMP) {
-			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
-			if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
-				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
-				for (; offset > 0; offset--) {			/* Loop over array */
-					*object = recursive_mark(*object);	
-					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
-				}
-			} else {									/* Object can't move */
-				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
-				for (; offset > 0; offset--) {			/* Loop over array */
-					(void) recursive_mark(*object);	
-					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
-				}
+		for (s = stk.st_hd; s && !done; s = s->sk_next) {
+			object = s->sk_arena;					/* Start of stack */
+			if (s != stk.st_cur)					/* Before current pos? */
+				roots = s->sk_end - object;			/* The whole chunk */
+			else {
+				roots = stk.st_top - object;		/* Stop at the top */
+				done = 1;							/* Reached end of stack */
 			}
-			return root;	/* Address of possibly moved array of expanded */
+
+			if (move) {
+				for (; roots > 0; roots--, object++)
+					*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+			} else {
+				for (; roots > 0; roots--, object++)
+					(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+			}
 		}
 
-	} else
-		offset = References(Deif_bid(flags));	/* Number of references */
-
-#ifdef DEBUG
-	dprintf(16)("recursive_mark: %d references for 0x%lx\n", offset, root);
-	if (DEBUG & 16 && debug_ok(16)) {
-		int i;
-		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((EIF_REFERENCE *) root + i));
+			/* Free memory used by stack as we don't need it anymore */
+		st_reset(&stk);
 	}
-	flush;
-#endif
 
-	/* Mark all objects under root, updating the references if scavenging */
-
-	if (g_data.status & (GC_PART | GC_GEN))
-		for (object = (EIF_REFERENCE *) root; offset > 0; offset--, object++)
-			*object = recursive_mark(*object);
-	else
-		for (object = (EIF_REFERENCE *) root; offset > 0; offset--)
-			(void) recursive_mark(*object++);
-
-	return root;	/* Address of possibly moved object */
+	ENSURE ("Overflow stack empty", overlow_stack_count == 0);
 }
-#endif /* RECURSIVE_MARKING */
 
-#ifdef HYBRID_MARKING
-rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
+
+rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 
 {
 	/* Mark all the objects referenced by the root object. This is almost the
@@ -2111,6 +1667,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
 	EIF_REFERENCE *object;				/* Sub-objects scanned */
 	EIF_REFERENCE current;				/* Object currently inspected */
 	EIF_REFERENCE *prev;				/* Holder of current (for update) */
+	EIF_REFERENCE root = *a_root;		/* Root object */
 	long count;					/* Number of references */
 
 	/* If 'root' is a void reference, return immediately. This is redundant
@@ -2118,6 +1675,15 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
 	 */
 	if (root == (EIF_REFERENCE) 0)
 		return (EIF_REFERENCE) 0;
+
+		/* Stack overflow protection */
+	overflow_stack_depth++;
+	if (overflow_stack_depth > overflow_stack_limit) {
+		epush(&overflow_stack_set, a_root);
+		overflow_stack_count++;
+		overflow_stack_depth--;
+		return root;
+	}
 
 	/* Initialize the variables for the loop */
 	current = root;
@@ -2268,13 +1834,13 @@ marked: /* Goto label needed to avoid code duplication */
 				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						*object = hybrid_mark(*object);
+						*object = hybrid_mark(object);
 						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				} else {								/* Object can't move */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						(void) hybrid_mark(*object);
+						(void) hybrid_mark(object);
 						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				}
@@ -2306,10 +1872,10 @@ marked: /* Goto label needed to avoid code duplication */
 
 		if (g_data.status & (GC_PART | GC_GEN))
 			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				*object = hybrid_mark(*object);
+				*object = hybrid_mark(object);
 		else
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--)
-				(void) hybrid_mark(*object++);
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
+				(void) hybrid_mark(object);
 
 		if (count >= 1) {
 			prev = object;
@@ -2322,421 +1888,9 @@ marked: /* Goto label needed to avoid code duplication */
 done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
+	overflow_stack_depth--;
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
 }
-#endif /* HYBRID_MARKING */
-
-#ifdef ITERATIVE_MARKING
-rt_private EIF_REFERENCE iterative_mark(EIF_REFERENCE root)
-{
-	/* Mark all the objects referenced by the root object. Recursion
-	 * is carefully avoided even if highly appropriate (might cause
-	 * C call stack overflow).
-	 * For a detailed description of the algorithm, refer to ...
-	 */
-
-	EIF_GET_CONTEXT
-	register1 union overhead *zone;	/* Malloc info zone fields */
-	register2 uint32 flags;			/* Eiffel flags */
-	long offset;					/* Reference's offset */
-	register3 uint32 size;			/* Size of an item (for array of expanded) */
-	EIF_REFERENCE *object;					/* Sub-objects scanned */
-
-	register4 EIF_REFERENCE parent = (EIF_REFERENCE) 0;	/* Parent of the current object */
-	register5 EIF_REFERENCE child;			/* Child to be inspected */
-	register6 EIF_REFERENCE node;			/* Node currently inspected */
-	register7 long position;		/* Child is the position-th attribute of Node */
-	long s_top;						/* Value on top of path_stack */
-
-#ifdef DEBUG
-	long loop_call = 0;
-#endif
-
-	/* Initialize the stack with LAST_REF. The algorithm stops when this
-	 * element is on top of the stack.
-	 */
-	epush(&path_stack, (EIF_REFERENCE) LAST_REF);
-
-	/* root is kept until the end because we have to return its possibly
-	 * new address.
-	 */
-	node = root;
-
-	do {
-
-#ifdef DEBUG
-	loop_call++;
-#endif
-		/* Step 0
-		 * This part of code is executed for all the references the algorithm
-		 * inspects.
-		 */
-
-		/* If the current object is void, there's nothing to explore.
-		 * Skip it.
-		 */
-		if (!node)
-			goto not_explorable;
-
-		zone = HEADER(node);		/* Malloc info zone */
-		flags = zone->ov_flags;		/* Fetch Eiffel flags */
-
-#ifdef DEBUG
-	if (zone->ov_size & B_FWD) {
-		dprintf(128)("iterative_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
-			node,
-			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	} else {
-		fdprintf(128,1)("iterative_mark: step 0, 0x%lx %s%s%s(DT %d, %d bytes)\n",
-			node,
-			zone->ov_flags & EO_MARK ? "marked " : "",
-			zone->ov_flags & EO_OLD ? "old " : "",
-			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	}
-	flush;
-#endif
-
-		/* Deal with scavenging here, namely scavenge the reached object if it
-		 * belongs to a 'from' space. Leave a forwarding pointer behind and mark
-		 * the object as forwarded. Scavenging while marking avoids another pass
-		 * for scavenging the 'from' zone and another entire pass to update the
-		 * references, so it should be a big win--RAM. Note that scavenged
-		 * objects are NOT marked: the fact that they have been forwarded is the
-		 * mark. The expanded objects are never scavenged (only the object which
-		 * holds them is).
-		 */
-		offset = (uint32) g_data.status;	/* Garbage collector's status */
-
-		if (offset & (GC_PART | GC_GEN)) {
-
-			/* If we enter here, then we are currently running a scavenging
-			 * algorithm of some sort. Depending on the garbage collector's
-			 * flag, we are able to see if the current object is in a 'from'
-			 * zone (i.e. has to be scavenged). Note that the generation
-			 * scavenging process does not usually call this routine (tenuring
-			 * can fail, and we are in a process that is not allowed to fail).
-			 * Here, the new generation is simply scavenged, with no tenuring.
-			 * Detecting whether an object is in the scavenge zone or not is
-			 * easy and fast: all the objects in the scavenge zone have their
-			 * B_BUSY flag reset.
-			 */
-
-			size = zone->ov_size;
-			if (size & B_FWD) {			/* Can't be true if expanded */
-				node = zone->ov_fwd;	/* So it has been already processed */
-				goto not_explorable;	/* Nothing to inspect, skip step 1 */
-			}
-
-			if (flags & (EO_MARK | EO_C))	/* Already marked or C object */
-				goto not_explorable;		/* Skip step 1 */
-
-			if (offset & GC_GEN && !(size & B_BUSY)) {
-				node = scavenge(node, &sc_to);	/* Simple scavenging */
-				zone = HEADER(node);			/* Update zone */
-				flags = zone->ov_flags;			/* And Eiffel flags */
-				goto marked;					/* Skip further testing */
-			} else if (offset & GC_PART && node > ps_from.sc_arena && node <= ps_from.sc_end) {
-				node = scavenge(node, &ps_to);	/* Partial scavenge */
-				zone = HEADER(node);			/* Update zone */
-				flags = zone->ov_flags;			/* And Eiffel flags */
-				goto marked;					/* Skip further testing */
-			}
-		}
-
-		/* This part of code, until the 'marked' label is executed only when the
-		 * object does not belong any scavenging space, or no scavenging is to
-		 * ever be done.
-		 */
-
-		/* If current object is already marked, it has been (or is)
-		 * studied. So skip it. Idem if object is a C one.
-		 */
-		if (flags & (EO_MARK | EO_C))
-			goto not_explorable;
-
-		/* Expanded objects have no 'ov_size' field. Instead, they have a
-		 * pointer to the object which holds them. This is needed by the
-		 * scavenging process, so that we can update the internal references
-		 * to the expanded in the scavenged object.
-		 * It's useless to mark an expanded, because it has only one reference
-		 * on itself, in the object which holds it.
-		 */
-		if (!(flags & EO_EXP)) {		/* Object is not expanded */
-			flags |= EO_MARK;			/* Mark it now, to avoid loops */
-			zone->ov_flags = flags;
-		}
-
-marked:
-
-		/* Now explore all the references of the current object.
-		 * For each object of type 'type', References(type) gives the number
-		 * of references in the objects. The references are placed at the
-		 * beginning of the data space by the Eiffel compiler. Expanded
-		 * objects have a reference to them, so no special treatment is
-		 * required. Special objects full of references are also explored.
-		 */
-
-		if (flags & EO_SPEC) {
-
-			/* Special objects may have no references (e.g. an array of
-			 * integer or a string), so we have to skip those.
-			 */
-			if (!(flags & EO_REF))
-				goto not_explorable;
-
-			/* At the end of the special data zone, there are two long integers
-			 * which give informations to the run-time about the content of the
-			 * zone: the first is the 'count', i.e. the number of items, and the
-			 * second is the size of each item (for expandeds, the overhead of
-			 * the header is not taken into account).
-			 */
-			offset = RT_SPECIAL_COUNT_WITH_ZONE(node, zone);	/* Get the count (# of items) */
-		} else
-			offset = References(Deif_bid(flags));	/* # of references */
-
-
-		/* Step 1
-		 * if the current object has reference(s), inspect the first one.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("iterative_mark: step 1, node = %lx, parent = %lx\n",
-				node,parent);
-	fdprintf(128,1)("iterative_mark: step 1, following 1/%d \n",offset);
-#endif
-
-		if (offset) {
-			/* If this is the only reference, mark the value pushed on the
-			 * stack consequently.
-			 */
-			if (offset == 1L)
-				epush (&path_stack, (EIF_REFERENCE) (1L | LAST_REF));
-			else
-				epush (&path_stack, (EIF_REFERENCE) 1L);
-
-			/* The current node has references. Get the first one */
-			/* Array of expanded */
-			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				child = (EIF_REFERENCE) (node + OVERHEAD);		/* First expanded */
-
-				/* For arrays of expanded, there's no field for the reference
-				 * so we have to store the address of the father in a stack
-				 * that will be used for all the fathers of arrays of expanded
-				 * (it means this stack should stay small).
-				 */
-				epush (&parent_expanded_stack, parent);
-			} else {
-				child = * (EIF_REFERENCE *) node;
-				* (EIF_REFERENCE *) node = parent;
-			}
-			parent = node;
-			node = child;
-			continue;
-		}
-
-not_explorable:
-
-		/* Step 2
-		 * At this point, we have reached a node that hasn't any reference
-		 * or all the references of which have been inspected. Go back to
-		 * the parent as long as we can.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("iterative_mark: step 2, node = %lx, parent = %lx\n",
-				node,parent);
-	fdprintf(128,1)("iterative_mark: top(path_stack) = %lx\n",
-				ntop(&path_stack));
-#endif
-
-		s_top = (long) ntop(&path_stack);
-
-		while ((s_top & LAST_REF) && (s_top & ~LAST_REF)) {
-			position = (long) nget (&path_stack);
-			position &= ~LAST_REF;
-			child = node;
-			node = parent;
-			/* If this current new object is an array of expanded, its father
-			 * is in the parent_expanded_stack stack, not in one if its
-			 * attributes
-			 */
-			flags = HEADER(node)->ov_flags;
-			if ((flags & EO_SPEC) && (flags & EO_COMP))
-				parent = nget (&parent_expanded_stack);
-			else {
-				/* The address of the parent must be in the last reference
-				 * and at this point, position must hold the number of
-				 * attributes of the current node.
-				 */
-				object = (EIF_REFERENCE *) node;
-				object += position - 1;
-				parent = *object;
-				*object = child;
-#ifdef DEBUG
-	fdprintf(128,1)("iterative_mark: step 2, up one level, node = %lx, "
-				"parent = %lx, child = %lx\n",node,parent,child);
-#endif
-			}
-			s_top = (long) ntop(&path_stack);
-		}
-
-		/* Step 3
-		 * If the parent of the current node exists, it has some unexplored
-		 * references. Go back to the parent.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("iterative_mark: step 3, node = %lx, parent = %lx\n",
-				node,parent);
-#endif
-
-		if (parent) {
-			position = (long) nget (&path_stack) + 1;
-			child = node;
-			node = parent;
-			flags = HEADER(node)->ov_flags;
-			if (flags & EO_SPEC) {
-				offset = RT_SPECIAL_COUNT(node);
-			} else
-				offset = References(Deif_bid(flags));
-
-			if (position == offset)
-				epush (&path_stack, (EIF_REFERENCE) (position | LAST_REF));
-			else
-				epush (&path_stack, (EIF_REFERENCE) position);
-
-			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				size = RT_SPECIAL_ELEM_SIZE(node);
-				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
-			} else {
-				object = (EIF_REFERENCE *) node;
-				object += position - 2;
-				parent = *object;
-				*object = child;
-				object++;
-				child = *object;
-				*object = parent;
-			}
-
-#ifdef DEBUG
-	fdprintf(128,1)("iterative_mark: step 3, up one level, node = %lx, "
-					"parent = %lx, child = %lx\n",node,parent,child);
-	fdprintf(128,1)("iterative_mark: step 3, node = %lx, parent = %lx\n",
-					node,parent);
-	fdprintf(128,1)("iterative_mark: step 3, following %d/%d reference\n",
-					position, offset);
-#endif
-
-			parent = node;
-			node = child;
-		}
-
-	} while (ntop(&path_stack) != (EIF_REFERENCE) LAST_REF);
-
-	(void) nget (&path_stack);
-
-	/* Check if `root' has moved and return the eventually new address */
-	zone = HEADER(root);
-	flags = zone->ov_flags;
-	size = zone->ov_size;
-
-#ifdef DEBUG
-	fdprintf(128,2)("iterative_mark called with 0x%lx, %ld iteration(s)\n",root,loop_call);
-#endif
-
-	if (size & B_FWD)
-		return zone->ov_fwd;
-	else
-		return root;
-}
-
-EIF_REFERENCE nget(register1 struct stack *stk)
-{
-	/* Pop the top item of *stk */
-	EIF_GET_CONTEXT
-	register1 EIF_REFERENCE *top = stk->st_top;		/* The top of the stack */
-	register3 EIF_REFERENCE *arena;					/* Base address of current chunk */
-	register4 struct stchunk *s;
-
-	if (top == (EIF_REFERENCE *) 0) {		/* No stack yet? */
-#ifdef DEBUG
-	fdprintf(128,4)("nget: no stack yet, returning 0\n");
-#endif
-		return (EIF_REFERENCE) 0;				/* Return null pointer */
-	}
-
-	arena = stk->st_cur->sk_arena;
-	top--;
-	if (top >= arena) {				/* Still in the same chunk ? */
-		stk->st_top = top;			/* Yes! Update top */
-#ifdef DEBUG
-	fdprintf(128,4)("nget: returning 0x%lx\n",*top);
-#endif
-		return *top;
-	}
-
-	/* We are just at the beginning of a new chunk. Go back to the previous
-	 * chunk if any.
-	 */
-
-	SIGBLOCK;			/* Entering critical section */
-
-	s = stk->st_cur->sk_prev;
-	if (s) {
-		stk->st_cur = s;
-		top = s->sk_end;		/* sk_end points to the first element beyond the chunk */
-		top--;
-		stk->st_top = top;
-		stk->st_end = s->sk_end;
-	}
-
-	SIGRESUME;			/* Leaving critical section */
-
-	if (s) {
-#ifdef DEBUG
-	fdprintf(128,4)("nget: returning 0x%lx\n",*top);
-#endif
-		return *top;
-	} else {
-#ifdef DEBUG
-	fdprintf(128,4)("nget: returning 0\n");
-#endif
-		return (EIF_REFERENCE) 0;
-	}
-}
-
-EIF_REFERENCE ntop (register1 struct stack *stk)
-{
-	/* Return the top item of *stk */
-	register1 EIF_REFERENCE *top = stk->st_top;		/* The top of the stack */
-	register2 EIF_REFERENCE *arena;					/* Base address of current chunk */
-	register3 struct stchunk *s;
-
-	if (top == (EIF_REFERENCE *) 0)		/* No stack yet? */
-			return (EIF_REFERENCE) 0;		/* Return null pointer */
-
-	arena = stk->st_cur->sk_arena;
-	top--;
-	if (top >= arena)			/* Still in the same chunk ? */
-		return *top;
-
-	s = stk->st_cur->sk_prev;
-	if (s) {
-		top = s->sk_end;	/* sk_end points to the first element beyond the
- chunk */
-		top--;
-		return (*top);
-	} else {
-		fprintf (stderr,"ntop: stack corrupted!\n");
-		return (EIF_REFERENCE) 0;
-	}
-}
-#endif /* ITERATIVE_MARKING */
-
 
 rt_private void full_sweep(void)
 {
@@ -2877,12 +2031,7 @@ rt_private void full_update(void)
 
 	update_moved_set();
 	update_rem_set();		/* Must be done after moved set (for GC_FAST) */
-#ifdef EIF_REM_SET_OPTIMIZATION 
-	(void) update_special_rem_set ();		
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-#ifdef EIF_MEMORY_OPTIMIZATION
 	update_memory_set ();
-#endif	/* EIF_MEMORY_OPTIMIZATION */
 }
 #endif /* ISE_GC */
 
@@ -2955,7 +2104,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	 * the GC's point of view although we know that it is not... As its location
 	 * may change, we use an indirection to reach it.
 	 */
-	*object = MARK_SWITCH(*object);	/* Ensure object is alive */
+	*object = MARK_SWITCH(object);	/* Ensure object is alive */
 
 	run_plsc();				/* Normal sequence */
 }
@@ -3982,9 +3131,6 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * I am aware of the code duplication, but this is a trade for speed over
 	 * run-time size and maintainability--RAM.
 	 */
-#ifdef EIF_THREADS
-	int i;
-#endif
 	register1 int age;					/* Object's age */
 	int moving = gen_scavenge & GS_ON;	/* May objects be moved? */
 
@@ -3994,293 +3140,22 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	for (age = 0; age < eif_tenure_max; age++)
 		size_table[age] = age_table[age] = (uint32) 0;
 
+		/* Initialize our overflow depth */
+	overflow_stack_depth = 0;
+
 	/* First deal with the root object. If it is not old, then mark it */
 	if (!(HEADER(root_obj)->ov_flags & EO_OLD))
-		root_obj = GEN_SWITCH(root_obj);
+		root_obj = GEN_SWITCH(&root_obj);
 
-#ifndef EIF_THREADS
-	/* The regular Eiffel variables have their values stored directly within
-	 * the loc_set stack. Those variables are the local roots for the garbage
-	 * collection process.
-	 */
-	mark_stack(&loc_set, GEN_SWITCH, moving);
-
-	/* Then deal with remembered set, which records the addresses of all the
+	/* Deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.
 	 */
 	mark_simple_stack(&rem_set, GEN_SWITCH, moving);
 
-	/* The stack of local variables holds the addresses of variables
-	 * in the process's stack which refers to the objects, hence the
-	 * double indirection necessary to reach the objects.
-	 */
-	mark_stack(&loc_stack, GEN_SWITCH, moving);
-
-	/* Once functions are old objects that are always alive in the system.
-	 * They are all gathered in a stack and always belong to the old
-	 * generation (thus they are allocated from the free-list). As with
-	 * locals, a double indirection is necessary.
-	 */
-#if defined WORKBENCH
-	mark_simple_stack(&once_set, GEN_SWITCH, moving);
-#else
-	mark_stack(&once_set, GEN_SWITCH, moving);
-#endif
-
-	/* The hector stacks record the objects which has been given to C and may
-	 * have been kept by the C side. Those objects are alive, of course.
-	 */
-	mark_simple_stack(&hec_stack, GEN_SWITCH, moving);
-	mark_simple_stack(&hec_saved, GEN_SWITCH, moving);
-
-#ifdef WORKBENCH
-	/* The operational stack of the interpreter holds some references which
-	 * must be marked and/or updated.
-	 */
-	mark_op_stack(&op_stack, GEN_SWITCH, moving);
-
-	/* The exception stacks are scanned. It is more to update the references on
-	 * objects than to ensure these objects are indeed alive...
-	 */
-	mark_ex_stack(&eif_stack, GEN_SWITCH, moving);
-	mark_ex_stack(&eif_trace, GEN_SWITCH, moving);
-#else
-	if (exception_stack_managed) {
-		/* The exception stacks are scanned. It is more to update the references on
-		 * objects than to ensure these objects are indeed alive...
-		 */
-		mark_ex_stack(&eif_stack, GEN_SWITCH, moving);
-		mark_ex_stack(&eif_trace, GEN_SWITCH, moving);
-	}
-#endif
-#else /* EIF_THREADS */
-	for (i = 0; i < loc_set_list.count; i++)
-		mark_stack(loc_set_list.threads.sstack[i], GEN_SWITCH, moving);
-
-	mark_simple_stack(&rem_set, GEN_SWITCH, moving);
-
-	for (i = 0; i < loc_stack_list.count; i++)
-		mark_stack(loc_stack_list.threads.sstack[i], GEN_SWITCH, moving);
-
-	mark_stack(&global_once_set, GEN_SWITCH, moving);
-
-	for (i = 0; i < once_set_list.count; i++)
-		mark_simple_stack(once_set_list.threads.sstack[i], GEN_SWITCH, moving);
-
-	for (i = 0; i < hec_stack_list.count; i++)
-		mark_simple_stack(hec_stack_list.threads.sstack[i], GEN_SWITCH, moving);
-	for (i = 0; i < hec_saved_list.count; i++)
-		mark_simple_stack(hec_saved_list.threads.sstack[i], GEN_SWITCH, moving);
-
-#ifdef WORKBENCH
-	for (i = 0; i < opstack_list.count; i++)
-		mark_op_stack(opstack_list.threads.opstack[i], GEN_SWITCH, moving);
-	for (i = 0; i < eif_stack_list.count; i++)
-		mark_ex_stack(eif_stack_list.threads.xstack[i], GEN_SWITCH, moving);
-	for (i = 0; i < eif_trace_list.count; i++)
-		mark_ex_stack(eif_trace_list.threads.xstack[i], GEN_SWITCH, moving);
-
-#else
-	if (exception_stack_managed) {
-		for (i = 0; i < eif_stack_list.count; i++)
-			mark_ex_stack(eif_stack_list.threads.xstack[i], GEN_SWITCH, moving);
-		for (i = 0; i < eif_trace_list.count; i++)
-			mark_ex_stack(eif_trace_list.threads.xstack[i], GEN_SWITCH, moving);
-	}
-#endif
-
-#endif /* EIF_THREADS */
-
-#ifdef EIF_REM_SET_OPTIMIZATION 
-	/* Finally, deal with special remembered objects set, which records 
-	 * the old special objects, full of reference pointing to new ones. 
-	 * (FIXME only hybrid_gen_mark support it.)
-	 */
-
-	mark_special_table(special_rem_set, GEN_SWITCH, moving);
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
-#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#ifdef CONCURRENT_EIFFEL
-	/* The separate_object_id_set records object referenced by other processors */
-	mark_simple_stack(&separate_object_id_set, GEN_SWITCH, moving);
-#endif
-
-	/* The object id stacks record the objects referenced by an identifier. Those objects
-	 * are not necessarily alive. Thus only an update after a move is needed.
-	 */
-	if (moving) update_object_id_stack();
-#endif
+	internal_marking(GEN_SWITCH, moving);
 }
 
-#ifdef RECURSIVE_MARKING
-rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root)
-{
-	EIF_GET_CONTEXT
-	/* This function is the same as recursive_mark() but slightly different :-).
-	 * Hmm..., I know this is a bad comment and a bad practice, but, for once,
-	 * it has to be done--RAM. In effect, I want to reduce the overhead on the
-	 * recursive_mark() routine. This is why I wrote a different one for the
-	 * generation-based collection.
-	 * The function returns the address of the (possibly moved) object.
-	 */
-
-	union overhead *zone;		/* Malloc info zone fields */
-	uint32 flags;				/* Eiffel flags */
-	long offset;				/* Reference's offset */
-	uint32 size;				/* Size of items (for array of expanded) */
-	EIF_REFERENCE *object;				/* Sub-objects scanned */
-
-	/* If 'root' is a void reference, return immediately */
-	if (root == (EIF_REFERENCE) 0)
-		return (EIF_REFERENCE) 0;
-
-	zone = HEADER(root);			/* Malloc info zone */
-
-#ifdef DEBUG
-	if (zone->ov_size & B_FWD) {
-		dprintf(16)("generation_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
-			root,
-			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	} else {
-		dprintf(16)("generation_mark: 0x%lx %s%s%s%s(DT %d, %d bytes)\n",
-			root,
-			zone->ov_flags & EO_MARK ? "marked " : "",
-			zone->ov_flags & EO_OLD ? "old " : "",
-			zone->ov_flags & EO_NEW ? "new " : "",
-			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	}
-	flush;
-#endif
-
-	/* If we reach a marked object or a forwarded object, return immediately:
-	 * the object has been already processed. Otherwise, an old object which
-	 * is not remembered is not processed, as it can't reference any new
-	 * objects. Old remembered objects are marked when they are processed,
-	 * otherwise it would be possible to process it twice (once via a reference
-	 * from another object and once because it's in the remembered list).
-	 */
-
-	if (zone->ov_size & B_FWD)		/* Object was forwarded (scavenged) */
-		return zone->ov_fwd;		/* Return its new location */
-
-	flags = zone->ov_flags;			/* Fetch Eiffel flags */
-	if (flags & (EO_MARK | EO_C))	/* Object has been already processed? */
-		return root;				/* Finished--object did not move */
-
-	if (flags & EO_OLD) {			/* Old object unmarked */
-		if (flags & EO_REM)			/* But remembered--mark it as processed */
-			zone->ov_flags =
-				flags | EO_MARK;	/* Flags not in sync, but it's ok */
-		else						/* Old object is not remembered */
-			return root;			/* Skip it--object did not move */
-	}
-
-	/* If we reach an expanded object, then we already dealt with the object
-	 * which holds it. If this object has been forwarded, we need to update
-	 * the reference field. Of course object with EO_OLD set are ignored.
-	 * It's easy to know whether a normal object has to be scavenged or marked.
-	 * The new objects outside the scavenge zone carry the EO_NEW mark.
-	 */
-	if (!(flags & EO_OLD) || (flags & EO_EXP)) {
-		root = gscavenge(root);			/* Generation scavenging */
-		zone = HEADER(root);			/* Update zone */
-		flags = zone->ov_flags;			/* And Eiffel flags */
-	}
-
-	/*
-	 * It's useless to mark an expanded, because it has only one reference
-	 * on itself, in the object which holds it. Scavengend objects need not
-	 * any mark either, as the forwarding mark tells that they are alive.
-	 */
-	if (!(flags & EO_EXP) && (flags & EO_NEW)) {
-		flags |= EO_MARK;			/* Mark it now, to avoid loops */
-		zone->ov_flags = flags;
-	}
-
-	/* Now explore all the references of the current object.
-	 * For each object of type 'type', Reference[type] gives the number
-	 * of references in the objects. The references are placed at the
-	 * beginning of the data space by the Eiffel compiler. Expanded
-	 * objects have a reference to them, so no special treatment is
-	 * required. Special objects full of references are also explored.
-	 */
-
-	if (flags & EO_SPEC) {				/* Special object */
-		EIF_REFERENCE o_ref;
-
-		/* Special objects may have no references (e.g. an array of
-		 * integer or a string), so we have to skip those.
-		 */
-		if (!(flags & EO_REF))
-			return root;				/* Skip if no references */
-
-		/* At the end of the special data zone, there are two long integers
-		 * which give informations to the run-time about the content of the
-		 * zone: the first is the 'count', i.e. the number of items, and the
-		 * second is the size of each item (for expandeds, the overhead of the
-		 * header is not taken into account).
-		 */
-
-		o_ref = RT_SPECIAL_INFO_WITH_ZONE(root, zone);
-		offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get the count (# of items) */
-
-		/* Treat arrays of expanded object here, because we have a special
-		 * way of looping over the array (we must take the size of each item
-		 * into account).
-		 */
-
-		 if (flags & EO_COMP) {
-			size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
-			if (gen_scavenge & GS_ON) {					/* Moving objects */
-				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
-				for (; offset > 0; offset--) {			/* Loop over array */
-					*object = generation_mark(*object);	
-					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
-				}
-			} else {									/* Object can't move */
-				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
-				for (; offset > 0; offset--) {			/* Loop over array */
-					(void) generation_mark(*object);	
-					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
-				}
-			}
-			return root;	/* Address of possibly moved array of expanded */
-		}
-
-	} else
-		offset = References(Deif_bid(flags));	/* Number of references */
-
-#ifdef DEBUG
-	dprintf(16)("generation_mark: %d references for 0x%lx\n", offset, root);
-	if (DEBUG & 16 && debug_ok(16)) {
-		int i;
-		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((EIF_REFERENCE *) root + i));
-	}
-	flush;
-#endif
-
-	/* Mark all objects under root, updating the references if scavenging */
-
-	if (gen_scavenge & GS_ON) {
-		for (object = (EIF_REFERENCE *) root; offset > 0; offset--, object++)
-			*object = generation_mark(*object);
-	} else {
-		for (object = (EIF_REFERENCE *) root; offset > 0; offset--)
-			(void) generation_mark(*object++);
-	}
-
-	return root;	/* Address of possibly moved object */
-}
-#endif /* RECURSIVE_MARKING */
-
-#ifdef HYBRID_MARKING
-rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
+rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 
 {
 	/* This function is the half-recursive half-iterative version of
@@ -4296,13 +3171,24 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 	EIF_REFERENCE *object;				/* Sub-objects scanned */
 	EIF_REFERENCE current;				/* Object currently inspected */
 	EIF_REFERENCE *prev;				/* Holder of current (for update) */
+	EIF_REFERENCE root = *a_root;		/* Root object */
 	long count;					/* Number of references */
 
 	/* If 'root' is a void reference, return immediately. This is redundant
 	 * with the beginning of the loop, but this case occurs quite often.
 	 */
+
 	if (root == (EIF_REFERENCE) 0)
 		return (EIF_REFERENCE) 0;
+
+		/* Stack overflow protection */
+	overflow_stack_depth++;
+	if (overflow_stack_depth > overflow_stack_limit) {
+		epush(&overflow_stack_set, a_root);
+		overflow_stack_count++;
+		overflow_stack_depth--;
+		return root;
+	}
 
 	/* Initialize the variables for the loop */
 	current = root;
@@ -4354,26 +3240,9 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 			goto done;					/* Exit the procedure */
 
 		if (flags & EO_OLD) {			/* Old object unmarked */
-			if (flags & EO_REM)		/* But remembered--mark it as processed */
-			{
+			if (flags & EO_REM) {		/* But remembered--mark it as processed */
 				zone->ov_flags = flags | EO_MARK;
-#ifdef EIF_REM_SET_OPTIMIZATION
-				if ((flags & EO_SPEC) && (flags & EO_REF))	
-									/* Is Object special and full of refs? */
-				{
-					CHECK ("Is in special rem set", is_in_spt (special_rem_set, current));
-					goto done;			
-						/* Skip it. it will be processed later in 
-						 * "mark_special_rem_set()". 
-						 * This is actually the purpose of the special_rem_set:
-						 * to avoid to mark recursively all the reference in a 
-						 * special rememembered old object, but only those 
-						 * which are `young'. */
-				}
-
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-			}
-			else						/* Old object is not remembered */
+			} else						/* Old object is not remembered */
 				goto done;				/* Skip it--object did not move */
 		}
 
@@ -4390,18 +3259,6 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 			flags = zone->ov_flags;			/* And Eiffel flags */
 			if (prev)						/* Update referencing pointer */
 				*prev = current;
-#ifdef EIF_REM_SET_OPTIMIZATION
-			if ((flags & (EO_SPEC | EO_REM | EO_REF | EO_OLD)) == (EO_REM | EO_SPEC | EO_REF | EO_OLD))
-				/* It has been tenured and may be in the special remembered set. 
-				 * Skip it-- Only the new references will be processed in 
-				 * "mark_special_table()". */
-			{
-				CHECK ("Is old", flags & EO_OLD);
-				CHECK ("Is marked", flags & EO_MARK);
-				CHECK ("Is in special rem set", is_in_spt (special_rem_set, current));
-				goto done;	/* Skip it. */
-			}
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 		}
 
 		/* It's useless to mark an expanded, because it has only one reference
@@ -4448,13 +3305,13 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						*object = hybrid_gen_mark(*object);
+						*object = hybrid_gen_mark(object);
 						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				} else {							/* Object can't move */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						(void) hybrid_gen_mark(*object);
+						(void) hybrid_gen_mark(object);
 						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				}
@@ -4485,10 +3342,10 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 
 		if (gen_scavenge & GS_ON) {
 			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				*object = hybrid_gen_mark(*object);
+				*object = hybrid_gen_mark(object);
 		} else {
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--)
-				(void) hybrid_gen_mark(*object++);
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
+				(void) hybrid_gen_mark(object);
 		}
 
 		if (count >= 1) {
@@ -4502,307 +3359,9 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
+	overflow_stack_depth--;
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
 }
-#endif /* HYBRID_MARKING */
-
-#ifdef ITERATIVE_MARKING
-rt_private EIF_REFERENCE it_gen_mark(EIF_REFERENCE root)
-{
-	EIF_GET_CONTEXT
-	register1 union overhead *zone;	/* Malloc info zone fields */
-	register2 uint32 flags;			/* Eiffel flags */
-	long offset;					/* Reference's offset */
-	register3 uint32 size;			/* Size of an item (for array of expanded) */
-	EIF_REFERENCE *object;					/* Sub-objects scanned */
-
-	register4 EIF_REFERENCE parent = (EIF_REFERENCE) 0;	/* Parent of the current object */
-	register5 EIF_REFERENCE child;			/* Child to be inspected */
-	register6 EIF_REFERENCE node;			/* Node currently inspected */
-	register7 long position;		/* Child is the position-th attribute of Node */
-	long s_top;						/* Value on top of path_stack */
-
-#ifdef DEBUG
-	long loop_call = 0;
-#endif
-
-	/* Initialize the stack with LAST_REF. The algorithm stops when this
-	 * element is on top of the stack.
-	 */
-	epush(&path_stack, (EIF_REFERENCE) LAST_REF);
-
-	/* root is kept until the end because we have to return its possibly
-	 * new address.
-	 */
-	node = root;
-
-	do {
-
-#ifdef DEBUG
-	loop_call++;
-#endif
-		/* Step 0
-		 * This part of code is executed for all the references the algorithm
-		 * inspects.
-		 */
-
-		/* If the current object is void, there's nothing to explore.
-		 * Skip it.
-		 */
-		if (!node)
-			goto not_explorable;
-
-		zone = HEADER(node);			/* Malloc info zone */
-
-#ifdef DEBUG
-	if (zone->ov_size & B_FWD) {
-		dprintf(16)("it_gen_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
-			root,
-			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	} else {
-		dprintf(16)("it_gen_mark: 0x%lx %s%s%s%s(DT %d, %d bytes)\n",
-			root,
-			zone->ov_flags & EO_MARK ? "marked " : "",
-			zone->ov_flags & EO_OLD ? "old " : "",
-			zone->ov_flags & EO_NEW ? "new " : "",
-			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE);
-	}
-#endif
-
-		/* If we reach a marked object or a forwarded object, return
-		 * immediately: the object has been already processed. Otherwise, an old
-		 * object which is not remembered is not processed, as it can't
-		 * reference any new objects. Old remembered objects are marked when
-		 * they are processed, otherwise it would be possible to process it
-		 * twice (once via a reference from another object and once because it's
-		 * in the remembered list).
-		 */
-		if (zone->ov_size & B_FWD) {	/* Object was forwarded (scavenged) */
-			node = zone->ov_fwd;		/* Update node with the new location */
-			goto not_explorable;		/* Nothing to inspect, skip step 1 */
-		}
-
-		flags = zone->ov_flags;			/* Fetch Eiffel flags */
-		if (flags & (EO_MARK | EO_C))	/* Object has been already processed? */
-			goto not_explorable;		/* Skip step 1 */
-
-		if (flags & EO_OLD) {			/* Old object unmarked */
-			if (flags & EO_REM)			/* But remembered--mark it as processed */
-				zone->ov_flags = flags | EO_MARK;
-			else
-				goto not_explorable;
-		}
-
-		/* If we reach an expanded object, then we already dealt with the object
-	 	 * which holds it. If this object has been forwarded, we need to update
-	 	 * the reference field. Of course object with EO_OLD set are ignored.
-	 	 * It's easy to know whether a normal object has to be scavenged or
-		 * marked. The new objects outside the scavenge zone carry the EO_NEW
-		 * mark.
-		 */
-
-		if (!(flags & EO_OLD) || (flags & EO_EXP)) {
-			node = gscavenge(node);		/* Generation scavenging */
-			zone = HEADER(node);		/* Update zone */
-			flags = zone->ov_flags;		/* And Eiffel flags */
-		}
-
-		/* It's useless to mark an expanded, because it has only one reference
-		 * on itself, in the object which holds it. Scavengend objects need not
-	 	 * any mark either, as the forwarding mark tells that they are alive.
-	 	 */
-		if (!(flags & EO_EXP) && (flags & EO_NEW)) {
-			flags |= EO_MARK;			/* Mark it now, to avoid loops */
-			zone->ov_flags = flags;
-		}
-
-		/* Now explore all the references of the current object.
-		 * For each object of type 'type', Reference[type] gives the number
-		 * of references in the objects. The references are placed at the
-		 * beginning of the data space by the Eiffel compiler. Expanded
-		 * objects have a reference to them, so no special treatment is
-		 * required. Special objects full of references are also explored.
-		 */
-
-		if (flags & EO_SPEC) {			/* Special object */
-
-			/* Special objects may have no references (e.g. an array of
-			 * integer or a string), so we have to skip those.
-			 */
-			if (!(flags & EO_REF))
-				goto not_explorable;
-
-			/* At the end of the special data zone, there are two long integers
-			 * which give informations to the run-time about the content of the
-			 * zone: the first is the 'count', i.e. the number of items, and the
-			 * second is the size of each item (for expandeds, the overhead of
-			 * the header is not taken into account).
-			 */
-			offset = RT_SPECIAL_COUNT_WITH_ZONE(node, zone);	/* Get the count (# of items) */
-		} else
-			offset = References(Deif_bid(flags));	/* # of references */
-
-		/* Step 1
-		 * if the current object has reference(s), inspect the first one.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("it_gen_mark: step 1, node = %lx, parent = %lx\n",
-					node,parent);
-	fdprintf(128,1)("it_gen_mark: step 1, following 1/%d \n",offset);
-#endif
-
-		if (offset) {
-			/* If this is the only reference, mark the value pushed on the
-			 * stack consequently.
-			 */
-			if (offset == 1L)
-				epush (&path_stack, (EIF_REFERENCE) (1L | LAST_REF));
-			else
-				epush (&path_stack, (EIF_REFERENCE) 1L);
-
-			/* The current node has references. Get the first one */
-			/* Array of expanded */
-			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				child = (EIF_REFERENCE) (node + OVERHEAD);		/* First expanded */
-
-				/* For arrays of expanded, there's no field for the reference
-				 * so we have to store the address of the father in a stack
-				 * that will be used for all the fathers of arrays of expanded
-				 * (it means this stack should stay small).
-				 */
-				epush (&parent_expanded_stack, parent);
-			} else {
-				child = * (EIF_REFERENCE *) node;
-				* (EIF_REFERENCE *) node = parent;
-			}
-			parent = node;
-			node = child;
-			continue;
-		}
-
-not_explorable:
-
-		/* Step 2
-		 * At this point, we have reached a node that hasn't any reference
-		 * or all the references of which have been inspected. Go back to
-		 * the parent as long as we can.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("it_gen_mark: step 2, node = %lx, parent = %lx\n",
-					node,parent);
-	fdprintf(128,1)("it_gen_mark: top(path_stack) = %lx\n",
-					ntop(&path_stack));
-#endif
-
-		s_top = (long) ntop(&path_stack);
-
-		while ((s_top & LAST_REF) && (s_top & ~LAST_REF)) {
-			position = (long) nget (&path_stack);
-			position &= ~LAST_REF;
-			child = node;
-			node = parent;
-			/* If this current new object is an array of expanded, its father
-			 * is in the parent_expanded_stack stack, not in one if its
-			 * attributes
-			 */
-			flags = HEADER(node)->ov_flags;
-			if ((flags & EO_SPEC) && (flags & EO_COMP))
-				parent = nget (&parent_expanded_stack);
-			else {
-				/* The address of the parent must be in the last reference
-				 * and at this point, position must hold the number of
-				 * attributes of the current node.
-				 */
-				object = (EIF_REFERENCE *) node;
-				object += position - 1;
-				parent = *object;
-				*object = child;
-
-#ifdef DEBUG
-	fdprintf(128,1)("it_gen_mark: step 2, up one level, node = %lx, "
-					"parent = %lx, child = %lx\n",node,parent,child);
-#endif
-			}
-			s_top = (long) ntop(&path_stack);
-		}
-
-		/* Step 3
-		 * If the parent of the current node exists, it has some unexplored
-		 * references. Go back to the parent.
-		 */
-
-#ifdef DEBUG
-	fdprintf(128,1)("it_gen_mark: step 3, node = %lx, parent = %lx\n",
-					node,parent);
-#endif
-
-		if (parent) {
-			position = (long) nget (&path_stack) + 1;
-			child = node;
-			node = parent;
-			flags = HEADER(node)->ov_flags;
-			if (flags & EO_SPEC) {
-				offset = RT_SPECIAL_COUNT(node);
-			} else
-				offset = References(Deif_bid(flags));
-
-			if (position == offset)
-				epush (&path_stack, (EIF_REFERENCE) (position | LAST_REF));
-			else
-				epush (&path_stack, (EIF_REFERENCE) position);
-
-			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				size = RT_SPECIAL_ELEM_SIZE(node);
-				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
-			} else {
-				object = (EIF_REFERENCE *) node;
-				object += position - 2;
-				parent = *object;
-				*object = child;
-				object++;
-				child = *object;
-				*object = parent;
-			}
-
-#ifdef DEBUG
-	fdprintf(128,1)("it_gen_mark: step 3, up one level, node = %lx, "
-					"parent = %lx, child = %lx\n",node,parent,child);
-	fdprintf(128,1)("it_gen_mark: step 3, node = %lx, parent = %lx\n",
-					node,parent);
-	fdprintf(128,1)("it_gen_mark: step 3, following %d/%d reference\n",
-					position, offset);
-#endif
-
-			parent = node;
-			node = child;
-		}
-
-	} while (ntop(&path_stack) != (EIF_REFERENCE) LAST_REF);
-
-	(void) nget (&path_stack);
-
-	/* Check if `root' has moved and return the eventually new address */
-	zone = HEADER(root);
-	flags = zone->ov_flags;
-	size = zone->ov_size;
-
-#ifdef DEBUG
-	fdprintf(128,2)("it_gen_mark called with 0x%lx, %ld iteration(s)\n",root,
-					loop_call);
-#endif
-
-	if (size & B_FWD)
-		return zone->ov_fwd;
-	else
-		return root;
-}
-#endif /* ITERATIVE_MARKING */
 
 rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 {
@@ -4856,24 +3415,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * be remembered, it remains in the new generation.
 			 */
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-			if ((flags & EO_SPEC) && (flags & EO_REF))
-				/* We need to push it into the special_rem_set
-				 * So we scan the young object reference that
-				 * it contains.
-				 */
-			{
-#ifdef GSCAVENGE_DEBUG
-				printf ("GSCAVENGE: Pushing %x in a special remembered table\n", root);
-#endif	/* GSCAVENGE_DEBUG */
-				ret = eif_promote_special (root);
-			}
-			else	/* Not a special object full of reference*/
-				ret = epush (&rem_set, root);
-
-#else	/* EIF_REM_SET_OPTIMIZATION */
 			ret = epush (&rem_set, root);
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 			if (-1 != ret) {	/* We could record it */
 
 				/* Mark the object as being old, but do not remove the EO_MARK
@@ -4918,21 +3460,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * be removed--object does not reference any young ones any more).
 			 */
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-			if ((flags & EO_SPEC) && (flags & EO_REF)) {
-				/* We need to push it into the special_rem_set
-				 * So we scan the young object reference that
-				 * it contains.
-				 */
-				memcpy (new, root, size);	/* Copy content of area to enable the
-											call to `eif_promote_special' */
-				HEADER(new)->ov_flags = flags | EO_OLD;	/* Copy flags for new object */
-				ret = eif_promote_special (new);
-			} else	/* Not a special object full of reference*/
-				ret = epush (&rem_set, new);
-#else
 			ret = epush (&rem_set, new);
-#endif
 			if (ret == -1) {	/* Cannot record it */
 				gen_scavenge |= GS_STOP;		/* Mark failure */
 				xfree(new);						/* Back where we found it */
@@ -4956,12 +3484,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * dealt with EO_MARK, so it is our responsability... This was a bug
 			 * I spent three days tracking--RAM.
 			 */
-#ifdef EIF_REM_SET_OPTIMIZATION
-				/* It is a special full of reference the copy has already
-				 * been done */
-			if (!((flags & EO_SPEC) && (flags & EO_REF))) 
-#endif
-				memcpy (new, root, size);		/* Copy data part */
+			memcpy (new, root, size);		/* Copy data part */
 
 #ifdef EIF_NO_SCAVENGING
 			eif_panic ("Generation Scavenging is not disabled");
@@ -5254,7 +3777,6 @@ rt_private void update_rem_set(void)
 	st_truncate(&rem_set);
 }
 
-#ifdef EIF_MEMORY_OPTIMIZATION
 rt_private void update_memory_set ()
 	/* Traverse the memory_set which contains all the objects, which have a
 	 * dispose routine. It calls the dispose routine
@@ -5390,681 +3912,7 @@ rt_private void update_memory_set ()
 	st_truncate(&memory_set);
 
 }	/* update_memory_set() */	
-#endif	/* EIF_MEMORY_OPTIMIZATION */
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_private int update_special_rem_set(void)
-{
-	/* Update the special remembered set. This is an iterative process: we check
-	 * only for the item that is new. 
-	 * During partial collections, this routine update the refernces, which
-	 * are remembered in the "special_rem_set", removing twin, void, and old
-	 * references.
-	 * This routine checks that the object is alive only when doing a full
-	 * collection. 
-	 */
-
-	EIF_GET_CONTEXT
-
-	EIF_REFERENCE			object;	/* Current inspected remembered object */
-	EIF_REFERENCE			item;		/* Current inspected item. */
-	struct special_table 	*new_table;
-									/* The new table built from the old one */
-	register2 char 			moving;		/* May GC move objects around? */
-	union overhead 			*zone;		/* Malloc info zone of current object.*/
-	union overhead 			*izone;		/* Malloc info zone of current item. */
-	int 					generational;/* Are we in a generational cycle? */
-	int						hsize;
-	int						count;			
-	int						i;			/* Index for loop. */
-	EIF_INTEGER_32			*hkeys;		/* Index of remembered items table. */
-	char 					**hvalues;	/* Special old object pointers table. */
-	long 					offset;		/* Index of item. */
-
-	/* Initializations. */
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-	printf ("In update_special_rem_set () : special_rem_set %x\n", special_rem_set);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-	if (!special_rem_set)			 	/* No special_rem_set . */
-		return 0;
-		
-	
-	count = special_rem_set->count;		
-							/* Fetch number of special remembered objects. */
-	if (count == 0) 					/* No object in special_rem_set . */
-		return 0;						/* Pass it. */
-
-
-	/* Initializations. */
-	hsize = special_rem_set->h_size;	/* Fetch fields of "special_rem_set". */
-	hkeys = special_rem_set->h_keys;
-	hvalues = special_rem_set->h_values;	 
-	moving = g_data.status;				/* Garbage collector's status */
-	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
-	moving &= GC_PART | GC_GEN ;		/* Is this a Full collection,
-										 which moves objects?	*/
-
-	new_table = (struct special_table *) eif_malloc (sizeof (struct special_table));
-	if (new_table == (struct special_table *) 0)	
-		enomem();	/* Could not allocate struct. */
-
-
-		/* Initializations of "new_table". 
-		 * In "old_values" are the table of the non processed special
-		 * remembered objects. We must do it to unmark them when exiting the
-		 * the procedure. */
-
-	new_table->count = 0;
-	new_table->h_size = special_rem_set->h_size;
-	new_table->old_values = special_rem_set->h_values;
-	new_table->old_count = special_rem_set->count;
-	new_table->h_values = special_rem_set->old_values;
-	new_table->h_keys = special_rem_set->h_keys;
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-	printf ("Status %d, Generational = %d, Moving = %d\n", g_data.status,generational, moving);
-	printf("update_special_rem_set: %d objects to be studied in %s collection\n",
-		special_rem_set->count, generational? "generational" : "full");
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-
-#ifdef EIF_ASSERTION
-	/************************ Checks. *********************************/
-	CHECK ("Table is coherent", count <= hsize);
-	{
-		int32	old_count = count;		/* For postcondittions. */
-	for (i = 0 ; i < count ; i++)
-	{
-		union overhead 	*zone = HEADER (hvalues [i]);
-									/* Current special's Malloc info zone. */
-		uint32 flags;	
-									/* Fetch curennt special Eiffel flags. */
-		if (zone->ov_size & B_FWD)		/* Is object forwarded? */
-			zone = HEADER (zone->ov_fwd);	/* Update Malloc info zone. */
-		flags = zone->ov_flags;			/* fetch Eiffel flags. */
-
-		CHECK ("Not composite", !(flags & EO_COMP));
-		CHECK ("Not C", !(flags & EO_C));
-		CHECK ("Remembered", flags & EO_REM);
-		CHECK ("Not expanded", !(flags & EO_EXP));
-		CHECK ("Old", flags & EO_OLD);
-		CHECK ("Full of references", flags & EO_REF);
-		CHECK ("Special", flags & EO_SPEC);
-		if (generational)
-		{
-			CHECK ("Not forwarded", !(zone->ov_size & B_FWD));
-			CHECK ("Marked", zone->ov_flags & EO_MARK);
-		}
-		
-	}
-	/************************ End of checks. *********************************/
-#endif /* !NDEBUG */
-
-	/* First, we remove the EO_REM flags from all the special object inside the 
-	 * table. Later on, we will process this flag with `| EO_REM' if it really 
-	 * has to be remembered or `| ~EO_REM' if it does not references a young 
-	 * item any longer. This way, if at least one remembered reference has to
-	 * be remembered the enclosing special will remain remembered. This is 
-	 * necessary since a special remembered objects can be recorded several 
-	 * times in the "special-rem_set".
-	 */
-
-
-	for (i = 0 ; i < count; i++)
-	{
-		union overhead *tzone = HEADER (hvalues [i]);	/* Fetch zone. */
-		if (tzone->ov_size & B_FWD)	{ /* Is object forwarded? */
-				tzone = HEADER (tzone->ov_fwd);	
-					/* Update zone, but not object, We must keep
-					 *the B_FWD flag to check if object is alive later on. */
-		}
-		tzone->ov_flags &= ~EO_REM;	/* Remove remembered flag. */
-		CHECK ("Flag EO_REM is unset", !(tzone->ov_flags & EO_REM));	
-	}
-
-
-	/* We check whether the special object references any new objects. 
-	 * We scan only the references recorded in the table. 
-	 */
-
-	for (i = 0; i < count ; i++)
-	{
-		/* Initializations. */
-		object 	= hvalues [i];			/* Current remembered object. */
-		if (object == (EIF_REFERENCE) 0)		/* Is special void? */
-			continue;					/* Skip it. */
-		zone = HEADER (object);			/* Current special's Malloc info zone. */
-		
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-	/******************************* Debug.	*********************************/
-
-		{
-		int32 ofst = hkeys [i];
-		if (ofst >= 0)
-		{
-		EIF_REFERENCE itm;
-		union overhead *iz;
-		itm = *(EIF_REFERENCE *) (object + ofst * REFSIZ);
-		if (itm != (EIF_REFERENCE) 0)
-		{
-		iz = HEADER (itm);
-
-		printf("update_special_rem_set: at 0x%x (type %d, %d bytes) %s%s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
-			object,
-			HEADER(
-				zone->ov_size & B_FWD ? zone->ov_fwd : object
-			)->ov_flags & EO_TYPE,
-			zone->ov_size & B_SIZE,
-			zone->ov_size & B_FWD ? "forwarded" : "",
-			zone->ov_flags & EO_MARK ? "marked" : "",
-			zone->ov_flags & EO_REF ? "ref" : "",
-			zone->ov_flags & EO_COMP ? "cmp" : "",
-			zone->ov_flags & EO_SPEC ? "spec" : "",
-			itm,
-			ofst,
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_TYPE,
-			iz->ov_size & B_SIZE,
-			iz->ov_size & B_FWD ? "forwarded" : "",
-			((HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_AGE) >> 24) / 2,
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_OLD ? "old " : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_REM ? "remembered" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_MARK ? "marked" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_REF ? "ref" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_COMP ? "comp" : "",
-			HEADER (
-				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_SPEC ? "spec" : ""
-		);
-		}
-		}
-		}
-	/*************************** End of debug. *****************************/
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-
-
-		/* When objects are moving, we need to focus on both the B_FWD
-		 * mark (which is an indication that the object is alive) and the
-		 * EO_MARK which is the traditional alive mark. Dead objects are
-		 * simply removed from the special remembered set.
-		 */
-
-
-		if (moving)						/* May object move? */
-		{
-			if (zone->ov_size & B_FWD)	/* Object was forwarded. */
-			{
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-				printf ("UPDATE_SPECIAL_REM_SET_DEBUG: Object was forwarded.\n");
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-				hvalues [i] = zone->ov_fwd;	/* Update object now. */
-				object = hvalues [i];
-				zone = HEADER (object);
-				CHECK ("Object forwarded", !(zone->ov_size & B_FWD));
-			}
-			else if (!(zone->ov_flags & EO_MARK))	/* Object is dead */
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-				printf ("UPDATE_SPECIAL_REM_SET:Remembered object %x is dead and kicked out.\n", object);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-				continue;			/* Remove it from special remembered table. */
-		} 
-		else if (!(zone->ov_flags & EO_MARK))	/* Object cannot move */
-		{
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-			printf ("UPDATE_SPECIAL_REM_SET:Remembered object %x is dead and kicked out.\n", object);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-			continue;	/* Skip it. */
-		}	/* if ... */
-		
- 
-		/* The objects referred by the hvalues [i] could have been
-		 * tenured, so we need to recheck whether it has its place in the
-		 * special remembered set.
-		 * We deal only with the subreferences recorded in the table. 
-		 */
-		
-		CHECK ("Object not forwarded anymore", !(HEADER (object)->ov_size & B_FWD));
-
-		/* Initializations for item. */
-		offset 	= hkeys [i];
-
-		if (offset == -1) /* No subreference to check. */
-			continue;						/* Remove it. */
-		if (offset == -2)		 	/* Twin, by convention.*/
-		{
-
-
-#ifndef NDEBUG
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-			/* Must be present in hvalues. */
-
-			{
-				int j;
-				int present = 0;
-				int twin = 0;
-				for (j = 0; j < count; j++)
-				{
-					if (hvalues [j] == hvalues [i])
-					{
-						present = 1;	
-						if (hkeys [j] == hkeys [i])
-						{
-							twin = 1;
-							break;
-						}
-					}	
-				}
-				CHECK ("present", present == 1);
-				CHECK ("twin", twin == 1);
-			}
-#endif	/* EIF_EXPENSIVE_ASSERTIONS */
-#endif	/* !NDEBUG */		
-
-			continue;				/* Skip twins. */
-		}	/* if ... */
-
-		item 	= *(EIF_REFERENCE *) (object + offset * sizeof (EIF_REFERENCE));		
-									/* Fetch current item . */
-		izone 	= HEADER (item);	/* Malloc info zone of item. */
-		if (item == (EIF_REFERENCE) 0)
-			continue;				/* Skip Void item. */
-
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-		printf("update_special_rem_set: Item at 0x%x (type %d, %d bytes) %s%s\n",
-			item,
-			HEADER(
-				izone->ov_size & B_FWD ? izone->ov_fwd : item
-			)->ov_flags & EO_TYPE,
-			izone->ov_size & B_SIZE,
-			izone->ov_size & B_FWD ? "forwarded" : "",
-			izone->ov_flags & EO_MARK ? "marked" : ""
-			
-		);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-		CHECK ("Must be updated", !(HEADER (item)->ov_size & B_FWD));
-
-
-		/* Look for the new item only. */
-
-		if (!(izone->ov_flags & EO_OLD))		/* Is Item still young? */
-		{
-				/* Copy it into the new table. */
-			zone->ov_flags |= EO_REM ;	/* Still remember it. */
-			if (-1 == spt_put (new_table, offset, object))
-					/* Insertion failed. */
-				eif_panic ("New special rem_set cannot be bigger."); 
-		}
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-		else	/* Then , it is old. */
-				/* Remove entry by ommitting it, reset the EO_REM flag. */
-		{
-
-			printf ("Removing reference special-offset = (%x, %ld (=item %x))\n", object, offset, item);
-
-		}
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-			
-	}	/* for ... */
-	
-	/* In a generational cycle, we need to explicitely unmark all the
-	 * alive objects, whether we keep them in the special remembered set or
-	 * not. Why? Because when we tenure those objects, we mark them
-	 * and also set the EO_OLD and EO_REM bit. If we do not unmark them
-	 * and those are once functions, then we will never scan the inside
-	 * of those objects. In other cycles, the unmarking will be done
-	 * by the full sweep operation.
-	 */
-
-	if (generational)				/* Is this a generational collection? */
-	{
-		for (i = 0; i < new_table->old_count; i ++)
-		{
-			CHECK ("Object did not move during generational collect",
-				!(HEADER(new_table->old_values [i])->ov_size & B_FWD));	
-
-				/* Unmark object */
-			HEADER (new_table->old_values [i])->ov_flags &=~EO_MARK;
-
-			CHECK ("Unmarked", !(HEADER (new_table->old_values [i])->ov_flags & EO_MARK));	
-		}
-	}
-
-				
-	/* Update "special_rem_set". */
-	special_rem_set->h_values = new_table->h_values;
-	special_rem_set->h_keys = new_table->h_keys;
-	special_rem_set->old_values = new_table->old_values;
-	special_rem_set->count = new_table->count;
-	special_rem_set->old_count = new_table->old_count;
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-	printf("Out of update_special_rem_set: %s object %lx (type %d, %d bytes) %s\n",
-		HEADER(object)->ov_flags & EO_OLD ? "old" :
-		HEADER(object)->ov_flags & EO_NEW ? "new" : "gen",
-		object, HEADER(object)->ov_flags & EO_TYPE,
-		HEADER(object)->ov_size & B_SIZE,
-		HEADER(object)->ov_flags & EO_REM ? "remembered":"forgotten");
-	printf("update_special_rem_set: %ld references remaining\n",
-		special_rem_set->count);
-	printf ("UPDATE_REM_SET: %ld couples kicked out\n", old_count - special_rem_set->count);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-	CHECK ("consistent count", special_rem_set->count == new_table->count );	
-	CHECK ("consistence size", special_rem_set->h_size == new_table->h_size );	
-	CHECK ("consistence content", special_rem_set->h_values == new_table->h_values);	
-	CHECK ("consistent keys", special_rem_set->h_keys == new_table->h_keys);	
-	CHECK ("less items than before", special_rem_set->count <= old_count);
-
-	eif_free (new_table);
-
-#ifndef NDEBUG
-	 /**************************** Postconditions *********************/
-
-	for (i = 0; i < special_rem_set->count ; i++)			/* All still remembered.	*/
-	{
-		
-		uint32 flags = HEADER (special_rem_set->h_values [i])->ov_flags;
-								/* Fetch object flags. */
-
-#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-		printf ("UPDATE_SPECIAL_REM_SET: Checking coherence of special %x\n", special_rem_set->h_values [i]);
-#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
-
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-		ENSURE ("Refers new object", refers_new_object (special_rem_set->h_values [i]));
-#endif	/* EIF_EXPENSIVE_ASSERTIONS */
-
-		ENSURE ("Remembered", flags & EO_REM);
-		ENSURE ("Updated", !(HEADER (special_rem_set->h_values [i])->ov_size & B_FWD));	
-		ENSURE ("Not expanded", !(flags & EO_EXP));
-		ENSURE ("Old", flags & EO_OLD);	
-		ENSURE ("Full of references", flags & EO_REF);
-		ENSURE ("Special", flags & EO_SPEC);
-		if (generational)
-			ENSURE ("Not marked", !(flags & EO_MARK));
-	}
-	}	/* (bracket open in Preconditions.) */
-	 /******************** End of Postconditions *****************************/
-#endif 	/* !NDEBUG */
-
-	return 0;						/* Always returns 0. */
-
-}	/* update_special_rem_set () */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
-
-#ifdef EIF_REM_SET_OPTIMIZATION 
-rt_shared int eif_promote_special (register EIF_REFERENCE object)
-	/* Promote a special object full of reference. This function
-	 * scan all the subreferences of "object" so that only the
-	 * young references will be processed during a partial
-	 * collection.	-- ET
-	 * Return value:
-	 *	-2: no young references found, but object put in special
-	 * 		table with index -1.
-	 *	-1: Error, could not push it into special_table, not implemented yey.
-	 * 	+1: Young references found, and recorded in special table.
-	 */
-{
-
-	register uint32 	flags;			/* Eiffel flags */
-	register int 		refs;			/* Number of references */
-	
-	register char 		*item;			/* Address of referred object */
-	register uint32 	size;			/* Size in bytes of an item */
-	register char		*ptr;				
-	union overhead 		*zone;			/* Malloc info zone of "object"'s item. */		
-	int 				ret = -2;		/* Returned status. */
-	int 				i;				/* Index of loop. */
-
-	EIF_GET_CONTEXT
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: promoting special %x\n", object);
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-
-	REQUIRE ("object not null", object != (EIF_REFERENCE) 0);
-	REQUIRE ("object is special", HEADER (object)->ov_flags & EO_SPEC);
-	REQUIRE ("object is full of references", HEADER (object)->ov_flags & EO_REF);
-	REQUIRE ("object is not forwarded", !(HEADER (object)->ov_size & B_FWD));	
-
-	/* Initializations. */
-
-	flags = HEADER(object)->ov_flags;			/* Fetch Eiffel flags */
-	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
-	refs = *(EIF_INTEGER *) (object + size);
-
-
-	/* Loop over the referenced objects to check 
-	 * if there is a new one. 
-	 */
-
-	ptr = object;							/* Temproray pointer. */
-	for (i = 0; i < refs ; i++, ptr += REFSIZ) 
-	{
-	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-		printf ("EIF_PROMOTE_SPECIAL: Scanning subref #%d amongthe %d references in %x\n", i, refs, object);
-	#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-		item = *(EIF_REFERENCE *) ptr;				/* Fetch item in special object. */
-		if (item == (EIF_REFERENCE) 0)
-		{
-	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-		printf ("EIF_PROMOTE_SPECIAL: Item at %d : 0x%x was void\n", i, item);
-	#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-			continue;						/* Skip void references.*/
-		}
-		zone = HEADER (item);				/* Item's malloc info zone. */
-		flags = zone->ov_flags;				/* Item's Eiffel flags. */
-
-		if (zone->ov_size & B_FWD)			/* Item is already forwarded? */
-		{
-
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: item %x at %d was forwarded\n", item, i);
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-			
-			/* An item was forwarded before the enclosing special 
-			 * has been promoted. 
-			 * Thus, we must update now the reference if it is an old object, 
-			 * since it will not be updated at the end of the collection 
-			 * in "update_special_rem_set ()". -- ET
-			 */
-
-			item = zone->ov_fwd;						/* Update. */
-			flags = HEADER (item)->ov_flags;			/* Fetch new flags. */
-			CHECK ("Not forwarded twice", !(HEADER (item)->ov_size & B_FWD));
-			if (!(flags & EO_OLD))						/* Is item young? */
-			{
-				ret = 1;					/* We found a new reference. */
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: remembering object %x with offset %d without update\n", object, i);
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-				special_erembq (object, i);	/* Remember the reference. */
-			}
-			else	/* Then, it is old */
-			{
-				/* This reference will not be processed, 
-				 * we must update it now. This function may be called 
-				 * from the GC. */
-
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: updating new location of forwarded %x at %d without remembering it\n", item, i);
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-				*(EIF_REFERENCE *) (object + REFSIZ * i) = item;	/* Update. */
-			}
-
-			continue;									/* Process next item. */
-		}
-			
-		CHECK ("Not forwarded", !(HEADER (item)->ov_size & B_FWD));
-		if (!(flags & EO_OLD))							/* Is item young? */
-		{
-			ret = 1;								/* We found a new reference. */
-
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-	printf ("EIF_PROMOTE_SPECIAL: inserting item in special rem set %x with index %d\n", item, i);
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-			CHECK ("Object valid", (*(EIF_REFERENCE *) (object + REFSIZ * i)) == (EIF_REFERENCE) item);
-			special_erembq (object, i);		/* Remember young reference. */
-		}
-			
-	}	/* for ... */
-
-	if (ret == -2)							/* No young reference found. */
-	{
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-		CHECK ("Not refers new object", !(refers_new_object (object)));	
-#endif	/* EIF_EXPENSIVE_ASSERTIONS */
-#ifdef EIF_PROMOTE_SPECIAL_DEBUG
-		printf ("EIF_PROMOTE_SPECIAL: no item to be inserted");
-#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-
-			/* Remember the object, even with no new reference, 
-			 * only for unmarking it in "update_special_table ()". 
-			 */
-
-		special_erembq (object, -1);		
-	}
-
-	ENSURE ("Object is still special", HEADER (object)->ov_flags & EO_SPEC);
-	ENSURE ("Object is still full of references", HEADER (object)->ov_flags & EO_REF);
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-	ENSURE ("Has been pushed", is_in_spt (special_rem_set, object));
-#endif
-
-	/*********************** End of Postconditions. ************************/
-
-	return ret;		/* Object does not reference any new object */
-
-}	/* eif_promote_special () */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-rt_private int all_subreferences_processed (EIF_REFERENCE root)
-	/* Check that all the subreferences under root (root included)
-	 * have been processed by some marking. Check is done at the first
-	 * level only.
-	 */
-{
-	union overhead 	*zone;		/* Malloc info zone of root. */
-	union overhead 	*szone;		/* Malloc info zone of subreference. */
-	int 			refs; 		/* Number of references in root. */
-	int				i;
-	char			*subref;	/* Subreference in root. */
-
-
-	if (root == (EIF_REFERENCE) 0)
-		return 1;
-
-	zone = HEADER (root);
-	
-	if (zone->ov_size & B_FWD)
-		return 0;	/* Not updated. */
-
-	CHECK ("Not forwarded", !(HEADER (root)->ov_size & B_FWD));
-	CHECK ("Special", HEADER (root)->ov_flags & EO_SPEC);
-	CHECK ("Full of references", HEADER (root)->ov_flags & EO_REF);
-
-	if ((zone->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
-	{
-		CHECK ("Not in spec rem set", !(refers_new_object (root)));
-		return 1;
-	}
-	
-	refs = RT_SPECIAL_COUNT(root);
-
-	for (i = 0; i < refs; i++)
-	{
-		subref = *(EIF_REFERENCE *) (root + i * REFSIZ); 
-		szone = HEADER (subref);
-		if (!subref)			/* Is reference Void? */
-			continue;			/* Skip it - Next reference. */
-		if (szone->ov_size & B_FWD)
-		{
-			return 0;	/* Not updated. */
-		}
-		if (szone->ov_flags & EO_MARK)
-			continue;	/* Ok, next one. */
-		if (szone->ov_flags & EO_OLD)
-			continue;	/* Do not explore. */
-		if ((g_data.status & GC_FAST) &&
-			((subref > sc_to.sc_arena) && subref <= sc_to.sc_end)) 
-				/* In TO zone. */
-			continue;	/* Ok, next. */
-		
-		if ((g_data.status & GC_PART)) {
-				/* Is this a partial scavenging. */
-			if 	((subref > ps_to.sc_arena) && (subref <= ps_to.sc_end))
-					/* In TO zone. */
-				continue;	/* Ok, next. */
-			if ((subref > ps_from.sc_arena && subref <= ps_from.sc_end))
-					/* Still in FROM zone. */
-				return 0;		/* Object not updated. */
-		}
-		return 0;
-	}	
-
-	return 1;	/* Passed successfully. */	
-}	/* all_subreferences_processed () */
-#endif
-
-
-#ifdef EIF_EXPANSIVE_ASSERTIONS
-rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
-{
-	/* Does 'object' directly refers to a new object? Stop as soon as the
-	 * answer is known. Return a boolean value stating the result. 
-	 * This routine can deal with non updated sub-objects. 
-	 */
-
-	register2 uint32 flags;			/* Eiffel flags */
-	register3 int refs;				/* Number of references */
-	register4 EIF_REFERENCE root;			/* Address of referred object */
-
-	REQUIRE ("Special rememvered set valid", object);
-	REQUIRE ("Special", HEADER (object)->ov_flags & EO_SPEC);
-	REQUIRE ("Full of references", HEADER (object)->ov_flags & EO_REF);
-
-	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
-	refs = RT_SPECIAL_COUNT(object);
-
-	for (; refs != 0; refs--, object += REFSIZ) {
-		root = *(EIF_REFERENCE *) object;			/* Get reference */
-		if (root == (EIF_REFERENCE) 0)
-			continue;						/* Skip void references */
-		if (HEADER (root)->ov_size & B_FWD)
-			flags = HEADER(HEADER (root)->ov_fwd)->ov_flags;/* Update flags. */
-		else
-			flags = HEADER(root)->ov_flags;
-		if (!(flags & EO_OLD))
-			return 1;						/* Object references a young one */
-	}
-
-	return 0;		/* Object does not reference any new object */
-}
-#endif	/* !NDEBUG */
 
 rt_shared int refers_new_object(register EIF_REFERENCE object)
 {
@@ -6188,76 +4036,6 @@ rt_public void erembq(EIF_REFERENCE obj)
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 }
 
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_rem_remove (EIF_REFERENCE obj)
-{
-	/* Remove `obj' in special_rem_set. */
-	EIF_GET_CONTEXT
-	return spt_replace (special_rem_set, obj, (EIF_REFERENCE) 0);
-}	/* special_rem_remove () */
-
-rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val)
-{
-	/* Replace `old' by `val' in special_rem_set. */
-	EIF_GET_CONTEXT
-	return spt_replace (special_rem_set, old, val);
-}	/* special_erembq_replace () */
-
-rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
-{
-	/*
-	 * Special version of erembq() for special objects full of references
-	 */
-
-	EIF_GET_CONTEXT
-	
-#ifdef SPECIAL_EREMBQ_DEBUG
-	printf ("Remembering special object %x, with offset %d\n", obj, offst);
-#endif	/* SPECIAL_EREMBQ_DEBUG */
-
-	REQUIRE ("Special", HEADER (obj)->ov_flags & EO_SPEC);
-	REQUIRE ("Full of references", HEADER (obj)->ov_flags & EO_REF);	
-
-	if (special_rem_set == (struct special_table *)	0)
-			/* Initialize it. */
-	{
-		special_rem_set = (struct special_table *) eif_malloc (sizeof (struct special_table));
-		if (special_rem_set == (struct special_table *) 0)
-			enomem();
-
-		if (-1 == spt_create (special_rem_set, EIF_SPT_SZ))
-			eif_panic ("Could not create special remembered special table");
-		else
-			/* Fill it with zero. */
-			spt_zero (special_rem_set);
-	}
-
-	CHECK ("special_rem_set created", special_rem_set != (struct special_table *) 0);	
-
-	/* Push the old object in it with corresponding offset as a key. *
-	 * With resizing of the special-table when needed.			 */
-
-	spt_force (special_rem_set, offst, obj);
-	
-	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered. */
-	
-	ENSURE ("Should be remembered", HEADER(obj)->ov_flags & EO_REM);
-}	/* special_erembq () */
-#else
-	
-rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
-{
-	/* Remember it in the remembered set. In the case we do not any
-	 * remembrance optimization, we redirect this function to the usual
-	 * remembrance process without changing the generated C-code (i.e
-	 * RTAS_OPT). There is only a slight overhead in RTAS_OPT compared
-	 * with the usual RTAS. -- ET*/
-
-	erembq (obj);
-}
-
-
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 /*
  * Freeing objects: each class has a chance to redefine the 'dispose' routine
@@ -6546,43 +4324,6 @@ rt_public void st_reset(register1 struct stack *stk)
 }
 
 #ifdef ISE_GC
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_shared int is_in_special_rem_set (EIF_REFERENCE obj)
-{
-	EIF_GET_CONTEXT
-	int ret;
-	ret = is_in_spt (special_rem_set, obj);
-	return ret;
-}
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
-rt_shared int is_in_rem_set (EIF_REFERENCE obj)
-{
-	register2 struct stchunk	*s;			/* To walk through the list */
-	register3 int				n = 0;		/* Number of items */
-	register4 int 				done = 0;	/* Top of stack not reached yet */
-	char 						**object;
-	
-	for (s = rem_set.st_hd; s && !done; s = s->sk_next) 
-	{
-		object = s->sk_arena;				/* Start of stack */
-		if (s != rem_set.st_cur)			/* Top is before after 's' */
-			n = s->sk_end - object;			/* Look at the whole chunk */
-		else {
-			n = rem_set.st_top - object;	/* Stop at the top */
-			done = 1;						/* Reached end of stack */
-		}
-
-		for (; n > 0; n--, object++) 
-		{
-			if (*object == obj)
-				return 1;
-			continue;
-		}
-	}
-	return 0;
-}
-
 #ifdef DEBUG
 rt_private void scavenge_statistics (struct sc_zone *to)
 {

@@ -43,9 +43,6 @@
 #include "eif_sig.h"
 #include "eif_err_msg.h"
 #ifdef ISE_GC
-#ifdef EIF_REM_SET_OPTIMIZATION
-#include "eif_special_table.h"	/* For the special table interface. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif
 #ifdef VXWORKS
 #include <string.h>
@@ -487,19 +484,13 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
 	 * All the objects smaller than `eif_gs_limit' are allocated 
 	 * in the the GSZ, otherwise they are allocated in the free-list.
-	 * If the flag EIF_MEMORY_OPTIMIZATION is defined then we put the 
-	 * memory objects in the GSZ (i.e those, which inherits from class
+	 * We put the memory objects in the GSZ (i.e those, which inherits from class
 	 * MEMORY, otherwise they are allocated in the free-list.
 	 * All the non-special objects smaller than `eif_gs_limit' are allocated 
 	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 */
 
-#ifdef EIF_MEMORY_OPTIMIZATION
-	if (!(gen_scavenge & GS_OFF) && (int) nbytes <= eif_gs_limit )
-#else	/* EIF_MEMORY_OPTIMIZATION */
-	if (!(gen_scavenge & GS_OFF) && ((int) nbytes <= eif_gs_limit) && (0 == Disp_rout(type))) 
-#endif	/* EIF_MEMORY_OPTIMIZATION */
-	{
+	if (!(gen_scavenge & GS_OFF) && (int) nbytes <= eif_gs_limit) {
 		object = malloc_from_zone(nbytes);
 		if (object != (EIF_REFERENCE) 0) {
 			UNDISCARD_BREAKPOINTS
@@ -514,12 +505,10 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 			printf("--- --------------------------------- ---\n\n");
 #endif
 
-#ifdef EIF_MEMORY_OPTIMIZATION
 				/* Special marking of MEMORY object */
 			if (0 != Disp_rout (type)) {		/* It is a memory object.	*/
 				set_memory_object (object);
 			}
-#endif 
 			return object;
 
 		}
@@ -883,26 +872,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
 			 */
 
-		if (HEADER (ptr)->ov_flags & EO_REM)
-		{
-#ifdef EIF_REM_SET_OPTIMIZATION 
-			if (HEADER(ptr)->ov_flags & EO_REF) {
-				CHECK ("Special object", HEADER (object)->ov_flags & EO_SPEC);
-				CHECK ("Full of references", HEADER (object)->ov_flags & EO_REF);
-				CHECK ("Remembered object", HEADER (object)->ov_flags & EO_REM);
-				CHECK ("Old", HEADER (object)->ov_flags & EO_OLD);
-				CHECK ("Not in remember set", !(is_in_rem_set (ptr)));
-				CHECK ("In special remember set", is_in_special_rem_set (ptr));
-				eif_promote_special (object); 
-						/* FIXME:  Should we replace old `ptr' 
-						 * by  `object' instead? */
-					/* We re-issue the remembering process. */
-			} else
-				erembq (object);
-#else
+		if (HEADER (ptr)->ov_flags & EO_REM) {
 			erembq (object);	/* Usual remembrance process. */
 					/* A simple remembering for other special objects. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 		}
 
 		if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new, ie not allocated

@@ -68,7 +68,6 @@ OBJECTS = \
 	$(INDIR)\gen_conf.$obj \
 	$(INDIR)\eif_type_id.$obj \
 	$(INDIR)\rout_obj.$obj \
-	$(INDIR)\eif_special_table.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
 	$(TOP)\console\winconsole.$lib \
@@ -126,7 +125,6 @@ WOBJECTS = \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\weif_type_id.$obj \
 	$(INDIR)\wrout_obj.$obj \
-	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\idrs\idr.$lib \
 	$(TOP)\console\wwinconsole.$lib \
 
@@ -182,7 +180,6 @@ EOBJECTS = \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\weif_type_id.$obj \
 	$(INDIR)\wrout_obj.$obj \
-	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\console\wwinconsole.$lib
 
@@ -234,7 +231,6 @@ MT_OBJECTS = \
 	$(INDIR)\MTgen_conf.$obj \
 	$(INDIR)\MTeif_type_id.$obj \
 	$(INDIR)\MTrout_obj.$obj \
-	$(INDIR)\MTeif_special_table.$obj \
 	$(TOP)\ipc\shared\MTnetworku.$obj \
 	$(TOP)\ipc\shared\MTshword.$obj \
 	$(TOP)\console\mtwinconsole.$lib \
@@ -292,7 +288,6 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwgen_conf.$obj \
 	$(INDIR)\MTweif_type_id.$obj \
 	$(INDIR)\MTwrout_obj.$obj \
-	$(INDIR)\MTweif_special_table.$obj \
 	$(TOP)\idrs\mtidr.$lib \
 	$(TOP)\console\mtwwinconsole.$lib \
 
@@ -465,9 +460,6 @@ $(INDIR)\eif_type_id.$obj: $(RTSRC)\eif_type_id.c
 $(INDIR)\rout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JCFLAGS) $(RTSRC)\rout_obj.c
 
-$(INDIR)\eif_special_table.$obj: $(RTSRC)\eif_special_table.c
-	$(CC) $(JCFLAGS) $(RTSRC)\eif_special_table.c
-
 $(INDIR)\hash.$obj: $(RTSRC)\hash.c
 	$(CC) $(JCFLAGS) $(RTSRC)\hash.c
 
@@ -614,9 +606,6 @@ $(INDIR)\wgen_conf.$obj: $(RTSRC)\gen_conf.c
 
 $(INDIR)\weif_type_id.$obj: $(RTSRC)\eif_type_id.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\eif_type_id.c
-
-$(INDIR)\weif_special_table.$obj: $(RTSRC)\eif_special_table.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\eif_special_table.c
 
 $(INDIR)\wrout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)\rout_obj.c
@@ -775,9 +764,6 @@ $(INDIR)\MTeif_type_id.$obj: $(RTSRC)\eif_type_id.c
 $(INDIR)\MTrout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\rout_obj.c
 
-$(INDIR)\MTeif_special_table.$obj: $(RTSRC)\eif_special_table.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_special_table.c
-
 $(INDIR)\MThash.$obj: $(RTSRC)\hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\hash.c
 
@@ -924,9 +910,6 @@ $(INDIR)\MTwgen_conf.$obj: $(RTSRC)\gen_conf.c
 
 $(INDIR)\MTweif_type_id.$obj: $(RTSRC)\eif_type_id.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_type_id.c
-
-$(INDIR)\MTweif_special_table.$obj: $(RTSRC)\eif_special_table.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_special_table.c
 
 $(INDIR)\MTwrout_obj.$obj: $(RTSRC)\rout_obj.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\rout_obj.c
@@ -1158,9 +1141,6 @@ $(INDIR)\weif_type_id.$obj : eif_gen_conf.h eif_struct.h eif_cecil.h
 
 $(INDIR)\rout_obj.$obj : eif_rout_obj.h
 $(INDIR)\wrout_obj.$obj : eif_rout_obj.h
-
-$(INDIR)\eif_special_table.$obj : eif_special_table.h
-$(INDIR)\eif_special_table.$obj : eif_special_table.h
 
 $(INDIR)\eif_threads.$obj : eif_threads.h eif_cond_var.h
 $(INDIR)\eif_cond_var.$obj : eif_cond_var.h

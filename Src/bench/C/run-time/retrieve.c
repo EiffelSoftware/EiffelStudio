@@ -1965,18 +1965,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 #endif
 		offset = rt_unsolved->offset;	/* Offset in the solved object */
 		*(EIF_REFERENCE *) (client + offset) = supplier;
-#ifdef EIF_REM_SET_OPTIMIZATION
-		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-			CHECK ("No expanded objects in `new_obj'", !(HEADER (new_obj)->ov_flags & EO_COMP));
-			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
-					/* Casting with (EIF_REFERENCE *) gives directly the
-					 * index instead of the offset. */
-		} else	{
-			RTAS(supplier, client);					/* Age check */
-		}
-#else	/* EIF_REM_SET_OPTIMIZATION */
 		RTAS(supplier, client);					/* Age check */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 		xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_info->rt_list = next;			/* Unlink from list */
@@ -2087,19 +2076,7 @@ update:
 				/* Reference is already solved */
 				supplier = eif_access(rt_info->rt_obj);
 				*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
-#ifdef EIF_REM_SET_OPTIMIZATION
-				if ((HEADER (new_obj)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-					CHECK ("No expanded objects in `new_obj'", !(HEADER (new_obj)->ov_flags & EO_COMP));
-					RTAS_OPT (supplier, (EIF_REFERENCE *) addr - (EIF_REFERENCE *) new_obj , new_obj);
-						/* Casting with (EIF_REFERENCE *) gives directly the
-						 * index instead of the offset. */
-				} else	{
-					RTAS(supplier, new_obj);						/* Age check */
-				}
-#else	/* EIF_REM_SET_OPTIMIZATION */
 				RTAS(supplier, new_obj);					/* Age check */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-
 			} else {
 				/* Reference is stil unsolved */
 				struct rt_cell *new_cell, *old_cell;
@@ -2142,18 +2119,8 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 		/* Reference is already solved */
 		EIF_REFERENCE supplier = eif_access (rt_info->rt_obj);
 		*location = supplier;			/* Attachment */
-#ifdef EIF_REM_SET_OPTIMIZATION
-		if ((HEADER (object)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
-			int ref_index = location - (EIF_REFERENCE *) object;
-			CHECK ("No expanded objects", !(HEADER (object)->ov_flags & EO_COMP));
-			RTAS_OPT (supplier, ref_index, object);
-		} else
-			RTAS (supplier, object);
-#else
-		RTAS (supplier, object);
-#endif
-	}
-	else {
+		RTAS(supplier, object);
+	} else {
 		/* Reference is still unsolved */
 		struct rt_cell *new_cell, *old_cell;
 		EIF_OBJECT new_hector = hrecord (object);

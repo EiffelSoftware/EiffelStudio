@@ -444,8 +444,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	wel_move_and_resize ( a_x, ay, a_width, a_height: INTEGER; repaint: BOOLEAN)
-		is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
@@ -711,6 +711,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/04/25 21:17:55  brendel
+--| Cosmetics.
+--|
 --| Revision 1.58  2000/04/25 20:49:35  rogers
 --| Removed FIXME_NOT_REVIEWED. COmments. Formatting.
 --|

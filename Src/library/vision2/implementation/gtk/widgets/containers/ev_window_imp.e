@@ -229,6 +229,14 @@ feature {NONE} -- Implementation
 		-- Vertical_box to have a possibility for a menu on the
 		-- top.
 
+	plateform_closed is
+			-- A specific function for each plateform to definitely
+			-- destroy the informations after the manager destroyed
+			-- the widget.
+		do
+			widget := default_pointer
+		end 
+
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
 	add_child (child_i: EV_WIDGET_I) is

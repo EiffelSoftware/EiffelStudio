@@ -41,11 +41,11 @@ creation
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
+	make (a_name: STRING; a_parent: TOOL_W; a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		do
-			text_create (a_name, a_parent);
+			text_create (a_name, a_parent.global_form);
 			tool := a_tool;
 			set_mode_for_editing;
 			initialize_transport;
@@ -72,9 +72,9 @@ feature -- Fonts
 	set_font_to_default is
 			-- Set `font' to the default font.
 		do
-			if default_font.item /= Void then
-				set_font (default_font.item)
-			end
+			--if default_font.item /= Void then
+				--set_font (default_font.item)
+			--end
 		end;
 
 feature -- Drag source/Hole properties

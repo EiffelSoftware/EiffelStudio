@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 				argument = last_confirmer and not end_run_confirmed) 
 			then
 				warner (popup_parent).custom_call (Current, w_Freeze_warning,
-							"Freeze now", Void, "Cancel");
+							l_Freeze_now, Void, l_Cancel);
 			elseif (argument /= Void and then argument = last_warner) then
 					freeze_now (argument)
 			elseif 

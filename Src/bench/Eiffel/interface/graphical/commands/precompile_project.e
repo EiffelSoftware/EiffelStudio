@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 				argument = last_confirmer and not end_run_confirmed) 
 			then
 				warner (popup_parent).custom_call (Current, w_Precompile_warning,
-							"Precompile now", Void, "Cancel");
+							l_Precompile_now, Void, l_Cancel);
 			elseif (argument /= Void and then argument = last_warner) then
 					precompile_now (argument)
 			elseif 

@@ -59,8 +59,8 @@ feature -- Callbacks
 			elseif not assert_confirmed then
 				assert_confirmed := True;
 				warner (popup_parent).custom_call (Current, 
-					w_Assertion_warning, "Keep assertions", 
-					"Discard assertions", "Cancel"); 
+					w_Assertion_warning, l_Keep_assertions, 
+					l_Discard_assertions, l_Cancel); 
 			elseif 
 				not Application.is_running or else
 				(argument /= Void and 
@@ -75,7 +75,7 @@ feature -- Callbacks
 				end_run_confirmed := true;
 				confirmer (popup_parent).call (Current,
 						"Recompiling project will end current run.%N%
-						%Start compilation anyway?", "Compile")
+						%Start compilation anyway?", l_Compile)
 			end
 		end;
  
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			then
 				assert_confirmed := False;
 				warner (popup_parent).custom_call (Current, w_Finalize_warning,
-					"Finalize now", Void, "Cancel");
+					l_Finalize_now, Void, l_Cancel);
 			elseif 
 				(argument = Current) or else
 				(argument = last_confirmer)

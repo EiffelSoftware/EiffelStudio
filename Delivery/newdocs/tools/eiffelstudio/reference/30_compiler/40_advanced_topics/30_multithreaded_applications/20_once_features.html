@@ -37,7 +37,7 @@ features in EIFFEL</a></h2>
 		<SPAN class="eclass">TEST_ONCE_PER_PROCESS</SPAN>
 
 	<SPAN class="ekeyword">feature</SPAN>
-	
+
 		<SPAN class="efeature">object_per_thread</SPAN>: <SPAN class="eclass">OBJECT</SPAN> <SPAN class="ekeyword">is</SPAN>
 				<SPAN class="ecomment">-- Once per thread.</SPAN>
 			<SPAN class="ekeyword">once</SPAN>
@@ -48,10 +48,10 @@ features in EIFFEL</a></h2>
 				<SPAN class="ecomment">-- New 'object' (once per process)</SPAN>
 				<SPAN class="ecomment">-- that could be shared between threads</SPAN>
 				<SPAN class="ecomment">-- without reinitializing it.
-			indexing
-				once_status: global</SPAN>
+			<SPAN CLASS="ekeyword">indexing</SPAN>
+				<SPAN CLASS="estring">once_status</SPAN><SPAN CLASS="esymbol">:</SPAN>< <SPAN CLASS="estring">global</SPAN>
 			<SPAN class="ekeyword">once</SPAN>
-				create Result.make
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="esymbol">Result</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</SPAN>
 			<SPAN class="ekeyword">end</SPAN>
 
 	<SPAN class="ekeyword">end</SPAN> <SPAN class="ecomment">-- class TEST_ONCE_PER_PROCESS</SPAN>

@@ -22,14 +22,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_resource (par: EV_CONTAINER; a_resource: like resource) is
+	make_with_resource (par: EV_BOX; a_resource: like resource) is
 			-- Initialize Current with `a_resource' as `resource'.
 		require
 			resource_not_void: a_resource /= Void
 			valid_parent: par /= Void 
 		do
 			make (par)
-			Current.set_expand (false)
+			par.set_child_expandable (Current, false)
 			resource := a_resource
 		ensure
 			set: resource = a_resource

@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 			-- Initialization of button box and events.
 		do
 			{EV_ITEM_IMP} Precursor
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box

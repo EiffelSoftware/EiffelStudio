@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	children: ARRAYED_LIST [like item_type] is
+	children: ARRAYED_LIST [EV_ITEM_IMP] is
 			-- List of the direct children of the item holder.
 			-- Should be define here, but is not because we cannot
 			-- do the hastable deferred, it doesn't work, it should,

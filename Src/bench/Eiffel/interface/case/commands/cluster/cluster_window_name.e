@@ -34,22 +34,22 @@ feature -- Execution (work)
 			-- of `text'.
 		local
 			err_id, tmp: STRING;
-			error_messages: like messages;
+			error_messages: like messages
 		do
-			err_id := Message_keys.no_matching_classes_er;
+			err_id := "E16"
 			error_messages := popup_windows.errors
 
 			if error_messages.has (err_id) then
 				tmp := error_messages.item (err_id)
 			else
-				io.error.putstring ("Can not find error keyword ");
-				io.error.putstring (err_id);
-				io.error.putstring ("%NPlease contact I.S.E.%N");
-				!! tmp.make (0);
-			end;
+				io.error.putstring ("Can not find error keyword ")
+				io.error.putstring (err_id)
+				io.error.putstring ("%NPlease contact I.S.E.%N")
+				!! tmp.make (0)
+			end
 		
 			popup_with_list (Current, text, System.clusters_with_prefix (text), tmp)
-		end;
+		end
 
 	fill is
 		local

@@ -16,7 +16,33 @@ creation
 feature -- Initialization
 
 	make is 
+		-- Initialize
 		do
+			create key_messages.make(50)
+			load_table
+		end
+
+	load_table is
+		local
+			file_name: FILE_NAME
+			file: RAW_FILE
+			s: STRING
+			parser: XML_TREE_PARSER
+		do	
+	
+			!! file_name.make_from_string("d:\Eiffel44\case\configurable\new_resources\general.xml")
+
+			!! parser.make 
+			!! file.make (file_name)
+			if file.exists then
+				file.open_read
+				file.read_stream (file.count)
+				!! s.make(file.count)
+				s.append (file.last_string)
+				parser.parse_string(s)
+				parser.set_end_of_file
+				file.close		
+			end
 		end
 
 feature -- Access
@@ -28,7 +54,6 @@ feature -- Access
 			caller_possible: caller /= Void and then caller.shown
 		local
 			tmp: STRING
-			
 			message_dialog: EV_MESSAGE_DIALOG
 		do
 			if not messages.empty then
@@ -153,6 +178,9 @@ feature -- Implementation
 			read_messages_in (Environment.errors_file, Result)
 		end
 
+	key_messages: HASH_TABLE [ STRING, STRING ]
+		-- Messages that may be popup.
+
 feature -- Operations
 
 	close(args: EV_ARGUMENT; data: EV_EVENT_DATA) is
@@ -173,10 +201,27 @@ feature -- Operations
 			line: STRING;
 			i: INTEGER;
 			key, text: STRING;
-			count: INTEGER;
+			count: INTEGER
+			file2: RAW_FILE
+			s: STRING
+			parser: XML_TREE_PARSER
 		do
-			!! file_name.make_from_string (file_named);
-			!!file.make (file_name);
+			!! file_name.make_from_string (file_named)
+			!!file.make (file_name)
+
+			-- New part
+			--!! parser.make 
+			--!! file.make (file_name)
+			--if file.exists then
+			--	file.open_read
+			--	file.read_stream (file.count)
+			--	!! s.make(file.count)
+			--	s.append (file.last_string)
+			--	parser.parse_string(s)
+			--	parser.set_end_of_file
+			--	file.close		
+			--end
+			
 			if file.exists and then file.is_readable then
 				file.open_read;	
 				from
@@ -239,4 +284,6 @@ feature -- Operations
 				end
 		end
 
+invariant
+	key_messages_exists: key_messages /= Void
 end -- class POPUP_WINDOWS

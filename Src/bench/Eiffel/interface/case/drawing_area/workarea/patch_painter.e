@@ -17,12 +17,12 @@ feature -- Initialization
 	initialize_root_painter is
 			-- Make a root painter.
 		do
-			--set_drawing (windows.screen);
-			set_logical_mode (10);
-			set_subwindow_mode (1);
+			--set_drawing (windows.screen)
+			set_logical_mode (10)
+			set_subwindow_mode (1)
 			set_line_width (2)
 			-- For drawing labels
-		--	drawing_i.set_drawing_font (Resources.link_label_font);
+		--	drawing_i.set_drawing_font (Resources.link_label_font)
 		end
 
 feature -- Properties
@@ -67,7 +67,7 @@ feature -- Setting
 	set_line_width (new_width: INTEGER) is
 			-- Set the width (in pixel) of lines.
 		require
-			new_width >= 0;
+			new_width >= 0
  			drawing_set: not (drawing_i = Void)
 		do
 			drawing_i.set_line_width (new_width)

@@ -179,7 +179,7 @@ feature -- warning caller
 			fail: EV_ROUTINE_COMMAND
 			browser: LOAD_PROJECT_AUX
 		do
-			warning := windows_manager.warning (Message_keys.valid_proj_name_wa, import_cluster_box.directory, main_window)
+			warning := windows_manager.warning ("E2", import_cluster_box.directory, main_window)
 			if warning /= Void then
 				!! fail.make (~no_action)
 				!! browser.make (main_window)

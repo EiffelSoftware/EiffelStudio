@@ -64,7 +64,7 @@ feature -- Initialization
 		do
 			!! dir.make (Environment.filters_directory)
 			if not dir.is_directory and then not dir.exists then
-				Windows_manager.popup_error (Message_keys.dir_exists_er,
+				Windows_manager.popup_error ("Ei",
 						Environment.filters_directory,
 						Windows_manager.first_window)
 				format_list.clear_items

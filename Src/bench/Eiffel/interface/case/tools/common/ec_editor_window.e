@@ -47,14 +47,6 @@ feature -- Creation
 
 			!! global_container.make ( Current )
 			global_container.set_homogeneous(FALSE)
-			
-			!! sep.make ( global_container )
-			!! toolbar.make ( Current )
-			!! sep.make ( global_container )
-
-			!! fix.make ( global_container )
-			fix.set_minimum_height(20)
-			fix.set_expand(FALSE)
 
 			!! notebook.make (global_container)
 			notebook.set_tab_bottom

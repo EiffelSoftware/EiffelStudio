@@ -9,13 +9,11 @@ class STORE_PROJECT
 
 inherit
 
-	EC_COMMAND;
+	EC_COMMAND
 	WARNING_CALLER
 		redefine
 			help_action
-		end;
-	ONCES;
-	CONSTANTS;
+		end
 	EXCEPTIONS
 	SHARED_FILE_SERVER
 
@@ -50,7 +48,7 @@ feature -- Execution
 				!! overwrite.make (false)
 				project_name := project_box.directory
 				if project_name = Void then
-					Windows_manager.popup_error (Message_keys.valid_proj_name_er, Void, main_window)
+					Windows_manager.popup_error ("E2", Void, main_window)
 				else
 					if project_name.count >= 1
 					then
@@ -69,9 +67,9 @@ feature -- Execution
 						!! check_file.make (dn);
 						if check_dir.exists then
 							if not check_file.is_writable then
-								Windows_manager.popup_error (Message_keys.write_to_dir_er, project_name, main_window)
+								Windows_manager.popup_error ("E6", project_name, main_window)
 							else
-								warning := windows_manager.warning (Message_keys.project_exists_wa, project_name, main_window)
+								warning := windows_manager.warning ("Wo", project_name, main_window)
 								if warning /= Void then
 									!! com.make (~create_project)
 									!! overwrite.make (true)
@@ -88,12 +86,12 @@ feature -- Execution
 						if project_dir.exists then
 							create_project (Void, Void)
 						else
-							windows_manager.popup_error (	Message_keys.write_to_dir_er, project_name, main_window)
+							windows_manager.popup_error ("E6", project_name, main_window)
 						end
 					end
 				end
 			else
-					Windows_manager.popup_error(Message_keys.problem_creation,"", main_window)
+					Windows_manager.popup_error("E32","", main_window)
 			end
 		rescue
 			has_no_error := TRUE
@@ -265,7 +263,7 @@ feature {WARNING_WINDOW} -- Implementation
 			warning: EV_WARNING_DIALOG
 		do
 			!! overwrite.make (true)
-			warning := windows_manager.warning (Message_keys.overwrite_proj_wa, project_name, main_window)
+			warning := windows_manager.warning ("We", project_name, main_window)
 		end;
 
 end -- class STORE_PROJECT

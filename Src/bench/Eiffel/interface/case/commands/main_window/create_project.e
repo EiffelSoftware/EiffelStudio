@@ -46,7 +46,7 @@ feature -- Execution
 				if system.saved then
 					work (Void)
 				else
-					warning := windows_manager.warning (Message_keys.create_wa, Void, main_window)
+					warning := windows_manager.warning ("Wn", Void, main_window)
 				end
 			else
 				work (Void)

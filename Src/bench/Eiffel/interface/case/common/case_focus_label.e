@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 			set_center_alignment;
 		--	forbid_recompute_size;
 			set_text (" ");
-			label_font := Resources.focus_label_font;
-			if label_font /= Void then
-				label_set_font (label_font)
-			end
+		--	label_font := Resources.focus_label_font;
+		--	if label_font /= Void then
+		--		label_set_font (label_font)
+		--	end
 		end;
 
 	set_font (a_font: EV_FONT) is

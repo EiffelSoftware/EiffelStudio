@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			d_area: EV_DRAWING_AREA
 		do
 			d_area := world.context_editor.area
-			world.context_editor.scroll_if_necessary
+--			world.context_editor.scroll_if_necessary (True)
 			if d_area /= Void and then d_area.has_capture then
 				d_area.disable_capture
 			end

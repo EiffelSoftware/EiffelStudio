@@ -183,20 +183,7 @@ feature -- Element change
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := font.family.out
-			Result.append (font.name)
-			Result.append (font.height.out)
-			Result.append (font.weight.out)
-			Result.append (font.shape.out)
-			Result.append (color.red_8_bit.out)
-			Result.append (color.green_8_bit.out)
-			Result.append (color.blue_8_bit.out)
-			Result.append (background_color.red_8_bit.out)
-			Result.append (background_color.green_8_bit.out)
-			Result.append (background_color.blue_8_bit.out)
-			Result.append (effects.is_underlined.out)
-			Result.append (effects.is_striked_out.out)
-			Result.append (effects.vertical_offset.out)
+			Result := implementation.out
 		end
 
 feature {NONE} -- Contract support

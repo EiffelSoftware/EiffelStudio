@@ -1,0 +1,40 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelBase Data Structures Taxonomy</TITLE>
+		<LINK REL=StyleSheet HREF="..\..\..\..\default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Abstract Container Structures: The Taxonomy</H1>
+			<P>
+				A container data structure (or container in the sequel) is an object which serves
+				to store and access collections of objects, called the <B>items</B> of the
+				container. All classes describing containers are descendants of the deferred
+				class <A HREF="..\..\Reference\access\container.html">CONTAINER</A>.<BR>
+				A container can be studied from three viewpoints: access, storage and traversal.<BR>
+				The <B>access</B> criterion affects how the clients of a container can access its items. For
+				example, in a stack or queue, only one item is accessible at any given time, and
+				clients do not choose that item; in contrast, clients of an array or hash table must
+				provide an index, or more generally a key, to access an item.<BR>
+				The <B>storage</B> criterion affects how the items are put together. For example some
+				containers are finite, others potentially infinite; among finite structures, some are
+				bounded, others unbounded.<BR>
+				The traversal criterion affects how, if in any way, the items of a container can be
+				traversed. A traversal is a mechanism which makes it possible to examine each
+				item of a container once, in a clearly specified order. For example some containers
+				can be traversed sequentially, in one direction or two; tree structures lend themselves
+				to preorder, postorder and breadth-first traversals.<BR>
+				For each of these criteria the Base library offers a single-inheritance hierarchy of
+				deferred classes. The top of the access hierarchy is class
+				<A HREF="..\Reference\structures\access\collection.html">COLLECTION</A>;
+				the top of the storage hierarchy is class
+				<A HREF="..\Reference\structures\storage\box.html">BOX</A>; the top of the
+				traversal hierarchy is class
+				<A HREF="..\Reference\structures\traversing\traversable.html">TRAVERSABLE</A>.
+				These three classes are heirs of the most general class,
+				<A HREF="..\..\Reference\access\container.html">CONTAINER</A>.
+			</P>
+	</BODY>
+</HTML>

@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Base">
+		<param name="Name" value="EiffelBase">
+		<param name="Local" value="Libraries\Base\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGI">
+		<param name="Name" value="EiffelWeb">
+		<param name="Local" value="Libraries\Web\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="COM">
+		<param name="Name" value="EiffelCOM">
+		<param name="Local" value="Technologies\COM\index.html">
+		<param name="Name" value="EiffelCOM Wizard">
+		<param name="Local" value="Tools\Wizards\COM\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Eiffel">
+		<param name="Name" value="Eiffel">
+		<param name="Local" value="General\Eiffel\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Eiffel Language">
+		<param name="Name" value="Eiffel">
+		<param name="Local" value="General\Eiffel\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Eiffel2Java">
+		<param name="Name" value="Eiffel2Java">
+		<param name="Local" value="Libraries\Eiffel2Java\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelBase">
+		<param name="Name" value="EiffelBase">
+		<param name="Local" value="Libraries\Base\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelBench">
+		<param name="Name" value="EiffelBench">
+		<param name="Local" value="Tools\EiffelBench\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelBuild">
+		<param name="Name" value="EiffelBuild">
+		<param name="Local" value="Tools\EiffelBuild\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelCOM">
+		<param name="Name" value="EiffelCOM">
+		<param name="Local" value="Technologies\COM\index.html">
+		<param name="Name" value="EiffelCOM Wizard">
+		<param name="Local" value="Tools\Wizards\COM\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelLex">
+		<param name="Name" value="EiffelLex">
+		<param name="Local" value="Libraries\Lex\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelMath">
+		<param name="Name" value="EiffelMath">
+		<param name="Local" value="Libraries\Math\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelNet">
+		<param name="Name" value="EiffelNet">
+		<param name="Local" value="Libraries\Net\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelStore">
+		<param name="Name" value="EiffelStore">
+		<param name="Local" value="Libraries\Store\index.html">
+		<param name="Name" value="EiffelStore Wizard">
+		<param name="Local" value="Tools\Wizards\Store\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelTest">
+		<param name="Name" value="EiffelTest">
+		<param name="Local" value="Libraries\Test\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelThread">
+		<param name="Name" value="EiffelThread">
+		<param name="Local" value="Libraries\Thread\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelTime">
+		<param name="Name" value="EiffelTime">
+		<param name="Local" value="Libraries\Time\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelVision">
+		<param name="Name" value="EiffelVision2">
+		<param name="Local" value="Libraries\Vision2\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelVision2">
+		<param name="Name" value="EiffelVision2">
+		<param name="Local" value="Libraries\Vision2\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="EiffelWeb">
+		<param name="Name" value="EiffelWeb">
+		<param name="Local" value="Libraries\Web\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="eXML">
+		<param name="Name" value="eXML">
+		<param name="Local" value="Libraries\eXML\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Gobo">
+		<param name="Name" value="Gobo">
+		<param name="Local" value="Libraries\Gobo\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Java">
+		<param name="Name" value="Eiffel2Java">
+		<param name="Local" value="Libraries\Eiffel2Java\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Lex">
+		<param name="Name" value="EiffelLex">
+		<param name="Local" value="Libraries\Lex\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Math">
+		<param name="Name" value="EiffelMath">
+		<param name="Local" value="Libraries\Math\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Net">
+		<param name="Name" value="EiffelNet">
+		<param name="Local" value="Libraries\Net\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Store">
+		<param name="Name" value="EiffelStore">
+		<param name="Local" value="Libraries\Store\index.html">
+		<param name="Name" value="EiffelStore Wizard">
+		<param name="Local" value="Tools\Wizards\Store\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Test">
+		<param name="Name" value="EiffelTest">
+		<param name="Local" value="Libraries\Test\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Thread">
+		<param name="Name" value="EiffelThread">
+		<param name="Local" value="Libraries\Thread\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Time">
+		<param name="Name" value="EiffelTime">
+		<param name="Local" value="Libraries\Time\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Vision">
+		<param name="Name" value="EiffelVision2">
+		<param name="Local" value="Libraries\Vision2\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Vision2">
+		<param name="Name" value="EiffelVision2">
+		<param name="Local" value="Libraries\Vision2\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Web">
+		<param name="Name" value="EiffelWeb">
+		<param name="Local" value="Libraries\Web\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="WEL">
+		<param name="Name" value="WEL">
+		<param name="Local" value="Libraries\WEL\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="White Papers">
+		<param name="Name" value="Papers">
+		<param name="Local" value="General\Eiffel\Papers\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Wizards">
+		<param name="Name" value="Wizards">
+		<param name="Local" value="Tools\Wizards\index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="XML">
+		<param name="Name" value="eXML">
+		<param name="Local" value="Libraries\eXML\index.html">
+		</OBJECT>
+</UL>
+</BODY></HTML>

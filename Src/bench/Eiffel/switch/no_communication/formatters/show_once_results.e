@@ -62,73 +62,8 @@ feature {NONE} -- Properties
 		end;
 
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
-		local
-			once_func_list: SORTED_TWO_WAY_LIST [E_FEATURE];
-			once_request: ONCE_REQUEST;
-			arguments: E_FEATURE_ARGUMENTS;
-			e_feature: E_FEATURE;
-			dynamic_class: E_CLASS;
-			type_name: STRING;
-			status: APPLICATION_STATUS;	
-			cs: CLASSC_STONE;
 		do
-			status := Application.status;
-			if status = void then
-				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
-			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
-			else
-				!! Result.make;
-				dynamic_class := object.dynamic_class;
-				once_func_list := dynamic_class.once_functions;
-				!! once_request.make;
-				type_name := clone (dynamic_class.name);
-				type_name.to_upper;
-				!! cs.make (dynamic_class);
-				Result.add_classi (dynamic_class.lace_class, type_name);
-				Result.add_string (" [");
-				Result.add_address (object.object_address, object.name, dynamic_class);
-				Result.add_char (']');
-				Result.add_new_line;
-				Result.add_new_line;
-				from
-					once_func_list.start
-				until
-					once_func_list.after
-				loop
-					Result.add_indent;
-					e_feature := once_func_list.item;
-					e_feature.append_name (Result);
-					arguments := e_feature.arguments;
-					if arguments /= Void then
-						Result.add_string (" (");
-						from
-							arguments.start
-						until
-							arguments.after
-						loop
-							Result.add_string (arguments.argument_names.i_th (arguments.index));
-							Result.add_string (": ");
-							arguments.item.actual_type.append_to (Result);
-							arguments.forth;
-							if not arguments.after then
-								Result.add_string ("; ")
-							end
-						end;
-						Result.add_char (')')
-					end;
-					Result.add_string (": ");
-					if once_request.already_called (e_feature) then
-						once_request.once_result (e_feature).append_type_and_value (Result)
-					else
-						e_feature.type.append_to (Result);
-						Result.add_indent;
-						Result.add_string ("Not yet called")
-					end;
-					Result.add_new_line;
-					once_func_list.forth
-				end
-			end
+			!! Result.make;
 		end;
 
 feature {NONE} -- Implementation

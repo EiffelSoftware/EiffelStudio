@@ -7,11 +7,11 @@
 
 indexing
 
-	description: "Nested queries example.";
-	product: "EiffelStore";
-	database: "Oracle";
-	date: "$Date$";
-	revision: "$Revision$";
+	description: "Nested queries example."
+	product: "EiffelStore"
+	database: "Oracle"
+	date: "$Date$"
+	revision: "$Revision$"
 	author: "Patrice Khawam"
 
 class TEST_I inherit

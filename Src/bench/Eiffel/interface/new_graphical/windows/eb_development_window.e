@@ -1891,7 +1891,7 @@ feature -- Resource Update
 	rebuild_tools_menu is
 			-- Refresh the list of external commands.
 		local
-			ms: LIST [EV_MENU_ITEM]
+			ms: LIST [EB_COMMAND_MENU_ITEM]
 		do
 				-- Remove all the external commands, which are at the end of the menu.
 			from
@@ -1909,6 +1909,7 @@ feature -- Resource Update
 				ms.after
 			loop
 				tools_menu.extend (ms.item)
+				add_recyclable (ms.item)
 				ms.forth
 			end
 		end

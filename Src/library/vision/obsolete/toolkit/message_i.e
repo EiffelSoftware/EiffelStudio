@@ -96,8 +96,8 @@ feature
 		deferred
 		end; -- set_center_message_alignment
 
-	set_end_alignment is
-			-- Set message alignment to end.
+	set_right_alignment is
+			-- Set message alignment to right.
 		deferred
 		end; -- set_end_alignment
 
@@ -124,7 +124,7 @@ feature
 		deferred
 		end; -- set_ok_label
 
-	set_start_alignment is
+	set_left_alignment is
 			-- Set message alignment to beginning.
 		deferred
 		end; -- set_start_alignment

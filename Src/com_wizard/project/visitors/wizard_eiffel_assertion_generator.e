@@ -213,9 +213,7 @@ feature {NONE}
 
 				elseif 
 					ret_val and 
-					(visitor.is_structure_pointer or
-					visitor.is_interface_pointer or 
-					visitor.is_coclass_pointer) 
+					visitor.is_structure_pointer
 				then
 					create tmp_tag.make (100)
 					tmp_tag.append ("valid_")

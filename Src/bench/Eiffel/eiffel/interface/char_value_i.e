@@ -3,7 +3,7 @@ class CHAR_VALUE_I
 inherit
 	VALUE_I
 		redefine
-			generate, is_character, inspect_constant,
+			generate, is_character, inspect_value,
 			append_signature, string_value
 		end
 
@@ -84,10 +84,10 @@ feature
 
 feature -- Multi-branch instruction processing
 
-	inspect_constant (context_class: CLASS_C; constant_i: CONSTANT_I; value_type: TYPE_A): CHAR_CONST_VAL_B is
-			-- Inspect value for `constant_i' from `context_class' of the given `value_type'
+	inspect_value (value_type: TYPE_A): CHAR_VAL_B is
+			-- Inspect value of the given `value_type'
 		do
-			create Result.make (context_class, character_value, constant_i)
+			create Result.make (character_value)
 		end
 
 end

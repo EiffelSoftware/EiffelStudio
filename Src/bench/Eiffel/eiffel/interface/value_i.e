@@ -140,13 +140,11 @@ feature -- Settings
 
 feature -- Multi-branch instruction processing
 
-	inspect_constant (context_class: CLASS_C; constant_i: CONSTANT_I; value_type: TYPE_A): INTERVAL_VAL_B is
-			-- Inspect value for `constant_i' from `context_class' of the given type `t'
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value of the given `value_type'
 		require
-			context_class_not_void: context_class /= Void
-			constant_i_not_void: constant_i /= Void
-			is_valid_inspect_value: constant_i.value.valid_type (value_type)
 			value_type_not_void: value_type /= Void
+			is_valid_inspect_value: valid_type (value_type)
 		do
 			-- Do nothing here.
 		ensure

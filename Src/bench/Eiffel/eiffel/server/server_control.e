@@ -149,13 +149,10 @@ end;
 		require
 			good_argument: f /= Void;
 			is_closed: not f.is_open
-		local
-			opened_file: SERVER_FILE;
 		do
 			if is_full then
 					-- Remove one opened file from cache
-				opened_file := item;
-				opened_file.close;
+				item.close;
 				remove;
 			end;
 			f.open;

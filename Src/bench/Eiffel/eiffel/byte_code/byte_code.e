@@ -990,7 +990,7 @@ feature -- Byte code generation
 						Temp_byte_code_array.append_short_integer (i)
 						if formal_type.is_bit then
 							bit_i ?= formal_type
-							Temp_byte_code_array.append_short_integer(bit_i.size)
+							Temp_byte_code_array.append_integer(bit_i.size)
 						else
 							expanded_type ?= formal_type
 							Temp_byte_code_array.append_short_integer

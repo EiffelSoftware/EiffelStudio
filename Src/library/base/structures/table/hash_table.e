@@ -22,7 +22,7 @@ indexing
 		%`put' and `replace_key'."
 
 	status: "See notice at end of class"
-	date: "$Date: 8th January 1996"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class HASH_TABLE [G, H -> HASHABLE] inherit
@@ -167,6 +167,9 @@ feature -- Access
 			Result := keys.item (iteration_position)
 		end
 
+	search_item: G
+			-- Item, if any, yielded by last `search' operation
+
 	cursor: CURSOR is
 			-- Current cursor position
 		do
@@ -207,16 +210,6 @@ feature -- Status report
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := true
-		end
-
-	valid_key (k: H): BOOLEAN is
-			obsolete "The default value is now accepted"
-			-- Is `k' a valid key?
-			-- Answer: yes
-		do
-			Result := True
-		ensure then
-			Result
 		end
 
 	conflict: BOOLEAN is
@@ -310,6 +303,14 @@ feature -- Cursor movement
 			if ht_cursor /= Void then
 				iteration_position := ht_cursor.position
 			end
+		end
+
+	search (key: H) is
+			-- Search for item of key `key'.
+			-- If found, set `found' to true and `search_item' to item for `key'.
+		do
+			internal_search (key)
+			search_item := content.item (position)
 		end
 
 feature -- Element change
@@ -504,6 +505,35 @@ feature -- Duplication
 			set_deleted_marks (clone (other.deleted_marks))
 		end
 
+feature -- Obsolete
+
+	dead_key: H is
+			obsolete "this special key is no more used"
+		do
+		end
+		
+	pos_for_iter: INTEGER is
+			obsolete "use iteration_position"
+		do
+			Result:= iteration_position
+		end
+		
+	changed_constant: INTEGER is
+			obsolete "use Replaced_constant"
+		do
+			Result := Replaced_constant
+		end
+
+	valid_key (k: H): BOOLEAN is
+			obsolete "The default value is now accepted"
+			-- Is `k' a valid key?
+			-- Answer: yes
+		do
+			Result := True
+		ensure then
+			Result
+		end
+
 feature {HASH_TABLE} -- Implementation: content attributes and preservation procedure
 
 	content: ARRAY [G]
@@ -534,7 +564,6 @@ feature {HASH_TABLE} -- Implementation: search attributes
 
 	iteration_position: INTEGER
 			-- Cursor for iteration primitives
-
 	position: INTEGER
 			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...

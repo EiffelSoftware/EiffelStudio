@@ -168,10 +168,12 @@ feature -- Commands
 			Manager.Shared_constants.Application_constants.set_index_file_name ("index.xml")
 			filter_nodes	
 			sort_node (Current)
-			move_nodes		
+			move_nodes				
 			if order_alphabetically then
 				sort_node_alphabetically (Current)
 			end
+			remove_duplicate_nodes (Current)
+			remove_duplicate_nodes (Current)
 		end		
 
 	reset is
@@ -564,6 +566,7 @@ feature {NONE} -- Sorting
 						create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_url))
 						manager.shared_document_manager.add_document (l_doc)
 					end
+					
 					if is_code_document (l_doc) then
 						Result := not is_required_library_document (l_url)
 					else
@@ -605,7 +608,7 @@ feature {NONE} -- Sorting
 			l_children_children_clone: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
 			l_child: TABLE_OF_CONTENTS_NODE
 		do
-			if a_node /= Void and then not Sort_excluded.has (a_node.id) then 								
+			if a_node /= Void and then not Sort_excluded.has (a_node.id) then 											
 				if a_node.has_child then
 					create l_children_clone.make (1)
 					from
@@ -902,6 +905,48 @@ feature {NONE} -- Sorting
 				end
 			end
 		end
+			
+	remove_duplicate_nodes (a_node: TABLE_OF_CONTENTS_NODE) is
+			-- Remove nodes occuring with the same id
+		local
+			l_ids,
+			l_removable: ARRAYED_LIST [INTEGER]
+		do
+			if a_node.has_child then
+				create l_ids.make (a_node.children.count)
+				from
+					a_node.children.start
+				until
+					a_node.children.after
+				loop					
+					if a_node.children.item.has_child then
+						remove_duplicate_nodes (a_node.children.item)
+					end
+					
+					if l_ids.has (a_node.children.item.id) then
+						if l_removable = Void then
+							create l_removable.make (1)
+							l_removable.extend (a_node.children.item.id)
+						end						
+					else
+						l_ids.extend (a_node.children.item.id)
+					end					
+					a_node.children.forth
+				end
+				
+				if l_removable /= Void then
+					from
+						l_removable.start
+					until
+						l_removable.after
+					loop
+						a_node.delete_node (l_removable.item)
+						l_removable.forth
+					end
+				end
+				
+			end
+		end	
 
 invariant
 	has_name: name /= Void and then not	name.is_empty

@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 				!! msg.make
 				txt.append ("Word count: ")
 				txt.append_integer (analyzer.word_count)
-				msg.information_message_box (Void, txt, "Analyzer")
+				msg.information_message_box (Current, txt, "Analyzer")
 			when Cmd_line_count then
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 				!! msg.make
 				txt.append ("Line count: ")
 				txt.append_integer (analyzer.line_count)
-				msg.information_message_box (Void, txt, "Analyzer")
+				msg.information_message_box (Current, txt, "Analyzer")
 			when Cmd_sentence_count then
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 				!! msg.make
 				txt.append ("Sentence count: ")
 				txt.append_integer (analyzer.sentence_count)
-				msg.information_message_box (Void, txt, "Analyzer")
+				msg.information_message_box (Current, txt, "Analyzer")
 			when Cmd_occurences then
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				txt.append (entered_text)
 				txt.append (": ")
 				txt.append_integer (analyzer.occurences (entered_text))
-				msg.information_message_box (Void, txt, "Analyzer")				
+				msg.information_message_box (Current, txt, "Analyzer")				
 			else
 			end
 		end

@@ -13,8 +13,8 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
-	GB_SHARED_COMPONENT_VIEWER
+
+	GB_SHARED_TOOLS
 		undefine
 			default_create, copy
 		end

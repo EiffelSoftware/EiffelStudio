@@ -38,9 +38,9 @@ feature
 			-- in `error_window'.
 		do
 			put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (error_window);
+			a_feature.append_clickable_signature (error_window, a_feature.written_class);
 			put_string ("%N%Tand feature ");
-			other_feature.append_clickable_signature (error_window);
+			other_feature.append_clickable_signature (error_window, other_feature.written_class);
 			new_line;
 		end;
 

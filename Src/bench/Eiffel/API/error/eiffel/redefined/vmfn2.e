@@ -43,9 +43,9 @@ feature
 				feature_info := features.item;
 				feature_i := feature_info.a_feature;
 				put_string ("%Tfeature ");
-				feature_i.append_clickable_signature (error_window);
-				put_string (" inherited from ");
 				parent := System.class_of_id (feature_info.parent.parent_id);
+				feature_i.append_clickable_signature (error_window, parent);
+				put_string (" inherited from ");
 				parent.append_clickable_name (error_window);
 				put_string (" written in ");
 				feature_i.written_class.append_clickable_name (error_window);

@@ -31,9 +31,9 @@ feature
 			-- in `error_window'.
 		do
 			put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (error_window);
+			a_feature.append_clickable_signature (error_window, a_feature.written_class);
 			put_string ("%N%Tand feature ");
-			inherited_feature.append_clickable_signature (error_window);
+			inherited_feature.append_clickable_signature (error_window, inherited_feature.written_class);
 			put_string (" inherited from ");
 			System.class_of_id (parent_id).append_clickable_name (error_window);
 			new_line;

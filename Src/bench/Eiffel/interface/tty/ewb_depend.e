@@ -70,7 +70,7 @@ feature
 
 				supplier.append_clickable_name (display);
 				display.put_string (".");
-				supp_f.append_clickable_name (display);
+				supp_f.append_clickable_name (display, supplier);
 				display.new_line;
 
 				fdep.forth

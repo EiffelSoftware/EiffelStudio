@@ -34,7 +34,7 @@ feature
 	build_explain is
 		do
 			put_string ("%T%Tin feature `");
-			feature_i.append_clickable_name (error_window);
+			feature_i.append_clickable_name (error_window, feature_i.written_class);
 			put_string ("':%N%T%T");
 			put_string (argument_name);
 			put_string (" is a feature name and cannot%N%

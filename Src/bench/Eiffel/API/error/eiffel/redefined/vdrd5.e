@@ -37,11 +37,11 @@ feature
 			-- in `error_window'.
 		do
 			put_string ("%Tprecursor: ");
-			precursor.append_clickable_signature (error_window);
+			precursor.append_clickable_signature (error_window, precursor.written_class);
 			put_string (" written in ");
 			precursor.written_class.append_clickable_name (error_window);
 			put_string ("%N%Tredeclaration: ");
-			redeclaration.append_clickable_signature (error_window);
+			redeclaration.append_clickable_signature (error_window, redeclaration.written_class);
 			put_string (" written in ");
 			redeclaration.written_class.append_clickable_name (error_window);
 			new_line;

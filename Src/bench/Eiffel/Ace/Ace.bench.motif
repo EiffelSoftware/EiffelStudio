@@ -12,18 +12,18 @@ cluster
 
 -- STANDARD STRUCTURES:
 
-		kernel:				"$BENCH/library/base/kernel";
-		support:			"$BENCH/library/base/support";
-		access:				"$BENCH/library/base/structures/access";
-		cursors:			"$BENCH/library/base/structures/cursors";
-		dispenser:			"$BENCH/library/base/structures/dispenser";
-		list:				"$BENCH/library/base/structures/list";
-		set:				"$BENCH/library/base/structures/set";
-		sort:				"$BENCH/library/base/structures/sort";
-		storage:			"$BENCH/library/base/structures/storage";
-		table:				"$BENCH/library/base/structures/table";
-		traversing:			"$BENCH/library/base/structures/traversing";
-		tree:				"$BENCH/library/base/structures/tree";
+		kernel:				"$BENCH/Eiffel/library/base/kernel";
+		support:			"$BENCH/Eiffel/library/base/support";
+		access:				"$BENCH/Eiffel/library/base/structures/access";
+		cursors:			"$BENCH/Eiffel/library/base/structures/cursors";
+		dispenser:			"$BENCH/Eiffel/library/base/structures/dispenser";
+		list:				"$BENCH/Eiffel/library/base/structures/list";
+		set:				"$BENCH/Eiffel/library/base/structures/set";
+		sort:				"$BENCH/Eiffel/library/base/structures/sort";
+		storage:			"$BENCH/Eiffel/library/base/structures/storage";
+		table:				"$BENCH/Eiffel/library/base/structures/table";
+		traversing:			"$BENCH/Eiffel/library/base/structures/traversing";
+		tree:				"$BENCH/Eiffel/library/base/structures/tree";
 
 -- ES3 SPECIFIC CLUSTERS
 
@@ -105,13 +105,13 @@ cluster
 
 		 ipc:				"$BENCH/Eiffel/ipc";
 
-		 graph_resources:	"$BENCH/library/vision/implement/motif/Resources";
-		 graph_widgets:		"$BENCH/library/vision/implement/motif/widgets";
-		 graph_toolkit:		"$BENCH/library/vision/implement/toolkit";
-		 graph_X:			"$BENCH/library/vision/implement/X";
-		 graph_commands:	"$BENCH/library/vision/oui/commands";
-		 graph_kernel:		"$BENCH/library/vision/oui/kernel";
-		 graph_oui_widgets:	"$BENCH/library/vision/oui/widgets";
+		 graph_resources:	"$BENCH/Eiffel/library/vision/implement/motif/Resources";
+		 graph_widgets:		"$BENCH/Eiffel/library/vision/implement/motif/widgets";
+		 graph_toolkit:		"$BENCH/Eiffel/library/vision/implement/toolkit";
+		 graph_X:			"$BENCH/Eiffel/library/vision/implement/X";
+		 graph_commands:	"$BENCH/Eiffel/library/vision/oui/commands";
+		 graph_kernel:		"$BENCH/Eiffel/library/vision/oui/kernel";
+		 graph_oui_widgets:	"$BENCH/Eiffel/library/vision/oui/widgets";
 
 external
 

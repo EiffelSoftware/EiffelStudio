@@ -30,7 +30,7 @@ feature
 			-- in `error_window'.
 		do
 			put_string ("%Tfeature ");
-			a_feature.append_clickable_signature (error_window);
+			a_feature.append_clickable_signature (error_window, a_feature.written_class);
 			put_string (" written in ");
 			a_feature.written_class.append_clickable_name (error_window);
 			new_line;

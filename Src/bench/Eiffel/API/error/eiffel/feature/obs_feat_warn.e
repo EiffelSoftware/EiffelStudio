@@ -40,12 +40,12 @@ feature
 			associated_class.append_clickable_name (error_window);
 			if a_feature /= Void then
 				put_string ("%N%Tin feature `");
-				a_feature.append_clickable_signature (error_window);
+				a_feature.append_clickable_signature (error_window, associated_class);
 				put_string ("':%N%T");
 			else
 				put_string ("%N%Tin invariant%N%T");
 			end;
-			obsolete_feature.append_clickable_signature (error_window);
+			obsolete_feature.append_clickable_signature (error_window, obsolete_feature.written_class);
 			put_string (" is obsolete:%N%T");
 			put_string (obsolete_feature.obsolete_message);
 			put_string (" (class ");

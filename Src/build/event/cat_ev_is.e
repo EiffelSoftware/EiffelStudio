@@ -12,7 +12,8 @@ inherit
 		redefine
 			process_event
 		end;
-	REMOVABLE
+	REMOVABLE;
+	ERROR_POPUPER
 
 creation
 
@@ -26,8 +27,19 @@ feature
 		do
 			r ?= data;
 			if r /= Void then
-				r.remove_yourself
+				if data.exists_in_application then
+					error_box.popup (Current,
+								Messages.cannot_remove_translation_er,
+								data.label)
+				else
+					r.remove_yourself
+				end
 			end
+		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := page
 		end;
 
 	page: EVENT_PAGE;

@@ -21,14 +21,23 @@ creation
 	make
 	
 feature {NONE} -- Initialization
-	
+
 	make is
 		do
 			!EV_BUTTON_EVENT_DATA_IMP! implementation
 		end
 
 feature -- Access	
-	
+
+	widget: EV_WIDGET is
+			-- The mouse pointer was over this widget 
+			-- when event happened
+		do
+			Result := implementation.widget
+		ensure
+			valid_result: Result /= Void
+		end
+
 	x: INTEGER is
 			-- Horizontal position of the mouse pointer relative
 			-- to the receiving widget

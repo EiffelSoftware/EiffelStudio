@@ -29,6 +29,15 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
+	widget: EV_WIDGET is
+			-- The mouse pointer was over this widget 
+			-- when event happened
+		do
+			Result := implementation.widget
+		ensure
+			valid_result: Result /= Void
+		end
+
 	keycode: INTEGER is
 			-- Platform dependent code corresponding to the keystroke
 			-- See class EV_KEY_CODE for values.

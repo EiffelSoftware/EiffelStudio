@@ -16,6 +16,8 @@ feature -- Initialization
 	make (a_parent: COMPOSITE; a_dialog: WIZARD_DIALOG; an_action: WIZARD_ACTION) is
 			-- Initialize Current. Set `associated_dialog' to `a_dialog',
 			-- `current_action' to `an_action'.
+			-- FIXME: New wizard dialog should be probably made for every WIZARD_ACTION, 
+			-- or at least reset!!!
 		require
 			non_void_parent: a_parent /= Void;
 			non_void_dialog: a_dialog /= Void;
@@ -64,9 +66,15 @@ feature -- Action Iteration
 				if current_action.is_finished then
 					current_action.process_information
 					if current_action.processed then
+					--	associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+						associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
+						associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
 						associated_dialog.popdown
 					end
 				else
+				--	associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+					associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
+					associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
 					associated_dialog.popdown;
 				end;
 			end;

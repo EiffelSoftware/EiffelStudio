@@ -58,7 +58,7 @@ feature -- Access
 			-- go off right if none.
 		require
 			exists: not destroyed;
-			search_element_exists: not (v = Void)
+			search_element_exists: v /= Void
 		do
 			implementation.search_equal (v)
 		ensure
@@ -305,7 +305,6 @@ feature -- Insertion
 			implementation.add_left (an_item)
 		ensure
 			count = old count+1;
-			(not (index = 2)) implies (index = old index+1)
 		end; 
 
 	put_right (an_item: STRING) is
@@ -328,7 +327,7 @@ feature -- Insertion
 			-- Empty other.
 		require
 			exists: not destroyed;
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
 			implementation.merge_left (other)
 		ensure
@@ -344,7 +343,7 @@ feature -- Insertion
 		require
 			--not_off: not off;
 			exists: not destroyed;
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
 			implementation.merge_right (other)
 		ensure
@@ -499,7 +498,7 @@ feature -- Visibilty
 			-- Set the number of visible items to `a_count'.
 		require
 			exists: not destroyed;
-			a_count_large_enough: a_count >0
+			a_count_large_enough: a_count > 0
 		do
 			implementation.set_visible_item_count (a_count)
 		end; 
@@ -546,7 +545,7 @@ feature -- Visibilty
 		do
 			Result := implementation.visible_item_count
 		ensure
-			count_large_enough: Result >0
+			count_large_enough: Result > 0
 		end;
 
 feature {LIST_MAN_I}

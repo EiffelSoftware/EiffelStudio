@@ -30,13 +30,8 @@ feature -- Properties
 		do
 		end;
 
-	full_symbol: PIXMAP is
+	icon_symbol, full_symbol: PIXMAP is
 		do	
-			Result := symbol
-		end;
-
-	icon_symbol: PIXMAP is
-		do
 			Result := symbol
 		end;
 

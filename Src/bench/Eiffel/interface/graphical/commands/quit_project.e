@@ -41,6 +41,7 @@ feature {NONE}
 					discard_licence;
 					exit
 				else
+					confirmer.set_window (text_window);
 					confirmer.call (Current, "Do you really want to exit ?", "Exit");
 				end
 			else

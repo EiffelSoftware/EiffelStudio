@@ -22,9 +22,23 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Retarget the class tool with the current class if any.
+		local
+			class_c: CLASS_C
 		do
-			if Run_info.is_running and Run_info.is_stopped then
-				text_window.receive (Run_info.class_type.associated_class.stone)
+			if not Run_info.is_running then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not running")
+			elseif not Run_info.is_stopped then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not stopped")
+			elseif Run_info.feature_i = Void or Run_info.class_type = Void then
+					-- Should never happen.
+				warner.set_window (text_window);
+				warner.gotcha_call ("Unknown class")
+			else
+					-- Show the current routine in that class.
+				class_c := Run_info.class_type.associated_class;
+				text_window.receive (Run_info.feature_i.stone (class_c))
 			end
 		end;
 

@@ -33,6 +33,7 @@ feature {NONE}
 		do
 			if argument = warner then
 				-- The user has been warned that he will lose his stuff
+				name_chooser.set_window (text_window);
 				name_chooser.call (Current) 
 			elseif argument = name_chooser then
 				fn := clone (name_chooser.selected_file);
@@ -48,13 +49,16 @@ feature {NONE}
 					temp.append ("File: ");
 					temp.append (fn);
 					temp.append ("%Ncannot be read. Try again?");
+					warner.set_window (text_window);
 					warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
 				end
 			else
 				-- First click on open
 				if text_window.changed then
+					warner.set_window (text_window);
 					warner.call (Current, l_File_changed)
 				else
+					name_chooser.set_window (text_window);
 					name_chooser.call (Current) 
 				end
 			end

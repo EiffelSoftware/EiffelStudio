@@ -44,6 +44,7 @@ feature {NONE}
 					!! temp.make (0);
 					temp.append (new_file.name);
 					temp.append ("%Nis not a plain file");
+					warner.set_window (text_window);
 					warner.gotcha_call (temp);
 				elseif 
 					not (argument = warner) and then
@@ -54,6 +55,7 @@ feature {NONE}
 					temp.append ("File: ");
 					temp.append (new_file.name);
 					temp.append (" already exists.%NDo you wish to overwrite it?");
+					warner.set_window (text_window);
 					warner.custom_call 
 						(Current, temp, "Overwrite", Void, "Cancel");
 				elseif
@@ -64,6 +66,7 @@ feature {NONE}
 					temp.append ("File: ");
 					temp.append (new_file.name);
 					temp.append (" is not writable.%NPlease check permissions");
+					warner.set_window (text_window);
 					warner.gotcha_call (temp);
 				elseif
 					not new_file.is_creatable
@@ -73,6 +76,7 @@ feature {NONE}
 					temp.append ("File: ");
 					temp.append (new_file.name);
 					temp.append (" cannot be created.%NPlease check permissions");
+					warner.set_window (text_window);
 					warner.gotcha_call (temp);
 				end;
 				if aok then
@@ -95,6 +99,7 @@ feature {NONE}
 					end;
 				end;
 			elseif (argument = text_window) then
+				name_chooser.set_window (text_window);
 				name_chooser.call (Current)
 			end
 		end;

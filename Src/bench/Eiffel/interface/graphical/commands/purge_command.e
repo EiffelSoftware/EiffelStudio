@@ -40,13 +40,16 @@ feature {NONE}
 			-- lengthy confirmation needed
 		do
 			if argument = warner then
+				confirmer.set_window (project_tool.text_window);
 				confirmer.call (Current, "Think again%NAre you really sure ?", "OK");
 			elseif argument = confirmer then
 				system.purge
 			elseif workbench.successfull then
+					warner.set_window (project_tool.text_window);
 					warner.call (Current,"Compress system%NIt could take quite a long%N%
 									%Go on ?");
 			else
+				warner.set_window (project_tool.text_window);
 				warner.custom_call (void ,"A compilation must complete%N%
 						%succesfully before compressing", void, void, "OK");
 			end;

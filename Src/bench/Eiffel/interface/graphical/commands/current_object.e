@@ -23,10 +23,24 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Retarget the object tool with the current object if any.
 		local
+			class_c: CLASS_C;
+			address: STRING;
 			stone: OBJECT_STONE
 		do
-			if Run_info.is_running and Run_info.is_stopped then
-				!! stone.make (Run_info.object_address, Run_info.class_type.associated_class);
+			address := Run_info.object_address;
+			if not Run_info.is_running then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not running")
+			elseif not Run_info.is_stopped then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not stopped")
+			elseif address = Void or Run_info.class_type = Void then
+					-- Should never happen.
+				warner.set_window (text_window);
+				warner.gotcha_call ("Unknown object")
+			else
+				class_c := Run_info.class_type.associated_class;
+				!! stone.make (address, class_c);
 				text_window.receive (stone)
 			end
 		end;

@@ -10,6 +10,8 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
+		export {NONE}
+			add_double_click_command, remove_double_click_commands
 		redefine
 			set_default_colors
 		end

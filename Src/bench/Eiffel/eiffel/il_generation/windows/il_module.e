@@ -51,6 +51,8 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
+	REFACTORING_HELPER
+
 create {IL_CODE_GENERATOR}
 	make
 	
@@ -962,12 +964,12 @@ feature -- Metadata description
 			class_c := class_type.associated_class
 			l_native_array ?= class_type
 
-			if l_native_array /= Void then
-					-- Generate association with a NATIVE_ARRAY []
+			if l_native_array /= Void or else is_by_ref_type (class_type.type) then
+					-- Generate association with a NATIVE_ARRAY [] or TYPED_POINTER []
 				create l_sig.make
-				set_signature_type (l_sig, l_native_array.type)
+				set_signature_type (l_sig, class_type.type)
 				l_type_token := md_emit.define_type_spec (l_sig)
-				name := l_native_array.il_type_name
+				name := class_type.full_il_type_name
 				class_mapping.put (l_type_token, class_type.static_type_id)
 				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)

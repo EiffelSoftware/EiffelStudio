@@ -22,24 +22,24 @@ feature {ANY} -- Element Change
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
-			index_small_enough: pos <= size;
+			index_small_enough: pos <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= 0
 			i_small_enough: i < 256 -- 2^8
 		do
-			put (i.ascii_char, pos)
+			area.put (i.ascii_char, pos)
 		end
 			
 	put_sint_8_from_int (i: INTEGER; pos: INTEGER) is
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
-			index_small_enough: pos <= size;
+			index_small_enough: pos <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= -128
 			i_small_enough: i <= 127
 		do
-			put (i.ascii_char, pos)
+			area.put (i.ascii_char, pos)
 		end
 			
 	put_uint_16_from_int (i: INTEGER; pos: INTEGER) is
@@ -47,7 +47,7 @@ feature {ANY} -- Element Change
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
-			index_small_enough: (pos + Int_16_size) <= size;
+			index_small_enough: (pos + Int_16_size) <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= 0
 			i_small_enough: i < 65536 -- 2^16
@@ -61,7 +61,7 @@ feature {ANY} -- Element Change
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
-			index_small_enough: (pos + Int_16_size) <= size;
+			index_small_enough: (pos + Int_16_size) <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= -32768
 			i_small_enough: i <= 32767
@@ -76,7 +76,7 @@ feature {ANY} -- Element Change
 			-- Note: on most machines INTEGER is only 32 bit and signed,
 			-- so there should never be an overflow here
 		require
-			index_small_enough: (pos + Int_32_size) <= size;
+			index_small_enough: (pos + Int_32_size) <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= 0
 			i_small_enough: i < 4294967296 -- 2^32
@@ -91,7 +91,7 @@ feature {ANY} -- Element Change
 			-- Note: on most machines INTEGER is only 32 bit and signed,
 			-- so there should never be an overflow here
 		require
-			index_small_enough: (pos + Int_32_size) <= size;
+			index_small_enough: (pos + Int_32_size) <= count;
 			index_large_enough: pos > 0;
 			i_big_enough: i >= -2147483648
 			i_small_enough: i <= 2147483647
@@ -106,10 +106,10 @@ feature {ANY} -- Element Change
 			-- Note: on most machines INTEGER is only 32 bit and signed,
 			-- so there should never be an overflow here
 		require
-			index_small_enough: (pos + Int_64_size) <= size;
+			index_small_enough: (pos + Int_64_size) <= count;
 			index_large_enough: pos > 0;
 			i_positive: i >= 0
-			i_small_enough: i < 18446744073709551616 -- 2^64
+			i_small_enough: i < {INTEGER_64}.max_value
 		do
 			check
 				TODO:False
@@ -123,7 +123,7 @@ feature {ANY} -- Element Change
 			-- Note: on most machines INTEGER is only 32 bit and signed,
 			-- so there should never be an overflow here
 		require
-			index_small_enough: (pos + Int_64_size) <= size;
+			index_small_enough: (pos + Int_64_size) <= count;
 			index_large_enough: pos > 0;
 			i_large_enough: i >= -9223372036854775808
 			i_small_enough: i < 9223372036854775807
@@ -140,7 +140,7 @@ feature {ANY} -- Element Change
 			-- there will be no additional info on size or a terminating
 			-- zero character. You have to provide this information yourself
 		require	
-			index_small_enough: (pos + Int_16_size + s.count) <= size;
+			index_small_enough: (pos + Int_16_size + s.count) <= count;
 			index_large_enough: pos > 0;
 			s_not_void: s /= Void
 			s_short_enought: s.count < 65536 -- 2^16
@@ -153,7 +153,7 @@ feature {ANY} -- Element Change
 	put_double_from_double (d: DOUBLE; pos: INTEGER) is
 			-- Note: `ca_wdouble' does not seem to work. FIXME
 		require
-			index_small_enough: (pos + Double_size) <= size;
+			index_small_enough: (pos + Double_size) <= count;
 			index_large_enough: pos > 0;
 		do
 			ca_wdouble ($area, d, pos - 1)
@@ -162,7 +162,7 @@ feature {ANY} -- Element Change
 	put_float_from_real (f: REAL; pos: INTEGER) is
 			-- Note: `ca_wdouble' does not seem to work. FIXME
 		require
-			index_small_enough: (pos + Double_size) <= size;
+			index_small_enough: (pos + Double_size) <= count;
 			index_large_enough: pos > 0;
 		do
 			check

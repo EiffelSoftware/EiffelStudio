@@ -8,29 +8,36 @@ class
 	JVM_IL_CODE_GENERATOR
 
 inherit
-	IL_CODE_GENERATOR_I
-		redefine
-			print,
-			start_parents_list,
-			start_arguments_list,
-			end_arguments_list,
-			start_class_mappings,
-			start_classes_descriptions,
-			end_classes_descriptions
-		end
+	IL_CODE_GENERATOR
 	
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 	SHARED_JVM_CLASS_REPOSITORY
-		undefine
-			print
+		export
+			{NONE} all
 		end
 			
 	JVM_NAME_CONVERTER
-		undefine
-			print
+		export
+			{NONE} all
 		end
+
 	JVM_CONSTANTS
-		undefine
-			print
+		export
+			{NONE} all
+		end
+	
+	REFACTORING_HELPER
+		export
+			{NONE} all
 		end
 			
 create
@@ -45,6 +52,35 @@ feature {NONE} -- Initialization
 			debug ("JVM_GEN2")
 				print ("Starting new generation ------------------------------%N")
 			end
+		end
+
+feature -- Generation type
+
+	set_console_application is
+			-- Current generated application is a CONSOLE application.
+		do
+		end
+
+	set_window_application is
+			-- Current generated application is a WINDOW application.
+		do
+		end
+
+	set_dll is
+			-- Current generated application is a DLL.
+		do
+		end
+
+feature -- Generation Info
+
+	set_version (build, major, minor, revision: INTEGER) is
+			-- Assign current generated assembly with given version details.
+		do
+		end
+
+	set_verifiability (verifiable: BOOLEAN) is
+			-- Mark current generation to generate verifiable code.
+		do
 		end
 
 feature -- Generation Structure
@@ -143,7 +179,6 @@ feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is
 		do
-			Precursor (class_count)
 			repository.set_capacity (class_count)
 			highest_used_type_id := 0
 		end
@@ -187,7 +222,6 @@ feature -- Class info
 	start_classes_descriptions is
 			-- Following calls to current will only describe parents and features of current class.
 		do
-			Precursor
 			debug ("JVM_GEN2")
 				print ("start classes descr.......................%N")
 			end
@@ -196,7 +230,6 @@ feature -- Class info
 	end_classes_descriptions is
 			-- Generate runtime
 		do
-			Precursor
 			debug ("JVM_GEN2")
 				print ("end classes descr.......................%N")
 			end
@@ -282,7 +315,6 @@ feature -- Class info
 	start_parents_list is
 			-- Starting inheritance part description
 		do
-			Precursor
 		end
 
 	add_to_parents_list (type_id: INTEGER) is
@@ -563,7 +595,7 @@ feature -- Features info
 			-- since the compiler does not tell me the alias name of the
 			-- deferred externals yet, i read them from a file produced
 			-- by the emittor. this is a dirty hack (tm)
-			fn := clone (current_class.qualified_name_wo_l)
+			fn := current_class.qualified_name_wo_l.twin
 			fn.replace_substring_all ("/", ".")
 			fn.append_string (".deh")
 			fn.prepend_string ("gen/")
@@ -587,7 +619,7 @@ feature -- Features info
 				then
 					-- we now are at the line of the alias corrisponding to `name'
 					deh.read_line
-					external_name := clone (deh.last_string)
+					external_name := deh.last_string.twin
 					create wf.make (current_class.constant_pool)
 					current_written_feature := wf
 					wf.set_external_name (external_name)
@@ -650,7 +682,6 @@ feature -- Features info
 			debug ("JVM_GEN2")
 				print (" (")
 			end
-			Precursor (count)
 			create current_parameters.make
 		end
 
@@ -725,9 +756,12 @@ feature -- IL Generation
 		do
 		end
 
-	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [INTEGER]; return_type: INTEGER; is_virtual: BOOLEAN) is
 			-- Generate call to `name' with signature `parameters_type'.
+		local
+			type_id, feature_id: INTEGER
 		do
+			fixme ("Manu: We should not use `type_id' `feature_id' to generate the call")
 			debug ("JVM_GEN")
 				print ("%T")
 				print ("%T")
@@ -806,11 +840,26 @@ feature -- IL Generation
 			end
 		end
 			
+	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
+		is
+			-- Get token for feature specified by `base_name' and `member_name'
+		do
+		end
+
 feature -- Local variable info generation
 
-	put_result_info (type_id: INTEGER) is
-			-- Specifies `type_id' of type of result.
+	set_local_count (a_count: INTEGER) is
+			-- Set `local_count' to `a_count'.
 		do
+		end
+
+	put_result_info (type_i: TYPE_I) is
+			-- Specifies `type_id' of type of result.
+		local
+			type_id: INTEGER
+		do
+			type_id := type_i.static_type_id
 			debug ("JVM_GEN")
 				print ("put_result_info: " + type_id.out + "%N")
 			end
@@ -820,9 +869,14 @@ feature -- Local variable info generation
 			current_method.code.append_pop_into_local (current_method.return_index, eiffel_type_id_to_jvm_type_id (type_id))
 		end
 			
-	put_local_info (type_id: INTEGER; name: STRING) is
+	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_id' of type local.
+		local
+			type_id: INTEGER
+			name: STRING
 		do
+			name := Names_heap.item (name_id)
+			type_id := type_i.static_type_id
 			debug ("JVM_GEN")
 				print ("put_local_info: " + type_id.out + "(" + name + ", " + eiffel_type_id_to_jvm_type_id (type_id).out + ")%Na")
 			end
@@ -831,10 +885,32 @@ feature -- Local variable info generation
 			current_method.code.append_pop_into_local (current_method.eiffel_locals_index.item (current_method.eiffel_locals_index.count), eiffel_type_id_to_jvm_type_id (type_id))
 		end
 
+	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
+			-- Specifies `type_i' of type of local.
+		do
+		end
+
+	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
+			-- Specifies `type_i' of type of local.
+		do
+		end
+
 feature -- Object creation
 
-	create_like_current_object is
-			-- Create object of same type as current object.
+	create_object (a_type_id: INTEGER) is
+			-- Create object of `a_type_id'.
+		do
+			debug ("JVM_GEN")
+				print ("%Tnewobj [3*]")
+				print (repository.item (a_type_id).qualified_name + "%N")
+			end
+			current_method.code.append_new_class (a_type_id)
+						--	 current_method.code.append_dup
+						--	 current_method.code.append_invoke_default_constructor (type_id)
+		end
+
+	create_like_object is
+			-- Create object of same type as object on top of stack.
 		do
 			debug ("JVM_GEN")
 				print ("%Tnewobj [2*] like Current")
@@ -845,16 +921,15 @@ feature -- Object creation
 						--	 current_method.code.append_invoke_default_constructor (current_type_id)
 		end
 
-	create_object (type_id: INTEGER) is
-			-- Create object of `type_id'.
+	load_type is
+			-- Load on stack type of object on top of stack.
 		do
-			debug ("JVM_GEN")
-				print ("%Tnewobj [3*]")
-				print (repository.item (type_id).qualified_name + "%N")
-			end
-			current_method.code.append_new_class (type_id)
-						--	 current_method.code.append_dup
-						--	 current_method.code.append_invoke_default_constructor (type_id)
+		end
+		
+	create_type is
+			-- Given info on stack, it will create a new instance of a generic formal
+			-- parameter.
+		do
 		end
 
 	create_attribute_object (type_id, feature_id: INTEGER) is
@@ -932,10 +1007,12 @@ feature -- Variables access
 			current_method.code.append_push_from_local (current_method.return_index, current_method.return_jvm_type_id)
 		end
 
-	generate_attribute (type_id, feature_id: INTEGER) is
-			-- Generate access to attribute of `feature_id' in `type_id'.
+	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
+			-- Generate access to attribute of `feature_id' in `type_i'.
+		local
+			type_id: INTEGER
 		do
-							
+			type_id := type_i.static_type_id
 			debug ("JVM_GEN")
 				print ("%N%Tldfld [*2] ")
 				print (repository.item (type_id).qualified_name)
@@ -946,17 +1023,34 @@ feature -- Variables access
 			current_method.code.append_push_field_by_feature_id (type_id, feature_id)
 		end
 
-	generate_feature_access (type_id, feature_id: INTEGER; is_virtual: BOOLEAN) is
+	generate_feature_access (type_i: TYPE_I; feature_id, nb: INTEGER; is_function, is_virtual: BOOLEAN) is
 			-- Generate access to feature of `feature_id' in `type_id'.
 		do
 			debug ("JVM_GEN")
 				print ("%Tcallvirt [*2] ")
-				print (repository.item (type_id).qualified_name_wo_l)
+				print (repository.item (type_i.static_type_id).qualified_name_wo_l)
 				print ("::")
-				print (repository.item (type_id).features.item (feature_id).written_feature.external_name + "%N")
+				print (repository.item (type_i.static_type_id).features.item (feature_id).written_feature.external_name + "%N")
 			end
 							
-			current_method.code.append_invoke_from_feature_id (type_id, feature_id)
+			current_method.code.append_invoke_from_feature_id (type_i.static_type_id, feature_id)
+		end
+
+	generate_precursor_feature_access (type_i: TYPE_I; a_feature_id: INTEGER;
+			nb: INTEGER; is_function: BOOLEAN)
+		is
+			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
+		do
+		end
+
+	put_type_instance (a_type: TYPE_I) is
+			-- Put instance of the native TYPE object corresponding to `a_type' on stack.
+		do
+		end
+
+	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate access to feature of `a_feature_id' in `type_i'.
+		do
 		end
 
 	generate_argument (n: INTEGER) is
@@ -982,14 +1076,21 @@ feature -- Variables access
 			current_method.code.append_push_from_local (current_method.eiffel_locals_index.item (n), eiffel_type_id_to_jvm_type_id (current_method.eiffel_locals_type_id.item (n)))
 		end
 
-	generate_metamorphose (type_id: INTEGER) is
+	generate_metamorphose (type_i: TYPE_I) is
 			-- Generate `metamorphose', ie boxing a basic type of `type_id' into its
 			-- corresponding reference type.
 		do
 			debug ("JVM_GEN")
 				print ("%Tbox [ ]")
-				print (repository.item (type_id).qualified_name + "%N")
+				print (repository.item (type_i.static_type_id).qualified_name + "%N")
 			end
+		end
+
+feature -- IL Generation
+
+	generate_object_equality_test is
+			-- Generate comparison of two objects.
+		do
 		end
 
 feature -- Addresses
@@ -1038,7 +1139,7 @@ feature -- Addresses
 			end
 		end
 
-	generate_attribute_address (type_id, feature_id: INTEGER) is
+	generate_attribute_address (type_i, attr_type: TYPE_I; feature_id: INTEGER) is
 			-- Generate address of attribute of `feature_id' in class `type_id'.
 		do
 			debug ("JVMGEN")
@@ -1049,7 +1150,7 @@ feature -- Addresses
 			end
 		end
 
-	generate_routine_address (type_id, feature_id: INTEGER) is
+	generate_routine_address (type_i: TYPE_I; feature_id: INTEGER) is
 			-- Generate address of routine of `feature_id' in class `type_id'.
 		do
 			debug ("JVMGEN")
@@ -1060,32 +1161,37 @@ feature -- Addresses
 			end
 		end
 
-	generate_load_from_address (type_id: INTEGER) is
+	generate_load_from_address (type_i: TYPE_I) is
 			-- Load value of `type_i' type from address pushed on stack.
 		do
 		end
 
 feature -- Assignments
 
-	generate_is_instance_of (type_id: INTEGER) is
+	generate_is_true_instance_of (type_i: TYPE_I) is
+			-- Generate `Isinst' byte code instruction.
+		do
+		end
+
+	generate_is_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction.
 		do
 			debug ("JVM_GEN")
-				print ("%Tis instance of [*]:" + type_id.out + "%N")
+				print ("%Tis instance of [*]:" + type_i.static_type_id.out + "%N")
 			end
-			current_method.code.append_is_instance_of_by_type_id (type_id)
+			current_method.code.append_is_instance_of_by_type_id (type_i.static_type_id)
 		end
 
-	generate_check_cast (source_type_id, target_type_id: INTEGER) is
+	generate_check_cast (source_type, target_type: TYPE_I) is
 			-- Generate `checkcast' byte code instruction.
 		do
 			debug ("JVM_GEN")
-				print ("%Tcheckcast [*]:" + target_type_id.out + "%N")
+				print ("%Tcheckcast [*]:" + target_type.static_type_id.out + "%N")
 			end
-			current_method.code.append_check_cast_by_type_id (target_type_id)
+			current_method.code.append_check_cast_by_type_id (target_type.static_type_id)
 		end
 
-	generate_attribute_assignment (feature_id: INTEGER) is
+	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
 			-- Generate assignment to attribute of `feature_id' in current class.
 		do
 			debug ("JVM_GEN")
@@ -1096,6 +1202,12 @@ feature -- Assignments
 			end
 			-- Perform assignment
 			current_method.code.append_pop_field_by_feature_id (current_type_id, feature_id)
+		end
+
+	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate assignment to attribute of `a_feature_id' in current class
+			-- when direct access to attribute is not possible.
+		do
 		end
 
 	generate_local_assignment (n: INTEGER) is
@@ -1126,20 +1238,13 @@ feature -- Assignments
 
 feature -- Return statements
 
-	generate_return is
+	generate_return (has_return_value: BOOLEAN) is
 			-- Generate simple end of routine
 		do
 			debug ("JVM_GEN")
 				print ("%Tret [*]%N")
 			end
 			current_method.code.append_return (current_method.return_jvm_type_id)
-		end
-
-	generate_return_value is
-			-- Generate end of routine which returns `Result'.
-		do
-			generate_result
-			generate_return
 		end
 
 feature -- Once management
@@ -1211,9 +1316,38 @@ feature -- Once management
 			current_method.code.append_pop_field (once_done)
 		end
 
+	generate_once_prologue is
+			-- Generate prologue for once feature.
+			-- The feature is used with `generate_once_epilogue' as follows:
+			--    generate_once_prologue
+			--    ... -- code of once feature body
+			--    generate_once_epilogue
+		do
+		end
+
+	generate_once_epilogue is
+			-- Generate epilogue for once feature.
+		do
+		end
+
+feature -- Once manifest string manipulation
+
+	generate_once_string_allocation (count: INTEGER) is
+			-- Generate code that allocates memory required for `count'
+			-- once manifest strings of the current routine.
+		do
+		end
+
+	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
+			-- Generate code for once string in a current routine with the given
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- or Eiffel string type otherwise.
+		do
+		end
+
 feature -- Array manipulation
 
-	generate_array_access (kind: INTEGER) is
+	generate_array_access (kind, a_type_id: INTEGER) is
 			-- Generate call to `item' of ARRAY.
 		do
 			debug ("JVM_GEN")
@@ -1239,7 +1373,12 @@ feature -- Array manipulation
 			current_method.code.append_push_from_array (kind)
 		end
 
-	generate_array_write (kind: INTEGER) is
+	generate_array_write_preparation (a_type_id: INTEGER) is
+			-- Prepare call to `put' from NATIVE_ARRAY in case of expanded elements.
+		do
+		end
+
+	generate_array_write (kind, a_type_id: INTEGER) is
 			-- Generate call to `put' of ARRAY.
 		do
 			debug ("JVM_GEN")
@@ -1315,12 +1454,44 @@ feature -- Exception handling
 		do
 		end
 
+	generate_leave_to (a_label: IL_LABEL) is
+			-- Instead of using `branch_to' which is forbidden in a `try-catch' clause,
+			-- we generate a `leave' opcode that has the same semantic except that it
+			-- should branch outside the `try-catch' clause.
+		do
+		end
+
 	generate_end_exception_block is
 			-- Mark end of rescue clause and end of routine.
 		do
 		end
 
 feature -- Assertions
+
+	generate_in_assertion_status is
+			-- Generate value of `in_assertion' on stack.
+		do
+		end
+
+	generate_is_assertion_checked (level: INTEGER) is
+			-- Check wether or not we need to check assertion for current type.
+		do
+		end
+
+	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
+			-- Generate `_invariant' that checks `current_class_type' invariants.
+		do
+		end
+
+	generate_inherited_invariants is
+			-- Generate call to all directly inherited invariant features.
+		do
+		end
+
+	generate_invariant_checked_for (a_label: IL_LABEL) is
+			-- Generate check to find out if we should check invariant or not.
+		do
+		end
 
 	generate_in_assertion_test (end_of_assert: INTEGER) is
 		do
@@ -1351,13 +1522,13 @@ feature -- Assertions
 
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
 		local
-			l: INTEGER
+			l: IL_LABEL
 		do
 			debug ("JVM_DBC")
 				print ("%Tgen. ass. check test: " + assert_type.out + ", " + tag.out + "[*]%N")
 			end
 			l := create_label
-			current_method.code.append_branch_on_true_by_label_id (l)
+			current_method.code.append_branch_on_true_by_label_id (l.id)
 			current_method.code.append_new_class_by_name ("java/lang/Exception")
 			current_method.code.append_dup
 			current_method.code.append_push_manifest_string (tag)
@@ -1380,20 +1551,28 @@ feature -- Assertions
 			current_method.code.append_throw_exception
 		end
 
-	generate_precondition_check (tag: STRING; labelID: INTEGER) is
+	generate_raise_exception (a_code: INTEGER; a_tag: STRING) is
+			-- Generate an exception of type EIFFEL_EXCEPTION with code
+			-- `a_code' and with tag `a_tag'.
+		do
+		end
+
+	generate_precondition_check (tag: STRING; label: IL_LABEL) is
 		do
 			debug ("JVM_DBC")
-				print ("%Tgen. precond check:" + tag + ", " + labelID.out + " [*]%N")
+				print ("%Tgen. precond check:" + tag + ", " + label.id.out + " [*]%N")
 			end
 			current_method.code.append_push_manifest_string (tag)
 			current_method.code.append_pop_field (static_string_object)
-			current_method.code.append_branch_on_false_by_label_id (labelID)
+			current_method.code.append_branch_on_false_by_label_id (label.id)
 		end
 
-	generate_invariant_checking (type_id: INTEGER) is
+	generate_invariant_checking (type_i: TYPE_I) is
 		local
 			f: JVM_WRITTEN_FEATURE
+			type_id: INTEGER
 		do
+			type_id := type_i.static_type_id
 			debug ("JVM_DBC")
 				print ("%Tgen. invariant checking: " + type_id.out + "[ ]%N")
 			end
@@ -1413,7 +1592,102 @@ feature -- Assertions
 			current_class.set_invariant (current_class.features.item (feature_id).written_feature)
 		end
 
+feature -- Generic conformance
+
+	generate_class_type_instance (cl_type: CL_TYPE_I) is
+			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
+		do
+		end
+
+	generate_generic_type_instance (n: INTEGER) is
+			-- Generate a GENERIC_TYPE instance corresponding that will hold `n' items.
+		do
+		end
+
+	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
+			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
+		do
+		end
+
+	generate_none_type_instance is
+			-- Generate a NONE_TYPE instance.
+		do
+		end
+
+	assign_computed_type is
+			-- Given elements on stack, compute associated type and set it to
+			-- newly created object.
+		do
+		end
+
+feature -- Conversion
+
+	convert_to (type: TYPE_I) is
+			-- Convert top of stack into `type'.
+		do
+		end
+
+	convert_to_native_int is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_integer_8, convert_to_boolean is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_integer_16, convert_to_character is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_integer_32 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+
+	convert_to_integer_64 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+
+	convert_to_natural_8 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_natural_16 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_natural_32 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+
+	convert_to_natural_64 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_real_64 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+		
+	convert_to_real_32 is
+			-- Convert top of stack into appropriate type.
+		do
+		end
+
 feature -- Constants generation
+
+	put_default_value (type: TYPE_I) is
+			-- Put default value of `type' on IL stack.
+		do
+		end
 
 	put_void is
 			-- Put `Void' on IL stack.
@@ -1424,8 +1698,19 @@ feature -- Constants generation
 			current_method.code.append_push_null
 		end
 
+	put_manifest_string_from_system_string_local (n: INTEGER) is
+			-- Create a manifest string by using local at position `n' which 
+			-- should be of type SYSTEM_STRING.
+		do
+		end
+
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
+		do
+		end
+
+	put_system_string (s: STRING) is
+			-- Put instance of platform String object corresponding to `s' on IL stack.
 		do
 			debug ("JVM_GEN")
 				print ("%Tldstr [*]%"%N")
@@ -1435,8 +1720,15 @@ feature -- Constants generation
 			current_method.code.append_push_manifest_string (s)
 		end
 
-	put_integer32_constant (i: INTEGER) is
-			-- Put `i' on IL stack.
+	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
+			-- Put `i' as a constant of type `type'.
+		do
+		end
+
+	put_integer_8_constant,
+	put_integer_16_constant,
+	put_integer_32_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER on IL stack
 		do
 			debug ("JVM_GEN")
 				print ("%Tput i32 on stack [*]%N")
@@ -1444,8 +1736,30 @@ feature -- Constants generation
 			end
 			current_method.code.append_push_manifest_int (i)
 		end
+		
+	put_integer_64_constant (i: INTEGER_64) is
+			-- Put `i' as INTEGER_64 on IL stack
+		do
+		end
 
-	put_double_constant (d: DOUBLE) is
+	put_natural_8_constant,
+	put_natural_16_constant,
+	put_natural_32_constant (i: INTEGER) is
+			-- Put `i' as NATURAL_8, NATURAL_16, NATURAL on IL stack
+		do
+		end
+
+	put_natural_64_constant (i: INTEGER_64) is
+			-- Put `i' as NATURAL_64 on IL stack
+		do
+		end
+
+	put_real_32_constant (r: REAL) is
+			-- Put `d' on IL stack.
+		do
+		end
+
+	put_real_64_constant (d: DOUBLE) is
 			-- Put `d' on IL stack.
 		do
 			debug ("JVM_GEN")
@@ -1483,57 +1797,133 @@ feature -- Constants generation
 
 feature -- Labels and branching
 
-	branch_on_true (label: INTEGER) is
+	branch_on_true (label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is True.
 		do
 			debug ("JVM_GEN")
-				print ("%Tbrtrue [*]" + label.out + "%N")
+				print ("%Tbrtrue [*]" + label.id.out + "%N")
 			end
-			current_method.code.append_branch_on_true_by_label_id (label)
+			current_method.code.append_branch_on_true_by_label_id (label.id)
 		end
 
-	branch_on_false (label: INTEGER) is
+	branch_on_false (label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is False.
 		do
 			debug ("JVM_GEN")
-				print ("%Tbrfalse [*]" + label.out + "%N")
+				print ("%Tbrfalse [*]" + label.id.out + "%N")
 			end
-			current_method.code.append_branch_on_false_by_label_id (label)
+			current_method.code.append_branch_on_false_by_label_id (label.id)
 		end
 
-	branch_to (label: INTEGER) is
+	branch_to (label: IL_LABEL) is
 			-- Generate a branch instruction to `label'.
 		do
 			debug ("JVM_GEN")
-				print ("%Tbr [*]" + label.out + "%N")
+				print ("%Tbr [*]" + label.id.out + "%N")
 			end
-			current_method.code.append_branch_by_label_id (label)
+			current_method.code.append_branch_by_label_id (label.id)
 		end
 
-	mark_label (label: INTEGER) is
+	branch_on_condition (comparison: INTEGER_16; label: IL_LABEL) is
+			-- Generate a branch instruction to `label' if two top-level operands on
+			-- IL stack when compared using conditional instruction `comparison' yield True.
+		do
+		end
+
+	mark_label (label: IL_LABEL) is
 			-- Mark a portion of code with `label'.
 		do
 			debug ("JVM_GEN")
-				print ("mark label: " + label.out + "%N")
+				print ("mark label: " + label.id.out + "%N")
 			end
 			check
-				valid_label: current_method.code.labels.valid_index (label)
-				label_not_void: current_method.code.labels.item (label) /= Void
+				valid_label: current_method.code.labels.valid_index (label.id)
+				label_not_void: current_method.code.labels.item (label.id) /= Void
 			end
-			current_method.code.labels.item (label).close (current_method.code.position)
+			current_method.code.labels.item (label.id).close (current_method.code.position)
 		end
 
-	create_label: INTEGER is
+	create_label: IL_LABEL is
 			-- Create a new label.
 			-- TODO: This feature violates CQS
 		local
 			l: JVM_LABEL
 		do
-			Result := counter.next
-			create l.make (Result)
+			Result := il_label_factory.new_label
+			create l.make (Result.id)
 			current_method.code.labels.force (l, current_method.code.labels.count + 1)
+		end
+
+feature -- Basic feature
+
+	generate_min (type: TYPE_I) is
+			-- Generate `min' on basic types.
+		do
+		end
+
+	generate_is_query_on_character (query_name: STRING) is
+			-- Generate is_`query_name' on CHARACTER returning a boolean.
+		do
+		end
+
+	generate_upper_lower (is_upper: BOOLEAN) is
+		do
+		end
+
+	generate_max (type: TYPE_I) is
+			-- Generate `max' on basic types.
+		do
+		end
+
+	generate_abs (type: TYPE_I) is
+			-- Generate `abs' on basic types.
+		do
+		end
+
+	generate_to_string is
+			-- Generate call on `ToString'.
+		do
+		end
+	
+	generate_hash_code is
+			-- Given an INTEGER on top of stack, put on stack
+			-- a positive INTEGER.
+		do
+		end
+		
+	generate_out (type: TYPE_I) is
+			-- Generate `out' on basic types.
+		do
+		end
+
+feature -- Switch instruction
+
+	put_switch_start (count: INTEGER) is
+			-- Generate start of a switch instruction with `count' items.
+		do
+		end
+
+	put_switch_label (label: IL_LABEL) is
+			-- Generate a branch to `label' in switch instruction.
+		do
+		end
+
+feature -- Binary operator generation
+
+	generate_binary_operator (code: INTEGER) is
+			-- Generate a binary operator represented by `code'.
+			-- Look in IL_CONST for `code' definition.
+		do
+		end
+
+feature -- Unary operator generation
+
+	generate_unary_operator (code: INTEGER) is
+			-- Generate a binary operator represented by `code'.
+			-- Look in IL_CONST for `code' definition.
+		do
 		end
 
 feature -- Binary operator generation
@@ -1759,24 +2149,44 @@ feature -- Line Info for debugging
 			current_method.put_line_info (n)
 		end
 
+	put_silent_line_info (n: INTEGER) is
+			-- Generate debug information at line `n'.			
+			-- But in case of dotnet debugger inside eStudio
+			-- ignore those 'dummy' nope.
+		do
+		end
+
+	put_debug_info (location: TOKEN_LOCATION) is
+			-- Generate debug information for `location' to enable to
+			-- find corresponding Eiffel class file in IL code.
+		do
+		end
+
+	put_ghost_debug_infos (a_line_n:INTEGER; a_nb: INTEGER) is
+			-- Generate `a_nb' ghost debug informations,
+			-- this is to deal with the not generated debug clauses
+			-- but displayed in eStudio during debugging
+		do
+		end
+
+	put_silent_debug_info (location: TOKEN_LOCATION) is
+			-- Generate debug information for `location' to enable to
+			-- find corresponding Eiffel class file in IL code.
+			-- but ignored from the EiffelStudio Debugger (.NET)
+		do
+		end
+
+	flush_sequence_points (a_class_type: CLASS_TYPE) is
+			-- Flush all sequence points.
+		do
+		end
+
 feature -- Compilation error handling
 
 	last_error: STRING is
 			-- Last exception which occurred during IL generation
 		do
 			Result := ""
-		end
-
-feature {NONE} -- Output
-
-	print (some: ANY) is
-			-- Write terse external representation of `some' on `output_file'.
-		do
-			debug ("JVM_GEN")
-				if some /= Void then
-					io.put_string (some.out)
-				end
-			end
 		end
 
 feature {NONE} -- Internal data
@@ -1839,9 +2249,21 @@ feature {NONE} -- Internal data
 
 feature {NONE} -- HACK FIXME NOT IMPLEMENTED
 
-	generate_unmetamorphose (type_id: INTEGER) is
-			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_id'.
+	generate_unmetamorphose (type_i: TYPE_I) is
+			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
+		do
+		end
+
+feature -- Convenience
+
+	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
+			-- Return static_type_id of class that defined `feat'.
+		do
+		end
+
+	generate_call_on_void_target_exception is
+			-- Generate call on void target exception.
 		do
 		end
 	

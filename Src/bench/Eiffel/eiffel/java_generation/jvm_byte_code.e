@@ -38,7 +38,7 @@ feature {ANY}
 			-- position `pos'
 		require
 			valid_cpi: cpi > 0
-			pos_small_enough: (pos + Int_16_size) <= size;
+			pos_small_enough: (pos + Int_16_size) <= count;
 			pos_large_enough: pos > 0;
 		do
 			put_uint_16_from_int (cpi, pos)

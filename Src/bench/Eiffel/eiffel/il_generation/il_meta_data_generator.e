@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
+
 create
 	default_create
 
@@ -82,7 +87,7 @@ feature -- Generation
 		require
 			class_type_not_void: class_type /= Void
 		local
-			name, full_name, element_name, file_name: STRING
+			name, impl_name, element_name, file_name: STRING
 			native_array: NATIVE_ARRAY_CLASS_TYPE
 			is_frozen_class: BOOLEAN
 			class_c: CLASS_C
@@ -95,32 +100,22 @@ feature -- Generation
 				il_generator.generate_class_mappings (name, native_array.associated_class.name_in_upper,
 					class_type.static_type_id, -1, "", element_name)
 			else
-				name := class_type.type.il_type_name
 				class_c := class_type.associated_class
 				is_frozen_class := class_c.is_frozen
 
+				name := class_type.full_il_type_name
 				if not class_c.is_external then
-					name := pascal_casing (name, upper_case)
-					full_name := System.name + "." + class_c.cluster.cluster_name
-					full_name := namespace_casing (full_name)
-					full_name.append_character ('.')
+					impl_name := class_type.full_il_implementation_type_name
 				end
 
-				if class_c.is_external then
-						-- Generate mapping for external class
-					il_generator.generate_class_mappings (name,
-						class_type.associated_class.name_in_upper,
-						class_type.static_type_id, class_type.static_type_id,
-						class_c.lace_class.base_name, Empty_string)
-				end
-				if not class_c.is_external then
-						-- Generate mapping for the interface representation
-						-- of an Eiffel class.
-					il_generator.generate_class_mappings (full_name + name,
-						class_type.associated_class.name_in_upper,
-						class_type.static_type_id, class_type.static_type_id,
-						class_c.lace_class.base_name, Empty_string)
+					-- Generate mapping for the interface representation
+					-- of an Eiffel class or of an external class.
+				il_generator.generate_class_mappings (name,
+					class_type.associated_class.name_in_upper,
+					class_type.static_type_id, class_type.static_type_id,
+					class_c.lace_class.base_name, Empty_string)
 
+				if not class_c.is_external then
 						-- Generate mapping for the implementation class
 						-- representation of an Eiffel class.
 					if System.line_generation then
@@ -129,12 +124,12 @@ feature -- Generation
 						file_name := Empty_string
 					end
 					if not is_frozen_class then
-						il_generator.generate_class_mappings (full_name + "Implementation." + name,
+						il_generator.generate_class_mappings (impl_name,
 							class_type.associated_class.name_in_upper,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
 					else
-						il_generator.generate_class_mappings (full_name + name,
+						il_generator.generate_class_mappings (name,
 							class_type.associated_class.name_in_upper,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
@@ -357,13 +352,15 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 						name := encoder.feature_name (current_class_type.static_type_id, feat.body_index)
 					else
 						if feat.is_attribute then
-							name := "$$" + camel_casing (feat.feature_name)
+							name := "$$" + il_casing.camel_casing (feat.feature_name)
 						else
-							name := "$$" + pascal_casing (feat.feature_name, lower_case)
+							name := "$$" + il_casing.pascal_casing (feat.feature_name,
+								feature {IL_CASING_CONVERSION}.lower_case)
 						end
 					end
 				else
-					name := pascal_casing (feat.feature_name, lower_case)
+					name := il_casing.pascal_casing (feat.feature_name, 
+						feature {IL_CASING_CONVERSION}.lower_case)
 				end
 
 				il_generator.generate_feature_identification (name, feat.feature_id,
@@ -499,7 +496,9 @@ feature {NONE} -- Feature generation
 					il_generator.start_feature_description (0)
 				end
 
-				il_generator.generate_interface_feature_identification (pascal_casing (feat.feature_name, lower_case),
+				il_generator.generate_interface_feature_identification (
+					il_casing.pascal_casing (feat.feature_name,
+						feature {IL_CASING_CONVERSION}.lower_case),
 					feat.feature_id, feat.is_attribute)
 
 				generate_arguments (feat)
@@ -575,22 +574,22 @@ feature {NONE} -- Implementation: ancestors description
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
 		local
-			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_I
-			cl_type: CLASS_TYPE
+--			parents: FIXED_LIST [CL_TYPE_A]
+--			parent_type: CL_TYPE_I
+--			cl_type: CLASS_TYPE
 --			pars: SEARCH_TABLE [CLASS_INTERFACE]
 --			class_interface: CLASS_INTERFACE
 		do
 -- FIXME: following code to use when we are able to do single inheritance
 -- to avoid code duplication of stubs.
- 			parents := class_c.parents
--- 			byte_context.set_class_type (class_type)
  			il_generator.start_parents_list
- 			parent_type ?= byte_context.real_type (parents.first.type_i)
- 			cl_type := parent_type.associated_class_type
-			if cl_type.associated_class.is_external then
+ 			
+-- 				parents := class_c.parents
+--	 			byte_context.set_class_type (class_type)
+-- 				parent_type ?= byte_context.real_type (parents.first.type_i)
+-- 				cl_type := parent_type.associated_class_type
 --				il_generator.add_to_parents_list (cl_type.implementation_id)
-			end
+	
 			il_generator.set_implementation_class
 			il_generator.add_interface (class_type.static_type_id)
 			il_generator.end_parents_list
@@ -615,134 +614,6 @@ feature {NONE} -- Implementation: ancestors description
 				end
 				feats.forth
 			end
-		end
-
-feature {NONE} -- Implementation: naming convention
-
-	lower_case: INTEGER is 1
-	upper_case: INTEGER is 2
-
-	pascal_casing (name: STRING; type: INTEGER): STRING is
-			-- Convert `name' using PascalCasing convention.
-			--| Used for all names apart for attributes in
-			--| implementation classes.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			valid_type: type = lower_case or type = upper_case
-		local
-			i, nb: INTEGER
-		do
-			Result := name
-			if System.dotnet_naming_convention then
-				Result := clone (Result)
-				from
-					i := 2
-					nb := Result.count
-					Result.put (Result.item (1).upper, 1)
-				until
-					i > nb
-				loop
-						-- When we encounter a '_' we delete it
-						-- if it is not the last one in `Result'
-						-- and the character following the `_'
-						-- has its case changed  to upper.
-					if Result.item (i) = '_' and i < nb then
-						Result.remove (i)
-						nb := nb - 1
-						Result.put (Result.item (i).upper, i)
-					end
-					i := i + 1
-				end
-			else
-				if type = upper_case then
-					Result := name.as_upper
-				end
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	camel_casing (name: STRING): STRING is
-			-- Convert `name' using camelCasing convention.
-			--| Used only for attributes in implementation classes.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-		local
-			i, nb: INTEGER
-		do
-			Result := name
-			if System.dotnet_naming_convention then
-				Result := clone (Result)
-				from
-					i := 2
-					nb := Result.count
-				until
-					i > nb
-				loop
-						-- When we encounter a '_' we delete it
-						-- if it is not the last one in `Result'
-						-- and the character following the `_'
-						-- has its case changed  to upper.
-					if Result.item (i) = '_' and i < nb then
-						Result.remove (i)
-						nb := nb - 1
-						Result.put (Result.item (i).upper, i)
-					end
-					i := i + 1
-				end
-			else
-					-- Do nothing as `Result' is already in lowercase.
-				check
-					already_lower_case: Result.as_lower.is_equal (Result)
-				end
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	namespace_casing (name: STRING): STRING is
-			-- Convert `name' using PascalCasing convention
-			-- on namesapce. Different from `pascal_casing'
-			-- as we convert a character in upper after a
-			-- `.' or a `_'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			not_dot_terminated: name.item (name.count) /= '.'
-		local
-			i, nb: INTEGER
-		do
-			Result := name
-			if System.dotnet_naming_convention then
-				Result := clone (Result)
-				from
-					i := 2
-					nb := Result.count
-					Result.put (Result.item (1).upper, 1)
-				until
-					i > nb
-				loop
-						-- When we encounter a '_' we delete it
-						-- if it is not the last one in `Result'
-						-- and the character following the `_'
-						-- has its case changed  to upper.
-					if Result.item (i) = '_' and i < nb then
-						Result.remove (i)
-						nb := nb - 1
-						Result.put (Result.item (i).upper, i)
-					elseif Result.item (i) = '.' then
-						i := i + 1
-							-- Precondition is there to prevent us
-							-- for accessing beyond the last element.
-						Result.put (Result.item (i).upper, i)
-					end
-					i := i + 1
-				end
-			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Custom Attributes

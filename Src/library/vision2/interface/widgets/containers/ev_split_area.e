@@ -144,16 +144,25 @@ feature -- Status report
 
 feature -- Element change
 
-	put, extend (an_item: EV_WIDGET) is
+	 extend (an_item: EV_WIDGET) is
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
-			implementation.put (an_item)
+			implementation.extend (an_item)
 		ensure then
 			first_item_used_first:
 				old first  = Void implies first = an_item
 			second_item_used_second:
 				old first /= Void implies second = an_item
+			has_an_item: has (an_item)
+		end
+		
+	put (an_item: EV_WIDGET) is
+			-- Replace `item' with `an_item'.
+		do
+			implementation.put (an_item)
+		ensure then
+			old item /= Void implies item = an_item
 			has_an_item: has (an_item)
 		end
 

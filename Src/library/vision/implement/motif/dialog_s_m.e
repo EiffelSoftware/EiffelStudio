@@ -18,7 +18,8 @@ inherit
 
 	POPUP_S_M
 		redefine
-			set_x, set_y, set_x_y, set_background_color
+			set_x, set_y, set_x_y, set_background_color,
+			update_background_color
 		end
 
 creation
@@ -120,6 +121,20 @@ feature -- Color
 			c_set_color (screen_object, color_implementation.pixel (screen),
 						$ext_name)
 		end;
+
+feature {COLOR_X} 
+
+	update_background_color is
+			-- Update the X color after a change inside the Eiffel color.
+		local
+			ext_name: ANY;
+			color_implementation: COLOR_X;
+		do
+			ext_name := Mbackground.to_c;
+			color_implementation ?= background_color.implementation;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
+		end;
+
 
 feature {NONE} -- External features
 

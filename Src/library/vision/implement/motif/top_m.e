@@ -19,12 +19,14 @@ inherit
 		rename
 			clean_up as shell_clean_up
 		redefine
-			set_x, set_y, set_x_y, set_background_color
+			set_x, set_y, set_x_y, set_background_color,
+			update_background_color
 		end
 
 	SHELL_M
 		redefine
-			set_x, set_y, set_x_y, clean_up, set_background_color
+			set_x, set_y, set_x_y, clean_up, set_background_color,
+			update_background_color
 		select
 			clean_up
 		end
@@ -151,6 +153,19 @@ feature
 			-- Does application start in iconic state?
 		do
 			Result := (xt_int (screen_object, MinitialState) = MICONIC_STATE)
+		end;
+
+feature {COLOR_X} 
+
+	update_background_color is
+			-- Update the X color after a change inside the Eiffel color.
+		local
+			ext_name: ANY;
+			color_implementation: COLOR_X;
+		do
+			ext_name := Mbackground.to_c;
+			color_implementation ?= background_color.implementation;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		end;
 
 feature {NONE}

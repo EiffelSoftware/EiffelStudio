@@ -581,6 +581,7 @@ feature {NONE} -- Implementation
 			new_x, new_y: INTEGER
 			column_position, row_position, end_row_position, end_column_position: INTEGER
 			new_column, new_row: INTEGER
+			end_position, current_x_position, current_y_position: INTEGER
 		do
 			if selected_item /= Void then
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
@@ -632,17 +633,43 @@ feature {NONE} -- Implementation
 				new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
 				new_y := temp_y + half_grid_size - ((temp_y + half_grid_size) \\ grid_size)	
 					
+					
+				
 				if x_scale /= 0 then
-					new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
-					if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
-						set_item_span (selected_item, new_column, first.item_row_span (selected_item))
+					if x_offset = 0 then
+						end_position := ((first.item_column_position (selected_item) + first.item_column_span (selected_item)))
+						current_x_position := (((x + half_grid_size) // grid_size + 1).max (1)).min (end_position - 1)
+						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
+							move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
+						else
+							current_x_position := first_filled_horizontal_space (selected_item, end_position - 1, first.item_row_position (selected_item), first.item_row_span (selected_item))-- + 1
+								-- We need to change the order depending on the movement that we are performing. This
+								-- ensures that we stay within valid bounds.
+						 	move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
+						end
+					else
+						new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
+						if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column, first.item_row_span (selected_item)) then --new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
+							set_item_span (selected_item, new_column, first.item_row_span (selected_item))
+						end
 					end
 				end
 				
 				if y_scale /= 0 then
-					new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
-					if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
-						set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
+					if y_offset = 0 then
+						end_position := ((first.item_row_position (selected_item) + first.item_row_span (selected_item)))
+						current_y_position := ((y + half_grid_size) // grid_size + 1).max (1).min (end_position - 1)
+						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
+							move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
+						else
+							current_y_position := first_filled_vertical_space (selected_item, end_position - 1, first.item_column_position (selected_item), first.item_column_span (selected_item))-- + 1
+							move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
+						end
+					else
+						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
+						if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row) then --.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
+							set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
+						end
 					end
 				end								
 				draw_widgets
@@ -662,6 +689,70 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 		end
+		
+	move_and_resize (v: EV_WIDGET; column, row, column_span, row_span: INTEGER) is
+			--
+		do
+			if first.item_column_position (v) + column_span <= first.columns then
+				set_item_span (v, column_span, row_span)
+				set_item_position (v, column, row)
+			else
+				set_item_position (v, column, row)
+				set_item_span (v, column_span, row_span)
+			end
+		end
+		
+		
+	first_filled_horizontal_space (widget: EV_WIDGET; a_column, a_row, a_row_span: INTEGER): INTEGER is
+			-- `Result' is first column, counting down from `a_column' which has the rows
+			-- `a_row' to `a_row' + `a_row_span' free from items.
+		local
+			row_counter, column_counter: INTEGER
+		do
+			from
+				column_counter := a_column
+			until
+				column_counter = 0 or Result /= 0
+			loop
+				from
+					row_counter := a_row
+				until
+					row_counter = a_row + a_row_span or Result /= 0
+				loop
+					if first.item (column_counter, row_counter) /= Void and first.item (column_counter, row_counter) /= widget then
+						Result := column_counter + 1
+					end
+					row_counter := row_counter + 1
+				end
+				column_counter := column_counter - 1
+			end
+		end
+		
+	first_filled_vertical_space (widget: EV_WIDGET; a_row, a_column, a_column_span: INTEGER): INTEGER is
+			-- `Result' is first row, counting down from `a_row' which has the columns
+			-- `a_column' to `a_column' + `a_column_span' free from items.
+		local
+			row_counter, column_counter: INTEGER
+		do
+			from
+				row_counter := a_row
+			until
+				row_counter = 0 or Result /= 0
+			loop
+				from
+					column_counter := a_column
+				until
+					column_counter = a_column + a_column_span or Result /= 0
+				loop
+					if first.item (column_counter, row_counter) /= Void and first.item (column_counter, row_counter) /= widget then
+						Result := row_counter + 1
+					end
+					column_counter := column_counter + 1
+				end
+				row_counter := row_counter - 1
+			end
+		end
+		
 		
 --	x_scrolling_velocity: INTEGER is
 --			-- `Result' is desired x scrolling velocity based on the last known position
@@ -937,7 +1028,7 @@ feature {NONE} -- Implementation
 						resizing_widget := False
 					end
 					if resizing_widget or moving_widget then
-						drawing_area.enable_capture	
+	--					drawing_area.enable_capture	
 					end
 				end
 			
@@ -967,11 +1058,11 @@ feature {NONE} -- Implementation
 				if resizing_widget then
 					resizing_widget := False
 					set_all_pointer_styles (standard_cursor)
-					drawing_area.disable_capture
+	--				drawing_area.disable_capture
 				elseif moving_widget then
 					moving_widget := False
 					set_all_pointer_styles (standard_cursor)
-					drawing_area.disable_capture
+	--				drawing_area.disable_capture
 				end
 --			set_initial_area_size
 			draw_widgets

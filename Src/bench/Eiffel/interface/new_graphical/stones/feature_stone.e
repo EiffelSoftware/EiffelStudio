@@ -135,7 +135,7 @@ feature -- dragging
 			Result.append (e_feature.written_class.name_in_upper)
 			Result.append ("%N%N%T")
 
-			temp := Precursor
+			temp := Precursor {CLASSC_STONE}
 			if temp /= Void then
 				if 
 					temp.count >= end_position and 
@@ -231,7 +231,7 @@ feature -- dragging
 					-- Body as cannot be found
 				Result := False
 			else
-				Result := {CLASSC_STONE} Precursor and then e_class /= Void and then e_feature /= Void
+				Result := Precursor {CLASSC_STONE} and then e_class /= Void and then e_feature /= Void
 			end
 		end
 

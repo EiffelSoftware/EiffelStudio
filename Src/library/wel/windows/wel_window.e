@@ -841,6 +841,23 @@ feature -- Element change
 		do
 			success := c_lock_window_update (default_pointer)
 		end
+		
+	enable_redraw is
+			-- Ensure `Current' is redrawn as required.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, wm_setredraw, 1, 0)	
+		end
+		
+	disable_redraw is
+			-- Disable redrawing of `Current' until next call to `enable_redraw'.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, wm_setredraw, 0, 0)			
+		end
+		
 
 feature -- Basic operations
 

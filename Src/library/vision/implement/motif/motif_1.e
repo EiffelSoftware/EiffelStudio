@@ -200,7 +200,7 @@ feature -- Widget access
 	scrollable_list (a_scrollable_list: SCROLLABLE_LIST; managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLLABLE_LIST_M is
 			-- Motif implementation of `a_scrollable_list'
 		do
-			--!! Result.make (a_scrollable_list, managed, is_fixed,oui_parent)
+			!! Result.make (a_scrollable_list, managed, is_fixed, oui_parent)
 		end; 
 
 	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE): SCROLL_L_M is

@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 					l_overloaded_features.forth
 				end
 				if l_feature_i /= Void then
-					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name)
+					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					from
 					until
 						l_overloaded_features.after
@@ -114,12 +114,28 @@ feature {NONE} -- Implementation
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
 					if is_listed (l_feature_i, class_i, l_class_i) then
-						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name)
+						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end
 			end
 			found := Result /= Void
 		end
+		
+	feature_location (a_feature_i: FEATURE_I): INTEGER is
+			-- retrieve line number of feature `a_feature_i'
+		require
+			non_void_feature_i: a_feature_i /= Void
+		local
+			l_class_txt: STRING
+			l_start_position: INTEGER
+		do
+			if a_feature_i.e_feature.ast /= Void then
+				-- ast will be Void for uncompiled inherited features
+				l_start_position := a_feature_i.e_feature.ast.start_position
+				l_class_txt := a_feature_i.written_class.lace_class.text.substring (1, l_start_position)
+				Result := l_class_txt.occurrences ('%N')
+			end
+		end   
 
 	parameter_descriptors (a_feature_i: FEATURE_I): ARRAYED_LIST [PARAMETER_DESCRIPTOR] is
 			-- Convert `a_feature_i' arguments into a list of parameter descriptors

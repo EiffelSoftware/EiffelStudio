@@ -20,7 +20,7 @@ feature -- Access
 				-- like `Void' in ANY we do not show them.
 			Result := f.is_attribute and then not f.type.is_none
 		ensure then
-			good_criterium: Result = f.is_attribute and then not f.type.is_none
+			good_criterium: Result = (f.is_attribute and then not f.type.is_none)
 		end
 	
 end -- class E_SHOW_ATTRIBUTES

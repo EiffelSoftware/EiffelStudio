@@ -1,0 +1,69 @@
+-- EFF (Eiffel Filter Format) for ebench and es4
+-- Styled HTML generation for project documentation.
+
+-- HTML properties:
+file_separator			|/
+suffix					|html
+
+-- File declaration:
+class_declaration		|<HTML>%N<HEAD>%N%
+						%<META NAME="generator" CONTENT="$generator$">%N%
+						%$html_meta$%
+						%<TITLE>$title$</TITLE>%N%
+						%<LINK REL="stylesheet" HREF="$root$default.css" TYPE="text/css">%N%
+						%<SCRIPT TYPE="text/javascript" SRC="$root$goto.html"></SCRIPT>%N%
+						%</HEAD>%N<BODY>*%N%
+						%</BODY>%N%
+						%</HTML>%N
+
+feature_declaration		|<A NAME="f_$feature$">*</A>
+
+-- Hyperlinking items:
+menu_bar				|<FORM ONSUBMIT="go_to('$root$'%,this.c.value);return false;">%N%
+						%<TABLE CELLSPACING="5" CELLPADDING="4"><TR>%N%
+						%*%
+						%<TD CLASS="link2"><INPUT NAME="c" VALUE="$class$"></TD>%N%
+						%</TR></TABLE></FORM>
+
+menu_item				|<TD CLASS="link1"><A CLASS="link1" HREF="$file$">*</A></TD>%N
+class_menu_item			|<TD CLASS="link2"><A CLASS="link2" HREF="$file$">*</A></TD>%N
+menu_item_disabled		|<TD CLASS="nolink1">*</TD>%N
+class_menu_item_disabled|<TD CLASS="nolink2">*</TD>%N
+
+cluster_name			|<A CLASS="ecluster" HREF="$file$">*</A>
+
+-- Use possible hyperlinks inside strings and comments:
+comment_url				|<A CLASS="ecomment" HREF="$file$">*</A>
+string_url				|<A CLASS="estring" HREF="$file$">*</A>
+
+features				|<A CLASS="efeature" HREF="$file$#f_$feature$">*</A>
+keyword_features		|<A CLASS="ekeyword" HREF="$file$#f_$feature$">*</A>
+symbol_features			|<A CLASS="esymbol" HREF="$file$#f_$feature$">*</A>
+class_name				|<A CLASS="eclass" HREF="$file$">*</A>
+
+-- Eiffel syntax items:
+keyword					|<SPAN CLASS="ekeyword">*</SPAN>
+reserved_word			|<SPAN CLASS="ereserved">*</SPAN>
+symbol					|<SPAN CLASS="esymbol">*</SPAN>
+comment					|<SPAN CLASS="ecomment">*</SPAN>
+quoted					|<SPAN CLASS="equoted">*</SPAN>
+string					|<SPAN CLASS="estring">*</SPAN>
+character				|<SPAN CLASS="echar">*</SPAN>
+number					|<SPAN CLASS="enumber">*</SPAN>
+local_symbol			|<SPAN CLASS="elocal">*</SPAN>
+assertion_tag			|<SPAN CLASS="etag">*</SPAN>
+indexing_tag			|<SPAN CLASS="eitag">*</SPAN>
+generic					|<SPAN CLASS="egeneric">*</SPAN>
+.						|<SPAN CLASS="edot">*</SPAN>
+
+-- Whitespace
+new_line				|<BR>*
+tab						| &nbsp%; &nbsp%; &nbsp%;
+
+-- In case there are sequential spaces, use this for all subsequent spaces.
+multiple_spaces			|&nbsp%;
+
+-- Characters that need to be escaped in HTML
+escape>					|&gt;
+escape<					|&lt;
+escape&					|&#38;

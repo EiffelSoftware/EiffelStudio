@@ -100,14 +100,7 @@ feature
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
-			Result := capacity = count
-		end
-
-	capacity: INTEGER is
-			-- Number of items that may
-			-- be stored into `Current'
-		do
-			Result := array_capacity - 1
+			Result := array_capacity = count + 1
 		end
 
 	change_last_item (t: T) is

@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			set_name (a_name)
 			tree_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
 			tree_item.drop_actions.extend (agent add_object)
+			tree_item.drop_actions.extend (agent add_component)
 			tree_item.drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
 			tree_item.set_pebble (Current)
 			is_grayed_out := True
@@ -119,7 +120,17 @@ feature {GB_WINDOW_SELECTOR, GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 		end
 
 feature -- Implementation
-	
+
+	add_component (a_component: GB_COMPONENT) is
+			-- Add representation of `a_component to `Current'.
+		require
+			a_component_not_void: a_component /= Void
+		do
+			add_object (a_component.object)
+			system_status.enable_project_modified
+			command_handler.update
+		end
+
 	add_object (an_object: GB_OBJECT) is
 			-- Add representation of `an_object' to `Current'.
 		require

@@ -10,12 +10,16 @@
 		Routines for printing an Eiffel object.
 */
 
+/*
+doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for printing Eiffel objects">
+*/
+
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "eif_eiffel.h"
 #include "eif_out.h"
 #include "eif_plug.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_hashin.h"
 #include "eif_except.h"		/* For `eraise' */
 #include "eif_sig.h"
@@ -36,10 +40,49 @@
  */
 
 #ifndef EIF_THREADS
-rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */
-rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */
-rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */
-rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */
+/*
+doc:	<attribute name="buffero" return_type="char [TAG_SIZE]" export="private">
+doc:		<summary>Buffer for printing an object in a string.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private char buffero[TAG_SIZE];
+
+/*
+doc:	<attribute name="tagged_out" return_type="char *" export="private">
+doc:		<summary>String where the tagged out is written.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private char *tagged_out = NULL;
+
+/*
+doc:	<attribute name="tagged_max" return_type="int" export="private">
+doc:		<summary>Actual maximum size of `tagged_out'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int tagged_max = 0;
+
+/*
+doc:	<attribute name="tagged_len" return_type="int" export="private">
+doc:		<summary>Actual length of `tagged_out'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be put in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int tagged_len = 0;
 #endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
@@ -698,3 +741,6 @@ rt_shared char *simple_out(struct item *val)
 
 #endif
 
+/*
+doc:</file>
+*/

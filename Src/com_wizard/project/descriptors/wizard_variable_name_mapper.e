@@ -152,9 +152,9 @@ feature -- Access
 			Result.compare_objects
 
 			Result.put ("ECOM_GUID", "GUID")
-			Result.put ("ECOM_STATSTG", "STATSTG")
-			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
-			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")
+--			Result.put ("ECOM_STATSTG", "STATSTG")
+--			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
+--			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")
 		end
 
 feature {NONE} -- Implementation

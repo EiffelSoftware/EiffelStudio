@@ -29,6 +29,40 @@ feature -- Access
 	address_expression_allowed: BOOLEAN
 			-- Does system accept such statement as $(a.to_c)?
 	
+	line_generation: BOOLEAN
+			-- Does the system generate the line number in the C-code?
+
+	has_multithreaded: BOOLEAN
+			-- Is the system a multithreaded one?
+
+	exception_stack_managed: BOOLEAN;
+			-- Is the exception stack managed in final mode
+
+	has_expanded: BOOLEAN;
+			-- Is there an expanded declaration in the system,
+			--| i.e. some extra check must be done after pass2 ?
+
+	is_console_application: BOOLEAN
+			-- Is the application going to be a console application?
+			--| ie on Windows only we need to link with the correct flags.
+
+	has_dynamic_runtime: BOOLEAN
+			-- Does the application need to be linked with a dynamic runtime?
+			--| ie on Windows the application will run with a DLL and on UNIX it
+			-- |will be a .so file.
+
+	uses_ise_gc_runtime: BOOLEAN
+			-- Does generated application uses ISE's GC.
+
+feature -- Access: IL code generation
+
+	use_cluster_as_namespace, use_all_cluster_as_namespace: BOOLEAN
+			-- Flag to tell how to generate a namespace in our code generation.
+			-- `use_cluster_as_namespace' will use either name of cluster or
+			-- given namespace in Ace file as namespace.
+			-- `use_all_cluster_as_namespace' is identical to `use_cluster_as_namespace'
+			-- but adds implicit clusters created by `all' qualifier in Ace file.
+			
 	java_generation: BOOLEAN
 			-- Does system generate Java byte code?
 
@@ -58,33 +92,11 @@ feature -- Access
 			-- without using .NET naming convention.
 			--| Used for IL generation.
 
-	line_generation: BOOLEAN
-			-- Does the system generate the line number in the C-code?
-
-	has_multithreaded: BOOLEAN
-			-- Is the system a multithreaded one?
-
-	exception_stack_managed: BOOLEAN;
-			-- Is the exception stack managed in final mode
-
-	has_expanded: BOOLEAN;
-			-- Is there an expanded declaration in the system,
-			--| i.e. some extra check must be done after pass2 ?
-
-	is_console_application: BOOLEAN
-			-- Is the application going to be a console application?
-			--| ie on Windows only we need to link with the correct flags.
-
-	has_dynamic_runtime: BOOLEAN
-			-- Does the application need to be linked with a dynamic runtime?
-			--| ie on Windows the application will run with a DLL and on UNIX it
-			-- |will be a .so file.
-
-	uses_ise_gc_runtime: BOOLEAN
-			-- Does generated application uses ISE's GC.
-
 	generate_eac_metadata: BOOLEAN
 			-- Will Eiffel Assembly Cache metadata be generated?
+
+	system_namespace: STRING
+			-- Top namespace of all generated Eiffel classes.
 
 feature -- Checking
 
@@ -130,6 +142,32 @@ feature -- Checking
 
 feature -- Update
 
+	set_system_namespace (n: STRING) is
+			-- Set `system_namespace' to `n'.
+		require
+			n_not_void: n /= Void
+		do
+			system_namespace := n
+		ensure
+			system_namespace_set: system_namespace = n
+		end
+
+	set_use_cluster_as_namespace (v: BOOLEAN) is
+			-- Set `use_cluster_as_namespace' to `v'.
+		do
+			use_cluster_as_namespace := v
+		ensure
+			use_cluster_as_namespace_set: use_cluster_as_namespace = v
+		end
+		
+	set_use_all_cluster_as_namespace (v: BOOLEAN) is
+			-- Set `use_all_cluster_as_namespace' to `v'.
+		do
+			use_all_cluster_as_namespace := v
+		ensure
+			use_all_cluster_as_namespace_set: use_all_cluster_as_namespace = v
+		end
+		
 	set_java_generation (v: BOOLEAN) is
 			-- Set `java_generation' to `v' if project is not already compiled.
 		do

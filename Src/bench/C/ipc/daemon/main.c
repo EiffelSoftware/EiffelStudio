@@ -47,6 +47,9 @@
 
 #ifdef EIF_ASSERTIONS
 #include <stdarg.h>
+#if defined(EIF_WIN32) && defined (_DEBUG)
+#include <crtdbg.h>
+#endif
 #endif
 
 /* Function declaration */
@@ -254,6 +257,7 @@ rt_public void init_bench(int argc, char **argv)
 #else
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
 #endif
+		free(sp);
 		exit(1);
 	}
 
@@ -265,8 +269,9 @@ rt_public void init_bench(int argc, char **argv)
 #endif
 	prt_init();						/* Initialize IDR filters */
 
-#ifdef EIF_WIN32
 	free (ewb_path);
+
+#ifdef EIF_WIN32
 	InvalidateRect (NULL, NULL, FALSE);
 #endif
 
@@ -321,11 +326,13 @@ rt_public void dexit(int code)
 	if (daemon_data.d_as) {
 		close_stream (daemon_data.d_as);
 		free (daemon_data.d_as);
+		daemon_data.d_as = NULL;
 	}
 
 	if (daemon_data.d_cs) {
 		close_stream (daemon_data.d_cs);
 		free (daemon_data.d_cs);
+		daemon_data.d_cs = NULL;
 	}
 
 	if (daemon_data.d_ewb != 0)
@@ -367,8 +374,35 @@ rt_private void process_name (char *ewb_path)
 			strcat (local, " -bench");
 			strcat (ewb_path, local);
 #endif
+			free(local);
 #endif
 		}
+}
+
+rt_public int main (int argc, char **argv)
+{
+	/* This is the main entry point for the ISE daemon */
+#ifdef EIF_ASSERTIONS
+#if defined(EIF_WIN32) && defined(_DEBUG)
+	int tmpDbgFlag = 0;
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
+
+	tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	tmpDbgFlag |= _CRTDBG_DELAY_FREE_MEM_DF;
+	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+	tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF;
+
+	_CrtSetDbgFlag(tmpDbgFlag);
+#endif
+#endif
+
+	init_bench (argc, argv);
+	return 0L;
 }
 
 #ifdef EIF_WIN32
@@ -570,6 +604,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 	char **argv = NULL;
 	char *tmp = strdup (GetCommandLine());	/* Cannot use lpszCmdLine since we need the
 												application name */
+	int return_value = 0;
 
 	hInst = hInstance;
 	display_splash ();
@@ -581,18 +616,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 	for (argc = 0; argv[argc] != (char *) 0; (argc)++)
 		;
 
-	init_bench (argc, argv);
+	return_value = main (argc,argv);
 
 	free (argv);
-	return 0L;
-}
-
-#else	/* (not) EIF_WIN32 */
-
-rt_public int main (int argc, char **argv)
-{
-	/* This is the main entry point for the ISE daemon */
-	init_bench (argc, argv);
-	return 0L;
+	return return_value;
 }
 #endif
+
+

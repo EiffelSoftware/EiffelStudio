@@ -16,6 +16,7 @@ OBJ = 	disptchr.obj \
 		estream.obj \
 		msgboxpa.obj \
 		diskspace.obj \
+		drawstate.obj \
 		dynload.obj \
 		choose_folder.obj \
 		mousehook.obj

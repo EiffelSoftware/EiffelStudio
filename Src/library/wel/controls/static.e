@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 
 	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			-- Make a static control
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists

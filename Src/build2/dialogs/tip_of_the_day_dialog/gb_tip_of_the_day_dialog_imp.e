@@ -147,7 +147,6 @@ feature {NONE}-- Initialization
 			close_button.set_minimum_width (default_button_width)
 			
 				--Connect events.
-			show_actions.extend (agent window_shown)
 			next_tip_button.select_actions.extend (agent next_tip_selected)
 			close_button.select_actions.extend (agent close_button_selected)
 				-- Close the application when an interface close
@@ -175,11 +174,6 @@ feature {NONE} -- Implementation
 	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
-		deferred
-		end
-	
-	window_shown is
-			-- Called by `show_actions' of `gb_tip_of_the_day_dialog'.
 		deferred
 		end
 	

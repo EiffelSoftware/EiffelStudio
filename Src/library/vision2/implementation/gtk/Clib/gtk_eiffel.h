@@ -186,6 +186,19 @@ void c_gtk_widget_set_fg_color (GtkWidget *widget, int r, int g, int b);
 void c_gtk_widget_get_fg_color (GtkWidget *widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b);
 
 /*==============================================================================
+ gtk_container functions
+==============================================================================*/
+
+/* Number of children of a container */
+gint c_gtk_container_nb_children (GtkWidget *widget);
+
+/* I-th child of the container */
+GtkWidget* c_gtk_container_ith_child (GtkWidget *widget, guint i);
+
+/* Does the container have the given child? */
+int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child);
+
+/*==============================================================================
  gtk_toolbar functions
 ==============================================================================*/
 
@@ -233,6 +246,12 @@ int c_gtk_get_text_max_length (GtkWidget* text);
 #define c_gtk_combo_entry(p) (GTK_COMBO(p)->entry)  /*GtkWidget**/
 #define c_gtk_combo_list(p)  (GTK_COMBO(p)->list)   /*GtkWidget**/
 
+/*==============================================================================
+ gtk_paned functions
+==============================================================================*/
+
+#define c_gtk_paned_child1(p) (GTK_PANED(p)->child1)  /*GtkWidget**/
+#define c_gtk_paned_child2(p) (GTK_PANED(p)->child2)  /*GtkWidget**/
 
 /*==============================================================================
  gtk_pixmap functions
@@ -248,6 +267,17 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
 void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
+
+/*==============================================================================
+ gtk_editable functions
+==============================================================================*/
+
+/* Editable : data access */
+#define c_gtk_editable_position(p) (GTK_EDITABLE(p)->current_pos) 				 /*guint*/
+#define c_gtk_editable_selection_start(p) (GTK_EDITABLE(p)->selection_start_pos) /*guint*/
+#define c_gtk_editable_selection_end(p) (GTK_EDITABLE(p)->selection_end_pos) 	 /*guint*/
+#define c_gtk_editable_has_selection(p) (GTK_EDITABLE(p)->has_selection) 		 /*guint*/
+#define c_gtk_editable_editable(p) (GTK_EDITABLE(p)->editable)                   /*guint*/
 
 /*==============================================================================
  gtk_list functions

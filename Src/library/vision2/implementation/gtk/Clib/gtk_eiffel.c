@@ -521,6 +521,53 @@ void c_gtk_widget_set_size (GtkWidget *widget, int width, int height)
 
 /*********************************
  *
+ * Function : `c_gtk_container_nb_children' (1)
+ *  		  `c_gtk_container_ith_child'   (2)
+ *  		  `c_gtk_container_ha_child'	(3)
+ *  		            
+ * Note (1) : Return the number of children of a container.
+ * 		(2)	: Return the i-th child of the container.
+ * 		(3) : Tell if the given widget is a child of the container.
+ * 
+ * Author : Leila
+ *
+ **********************************/
+
+gint c_gtk_container_nb_children (GtkWidget *widget)
+{
+	GList* children;
+	
+	children = gtk_container_children (GTK_CONTAINER(widget));
+	return (g_list_length (children));
+}
+
+GtkWidget* c_gtk_container_ith_child (GtkWidget *widget, guint i)
+{
+	GList* children;
+	
+	children = gtk_container_children (GTK_CONTAINER(widget));
+	return (g_list_nth_data ((children), i));
+}
+
+int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child)
+{
+	GList* children;
+	
+	children = gtk_container_children (GTK_CONTAINER(widget));
+	children = g_list_find (children, child);
+	if (!children)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	};
+}
+
+
+/*********************************
+ *
  * Function `c_toolbar_callback'
  *
  * Note : Call back for toolbar buttons
@@ -581,6 +628,7 @@ void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name)
 {
     gtk_widget_set_name (widget, name);
 }
+
 
 /*********************************
  *
@@ -906,10 +954,6 @@ EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
 
 void c_gtk_text_insert (GtkWidget *widget, const char *txt)
 {
-   /* Widget must be realized before we can set the text */
-  if (widget->window == NULL)
-    gtk_widget_realize (widget);
-
   gtk_text_insert (GTK_TEXT(widget), NULL, NULL, NULL, txt, -1);
 }
 

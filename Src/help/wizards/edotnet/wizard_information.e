@@ -153,7 +153,7 @@ feature -- Access
 			an_assembly_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			a_dependency: ASSEMBLY_INFORMATION
 			tmp_list: LINKED_LIST [ASSEMBLY_INFORMATION]
-		do
+		once
 			from
 				create tmp_list.make
 				selected_assemblies.start

@@ -126,6 +126,7 @@ feature {NONE} -- Implementation
 			a_dependency: ASSEMBLY_INFORMATION
 			a_dependency_name: STRING			
 			a_local_assembly: STRING
+			a_path: STRING
 			i: INTEGER
 		do
 			create Result.make (1024)
@@ -140,7 +141,11 @@ feature {NONE} -- Implementation
 				assembly_name := clone (an_assembly.name)
 				assembly_name.replace_substring_all (".", "_")
 				assembly_name.to_lower
-				Result.append (Tab + "all " + assembly_name + "_generated: " + Inverted_comma + an_assembly.eiffel_cluster_path + Inverted_comma + New_line + New_line)
+				a_path := clone (an_assembly.eiffel_cluster_path)
+				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_installation_dir_name, 1) > 0 then
+					a_path.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
+					Result.append (Tab + "all " + assembly_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+				end
 				selected_assemblies.forth
 			end
 			dependencies := wizard_information.dependencies
@@ -153,7 +158,11 @@ feature {NONE} -- Implementation
 				a_dependency_name := clone (a_dependency.name)
 				a_dependency_name.replace_substring_all (".", "_")
 				a_dependency_name.to_lower
-				Result.append (Tab + "all " + a_dependency_name + "_generated: " + Inverted_comma + a_dependency.eiffel_cluster_path + Inverted_comma +  New_line + New_line)
+				a_path := clone (a_dependency.eiffel_cluster_path)
+				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_installation_dir_name, 1) > 0 then
+					a_path.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
+					Result.append (Tab + "all " + a_dependency_name + "_generated: " + Inverted_comma + a_path + Inverted_comma + New_line + New_line)
+				end
 				dependencies.forth
 			end		
 			local_assemblies := wizard_information.local_assemblies
@@ -309,5 +318,8 @@ feature {NONE} -- Constants
 	
 	Assembly_keyword: STRING is "assembly:"
 			-- Assembly keyword
+
+	Eiffel_key: STRING is "$ISE_EIFFEL"
+			-- Key of environment variable to the Eiffel delivery
 			
 end -- class WIZARD_PROJECT_GENERATOR

@@ -66,7 +66,7 @@ feature
 			-- Check whether this is an assignment in Result, candidate for
 			-- final 'return' optimization. This won't be done if result is
 			-- expanded or if there are some postconditions which might use
-			-- it...
+			-- it or there is a rescue clause...
 		local
 			source_type: TYPE_I;
 			target_type: TYPE_I;
@@ -74,6 +74,7 @@ feature
 			if target.is_result and
 				not context.has_postcondition and
 				not context.has_invariant and
+				not context.has_rescue and
 				source.is_simple_expr
 			then
 				target_type := context.real_type (target.type);

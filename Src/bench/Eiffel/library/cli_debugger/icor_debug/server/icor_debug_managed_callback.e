@@ -328,7 +328,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 			-- `p_breakpoint' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -351,7 +350,6 @@ feature -- Basic Operations
 			-- `p_stepper' [in].  
 			-- `reason' [in]. 
 			-- (See ECOM_COR_DEBUG_STEP_REASON_ENUM for possible `reason' values. )
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -391,7 +389,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `thread' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -411,7 +408,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 			-- `unhandled' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -434,7 +430,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 			-- `p_eval' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -454,7 +449,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 			-- `p_eval' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -488,7 +482,6 @@ feature -- Basic Operations
 	exit_process (p_process: POINTER) is
 			-- No description available.
 			-- `p_process' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -524,7 +517,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `thread' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -543,32 +535,18 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `p_module' [in].  
-		require
 		local
---			l_hr: INTEGER
---			mp: MANAGED_POINTER
---			p_cchname: INTEGER
-			
 			l_module: ICOR_DEBUG_MODULE
 			retried: BOOLEAN
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_module)
-
 				set_last_app_domain_by_pointer (p_app_domain)
-
 				if p_module /= Default_pointer then
 					create l_module.make_by_pointer (p_module)
 					l_module.add_ref
 					Eifnet_debugger_info.register_new_module (l_module)	
 				end
-
-	--			debug ("DEBUGGER_TRACE_MESSAGE")
-	--				--| Get Module Name
-	--	 			create mp.make (256 * 2)
-	--	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
-	--	 		end
-
 				end_of_managed_callback (Cst_managed_cb_load_module)
 			end
 		rescue
@@ -580,7 +558,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `p_module' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -598,7 +575,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].
 			-- `c' [in].  
-		require
 		local
 			l_class: ICOR_DEBUG_CLASS
 			retried: BOOLEAN
@@ -606,14 +582,6 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_class)
 				set_last_app_domain_by_pointer (p_app_domain)
-				
-				io.read_line
-				if p_class /= Default_pointer then
-					create l_class.make_by_pointer (p_class)
-					l_class.add_ref
-	--				Eifnet_debugger_info.register_new_class (l_class)	
-				end		
-				
 				end_of_managed_callback (Cst_managed_cb_load_class)
 			end
 		rescue
@@ -625,7 +593,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `c' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -644,7 +611,6 @@ feature -- Basic Operations
 			-- `p_process' [in].  
 			-- `error_hr' [in].  
 			-- `error_code' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -665,7 +631,6 @@ feature -- Basic Operations
 			-- `l_level' [in].  
 			-- `p_log_switch_name' [in].  
 			-- `p_message' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -688,7 +653,6 @@ feature -- Basic Operations
 			-- `ul_reason' [in].  
 			-- `p_log_switch_name' [in].  
 			-- `p_parent_name' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -707,10 +671,7 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_process' [in].  
 			-- `p_app_domain' [in].  
-		require
 		local
---			l_icor_debug_process: ICOR_DEBUG_PROCESS;
---			l_icor_debug_app_domain: ICOR_DEBUG_APP_DOMAIN;
 			l_hr: INTEGER
 			retried: BOOLEAN
 		do
@@ -723,10 +684,6 @@ feature -- Basic Operations
 				check
 					l_hr = 0
 				end
-
-	--			create l_icor_debug_process.make_by_pointer (p_process)
-	--			l_icor_debug_process.terminate (123)
-
 				end_of_managed_callback (Cst_managed_cb_create_app_domain)
 			end
 		rescue
@@ -738,7 +695,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_process' [in].  
 			-- `p_app_domain' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -746,9 +702,7 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_exit_app_domain)
 				set_last_process_by_pointer (p_process)
 				set_last_app_domain_by_pointer (p_app_domain)
-
 				reset_last_app_domain_by_pointer (p_app_domain)			
-
 				end_of_managed_callback (Cst_managed_cb_exit_app_domain)
 			end
 		rescue
@@ -760,24 +714,12 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `p_assembly' [in].  
-		require
 		local
---			l_hr: INTEGER
---			mp: MANAGED_POINTER
---			p_cchname: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_load_assembly)
 				set_last_app_domain_by_pointer (p_app_domain)
-
---				debug ("DEBUGGER_TRACE_MESSAGE")
---					--| Get Assembly Name
---					create mp.make (256 * 2)
---					l_hr := feature {ICOR_DEBUG_ASSEMBLY}.cpp_get_name (p_assembly, 256, $p_cchname, mp.item)
---					--|
---				end
-				
 				end_of_managed_callback (Cst_managed_cb_load_assembly)
 			end
 		rescue
@@ -789,7 +731,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `p_assembly' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -806,7 +747,6 @@ feature -- Basic Operations
 	control_ctrap (p_process: POINTER) is
 			-- No description available.
 			-- `p_process' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -824,7 +764,6 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -844,7 +783,6 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_module' [in].  
 			-- `p_symbol_stream' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -864,7 +802,6 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `p_function' [in].  
 			-- `f_accurate' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do
@@ -885,7 +822,6 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `p_breakpoint' [in].  
 			-- `dw_error' [in].  
-		require
 		local
 			retried: BOOLEAN
 		do

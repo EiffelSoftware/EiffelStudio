@@ -70,6 +70,8 @@ feature
 			feat_tbl: FEATURE_TABLE;
 			inst_cont_type: TYPE_I;
 			metamorphosed: BOOLEAN;
+			r_id, origin, offset: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			inst_cont_type := context_type;
 			metamorphosed := inst_cont_type.is_basic 
@@ -93,14 +95,25 @@ io.error.putstring ("%NFEATURE_TABLE: ");
 feat_tbl.trace;
 io.error.new_line;
 end;
-					real_feat_id := feat_tbl.item (feature_name).feature_id;
 					if parameters /= Void then
 						ba.append (Bc_rotate);
 						ba.append_short_integer (parameters.count + 1);
 					end;
 					ba.append (Bc_metamorphose);
-					static_type := basic_type.associated_reference.id - 1;
-					make_end_byte_code (ba, flag, real_feat_id, static_type);
+					if associated_class.is_precompiled then
+						r_id := feat_tbl.item (feature_name).rout_id_set.first;
+						if r_id < 0 then
+							r_id := - r_id
+						end;
+						rout_info := System.rout_info_table.item (r_id);
+						origin := rout_info.origin;
+						offset := rout_info.offset;
+						make_end_precomp_byte_code (ba, flag, origin, offset)
+					else
+						real_feat_id := feat_tbl.item (feature_name).feature_id;
+						static_type := basic_type.associated_reference.id - 1;
+						make_end_byte_code (ba, flag, real_feat_id, static_type)
+					end
 				end;
 			else
 				cl_type ?= inst_cont_type;
@@ -110,8 +123,6 @@ end;
 					cl_type := clone (cl_type);
 					cl_type.set_is_expanded (False);
 				end;
-				static_type := cl_type.associated_class_type.id - 1;
-				real_feat_id := feature_id;
 				if is_first then 
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
@@ -122,7 +133,22 @@ end;
 						ba.append_short_integer (parameters.count + 1);
 					end;
 				end;
-				make_end_byte_code (ba, flag, real_feat_id, static_type);
+				associated_class := cl_type.base_class;
+				if associated_class.is_precompiled then
+					r_id := associated_class.feature_table.item
+						(feature_name).rout_id_set.first;
+					if r_id < 0 then
+						r_id := - r_id
+					end;
+					rout_info := System.rout_info_table.item (r_id);
+					origin := rout_info.origin;
+					offset := rout_info.offset;
+					make_end_precomp_byte_code (ba, flag, origin, offset)
+				else
+					static_type := cl_type.associated_class_type.id - 1;
+					real_feat_id := feature_id;
+					make_end_byte_code (ba, flag, real_feat_id, static_type);
+				end
 			end
 		end;
 
@@ -140,6 +166,22 @@ end;
 				-- Generate feature id
 			ba.append_integer (real_feat_id);
 			ba.append_short_integer (static_type);
+		end;
+
+	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
+					origin: INTEGER; offset: INTEGER) is
+			-- Make final portion of the standard byte code
+			-- for a precompiled call.
+		do
+			if 	is_first or flag then
+				ba.append (precomp_code_first);
+			else
+				ba.append (precomp_code_next);
+					-- Generate feature name for test of void reference
+				ba.append_raw_string (feature_name);
+			end;
+			ba.append_integer (origin);
+			ba.append_integer (offset);
 		end;
 
 	make_special_byte_code (ba: BYTE_ARRAY) is
@@ -183,6 +225,16 @@ end;
 
 	code_next: CHARACTER is
 			-- Byte code when call is nested (invariant)
+		deferred
+		end;
+
+	precomp_code_first: CHARACTER is
+			-- Byte code when precompiled call is first (no invariant)
+		deferred
+		end;
+
+	precomp_code_next: CHARACTER is
+			-- Byte code when precompiled call is nested (invariant)
 		deferred
 		end;
 

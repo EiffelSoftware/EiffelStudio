@@ -76,12 +76,15 @@ feature
 			expr: EXPR_B;
 			target_type: TYPE_I;
 			basic_i: BASIC_I;
+			base_class: CLASS_C;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			real_ty ?= context.real_type (type);
 			target_type := real_ty.meta_generic.item (1);
-			f_table := real_ty.base_class.feature_table;
+			base_class := real_ty.base_class;
+			f_table := base_class.feature_table;
 			feat_i := f_table.item ("make");
-			feat_id := feat_i.feature_id;
 				-- Need to insert expression into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly
@@ -114,10 +117,20 @@ feature
 				end;
 				expressions.back;
 			end;
-			ba.append (Bc_array);
-			ba.append_short_integer (real_ty.associated_class_type.id - 1);
-			ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-			ba.append_short_integer (feat_id);
+			if base_class.is_precompiled then
+				ba.append (Bc_parray);
+				r_id := feat_i.rout_id_set.first;
+				rout_info := System.rout_info_table.item (r_id);
+				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.offset);	
+				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+			else
+				ba.append (Bc_array);
+				ba.append_short_integer (real_ty.associated_class_type.id - 1);
+				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+				feat_id := feat_i.feature_id;
+				ba.append_short_integer (feat_id);
+			end;
 			ba.append_integer (expressions.count);
 		end;
 

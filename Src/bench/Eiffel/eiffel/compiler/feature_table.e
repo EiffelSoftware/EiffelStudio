@@ -647,27 +647,31 @@ end;
 			i, nb, rout_id: INTEGER;
 			a_class: CLASS_C;
 		do
-			tab := routine_id_array;
-			from
-				i := 0;
-				nb := tab.upper;
-				ba.append_integer (tab.count);
-			until
-				i > nb
-			loop
-				feat := tab.item (i);
-				if feat = Void then
-					ba.append_int32_integer (0);
-				else
-					rout_id := feat.rout_id_set.first;
-					if rout_id < 0 then
-						rout_id := - rout_id;
-					end;
-					ba.append_int32_integer (rout_id);
-				end;
-				i := i + 1
-			end;
 			a_class := associated_class;
+			if a_class.is_precompiled then
+				ba.append_integer (0);
+			else
+				from
+					i := 0;
+					tab := routine_id_array;
+					nb := tab.upper;
+					ba.append_integer (tab.count);
+				until
+					i > nb
+				loop
+					feat := tab.item (i);
+					if feat = Void then
+						ba.append_int32_integer (0);
+					else
+						rout_id := feat.rout_id_set.first;
+						if rout_id < 0 then
+							rout_id := - rout_id;
+						end;
+						ba.append_int32_integer (rout_id);
+					end;
+					i := i + 1
+				end
+			end;
 			if a_class.has_visible then
 				ba.append ('%/001/');
 				a_class.visible_level.make_byte_code (ba, Current);

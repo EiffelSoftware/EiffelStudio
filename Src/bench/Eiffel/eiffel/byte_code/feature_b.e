@@ -127,6 +127,18 @@ feature -- Byte code generation
 			Result := Bc_feature_inv
 		end;
 
+	precomp_code_first: CHARACTER is
+			-- Code when Eiffel precompiled call is first (no invariant)
+		do
+			Result := Bc_pfeature
+		end;
+
+	precomp_code_next: CHARACTER is
+			-- Code when Eiffel precompiled call is nested (invariant)
+		do
+			Result := Bc_pfeature_inv
+		end;
+
 feature -- Array optimization
 
 	is_special_feature: BOOLEAN is

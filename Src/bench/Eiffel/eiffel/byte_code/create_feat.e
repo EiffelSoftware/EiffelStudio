@@ -69,6 +69,7 @@ feature
 			create_table_name: STRING;
 			gen_file: INDENT_FILE;
 			dyn_type: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			gen_file := context.generated_file;
 			if context.final_mode then
@@ -94,11 +95,22 @@ feature
                     Extern_declarations.add_type_table (clone (create_table_name));
 				end;
 			else
-				gen_file.putstring ("RTWT(");
-				gen_file.putint
-					(context.current_type.associated_class_type.id - 1);
-				gen_file.putstring (gc_comma);
-				gen_file.putint (feature_id);
+				if
+					Compilation_modes.is_precompiling or
+					context.current_type.base_class.is_precompiled
+				then
+					gen_file.putstring ("RTWPT(");
+					rout_info := System.rout_info_table.item (rout_id);
+					gen_file.putint (rout_info.origin);
+					gen_file.putstring (gc_comma);
+					gen_file.putint (rout_info.offset)
+				else
+					gen_file.putstring ("RTWT(");
+					gen_file.putint
+						(context.current_type.associated_class_type.id - 1);
+					gen_file.putstring (gc_comma);
+					gen_file.putint (feature_id);
+				end;
 				gen_file.putstring (gc_comma);
 				context.generate_current_dtype;
 				gen_file.putchar (')');
@@ -109,10 +121,20 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an anchored creation type.
+		local
+			rout_info: ROUT_INFO
 		do
-			ba.append (Bc_clike);
-			ba.append_short_integer (context.current_type.associated_class_type.id - 1);
-			ba.append_integer (feature_id);
+			if context.current_type.base_class.is_precompiled then
+				ba.append (Bc_pclike);
+				rout_info := System.rout_info_table.item (rout_id);
+				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.offset);
+			else
+				ba.append (Bc_clike);
+				ba.append_short_integer
+					(context.current_type.associated_class_type.id - 1);
+				ba.append_integer (feature_id);
+			end
 		end;
 
 feature -- Debug

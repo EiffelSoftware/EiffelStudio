@@ -130,5 +130,9 @@ feature {NONE}
 	Bc_parray:			CHARACTER is '%/122/';
 	Bc_pattribute:		CHARACTER is '%/123/';
 	Bc_pattribute_inv:	CHARACTER is '%/124/';
+	Bc_pexp_assign:		CHARACTER is '%/125/';
+	Bc_passign:			CHARACTER is '%/126/';
+	Bc_preverse:		CHARACTER is '%/127/';
+	Bc_pclike:			CHARACTER is '%/128/';
 
 end

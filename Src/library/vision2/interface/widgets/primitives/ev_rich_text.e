@@ -103,7 +103,7 @@ feature -- Access
 		do
 			Result := implementation.tab_width
 		ensure
-			result_non_negative: Result >= 0
+			result_positive: Result > 0
 		end
 
 feature -- Status setting

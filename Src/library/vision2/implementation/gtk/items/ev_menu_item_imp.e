@@ -13,14 +13,20 @@ inherit
 			interface
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize,
+			initialize
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface,
 			set_text,
 			remove_text,
 			text
 		end
+
 create
 	make
 
@@ -36,11 +42,11 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.
 		do
-			signal_connect ("activate", ~on_activate, default_translate)
+			signal_connect ("activate", ~on_activate, Void)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 		end
 
 	initialize_menu_item_box is
@@ -168,6 +174,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.44  2000/04/04 20:50:18  oconnor
 --| updated signal connection for new marshaling scheme
 --|

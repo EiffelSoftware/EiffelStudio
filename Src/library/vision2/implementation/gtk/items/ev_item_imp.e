@@ -31,7 +31,17 @@ inherit
 			has_parent
 		end
 
-feature -- Initialization
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
+
+	EV_PIXMAPABLE_IMP
+		redefine
+			interface
+		end
+
+feature {NONE} -- Initialization
 
 	initialize is
 			-- FIXME comment
@@ -131,6 +141,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.25  2000/04/04 20:50:18  oconnor
 --| updated signal connection for new marshaling scheme
 --|

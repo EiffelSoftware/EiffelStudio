@@ -17,7 +17,7 @@ inherit
 			parent
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		rename
 			parent as old_simple_parent
 		undefine
@@ -30,6 +30,11 @@ inherit
 			set_pixmap,
 			on_parented,
 			on_orphaned
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -402,7 +407,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 			internal_children := Void
 		end
 
@@ -596,6 +601,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.56  2000/04/05 21:16:11  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -1,6 +1,6 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: ""
+	description: "FIXME"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,15 +14,20 @@ inherit
 			interface
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		undefine
 			parent
 		redefine
 			interface,
 			initialize,
 			has_parent,
-			set_text,
 			make
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface,
+			set_text
 		end
 
 create
@@ -43,7 +48,7 @@ feature {NONE} -- Initialization
 		local
 			item_box: POINTER
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			
@@ -122,14 +127,14 @@ feature -- Status setting
 			C.c_gtk_list_item_unselect (c_object)
 		end
 
-feature -- element change
+feature -- Element change
 
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
+			Precursor (txt)
 
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
@@ -178,6 +183,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.32  2000/04/04 20:50:06  oconnor
 --| formatting
 --|

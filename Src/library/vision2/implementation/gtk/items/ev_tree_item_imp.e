@@ -14,12 +14,17 @@ inherit
 			interface
 		end
 	
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		redefine
 			interface,
 			initialize,
 			minimum_width,
 			minimum_height
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_ITEM]
@@ -312,6 +317,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/07 22:35:53  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.51  2000/04/06 20:27:05  brendel
 --| Uncommented list_widget.
 --|

@@ -14,9 +14,14 @@ inherit
 			parent
 		end
 		
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		undefine
 			parent
+		redefine
+			interface
+		end
+
+	EV_TEXTABLE_IMP
 		redefine
 			interface,
 			set_text,
@@ -217,6 +222,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.35  2000/03/29 20:36:26  brendel
 --| Modified text handling in compliance with new EV_TEXTABLE_IMP.
 --|

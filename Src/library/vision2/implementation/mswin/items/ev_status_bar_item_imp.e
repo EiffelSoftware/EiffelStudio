@@ -15,13 +15,18 @@ inherit
 			interface
 		end
 	
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		undefine
 			parent
 		redefine
 			set_pixmap,
 			remove_pixmap,
 			parent_imp,
+			interface
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
 			interface
 		end
 
@@ -111,14 +116,14 @@ feature -- Status setting
 			-- Assign `pixmap' to `Current'.
 			-- Notify parent to set owner draw for `Current'
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor (pix)
+			{EV_ITEM_IMP} Precursor (pix)
 			parent_imp.set_child_owner_draw (Current, True)
 		end
 
 	remove_pixmap is
 			-- If a pixmap is set, then unset it.
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 			parent_imp.set_child_owner_draw (Current, False)
 		end
 
@@ -183,6 +188,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.19  2000/03/29 20:35:20  brendel
 --| Added is_initialized := True.
 --|

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: "EiffelVision item. Mswindows implementation"
@@ -12,43 +13,6 @@ indexing
 
 deferred class 
 	EV_SIMPLE_ITEM_IMP
-
-inherit
-	EV_SIMPLE_ITEM_I
-		redefine
-			interface
-		select
-			interface
-		end
-
-	EV_ITEM_IMP
-		redefine
-			interface
-		end
-
-	EV_PIXMAPABLE_IMP
-		--| FIXME Not in pixmapable anymore.
---		undefine
---			maximum_pixmap_height,
---			maximum_pixmap_width
-		redefine
-			interface
-		end
-
-	EV_TEXTABLE_IMP
-		rename
-			interface as textable_interface
-		end
-
-	--| FIXME Menu items and separators are not PND-able
-	EV_PICK_AND_DROPABLE_IMP
-		redefine
-			interface
-		end
-
-feature {NONE}
-
-	interface: EV_SIMPLE_ITEM
 
 end -- class EV_SIMPLE_ITEM_IMP
 
@@ -73,6 +37,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/07 22:31:51  brendel
+--| Removed EV_SIMPLE_ITEM_IMP from inheritance.
+--|
 --| Revision 1.21  2000/03/28 00:05:27  brendel
 --| Added FIXME about not all items being PND able.
 --|

@@ -33,6 +33,8 @@ feature {NONE}
 
 	clients_help: STRING is "show the clients of a class";
 
+	cluster_hierarchy_help: STRING is "display the cluster hierarchy of the system";
+
 	clusters_help: STRING is "show the system's classes, cluster by cluster";
 
 	compile_help: STRING is "compile or run the system";

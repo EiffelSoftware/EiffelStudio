@@ -31,6 +31,8 @@ feature {NONE}
 
 	clients_cmd_name: STRING is "clients"
 
+	cluster_hierarchy_cmd_name: STRING is "Cluster hierarchy"
+
 	clusters_cmd_name: STRING is "clusters"
 
 	compile_cmd_name: STRING is "compile"

@@ -1,40 +1,26 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Wizard state: Error in the project name"
+	author		: "David Solal"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_ERROR_PROJECT_NAME
 
 inherit
-	WIZARD_FINAL_STATE_WINDOW
---		rename
---			pixmap_location as last_pixmap_location
-		redefine
-			build
-		end
+	BENCH_WIZARD_ERROR_STATE_WINDOW
 
 creation
 	make
-
-
-feature -- Initialization
-
-	build is
-		do
-			Precursor
-			first_window.set_final_state ("Abort")
-		end
-
 
 feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("PROJECT NAME ERROR")
-			message.set_text ("%NThe project name that you have specify doesn't conform the ace file.%N%
-								%%NChoose an other one by pushing the back button.")
+			title.set_text ("Project Name Error")
+			message.set_text (
+				"The project name that you have specify doesn't conform the ace file.%N%N%
+				%Click Back and choose another directory.")
 		end
 
 	final_message: STRING is
@@ -42,8 +28,6 @@ feature -- basic Operations
 		end
 
 feature {WIZARD_STATE_WINDOW}
-
---	pixmap_location: STRING is "f_state_red.bmp"
 
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
 

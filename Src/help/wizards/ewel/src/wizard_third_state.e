@@ -1,14 +1,14 @@
 indexing
-	description: "Page in which the user choose where he wants to generate the sources."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Page in which the user choose where he wants to generate the sources."
+	author		: "David Solal"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_THIRD_STATE
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,
@@ -22,59 +22,62 @@ feature -- Basic Operation
 
 	build is 
 			-- Build entries.
-		local
-			browse1_b: EV_BUTTON
-			h1,h2: EV_HORIZONTAL_BOX
-			v1: EV_VERTICAL_BOX
 		do 
-			create h1
-			Create location.make ("New Project Location",wizard_information.location,10,80,Current, FALSE)
-			Create browse1_b.make_with_text ("Browse ...")
-			browse1_b.set_minimum_width (74)
-			browse1_b.set_minimum_height (23)
-			browse1_b.select_actions.extend (~browse(FALSE))
-			create v1
-			v1.extend (create {EV_CELL})
-			v1.extend (browse1_b)
-			v1.disable_item_expand (browse1_b)
-			h1.set_padding (11)
-			h1.extend(location)
-			h1.extend(v1)
-			h1.disable_item_expand(v1)
+			create location.make (Current)
+			location.set_label_string_and_size ("Project location", 10)
+			location.set_textfield_string_and_capacity (wizard_information.location, 80)
+			location.enable_directory_browse_button
+			location.generate
 
-			create to_compile_b.make_with_text ("Check if you want the wizard to compile the generated classes")
+			create to_compile_b.make_with_text ("Compile the generated project")
 			if wizard_information.compile_project then
 				to_compile_b.enable_select
 			else
 				to_compile_b.disable_select
 			end
 
-			choice_box.extend (h1)
-			choice_box.disable_item_expand(h1)
-
+			choice_box.set_padding (10)
+			choice_box.extend (location.widget)
+			choice_box.disable_item_expand(location.widget)
 			choice_box.extend (to_compile_b)
 			choice_box.disable_item_expand (to_compile_b)
 			choice_box.extend (create {EV_CELL})
 
-			set_updatable_entries(<<browse1_b.select_actions,
+			set_updatable_entries(<<location.browse_actions,
 									location.change_actions,
 									to_compile_b.select_actions>>)
-
 		end
 
 	proceed_with_current_info is 
 		local
 			dir: DIRECTORY
+			next_window: WIZARD_STATE_WINDOW
+			rescued: BOOLEAN
 		do
-			create dir.make (location.text)
+			if not rescued then
+				create dir.make (location.text)
+				if not dir.exists then
+					-- Try to create the directory
+					dir.create_dir
+				end
 
-			if not dir.exists then
 				Precursor
-				proceed_with_new_state (create {WIZARD_ERROR_LOCATION}.make (wizard_information))
+				if not dir.exists then
+					create {WIZARD_ERROR_LOCATION}next_window.make (wizard_information)
+				else
+					create {WIZARD_FINAL_STATE}next_window.make (wizard_information)
+				end
 			else
-				Precursor
-				proceed_with_new_state (create {WIZARD_FINAL_STATE}.make (wizard_information))
+				-- Something went wrong when checking that the selected directory exists
+				-- or when trying to create the directory, go to error.
+				create {WIZARD_ERROR_LOCATION}next_window.make (wizard_information)
 			end
+
+			Precursor
+			proceed_with_new_state (next_window)
+		rescue
+			rescued := True
+			retry
 		end
 
 	update_state_information is
@@ -90,36 +93,17 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("CHOOSE LOCATION")
-			message.set_text ("%NChoose the directory where you want to generate%
-							    % your new project%
-								%%NThen check the box if you want to compile the generated files")
+			title.set_text ("Project Location")
+			subtitle.set_text ("Where should the Eiffel project be created?")
+			message.set_text (
+				"Choose the directory where you want to generate your new project.%N%
+				%Uncheck the box if you don't want to compile the generated project")
 		end
-
-	browse (is_for_project: BOOLEAN) is
-			-- Launch a computer directory Browser.
-		local
-			dir_selector: EV_DIRECTORY_DIALOG	
-		do
-			Create dir_selector
-			dir_selector.ok_actions.extend (~directory_selected(dir_selector,is_for_project))
-			dir_selector.show_modal
-		end
-
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG; is_for_project: BOOLEAN) is
-			-- The user selected a directory from the browser. 
-			-- It updates the text fields accordingly.
-		require
-			selector_exists: dir_selector /= Void
-		do
-			location.set_text (dir_selector.directory)
-		end
-
-feature -- Implementation
 
 	location: WIZARD_SMART_TEXT_FIELD
+			-- Label, Text field and browse button for the project location.
 
 	to_compile_b: EV_CHECK_BUTTON
-
+			-- Should compilation be launched?.
 
 end -- class WIZARD_THIRD_STATE

@@ -1018,11 +1018,15 @@ EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
 
 /*********************************
  *
- * Function : `c_gtk_text_insert'
+ * Function : `c_gtk_text_insert' (1)
+ * 			  `c_gtk_text_full_insert' (2)
  *
- * Note : insert a text at the current position of a text area.
- *        We can't use directly the function because the widget
- *        must be realized.
+ * Note (1): Insert a text at the current position of a text widget.
+ *        	 We can't use directly the function because the widget
+ *        	 must be realized.
+ *      (2): Insert a text at the current position of a rich-text widget.
+ *      	 The text is added with the given color and font. The background
+ *      	 color used is the one of the widget.
  *
  * Author : Leila
  *
@@ -1031,6 +1035,27 @@ EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
 void c_gtk_text_insert (GtkWidget *widget, const char *txt)
 {
   gtk_text_insert (GTK_TEXT(widget), NULL, NULL, NULL, txt, -1);
+}
+
+void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int b, const char *txt, gint length)
+{
+	GdkColor *fore;
+	GdkColor *back;
+	GtkStyle *style;
+	
+	/* We create the foreground color */
+	r *= 257; g *= 257; b *= 257;
+	fore->red = r;
+	fore->green = g;
+	fore->blue = b;
+	
+	/* We create the background color */
+	style = GTK_WIDGET(widget)->style;
+	back->red = 1 /*style->text[GTK_STATE_NORMAL].red;*/
+	back->green = 1 /*style->text[GTK_STATE_NORMAL].green;*/
+	back->blue = 1 /*style->text[GTK_STATE_NORMAL].blue;*/
+
+	gtk_text_insert (GTK_TEXT (widget), font, fore, back, txt, length);
 }
 
 /*********************************
@@ -1057,6 +1082,17 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 			     old_padding, old_pack_type);
 
 }
+
+/*********************************
+ *
+ * Function : `'
+ *
+ * Note : Several externals for the colors
+ *
+ * Author : Leila
+ *
+ *********************************/
+
 
 /*
 EIF_REFERENCE ev_color_make_rgb (int r, int g, int b)
@@ -1111,7 +1147,7 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 		}
 }
 
-void c_gtk_widget_get_bg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
 {
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
@@ -1156,3 +1192,4 @@ void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* 
 
 		*r /= 257; *g /= 257; *b /= 257;
 }
+

@@ -7,6 +7,16 @@ indexing
 external class
 	ISE_RUNTIME
 
+feature -- Equality
+
+	deep_equal (target, source: ANY): BOOLEAN is
+			-- Copy `source' onto `target'.
+		external
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO): System.Boolean use ISE.Runtime.RUN_TIME"
+		alias
+			"deep_equal"
+		end
+
 feature -- Duplication
 
 	standard_copy (target, source: ANY) is

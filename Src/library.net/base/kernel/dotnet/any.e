@@ -75,7 +75,6 @@ feature -- Comparison
 			consistent: standard_is_equal (other) implies Result
 		end
 
-
 	frozen standard_is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object of the same type
 			-- as current object, and field-by-field identical to it?
@@ -130,9 +129,7 @@ feature -- Comparison
 			else
 				Result := other = some
 				if not Result then
-					check
-						not_implemented: False
-					end
+					Result := feature {ISE_RUNTIME}.deep_equal (some, other)
 				end
 			end
 		ensure

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			initialized := False -- Reset the flag since initializion is not yet complete.
 
 				-- Track the changes of size of the window.
-			window.resize_actions.extend (~on_window_size)
+			window.resize_actions.extend (~on_size)
 
 			initialized := True
 		end
@@ -590,16 +590,6 @@ feature {NONE} -- Implementation
 					-- Save width & height.
 				save_size (window.width, window.height, window.is_maximized)
 			end
-		end
-
-	on_window_size (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Save the size of the window and the main layout.
-		do
-			if panel.full then
-				panel.set_split_position (left_panel_width.max (
-					panel.minimum_split_position).min (panel.maximum_split_position))
-			end
-			on_size (a_x, a_y, a_width, a_height)
 		end
 
 feature {NONE} -- Implementation / Commands

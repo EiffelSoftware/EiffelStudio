@@ -1,7 +1,7 @@
 -- Counter associated with a compilation unit (i.e. precompilation,
 -- normal compilation or dle compilation).
 
-deferred class COMPILER_SUBCOUNTER [G -> COMPILER_ID]
+deferred class COMPILER_SUBCOUNTER
 
 feature {NONE} -- Initialization
 
@@ -12,7 +12,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next_id: G is
+	next_id: COMPILER_ID is
 			-- Next id
 		deferred
 		ensure
@@ -25,12 +25,6 @@ feature -- Access
 	offset: INTEGER;
 			-- Offset to ensure uniqueness of ids
 			-- (Used for renumbering)
-
-	prefix_string: STRING is
-			-- Prefix for generated C function and table names
-		once
-			Result := ""
-		end
 
 feature -- Setting
 

@@ -1,0 +1,10 @@
+<document output="studio" title="Tutorial"><meta_data/><paragraph><heading><size>1</size>WEL Tutorial</heading> WEL is shipped with a tutorial among its sample programs. This tutorial shows you how to develop a simple WEL application and contains eight different samples listed below: <list ordered="false">
+<item><link><url>/libraries/wel/samples/tutorial/step1/index.html</url><label>Step1</label></link> - A Basic WEL Application.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step2/index.html</url><label>Step2</label></link> - Responding to an event.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step3/index.html</url><label>Step3</label></link> - Displaying output on a WEL_CLIENT_DC.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step4/index.html</url><label>Step4</label></link> - A very basic drawing program.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step5/index.html</url><label>Step5</label></link> - Using a WEL_MODAL_DIALOG.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step6/index.html</url><label>Step6</label></link> - Re-drawing a window by redefining on_paint.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step7/index.html</url><label>Step7</label></link> - Adding menus.  </item>
+<item><link><url>/libraries/wel/samples/tutorial/step8/index.html</url><label>Step8</label></link> - Using a WEL_OPEN_FILE_DIALOG and a WEL_SAVE_FILE_DIALOG.</item>
+</list></paragraph></document>

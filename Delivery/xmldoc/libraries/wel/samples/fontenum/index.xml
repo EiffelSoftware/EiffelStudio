@@ -1,0 +1,46 @@
+<document output="studio" title="Fontenum">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>fontenum.png</url> 
+			<alt_text>fontenum</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\fontenum\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the program, a window will be displayed as illustarated above. Selecting one of the available fonts (Listed on the left hand side) will cause a sample text to be displayed in the currently entered font size. Clicking the button marked "Close" will cause the program to end. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>MAIN_DIALOG inherits from WEL_MAIN_DIALOG and also WEL_FONT_ENUMARATOR.  MAIN_DIALOG implements action which was deferred from WEL_FONT_ENUMARATOR and executed every an enumeration finds a new font. This new implementation is used to display the available fonts in the WEL_LIST_VIEW</paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>FONTENUM_DEMO</item>
+				<item>MAIN_DIALOG</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,43 @@
+<document output="studio" title="Menus">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>menus.png</url> 
+			<alt_text>menus</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\menus\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, you will see a window displayed with a similar appearance to the one displayed above. If you right click in the client area of the window, a menu will pop up at the cursor position. The same menu is also accessible from the "File" menu. Selecting any of the menu options will display a notification of which option was selected. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading> A WEL_MENU is used for the menu's in this sample. The feature show_track is used to display the menu at the cursor position and a WEL_MSG_BOX is used to display the notification when a menu selection has occured. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>MAIN_WINDOW</item>
+				<item>MENUS_DEMO</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,44 @@
+<document output="studio" title="Disk Space">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>diskspace.png</url> 
+			<alt_text>diskspace</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\diskspace\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see text ouput showing the size and amount of free space available on each of your local drives. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>DISCSPACE_DEMO contains a once feature, diskspace which returns an instance of WEL_DISK_SPACE, used to query the local drives.</paragraph>
+		<paragraph>This sample contains only one class: 
+			<list ordered="false">
+				<item>DISKSPACE_DEMO</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

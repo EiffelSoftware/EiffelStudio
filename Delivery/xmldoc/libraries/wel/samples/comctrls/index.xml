@@ -1,0 +1,47 @@
+<document output="studio" title="Common Controls">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>comctrls.png</url> 
+			<alt_text>comctrls</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\comctrls\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy              images (*.bmp), icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item> 
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the program, a window will be displayed as illustrated above. Selecting "Progress bar demonstration" from the "File" menu will update the progress bar to a full state. Leaving the mouse stationary above the track bar, progress bar or tollbar buttons will cause a tooltip control to be displayed.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>There is one WEL_TOOLTIP used for all the controls, but each control adds a new WEL_TOOL_INFO to provide different output for each control. The feature `on_notify' has been redefined to handle the Ttn_needtext notification which is posted by a control, and received by the controls parent, when a control needs to display a tooltip. The feature `on_menu_select' has been redefined to output the text of the selected menu item in the WEL_STATUS_WINDOW located at the bottom of MAIN_WINDOW. 
+			<paragraph>This sample contains the following classes: 
+				<list ordered="false">
+					<item>APPLICATION_IDS</item>
+					<item>MAIN_WINDOW</item>
+					<item>COMCTRLS_DEMO</item>
+				</list>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

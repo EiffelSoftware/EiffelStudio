@@ -1,0 +1,67 @@
+<document output="studio" title="Standard Dialogs">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>stddlgs.png</url> 
+			<alt_text>stddlgs</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\stddlgs\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program, a window will displayed with a menu allowing you to select some of the standard dialogs provided by WEL. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>on_menu_command has been redefined in MAIN_WINDOW to display a different standard dialog when each of the menu items is selected. 
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>MAIN_WINDOW</item>
+				<item>STDDLG_DEMO</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_open_file_dialog.html</url>
+					<label>WEL_OPEN_FILE_DIALOG</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_choose_font_dialog.html</url>
+					<label>WEL_CHOOSE_FONT_DIALOG</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_choose_color_dialog.html</url>
+					<label>WEL_CHOOSE_COLOR_DIALOG</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>/libraries/wel/content/stddlgs/wel_print_dialog.html</url>
+					<label>WEL_PRINT_DIALOG</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,46 @@
+<document output="studio" title="Cursors">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>cursors.png</url> 
+			<alt_text>cursors</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\cursors\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the program, a window will be displayed as illustarated above. Selecting one of the cursor types from the "Cursors" menu will cause the selected cursor to be displayed when the mouse pointer is over the client area of the window. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>The feature `on_menu_command' has been redefined in MAIN_WINDOW to create the appropriate cursor when a menu selection is made, while `on_set_cursor' has been redefined to update the style of the displayed cursor. </paragraph>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>CURSORS_DEMO</item>
+				<item>MAIN_WINDOW</item>
+				<item>APPLICATION_IDS</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

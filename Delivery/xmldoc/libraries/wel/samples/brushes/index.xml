@@ -1,0 +1,51 @@
+<document output="studio" title="Brushes">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>brushes.png</url> 
+			<alt_text>brushes</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\wel\brushes\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy              images (*.bmp), icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+			<item>Click 
+				<bold>OK</bold>. 
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading> After launching the program you will see a window displayed containing three push buttons marked "Brushes", "Rectangles" and "3D". Clicking "Brushes" will open a new window demonsatrating different brushes available. Clicking "Rectangles" will open a new window within which many different shaped and colored rectangles will be drawn. Clicking"3D" will open a new window demonstrating the use of multiple bitmaps for animation. 
+		<heading>
+			<size>2</size>Under the Hood
+		</heading> Each of the three windows that are opened from the programs MAIN_WINDOW inherit WEL_FRAME_WINDOW and contains code for generating their output. BRUSHES_DEMO redefinesidle_action to force a re-draw on the applicable windows. 
+		<note>
+			<bold>Note</bold>. If enable_idle_action is not called, then idle_action is never executed.
+		</note>
+		<paragraph>This sample contains the following classes: 
+			<list ordered="false">
+				<item>APPLICATION_IDS</item>
+				<item>BRUSH_DEMO</item>
+				<item>BRUSHES_DEMO</item>
+				<item>DEMO_3D</item>
+				<item>MAIN_WINDOW</item>
+				<item>PROJECTION</item>
+				<item>RECTANGLE_DEMO</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

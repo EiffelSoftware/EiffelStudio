@@ -29,22 +29,17 @@ feature
 			pre_fix: STRING;
 			full_name: STRING;
 			con_group: GROUP_C;
+			g_name: STRING
 		do
 			!!Result.make (0);
 			Result.append ("%N%Tset_");
 			if not c.is_window then
-				--con_group ?= c.parent;
-				--if con_group = Void then
-					--full_name := clone (c.entity_name);
-					--full_name.append ("_");
-				--else
-					--full_name := c.group_name;
-				--end;
-				if c.group_name = Void then
+				g_name := c.group_name;
+				if g_name = Void then
 					full_name := clone (c.entity_name_in_lower_case);
 					full_name.append ("_");
 				else
-					full_name := c.group_name;
+					full_name := g_name;
 				end;
 				Result.append (full_name);
 				pre_fix := c.full_name;

@@ -47,21 +47,6 @@ feature -- Access
 			bridge_ok: Result = implementation.parent
 		end
 
-	data: ANY
-			-- Arbitrary user data may be stored here.
-
-feature -- Element change
-
-	set_data (some_data: like data) is
-			-- Assign `some_data' to `data'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			data := some_data
-		ensure
-			data_assigned: data = some_data
-		end
-
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

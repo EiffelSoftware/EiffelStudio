@@ -210,6 +210,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementations: Assertions
 */
 
+	[ThreadStatic]
 	private static Hashtable invariant_checked_table;
 		// Equivalent of an HASH_TABLE [Boolean, RuntimeTypeHandle]
 		// For each type we have processed, key is True.

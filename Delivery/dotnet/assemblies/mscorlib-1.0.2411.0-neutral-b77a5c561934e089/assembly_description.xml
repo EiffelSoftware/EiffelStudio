@@ -4,7 +4,7 @@
 	<assembly_version>1.0.2411.0</assembly_version>
 	<assembly_culture>neutral</assembly_culture>
 	<assembly_public_key>b77a5c561934e089</assembly_public_key>
-	<eiffel_cluster_path>$ISE_EIFFEL\library.net\base.net</eiffel_cluster_path>
+	<eiffel_cluster_path>$ISE_EIFFEL\library.net\base</eiffel_cluster_path>
 	<emitter_version_number>2.7b2</emitter_version_number>
 	<assembly_types>
 		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\mscorlib-1.0.2411.0-neutral-b77a5c561934e089\any.xml</assembly_type_filename>

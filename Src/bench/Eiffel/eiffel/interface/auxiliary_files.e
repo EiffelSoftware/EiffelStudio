@@ -198,26 +198,9 @@ feature -- Plug and Makefile file
 				Plug_file.putstring (";%N")
 			end
 
-			if final_mode then
-					-- Initialization routines
-				Plug_file.putstring ("char *(**ecreate)() = ")
-				Plug_file.putstring (table_prefix)
-				Plug_file.putstring (init_name)
-				Plug_file.putstring (";%N")
-
-					-- Dispose routines
-				Plug_file.putstring ("void (**edispose)() = ")
-				Plug_file.putstring ("(void (**)()) ")
-				Plug_file.putstring (table_prefix)
-				Plug_file.putstring (dispose_name)
-				Plug_file.putstring (";%N")
-
-			end
-
-
 				-- Declaration and definition of the egc_init_plug function.
 			Plug_file.putstring ("%N%Nextern void egc_init_plug (void); %N")
-			Plug_file.putstring ("%Nvoid egc_init_plug (void)%N{%N")
+			Plug_file.putstring ("void egc_init_plug (void)%N{%N")
 
 				-- Do we need to collect GC data for the profiler?
 			Plug_file.putstring ("%TEIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
@@ -292,9 +275,29 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init ; %N")
 			Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init ; %N")
 			Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init ; %N")
+
+			if final_mode then
+				Plug_file.putstring ("%N#else%N")
+
+					-- Initialization routines
+				Plug_file.putstring ("egc_ecreate = ")
+				Plug_file.putstring (table_prefix)
+				Plug_file.putstring (init_name)
+				Plug_file.putstring (";%N")
+
+					-- Dispose routines
+				Plug_file.putstring ("egc_edispose = ")
+				Plug_file.putstring ("(void (**)()) ")
+				Plug_file.putstring (table_prefix)
+				Plug_file.putstring (dispose_name)
+				Plug_file.putstring (";%N")
+
+				Plug_file.putstring ("%Tegc_ce_rname = egc_ce_rname_init; %N")
+				Plug_file.putstring ("%Tegc_fnbref = egc_fnbref_init; %N")
+				Plug_file.putstring ("%T /* egc_fsize = egc_fsize_init; */ %N")
+
+			end
 			Plug_file.putstring ("#endif%N")
-
-
 			Plug_file.putstring ("%N}%N")
 
 			Plug_file.close_c

@@ -182,13 +182,12 @@ feature {NONE} -- Implementation
 		end
 		
 	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON) is
-			--
+			-- Ensure `argument_holder' is parented in the same parent as `a_radio_button',
+			-- at the following position.
 		local
 			a_parent: EV_VERTICAL_BOX
 			original_index: INTEGER
 		do
-			argument_holder.wipe_out
-			unparent_argument_holder
 			a_parent ?= a_radio_button.parent
 			check
 				parent_is_vertical_box: a_parent /= Void
@@ -196,20 +195,25 @@ feature {NONE} -- Implementation
 			original_index := a_parent.index_of (a_radio_button, 1)
 			a_parent.go_i_th (original_index)
 			a_parent.put_right (argument_holder)
+			parent_window (Current).unlock_update
 		end
 		
 	unparent_argument_holder is
-			-- Ensure `argument' holder is not parented.
+			-- Ensure `argument' holder is not parented and
+			-- remove all items.
 		do
+			parent_window (Current).lock_update
 			if argument_holder.parent /= Void then
 				argument_holder.parent.prune (argument_holder)	
 			end
+			argument_holder.wipe_out
 		end
 		
 	setup_draw_pixmap is
 			-- initialize controls for drawing pixmaps.
 		do
 			unparent_argument_holder
+			parent_window (Current).unlock_update
 		end
 		
 
@@ -217,77 +221,86 @@ feature {NONE} -- Implementation
 			-- Initialize controls for drawing points.
 		do
 			unparent_argument_holder
+			parent_window (Current).unlock_update
 		end
 		
 		
 	setup_draw_text is
 			-- Initialize controls for drawing text.
 		do
-			parent_argument_holder (text_radio_button)
+			unparent_argument_holder
 			add_text_entry_with_label ("text : ")
+			parent_argument_holder (text_radio_button)
 		end
 		
 	setup_draw_text_top_left is
 			-- Initialize controls for drawing text top left.
 		do
-			parent_argument_holder (text_top_left_radio_button)
+			unparent_argument_holder
 			add_text_entry_with_label ("text : ")
+			parent_argument_holder (text_top_left_radio_button)
 		end
 		
 	setup_draw_segment is
 			-- Initialize controls for drawing segments.
 		do
-			parent_argument_holder (segment_radio_button)
+			unparent_argument_holder
 			add_integer_entry_with_label ("x2 pos : ", 1)
 			add_integer_entry_with_label ("y2 pos : ", 2)
+			parent_argument_holder (segment_radio_button)
 		end
 		
 	setup_draw_straight_line is
 			-- Initialize controls for drawing lines.
 		do
-			parent_argument_holder (straight_line_radio_button)
+			unparent_argument_holder
 			add_integer_entry_with_label ("x2 pos : ", 1)
 			add_integer_entry_with_label ("y2 pos : ", 2)
+			parent_argument_holder (straight_line_radio_button)
 		end
 		
 	setup_draw_arc is
 			-- Initialize controls for drawing arcs.
 		do
-			parent_argument_holder (draw_arc_radio_button)
+			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
 			add_integer_entry_with_label ("Height : ", 2)	
 			add_real_entry_with_label ("Start angle : ", 1)
 			add_real_entry_with_label ("Aperture : ", 2)
+			parent_argument_holder (draw_arc_radio_button)
 		end
 		
 	setup_draw_rectangle is
 			-- Initialize controls for drawing rectangles.
 		do
-			parent_argument_holder (draw_rectangle_radio_button)
+			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
 			add_integer_entry_with_label ("Height : ", 2)
 			add_fill_button
+			parent_argument_holder (draw_rectangle_radio_button)
 		end
 		
 	setup_draw_ellipse is
 			-- Initialize controls for drawing ellipses.
 		do
-			parent_argument_holder (draw_ellipse_radio_button)
+			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
 			add_integer_entry_with_label ("Height : ", 2)
 			add_fill_button
+			parent_argument_holder (draw_ellipse_radio_button)
 		end
 		
 		
 	setup_draw_pie_slice is
 			-- Initialize controls for drawing pie slices.
-		do
-			parent_argument_holder (draw_pie_slice_radio_button)
+		do	
+			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
 			add_integer_entry_with_label ("Height : ", 2)	
 			add_real_entry_with_label ("Start angle : ", 1)
 			add_real_entry_with_label ("Aperture : ", 2)
 			add_fill_button
+			parent_argument_holder (draw_pie_slice_radio_button)
 		end
 
 	text_entry: EV_TEXT_FIELD is

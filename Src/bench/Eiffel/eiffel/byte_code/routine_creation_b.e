@@ -24,7 +24,6 @@ feature  -- Initialization
 			valid_id: cl_id /= 0
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
-			valid_maps: omap /= Void
 		do
 			class_type := cl_type
 			if System.il_generation then
@@ -49,7 +48,6 @@ feature  -- Initialization
 			valid_class_type: cl_type /= Void
 			valid_routine_id: r_id /= 0
 			valid_type: r_type /= Void
-			valid_maps: omap /= Void
 		do
 			class_type := cl_type
 			rout_id := r_id

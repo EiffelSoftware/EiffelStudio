@@ -22,6 +22,11 @@ inherit
 			default_create
 		end
 
+	EV_KEY_CONSTANTS
+		undefine
+			default_create
+		end
+
 	SHARED_EDITOR_PREFERENCES
 		undefine
 			default_create
@@ -280,11 +285,13 @@ feature -- Process Vision2 events
 			end
 
 				-- Handle state key.			
-			if ev_key.code = ev_key.Key_shift then
+			inspect
+				ev_key.code
+			when Key_shift then
 					-- Shift key action
 				shifted_key := True
 
-			elseif ev_key.code = ev_key.Key_ctrl then
+			when Key_ctrl then
 					-- Ctrl key action
 				ctrled_key := True
 			else
@@ -296,13 +303,16 @@ feature -- Process Vision2 events
 			-- Process Wm_keyup message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
-			if ev_key.code = ev_key.Key_shift then
+			inspect
+				ev_key.code
+			when Key_shift then
 					-- Notice that all shift key are released.
 				shifted_key := False
-
-			elseif ev_key.code = ev_key.Key_ctrl then
+			when Key_ctrl then
 					-- Ctrl key action
 				ctrled_key := False
+			else
+				-- Key not handled, do nothing
 			end
 		end
 
@@ -584,59 +594,65 @@ feature {NONE} -- Handle keystokes
 
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
 		do
-			if ev_key.code = ev_key.Key_x then
+			inspect
+				ev_key.code
+			when Key_x then
 					-- Ctrl-X (cut)
 				cut_selection
 
-			elseif ev_key.code = ev_key.Key_c then
+			when Key_c then
 					-- Ctrl-C (copy)
 				copy_selection
 
-			elseif ev_key.code = ev_key.Key_v then
+			when Key_v then
 					-- Ctrl-V (paste)
 				paste_selection
 
-			elseif ev_key.code = ev_key.Key_z then
+			when Key_z then
 					-- Ctrl-Z (undo)
 				undo
 
-			elseif ev_key.code = ev_key.Key_r then
+			when Key_r then
 					-- Ctrl-R (redo)
 				redo
 
-			elseif ev_key.code = ev_key.Key_f then
+			when Key_f then
 					-- Ctrl-F (find)
 				search_string(clipboard)
+			else
+				-- Key not handled, do nothing			
 			end
 		end
 
 	handle_extended_key (ev_key: EV_KEY) is
 		do
-			if ev_key.code = ev_key.Key_left then
+			inspect
+				ev_key.code
+			when Key_left then
 					-- Left arrow action
 				basic_cursor_move(cursor~go_left_char)
 
-			elseif  ev_key.code = ev_key.Key_right then
+			when Key_right then
 					-- Right arrow action
 				basic_cursor_move(cursor~go_right_char)
 
-			elseif  ev_key.code = ev_key.Key_up then
+			when Key_up then
 					-- Up arrow action
 				basic_cursor_move(cursor~go_up_line)
 
-			elseif  ev_key.code = ev_key.Key_down then
+			when Key_down then
 					-- Down arrow action
 				basic_cursor_move(cursor~go_down_line)
 
-			elseif  ev_key.code = ev_key.Key_home then
+			when Key_home then
 					-- Home key action
 				basic_cursor_move(cursor~go_start_line)
 
-			elseif  ev_key.code = ev_key.Key_end then
+			when Key_end then
 					-- End key action
 				basic_cursor_move(cursor~go_end_line)
 
-			elseif  ev_key.code = ev_key.Key_delete then
+			when Key_delete then
 					-- Delete key action
 				if has_selection then
 					delete_selection
@@ -647,7 +663,7 @@ feature {NONE} -- Handle keystokes
 				my_device.redraw
 				my_device.flush
 
-			elseif  ev_key.code = ev_key.Key_back_space then
+			when Key_back_space then
 					-- Backspace key action
 				if has_selection then
 					delete_selection
@@ -657,7 +673,7 @@ feature {NONE} -- Handle keystokes
 				my_device.redraw
 				my_device.flush
 
-			elseif ev_key.code = ev_key.Key_enter then
+			when Key_enter then
 					-- Return/Enter key action
 				if has_selection then
 					delete_selection
@@ -671,13 +687,13 @@ feature {NONE} -- Handle keystokes
 				my_device.redraw
 				my_device.flush
 
-			elseif  ev_key.code = ev_key.Key_insert then
+			when Key_insert then
 					-- Insert key action
 				insert_mode := not insert_mode
 				my_device.redraw
 				my_device.flush
 
-			elseif  ev_key.code = ev_key.Key_tab then
+			when Key_tab then
 					-- Tab key action
 				if has_selection then
 					if shifted_key then
@@ -694,6 +710,8 @@ feature {NONE} -- Handle keystokes
 
 				my_device.redraw
 				my_device.flush
+			else
+				-- Key not handled, do nothing
 			end
 		end
 

@@ -71,15 +71,17 @@ feature -- Initialization
 			current_list.select_actions.extend (agent on_current_select)
 			current_list.deselect_actions.extend (agent on_current_deselect)
 
-			create combo_strings.make (1,2)
-			combo_strings.put (Interface_names.l_Put_text_right_text, 1)
-			combo_strings.put (Interface_names.l_No_text_text, 2)
+			create combo_strings.make (1,3)
+			combo_strings.put (Interface_names.l_Show_all_text, 1)
+			combo_strings.put (Interface_names.l_Put_text_right_text, 2)
+			combo_strings.put (Interface_names.l_No_text_text, 3)
 			create text_combo.make_with_strings (combo_strings)
 			create text_combo_label.make_with_text (Interface_names.l_Toolbar_select_text_position)
+			text_combo_label.align_text_right
 			create text_combo_box
 			text_combo_box.set_padding (Layout_constants.Small_padding_size)
 			text_combo_box.extend (text_combo_label)
-			text_combo_box.disable_item_expand (text_combo_label)
+			--text_combo_box.disable_item_expand (text_combo_label)
 			text_combo_box.extend (text_combo)
 			text_combo.disable_edit
 
@@ -182,7 +184,7 @@ feature -- Initialization
 			set_default_push_button (ok_button)
 		end
 
-	customize_toolbar (a_parent: EV_WINDOW; gray_icons: BOOLEAN; text_displayed: BOOLEAN; toolbar: ARRAYED_LIST [EB_TOOLBARABLE]) is
+	customize_toolbar (a_parent: EV_WINDOW; gray_icons: BOOLEAN; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [EB_TOOLBARABLE]) is
 			-- Reload the dialog box with available buttons found in `toolbar'
 			-- and set `is_text_displayed' to `text_displayed'.
 			-- `toolbar' is a list of separators and commands that represents both
@@ -190,14 +192,18 @@ feature -- Initialization
 			-- 	* the pool of controls available
 		do
 			is_text_displayed := text_displayed
+			is_text_important := text_important
+			
 			has_gray_icons := gray_icons
 			fill_lists (toolbar)
 			if text_displayed then
 				text_combo.first.enable_select
-			else
+			elseif text_important then	
 				text_combo.start
 				text_combo.forth
 				text_combo.item.enable_select
+			else
+				text_combo.last.enable_select
 			end -- if
 			if has_gray_icons then
 				color_combo.set_text (Interface_names.l_Toolbar_with_gray_icons)
@@ -218,6 +224,9 @@ feature -- Result
 
 	is_text_displayed: BOOLEAN
 			-- Should text be printed next to toolbar buttons?
+
+	is_text_important: BOOLEAN
+			-- Should only important text be displayed?
 
 	has_gray_icons: BOOLEAN
 			-- Should gray icons be displayed?
@@ -279,7 +288,8 @@ feature {NONE} -- Button actions
 			cur: EB_CUSTOMIZABLE_LIST_ITEM
 			cmd: EB_TOOLBARABLE_COMMAND
 		do
-			is_text_displayed := text_combo.text.is_equal (Interface_names.l_Put_text_right_text)
+			is_text_important := text_combo.text.is_equal (Interface_names.l_Put_text_right_text)
+			is_text_displayed := text_combo.text.is_equal (Interface_names.l_Show_all_text)
 			has_gray_icons := color_combo.text.is_equal (Interface_names.l_Toolbar_with_gray_icons)
 
 			final_toolbar.wipe_out

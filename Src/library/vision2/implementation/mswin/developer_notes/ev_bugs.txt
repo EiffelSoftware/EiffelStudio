@@ -1,11 +1,16 @@
 ==========================================================================
-CLASS:	[CLASS_NAME]
-DATE:	[YYYYMMDD]
-WHO:	[LOGINNAME]
+CLASS:  [CLASS_NAME]
+DATE:   [YYYYMMDD]
+WHO:    [LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:  EV_MULTI_COLUMN_LIST_IMP
+DATE:   19990914      
+WHO:    Julian Rogers    
+I have implemented a fix for the columns, which would previously not re-size correctly.
+This currently is called with by Wm_onpaint. Unfortunately, when making the window
+thinner while the right most column is stretched, shows the horizontal scroll bar
+briefly before removing it. This needs fixong. Maybe finding a better call than
+Wm_onpaint would help as well.
 
 

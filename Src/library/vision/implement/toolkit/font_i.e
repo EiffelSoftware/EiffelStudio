@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FONT_I 
+deferred class
+
+	FONT_I 
 
 inherit
 
@@ -14,14 +16,7 @@ inherit
 			{NONE} all
 		end
 	
-feature -- Access
-
-	is_valid: BOOLEAN is
-			-- Is the font valid?
-		require
-			font_specified: is_specified
-		deferred
-		end;
+feature -- Acces
 
 	ascent: INTEGER is
 			-- Ascent value in pixel of the font loaded 
@@ -61,7 +56,7 @@ feature -- Access
 			font_standard: is_standard
 		deferred
 		ensure
-			average_width >= 0
+			positive_result: average_width >= 0
 		end;
 
 	character_set: STRING is
@@ -71,7 +66,7 @@ feature -- Access
 			font_standard: is_standard
 		deferred
 		ensure
-			not (Result = Void)
+			result_not_void: Result /= Void
 		end;
 
 	family: STRING is
@@ -81,7 +76,7 @@ feature -- Access
 			font_standard: is_standard
 		deferred
 		ensure
-			not (Result = Void)
+			result_not_void: Result /= Void
 		end;
 
 	foundry: STRING is
@@ -91,7 +86,7 @@ feature -- Access
 			font_standard: is_standard
 		deferred
 		ensure
-			not (Result = Void)
+			result_not_void: Result /= Void
 		end;
 
 	horizontal_resolution: INTEGER is
@@ -101,7 +96,83 @@ feature -- Access
 			font_standard: is_standard
 		deferred
 		ensure
-			Result > 0
+			positive_result: Result > 0
+		end;
+
+	name: STRING is
+			-- Name of the font
+		require
+			font_specified: is_specified
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end;
+
+	pixel_size: INTEGER is
+			-- Size of font in pixel
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		ensure
+			positive_result: Result > 0
+		end;
+
+	point: INTEGER is
+			-- Size of font in tenth of points (1 point = 1/72 of an inch)
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		ensure
+			positive_reuslt: Result > 0
+		end;
+
+	slant: CHARACTER is
+			-- Slant of font (o, r, i...)
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		end;
+
+	vertical_resolution: INTEGER is
+			-- Vertical resolution of screen for which the font is designed
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		ensure
+			positive_result: Result > 0
+		end;
+
+	weight: STRING is
+			-- Weight of font (Bold, Medium...)
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end;
+
+	width: STRING is
+			-- Width of font (Normal, Condensed...)
+		require
+			font_specified: is_specified;
+			font_standard: is_standard
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_valid: BOOLEAN is
+			-- Is the font valid?
+		require
+			font_specified: is_specified
+		deferred
 		end;
 
 	is_proportional: BOOLEAN is
@@ -124,34 +195,7 @@ feature -- Access
 		deferred
 		end;
 
-	name: STRING is
-			-- Name of the font
-		require
-			font_specified: is_specified
-		deferred
-		ensure
-			not (Result = Void)
-		end;
-
-	pixel_size: INTEGER is
-			-- Size of font in pixel
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		ensure
-			Result > 0
-		end;
-
-	point: INTEGER is
-			-- Size of font in tenth of points (1 point = 1/72 of an inch)
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		ensure
-			Result > 0
-		end;
+feature -- Element change
 
 	set_name (a_name: STRING) is
 			-- Set `n_ame' to `a_name'.
@@ -162,46 +206,7 @@ feature -- Access
 			is_specified implies a_name.is_equal (a_name)
 		end;
 
-	slant: CHARACTER is
-			-- Slant of font (o, r, i...)
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		end;
-
-	vertical_resolution: INTEGER is
-			-- Vertical resolution of screen for which the font is designed
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		ensure
-			Result > 0
-		end;
-
-	weight: STRING is
-			-- Weight of font (Bold, Medium...)
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		ensure
-			not (Result = Void)
-		end;
-
-	width: STRING is
-			-- Width of font (Normal, Condensed...)
-		require
-			font_specified: is_specified;
-			font_standard: is_standard
-		deferred
-		ensure
-			not (Result = Void)
-		end
-
 end -- class FONT_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -215,3 +220,4 @@ end -- class FONT_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

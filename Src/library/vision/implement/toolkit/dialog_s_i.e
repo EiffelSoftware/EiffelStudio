@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DIALOG_S_I 
+deferred class
+
+	DIALOG_S_I 
 
 inherit
 
@@ -14,7 +16,6 @@ inherit
 feature
 
 end -- class DIALOG_S_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -28,3 +29,4 @@ end -- class DIALOG_S_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

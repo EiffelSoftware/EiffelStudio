@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLLBAR 
+class
+
+	SCROLLBAR 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a scrollbar with `a_name' as identifier,
@@ -60,55 +62,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Callbacks (adding)
-
-	add_move_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when the
-			--  slider is moved.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.add_move_action (a_command, argument)
-		end;
-
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when value
-			-- is changed.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.add_value_changed_action (a_command, argument)
-		end;
-
-feature -- Callbacks (removing)
-
-	remove_move_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed when
-			-- slide is moved.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.remove_move_action (a_command, argument)
-		end; 
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed when
-			-- value is changed.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.remove_value_changed_action (a_command, argument)
-		end; 
-
-feature -- Slider setup (max, min., gran, ...)
+feature -- Access
 
 	granularity: INTEGER is
 			-- Value of the amount to move the slider of the current
@@ -141,6 +95,69 @@ feature -- Slider setup (max, min., gran, ...)
 		ensure
 			minimum_smaller_than_maxi: Result < maximum
 		end; 
+
+	initial_delay: INTEGER is
+			-- Amount of time to wait (milliseconds) before starting
+			-- continuous slider movement
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.initial_delay
+		ensure
+			positive_value: Result > 0
+		end;
+
+	repeat_delay: INTEGER is
+			-- Amount of time to wait (milliseconds) between subsequent
+			-- slider movements after the initial delay
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.repeat_delay
+		ensure
+			positive_delay: Result > 0
+		end;
+	
+	slider_size: INTEGER is
+			-- Size of slider.
+		do
+			Result := implementation.slider_size
+		ensure
+			slider_size_small_enough: Result <= (maximum - minimum);
+			slider_size_large_enough: Result >= 0
+		end
+
+	value: INTEGER is
+			-- Slider value
+		require
+			exists: not destroyed
+		do
+			Result := implementation.position
+		ensure
+			value_large_enough: Result >= minimum;
+			value_small_enough: Result <= maximum
+		end;
+
+feature -- Status report
+
+	is_horizontal: BOOLEAN is
+			-- Is scrollbar oriented horizontal?
+		do
+			Result := implementation.is_horizontal
+		end;
+
+feature -- Status setting
+
+	set_horizontal (flag: BOOLEAN) is
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		do
+			implementation.set_horizontal (flag)
+		ensure
+			value_correctly_set: is_horizontal = flag
+		end;
+
+feature -- Element change
 
 	set_granularity (new_granularity: INTEGER) is
 			-- Set amount to move the slider when a move action 
@@ -177,30 +194,6 @@ feature -- Slider setup (max, min., gran, ...)
 			minimum = new_minimum
 		end;
 
-feature -- Delay
-
-	initial_delay: INTEGER is
-			-- Amount of time to wait (milliseconds) before starting
-			-- continuous slider movement
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.initial_delay
-		ensure
-			positive_value: Result > 0
-		end;
-
-	repeat_delay: INTEGER is
-			-- Amount of time to wait (milliseconds) between subsequent
-			-- slider movements after the initial delay
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.repeat_delay
-		ensure
-			positive_delay: Result > 0
-		end;
-	
 	set_repeat_delay (new_delay: INTEGER) is
 			-- Set the amount of time to wait (milliseconds) between
 			-- subsequent movements after the initial delay to 'new_delay'.
@@ -225,25 +218,6 @@ feature -- Delay
 			initial_delay = new_delay
 		end;
 
-feature -- Orientation
-
-	is_horizontal: BOOLEAN is
-			-- Is scrollbar oriented horizontal?
-		do
-			Result := implementation.is_horizontal
-		end;
-
-	set_horizontal (flag: BOOLEAN) is
-			-- Set orientation of the scale to horizontal if `flag',
-			-- to vertical otherwise.
-		do
-			implementation.set_horizontal (flag)
-		ensure
-			value_correctly_set: is_horizontal = flag
-		end;
-
-feature -- Slider size
-
 	set_slider_size (new_size: INTEGER) is
 			-- Set size of slider to 'new_size'.
 		require
@@ -253,28 +227,6 @@ feature -- Slider size
 			implementation.set_slider_size (new_size)
 		ensure
 			slider_size = new_size
-		end;
-
-	slider_size: INTEGER is
-			-- Size of slider.
-		do
-			Result := implementation.slider_size
-		ensure
-			slider_size_small_enough: Result <= (maximum - minimum);
-			slider_size_large_enough: Result >= 0
-		end
-
-feature -- Slider value 
-
-	value: INTEGER is
-			-- Slider value
-		require
-			exists: not destroyed
-		do
-			Result := implementation.position
-		ensure
-			value_large_enough: Result >= minimum;
-			value_small_enough: Result <= maximum
 		end;
 
 	set_value (new_value: INTEGER) is
@@ -289,20 +241,65 @@ feature -- Slider value
 			value = new_value
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+	add_move_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed when the
+			--  slider is moved.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			Valid_command: a_command /= Void
+		do
+			implementation.add_move_action (a_command, argument)
+		end;
+
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed when value
+			-- is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			Valid_command: a_command /= Void
+		do
+			implementation.add_value_changed_action (a_command, argument)
+		end;
+
+feature -- Removal
+
+	remove_move_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed when
+			-- slide is moved.
+		require
+			exists: not destroyed;
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_move_action (a_command, argument)
+		end; 
+
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed when
+			-- value is changed.
+		require
+			exists: not destroyed;
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_value_changed_action (a_command, argument)
+		end; 
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCROLLBAR_I;
 			-- Implementation of scrollbar
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values tu current scrollbar.
 		do
 		end;
 
-end
-
+end -- class SCROLLBAR
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -316,3 +313,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class COMMAND_EXEC 
+class
+
+	COMMAND_EXEC 
 
 inherit
 
@@ -19,13 +21,7 @@ creation
 
 	make
 
-feature 
-
-	argument: ANY;
-			-- Argument to be given to `command' before execution
-
-	command: COMMAND;
-			-- Command to execute
+feature -- Initialization
 
 	make (a_command: COMMAND; an_argument: ANY) is
 			-- Store `a_command' and `an_argument'.
@@ -33,6 +29,16 @@ feature
 			command := a_command;
 			argument := an_argument
 		end; 
+
+feature -- Access
+
+	argument: ANY;
+			-- Argument to be given to `command' before execution
+
+	command: COMMAND;
+			-- Command to execute
+
+feature -- Basic operations
 
 	execute (context_data: CONTEXT_DATA) is
 			-- Execute `command' with `argument' and `context_data'.
@@ -48,6 +54,8 @@ feature
 			command_clone.execute (argument)
 		end;
 
+feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN is
 			-- Is Current equal to `other' ?
 		do
@@ -59,8 +67,7 @@ invariant
 
 	valid_command: command /= Void
 
-end 
-
+end -- class COMMAND_EXEC
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -74,3 +81,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,10 +1,13 @@
 indexing
-
+	
+	description: "Picture with colors"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PIXMAP 
+class
+
+	PIXMAP
 
 inherit
 
@@ -34,7 +37,21 @@ feature {NONE} -- Initialization
 			implementation := toolkit.pixmap_for_screen (Current, a_screen)
 		end;
 
-feature
+feature -- Status report
+
+	is_valid: BOOLEAN is
+			-- Is the pixmap valid and usable ?
+		do
+			Result := implementation.is_valid
+		end;
+
+	last_operation_correct: BOOLEAN is
+			-- Is the last operation correctly performed ?
+		do
+			Result := implementation.last_operation_correct
+		end;
+
+feature -- Basic operations
 
 	copy_from (a_widget: WIDGET; x, y, p_width, p_height: INTEGER) is
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
@@ -52,61 +69,6 @@ feature
 			implementation.copy_from (a_widget.implementation, x, y, p_width, p_height)
 		ensure
 			last_operation_correct implies is_valid
-		end;
-
-	depth: INTEGER is
-			-- Depth of pixmap (Number of colors)
-		require
-			is_valid: is_valid
-		do
-			Result := implementation.depth
-		ensure
-			valid_result: Result >= 1
-		end;
-
-	height: INTEGER is
-			-- Height of pixmap
-		require
-			is_valid: is_valid
-		do
-			Result := implementation.height
-		ensure
-			valid_result: Result >= 1
-		end;
-
-	hot_x: INTEGER is
-			-- Horizontal position of "hot" point
-		require
-			is_valid: is_valid
-		do
-			Result := implementation.hot_x
-		ensure
-			non_negative_result: Result >= 0
-		end;
-
-	hot_y : INTEGER is
-			-- Vertical position of "hot" point
-		require
-			iis_valid: is_valid
-		do
-			Result := implementation.hot_y
-		ensure
-			non_negative_result: Result >= 0
-		end;
-
-	implementation: PIXMAP_I;
-			-- Implementation of PIXMAP
-
-	is_valid: BOOLEAN is
-			-- Is the pixmap valid and usable ?
-		do
-			Result := implementation.is_valid
-		end;
-
-	last_operation_correct: BOOLEAN is
-			-- Is the last operation correctly performed ?
-		do
-			Result := implementation.last_operation_correct
 		end;
 
 	read_from_file (a_file_name: STRING) is
@@ -144,6 +106,18 @@ feature
 			implementation.store (a_file_name)
 		end;
 
+feature -- Measurement
+
+	depth: INTEGER is
+			-- Depth of pixmap (Number of colors)
+		require
+			is_valid: is_valid
+		do
+			Result := implementation.depth
+		ensure
+			valid_result: Result >= 1
+		end;
+
 	width: INTEGER is
 			-- Width of pixmap
 		require
@@ -153,6 +127,41 @@ feature
 		ensure
 			valid_reuslt: Result >= 1
 		end;
+
+	height: INTEGER is
+			-- Height of pixmap
+		require
+			is_valid: is_valid
+		do
+			Result := implementation.height
+		ensure
+			valid_result: Result >= 1
+		end;
+
+	hot_x: INTEGER is
+			-- Horizontal position of "hot" point
+		require
+			is_valid: is_valid
+		do
+			Result := implementation.hot_x
+		ensure
+			non_negative_result: Result >= 0
+		end;
+
+	hot_y : INTEGER is
+			-- Vertical position of "hot" point
+		require
+			iis_valid: is_valid
+		do
+			Result := implementation.hot_y
+		ensure
+			non_negative_result: Result >= 0
+		end;
+
+feature -- Implementation
+
+	implementation: PIXMAP_I;
+			-- Implementation of PIXMAP
 
 invariant
 
@@ -164,7 +173,6 @@ invariant
 	is_valid implies ((hot_y >= 0) and (hot_y < height))
 
 end -- class PIXMAP
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -178,3 +186,4 @@ end -- class PIXMAP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

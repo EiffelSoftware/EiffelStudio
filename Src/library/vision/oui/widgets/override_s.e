@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OVERRIDE_S 
+class
+
+	OVERRIDE_S 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initializatin
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an override shell with `a_name' as identifier,
@@ -37,20 +39,19 @@ feature {NONE} -- Creation
 			identifier_set: identifier.is_equal (a_name)
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: OVERRIDE_S_I
 			-- Implementation of override shell
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current override shell.
 		do
 		end;
 
-end
-
+end -- class OVERRIDE_S
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -64,3 +65,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

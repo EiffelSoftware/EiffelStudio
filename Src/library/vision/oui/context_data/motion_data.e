@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MOTION_DATA 
+class
+
+	MOTION_DATA 
 
 inherit 
 
@@ -18,13 +20,7 @@ creation
 
 	make
 
-feature 
-
-	current_cursor_position: INTEGER;
-			-- Position of cursor at current time (before its motion)
-
-	next_cursor_position: INTEGER;
-			-- Future position of cursor if the motion is agreed
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_current, a_next: INTEGER) is
 			-- Create a context_data for `motion' action.
@@ -34,8 +30,15 @@ feature
 			next_cursor_position := a_next
 		end
 
-end
+feature -- Access
 
+	current_cursor_position: INTEGER;
+			-- Position of cursor at current time (before its motion)
+
+	next_cursor_position: INTEGER;
+			-- Future position of cursor if the motion is agreed
+
+end -- class MOTION_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -49,3 +52,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

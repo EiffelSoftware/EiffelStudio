@@ -5,9 +5,22 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CLIP 
+class
 
-feature 
+	CLIP 
+
+feature -- Access
+
+	upper_left: COORD_XY;
+			-- Upper-left coiner of the clip area
+
+	width: INTEGER;
+			-- Width of the clip area
+
+	height: INTEGER
+			-- Height of the clip area
+
+feature -- Element change
 
 	set (a_coin: COORD_XY; a_width, a_height: INTEGER) is
 			-- Set the clip
@@ -21,17 +34,7 @@ feature
 			height := a_height
 		end; 
 
-	upper_left: COORD_XY;
-			-- Upper-left coiner of the clip area
-
-	width: INTEGER;
-			-- Width of the clip area
-
-	height: INTEGER
-			-- Height of the clip area
-
-end
-
+end -- class CLIP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -45,3 +48,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

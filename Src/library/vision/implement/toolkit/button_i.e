@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class BUTTON_I 
+deferred class
+
+	BUTTON_I 
 
 inherit
 
@@ -45,7 +47,7 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Set current button text to `a_text'.
 		require
-			not_text_void: not (a_text = Void)
+			not_text_void: a_text /= Void
 		deferred
 		ensure
 			text.is_equal (a_text)
@@ -57,7 +59,7 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -65,7 +67,7 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is armed.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -73,7 +75,7 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is released.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -83,7 +85,7 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -91,7 +93,7 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -99,7 +101,7 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -117,3 +119,4 @@ end -- class BUTTON_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

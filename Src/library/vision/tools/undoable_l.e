@@ -8,24 +8,25 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class UNDOABLE_L 
+deferred class
+
+	UNDOABLE_L 
 
 inherit
 
 	UNDOABLE
 
-feature 
+feature -- Access
 
 	history: HISTORY_LIST is
 			-- Trace of previously executed commands
 		once
 			!! Result.make
 		ensure then
-			not (Result = Void)
+			result_not_void: Result /= Void
 		end
 
-end
-
+end -- class UNDOABLE_L
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -39,3 +40,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

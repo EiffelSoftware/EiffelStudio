@@ -10,7 +10,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TASK 
+class
+
+	TASK 
 
 inherit
 
@@ -23,17 +25,7 @@ creation
 
 	make
 
-feature 
-
-	add_action (a_command: COMMAND; an_argument: ANY) is
-			-- Add `a_command' with `argument' to the list of action to execute
-			-- while the system is waiting for user events.
-		require
-			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
-		do
-			implementation.add_action (a_command, an_argument)
-		end;
+feature -- Initialization
 
 	make is
 			-- Create a task.
@@ -41,21 +33,11 @@ feature
 			implementation := toolkit.task (Current)
 		end;
 
-feature {NONE}
+feature -- Status report
 
-	implementation: TASK_I;
-			-- Implementation of task
-
-feature 
-
-	remove_action (a_command: COMMAND; an_argument: ANY) is
-			-- Remove `a_command' with `argument' to the list of action to
-			-- execute while the system is waiting for user events.
-		require
-			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+	destroyed: BOOLEAN is
 		do
-			implementation.remove_action (a_command, an_argument)
+			Result := implementation = Void
 		end;
 
 	empty: BOOLEAN is
@@ -65,10 +47,7 @@ feature
 			Result := implementation.empty
 		end;
 
-	destroyed: BOOLEAN is
-		do
-			Result := implementation = Void
-		end;
+feature -- Status setting
 
 	destroy is 
 			-- Destroy Current.
@@ -81,8 +60,36 @@ feature
 			destroyed: implementation = Void
 		end
 
-end
+feature -- Element change
 
+	add_action (a_command: COMMAND; an_argument: ANY) is
+			-- Add `a_command' with `argument' to the list of action to execute
+			-- while the system is waiting for user events.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_action (a_command, an_argument)
+		end;
+
+feature -- Removal
+
+	remove_action (a_command: COMMAND; an_argument: ANY) is
+			-- Remove `a_command' with `argument' to the list of action to
+			-- execute while the system is waiting for user events.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_action (a_command, an_argument)
+		end;
+
+feature {NONE} -- Implementation
+
+	implementation: TASK_I;
+			-- Implementation of task
+
+end -- class TASK
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -96,3 +103,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

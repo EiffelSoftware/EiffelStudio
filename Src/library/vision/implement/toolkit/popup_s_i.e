@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class POPUP_S_I 
+deferred class
+
+	POPUP_S_I 
 
 inherit
 
 	SHELL_I
 	
-feature 
+feature -- Status report
 
 	is_cascade_grab: BOOLEAN is
 			-- Is the shell popped up with cascade grab (allowing the other
@@ -32,13 +34,15 @@ feature
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		deferred
-		end; 
+		end;
+
+feature -- Status setting 
 
 	popdown is
 			-- Popdown popup shell.
 		deferred
 		ensure
-			not is_popped_up
+			not_pupped_up: not is_popped_up
 		end;
 
 	popup is
@@ -51,25 +55,24 @@ feature
 			-- (allowing the other shells popped up with grab to receive events).
 		deferred
 		ensure
-			is_cascade_grab
+			is_cascade_grab: is_cascade_grab
 		end;
 
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
 		deferred
 		ensure
-			is_exclusive_grab
+			is_exclusive_grab: is_exclusive_grab
 		end;
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
 		deferred
 		ensure
-			is_no_grab
+			is_no_grab: is_no_grab
 		end
 
 end -- class POPUP_S_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -83,3 +86,4 @@ end -- class POPUP_S_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

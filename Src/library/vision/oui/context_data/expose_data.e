@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EXPOSE_DATA 
+class
+
+	EXPOSE_DATA 
 
 inherit
 
@@ -21,10 +23,7 @@ creation
 
 	make
 
-feature 
-
-	clip: CLIP;
-			-- Exposed region
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_clip: CLIP; expose_count: INTEGER) is
 			-- Create a context_data for `Expose' event.
@@ -34,10 +33,15 @@ feature
 			exposes_to_come := expose_count;
 		end
 
+feature -- Access
+
+	clip: CLIP;
+			-- Exposed region
+
 	exposes_to_come: INTEGER
+			-- Number of expose events to come
 
-end
-
+end -- class EXPOSE_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -51,3 +55,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class QUESTION_D_I 
+deferred class
+
+	QUESTION_D_I 
 
 inherit
 
@@ -14,7 +16,6 @@ inherit
 feature
 
 end -- class QUESTION_D_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,9 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CURSOR_TYPE 
+class
 
-feature 
+	CURSOR_TYPE 
+
+feature -- Access
 
 	User_defined_pixmap: INTEGER is -1;
 
@@ -19,11 +21,11 @@ feature
 
 	Based_arrow_up: INTEGER is 3;
 
-feature {NONE}
+feature {NONE} -- Access
 
 	Boat: INTEGER is 4;
 
-feature 
+feature -- Access
 
 	Bogosity: INTEGER is 5;
 
@@ -137,11 +139,11 @@ feature
 
 	Sizing: INTEGER is 60;
 
-feature {NONE}
+feature {NONE} -- Access
 
 	Spider: INTEGER is 61;
 
-feature 
+feature -- Access
 
 	Spraycan: INTEGER is 62;
 
@@ -175,12 +177,11 @@ feature
 
 	Num_glyphs: INTEGER is 77;
 
-feature 
+feature -- Access
 
 	Cursor_undefined: INTEGER is 78
 
-end
-
+end -- class CURSOR_TYPE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -194,3 +195,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

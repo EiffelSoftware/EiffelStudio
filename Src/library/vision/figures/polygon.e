@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POLYGON 
+class
+
+	POLYGON 
 
 inherit
 
@@ -56,7 +58,6 @@ feature -- Access
 			end
 		end;
 
-
 	center: COORD_XY_FIG is
 			-- Center of the polygon.
 		require else
@@ -80,7 +81,7 @@ feature -- Access
 			Result.set (x, y)
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_origin_to_center is
 			-- Set origin to `center'.
@@ -185,7 +186,6 @@ feature -- Output
 			end
 		end;
 
-
 feature -- Status report
 
 	is_superimposable (other: like Current): BOOLEAN is
@@ -214,9 +214,7 @@ feature -- Status report
 			end
 		end;
 
-
 feature {CONFIGURE_NOTIFY} -- Updating
-
 
 	conf_recompute is
 		local
@@ -235,8 +233,6 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			go_to (keep_cursor);
 			unset_conf_modified
 		end;
-
-
 
 feature {NONE} -- Status report
 
@@ -288,7 +284,6 @@ invariant
 
 end -- class POLYGON
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -301,3 +296,4 @@ end -- class POLYGON
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
+
 	WIDGET_RESOURCE
 
 inherit
@@ -15,7 +16,7 @@ creation
 
 	make
 
-feature		-- Initalization
+feature -- Initalization
 
 	make is
 			-- Create object
@@ -23,7 +24,7 @@ feature		-- Initalization
 			implementation := toolkit.widget_resource;;
 		end;
 
-feature		-- Status report
+feature -- Status report
 
 	resource_name: STRING is
 			-- name of resource for widget 'widget_name'
@@ -52,7 +53,7 @@ feature		-- Status report
 			Result := implementation.resource_string;
 		end;
 
-feature 	-- Status setting
+feature -- Status setting
 
 	set_resource_name (a_name: STRING) is
 			-- Set the resource name 
@@ -84,13 +85,12 @@ feature 	-- Status setting
 			resource_name_set: widget_name.is_equal (a_name);
 		end;
 
-feature 	-- Implementation
+feature -- Implementation
 
 	implementation: WIDGET_RESOURCE_I;
 			-- Implementation of the class 
 
 end -- class WIDGET_RESOURCE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -104,3 +104,4 @@ end -- class WIDGET_RESOURCE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,12 +1,15 @@
 indexing
 
+	description: "Implementaiton of a g_any";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class G_ANY_I
-end
+class
 
+	G_ANY_I
+
+end -- class G_ANY_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -20,3 +23,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COMPOSITE_I 
+deferred class
+
+	COMPOSITE_I 
 
 inherit
 
 	WIDGET_I
 	
-feature 
+feature -- Measurement
 
 	children_count: INTEGER is
 			-- Count of managed children
@@ -19,7 +21,6 @@ feature
 		end;
 
 end -- class COMPOSITE_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -33,3 +34,4 @@ end -- class COMPOSITE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

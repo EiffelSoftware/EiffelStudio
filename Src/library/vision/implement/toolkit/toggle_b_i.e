@@ -5,30 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TOGGLE_B_I 
+deferred class
+
+	TOGGLE_B_I 
 
 inherit
 
 	BUTTON_I
 	
-feature 
-
-	set_accelerator_action (a_translation: STRING) is
-            -- Set the accerlator action (modifiers and key to use as a shortcut
-            -- in selecting a button) to `a_translation'.
-            -- `a_translation' must be specified with the X toolkit conventions.
-		require
-			translation_not_void: a_translation /= Void
-		deferred
-		end;
-
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when value
-			-- is changed.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
+feature -- Status setting
 
 	arm is
 			-- Assign True to `state'.
@@ -42,14 +27,6 @@ feature
 		deferred
 		ensure
 			state_is_false: not state
-		end;
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- value is changed.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
 		end;
 
 	state: BOOLEAN is
@@ -73,11 +50,30 @@ feature
 			state_is_false: not state
 		end;
 
-feature
+feature -- Element change
+
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when value
+			-- is changed.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
 		end;
+
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
+		require
+			translation_not_void: a_translation /= Void
+		deferred
+		end;
+
+feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
@@ -88,8 +84,15 @@ feature
 		deferred
 		end;
 
-end --class TOGGLE_B_I
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- value is changed.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
 
+end --class TOGGLE_B_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -103,3 +106,4 @@ end --class TOGGLE_B_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

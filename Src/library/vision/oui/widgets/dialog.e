@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DIALOG 
+deferred class
+
+	DIALOG 
 
 inherit
 
@@ -16,7 +18,7 @@ inherit
 			implementation
 		end
 	
-feature -- Windowing
+feature -- Status setting
 
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
@@ -68,6 +70,8 @@ feature -- Windowing
 		do
 			Result := implementation.is_popped_up
 		end;
+
+feature -- feature setting
 
 	lower is
 			-- Lower the dialog box in the stacking order.
@@ -134,7 +138,7 @@ feature -- Windowing
 			is_no_grab
 		end
 
-feature
+feature -- Element change
 
 	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
 			-- Set the dialog shell action to `cmd' with `arg'
@@ -173,7 +177,7 @@ feature
 			implementation.widget_command_target;
 		end
 
-feature {DIALOG_I}
+feature {DIALOG_I} -- Implementation
 
 	set_dialog_imp (a_dialog_imp: DIALOG_I) is
 			-- Set dialog implementation to `a_dialog_imp'.
@@ -181,7 +185,7 @@ feature {DIALOG_I}
 			implementation := a_dialog_imp
 		end;
 	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	implementation: DIALOG_I;
 			-- Implementation of dialog
@@ -200,3 +204,4 @@ end  -- class DIALOG
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

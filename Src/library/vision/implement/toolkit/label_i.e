@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LABEL_I 
+deferred class
+
+	LABEL_I 
 
 inherit
 
@@ -13,7 +15,14 @@ inherit
 
 	FONTABLE_I
 	
-feature 
+feature -- Access
+
+	text: STRING is
+			-- Text of current label
+		deferred
+		end
+
+feature -- Status setting
 
 	allow_recompute_size is
 			-- Allow current label to recompute its  size according to
@@ -42,22 +51,18 @@ feature
 		deferred
 		end;
 
+feature -- Element change
+
 	set_text (a_text: STRING) is
 			-- Set text of current label to `a_text'.
 		require
-			not_a_text_void: not (a_text = Void)
+			not_a_text_void: a_text /= Void
 		deferred
 		ensure
-			text.is_equal (a_text)
+			set: text.is_equal (a_text)
 		end;
 
-	text: STRING is
-			-- Text of current label
-		deferred
-		end
-
 end --class LABEL_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -71,3 +76,4 @@ end --class LABEL_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class KEY_DATA 
+class
+
+	KEY_DATA 
 
 inherit
 
@@ -38,3 +40,4 @@ end -- class KEY_DATA
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

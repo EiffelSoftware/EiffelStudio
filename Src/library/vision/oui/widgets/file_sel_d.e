@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FILE_SEL_D 
+class
+
+	FILE_SEL_D 
 
 inherit
 
@@ -26,7 +28,7 @@ creation
 
 	make
 		
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a file selection dialog with `a_name' as identifier,
@@ -60,13 +62,12 @@ feature -- Status setting
 			implementation.set_save_file
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: FILE_SEL_D_I
 			-- Implementation of current file selection dialog
 
-end 
-
+end -- class FILE_SEL_D
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -80,3 +81,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

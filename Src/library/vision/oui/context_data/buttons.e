@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BUTTONS 
+class
+
+	BUTTONS 
 
 inherit
 
@@ -24,7 +26,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (nb_buttons: INTEGER) is
 			-- Create an array of five logical 
@@ -35,8 +37,7 @@ feature
 			make_array (1, nb_buttons)
 		end
 
-end
-
+end -- class BUTTONS
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -50,3 +51,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

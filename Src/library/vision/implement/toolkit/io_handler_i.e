@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class IO_HANDLER_I 
+deferred class
+
+	IO_HANDLER_I 
 
 inherit
 
@@ -17,12 +19,14 @@ inherit
 			{NONE} all
 		end;
 	
-feature 
+feature -- Status report
 
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
 		deferred
-		end;
+		end
+
+feature -- Status setting
 
 	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when an operation
@@ -31,7 +35,7 @@ feature
 			--| error handlers are used (such as Eiffel exception mechanism).
 		require
 			no_call_back_already_set: not is_call_back_set;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		ensure
 			is_call_back_set
@@ -51,7 +55,7 @@ feature
 			-- data available.
 		require
 			no_call_back_already_set: not is_call_back_set;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		ensure
 			is_call_back_set
@@ -62,7 +66,7 @@ feature
 			-- available for writing.
 		require
 			no_call_back_already_set: not is_call_back_set;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		ensure
 			is_call_back_set
@@ -72,8 +76,7 @@ feature
 		deferred
 		end;
 
-end 
-
+end -- IO_HANDLER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -87,3 +90,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

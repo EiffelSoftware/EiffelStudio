@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FONT_BOX 
+class
+
+	FONT_BOX 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a font box with `a_name' as identifier,
@@ -46,7 +48,78 @@ feature {NONE} -- Creation
 			implementation.set_widget_default;
 		end;
 
-feature
+feature -- Access
+
+	font: FONT is
+			-- Font currently selected by the user
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.font
+		ensure
+			valid_result: Result /= Void
+		end;
+
+feature -- Status report
+
+	show_apply_button is
+			-- Make apply button visible.
+		require
+			exists: not destroyed
+		do
+			implementation.show_apply_button
+		end;
+
+	show_cancel_button is
+			-- Make cancel button visible.
+		require
+			exists: not destroyed
+		do
+			implementation.show_cancel_button
+		end;
+
+	show_ok_button is
+			-- Make ok button visible.
+		require
+			exists: not destroyed
+		do
+			implementation.show_ok_button
+		end 
+
+	hide_apply_button is
+			-- Make apply button invisible.
+		require
+			exists: not destroyed
+		do
+			implementation.hide_apply_button
+		end;
+
+	hide_cancel_button is
+			-- Make cancel button invisible.
+		require
+			exists: not destroyed
+		do
+			implementation.hide_cancel_button
+		end;
+
+	hide_ok_button is
+			-- Make ok button invisible.
+		require
+			exists: not destroyed
+		do
+			implementation.hide_ok_button
+		end; 
+
+feature -- Element change
+
+	set_font (a_font: FONT) is
+			-- Edit `a_font'.
+		require
+			exists: not destroyed;
+			a_font_exists: a_font /= Void
+		do
+			implementation.set_font (a_font)
+		end;
 
 	add_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -78,46 +151,7 @@ feature
 			implementation.add_ok_action (a_command, argument)
 		end; 
 
-	font: FONT is
-			-- Font currently selected by the user
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.font
-		ensure
-			valid_result: Result /= Void
-		end;
-
-	hide_apply_button is
-			-- Make apply button invisible.
-		require
-			exists: not destroyed
-		do
-			implementation.hide_apply_button
-		end;
-
-	hide_cancel_button is
-			-- Make cancel button invisible.
-		require
-			exists: not destroyed
-		do
-			implementation.hide_cancel_button
-		end;
-
-	hide_ok_button is
-			-- Make ok button invisible.
-		require
-			exists: not destroyed
-		do
-			implementation.hide_ok_button
-		end; 
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: FONT_BOX_I;
-			-- Implementation of current font box
-	
-feature 
+feature -- Remocal
 
 	remove_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -148,41 +182,12 @@ feature
 			implementation.remove_ok_action (a_command, argument)
 		end;
 
-	set_font (a_font: FONT) is
-			-- Edit `a_font'.
-		require
-			exists: not destroyed;
-			a_font_exists: a_font /= Void
-		do
-			implementation.set_font (a_font)
-		end;
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	show_apply_button is
-			-- Make apply button visible.
-		require
-			exists: not destroyed
-		do
-			implementation.show_apply_button
-		end;
-
-	show_cancel_button is
-			-- Make cancel button visible.
-		require
-			exists: not destroyed
-		do
-			implementation.show_cancel_button
-		end;
-
-	show_ok_button is
-			-- Make ok button visible.
-		require
-			exists: not destroyed
-		do
-			implementation.show_ok_button
-		end 
-
-end 
-
+	implementation: FONT_BOX_I;
+			-- Implementation of current font box
+	
+end -- class FONT_BOX
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -196,3 +201,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,19 +5,39 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FORM_I 
+deferred class
+
+	FORM_I 
 
 inherit
 
 	BULLETIN_I
 	
-feature 
+feature -- Access
+
+	fraction_base: INTEGER is
+			-- Value used to compute child position with
+			-- position attachment
+		deferred
+		ensure
+			fraction_base_strictly_greater_than_zero: Result > 0
+		end;
+
+feature -- Status report
+
+	is_valid (other: WIDGET_I): BOOLEAN is
+			-- Is `other' a valid child?
+		do
+			Result := True
+		end
+
+feature -- Basic operations
 
 	attach_right (a_child: WIDGET_I; right_offset: INTEGER) is
 			-- Attach right side of `a_child' to the right side of current form
 			-- with `right_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: right_offset >= 0
 		deferred
@@ -27,7 +47,7 @@ feature
 			-- Attach left side of `a_child' to the left side of current form
 			-- with `left_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: left_offset >= 0
 		deferred
@@ -37,7 +57,7 @@ feature
 			-- Attach bottom side of `a_child' to the bottom side of current form
 			-- with `bottom_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: bottom_offset >= 0
 		deferred
@@ -47,7 +67,7 @@ feature
 			-- Attach top side of `a_child' to the top side of current form
 			-- with `top_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: top_offset >= 0
 		deferred
@@ -57,9 +77,9 @@ feature
 			-- Attach right side of `a_child' to the left side of
 			-- `a_widget' with `right_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
+			not_widget_void: a_widget /= Void;
 			offset_non_negative: right_offset >= 0
 		deferred
 		end;
@@ -68,9 +88,9 @@ feature
 			-- Attach left side of `a_child' to the right side of
 			-- `a_widget' with `left_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
+			not_widget_void: a_widget /= Void;
 			offset_non_negative: left_offset >= 0
 		deferred
 		end;
@@ -79,9 +99,9 @@ feature
 			-- Attach bottom side of `a_child' to the top side of
 			-- `a_widget' with `bottom_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
+			not_widget_void: a_widget /= Void;
 			offset_non_negative: bottom_offset >= 0
 		deferred
 		end;
@@ -90,9 +110,9 @@ feature
 			 -- Attach top side of `a_child' to the bottom side of
 			-- `a_widget' with `top_offset' spaces between each other.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
-			not_widget_void: not (a_widget = Void);
+			not_widget_void: a_widget /= Void;
 			offset_non_negative: top_offset >= 0
 		deferred
 		end;
@@ -103,7 +123,7 @@ feature
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
@@ -116,7 +136,7 @@ feature
 			-- of the width of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
@@ -129,7 +149,7 @@ feature
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
@@ -142,7 +162,7 @@ feature
 			-- of the height of current form. This fraction is the value
 			-- of `a_position' divided by the value of `fraction_base'.
 		require
-			not_child_void: not (a_child = Void);
+			not_child_void: a_child /= Void;
 			not_shell_child: is_valid (a_child);
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
@@ -152,30 +172,32 @@ feature
 	detach_right (a_child: WIDGET_I) is
 			-- Detach right side of `a_child'.
 		require
-			not_child_void: not (a_child = Void)
+			not_child_void: a_child /= Void
 		deferred
 		end;
 
 	detach_left (a_child: WIDGET_I) is
 			-- Detach left side of `a_child'.
 		require
-			not_child_void: not (a_child = Void)
+			not_child_void: a_child /= Void
 		deferred
 		end;
 
 	detach_bottom (a_child: WIDGET_I) is
 			-- Detach bottom side of `a_child'.
 		require
-			not_child_void: not (a_child = Void)
+			not_child_void: a_child /= Void
 		deferred
 		end;
 
 	detach_top (a_child: WIDGET_I) is
 			-- Detach top side of `a_child'.
 		require
-			not_child_void: not (a_child = Void)
+			not_child_void: a_child /= Void
 		deferred
 		end;
+
+feature -- Element change
 
 	set_fraction_base (a_value: INTEGER) is
 			-- Set fraction_base to `a_value'.
@@ -186,25 +208,7 @@ feature
 		deferred
 		end;
 
-	fraction_base: INTEGER is
-			-- Value used to compute child position with
-			-- position attachment
-		deferred
-		ensure
-			fraction_base_strictly_greater_than_zero: Result > 0
-		end;
-
-	
-feature 
-
-	is_valid (other: WIDGET_I): BOOLEAN is
-			-- Is `other' a valid child?
-		do
-			Result := true
-		end
-
 end -- class FORM_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -218,3 +222,4 @@ end -- class FORM_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

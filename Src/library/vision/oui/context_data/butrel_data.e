@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BUTREL_DATA 
+class
+
+	BUTREL_DATA 
 
 inherit
 
@@ -20,23 +22,22 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y, a_button: INTEGER; a_buttons_state: BUTTONS; a_key_state: KEYBOARD) is
-            -- Create a context_data for `ButtonPress' event.
-        do
-            widget := a_widget;
-            relative_x := a_relative_x;
-            relative_y := a_relative_y;
-            absolute_x := an_absolute_x;
-            absolute_y := an_absolute_y;
-            button := a_button;
-            buttons_state := a_buttons_state;
-	keyboard := a_key_state;
-        end
+			-- Create a context_data for `ButtonPress' event.
+		do
+			widget := a_widget;
+			relative_x := a_relative_x;
+			relative_y := a_relative_y;
+			absolute_x := an_absolute_x;
+			absolute_y := an_absolute_y;
+			button := a_button;
+			buttons_state := a_buttons_state;
+			keyboard := a_key_state;
+		end
 
-end
-
+end -- class BUTREL_DATA 
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -50,3 +51,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SCREEN_I 
+deferred class
+
+	SCREEN_I 
 
 inherit
 
@@ -16,7 +18,7 @@ feature
 			-- Current state of the mouse buttons
 		deferred
 		ensure
-			not (Result = Void)
+			result_not_void: Result /= Void
 		end;
 
 	height: INTEGER is
@@ -66,7 +68,6 @@ feature
 
 end -- class SCREEN_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -79,3 +80,4 @@ end -- class SCREEN_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

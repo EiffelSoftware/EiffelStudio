@@ -5,14 +5,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BACKGROUND 
+class
+
+	BACKGROUND 
 
 feature -- Access 
 
 	background_color: COLOR;
 			-- background color of current figure
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_background_color (a_color: COLOR) is
 			-- Set `background_color' to `a_color'.
@@ -23,7 +25,6 @@ feature -- Modification & Insertion
 		end
 
 end -- class BACKGROUND
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +38,4 @@ end -- class BACKGROUND
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

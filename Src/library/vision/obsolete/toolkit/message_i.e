@@ -5,37 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MESSAGE_I 
+deferred class
+
+	MESSAGE_I 
 
 inherit
 
 	TERMINAL_I
 	
-feature 
-
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- cancel button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	add_help_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- help button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	add_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- ok button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
+feature -- Status setting
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
@@ -52,38 +30,6 @@ feature
 		deferred
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- cancel button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	remove_help_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- help button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- ok button is activated.
-		require
-			not_a_command_void: not (a_command = Void)
-		deferred
-		end;
-
-	set_cancel_label (a_label: STRING) is
-			-- Set `a_label' as label for cancel button,
-			-- by default this label is `cancel'.
-		require
-			not_label_void: not (a_label = Void)
-		deferred
-		end;
-
 	set_center_alignment is
 			-- Set message alignment to center.
 		deferred
@@ -91,29 +37,6 @@ feature
 
 	set_right_alignment is
 			-- Set message alignment to right.
-		deferred
-		end;
-
-	set_help_label (a_label: STRING) is
-			-- Set `a_label' as label for help button,
-			-- by default this label is `help'.
-		require
-			not_label_void: not (a_label = Void)
-		deferred
-		end;
-
-	set_message (a_message: STRING) is
-			-- Set `a_message' as message.
-		require
-			not_message_void: not (a_message = Void)
-		deferred
-		end;
-
-	set_ok_label (a_label: STRING) is
-			-- Set `a_label' as label for ok button,
-			-- by default this label is `ok'.
-		require
-			not_label_void: not (a_label = Void)
 		deferred
 		end;
 
@@ -137,8 +60,90 @@ feature
 		deferred
 		end
 
-end -- class MESSAGE_I
+feature -- Element change
 
+	add_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	add_help_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- help button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	add_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	set_cancel_label (a_label: STRING) is
+			-- Set `a_label' as label for cancel button,
+			-- by default this label is `cancel'.
+		require
+			not_label_void: a_label /= Void
+		deferred
+		end;
+
+	set_help_label (a_label: STRING) is
+			-- Set `a_label' as label for help button,
+			-- by default this label is `help'.
+		require
+			not_label_void: a_label /= Void
+		deferred
+		end;
+
+	set_message (a_message: STRING) is
+			-- Set `a_message' as message.
+		require
+			not_message_void: a_message /= Void
+		deferred
+		end;
+
+	set_ok_label (a_label: STRING) is
+			-- Set `a_label' as label for ok button,
+			-- by default this label is `ok'.
+		require
+			not_label_void: a_label /= Void
+		deferred
+		end;
+
+feature -- Removal
+
+	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- cancel button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	remove_help_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- help button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+	remove_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- ok button is activated.
+		require
+			not_a_command_void: a_command /= Void
+		deferred
+		end;
+
+end -- class MESSAGE_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -152,3 +157,4 @@ end -- class MESSAGE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,14 +5,18 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class G_ANY
+class
 
-feature {NONE}
+	G_ANY
+
+feature {NONE} -- Initialization
 
 	init_toolkit: like toolkit is
 			-- Init toolkit to desired implementation.
 		do
 		end;
+
+feature -- Access
 
 	toolkit: TOOLKIT is
 			-- Toolkit of implementation in the environment desired
@@ -23,7 +27,6 @@ feature {NONE}
 		end 
 
 end -- G_ANY
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +40,4 @@ end -- G_ANY
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

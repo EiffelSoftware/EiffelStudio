@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class UNDOABLE 
+deferred class
+
+	UNDOABLE 
 
 inherit
 
@@ -45,7 +47,7 @@ feature -- Update
 		deferred
 		end;
 
-feature -- Execution
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Execute Current command and insert it
@@ -96,3 +98,4 @@ end -- class UNDOABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

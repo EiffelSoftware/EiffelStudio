@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MENU_PULL_I 
+deferred class
+
+	MENU_PULL_I 
 
 inherit
 
@@ -17,7 +19,6 @@ feature
 			-- Menu button which contains the pulldown
 
 end -- class MENU_PULL_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -31,3 +32,4 @@ end -- class MENU_PULL_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

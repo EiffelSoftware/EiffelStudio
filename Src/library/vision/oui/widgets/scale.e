@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCALE 
+class
+
+	SCALE 
 
 inherit
 
@@ -25,7 +27,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initiaization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a scale with `a_name' as identifier,
@@ -67,54 +69,18 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Callbacks (adding)
+feature -- Access
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed
-			-- when slide is moved.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
+	value: INTEGER is
+			-- Value of the current slider position along the scale
 		require
 			exists: not destroyed;
-			Valid_command: a_command /= Void
 		do
-			implementation.add_move_action (a_command, argument)
-		end;
-
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be execute when 
-			-- value is changed.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.add_value_changed_action (a_command, argument)
-		end; 
-
-	remove_move_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed when
-			-- slide is moved.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.remove_move_action (a_command, argument)
-		end; 
-
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed when
-			-- value is changed.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.remove_value_changed_action (a_command, argument)
-		end;
-
-feature -- Slider setup (max, min, granularity ...)
-
+			Result := implementation.value
+		ensure
+			value_large_enough: Result >= minimum;
+			value_small_enough: Result <= maximum
+		end
 	granularity: INTEGER is
 			-- Value of the amount that the current slider can be moved 
 			-- whenever a move action occurs
@@ -145,6 +111,109 @@ feature -- Slider setup (max, min, granularity ...)
 			Result := implementation.minimum
 		ensure
 			minimum_smaller_than_maximum: Result <= maximum
+		end;
+
+	text: STRING is
+			-- Scale text
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text
+		end;
+
+feature -- Status report
+
+	is_output_only: BOOLEAN is
+			-- Is scale mode output only?
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.is_output_only
+		end;
+
+	is_horizontal: BOOLEAN is
+			-- Is scale oriented horizontal?
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.is_horizontal
+		end; 
+
+	is_value_shown: BOOLEAN is 
+		require
+			exists: not destroyed;
+		do 
+			Result := implementation.is_value_shown;
+		end;
+ 
+	is_maximum_right_bottom: BOOLEAN is 
+		require
+			exists: not destroyed;
+		do 
+			Result := implementation.is_maximum_right_bottom;
+		end;
+
+feature -- Status setting
+
+	set_output_only (flag: BOOLEAN) is
+			-- Set scale mode to output only if `flag'. The user
+			-- can not modify the current scale interactively.
+		require
+			exists: not destroyed;
+		do
+			implementation.set_output_only (flag)
+		ensure
+			Output_only: is_output_only = flag
+		end; 
+
+	set_horizontal (flag: BOOLEAN) is
+			-- Set orientation of the scale to horizontal if `flag',
+			-- to vertical otherwise.
+		require
+			exists: not destroyed;
+		do
+			implementation.set_horizontal (flag)
+		ensure
+			value_correctly_set: is_horizontal = flag
+		end;
+
+	set_maximum_right_bottom (flag: BOOLEAN) is 
+		require
+			exists: not destroyed;
+		do 
+			implementation.set_maximum_right_bottom (flag);
+		end;
+
+	show_value (flag: BOOLEAN) is 
+		require
+			exists: not destroyed;
+		do 
+			implementation.set_value_shown (flag);
+		end;
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Set scale text to `a_text'.
+		require
+			exists: not destroyed;
+			not_text_void: a_text /= Void
+		do
+			implementation.set_text (a_text);
+		ensure
+			text.is_equal (a_text)
+		end; 
+
+	set_value (new_value: INTEGER) is
+			-- Set value to `new_value'.
+		require
+			exists: not destroyed;
+			value_small_enough: new_value <= maximum;
+			value_large_enough: new_value >= minimum
+		do
+			implementation.set_value (new_value)
+		ensure
+			value = new_value
 		end;
 
 	set_granularity (new_granularity: INTEGER) is
@@ -189,108 +258,64 @@ feature -- Slider setup (max, min, granularity ...)
 			minimum = new_minimum;
 			value >= minimum;
 		end;
-
-feature -- Slider Value
-
-	set_value (new_value: INTEGER) is
-			-- Set value to `new_value'.
+	add_move_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed
+			-- when slide is moved.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
 			exists: not destroyed;
-			value_small_enough: new_value <= maximum;
-			value_large_enough: new_value >= minimum
+			Valid_command: a_command /= Void
 		do
-			implementation.set_value (new_value)
-		ensure
-			value = new_value
+			implementation.add_move_action (a_command, argument)
 		end;
 
-	value: INTEGER is
-			-- Value of the current slider position along the scale
+	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be execute when 
+			-- value is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
 			exists: not destroyed;
+			Valid_command: a_command /= Void
 		do
-			Result := implementation.value
-		ensure
-			value_large_enough: Result >= minimum;
-			value_small_enough: Result <= maximum
-		end
-
-feature -- Output Mode
-
-	is_output_only: BOOLEAN is
-			-- Is scale mode output only?
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.is_output_only
-		end;
-
-	set_output_only (flag: BOOLEAN) is
-			-- Set scale mode to output only if `flag'. The user
-			-- can not modify the current scale interactively.
-		require
-			exists: not destroyed;
-		do
-			implementation.set_output_only (flag)
-		ensure
-			Output_only: is_output_only = flag
+			implementation.add_value_changed_action (a_command, argument)
 		end; 
 
-feature -- Orientation of Slider
+feature -- Removal
 
-	set_horizontal (flag: BOOLEAN) is
-			-- Set orientation of the scale to horizontal if `flag',
-			-- to vertical otherwise.
+	remove_move_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed when
+			-- slide is moved.
 		require
 			exists: not destroyed;
+			Valid_command: a_command /= Void
 		do
-			implementation.set_horizontal (flag)
-		ensure
-			value_correctly_set: is_horizontal = flag
-		end;
-
-	is_horizontal: BOOLEAN is
-			-- Is scale oriented horizontal?
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.is_horizontal
+			implementation.remove_move_action (a_command, argument)
 		end; 
 
-feature -- Text
-
-	set_text (a_text: STRING) is
-			-- Set scale text to `a_text'.
+	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed when
+			-- value is changed.
 		require
 			exists: not destroyed;
-			not_text_void: a_text /= Void
+			Valid_command: a_command /= Void
 		do
-			implementation.set_text (a_text);
-		ensure
-			text.is_equal (a_text)
-		end; 
-
-	text: STRING is
-			-- Scale text
-		require
-			exists: not destroyed
-		do
-			Result := implementation.text
+			implementation.remove_value_changed_action (a_command, argument)
 		end;
 
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SCALE_I;
 			-- Implementation of scale
 
 	
-feature {G_ANY, G_ANY_I, WIDGET_I}
+feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
 	is_fontable: BOOLEAN is true;
 			-- Is current widget an heir of FONTABLE ?
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current scale.
@@ -303,39 +328,7 @@ feature {NONE}
 			--not is_horizontal;
 		end;
 
-feature 
- 
- 
-	is_maximum_right_bottom: BOOLEAN is 
-		require
-			exists: not destroyed;
-		do 
-			Result := implementation.is_maximum_right_bottom;
-		end;
-
-	set_maximum_right_bottom (flag: BOOLEAN) is 
-		require
-			exists: not destroyed;
-		do 
-			implementation.set_maximum_right_bottom (flag);
-		end;
-
-	show_value (flag: BOOLEAN) is 
-		require
-			exists: not destroyed;
-		do 
-			implementation.set_value_shown (flag);
-		end;
-
-	is_value_shown: BOOLEAN is 
-		require
-			exists: not destroyed;
-		do 
-			Result := implementation.is_value_shown;
-		end;
- 
-end
-
+end -- class SCALE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -349,3 +342,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PICTURE 
+class
+
+	PICTURE 
 
 inherit
 
@@ -64,7 +66,7 @@ feature -- Access
 		end;
 
 
-feature -- Modification & Insertion
+feature -- Element change
 	
 	set_pixmap (a_pixmap: like pixmap) is
 			-- Set `pixmap' to `a_pixmap'.
@@ -155,8 +157,7 @@ feature -- Status report
 				(pixmap = other.pixmap)
 		end;
 	
-feature {CONFIGURE_NOTIFY} -- Updating 
-
+feature {CONFIGURE_NOTIFY} -- Implementation
 	
 	conf_recompute is
 		require else
@@ -179,7 +180,6 @@ invariant
 
 end  -- class PICTURE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -192,3 +192,4 @@ end  -- class PICTURE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

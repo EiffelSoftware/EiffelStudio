@@ -6,7 +6,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SEARCH_REPLACE_DIALOG_I
+deferred class
+
+	SEARCH_REPLACE_DIALOG_I
 
 inherit
 	TERMINAL_I
@@ -128,7 +130,7 @@ feature -- Status setting
 		deferred
 		end
 
-feature
+feature -- Element change
 
 	add_find_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when
@@ -170,6 +172,8 @@ feature
 		deferred
 		end;
 
+feature -- Removal
+
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the cancel option.
@@ -204,7 +208,6 @@ feature
 
 end -- class SEARCH_REPLACE_DIALOG_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -217,3 +220,4 @@ end -- class SEARCH_REPLACE_DIALOG_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

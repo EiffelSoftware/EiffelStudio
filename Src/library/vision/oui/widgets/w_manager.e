@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class W_MANAGER 
+class
+
+	W_MANAGER 
 
 inherit
 
@@ -40,7 +42,7 @@ creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
 			-- Create a widget manager.
@@ -48,7 +50,48 @@ feature {NONE} -- Creation
 			array_make (1, 100)
 		end;
 
-feature -- List
+feature -- Access
+
+	last_inserted_position: INTEGER;
+			-- Index position of last widget inserted into Current
+
+	item: WIDGET is
+			-- Item at cursor position
+		require
+			not_off: not off
+		do
+			Result := area.item (index - 1)
+		ensure
+			valid_result: Result /= Void
+		end;
+
+feature -- Status report
+
+	after: BOOLEAN is
+			-- Is there no valid cursor position 
+			-- to the right of cursor?
+		do
+			Result := index = count + 1
+		end;
+
+	before: BOOLEAN is
+			-- Is there no valid cursor position 
+			-- to the left of cursor?
+		do
+			Result := index = 0
+		end;
+
+	off: BOOLEAN is
+		do
+			Result := after or else before
+		end;
+
+feature -- Measurement
+
+	count: INTEGER;
+			-- Number of widgets in Current
+
+feature -- Cursor movement
   
 	back is
 			-- Move cursor back one position.
@@ -59,12 +102,6 @@ feature -- List
 		ensure
 			moved_back: index = old index - 1
 		end;
-
-	count: INTEGER;
-			-- Number of widgets in Current
-
-	last_inserted_position: INTEGER;
-			-- Index position of last widget inserted into Current
 
 	finish is
 			-- Move cursor to end position
@@ -82,37 +119,13 @@ feature -- List
 			moved_forth: index = old index + 1
 		end;
 
-	item: WIDGET is
-			-- Item at cursor position
-		require
-			not_off: not off
-		do
-			Result := area.item (index - 1)
-		ensure
-			valid_result: Result /= Void
-		end;
-
 	start is
 			-- Move cursor to first position.
 		do
 			index := 1
 		end;
 
-	after: BOOLEAN is
-			-- Is there no valid cursor position 
-			-- to the right of cursor?
-		do
-			Result := index = count + 1
-		end;
-
-	before: BOOLEAN is
-			-- Is there no valid cursor position 
-			-- to the left of cursor?
-		do
-			Result := index = 0
-		end;
-
-feature -- Widget 
+feature -- Basic operations
 
 	new (widget, a_parent: WIDGET) is
 			-- Add `widget' to the list as a child of `parent'.
@@ -392,15 +405,10 @@ feature -- Widget
 			valid_result: Result /= Void
 		end;
 
-	off: BOOLEAN is
-		do
-			Result := after or else before
-		end;
-
 	index: INTEGER;
 			-- Current cursor index
 
-feature {COMPOSITE} -- Child/descendents widgets
+feature {COMPOSITE} -- Basic operations
 
 	children_of (w: WIDGET): ARRAYED_LIST [WIDGET] is
 			-- Children of widget `w'
@@ -469,7 +477,7 @@ feature {COMPOSITE} -- Child/descendents widgets
 			end
 		end;
 
-feature -- Using widget_index information
+feature {G_ANY_I} -- Basic operations
 
 	widget_at (i: INTEGER): WIDGET is
 			-- Widget at index position `i'.
@@ -535,7 +543,7 @@ feature -- Using widget_index information
 			is_child: (Result /= Void) implies (Result.depth+1 = widget.depth)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	Chunk: INTEGER is 50;
 			-- Array chunk
@@ -595,8 +603,7 @@ invariant
 	Stay_on: index <= count+1;
 	Empty_implies_zero_position: empty implies (index = 0)
 
-end
-
+end -- class W_MANAGER
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -610,3 +617,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

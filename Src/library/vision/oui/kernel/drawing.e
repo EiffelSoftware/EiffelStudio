@@ -5,27 +5,18 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DRAWING 
+deferred class
 
-feature 
+	DRAWING 
 
-	same (other: like Current): BOOLEAN is
-			-- Does the current drawing and `other' share the same object
-			-- on screen ?
-		require
-			other_exists: other /= Void
+feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is current dash destroyed?
 		deferred
 		end;
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- current area is exposed.
-		require
-			exists: not destroyed
-			not_a_command_void: a_command /= Void
-		do
-			implementation.add_expose_action (a_command, argument)
-		end;
+feature -- Status setting
 
 	clear is
 			-- Clear the entire area.
@@ -35,20 +26,24 @@ feature
 			implementation.clear
 		end;
 
+feature -- Access
+
 	implementation: DRAWING_I is
 			-- Implementation
 		deferred
 		end;
 
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- current area is exposed.
+feature -- Comparison
+
+	same (other: like Current): BOOLEAN is
+			-- Does the current drawing and `other' share the same object
+			-- on screen ?
 		require
-			exists: not destroyed
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_expose_action (a_command, argument)
+			other_exists: other /= Void
+		deferred
 		end;
+
+feature -- Status setting
 
 	set_clip (a_clip: CLIP) is
 			-- Set a clip area.
@@ -67,12 +62,31 @@ feature
 			implementation.set_no_clip
 		end;
 
-	destroyed: BOOLEAN is
-		deferred
+feature -- Element change
+
+	add_expose_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- current area is exposed.
+		require
+			exists: not destroyed
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_expose_action (a_command, argument)
 		end;
 
-end
+feature -- Removal
 
+	remove_expose_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- current area is exposed.
+		require
+			exists: not destroyed
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_expose_action (a_command, argument)
+		end;
+
+end -- class DRAWING
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -86,3 +100,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

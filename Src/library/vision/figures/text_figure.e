@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT_FIGURE 
+class
+
+	TEXT_FIGURE 
 
 inherit
 
@@ -50,7 +52,6 @@ feature -- Output
 		end;
 
 end -- class TEXT_FIGURE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PATH 
+class
+
+	PATH 
 
 inherit
 
@@ -39,7 +41,7 @@ feature -- Initialization
 			!! foreground_color.make;
 		end;
 
-feature {FIGURE} -- Modification & Insertion
+feature {FIGURE} -- Element change
 
 	set_drawing_attributes (drawing: DRAWING_I) is
 			-- Set the attributes to `a_drawing'.
@@ -89,7 +91,6 @@ invariant
 
 end -- class PATH
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -102,3 +103,4 @@ end -- class PATH
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

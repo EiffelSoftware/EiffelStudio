@@ -8,9 +8,18 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COMMAND 
+deferred class
 
-feature 
+	COMMAND 
+
+feature -- Access
+
+	context_data: CONTEXT_DATA;
+			-- Information related to Current command,
+			-- provided by the underlying user interface 
+			-- mechanism
+
+feature -- Status report
 
 	is_template: BOOLEAN is
 			-- Is the current command a template, in other words,
@@ -20,17 +29,14 @@ feature
 		do
 		end;
 
-	context_data: CONTEXT_DATA;
-			-- Information related to Current command,
-			-- provided by the underlying user interface 
-			-- mechanism
-
 	context_data_useful: BOOLEAN is
 			-- Should the context data be available
 			-- when Current command is invoked as a
 			-- callback
 		do
-        end;
+		end;
+
+feature -- Basic operations
 
 	execute (argument: ANY) is
 			-- Execute Current command.
@@ -40,7 +46,7 @@ feature
 		deferred
 		end;
 
-feature {EVENT_HDL}
+feature {EVENT_HDL} -- Element change
 
 	set_context_data (a_context_data: CONTEXT_DATA) is
 			-- Set `context_data' to `a_context_data'.
@@ -51,7 +57,6 @@ feature {EVENT_HDL}
 		end
 
 end -- class COMMAND
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -65,3 +70,4 @@ end -- class COMMAND
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

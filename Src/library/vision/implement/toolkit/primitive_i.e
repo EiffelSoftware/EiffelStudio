@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PRIMITIVE_I 
+deferred class
+
+	PRIMITIVE_I 
 
 inherit
 
@@ -13,7 +15,7 @@ inherit
 
 	STACKABLE_I;
 
-feature 
+feature -- Access
 
 	foreground_color: COLOR is
 			-- Foreground color of primitive widget
@@ -21,6 +23,14 @@ feature
 		ensure
 			valid_result: Result /= Void
 		end;
+
+feature -- Status setting
+
+	update_foreground_color is
+		deferred
+		end;
+
+feature -- Element change
 
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
@@ -31,12 +41,7 @@ feature
 			foreground_set: foreground_color = new_color
 		end;
 
-	update_foreground_color is
-		deferred
-		end;
-
-end
-
+end -- class PRIMITIVE_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -50,3 +55,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,11 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class JOINABLE
+class
 
+	JOINABLE
 
-
-feature -- Modification & Insertion 
+feature -- Element change 
 
 	set_bevel_join is
 			-- Specifies CapButt endpoint styles, with the triangular notch
@@ -31,7 +31,6 @@ feature -- Modification & Insertion
 		do
 			join_style := JoinRound
 		end;
-
 
 feature -- Status report
 
@@ -71,7 +70,6 @@ feature {NONE} -- Access
 
 end -- class JOINABLE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -84,3 +82,4 @@ end -- class JOINABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

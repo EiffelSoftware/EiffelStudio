@@ -1,10 +1,13 @@
 indexing
 
+	description: "A list of fonts";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FONT_LIST 
+class
+
+	FONT_LIST 
 
 inherit
 
@@ -17,26 +20,7 @@ creation
 
 	make
 
-feature 
-
-	back is
-			-- Move cursor backward one position.
-		require
-			exists: not destroyed;
-			not_offleft: position > 0
-		do
-			implementation.back
-		ensure
-			position = old position - 1
-		end;
-
-	count: INTEGER is
-			-- Number of items in current series
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		end;
+feature -- Initialization
 
 	make (a_screen: SCREEN) is
 			-- Create a font list corresponding to `a_screen'.
@@ -45,22 +29,68 @@ feature
 			implementation := toolkit.font_list (Current)
 		end;
 	
-	destroy is
-			-- Destroy current font list implementation.
+feature -- Access
+
+	last: like first is
+			-- Item at last position
+		require
+			exists: not destroyed;
+			not_empty: not empty
 		do
-			implementation.destroy;
-			implementation := Void;
+			Result := implementation.last
 		end;
 
-feature 
+	first: FONT is
+			-- Item at first position
+		require
+			exists: not destroyed;
+			not_empty: not empty
+		do
+			Result := implementation.first
+		end;
 
-	empty: BOOLEAN is
-			-- Is current series empty?
+	i_th (i: INTEGER): like first is
+			-- Item at `i'_th position
+		require
+			exists: not destroyed;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= count;
+		do
+			Result := implementation.i_th (i)
+		end;
+
+	index_of (v: like first; i: INTEGER): INTEGER is
+			-- Index of `i'-th item `v'; 0 if none
+		require
+			exists: not destroyed;
+			positive_occurrence: i > 0
+		do
+			Result := implementation.index_of (v, i)
+		ensure
+			Result >= 0
+		end;
+
+	item: like first is
+			-- Item at cursor position
+		require
+			exists: not destroyed;
+			not_off: not off
+		do
+			Result := implementation.item
+		end;
+
+	position: INTEGER is
+			-- Current cursor position, 0 if empty
 		require
 			exists: not destroyed
 		do
-			Result := implementation.empty
+			Result := implementation.position
 		end;
+
+	screen: SCREEN;
+			-- Screen used to get the font list
+
+feature -- Cursor movement
 
 	finish is
 			-- Move cursor to last position
@@ -73,13 +103,15 @@ feature
 			empty or islast
 		end;
 
-	first: FONT is
-			-- Item at first position
+	back is
+			-- Move cursor backward one position.
 		require
 			exists: not destroyed;
-			not_empty: not empty
+			not_offleft: position > 0
 		do
-			Result := implementation.first
+			implementation.back
+		ensure
+			position = old position - 1
 		end;
 
 	forth is
@@ -106,40 +138,93 @@ feature
 			position = i
 		end;
 
+	search_equal (v: like first) is
+			-- Move cursor to first position
+			-- (at or after current cursor position)
+			-- where item is equal to `v' (shallow equality);
+			-- go off right if none.
+		require
+			exists: not destroyed;
+			search_element_exists: v /= Void
+		do
+			implementation.search_equal (v)
+		ensure
+			(not off) implies (v.is_equal (item))
+		end;
+
+	start is
+			-- Move cursor to first position.
+		require
+			exists: not destroyed
+		do
+			implementation.start
+		ensure
+			empty or isfirst
+		end 
+
+	move (i: INTEGER) is
+			-- Move cursor `i' positions.
+		require
+			exists: not destroyed;
+			stay_right: position + i >= 0;
+			stay_left: position + i <= count + 1;
+			not_empty_unless_zero: empty implies i=0;
+		do
+			implementation.move (i)
+		ensure
+			position = old position + i
+		end;
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items in current series
+		require
+			exists: not destroyed
+		do
+			Result := implementation.count
+		end;
+
+feature -- Status report
+
+	off: BOOLEAN is
+			-- Is cursor off?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.off
+		end;
+
+	offleft: BOOLEAN is
+			-- Is cursor off left edge?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.offleft
+		end;
+
+	offright: BOOLEAN is
+			-- Is cursor off right edge?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.offright
+		end;
+
+	empty: BOOLEAN is
+			-- Is current series empty?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.empty
+		end;
+
 	has (v: like first): BOOLEAN is
 			-- Does `v' appear in current series?
 		require
 			exists: not destroyed
 		do
 			Result := implementation.has (v)
-		end;
-
-	i_th (i: INTEGER): like first is
-			-- Item at `i'_th position
-		require
-			exists: not destroyed;
-			index_large_enough: i >= 1;
-			index_small_enough: i <= count;
-		do
-			Result := implementation.i_th (i)
-		end;
-
-feature {NONE}
-
-	implementation: FONT_LIST_I;
-			-- Implementation of current font list
-
-feature 
-
-	index_of (v: like first; i: INTEGER): INTEGER is
-			-- Index of `i'-th item `v'; 0 if none
-		require
-			exists: not destroyed;
-			positive_occurrence: i > 0
-		do
-			Result := implementation.index_of (v, i)
-		ensure
-			Result >= 0
 		end;
 
 	destroyed: BOOLEAN is
@@ -173,95 +258,19 @@ feature
 			Result implies (not empty)
 		end;
 
-	item: like first is
-			-- Item at cursor position
-		require
-			exists: not destroyed;
-			not_off: not off
+feature -- Status setting
+
+	destroy is
+			-- Destroy current font list implementation.
 		do
-			Result := implementation.item
+			implementation.destroy;
+			implementation := Void;
 		end;
 
-	last: like first is
-			-- Item at last position
-		require
-			exists: not destroyed;
-			not_empty: not empty
-		do
-			Result := implementation.last
-		end;
+feature {NONE} -- Implementation
 
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		require
-			exists: not destroyed;
-			stay_right: position + i >= 0;
-			stay_left: position + i <= count + 1;
-			not_empty_unless_zero: empty implies i=0;
-		do
-			implementation.move (i)
-		ensure
-			position = old position + i
-		end;
-
-	off: BOOLEAN is
-			-- Is cursor off?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.off
-		end;
-
-	offleft: BOOLEAN is
-			-- Is cursor off left edge?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.offleft
-		end;
-
-	offright: BOOLEAN is
-			-- Is cursor off right edge?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.offright
-		end;
-
-	position: INTEGER is
-			-- Current cursor position, 0 if empty
-		require
-			exists: not destroyed
-		do
-			Result := implementation.position
-		end;
-
-	screen: SCREEN;
-			-- Screen used to get the font list
-
-	search_equal (v: like first) is
-			-- Move cursor to first position
-			-- (at or after current cursor position)
-			-- where item is equal to `v' (shallow equality);
-			-- go off right if none.
-		require
-			exists: not destroyed;
-			search_element_exists: not (v = Void)
-		do
-			implementation.search_equal (v)
-		ensure
-			(not off) implies (v.is_equal (item))
-		end;
-
-	start is
-			-- Move cursor to first position.
-		require
-			exists: not destroyed
-		do
-			implementation.start
-		ensure
-			empty or isfirst
-		end 
+	implementation: FONT_LIST_I;
+			-- Implementation of current font list
 
 invariant
 			-- Definitions:
@@ -278,10 +287,9 @@ invariant
 	empty_implies_zero_pos: not destroyed implies (empty implies position = 0);
 			-- Theorems:
 	not_on_empty: not destroyed implies (empty implies not (isfirst or islast));
-	not_on_destroy: not destroyed implies not (implementation = Void)
+	not_on_destroy: not destroyed implies implementation /= Void
 
-end
-
+end -- class FONT_LIST
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -295,3 +303,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

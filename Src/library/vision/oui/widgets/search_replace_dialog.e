@@ -6,23 +6,25 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SEARCH_REPLACE_DIALOG
+class
+
+	SEARCH_REPLACE_DIALOG
 
 inherit
 
-    TERMINAL_OUI
+	TERMINAL_OUI
 		rename
 			make as terminal_make
 		undefine
 			lower, raise
-        redefine
-            implementation
-        end
+		redefine
+			implementation
+		end
 
 	DIALOG
-        rename
-            implementation as dialog_imp
-        end
+		rename
+			implementation as dialog_imp
+		end
 
 creation
 
@@ -33,9 +35,9 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a question dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
-        require
-            valid_name: a_name /= Void;
-            valid_parent: a_parent /= Void
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
@@ -43,9 +45,9 @@ feature {NONE} -- Initialization
 			implementation:= toolkit.search_replace_dialog (Current, a_parent);
 			set_default
 		ensure 
-            parent_set: parent = a_parent;
-            identifier_set: identifier.is_equal (a_name);
-			in_replace_mode: replace_mode
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+				in_replace_mode: replace_mode
 		end;
 
 feature -- Status report
@@ -202,12 +204,7 @@ feature -- Status setting
 			implementation.set_search_text (a_text)
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: SEARCH_REPLACE_DIALOG_I
-			-- Implementation of search replace dialog
-
-feature
+feature -- Element change
 
 	add_find_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when
@@ -257,6 +254,8 @@ feature
 			implementation.add_find_action (a_command, argument)
 		end;
 
+feature -- Removal
+
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the cancel option.
@@ -297,8 +296,12 @@ feature
 			implementation.remove_replace_all_action (a_command, argument)
 		end;
 
-end -- class SEARCH_REPLACE_DIALOG
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
+	implementation: SEARCH_REPLACE_DIALOG_I
+			-- Implementation of search replace dialog
+
+end -- class SEARCH_REPLACE_DIALOG
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -312,3 +315,4 @@ end -- class SEARCH_REPLACE_DIALOG
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

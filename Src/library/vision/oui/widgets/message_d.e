@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MESSAGE_D 
+class
+
+	MESSAGE_D 
 
 inherit
 	TERMINAL_OUI
@@ -28,7 +30,7 @@ creation
 
 	make
 	
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a message dialog with `a_name' as identifier,
@@ -47,37 +49,8 @@ feature {NONE} -- Creation
 			identifier_set: identifier.is_equal (a_name)
 		end;
 	
-feature
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- cancel button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.add_cancel_action (a_command, argument)
-		end;
-
-	add_help_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- help button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.add_help_action (a_command, argument)
-		end;
-
-	add_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to execute when
-			-- ok button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.add_ok_action (a_command, argument)
-		end;
+feature -- Status setting
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
@@ -103,52 +76,6 @@ feature
 			implementation.hide_ok_button
 		end;
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: MESSAGE_D_I
-			-- Implementation of message dialog
-feature 
-
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- cancel button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_cancel_action (a_command, argument)
-		end;
-
-	remove_help_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- help button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_help_action (a_command, argument)
-		end;
-
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to execute when
-			-- ok button is activated.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_ok_action (a_command, argument)
-		end; 
-
-	set_cancel_label (a_label: STRING) is
-			-- Set `a_label' as label for cancel button,
-			-- by default this label is `cancel'.
-		require
-			exists: not destroyed;
-			not_label_void: a_label /= Void
-		do
-			implementation.set_cancel_label (a_label)
-		end;
-
 	set_center_alignment is
 			-- Set message alignment to center.
 		require
@@ -163,35 +90,6 @@ feature
 			exists: not destroyed
 		do
 			implementation.set_right_alignment
-		end;
-
-	set_help_label (a_label: STRING) is
-			-- Set `a_label' as label for help button,
-			-- by default this label is `help'.
-		require
-			exists: not destroyed;
-			not_label_void: a_label /= Void
-		do
-			implementation.set_help_label (a_label)
-		end;
-
-	set_message (a_message: STRING) is
-			-- Set `a_message' as message.
-		require
-			exists: not destroyed;
-			not_message_void: a_message /= Void
-		do
-			implementation.set_message (a_message)
-		end;
-
-	set_ok_label (a_label: STRING) is
-			-- Set `a_label' as label for ok button,
-			-- by default this label is `ok'.
-		require
-			exists: not destroyed;
-			not_label_void: a_label /= Void
-		do
-			implementation.set_ok_label (a_label)
 		end;
 
 	set_left_alignment is
@@ -226,8 +124,115 @@ feature
 			implementation.show_ok_button
 		end
 
-end
+feature -- Element change
 
+	set_cancel_label (a_label: STRING) is
+			-- Set `a_label' as label for cancel button,
+			-- by default this label is `cancel'.
+		require
+			exists: not destroyed;
+			not_label_void: a_label /= Void
+		do
+			implementation.set_cancel_label (a_label)
+		end;
+
+	set_help_label (a_label: STRING) is
+			-- Set `a_label' as label for help button,
+			-- by default this label is `help'.
+		require
+			exists: not destroyed;
+			not_label_void: a_label /= Void
+		do
+			implementation.set_help_label (a_label)
+		end;
+
+	set_message (a_message: STRING) is
+			-- Set `a_message' as message.
+		require
+			exists: not destroyed;
+			not_message_void: a_message /= Void
+		do
+			implementation.set_message (a_message)
+		end;
+
+	set_ok_label (a_label: STRING) is
+			-- Set `a_label' as label for ok button,
+			-- by default this label is `ok'.
+		require
+			exists: not destroyed;
+			not_label_void: a_label /= Void
+		do
+			implementation.set_ok_label (a_label)
+		end;
+
+	add_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_cancel_action (a_command, argument)
+		end;
+
+	add_help_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- help button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_help_action (a_command, argument)
+		end;
+
+	add_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_ok_action (a_command, argument)
+		end;
+
+feature -- Removal
+
+	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- cancel button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_cancel_action (a_command, argument)
+		end;
+
+	remove_help_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- help button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_help_action (a_command, argument)
+		end;
+
+	remove_ok_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- ok button is activated.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_ok_action (a_command, argument)
+		end; 
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: MESSAGE_D_I
+			-- Implementation of message dialog
+
+end -- class MESSAGE_D
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -241,3 +246,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

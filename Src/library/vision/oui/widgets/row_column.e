@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ROW_COLUMN 
+class
+
+	ROW_COLUMN 
 
 inherit
 
@@ -18,7 +20,7 @@ creation
 
 	make, make_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a row column with `a_name' as identifier,
@@ -62,19 +64,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 	
-feature -- Layout
-
-	set_preferred_count (a_number: INTEGER) is
-			-- Set number of columns if column
-			-- layout, or number of rows if row
-			-- layout.
-		require
-			exists: not destroyed;
-			Not_negative_number: not (a_number < 0);
-			Not_nul_number: not (a_number = 0)
-		do
-			implementation.set_preferred_count (a_number)
-		end;
+feature -- Status report
 
 	is_row_layout: BOOLEAN is
 			-- Are children laid out in rows?
@@ -82,6 +72,20 @@ feature -- Layout
 			exists: not destroyed
 		do
 			Result := implementation.is_row_layout
+		end;
+
+feature -- Status setting
+
+	set_preferred_count (a_number: INTEGER) is
+			-- Set number of columns if column
+			-- layout, or number of rows if row
+			-- layout.
+		require
+			exists: not destroyed;
+			Not_negative_number: a_number >= 0;
+			Not_nul_number: not (a_number = 0)
+		do
+			implementation.set_preferred_count (a_number)
 		end;
 
 	set_row_layout is
@@ -104,7 +108,27 @@ feature -- Layout
 			Column_layout: not is_row_layout
 		end;
 
-feature -- Margin
+	set_free_size is
+			-- Set size of items to be free, in vertical layout mode
+			-- only width is set to be the same as the widest one, in
+			-- horizontal layout mode only height is set to be the same
+			-- as the tallest one.
+		require
+			exists: not destroyed
+		do
+			implementation.set_free_size
+		end;
+
+	set_same_size is
+			-- Set width of items to be the same as the widest one
+			-- and height as the tallest one.
+		require
+			exists: not destroyed
+		do
+			implementation.set_same_size
+		end; 
+
+feature -- Measurement
 
 	margin_height: INTEGER is
 			-- Amount of blank space between the top edge
@@ -129,6 +153,18 @@ feature -- Margin
 		ensure
 			Result >= 0
 		end;
+
+	spacing: INTEGER is
+			-- Spacing between items
+		require
+			exists: not destroyed
+		do
+			Result:= implementation.spacing
+		ensure
+			Greater_that_zero: Result >= 0
+		end
+
+feature -- Resizing
 
 	set_margin_height (new_margin_height: INTEGER) is
 			-- Set amount of blank space between the top edge
@@ -156,28 +192,6 @@ feature -- Margin
 			margin_width = new_margin_width
 		end;
 
-feature  -- Children widgets manipulation
-
-	set_free_size is
-			-- Set size of items to be free, in vertical layout mode
-			-- only width is set to be the same as the widest one, in
-			-- horizontal layout mode only height is set to be the same
-			-- as the tallest one.
-		require
-			exists: not destroyed
-		do
-			implementation.set_free_size
-		end;
-
-	set_same_size is
-			-- Set width of items to be the same as the widest one
-			-- and height as the tallest one.
-		require
-			exists: not destroyed
-		do
-			implementation.set_same_size
-		end; 
-
 	set_spacing (new_spacing: INTEGER) is
 			-- Set spacing between items to `new_spacing'.
 		require
@@ -189,30 +203,19 @@ feature  -- Children widgets manipulation
 			Spacing_set: spacing = new_spacing
 		end;
 
-	spacing: INTEGER is
-			-- Spacing between items
-		require
-			exists: not destroyed
-		do
-			Result:= implementation.spacing
-		ensure
-			Greater_that_zero: Result >= 0
-		end
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: ROW_COLUMN_I;
 			-- Implementation of row column
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current row column.
 		do
 		end;
 
-end
-
+end -- class ROW_COLUMN
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -226,3 +229,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

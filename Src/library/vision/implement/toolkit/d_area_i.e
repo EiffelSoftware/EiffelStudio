@@ -5,24 +5,23 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class D_AREA_I 
+deferred class
+
+	D_AREA_I 
 
 inherit
 
 	PRIMITIVE_I;
 
 	DRAWING_I
-
-
-
 	
-feature 
+feature -- Element change
 
 	add_input_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -30,15 +29,17 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- current area is resized.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
+
+feature -- Removal
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end;
 
@@ -46,12 +47,11 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is resized.
 		require
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		end
 
-end --class D_AREA_I
-
+end -- class D_AREA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -65,3 +65,4 @@ end --class D_AREA_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HISTORY_LIST 
+class
+
+	HISTORY_LIST 
 
 inherit
 
@@ -31,12 +33,12 @@ creation
 
 feature -- Initialization
 
-    make is
-            -- Create a history based on a list.
-        do
+	make is
+			-- Create a history based on a list.
+		do
 			linked_list_make;
-            !! history_windows.make
-        end;
+			!! history_windows.make
+		end;
 
 feature -- Cursor movement
 
@@ -192,7 +194,7 @@ feature {HISTORY_L_W} -- Implementation
 	add_history_window (history_window: HISTORY_L_W) is
 			-- Add `history_window' to the list of the current history.
 		require
-			not (history_window = Void)
+			history_window_not_void: history_window /= Void
 		do
 			history_windows.finish;
 			history_windows.put_right (history_window)
@@ -221,3 +223,4 @@ end -- class HISTORY_LIST
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

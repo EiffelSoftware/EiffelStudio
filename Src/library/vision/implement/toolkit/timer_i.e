@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TIMER_I 
+deferred class
+
+	TIMER_I 
 
 inherit
 
@@ -14,7 +16,7 @@ inherit
 			{NONE} all
 		end
 	
-feature 
+feature -- Status report
 
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
@@ -28,12 +30,14 @@ feature
 		deferred
 		end;
 
-	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is            -- Set `a_command' with `argument' to execute when `a_delay';
+feature -- Status setting
+
+	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is-- Set `a_command' with `argument' to execute when `a_delay';
 			-- in milliseconds has expired.
 		require
 			no_call_back_already_set: not is_call_back_set;
 			a_delay_positive_and_not_null: a_delay > 0;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		ensure
 			is_call_back_set and (not is_regular_call_back)
@@ -54,7 +58,7 @@ feature
 		require
 			no_call_back_already_set: not is_call_back_set;
 			a_time_positive_and_not_null: a_time >0;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		deferred
 		ensure
 			is_call_back_set and is_regular_call_back
@@ -64,8 +68,7 @@ feature
 		deferred
 		end
 
-end 
-
+end -- class TIMER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -79,3 +82,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PRIMITIVE 
+deferred class
+
+	PRIMITIVE 
 
 inherit
 
@@ -21,15 +23,13 @@ inherit
 			implementation
 		end;
 	
-feature -- Widget hierarchy
+feature -- Access
 
 	parent: COMPOSITE is
 			-- Parent of Current widget
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
-
-feature -- Color
 
 	foreground_color: COLOR is
 			-- Foreground color of Current widget
@@ -40,6 +40,8 @@ feature -- Color
 		ensure
 			valid_result: Result /= Void
 		end;
+
+feature -- Element change
 
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
@@ -52,7 +54,7 @@ feature -- Color
 			foreground_set: foreground_color = new_color
 		end 
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: PRIMITIVE_I;
 			-- Implementation of Current widget
@@ -62,8 +64,7 @@ invariant
 	Positive_depth: depth > 0;
 	Has_parent: not destroyed implies parent /= Void
 
-end
-
+end -- class PRIMITIVE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -77,3 +78,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SCROLLED_W_I 
+deferred class
+
+	SCROLLED_W_I 
 
 inherit
 
@@ -22,14 +24,13 @@ feature
 	set_working_area (a_widget: WIDGET) is
 			-- Set work area of windon to `a_widget'.
 		require
-			not_a_widget_void: not (a_widget = Void)
+			not_a_widget_void: a_widget /= Void
 		deferred
 		ensure
 			working_area = a_widget
 		end
 
 end -- class SCROLLED_W_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -43,3 +44,4 @@ end -- class SCROLLED_W_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PULLDOWN 
+deferred class
+
+	PULLDOWN 
 
 inherit
 
@@ -24,7 +26,7 @@ feature
 		deferred
 		end;
 	
-feature -- Text
+feature -- Access
 
 	text: STRING is
 			-- Label of menu button
@@ -34,13 +36,7 @@ feature -- Text
 			Result := implementation.text
 		end;
 
-	set_text (a_text: STRING) is
-			-- Set button label to `a_text'.
-		require
-			exists: not destroyed
-		do
-			implementation.set_text(a_text)
-		end;
+feature -- Status setting
 
 	allow_recompute_size is
 		require
@@ -56,14 +52,22 @@ feature -- Text
 			implementation.forbid_recompute_size;
 		end;
 
+feature -- Element change
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+	set_text (a_text: STRING) is
+			-- Set button label to `a_text'.
+		require
+			exists: not destroyed
+		do
+			implementation.set_text(a_text)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: PULLDOWN_I;
 			-- Implementation of pulldown menu
 	
-end 
-
+end -- class PULLDOWN
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -77,3 +81,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

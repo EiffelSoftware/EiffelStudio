@@ -5,32 +5,35 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class OPT_PULL_I 
+deferred class
+
+	OPT_PULL_I 
 
 inherit
 
 	PULLDOWN_I
 	
-feature 
+feature -- Access
 
 	option_button: OPTION_B;
 			-- option button which contains the pulldown
 
 	selected_button: BUTTON is
-            		-- Current Push Button selected in the option menu
+		-- Current Push Button selected in the option menu
 		deferred
 		end;
 
-   	set_selected_button (button: BUTTON) is
-            		-- Set `selected_button' to `button'
-		deferred
-	        ensure
-		        button.same (selected_button)
-		end;
-
-feature
 	caption: STRING is
 		deferred
+		end;
+
+feature -- Element change
+
+   	set_selected_button (button: BUTTON) is
+		-- Set `selected_button' to `button'
+		deferred
+		ensure
+			same_button: button.same (selected_button)
 		end;
 
 	set_caption (a_caption: STRING) is
@@ -49,6 +52,8 @@ feature
 		do
 		end;
 
+feature -- Removal
+
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 		do
 		end;
@@ -61,9 +66,7 @@ feature
 		do
 		end;
 
-
 end -- class OPT_PULL_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -77,3 +80,4 @@ end -- class OPT_PULL_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

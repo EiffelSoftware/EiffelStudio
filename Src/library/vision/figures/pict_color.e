@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PICT_COLOR 
+class
+
+	PICT_COLOR 
 
 inherit
 
@@ -57,7 +59,7 @@ feature -- Access
 	upper_left: COORD_XY_FIG;
 			-- Upper left point of pict_color
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_origin_to_upper_left is
 			-- Set `origin' to `upper_left'.
@@ -117,7 +119,6 @@ feature -- Modification & Insertion
 			set_conf_modified
 		end
 
-
 feature -- Output
 
 	draw is
@@ -133,7 +134,6 @@ feature -- Output
 			end
 		end;
 
-	
 feature -- Status report
 
 	is_superimposable (other: like Current): BOOLEAN is
@@ -146,7 +146,6 @@ feature -- Status report
 			Result := upper_left.is_superimposable (other.upper_left) and 
 				(pixmap = other.pixmap)
 		end;
-
 
 feature {CONFIGURE_NOTIFY} -- Updating 
 
@@ -168,7 +167,6 @@ invariant
 
 end -- class PICT_COLOR
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -181,3 +179,4 @@ end -- class PICT_COLOR
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

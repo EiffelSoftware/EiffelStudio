@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MENU_B_I 
+deferred class
+
+	MENU_B_I 
 
 inherit
 
 	BUTTON_I
 
-feature 
+feature -- Element change
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
@@ -25,6 +27,15 @@ feature
 		deferred
 		end;
 
+	attach_menu (a_menu: MENU_PULL) is
+			-- Attach menu `a_menu' to the menu button, it will
+			-- be the menu which will appear when the button
+			-- is armed.
+		deferred
+		end;
+ 
+feature -- Removal
+
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 		deferred
 		end;
@@ -37,15 +48,7 @@ feature
 		deferred
 		end;
 
-	attach_menu (a_menu: MENU_PULL) is
-			-- Attach menu `a_menu' to the menu button, it will
-			-- be the menu which will appear when the button
-			-- is armed.
-		deferred
-		end;
- 
-end 
-
+end -- class MENU_B_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -59,3 +62,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

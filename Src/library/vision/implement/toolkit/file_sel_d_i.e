@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FILE_SEL_D_I 
+deferred class
+
+	FILE_SEL_D_I 
 
 inherit
 
@@ -17,13 +19,12 @@ feature -- Status setting
 		deferred
 		end
 
-    set_save_file is
-            -- Set the dialog to a save file dialog
-        deferred
-        end
+	set_save_file is
+			-- Set the dialog to a save file dialog
+		deferred
+		end
 
 end --class FILE_SEL_D_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +38,4 @@ end --class FILE_SEL_D_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

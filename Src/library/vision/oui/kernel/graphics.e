@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class GRAPHICS 
+class
+
+	GRAPHICS 
 
 inherit
 
@@ -18,13 +20,7 @@ inherit
 			{NONE} all
 		end
 
-feature 
-
-	exit is
-			-- Exit from the application.
-		do
-			toolkit.exit
-		end;
+feature -- Access
 
 	global_cursor: SCREEN_CURSOR is
 			-- Global cursor for the whole application.
@@ -32,6 +28,14 @@ feature
 			-- with `set_global_cursor'.
 		do
 			Result := toolkit.global_cursor
+		end;
+
+feature -- Basic operations
+
+	exit is
+			-- Exit from the application.
+		do
+			toolkit.exit
 		end;
 
 	iterate is
@@ -43,7 +47,7 @@ feature
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursor'.
 		require
---			a_global_cursor_set_before: not (global_cursor = Void)
+--			a_global_cursor_set_before: global_cursor /= Void
 		do
 			toolkit.restore_cursors
 		ensure
@@ -56,7 +60,7 @@ feature
 			-- `set_cursor' on a WIDGET is not defined.
 			-- It depends on the specific implementation.
 		require
-			a_cursor_exists: not (cursor = Void);
+			a_cursor_exists: cursor /= Void
 			--no_global_cursor_already_set: (global_cursor = Void)
 		do
 			toolkit.set_global_cursor (cursor)
@@ -67,14 +71,13 @@ feature
 	show_tree (a_file: PLAIN_TEXT_FILE) is
 			-- Print a textual representation of the widgets tree on `a_file'.
 		require
-			a_file_exists: not (a_file = Void);
+			a_file_exists: a_file /= Void
 			a_file_opened_for_writing: a_file.is_open_write
 		do
 			widget_manager.show_tree (a_file)
 		end 
 
-end 
-
+end -- class GRAPHICS
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -88,3 +91,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

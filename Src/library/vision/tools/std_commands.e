@@ -5,9 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class STD_COMMANDS
+class
 
-feature {NONE}
+	STD_COMMANDS
+
+feature {NONE} -- Access
 
 	draw_figure_command: DRAW_FIG_COM is
 			-- Command to draw a figure or a world
@@ -33,8 +35,7 @@ feature {NONE}
 			!! Result
 		end;
 
-end
-
+end -- class STD_COMMANDS
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -48,3 +49,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

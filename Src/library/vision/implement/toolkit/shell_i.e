@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SHELL_I 
+deferred class
+
+	SHELL_I 
 
 inherit
 
 	COMPOSITE_I
 	
-feature 
+feature -- Status setting
 
 	set_override (flag: BOOLEAN) is
 		require 
@@ -33,7 +35,6 @@ feature
 
 end -- class SHELL_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -46,3 +47,4 @@ end -- class SHELL_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

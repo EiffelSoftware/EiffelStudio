@@ -4,7 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class STACKABLE_I
+deferred class
+
+	STACKABLE_I
 
 feature
 
@@ -15,7 +17,6 @@ feature
 	screen_object: POINTER is
 		deferred
 		end;
-
 
 end -- STACKABLE_I
 
@@ -31,3 +32,4 @@ end -- STACKABLE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

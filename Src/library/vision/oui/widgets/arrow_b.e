@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ARROW_B 
+class
+
+	ARROW_B 
 
 inherit
 
@@ -20,7 +22,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation 
+feature {NONE} -- Initialization 
 	
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an arrow button with `a_name' as identifier,
@@ -67,7 +69,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature --  Arrow direction 
+feature -- Status report
 
 	down: BOOLEAN is
 			-- Is the arrow direction down ?
@@ -101,6 +103,17 @@ feature --  Arrow direction
 			Result := implementation.up
 		end;
 
+	is_valid (other: COMPOSITE): BOOLEAN is
+			-- Is `other' a valid parent?
+		local
+			a_bar: BAR
+		do
+			a_bar ?= other;
+			Result := (a_bar = Void)
+		end;
+
+feature -- Status setting
+
 	set_down is
 			-- Set the arrow direction to down.
 		require
@@ -133,7 +146,19 @@ feature --  Arrow direction
 			implementation.set_up
 		end;
 
-feature {NONE}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
+
+	implementation: ARROW_B_I;
+			-- Implementation of arrow button
+
+feature {NONE} -- Implementation
+
+	set_default is
+			-- Set default values to current arrow button.
+		do
+		end;
+
+feature {NONE} -- Inapplicable
 
 	font: FONT is
 			-- Font of arrow button
@@ -144,8 +169,6 @@ feature {NONE}
 			-- Set font to `a_font'.
 		do
 		end;
-
-feature {NONE}
 
 	text: STRING is
 			-- Text of current button
@@ -158,45 +181,21 @@ feature {NONE}
 		end;
 
 	set_left_alignment is
-			--  Set text alignment to left.
+			-- Set text alignment to left.
 		do
 		end;
  
 	set_center_alignment is
-			--  Set text alignment to center.
+			-- Set text alignment to center.
 		do
 		end;
 
 	set_right_alignment is
-			--  Set text alignment to right.
+			-- Set text alignment to right.
 		do
 		end
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
-
-	implementation: ARROW_B_I;
-			-- Implementation of arrow button
-
-feature 
-
-	is_valid (other: COMPOSITE): BOOLEAN is
-			-- Is `other' a valid parent?
-		local
-			a_bar: BAR
-		do
-			a_bar ?= other;
-			Result := (a_bar = Void)
-		end;
-
-feature {NONE}
-
-	set_default is
-			-- Set default values to current arrow button.
-		do
-		end;
-
-end
-
+end -- class ARROW_B
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -210,3 +209,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MOTNOT_DATA 
+class
+
+	MOTNOT_DATA 
 
 inherit
 
@@ -20,7 +22,20 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
+
+	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y: INTEGER; a_buttons_state: BUTTONS) is
+			-- Create a context_data for `MotionNotify' event.
+		do
+			widget := a_widget;
+			relative_x := a_relative_x;
+			relative_y := a_relative_y;
+			absolute_x := an_absolute_x;
+			absolute_y := an_absolute_y;
+			buttons_state := a_buttons_state
+		end
+
+feature -- Access
 
 	absolute_x: INTEGER;
 			-- Absolute horizontal position of the pointer (in other words
@@ -41,23 +56,11 @@ feature
 			-- Vertical position of the pointer relative to the receiving
 			-- window
 
-	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y: INTEGER; a_buttons_state: BUTTONS) is
-			-- Create a context_data for `MotionNotify' event.
-		do
-			widget := a_widget;
-			relative_x := a_relative_x;
-			relative_y := a_relative_y;
-			absolute_x := an_absolute_x;
-			absolute_y := an_absolute_y;
-			buttons_state := a_buttons_state
-		end
-
 invariant
 
-	not (buttons_state = Void)
+	buttons_state /= Void
 
-end
-
+end -- class MOTNOT_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -71,3 +74,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

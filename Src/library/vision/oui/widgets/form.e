@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FORM 
+class
+
+	FORM 
 
 inherit
 
@@ -21,7 +23,7 @@ creation
 
 	make, make_unmanaged
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a form with `a_name' as identifier,
@@ -53,12 +55,41 @@ feature {NONE} -- Creation
 			set_default
 		end; 
 	
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature -- Access
 
-	implementation: FORM_I;
-			-- Implementation of form
-	
-feature -- Attachments using offet
+	fraction_base: INTEGER is
+			-- Value used to compute child position with
+			-- position attachment
+		require
+			exists: not destroyed
+		do
+			Result := implementation.fraction_base
+		ensure
+			Fraction_base_greater_than_zero: Result > 0
+		end;
+
+feature -- Status report
+
+	is_valid (other: WIDGET): BOOLEAN is
+			-- Is `other' a valid child?
+		do
+			Result := true
+		end 
+
+feature -- Element change
+
+	set_fraction_base (a_value: INTEGER) is
+			-- Set fraction_base to `a_value'.
+			-- Unsecure to set it after any position attachment,
+			-- contradictory constraints could occur.
+		require
+			exists: not destroyed;
+			value_greater_than_zero: a_value > 0
+		do
+			implementation.set_fraction_base (a_value)
+		end;
+
+feature -- Basic operations
 
 	attach_right (a_child: WIDGET; right_offset: INTEGER) is
 			-- Attach right side of `a_child' to the right side of current form
@@ -172,8 +203,6 @@ feature -- Attachments using offet
 			implementation.attach_top_widget (a_widget.implementation, a_child.implementation, top_offset)
 		end;
 
-feature -- Attachments using positioning 
-
 	attach_left_position (a_child: WIDGET; a_position: INTEGER) is
 			-- Attach left side of `a_child' to a position that is
 			-- relative to left side of current form and is a fraction
@@ -238,30 +267,6 @@ feature -- Attachments using positioning
 			implementation.attach_top_position (a_child.implementation, a_position)
 		end;
 
-	fraction_base: INTEGER is
-			-- Value used to compute child position with
-			-- position attachment
-		require
-			exists: not destroyed
-		do
-			Result := implementation.fraction_base
-		ensure
-			Fraction_base_greater_than_zero: Result > 0
-		end;
-
-	set_fraction_base (a_value: INTEGER) is
-			-- Set fraction_base to `a_value'.
-			-- Unsecure to set it after any position attachment,
-			-- contradictory constraints could occur.
-		require
-			exists: not destroyed;
-			value_greater_than_zero: a_value > 0
-		do
-			implementation.set_fraction_base (a_value)
-		end;
-
-feature -- Detachments
-
 	detach_right (a_child: WIDGET) is
 			-- Detach right side of `a_child'.
 		require
@@ -298,16 +303,12 @@ feature -- Detachments
 			implementation.detach_top (a_child.implementation)
 		end;
 
-feature 
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
-	is_valid (other: WIDGET): BOOLEAN is
-			-- Is `other' a valid child?
-		do
-			Result := true
-		end 
-
-end 
-
+	implementation: FORM_I;
+			-- Implementation of form
+	
+end -- class FORM
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -321,3 +322,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

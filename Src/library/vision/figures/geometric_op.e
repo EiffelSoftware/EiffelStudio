@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class GEOMETRIC_OP 
+deferred class
+
+	GEOMETRIC_OP 
 
 inherit
 
@@ -28,9 +30,7 @@ feature -- Access
 			Result := false;
 		end;
 
-	
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	rotate (a: REAL; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
@@ -131,14 +131,12 @@ feature {NONE} -- Access
 	origin_user_type: INTEGER;
 			-- Type of origin typed by the user
 
-
 invariant
 
 	origin_user_type_constraint: origin_user_type >= 0;
 	user_origin_constraint: (origin_user_type = 1) implies origin_user /= Void
 
 end -- GEOMETRIC_OP
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -152,3 +150,4 @@ end -- GEOMETRIC_OP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

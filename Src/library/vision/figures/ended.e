@@ -8,7 +8,7 @@ indexing
 class ENDED 
 
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_butt_cap is
 			-- Specifies that lines will be square at the endpoint with no
@@ -89,9 +89,7 @@ feature {NONE} -- Access
 	CapRound: INTEGER is 2;
 			-- Code to define round cap
 
-
 end -- class ENDED
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -105,3 +103,4 @@ end -- class ENDED
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

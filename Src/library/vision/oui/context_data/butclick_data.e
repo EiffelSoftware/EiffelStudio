@@ -7,11 +7,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BUTCLICK_DATA 
+class
+
+	BUTCLICK_DATA 
 
 obsolete
-    "button click actions will be removed therefor Current class will %
-	%not be needed."
+	"button click actions will be removed therefor Current class will %
+		%not be needed."
 
 inherit
 
@@ -24,22 +26,21 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y, a_button: INTEGER; a_buttons_state: BUTTONS) is
-            -- Create a context_data for `ButtonClick' event.
-        do
-            widget := a_widget;
-            relative_x := a_relative_x;
-            relative_y := a_relative_y;
-            absolute_x := an_absolute_x;
-            absolute_y := an_absolute_y;
-            button := a_button;
-            buttons_state := a_buttons_state
-        end
+			-- Create a context_data for `ButtonClick' event.
+		do
+			widget := a_widget;
+			relative_x := a_relative_x;
+			relative_y := a_relative_y;
+			absolute_x := an_absolute_x;
+			absolute_y := an_absolute_y;
+			button := a_button;
+			buttons_state := a_buttons_state
+		end
 
-end
-
+end -- class BUTCLICK_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -53,3 +54,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

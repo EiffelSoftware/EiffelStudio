@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INF_LINE 
+class
+
+	INF_LINE 
 
 inherit
 
@@ -34,7 +36,7 @@ feature -- Initialization
 			surround_box.set_infinite
 		end;
 
-feature -- Modification & Insertion	
+feature -- Element change	
 
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
@@ -95,7 +97,7 @@ feature -- Status report
 feature {NONE} -- Access
 
 	CapProjecting: INTEGER is 3;
-            -- Code to define projecting cap
+		-- Code to define projecting cap
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
@@ -105,13 +107,11 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			unset_conf_modified
 		end;
 
-
 invariant
 
 	not p1.is_superimposable (p2)
 
 end -- class INF_LINE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -125,3 +125,4 @@ end -- class INF_LINE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

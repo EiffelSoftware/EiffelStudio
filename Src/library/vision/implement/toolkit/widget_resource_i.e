@@ -6,16 +6,17 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
+
 	WIDGET_RESOURCE_I
 
-feature		-- Initalization
+feature -- Initalization
 
 	make is
 			-- Create object
 		deferred
 		end;
 
-feature		-- Status report
+feature -- Status report
 
 	resource_name: STRING is
 			-- name of resource for widget 'widget_name'
@@ -24,23 +25,24 @@ feature		-- Status report
 
 	resource_value: STRING is
 			-- Value of the resource 'resource_name' for widget 'widget_name'
-                deferred
-                end;
+		deferred
+		end;
 
 	widget_name: STRING is
 			-- widget name to which 'resource_name' refers to
-                deferred
-                end;
+		deferred
+		end;
 
 	resource_string: STRING is
 			-- The joining of widget name, resource name and resource value
 			-- to form the resource string;
 		require
-			resource_name_valid: resource_name /= Void and then not resource_name.empty;
+			resource_name_valid: resource_name /= Void and then not 
+				resource_name.empty;
 		deferred
 		end;
 
-feature 	-- Status setting
+feature -- Status setting
 
 	set_resource_name (a_name: STRING) is
 			-- Set the resource name 
@@ -71,7 +73,6 @@ feature 	-- Status setting
 
 end -- class WIDGET_RESOURCE_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -84,3 +85,4 @@ end -- class WIDGET_RESOURCE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SEGMENT 
+class
+
+	SEGMENT 
 
 inherit
 
@@ -58,7 +60,7 @@ feature -- Access
 			end
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
@@ -129,7 +131,6 @@ feature -- Status report
 
 end -- class SEGMENT
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -142,3 +143,4 @@ end -- class SEGMENT
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

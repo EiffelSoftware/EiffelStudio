@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CONFIGURE_NOTIFY
+class
+
+	CONFIGURE_NOTIFY
 
 creation
 	
@@ -25,7 +27,6 @@ feature -- Initialization
 			notify_class_not_void: notify_class /= Void
 		end
 
-
 feature -- Access
 
 	get_conf_notified: FIGURE is
@@ -33,7 +34,7 @@ feature -- Access
 			Result ?= notify_class.get_notified
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	set_conf_notify is
 			-- 'Current' notifies `conf_notified' when changes configuration
@@ -77,8 +78,6 @@ feature -- Modification & Insertion
 		do
 			notify_class.set_notified (arg)
 		end;
-
-		
 
 	set_conf_modified is
 			-- To be called when a configuration change has been performed
@@ -127,7 +126,6 @@ feature {NONE} -- Access
 
 	notify_class: NOTIFY;
 	
-
 feature -- Status report
 
 	conf_notify: BOOLEAN is
@@ -150,7 +148,6 @@ feature -- Status report
 
 end -- class CONFIGURE_NOTIFY
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -163,3 +160,4 @@ end -- class CONFIGURE_NOTIFY
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

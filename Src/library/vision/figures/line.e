@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LINE 
+deferred class
+
+	LINE 
 
 inherit
 
@@ -23,7 +25,6 @@ inherit
 		end;
 
 feature -- Access
-
 
 	origin: COORD_XY_FIG is
 			-- Origin of line
@@ -49,8 +50,7 @@ feature -- Access
 	p1: COORD_XY_FIG;
 			-- First point
 
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
@@ -62,7 +62,6 @@ feature -- Modification & Insertion
 			p1_set: p1 = o1;
 			p2_set: p2 = o2
 		end;
-
 
 	set_origin_to_first_point is
 			-- Set origin to first point of line.
@@ -134,7 +133,6 @@ feature -- Modification & Insertion
 			set_conf_modified
 		end
 
-
 feature -- Status report
 
 	is_horizontal: BOOLEAN is
@@ -173,7 +171,6 @@ invariant
 
 end -- class LINE
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -186,3 +183,4 @@ end -- class LINE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

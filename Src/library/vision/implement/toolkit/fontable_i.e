@@ -5,25 +5,28 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FONTABLE_I 
+deferred class
 
-feature 
+	FONTABLE_I 
+
+feature -- Access
 
 	font: FONT is
 			-- Font name of label
 		deferred
-		end;
+		end
+
+feature -- Element change
 
 	set_font (a_font: FONT) is
 			-- Set font label to `font_name'.
 		require
-			a_font_exists: not (a_font = Void);
+			a_font_exists: a_font /= Void
 			a_font_specified: a_font.is_specified
 		deferred
 		end
 
 end -- class FONTABLE_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -37,3 +40,4 @@ end -- class FONTABLE_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

@@ -1,19 +1,15 @@
 indexing
-
+	
+	description: "Item that can be stacked on the screen"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class STACKABLE
+deferred class
 
-feature
+	STACKABLE
 
-	is_stackable: BOOLEAN is
-		require
-			exists: not destroyed;
-		do
-			Result := implementation.is_stackable;
-		end
+feature -- Access
 
 	screen_object: POINTER is
 			-- implementation of current widget
@@ -23,13 +19,22 @@ feature
 			Result := implementation.screen_object;
 		end;
 
-	destroyed: BOOLEAN is
-		deferred
-		end;
-
 	parent: COMPOSITE is
 		require
 			exists: not destroyed;
+		deferred
+		end;
+
+feature -- Status report
+
+	is_stackable: BOOLEAN is
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.is_stackable;
+		end
+
+	destroyed: BOOLEAN is
 		deferred
 		end;
 
@@ -42,7 +47,6 @@ feature
 feature {NONE}
 
 	implementation: STACKABLE_I;
-
 
 end -- STACKABLE
 
@@ -58,3 +62,4 @@ end -- STACKABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

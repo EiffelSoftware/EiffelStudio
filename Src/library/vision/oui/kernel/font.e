@@ -7,6 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class 
+
 	FONT 
 
 inherit
@@ -40,14 +41,6 @@ feature -- Access
 
 	implementation: FONT_I;
 			-- Implementation of font
-
-	is_font_valid: BOOLEAN is
-			-- Is the font valid?
-		require
-			font_specified: is_specified
-		do
-			Result := implementation.is_valid 
-		end;
 
 	font_ascent: INTEGER is
 			-- Ascent value in pixel of the font loaded for `a_screen'.
@@ -146,6 +139,16 @@ feature -- Access
 			positive_result: Result > 0
 		end;
 
+feature -- Status report
+
+	is_font_valid: BOOLEAN is
+			-- Is the font valid?
+		require
+			font_specified: is_specified
+		do
+			Result := implementation.is_valid 
+		end;
+
 	is_proportional: BOOLEAN is
 			-- Is the font proportional ?
 		require
@@ -233,7 +236,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-feature -- Status setting
+feature -- Element change
 
 	set_name (a_name: STRING) is
 			-- Set `name' to `a_name'.
@@ -318,3 +321,4 @@ end -- class FONT
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

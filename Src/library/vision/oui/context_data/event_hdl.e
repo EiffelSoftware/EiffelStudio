@@ -4,10 +4,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EVENT_HDL 
+class
 
-end
+	EVENT_HDL 
 
+end -- class EVENT_HDL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -21,3 +22,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

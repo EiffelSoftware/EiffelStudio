@@ -8,7 +8,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class NOTIFY
+class
+
+	NOTIFY
 
 feature -- Access
 	
@@ -104,10 +106,9 @@ feature {NONE} -- access
 invariant
 	
 	--notified.receive implies notify;
-		-- if receive=false `Current` is not always notified
+	-- if receive=false `Current` is not always notified
 
 end -- class NOTIFY
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BASE 
+class
+
+	BASE 
 
 inherit 
 
@@ -18,7 +20,7 @@ creation
 
 	make
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make  (a_name: STRING; a_screen: SCREEN) is
 			-- Create a base with `a_name' as identifier,
@@ -39,19 +41,18 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BASE_I
 			-- Implementation of base
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current base.
 		do
 		end;
-end
-
+end -- class BASE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -65,3 +66,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

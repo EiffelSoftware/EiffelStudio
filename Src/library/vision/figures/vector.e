@@ -5,14 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VECTOR 
+class
+
+	VECTOR 
 
 inherit
 
 	COORD_XY_FIG
 
 end -- class VECTOR
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

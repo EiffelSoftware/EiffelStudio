@@ -14,6 +14,7 @@ inherit
 feature
 
 	set_always_one (flag: BOOLEAN) is
+			-- Set always one.
 		deferred
 		end;
 
@@ -32,3 +33,4 @@ end -- class RADIO_BOX_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

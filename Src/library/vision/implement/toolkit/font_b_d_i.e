@@ -1,10 +1,13 @@
 indexing
 
+	description: "Implementation of a font box dialog";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FONT_B_D_I 
+deferred class
+
+	FONT_B_D_I 
 
 inherit
 
@@ -13,7 +16,6 @@ inherit
 feature
 
 end -- class FONT_B_D_I
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -27,3 +29,4 @@ end -- class FONT_B_D_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

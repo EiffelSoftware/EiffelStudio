@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MANAGER_I 
+deferred class
+
+	MANAGER_I 
 
 inherit
 
@@ -13,28 +15,31 @@ inherit
 
 	STACKABLE_I;
 
-feature 
+feature -- Access
 
 	foreground_color: COLOR is
 			-- Foreground color of manager widget
 		deferred
 		end;
 
-	set_foreground_color (new_color: COLOR) is
-			-- Set foreground color to `new_color'.
-		require
-			color_not_void: not (new_color = Void)
-		deferred
-		ensure
-			foreground_color = new_color
-		end;
+feature -- Status setting
 
 	update_foreground_color is
 		deferred
 		end;
 
-end
+feature -- Element change
 
+	set_foreground_color (new_color: COLOR) is
+			-- Set foreground color to `new_color'.
+		require
+			color_not_void: new_color /= Void
+		deferred
+		ensure
+			foreground_color_set: foreground_color = new_color
+		end;
+
+end -- class MANAGER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -48,3 +53,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

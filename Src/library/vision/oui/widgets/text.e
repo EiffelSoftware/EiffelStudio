@@ -1,10 +1,13 @@
 indexing
 
+	desciption: "A text editor for several lines of text. "
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TEXT 
+class
+
+	TEXT 
 
 inherit
 
@@ -18,7 +21,7 @@ creation
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
 	
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a text with `a_name' as identifier,
@@ -92,56 +95,7 @@ feature {NONE} -- Creation
 			set_default
 		end;
 
-feature -- Callbacks (adding)
-
-	add_modify_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed before
-			-- text is deleted from or inserted in current text widget.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.add_modify_action (a_command, argument)
-		end;
-
-	add_motion_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed before insert
-			-- cursor is moved to a new position.
-			-- `argument' will be passed to `a_command' whenever it is
-			-- invoked as a callback.
-		require
-			exists: not destroyed;
-			Valid_command: a_command /= Void
-		do
-			implementation.add_motion_action (a_command, argument)
-		end;
-
-feature -- Callbacks (removing)
-
-	remove_modify_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed before
-			-- text is deleted from or inserted in current text widget.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_modify_action (a_command, argument)
-		end;
-
-	remove_motion_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed before
-			-- insert cursor is moved to a new position.
-		require
-			exists: not destroyed;
-			not_a_command_void: a_command /= Void
-		do
-			implementation.remove_motion_action (a_command, argument)
-		end;
-
-
-feature -- Text selection
+feature -- Access
 
 	begin_of_selection: INTEGER is
 			-- Position of the beginning of the current selection highlightened
@@ -155,44 +109,6 @@ feature -- Text selection
 			Result >= 0;
 			Result < count
 		end;
-
-	clear_selection is
-			-- Clear a selection
-		require
-			exists: not destroyed;
-			selection_active: is_selection_active;
-			realized: realized
-		do
-			implementation.clear_selection
-		ensure
-			not is_selection_active
-		end;
-
-	is_selection_active: BOOLEAN is
-			-- Is there a selection currently active ?
-		require
-			exists: not destroyed;
-			realized: realized
-		do
-			Result := implementation.is_selection_active
-		end;
-
-	set_selection (first, last: INTEGER) is
-			-- Select the text between `first' and `last'.
-			-- This text will be physically highlightened on the screen.
-		require
-			exists: not destroyed;
-			first_positive_not_null: first >= 0;
-			last_fewer_than_count: last <= count;
-			first_fewer_than_last: first <= last;
-			realized: realized
-		do
-			implementation.set_selection (first, last)
-		ensure
-			is_selection_active;
-			begin_of_selection = first;
-			end_of_selection = last
-		end
 
 	x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to the upper left corner
@@ -232,19 +148,6 @@ feature -- Text selection
 			valid_result: Result >= 0 and then Result <= count
 		end;
  
-	set_top_character_position (char_pos: INTEGER) is
-			-- Set first character displayed to `char_pos'.
-		require
-			exists: not destroyed;
-			valid_position: char_pos >= 0 and then char_pos <= count
-		do
-			implementation.set_top_character_position (char_pos)
-		ensure
-			valid_position: top_character_position = char_pos
-		end;
- 
-feature -- Text cursor position
-
 	cursor_position: INTEGER is
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
@@ -270,57 +173,89 @@ feature -- Text cursor position
 			Result <= count
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
-			-- Set `cursor_position' to `a_position'.
+feature -- Element change
+
+	add_modify_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed before
+			-- text is deleted from or inserted in current text widget.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
 			exists: not destroyed;
-			a_position_positive_not_null: a_position >= 0;
-			a_position_fewer_than_count: a_position <= count
+			Valid_command: a_command /= Void
 		do
-			implementation.set_cursor_position (a_position)
-		ensure
-			cursor_position = a_position
+			implementation.add_modify_action (a_command, argument)
 		end;
 
-feature -- Text margin
+	add_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of action to be executed before insert
+			-- cursor is moved to a new position.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			exists: not destroyed;
+			Valid_command: a_command /= Void
+		do
+			implementation.add_motion_action (a_command, argument)
+		end;
 
-	margin_height: INTEGER is
-			-- Distance between top edge of text window and current text,
-			-- and between bottom edge of text window and current text.
+feature -- Removal
+
+	remove_modify_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed before
+			-- text is deleted from or inserted in current text widget.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_modify_action (a_command, argument)
+		end;
+
+	remove_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of action to be executed before
+			-- insert cursor is moved to a new position.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.remove_motion_action (a_command, argument)
+		end;
+
+feature -- Status report
+
+	is_selection_active: BOOLEAN is
+			-- Is there a selection currently active ?
+		require
+			exists: not destroyed;
+			realized: realized
+		do
+			Result := implementation.is_selection_active
+		end;
+
+
+	is_height_resizable: BOOLEAN is
+			-- Is height of current text resizable?
 		require
 			exists: not destroyed
 		do
-			Result := implementation.margin_height
+			Result := implementation.is_height_resizable
 		end;
 
-	margin_width: INTEGER is
-			-- Distance between left edge of text window and current text,
-			-- and between right edge of text window and current text.
+	is_width_resizable: BOOLEAN is
+			-- Is width of current text resizable?
 		require
 			exists: not destroyed
 		do
-			Result := implementation.margin_width
+			Result := implementation.is_width_resizable
 		end;
 
-	set_margin_height (new_height: INTEGER) is
-			-- Set `margin_height' to `new_height'.
+	is_any_resizable: BOOLEAN is
+			-- Is width and height of current text resizable?
 		require
-			exists: not destroyed;
-			new_height_large_enough: new_height >= 0
+			exists: not destroyed
 		do
-			implementation.set_margin_height (new_height)
+			Result := implementation.is_any_resizable 
 		end;
-
-	set_margin_width (new_width: INTEGER) is
-			-- Set `margin_width' to `new_width'.
-		require
-			exists: not destroyed;
-			new_width_large_enough: new_width >= 0
-		do
-			implementation.set_margin_width (new_width)
-		end;
-
-feature -- Text mode
 
 	is_read_only: BOOLEAN is
 			-- Is current text in read only mode?
@@ -346,96 +281,6 @@ feature -- Text mode
 			Result := implementation.is_bell_enabled
 		end;
 
-	allow_action is
-			-- Allow the cursor to move or the text to be modified
-			-- during a `motion' or a `modify' action.
-		require
-			exists: not destroyed
-		do
-			implementation.allow_action
-		end;
-
-	forbid_action is
-			-- Forbid the cursor to move or the text to be modified
-			-- during a `motion' or a `modify' action.
-		require
-			exists: not destroyed
-		do
-			implementation.forbid_action
-		end;
-
-	set_read_only is
-			-- Set current text to be read only.
-		require
-			exists: not destroyed
-		do
-			implementation.set_read_only
-		end;
-
-	set_editable is
-			-- Set current text to be editable.
-		require
-			exists: not destroyed
-		do
-			implementation.set_editable
-		end;
-
-	disable_verify_bell is
-			-- Disable the bell when an action is forbidden
-		require
-			exists: not destroyed
-		do
-			implementation.disable_verify_bell
-		end;
-
-	enable_verify_bell is
-			-- Enable the bell when an action is forbidden
-		require
-			exists: not destroyed
-		do
-			implementation.enable_verify_bell
-		end;
-
-	rows: INTEGER is
-			-- Height of Current widget measured in character
-			-- heights. 
-		require
-			exists: not destroyed;
-			is_multi_line_mode: is_multi_line_mode
-		do
-			Result := implementation.rows
-		end;
-
-	set_rows (i: INTEGER) is
-			-- Set the character height of Current widget to `i'.
-		require
-			exists: not destroyed;
-			is_multi_line_mode: is_multi_line_mode;
-			valid_i: i > 0
-		do
-			implementation.set_rows (i)
-		end;
-
-	set_single_line_mode is
-			-- Set editing for single line text.
-		require
-			exists: not destroyed
-		do
-			implementation.set_single_line_mode
-		ensure
-			is_single_line_mode: not is_multi_line_mode
-		end;
-
-	set_multi_line_mode is
-			-- Set editing for multiline text.
-		require
-			exists: not destroyed
-		do
-			implementation.set_multi_line_mode
-		ensure
-			is_multi_line_mode: is_multi_line_mode
-		end;
-
 	is_multi_line_mode: BOOLEAN is
 			-- Is Current editing a multiline text?
 		require
@@ -453,15 +298,7 @@ feature -- Text mode
 			Result := implementation.is_cursor_position_visible
 		end;
 
-	set_cursor_position_visible (flag: BOOLEAN) is
-			-- Set is_cursor_position_visible to flag.
-		require
-			exists: not destroyed
-		do
-			implementation.set_cursor_position_visible (flag)
-		end;
-
-feature -- Resize policies
+feature -- Status setting
 
 	disable_resize is
 			-- Disable that current text widget attempts to resize its width and
@@ -517,37 +354,204 @@ feature -- Resize policies
 			implementation.enable_resize_width
 		end;
 
-	is_height_resizable: BOOLEAN is
-			-- Is height of current text resizable?
+	allow_action is
+			-- Allow the cursor to move or the text to be modified
+			-- during a `motion' or a `modify' action.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_height_resizable
+			implementation.allow_action
 		end;
 
-	is_width_resizable: BOOLEAN is
-			-- Is width of current text resizable?
+	forbid_action is
+			-- Forbid the cursor to move or the text to be modified
+			-- during a `motion' or a `modify' action.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_width_resizable
+			implementation.forbid_action
 		end;
 
-	is_any_resizable: BOOLEAN is
-			-- Is width and height of current text resizable?
+	set_read_only is
+			-- Set current text to be read only.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_any_resizable 
+			implementation.set_read_only
 		end;
 
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+	set_editable is
+			-- Set current text to be editable.
+		require
+			exists: not destroyed
+		do
+			implementation.set_editable
+		end;
+
+	disable_verify_bell is
+			-- Disable the bell when an action is forbidden
+		require
+			exists: not destroyed
+		do
+			implementation.disable_verify_bell
+		end;
+
+	enable_verify_bell is
+			-- Enable the bell when an action is forbidden
+		require
+			exists: not destroyed
+		do
+			implementation.enable_verify_bell
+		end;
+
+	set_single_line_mode is
+			-- Set editing for single line text.
+		require
+			exists: not destroyed
+		do
+			implementation.set_single_line_mode
+		ensure
+			is_single_line_mode: not is_multi_line_mode
+		end;
+
+	set_multi_line_mode is
+			-- Set editing for multiline text.
+		require
+			exists: not destroyed
+		do
+			implementation.set_multi_line_mode
+		ensure
+			is_multi_line_mode: is_multi_line_mode
+		end;
+
+feature -- Measurement
+
+	margin_height: INTEGER is
+			-- Distance between top edge of text window and current text,
+			-- and between bottom edge of text window and current text.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.margin_height
+		end;
+
+	margin_width: INTEGER is
+			-- Distance between left edge of text window and current text,
+			-- and between right edge of text window and current text.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.margin_width
+		end;
+
+	rows: INTEGER is
+			-- Height of Current widget measured in character
+			-- heights. 
+		require
+			exists: not destroyed;
+			is_multi_line_mode: is_multi_line_mode
+		do
+			Result := implementation.rows
+		end;
+
+feature -- Basic operations
+
+	clear_selection is
+			-- Clear a selection
+		require
+			exists: not destroyed;
+			selection_active: is_selection_active;
+			realized: realized
+		do
+			implementation.clear_selection
+		ensure
+			not is_selection_active
+		end;
+
+	set_selection (first, last: INTEGER) is
+			-- Select the text between `first' and `last'.
+			-- This text will be physically highlightened on the screen.
+		require
+			exists: not destroyed;
+			first_positive_not_null: first >= 0;
+			last_fewer_than_count: last <= count;
+			first_fewer_than_last: first <= last;
+			realized: realized
+		do
+			implementation.set_selection (first, last)
+		ensure
+			is_selection_active;
+			begin_of_selection = first;
+			end_of_selection = last
+		end
+
+	set_top_character_position (char_pos: INTEGER) is
+			-- Set first character displayed to `char_pos'.
+		require
+			exists: not destroyed;
+			valid_position: char_pos >= 0 and then char_pos <= count
+		do
+			implementation.set_top_character_position (char_pos)
+		ensure
+			valid_position: top_character_position = char_pos
+		end;
+ 
+	set_cursor_position (a_position: INTEGER) is
+			-- Set `cursor_position' to `a_position'.
+		require
+			exists: not destroyed;
+			a_position_positive_not_null: a_position >= 0;
+			a_position_fewer_than_count: a_position <= count
+		do
+			implementation.set_cursor_position (a_position)
+		ensure
+			cursor_position = a_position
+		end;
+
+	set_margin_height (new_height: INTEGER) is
+			-- Set `margin_height' to `new_height'.
+		require
+			exists: not destroyed;
+			new_height_large_enough: new_height >= 0
+		do
+			implementation.set_margin_height (new_height)
+		end;
+
+	set_margin_width (new_width: INTEGER) is
+			-- Set `margin_width' to `new_width'.
+		require
+			exists: not destroyed;
+			new_width_large_enough: new_width >= 0
+		do
+			implementation.set_margin_width (new_width)
+		end;
+
+feature -- Text mode
+
+	set_rows (i: INTEGER) is
+			-- Set the character height of Current widget to `i'.
+		require
+			exists: not destroyed;
+			is_multi_line_mode: is_multi_line_mode;
+			valid_i: i > 0
+		do
+			implementation.set_rows (i)
+		end;
+
+	set_cursor_position_visible (flag: BOOLEAN) is
+			-- Set is_cursor_position_visible to flag.
+		require
+			exists: not destroyed
+		do
+			implementation.set_cursor_position_visible (flag)
+		end;
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: TEXT_I;
 			-- Implementation of current text
 	
 end -- class TEXT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -561,3 +565,4 @@ end -- class TEXT
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

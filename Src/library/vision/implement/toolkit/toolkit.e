@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TOOLKIT
+deferred class
+
+	TOOLKIT
 
 inherit
 
@@ -14,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-feature
+feature -- Access
 
 	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN; 
 		oui_parent: COMPOSITE): ARROW_B_I is
@@ -47,11 +49,6 @@ feature
 		deferred
 		ensure
 			widget_exists: Result /= Void
-		end;
-
-	exit is
-			-- Exit from the application
-		deferred
 		end;
 
 	font (a_font: FONT): FONT_I is
@@ -87,11 +84,6 @@ feature
 			-- Global cursor for the whole application.
 			-- Void if no global cursor has been defined
 			-- with `set_global_cursor'.
-		deferred
-		end;
-
-	iterate is
-			-- Loop the application.
 		deferred
 		end;
 
@@ -140,8 +132,6 @@ feature
 
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursor'.
-	   require
---			a_global_cursor_set_before: not (global_cursor = Void)
 		deferred
 		ensure
 			no_global_cursor_anymore: (global_cursor = Void)
@@ -174,7 +164,7 @@ feature
 			-- or `set_cursor' on a WIDGET is not defined.
 			-- It depends on the specific implementation.
 		require
-			a_cursor_exists: not (a_cursor = Void);
+			a_cursor_exists: a_cursor /= Void
 			no_global_cursor_already_set: (global_cursor = Void)
 		deferred
 		ensure
@@ -536,8 +526,20 @@ feature
 		deferred
 		end;
 
-end -- class TOOLKIT
+feature -- Basic operations
 
+	iterate is
+			-- Loop the application.
+		deferred
+		end;
+
+	exit is
+			-- Exit from the application
+		deferred
+		end;
+
+
+end -- class TOOLKIT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -551,3 +553,4 @@ end -- class TOOLKIT
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

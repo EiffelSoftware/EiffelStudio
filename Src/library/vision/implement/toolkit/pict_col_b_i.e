@@ -5,16 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PICT_COL_B_I 
+deferred class
+
+	PICT_COL_B_I 
 
 inherit
 
 	BUTTON_I
 
-
-
-	
-feature 
+feature -- Access
 
 	pixmap: PIXMAP is
 			-- Pixmap used
@@ -23,10 +22,12 @@ feature
 			valid_result: Result.is_valid
 		end;
 
+feature -- Element change
+
 	set_pixmap (a_pixmap: PIXMAP) is
 			-- Draw `a_pixmap' into the picture_button.
 		require
-			a_pixmap_exists: not (a_pixmap = Void);
+			a_pixmap_exists: a_pixmap /= Void
 			a_pixmap_valid: a_pixmap.is_valid
 		deferred
 		ensure
@@ -34,7 +35,6 @@ feature
 		end
 
 end -- class PICT_COLOR_B
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -48,3 +48,4 @@ end -- class PICT_COLOR_B
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

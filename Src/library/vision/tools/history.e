@@ -5,9 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class HISTORY 
+deferred class
 
-feature 
+	HISTORY 
+
+feature -- Basic operations
 
 	record (a_command: UNDOABLE) is
 			-- Record `a_command' in Current
@@ -15,8 +17,7 @@ feature
 		deferred
 		end
 
-end
-
+end -- class HISTORY
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -30,3 +31,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

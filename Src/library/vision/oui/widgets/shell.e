@@ -5,7 +5,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SHELL 
+deferred class
+
+	SHELL 
 
 inherit
 
@@ -16,7 +18,13 @@ inherit
 			implementation
 		end
 	
-feature -- Windowing
+feature -- Status report
+
+	is_popup_shell: BOOLEAN is
+		do
+		end;
+
+feature -- Status setting
 
 	set_override (flag: BOOLEAN) is
 		require
@@ -43,17 +51,12 @@ feature -- Windowing
 			implementation.forbid_resize
 		end;
 
-	is_popup_shell: BOOLEAN is
-		do
-		end;
-
-feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: SHELL_I;
 			-- Implementation of shell
 
-end 
-
+end -- class SHELL
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -67,3 +70,4 @@ end
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

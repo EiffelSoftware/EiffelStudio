@@ -5,6 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
+
 	SCROLLABLE_LIST_I 
 
 inherit

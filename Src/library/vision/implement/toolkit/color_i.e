@@ -4,9 +4,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class COLOR_I 
+deferred class
 
-inherit
+	COLOR_I 
 
 feature -- Access
 
@@ -97,7 +97,7 @@ feature -- Status setting
 	set_name (a_name: STRING) is
 			-- Set color name to `a_name'.
 		require
-			a_name_not_void: not (a_name = Void)
+			a_name_not_void: a_name /= Void
 		deferred
 		ensure
 			name_exists: name /= Void;
@@ -140,7 +140,6 @@ feature -- Status setting
 
 end -- class COLOR_I
 
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
@@ -153,3 +152,4 @@ end -- class COLOR_I
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

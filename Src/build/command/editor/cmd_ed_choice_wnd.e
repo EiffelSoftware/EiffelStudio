@@ -4,8 +4,7 @@ inherit
 
 	CHOICE_WND
 		redefine
-			continue_after_popdown,
-			first_line, no_item_line
+			continue_after_popdown
 		end
 
 creation
@@ -16,45 +15,33 @@ feature
 
 	data_list: LINKED_LIST [EDITABLE];
 
-	first_line: STRING_SCROLLABLE_ELEMENT is
-		once
-			!! Result.make (14)
-			Result.append ("Select to edit")
-		end;
-
-	no_item_line: STRING_SCROLLABLE_ELEMENT is
-		once
-			!! Result.make (18)
-			Result.append ("No items to select")
-		end;
-
 	popup_with_list (l: LINKED_LIST [EDITABLE]) is
 		require
 			valid_list: l /= Void 
 		local
-			string_list: LINKED_LIST [STRING];
+			string_list: LINKED_LIST [STRING]
 			ed: EDITABLE
 		do
-			!! string_list.make;
-			data_list := l;
+			!! string_list.make
+			data_list := l
 			from
 				l.start
 			until
 				l.after
 			loop
 				ed := l.item;
-				string_list.extend (ed.label);
+				string_list.extend (ed.label)
 				l.forth
 			end;
 			if not l.empty then
-				string_list.extend (" Edit all ");
+				string_list.extend (" Edit all ")
 			end;
 			popup (string_list)
 		end;
 
 	continue_after_popdown is
 		local
-			editable: EDITABLE;
+			editable: EDITABLE
 			pos: INTEGER
 		do
 			pos := position;

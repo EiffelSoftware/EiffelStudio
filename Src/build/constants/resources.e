@@ -150,7 +150,7 @@ feature {NONE} -- Integer Values initialization
 	initialize_misc_values (resource: RESOURCE_TABLE) is
 		do
 			history_size 
-				:= resource.get_integer ("history_size", 10);
+				:= resource.get_integer ("history_size", 20);
 			window_free_list_number 
 				:= resource.get_integer ("window_free_list_number", 0);
 			command_file_name
@@ -204,6 +204,7 @@ feature -- Window sizes
 
 		-- History Window
 	history_wnd_width: INTEGER
+	history_wnd_height: INTEGER
 
 		-- Help Window
 	
@@ -226,6 +227,7 @@ feature -- Window sizes
 
 		-- Translation Editor
 	trans_ed_width: INTEGER;
+	trans_ed_height: INTEGER;
 
 		-- Context Tree
 	tree_width: INTEGER;
@@ -267,6 +269,7 @@ feature {NONE} -- Integer Values initialization
 			help_wnd_height := resource.get_pos_integer ("help_wnd_height", 500);
 
 			history_wnd_width := resource.get_pos_integer ("history_wnd_width", 200);
+			history_wnd_height := resource.get_pos_integer ("history_wnd_height", 300);
 
 			main_panel_width := resource.get_pos_integer ("main_panel_width", 550);
 			main_panel_height := resource.get_pos_integer ("main_panel_height", 180);
@@ -280,6 +283,7 @@ feature {NONE} -- Integer Values initialization
 			state_ed_height := resource.get_pos_integer ("state_ed_height", 300);
 
 			trans_ed_width := resource.get_pos_integer ("trans_ed_width", 250);
+			trans_ed_height := resource.get_pos_integer ("trans_ed_height", 170);
 
 			tree_width := resource.get_pos_integer ("tree_width", 320);
 			tree_height := resource.get_pos_integer ("tree_height", 270);

@@ -36,10 +36,10 @@ extern "C" {
 				/* VXWORKS should be undef because mutex doesn't Work on this platform */
 /* Public features declarations */
 
-rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENCE (*feature_address) (EIF_REFERENCE));
+rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER function_ptr);
 
-rt_public void eif_global_procedure (EIF_REFERENCE Current, void * (*feature_address) (EIF_REFERENCE));
-rt_shared void eif_destroy_once_per_process (void); /* shared?? FIXME */
+rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr);
+rt_shared void eif_destroy_once_per_process (void); 
 
 /* Private structures declarations */
 
@@ -59,7 +59,7 @@ struct fop_list {
         char *addr;     	 /* Index in the list. Here it is
 							*	 the once per thread
                             * function address */
-        EIF_REFERENCE * val;             /* Value of the once per process: FIXME * removed on val */
+        EIF_REFERENCE * val;             /* Value of the once per process */
         struct fop_list *next;  /* Link to the next element in the list */
 };
  
@@ -93,10 +93,10 @@ rt_private EIF_MUTEX_TYPE *eif_pop_table_mutex;
  * otherwise several threads can access and modify it  */
 rt_private EIF_MUTEX_TYPE *eif_fop_table_mutex;
 
-rt_private struct fop_list *init_fop_list (EIF_REFERENCE (*feature_address) (EIF_REFERENCE)); 
+rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address); 
 	/* Creates and returns a pointer on a new 'fop_list' */
 	
-rt_private struct pop_list *init_pop_list (void * (*feature_address) (EIF_REFERENCE)); 
+rt_private struct pop_list *init_pop_list (EIF_PROC feature_address); 
 	/* creates and returns a pointer on a new 'pop_list' */
  
 /* For reclaiming eif_pop_table and eif_fop_table */
@@ -105,7 +105,7 @@ rt_private void eif_destroy_pop_list (struct pop_list *list); 	/* destroy a pop_
 
 /* Implementations */
 
-rt_private struct fop_list *init_fop_list (EIF_REFERENCE (*feature_address) (EIF_REFERENCE))
+rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address)
 {
 	/* Creates and initializes a pointer on a new struct fop_list 
 	 * (first call of once function). 		 
@@ -130,7 +130,7 @@ rt_private struct fop_list *init_fop_list (EIF_REFERENCE (*feature_address) (EIF
 } /* init_fop_list */	
 
 
-rt_private struct pop_list *init_pop_list(void * (*feature_address) (EIF_REFERENCE))
+rt_private struct pop_list *init_pop_list(EIF_PROC feature_address)
 {
 	/* Creates a new 'pop_list'
 	 * (first call of once procedure). 				 
@@ -156,7 +156,7 @@ rt_private struct pop_list *init_pop_list(void * (*feature_address) (EIF_REFEREN
 
 
 
-rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENCE (*feature_address) (EIF_REFERENCE))
+rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER  function_ptr)
 {					/* Current object */
 								/* feature address of once function (called with $ operator) */
 
@@ -179,6 +179,8 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 				* containing information about feature */ 
 
 
+	EIF_FN_REF feature_address = (EIF_FN_REF) function_ptr; /* need to cast function_ptr for C-ANSI conformance */
+
 	EIF_MUTEX_CREATE(eif_fop_table_mutex, "Couldn't create mutex for once per process management\n");
 	
 	EIF_MUTEX_LOCK(eif_fop_table_mutex,"Couldn't lock mutex for once per process management\n");
@@ -199,7 +201,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 	if (list == (struct fop_list *) 0) {
 		/* First call of feature once in process*/
 		list = (struct fop_list *) init_fop_list (feature_address);
-		list->val = (EIF_REFERENCE *) hector_addr ( (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current))));
+		list->val = (EIF_REFERENCE *) hector_addr ( (char *) (feature_address (eif_access (Current))));
 
 		eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex");
@@ -212,7 +214,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 			if (list->next == (struct fop_list *) 0) {
 				list->next =(struct fop_list *) init_fop_list (feature_address);
 
-				list->next->val = (EIF_REFERENCE *) hector_addr ( (char *) (FUNCTION_CAST(EIF_REFERENCE, (EIF_REFERENCE)) feature_address (eif_access (Current))));
+				list->next->val = (EIF_REFERENCE *) hector_addr (feature_address (eif_access (Current)));
 				EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
 		return ((EIF_REFERENCE) eif_access (list->next->val));	
 			}
@@ -240,7 +242,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_REFERENC
 
 }
 
-rt_public void eif_global_procedure (EIF_REFERENCE Current, void * (*feature_address) (EIF_REFERENCE))
+rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr)
 				/* Current object */
 							/* Feature address of once procedure (called with $ operator) */
 {
@@ -255,6 +257,7 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, void * (*feature_add
 
         struct pop_list *list; /* current pointer on struct pop_list containing information about feature */
  
+	EIF_PROC feature_address = (EIF_PROC) proc_ptr; /* need to cast proc_ptr for C-ANSI conformance */
 
 	EIF_MUTEX_CREATE(eif_pop_table_mutex, "Couldn't create mutex for once per process table\n");
 	
@@ -282,7 +285,7 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, void * (*feature_add
                 list = (struct pop_list *) init_pop_list (feature_address);
 	        /* The once procedure is executed here. */
 		eif_pop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
-        	(FUNCTION_CAST (void, (EIF_REFERENCE)) feature_address (eif_access (Current)));
+        feature_address (eif_access (Current));
 
         } else {
  
@@ -291,7 +294,7 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, void * (*feature_add
                         if (list->next == (struct pop_list *) 0) {
                                 list->next = (struct pop_list *) init_pop_list (feature_address);
         			/* The once procedure is executed here. */
-        			(FUNCTION_CAST (void, (EIF_REFERENCE)) feature_address (eif_access (Current)));
+        			feature_address (eif_access (Current));
 
                         }
 			list = list->next;

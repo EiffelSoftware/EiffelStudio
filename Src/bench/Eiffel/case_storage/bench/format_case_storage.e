@@ -81,8 +81,7 @@ feature -- Execution
 								set_order_same_as_text;
 								initialize_view_ids;
 								process_clusters;
-								Reverse_engineering_window.put_start_reverse_engineering
-									(System.nb_of_classes);
+								Reverse_engineering_window.put_start_reverse_engineering (System.classes.count);
 								convert_to_case_format;
 								remove_old_classes;
 								clear_shared_case_information;

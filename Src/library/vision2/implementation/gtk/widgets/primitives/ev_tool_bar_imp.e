@@ -74,35 +74,18 @@ feature -- Implementation
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
 		local
-			l: POINTER
-			child: POINTER
-			a_child_list: POINTER
-			gdkwin: POINTER
-			a_x, a_y, insert_pos: INTEGER
-			item_imp: EV_ITEM_IMP
+			wid_imp: EV_WIDGET_IMP
+			tbi: EV_TOOL_BAR_ITEM
 		do
-			from
-				gdkwin := C.gdk_window_at_pointer ($a_x, $a_y)
-				a_child_list := C.gtk_container_children (list_widget)
-				l := a_child_list
-			until
-				Result > 0
-			loop				
-				child := C.glist_struct_data (l)
-				-- This is the c_object widget in the list
-				if child /= NULL then
-					insert_pos := insert_pos + 1
-					item_imp ?= eif_object_from_c (child)
-					if item_imp.pointer_over_widget (gdkwin, a_x, a_y) then
-						Result := insert_pos
-					end
-				else
-					Result := count + 1
+			wid_imp := widget_imp_at_pointer_position
+			if wid_imp /= Void then
+				tbi ?= wid_imp.interface
+				if tbi /= Void and has (tbi) then
+					Result := index_of (tbi, 1)
 				end
-				l := C.glist_struct_next (l) 
 			end
-			if a_child_list /= NULL then
-				C.g_list_free (a_child_list)
+			if Result = 0 then
+				Result := count + 1
 			end
 		end
 

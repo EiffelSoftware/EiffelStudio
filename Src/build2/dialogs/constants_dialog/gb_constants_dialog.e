@@ -780,12 +780,16 @@ feature {NONE} -- Implementation
 	cancel_pressed is
 			-- Called by `select_actions' of `cancel_button'.
 		do
+				-- Reset modify constant before next showing.
+			modify_constant := Void
 			Command_handler.Show_hide_constants_dialog_command.execute
 		end
 		
 	ok_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		do
+				-- Reset modify constant before next showing.
+			modify_constant := Void
 			Command_handler.Show_hide_constants_dialog_command.execute
 		end
 		

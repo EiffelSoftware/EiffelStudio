@@ -10,13 +10,13 @@ inherit
 			display_header as format_display_header,
 			class_name as exception_class_name
 		redefine
-			format, file_name, dark_symbol
+			format, file_name, dark_symbol, display_temp_header
 		end;
 	FORMATTER
 		rename
 			class_name as exception_class_name
 		redefine
-			format, display_header, file_name, dark_symbol
+			format, display_header, file_name, dark_symbol, display_temp_header
 		select
 			display_header
 		end;
@@ -43,12 +43,11 @@ feature
 			Result := bm_Dark_showtext
 		end;
 	
-feature {NONE}
+feature {ROUTINE_WIN_MGR}
 
 	display_header (stone: STONE) is
 		local
 			new_title: STRING;
-			filed_stone: FILED_STONE;
 			fs: FEATURE_STONE;
 		do
 			!!new_title.make (0);
@@ -56,16 +55,14 @@ feature {NONE}
 			fs ?= stone;
 			if
 				(fs /= Void) and then
-				Debug_info.is_breakpoint_set (fs.feature_i, 1) 
+				Debug_info.has_breakpoint_set (fs.feature_i) 
 			then
 				new_title.append ("   (stop)");		
 			end;
 			text_window.display_header (new_title);
-			filed_stone ?= stone;
-			if filed_stone /= Void then
-				text_window.set_file_name (file_name (filed_stone));
-			end;
 		end;
+
+feature {NONE}
 
 	file_name (s: FILED_STONE): STRING is
 		do
@@ -73,6 +70,12 @@ feature {NONE}
 		end;
 
 	command_name: STRING is do Result := l_Showtext end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Switching to text format...")
+		end;
 
 feature 
 
@@ -107,8 +110,9 @@ feature
 					(text_window.last_format /= Current or
 					not equal (stone, text_window.root_stone))
 				then
-					set_global_cursor (watch_cursor);
 					if stone /= Void and then stone.is_valid then
+						display_temp_header (stone);
+						set_global_cursor (watch_cursor);
 						stone_text := stone.origin_text;
 						if stone_text = Void then
 							stone_text := "";
@@ -124,7 +128,10 @@ feature
 							end			
 						end;
 						text_window.clean;
-						display_header (stone);
+						filed_stone ?= stone;
+						if filed_stone /= Void then
+							text_window.set_file_name (file_name (filed_stone));
+						end;
 						text_window.set_root_stone (stone);
 						text_window.put_string (stone_text);
 						if stone.clickable then
@@ -166,10 +173,11 @@ feature
 							text_window.set_top_character_position 
 													(last_top_position)
 						end;
-						text_window.set_last_format (Current)
+						text_window.set_last_format (Current);
+						display_header (stone);
+						restore_cursors
 					end;
-					filtered := false;
-					restore_cursors
+					filtered := false
 				end
 			else
 				warner (text_window).gotcha_call (w_Cannot_retrieve_info);

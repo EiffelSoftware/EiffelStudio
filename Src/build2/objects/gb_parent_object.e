@@ -6,6 +6,13 @@ indexing
 
 deferred class
 	GB_PARENT_OBJECT
+	
+feature -- Access
+
+	layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM is
+			-- Representation of `object' used in GB_LAYOUT_CONSTRUCTOR.
+		deferred
+		end
 
 feature -- Basic operation
 
@@ -13,6 +20,5 @@ feature -- Basic operation
 			-- Add `an_object' to `Current' at position `position'.
 		deferred
 		end
-		
 	
 end -- class GB_CONTAINABLE_OBJECT

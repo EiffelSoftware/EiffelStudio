@@ -53,6 +53,8 @@ inherit
 			menu as wel_menu,
 			make as wel_make
 		undefine
+			on_size,
+			on_move,
 			on_destroy,
 			on_draw_item,
 			on_key_down,

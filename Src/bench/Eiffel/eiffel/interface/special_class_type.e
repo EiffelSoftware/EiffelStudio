@@ -18,6 +18,11 @@ inherit
 
 	IL_CONST
 	
+	BYTE_CONST
+		export
+			{NONE} all
+		end
+	
 create
 	make
 
@@ -53,7 +58,170 @@ feature -- Access
 			-- Type of the class. It includes meta-instantiation of possible
 			-- generic parameters.
 
+feature -- Byte code generation
+
+	make_creation_byte_code (ba: BYTE_ARRAY) is
+			-- Generate byte code for creation of a special instance. 
+		require
+			ba_not_void: ba /= Void
+		local
+			gen_param: TYPE_I
+			expanded_type: CL_TYPE_I
+			l_bit: BIT_I
+			l_param_is_expanded: BOOLEAN
+			type_c: TYPE_C
+			final_mode: BOOLEAN
+		do
+			gen_param := first_generic
+			l_param_is_expanded := gen_param.is_true_expanded
+			final_mode := byte_context.final_mode
+			type_c := gen_param.c_type
+
+			ba.append_boolean (gen_param.is_reference)
+			ba.append_boolean (gen_param.is_basic)
+			ba.append_boolean (gen_param.is_bit)
+			ba.append_boolean (l_param_is_expanded)
+			if l_param_is_expanded then
+				ba.append_short_integer (expanded_type.associated_class_type.static_type_id - 1)
+			else
+				ba.append_uint32_integer (gen_param.sk_value)
+			end
+			if gen_param.is_bit then
+					-- Initialize array of bits with default values
+				l_bit ?= gen_param
+				ba.append_uint32_integer (l_bit.size)
+			end
+		end
+
 feature -- C code generation
+
+	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register, nb_register: REGISTRABLE) is
+			-- Generate creation of a special instance using `info' to get the exact type
+			-- to create.
+		require
+			buffer_not_void: buffer /= Void
+			info_not_void: info /= Void
+			target_register_not_void: target_register /= Void
+			nb_register_not_void: nb_register /= Void
+		local
+			gen_param: TYPE_I
+			expanded_type: CL_TYPE_I
+			l_bit: BIT_I
+			l_param_is_expanded: BOOLEAN
+			type_c: TYPE_C
+			final_mode: BOOLEAN
+		do
+			gen_param := first_generic
+			l_param_is_expanded := gen_param.is_true_expanded
+			final_mode := byte_context.final_mode
+			type_c := gen_param.c_type
+
+				-- Check validity of call
+			if not final_mode or else associated_class.assertion_level.check_precond then
+				buffer.put_string ("if (")
+				nb_register.print_register
+				buffer.put_string ("< 0) {")
+				buffer.put_new_line
+				buffer.indent
+				buffer.put_string ("eraise (%"non_negative_argument%", EN_RT_CHECK);")
+				buffer.put_new_line
+				buffer.exdent
+				buffer.put_character ('}')
+				buffer.put_new_line
+			end
+
+			if l_param_is_expanded then
+				buffer.put_character ('{')
+				buffer.indent
+				buffer.put_new_line
+				buffer.put_string ("EIF_INTEGER elem_size = (EIF_Size(")
+				expanded_type ?= gen_param
+				check
+					expanded_type_not_void: expanded_type /= Void
+				end
+				if final_mode then
+					buffer.put_type_id (expanded_type.type_id)
+				else
+					buffer.put_string("RTUD(")
+					buffer.put_static_type_id (expanded_type.associated_class_type.static_type_id)
+					buffer.put_character (')')
+				end
+				buffer.put_string (") + OVERHEAD);")
+				buffer.put_new_line
+			end
+				-- Generate recipient of newly created SPECIAL instance.
+			target_register.print_register
+
+				-- 1. Dynamic type with flags
+			buffer.put_string (" = RTLNSP(")
+			info.generate_type_id (buffer, final_mode)
+			if gen_param.is_reference or else gen_param.is_bit then
+				buffer.put_string (" | EO_REF")
+			elseif l_param_is_expanded then
+				buffer.put_string (" | EO_COMP")
+			end
+			buffer.put_string (", ")
+
+				-- 2. Number of elements
+			nb_register.print_register
+			buffer.put_string (", ")
+
+				-- 3. Element size
+			if l_param_is_expanded then
+				buffer.put_string ("elem_size")
+			else
+				type_c.generate_size (buffer)
+			end
+			buffer.put_string (", ")
+
+				-- 4. Is it a basic type.
+			if gen_param.is_basic then
+				buffer.put_string ("EIF_TRUE);")
+			else
+				buffer.put_string ("EIF_FALSE);")
+			end
+
+			if l_param_is_expanded then
+				buffer.put_new_line
+				buffer.exdent
+				buffer.put_character ('}')
+			end
+
+			if gen_param.is_bit then
+					-- Initialize array of bits with default values
+				shared_include_queue.put (Names_heap.eif_plug_header_name_id)
+				l_bit ?= gen_param
+				buffer.put_new_line
+				buffer.put_character ('{')
+				buffer.indent
+				buffer.put_new_line
+				buffer.put_string ("EIF_INTEGER i;")
+				buffer.put_new_line
+				buffer.put_string ("for (i = 0; i < ")
+				nb_register.print_register
+				buffer.put_string ("; i++) {")
+				buffer.put_new_line
+				buffer.indent
+				buffer.put_string ("*((EIF_REFERENCE *) ")
+				target_register.print_register
+				buffer.put_string (" + i) = RTLB(")
+				buffer.put_integer (l_bit.size)
+				buffer.put_string (");")
+				buffer.put_new_line
+				buffer.put_string ("RTAR(")
+				target_register.print_register
+				buffer.put_string (", *((EIF_REFERENCE *) ")
+				target_register.print_register
+				buffer.put_string (" + i));")
+				buffer.put_new_line
+				buffer.exdent
+				buffer.put_character ('}')
+				buffer.put_new_line
+				buffer.exdent
+				buffer.put_character ('}')
+			end
+			buffer.put_new_line
+		end
 
 	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generate feature `feat' in `buffer'.
@@ -290,10 +458,6 @@ feature {NONE} -- C code generation
 
 			final_mode := byte_context.final_mode;
 
-			if l_param_is_expanded and not final_mode then
-				buffer.put_string ("%TEIF_INTEGER elem_size;%N");
-			end;
-
 			buffer.put_string ("%Treturn ")
 			result_type.c_type.generate_cast (buffer)
 			buffer.put_string (" Current;")
@@ -308,46 +472,44 @@ feature {NONE} -- C code generation
 			buffer_not_void: buffer /= Void
 			arg_name_not_void: arg_name /= Void
 		do
-			if (not final_mode) or else associated_class.assertion_level.check_precond then
-				if final_mode then
-					buffer.put_string ("%Tif (~in_assertion) {%N");
-					buffer.put_string ("%
-						%%TRTCT(%"index_large_enough%", EX_PRE);%N%
-						%%Tif (")
-					buffer.put_string (arg_name)
-					buffer.put_string (">= 0) {%N%
-						%%T%TRTCK;%N%
-						%%T} else {%N%
-						%%T%TRTCF;%N%T}%N");
+			if final_mode and then associated_class.assertion_level.check_precond then
+				buffer.put_string ("%Tif (~in_assertion) {%N");
+				buffer.put_string ("%
+					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
+					%%Tif (")
+				buffer.put_string (arg_name)
+				buffer.put_string (">= 0) {%N%
+					%%T%TRTCK;%N%
+					%%T} else {%N%
+					%%T%TRTCF;%N%T}%N");
 
-					buffer.put_string ("%
-						%%TRTCT(%"index_small_enough%", EX_PRE);%N%
-						%%Tif (")
-					buffer.put_string (arg_name)
-					buffer.put_string ("< *(EIF_INTEGER *) %
-							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-							% - LNGPAD(2))) {%N%
-						%%T%TRTCK;%N%
-						%%T} else {%N%
-						%%T%TRTCF;%N%T}%N");
+				buffer.put_string ("%
+					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
+					%%Tif (")
+				buffer.put_string (arg_name)
+				buffer.put_string ("< *(EIF_INTEGER *) %
+						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+						% - LNGPAD(2))) {%N%
+					%%T%TRTCK;%N%
+					%%T} else {%N%
+					%%T%TRTCF;%N%T}%N");
 
-					buffer.put_string ("%T}%N");
-				else
-					buffer.put_string ("%
-						%%Tif (")
-					buffer.put_string (arg_name)
-					buffer.put_string ("< 0) {%N%
-						%%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}%N");
+				buffer.put_string ("%T}%N");
+			elseif not final_mode then
+				buffer.put_string ("%
+					%%Tif (")
+				buffer.put_string (arg_name)
+				buffer.put_string ("< 0) {%N%
+					%%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}%N");
 
-					buffer.put_string ("%
-						%%Tif (")
-					buffer.put_string (arg_name)
-					buffer.put_string (">= *(EIF_INTEGER *) %
-							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-							% - LNGPAD(2))) {%N%
-						%%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}%N");
-				end
-			end;
+				buffer.put_string ("%
+					%%Tif (")
+				buffer.put_string (arg_name)
+				buffer.put_string (">= *(EIF_INTEGER *) %
+						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+						% - LNGPAD(2))) {%N%
+					%%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}%N");
+			end
 		end
 
 feature -- IL code generation

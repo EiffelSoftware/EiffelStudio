@@ -23,7 +23,8 @@ inherit
 			i_th,
 			count,
 			list_widget,
-			initialize
+			initialize,
+			dispose
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -57,6 +58,20 @@ feature {NONE} -- Initialization
 		do
 			{EV_ITEM_LIST_IMP} Precursor
 			is_initialized := True
+		end
+		
+	dispose is
+			-- 
+		do
+			Precursor {EV_ITEM_LIST_IMP}
+			if not is_in_final_collect then
+				if gdk_pixmap /= NULL then
+					C.gdk_pixmap_unref (gdk_pixmap)
+				end
+				if gdk_mask /= NULL then
+					C.gdk_pixmap_unref (gdk_mask)
+				end				
+			end
 		end
 
 feature -- Status report
@@ -392,10 +407,13 @@ feature {EV_TREE_IMP} -- Implementation
 			--| FIXME An intelligent image list needs to be implemented instead of
 			--| just retaining a pointer to passed pixmap.
 			a_pix_imp ?= a_pixmap.implementation
-			gdk_pixmap := a_pix_imp.drawable
-			gdk_mask := a_pix_imp.mask
+			gdk_pixmap := C.gdk_pixmap_ref (a_pix_imp.drawable)
+			if a_pix_imp.mask /= NULL then
+				gdk_mask := C.gdk_bitmap_ref (a_pix_imp.mask)
+			end
 			pix_width := a_pix_imp.width
 			pix_height := a_pix_imp.height
+			
 			if tree_node_ptr /= NULL then
 				insert_pixmap
 			end

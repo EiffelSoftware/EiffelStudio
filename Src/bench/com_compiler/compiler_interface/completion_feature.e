@@ -249,7 +249,7 @@ feature -- Access
 			if not return_type.is_equal (void_keyword) then
 				Result.append (": " + return_type)
 			end
-		ensure
+		ensure then
 			result_exists: Result /= void
 		end
 		

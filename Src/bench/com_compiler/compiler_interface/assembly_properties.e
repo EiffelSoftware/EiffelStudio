@@ -157,7 +157,7 @@ feature -- Access
 			else
 				Result := known_prefixes.item (format_hash_assembly_name (assembly_name, assembly_public_key_token))
 			end
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 		
@@ -165,7 +165,7 @@ feature -- Access
 			-- the cluster name for the assembly
 		do
 			Result := assembly_sd.cluster_name
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 		
@@ -173,7 +173,7 @@ feature -- Access
 				-- the name/path for the assembly
 		do
 			Result := assembly_sd.assembly_name
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 		
@@ -184,7 +184,7 @@ feature -- Access
 			if Result = Void then
 				Result := ""
 			end
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 		
@@ -195,7 +195,7 @@ feature -- Access
 			if Result = Void then
 				Result := ""
 			end
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 		
@@ -206,7 +206,7 @@ feature -- Access
 			if Result = Void then
 				Result := ""
 			end
-		ensure
+		ensure then
 			non_void_Result: Result /= Void
 		end
 	

@@ -258,7 +258,7 @@ feature -- Access
 			return_names.set_string_array (l_names)
 			return_signatures.set_string_array (l_signatures)
 			return_image_indexes.set_integer_array (l_image_indexes)
-		ensure
+		ensure then
 			non_void_names: return_names /= Void
 			non_void_signatures: return_signatures /= Void
 			non_void_image_indexes: return_image_indexes /= Void

@@ -219,7 +219,7 @@ feature -- Access
 			-- Retireve the entire list of assemblies
 		do
 			create Result.make (assemblies_impl)
-		ensure
+		ensure then
 			non_void_result: Result /= Void
 		end	
 

@@ -179,27 +179,6 @@ feature -- Access
 		end
 
 feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT} -- Deletion
-		
-		update_for_delete is
-				-- Perfrom any necessary processing on `Current'
-				-- and all children contained within for a deletion
-				-- event.
-			local
-				all_objects: ARRAYED_LIST [GB_OBJECT]
-				counter: INTEGER
-			do
-				create all_objects.make (10)
-				all_children_recursive (all_objects)
-				all_objects.extend (Current)
-				from
-					counter := 1
-				until
-					counter > all_objects.count
-				loop
-					(all_objects @ counter).delete
-					counter := counter + 1
-				end
-			end
 			
 		delete is
 				-- Perform any necessary pre processing for
@@ -208,7 +187,6 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT} -- Deletion
 				-- Redefine in descendents that need to handle
 				-- special processing for a delete.
 			end
-			
 
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 

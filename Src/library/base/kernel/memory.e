@@ -222,7 +222,8 @@ feature -- Removal
 
 	full_coalesce is
 			-- Coalesce the whole memory: merge adjacent free
-			-- blocks to reduce fragmentation.
+			-- blocks to reduce fragmentation. Useful, when
+			-- a lot of memory is allocated with garbage collector off.
 		external
 			"C | %"eif_memory.h%""
 		alias

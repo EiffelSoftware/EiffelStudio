@@ -63,6 +63,12 @@ feature -- Execution
 			if system_name = Void then
 				create wd.make_with_text (Warning_messages.w_Must_finalize_first)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			elseif 
+				Eiffel_system.system.il_generation and then 
+				Eiffel_system.system.msil_generation_type.is_equal ("dll")
+			then
+				create wd.make_with_text ("No debugging for DLL system")
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
 				check
 					System_defined: Eiffel_system.Workbench.system_defined

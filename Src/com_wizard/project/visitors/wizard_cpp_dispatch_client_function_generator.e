@@ -16,7 +16,9 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; interface_name, guid: STRING; lcid: INTEGER; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
+				interface_name, guid: STRING; lcid: INTEGER; 
+				a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
 			non_void_descriptor: a_descriptor /= Void
@@ -53,8 +55,10 @@ feature -- Basic operations
 
 			elseif is_boolean (result_type_visitor.vt_type) then
 				ccom_feature_writer.set_result_type (Eif_boolean)
+
 			elseif is_hresult (result_type_visitor.vt_type) or is_error (result_type_visitor.vt_type) then
 				ccom_feature_writer.set_result_type (Void_c_keyword)
+
 			else
 				ccom_feature_writer.set_result_type (Eif_reference)
 			end
@@ -515,10 +519,6 @@ feature {NONE} -- Implementation
 				tmp_value.append (visitor.ec_function_name)
 				tmp_value.append (Space_open_parenthesis)
 				tmp_value.append (name)
-				if is_byref (type) then
-					tmp_value.append (Comma_space)
-					tmp_value.append (Null)
-				end
 				tmp_value.append (Close_parenthesis)
 
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))

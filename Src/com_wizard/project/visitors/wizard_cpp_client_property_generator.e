@@ -46,7 +46,7 @@ feature -- Basic operations
 			end
 
 			-- Set result type
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or is_boolean (visitor.vt_type) or visitor.is_enumeration then
 				c_access_feature.set_result_type (visitor.cecil_type)
 			else
 				c_access_feature.set_result_type (Eif_reference)
@@ -66,7 +66,7 @@ feature -- Basic operations
 			c_setting_feature.set_comment (tmp_string)
 	
 			-- Set signature
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
 				tmp_string := clone (visitor.cecil_type)
 
 			elseif visitor.is_structure or visitor.is_array_basic_type or
@@ -96,7 +96,7 @@ feature -- Basic operations
 			c_setting_feature_exist: c_setting_feature /= Void
 		end
 
-end -- class WIZARD_C_CLIENT_PROPERTY_GENERATOR
+end -- class WIZARD_CPP_CLIENT_PROPERTY_GENERATOR
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

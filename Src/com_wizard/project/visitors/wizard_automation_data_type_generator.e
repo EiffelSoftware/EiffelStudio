@@ -80,6 +80,7 @@ feature -- Basic operations
 				is_basic_type := True
 
 			elseif is_boolean (a_type) then
+				cecil_type.append ("EIF_BOOLEAN")
 				ce_function_name.append ("ccom_ce_boolean")
 				ec_function_name.append ("ccom_ec_boolean")
 

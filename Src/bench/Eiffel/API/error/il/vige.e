@@ -16,7 +16,8 @@ inherit
 create
 	make,
 	make_com_error,
-	make_output_in_use
+	make_output_in_use,
+	make_pdb_in_use
 
 feature {NONE} -- Initialization
 
@@ -46,6 +47,16 @@ feature {NONE} -- Initialization
 			t_not_empty: not t.is_empty
 		do
 			internal_error_string := "File: " + t + " is in use.%NSystem compilation aborted.%N"
+		end
+
+	make_pdb_in_use (module_name: STRING) is
+			-- Error when trying to create PDB file associated to module `module_name'.
+		require
+			module_name_not_void: module_name /= Void
+			module_name_not_empty: not module_name.is_empty
+		do
+			internal_error_string := "Cannot create PDB file associated to module:%N" +
+				module_name + ".%NSystem compilation aborted.%N"
 		end
 		
 feature -- Properties
@@ -97,5 +108,8 @@ feature {NONE} -- Implementation
 
 	internal_error_string: STRING
 			-- Internal copy of error description
+			
+invariant
+	internal_error_string_not_void: internal_error_string /= Void
 
 end -- class VIGE

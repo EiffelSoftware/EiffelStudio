@@ -88,6 +88,7 @@ rt_public char *efreeze(EIF_OBJ object)
 	 * the scavenge zone and it could not be tenured).
 	 */
 
+	EIF_GET_CONTEXT
 	char *root;						/* Object's physical address */
 	union overhead *zone;			/* Malloc information zone */
 	/* uint32 flags;*/ /* Eiffel flags */ /* %%ss removed */
@@ -140,6 +141,7 @@ rt_public char *efreeze(EIF_OBJ object)
 	zone->ov_size |= B_C;				/* Make it a C block now */
 
 	return root;						/* Freezing succeeded, new location */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_OBJ eadopt(EIF_OBJ object)

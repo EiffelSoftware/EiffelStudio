@@ -247,6 +247,7 @@ rt_public char **eget(register int num)
 	 * when we are at the junction of two local chunks. If the calls happen
 	 * to be in a loop, that's too bad--RAM.
 	 */
+
 	EIF_GET_CONTEXT
 	register2 char **top = loc_set.st_top;	/* The top of the stack */
 	register3 char **saved_top = top;		/* Save current top of stack */
@@ -343,6 +344,7 @@ rt_public void eback(register char **top)
 	 * top of the stack to 'top'. Make sure there is no inconsistency in the
 	 * stack by checking the range of the pointers.
 	 */
+
 	EIF_GET_CONTEXT
 #ifdef DEBUG
 	dprintf(1)("eback: top = 0x%lx, arena = 0x%lx, end = 0x%lx\n",
@@ -423,6 +425,7 @@ rt_shared void initstk(void)
 	 * In workbench mode, the debugger stack is also created here.
 	 */
 
+	EIF_GET_CONTEXT
 	char **top;
 
 	top = st_alloc(&loc_set, STACK_CHUNK);
@@ -436,6 +439,7 @@ rt_shared void initstk(void)
 	initdb();				/* Initialize debugger stack */
 #endif
 
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef TEST

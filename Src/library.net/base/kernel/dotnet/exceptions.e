@@ -162,8 +162,10 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {ISE_RUNTIME}.last_exception
-			if le /= Void and then le.inner_exception /= Void then
-				le := le.inner_exception
+			if le /= Void then
+				from until le.inner_exception = Void loop
+					le := le.inner_exception
+				end
 				conv_fl ?= le
 				if conv_fl /= Void then
 					Result := conv_fl.tag
@@ -182,8 +184,11 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {ISE_RUNTIME}.last_exception
-			if le /= Void and then le.inner_exception /= Void then
-				Result := exception_to_code (le.inner_exception)
+			if le /= Void then
+				from until le.inner_exception = Void loop
+					le := le.inner_exception
+				end
+				Result := exception_to_code (le)
 			else
 				Result := 0
 			end
@@ -196,8 +201,10 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {ISE_RUNTIME}.last_exception
-			if le /= Void and then le.inner_exception /= Void then
-				le := le.inner_exception
+			if le /= Void then
+				from until le.inner_exception = Void loop
+					le := le.inner_exception
+				end
 				create Result.make_from_cil (le.target_site.name)
 			else
 				create Result.make (0)
@@ -211,8 +218,10 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {ISE_RUNTIME}.last_exception
-			if le /= Void and then le.inner_exception /= Void then
-				le := le.inner_exception
+			if le /= Void then
+				from until le.inner_exception = Void loop
+					le := le.inner_exception
+				end
 				create Result.make_from_cil (le.target_site.reflected_type.full_name)
 			else
 				create Result.make (0)

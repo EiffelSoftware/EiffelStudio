@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Shared text format items.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class SHARED_TEXT_ITEMS
 
 inherit
@@ -399,6 +406,13 @@ feature {NONE} -- Keywords
 			!!Result.make ("obsolete");
 			Result.set_is_keyword
 		end;
+
+	ti_Old_keyword: BASIC_TEXT is
+			-- "old" keyword
+		once
+			!!Result.make ("old");
+			Result.set_is_keyword
+		end;
 	
 	ti_Once_keyword: BASIC_TEXT is
 			-- "once" keyword
@@ -654,6 +668,18 @@ feature {NONE} -- Special characters
 			Result.set_is_special
 		end;
 
+	ti_New_line: NEW_LINE_ITEM is
+			-- "%N" character
+		once
+			!! Result.make
+		end;
+
+	ti_Padded_debug_mark: BASIC_TEXT is
+			-- Breakpoint item 
+		once
+			!! Result.make ("    ")
+		end;
+
 	ti_Quote: BASIC_TEXT is
 			-- "'" characters
 		once
@@ -703,10 +729,60 @@ feature {NONE} -- Special characters
 			Result.set_is_special
 		end;
 
+feature {NONE} -- Basic text
+
+	ti_Breakpoint: BREAKPOINT_ITEM is
+			-- Breakpoint item 
+		once
+			!! Result
+		end;
+
+	ti_Current: BASIC_TEXT is
+			-- Breakpoint item 
+		once
+			!! Result.make ("Current")
+		end;
+
+	ti_Result: BASIC_TEXT is
+			-- Breakpoint item 
+		once
+			!! Result.make ("Result")
+		end;
+
 	ti_Space: BASIC_TEXT is
 			-- " " character
 		once
 			!!Result.make (" ")
+		end;
+
+	ti_Tab1: INDENT_TEXT is
+			-- 1 tab character
+		once
+			!!Result.make (1)
+		end;
+
+	ti_Tab2: INDENT_TEXT is
+			-- 2 tab characters
+		once
+			!!Result.make (2)
+		end;
+
+	ti_Tab3: INDENT_TEXT is
+			-- 3 tab characters
+		once
+			!!Result.make (3)
+		end;
+
+	ti_Tab4: INDENT_TEXT is
+			-- 4 tab characters
+		once
+			!!Result.make (4)
+		end;
+
+	ti_Tab5: INDENT_TEXT is
+			-- 5 tab characters
+		once
+			!!Result.make (5);
 		end;
 
 end -- class SHARED_TEXT_ITEMS

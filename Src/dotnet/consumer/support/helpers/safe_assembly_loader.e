@@ -20,10 +20,16 @@ feature -- Basic Operations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
+			l_path: STRING
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				Result := feature {ASSEMBLY}.load_from (a_path)
+				l_path := a_path.as_lower
+				Result := assembly_table.item (l_path)
+				if Result = Void then
+					Result := feature {ASSEMBLY}.load_from (l_path)
+					assembly_table.put (Result, l_path)
+				end
 			end
 		rescue
 			l_retried := True
@@ -34,15 +40,8 @@ feature -- Basic Operations
 			-- loads an assembly by `a_name'
 		require
 			non_void_name: a_name /= Void
-		local
-			l_retried: BOOLEAN
 		do
-			if not l_retried then
-				Result := feature {ASSEMBLY}.load (a_name)
-			end
-		rescue
-			l_retried := True
-			retry
+			Result := load_assembly_from_full_name (a_name.to_string)
 		end
 		
 	load_assembly_from_full_name (a_name: STRING): ASSEMBLY is
@@ -52,9 +51,18 @@ feature -- Basic Operations
 			valid_name: not a_name.is_empty
 		local
 			l_retried: BOOLEAN
+			l_path: STRING
 		do
 			if not l_retried then
-				Result := feature {ASSEMBLY}.load (a_name)
+				Result := assembly_table.item (a_name)
+				if Result = Void then
+					Result := feature {ASSEMBLY}.load (a_name)
+					l_path := Result.location.to_lower
+					if not assembly_table.has (l_path) then
+						assembly_table.put (Result, l_path)
+					end
+					assembly_table.put (Result, a_name)
+				end
 			end
 		rescue
 			l_retried := True
@@ -69,15 +77,36 @@ feature -- Basic Operations
 			valid_path: not a_path.is_empty
 		local
 			l_assembly, l_gac_assembly: ASSEMBLY
+			l_name: ASSEMBLY_NAME
+			l_pkt: NATIVE_ARRAY [NATURAL_8]
 		do
 			l_assembly := load_assembly_from_path (a_path)
 			if l_assembly /= Void then
-				l_gac_assembly := load_from_gac (l_assembly.get_name)
+				l_name := l_assembly.get_name
+				l_pkt := l_name.get_public_key_token
+				if l_pkt /= Void and then l_pkt.length > 0 then
+					l_gac_assembly := load_from_gac (l_assembly.get_name)	
+				end
 			end
-			if l_gac_assembly = Void or not l_gac_assembly.global_assembly_cache then
+			if l_gac_assembly = Void or else not l_gac_assembly.global_assembly_cache then
 				Result := l_assembly
 			else
 				Result := l_gac_assembly
+			end
+		end
+		
+	gac_path_of_assembly_path (a_path: STRING): STRING is
+			-- Retrieves GAC path for `a_path'
+		require
+			a_path_not_void: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			l_assembly: ASSEMBLY
+		do
+				-- No path cached
+			l_assembly := load_from_gac_or_path (a_path)
+			if l_assembly /= Void then
+				Result := l_assembly.location.to_lower
 			end
 		end
 		
@@ -106,13 +135,24 @@ feature {NONE} -- Implementation
 			-- Load `a_name' from GAC if possible
 		require
 			a_name_not_void: a_name /= Void
+			a_name_has_pkt: a_name.get_public_key_token /= Void and then a_name.get_public_key_token.length > 0
 		local
-			retried: BOOLEAN
+			l_path: STRING
 			l_new_domain: APP_DOMAIN
+			retried: BOOLEAN
 		do
 			if not retried then
-				l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
-				Result := l_new_domain.load (a_name)
+				l_path := a_name.to_string.to_lower
+				Result := assembly_table.item (l_path)
+				if Result = Void then
+					l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
+					Result := l_new_domain.load (a_name)
+					assembly_table.put (Result, l_path)
+					l_path := Result.location.to_lower
+					if not assembly_table.has (l_path) then
+						assembly_table.put (Result, l_path)
+					end
+				end
 			end
 			if l_new_domain /= Void then
 				feature {APP_DOMAIN}.unload (l_new_domain)
@@ -120,6 +160,28 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+		
+feature {NONE} -- Implementation
+
+	assembly_table: HASH_TABLE [ASSEMBLY, STRING] is
+			-- Table of assemblies in GAC.
+			-- Key: Assembly location
+			-- Value: GAC assembly
+		once
+			create Result.make (5)
+			Result.compare_objects
+		ensure
+			result_not_void: Result /= Void
+			result_compares_objects: Result.object_comparison
+		end
+		
+	release_cached_assemblies is
+			-- Releases cached assemblies
+		do
+			assembly_table.clear_all
+		ensure
+			assembly_table_is_empty: assembly_table.is_empty
 		end
 
 end -- class SAFE_ASSEMBLY_LOADER

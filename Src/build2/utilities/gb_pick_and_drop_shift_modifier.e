@@ -23,20 +23,20 @@ feature {NONE} -- Basic operation
 		end
 		
 	check_shift_status is
-			--
+			-- Check status of shift key.
+			-- Modify the drop actions for all objects dependent on
+			-- the state.
 		local
 			env: EV_ENVIRONMENT
 		do
 			create env
 			if env.application.shift_pressed then
 				if shift_pressed_at_last_check = False then
-					io.putstring ("Shift pressed")
 					object_handler.for_all_objects_build_shift_drop_actions_for_new_object
 				end
 				shift_pressed_at_last_check := True
 			else
 				if shift_pressed_at_last_check = True then
-					io.putstring ("Shift released")
 					object_handler.for_all_objects_build_drop_actions_for_new_object
 				end
 				shift_pressed_at_last_check := False

@@ -13,6 +13,14 @@ inherit
 			adapt as ast_adapt
 		end;
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new OPTION AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

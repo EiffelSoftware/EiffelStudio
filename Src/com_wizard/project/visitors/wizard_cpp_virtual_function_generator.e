@@ -100,7 +100,7 @@ feature -- Basic operations
 
 			ccom_feature_writer.set_result_type(Std_method_imp)
 
-			if not func_desc.arguments.empty then
+			if not func_desc.arguments.empty or else not func_desc.return_type.name.is_equal (Void_c_keyword) then
 				from
 					func_desc.arguments.start
 				until

@@ -137,6 +137,10 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
+	disable_default_processing is
+		do
+		end
+
 end -- OPTION_BUTTON_WINDOWS
  
 --|---------------------------------------------------------------- 

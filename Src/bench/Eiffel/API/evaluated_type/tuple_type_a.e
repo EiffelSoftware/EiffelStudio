@@ -63,6 +63,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			tuple_type: TUPLE_TYPE_A
 			i, count, other_count: INTEGER
 			other_generics: ARRAY [TYPE_A]
+			l_pseudo_vjar: TUPLE_WARNING
 		do
 			tuple_type ?= other
 
@@ -77,9 +78,25 @@ feature {COMPILER_EXPORTER} -- Primitives
 				until
 					(i > other_count) or else (not Result)
 				loop
-					Result := generics.item (i).conform_to (
-													  other_generics.item (i)
-														   )
+					Result := generics.item (i).internal_conform_to (
+						other_generics.item (i), True)
+					if
+						not Result
+						and then generics.item (i).conform_to (other_generics.item (i))
+					then
+							-- FIXME: Manu 09/14/2003. In 5.4 code was changed
+							-- from `conform_to' to `internal_conform_to' to avoid the
+							-- following type of conformance TUPLE [INTEGER] conforming
+							-- to TUPLE [DOUBLE]. However this could have break a lot of user
+							-- code. So when it simply conforms, then we raise a warning.
+						create l_pseudo_vjar
+						Context.init_error (l_pseudo_vjar)
+						l_pseudo_vjar.set_source_type (other)
+						l_pseudo_vjar.set_target_type (Current)
+						l_pseudo_vjar.set_target_name ("(none)")
+						Error_handler.insert_warning (l_pseudo_vjar)
+						Result := True
+					end
 					i := i + 1
 				end
 			else

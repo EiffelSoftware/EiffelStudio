@@ -27,19 +27,19 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
 		do
-			create subrows.make
 			base_make (an_interface)
 		end
 		
 	initialize is
 			-- Initialize `Current'.
 		do
-			is_initialized := True
+			create subrows.make
 			internal_height := 16
 			depth_in_tree := 1
 			subnode_count_recursive := 0
 			expanded_subnode_count_recursive := 0
 			is_expanded := False
+			is_initialized := True
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -130,16 +130,18 @@ feature -- Access
 			i: INTEGER
 			create_if_void: BOOLEAN
 			a_item: EV_GRID_ITEM_I
+			temp_parent_i: like parent_i
 		do
 			from
 				i := 1
 				create_if_void := is_selected
 				create Result.make (count)
+				temp_parent_i := parent_i
 			until
 				i > count
 			loop
 					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
-				a_item := parent_i.item_internal (i, index, create_if_void)
+				a_item := temp_parent_i.item_internal (i, index, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end
@@ -559,14 +561,14 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 			-- functionality implemented by `Current'.
 			
 invariant
-	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
-	selected_item_count_valid: selected_item_count >= 0 and then selected_item_count <= count
-	subrows_not_void: subrows /= Void
-	subnode_count_recursive_zero_when_no_subrows: subrows.count = 0 implies subnode_count_recursive = 0
-	expanded_subnode_count_recursive_zero_when_no_subrows: subrows.count = 0 implies expanded_subnode_count_recursive = 0
---	subnode_count_recursive_at_least_subrow_count: subrow_count > 0 implies subnode_count_recursive >= subrow_count
-	expanded_subnode_count_recursive_at_least_subrow_count_when_expanded: subrow_count > 0 and is_expanded implies expanded_subnode_count_recursive >= subrow_count
-	expanded_subnode_count_recursive_non_negative_while_collapsed: subrow_count > 0 and not is_expanded implies expanded_subnode_count_recursive >= 0
+	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
+	selected_item_count_valid: is_initialized implies selected_item_count >= 0 and then selected_item_count <= count
+	subrows_not_void: is_initialized implies subrows /= Void
+	subnode_count_recursive_zero_when_no_subrows: is_initialized and then subrows.count = 0 implies subnode_count_recursive = 0
+	expanded_subnode_count_recursive_zero_when_no_subrows: is_initialized and then subrows.count = 0 implies expanded_subnode_count_recursive = 0
+--	subnode_count_recursive_at_least_subrow_count: is_initialized and then subrow_count > 0 implies subnode_count_recursive >= subrow_count
+	expanded_subnode_count_recursive_at_least_subrow_count_when_expanded: is_initialized and then subrow_count > 0 and then is_expanded implies expanded_subnode_count_recursive >= subrow_count
+	expanded_subnode_count_recursive_non_negative_while_collapsed: is_initialized and then subrow_count > 0 and then not is_expanded implies expanded_subnode_count_recursive >= 0
 end
 
 --|----------------------------------------------------------------

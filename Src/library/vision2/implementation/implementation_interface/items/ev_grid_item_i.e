@@ -71,7 +71,7 @@ feature -- Access
 		require
 			is_parented: is_parented
 		do
-			to_implement ("EV_GRID_ITEM_I.column")
+			Result := parent_column_i.interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -88,7 +88,7 @@ feature -- Access
 		require
 			parented: is_parented
 		do
-			to_implement ("EV_GRID_ITEM_I.row")
+			Result := parent_row_i.interface
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -99,12 +99,14 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			to_implement ("EV_GRID_ITEM_I.enable_select")
+			is_selected := True
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
 			to_implement ("EV_GRID_ITEM_I.disable_select")
+			is_selected := False
 		end
 
 feature -- Status report
@@ -115,11 +117,8 @@ feature -- Status report
 			Result := parent_grid_i /= Void
 		end
 		
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected?
-		do
-			to_implement ("EV_GRID_ITEM_I.is_selected")
-		end
 
 feature -- Element change
 
@@ -135,20 +134,32 @@ feature -- Element change
 			internal_background_color := a_color.twin
 		end
 		
-feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_I} -- Implementation
 
-	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
-			-- Set `parent_grid_i' to `a_parent_grid_i'
+	set_parents (a_parent_grid_i: EV_GRID_I; a_parent_column_i: EV_GRID_COLUMN_I; a_parent_row_i: EV_GRID_ROW_I) is
+			-- Set the appropriate grid, column and row parents
 		require
 			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+			a_parent_column_i_not_void: a_parent_column_i /= Void
+			a_parent_row_i_not_void: a_parent_row_i /= Void
 		do
 			parent_grid_i := a_parent_grid_i
+			parent_column_i := a_parent_column_i
+			parent_row_i := a_parent_row_i
 		ensure
 			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+			parent_column_i_set: parent_column_i = a_parent_column_i
+			parent_row_i_set: parent_row_i = a_parent_row_i
 		end
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.
+
+	parent_column_i: EV_GRID_COLUMN_I
+		-- Grid column that `Current' resides in if any
+
+	parent_row_i: EV_GRID_ROW_I
+		-- Grid row that `Current' resides in if any
 		
 feature {NONE} -- Implementation
 
@@ -186,6 +197,10 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 	interface: EV_GRID_ITEM
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
+
+invariant
+	is_parented_implies_parents_set: is_parented implies parent_grid_i /= Void and then parent_column_i /= Void and then parent_row_i /= Void
+	not_is_parented_implies_parents_not_set: not is_parented implies parent_grid_i = Void and then parent_column_i = Void and then parent_row_i = Void
 			
 end
 

@@ -36,7 +36,11 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			connect_signal_to_actions ("pressed", interface.actions)
+			connect_signal_to_actions (
+				"pressed",
+				interface.actions,
+				default_translate
+			)
 			is_initialized := True
 		end
 
@@ -192,6 +196,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/04 21:01:07  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.7  2000/03/22 23:54:31  brendel
 --| Removed feature `name'.
 --|
@@ -225,7 +232,6 @@ end -- class EV_ACCELERATOR_IMP
 --| Revision 1.1.2.1  2000/01/24 23:15:03  brendel
 --| Accelerators are now platform dependent.
 --| Features are not yet implemented.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

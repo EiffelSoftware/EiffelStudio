@@ -63,7 +63,11 @@ feature {NONE} -- Initialization
 			loop
 				signal_name ?= signal_map.item (i).item (Signal_map_signal_name)
 				actions ?= signal_map.item (i).item (Signal_map_actions)
-				connect_signal_to_actions (signal_name, actions)
+				connect_signal_to_actions (
+					signal_name,
+					actions,
+					default_translate
+				)
 				i := i + 1
 			end
 
@@ -123,7 +127,11 @@ feature {NONE} -- Initialization
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				signal_connect ( "button-press-event", ~button_press_switch)
+				signal_connect (
+					"button-press-event",
+					~button_press_switch,
+					default_translate
+				)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -786,9 +794,11 @@ feature -- Obsolete
 	
 		obsolete "dont use it"
 		do
-                --       Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
-                  --               (height = new_height or else height = minimum_height or else (not shown and height = 1))
-                 --      Result := True
+--       Result := (width = new_width or else wid
+--th = minimum_width or else (not shown and width = 1)) and then
+--               (height = new_height or else height = mini
+--mum_height or else (not shown and height = 1))
+--      Result := True
 		end		
 
 	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
@@ -798,7 +808,8 @@ feature -- Obsolete
 			-- On gtk, when the widget is not shown, the result is 0
 		obsolete "dont use it"
 		do 
-		--	Result := (c_gtk_widget_minimum_size_set (c_object, new_width, new_height) = 1) or else
+		--	Result := (c_gtk_widget_minimum_size_set (
+		--c_object, new_width, new_height) = 1) or else
 		--		(not shown and then (minimum_width = 0 and minimum_height = 0))
 		end		
 
@@ -809,7 +820,8 @@ feature -- Obsolete
  			-- On gtk, when the widget is not shown, the result is -1
 		obsolete "dont use it"
 		do
-		--	Result := (c_gtk_widget_position_set (c_object, new_x, new_y) = 1) or else
+		--	Result := (c_gtk_widget_position_set (c_obj
+		--ect, new_x, new_y) = 1) or else
 		--		(not shown and then (x_position = - 1 and y_position = - 1))
 		end
 -- Now in EV_WINDOW_IMP:
@@ -862,6 +874,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/04 21:00:34  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.65  2000/03/24 02:20:40  oconnor
 --| use new not_empty_actions from ACTION_SEQUENCE
 --|
@@ -869,7 +884,8 @@ end -- class EV_WIDGET_IMP
 --| Added code for parent to deal with aggregate cell
 --|
 --| Revision 1.63  2000/03/17 18:24:09  rogers
---| Added screen_x and _screen_y using the old implementation taken directly from EV_WIDGET_I.
+--| Added screen_x and _screen_y using the old implementation taken directly
+--| from EV_WIDGET_I.
 --|
 --| Revision 1.62  2000/03/15 23:32:35  king
 --| Added code in set_pointer_style to set pointer_style attribute
@@ -1097,7 +1113,6 @@ end -- class EV_WIDGET_IMP
 --|
 --| Revision 1.48.2.2  1999/11/02 17:20:03  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

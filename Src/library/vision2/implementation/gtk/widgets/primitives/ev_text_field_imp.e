@@ -41,12 +41,14 @@ feature {NONE} -- Initialization
 			real_connect_signal_to_actions (
 				entry_widget,
 				"activate",
-				interface.return_actions
+				interface.return_actions,
+				default_translate
 			)
 			real_connect_signal_to_actions (
 				entry_widget,
 				"changed",
-				interface.change_actions
+				interface.change_actions,
+				default_translate
 			)
 		end
 
@@ -154,6 +156,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/04 21:00:33  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.16  2000/03/08 21:42:44  king
 --| Indented to fit within 80 cols
 --|
@@ -164,7 +169,8 @@ end -- class EV_TEXT_FIELD_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.13.6.12  2000/02/11 18:25:27  king
---| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact
+--| that combo box is not an entry widget
 --|
 --| Revision 1.13.6.11  2000/02/10 08:45:18  oconnor
 --| connect_signal_to_actions "changed"

@@ -33,7 +33,11 @@ feature -- Implementation
 			if button_press_connection_id > 0 then
 				signal_disconnect (button_press_connection_id)
 			end
-			signal_connect ("button-press-event", ~start_transport_filter)
+			signal_connect (
+				"button-press-event",
+				~start_transport_filter,
+				default_translate
+			)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		ensure then
@@ -131,7 +135,11 @@ feature -- Implementation
 						C.Gdk_pointer_motion_mask_enum
 					)
 				end
-				signal_connect ("motion-notify-event", ~add_grab_cb)
+				signal_connect (
+					"motion-notify-event",
+					~add_grab_cb,
+					default_translate
+				)
 				grab_callback_connection_id := last_signal_connection_id
 				create curs_code
 				if accept_cursor = Void then
@@ -152,23 +160,41 @@ feature -- Implementation
 --FIXME this line for testing only		env.application.process_events
 
 				signal_disconnect (button_press_connection_id)
-				signal_connect ("button-press-event", ~end_transport_filter)
+				signal_connect (
+					"button-press-event",
+					~end_transport_filter,
+					default_translate
+				)
 				button_press_connection_id := last_signal_connection_id
 				if is_dnd_in_transport then
 					check
 						release_not_connected: button_release_connection_id = 0
 					end
-					signal_connect ("button-release-event", ~end_transport)
+					signal_connect (
+						"button-release-event",
+						~end_transport,
+						default_translate
+					)
 					button_release_connection_id := last_signal_connection_id
 				end
 
-				signal_connect ("motion-notify-event", ~execute)
+				signal_connect (
+					"motion-notify-event",
+					~execute,
+					default_translate
+				)
 				motion_notify_connection_id := last_signal_connection_id
-				signal_connect ("enter_notify_event",
-					~signal_emit_stop (c_object, "enter_notify_event"))
+				signal_connect (
+					"enter_notify_event",
+					~signal_emit_stop (c_object, "enter_notify_event"),
+					default_translate
+				)
 				enter_notify_connection_id := last_signal_connection_id
-				signal_connect ("leave_notify_event",
-					~signal_emit_stop (c_object, "leave_notify_event"))
+				signal_connect (
+					"leave_notify_event",
+					~signal_emit_stop (c_object, "leave_notify_event"),
+					default_translate
+				)
 				leave_notify_connection_id := last_signal_connection_id
 				check
 					motion_notify_connected: motion_notify_connection_id > 0
@@ -467,6 +493,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/04 21:00:34  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.20  2000/03/31 19:10:25  king
 --| pebble_over_widget -> pointer_over_widget
 --|

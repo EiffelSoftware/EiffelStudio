@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 				until
 					Result.count = decimals
 				loop
-					Result.extend ('0')
+					Result.precede ('0')
 				end
 			end
 		ensure

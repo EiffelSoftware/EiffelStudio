@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CODE_VARIABLE; a_expression: CODE_EXPRESSION) is
+	make (a_target: like target; a_expression: like expression) is
 			-- Initialize `expression' and `target_object'.
 		require
 			non_void_target: a_target /= Void
@@ -32,7 +32,7 @@ feature -- Access
 	expression: CODE_EXPRESSION
 			-- Expression to cast
 			
-	target: CODE_VARIABLE
+	target: STRING
 			-- Recipient of assignment attempt
 			
 	code: STRING is
@@ -41,18 +41,16 @@ feature -- Access
 		do
 			create Result.make (80)
 			Result.append (indent_string)
-			Result.append (target.variable.eiffel_name)
+			Result.append (target)
 			Result.append (" ?= ")
 			Result.append (expression.code)
 			Result.append_character ('%N')
 		end
-		
-feature -- Status Report
-		
-	ready: BOOLEAN is
-			-- Is cast expression ready to be generated?
+	
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
 		do
-			Result := True
+			Result := False
 		end
 		
 invariant

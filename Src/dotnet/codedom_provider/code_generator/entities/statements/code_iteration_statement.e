@@ -85,6 +85,20 @@ feature -- Access
 			Result.append ("end%N")
 		end
 		
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := init_statement.need_dummy
+			from
+				loop_statements.start				
+			until
+				Result or loop_statements.after
+			loop
+				Result := loop_statements.item.need_dummy
+				loop_statements.forth
+			end
+		end
+		
 invariant
 	non_void_test_expression: test_expression /= Void
 	

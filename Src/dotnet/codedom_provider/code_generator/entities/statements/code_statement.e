@@ -9,6 +9,15 @@ deferred class
 inherit
 	CODE_ENTITY
 
+feature -- Access
+
+	need_dummy: BOOLEAN is
+			-- Does statement requires dummy local variable?
+		require
+			in_code_generation: current_state = Code_generation
+		deferred
+		end
+		
 end -- class CODE_STATEMENT
 
 --+--------------------------------------------------------------------

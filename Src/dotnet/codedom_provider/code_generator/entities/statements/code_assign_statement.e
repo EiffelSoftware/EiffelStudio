@@ -9,24 +9,30 @@ class
 inherit
 	CODE_STATEMENT
 
+	CODE_ASSIGNMENT_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_source, a_target: CODE_EXPRESSION; a_is_property_assignment: BOOLEAN) is
+	make (a_target, a_source: CODE_EXPRESSION; a_assignment_type: INTEGER) is
 			-- Initialize `target', `source' and `is_property_assignment'.
 		require
 			non_void_source: a_source /= Void
 			non_void_target: a_target /= Void
+			valid_assignment_type: is_valid_assignment_type (a_assignment_type)
 		do
 			source := a_source
 			target := a_target
-			is_property_assignment := a_is_property_assignment
+			assignment_type := a_assignment_type
 		ensure
 			source_set: source = a_source
 			target_set: target = a_target
-			is_propety_assignment_set: is_property_assignment = a_is_property_assignment
+			assignment_type_set: assignment_type = a_assignment_type
 		end
 		
 feature -- Access
@@ -37,8 +43,8 @@ feature -- Access
 	source: CODE_EXPRESSION
 			-- Assignment source
 
-	is_property_assignment: BOOLEAN
-			-- is property assignement?
+	assignment_type: INTEGER
+			-- See class {CODE_ASSIGNMENT_TYPES} for possible values
 
 	code: STRING is
 			-- | Result := "`target' := `source'"
@@ -49,11 +55,20 @@ feature -- Access
 		local
 			create_expression: CODE_OBJECT_CREATE_EXPRESSION
 			create_array_expression: CODE_ARRAY_CREATE_EXPRESSION
+			l_field_set: BOOLEAN
+			l_field_expression: CODE_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			create Result.make (120)
 			Result.append (Indent_string)
 			set_new_line (False)
-			if is_property_assignment then
+			if assignment_type = Field_assignment then
+				l_field_expression ?= target
+				check
+					is_field: l_field_expression /= Void
+				end
+				l_field_set := not l_field_expression.is_in_current
+			end
+			if assignment_type = Property_assignment or l_field_set then
 				Result.append (target.code)
 				Result.append (" (")
 				Result.append (source.code)
@@ -79,6 +94,15 @@ feature -- Access
 			end
 			Result.append_character ('%N')
 		end
+
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := False
+		end
+
+invariant
+	valid_assignment_type: is_valid_assignment_type (assignment_type)
 
 end -- class CODE_ASSIGN_STATEMENT
 

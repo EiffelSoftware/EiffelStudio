@@ -9,6 +9,11 @@ class
 inherit
 	CODE_STATEMENT
 
+	CODE_STOCK_TYPE_REFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -33,30 +38,27 @@ feature -- Access
 			-- | Result := "`expression'"
 			-- | OR		:= "res := `expression'" if typeof `expression' is CODE_ROUTINE_INVOKE_EXPRESSION
 			-- Eiffel code of expression statement
-		local
-			routine_invoke_exp: CODE_ROUTINE_INVOKE_EXPRESSION
-			l_dummy_variable: BOOLEAN
-			l_code: STRING
 		do
 			create Result.make (80)
 			Result.append (indent_string)
-			l_dummy_variable := dummy_variable
-			set_dummy_variable (False)
-			l_code := expression.code
-			if dummy_variable then
-				routine_invoke_exp ?= expression
-				if routine_invoke_exp /= Void then
-					Result.append ("res := ")
-					set_dummy_variable (True)
-				end
+			if need_dummy then
+				Result.append ("res := ")
 			end
-			if l_dummy_variable then
-				set_dummy_variable (True)
-			end
-			Result.append (l_code)
+			Result.append (expression.code)
 			Result.append_character ('%N')
 		end
-		
+
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		local
+			l_method_invoke_expression: CODE_ROUTINE_INVOKE_EXPRESSION
+		do
+			l_method_invoke_expression ?= expression
+			if l_method_invoke_expression /= Void then
+				Result := not l_method_invoke_expression.type.is_equal (None_type_reference)
+			end
+		end
+
 invariant
 	non_void_expression: expression /= Void
 	

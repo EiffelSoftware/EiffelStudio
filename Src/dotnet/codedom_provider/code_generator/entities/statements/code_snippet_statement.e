@@ -38,6 +38,12 @@ feature -- Access
 			Result.append ("%N")
 		end
 	
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := False
+		end
+
 end -- class CODE_SNIPPET_STATEMENT
 
 --+--------------------------------------------------------------------

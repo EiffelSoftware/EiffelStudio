@@ -65,7 +65,7 @@ feature -- Access
 				end
 			end
 			
-			if false_statements /= Void then
+			if false_statements /= Void and then false_statements.count > 0 then
 				decrease_tabulation
 				Result.append (indent_string)
 				Result.append ("else%N")
@@ -82,6 +82,31 @@ feature -- Access
 			decrease_tabulation
 			Result.append (indent_string)
 			Result.append ("end%N")
+		end
+		
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			if true_statements /= Void then
+				from
+					true_statements.start				
+				until
+					Result or true_statements.after
+				loop
+					Result := true_statements.item.need_dummy
+					true_statements.forth
+				end
+			end
+			if false_statements /= Void then
+				from
+					false_statements.start				
+				until
+					Result or false_statements.after
+				loop
+					Result := false_statements.item.need_dummy
+					false_statements.forth
+				end
+			end
 		end
 		
 invariant

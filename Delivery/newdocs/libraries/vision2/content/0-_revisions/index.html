@@ -12,8 +12,8 @@
 	<body>
 		<h1>Revisions and bug fixes
 		</h1>
-		<p>This document contains details of modifications and bug fixes to the vision2
-			library listed by the release version of EiffelStudio. All bug fixes and
+		<p>This document contains details of modifications and bug fixes to the vision2 
+			library listed by the release version of EiffelStudio. All bug fixes and 
 			modifications are relative to the previously released version.</p>
 		<h2>
 			Eiffel Studio 5.4</h2>
@@ -22,91 +22,143 @@
 		<ul class="circle">
 			<li>
 				<b>EV_ITEM_PIXMAP_SCALER</b>
-			- New class added which provides no new functionality, but is a clean
-			abstraction of `pixmaps_width', `pixmaps_height' and `set_pixmaps_size' which
-			were all defined independently in EV_TREE, EV_LIST, EV_MULTI_COLUMN_LIST and
+			- New class added which provides no new functionality, but is a clean 
+			abstraction of `pixmaps_width', `pixmaps_height' and `set_pixmaps_size' which 
+			were all defined independently in EV_TREE, EV_LIST, EV_MULTI_COLUMN_LIST and 
 			EV_COMBO_BOX. Your code will not be affected by this change.
 			<li>
 				<b>EV_TOOL_BAR</b>
-			- Added three new features `has_vertical_button_style',
-			`enable_vertical_button_style' and `disable_vertical_button_style'. The default
-			style for buttons is vertical and was the only style previously available, in
-			which the `pixmap' is displayed above `text'. When vertical style is disabled,
+			- Added three new features `has_vertical_button_style', 
+			`enable_vertical_button_style' and `disable_vertical_button_style'. The default 
+			style for buttons is vertical and was the only style previously available, in 
+			which the `pixmap' is displayed above `text'. When vertical style is disabled, 
 			the `pixmap' of a button will be displayed to the left of its `text'.
 			<LI>
 				<B>EV_TREE </B>
-			- No longer inherits EV_TREE_NODE_CONTAINER which is now obsolete. Made
+			- No longer inherits EV_TREE_NODE_CONTAINER which is now obsolete. Made 
 			`selected' obsolete, use selected_item /= Void instead.
 			<li>
 				<B>EV_TREE_NODE</B>
-			- Now inherits EV_TREE_NODE_LIST instead of EV_TREE_NODE_CONTAINER. This
-			provides more functionality at the level of the node, but does not change the
-			features available in non deferred descendents, as they all previously
-			inherited EV_TREE_NODE_LIST. Changed type of `parent' to EV_TREE_NODE_LIST from
-			EV_TREE_NODE_CONTAINER. Removed three obsolete features - `align_text_left',
+			- Now inherits EV_TREE_NODE_LIST instead of EV_TREE_NODE_CONTAINER. This 
+			provides more functionality at the level of the node, but does not change the 
+			features available in non deferred descendents, as they all previously 
+			inherited EV_TREE_NODE_LIST. Changed type of `parent' to EV_TREE_NODE_LIST from 
+			EV_TREE_NODE_CONTAINER. Removed three obsolete features - `align_text_left', 
 			align_text_center' and `align_text_right'.
 			<LI>
 				<B>EV_TREE_ITEM</B>
-			- Strengthened `is_expandable' so that it checks `parent_tree' is not Void,
+			- Strengthened `is_expandable' so that it checks `parent_tree' is not Void, 
 			this brings it into line with the preconditions of `expand'.
 			<LI>
 				<B>EV_DYNAMIC_TREE_ITEM</B>
-			- Strengthened `is_expandable' to check `parent_tree', in line with
-			preconditions of `expand'. Added "valid_operands" precondition to
-			`set_subtree_function' which ensures that you only pass a function with valid
+			- Strengthened `is_expandable' to check `parent_tree', in line with 
+			preconditions of `expand'. Added "valid_operands" precondition to 
+			`set_subtree_function' which ensures that you only pass a function with valid 
 			operands.
 			<LI>
 				<B>EV_TREE_NODE_CONTAINER</B>
 			- Now obsolete, you should use EV_TREE_NODE_LIST instead.
 			<LI>
 				<B>EV_MULTI_COLUMN_LIST</B>
-			- Added missing postconditions to `align_text_left', `align_text_right',
-			`align_text_center' and other miscellaneous features that were missing relevent
+			- Added missing postconditions to `align_text_left', `align_text_right', 
+			`align_text_center' and other miscellaneous features that were missing relevent 
 			postconditions.
 			<LI>
 				<b>EV_MENU</b>
-			- Tightened preconditions of `show' and `show_at' to ensure that the menu is
+			- Tightened preconditions of `show' and `show_at' to ensure that the menu is 
 			not parented.
 			<LI>
 				<b>EV_TEXT</b>
-			Added `has_word_wrapping', `enable_word_wrapping' and `disable_word_wrapping'.
-			These features allow you to switch between horizontal word wrapping, in which
-			lines too long to be displayed will be wrapped, and no word wrapping, in which
-			horizontal scroll bars will be displayed, allowing you to view the complete
-			contents of each line. Previously EV_TEXT would always wrap lines, and the
+			Added `has_word_wrapping', `enable_word_wrapping' and `disable_word_wrapping'. 
+			These features allow you to switch between horizontal word wrapping, in which 
+			lines too long to be displayed will be wrapped, and no word wrapping, in which 
+			horizontal scroll bars will be displayed, allowing you to view the complete 
+			contents of each line. Previously EV_TEXT would always wrap lines, and the 
 			default beaviour is `has_word_wrapping' as it was before these changes.
 			<li>
 				<B>EV_TEXT_COMPONENT</B>
-			- Added `has_selection' precondition to `selected_text' which requires that
+			- Added `has_selection' precondition to `selected_text' which requires that 
 			`has_selection' must be True for you to call `selected_text'.
 			<LI>
 				<B>EV_FILE_DIALOG</B>
 			- Added `valid_file_title' for validation of a file name excluding the path.
 			<LI>
-				<B>EV_STANDARD_DIALOG</B> - Corrected postcondition of `make_with_text' which
-				was checking that `text' was the same object as the STRING pased as an
-				argument. This was incorrect, as `text' is cloned during the creation.</LI>
-			<li><B>EV_WIDGET</B> - Added `remove_real_target' which ensures that `real_target' is Void.</li>
-			<li><B>EV_WIDGET_ACTION_SEQUENCES</B>  - Added `mouse_wheel_actions', fired each time that the mouse wheel is scrolled.</li>
-			<LI><B>EV_NOTEBOOK</B> - Now inherits EV_FONTABLE permitting a font to be applied to the item texts.</li>
-			<li><B>EV_ENVIRONMENT</B><ul class="square"><li>Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the number of lines that should be scrolled in response to each mouse wheel scroll event received.</li>
-			<li>Added `has_printer' which returns `True' if at least one printer is installed.</li></ul></li>
-			<li><B>EV_PRINT_CONTEXT</B> - Added `horizontal_resolution' and `vertical_resolution' which return the page size in pixels of the page type selected from an EV_PRINT_DIALOG. This permits you to adjust the figure world you are printing to an EV_PRINT_PROJECTOR based on the limits of the page, as determined by `horizontal_resolution' and `vertical_resolution' in pixels.</li>
-			<li><B>EV_APPLICATION</B> - Added `process_events_until_stopped' and `stop_processing', similar to `process_events', except the processing is executed until `stop_processing' is called.</li>
-	<li><B>EV_PRINT_PROJECTOR</B> - Added `has_printer' check to `make_with_context', ensuring that if you are to print to a printer, at least one printer is available.</li>
-	<li><B>EV_PRINT_CONTEXT</B> - `default_create' now initializes a set of standard values, permitting the printing to the default printer, using US letter size.</li>
-	<li><B>EV_RELATIVE_POINT</B> - The features `set_x_abs', `set_y_abs', `set_angle_abs', `set_scale_x_abs' and `set_scale_y_abs' now all have a precondition ensuring that you may only call them while `being_positioned' is True, which is only the case during execution of a custom positioning agent. Previously, if they were called at other times, the values set would be overridden.</li>
-	<li><B>EV_FIGURE</B> - `accept_cursor' and `deny_cursor' are now available as queries.</li>
-	<li><B>EV_ABSTRACT_PICK_AND_DROPABLE</B> - `set_accept_cursor' and `set_deny_cursor' no longer accept `Void' arguments.
-</ul>
+				<B>EV_STANDARD_DIALOG</B>
+			- Corrected postcondition of `make_with_text' which was checking that `text' 
+			was the same object as the STRING pased as an argument. This was incorrect, as 
+			`text' is cloned during the creation.
+			<li>
+				<B>EV_WIDGET</B>
+			- Added `remove_real_target' which ensures that `real_target' is Void.
+			<li>
+				<B>EV_WIDGET_ACTION_SEQUENCES</B>
+			- Added `mouse_wheel_actions', fired each time that the mouse wheel is 
+			scrolled.
+			<LI>
+				<B>EV_NOTEBOOK</B>
+			- Now inherits EV_FONTABLE permitting a font to be applied to the item texts.
+			<li>
+				<B>EV_ENVIRONMENT</B><ul class="square">
+					<li>
+					Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the 
+					number of lines that should be scrolled in response to each mouse wheel scroll 
+					event received.
+					<li>
+						Added `has_printer' which returns `True' if at least one printer is installed.</li></ul>
+			<li>
+				<B>EV_PRINT_CONTEXT</B>
+			- Added `horizontal_resolution' and `vertical_resolution' which return the page 
+			size in pixels of the page type selected from an EV_PRINT_DIALOG. This permits 
+			you to adjust the figure world you are printing to an EV_PRINT_PROJECTOR based 
+			on the limits of the page, as determined by `horizontal_resolution' and 
+			`vertical_resolution' in pixels.
+			<li>
+				<B>EV_APPLICATION</B>
+			- Added `process_events_until_stopped' and `stop_processing', similar to 
+			`process_events', except the processing is executed until `stop_processing' is 
+			called.
+			<li>
+				<B>EV_PRINT_PROJECTOR</B>
+			- Added `has_printer' check to `make_with_context', ensuring that if you are to 
+			print to a printer, at least one printer is available.
+			<li>
+				<B>EV_PRINT_CONTEXT</B>
+			- `default_create' now initializes a set of standard values, permitting the 
+			printing to the default printer, using US letter size.
+			<li>
+				<B>EV_RELATIVE_POINT</B>
+			- The features `set_x_abs', `set_y_abs', `set_angle_abs', `set_scale_x_abs' and 
+			`set_scale_y_abs' now all have a precondition ensuring that you may only call 
+			them while `being_positioned' is True, which is only the case during execution 
+			of a custom positioning agent. Previously, if they were called at other times, 
+			the values set would be overridden.
+			<li>
+				<B>EV_FIGURE</B>
+			- `accept_cursor' and `deny_cursor' are now available as queries.
+			<li>
+				<B>EV_ABSTRACT_PICK_AND_DROPABLE</B>
+			- `set_accept_cursor' and `set_deny_cursor' no longer accept `Void' arguments.
+			<LI>
+				<STRONG>EV_FIGURE_MATH </STRONG>
+			- 'line_angle' now correctly returns the angle in radians relative to world.
+			<LI>
+				<STRONG>EV_ARROWED_FIGURE</STRONG>
+			- 'start_angle' and 'end_angle' now work in all circumstances
+			<LI>
+				<STRONG>EV_FIGURE_STAR</STRONG>
+			- First line generated is now created from 'point_b'
+			<LI>
+				<STRONG>EV_FIGURE_EQUILATERAL</STRONG> - First point generated is now based 
+				upon 'point_b'</LI>
+		</ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
 			<LI>
-				<B>EV_TREE_NODE_CONTAINER</B> - This class is no longer used in EiffelVision2,
-				and if you were relying on it, you should use EV_TREE_NODE_LIST instead. The
-				type of `parent' for tree nodes has been changed from EV_TREE_NODE_CONTAINER to
-				EV_TREE_NODE_LIST, so if you retrieve the `parent' and then attempt to iterate,
-				you may have declared an instance of EV_TREE_NODE_CONTAINER. In this situation,
+				<B>EV_TREE_NODE_CONTAINER</B> - This class is no longer used in EiffelVision2, 
+				and if you were relying on it, you should use EV_TREE_NODE_LIST instead. The 
+				type of `parent' for tree nodes has been changed from EV_TREE_NODE_CONTAINER to 
+				EV_TREE_NODE_LIST, so if you retrieve the `parent' and then attempt to iterate, 
+				you may have declared an instance of EV_TREE_NODE_CONTAINER. In this situation, 
 				you should simply change the definition to EV_TREE_NODE_LIST instead.
 			</LI>
 		</UL>
@@ -117,92 +169,127 @@
 				<ul>
 					<LI>
 						<B>EV_DYNAMIC_TREE_ITEM</B>
-					- No longer crashes if your `subtree_function' returns Void. In this situation,
+					- No longer crashes if your `subtree_function' returns Void. In this situation, 
 					it will now behave as if the `Result' was empty.
 					<li>
-						<B>EV_BOX</B> - Attempting to dock from an EV_DOCKABLE_SOURCE while the box was
-						empty would not work. This has now been fixed.
-					</li>
-					<li><B>EV_TEXT_COMPONENT</B> - Calling `append_text', `prepend_text' or `insert_text' while `is_editable' is False caused a precondition failure in the implementation which is now fixed.</li>
-					<li><B>EV_DOCKABLE_SOURCE</B>
+						<B>EV_BOX</B>
+					- Attempting to dock from an EV_DOCKABLE_SOURCE while the box was empty would 
+					not work. This has now been fixed.
+					<li>
+						<B>EV_TEXT_COMPONENT</B>
+					- Calling `append_text', `prepend_text' or `insert_text' while `is_editable' is 
+					False caused a precondition failure in the implementation which is now fixed.
+					<li>
+						<B>EV_DOCKABLE_SOURCE</B>
 						<UL>
-							<li>It was previously not possible to dock to an empty window, as the target was ignored in error.</LI>
-							<li>Fixed bug which caused a crash if a dock was attempted to an empty box.</li>
+							<li>
+							It was previously not possible to dock to an empty window, as the target was 
+							ignored in error.
+							<li>
+								Fixed bug which caused a crash if a dock was attempted to an empty box.</li>
 						</UL>
-					</li>
-					<li><B>EV_CHECKABLE_LIST</B> - Corrected postcondition of `checked_items' which was checking `selected_items' in error, and therefore almost always failing.</li>
-					<li><B>EV_APPLICATION</B> - Querying `focused_widget' if the window with the focus was empty caused a crash. This has now been fixed, and in this situation, the window itself is returned.</li>
-					<li><B>EV_FIGURE_TEXT</B> - Fixed handling of `preferred_fonts' from the `font', which was not taken into account. Previously, the default font was always used.</li>
-					<li><B>EV_DYNAMIC_LIST</B> - Fixed `retrieve_item_by_data' and `retrieve_items_by_data' which were always performing object comparison, even when reference comparison was selected by passing `False' as the second argument.</li>
-					<li><B>EV_TREE_NODE_LIST</B>- Fixed `retrieve_item_recursively_by_data' and `retrieve_items_recursively_by_data' which were always performing object comparison, even when reference comparison was selected by passing `False' as the second argument.</li>
+					<li>
+						<B>EV_CHECKABLE_LIST</B>
+					- Corrected postcondition of `checked_items' which was checking 
+					`selected_items' in error, and therefore almost always failing.
+					<li>
+						<B>EV_APPLICATION</B>
+					- Querying `focused_widget' if the window with the focus was empty caused a 
+					crash. This has now been fixed, and in this situation, the window itself is 
+					returned.
+					<li>
+						<B>EV_FIGURE_TEXT</B>
+					- Fixed handling of `preferred_fonts' from the `font', which was not taken into 
+					account. Previously, the default font was always used.
+					<li>
+						<B>EV_DYNAMIC_LIST</B>
+					- Fixed `retrieve_item_by_data' and `retrieve_items_by_data' which were always 
+					performing object comparison, even when reference comparison was selected by 
+					passing `False' as the second argument.
+					<li>
+						<B>EV_TREE_NODE_LIST</B>- Fixed `retrieve_item_recursively_by_data' and 
+						`retrieve_items_recursively_by_data' which were always performing object 
+						comparison, even when reference comparison was selected by passing `False' as 
+						the second argument.</li>
 				</ul>
 			<li>
 				<b>Windows</b>
 				<ul>
 					<LI>
 						<B>EV_TEXT_COMPONENT</B>
-					- fixed bug in `select_region' which would fail if `start_pos' was greater than
+					- fixed bug in `select_region' which would fail if `start_pos' was greater than 
 					`end_pos'.
 					<LI>
 						<B>EV_PIXMAP</B>
 						<ul>
 							<li>
-							`expose_actions' previously had a feature contained related to the
-							implementation, and calling `wipe_out' on `expose_actions' would stop the image
+							`expose_actions' previously had a feature contained related to the 
+							implementation, and calling `wipe_out' on `expose_actions' would stop the image 
 							from being redrawn. There are now no side effects related to `expose_actions'.
 							<LI>
-								Calling `copy' on a pixmap that was parented in an EV_CONTAINER, and therefore
-								displayed on screen had no visual effect until the window was re-painted. The
-								image is now updated immediately. Also, using `copy' on a pixmap in a similar
-								situation that was originally set with a masked icon, and passing a pixmap
-								created from a bitmap file would cause a crash.</LI>
-	<li>Fixed display error in handling of pixmaps created from a PNG with a transparant color,  using `set_with_named_file'. The background would be garbled and partially black.</li>
+							Calling `copy' on a pixmap that was parented in an EV_CONTAINER, and therefore 
+							displayed on screen had no visual effect until the window was re-painted. The 
+							image is now updated immediately. Also, using `copy' on a pixmap in a similar 
+							situation that was originally set with a masked icon, and passing a pixmap 
+							created from a bitmap file would cause a crash.
+							<li>
+								Fixed display error in handling of pixmaps created from a PNG with a 
+								transparant color, using `set_with_named_file'. The background would be garbled 
+								and partially black.</li>
 						</ul>
 					<LI>
 						<B>EV_LIST</B>
-					- Calling `disable_sensitive' when already non sensitive would loose the
-					original selection, and calling `enable_sensitive' when already sensitive would
-					alter the selected item. The features will no longer alter the selection if
+					- Calling `disable_sensitive' when already non sensitive would loose the 
+					original selection, and calling `enable_sensitive' when already sensitive would 
+					alter the selected item. The features will no longer alter the selection if 
 					called twice.
 					<LI>
 						<B>EV_CELL</B>
-					- If you removed the item, the minimum size was not updated to reflect this,
-					thereby retaining the minimum size as constrained by the minimum size of the
+					- If you removed the item, the minimum size was not updated to reflect this, 
+					thereby retaining the minimum size as constrained by the minimum size of the 
 					now removed item.
 					<LI>
 						<B>EV_TREE_ITEM</B>/<B>EV_TREE</B>
-					- A call to `disable_select' on an EV_TREE_ITEM will now actually remove the
-					selection from the tree. Previously, the style of the item was changed, but a
+					- A call to `disable_select' on an EV_TREE_ITEM will now actually remove the 
+					selection from the tree. Previously, the style of the item was changed, but a 
 					call to `selected_item' on the tree would still return the item.
 					<LI>
 						<B>EV_FILE_DIALOG</B>
-					- Fixed precondition violation when you calling `set_file_name' which was
+					- Fixed precondition violation when you calling `set_file_name' which was 
 					rejecting directory separators.
 					<LI>
 						<B>EV_DIALOG</B>
-					- Fixed a bug when you had two dialogs displayed modally, with the second modal
-					to the first. If you had a text field within the second dialog whose
-					`return_actions' contained an agent which would destroy the second dialog, the
-					`select_actions' of the `default_push_button' in the lower dialog would be
+					- Fixed a bug when you had two dialogs displayed modally, with the second modal 
+					to the first. If you had a text field within the second dialog whose 
+					`return_actions' contained an agent which would destroy the second dialog, the 
+					`select_actions' of the `default_push_button' in the lower dialog would be 
 					subsequently fired.
 					<LI>
 						<B>EV_LABEL</B>
-					- If a label was disabled through the disabling of a container in which it was
+					- If a label was disabled through the disabling of a container in which it was 
 					contained, it would sometimes not be grayed out. This has now been fixed.</B>
 					<LI>
 						<B>EV_PICK_AND_DROPABLE</B><ul>
 							<li>
-							`mode_is_target_menu' did not work for a pick and drop source whose `pebble'
+							`mode_is_target_menu' did not work for a pick and drop source whose `pebble' 
 							was generated by a `pebble_function'.
 							<li>
-								Fixed bug where drag and drop was not working as it was attempting to perform
+								Fixed bug where drag and drop was not working as it was attempting to perform 
 								docking instead. If both are enabled, docking has priority.</li>
-
 						</ul>
-					</LI>
-<LI><B>EV_COMBO_BOX_IMP</B><UL><LI>Fixed `set_foreground_color' and `set_background_color' which previously did nothing.</li>
-				<LI>Fixed bug in selection. If during execution of the `select_actions' of an item contained, you called `enable_select' on another item within the combo box, subsequently selecting the originally selected item would no longer fire its `select_actions'.</UL>
-				<li><B>EV_PRINT_DIALOG</B> - Querying `print_context' from a print dialog if a user selected "Cancel" would previously crash.</li>
+					<LI>
+						<B>EV_COMBO_BOX_IMP</B><UL>
+							<LI>
+							Fixed `set_foreground_color' and `set_background_color' which previously did 
+							nothing.
+							<LI>
+								Fixed bug in selection. If during execution of the `select_actions' of an item 
+								contained, you called `enable_select' on another item within the combo box, 
+								subsequently selecting the originally selected item would no longer fire its 
+								`select_actions'.</LI></UL>
+					<li>
+						<B>EV_PRINT_DIALOG</B> - Querying `print_context' from a print dialog if a user 
+						selected "Cancel" would previously crash.</li>
 				</ul>
 			<li>
 				<b>Gtk</b>
@@ -212,39 +299,46 @@
 					- Now expansion state remains the same when 'set_pixmap' is called.
 					<LI>
 						<STRONG>EV_DIALOG</STRONG>
-					- Fixed bug where 100 percent of CPU time was being used when dialog was shown
+					- Fixed bug where 100 percent of CPU time was being used when dialog was shown 
 					modally.
 					<LI>
-						<STRONG>EV_WINDOW</STRONG> - Now sizing invariants are fulfilled when widget is
-						destroyed, preventing segmentation violation. <STRONG>EV_COMBO_BOX</STRONG></LI>
-					<UL>
-						<LI>
-						Fixed bug where reselecting an item within the combo box list was in fact
-						deselecting it.
-						<LI>
-							Now first item remains selected when items are added.</LI></UL>
+						<STRONG>EV_WINDOW</STRONG> - Now sizing invariants are fulfilled when widget is 
+						destroyed, preventing segmentation violation. <STRONG>EV_COMBO_BOX</STRONG>
+						<UL>
+							<LI>
+							Fixed bug where reselecting an item within the combo box list was in fact 
+							deselecting it.
+							<LI>
+								Now first item remains selected when items are added.</LI></UL>
 					<LI>
 						<STRONG>EV_WINDOW</STRONG>
-					- Fixed querying of positioning which never changes if previously&nbsp;set by
+					- Fixed querying of positioning which never changes if previously&nbsp;set by 
 					user.
 					<LI>
 						<STRONG>EV_APPLICATION</STRONG>
-					- Priority of `idle_actions' has been changed so that gtk will recalculate
-					widgets sizes before calling its idle handler, this means that all resizing is
+					- Priority of `idle_actions' has been changed so that gtk will recalculate 
+					widgets sizes before calling its idle handler, this means that all resizing is 
 					done before idle actions are called.
 					<li>
 						<STRONG>EV_WINDOW </STRONG>
 					- Now windows correctly shrink when requested size is smaller than current size
 					<LI>
 						<STRONG>EV_PICK_AND_DROPABLE</STRONG>
-					- Fixed bug where if both drag and drop and docking were enabled, both would be
+					- Fixed bug where if both drag and drop and docking were enabled, both would be 
 					executed, now docking overrides drag and drop if both are enabled.
 					<LI>
 						<STRONG>EV_TIMEOUT </STRONG>
-					- Now timeouts correctly unregister themselves on dispose preventing
+					- Now timeouts correctly unregister themselves on dispose preventing 
 					segmentation violation.
 					<LI>
-						<STRONG>EV_PIXMAP </STRONG>- Pixmap stretching now works as expected.</LI>
+						<STRONG>EV_PIXMAP </STRONG>
+					- Pixmap stretching now works as expected.
+					<LI>
+						<STRONG>EV_WINDOW</STRONG>
+					- Now all window specific&nbsp;events&nbsp;work as expected
+					<LI>
+						<STRONG>EV_TITLED_WINDOW</STRONG> - Now is_displayed returns false when window 
+						is minimized.</LI>
 				</UL>
 			</li>
 		</UL>
@@ -253,7 +347,7 @@
 		<ul class="circle">
 			<li>
 				<B>EV_TITLED_WINDOW_ACTION_SEQUENCES</B>
-			added which is inherited only by EV_TITLED_WINDOW and provides three new action
+			added which is inherited only by EV_TITLED_WINDOW and provides three new action 
 			sequences :- `minimize_actions', `maximize_actions' and `restore_actions'.
 			<li>
 				<b>EV_TITLED_WINDOW</b>
@@ -268,45 +362,45 @@
 			now inherits EV_FONTABLE, allowing you to modify the font displayed.
 			<li>
 				<B>EV_DYNAMIC_LIST_ITEM</B>
-			- Corrected `off' which was using the version inherited from EV_TREE_NODE when
+			- Corrected `off' which was using the version inherited from EV_TREE_NODE when 
 			it should have been using the version from EV_TREE_NODE_LIST instead.
 			<li>
 				<B>EV_RECTANGLE</B>
-			- Added precondition to `intersects' which stops a Void rectangle being passed
+			- Added precondition to `intersects' which stops a Void rectangle being passed 
 			as an argument.
 			<li>
 				<B>EV_TOOL_BAR_SEPARATOR</B>
-			- Now export many inherited features to {ANY} instead of {NONE}, including
+			- Now export many inherited features to {ANY} instead of {NONE}, including 
 			`parent'.
 			<li>
 				<B>EV_ENVIRONMENT</B>
-			- Added `supported_image_formats' which returns a LINEAR [STRING] containing
+			- Added `supported_image_formats' which returns a LINEAR [STRING] containing 
 			all valid formats by their three letter extension.
 			<li>
 				<B>EV_CHECKABLE_LIST</B>
-			- New class added which behaves as an EV_LIST, except that for each
+			- New class added which behaves as an EV_LIST, except that for each 
 			EV_LIST_ITEM contained, an associated check box is displayed.
 			<li>
 				<B>EV_MESSAGE_DIALOG</B>
-			- No longer deferred, and has two creation procedures `default_create' and
+			- No longer deferred, and has two creation procedures `default_create' and 
 			`make_with_text'.
 			<li>
 				<B>EV_STANDARD_DIALOG</B>
 			- All descendents now have `make_with_text' as a creation procedure'.
 			<li>
-				<B>EV_TABLE</B> - Now inherits CHAIN instead of ARRAY. This is a breaking
-				change, and may require some modification to your code. The inheritence from
-				ARRAY was seriously flawed. For example, if you were to call `extend' on an
-				EV_CONTAINER object that was currently referencing an EV_TABLE, then this would
-				fail. Now that we inherit CHAIN, this problem, among others of a similar nature
-				are fixed. Another advantage of inheriting CHAIN, is that the table may now be
+				<B>EV_TABLE</B> - Now inherits CHAIN instead of ARRAY. This is a breaking 
+				change, and may require some modification to your code. The inheritence from 
+				ARRAY was seriously flawed. For example, if you were to call `extend' on an 
+				EV_CONTAINER object that was currently referencing an EV_TABLE, then this would 
+				fail. Now that we inherit CHAIN, this problem, among others of a similar nature 
+				are fixed. Another advantage of inheriting CHAIN, is that the table may now be 
 				iterated which allows for greater flexibility.<br>
 				<br>
 				The following list details some of the breaking changes, and how to fix them:
 				<ul class="square">
 					<li>
 						<B>item</B>
-					- If you were using `item', you should change this to `item_at_position'. A
+					- If you were using `item', you should change this to `item_at_position'. A 
 					call to `item' will now return the current item.
 					<li>
 						<B>put</B>
@@ -316,21 +410,21 @@
 					- These are now both exported, as before, they were exported to {NONE}.
 					<li>
 						features inherited from <B>ARRAY</B>
-					- These are no longer available but you may use the feature `to_array', which
-					returns the contents of the table represented as an ARRAY [EV_WIDGET]. This
-					feature is marked as obsolete, as it is temporary, to simplify the transition
+					- These are no longer available but you may use the feature `to_array', which 
+					returns the contents of the table represented as an ARRAY [EV_WIDGET]. This 
+					feature is marked as obsolete, as it is temporary, to simplify the transition 
 					to the new inheritence structure of EV_TABLE.
 					<li>
 						<B>count</B>
-					- The previous version of `count' was the one from ARRAY, which returned the
-					number of available (not empty) cells in the table. We now use the version of
-					`count' inherited from EV_CONTAINER which returns the number of widgets
-					currently contained. Previously, the feature `widget_count' was used to return
-					the number of items, but this feature has now been made obsolete. Therefore, if
-					you were previously using `count', replace this with `rows' * `columns', and if
+					- The previous version of `count' was the one from ARRAY, which returned the 
+					number of available (not empty) cells in the table. We now use the version of 
+					`count' inherited from EV_CONTAINER which returns the number of widgets 
+					currently contained. Previously, the feature `widget_count' was used to return 
+					the number of items, but this feature has now been made obsolete. Therefore, if 
+					you were previously using `count', replace this with `rows' * `columns', and if 
 					you were using `widget_count', replace this with a call to `count'.
 					<li>
-						<B>item_list</B> - This is now obsolete. You may use `linear_representation' to
+						<B>item_list</B> - This is now obsolete. You may use `linear_representation' to 
 						retrieve the contents of the table, or simply traverse the table.</li>
 				</ul>
 			<li>
@@ -341,12 +435,12 @@
 			- No longer inherits DOUBLE_MATH.
 			<li>
 				<B>EV_TEXT</B>
-			- `line_count' now returns the number of lines actually displayed, and not just
-			the newline characters, as an EV_TEXT will wrap the text when necessary. The
+			- `line_count' now returns the number of lines actually displayed, and not just 
+			the newline characters, as an EV_TEXT will wrap the text when necessary. The 
 			postcondition of `linecount' has been updated to reflect this change.
 			<li>
-				<B>EV_FILE_DIALOG</B> Added "valid_file_name" precondition to `set_file_name'
-				and a new feature `valid_file_name' which checks that a file name is valid on
+				<B>EV_FILE_DIALOG</B> Added "valid_file_name" precondition to `set_file_name' 
+				and a new feature `valid_file_name' which checks that a file name is valid on 
 				the current platform.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
@@ -361,10 +455,10 @@
 						<B>EV_FIGURE_RECTANGLE</B>
 						<ul class="square">
 							<li>
-							Corrected `bounding_box' which was previously computed incorrectly when the
+							Corrected `bounding_box' which was previously computed incorrectly when the 
 							rectangle was rotated.
 							<li>
-								Fixed `width' and `height' which were always returning one less pixel than they
+								Fixed `width' and `height' which were always returning one less pixel than they 
 								should have.</li>
 						</ul>
 					</li>
@@ -374,7 +468,7 @@
 				<ul>
 					<li>
 						<b>EV_PIXMAP</b>
-					- Setting a tile with `set_tile' followed by a call to a fill routine would
+					- Setting a tile with `set_tile' followed by a call to a fill routine would 
 					crash the implementation.
 					<li>
 						<b>EV_COMBO_BOX</b>
@@ -390,60 +484,60 @@
 							<li>
 							Implemented pick and drop.
 							<li>
-							If not `is_editable' and a `background_color' had been set, it was only used on
-							lines containing text. The `background_color' is now correctly displayed
+							If not `is_editable' and a `background_color' had been set, it was only used on 
+							lines containing text. The `background_color' is now correctly displayed 
 							throughout the whole control when not `is_editable'.
 							<li>
-							Fixed `select_region' which was selecting an incorrect region starting on any
+							Fixed `select_region' which was selecting an incorrect region starting on any 
 							line except the first, when the `text' spanned multiple lines.
 							<li>
-							Fixed `selection_start' and `selection_end' which were incorrect when the
+							Fixed `selection_start' and `selection_end' which were incorrect when the 
 							selection was not completely contained on the first line.
 							<li>
-							Fixed `first_position_from_line_number' and `last_position_from_line_number'
+							Fixed `first_position_from_line_number' and `last_position_from_line_number' 
 							which were returning incorrect values when the text was wrapped.
 							<li>
-							Fixed `caret_position' and `set_caret_position' which were incorrect when the
+							Fixed `caret_position' and `set_caret_position' which were incorrect when the 
 							text spanned multiple lines, and the caret was not on the first line.
 							<li>
-							`line_count' now returns the number of lines actually displayed, and not simply
-							the number of newline characters. To query the number of new line characters do
+							`line_count' now returns the number of lines actually displayed, and not simply 
+							the number of newline characters. To query the number of new line characters do 
 							:- text.occurrences ('%N')
 							<li>
-								Fixed bug in `search' which was returning -1 instead of 0 when the text was not
+								Fixed bug in `search' which was returning -1 instead of 0 when the text was not 
 								found.</li>
 						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>
-					- Fixed bug when you performed the following: drew a filled shape, called
-					`set_tile' and then drew another filled shape. The tile would not be used on
+					- Fixed bug when you performed the following: drew a filled shape, called 
+					`set_tile' and then drew another filled shape. The tile would not be used on 
 					the second fill.
 					<li>
 						<b>EV_COLOR_DIALOG</b>
-					- Querying `color' after a user had cancelled the dialog would previously crash
+					- Querying `color' after a user had cancelled the dialog would previously crash 
 					a system, if `set_color' had never been called.
 					<li>
 						<b>EV_COLOR</b>
 					- Fixed `set_rgb_with_24_bit' which would fail when called.
 					<li>
 						<b>EV_BUTTON, EV_TOGGLE_BUTTON</b>
-					- The buttons now correctly display a text, pixmap and background color
-					simultaneously. Previously, the background color was never displayed, and
+					- The buttons now correctly display a text, pixmap and background color 
+					simultaneously. Previously, the background color was never displayed, and 
 					either the pixmap or text would be displayed, not both.
 					<li>
 						<b>EV_PRINT_DIALOG</b>
-					- Fixed `set_from_page' and `set_to_page' which were previously not
+					- Fixed `set_from_page' and `set_to_page' which were previously not 
 					implemented.
 					<li>
 						<b>EV_LIST</b>
 						<ul>
 							<li>
-							Fixed a graphical glitch when using `wipe_out' when items were contained that
-							required the horizontal scroll bar to be visible. The scroll bar was not
+							Fixed a graphical glitch when using `wipe_out' when items were contained that 
+							required the horizontal scroll bar to be visible. The scroll bar was not 
 							hidden, even though there were no longer any items in the list.
 							<li>
-								Changing the selection behaviour between multiple and single selection would
-								cause the scroll bars to become hidden, even if they were necessary. Changing
+								Changing the selection behaviour between multiple and single selection would 
+								cause the scroll bars to become hidden, even if they were necessary. Changing 
 								this status will no longer hide the scroll bars if they are required.
 							</li>
 						</ul>
@@ -451,30 +545,30 @@
 						<b>EV_TOOL_BAR</b>
 						<ul>
 							<li>
-							Items that were disabled would sometimes become enabled when other properties
-							of the item were set. For example, performing
-							"my_tool_bar_button.disable_sensitive" followed by "my_tool_bar_button.set_text
-							("Disabled")" while the button was parented, would result in a sensitive tool
+							Items that were disabled would sometimes become enabled when other properties 
+							of the item were set. For example, performing 
+							"my_tool_bar_button.disable_sensitive" followed by "my_tool_bar_button.set_text 
+							("Disabled")" while the button was parented, would result in a sensitive tool 
 							bar button. This is now fixed.
 							<li>
-								If you changed the `text' of a tool bar toggle button during the firing of the
-								`select_actions' of the toggle button, the button would become unchecked as a
-								result. This is now fixed, and changing the text will not stop the button from
+								If you changed the `text' of a tool bar toggle button during the firing of the 
+								`select_actions' of the toggle button, the button would become unchecked as a 
+								result. This is now fixed, and changing the text will not stop the button from 
 								becoming selected.</li></ul>
 					<li>
 						<b>EV_MULTI_COLUMN_LIST</b>
-					- Changing the selection behaviour between multiple and single selection would
-					cause the scroll bars to become hidden, even if they were necessary. Changing
+					- Changing the selection behaviour between multiple and single selection would 
+					cause the scroll bars to become hidden, even if they were necessary. Changing 
 					this status will no longer hide the scroll bars if they are required.
 					<li>
 						<b>EV_DYNAMIC_TREE_ITEM</b>
 					- Calling `set_tooltip' failed and has now been fixed.
 					<li>
 						<b>EV_TIMEOUT</b>
-					- Calling `destroy' more than once on a timeout, caused the implementation to
+					- Calling `destroy' more than once on a timeout, caused the implementation to 
 					crash, and has now been fixed.</B>
 					<li>
-						<b>EV_TOOLTIPABLE</b> - Tooltips on primitives were not supporting multiple
+						<b>EV_TOOLTIPABLE</b> - Tooltips on primitives were not supporting multiple 
 						lines and this has now been fixed. Use %N for a line break.
 					</li>
 				</ul>
@@ -499,16 +593,16 @@
 					- Cancelling via Enter key is now handled correctly.
 					<LI>
 						<STRONG>EV_LIST</STRONG>
-					- Fixed selection of selected item when changing from multiple selection to
+					- Fixed selection of selected item when changing from multiple selection to 
 					single selection.
 					<LI>
 						<STRONG>EV_MULTI_COLUMN_LIST</STRONG>
 						<UL>
 							<LI>
-							Row height now incorporates spacing pixel to match the implementation of
+							Row height now incorporates spacing pixel to match the implementation of 
 							Windows.
 							<LI>
-								Default row height is now slightly larger to be more aesthetically pleasing
+								Default row height is now slightly larger to be more aesthetically pleasing 
 								with smaller fonts sizes.</LI></UL>
 					<LI>
 						<STRONG>EV_CONTAINER</STRONG>
@@ -519,11 +613,11 @@
 								Radio group unmerging is now handled correctly.</LI></UL>
 					<LI>
 						<STRONG>EV_TEXT_FIELD </STRONG>
-					- Now vertical alignment is identical to that on Windows, including that for
+					- Now vertical alignment is identical to that on Windows, including that for 
 					text field descendants.
 					<LI>
 						<STRONG>EV_RANGE </STRONG>
-					- Now motions events are passing consistent pointer values instead of sometimes
+					- Now motions events are passing consistent pointer values instead of sometimes 
 					skewed ones.
 					<LI>
 						<STRONG>EV_DRAWING_AREA</STRONG>
@@ -534,7 +628,7 @@
 							<LI>
 							`scroll_to_line' is now implemented.
 							<LI>
-								`line_count' and `current_line_number' now handle lines in text widget and not
+								`line_count' and `current_line_number' now handle lines in text widget and not 
 								the text itself.</LI></UL>
 					<LI>
 						<STRONG>EV_FIXED</STRONG>
@@ -546,7 +640,7 @@
 						<STRONG>EV_MENU_SEPARATOR&nbsp; </STRONG>
 					- Menu Separators are now more prominent.
 					<LI>
-						<STRONG>EV_TOOLBAR_SEPARATOR - </STRONG>Toolbar Separators are now more
+						<STRONG>EV_TOOLBAR_SEPARATOR - </STRONG>Toolbar Separators are now more 
 						prominent.</LI></UL>
 			</LI>
 		</UL>
@@ -556,9 +650,9 @@
 		<ul class="circle">
 			<li>
 				<b>EV_TEXTABLE</b>
-			- `align_text_left', `align_text_right' and `align_text_center' have been
-			extracted into a new class, EV_TEXT_ALIGNABLE which inherits EV_TEXTABLE. All
-			previous descendents of EV_TEXTABLE now inherit EV_TEXT_ALIGNABLE, except
+			- `align_text_left', `align_text_right' and `align_text_center' have been 
+			extracted into a new class, EV_TEXT_ALIGNABLE which inherits EV_TEXTABLE. All 
+			previous descendents of EV_TEXTABLE now inherit EV_TEXT_ALIGNABLE, except 
 			EV_TREE_NODE, EV_MENU_ITEM, EV_LIST_ITEM and EV_TOOL_BAR_BUTTON
 			<li>
 				<b>EV_TEXT_COMPONENT</b>
@@ -568,8 +662,8 @@
 			- New class added to support EV_TEXT_ALIGNABLE.
 			<li>
 				<b>EV_MENU_ITEM_LIST</b>
-			- `parent' is now of type EV_ANY, instead of EV_MENU_ITEM_LIST as it did not
-			hold for EV_MENU_BAR. The renaming of `parent' to `old_parent' in EV_MENU_BAR
+			- `parent' is now of type EV_ANY, instead of EV_MENU_ITEM_LIST as it did not 
+			hold for EV_MENU_BAR. The renaming of `parent' to `old_parent' in EV_MENU_BAR 
 			has now been removed.
 			<li>
 				<b>EV_VIEWPORT</b>
@@ -580,17 +674,17 @@
 					<li>
 					redefined `prunable' to `True' and implemented `prune'.
 					<li>
-						Added the following features - `set_item_span', `set_item_position',
-						`set_item_span_and_position', `area_clear_excluding_widget', `item_row_span',
+						Added the following features - `set_item_span', `set_item_position', 
+						`set_item_span_and_position', `area_clear_excluding_widget', `item_row_span', 
 						`item_column_span', `item_row_position' and `item_column_position'.
 					</li>
 				</ul>
 			<li>
 				<b>EV_WIDGET</b>
-			- Changed type of `focus_in_actions' and `focus_out_actions' from
-			EV_FOCUS_ACTION_SEQUENCE to EV_NOTIFY_ACTION_SEQUENCE. `is_parent_recursive' is
-			no longer available. It has been moved to EV_CONTAINER. This was necessary to
-			fix a catcall encountered using vision2 under .NET. The problem manifested with
+			- Changed type of `focus_in_actions' and `focus_out_actions' from 
+			EV_FOCUS_ACTION_SEQUENCE to EV_NOTIFY_ACTION_SEQUENCE. `is_parent_recursive' is 
+			no longer available. It has been moved to EV_CONTAINER. This was necessary to 
+			fix a catcall encountered using vision2 under .NET. The problem manifested with 
 			widgets that held items.
 			<li>
 				<b>EV_FIGURE</b>
@@ -600,26 +694,26 @@
 			- `set_font' now sets a copy of the font internally.
 			<LI>
 				<b>EV_TREE</b>
-			- `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as
+			- `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as 
 			arguments, instead of an EV_TREE_ITEM.
 			<li>
 				<b>EV_TEXT</b>
 			- `put_new_line' is now obsolete. Use `set_text ("%N") instead."
 			<li>
 				<b>EV_APPLICATION_ACTION_SEQUENCES</b>
-			- Added `cancel_actions', fired when a pick and drop is cancelled, and
+			- Added `cancel_actions', fired when a pick and drop is cancelled, and 
 			`pnd_motion_actions' fired while the pointer moves during a pick and drop.
 			<li>
 				<b>EV_TREE_NODE_LIST</b>
 				<ul class="square">
 					<li>
-					`find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are
-					now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which
+					`find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are 
+					now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which 
 					are descendents.
 					<li>
-						Added `retrive_items_recursively_by_data' and
-						`retrieve_item_recursively_by_data' which allow you to specify a comparison
-						criterion, and due to this addition, `find_item_recursively_by_data' has now
+						Added `retrive_items_recursively_by_data' and 
+						`retrieve_item_recursively_by_data' which allow you to specify a comparison 
+						criterion, and due to this addition, `find_item_recursively_by_data' has now 
 						been made obsolete.
 					</li>
 				</ul>
@@ -628,10 +722,10 @@
 			- Added `retrieve_item_by_data' and `retrieve_items_by_data'.
 			<li>
 				<b>EV_ITEM_LIST</b>
-			- Made `item_by_data' obsolete, as you should now use `retrieve_item_by_data'
+			- Made `item_by_data' obsolete, as you should now use `retrieve_item_by_data' 
 			added in EV_DYNAMIC_LIST.
 			<li>
-				<b>EV_DIALOG</b> - Added `is_relative' and defined `is_modal' in this class,
+				<b>EV_DIALOG</b> - Added `is_relative' and defined `is_modal' in this class, 
 				instead of inheriting it from EV_WINDOW.
 			</li>
 		</ul>
@@ -642,16 +736,16 @@
 					<ul>
 						<li>
 							<b>EV_FIGURE_POLYLINE</b>
-						- Fixed `start_angle' and `end_angle' so that they are computed relative to the
-						first and last polyline segments. This also fixes the start and end arrows, so
-						that when displayed, they now actually point in the direction of their
+						- Fixed `start_angle' and `end_angle' so that they are computed relative to the 
+						first and last polyline segments. This also fixes the start and end arrows, so 
+						that when displayed, they now actually point in the direction of their 
 						respective line segments.
 						<li>
 							<b>EV_TREE and EV_TREE_NODE</b>
-						- Fixed `find_item_recursively_by_data' which failed on the `index_not_changed'
+						- Fixed `find_item_recursively_by_data' which failed on the `index_not_changed' 
 						postcondition. Note that these features are now defined in EV_TREE_NODE_LIST.
 						<li>
-							<b>EV_DYNAMIC_TREE_ITEM</b> - Fixed invariant violation from EV_ITEM_LIST, when
+							<b>EV_DYNAMIC_TREE_ITEM</b> - Fixed invariant violation from EV_ITEM_LIST, when 
 							created with `default_create'.
 						</li>
 					</ul>
@@ -660,87 +754,87 @@
 					<ul>
 						<li>
 							<b>EV_RADIO_BUTTON</b>
-						- The default minimum height after `default_create' is now enough to display
+						- The default minimum height after `default_create' is now enough to display 
 						the widget correctly.
 						<li>
 							<b>EV_CHECK_BUTTON</b>
-						- The default minimum height after `default_create' is now enough to display
+						- The default minimum height after `default_create' is now enough to display 
 						the widget correctly.
 						<li>
 							<b>EV_NOTEBOOK</b>
-						- When removing a widget from a notebook, it is now visible. Previously, the
+						- When removing a widget from a notebook, it is now visible. Previously, the 
 						widget would be hidden.
 						<li>
 							<b>EV_LIST, EV_MULTI_COLUMN_LIST, EV_TREE</b>
-						- Fixed `set_foreground_color' and `set_background_color'. Previously, calling
+						- Fixed `set_foreground_color' and `set_background_color'. Previously, calling 
 						these features did nothing.
 						<li>
 							<b>EV_BOX</b>
-						- If a widget was not`is_item_expanded', then adding a new widget to the box
-						before that widget would sometimes cause a different widget to become
+						- If a widget was not`is_item_expanded', then adding a new widget to the box 
+						before that widget would sometimes cause a different widget to become 
 						`is_item_expanded'.
 						<li>
 							<b>EV_TOOL_BAR_RADIO_BUTTON</b>
-						- The currently selected button in `peers' was unselected when the button was
-						pressed, and not when it was really selected. This bug made it possible to make
+						- The currently selected button in `peers' was unselected when the button was 
+						pressed, and not when it was really selected. This bug made it possible to make 
 						`selected_peer' Void, which caused an invariant to fail.
 						<li>
 							<b>EV_LIST_ITEM</b>
-						- Calling `enable_select' when parented in an EV_LIST now also sets the item as
-						focused in the parent. This corrects bugs in keyboard navigation when selecting
+						- Calling `enable_select' when parented in an EV_LIST now also sets the item as 
+						focused in the parent. This corrects bugs in keyboard navigation when selecting 
 						an item programatically.
 						<li>
 							<b>EV_FIXED</b>
-						- The minimum size is constrained by the positions and sizes of the children
-						(They must be completely displayed), although when the positions of the
-						children were reduced, the minimum allowable size was not recomputed. This
-						meant that the widget would be enlarged when the positions of the children
-						increased, but could never be reduced in size when the positions of the
+						- The minimum size is constrained by the positions and sizes of the children 
+						(They must be completely displayed), although when the positions of the 
+						children were reduced, the minimum allowable size was not recomputed. This 
+						meant that the widget would be enlarged when the positions of the children 
+						increased, but could never be reduced in size when the positions of the 
 						children were decreased.
 						<li>
 							<b>EV_MENU and EV_MENU_ITEM</b>
 						- `set_pixmap' has been implemented as previously, it did nothing.
 						<li>
 							<b>EV_TABLE</b>
-						- re-implemented resizing calculations to fix numerous problems when children
-						had minimum sizes. The minimum size now also includes the border width when
+						- re-implemented resizing calculations to fix numerous problems when children 
+						had minimum sizes. The minimum size now also includes the border width when 
 						empty.
 						<li>
 							<b>EV_NOTEBOOK</b>
-						- `selection_actions' were called when you selected an item through
-						`select_item', even if the item was already selected. `selection_actions' are
+						- `selection_actions' were called when you selected an item through 
+						`select_item', even if the item was already selected. `selection_actions' are 
 						now only fired when the selection changes.
 						<li>
 							<b>EV_TREE_ITEM</b>
-						- calling `set_pixmap' twice successively with the same EV_PIXMAP caused a
+						- calling `set_pixmap' twice successively with the same EV_PIXMAP caused a 
 						postcondition failure.
 						<li>
 							<b>EV_TEXT</b>
-						- Fixed `put_new_line', although it has been made obsolete, as you should just
+						- Fixed `put_new_line', although it has been made obsolete, as you should just 
 						use `append_text ("%N") instead.
 						<li>
 							<b>EV_SPLIT_AREA</b>
-						- Fixed crash reproducable by inserting an EV_PIXMAP directly into the split
+						- Fixed crash reproducable by inserting an EV_PIXMAP directly into the split 
 						area.
 						<li>
 							<b>EV_CONTAINER</b>
-						- Fixed `propagate_foreground_color' and `propagate_background_color' which
+						- Fixed `propagate_foreground_color' and `propagate_background_color' which 
 						failed when one of the children was a descendent of EV_CELL.
 						<li>
 							<b>EV_APPLICATION_ACTION_SEQUENCES</b>
 						- `drop_actions' was being fired even when the pick and drop was cancelled.
 						<li>
 							<b>EV_PIXMAP</b>
-						- Previously, if you were to add an agent to an action sequence of the pixmap,
+						- Previously, if you were to add an agent to an action sequence of the pixmap, 
 						before it was parented, the agent would be removed during the parenting.
 						<li>
 							<b>EV_MENU</b>
 							<ul>
 								<li>
-								Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still
+								Pruning an EV_MENU_SEPARATOR when one or more EV_RADIO_MENU_ITEM were still 
 								contained in the menu would cause occasional crashes.
 								<li>
-								Previously, when adding an EV_MENU_SEPARATOR, followed by multiple
+								Previously, when adding an EV_MENU_SEPARATOR, followed by multiple 
 								EV_RADIO_MENU_ITEMS, all the items were being selected.
 								<li>
 									Fixed bug in `destroy' which was causing postcondition failures.
@@ -755,23 +849,23 @@
 								<li>
 								Fixed `is_modal' which was previously always returned `False'.
 								<li>
-								Fixed bug with `background_color' and `foreground_color' which was not taken
+								Fixed bug with `background_color' and `foreground_color' which was not taken 
 								into account if the dialog was shown relative or modally to another window.
 								<li>
-								If a dialog with a default cancel button was displayed using `show', then
+								If a dialog with a default cancel button was displayed using `show', then 
 								minimizing the dialog would cause the system to fail internally.
 								<li>
-								Fix bug in `show_relative_to_window' which would cause any associated menus to
+								Fix bug in `show_relative_to_window' which would cause any associated menus to 
 								be removed.
 								<li>
-								Fixed bug in `show', as if the dialog had already been shown modelessly to a
-								window, then calling `show' did not show it independently, but still
+								Fixed bug in `show', as if the dialog had already been shown modelessly to a 
+								window, then calling `show' did not show it independently, but still 
 								modelessly.
 								<LI>
-								Fixed bug with `show_actions' which would be wiped out if you called
+								Fixed bug with `show_actions' which would be wiped out if you called 
 								`show_modal_to_window' and then `hide'.
 								<LI>
-									`set_pixmap' will now actually display the pixmap, whereas before, no pixmap
+									`set_pixmap' will now actually display the pixmap, whereas before, no pixmap 
 									was displayed.
 								</LI>
 							</ul>
@@ -783,15 +877,15 @@
 						- Fixed `line_count' which was previously returning the correct result + 1.
 						<li>
 							<b>EV_SCROLLABLE_AREA</b>
-						- Fixed crash which occurred when you attempted to use `set_x_offset' or
+						- Fixed crash which occurred when you attempted to use `set_x_offset' or 
 						`set_y_offset' before the area had been parented or displayed.
 						<li>
 							<b>EV_FONTABLE</b>
-						- Fixed bug when `font' was queried, `preferred_families' was not returned
+						- Fixed bug when `font' was queried, `preferred_families' was not returned 
 						correctly, and would always be empty.
 						<li>
-							<b>EV_CONTAINER</b> - `set_background_pixmap' was not correctly cloning the
-							image of the pixmap, and the displayed image could then be modified after
+							<b>EV_CONTAINER</b> - `set_background_pixmap' was not correctly cloning the 
+							image of the pixmap, and the displayed image could then be modified after 
 							setting, by changing the image of the original pixmap.
 						</li>
 					</ul>
@@ -801,8 +895,8 @@
 						<LI>
 						Remaining EV_WIDGET memory leaks have been fixed.
 						<li>
-							<strong>EV_WIDGET</strong>&nbsp;- Focus in/out actions are now correctly
-						called for widgets that do not occupy their entire space allocation such as
+							<strong>EV_WIDGET</strong>&nbsp;- Focus in/out actions are now correctly 
+						called for widgets that do not occupy their entire space allocation such as 
 						EV_TEXT_FIELD.
 						<li>
 							<strong>EV_DRAWABLE_IMP</strong>
@@ -811,7 +905,7 @@
 							<STRONG>EV_KEY</STRONG>
 							<UL>
 								<LI>
-								`out' is now correct for all keys (previously Quote and Backquote were
+								`out' is now correct for all keys (previously Quote and Backquote were 
 								incorrect).
 								<LI>
 									The events for all keys are now fired when Shift is held down.</LI></UL>
@@ -881,7 +975,7 @@
 							<STRONG>EV_TEXT_FIELD</STRONG>
 							<UL>
 								<LI>
-								Now default `minimum_width' is reasonable (before 148, now same as Windows
+								Now default `minimum_width' is reasonable (before 148, now same as Windows 
 								being 4 characters wide)
 								<LI>
 									Fixed `caret_position' when queried in change actions</LI></UL>
@@ -901,7 +995,7 @@
 			- `title' no longer returns `Void' when empty.
 			<li>
 				<b>EV_TOOLTIPABLE</b>
-			- `tooltip' no longer returns `Void' when empty. If empty, no tooltip is
+			- `tooltip' no longer returns `Void' when empty. If empty, no tooltip is 
 			displayed.
 			<li>
 				<b>EV_TITLED_WINDOW</b>
@@ -914,16 +1008,16 @@
 			- `text' no longer returns `Void' when empty.
 			<li>
 				<b>EV_FILE_DIALOG</b>
-			- `file_name' no longer returns `Void' when the "Cancel" button was pressed,
+			- `file_name' no longer returns `Void' when the "Cancel" button was pressed, 
 			`Result' is empty instead.
 			<li>
 				<b>EV_DIRECTORY_DIALOG</b>
-			- `directory' no longer returns `Void when the "Cancel" button was pressed,
+			- `directory' no longer returns `Void when the "Cancel" button was pressed, 
 			`Result' is empty instead.
 			<li>
 				<b>EV_CONTAINER</b>
-			- has three new features `set_background_pixmap', `background_pixmap' and
-			`remove_background_pixmap'. `background_pixmap' will be tessellated to cover
+			- has three new features `set_background_pixmap', `background_pixmap' and 
+			`remove_background_pixmap'. `background_pixmap' will be tessellated to cover 
 			complete background area.
 			<li>
 				<b>EV_TREE and EV_TREE_NODE</b>
@@ -932,12 +1026,12 @@
 				<b>EV_STANDARD_DIALOGS</b>
 				<ul class="square">
 					<li>
-					`ok_actions' have been renamed in descendents where appropriate. e.g. in
-					EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the
-					associated buttons. Where renamed, `ok_actions' are still available but
+					`ok_actions' have been renamed in descendents where appropriate. e.g. in 
+					EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the 
+					associated buttons. Where renamed, `ok_actions' are still available but 
 					obsolete.
 					<li>
-						Selected button now also returns the correct text of the button (Previously it
+						Selected button now also returns the correct text of the button (Previously it 
 						was always "Ok").
 					</li>
 				</ul>
@@ -946,19 +1040,19 @@
 			- Added new constants required for the above change to EV_STANDARD_DIALOGS.
 			<li>
 				<b>EV_DRAWABLE</b>
-			- `draw_straight_line' now has a precondition to ensure the points are not
+			- `draw_straight_line' now has a precondition to ensure the points are not 
 			identical.
 			<li>
 				<b>EV_SPLIT_AREA</b>
-			- seperated `put' from `extend'. They were defined as synonyms, but have
+			- seperated `put' from `extend'. They were defined as synonyms, but have 
 			different behaviour.
 			<li>
 				<b>EV_DYNAMIC_TREE_ITEM</b>
-			- Added `remove_subtree_function'. Item now only shows as expandable if there
+			- Added `remove_subtree_function'. Item now only shows as expandable if there 
 			is a subtree function.
 			<li>
 				<b>EV_WINDOW</b>
-			- Added `maximum_dimension' which is the greatest value allowed for `width' and
+			- Added `maximum_dimension' which is the greatest value allowed for `width' and 
 			`height'. This is also the default value for `width' and `height'.
 			<li>
 				<b>EV_OPTION_BUTTON</b>
@@ -968,10 +1062,10 @@
 			- Added `pick_ended_actions' which are called when a pick ends.
 			<li>
 				<b>EV_WIDGET</b>
-			- `set_minimum_height', `set_minimum_width' and `set_minimum_size' now all
+			- `set_minimum_height', `set_minimum_width' and `set_minimum_size' now all 
 			allow 0 as an argument. Previously, 1 was the minimum valid dimension.
 			<li>
-				<b>EV_MULTI_COLUMN_LIST</b> - `clear_selection' is now obsolete. Use
+				<b>EV_MULTI_COLUMN_LIST</b> - `clear_selection' is now obsolete. Use 
 				`remove_selection' instead.
 			</li>
 		</ul>
@@ -987,7 +1081,7 @@
 							<b>EV_SELECTABLE</b>
 						- Corrected postcondition of `is_selected'.
 						<li>
-							<b>EV_PND_ACTION_SEQUENCE</b> -- `veto_pebble_function' is now only called when
+							<b>EV_PND_ACTION_SEQUENCE</b> -- `veto_pebble_function' is now only called when 
 							its argument conforms to the transported pebble.
 						</li>
 					</ul>
@@ -996,7 +1090,7 @@
 					<ul>
 						<li>
 							<b>EV_RANGE</b>
-						- The `maximum_value' could not be set greater than 32,000. The full range of
+						- The `maximum_value' could not be set greater than 32,000. The full range of 
 						an INTEGER may now be set.
 						<li>
 							<b>`focused_widget' from `EV_APPLICATION'</b>
@@ -1005,7 +1099,7 @@
 							<b>EV_PICK_AND_DROPABLE</b>
 							<ul>
 								<li>
-								Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble
+								Ending a pick and drop on an EV_TOOL_BAR_BUTTON which has a non `void' pebble 
 								no longer starts a transport from the button.
 								<li>
 								Reduced flicker on cursor when picking from an EV_TREE_ITEM or EV_LIST_ITEM.
@@ -1020,26 +1114,26 @@
 							<b>EV_DRAWABLE</b>
 							<ul>
 								<li>
-								`Remove_clip_area' did not remove the clip_area correctly, but set it to the
-								current size. This meant that if you then enlarged the widget, clipping would
+								`Remove_clip_area' did not remove the clip_area correctly, but set it to the 
+								current size. This meant that if you then enlarged the widget, clipping would 
 								be applied.
 								<li>
-								Fixed problems with ordering of calls to certain features which would cause
+								Fixed problems with ordering of calls to certain features which would cause 
 								postcondition violations in the implementation.
 								<li>
-									`draw_pie_slice', `fill_pie_slice' and `draw_arc' now have divide by 0
+									`draw_pie_slice', `fill_pie_slice' and `draw_arc' now have divide by 0 
 									protection in the implementation.</li>
 							</ul>
 						<li>
 							<b>EV_TEXT</b>
-						- `set_background_color' now correctly sets the color of the whole background.
+						- `set_background_color' now correctly sets the color of the whole background. 
 						Previously only the area containing text was modified.
 						<li>
 							<b>EV_CLIPBOARD</b>
-						- Our implementation would sometimes query `text' when not allowed by Windows,
+						- Our implementation would sometimes query `text' when not allowed by Windows, 
 						thus causing postcondition failures.
 						<li>
-							<b>EV_BUTTON</b> - The result of `text_alignment' after default_create was
+							<b>EV_BUTTON</b> - The result of `text_alignment' after default_create was 
 							incorrect.</li></ul>
 				<li>
 					<b>Gtk</b>

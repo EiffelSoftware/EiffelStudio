@@ -28,7 +28,11 @@ inherit
 		undefine
 			default_create
 		end
-	
+
+	GB_WIDGET_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Initialization
 		
@@ -196,41 +200,6 @@ feature {NONE} -- Implementation
 			loop
 				p.call ([objects.item])
 				objects.forth
-			end
-		end
-		
-	disable_all_items (b: EV_BOX) is
-			-- Call `disable_item_expand' on all items in `b'.
-		require
-			box_not_void: b /= Void
-		do
-			from
-				b.start
-			until
-				b.off
-			loop
-				b.disable_item_expand (b.item)
-				b.forth
-			end
-		end
-		
-	align_labels_left (b: EV_BOX) is
-			-- For every item in `b' of type EV_LABEL, align the test left.
-		require
-			box_not_void: b /= Void
-		local
-			label: EV_LABEL
-		do
-			from
-				b.start
-			until
-				b.off
-			loop
-				label ?= b.item
-				if label /= Void then
-					label.align_text_left
-				end
-				b.forth
 			end
 		end
 		

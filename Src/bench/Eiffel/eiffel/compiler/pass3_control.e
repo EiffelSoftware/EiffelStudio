@@ -75,8 +75,10 @@ feature
 			good_argument: depend_list /= Void
 		local
 			old_cursor: CURSOR;
+			prop: like propagators
 		do
 -- FIXME: use `disjoint'
+			prop := propagators
 			old_cursor := depend_list.cursor;
 			from
 				Result := True;
@@ -84,9 +86,9 @@ feature
 			until
 				depend_list.after or else not Result
 			loop
-				propagators.start;
-				propagators.search (depend_list.item);				
-				Result := propagators.off;
+				prop.start;
+				prop.search (depend_list.item);				
+				Result := prop.off;
 				depend_list.forth;
 			end;
 			depend_list.go_to (old_cursor);
@@ -99,8 +101,10 @@ feature
 			good_argument: depend_list /= Void
 		local
 			old_cursor: CURSOR;
+			prop: like melted_propagators
 		do
 -- FIXME: use `disjoint'
+			prop := melted_propagators
 			old_cursor := depend_list.cursor;
 			from
 				Result := True;
@@ -108,9 +112,9 @@ feature
 			until
 				depend_list.after or else not Result
 			loop
-				melted_propagators.start;
-				melted_propagators.search (depend_list.item);
-				Result := melted_propagators.off;
+				prop.start;
+				prop.search (depend_list.item);
+				Result := prop.off;
 				depend_list.forth;
 			end;
 			depend_list.go_to (old_cursor);

@@ -49,14 +49,14 @@ feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
 	code_replication, fail_on_rescue, check_vape,
-	optimization: INTEGER is UNIQUE;
+	array_optimization: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
 			!!Result.make (6);
 			Result.force (dead_code, "dead_code_removal");
-			Result.force (optimization, "optimization");
+			Result.force (array_optimization, "array_optimization");
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
@@ -83,6 +83,7 @@ feature
 		local
 			error_found: BOOLEAN;
 			vd37: VD37;
+			val: STRING
 		do
 			inspect
 				valid_options.item (option_name)
@@ -96,13 +97,23 @@ feature
 				else
 					error_found := True;
 				end;
-			when optimization then
+			when array_optimization then
 				if value = Void then
 					error_found := True
 				elseif value.is_no then
-					System.set_optimization (False)
-				elseif value.is_yes then
-					System.set_optimization (True)
+					System.set_array_optimization_level (0)
+				elseif value.is_name then
+					val := clone (value.value);
+					val.to_lower;
+					if val.is_equal ("level0") then
+						System.set_array_optimization_level (0)
+					elseif val.is_equal ("level1") then
+						System.set_array_optimization_level (1)
+					elseif val.is_equal ("level2") then
+						System.set_array_optimization_level (2)
+					else
+						error_found := True;
+					end;
 				else
 					error_found := True;
 				end;

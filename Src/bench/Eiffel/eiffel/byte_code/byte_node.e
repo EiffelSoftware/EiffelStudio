@@ -99,4 +99,10 @@ feature
 			end
 		end; -- make_breakable
 
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+		end;
+
 end

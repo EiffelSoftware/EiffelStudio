@@ -9,7 +9,8 @@ inherit
 		undefine
 			copy, setup, is_equal, consistent
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code
+			enlarge_tree, analyze, generate, make_byte_code,
+			has_loop
 		end;
 	FIXED_LIST [T]
 
@@ -71,6 +72,20 @@ feature
 				after
 			loop
 				item.make_byte_code (ba);
+				forth;
+			end;
+		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+			from
+				start
+			until
+				Result or else after
+			loop
+				Result := item.has_loop;
 				forth;
 			end;
 		end;

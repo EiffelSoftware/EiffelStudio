@@ -21,7 +21,7 @@ feature -- Output
 			-- Execute Current command.	
 		do
 			!! displayed.make;
-			current_class.append_clickable_signature (output_window);
+			current_class.append_signature (output_window);
 			output_window.new_line;
 			rec_display (1, current_class);
 			displayed := Void;	
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 				loop
 					descendant_class := descendants.item;
 					output_window.put_string (tabs (i));
-					descendant_class.append_clickable_signature (output_window);
+					descendant_class.append_signature (output_window);
 					if displayed.has (descendant_class) then
 						if not descendant_class.descendants.empty then
 							output_window.put_string ("...")

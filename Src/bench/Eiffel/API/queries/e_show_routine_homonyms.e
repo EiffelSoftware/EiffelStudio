@@ -57,9 +57,9 @@ feature -- Execution
 						feat := e_class.feature_with_name (feature_name);
 						if feat /= Void then
 							class_name := e_class.name;
-							feat.append_clickable_signature (output_window, e_class);
+							feat.append_signature (output_window, e_class);
 							output_window.put_string ("%N%TFrom class ");
-							e_class.append_clickable_signature (output_window);
+							e_class.append_signature (output_window);
 							output_window.new_line;
 						end
 					end;

@@ -77,7 +77,7 @@ feature {NONE}
 			Result := last_confirmer_cell.item
 		end;
 
-	error_window: CLICK_WINDOW is
+	error_window: OUTPUT_WINDOW is
 			-- Error window that displays error message
 		do
 			if batch_mode then
@@ -85,22 +85,6 @@ feature {NONE}
 			else
 				Result := bench_error_window
 			end;
-		end;
-
-	bench_error_window: TEXT_WINDOW is
-		do
-			Result := project_tool.text_window
-		end;
-
-	term_window: TERM_WINDOW is
-		once
-			!!Result
-		end;
-
-	info_window: CLICK_WINDOW is
-			-- Info window
-		do
-			Result := error_window
 		end;
 
 	debug_window: CLICK_WINDOW is
@@ -153,5 +137,15 @@ feature {NONE} -- Implementation
         once
             !! Result.put (False)
         end;
+
+	bench_error_window: TEXT_WINDOW is
+		do
+			Result := project_tool.text_window
+		end;
+
+	term_window: TERM_WINDOW is
+		once
+			!! Result
+		end;
 
 end -- class WINDOWS

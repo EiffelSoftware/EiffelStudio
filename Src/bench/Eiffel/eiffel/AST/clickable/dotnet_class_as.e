@@ -66,24 +66,18 @@ feature {NONE} -- Initialization
 		do
 			
 					-- Initialize all feature category lists.
-			create property_features.make ("Properties")
-			create property_setting_features.make ("Property Setting")
-			create events_features.make ("Events")
-			create access_features.make ("Access")
-			create query_features.make ("Query")
-			create command_features.make ("Commands")
-			create hidden_property_features.make ("Properties {NONE}")
-			hidden_property_features.set_export_status (False)
-			create hidden_property_setting_features.make ("Property Setting {NONE}")
-			hidden_property_setting_features.set_export_status (False)
-			create hidden_events_features.make ("Events {NONE}")
-			hidden_events_features.set_export_status (False)
-			create hidden_access_features.make ("Access {NONE}")
-			hidden_access_features.set_export_status (False)
-			create hidden_query_features.make ("Query {NONE}")
-			hidden_query_features.set_export_status (False)
-			create hidden_command_features.make ("Commands {NONE}")
-			hidden_command_features.set_export_status (False)
+			create property_features.make ("Properties", True)
+			create property_setting_features.make ("Property Setting", True)
+			create events_features.make ("Events", True)
+			create access_features.make ("Access", True)
+			create query_features.make ("Query", True)
+			create command_features.make ("Commands", True)
+			create hidden_property_features.make ("Properties", False)
+			create hidden_property_setting_features.make ("Property Setting", False)
+			create hidden_events_features.make ("Events", False)
+			create hidden_access_features.make ("Access", False)
+			create hidden_query_features.make ("Query", False)
+			create hidden_command_features.make ("Commands", False)
 			
 			from
 				loop_counter := 1
@@ -114,7 +108,7 @@ feature {NONE} -- Initialization
 						end
 					else
 						if misc_features = Void then
-							create misc_features.make (" -- Miscellaneous")
+							create misc_features.make ("Miscellaneous", True)
 						end
 						misc_features.extend (l_entity)
 					end
@@ -506,7 +500,7 @@ feature {NONE} -- Formatting
 					not a_category_list.is_empty and then
 					should_display (a_category_list)
 				then
-					format_feature_header (a_ctxt,  " -- " + a_category_list.name)
+					format_feature_header (a_ctxt, a_category_list)
 					from
 						a_category_list.start
 					until
@@ -520,7 +514,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_feature_header (a_ctxt: DOTNET_CLASS_CONTEXT; a_header: STRING) is
+	format_feature_header (a_ctxt: DOTNET_CLASS_CONTEXT; a_header: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
 			-- Format feature with category 'a_header'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -528,7 +522,16 @@ feature {NONE} -- Formatting
 		do
 			a_ctxt.put_new_line
 			a_ctxt.put_text_item (Ti_feature_keyword)
-			a_ctxt.put_comment_text (a_header)
+			a_ctxt.put_space
+			if not a_header.is_exported then
+				a_ctxt.put_text_item (ti_l_curly)
+				a_ctxt.put_class_name ("NONE")
+				a_ctxt.put_text_item (ti_r_curly)
+				a_ctxt.put_space
+			end
+			a_ctxt.put_text_item (ti_dashdash)
+			a_ctxt.put_space
+			a_ctxt.put_comment_text (a_header.name)
 			a_ctxt.put_new_line
 		end
 

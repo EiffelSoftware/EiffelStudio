@@ -104,7 +104,11 @@ feature -- Basic operations
 					Result := load_and_parse_xml_file (file_name)
 						-- Assign `True' to `last_load_successful' so it can be queried
 						-- externally.
-					last_load_successful := True
+					if parser.is_correct then
+						last_load_successful := True
+					else
+						show_warning_dialog
+					end
 				else
 					show_warning_dialog
 				end
@@ -142,12 +146,7 @@ feature {NONE} -- Implementation
 			element_info: ELEMENT_INFORMATION
 		do
 			parse_file (a_filename)
-			if not parser.is_correct then
-				create temp_window
-				create error_dialog.make_with_text ("Invalid XML Schema.")
-				error_dialog.show_modal_to_window (temp_window)
-				temp_window.destroy
-			else
+			if parser.is_correct then
 				create Result.make (0)
 				root_element := pipe_callback.document.root_element
 				child_names := all_child_element_names (root_element)

@@ -24,7 +24,7 @@ comment_url			|<comment><location>$file$</location>*</comment>
 string_url			|<string><location>$file$</location>*</string>
 
 features			|<feature><location>$file$#f_$feature$</location>*</feature>
-keyword_features		|<keyword><location>$file$#f_$feature</location>*</keyword>
+keyword_features		|<keyword><location>$file$#f_$feature$</location>*</keyword>
 symbol_features			|<symbol><location>$file$#f_$feature$</location>*</symbol>
 class_name			|<class><location>$file$</location>*</class>
 

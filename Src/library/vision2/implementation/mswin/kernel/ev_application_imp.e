@@ -279,13 +279,15 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 			end
 		end
 
-feature {EV_PICK_AND_DROPABLE_IMP} -- Status Report
+feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP} -- Status Report
 
 	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
 		-- The current pick and drop source.
 		--| If `Void' then no pick and drop is currently executing.
 		--| This allows us to globally check whether a pick and drop
 		--| is executing, and if so, the source.
+
+feature {EV_PICK_AND_DROPABLE_IMP} -- Status Report
 
 	transport_started (widget: EV_PICK_AND_DROPABLE_IMP) is
 			-- Assign `widget' to `pick_and_drop_source'.

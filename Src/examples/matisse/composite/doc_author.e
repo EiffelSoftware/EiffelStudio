@@ -12,7 +12,7 @@ inherit
 	MT_STORABLE
 -- END of mt_odl generation of inheritance
 
-creation
+create
 	make
 
 feature

@@ -23,7 +23,6 @@ feature {NONE}
 		-- Value is a container class name in upper case.
 		-- Key is a MATISSE relationship name.
 		once
-			!!Result.make(20)
+			create Result.make(20)
 		end
 
-end -- class MT_CONTAINER_TYPES

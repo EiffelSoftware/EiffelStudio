@@ -12,7 +12,7 @@ inherit
 	ARGUMENTS
 	
 	
-creation
+create
 	make
 	
 feature
@@ -21,7 +21,7 @@ feature
 			if arg_number /= 3 then
 				print_usage
 			else
-			!!mt_appl.set_login(argument(1), argument(2))
+			create mt_appl.set_login(argument(1), argument(2))
 			mt_appl.connect
 			create_data
 			mt_appl.disconnect
@@ -55,13 +55,13 @@ feature
 				print("Connection-1 established%N")
 				mt_appl.set_no_current_connection
 				
-				!!another_appl.set_login(mt_appl.host_name, mt_appl.database_name)
+				create another_appl.set_login(mt_appl.host_name, mt_appl.database_name)
 				another_appl.set_wait(Mt_No_Wait)
 				another_appl.connect
 				print("Connection-2 established%N")
 				
 				mt_appl.start_transaction
-				!!entry.make_from_name("title", "DOCUMENT")
+				create entry.make_from_name("title", "DOCUMENT")
 				obj ?= entry.retrieve_first(Document_name)
 				obj.lock_composite(Mt_Write)
 				print("A composite object ")
@@ -88,7 +88,7 @@ feature
 			temp: STRING
 		do
 			print("reading the section 1.1 Foo in the Document Foo... ")
-			!!entry.make_from_name("title", "SECTION")
+			create entry.make_from_name("title", "SECTION")
 			obj ?= entry.retrieve_first("1.1 Foo")
 			temp := obj.get_title  -- This should not raise an exception
 			print("done.%N")
@@ -104,7 +104,7 @@ feature
 				print("reading the section 1.1 Bar in the Document Bar...%N")
 				print("	This will raise an exception.%N")
 				print("	Click the 'Run' button in the project window to continue%N")
-				!!entry.make_from_name("title", "SECTION")
+				create entry.make_from_name("title", "SECTION")
 				obj ?= entry.retrieve_first("1.1 Bar")
 				print(obj.get_title) -- This should raise an exception
 			end
@@ -126,69 +126,69 @@ feature
 				mt_appl.start_transaction
 				
 				print("---Before the deletion---%N")
-				!!a_class.make_from_name("DOCUMENT")
+				create a_class.make_from_name("DOCUMENT")
 				obtained := a_class.instances_count
 				hoped := 2
 				print("Number of instances of class DOCUMENT is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("DOC_AUTHOR")
+				create a_class.make_from_name("DOC_AUTHOR")
 				obtained := a_class.instances_count
 				hoped := 2
 				print("Number of instances of class DOC_AUTHOR is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("CHAPTER")
+				create a_class.make_from_name("CHAPTER")
 				obtained := a_class.instances_count
 				hoped := 6
 				print("Number of instances of class CHAPTER is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("SECTION")
+				create a_class.make_from_name("SECTION")
 				obtained := a_class.instances_count
 				hoped := 12
 				print("Number of instances of class SECTION is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("PARAGRAPH")
+				create a_class.make_from_name("PARAGRAPH")
 				obtained := a_class.instances_count
 				hoped := 12
 				print("Number of instances of class PARAGRAPH is ")
 				print(obtained.out) io.new_line io.new_line
 				
 				---- Delete the composite object ----
-				!!entry.make_from_name("title", "DOCUMENT")
+				create entry.make_from_name("title", "DOCUMENT")
 				obj ?= entry.retrieve_first(Document_name)
 				obj.mt_remove
 				print(Document_name)
 				print(" has just been removed. (a_document.mt_removed)%N")
 				print("---After the deletion---%N")
 				
-				!!a_class.make_from_name("DOCUMENT")
+				create a_class.make_from_name("DOCUMENT")
 				obtained := a_class.instances_count
 				hoped := 1
 				print("Number of instances of class DOCUMENT is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("DOC_AUTHOR")
+				create a_class.make_from_name("DOC_AUTHOR")
 				obtained := a_class.instances_count
 				hoped := 2
 				print("Number of instances of class DOC_AUTHOR is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("CHAPTER")
+				create a_class.make_from_name("CHAPTER")
 				obtained := a_class.instances_count
 				hoped := 3
 				print("Number of instances of class CHAPTER is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("SECTION")
+				create a_class.make_from_name("SECTION")
 				obtained := a_class.instances_count
 				hoped := 6
 				print("Number of instances of class SECTION is ")
 				print(obtained.out) io.new_line
 				
-				!!a_class.make_from_name("PARAGRAPH")
+				create a_class.make_from_name("PARAGRAPH")
 				obtained := a_class.instances_count
 				hoped := 6
 				print("Number of instances of class PARAGRAPH is ")
@@ -216,21 +216,21 @@ feature {NONE} -- Implementation
 			sec_name: STRING
 		do
 			mt_appl.start_transaction
-			!!a_class.make_from_name("DOCUMENT")
+			create a_class.make_from_name("DOCUMENT")
 			a_class.remove_all_instances
 			
-			!!a_class.make_from_name("DOC_AUTHOR")
+			create a_class.make_from_name("DOC_AUTHOR")
 			a_class.remove_all_instances
 			
-			!!doc
+			create doc
 			current_db.persist(doc)
 			doc.set_title("Document Foo")
-			!!author.make("Author Foo")
+			create author.make("Author Foo")
 			doc.get_authors.extend(author)
 			from i := 1
 			until i > 3
 			loop
-				!!chap.make(i.out)
+				create chap.make(i.out)
 				doc.get_chapters.extend(chap)
 				from j := 1
 				until j > 2
@@ -239,9 +239,9 @@ feature {NONE} -- Implementation
 					sec_name.append(".")
 					sec_name.append(j.out)
 					sec_name.append(" Foo")					
-					!!section.make(sec_name)
+					create section.make(sec_name)
 					chap.get_sections.extend(section)
-					!!paragraph.make("text here ....")
+					create paragraph.make("text here ....")
 					section.get_paragraphs.extend(paragraph)
 					if i = 1 and j = 1 then
 						linked_section := section
@@ -255,15 +255,15 @@ feature {NONE} -- Implementation
 			print("	It consists of three chapters. Each chapter has two sections.%N")
 			print("	Each section has one paragraph%N%N")
 			
-			!!doc
+			create doc
 			current_db.persist(doc)
 			doc.set_title(Document_name)
-			!!author.make("Author Bar")
+			create author.make("Author Bar")
 			doc.get_authors.extend(author)
 			from i := 1
 			until i > 3
 			loop
-				!!chap.make(i.out)
+				create chap.make(i.out)
 				doc.get_chapters.extend(chap)
 				from j := 1
 				until j > 2
@@ -272,9 +272,9 @@ feature {NONE} -- Implementation
 					sec_name.append(".")
 					sec_name.append(j.out)
 					sec_name.append(" Bar")
-					!!section.make(sec_name)
+					create section.make(sec_name)
 					chap.get_sections.extend(section)
-					!!paragraph.make("bar text here ....")
+					create paragraph.make("bar text here ....")
 					section.get_paragraphs.extend(paragraph)
 					if i = 3 and j = 1 then
 						paragraph.get_hyperlinks.extend(linked_section)

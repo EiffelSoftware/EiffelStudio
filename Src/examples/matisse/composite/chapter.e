@@ -12,7 +12,7 @@ inherit
 	DOC_CONTENT
 -- END of mt_odl generation of inheritance
 
-creation
+create
 	make
 	
 feature

@@ -29,7 +29,7 @@ feature -- Access
 		do
 			if is_persistent then
 				if zip_table = Void then
-					!!zip_table.make(1)
+					create zip_table.make(1)
 					zip_table.become_persistent(db, Current, field_position_of_zip_table)
 				else
 					zip_table.load_successors

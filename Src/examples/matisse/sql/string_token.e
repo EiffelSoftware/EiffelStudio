@@ -13,7 +13,7 @@ class STRING_TOKEN
 			make as string_make
 		end
 
-   creation
+   create
 	make
 
    feature -- Initialisation
@@ -64,7 +64,7 @@ class STRING_TOKEN
 			Not_off: not token_off
 		do
 			if idx2 >= idx1 then
-				!!Result .make(0)
+				create Result .make(0)
 				Result.make_from_string(substring(idx1,idx2))
 			else
 				Result := clone( "" )
@@ -87,9 +87,9 @@ class STRING_TOKEN
 	        change_pos :INTEGER
 	        one_tab, two_tabs, one_space: like Current
 	    do
-	        !!one_tab.make(0) one_tab.make_from_string("%T")
-	        !!two_tabs.make(0) two_tabs.append(one_tab) two_tabs.append(one_tab)
-	        !!one_space.make(0) one_space.make_from_string(" ")
+	        create one_tab.make(0) one_tab.make_from_string("%T")
+	        create two_tabs.make(0) two_tabs.append(one_tab) two_tabs.append(one_tab)
+	        create one_space.make(0) one_space.make_from_string(" ")
 
 	        -- remove leading and trailing white space
   	        left_adjust 

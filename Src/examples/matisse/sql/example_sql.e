@@ -10,7 +10,7 @@ inherit
 
 	ARGUMENTS
 
-creation
+create
 	make
 	
 feature
@@ -19,7 +19,7 @@ feature
 			if arg_number /= 3 then
 				print_usage
 			else
-			!!mt_appl.set_login(argument(1), argument(2))
+			create mt_appl.set_login(argument(1), argument(2))
 			
 			load_presidents("..\..\data\presidents.txt")
 			start_quiz(query_list_very_easy, "U.S. President Quiz: Level 1")
@@ -72,14 +72,14 @@ feature
 			middle_initial: CHARACTER
 			start_year, end_year: INTEGER
 		do
-			!!data_file.make_open_read(filename)
+			create data_file.make_open_read(filename)
 			from
 			until
 				data_file.off
 			loop
 				data_file.read_line
 				a_line := data_file.last_string
-				!!tokens.make(a_line.count)
+				create tokens.make(a_line.count)
 				tokens.make_from_string(a_line)
 				tokens.token_start
 				president_number := tokens.token_item.to_integer
@@ -95,7 +95,7 @@ feature
 				end
 				president := get_person_from_name(president_name)
 				if president = Void then
-					!!president.make_from_name(
+					create president.make_from_name(
 						first_name_out_of_full_name(president_name),
 						middle_initial_out_of_full_name(president_name),
 						last_name_out_of_full_name(president_name))
@@ -104,7 +104,7 @@ feature
 				if first_lady_name /= Void then
 					first_lady := get_person_from_name(first_lady_name)
 					if first_lady = Void then
-						!!first_lady.make_from_name(
+						create first_lady.make_from_name(
 							first_name_out_of_full_name(first_lady_name),
 							middle_initial_out_of_full_name(first_lady_name),
 							last_name_out_of_full_name(first_lady_name))
@@ -115,7 +115,7 @@ feature
 				if a_presidency = Void then
 					start_year := start_year_from_duty(president_duty)
 					end_year := end_year_from_duty(president_duty)
-					!!a_presidency.make(president_number, start_year, end_year, president)
+					create a_presidency.make(president_number, start_year, end_year, president)
 					current_db.persist(a_presidency)
 				end
 				print(president_number) print("  ")
@@ -148,7 +148,7 @@ feature
 				print(quiz.item(2))
 				io.new_line
 				io.read_line
-				!!sql_statement.make
+				create sql_statement.make
 				result_set := sql_statement.execute_query(quiz.item(3))
 				from
 					result_set.start
@@ -180,7 +180,7 @@ feature {NONE}
 			statement.append_integer(number)
 			statement.append("', number)")
 			
-			!!query.make
+			create query.make
 			result_set := query.execute_query(statement)
 			result_set.start
 			if result_set.exhausted then
@@ -215,7 +215,7 @@ feature {NONE}
 				statement.append_character(middle_initial)
 				statement.append("'")
 			end
-			!!query.make
+			create query.make
 			result_set := query.execute_query(statement)
 			result_set.start
 			if result_set.exhausted then
@@ -284,7 +284,7 @@ feature {NONE}
 feature
 	query_list_very_easy : LINKED_LIST[ARRAY[STRING]] is
 		once
-			!!Result.make
+			create Result.make
 			Result.extend(
 				<<"Question One",
 			         "Who was the First President",
@@ -302,7 +302,7 @@ feature
 
 	query_list_easy:  LINKED_LIST[ARRAY[STRING]] is
 		once
-			!!Result.make
+			create Result.make
 			Result.extend(
 				<<"Question One",
 				  "Who was President during the Second World War",
@@ -319,7 +319,7 @@ feature
 	
 	query_list_difficult:  LINKED_LIST[ARRAY[STRING]] is
 		once
-			!!Result.make
+			create Result.make
 			Result.extend(
 				<<"Question One",
 				  "Who are the Presidents with no First Lady",

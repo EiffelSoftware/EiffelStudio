@@ -893,7 +893,7 @@ feature {NONE} -- Implementation
 		local
 			local_commands: ARRAYED_LIST [EB_STANDARD_CMD]
 		do
-			local_commands := command_handler.all_commands
+			local_commands := command_handler.all_standard_commands
 			from
 				local_commands.start
 			until

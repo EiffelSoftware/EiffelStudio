@@ -11,7 +11,7 @@ deferred class E_CLASS_CMD
 
 inherit
 
-	E_CMD
+	E_OUTPUT_CMD
 		rename
 			make as cmd_make
 		export

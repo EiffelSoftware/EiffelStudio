@@ -9,7 +9,7 @@ class E_SHOW_STATISTICS
 
 inherit
 
-	E_CMD;
+	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
 
 creation

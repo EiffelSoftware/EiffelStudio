@@ -51,7 +51,7 @@ feature -- Access
 			Result := native_array.item (i)
 		end
 
-	frozen index_of (v: T; start_position: INTEGER): INTEGER is
+	index_of (v: T; start_position: INTEGER): INTEGER is
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
 		require
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Measurement
 
-	frozen count: INTEGER is
+	count: INTEGER is
 			-- Count of the special area
 		do
 			Result := native_array.count
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := True
 		end
 
-	frozen all_default (upper: INTEGER): BOOLEAN is
+	all_default (upper: INTEGER): BOOLEAN is
 			-- Are all items between index `0' and `upper'
 			-- set to default values?
 		require
@@ -118,7 +118,7 @@ feature -- Status report
 			valid_on_empty_area: upper = -1 implies Result
 		end
 
-	frozen same_items (other: like Current; upper: INTEGER): BOOLEAN is
+	same_items (other: like Current; upper: INTEGER): BOOLEAN is
 			-- Do all items between index `0' and `upper' have
 			-- same value?
 		require
@@ -155,7 +155,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	frozen resized_area (n: INTEGER): like Current is
+	resized_area (n: INTEGER): like Current is
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count

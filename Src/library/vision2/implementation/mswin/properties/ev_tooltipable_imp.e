@@ -28,62 +28,53 @@ feature -- Element change
 
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
-	local
+		local
 			tool_info: WEL_TOOL_INFO
 			envir: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
 		do
 			create envir
 			app_imp ?= envir.application.implementation
-		
-			--| The tooltip does not seem to work correctly unless we
-			--| destroy the old tooltip before creating the new one.
-			if internal_tooltip /= Void then
-				internal_tooltip.destroy
-			end
-			create internal_tooltip.make (tooltip_window, 1)
-			create tool_info.make
-			tool_info.set_text (a_tooltip)
-			tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
-			tool_info.set_id_with_window (tooltip_window)
-			internal_tooltip.add_tool (tool_info)
-			internal_tooltip.activate
 
-				-- Set the inital time delay for the tooltip.
-			internal_tooltip.set_initial_delay_time (app_imp.tooltip_delay)
+			if not a_tooltip.is_empty then
+					--| The tooltip does not seem to work correctly unless we
+					--| destroy the old tooltip before creating the new one.
+				if internal_tooltip /= Void and then internal_tooltip.exists then
+					internal_tooltip.destroy
+				end
+				create internal_tooltip.make (tooltip_window, 1)
+				create tool_info.make
+				tool_info.set_text (a_tooltip)
+				tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
+				tool_info.set_id_with_window (tooltip_window)
+				internal_tooltip.add_tool (tool_info)
+				internal_tooltip.activate
+
+					-- Set the inital time delay for the tooltip.
+				internal_tooltip.set_initial_delay_time (app_imp.tooltip_delay)
+				
+				app_imp.all_tooltips.extend (internal_tooltip)
+			else
+				if tooltip /= Void and then not tooltip.is_empty then
+						-- If `tooltip' is not `Void' then there should always
+						-- be an internal tooltip.
+					check
+						internal_tooltip_not_void: internal_tooltip /= Void
+					end
+				
+						-- Remove `internal_tooltip' from `all_tooltips' in
+						-- EV_APPLICATION_IMP.
+					create envir
+					app_imp ?= envir.application.implementation
+					app_imp.all_tooltips.prune (internal_tooltip)
 			
-			app_imp.all_tooltips.extend (internal_tooltip)
+						-- Destroy `internal_tooltip'.
+					internal_tooltip.destroy
+				end
+			end
 
 				-- Assign `a_tooltip' to `tooltip'.
 			tooltip := clone (a_tooltip)
-		end
-
-	remove_tooltip is
-			-- Assign Void to `tooltip'.
-		local
-			envir: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
-		do
-				-- We do nothing if there is no tooltip on
-				-- `Current'.
-			if tooltip /= Void then
-					-- If `tooltip' is not `Void' then there should always
-					-- be an internal tooltip.
-				check
-					internal_tooltip_not_void: internal_tooltip /= Void
-				end
-					-- Assign `Void' to `tooltip'.
-				tooltip := Void
-	
-					-- Remove `internal_tooltip' from `all_tooltips' in
-					-- EV_APPLICATION_IMP.
-				create envir
-				app_imp ?= envir.application.implementation
-				app_imp.all_tooltips.prune (internal_tooltip)
-			
-					-- Destroy `internal_tooltip'.
-				internal_tooltip.destroy
-			end
 		end
 
 feature {NONE} -- Implementation 

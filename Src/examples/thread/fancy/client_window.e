@@ -17,7 +17,7 @@ inherit
 	OBJECT_CONTROL
 
 creation
-	make
+	make, make_by_pointer
 
 feature -- Initialization
 
@@ -50,9 +50,6 @@ feature -- Redefine features
 			on_destroy
 			exists := False
 			unregister_window (Current)
-			--if application_main_window.is_application_main_window (Current) then
-			--	cwin_post_quit_message (0)
-			--end
 		end
 
 	on_wm_close is
@@ -63,10 +60,9 @@ feature -- Redefine features
 		end
 
 	class_background: WEL_GRAY_BRUSH is
---WEL_LIGHT_GRAY_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature {NONE} -- Implementation

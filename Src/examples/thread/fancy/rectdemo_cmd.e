@@ -18,14 +18,14 @@ feature -- Basic operations
 			brush: WEL_BRUSH
 			color: WEL_COLOR_REF
 		do
-			!! dc.make (t_parent)
+			create dc.make (t_parent)
 			dc.get
 			r_left := next_number (t_parent.width)
 			r_top := next_number (t_parent.height)
 			r_right := next_number (t_parent.width)
 			r_bottom := next_number (t_parent.height)
 			color := std_colors @ (next_number (std_colors.count))
-			!! brush.make_solid (color)
+			create brush.make_solid (color)
 			dc.select_brush (brush)
 			dc.rectangle (r_left, r_top, r_right, r_bottom)
  			dc.release

@@ -4,42 +4,49 @@ deferred class
 inherit
 	WEL_STANDARD_COLORS
 	THREAD
+	MEMORY
 
 feature {NONE} -- Initialization
 
-	make_in (p_window: PROXY[CLIENT_WINDOW]) is
+	make_in (ptr: POINTER) is
 		do
-			proxy_window := p_window
-			!! mutex_continue.make
-			!! thread_continue
+			ptr_window := ptr
+			create mutex_continue.make
+			create thread_continue
 			thread_continue.set_item (True)
-			!! proxy_continue.put (thread_continue)
+			create proxy_continue.put (thread_continue)
 		end
 
 feature -- Threads
-
+	ptr_window: POINTER
+			-- Pointer to the shared client window, on
+			-- which the thread draws.
 	mutex_continue: MUTEX
-	proxy_window: PROXY[CLIENT_WINDOW]
+			-- Protection lock for `proxy_continue'.
+	client_window: CLIENT_WINDOW
+			-- Client window rebuilt from `ptr_window'.
 	proxy_continue: PROXY[like thread_continue]
+			-- Proxy to `thread_continue'.
 	thread_continue: BOOLEAN_REF
-			-- If `True' the thread continues.
-
-
+			-- Flag, which indicates if the thread must continue.
+			
 feature -- Threads
 
 	execute is
 			-- Draw rectangles, until window closed.
 		do
+				-- Rebuilt the shared client window from C.
+			create client_window.make_by_pointer (ptr_window)
 			from
 			until 
 				is_thread_continue
 			loop
-				draw (proxy_window.item)
+				draw (client_window)
 			end
 		end
 
 	is_thread_continue: BOOLEAN is
-			-- Is the thread can continue.
+			-- Must the thread continue?
 		do
 			mutex_continue.lock
 			Result := proxy_continue.item.item = False
@@ -89,7 +96,7 @@ feature {NONE} -- Implementation
 	random: RANDOM is
 			-- Initialize a randon number
 		once
-			!! Result.make
+			create Result.make
 			random.start
 		ensure
 			result_not_void : Result /= Void

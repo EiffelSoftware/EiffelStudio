@@ -14,26 +14,25 @@ inherit
 	WEL_SIZE_CONSTANTS
 	
 	THREAD_CONTROL
-
+	EXIT_CONTROL
+	
 feature {NONE} -- Initialization
 
 	make is
 		do
+			exit_mutex.lock
 			make_top ("Ovals")
 			resize (200,200)
-			initialize
+			!! client_window.make (Current, "Client Window")
+			ptr_window := client_window.item
 			launch_demo
 			resize (200,200)
 			show
+			demos_list.extend (Current)
+			exit_mutex.unlock
 		end
 
-	initialize is
-		do
-			!! client_window.make (Current, "Client Window")
-			!! px_window.put (client_window)
-		end
-
-	client_window: CLIENT_WINDOW
+feature	-- Deferred
 
 	launch_demo is
 		deferred
@@ -44,14 +43,24 @@ feature {NONE} -- Initialization
 		end
 	
 
-feature -- threads
+feature -- Access
 
-	px_window: PROXY [like client_window]
+	ptr_window: POINTER
+		-- Pointer to shared C client window.
+		-- With the Eiffel Threads, we can only share
+		-- flat Eiffel objects, but we share the encapsulated
+		-- C client window for the Windows library.
+
+	client_window: CLIENT_WINDOW
+		-- Shared client window on which thread draws.
+
+
+feature -- Threads
 
     stop_demo is
 			-- Tell the thread to stop.
 		do
-		     fig_demo_cmd.stop
+		    fig_demo_cmd.stop
 		end
 
     join_demo is
@@ -60,7 +69,7 @@ feature -- threads
 		     fig_demo_cmd.join
 		end
 
-feature -- Redefine features
+feature -- Redefined features
 
 	on_size (a_size_type, a_width, a_height: INTEGER) is
 			-- Reposition windows in the main window.
@@ -97,10 +106,13 @@ feature -- Redefine features
 		end
 
 	closeable: BOOLEAN is
-			-- Show the standard dialog box
+			-- Stop and join the thread, then return true.
 		do
+			exit_mutex.lock
 			stop_demo
 			join_demo
+			demos_list.prune_all (Current)
+			exit_mutex.unlock
 			Result := True
 		end
 

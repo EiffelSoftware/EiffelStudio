@@ -106,6 +106,7 @@ extern "C" {
 #define EN_DOL		26			/* $ applied to melted feature */
 #define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
 #define EN_COM		28			/* COM error raised by EiffelCOM runtime */
+#define EN_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
 
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */

@@ -34,7 +34,7 @@ extern "C" {
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
-#define EN_NEX		28			/* Number of internal exceptions */
+#define EN_NEX		29			/* Number of internal exceptions */
 
 	/*------------*/
 	/*  garcol.h  */

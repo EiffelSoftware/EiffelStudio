@@ -61,14 +61,6 @@ feature -- Selecting and moving a figure
 	out_of_bounds: BOOLEAN;	
 			-- Is the moving_figure out of the drawing_area?
 
-	set_showable_area (s: COMPOSITE) is
-			-- Set `extent_point' using w and h.
-		require
-			not_void_s: not (s = Void)
-		do
-			showable_area := s
-		end; -- set_size
-
 	set_selected (c: STATE_CIRCLE) is
 			-- Set selected_figure to `c'
 		do
@@ -104,9 +96,6 @@ feature {NONE} -- Movement of a figure
 	move_command: APP_MOVE_FIGURE;
 			-- Command executed when figure is moved
 
-	showable_area: COMPOSITE;
-			-- Showable area of drawing_area
-
 	moving_figure: CLOSED_FIG;
 			-- Figure being moved around the drawing_area
 
@@ -133,8 +122,8 @@ feature {NONE} -- Movement of a figure
 			lx1 := curr_p.x;
 			ly1 := curr_p.y;
 			if lx1 < 0 or ly1 < 0 or
-				(lx1 > showable_area.width) or
-				(ly1 > showable_area.height)
+				(lx1 > drawing_area.width) or
+				(ly1 > drawing_area.height)
 			then
 				out_of_bounds := true;
 			else

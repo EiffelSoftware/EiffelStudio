@@ -1,0 +1,89 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Keyword completion customization</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Preferences, Keyword completion syntax">
+		<META NAME="MS-HKWD" CONTENT="Keyword completion, syntax">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Keyword completion customization</H1>
+		<P>This document describes the syntax used to customize keyword automatic completion.<BR><a href="10_automatic_keyword_completion.html">Four strings</a> are used to define 
+		the completion of a keyword. The rules are the same for all of them:</P>
+		<UL>
+			<LI><P>These strings will be inserted right after the keyword. The key that triggers the automatic completion will not
+			be taken into account, i.e. no space or &quot;new line&quot; character will be inserted even though you press Return or Space. The strings should therefore begin with a space or a &quot;new line&quot; character (see below for &quot;new line&quot;).
+			</P>
+			<LI><P>Two reserved words will allow you to position the cursor and to indent the text properly. Insert the word <i>$cursor$</i> in the string where you want the cursor to be moved once the completion is finished. Insert the word <i>$indent$</i> where you want to copy as many blank spaces as there were on the line where the keyword was typed.
+			</P>
+			<LI><P>Three special characters are available: <UL>
+				<LI><i>%N</i> represents the new line character.
+				<LI><i>%T</i> represents the tabulation
+				<LI><i>%B</i> represents the back space 
+				</UL>
+			</P>
+		</UL>
+		<P>Examples :
+		<OL>
+			<LI><P>You want the lines of code :</P>
+				<P>
+				&nbsp;&nbsp;&nbsp;&nbsp;<i>if</i><BR>&nbsp;&nbsp;&nbsp;&nbsp;next_line_of_code<BR><P></P>
+				to become:<P>
+				&nbsp;&nbsp;&nbsp;&nbsp;<i>if</i> &lt;cursor here&gt; <i>then</i> <BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;one more tabulation&gt;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<i>end</i><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;next_line_of_code<BR></P>
+				<P>
+				as you press Space just after typing <i>if</i>. You should define the &quot;Customized 
+				autocomplete (Space after keyword was typed)&quot; string for <i>if</i> as : </P><P>&quot;
+				$cursor$ then%N$indent$%T%N$indent$end&quot;
+				</P>
+				<P>
+				First, [BENCH] editor has to insert a blank space after <i>if</i>. The string begins
+				therefore by a blank space.<BR>
+				Then, <i>$cursor$</i> tells [BENCH] to move the cursor to this position after the completion.<BR>
+				<i>then</i> is inserted after the cursor position.<BR>
+				<i>%N</i> indicates that you want to insert a new line after <i>then</i>.<BR>
+				<i>$indent$%T</i> means that this line is filled with as many blank spaces as before <i>if</i> plus
+				a tabulation.<BR>
+				Another line is inserted with <i>%N</i>.<BR>
+				Then <i>$indent$%Tend</i> means that <i>end</i> will be inserted in this new line with the same
+				indentation as <i>if</i>.
+				</P>
+	
+			<LI><P>You want the lines of code :</P>
+				<P>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>end</i><BR>&nbsp;&nbsp;&nbsp;
+				next_line_of_code
+				</P>
+				<P>
+				to become: </P>
+				<P>
+				&nbsp;&nbsp;&nbsp;&nbsp;<i>end</i><BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;next_line_of_code</P>
+				<P>
+				as you press Return just after typing <i>end</i>. You should define the &quot;Customized
+				autocomplete (Return after keyword was typed)&quot; string for <i>end</i> as : </P>
+				<P>&quot;%B%B%B%Bend%N$indent$%B$cursor$&quot;
+				</P>
+				<P>
+				The four <i>%B</i> will remove <i>end</i> plus one character before <i>end</i>.<BR>
+				<i>end</i> will be inserted at this new position.<BR>
+				<i>%N</i> indicates that you want to insert a new line.<BR>
+				<i>$indent$%B$cursor$</i> means that the cursor will be moved to the end of the line
+				where one less blank space than before the original <i>end</i> will have been inserted.
+				</P>
+		</OL>
+		<P CLASS="Note">
+		<B>Note</B>: [BENCH] editor can insert spaces instead of tabulation when you use special character <i>%T</i>.
+		This is set in <a href="../../10_general_editor_preferences.html"> another section of the
+        preferences</a>.<BR>
+		</P>
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+		<a href="./20_keyword_completion_customization.html">Keyword completion customization</A><BR>
+		<a href="./30_keyword_completion_default_values.html">Default values for keyword completion preferences</A><BR>
+
+		</P>
+	</BODY>
+</HTML>

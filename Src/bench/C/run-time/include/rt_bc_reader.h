@@ -25,6 +25,7 @@
 #define _rt_bc_reader_h_
 
 #include "eif_portable.h"
+#include <string.h>
 #include "rt_assert.h"
 
 #ifdef __cplusplus

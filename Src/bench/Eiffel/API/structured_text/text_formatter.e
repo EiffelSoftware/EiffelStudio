@@ -25,11 +25,8 @@ feature
 			basic_text: BASIC_TEXT;
 			clickable_text: CLICKABLE_TEXT;
 			breakable_mark: BREAKABLE_MARK;
+			filter_item: FILTER_ITEM
 		do
-			before_class ?= t;
-			after_class ?= t;
-			before_feature ?= t;
-			after_feature ?= t;
 			new_line_text ?= t;
 			basic_text ?= t;
 			clickable_text ?= t;
@@ -43,14 +40,23 @@ feature
 				process_breakable_mark (breakable_mark);
 			elseif new_line_text /= void then
 				process_new_line_text (new_line_text)
-			elseif after_feature /= void then
-				process_after_feature (after_feature)
-			elseif before_feature /= void then
-				process_before_feature (before_feature)
-			elseif after_class /= void then
-				process_after_class (after_class)
-			elseif before_class /= void then
-				process_before_class (before_class)
+			else
+				before_class ?= t;
+				after_class ?= t;
+				before_feature ?= t;
+				after_feature ?= t;
+				filter_item ?= t;
+				if after_feature /= void then
+					process_after_feature (after_feature)
+				elseif before_feature /= void then
+					process_before_feature (before_feature)
+				elseif after_class /= void then
+					process_after_class (after_class)
+				elseif before_class /= void then
+					process_before_class (before_class)
+				elseif filter_item /= Void then
+					process_filter_item (filter_item)
+				end
 			end;
 		end;
 				
@@ -88,9 +94,8 @@ feature
 		do
 		end;
 
+	process_filter_item (t: filter_item) is
+		do
+		end;
 
 end
-
-			
-			
-				

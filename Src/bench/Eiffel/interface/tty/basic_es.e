@@ -16,10 +16,7 @@ inherit
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
 	SHARED_EXEC_ENVIRONMENT;
-	COMMAND_LINE_PROJECT
-		redefine
-			new_license
-		end;
+	COMMAND_LINE_PROJECT;
 	SHARED_CONFIGURE_RESOURCES
 
 creation
@@ -61,19 +58,19 @@ feature {NONE} -- Initialization
 				if (temp = Void) or else temp.empty then
 					io.error.putstring
 					("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
-					new_die (-1)
+					die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring
 					("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
-					new_die (-1)
+					die (-1)
 				end;
 
-					-- Call `init_licence' only if `licensed' is `True'
-				if not licensed or else init_licence then
-					if not licence.is_unlimited then
-					expiration := licence.time_left
+					-- Call `init_license' only if `licensed' is `True'
+				if not licensed or else init_license then
+					if not license.is_unlimited then
+					expiration := license.time_left
 						if expiration <= 30 then
 							io.error.putstring ("Your license will expire in ")
 							io.error.putint (expiration)
@@ -108,14 +105,14 @@ feature {NONE} -- Initialization
 						if not error_occurred then
 							command.execute
 						end;
-						discard_licence
+						discard_licenses
 					end
 				end;
 			else
-				new_die (-1)
+				die (-1)
 			end;
 		rescue
-			discard_licence;
+			discard_licenses;
 			io.error.putstring ("ISE Eiffel4: Session aborted%N");
 			io.error.putstring ("Exception tag: ");
 			temp := original_tag_name;
@@ -129,25 +126,6 @@ feature {NONE} -- Initialization
 			end;
 		end;
 
-feature -- License manager
-
-	init_licence: BOOLEAN is
-			-- Initialization of the license
-		local
-			
-		do
-			licence.set_version (4.0);
-			licence.set_application_name ("eiffelbench");
-			licence.get_licence;
-			Result := licence.licensed;
-		end;
-
-	new_license: LICENCE is
-			-- New instance of a license
-		do
-			!BENCH_LICENCE!Result.make
-		end
- 
 feature -- Properties
 
 	command: EWB_CMD;

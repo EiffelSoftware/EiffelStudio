@@ -7,6 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
 	ASSEMBLY_I
 	
@@ -327,21 +328,46 @@ feature -- Initialization
 					
 				l_assembly ?= Universe.cluster_of_path (l_path)
 				if l_assembly = Void then
-						-- We did not find a global or a local matching assembly,
-						-- we are going to try to add it as a global assembly and
-						-- emit the missing XML.
 					l_assembly ?= Lace.old_universe.cluster_of_path (l_path)
 					if l_assembly = Void then
-						create l_assembly.make_from_consumed_assembly (l_cons_assembly)
-						Eiffel_system.add_sub_cluster (l_assembly)
-						Universe.insert_cluster (l_assembly)
-						l_assembly.import_data
-						universe.add_new_assembly_in_ace (l_assembly)
+							-- We did not find an assembly using a path. This can happen
+							-- when using a precompiled library or a project who's previous cache
+							-- has been wiped out.
+						l_assembly ?= Universe.assembly_of_specification(
+							l_cons_assembly.name,
+							l_cons_assembly.culture,
+							l_cons_assembly.key,
+							l_cons_assembly.version)
+						if l_assembly = Void then
+								-- We did not find a global or a local matching assembly,
+								-- we are going to try to add it as a global assembly and
+								-- emit the missing XML.
+							l_assembly ?= Lace.old_universe.assembly_of_specification(
+								l_cons_assembly.name,
+								l_cons_assembly.culture,
+								l_cons_assembly.key,
+								l_cons_assembly.version)
+							if l_assembly = Void then
+								create l_assembly.make_from_consumed_assembly (l_cons_assembly)
+								Eiffel_system.add_sub_cluster (l_assembly)
+								Universe.insert_cluster (l_assembly)
+								l_assembly.import_data
+								universe.add_new_assembly_in_ace (l_assembly)
+							else
+								Eiffel_system.add_sub_cluster (l_assembly)
+								Universe.insert_cluster (l_assembly)
+							end
+						end
+						check
+							l_assembly_not_void:l_assembly /= Void
+						end
+						l_assembly.set_dollar_path (l_path)
 					else
 						Eiffel_system.add_sub_cluster (l_assembly)
 						Universe.insert_cluster (l_assembly)
 					end
 				end
+
 				referenced_assemblies.put (l_assembly, i)
 				i := i + 1
 			end
@@ -397,6 +423,29 @@ feature {COMPILER_EXPORTER} -- Element change
 				-- Do nothing, because one cannot override .NET classes.
 		end
 
+feature {COMPILER_EXPORTER} -- Conveniences
+
+	update_cache_path is
+			-- Updates `Current's' assoicated metadata cache path
+		require
+			assembly_path_not_void: assembly_path /= Void
+		local
+			l_path: STRING
+			l_assembly_location: PATH_NAME
+		do
+			if assembly_path /= Void then
+				l_path := environ.interpreted_string (assembly_path)
+				il_emitter.retrieve_assembly_info (l_path)
+				l_path := il_emitter.relative_folder_name_from_path (l_path)
+				if l_path /= Void then
+					l_assembly_location := assembly_cache_folder.twin
+					l_assembly_location.extend (l_path)
+					l_path := environ.interpreted_string (l_assembly_location)
+					consumed_folder_name := l_path.twin
+					set_dollar_path (l_path)
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 

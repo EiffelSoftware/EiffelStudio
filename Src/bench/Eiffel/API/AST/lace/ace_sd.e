@@ -460,6 +460,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_precomp_assembly: ASSEMBLY_I
 			l_cluster_of_name, l_cluster_of_path: CLUSTER_I
 			l_new_assemblies, l_local_assemblies: ARRAYED_LIST [ASSEMBLY_I]
+			l_assembly_of_name: ASSEMBLY_I
 			l_emitter: like il_emitter
 			vdcn: VDCN
 			vd28: VD28
@@ -501,6 +502,12 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 								vd28.set_second_cluster_name (l_cluster_of_path.cluster_name)
 								Error_handler.insert_error (vd28)
 								Error_handler.raise_error
+							else
+									-- We might need to update assembly metadata path
+								l_assembly_of_name ?= l_cluster_of_name
+								if l_assembly_of_name /= Void then
+									l_assembly_of_name.update_cache_path
+								end
 							end
 						else
 							create vdcn

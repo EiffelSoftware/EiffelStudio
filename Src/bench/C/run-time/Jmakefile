@@ -10,7 +10,7 @@ NETWORK_OBJ = ../ipc/app/network.o
 /*
  * Main source files for run-time archive
  */
-LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
+LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
@@ -19,7 +19,7 @@ LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 /*
  * The following files need a special treatment.
  */
-OTHER = main.c
+OTHER = main.c except.c
 
 /*
  * Files addedd only for workbench-type archive

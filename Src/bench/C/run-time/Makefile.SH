@@ -141,7 +141,7 @@ ESRC = \
 	wmalloc.c \
 	wgarcol.c \
 	wlocal.c \
-	wexcept.c \
+	bexcept.c \
 	wstore.c \
 	wretrieve.c \
 	whash.c \
@@ -258,7 +258,7 @@ EOBJ = \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
-	wexcept.o \
+	bexcept.o \
 	wstore.o \
 	wretrieve.o \
 	whash.o \
@@ -784,6 +784,17 @@ remove::
 
 
 bmain.o: bmain.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
+	$(RM) $*.c
+
+bexcept.c: except.c
+	$(RM) bexcept.c
+	$(LN) except.c bexcept.c
+remove::
+	$(RM) bexcept.c
+
+
+bexcept.o: bexcept.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
 	$(RM) $*.c
 

@@ -245,7 +245,7 @@ feature -- Element change
 			index: INTEGER
 		do
 			index := get_child_index (a_child)
-			delete_item (index)
+			delete_item (index - 1)
 			notify_change (2 + 1)
 		end
 
@@ -350,17 +350,17 @@ feature -- Basic operation
 			ww: WEL_WINDOW
 		do
 			from
-				Result := -1
+				Result := 0
 			until
-				(Result = count - 1) or test
+				Result = count or test
 			loop
-				Result := Result + 1
 				child_item := get_item (Result)
 				ww := child_item.window
 				child_imp ?= child_item.window
 				if a_child.is_equal (child_imp) then
 					test := True
 				end
+				Result := Result + 1
 			end
 		end
 

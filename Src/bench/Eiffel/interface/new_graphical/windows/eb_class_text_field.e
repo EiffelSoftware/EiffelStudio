@@ -33,7 +33,7 @@ feature -- Initialization
 			make (a_parent)
 			init_tool (a_tool)
 --			create debug_tip_cmd.make (implementation)
-			add_activate_command (Current, Void)
+			add_return_command (Current, Void)
 		end
 
 feature -- Properties

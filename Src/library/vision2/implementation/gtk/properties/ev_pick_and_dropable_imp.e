@@ -337,6 +337,7 @@ feature -- Implementation
 
 			call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			
+			
 			if pointer_style /= Void then
 				internal_set_pointer_style (pointer_style)
 			else
@@ -381,7 +382,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			if mode_is_pick_and_drop then
-				signal_emit_stop (c_object, "button-press-event")
+				signal_emit_stop (visual_widget, "button-press-event")
 			end
 			app_implementation.on_drop (pebble)
 			x_origin := 0
@@ -517,7 +518,7 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		do
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := ((
-				(C.gtk_object_struct_flags (c_object)
+				(C.gtk_object_struct_flags (visual_widget)
 				// C.GTK_MAPPED_ENUM) \\ 2)
 			) = 1
 		end

@@ -471,7 +471,6 @@ feature -- Code generation
 			entry_type_token: INTEGER
 			l_sig: like method_sig
 			l_type_id: INTEGER
-			l_assertion_initialize_token: INTEGER
 		do
 			l_type_id := a_class_type.implementation_id
 
@@ -576,7 +575,6 @@ feature -- Metadata description
 			l_type: CL_TYPE_I
 			l_nested_parent_class: CLASS_C
 			l_nested_parent_class_token: INTEGER
-			l_one_element_array: ARRAY [INTEGER]
 		do
 			class_c := class_type.associated_class
 

@@ -73,17 +73,23 @@ feature -- Output
 		local
 			i, j: INTEGER
 		do
-			from
-				i := error_string.index_of ('%N', 1)
-				st.add_string ("IL Generation Error:")
+			st.add_string ("IL Generation Error:")
+			st.add_new_line
+
+			i := error_string.index_of ('%N', 1)
+			if i = 0 then
+				st.add_string (error_string)
 				st.add_new_line
-			until
-				i = 0
-			loop
-				st.add_string (error_string.substring (j + 1, i - 1))
-				st.add_new_line
-				j := i
-				i := error_string.index_of ('%N', i + 1)
+			else
+				from
+				until
+					i = 0
+				loop
+					st.add_string (error_string.substring (j + 1, i - 1))
+					st.add_new_line
+					j := i
+					i := error_string.index_of ('%N', i + 1)
+				end
 			end
 		end
 

@@ -2680,8 +2680,8 @@ end
 			Skeleton_file := Skeleton_f (final_mode)
 			Skeleton_file.open_write
 
-			Skeleton_file.putstring ("#include %"eif_project.h%"%N") --JOCE
-			Skeleton_file.putstring ("#include %"eif_struct.h%"%N")
+			Skeleton_file.putstring ("#include %"eif_project.h%"%N%
+									 %#include %"eif_struct.h%"%N")
 			if final_mode then
 				Skeleton_file.putstring ("#include %"")
 				Skeleton_file.putstring (Eskelet)
@@ -3039,7 +3039,8 @@ end
 			Conformance_file := conformance_f (byte_context.final_mode)
 			Conformance_file.open_write
 
-			Conformance_file.putstring ("#include %"eif_struct.h%"%N%N")
+			Conformance_file.putstring ("#include %"eif_project.h%"%N%
+										%#include %"eif_struct.h%"%N%N")
 
 			from
 				i := 1
@@ -3601,8 +3602,8 @@ feature --Workbench option file generation
 		do
 			Option_file.open_write
 
-			Option_file.putstring ("#include %"eif_project.h%"N")
-			Option_file.putstring ("#include %"eif_struct.h%"%N%N")
+			Option_file.putstring ("#include %"eif_project.h%"%N%
+								   %#include %"eif_struct.h%"%N%N")
 
 				-- First debug keys
 			from

@@ -105,9 +105,6 @@ extern void eif_thr_join_all(void);
 #define EIF_TSD_DESTROY(key,msg)			\
 	if (pthread_key_delete((key)) eif_thr_panic(msg)
 
-#define MTOG(result_type,key,result)					\
-	(EIF_TSD_GET0(result_type, key, result))
-
 
 #elif defined EIF_WIN32
 
@@ -159,9 +156,6 @@ extern void eif_thr_join_all(void);
 
 #define EIF_TSD_DESTROY(key,msg)			\
 	if (!TlsFree(key)) eif_thr_panic(msg)
-
-#define MTOG(result_type,key,result)					\
-	(EIF_TSD_GET0(result_type, key, result))
 
 
 #elif defined SOLARIS_THREADS
@@ -218,15 +212,12 @@ extern void eif_thr_join_all(void);
 
 #define EIF_TSD_DESTROY(key,msg)
 
-#define MTOG(result_type,key,result)					\
-	((EIF_TSD_GET0(result_type, key, result)), (result))
-
 
 #endif	/* end of POSIX, WIN32, SOLARIS... */
 
 
-#define MTOS(key,val)						\
-	EIF_TSD_SET(key, val, "couldn't set thread once")
+#define MTOG(result_type,item,result)	result = result_type item
+#define MTOS(item,val)					item = (char *) val
 
 
 /* --------------------------------------- */

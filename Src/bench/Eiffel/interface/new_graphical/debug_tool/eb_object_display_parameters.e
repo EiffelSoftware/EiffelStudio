@@ -133,8 +133,6 @@ feature -- Transformation
 			has_onces: BOOLEAN
 			ft: FEATURE_TABLE
 			f: FEATURE_I
-
-			dv: ABSTRACT_DEBUG_VALUE
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_DISPLAY_PARAMETERS.to_tree_item%N")

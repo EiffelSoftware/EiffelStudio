@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			-- If we are working with an EV_TITLED_WINDOW, then
 			-- we may have the . at the start which is uneeded in
 			-- the code. Remove it.
-			if (non_void_set @ 1) = '.' then
+			if not non_void_set.is_empty and then (non_void_set @ 1) = '.' then
 				non_void_set := non_void_set.substring (2, non_void_set.count)
 				non_void_set.replace_substring_all (indent + ".", indent)
 			end

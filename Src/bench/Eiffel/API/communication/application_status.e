@@ -162,19 +162,23 @@ feature -- Output
 			f, of: E_FEATURE;
 		do
 			if not is_stopped then
-				st.add_string ("System is running%N")
+				st.add_string ("System is running");
+				st.add_new_line
 			else -- Application is stopped.
 					-- Print object address.
 				st.add_string ("Stopped in object [");
 				c := dynamic_class;
 				st.add_address (object_address, c);
-				st.add_string ("]%N");
+				st.add_string ("]");
+				st.add_new_line;
 					-- Print class name.
-				st.add_string ("%TClass: ");
+				st.add_indent;
+				st.add_string ("Class: ");
 				c.append_name (st);
-				st.add_string ("%N");
+				st.add_new_line;
 					-- Print routine name.
-				st.add_string ("%TFeature: ");
+				st.add_indent;
+				st.add_string ("Feature: ");
 				if e_feature /= Void then
 					oc := origin_class;
 					e_feature.append_name (st, oc)
@@ -186,22 +190,28 @@ feature -- Output
 				else
 					st.add_string ("Void")
 				end;
-				st.add_string ("%N");
+				st.add_new_line;
 					-- Print the reason for stopping.
-				st.add_string ("%TReason: ");
+				st.add_indent;
+				st.add_string ("Reason: ");
 				inspect reason
 				when Pg_break then
-					st.add_string ("Stop point reached%N")
+					st.add_string ("Stop point reached");
+					st.add_new_line
 				when Pg_interrupt then
-					st.add_string ("Execution interrupted%N")
+					st.add_string ("Execution interrupted");
+					st.add_new_line
 				when Pg_raise then
-					st.add_string ("Explicit exception pending%N");
+					st.add_string ("Explicit exception pending");
+					st.add_new_line;
 					display_exception (st)
 				when Pg_viol then
-					st.add_string ("Implicit exception pending%N");
+					st.add_string ("Implicit exception pending");
+					st.add_new_line;
 					display_exception (st)
 				else
-					st.add_string ("Unknown%N")
+					st.add_string ("Unknown");
+					st.add_new_line
 				end;
 				if not where.empty then
 					where.first.display_arguments (st);
@@ -220,7 +230,9 @@ feature -- Output
 			e: EXCEPTIONS;
 			m: STRING
 		do
-			st.add_string ("%T%TCode: ");
+			st.add_indent;
+			st.add_indent;
+			st.add_string ("Code: ");
 			st.add_int (exception_code);
 			st.add_string (" (");
 			!!e;
@@ -229,7 +241,11 @@ feature -- Output
 				m := "Undefined"
 			end;
 			st.add_string (m);
-			st.add_string (")%N%T%TTag: ");
+			st.add_string (")");
+			st.add_new_line;
+			st.add_indent;
+			st.add_indent;
+			st.add_string ("Tag: ");
 			st.add_string (exception_tag);
 			st.add_new_line
 		end;

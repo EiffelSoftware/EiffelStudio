@@ -114,7 +114,10 @@
 					<li>Changing the selection behaviour between multiple and single selection would cause the scroll bars to become hidden, even if they were necessary. Changing this status will no longer hide the scroll bars if they are required.</li>
 			</ul>
 			</li>
-					<li><b>EV_TOOL_BAR</b> - Items that were disabled would sometimes become enabled when other properties of the item were set. For example, performing "my_tool_bar_button.disable_sensitive" followed by "my_tool_bar_button.set_text ("Disabled")" while the button was parented, would result in a sensitive tool bar button. This is now fixed.</b>
+					<li><b>EV_TOOL_BAR</b><ul> <li>Items that were disabled would sometimes become enabled when other properties of the item were set. For example, performing "my_tool_bar_button.disable_sensitive" followed by "my_tool_bar_button.set_text ("Disabled")" while the button was parented, would result in a sensitive tool bar button. This is now fixed.</li>
+		<li>If you changed the `text' of a tool bar toggle button during the firing of the `select_actions' of the toggle button, the button would become unchecked as a result. This is now fixed, and changing the text will not stop the button from becoming selected.</li>
+		</li>
+		</ul>
 					<li><b>EV_MULTI_COLUMN_LIST</b> - Changing the selection behaviour between multiple and single selection would cause the scroll bars to become hidden, even if they were necessary. Changing this status will no longer hide the scroll bars if they are required.</li>
 </ul>
 			<li>

@@ -39,19 +39,34 @@ feature {NONE}
 			-- Add the context in the list of contexts
 			-- to align if it is valid
 		local
-			list: LINKED_LIST [CONTEXT]
+			list: LINKED_LIST [CONTEXT];
+			sorted_list: SORTED_TWO_WAY_LIST [ALIGNMENT_ICON];
+			ic: ALIGNMENT_ICON;
+			is_v: BOOLEAN
 		do
 			if dropped.data.grouped then
+				alignment_form.clear_alignment_box;
 				from
 					list := dropped.data.group;
 					list.start;
+					!! sorted_list.make;
+					is_v := alignment_form.vertical.state;
 				until
 					list.after
 				loop
 					if is_context_valid (list.item) then
-						alignment_form.add_item (list.item)
+						!! ic.make_for_sort (is_v, list.item);
+						sorted_list.extend (ic);
 					end;
 					list.forth;
+				end;
+				from
+					sorted_list.start;
+				until
+					sorted_list.after
+				loop
+					alignment_form.add_item (sorted_list.item.data)
+					sorted_list.forth;
 				end;
 			elseif is_context_valid (dropped.data) then
 				alignment_form.add_item (dropped.data)

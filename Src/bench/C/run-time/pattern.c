@@ -196,7 +196,7 @@ int plen;		/* The length of the pattern */
 		if (i == plen)				/* Got substring (whole pattern matched) */
 			return tx;				/* Start of substring found */
 		
-		tx += delta[*(tx + plen)];	/* Shift to next text location */
+		tx += delta[*(tx + i)];	/* Shift to next text location */
 	}
 
 	return (char *) 0;		/* No substring found */

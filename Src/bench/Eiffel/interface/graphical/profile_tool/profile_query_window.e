@@ -13,7 +13,8 @@ inherit
 			make as form_d_make
 		end;
 	INTERFACE_W;
-	SHARED_RESOURCES
+	SHARED_RESOURCES;
+	EB_CONSTANTS;
 	SHARED_TABS
 
 creation
@@ -27,8 +28,8 @@ feature {NONE} -- Initialization
 			a_tool_not_void: a_tool /= Void
 		do
 			tool := a_tool;
-			form_d_make (l_X_resourse_name, a_tool);
-			set_title ("Profile query window");
+			form_d_make (Interface_names.n_X_resource_name, a_tool);
+			set_title (Interface_names.t_Profile_query_window);
 
 			build_interface
 		ensure
@@ -48,9 +49,9 @@ feature -- Access
 		do
 			!! ptf.make_create_read_write (fn);
 			ptf.putstring ("Options:%N========%N%N");
-			--ptf.putstring (profiler_options.image);
+			ptf.putstring (profiler_options.image);
 			ptf.putstring ("%NQuery:%N======%N%N");
-			--ptf.putstring (profiler_query.image);
+			ptf.putstring (profiler_query.image);
 			ptf.putstring ("%NResults:%N========%N%N");
 			ptf.putstring (text_window.text);
 			ptf.new_line;
@@ -67,10 +68,7 @@ feature -- Status Setting
 			profiler_options := po;
 			profinfo := pi;
 
-			-- FIXME *****: Remove comments after integration
-			-- FIXME *****: This should be integrated...
-			--query_text.set_text (pq.image);
-
+			query_text.set_text (pq.image);
 			text_window.set_text (st.image)
 		end
 
@@ -80,50 +78,43 @@ feature {NONE} -- Graphical User Interface
 			-- Build the user interface.
 		do
 				--| Build forms
-			!! query_form.make ("", Current);
-			!! text_form.make ("", Current);
-			!! subquery_form.make ("", Current);
-			!! button_form.make ("", Current);
+			!! query_form.make (Interface_names.t_Empty, Current);
+			!! text_form.make (Interface_names.t_Empty, Current);
+			!! subquery_form.make (Interface_names.t_Empty, Current);
+			!! button_form.make (Interface_names.t_Empty, Current);
 
 				--| Build widgets
-			!! query_sep.make ("", Current);
-			!! text_sep.make ("", Current);
-			!! subquery_sep.make ("", Current);
+			!! query_sep.make (Interface_names.t_Empty, Current);
+			!! text_sep.make (Interface_names.t_Empty, Current);
+			!! subquery_sep.make (Interface_names.t_Empty, Current);
 
-			!! query_label.make ("Query", query_form);
-			!! query_text.make ("", query_form);
+			!! query_label.make (Interface_names.l_Query, query_form);
+			!! query_text.make (Interface_names.t_Empty, query_form);
 			query_text.set_multi_line_mode;
 			query_text.set_rows (3);
 			query_text.set_read_only;
 
-			!! text_label.make ("Results", text_form);
-			!! text_window.make ("", text_form);
-			text_window.set_multi_line_mode;
-			text_window.set_read_only;
+			!! text_label.make (Interface_names.l_Results, text_form);
+			if is_graphics_disabled then
+				if tabs_disabled then
+					!SCROLLED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+				else
+					!TABBED_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+				end
+			else
+				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, Current)
+			end;
 
-			-- ***** FIXME *****: Dinov has to make new abstraction in order
-			-- ***** FIXME *****: to use the following code...
-			-- ***** FIXME *****: This should be integrated!!!
-			--if is_graphics_disabled then
-			--	if tabs_disabled then
-			--		!SCROLLED_TEXT_WINDOW! text_window.make ("", Current)
-			--	else
-			--		!TABBED_TEXT_WINDOW! text_window.make ("", Current)
-			--	end;
-			--else
-			--	!GRAPHICAL_TEXT_WINDOW! text_window.make ("", Current)
-			--end;
+			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
+			!! subquery_text.make (Interface_names.t_Empty, subquery_form);
 
-			!! subquery_label.make ("Subquery", subquery_form);
-			!! subquery_text.make ("", subquery_form);
-
-			!! run_button.make ("Run subquery", button_form);
+			!! run_button.make (Interface_names.b_Run_subquery, button_form);
 			!! run_subquery_cmd.make (Current);
 			run_button.add_activate_action (run_subquery_cmd, Void);
-			!! save_as_button.make ("Save as", button_form);
+			!! save_as_button.make (Interface_names.b_Save_as, button_form);
 			!! save_result_cmd.make (Current);
 			save_as_button.add_activate_action (save_result_cmd, Void);
-			!! close_button.make ("Close", button_form);
+			!! close_button.make (Interface_names.b_Close, button_form);
 			!! close_cmd.make (Current);
 			close_button.add_activate_action (close_cmd, Void);
 
@@ -178,10 +169,10 @@ feature {NONE} -- Graphical User Interface
 
 			text_form.attach_top (text_label, 0);
 			text_form.attach_left (text_label, 5);
-			text_form.attach_top_widget (text_label, text_window, 2);
-			text_form.attach_right (text_window, 0);
-			text_form.attach_bottom (text_window, 0);
-			text_form.attach_left (text_window, 0);
+			text_form.attach_top_widget (text_label, text_window.widget, 2);
+			text_form.attach_right (text_window.widget, 0);
+			text_form.attach_bottom (text_window.widget, 0);
+			text_form.attach_left (text_window.widget, 0);
 
 			subquery_form.attach_top (subquery_label, 0);
 			subquery_form.attach_left (subquery_label, 5);
@@ -238,10 +229,10 @@ feature {NONE} -- Attributes
 	subquery_text: TEXT;
 			-- Text field for eventual subqueries
 
-	query_text,
+	query_text: SCROLLED_T;
 			-- Text field for the query
 
-	text_window: SCROLLED_T;
+	text_window: TEXT_WINDOW;
 			-- Output window for the results
 
 	run_button,
@@ -282,12 +273,10 @@ feature {RUN_SUBQUERY_CMD} -- Update Interface
 			profiler_query := pq;
 			profinfo := pi;
 
-			-- FIXME *****: Remove comments after integration
-			-- FIXME *****: This should be integrated...
-			--query_text.set_text (pq.image);
+			query_text.set_text (pq.image);
 
 			text_window.set_text (st.image);
-			subquery_text.set_text ("")
+			subquery_text.set_text (Interface_names.t_Empty)
 		end
 
 feature {CLOSE_QUERY_WINDOW_CMD} -- User Interface

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Action sequences for EV_DOCKABLE_SOURCE."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 	dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when a dockable source is dragged
+			-- Actions to be performed when a dockable source is dragged.
 		do
 			Result := implementation.dock_started_actions
 		ensure

@@ -3,10 +3,10 @@ system
 
 root 
 	STDDLG_DEMO (root_cluster): "make"
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 default
 	assertion (all)
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
 	root_cluster:	"$ISE_EIFFEL\examples\wel\stddlgs"

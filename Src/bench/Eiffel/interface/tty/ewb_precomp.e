@@ -6,12 +6,11 @@ inherit
 	EWB_CMD
 		rename
 			name as precompile_cmd_name,
-			help_message as precompile_help
+			help_message as precompile_help,
+			abbreviation as precompile_abb
 		end
 
 feature
-
-	name: STRING is "precompile";
 
 	loop_execute is do end;
 

@@ -106,7 +106,7 @@ feature
 			-- Server for melted routine tables
 
 	m_rout_id_server: M_ROUT_ID_SERVER;
-			-- Server for  routine id array byte code
+			-- Server for routine id array byte code
 
 	m_desc_server: M_DESC_SERVER;
 			-- Server for class type descriptors
@@ -1205,7 +1205,7 @@ end;
 debug ("ACTIVITY")
 	io.error.putstring ("Updating .UPDT%N");
 end;
-			Update_file.open_write;
+			Update_file.open_binary_write;
 			file_pointer := Update_file.file_pointer;
 
 				-- There is something to update
@@ -1508,7 +1508,7 @@ end;
 			--original_body_index_table := Void
 		end;
 
-feature  -- Freeezing
+feature -- Freeezing
 
 	freeze_system is
 			-- Worrkbench C code generation
@@ -1727,7 +1727,7 @@ end;
 
 	generate_empty_update_file is
 		do
-			Update_file.open_write;
+			Update_file.open_binary_write;
 				-- Nothing to update
 			Update_file.putchar ('%U');
 			Update_file.close;
@@ -2010,7 +2010,7 @@ feature -- Dead code removal
 				i > nb
 			loop
 				a_class := id_array.item (i);
-				if  a_class /= Void then
+				if a_class /= Void then
 						-- Classes could be removed	then
 					a_class.mark_dispose (remover);
 					if a_class.visible_level.has_visible then
@@ -2656,55 +2656,59 @@ feature -- Dispose routine
 			end
 		end;
 
-    memory_class: CLASS_C is
+	memory_class: CLASS_C is
 			-- MEMORY class of system. Void if it has
 			-- not been compiled.
-        local
-            nbr, i: INTEGER;
+		local
+			nbr, i: INTEGER;
 			class_c: CLASS_C
-        once
-            from
-                nbr := id_array.count;
-                i := 1
-            until
-                i > nbr or else (Result /= Void)
-            loop
-                class_c := id_array.item (i);
-                if (class_c /= Void) and class_c.class_name.is_equal ("memory") then
-                    Result := class_c
-                else
-                    i := i + 1;
-                end;
-            end;
-        end;
+		once
+			from
+				nbr := id_array.count;
+				i := 1
+			until
+				i > nbr or else (Result /= Void)
+			loop
+				class_c := id_array.item (i);
+				if
+					(class_c /= Void)
+				and then
+					class_c.class_name.is_equal ("memory")
+				then
+					Result := class_c
+				else
+					i := i + 1;
+				end;
+			end;
+		end;
 
-    memory_descendants: LINKED_LIST [CLASS_C] is
-            -- Memory descendants.
-        once
-            !!Result.make;
-            if memory_class /= Void then
-                formulate_mem_descendants (memory_class, Result);
-            end;
-        end;
+	memory_descendants: LINKED_LIST [CLASS_C] is
+			-- Memory descendants.
+		once
+			!!Result.make;
+			if memory_class /= Void then
+				formulate_mem_descendants (memory_class, Result);
+			end;
+		end;
  
-    formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
+	formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
 			-- Formulate descendants of class MEMORY. 
-        local
-            descendants: LINKED_LIST [CLASS_C];
-            d: CLASS_C
-        do
-            from
-                descendants := c.descendants;
-                descendants.start
-            until
-                descendants.after
-            loop
+		local
+			descendants: LINKED_LIST [CLASS_C];
+			d: CLASS_C
+		do
+			from
+				descendants := c.descendants;
+				descendants.start
+			until
+				descendants.after
+			loop
 				d := descendants.item;
-                desc.add (d);
-                formulate_mem_descendants (d, desc);
-                descendants.forth;
-            end;
-        end;
+				desc.add (d);
+				formulate_mem_descendants (d, desc);
+				descendants.forth;
+			end;
+		end;
  
 	generate_dispose_table is
 			-- Generate dispose table
@@ -2963,6 +2967,7 @@ feature -- Main file generation
 		local
 			root_cl: CLASS_C;
 			root_feat: FEATURE_I;
+			ext_feat: EXTERNAL_I;
 			c_name: STRING;
 			dtype: INTEGER;
 			final_mode: BOOLEAN;
@@ -3022,8 +3027,15 @@ feature -- Main file generation
 
 			if 	creation_name /= Void then
 				if final_mode then
-					c_name := Encoder.feature_name
+					if root_feat.is_external then
+							-- The name is the external name
+							-- FIXME: is_encapsulated ...
+						ext_feat ?= root_feat;
+						c_name := ext_feat.external_name
+					else
+						c_name := Encoder.feature_name
 										(cl_type.id, root_feat.body_id);
+					end;
 					Initialization_file.putstring ("%Textern void ");
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring (" ();%N%N");

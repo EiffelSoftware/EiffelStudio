@@ -1,6 +1,6 @@
 -- Internal representation of a compiled class.
 
-class CLASS_C 
+class CLASS_C
 
 inherit
 
@@ -33,13 +33,13 @@ creation
 
 	make
 	
-feature 
+feature
 
 	lace_class: CLASS_I;
 			-- Lace class
 
 	obsolete_message: STRING;
-			-- Obsolete message 
+			-- Obsolete message
 			-- (Void if Current is not obsolete)
 
 	parents: FIXED_LIST [CL_TYPE_A];
@@ -72,7 +72,7 @@ feature
 
 	changed2: BOOLEAN;
 			-- Has the compiler to apply the second pass to this class
-			-- again, even if the class didn't textually changed 
+			-- again, even if the class didn't textually changed
 			-- (i.e `changed' is set to False) ?
 
 	changed3: BOOLEAN is
@@ -214,7 +214,7 @@ feature
 				Error_handler.insert_error (vd21);
 					-- Cannot go on here
 				Error_handler.raise_error;
-					-- 
+					--
 					-- NOT REACHED
 					--
 				check False end;
@@ -408,7 +408,7 @@ end;
 					generic_dec := generics.item;
 					constraint_type := generic_dec.constraint_type;
 					if
-						constraint_type /= Void 
+						constraint_type /= Void
 					and then
 						constraint_type.has_generics
 					then
@@ -521,7 +521,7 @@ end;
 								f_suppliers = Void
 							)
 					then
-						feature_changed := 
+						feature_changed :=
 							(not propagators.melted_empty_intersection
 																(f_suppliers));
 						if not feature_changed then
@@ -695,7 +695,7 @@ end;
 			else
 				invariant_changed := propagators.invariant_changed;
 				if not (invariant_changed or else f_suppliers = Void) then
-					invariant_changed := 
+					invariant_changed :=
 						not propagators.melted_empty_intersection (f_suppliers);
 				end;
 				if invariant_changed then
@@ -788,9 +788,9 @@ end;
 						dependances.remove (feature_name);
 
 					end;
-					if 
-						rep_dep /= Void and then 
-						rep_dep.has (feature_name) 
+					if
+						rep_dep /= Void and then
+						rep_dep.has (feature_name)
 					then
 debug ("REPLICATION")
 	io.error.putstring ("removing dependency feature :");
@@ -933,7 +933,7 @@ end;
 --			else
 --				invariant_changed := propagators.invariant_changed;
 --				if not (invariant_changed or else f_suppliers = Void) then
---					invariant_changed := 
+--					invariant_changed :=
 --						not propagators.melted_empty_intersection (f_suppliers);
 --				end;
 --				if invariant_changed then
@@ -1230,7 +1230,7 @@ feature -- Melting
 feature -- Workbench feature and descriptor table generation
 
 	generate_feature_table is
-			-- Generation of workbench mode feature table for 
+			-- Generation of workbench mode feature table for
 			-- the current class
 		local
 			table_file_name: STRING;
@@ -1735,7 +1735,7 @@ feature -- Class initialization
 			Result.set_parent_type (Any_type);
 		end;
 
-feature 
+feature
 
 	update_syntactical_relations
 		(old_syntactical_suppliers: like syntactical_suppliers) is
@@ -1879,7 +1879,7 @@ feature
 					error := True
 				end;
 
-					-- Second, check if the formal generic name doen't 
+					-- Second, check if the formal generic name doen't
 					-- appear twice in `generics'.
 				pos := generics.position;
 				from
@@ -2078,13 +2078,13 @@ feature -- Supplier checking
 			supplier: SUPPLIER_CLASS;
 			comp_class: CLASS_C;
 		do
-				-- 1. Check if the supplier class is in the universe
-				--	  associated to `cluster'.
-				-- 2. Check if the supplier class is a new class
-				--  for the system.
+				-- 1.	Check if the supplier class is in the universe
+				--		associated to `cluster'.
+				-- 2.	Check if the supplier class is a new class
+				--		for the system.
 			Universe.compute_last_class (cl_name, cluster);
 			supplier_class := Universe.last_class;
-			if supplier_class /= Void 
+			if supplier_class /= Void
 				and then not cl_name.is_equal ("none")
 			then
 					-- The supplier class is in the universe associated
@@ -2628,10 +2628,10 @@ feature -- Meta-type
 			else
 				actual_class_type := class_type.base_class.actual_type;
 					-- General instantiation of the actual class type where
-				  -- the feature is written in the context of the actual
+					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
 				written_actual_type ?= actual_type.instantiation_in
-											  (actual_class_type, id);
+											(actual_class_type, id);
 					-- Ask for the meta-type
 				Result := written_actual_type.type_i;
 					-- Meta instantiation
@@ -2805,7 +2805,7 @@ feature -- Cecil
 
 feature -- Conformance table generation
 
- 	process_polymorphism is
+	process_polymorphism is
 		local
 			ftab: FEATURE_TABLE;
 			stab: SELECT_TABLE;
@@ -2813,7 +2813,7 @@ feature -- Conformance table generation
 			ftab := feature_table;
 			stab := ftab.origin_table;
 			stab.add_units (id);
-		end; 
+		end;
 
 	make_conformance_table (t: CONFORM_TABLE) is
 			-- Make final conformance table
@@ -3010,7 +3010,7 @@ feature -- PS
 	feature_named (n: STRING): FEATURE_I is
 			-- Feature whose internal name is `n'
 		do
-			if 
+			if
 				Tmp_feat_tbl_server.has (id)
 			then
 				Result := Tmp_feat_tbl_server.item (id).item (n)
@@ -3034,10 +3034,10 @@ feature -- PS
 			Result := ast_clicks.clickable_stones (Current)
 		end;
 
-	clickable: BOOLEAN is 
+	clickable: BOOLEAN is
 			-- Is Current class clickable?
 		do
-			Result := (Tmp_ast_server.has (id) or else 
+			Result := (Tmp_ast_server.has (id) or else
 						Ast_server.has (id)) and then
 					Feat_tbl_server.has (id)
 		end;
@@ -3069,7 +3069,7 @@ feature -- Replication
 					f_table := class_c.feature_table;
 						-- Get feature_i to be propagated (if valid)
 					feat := f_table.item (unit.feature_name);
-					if 
+					if
 						(feat /= Void) and then
 						(feat.rout_id_set.same_as (unit.rout_id_set))
 					then
@@ -3113,7 +3113,7 @@ debug ("REPLICATION")
 	io.error.new_line;
 end;
 						-- Remove depend unit
-                    feat_dep.remove;
+					feat_dep.remove;
 				end;
 debug ("REPLICATION")
 	io.error.putstring (class_c.class_name);
@@ -3172,15 +3172,15 @@ end;
 						-- Must check old and new ast for incrementality
 						old_body_id := new_feat.original_body_id;
 						old_feat_as := Rep_feat_server.server_item (old_body_id);
-						if 
-							not old_feat_as.is_assertion_equiv (new_feat_as) 
-							or else not old_feat_as.is_body_equiv (new_feat_as) 
+						if
+							not old_feat_as.is_assertion_equiv (new_feat_as)
+							or else not old_feat_as.is_body_equiv (new_feat_as)
 						then
 							new_body_id := System.body_id_counter.next;
 							insert_changed_feature (new_feat.feature_name);
 
 								-- We do not have enough information to know
-								-- in which server we should deactivate, so 
+								-- in which server we should deactivate, so
 								-- we do it in both -- FRED
 							Tmp_body_server.desactive (old_body_id);
 							Tmp_rep_feat_server.desactive (old_body_id);
@@ -3239,7 +3239,7 @@ end;
 			Tmp_rep_feat_server.merge (rep_body_table);
 			Tmp_rep_server.clear_index;
 		end;
- 
+
 feature -- Dino stuff
 
 	insert_changed_assertion (a_feature: FEATURE_I) is

@@ -4,20 +4,25 @@ inherit
 
 	BASIC_EWB_LOOP
 		redefine
-			add_special_cmds
+			c_menu
 		end
 
 feature
 
-	add_special_cmds is
+	c_menu: EWB_MENU is
 		local
 			ewb_cmd: EWB_CMD
 		do
-			!EWB_FREEZE! ewb_cmd;
-			add_cmd (ewb_cmd);
+			!!Result.make (1,3)
 
 			!EWB_FINALIZE! ewb_cmd.make (False);
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
+
+			!EWB_FREEZE! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_COMP! ewb_cmd;
+			Result.add_entry (ewb_cmd)
 		end
 
 end

@@ -4,7 +4,7 @@ inherit
 
 	EWB_FS
 		redefine
-			loop_execute, help_message, name
+			loop_execute, help_message, name, abbreviation
 		end;
 
 creation
@@ -16,6 +16,11 @@ feature
 	name: STRING is
 		do
 			Result := short_cmd_name;
+		end;
+
+	abbreviation: CHARACTER is
+		do
+			Result := short_abb
 		end;
 
 	help_message: STRING is

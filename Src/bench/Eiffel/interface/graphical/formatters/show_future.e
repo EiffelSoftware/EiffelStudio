@@ -35,7 +35,8 @@ feature {NONE}
 			ewb_future: EWB_FUTURE;
 		do
 			!! ewb_future.null;
-			ewb_future.display_hist (text_window, f.feature_i, f.class_c);
+			ewb_future.set_output_window (text_window);
+			ewb_future.display (f.feature_i, f.class_c);
 		end;
 
 end

@@ -35,7 +35,8 @@ feature {NONE}
 			cmd: EWB_SENDERS;
 		do
 			!!cmd.null;
-			cmd.display_senders (text_window, f.class_c, f.feature_i);
+			cmd.set_output_window (text_window);
+			cmd.display (f.feature_i, f.class_c);
 		end;
 
 end

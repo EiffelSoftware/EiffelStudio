@@ -1,4 +1,4 @@
-class VISIBLE_EXPORT_I 
+class VISIBLE_EXPORT_I
 
 inherit
 
@@ -11,7 +11,7 @@ inherit
 	SHARED_SERVER;
 	SHARED_CECIL;
 	
-feature 
+feature
 
 	is_visible (feat: FEATURE_I): BOOLEAN is
 			-- Is the feature `feat' visible for external code ?
@@ -114,10 +114,11 @@ end;
 				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
-				if  not (a_feature.is_deferred or else a_feature.is_attribute)
-                    and then
-                    a_feature.export_status.is_all
-                then
+				if
+					not (a_feature.is_deferred or else a_feature.is_attribute)
+				and then
+					a_feature.export_status.is_all
+				then
 					nb := nb + 1;
 				end;
 				feat_table.forth;
@@ -131,8 +132,9 @@ end;
 				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
-				if  not (a_feature.is_deferred or else a_feature.is_attribute)
-					and then
+				if
+					not (a_feature.is_deferred or else a_feature.is_attribute)
+				and then
 					a_feature.export_status.is_all
 				then
 					Cecil1.put (a_feature, real_name (a_feature));

@@ -8,7 +8,8 @@ inherit
 	SHARED_ERROR_BEHAVIOR;
 	SHARED_STATUS;
 	SHARED_EWB_HELP;
-	SHARED_EWB_CMD_NAMES
+	SHARED_EWB_CMD_NAMES;
+	WINDOWS
 
 creation
 
@@ -25,8 +26,15 @@ feature -- Creation
 				print_option_error
 			elseif help_only then
 				print_help
-			else
-				command.work (Project_name, Ace_name);
+			elseif not file_error then
+				if output_window = Void then
+					command.set_output_window (error_window)
+					command.work (Project_name, Ace_name);
+				else
+					command.set_output_window (output_window)
+					command.work (Project_name, Ace_name);
+					output_window.close;
+				end;
 			end;
 		end;
 
@@ -54,7 +62,7 @@ feature -- Input/Output
 				%%T-descendants class|-ancestors class|%N%
 				%%T-aversions class feature|-dversions class feature|%N%
 				%%T-implementers class feature|-callers class feature|%N%
-				%%T[-stop] [-ace Ace] [-project Project]]%N");
+				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 
 	add_usage_special_cmds is
@@ -71,6 +79,7 @@ feature -- Input/Output
 			Result.put (clients_help, clients_cmd_name);
 			Result.put (descendants_help, descendants_cmd_name);
 			Result.put (dversions_help, dversions_cmd_name);
+			Result.put (file_help, file_cmd_name);
 			Result.put (flat_help, flat_cmd_name);
 			Result.put (flatshort_help, flatshort_cmd_name);
 			Result.put (help_help, help_cmd_name);
@@ -142,6 +151,13 @@ feature -- Command line options
 	Project_name: STRING;
 			-- Name of the Project file.
 			-- ("Project" by default)
+
+	output_window: FILE_WINDOW;
+			-- Window where the output is displayed
+
+	file_error: BOOLEAN;
+			-- Has an error been encountered in opening the 
+			-- file for redirection?
 
 	option_error: BOOLEAN;
 			-- Has an error been encountered in the 
@@ -369,6 +385,13 @@ feature -- Command line options
 			elseif option.is_equal ("-stop") then
 					-- The compiler stops on errors
 				set_stop_on_error (True);
+			elseif option.is_equal ("-file") then
+				if current_option < (argument_count - 1) then
+					current_option := current_option + 1;
+					set_file (argument (current_option));
+				else
+					option_error := True
+				end;
 			elseif is_precompiled_option then
 				if command /= Void then
 					option_error := True
@@ -399,6 +422,20 @@ feature -- Command line options
 	loop_cmd: BASIC_EWB_LOOP is
 		do
 			!!Result
+		end;
+
+	set_file (filename: STRING) is
+		do
+			!!output_window.make (filename);
+			if output_window.exists then
+				io.error.putstring ("File exists.%N");
+				file_error := True;
+			else
+				output_window.open_file;
+				if not output_window.exists then
+					file_error := True;
+				end;
+			end;
 		end;
 
 end

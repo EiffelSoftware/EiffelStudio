@@ -5,7 +5,7 @@ class SHOW_ATTRIBUTES
 
 inherit
 
-	ROUTINE_FORM
+	FORMATTER
 
 creation
 
@@ -30,10 +30,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Attributes_of end;
 
-	criterium (f: FEATURE_I): BOOLEAN is
+	display_info (i: INTEGER; c: CLASSC_STONE) is
+		local
+			cmd: EWB_ATTRIBUTES
 		do
-			Result := any_criterium (f);
-			Result := Result and f.is_attribute
+			!!cmd.null;
+			cmd.set_output_window (text_window);
+			cmd.display (c.class_c);
 		end
 
 end

@@ -15,6 +15,7 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
+	SHARED_EWB_ABBREV;
 	COMPARABLE;
 	LIC_EXITER
 
@@ -165,7 +166,7 @@ if not initialized.item then
 
 			if not retried then
 				!!workb;
-				!!workbench_file.make_open_read (Project_file_name);
+				!!workbench_file.make_open_binary_read (Project_file_name);
 				workb ?= workb.retrieved (workbench_file);
 				if not workbench_file.is_closed then
 					workbench_file.close
@@ -247,7 +248,10 @@ feature -- Compilation
 						lic_die (-1);
 					end;
 					if termination_requested then
-						lic_die (0)
+						--lic_die (0);
+							-- es3 -loop does NOT like lic_die(0)
+						discard_license;
+						exit := True
 					end
 				else
 					exit := True
@@ -301,13 +305,13 @@ feature {NONE} -- I/O
 				end;
 				i := i + 1
 			end;
-			last_input.to_lower;
 		end;
 
 	get_class_name is
 		do
 			io.putstring ("--> Class name: ");
 			get_name;
+			last_input.to_lower;
 			if last_input.empty then
 				get_class_name
 			end;
@@ -316,10 +320,18 @@ feature {NONE} -- I/O
 	get_feature_name is
 		do
 			io.putstring ("--> Feature name: ");
-			get_name
+			get_name;
+			last_input.to_lower;
 			if last_input.empty then
 				get_feature_name
 			end;
+		end;
+
+	output_window: CLICK_WINDOW;
+
+	yank_window: YANK_WINDOW is
+		once
+			!!Result.make;
 		end;
 
 	prompt_finish_freezing (finalized_dir: BOOLEAN) is
@@ -331,6 +343,13 @@ feature {NONE} -- I/O
 				io.error.putstring (Workbench_generation_path)	
 			end;
 			io.error.new_line;
+		end;
+
+feature -- I/O
+
+	set_output_window (display: CLICK_WINDOW) is
+		do
+			output_window := display
 		end;
 
 feature -- Termination
@@ -345,7 +364,7 @@ feature -- Termination
 			if not retried then
 				System.server_controler.wipe_out;
 				!!file.make (Project_file_name);
-				file.open_write;
+				file.open_binary_write;
 				Workbench.basic_store (file);
 				file.close;
 			else
@@ -359,9 +378,7 @@ feature -- Termination
 					temp.append ("%NPlease check permissions and disk space");
 				io.error.putstring (temp);
 				io.error.new_line;
-				if stop_on_error then
-					lic_die (-1)
-				elseif termination_requested then
+				if stop_on_error or else termination_requested then
 					lic_die (-1)
 				else
 					terminate_project
@@ -387,6 +404,10 @@ feature -- Input/Output
 		end;
 
 	help_message: STRING is
+		deferred
+		end;
+
+	abbreviation: CHARACTER is
 		deferred
 		end;
 

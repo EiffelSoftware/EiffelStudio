@@ -29,12 +29,13 @@ feature
 			add_cancel_action (Current, void_argument)
 		end;
 
-	call (a_command: COMMAND_W; a_message: STRING) is
+	call (a_command: COMMAND_W; a_message, ok_label: STRING) is
 			-- Record calling command `a_command' and popup current,
 			-- with the message `a_message'.
 		do
 			last_caller := a_command;
 			set_exclusive_grab;
+			set_ok_label (ok_label);
 			set_message (a_message);
 			popup
 		ensure
@@ -45,7 +46,7 @@ feature
 feature {NONE}
 
 	work (argument: ANY) is
-        do
+		do
 			popdown;
 			if argument = Current then
 				last_caller.execute (Current)

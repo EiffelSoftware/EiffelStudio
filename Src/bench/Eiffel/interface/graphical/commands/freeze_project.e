@@ -113,7 +113,7 @@ feature {NONE}
 		do
 			if not retried then
 				!!file.make (Project_file_name);
-				file.open_write;
+				file.open_binary_write;
 				workbench.basic_store (file);
 				file.close;
 			else

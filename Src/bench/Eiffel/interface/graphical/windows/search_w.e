@@ -32,7 +32,7 @@ feature
 			!!ok_it;
 			!!cancel_it;
 			set_width (200);
-			set_ok_label ("next");
+			set_ok_label ("Next");
 			add_ok_action (Current, ok_it);
 			text_window.set_action ("Ctrl<Key>d", Current, ok_it);
 			add_cancel_action (Current, cancel_it)

@@ -85,7 +85,7 @@ feature
 			-- Reference class associated with simple type
 		do
 			Result := system.pointer_ref_class.compiled_class.types.first;
-	   end;
+		end;
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.

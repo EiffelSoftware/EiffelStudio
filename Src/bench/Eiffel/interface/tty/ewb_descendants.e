@@ -2,76 +2,30 @@ class EWB_DESCENDANTS
 
 inherit
 
-	EWB_CMD
+	EWB_CLASS
 		rename
 			name as descendants_cmd_name,
-			help_message as descendants_help
+			help_message as descendants_help,
+			abbreviation as descendants_abb
 		end
 
 creation
 
 	make, null
 
-feature -- Creation
-
-	make (cn: STRING) is
-		do
-			class_name := cn;
-			class_name.to_lower;
-		end;
-
-	class_name: STRING;
-
 feature
 
-	loop_execute is
+	display (a_class: CLASS_C) is
 		do
-			get_class_name;
-			class_name := last_input;
-			class_name.to_lower;
-			execute;
+			!!displayed.make;
+			current_class := a_class;
+			a_class.append_clickable_signature (output_window);
+			output_window.new_line;
+			rec_display (1, a_class);
+			displayed := void;	
 		end;
 
-	execute is
-		local
-			class_c: CLASS_C;
-			class_i: CLASS_I
-		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					class_i := Universe.unique_class (class_name);
-                    if class_i /= Void then
-                        class_c := class_i.compiled_class;
-                    end;
-					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
-					else
-						print_descendants (class_c, 0);
-					end;
-				end;
-			end;
-		end;
-
-	print_descendants (c: CLASS_C; i: INTEGER) is
-		local
-			descendants: LINKED_LIST [CLASS_C]
-		do
-			from	
-				descendants := c.descendants;
-				descendants.start
-			until
-				descendants.after
-			loop
-				io.putstring (tabs(i));
-				io.putstring (descendants.item.signature);
-				io.new_line;
-				print_descendants (descendants.item, i + 1);
-				descendants.forth
-			end
-		end;
+	displayed: LINKED_LIST [CLASS_C];
 
 	tabs (i: INTEGER): STRING is
 		local
@@ -79,13 +33,44 @@ feature
 		do
 			from
 				j := 1;
-				!!Result.make (4 * i)
+				!!Result.make (i)
 			until
 				j > i
 			loop
-				Result.append ("	");
+				Result.append_character ('%T');
 				j := j + 1
 			end;
+		end;
+
+	rec_display (i: INTEGER; c: CLASS_C) is
+			-- Display parents of `c' in tree form.
+		local
+			descendants: LINKED_LIST [CLASS_C]
+			descendant_class: CLASS_C;
+		do
+			descendants := c.descendants;
+			if not descendants.empty then
+				from
+					descendants.start
+				until
+					descendants.after
+				loop
+					descendant_class := descendants.item;
+					output_window.put_string (tabs (i));
+					descendant_class.append_clickable_signature (output_window);
+					if displayed.has (descendant_class) then
+						if not descendant_class.descendants.empty then
+							output_window.put_string ("...")
+						end;
+						output_window.new_line;
+					else	
+						output_window.new_line;
+						displayed.add (descendant_class);
+						rec_display (i+1, descendant_class);
+					end;			
+					descendants.forth
+				end
+			end
 		end;
 
 end

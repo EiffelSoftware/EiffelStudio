@@ -45,7 +45,7 @@ feature
 
 	written_class: CLASS_C is
 		do
-			Result :=  System.class_of_id (written_in);
+			Result := System.class_of_id (written_in);
 		end;
 
 feature -- Query
@@ -156,25 +156,25 @@ feature -- Debug purpose
 
 feature -- formatter
 
-    less_restrictive_than (other: like Current): BOOLEAN is
-        require
-            good_argument: other /= void
-        local
-            other_clients: FIXED_LIST [STRING];
-            other_cluster: CLUSTER_I;
-        do
-            other_clients := other.clients;
-            other_cluster := system.class_of_id (other.written_in).cluster;
-            from
-                other_clients.start ;
-                Result := true;
-            until
-                other_clients.after or Result = false
-            loop
-                Result := valid_for ( Universe.class_named (
-                        other_clients.item, other_cluster).compiled_class);
-            end;
-        end;
+	less_restrictive_than (other: like Current): BOOLEAN is
+		require
+			good_argument: other /= void
+		local
+			other_clients: FIXED_LIST [STRING];
+			other_cluster: CLUSTER_I;
+		do
+			other_clients := other.clients;
+			other_cluster := system.class_of_id (other.written_in).cluster;
+			from
+				other_clients.start ;
+				Result := true;
+			until
+				other_clients.after or Result = false
+			loop
+				Result := valid_for (Universe.class_named
+					(other_clients.item, other_cluster).compiled_class);
+			end;
+		end;
 
 
 	format (ctxt: FORMAT_CONTEXT) is

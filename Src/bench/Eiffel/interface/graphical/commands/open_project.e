@@ -171,7 +171,7 @@ feature
 				init_project_directory := project_dir;
 				if project_dir /= Project_directory then end;
 				!!workb;
-				workbench_file.open_read;
+				workbench_file.open_binary_read;
 				workb ?= workb.retrieved (workbench_file);
 				if not workbench_file.is_closed then
 					workbench_file.close

@@ -143,7 +143,7 @@ feature
 							file.open_write;
 							file.putstring ("class ");
 							file.putstring (stone.signature);
-							file.putstring ("%N%Nfeature%N%Nend -- ");
+							file.putstring (" feature%N%Nend -- class ");
 							file.putstring (stone.signature);
 							file.new_line;
 							file.close;

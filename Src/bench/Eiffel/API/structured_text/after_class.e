@@ -14,7 +14,7 @@ feature
 	image: STRING is
 		do
 			!! Result.make (0);
-			Result.append (" -- ");
+			Result.append (" -- class ");
 			Result.append (class_name);
 		end;
 

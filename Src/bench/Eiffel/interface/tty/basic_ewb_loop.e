@@ -6,7 +6,8 @@ inherit
 	EWB_CMD
 		rename
 			name as loop_cmd_name,
-			help_message as loop_help
+			help_message as loop_help,
+			abbreviation as loop_abb
 		end;
 
 feature
@@ -30,103 +31,190 @@ feature
 
 feature -- Initialization
 
-	command_list: SORTED_TWO_WAY_LIST [EWB_CMD] is
-		once
-			!!Result.make
-		end;
+	command_list: EWB_MENU;
 
-	commands: EXTEND_TABLE [EWB_CMD, STRING] is
+	main_menu: EWB_MENU is
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!! Result.make (14);
+			!!Result.make (1, 4);
+			Result.set_is_main;
 
-			!EWB_COMP! ewb_cmd;
-			add_cmd (ewb_cmd);
+			!EWB_STRING! ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu);
+			Result.add_entry (ewb_cmd)
+	
+			!EWB_STRING! ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu);
+			Result.add_entry (ewb_cmd)
+	
+			!EWB_STRING! ewb_cmd.make (routines_cmd_name, routine_help, routines_abb, feature_menu);
+			Result.add_entry (ewb_cmd)
+	
+			!EWB_STRING! ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu);
+			Result.add_entry (ewb_cmd)
+		end;
 
-			add_special_cmds;
+	System_menu: EWB_MENU is
+		local
+			ewb_cmd: EWB_CMD;
+		once
+			!!Result.make (1, 2)
 
+			!EWB_ACE! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+			
+			!EWB_CLUSTERS! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+		end;
+
+	class_menu: EWB_MENU is
+		local
+			ewb_cmd: EWB_CMD;
+		once
+			!!Result.make (1, 13)
+			
 			!EWB_ANCESTORS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
+
+			!EWB_ATTRIBUTES! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 
 			!EWB_CLIENTS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
+
+			!EWB_DEFERRED! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 
 			!EWB_DESCENDANTS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
+
+			!EWB_EXTERNALS! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 
 			!EWB_FLAT! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
 
 			!EWB_FS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
 
-			!EWB_FUTURE! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			!EWB_ONCE! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 
-			!EWB_HISTORY! ewb_cmd.null;
-			add_cmd (ewb_cmd);
-
-			!EWB_PAST! ewb_cmd.null;
-			add_cmd (ewb_cmd);
-
-			!EWB_SENDERS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			!EWB_ROUTINES! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 
 			!EWB_SHORT! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
 
 			!EWB_SUPPLIERS! ewb_cmd.null;
-			add_cmd (ewb_cmd);
+			Result.add_entry (ewb_cmd)
+
+			!EWB_TEXT! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
 		end;
 
-	add_special_cmds is
-		do
-		end;
-
-	add_cmd (a_cmd: EWB_CMD) is
-		do
-			commands.put (a_cmd, a_cmd.name);
-			command_list.add (a_cmd);
-		end;
-
-	display_commands is
+	feature_menu: EWB_MENU is
 		local
-			cmd: EWB_CMD
+			ewb_cmd: EWB_CMD;
+		once
+			!!Result.make (1, 6)
+
+			!EWB_PAST! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_SENDERS! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_FUTURE! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_R_FLAT! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_HISTORY! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_R_TEXT! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+		end;
+
+	compile_menu: EWB_MENU is
+		once
+			Result := c_menu
+		end;
+
+	c_menu: EWB_MENU is
+		local
+			ewb_cmd: EWB_CMD;
 		do
--- FIXME
+			!!Result.make (1, 1);
 
--- ADD -keep for finalize
+			!EWB_COMP! ewb_cmd;
+			Result.add_entry  (ewb_cmd);
+		end;
 
+	commands: ARRAY [EWB_MENU] is
+		once
+			!!Result.make (1, 5);
+	
+			Result.put (main_menu, 1);
 
+			Result.put (system_menu, 2);
+
+			Result.put (class_menu, 3)
+
+			Result.put (feature_menu, 4);
+
+			Result.put (compile_menu, 5);
+		end
+
+	display_header is
+		do
 			io.putstring ("==== ISE Eiffel3 - Interactive Batch Version (v");
 			io.putstring (Version_number);
 			io.putstring (") ====%N%N");
-			from
-				command_list.start
-			until
-				command_list.after
-			loop
-				cmd := command_list.item;
-				print_one_help (cmd.name, cmd.help_message);
-				command_list.forth
-			end;
-			io.new_line;
-			print_one_help (loop_help_cmd_name, loop_help_help);
-			print_one_help (quit_cmd_name, quit_help);
-			io.neW_line;
 		end;
 
-	print_one_help (opt: STRING; txt: STRING) is
+	display_commands is
 		do
-			io.putchar ('%T');
-			io.putstring (opt);
-			io.putstring (": ");
-			io.putstring (txt);
-			io.putstring (".%N")
+			command_list.print_help
 		end;
 
-	last_request: STRING;
+	save_to_disk is
+		local
+			s: STRING;
+			file_w: FILE_WINDOW;
+			done: BOOLEAN;
+		do
+			s := yank_window.stored_output;
+			if s.empty then
+				io.error.putstring ("There is no output to save.%N");
+			else
+				from
+				until
+					done
+				loop
+					io.putstring ("--> File name: ");
+					get_name;
+					if not last_input.empty then
+						!!file_w.make (last_input);
+						if file_w.exists then
+							io.putstring ("File already exists.%N");
+						else
+							file_w.open_file;
+							if file_w.exists then
+								file_w.put_string (s);
+								file_w.close;
+								done := True
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+
+	last_request_abb: CHARACTER;
+
+	last_request_cmd: EWB_CMD;
 
 	get_user_request is
 		local
@@ -139,30 +227,109 @@ feature -- Initialization
 				io.putstring ("Command => ");
 				get_name;
 				if last_input.empty then
-					done := False
-				elseif commands.has (last_input) then
-					last_request := last_input;
-					done := True;
-				elseif
-					(last_input.is_equal (quit_cmd_name) or else
-						((last_input.count = 1) and then
-						 (last_input.item (1) = 'q')))
-				then
-					last_request := quit_cmd_name;
-					done := True
-				elseif
-					(last_input.is_equal (loop_help_cmd_name) or else
-						((last_input.count = 1) and then
-						 (last_input.item (1) = 'h')))
-				then
-					last_request := loop_help_cmd_name;
-					done := True
+					-- do nothing
 				else
-					done := False;
-					io.putstring ("Invalid command%N");
+					process_request (last_input)
+					if last_request_abb = quit_abb then
+						done := True;
+					elseif last_request_cmd /= Void then
+						done := True;
+					end;
 				end;
 			end;
 		end;
+
+	prev: EWB_MENU;
+
+	process_request (req: STRING) is
+		local
+			next_cmd: EWB_CMD;
+			menu, option : STRING
+			dot_place: INTEGER
+			main_menu_option : EWB_STRING
+			menu_abb : CHARACTER
+		
+		do
+			last_request_cmd := Void
+			if req.has ('.') then
+				dot_place := req.search_character ('.', 1)
+				debug
+					io.putstring ("Req :")
+					io.putstring (req)
+					io.putstring (": dot place")
+					io.putint (dot_place)
+					io.new_line
+				end	
+				menu := req.substring (1,dot_place -1)
+				if menu.count = 1 then 
+					menu_abb := menu.item (1)
+				elseif menu.empty then
+					menu := "M"
+					menu_abb := main_abb	
+			 	end
+				option := req.substring (dot_place+1, req.count)
+				next_cmd := main_menu.option_item (menu)
+				if next_cmd /= Void
+				then
+					prev := command_list
+					main_menu_option ?= next_cmd
+					command_list := main_menu_option.sub_menu
+					if not option.empty then
+						process_request (option)
+					end
+				else
+					if menu.is_equal (quit_cmd_name) or menu_abb = quit_abb then
+						last_request_abb := quit_abb
+					elseif menu.is_equal (yank_cmd_name) or menu_abb = yank_abb then
+						save_to_disk;
+					elseif menu.is_equal (help_cmd_name) or menu_abb = help_abb or menu_abb = '?' then
+						display_commands;
+					elseif menu.is_equal (main_cmd_name) or menu_abb = main_abb then
+						prev := command_list
+						command_list := main_menu
+						if not option.empty then
+							process_request (option)
+						end					
+					else
+						io.putstring ("Unknown menu ")
+						io.putstring (menu)
+						io.putstring (".%N")
+					end
+				end
+			else
+				next_cmd := command_list.option_item(req)
+				if req.count = 1 then
+					menu_abb := req.item(1)
+				end
+				if next_cmd /= Void then
+					if command_list = Main_menu then
+						prev := command_list
+						main_menu_option ?= next_cmd
+						command_list := main_menu_option.sub_menu
+						display_commands
+					else
+						last_request_cmd := next_cmd
+					end
+				else
+					if req.is_equal (quit_cmd_name) or menu_abb = quit_abb then
+						last_request_abb := quit_abb
+					elseif req.is_equal (yank_cmd_name) or menu_abb = yank_abb then
+						save_to_disk;
+					elseif req.is_equal (help_cmd_name) or menu_abb = help_abb or menu_abb = '?' then
+						display_commands;
+					elseif req.is_equal (main_cmd_name) or menu_abb = main_abb 
+					then
+						prev := command_list
+						command_list := Main_menu
+						display_commands
+					else
+						io.putstring ("Unknown option ")
+						io.putstring (req)
+						io.putstring (".%N")
+					end
+				end		
+			end
+		end
 
 feature -- Command loop
 
@@ -173,23 +340,24 @@ feature -- Command loop
 		do
 			from
 				if commands = Void then end;
+				command_list := commands.item (1)
+				display_header
 				display_commands
 			until
 				done
 			loop
 				get_user_request;
-				if
-					last_request.is_equal (quit_cmd_name)
-				then
+				if last_request_abb = quit_abb then
 					done := True;
-				elseif
-					last_request.is_equal (loop_help_cmd_name)
-				then
-					display_commands
-				else
-					cmd := commands.item (last_request);
-					if cmd /= Void then
-						cmd.loop_execute;
+				elseif last_request_cmd /= Void then
+					licence.alive;
+					if licence.is_alive then
+						yank_window.reset_output;
+						last_request_cmd.set_output_window (yank_window);
+						last_request_cmd.loop_execute;
+					else
+						io.putstring ("You have lost your licence.%N");
+						done := True
 					end;
 				end;
 			end;

@@ -55,7 +55,7 @@ feature
 			f_name.append ("/E");
 			f_name.append_integer (i);
 			file_make (f_name);
-			open_write;
+			open_binary_write;
 			basic_close;	
 			id := i;
 debug ("SERVER")
@@ -97,9 +97,9 @@ end;
 			is_closed: not is_open
 		do
 			if precompiled then
-				open_read
+				open_binary_read
 			else
-				open_read_write;
+				open_binary_read_write;
 			end;
 			is_open := True;
 		ensure

@@ -14,7 +14,7 @@ inherit
 		end;
 	ATTRIBUTE_I
 		redefine
-			replicated, code_id, unselected, transfer_to, 
+			replicated, code_id, unselected, transfer_to,
 			is_replicated, is_code_replicated,
 			set_is_code_replicated,
 			set_code_id
@@ -62,12 +62,12 @@ feature
 			f.set_code_id (code_id);
 		end;
 
-    set_is_code_replicated is  
-            -- Set `is_code_replicated' to True. 
+	set_is_code_replicated is
+			-- Set `is_code_replicated' to True.
 		do
 			is_code_replicated := True;
 		end;
- 
+
 	is_code_replicated: BOOLEAN;
 			-- Is Current feature code replicated
 

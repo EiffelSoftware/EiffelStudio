@@ -470,7 +470,7 @@ feature -- Generation
 				class_type := exp_desc.class_type;
 				creation_feature := 
 						class_type.associated_class.creation_feature;
-            	if creation_feature /= Void then
+				if creation_feature /= Void then
 					creat_name := 
 						Encoder.feature_name (class_type.id, creation_feature.body_id).duplicate;
 					file.putstring (creat_name);
@@ -523,7 +523,7 @@ feature -- Generation
 					exp_desc ?= skeleton.item;
 					cl := exp_desc.class_type.associated_class;
 					creation_feature := cl.creation_feature;
-            		if creation_feature /= Void then
+					if creation_feature /= Void then
 						r.record (creation_feature, cl);
 					end;
 					skeleton.forth;

@@ -5,7 +5,6 @@ inherit
 	EV_BUTTON_EVENT_DATA
 		redefine
 			make,
-			implementation
 		end
 
 create

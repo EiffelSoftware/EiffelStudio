@@ -4,12 +4,14 @@ deferred class
 inherit
 
 	EV_OPEN_FIGURE
-		redefine
-			contains,
-			recompute
-		end
 
 	EV_PATH
+		undefine
+			out,
+			default_create
+		select
+			out
+		end
 
 feature -- Access
 

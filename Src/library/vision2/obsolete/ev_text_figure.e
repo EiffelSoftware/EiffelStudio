@@ -3,13 +3,15 @@ class
 
 inherit
 	EV_FIGURE
-		redefine
-			recompute
-		end
 
 	EV_INTERIOR
+		undefine
+			out,
+			default_create
 		redefine
 			make
+		select
+			out
 		end
 
 create
@@ -20,6 +22,9 @@ feature {NONE} -- Initialization
 	make is do end
 
 feature -- Access
+        position_on_figure (x,y: INTEGER): BOOLEAN is do end
+        point_count: INTEGER
+
 
 	ascent: INTEGER
 	

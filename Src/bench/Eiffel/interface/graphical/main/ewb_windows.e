@@ -23,7 +23,7 @@ feature {NONE}
 
 	init_toolkit: EBENCH_MS_WINDOWS is
 		once
-			!!Result.make ("ebench")
+			!!Result.make ("ISE Eiffel Bench")
 		end;
 
 	create_handler is

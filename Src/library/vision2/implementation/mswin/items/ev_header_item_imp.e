@@ -115,13 +115,39 @@ feature -- Status setting
 			parent_imp.resize_item_to_content (Current)
 		end
 		
-	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of `Current'.
+	set_pixmap (p: EV_PIXMAP) is
+			-- Assign `p' to the displayed pixmap.
 		do
-			Precursor {EV_ITEM_IMP} (pix)
-			if parent_imp /= Void then
-				parent_imp.set_item_pixmap (Current, pix)
+			if private_pixmap /= Void then
+				private_pixmap.destroy
+				private_pixmap := Void
 			end
+			private_pixmap := p.twin
+			if parent_imp /= Void then
+				set_pixmap_in_parent
+			end
+		end
+
+	set_pixmap_in_parent is
+			-- Make `pix' the new pixmap of `Current'.
+		local
+			image_list: EV_IMAGE_LIST_IMP
+		do
+			image_list := parent_imp.image_list
+			if image_list = Void then
+				parent_imp.setup_image_list
+				image_list := parent_imp.image_list
+			end
+			if private_pixmap /= Void then
+				image_list.add_pixmap (private_pixmap)
+					-- Set the `iimage' to the index of the image to be used
+					-- from the image list.
+				set_iimage (image_list.last_position)
+			else
+				set_mask (clear_flag (mask, feature {WEL_HDI_CONSTANTS}.hdi_image))
+				set_format (clear_flag (format, feature {WEL_HDF_CONSTANTS}.hdf_image))
+			end
+			parent_imp.refresh_item (Current)
 		end
 		
 	remove_pixmap is
@@ -129,7 +155,7 @@ feature -- Status setting
 		do
 			Precursor {EV_ITEM_IMP}
 			if parent_imp /= Void then
-				parent_imp.set_item_pixmap (Current, Void)
+				set_pixmap_in_parent
 			end
 		end
 		

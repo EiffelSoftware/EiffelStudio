@@ -11,9 +11,9 @@ inherit
 		undefine
 			same_as, solved_type, instantiation_in
 		redefine
-			actual_type, has_like, is_like,
+			actual_type, has_like, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
-			has_associated_class
+			has_associated_class, reference_actual_type
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -22,6 +22,13 @@ feature -- Properties
 
 	actual_type: TYPE_A
 			-- Actual type of the anchored type in a given class
+			
+	reference_actual_type: TYPE_A is
+			-- `actual_type' if not `is_expanded'.
+			-- Otherwise associated reference of `actual type'
+		do
+			Result := actual_type.reference_actual_type
+		end
 
 	is_like: BOOLEAN is True
 			-- Is the type anchored one ?
@@ -32,11 +39,16 @@ feature -- Properties
 	class_id: INTEGER
 			-- Class ID of the class where the anchor is referenced
 
-
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
 		do
 			Result := actual_type.is_basic
+		end
+		
+	is_external: BOOLEAN is
+			-- Is current type based on an external class?
+		do
+			Result := actual_type.is_external
 		end
 
 feature -- Access
@@ -88,10 +100,10 @@ feature -- Primitives
 			Result.set_actual_type (actual_type.instantiated_in (class_type))
 		end
 
-	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to `actual_type' ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does `actual_type' conform to `other'?
 		do
-			Result := actual_type.internal_conform_to (other.actual_type, in_generics)
+			Result := actual_type.conform_to (other.actual_type)
 		end
 
 	type_i: TYPE_I is
@@ -102,8 +114,9 @@ feature -- Primitives
 			Result := actual_type.type_i
 			cl_type ?= Result
 
-			if cl_type /= Void then
-					-- Remember that it's an anchored type 
+			if cl_type /= Void and then not cl_type.is_expanded then
+					-- Remember that it's an anchored type, not needed
+					-- when handling expanded types.
 				cl_type.set_cr_info (create_info)
 			end
 		end

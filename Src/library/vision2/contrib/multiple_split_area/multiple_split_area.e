@@ -653,6 +653,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	remove_docking_areas is
 			-- Remove all docking areas added as result of last call to
 			-- `initialize_docking_areas'.
+		local
+			cell: EV_CELL
 		do
 			from
 				all_holders.start
@@ -660,10 +662,15 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				all_holders.off
 			loop
 				if not all_holders.item.upper_box.is_empty then
-					--| FIXME also need to ensure that we do not remove a minimized item
-					--| if there were some in the box that did not allow docking.
-					all_holders.item.upper_box.start
-					all_holders.item.upper_box.remove
+					
+					-- We do not wish to remove any minimized items contained in `upper_box',
+					-- only the cells added during call to `initialize_docking_areas'.
+					-- Therefore, we check that they are cells with data to qualify this.
+					cell ?= all_holders.item.first
+					if cell /= Void and then cell.data /= Void then
+						all_holders.item.upper_box.start
+						all_holders.item.upper_box.remove
+					end
 				end
 				all_holders.forth
 			end

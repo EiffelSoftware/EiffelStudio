@@ -6,8 +6,6 @@ indexing
 class
 	VIFI
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
 	ERROR
 
@@ -36,7 +34,7 @@ feature -- Access
 
 feature -- Properties
 
-	code: STRING is "IL_inherit_error"
+	code: STRING is "VIFI"
 		-- Error code
 
 feature -- Setting
@@ -57,9 +55,9 @@ feature -- Output
 		do
 			st.add_string ("Class: ")
 			class_c.append_signature (st)
-			st.add_string ("inherit from ")
-			st.add_new_line
+			st.add_string (" inherit from frozen class ")
 			parent_class.append_signature (st)			
+			st.add_new_line
 		end
 
 end -- class VIFI

@@ -115,6 +115,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 		do
 			{EV_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -165,6 +166,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/23 23:25:18  brendel
+--| Now calls Precursor of create_action_sequences for PND-able.
+--|
 --| Revision 1.33  2000/03/23 18:17:03  brendel
 --| Added columns and set_solumns as obsolete.
 --|

@@ -1312,20 +1312,20 @@ feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 		do
 			if world.is_statistics then
 				create time
-				l_ticks := time.millisecond_now
+				l_ticks := time.millisecond_now + time.second_now * 1000 + time.hour_now * 60000
 				
 				projector.full_project
 				
 				time.update
-				world.set_last_physics_time (time.millisecond_now - l_ticks)
-				
+				world.set_last_physics_time (time.millisecond_now + time.second_now * 1000 + time.hour_now * 60000 - l_ticks)
+
 				time.update
-				l_ticks := time.millisecond_now
+				l_ticks := time.millisecond_now + time.second_now * 1000 + time.hour_now * 60000
 				
 				force_directed_layout.layout
 				
 				time.update
-				world.set_last_draw_time (time.millisecond_now - l_ticks)				
+				world.set_last_draw_time (time.millisecond_now + time.second_now * 1000 + time.hour_now * 60000 - l_ticks)				
 			else
 				projector.full_project
 				force_directed_layout.layout

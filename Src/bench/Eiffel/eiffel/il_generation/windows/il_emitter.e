@@ -89,7 +89,6 @@ feature -- Access
 			-- Path to consumed assembly folder
 		require
 			assembly_found: assembly_found
-			assembly_consumed: is_consumed
 		do
 			Result := assembly_info.consumed_folder_name
 		end	

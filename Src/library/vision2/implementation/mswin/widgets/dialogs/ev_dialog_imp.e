@@ -25,13 +25,25 @@ inherit
 	EV_TITLED_WINDOW_IMP
 		redefine
 			default_style,
-			interface
+			interface,
+			initialize
 		end
 
 create
 	make
 
 feature -- Basic operations
+
+	initialize is
+		do
+			--|FIXME This has been added TEMPORARILY
+			--|To fix a sizing problem. The whole packing and
+			--| redrawing mechanism will be re-written.
+			--| This should cure the problem and remove the need
+			--| For this fix.
+			set_minimum_size (250, 140)
+			{EV_TITLED_WINDOW_IMP} Precursor
+		end
 
 	block is
 			-- Wait until window is closed by the user.
@@ -87,6 +99,10 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/04 19:29:50  rogers
+--| Redefined initialize, to give the dialog a minimum size, to
+--| fix the packing problem. Only a temporary solution.
+--|
 --| Revision 1.9  2000/02/29 17:59:02  rogers
 --| Undefined last_call_was_destroy  inherited from EV_DIALOG_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
 --|

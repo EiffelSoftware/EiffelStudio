@@ -182,7 +182,7 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			--Is other equal to Current?
-	local
+		local
 			c1,c2: like cursor;
 		do
 			if (count = other.count) and 

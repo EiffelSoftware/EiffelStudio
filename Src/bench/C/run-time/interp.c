@@ -3692,8 +3692,6 @@ rt_private void eif_interp_basic_operations (void)
 				}
 			break;
 
-			break;
-
 		default: eif_panic (RT_BOTCHED_MSG);
 	}
 }

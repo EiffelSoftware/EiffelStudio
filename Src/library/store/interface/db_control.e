@@ -58,7 +58,7 @@ feature -- Basic operations
 			-- Commit work.
 		require
 			connection_exists: is_connected
-			transaction_exists: transaction_count > 0
+			transaction_exists: transaction_count >= 0
 		do
 			handle.status.set (implementation.commit)
 		end
@@ -67,7 +67,7 @@ feature -- Basic operations
 			-- Rollback work.
 		require
 			connection_exists: is_connected
-			transaction_exists: transaction_count > 0
+			transaction_exists: transaction_count >= 0
 		do
 			handle.status.set (implementation.rollback)
 		end

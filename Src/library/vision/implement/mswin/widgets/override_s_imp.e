@@ -132,7 +132,7 @@ feature -- Status setting
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
-			i, maxxw, maxyh, tmp: INTEGER
+			maxxw, maxyh, tmp: INTEGER
 			current_item: WIDGET_IMP
 		do
 			if not fixed_size_flag then

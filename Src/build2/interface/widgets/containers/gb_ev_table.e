@@ -107,6 +107,25 @@ feature {GB_XML_STORE} -- Output
 			temp_width_string, temp_height_string: STRING
 			temp: STRING
 		do
+			
+			if first.columns /= 1 then
+				add_element_containing_integer (element, columns_string, first.columns)	
+			end
+			if first.rows /= 1 then
+				add_element_containing_integer (element, rows_string, first.rows)	
+			end
+			if first.column_spacing /= 0 then
+				add_element_containing_integer (element, column_spacing_string, first.column_spacing)
+			end
+			if first.row_spacing /= 0 then
+				add_element_containing_integer (element, row_spacing_string, first.row_spacing)
+			end
+			
+			if first.border_width /= 0 then
+				add_element_containing_integer (element, border_width_string, first.border_width)
+			end
+			
+			
 --			temp_x_position_string := ""
 --			temp_y_position_string := ""
 --			temp_width_string := ""
@@ -161,6 +180,32 @@ feature {GB_XML_STORE} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
+			full_information := get_unique_full_info (element)
+			
+			element_info := full_information @ (Columns_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_TABLE}.resize (element_info.data.to_integer, first.rows))
+			end
+			element_info := full_information @ (Rows_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_TABLE}.resize (first.columns, element_info.data.to_integer))
+			end
+			element_info := full_information @ (Column_spacing_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_TABLE}.set_column_spacing (element_info.data.to_integer))
+			end
+			element_info := full_information @ (Row_spacing_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_TABLE}.set_row_spacing (element_info.data.to_integer))
+			end
+			element_info := full_information @ (Border_width_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_TABLE}.set_border_width (element_info.data.to_integer))
+			end
+			
+			
+			
+			
 				-- All the building for an EV_FIXED needs to be deferred so
 				-- we set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
@@ -1262,6 +1307,17 @@ feature {NONE} -- Attributes
 		
 	selected_item_color: EV_COLOR
 		-- Color used to draw `selected_item'.
+		
+	rows_string: STRING is "Rows"
+	
+	columns_string: STRING is "Columns"
+	
+	row_spacing_string: STRING is "Row_spacing"
+	
+	column_spacing_string: STRING is "Column_spacing"
+	
+	border_width_string: STRING is "Border_width"
+	
 		
 --	x_position_string: STRING is "Children_x_position"
 --	

@@ -27,7 +27,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	top_shadow_color: MEL_PIXEL is
@@ -40,7 +40,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	bottom_shadow_pixmap: MEL_PIXMAP is
@@ -53,7 +53,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	top_shadow_pixmap: MEL_PIXMAP is
@@ -66,7 +66,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	foreground, foreground_color: MEL_PIXEL is
@@ -78,7 +78,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	highlight_color: MEL_PIXEL is
@@ -90,10 +90,10 @@ feature -- Status report
 		ensure
 			valid_result: Result /= Void and then Result.is_valid
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
-	is_highlighted_on_enter: BOOLEAN is
+	is_highlighted_on_entry: BOOLEAN is
 			-- Is Current highlighted when it gets the focus?
 		require
 			exists: not is_destroyed
@@ -110,7 +110,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	highlight_thickness: INTEGER is
@@ -289,14 +289,24 @@ feature -- Status setting
 			highlight_color_set: highlight_color.is_equal (a_color)
 		end;
 
-	set_highlighted_on_enter (b: BOOLEAN) is
-			-- Set `is_highlighted_on_enter' to `b'.
+	highlight_on_entry is
+			-- Set `is_highlighted_on_entry' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNhighlightOnEnter, b)
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, True)
 		ensure
-			is_highlighted_on_enter: is_highlighted_on_enter = b
+			highlighted_on_enter: is_highlighted_on_entry
+		end;
+
+	no_hightlight_on_entry is
+			-- Set `is_highlighted_on_entry' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, False)
+		ensure
+			do_not_highlight_on_enter: not is_highlighted_on_entry
 		end;
 
 	set_highlight_pixmap (a_pixmap: MEL_PIXMAP) is
@@ -333,14 +343,24 @@ feature -- Status setting
 			shadow_thickness_set: shadow_thickness = a_thickness
 		end;
 
-	set_traversable (b: BOOLEAN) is
-			-- Set `is_traversable' to `b'.
+	set_traversal_on is
+			-- Set `is_traversable' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNtraversalOn, b)
+			set_xt_boolean (screen_object, XmNtraversalOn, True)
 		ensure
-			traversal_enabled: is_traversable = b
+			traversal_on: is_traversable
+		end;
+
+	set_traversal_off is
+			-- Set `is_traversable' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNtraversalOn, False)
+		ensure
+			traversal_off: not is_traversable
 		end;
 
 	set_unit_pixel is

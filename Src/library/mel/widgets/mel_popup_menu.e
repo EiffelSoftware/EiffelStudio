@@ -16,11 +16,11 @@ inherit
 			make as rc_make
 		export
 			{NONE} menu_accelerator, menu_history, menu_help_widget, mnemonic,
-			mnemonic_char_set, radio_behavior, is_working_area, is_menu_bar,
+			mnemonic_char_set, is_radio_behavior, is_working_area, is_menu_bar,
 			is_menu_popup, is_menu_option, is_menu_pulldown, 
 			set_menu_accelerator, set_menu_history, set_menu_help_widget,
-			set_mnemonic, set_mnemonic_char_set, set_radio_behavior,
-			rc_make
+			set_mnemonic, set_mnemonic_char_set, 
+			enable_radio_behavior, disable_radio_behavior, rc_make
 		redefine
 			parent
 		end

@@ -91,6 +91,14 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
+	is_vertical: BOOLEAN is
+			-- Is scale orientation vertical?
+		require
+			exists: not is_destroyed
+		do
+			Result := orientation = XmVERTICAL
+		end;
+
 	is_maximum_on_top: BOOLEAN is
 			-- Is `maximum' placed at the top?
 		require
@@ -98,6 +106,24 @@ feature -- Status report
 			vertical: not is_horizontal
 		do
 			Result := processing_direction = XmMAX_ON_TOP
+		end;
+
+	is_maximum_on_bottom: BOOLEAN is
+			-- Is processing direction bottom?
+		require
+			exists: not is_destroyed;
+			vertical: not is_horizontal
+		do
+			Result := processing_direction = XmMAX_ON_BOTTOM
+		end;
+
+	is_maximum_on_right: BOOLEAN is
+			-- Is processing direction right?
+		require
+			exists: not is_destroyed;
+			is_horizontal: is_horizontal
+		do
+			Result := processing_direction = XmMAX_ON_RIGHT
 		end;
 
 	is_maximum_on_left: BOOLEAN is
@@ -179,7 +205,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 feature  -- Status setting
@@ -219,48 +245,68 @@ feature  -- Status setting
 			delay_set: initial_delay = new_delay
 		end;
 
-	set_horizontal (b: BOOLEAN) is
-			-- Set `is_horizontal' to `b'.
+	set_horizontal is
+			-- Set `is_horizontal' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
-			else
-				set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
-			end
+			set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
 		ensure
-			value_set: is_horizontal = b
+			is_horizontal: is_horizontal
 		end;
 
-	set_maximum_on_top (b: BOOLEAN) is
-			-- Set `maximum_on_top' to `b'.
+	set_vertical is
+			-- Set `is_horizontal' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
+		ensure
+			is_vertical: is_vertical
+		end;
+
+	set_maximum_on_top is
+			-- Set `is_maximum_on_top' to True.
 		require
 			exists: not is_destroyed;
 			vertical: not is_horizontal
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_TOP)
-			else
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_BOTTOM)
-			end
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_TOP)
 		ensure
-			value_set: is_maximum_on_top = b
+			is_maximum_on_top: is_maximum_on_top
 		end
 
-	set_maximum_on_left (b: BOOLEAN) is
-			-- Set `is_maximum_on_left' to `b'.
+	set_maximum_on_bottom is
+			-- Set `is_maximum_on_bottom' to True.
 		require
 			exists: not is_destroyed;
-			horizontal: is_horizontal
+			vertical: not is_horizontal
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_LEFT)
-			else
-				set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_RIGHT)
-			end
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_BOTTOM)
 		ensure
-			value_set: is_maximum_on_left = b
+			is_maximum_on_bottom: is_maximum_on_bottom
+		end
+
+	set_maximum_on_left is
+			-- Set `is_maximum_on_left' to True.
+		require
+			exists: not is_destroyed;
+			is_horizontal: is_horizontal
+		do
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_LEFT)
+		ensure
+			is_maximum_on_left: is_maximum_on_left
+		end
+
+	set_maximum_on_right is
+			-- Set `is_maximum_on_right' to True.
+		require
+			exists: not is_destroyed;
+			is_horizontal: is_horizontal
+		do
+			set_xt_unsigned_char (screen_object, XmNprocessingDirection, XmMAX_ON_RIGHT)
+		ensure
+			is_maximum_on_right: is_maximum_on_right
 		end
 
 	set_maximum (a_maximum: INTEGER) is
@@ -308,14 +354,24 @@ feature  -- Status setting
 			delay_set: repeat_delay = a_delay
 		end;
 
-	set_arrows_shown (b: BOOLEAN) is
-			-- Set `are_arrows_shown' to `b'.
+	show_arrows is
+			-- Set `are_arrows_shown' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNshowArrows, b)
+			set_xt_boolean (screen_object, XmNshowArrows, True)
 		ensure
-			arrows_displayed : are_arrows_shown = b
+			arrows_displayed: are_arrows_shown 
+		end;
+
+	hide_arrows is
+			-- Set `are_arrows_shown' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNshowArrows, False)
+		ensure
+			arrows_hidden: not are_arrows_shown 
 		end;
 
 	set_slider_size (a_size: INTEGER) is

@@ -78,13 +78,22 @@ feature -- Status report
 			indicator_size_large_enough: Result >= 0
 		end;
 
-	is_indicator_square: BOOLEAN is
-			-- Is the indicator displayed as a square?
-			-- (I.e.: Is Current part of an `n of many' group?)
+	is_indicator_n_of_many: BOOLEAN is
+			-- Is the indicator part of `n of many' group?
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_unsigned_char (screen_object, XmNindicatorType) = XmN_OF_MANY
+			Result := get_xt_unsigned_char 
+					(screen_object, XmNindicatorType) = XmN_OF_MANY
+		end;
+
+	is_indicator_one_of_many: BOOLEAN is
+			-- Is the indicator part of `one of many' group?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 	
+					(screen_object, XmNindicatorType) = XmONE_OF_MANY
 		end;
 
 	select_color: MEL_PIXEL is
@@ -96,7 +105,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	select_insensitive_pixmap: MEL_PIXMAP is
@@ -108,7 +117,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	select_pixmap: MEL_PIXMAP is
@@ -120,7 +129,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	spacing: INTEGER is
@@ -183,24 +192,44 @@ feature -- Status setting
 			state_is_false: not state
 		end;
 
-	set_filled_on_select (b: BOOLEAN) is
-			-- Set `filled_on_select' to `b'.
+	fill_on_select is
+			-- Set `filled_on_select' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNfillOnSelect, b)
+			set_xt_boolean (screen_object, XmNfillOnSelect, True)
 		ensure
-			filled_on_select_is_true: filled_on_select = b
+			filled_on_select: filled_on_select 
 		end;
 
-	set_indicator_visible (b: BOOLEAN) is
-			-- Set `is_indicator_visible' to `b'.
+	no_fill_on_select is
+			-- Set `filled_on_select' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNindicatorOn, b)
+			set_xt_boolean (screen_object, XmNfillOnSelect, False)
 		ensure
-			indicator_visible_is_true: is_indicator_visible = b
+			is_not_filled_on_select: not filled_on_select 
+		end;
+
+	set_indicator_visible is
+			-- Set `is_indicator_visible' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNindicatorOn, True)
+		ensure
+			indicator_is_visible: is_indicator_visible 
+		end;
+
+	set_indicator_invisible is
+			-- Set `is_indicator_invisible' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNindicatorOn, False)
+		ensure
+			indicator_is_invisible: not is_indicator_visible 
 		end;
 
 	set_indicator_size (a_width: INTEGER) is
@@ -214,18 +243,24 @@ feature -- Status setting
 			value_set: indicator_size = a_width
 		end;
 
-	set_indicator_square (b: BOOLEAN) is
-			-- Set `is_indicator_square' to `b'.
+	set_indicator_to_n_to_many is
+			-- Set `is_indicator_n_of_many' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNindicatorType, XmN_OF_MANY)
-			else
-				set_xt_unsigned_char (screen_object, XmNindicatorType, XmONE_OF_MANY)
-			end
+			set_xt_unsigned_char (screen_object, XmNindicatorType, XmN_OF_MANY)
 		ensure
-			indicator_square_is_true: is_indicator_square = b
+			indicator_square_is_n_of_many: is_indicator_n_of_many
+		end;
+
+	set_indicator_to_one_to_many is
+			-- Set `is_indicator_one_of_many' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNindicatorType, XmONE_OF_MANY)
+		ensure
+			indicator_square_is_one_of_many: is_indicator_one_of_many
 		end;
 
 	set_select_color (a_color: MEL_PIXEL) is
@@ -277,14 +312,24 @@ feature -- Status setting
 			value_set: spacing = a_width
 		end;
 
-	set_indicator_visible_when_off (b: BOOLEAN) is
-			-- Set `is_indicator_visible_when_off' to `b'.
+	enable_indicator_visible_when_off is
+			-- Set `is_indicator_visible_when_off' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNvisibleWhenOff, b)
+			set_xt_boolean (screen_object, XmNvisibleWhenOff, True)
 		ensure
-			indicator_is_visible_when_off: is_indicator_visible_when_off = b
+			indicator_is_visible_when_off_enabled: is_indicator_visible_when_off 
+		end;
+
+	disable_indicator_visible_when_off is
+			-- Set `is_indicator_visible_when_off' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNvisibleWhenOff, False)
+		ensure
+			indicator_is_visible_when_off_disabled: not is_indicator_visible_when_off 
 		end;
 
 feature -- Element change

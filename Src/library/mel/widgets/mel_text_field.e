@@ -145,7 +145,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNcursorPositionVisible)
 		end;
 
-	resize_width: BOOLEAN is
+	is_width_resizable: BOOLEAN is
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -248,7 +248,7 @@ feature -- Status report
 			select_threshold_large_enough: Result >=0
 		end;
 
-	verify_bell: BOOLEAN is
+	is_verify_bell_enabled: BOOLEAN is
 			-- Will a bell sound when a verification produces no action?
 		require
 			exists: not is_destroyed
@@ -280,24 +280,44 @@ feature -- Status setting
 			columns_set: columns = a_width
 		end;
 
-	set_cursor_position_visible (b: BOOLEAN) is
-			-- Set `is_cursor_position_visible' to `b'.
+	set_cursor_position_visible is
+			-- Set `is_cursor_position_visible' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNcursorPositionVisible, b)
+			set_xt_boolean (screen_object, XmNcursorPositionVisible, True)
 		ensure
-			cursor_is_visible_set: is_cursor_position_visible = b
+			cursor_is_visible: is_cursor_position_visible 
 		end;
 
-	set_resize_width (b: BOOLEAN) is
-			-- Set `resize_width' to `b'.
+	set_cursor_position_invisible is
+			-- Set `is_cursor_position_visible' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNresizeWidth, b)
+			set_xt_boolean (screen_object, XmNcursorPositionVisible, False)
 		ensure
-			resize_width_set: resize_width = b
+			cursor_is_invisible: not is_cursor_position_visible 
+		end;
+
+	enable_resize_width is
+			-- Set `is_width_resizable' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNresizeWidth, True)
+		ensure
+			resize_width_enabled: is_width_resizable
+		end;
+
+	disable_resize_width is
+			-- Set `is_width_resizable' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNresizeWidth, False)
+		ensure
+			resize_width_disabled: not is_width_resizable
 		end;
 
 	set_string, set_value (a_string: STRING) is
@@ -327,14 +347,24 @@ feature -- Status setting
 			a_position_set: cursor_position = a_position
 		end;
 
-	set_editable (b: BOOLEAN) is
-			-- Set `is_editable' to `b'.
+	set_editable is
+			-- Set `is_editable' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNeditable, b)
+			set_xt_boolean (screen_object, XmNeditable, True)
 		ensure
-			edition_allowed: is_editable = b
+			edition_allowed: is_editable 
+		end;
+
+	set_read_only is
+			-- Set `is_editable' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNeditable, False)
+		ensure
+			read_only_text: not is_editable 
 		end;
 
 	set_margin_height (a_height: INTEGER) is
@@ -370,14 +400,24 @@ feature -- Status setting
 			max_length_set: max_length = a_length
 		end;
 
-	set_pending_delete (b: BOOLEAN) is
-			-- Set `is_pending_delete' to `b'.
+	set_pending_delete_on is
+			-- Set `is_pending_delete' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNpendingDelete, b)
+			set_xt_boolean (screen_object, XmNpendingDelete, True)
 		ensure
-			pending_delete_set: is_pending_delete = b
+			pending_delete_switched_on: is_pending_delete 
+		end;
+
+	set_pending_delete_off is
+			-- Set `is_pending_delete' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNpendingDelete, False)
+		ensure
+			pending_delete_switched_off: not is_pending_delete 
 		end;
 
 	set_selection (first, last: INTEGER; time: INTEGER) is
@@ -435,14 +475,24 @@ feature -- Status setting
 			select_threshold_set: select_threshold = a_threshold
 		end;
 
-	set_verify_bell (b: BOOLEAN) is
-			-- Set `verify_bell' to `b'.
+	enable_verify_bell is
+			-- Set `is_verify_bell_enabled' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNverifyBell, b)
+			set_xt_boolean (screen_object, XmNverifyBell, True)
 		ensure
-			verify_bell_set: verify_bell = b
+			verify_bell_enabled: is_verify_bell_enabled 
+		end;
+
+	disable_verify_bell is
+			-- Set `is_verify_bell_enabled' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNverifyBell, False)
+		ensure
+			verify_bell_disabled: not is_verify_bell_enabled 
 		end;
 
 feature -- Element change

@@ -38,7 +38,7 @@ feature -- Access
 			Result.set_shared
 		ensure
 			Result_not_void: Result /= Void;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	length: INTEGER is
@@ -54,7 +54,7 @@ feature -- Access
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	mask_length: INTEGER is
@@ -70,7 +70,7 @@ feature -- Access
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	dir_length: INTEGER is
@@ -86,7 +86,7 @@ feature -- Access
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	pattern_length: INTEGER is

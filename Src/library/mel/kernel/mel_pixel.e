@@ -44,11 +44,11 @@ feature {NONE} -- Initilization
 			identifier := get_color_by_name ($temp, 
 				display_handle, colormap_identifier);
 			status := last_color_alloc_status;
-			shared := True
+			is_shared := True
 		ensure
 			has_valid_display: has_valid_display;
 			has_valid_colormap: has_valid_colormap;
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	make_by_rgb_value (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
@@ -71,11 +71,11 @@ feature {NONE} -- Initilization
 				(red_value, green_value, blue_value, 
 					display_handle, colormap_identifier);
 			status := last_color_alloc_status;
-			shared := True
+			is_shared := True
 		ensure
 			has_valid_display: has_valid_display;
 			has_valid_colormap: has_valid_colormap;
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	make_from_existing (a_display: MEL_DISPLAY; an_id: like identifier) is
@@ -86,10 +86,10 @@ feature {NONE} -- Initilization
 			identifier := an_id;
 			display_handle := a_display.handle;
 			status := 0;
-			shared := True
+			is_shared := True
 		ensure then
 			is_valid: is_valid;
-			shared: shared
+			is_shared: is_shared
 		end;
 
 feature -- Access

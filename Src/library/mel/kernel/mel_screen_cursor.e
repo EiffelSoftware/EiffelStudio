@@ -38,9 +38,9 @@ feature {NONE} -- Initialization
 		do
 			display_handle := a_display.handle;
 			identifier := x_create_font_cursor (display_handle, a_type);
-			shared := True
+			is_shared := True
 		ensure
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	make_from_pixmap (a_pixmap, a_mask: MEL_PIXMAP;
@@ -65,9 +65,9 @@ feature {NONE} -- Initialization
 				(display_handle, a_pixmap.identifier, a_mask_id,
 						0, 0, 0, 65535, 65535, 65535,
 						x_hot, y_hot);
-			shared := True
+			is_shared := True
 		ensure
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	make_from_pixmap_with_colors (
@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 						fg_red, fg_green, fg_blue,
 						bg_red, bg_green, bg_blue,	
 						x_hot, y_hot);
-			shared := True
+			is_shared := True
 		ensure
-			shared: shared
+			is_shared: is_shared
 		end;
 
 feature -- Removal

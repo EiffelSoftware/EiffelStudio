@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	MEL_COMMAND
+	MEL_COMMAND_WIDGET
 
 inherit
 
@@ -65,7 +65,7 @@ feature -- Status report
 			Result.set_shared
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	history_item_count: INTEGER is
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			"XmCreateCommand"
 		end;
 
-end -- class MEL_COMMAND
+end -- class MEL_COMMAND_WIDGET
 
 --|-----------------------------------------------------------------------
 --| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.

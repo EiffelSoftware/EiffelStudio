@@ -137,7 +137,7 @@ feature -- Status report
 			Result.set_shared
 		ensure
 			items_exist: Result /= Void and then Result.is_valid;
-			items_is_shared: Result.shared
+			items_is_shared: Result.is_shared
 		end;
 
 	margin_height: INTEGER is
@@ -214,7 +214,7 @@ feature -- Status report
 			Result.set_shared
 		ensure
 			selected_items_exists: Result /= Void and then Result.is_valid;
-			items_is_shared: Result.shared
+			items_is_shared: Result.is_shared
 		end;
 
 	is_single_select: BOOLEAN is
@@ -255,6 +255,15 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			Result := get_xm_string_direction (screen_object, XmNstringDirection) = XmSTRING_DIRECTION_L_TO_R
+		end;
+
+	is_string_direction_r_to_l: BOOLEAN is
+			-- Are the strings displayed from right to left?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string_direction 
+				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_R_TO_L
 		end;
 
 	top_item_position: INTEGER is
@@ -391,18 +400,26 @@ feature -- Status setting
 			extended_select_set: is_extended_select
 		end;
 
-	set_string_direction_l_to_r (b: BOOLEAN) is
-			-- Set `is_string_direction_l_to_r' to `b'.
+	set_string_direction_l_to_r is
+			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
-			else
-				set_xm_string_direction (screen_object, XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
-			end
+			set_xm_string_direction (screen_object, 
+						XmNstringDirection, XmSTRING_DIRECTION_L_TO_R)
 		ensure
-			string_direction_set: is_string_direction_l_to_r = b
+			is_string_direction_l_to_r: is_string_direction_l_to_r
+		end;
+
+	set_string_direction_r_to_l is
+			-- Set the direction in which to draw the string to right to left.
+		require
+			exists: not is_destroyed
+		do
+			set_xm_string_direction (screen_object, 
+						XmNstringDirection, XmSTRING_DIRECTION_R_TO_L)
+		ensure
+			is_string_direction_r_to_l: is_string_direction_r_to_l
 		end;
 
 	set_top_item_position (a_position: INTEGER) is

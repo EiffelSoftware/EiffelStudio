@@ -79,7 +79,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	icon_pixmap: MEL_PIXMAP is
@@ -91,7 +91,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	icon_window: POINTER is
@@ -385,28 +385,44 @@ feature -- Status setting
 			icon_y_set: icon_y = a_y
 		end;
 
-	set_initial_state_normal (b: BOOLEAN) is
-			-- Set `is_initial_state_normal' to `b'.
+	set_initial_state_to_normal is
+			-- Set `is_initial_state_normal' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_int (screen_object, XmNinitialState, NormalState)
-			else
-				set_xt_int (screen_object, XmNinitialState, IconicState)
-			end
+			set_xt_int (screen_object, XmNinitialState, NormalState)
 		ensure
-			initial_state_is_normal: is_initial_state_normal = b
+			initial_state_is_normal: is_initial_state_normal 
 		end;
 
-	set_input (b: BOOLEAN) is
-			-- Set `input' to `b'.
+	set_initial_state_to_iconic is
+			-- Set `is_initial_state_iconic' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNinput, b)
+			set_xt_int (screen_object, XmNinitialState, IconicState)
 		ensure
-			input_enabled: input = b
+			initial_state_is_iconic: is_initial_state_iconic 
+		end;
+
+	enable_input is
+			-- Set `input' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNinput, True)
+		ensure
+			input_enabled: input
+		end;
+
+	disable_input is
+			-- Set `input' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNinput, False)
+		ensure
+			input_disabled: not input
 		end;
 
 	set_max_aspect_x (a_value: INTEGER) is
@@ -510,39 +526,44 @@ feature -- Status setting
 			title_set: title.is_equal (a_string)
 		end;
 
-	set_title_encoding is
-			-- Set `title_encoding'.
+	enable_transient is
+			-- Set `is_transient' to True.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_boolean (screen_object, XmNtransient, True)
 		ensure
+			shell_is_transient: is_transient 
 		end;
 
-	set_transient (b: BOOLEAN) is
-			-- Set `is_transient' to `b'.
+	disable_transient is
+			-- Set `is_transient' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNtransient, b)
+			set_xt_boolean (screen_object, XmNtransient, False)
 		ensure
-			shell_is_transient: is_transient = b
+			shell_is_not_transient: not is_transient 
 		end;
 
-	set_wait_for_wm (b: BOOLEAN) is
-			-- Set `wait_for_wm' to `b'.
+	enable_wait_for_wm is
+			-- Set `wait_for_wm' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNwaitForWm, b)
+			set_xt_boolean (screen_object, XmNwaitForWm, True)
 		ensure
-			wait_for_wm_enabled: wait_for_wm = b
+			wait_for_wm_enabled: wait_for_wm 
 		end;
 
-	set_window_group is
-			-- Set the window assciated with this widget instance.
+	disable_wait_for_wm is
+			-- Set `wait_for_wm' to False.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_boolean (screen_object, XmNwaitForWm, False)
+		ensure
+			wait_for_wm_disabled: not wait_for_wm 
 		end;
 
 	set_window_gravity (a_value: INTEGER) is

@@ -287,7 +287,7 @@ feature -- Status report
 		ensure
 			valid_Result: Result /= Void and then Result.is_valid;
 			Result_has_same_display: Result.same_display (display);
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 feature -- Status setting
@@ -466,14 +466,24 @@ feature -- Status setting
 			alignment_end_set: is_alignment_end
 	   end;
 
-	set_buttons_minimized (b: BOOLEAN) is
-			-- Set `buttons_minimized' to `b'.
+	minimize_button is
+			-- Set `buttons_minimized' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNminimizeButtons, b)
+			set_xt_boolean (screen_object, XmNminimizeButtons, True)
 		ensure
-			buttons_minimized_set: buttons_minimized = b
+			buttons_minimized: buttons_minimized 
+		end;
+
+	maximize_button is
+			-- Set `buttons_minimized' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNminimizeButtons, False)
+		ensure
+			buttons_maximized: not buttons_minimized 
 		end;
 
 	set_symbol_pixmap (a_pixmap: MEL_PIXMAP) is

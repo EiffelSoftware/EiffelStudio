@@ -16,11 +16,13 @@ inherit
 			make as row_column_make
 		export
 			{NONE}  menu_accelerator, menu_help_widget, menu_history, mnemonic,
-			mnemonic_char_set, is_popup_enabled, radio_behavior, is_working_area,
+			mnemonic_char_set, is_popup_enabled, is_radio_behavior, is_working_area,
 			is_menu_bar, is_menu_popup, is_menu_option, is_menu_pulldown,
 			row_column_make, set_menu_accelerator, set_menu_history, 
 			set_menu_help_widget, set_mnemonic, set_mnemonic_char_set, 
-			set_popup_enabled, set_radio_behavior
+			enable_popup, disable_popup,
+			enable_radio_behavior, disable_radio_behavior,
+			set_tear_off_to_enabled, set_tear_off_to_disabled
 		redefine
 			parent
 		end

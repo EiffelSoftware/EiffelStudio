@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Class which can control the collection of external structures.%
-		%If `shared' is True, then destroying the handle (`destroy') is %
+		%If `is_shared' is True, then destroying the C handle (i.e `destroy') is %
 		%the responsibility of the user. Otherwize, the `destroy' will be %
 		%automatically called when the Current object is collected. ";
 	status: "See notice at end of class.";
@@ -61,28 +61,27 @@ feature -- Access
 
 feature -- Status report
 
-	shared: BOOLEAN
+	is_shared: BOOLEAN
 			-- Is `handle' shared by another object?
 			-- If False (by default except for descendents of
-			-- MEL_RESOURCE), `handle' will be destroyed by `destroy'.
-			-- If True, `handle' will not be destroyed.
+			-- MEL_RESOURCE), `handle' will be automatically destroyed by `dispose'.
 
 feature -- Status setting
 
 	set_shared is
 			-- Set `shared' to True.
 		do
-			shared := True
+			is_shared := True
 		ensure
-			shared: shared
+			is_shared: is_shared
 		end;
 
 	set_unshared is
-			-- Set `shared' to False.
+			-- Set `is_shared' to False.
 		do
-			shared := False
+			is_shared := False
 		ensure
-			unshared: not shared
+			unshared: not is_shared
 		end
 
 feature -- Comparison
@@ -110,7 +109,7 @@ feature {NONE} -- Removal
 			-- Ensure `item' is destroyed when
 			-- garbage collected by calling `destroy_item'
 		do
-			if not shared and then not is_destroyed then
+			if not is_shared and then not is_destroyed then
 				destroy
 			end
 		end

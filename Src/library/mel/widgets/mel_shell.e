@@ -48,8 +48,8 @@ feature -- Initialization
 
 feature -- Status report
 
-	allow_shell_resize: BOOLEAN is
-			-- Can Current resize?
+	allow_shell_to_resize: BOOLEAN is
+			-- Can Current be resized?
 		require
 			exists: not is_destroyed
 		do
@@ -102,12 +102,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_allow_shell_resize (b: BOOLEAN) is
-			-- Set `allow_shell_resize' to `b'
+	allow_shell_resize is
+			-- Set `allow_shell_to_resize' to True.
 		do
-			set_xt_boolean (screen_object, XmNallowShellResize, b)
+			set_xt_boolean (screen_object, XmNallowShellResize, True)
 		ensure
-			set: allow_shell_resize = b
+			shell_resize_allowed: allow_shell_to_resize
+		end;
+
+	forbid_shell_resize is
+			-- Set `allow_shell_to_resize' to False.
+		do
+			set_xt_boolean (screen_object, XmNallowShellResize, False)
+		ensure
+			shell_resize_forbidden: not allow_shell_to_resize
 		end;
 
 	set_geometry (a_string: STRING) is
@@ -139,32 +147,44 @@ feature -- Status setting
 			set_geometry (geo)
 		end;
 
-	set_override_redirect (b: BOOLEAN) is
-			-- Set `is_override_redirect' to `b'.
+	enable_override_redirect is
+			-- Set `is_override_redirect' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNoverrideRedirect, b)
+			set_xt_boolean (screen_object, XmNoverrideRedirect, True)
 		ensure
-			override_redirect_enabled: is_override_redirect = b
+			override_redirect_enabled: is_override_redirect 
 		end;
 
-	set_save_under (b: BOOLEAN) is
-			-- Set `is_save_under' to `b'.
+	disable_override_redirect is
+			-- Set `is_override_redirect' to False.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNsaveUnder, b)
+			set_xt_boolean (screen_object, XmNoverrideRedirect, False)
 		ensure
-			save_under_enabled: is_save_under = b
+			override_redirect_disabled: not is_override_redirect 
 		end;
 
-	set_visual is
-			-- Set `visual'.
+	enable_save_under is
+			-- Set `is_save_under' to True.
 		require
 			exists: not is_destroyed
 		do
+			set_xt_boolean (screen_object, XmNsaveUnder, True)
 		ensure
+			save_under_enabled: is_save_under 
+		end;
+
+	disable_save_under is
+			-- Set `is_save_under' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNsaveUnder, False)
+		ensure
+			save_under_disabled: not is_save_under 
 		end;
 
 feature -- Display

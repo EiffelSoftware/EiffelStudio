@@ -119,7 +119,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	label_font_list: MEL_FONT_LIST is
@@ -130,7 +130,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNlabelFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	text_font_list: MEL_FONT_LIST is
@@ -141,7 +141,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNtextFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	cancel_button: MEL_RECT_OBJ is
@@ -160,7 +160,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNdefaultButton)
 		end;
 
-	default_position: BOOLEAN is
+	is_default_position: BOOLEAN is
 			-- Is Current centered relative to `parent'.
 		require
 			exists: not is_destroyed
@@ -246,12 +246,12 @@ feature -- Status report
 			not_margin_width_negative: Result >= 0
 		end;
 
-	resize: BOOLEAN is
+	has_resize_control: BOOLEAN is
 			-- Does MWM include resize controls in the window manager frame of `parent'?
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_boolean (screen_object, XmNnoResize)
+			Result := not get_xt_boolean (screen_object, XmNnoResize)
 		end;
 
 	resize_none: BOOLEAN is
@@ -279,37 +279,61 @@ feature -- Status report
 		end;
 
 	is_shadow_in: BOOLEAN is
-			-- Does Current appear inset?
+			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
-		local
-			shadowtype: INTEGER
 		do
-			shadowtype := get_xt_unsigned_char (screen_object, XmNshadowType);
-			Result := (shadowtype = XmSHADOW_IN) or (shadowtype = XmSHADOW_ETCHED_IN)
+			Result := (get_xt_unsigned_char
+					(screen_object, XmNshadowType) = XmSHADOW_IN)
 		end;
 
-	is_shadow_etched: BOOLEAN is
-			-- Does Current appear with a double line shadow?
+	is_shadow_out: BOOLEAN is
+			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
-		local
-			shadowtype: INTEGER
 		do
-			shadowtype := get_xt_unsigned_char (screen_object, XmNshadowType);
-			Result := (shadowtype = XmSHADOW_ETCHED_IN) or (shadowtype = XmSHADOW_ETCHED_OUT)
+			Result := (get_xt_unsigned_char
+					(screen_object, XmNshadowType) = XmSHADOW_OUT)
+		end;
+
+	is_shadow_etched_in: BOOLEAN is
+			-- Does Current appear with a double line shadow inset?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN)
+		end;
+
+	is_shadow_etched_out: BOOLEAN is
+			-- Does Current appear with a double line shadow raised?
+		require
+			exists: not is_destroyed
+		do
+			Result := (get_xt_unsigned_char
+						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_OUT)
 		end;
 
 feature -- Status setting
 
-	set_overlap_allowed (b: BOOLEAN) is
-			-- Set `overlap_allowed' to `b'.
+	enable_overlap is
+			-- Set `overlap_allowed' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNallowOverlap, b)
+			set_xt_boolean (screen_object, XmNallowOverlap, True)
 		ensure
-			overlap_is_allowed: overlap_allowed = b
+			overlap_is_allowed: overlap_allowed 
+		end;
+
+	forbid_overlap is
+			-- Set `overlap_allowed' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNallowOverlap, False)
+		ensure
+			overlap_is_not_allowed: not overlap_allowed 
 		end;
 
 	set_button_font_list (a_font_list: MEL_FONT_LIST) is
@@ -361,14 +385,24 @@ feature -- Status setting
 			default_button_set: default_button.is_equal (a_button)
 		end;
 
-	set_default_position (b: BOOLEAN) is
-			-- Set `default_position' to `b'.
+	enable_default_positioning is
+			-- Set `is_default_position' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNdefaultPosition, b)
+			set_xt_boolean (screen_object, XmNdefaultPosition, True)
 		ensure
-			default_position_enabled: default_position = b
+			default_position_enabled: is_default_position 
+		end;
+
+	disable_default_positioning is
+			-- Set `is_default_position' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNdefaultPosition, False)
+		ensure
+			default_position_disabled: not is_default_position 
 		end;
 
 	set_dialog_work_area is
@@ -465,14 +499,24 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_resize (b: BOOLEAN) is
-			-- Set `resize' to `b'.
+	allow_resize_control is
+			-- Set `has_resize_control' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNnoResize, b)
+			set_xt_boolean (screen_object, XmNnoResize, False)
 		ensure
-			resize_set: resize = b
+			resize_allowed: has_resize_control 
+		end;
+
+	forbid_resize_control is
+			-- Set `has_resize_control' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNnoResize, True)
+		ensure
+			resize_not_allowed: not has_resize_control 
 		end;
 
 	set_resize_none is
@@ -505,32 +549,44 @@ feature -- Status setting
 			resize_any_set: resize_any
 		end;
 
-	set_shadow_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to False.
+	set_shadow_in is
+			-- Set `is_shadow_in' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
-			end
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_IN)
 		ensure
-			shadow_type_set: is_shadow_in = b and not is_shadow_etched
+			is_shadow_in: is_shadow_in
 		end;
 
-	set_shadow_etched_in (b: BOOLEAN) is
-			-- Set `is_shadow_in' to `b' and `is_shadow_etched' to True.
+	set_shadow_out is
+			-- Set `is_shadow_in' to False.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
-			end
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_OUT)
 		ensure
-			shadow_type_set: is_shadow_in = b and is_shadow_etched
+			is_shadow_out: is_shadow_out
+		end;
+
+	set_shadow_etched_in is
+			-- Set `is_shadow_etched_in' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_IN)
+		ensure
+			is_shadow_etched_in: is_shadow_etched_in
+		end;
+
+	set_shadow_etched_out is
+			-- Set `is_shadow_etched_out' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNshadowType, XmSHADOW_ETCHED_OUT)
+		ensure
+			is_shadow_etched_out: is_shadow_etched_out
 		end;
 
 feature -- Element change

@@ -56,6 +56,14 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNorientation) = XmHORIZONTAL
 		end;
 
+    is_vertical: BOOLEAN is
+            -- Is scale orientation vertical?
+        require
+            exists: not is_destroyed
+        do
+			Result := get_xt_unsigned_char (screen_object, XmNorientation) = XmVERTICAL
+        end;
+
 	is_no_line: BOOLEAN is
 			-- Is Current displayed as nothing?
 		require
@@ -101,24 +109,40 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_unsigned_char (screen_object, XmNseparatorType) = XmSHADOW_ETCHED_IN
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNseparatorType) = XmSHADOW_ETCHED_IN
+		end;
+
+	is_shadow_etched_out: BOOLEAN is
+			-- Is Current displayed as a deeper line?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 
+					(screen_object, XmNseparatorType) = XmSHADOW_ETCHED_OUT
 		end;
 
 feature -- Status setting
 
-	set_horizontal (b: BOOLEAN) is
-			-- Set `is_horizontal' to `b'.
-		require
-			exists: not is_destroyed
-		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
-			else
-				set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
-			end
-		ensure
-			orientation_set: is_horizontal = b
-		end;
+    set_horizontal is
+            -- Set `is_horizontal' to True.
+        require
+            exists: not is_destroyed
+        do
+            set_xt_unsigned_char (screen_object, XmNorientation, XmHORIZONTAL)
+        ensure
+            is_horizontal: is_horizontal
+        end;
+
+    set_vertical is
+            -- Set `is_horizontal' to False.
+        require
+            exists: not is_destroyed
+        do
+            set_xt_unsigned_char (screen_object, XmNorientation, XmVERTICAL)
+        ensure
+            is_vertical: is_vertical
+        end;
 
 	set_no_line is
 			-- Set `is_no_line'.
@@ -170,18 +194,24 @@ feature -- Status setting
 			double_dashed_line_set: is_double_dashed_line
 		end;
 
-	set_shadow_etched_in (b: BOOLEAN) is
-			-- Set `is_shadow_etched_in' to `b'.
+	set_shadow_etched_in is
+			-- Set `is_shadow_etched_in' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNseparatorType, XmSHADOW_ETCHED_IN)
-			else
-				set_xt_unsigned_char (screen_object, XmNseparatorType, XmSHADOW_ETCHED_OUT)
-			end
+			set_xt_unsigned_char (screen_object, XmNseparatorType, XmSHADOW_ETCHED_IN)
 		ensure
-			shadow_etched_in_set: is_shadow_etched_in = b
+			is_shadow_etched_in: is_shadow_etched_in 
+		end;
+
+	set_shadow_etched_out is
+			-- Set `is_shadow_etched_out' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNseparatorType, XmSHADOW_ETCHED_OUT)
+		ensure
+			is_shadow_etched_out: is_shadow_etched_out 
 		end;
 
 feature {NONE} -- Implementation

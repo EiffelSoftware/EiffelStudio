@@ -182,14 +182,24 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_separator_shown (b: BOOLEAN) is
-			-- Set `is_separator_shown' to `b'.
+	show_separator is
+			-- Set `is_separator_shown' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNshowSeparator, b)
+			set_xt_boolean (screen_object, XmNshowSeparator, True)
 		ensure
-			separator_is_shown: is_separator_shown = b
+			separator_is_shown: is_separator_shown 
+		end;
+
+	hide_separator is
+			-- Set `is_separator_shown' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNshowSeparator, False)
+		ensure
+			separator_is_hidden: not is_separator_shown 
 		end;
 
 feature {NONE} -- Implementation

@@ -115,14 +115,24 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_iconic (b: BOOLEAN) is
-			-- Set `is_iconic' to `b'.
+	enable_iconic is
+			-- Set `is_iconic' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNiconic, b)
+			set_xt_boolean (screen_object, XmNiconic, True)
 		ensure
-			iconic_enabled: is_iconic = b
+			iconic_enabled: is_iconic 
+		end;
+
+	disable_iconic is
+			-- Set `is_iconic' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNiconic, False)
+		ensure
+			iconic_disabled: not is_iconic 
 		end;
 
 	set_icon_name (a_string: STRING) is

@@ -36,7 +36,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNdefaultFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	button_font_list: MEL_FONT_LIST is
@@ -47,7 +47,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	label_font_list: MEL_FONT_LIST is
@@ -58,7 +58,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNlabelFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	text_font_list: MEL_FONT_LIST is
@@ -69,7 +69,7 @@ feature -- Status report
 			Result := get_xm_font_list (screen_object, XmNtextFontList)
 		ensure
 			Result_is_valid: Result /= Void and then Result.is_valid;
-			Result_is_shared: Result.shared
+			Result_is_shared: Result.is_shared
 		end;
 
 	is_delete_response_destroy: BOOLEAN is
@@ -115,6 +115,16 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			Result := get_xt_unsigned_char (screen_object, XmNkeyboardFocusPolicy) = XmEXPLICIT
+		end;
+
+	is_keyboard_focus_policy_pointer: BOOLEAN is
+			-- Is the method of assigning the keyboard focus determined
+			-- by the mouse pointer?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNkeyboardFocusPolicy) = XmPOINTER
 		end;
 
 	preedit_type: STRING is
@@ -179,18 +189,24 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_audible_warning (b: BOOLEAN) is
-			-- Set `is_audible_warning' to `b'.
+	enable_audible_warning is
+			-- Set `is_audible_warning' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNaudibleWarning, XmBELL)
-			else
-				set_xt_unsigned_char (screen_object, XmNaudibleWarning, XmNONE)
-			end
+			set_xt_unsigned_char (screen_object, XmNaudibleWarning, XmBELL)
 		ensure
-			audible_warning_enabled: is_audible_warning = b
+			audible_warning_enabled: is_audible_warning 
+		end;
+
+	disable_audible_warning is
+			-- Set `is_audible_warning' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNaudibleWarning, XmNONE)
+		ensure
+			audible_warning_disabled: not is_audible_warning 
 		end;
 
 	set_delete_response_destroy is
@@ -234,18 +250,24 @@ feature -- Status setting
 			input_method_set: input_method.is_equal (a_string)
 		end;
 
-	set_keyboard_focus_policy_explicit (b: BOOLEAN) is
-			-- Set `is_keyboard_focus_policy_explicit' to `b'.
+	set_keyboard_focus_policy_to_explicit is
+			-- Set `is_keyboard_focus_policy_explicit' to True.
 		require
 			exists: not is_destroyed
 		do
-			if b then
-				set_xt_unsigned_char (screen_object, XmNkeyboardFocusPolicy, XmEXPLICIT)
-			else
-				set_xt_unsigned_char (screen_object, XmNkeyboardFocusPolicy, XmPOINTER)
-			end
+			set_xt_unsigned_char (screen_object, XmNkeyboardFocusPolicy, XmEXPLICIT)
 		ensure
-			keyboard_focus_policy_explicit_set: is_keyboard_focus_policy_explicit
+			keyboard_focus_policy_explicit: is_keyboard_focus_policy_explicit
+		end;
+
+	set_keyboard_focus_policy_to_pointer is
+			-- Set `is_keyboard_focus_policy_explicit' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNkeyboardFocusPolicy, XmPOINTER)
+		ensure
+			keyboard_focus_policy_pointer: is_keyboard_focus_policy_pointer
 		end;
 
 	set_preedit_type (a_string: STRING) is
@@ -309,14 +331,24 @@ feature -- Status setting
 			unit_100th_font_unit_set: is_unit_100th_font_unit
 		end;
 
-	set_async_geometry_used (b: BOOLEAN) is
-			-- Set `is_async_geometry_used' to `b'.
+	use_async_geometry is
+			-- Set `is_async_geometry_used' to True.
 		require
 			exists: not is_destroyed
 		do
-			set_xt_boolean (screen_object, XmNuseAsyncGeometry, b)
+			set_xt_boolean (screen_object, XmNuseAsyncGeometry, True)
 		ensure
-			async_geometry_are_used: is_async_geometry_used = b
+			async_geometry_is_used: is_async_geometry_used 
+		end;
+
+	do_use_async_geometry is
+			-- Set `is_async_geometry_used' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNuseAsyncGeometry, False)
+		ensure
+			async_geometry_is_not_used: not is_async_geometry_used 
 		end;
 
 	set_button_font_list (a_font_list: MEL_FONT_LIST) is

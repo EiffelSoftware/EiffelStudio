@@ -3,8 +3,16 @@ class DEBUG_CONTEXT
 inherit
 
 	FORMAT_FEAT_CONTEXT
+		rename
+			emit_tabs as old_emit_tabs
 		redefine
-			put_breakable, next_line
+			put_breakable
+		end
+	FORMAT_FEAT_CONTEXT
+		redefine
+			put_breakable, emit_tabs
+		select
+			emit_tabs
 		end
 
 creation
@@ -13,37 +21,23 @@ creation
 
 feature {NONE}
 
-	next_line is
-			-- Go to next line and indent as necessary.
-		local
-			item: DEBUG_NEW_LINE
-		do
-			!!item.make (format.indent_depth);
-			if has_breakable then
-				item.set_breakable;
-				has_breakable := false
-			end;
-			text.add (item)
-		end;
+	added_breakpoint: BOOLEAN
+			-- Was a break point added?
 
 	put_breakable is
-		local
-			new_line: DEBUG_NEW_LINE
 		do
-			if not text.empty then
-				new_line ?= text.last;
-				if new_line /= Void then
-					new_line.set_breakable
-				else
-					has_breakable := true
-				end
-			else
-				has_breakable := true
-			end
+			added_breakpoint := True;
+			text.add (ti_Breakpoint)
 		end;
 
-	has_breakable: BOOLEAN;
-			-- Should a breakable point be integrated 
-			-- at the beginning of the next line?
+	emit_tabs is
+		do
+			if added_breakpoint then
+				added_breakpoint := false;
+			else
+				text.add (ti_padded_debug_mark)
+			end;
+			old_emit_tabs;
+		end;
 
 end	 -- class DEBUG_CONTEXT

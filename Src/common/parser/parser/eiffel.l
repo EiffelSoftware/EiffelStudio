@@ -190,7 +190,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Free operators
 
-(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*	{
+(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*	{
+
 					-- Note: Free operators are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
@@ -767,13 +768,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (5)
 				last_token := TE_STR_XOR
 			}
-\"(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
+\"(@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*\"	{
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				current_position.go_to (text_count)
 				last_token := TE_STR_FREE
 			}
-
 \"\"		{
 					-- Empty string.
 				current_position.go_to (2)

@@ -12,7 +12,7 @@ inherit
 			make as entity_make
 		redefine
 			dotnet_name,
-			is_static, is_deferred, is_public,
+			is_static, is_deferred, is_public, is_artificially_added,
 			set_is_public
 		end
 
@@ -70,7 +70,14 @@ feature -- Status report
 			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_deferred =
 				feature {FEATURE_ATTRIBUTE}.Is_deferred
 		end
-		
+
+	is_artificially_added: BOOLEAN is
+			-- Is feature deferred?
+		do
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
+				feature {FEATURE_ATTRIBUTE}.Is_artificially_added
+		end
+				
 feature -- Settings
 
 	set_is_public (pub: like is_public) is
@@ -81,6 +88,18 @@ feature -- Settings
 			else
 				internal_flags := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_public.bit_not
 			end
+		end
+
+	set_is_artificially_added (val: like is_artificially_added) is
+			-- Set `is_artificially_added' with `val'.
+		do
+			if val then
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_artificially_added
+			else
+				internal_flags := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_artificially_added.bit_not
+			end
+		ensure
+			is_artificially_added_set: is_artificially_added = val
 		end
 		
 feature {NONE} -- Internal

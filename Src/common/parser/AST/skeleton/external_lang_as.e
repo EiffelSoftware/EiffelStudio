@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	language_name: STRING_AS_B;
+	language_name: STRING_AS;
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 

@@ -120,6 +120,20 @@ feature -- Basic operations
 			file.close
 		end
 		
+	remove_component (component_name: STRING) is
+			-- Removed component named `name' from `component_document'.
+		require
+			vaid_component_name: component_name /= Void and not component_name.is_empty
+		local
+			an_element: XML_ELEMENT
+			element_to_remove: XML_ELEMENT
+		do
+			an_element ?= component_document.first
+			element_to_remove := child_element_by_name (an_element, component_name)
+			an_element.delete (element_to_remove)
+		end
+		
+		
 feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
 	xml_element_representing_named_component (a_name: STRING): XML_ELEMENT is

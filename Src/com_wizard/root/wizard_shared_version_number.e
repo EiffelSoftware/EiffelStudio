@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	version_number: STRING is "2.0.0314"
+	version_number: STRING is "2.0.0407"
 			-- Version number
 
 end -- class WIZARD_SHARED_VERSION_NUMBER

@@ -4377,12 +4377,13 @@ feature -- Output
 			st.add (ti_Class_keyword)
 			st.add_new_line
 			st.add_indent
-			append_signature (st)
+			append_signature (st, False)
 			st.add_new_line
 		end
 
-	append_signature (st: STRUCTURED_TEXT) is
-			-- Append the signature of current class in `st'
+	append_signature (st: STRUCTURED_TEXT; a_with_deferred_symbol: BOOLEAN) is
+			-- Append the signature of current class in `st'. If `a_with_deferred_symbol'
+			-- then add a `*' to the class name.
 		require
 			non_void_st: st /= Void
 		local
@@ -4391,7 +4392,7 @@ feature -- Output
 			gens: like generics
 		do
 			append_name (st)
-			if is_deferred then
+			if a_with_deferred_symbol and is_deferred then
 				st.add_char ('*')
 			end
 			gens := generics

@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 			loop
 				ci := class_list.item
 				text.add_indent
-				ci.compiled_class.append_signature (text)
+				ci.compiled_class.append_signature (text, True)
 				text.add_new_line
 				if desc then
 					s := indexing_item_as_string (class_list.item, "description")

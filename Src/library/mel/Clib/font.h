@@ -10,3 +10,5 @@
 #define mel_font_ascent(_ptr_) (_ptr_)->ascent
 #define mel_font_id(_ptr_) (_ptr_)->fid
 #define mel_font_list_name(_ptr_, pos) (*(_ptr_ + (pos - 1)))
+
+extern EIF_POINTER x_build_font_from_set (EIF_POINTER);

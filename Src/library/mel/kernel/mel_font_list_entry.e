@@ -78,7 +78,14 @@ feature -- Access
 				valid_font_type: font_type = XmFONT_IS_FONT or else
 						font_type = XmFONT_IS_FONTSET
 			end;
+			
 			if font_type = XmFONT_IS_FONT then
+				!! Result.make_from_existing_handle (p)
+			elseif font_type = XmFONT_IS_FONTSET then 
+					-- We look at the C level for the first
+					-- XFontStruct in the XFontSet returned
+					-- by XmFontListEntryGetFont.
+				p := x_build_font_from_set (p)
 				!! Result.make_from_existing_handle (p)
 			end
 		end;
@@ -170,6 +177,13 @@ feature {NONE} -- External features
 		alias
 			"XtFree"
 		end;
+
+	x_build_font_from_set (p: POINTER): POINTER is
+		external
+			"C | %"font.h%""
+		alias
+			"x_build_font_from_set"
+		end
 
 end -- class MEL_FONT_LIST_ENTRY
 

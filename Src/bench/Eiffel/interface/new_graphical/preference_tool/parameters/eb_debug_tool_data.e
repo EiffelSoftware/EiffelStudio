@@ -28,7 +28,7 @@ feature -- Access
 
 	debug_tool_bar: BOOLEAN is
 		do
-			Result := boolean_resource_value ("debug_tool_bar", true)
+			Result := boolean_resource_value ("debug_tool_bar", True)
 		end
 
 	last_saved_stack_path: STRING is
@@ -53,7 +53,7 @@ feature -- Access
 		
 	optimized_jit_debugging_enabled: BOOLEAN is
 		do
-			Result := boolean_resource_value ("enable_optimized_jit_debugging", True)			
+			Result := boolean_resource_value ("enable_optimized_jit_debugging", False)			
 		end		
 
 	min_slice: INTEGER is

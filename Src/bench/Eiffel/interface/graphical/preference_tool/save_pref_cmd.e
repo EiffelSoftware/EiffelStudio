@@ -26,7 +26,7 @@ feature {PREFERENCE_COMMAND} -- Execution
 			wd: WARNING_D;
 			file_names: RESOURCE_FILES_PARSER
 		do
-			!! file_names.make ("bench");
+			!! file_names.make ((create {PRODUCT_NAMES}).Workbench_name);
 			!! fn.make_from_string (file_names.system_specific)
 			if fn /= Void then
 				!! file.make (fn)

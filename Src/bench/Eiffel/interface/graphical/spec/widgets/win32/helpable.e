@@ -20,8 +20,7 @@ feature -- Access
 
 	bench_help_file_name: FILE_NAME is
 		once
-			!! Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM"), "bin">>)
+			Result := Bin_path
 			Result.set_file_name ("ebench.hlp")
 		end
 

@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 								dir_name.remove (dir_name.count)
 							end
 						end
-						ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
+						ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
 						ebench_name.append (" -create ")
 						ebench_name.append (dir_name)
 						launch_ebench (ebench_name)

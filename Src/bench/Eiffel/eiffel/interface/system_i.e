@@ -4001,7 +4001,6 @@ feature -- Conveniences
 			set_check_generic_creation_constraint (True)
 			set_has_syntax_warning (False)
 			set_msil_use_optimized_precompile (False)
-			internal_msil_classes_per_module := 0
 			msil_version := Void
 			msil_assembly_compatibility := Void
 			set_line_generation (False)
@@ -4016,6 +4015,7 @@ feature -- Conveniences
 			cls_compliant := False
 			dotnet_naming_convention := False
 			metadata_cache_path := Void
+			internal_msil_classes_per_module := 0
 		end
 
 	set_executable_directory (d: STRING) is

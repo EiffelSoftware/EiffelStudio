@@ -46,6 +46,21 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Bridge to Debugger
 
+	exception_occured: BOOLEAN is
+			-- Last callback is about exception ?
+		do
+		end
+
+	exception_details: TUPLE [STRING, STRING] is
+			-- class details , module details
+		do
+		end
+
+	exception_to_string: STRING is
+			-- Exception to String
+		do
+		end
+
 	string_value_from_string_class_object_value (icd_string_instance: ANY): STRING is
 			-- String value of the `icd_string_instance'.
 		do

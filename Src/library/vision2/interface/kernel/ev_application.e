@@ -131,16 +131,6 @@ feature -- Event handling
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions be performed take when the application is otherwise idle.
 
-	accelerator_actions (an_accelerator: EV_ACCELERATOR): 
-		 EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when `an_accelerator' key sequence is
-			-- pressed.
-		do
-			Result := implementation.accelerator_actions (an_accelerator)
-		ensure
-			not_void: Result /= Void
-		end
-
 feature -- Root window management
 
 	add_root_window (a_window: EV_WINDOW) is
@@ -227,6 +217,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/15 23:05:46  brendel
+--| Removed `accelerator_actions'.
+--|
 --| Revision 1.12  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

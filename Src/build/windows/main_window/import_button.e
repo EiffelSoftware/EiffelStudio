@@ -13,9 +13,9 @@ inherit
 	EB_BUTTON_COM
 	
 	RAISE_IMPORT_WINDOW_CMD
-		select
-			init_toolkit
-		end
+--		select
+--			init_toolkit
+--		end
 
 creation
 
@@ -23,20 +23,16 @@ creation
 	
 feature {NONE}
 
-    make (a_parent: COMPOSITE) is
-        do
-            make_visible (a_parent)
-        end
-
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.import_code_label)
-		end;
+-- 	create_focus_label is 
+-- 		do
+-- 			set_focus_string (Focus_labels.import_code_label)
+-- 		end
 
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.import_pixmap
-		end;
+		end
 
-end
+end -- class IMPORT_BUTTON
+

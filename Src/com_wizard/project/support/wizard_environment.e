@@ -265,5 +265,7 @@ feature -- Element Change
 invariant
 
 	valid_output_level: output_level = Output_warnings or output_level = Output_all or output_level = Output_none
+	valid_destination_folder: destination_folder /= Void implies (destination_folder.item (destination_folder.count) = Directory_separator)
+	valid_eiffel_compilation_choice: compile_eiffel implies compile_c
 
 end -- class WIZARD_ENVIRONMENT

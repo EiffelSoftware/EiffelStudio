@@ -58,23 +58,13 @@ feature -- Type check, byte code and dead code removal
 				not (left_type.conform_to (right_type.actual_type) or else
 				right_type.conform_to (left_type.actual_type))
 			then
-				if
-					((right_type.convert_to (context.current_class, left_type.actual_type)) or
-					right_type.convert_to (context.current_class,
-						right_type.reference_actual_type) and then
-					right_type.reference_actual_type.conform_to (left_type.actual_type))
-				then
+				if right_type.convert_to (context.current_class, left_type.actual_type) then
 					last_argument_conversion_info := context.last_conversion_info
 					if last_argument_conversion_info.has_depend_unit then
 						context.supplier_ids.extend (last_argument_conversion_info.depend_unit)
 					end
 				else
-					if
-						((left_type.convert_to (context.current_class, right_type.actual_type)) or
-						left_type.convert_to (context.current_class,
-							left_type.reference_actual_type) and then
-						left_type.reference_actual_type.conform_to (right_type.actual_type))
-					then
+					if left_type.convert_to (context.current_class, right_type.actual_type) then
 						last_target_conversion_info := context.last_conversion_info
 						if last_target_conversion_info.has_depend_unit then
 							context.supplier_ids.extend (last_target_conversion_info.depend_unit)

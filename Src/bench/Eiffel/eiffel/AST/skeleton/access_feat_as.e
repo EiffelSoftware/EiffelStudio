@@ -271,34 +271,22 @@ feature -- Type check, byte code and dead code removal
 								end
 								parameters_convert_info.put (context.last_conversion_info, i)
 								if context.last_conversion_info.has_depend_unit then
-									context.supplier_ids.extend (context.last_conversion_info.depend_unit)
+									context.supplier_ids.extend (
+										context.last_conversion_info.depend_unit)
 								end
 							elseif
 								current_item.is_expanded and then arg_type.is_external and then
-								current_item.reference_actual_type.conform_to (arg_type)
+								current_item.is_conformant_to (arg_type)
 							then
 									-- No need for conversion, this is currently done at the code
 									-- generation level to properly handle the generic case.
-									-- If not done at the code generation, we would need the following
-									-- lines.
+									-- If not done at the code generation, we would need the
+									-- following lines.
 --								if parameters_convert_info = Void then
 --									create parameters_convert_info.make (1, count)
 --								end
 --								parameters_convert_info.put (
 --									create {BOX_CONVERSION_INFO}.make (current_item), i)	
-							elseif
-								current_item.is_expanded and then
-								current_item.convert_to (context.current_class,
-									current_item.reference_actual_type) and then
-								current_item.reference_actual_type.conform_to (arg_type)
-							then
-								if parameters_convert_info = Void then
-									create parameters_convert_info.make (1, count)
-								end
-								parameters_convert_info.put (context.last_conversion_info, i)
-								if context.last_conversion_info.has_depend_unit then
-									context.supplier_ids.extend (context.last_conversion_info.depend_unit)
-								end
 							else
 								insert_vuar2_error (a_feature, last_id, i, current_item, arg_type)
 							end

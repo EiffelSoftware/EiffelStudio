@@ -20,7 +20,6 @@
 #include "update.h"
 #include "cecil.h"
 
-
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
 private void routtbl_updt();		/* Update of the routine tables */
@@ -28,6 +27,8 @@ private void conform_updt();		/* Update a conformance table */
 private void option_updt();			/* Update the option table */
 private void cecil_updt();			/* Cecil update */
 private char **names_updt();		/* String array */
+
+public long mcount;					/* Size of melting table */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
@@ -113,14 +114,14 @@ if ((fil = fopen(".UPDT", "r")) == (FILE *) 0) {
 #endif
 	}
 
-	/* Read the size of the byte code array */
-	count = wlong();
+	/* Updating of the melting table */
+	mcount = wlong();		/* Read the size of the byte code array */
 #ifdef DEBUG
-	dprintf(1)("Size of melted table: %ld\n", count);
+	dprintf(1)("Size of melted table: %ld\n", mcount);
 #endif
 
 	/* Allocation of the variable `melt' */
-	melt = (char **) cmalloc(count * sizeof(char *));
+	melt = (char **) cmalloc(mcount * sizeof(char *));
 	if (melt == (char **) 0)
 		enomem();
 

@@ -158,7 +158,8 @@ struct interface {
 };
 
 extern int scount;		/* Size of `fsystem' */
-extern long dcount;		/* Size fo `fdispatch' */
+extern long dcount;		/* Size of `fdispatch' */
+extern long mcount;		/* Size of `melt' table */
 
 /*
  * Dispatch table: array of body ids indexed by body indexes

@@ -1,5 +1,4 @@
 /*
-
  #    #  #####   ######  #    #   ####   #    #           ####
  #    #  #    #  #       ##   #  #    #  #    #          #    #
  #    #  #####   #####   # #  #  #       ######          #
@@ -21,6 +20,7 @@
 #include "interp.h"
 #include "plug.h"
 
+/*#define DEBUG 6	/**/
 #define dprintf(n) if (DEBUG & n) printf
 
 private struct as_info *rec_waslist();		/* Recursion */
@@ -33,16 +33,13 @@ int32 feature_id;
 	 * `feature_id' accessed in Eiffel static type `static_type' to
 	 * apply on an object of dynamic type `dyn_type'.
 	 * Return a function pointer.
+	 * NOTE: static_type is not the static type of the class
+	 * but just a number that does not change, dixit FREDD
 	 */
 
 	int32 rout_id;
 	struct ca_info *info;
 	uint32 body_id;
-
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWF invalid");
-#endif
 
 	nstcall = 0;	/* No invariant check */
 	rout_id = Routids(static_type)[feature_id];
@@ -50,12 +47,13 @@ int32 feature_id;
 	body_id = dispatch[info->ca_id];
 
 #ifdef DEBUG
-	dprintf(2)("\tcall [fid = %d stat = %d dyn = %d] rout_id = %ld bid = %ld\n",
-		feature_id, static_type, dyn_type, rout_id, info->ca_id);
+	dprintf(2)(
+		"\tcall [fid: %d stat: %d dyn: %d] rout_id: %ld bidx: %ld bid: %ld\n",
+		feature_id, static_type, dyn_type, rout_id, info->ca_id, body_id);
 #endif
-	if (body_id < zeroc)
-		/* Frozen feature */
-		return frozen[body_id];
+	if (body_id < zeroc) {
+		return frozen[body_id];		/* Frozen feature */
+	}
 	else {
 		IC = melt[body_id - zeroc];	/* Position byte code to interpret */
 		return pattern[info->ca_pattern_id].toi;
@@ -88,17 +86,14 @@ char *name;
 
 	dyn_type = Dtype(object);
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWF invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 	info = &((struct ca_info *) Table(rout_id))[dyn_type];
 	body_id = dispatch[info->ca_id];
 
 #ifdef DEBUG
-    dprintf(2)("\tcall [fid = %d stat = %d dyn = %d] rout_id = %ld bid = %ld\n",
-		feature_id, static_type, dyn_type, rout_id, info->ca_id);
+	dprintf(2)(
+		"\tcall [fid: %d stat: %d dyn: %d] rout_id: %ld bidx: %ld bid: %ld\n",
+		feature_id, static_type, dyn_type, rout_id, info->ca_id, body_id);
 #endif
 
 	if (body_id < zeroc)
@@ -125,10 +120,6 @@ int32 feature_id;
 	struct ca_info *info;
 	int16 body_index;
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWF invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 	body_index = ((struct ca_info *)Table(rout_id))[dyn_type].ca_id;
 	body_id = dispatch[body_index];
@@ -151,13 +142,9 @@ int32 feature_id;
 
 	int32 rout_id;
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWA invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 #ifdef DEBUG
-    dprintf(2)("\taccess [fid = %d stat = %d dyn = %d] rout_id = %ld\n" ,
+    dprintf(2)("\taccess [fid: %d stat: %d dyn: %d] rout_id: %ld\n" ,
 		feature_id, static_type, dyn_type, rout_id);
 #endif
 
@@ -187,13 +174,9 @@ char *name;		/* Feature name to apply */
 	if (WASC(dyn_type) & CK_INVARIANT)	/* Invariant checking */
 		chkinv(object);
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWA invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 #ifdef DEBUG
-    dprintf(2)("\taccess [fid = %d stat = %d dyn = %d] rout_id = %ld\n" ,
+    dprintf(2)("\taccess [fid: %d stat: %d dyn: %d] rout_id: %ld\n" ,
         feature_id, static_type, dyn_type, rout_id);
 #endif
 
@@ -211,10 +194,6 @@ int32 feature_id;
 
 	int32 rout_id;
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("ca_info invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 	return &((struct ca_info *) Table(rout_id))[dyn_type];
 }
@@ -230,10 +209,6 @@ int32 feature_id;
 
 	int32 rout_id;
 
-#ifdef DEBUG
-	if (!econfm(static_type, dyn_type))
-		panic("RTWT invalid");
-#endif
 	rout_id = Routids(static_type)[feature_id];
 	return Type(rout_id)[dyn_type] & SK_DTYPE;
 }

@@ -28,6 +28,7 @@ struct item {
 		float itu_float;		/* A real value */
 		double itu_double;		/* A double value */
 		char *itu_ref;			/* A reference value */
+		char *itu_bit;			/* A bit reference value */
 		fnptr itu_ptr;			/* A routine pointer */
 	} itu;
 };
@@ -39,6 +40,7 @@ struct item {
 #define it_double	itu.itu_double
 #define it_ref		itu.itu_ref
 #define it_ptr		itu.itu_ptr
+#define it_bit		itu.itu_bit
 
 /*
  * Stack used by the interpreter (operational stack)
@@ -151,7 +153,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_POWER			63
 #define BC_LE				64
 #define BC_DIV				65
-#define BC_NEXT				66
+#define BC_BREAK			66
 #define BC_AND				67
 #define BC_SLASH			68
 #define BC_MOD				69
@@ -181,6 +183,7 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_TRUE_COMPAR		93
 #define BC_STANDARD_EQUAL	94
 #define BC_NOT_STD_EQUAL	95
-#define BC_BREAK			96
+#define BC_NEXT				96
+#define BC_BIT				97
 
 #endif

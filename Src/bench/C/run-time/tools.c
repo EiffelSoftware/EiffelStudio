@@ -18,8 +18,9 @@ private char *rcsid =
 	"$Id$";
 #endif
 
-public long hashcode(s)
+public long hashcode(s, count)
 register3 char *s;
+register4 long count;
 {
 	/* Compute the hash code associated with given string s. The magic number
 	 * below is the greatest prime lower than 2^23.
@@ -28,7 +29,7 @@ register3 char *s;
 	register1 unsigned int hashval = 0;
 	register2 int magic = 8388593;
 
-	while (*s)
+	while (count--)
 		hashval = ((hashval % magic) << 8) + (unsigned int) *s++;
 
 	return hashval & 0x7fffffff;	/* Clear bit 31 (no unsigned in Eiffel) */

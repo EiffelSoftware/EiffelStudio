@@ -46,6 +46,8 @@ public uint32 *dispatch;				/* Update dispatch table */
 public uint32 zeroc;					/* Frozen level */
 public char **melt;						/* Byte code array */
 public struct eif_opt *eoption;			/* Option table */
+extern void winit();					/* Workbench debugger initialization */
+extern void einit();					/* System-dependent initializations */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
 /*#define exvec() exft()					/* No stack dump in final mode */
@@ -111,7 +113,28 @@ char **envp;
 	ecall = fcall;
 	eoption = foption;
 	co_table = fco_table;
+
+	/* Initialize dynamically computed variables (i.e. system dependent) like
+	 * 'zeroc' which is the melting temperature -- the last body id in the
+	 * whole system. Then we may call update. Eventually, when debugging the
+	 * application, the values loaded from the update file will be overridden
+	 * by the workbench (via winit).
+	 */
+
+	einit();							/* Various static initializations */
+	update();							/* Read melted information */
+
+	/* In workbench mode, we have a slight problem: when we link ewb in
+	 * workbench mode, since ewb is a child from ised, the run-time will
+	 * assume, wrongly, that the executable is started in debug mode. Therefore,
+	 * we need a special run-time, with no debugging hooks involved.
+	 */
+
+#ifndef NOHOOK
+	winit();							/* Did we start under ewb control? */
 #endif
+#endif
+
 	umain(argc, argv, envp);			/* User's initializations */
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
 	emain((char *) 0);					/* Start the Eiffel application */
@@ -152,3 +175,11 @@ int sig;
 	/* NOTREACHED */
 }
 
+#ifdef NOHOOK
+
+/* When no debugging is allowed, the file network.o is not part of the
+ * archive. However, we need to define a dummy dserver() entry.
+ */
+
+public void dserver() {}
+#endif

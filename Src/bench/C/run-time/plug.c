@@ -225,7 +225,9 @@ char *parent;	/* Parent (enclosing object) */
 	long nb_ref;					/* Number of references in `obj' */
 	uint32 type;
 	int32 *cn_attr;
+	uint32 *cn_types;
 	long nb_attr;
+	struct cnode *desc;
 	RTLD;
 
 	/* We have to get GC hooks, in case the creation routines we call on the
@@ -235,16 +237,19 @@ char *parent;	/* Parent (enclosing object) */
 	RTLI(2);
 	l[0] = obj;
 	l[1] = parent;
-	zone->ov_flags |= EO_COMP;		/* Set the composite flag of `obj' */
+	zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 
 	dtype = Dtype(obj);
-	cn_attr = System(dtype).cn_attr;
-	nb_attr = System(dtype).cn_nbattr;
-	nb_ref = References(dtype);						/* Reference number */
+	desc = &System(dtype);
+	cn_attr = desc->cn_attr;
+	nb_attr = desc->cn_nbattr;
+	nb_ref = desc->nb_ref;				/* Reference number */
+	cn_types = desc->cn_types;
 	for (i = 0; i < nb_attr; i++) {	/* Iteration on attributes descriptions */
-		type = cn_attr[i];
-		if (type & SK_HEAD == SK_EXP) { 	/* Found an expanded attribute */
-			
+		type = cn_types[i];
+		switch (type & SK_HEAD) {
+		case SK_EXP:						/* Found an expanded attribute */
+			{
 			long offset;					/* Attribute offset */
 			int32 feature_id;				/* Creation procedure feature id */		
 
@@ -262,6 +267,25 @@ char *parent;	/* Parent (enclosing object) */
 			/* If expanded object is composite also, initialize it. */
 			if (System(dtype).cn_composite)
 				wstdinit(l[0] + offset, l[1]);
+			}
+			break;
+		case SK_BIT:
+			{
+			long offset;					/* Attribute offset */
+			extern int bit_dtype;			/* Bit dynamic type */
+		
+			/* Set dynamic type for bit expanded object */	
+			offset = ((long *) Table(cn_attr[i]))[dtype];
+			zone = HEADER(l[0] + offset);
+			zone->ov_flags = bit_dtype;
+			zone->ov_flags |= EO_EXP;
+			zone->ov_size = offset + (l[0] - l[1]);
+			
+			*(uint32 *)(l[0] + offset) = type & SK_BMASK; /* Write bit size */
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -269,3 +293,15 @@ char *parent;	/* Parent (enclosing object) */
 }
 #endif
 
+#ifndef WORKBENCH
+
+void rt_norout()
+{
+	/* Function called when Eiffel is supposed to call a deferred feature
+	 * without any implementation in final mode
+	 */
+
+	RTEC(EN_VOID);
+}
+
+#endif

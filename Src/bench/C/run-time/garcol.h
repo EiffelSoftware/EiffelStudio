@@ -143,6 +143,7 @@ extern void st_truncate();			/* Truncate stack if necessary */
 extern void st_wipe_out();			/* Remove unneeded chunk from stack */
 extern void eremb();				/* Remembers old object */
 extern void erembq();				/* Quick veersion (no GC call) of eremb */
+extern void onceset();				/* Recording of once function result */
 
 /* Exported data-structure declarations */
 extern struct stack loc_set;			/* Local variable stack */

@@ -46,6 +46,16 @@ $spitshell >size.h <<!GROK!THIS!
 : In the following dollars and backticks do not need the extra backslash.
 $spitshell >>size.h <<'!NO!SUBS!'
 
+/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
+ * This means some garbage bits may be found at the end of the bit field.
+ * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
+ * store a given amount of bits.
+ */
+#define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
+#define BIT_UNIT		32				/* Size of a bit unit in bits */
+#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
+#define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+
 /* Macros used to compute padded size for fields in the object */
 #define REMAINDER(x)		(((x) % ALIGN)?(ALIGN-((x)%ALIGN)):0)
 #define PADD(x,y)			(REMAINDER(x)%(y))
@@ -77,7 +87,6 @@ $spitshell >>size.h <<'!NO!SUBS!'
 #define FLTACS(n) ((n)*FLTSIZ)
 #define DBLACS(n) ((n)*DBLSIZ)
 #define PTRACS(n) ((n)*PTRSIZ)
-#define BITACS(n) (1+((n)/BITLONG)+(((n)%BITLONG)?1:0)*LNGSIZ)
 
 #endif
 !NO!SUBS!

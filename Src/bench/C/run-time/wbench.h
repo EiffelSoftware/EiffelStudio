@@ -21,5 +21,6 @@ extern long	wattr();				/* Attribute access */
 extern long wattr_inv();			/* Nested attribute access */
 extern int wtype();					/* Creation type */
 extern struct ca_info *wcainfo();	/* Call information structure */
+extern void update();				/* Dynamic byte code loading */
 
 #endif

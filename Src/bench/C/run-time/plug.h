@@ -89,5 +89,9 @@ extern int econfm();			/* Conformance query for assignment attempt */
 extern long sp_count();			/* Count of a special object */
 extern void chkinv();			/* Invariant control call in final mode */
 
+#ifndef WORKBENCH
+extern void rt_norout();		/* No function pointer */
+#endif
+
 #endif
 

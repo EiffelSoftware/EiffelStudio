@@ -1,0 +1,16 @@
+<document title="User Interface" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>The following user interface items may be added:
+		<list ordered="false">
+			<item>Winforms</item>
+			<item>Winform Controls</item>
+			<item>EiffelVision2 Windows </item>
+			<item>EiffelVision2 Dialogs</item>
+		</list>
+	</paragraph></document>

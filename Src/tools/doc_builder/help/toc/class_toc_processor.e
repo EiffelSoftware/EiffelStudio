@@ -84,9 +84,9 @@ feature -- Process
 			l_filename.add_extension (xml_extension)
 			create l_chart_file.make (l_filename.string)
 			if l_chart_file.exists then
-					-- Read the individual features
-				if l_consts.shared_project.preferences.generate_feature_nodes then							
-					l_anchors := generated_anchors (l_chart_file)
+					-- Read the individual features				
+				if l_consts.shared_project.preferences.generate_feature_nodes then	
+					l_anchors := generated_anchors (l_chart_file)					
 					if l_anchors /= Void and then not l_anchors.is_empty then
 						from
 							l_anchors.start
@@ -102,7 +102,7 @@ feature -- Process
 						end
 						chart_node.sort
 					end				
-				end
+				end				
 			end
 			l_mem.full_collect
 		end

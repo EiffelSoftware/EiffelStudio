@@ -37,11 +37,18 @@ feature {NONE} -- File
 			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
 			l_text: STRING
+			l_util: UTILITY_FUNCTIONS
 		do
 			create l_file.make_open_read (web_help_project_template_file_name)
 			l_file.read_stream (l_file.count)
 			l_text := l_file.last_string.twin
-			replace_token (l_text, html_default_toc, toc.name)
+			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+				create l_util
+				create l_filename.make_from_string (l_util.file_no_extension (l_util.short_name (toc.name)))
+			else
+				create l_filename.make_from_string (toc.name)
+			end
+			replace_token (l_text, html_default_toc, l_filename.string)
 			l_file.close
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory)
 			l_filename.extend (name)
@@ -131,6 +138,7 @@ feature {NONE} -- Implementation
 			l_filter_count: INTEGER
 			l_toc_name: STRING
 			l_toc_url: FILE_NAME
+			l_util: UTILITY_FUNCTIONS
 		do	
 			create Result.make_empty
 			if shared_project.preferences.generate_dhtml_filter then
@@ -145,6 +153,10 @@ feature {NONE} -- Implementation
 					if not l_output_filter.description.is_empty and then generation_data.filter_toc_hash.has (l_output_filter.description) then							
 						create l_toc_url.make_from_string ("..")
 						l_toc_name := generation_data.filter_toc_hash.item (l_output_filter.description)
+						if (create {PLAIN_TEXT_FILE}.make (l_toc_name)).exists then
+							create l_util
+							l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
+						end
 						l_toc_url.extend (l_toc_name)
 						l_toc_url.extend ("HTMLLeftContextTemplate.html")
 						Result.append ("<option value=%"" + l_toc_url + "%"")

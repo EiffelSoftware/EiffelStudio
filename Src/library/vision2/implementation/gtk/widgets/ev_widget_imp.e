@@ -13,7 +13,7 @@ deferred class
         
 inherit
         EV_WIDGET_I
-        
+
         EV_GTK_EXTERNALS
 
 	EV_GTK_TYPES_EXTERNALS
@@ -68,15 +68,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	background_color: EV_COLOR_IMP is
+	background_color: EV_COLOR is
 			-- Color used for the background of the widget
+		local
+			r, g, b: INTEGER
 		do
+			c_gtk_widget_get_bg_color (widget, $r, $g, $b)
+			!!Result.make_rgb (r, g, b)
 		end
 
-	foreground_color: EV_COLOR_IMP is
+	foreground_color: EV_COLOR is
 			-- Color used for the foreground of the widget,
 			-- usually the text.
+		local
+			r, g, b: INTEGER
 		do
+			c_gtk_widget_get_fg_color (widget, $r, $g, $b)
+			!!Result.make_rgb (r, g, b)
 		end
 
 	parent_imp: EV_CONTAINER_IMP
@@ -152,66 +160,20 @@ feature -- Status setting
 		do
 			expandable := flag
 			if parent_imp /= Void then
-				parent_imp.child_expand_changed (Current)
-			end
-		end
-
-	set_horizontal_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		do
-			if flag then
-				if vertical_resizable then
-					resize_type := 3
-				else
-					resize_type := 1
-				end
-			else
-				if vertical_resizable then
-					resize_type := 2
-				else
-					resize_type := 0
-				end				
-			end
-			if parent_imp /= Void then
-				parent_imp.child_horiresize_changed (Current)
-			end
-		end
-
-	set_vertical_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		do
-			if flag then
-				if horizontal_resizable then
-					resize_type := 3
-				else
-					resize_type := 2
-				end
-			else
-				if horizontal_resizable then
-					resize_type := 1
-				else
-					resize_type := 0
-				end				
-			end
-			if parent_imp /= Void then
-				parent_imp.child_vertresize_changed (Current)
+				parent_imp.child_packing_changed (Current)
 			end
 		end
 
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
-			check
-				not_yet_implemented: False
-			end
+			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
-			check
-				not_yet_implemented: False
-			end
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 	
 feature -- Measurement
@@ -258,23 +220,21 @@ feature -- Resizing
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
                 do
-			gtk_widget_set_usize (widget, new_width, new_height) 
---			c_gtk_widget_set_size (widget, new_width, new_height)
+--			gtk_widget_set_usize (widget, new_width, new_height) 
+			c_gtk_widget_set_size (widget, new_width, new_height)
 		end
 
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
 			--XX Temporary implementation.
                 do
-			gtk_widget_set_usize (widget, new_width, -1) 
---			c_gtk_widget_set_size (widget, new_width, height)
+			set_size (new_width, height)
 		end
 	
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		do
-			gtk_widget_set_usize (widget, -1, new_height) 
---			c_gtk_widget_set_size (widget, width, new_height)
+			set_size (width, new_height)
 		end
 
         set_minimum_size (min_width, min_height: INTEGER) is

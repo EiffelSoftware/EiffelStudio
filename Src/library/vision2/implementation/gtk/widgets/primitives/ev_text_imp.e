@@ -22,6 +22,11 @@ inherit
 			set_caret_position,
 			insert_text
 		end
+		
+	EV_FONTABLE_IMP
+		redefine
+			interface
+		end
 
 create
 	make

@@ -24,6 +24,13 @@ inherit
 			interface,
 			container_widget
 		end
+		
+	EV_FONTABLE_IMP
+		undefine
+			destroy
+		redefine
+			interface
+		end
 
 create
 	make

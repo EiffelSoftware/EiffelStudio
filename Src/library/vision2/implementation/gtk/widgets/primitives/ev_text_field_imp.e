@@ -18,6 +18,12 @@ inherit
 			interface,
 			visual_widget
 		end
+		
+	EV_FONTABLE_IMP
+		redefine
+			interface,
+			visual_widget
+		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
 		export

@@ -404,7 +404,6 @@ feature {NONE} -- Implementation
 			efw: ENUMERATED_FONT_WINDOWS
 			lefdw: LINKED_LIST [ENUMERATED_FONT_DETAILS_WINDOWS]
 			style_selected: BOOLEAN
-			i: INTEGER
 		do
 			if font_styles.selected then
 				current_style := font_styles.selected_string

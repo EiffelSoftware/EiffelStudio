@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			if Workbench.is_already_compiled and Workbench.lace.successful then
+			if Workbench.lace.successful then
 				workbench.recompile_no_degree_6
 			else
 				Workbench.recompile

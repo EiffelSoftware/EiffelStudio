@@ -210,29 +210,28 @@ feature {NONE} -- Implementation
 	new_object_editor (object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		local
-			window: EV_DIALOG
+			object_editor_window: GB_FLOATING_OBJECT_EDITOR_WINDOW
 			editor: GB_OBJECT_EDITOR
 			button: EV_BUTTON
 			wizard_shared: WIZARD_SHARED
 		do
-			create window
+			create object_editor_window
 				-- We must now temporarily create a new button, and add it to `Current'
 				-- as the default cancel button. We then remove it. This is necessary so
 				-- that we have access to the minimize, maximize and close buttons.
 				-- Note that we have custom implementations of EV_DIALOG_IMP, in order to
 				-- fire these actions when the button is not visible.
 			create button
-			window.extend (button)
-			button.select_actions.extend (agent remove_floating_object_editor (window))
-			button.select_actions.extend (agent window.destroy)
+			object_editor_window.extend (button)
+			button.select_actions.extend (agent remove_floating_object_editor (object_editor_window))
+			button.select_actions.extend (agent object_editor_window.destroy)
 
-			window.set_default_cancel_button (button)
-			window.prune (button)
+			object_editor_window.set_default_cancel_button (button)
+			object_editor_window.prune (button)
 
-			window.set_height (Default_floating_object_editor_height)
-			window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_object_window @ 1)
+			object_editor_window.set_height (Default_floating_object_editor_height)
 			create editor
-			window.extend (editor)
+			object_editor_window.extend (editor)
 			floating_object_editors.extend (editor)
 			editor.set_object (object)
 			if Visual_studio_information.Is_visual_studio_wizard then
@@ -241,11 +240,16 @@ feature {NONE} -- Implementation
 				--| speed should not be an issue here, anyway, as this only gets executed
 				--| infrequently, as a direct response to a user action.
 				create wizard_shared
-				window.show_relative_to_window (wizard_shared.first_window)
+				object_editor_window.show_relative_to_window (wizard_shared.first_window)
+				object_editor_window.set_default_icon
+			elseif (create {GB_SHARED_SYSTEM_STATUS}).system_status.tools_always_on_top then
+				object_editor_window.show_relative_to_window ((create {GB_SHARED_TOOLS}).main_window)
+				object_editor_window.set_default_icon				
 			else
-				window.show
+				object_editor_window.show
+				object_editor_window.restore_icon
 			end
-			window.set_maximum_width (window.width)
+			object_editor_window.set_maximum_width (object_editor_window.width)
 		end
 		
 feature {NONE} -- Implementation

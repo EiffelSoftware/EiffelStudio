@@ -427,6 +427,8 @@ feature {NONE} -- Implementation
 				-- Now expand the layout selector item, so that the window is displayed as
 				-- it was when last edited.
 			Layout_constructor.update_expanded_state_from_root_object		
+			
+			constants.build_deferred_elements
 		end
 
 	load_and_parse_xml_file (a_filename:STRING) is

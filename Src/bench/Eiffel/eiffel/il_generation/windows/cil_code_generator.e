@@ -2532,9 +2532,11 @@ feature -- IL Generation
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 							class_type_token (l_cur_sig.item (0)))
 					end
+						-- Hard coded `1' for number of arguments since there is one,
+						-- we cannot use `nb' as it is `0' for attributes.
 					method_body.put_call (feature {MD_OPCODES}.Callvirt,
 						setter_token (current_type_id, cur_feat.feature_id),
-						nb, cur_feat.has_return_value)
+						1, cur_feat.has_return_value)
 
 					generate_return (cur_feat.has_return_value)
 					method_writer.write_current_body

@@ -6,11 +6,6 @@ indexing
 
 class
 	WEL_CLIPBOARD
-inherit
-	WEL_CLIPBOARD_CONSTANTS
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -33,12 +28,12 @@ feature -- Element Change
 			-- Retrieves text from the clipboard
 		require
 			clipboard_open: clipboard_open
-			text_available: is_clipboard_format_available (Cf_text)
+			text_available: is_clipboard_format_available (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text)
 		local
 			shared_string: WEL_SHARED_MEMORY_STRING
 			shared_memory_handle: POINTER
 		do
-			shared_memory_handle := cwel_get_clipboard_data (Cf_text)
+			shared_memory_handle := cwel_get_clipboard_data (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text)
 			create shared_string.make_from_handle (shared_memory_handle)
 			shared_string.retrieve_string
 			last_string := shared_string.last_string
@@ -52,7 +47,7 @@ feature -- Element Change
 			shared_string: WEL_SHARED_MEMORY_STRING
 		do
 			create shared_string.make_from_string (a_text)
-			cwel_set_clipboard_data (Cf_text, shared_string.handle)
+			cwel_set_clipboard_data (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text, shared_string.handle)
 		end
 
 	open_clipboard (window: WEL_WINDOW) is

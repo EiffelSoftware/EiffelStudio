@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize structure.
 		do
-			create_item
 		end
 		
 feature -- Access

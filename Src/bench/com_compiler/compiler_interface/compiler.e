@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			err_win: COM_ERROR_WINDOW
 		do
-			create_item
 			create output.make (Current)
 			create err_win.make (Current)
 			create e_displayer.make (err_win)

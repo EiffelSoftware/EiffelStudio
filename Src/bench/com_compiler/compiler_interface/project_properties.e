@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			f: RAW_FILE
 			retried: BOOLEAN
 		do
-			create_item
 			create ace.make
 			if not retried then
 				if not is_valid then

@@ -41,6 +41,8 @@ feature -- Menu texts.
 		
 	Gb_help_about_menu_text: STRING is "&About..."
 	
+	Gb_help_tip_of_day_menu_text: STRING is "Tip of the Day..."
+	
 	Gb_help_menu_text: STRING is "&Help"
 	
 	Gb_project_menu_text: STRING is "Project"

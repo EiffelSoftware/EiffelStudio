@@ -10,14 +10,14 @@ feature
 	position: INTEGER;
 			-- Position id file of id `id'.
 
-	id: INTEGER;
+	id: FILE_ID;
 			-- Id of the file where associated item is strored
 
-	make (p, i: INTEGER) is
+	make (p: INTEGER; i: FILE_ID) is
 			-- Initialization
 		require
 			good_position: p >= 0;
-			good_id: i > 0
+			good_id: i /= Void
 		do
 			position := p;
 			id := i
@@ -28,7 +28,7 @@ feature
 			io.error.putstring ("SERVER_INFO%Nposition: ");
 			io.error.putint (position);
 			io.error.putstring ("%Nid: ");
-			io.error.putint (id);
+			id.trace;
 			io.error.new_line;
 		end;
 

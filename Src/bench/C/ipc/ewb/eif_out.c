@@ -97,7 +97,7 @@ rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 #endif
 }
 
-rt_public void send_rqst_3 (long int code, long int info1, long int info2, long int info3)
+rt_public void send_rqst_3 (long int code, long int info1, long int info2, rt_uint_ptr info3)
 {
 	Request rqst;
 #ifndef EIF_WIN32
@@ -112,7 +112,7 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, long 
 	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
-	rqst.rq_opaque.op_third = (long) info3;
+	rqst.rq_opaque.op_third = info3;
 
 #ifdef EIF_WIN32
 	send_packet(sp, &rqst);

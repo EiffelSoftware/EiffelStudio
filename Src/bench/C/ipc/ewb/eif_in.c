@@ -162,7 +162,7 @@ rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BO
 	rqst.rq_type = BREAK_ON;
 	rqst.rq_opaque.op_first = (int) real_body_index;
 	rqst.rq_opaque.op_second = (int) real_body_id;
-	rqst.rq_opaque.op_third = (long) offset;
+	rqst.rq_opaque.op_third = offset;
 
 #ifdef EIF_WIN32
 	if (-1 == send_packet (sp, &rqst))

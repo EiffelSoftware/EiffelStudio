@@ -516,7 +516,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_leave_actions_internal.call (empty_tuple)
+			widget.pointer_leave_actions_internal.call (Void)
 		end
 		
 	pointer_enter_actions_intermediary (a_c_object: POINTER) is
@@ -525,7 +525,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_enter_actions_internal.call (empty_tuple)
+			widget.pointer_enter_actions_internal.call (Void)
 		end
 		
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			

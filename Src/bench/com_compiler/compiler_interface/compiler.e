@@ -27,7 +27,8 @@ inherit
 			expand_path,
 			is_output_piped,
 			output_pipe_name,
-			set_output_pipe_name
+			set_output_pipe_name,
+			can_run
 		end
 
 	SHARED_EIFFEL_PROJECT

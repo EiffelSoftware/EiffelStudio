@@ -636,12 +636,15 @@ $inttypes_include
 /* INTEGER_64 constant definition: */
 #define RTI64C(x)	$eif_integer_64_constant
 
-/* Is windows platform */
+/* Is windows platform? */
 #$eif_win32	EIF_WIN32	/* NC */
 #$eif_windows EIF_WINDOWS	/* NC */
 
-/* Is SGI platform */
+/* Is SGI platform? */
 #$eif_sgi	EIF_SGI		/* NC */
+
+/* Is Solaris platform? */
+#$eif_solaris	EIF_SOLARIS		/* NC */
 
 #endif
 !GROK!THIS!

@@ -151,7 +151,7 @@ feature -- Access: file name
 	Assemblies_path: FILE_NAME is
 			-- Location of Eiffel Assembly Cache.
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
+			create Result.make_from_string ("$ISE_EIFFEL")
 			Result.extend_from_array (<<"dotnet", "assemblies">>)
 		end
 		

@@ -1,0 +1,69 @@
+system
+	"VISION2_WIDGET_TEST"
+
+root
+	vision2_application: make_and_launch
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	override_cluster ("root_cluster")
+	check_vape (yes)
+	console_application (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	exception_trace (no)
+	inlining (no)
+
+
+-------------------------------------------------
+-- This ace file has been generated for you by --
+-- EiffelBuild.                                --
+-------------------------------------------------
+-- The application
+-- EiffelBase
+-- WEL
+-- EiffelVision2
+
+cluster
+	all root_cluster:		"."
+
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"; 
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
+end

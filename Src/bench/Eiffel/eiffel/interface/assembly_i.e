@@ -12,8 +12,10 @@ class
 	
 inherit
 	CLUSTER_I
+		undefine
+			format
 		redefine
-			classes, copy_old_cluster
+			classes, copy_old_cluster, is_assembly
 		end
 
 	ASSEMBLY_INFO
@@ -127,6 +129,9 @@ feature -- Access
 			
 	assembly_path: STRING
 			-- Path of current assembly if it is a local assembly.
+
+	is_assembly: BOOLEAN is True
+			-- Is current an instance of ASSEMBLY_I?
 
 feature -- Copy
 

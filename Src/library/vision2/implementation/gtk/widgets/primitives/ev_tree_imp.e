@@ -54,6 +54,24 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	selected_item: EV_TREE_ITEM is
+			-- Item which is currently selected, for a multiple
+			-- selection, it gives the item which has the focus.
+			-- XX Currently just give head of the gtk selection list
+		local
+			p: POINTER
+			o: EV_ANY_IMP
+		do
+			p := C.gtk_tree_struct_selection (list_widget)
+			if p/= Default_pointer then
+				p := C.g_list_nth_data (p, 0)
+				if p /= Default_pointer then
+					o := eif_object_from_c (p)
+					Result ?= o.interface
+				end
+			end
+		end
+
 	selected: BOOLEAN is
 			-- Is one item selected ?
 		do
@@ -87,7 +105,8 @@ feature {NONE} -- Implementation
 			item_imp: EV_TREE_ITEM_IMP
 		do
 			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_tree_widget_imp (Void)	
+			item_imp.set_tree_widget_imp (Void)
+			C.gtk_tree_item_remove_subtree (item_imp.c_object)	
 			Precursor (a_position)
 		end
 
@@ -131,6 +150,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/22 23:57:32  king
+--| Implemented selecrted_item
+--|
 --| Revision 1.20  2000/02/22 21:37:40  king
 --| Initial implementation to fit in with new structure
 --|

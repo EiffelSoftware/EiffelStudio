@@ -1,13 +1,14 @@
 -- Terms: SIMPLE_VAR | POLY_INTEGER | NESTED
 
-class TERM 
+class
+	TERM 
 
 inherit
 
 	CHOICE
 		redefine
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +16,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -23,7 +23,7 @@ feature
 	construct_name: STRING is
 		once
 			Result := "TERM"
-		end; -- construct_name
+		end -- construct_name
 
 	production: LINKED_LIST [CONSTRUCT] is
 		local
@@ -31,15 +31,15 @@ feature
 			val: POLY_INTEGER;
 			nest: NESTED
 		once
-			create Result.make;
-			Result.forth;
-			create id.make;
-			put (id);
-			create val.make;
-			put (val);
-			create nest.make;
+			create Result.make
+			Result.forth
+			create id.make
+			put (id)
+			create val.make
+			put (val)
+			create nest.make
 			put (nest)
-		end; -- production
+		end -- production
 
 	post_action is
 		do

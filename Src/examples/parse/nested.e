@@ -7,7 +7,7 @@ inherit
 	AGGREGATE
 		redefine
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +15,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -29,19 +28,19 @@ feature
 		local
 			expression: SUM
 		once
-			create Result.make;
-			Result.forth;
-			keyword ("(");
-			commit;
-			create expression.make;
-			put (expression);
+			create Result.make
+			Result.forth
+			keyword ("(")
+			commit
+			create expression.make
+			put (expression)
 			keyword (")")
-		end; -- production
+		end -- production
 
 	post_action is
 		do       
-			child_start;
-			child_forth;
+			child_start
+			child_forth
 			child.post_action
 		end -- post_action
 

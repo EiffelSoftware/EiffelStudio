@@ -1,13 +1,14 @@
 -- Simple variables
 
-class SIMPLE_VAR 
+class
+	SIMPLE_VAR 
 
 inherit
 
 	IDENTIFIER
 		redefine 
 			action, construct_name
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +16,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature {NONE}
@@ -23,7 +23,7 @@ feature {NONE}
 	construct_name: STRING is
 		once
 			Result := "SIMPLE_VAR"
-		end; -- construct_name
+		end -- construct_name
 
 	action is
 		do

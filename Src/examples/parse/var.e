@@ -1,13 +1,14 @@
 -- Variables
 
-class VAR 
+class
+	VAR 
 
 inherit
 
 	IDENTIFIER
 		redefine
 			construct_name, action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +16,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature {NONE}

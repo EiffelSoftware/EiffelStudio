@@ -1,7 +1,8 @@
 -- Lines of the form VARIABLES ":" SUM
 -- This is the top construct of the Polynomial language
 
-class LINE 
+class
+	LINE 
 
 inherit
 
@@ -10,7 +11,7 @@ inherit
 			{PROCESS} all
 		redefine 
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -18,7 +19,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -26,35 +26,35 @@ feature
 	construct_name: STRING is
 		once
 			Result := "LINE"
-		end; -- construct_name
+		end -- construct_name
 
 	production: LINKED_LIST [CONSTRUCT] is
 		local
-			var: VARIABLES;
+			var: VARIABLES
 			sum: SUM
 		once
-			create Result.make;
-			Result.forth;
-			create var.make;
-			put (var);
-			keyword (":");
-			create sum.make;
+			create Result.make
+			Result.forth
+			create var.make
+			put (var)
+			keyword (":")
+			create sum.make
 			put (sum)
-		end; -- production
+		end -- production
 
 	post_action is
 		do
-			child_start;
-			child.post_action;
+			child_start
+			child.post_action
 			from
-				child_finish;
+				child_finish
 			until
 				info.end_session
 			loop
-				info.set_value;
-				child.post_action;
-				io.putstring ("value: ");
-				io.putint (info.child_value);
+				info.set_value
+				child.post_action
+				io.putstring ("value: ")
+				io.putint (info.child_value)
 				io.new_line
 			end
 		end -- post_action

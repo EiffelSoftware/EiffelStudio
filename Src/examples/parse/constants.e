@@ -1,11 +1,12 @@
-class CONSTANTS
+class
+	CONSTANTS
 
 feature
 
-	Dummy: INTEGER is 0;
-	Special: INTEGER is 1;
-	Simple_identifier: INTEGER is 2;
-	Integer_constant: INTEGER is 3;
+	Dummy: INTEGER is 0
+	Special: INTEGER is 1
+	Simple_identifier: INTEGER is 2
+	Integer_constant: INTEGER is 3
 	Blanks: INTEGER is 4
 
 end -- class CONSTANTS

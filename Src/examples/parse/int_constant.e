@@ -1,10 +1,11 @@
 -- Integer constants
 
-class INT_CONSTANT 
+class
+	INT_CONSTANT 
 
 inherit
 
-	TERMINAL;
+	TERMINAL
 
 	CONSTANTS
 		undefine

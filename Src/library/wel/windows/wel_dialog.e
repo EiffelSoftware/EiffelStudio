@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		require
 			parent_exists: a_parent /= Void implies a_parent.exists
 			name_not_void: a_name /= Void
-			name_not_empty: not a_name.empty
+			name_not_empty: not a_name.is_empty
 		do
 			parent := a_parent
 			resource_name := clone (a_name)

@@ -40,7 +40,7 @@ feature -- Access
 			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
-			result_not_empty: not Result.empty
+			result_not_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Removal

@@ -33,7 +33,11 @@ inherit
 	SHARED_ARRAY_BYTE;
 	SHARED_DECLARATIONS;
 	SHARED_PASS;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	C_COMPILE_ACTIONS
+		rename
+			freeze_system as c_comp_actions_freeze_system
+		end
 
 feature 
 
@@ -867,7 +871,7 @@ end;
 					-- Verbose
 				io.error.putstring ("Freezing system%N");
 
-				freeze_system;
+				c_comp_actions_freeze_system;
 				freeze := False;
 
 			else
@@ -2345,15 +2349,15 @@ end;
 				temp.append_integer (1);
 				!!dir_name.make_from_string (Final_generation_path);
 				dir_name.extend (temp);
-				!! subdir.make (dir_name.path);
+				!! subdir.make (dir_name);
 				if not subdir.exists then
 					subdir.create
 				end;
-				!!f_name.make_from_string (dir_name.path);
+				!!f_name.make_from_string (dir_name);
 				temp := clone (Eskelet);
 				temp.append (Dot_h);
 				f_name.set_file_name (temp);
-				Extern_declarations.generate (f_name.path);
+				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 			else
 					-- Hash table extern declaration in workbench mode
@@ -2538,13 +2542,13 @@ end;
 				temp.append_integer (1);
 				!!dir_name.make_from_string (Final_generation_path);
 				dir_name.extend (temp);
-				!! subdir.make (dir_name.path);
+				!! subdir.make (dir_name);
 				if not subdir.exists then
 					subdir.create
 				end;
-				!!f_name.make_from_string (dir_name.path);
+				!!f_name.make_from_string (dir_name);
 				f_name.set_file_name ("ececil.h");
-				Extern_declarations.generate (f_name.path);
+				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");
 				from
@@ -3538,11 +3542,11 @@ feature -- Log files
 					-- removed_log_file is used only in final mode
 				!!f_name.make_from_string (Final_generation_path);
 				f_name.set_file_name (Removed_log_file_name);
-				!!removed_log_file.make (f_name.path);
+				!!removed_log_file.make (f_name);
 
 				!!f_name.make_from_string (Final_generation_path);
 				f_name.set_file_name (Translation_log_file_name);
-				!!used_features_log_file.make (f_name.path);
+				!!used_features_log_file.make (f_name);
 
 					-- Files are open using the `write' mode
 				removed_log_file.open_write;
@@ -3550,7 +3554,7 @@ feature -- Log files
 			else
 				!!f_name.make_from_string (Workbench_generation_path);
 				f_name.set_file_name (Translation_log_file_name);
-				!!used_features_log_file.make (f_name.path);
+				!!used_features_log_file.make (f_name);
 
 					-- File is open using the `append' mode
 					-- (refreezing)

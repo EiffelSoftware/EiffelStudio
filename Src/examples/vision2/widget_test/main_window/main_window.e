@@ -46,7 +46,12 @@ feature {NONE} -- Initialization
 			editor: GB_OBJECT_EDITOR
 			event_selector: EVENT_SELECTOR
 			documentation_display: DOCUMENTATION_DISPLAY
+			temp_font: EV_FONT
 		do
+			register_type_change_agent (agent clear_idle_actions)
+				-- Clear any agents from the idle actions, as a new widget
+				-- type is being selected.
+			
 				-- The first type change agent that we register locks the update, so
 				-- that the user does not see the changes taking place.
 			register_type_change_agent (agent lock_current)
@@ -87,22 +92,86 @@ feature {NONE} -- Initialization
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
 			
+				-- Connect flatshort text size buttons to agents.
+			increase_text_button.select_actions.extend (agent modify_flatshort_text (1))
+			increase_text_button.pointer_button_press_actions.force_extend (agent button_pressed (increase_text_button))
+			increase_text_button.pointer_double_press_actions.force_extend (agent button_pressed (increase_text_button))
+			increase_text_button.pointer_button_release_actions.force_extend (agent button_released (increase_text_button))
+			decrease_text_button.select_actions.extend (agent modify_flatshort_text (-1))
+			decrease_text_button.pointer_button_press_actions.force_extend (agent button_pressed (decrease_text_button))
+			decrease_text_button.pointer_button_release_actions.force_extend (agent button_released (decrease_text_button))
+			
 				-- Initialize button pixmaps.
 			initialize_pixmaps
 			
 				-- Set up search tool
 			search_tool.associate_text_entry (search_field)
 			
-				-- Connect events to `generation_button'
-			generate_button.select_actions.extend (agent perform_generation)
+				-- Now select font for `flat_short_display'
+			temp_font := flat_short_display.font
+			temp_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
+			flat_short_display.set_font (temp_font)
 			
 			setup_initial_screen
 		end
 
 feature {NONE} -- Implementation
 
+	clear_idle_actions (a_widget: EV_WIDGET) is
+			-- Clear `idle_actions' from EV_APPLICATION.
+		do
+			application.idle_actions.wipe_out
+		ensure
+			actions_empty: application.idle_actions.is_empty
+		end
+
+	modify_flatshort_text (value: INTEGER) is
+			-- adjust font size of `flat_short_display' by `value'.
+		local
+			font: EV_FONT
+		do
+			font := flat_short_display.font
+			if font.height + value > 4 then
+				font.set_height (font.height + value)
+				flat_short_display.set_font (font)
+			end
+		end
+	
+	initial_timer, second_timer: EV_TIMEOUT
+			-- Timers for adjusting the flatshort text.
+		
+	button_pressed (a_button: EV_BUTTON) is
+			-- The mouse pointer has been pressed on `a_button', so start
+			-- timers for adjusting the flatshort text.
+		require
+			button_valid: a_button = increase_text_button or a_button = decrease_text_button
+		do
+			if second_timer /= Void then
+				second_timer.destroy	
+			end
+			if not a_button.has_capture then
+				a_button.enable_capture
+			end
+			create initial_timer.make_with_interval (250)
+			initial_timer.actions.extend (agent (a_button.select_actions).call ([]))			
+		end
+		
+	button_released (a_button: EV_BUTTON) is
+			-- The mouse pointer has been release on `a_button', so start
+			-- timers for adjusting the flatshort text.
+		require
+			button_valid: a_button = increase_text_button or a_button = decrease_text_button
+		do
+			initial_timer.destroy
+			create second_timer.make_with_interval (250)
+			if a_button.has_capture then
+				second_timer.actions.extend (agent a_button.disable_capture)
+			end
+			second_timer.actions.extend (agent second_timer.destroy)
+		end
+
 	display_about_dialog is
-			-- Display an instace of ABOUT_DIALOG
+			-- Display an instance of ABOUT_DIALOG
 			-- modally to `Current'.
 		local
 			about_dialog: ABOUT_DIALOG
@@ -110,7 +179,6 @@ feature {NONE} -- Implementation
 			create about_dialog.make
 			about_dialog.show_modal_to_window (Current)
 		end
-		
 
 	set_window_title (a_widget: EV_WIDGET) is
 			-- Assign a title to `Current', reflecting type
@@ -118,7 +186,6 @@ feature {NONE} -- Implementation
 		do
 			set_title ("Testing - " + test_widget_type + ".")
 		end
-		
 
 	parent_test_widget (a_widget: EV_WIDGET) is
 			-- Ensure `a_widget' is parented in
@@ -270,7 +337,7 @@ feature {NONE} -- Implementation
 			if main_notebook.selected_item = main_notebook_tests then
 				tests_button.enable_select
 			end
-			if main_notebook.selected_item = flat_short_display then
+			if main_notebook.selected_item = flat_short_display_parent then
 				documentation_button.enable_select
 			end
 		end
@@ -282,6 +349,8 @@ feature {NONE} -- Implementation
 			tests_button.set_pixmap (pixmap_by_name ("testing"))
 			documentation_button.set_pixmap (pixmap_by_name ("documentation"))
 			generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
+			increase_text_button.set_pixmap (pixmap_by_name ("size_up"))
+			decrease_text_button.set_pixmap (pixmap_by_name ("size_down"))
 		end
 		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
@@ -302,7 +371,7 @@ feature {NONE} -- Implementation
 		end
 	
 	image_extension: STRING is
-			-- Extension type of image formts on current platform.
+			-- Extension type of image formats on current platform.
 			-- either "png" or "ico"
 		once
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
@@ -313,8 +382,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_valid: Result.is_equal ("png") or Result.is_equal ("ico")
 		end
-		
-		
+
 	perform_generation is
 			-- User has requested to generate a test, so
 			-- display a GENERATION_DIALOG.
@@ -358,8 +426,6 @@ feature {NONE} -- Implementation
 		once
 			Create Result.make_with_ev_text (flat_short_display)
 		end
-		
-		
-	
+
 end -- class MAIN_WINDOW
 

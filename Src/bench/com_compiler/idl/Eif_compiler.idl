@@ -86,11 +86,20 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Compile.")]
   HRESULT compile ();
 
+  [helpstring ("Finalize.")]
+  HRESULT finalize ();
+
   [helpstring ("Was last compilation successful?")]
   HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
 
+  [helpstring ("Did last compile warrant a call to finish_freezing?")]
+  HRESULT freezing_occurred ([out, retval] VARIANT_BOOL * return_value);
+
   [helpstring ("Compiler version.")]
   HRESULT compiler_version ([out, retval] BSTR * return_value);
+
+  [helpstring ("Eiffel Installation Directory")]
+  HRESULT freeze_command_name ([out, retval] BSTR * return_value);
 };
 //---------------------------------------------------------------------
 

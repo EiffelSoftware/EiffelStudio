@@ -12,7 +12,6 @@ inherit
 			set_size, set_x_y, height, width, y, x, widget, 
 			add_to_option_list, add_widget_callbacks 
 		end;
-
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
@@ -21,6 +20,7 @@ inherit
 		select
 			context_initialization
 		end;
+	G_ANY
 
 feature 
 
@@ -35,11 +35,16 @@ feature
 		end;
 
 	add_widget_callbacks is
+		local
+			ms_win: STRING
 		do
-			add_common_callbacks (widget.button);
-			initialize_transport;
-			if (parent = Void) or else not parent.is_group_composite then
-				widget.button.add_enter_action (eb_selection_mgr, Current);
+			ms_win := "MS_WINDOW";
+			if not ms_win.is_equal (toolkit.name) then
+				add_common_callbacks (widget.button);
+				initialize_transport;
+				if (parent = Void) or else not parent.is_group_composite then
+					widget.button.add_enter_action (eb_selection_mgr, Current);
+				end
 			end;
 		end;
 

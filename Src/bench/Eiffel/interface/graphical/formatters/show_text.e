@@ -76,12 +76,20 @@ feature
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
 		local
-			stone_text: STRING;
+			stone_text, temp, class_name: STRING;
 			filed_stone: FILED_STONE;
-			temp: STRING
+			classc_stone: CLASSC_STONE;
+			modified_class: BOOLEAN
 		do
+			classc_stone ?= stone;
+			if 
+				classc_stone /= Void and then classc_stone.is_valid and then
+				classc_stone.class_c.lace_class.date_has_changed 
+			then
+				modified_class := true
+			end;
 			if
-				do_format or else
+				do_format or modified_class or else
 				(text_window.last_format /= Current or
 				not equal (stone, text_window.root_stone))
 			then
@@ -110,9 +118,20 @@ feature
 					text_window.set_root_stone (stone);
 					text_window.put_string (stone_text);
 					if stone.clickable then
-						click_list := stone.click_list;
-						if (click_list /= Void) then
-							text_window.share (click_list)
+						if modified_class then
+							!!temp.make (50);
+							temp.append ("Class ");
+							class_name := clone (classc_stone.class_c.class_name);
+							class_name.to_upper;
+							temp.append (class_name);
+							temp.append (" has been modified since last compilation.%NThe text will not be clickable.");
+							warner.set_window (text_window);
+							warner.gotcha_call (temp)
+						else
+							click_list := stone.click_list;
+							if (click_list /= Void) then
+								text_window.share (click_list)
+							end
 						end
 					end;
 					text_window.set_editable;

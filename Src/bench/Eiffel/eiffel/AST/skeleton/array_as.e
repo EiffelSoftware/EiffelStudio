@@ -76,10 +76,12 @@ feature -- Type check, byte code, dead code removal and formatter
 					create cl_type_a.make (System.any_id)
 					lowest_type := cl_type_a
 				end
+				create expression_types.make (1, nb)
 			until
 				i < 1
 			loop
 				element_type := context.item
+				expression_types.put (element_type, i)
 				multi_type.put (element_type, i)
 					-- If ANY is the common ancestor, there is no need to search
 					-- for one, we simply pop the remaining types.
@@ -118,15 +120,53 @@ feature -- Type check, byte code, dead code removal and formatter
 			-- Byte code for a manifest array
 		local
 			array_line: LINE [MULTI_TYPE_A]
+			l_array_type: GEN_TYPE_A
+			l_array_element_type, l_element_type: TYPE_A
+			i, nb: INTEGER
+			l_conversion: CONVERSION_INFO
+			l_expressions: BYTE_LIST [BYTE_NODE]
 		do
-			create Result
-			Result.set_expressions (expressions.byte_node)
-			
 			array_line := context.array_line
-			Result.set_type (array_line.item.type_i)
-			
+			l_array_type := array_line.item.last_type
+			l_array_element_type := l_array_type.generics.item (1)
 				-- Update the array-line stack
 			array_line.forth
+			
+				-- Special manipulation of `expressions' to take into account
+				-- possible conversions.
+			from
+				i := 1
+				nb := expression_types.count
+				create l_expressions.make_filled (nb)
+			until
+				i > nb
+			loop
+				l_element_type := expression_types.item (i)
+				if not l_element_type.conform_to (l_array_element_type) then
+					if l_element_type.convert_to (system.current_class, l_array_element_type) then
+						l_conversion := context.last_conversion_info
+					else
+						check
+							False	-- If it does not conform, then it should at least convert.
+						end
+					end
+				else
+					l_conversion := Void
+				end
+				if l_conversion = Void then
+					l_expressions.put_i_th (expressions.i_th (i).byte_node, i)
+				else
+					l_expressions.put_i_th (l_conversion.byte_node (expressions.i_th (i).byte_node), i)
+				end
+				i := i + 1
+			end
+
+			create Result
+			Result.set_expressions (l_expressions)
+			Result.set_type (l_array_type.type_i)
+			
+				-- To save memory.
+			expression_types := Void
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -151,5 +191,10 @@ feature {ARRAY_AS}	-- Replication
 		do
 			expressions := e
 		end
+
+feature {NONE} -- Implementation
+
+	expression_types: ARRAY [TYPE_A]
+			-- Type of expressions
 
 end -- class ARRAY_AS

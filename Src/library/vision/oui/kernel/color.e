@@ -9,9 +9,6 @@ class COLOR
 inherit
 
 	G_ANY
-		export
-			{NONE} all
-		end
 
 creation
 

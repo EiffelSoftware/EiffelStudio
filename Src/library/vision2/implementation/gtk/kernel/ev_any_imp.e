@@ -79,18 +79,15 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		do
-			if not is_destroyed then
-				is_destroyed := True
-				
-				if c_object /= NULL then
-					-- Some objects do not set `c_object'
-					if internal_id /= 0 then
-							feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-					end	
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-					c_object := NULL
-				end
+			is_destroyed := True
+			if c_object /= NULL then
+				-- Some objects do not set `c_object'
+				if internal_id /= 0 then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+				end	
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+				c_object := NULL
 			end
 		ensure then
 			c_object_detached: c_object = NULL
@@ -124,10 +121,36 @@ feature {EV_ANY_I} -- Event handling
 		a_c_object: like c_object;
 		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		) is
+				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
+			do
+				internal_real_signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
+			end
+
+	real_signal_connect_after (
+		a_c_object: like c_object;
+		a_signal_name: STRING;
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		) is
+				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
+				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
+			do
+				internal_real_signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
+			end
+			
+
+	internal_real_signal_connect (
+		a_c_object: like c_object;
+		a_signal_name: STRING;
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		invoke_after_handler: BOOLEAN
 		) is
 			-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 			-- Use `translate' to convert GTK+ event data to TUPLE.
+			-- `invoke_after_handler' determines whether 'an_agent' is called before or after default gtk handler for `a_signal_name'
 		require
 			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
@@ -141,13 +164,15 @@ feature {EV_ANY_I} -- Event handling
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_cs.item,
-					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?)
+					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?),
+					False
 				)
 			else
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
 					a_cs.item,
-					an_agent
+					an_agent,
+					False
 				)
 			end
 		ensure

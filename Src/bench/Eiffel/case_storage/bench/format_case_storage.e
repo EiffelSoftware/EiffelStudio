@@ -168,6 +168,7 @@ feature {NONE} -- Implementation
 			s_system_data.set_class_view_number (Old_case_info.class_view_number);
 			s_system_data.set_class_id_number (System.class_counter.total_count);
 			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
+			s_system_data.set_list_class_with_string(system)
 			Case_file_server.tmp_save_system (s_system_data);
 			Reverse_engineering_window.put_case_message 
 				("Saving EiffelCase project to CASEGEN directory.");

@@ -167,17 +167,18 @@ feature -- Access
 			c_string: C_STRING	
 		do
 			Result := wel_line (i - 1)
-			line_offset := wel_line_index (i - 1)
-			length := line_length (i - 1)
-			chars_to_retrieve := line_offset + length
-			if chars_to_retrieve < text_length - 2 then
-				handle := cwel_integer_to_pointer (cwin_send_message_result (wel_item, Em_gethandle, 0, 0))
-				ptr := c_local_lock (handle)
-				create c_string.make_by_pointer_and_count (ptr + chars_to_retrieve, 2)
-				c_local_unlock (handle)
-				if c_string.string.is_equal ("%R%N") then
-					Result.append_character ('%N')
+				-- `wel_line' does not include the new line characters, so must add a
+				-- new line character if necessary. As word wrapping may be enabled, we must
+				-- only add the new line character if enabled, and the line really should
+				-- have a new character, for example, if the line was wrapped, then we must not append.
+				-- This is calculated by comparing the length of the line with the start offset and
+				-- the start offset of the next line, to determine if the new line character is missing.
+			if has_word_wrapping then
+				if i < line_count and then wel_line_index (i) > Result.count + wel_line_index (i - 1) then
+					Result.append ("%N")
 				end
+			else
+				Result.append ("%N")
 			end
 		end
 
@@ -354,29 +355,6 @@ feature -- Basic operation
 			-- Ensure that line `i' is visible in `Current'.
 		do
 			scroll (0, i - first_visible_line - 1)
-		end
-
-	put_new_line is
-			-- Go to the beginning of the following line.
-		do
-			if caret_position = text.count+1 then
-				append_text ("%N")
-			else
-				insert_text ("%N")
-			end
-		end
-
-feature -- Assertion
-
-	last_line_not_empty: BOOLEAN is
-			-- Has the last line at least one character?
-		local
-			str: STRING
-			int: INTEGER
-		do
-			str := text
-			int := str.count
-			Result := not (str @ (int - 1 ) = '%R' and str @ int = '%N')
 		end
 
 feature {NONE} -- Implementation

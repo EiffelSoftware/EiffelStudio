@@ -37,7 +37,7 @@ feature -- Output
 			if not exists then
 				make_track
 			end
-			put_children_in_menu (Current)
+			put_children_in_menu
 			ww ?= parent
 			parent.associate_menu (Current)
 			show_track (x, y, ww)

@@ -91,8 +91,7 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth
 
 			if access.is_feature then
-				a_feature :=
-					context.feature_table.item(feature_name.internal_name)
+				a_feature := context.feature_table.item(feature_name.internal_name)
 				!! address
 				address.init (context.a_class.id, a_feature)
 				Result := address

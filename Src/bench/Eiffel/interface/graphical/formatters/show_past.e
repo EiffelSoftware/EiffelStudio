@@ -56,7 +56,7 @@ feature {NONE} -- Properties
 			cmd: E_SHOW_ROUTINE_ANCESTORS;
 		do
 			!! Result.make;
-			!! cmd.make (f.e_feature, f.e_class, Result);
+			!! cmd.make (f.e_feature, Result);
 			if cmd.has_valid_feature then
 				cmd.execute
 			end

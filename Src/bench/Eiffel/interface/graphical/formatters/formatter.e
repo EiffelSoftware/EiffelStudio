@@ -55,7 +55,7 @@ feature -- Callbacks
 			do_format := true;
 			execute_licensed (formatted);
 			do_format := old_do_format;
-			tool.history.extend (tool.stone);
+			tool.add_to_history (tool.stone);
 			mp.restore
 		end;
 

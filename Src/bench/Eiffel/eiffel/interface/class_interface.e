@@ -159,13 +159,7 @@ feature -- Control
 				feat_tbl.after
 			loop
 				feat := feat_tbl.item_for_iteration
-
-					-- FIXME: Manu 08/16/2002: We should check routine IDs rather 
-					-- than checking by feature name for `Void'.
-				if (feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id) then
-					compare_with_parent (feat, par_feats)
-				end
-
+				compare_with_parent (feat, par_feats)
 				feat_tbl.forth
 			end
 		end
@@ -213,7 +207,6 @@ feature {NONE} -- Implementation
 		require
 			feat_not_void: feat /= Void
 			p_not_void: p /= Void
-			not_is_void_feature: feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
 		local
 			l_feats: SELECT_TABLE
 			i, nb, j, count: INTEGER

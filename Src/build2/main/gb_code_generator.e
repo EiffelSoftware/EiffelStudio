@@ -503,7 +503,9 @@ feature {NONE} -- Implementation
 			comment_object_name, parameters: STRING
 			feature_implementation: STRING
 			indent_value: STRING
+			project_settings: GB_PROJECT_SETTINGS
 		do
+			project_settings := system_status.current_project_settings
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
 			end
@@ -574,12 +576,17 @@ feature {NONE} -- Implementation
 										parameters := " (" +action_sequence.parameter_list + ") is"
 									end	
 									
-									if action_sequence.count = 0 then
-										feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"-- + indent_less_one
-										--indent_value := indent_less_one
+										-- If the user has selected that they wish to generate debugging output, 
+										-- then we build a representation in `feature_implementation' otherwise,
+										-- the feature implementation will be empty.
+									if project_settings.debugging_output then
+										if action_sequence.count = 0 then
+											feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+										else
+											feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+										end
 									else
-										feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info --+ indent_less_one
-										--indent_value := indent_less_one
+										feature_implementation := ""
 									end
 									
 										-- Now we must generate the event declarations.

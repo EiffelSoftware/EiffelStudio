@@ -93,7 +93,7 @@ feature -- Access
 	log10 (v: DOUBLE): DOUBLE is
 			-- Base 10 logarithm of `v'
 		do
-			Result := feature {MATH}.log10 (v)
+			Result := feature {MATH}.log_10 (v)
 		end
 
 	floor (v: DOUBLE): DOUBLE is

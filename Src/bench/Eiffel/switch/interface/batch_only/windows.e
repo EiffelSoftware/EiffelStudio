@@ -14,7 +14,7 @@ feature
 	info_window: TERM_WINDOW is
 		once
 			Result := error_window
-		end;
+		end
 
 	debug_window: TERM_WINDOW is
 		once
@@ -24,11 +24,11 @@ feature
     Generate_window: DEGREE_OUTPUT is
 		once
 			!! Result
-		end;
+		end
 
     Reverse_engineering_window: DEGREE_OUTPUT is
 		once
 			!! Result
-		end;
+		end
 
 end

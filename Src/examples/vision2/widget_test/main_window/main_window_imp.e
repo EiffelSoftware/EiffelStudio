@@ -27,10 +27,12 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create l_vertical_box_1
-			create l_horizontal_box_1
+			create main_split_area
 			create widget_selector_parent
-			create l_notebook_1
-			create l_horizontal_box_2
+			create main_box
+			create l_label_1
+			create main_notebook
+			create l_horizontal_box_1
 			create l_vertical_box_2
 			create scrollable_parent
 			create scrollable_widget_area
@@ -41,33 +43,36 @@ feature {NONE}-- Initialization
 			create widget_holder
 			create bottom_spacing_cell
 			create right_spacing_cell
-			create l_horizontal_box_3
+			create l_horizontal_box_2
+			create l_notebook_1
 			create event_output
-			create l_vertical_box_3
+			create l_horizontal_box_3
 			create event_selector_list
-			create l_horizontal_box_4
+			create l_vertical_box_3
 			create select_all
-			create deselect_all
-			create l_horizontal_box_5
-			create l_label_1
-			create event_count_adjuster
+			create clear_all
 			create l_vertical_box_4
 			create object_editor
 			create padding_cell
-			create l_horizontal_box_6
+			create l_horizontal_box_4
 			create l_vertical_split_area_1
+			create l_horizontal_box_5
 			create controller_parent
-			create l_horizontal_box_7
+			create l_vertical_box_5
+			create l_button_1
+			create l_horizontal_box_6
 			create test_class_display
 			create flat_short_display
 			
 				-- Build_widget_structure.
 			extend (l_vertical_box_1)
-			l_vertical_box_1.extend (l_horizontal_box_1)
-			l_horizontal_box_1.extend (widget_selector_parent)
-			l_horizontal_box_1.extend (l_notebook_1)
-			l_notebook_1.extend (l_horizontal_box_2)
-			l_horizontal_box_2.extend (l_vertical_box_2)
+			l_vertical_box_1.extend (main_split_area)
+			main_split_area.extend (widget_selector_parent)
+			main_split_area.extend (main_box)
+			main_box.extend (l_label_1)
+			main_box.extend (main_notebook)
+			main_notebook.extend (l_horizontal_box_1)
+			l_horizontal_box_1.extend (l_vertical_box_2)
 			l_vertical_box_2.extend (scrollable_parent)
 			scrollable_parent.extend (scrollable_widget_area)
 			scrollable_widget_area.extend (horizontal_spacing_box)
@@ -77,36 +82,38 @@ feature {NONE}-- Initialization
 			vertical_spacing_box.extend (widget_holder)
 			vertical_spacing_box.extend (bottom_spacing_cell)
 			horizontal_spacing_box.extend (right_spacing_cell)
-			l_vertical_box_2.extend (l_horizontal_box_3)
-			l_horizontal_box_3.extend (event_output)
+			l_vertical_box_2.extend (l_horizontal_box_2)
+			l_horizontal_box_2.extend (l_notebook_1)
+			l_notebook_1.extend (event_output)
+			l_notebook_1.extend (l_horizontal_box_3)
+			l_horizontal_box_3.extend (event_selector_list)
 			l_horizontal_box_3.extend (l_vertical_box_3)
-			l_vertical_box_3.extend (event_selector_list)
-			l_vertical_box_3.extend (l_horizontal_box_4)
-			l_horizontal_box_4.extend (select_all)
-			l_horizontal_box_4.extend (deselect_all)
-			l_vertical_box_3.extend (l_horizontal_box_5)
-			l_horizontal_box_5.extend (l_label_1)
-			l_horizontal_box_5.extend (event_count_adjuster)
-			l_horizontal_box_2.extend (l_vertical_box_4)
+			l_vertical_box_3.extend (select_all)
+			l_vertical_box_3.extend (clear_all)
+			l_horizontal_box_1.extend (l_vertical_box_4)
 			l_vertical_box_4.extend (object_editor)
 			l_vertical_box_4.extend (padding_cell)
-			l_notebook_1.extend (l_horizontal_box_6)
-			l_horizontal_box_6.extend (l_vertical_split_area_1)
-			l_vertical_split_area_1.extend (controller_parent)
-			l_vertical_split_area_1.extend (l_horizontal_box_7)
-			l_horizontal_box_7.extend (test_class_display)
-			l_notebook_1.extend (flat_short_display)
+			main_notebook.extend (l_horizontal_box_4)
+			l_horizontal_box_4.extend (l_vertical_split_area_1)
+			l_vertical_split_area_1.extend (l_horizontal_box_5)
+			l_horizontal_box_5.extend (controller_parent)
+			l_horizontal_box_5.extend (l_vertical_box_5)
+			l_vertical_box_5.extend (l_button_1)
+			l_vertical_split_area_1.extend (l_horizontal_box_6)
+			l_horizontal_box_6.extend (test_class_display)
+			main_notebook.extend (flat_short_display)
 			
 				-- Initialize properties of all widgets.
 			
 			set_minimum_width (800)
 			set_minimum_height (27)
 			set_title ("Display window")
-			l_horizontal_box_1.disable_item_expand (l_notebook_1)
-			l_notebook_1.set_item_text (l_horizontal_box_2, "Properties")
-			l_notebook_1.set_item_text (l_horizontal_box_6, "Tests")
-			l_notebook_1.set_item_text (flat_short_display, "Documentation")
-			l_horizontal_box_2.disable_item_expand (l_vertical_box_4)
+			main_box.disable_item_expand (l_label_1)
+			l_label_1.align_text_left
+			main_notebook.set_item_text (l_horizontal_box_1, "Properties")
+			main_notebook.set_item_text (l_horizontal_box_4, "Tests")
+			main_notebook.set_item_text (flat_short_display, "Documentation")
+			l_horizontal_box_1.disable_item_expand (l_vertical_box_4)
 			l_vertical_box_2.disable_item_expand (scrollable_parent)
 			scrollable_widget_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
 			scrollable_widget_area.set_minimum_width (330)
@@ -131,24 +138,27 @@ feature {NONE}-- Initialization
 			right_spacing_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
 			right_spacing_cell.set_minimum_width (5)
 			right_spacing_cell.set_minimum_height (310)
+			l_notebook_1.set_item_text (event_output, "Output")
+			l_notebook_1.set_item_text (l_horizontal_box_3, "Events")
 			l_horizontal_box_3.disable_item_expand (l_vertical_box_3)
-			l_vertical_box_3.disable_item_expand (l_horizontal_box_4)
-			l_vertical_box_3.disable_item_expand (l_horizontal_box_5)
 			event_selector_list.set_minimum_width (150)
-			l_horizontal_box_4.set_padding_width (2)
-			l_horizontal_box_4.set_border_width (2)
+			l_vertical_box_3.set_padding_width (10)
+			l_vertical_box_3.set_border_width (10)
+			l_vertical_box_3.disable_item_expand (select_all)
+			l_vertical_box_3.disable_item_expand (clear_all)
 			select_all.set_text ("Select All")
-			deselect_all.set_text ("Clear All")
-			l_horizontal_box_5.set_border_width (2)
-			l_label_1.set_text ("Events recorded:")
-			event_count_adjuster.set_text ("0")
+			clear_all.set_text ("Clear All")
 			l_vertical_box_4.disable_item_expand (object_editor)
 			l_vertical_box_4.disable_item_expand (padding_cell)
 			padding_cell.set_minimum_width (180)
+			l_button_1.set_text ("Generate Test Application")
 			test_class_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (253, 255, 255))
 			test_class_display.disable_edit
 			
 				--Connect events.
+			l_notebook_1.selection_actions.extend (agent clear_events)
+			select_all.select_actions.extend (agent select_all_events)
+			clear_all.select_actions.extend (agent clear_all_events)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
@@ -171,18 +181,37 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	l_vertical_box_1, l_vertical_box_2, vertical_spacing_box, l_vertical_box_3, l_vertical_box_4: EV_VERTICAL_BOX
-	l_horizontal_box_1, l_horizontal_box_2, horizontal_spacing_box, l_horizontal_box_3, 
-	l_horizontal_box_4, l_horizontal_box_5, l_horizontal_box_6, l_horizontal_box_7: EV_HORIZONTAL_BOX
+	l_vertical_box_1, main_box, l_vertical_box_2, vertical_spacing_box, l_vertical_box_3, 
+	l_vertical_box_4, l_vertical_box_5: EV_VERTICAL_BOX
+	main_split_area: EV_HORIZONTAL_SPLIT_AREA
 	widget_selector_parent, left_spacing_cell, top_spacing_cell, widget_holder, bottom_spacing_cell, 
 	right_spacing_cell, object_editor, padding_cell, controller_parent: EV_CELL
-	l_notebook_1: EV_NOTEBOOK
+	l_label_1: EV_LABEL
+	main_notebook, l_notebook_1: EV_NOTEBOOK
+	l_horizontal_box_1, horizontal_spacing_box, l_horizontal_box_2, l_horizontal_box_3, 
+	l_horizontal_box_4, l_horizontal_box_5, l_horizontal_box_6: EV_HORIZONTAL_BOX
 	scrollable_parent: EV_FRAME
 	scrollable_widget_area: EV_SCROLLABLE_AREA
-	event_output, test_class_display, flat_short_display: EV_TEXT
+	event_output: EV_LIST
 	event_selector_list: EV_CHECKABLE_LIST
-	select_all, deselect_all: EV_BUTTON
-	l_label_1: EV_LABEL
-	event_count_adjuster: EV_SPIN_BUTTON
+	select_all, clear_all, l_button_1: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
-	end -- class MAIN_WINDOW_IMP
+	test_class_display, flat_short_display: EV_TEXT
+	
+	clear_events is
+			-- Called by `selection_actions' of `l_notebook_1'.
+		deferred
+		end
+	
+	select_all_events is
+			-- Called by `select_actions' of `select_all'.
+		deferred
+		end
+	
+	clear_all_events is
+			-- Called by `select_actions' of `clear_all'.
+		deferred
+		end
+	
+
+end -- class MAIN_WINDOW_IMP

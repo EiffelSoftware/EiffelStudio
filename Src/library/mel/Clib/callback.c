@@ -64,7 +64,6 @@ XEvent *an_event;
 String *params;
 Cardinal *num_params;
 {
-	EIF_PROC eiffel_rout;
 	EIF_OBJ trans;
 
 	if (*num_params) {

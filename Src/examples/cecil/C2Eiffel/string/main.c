@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include "eif_setup.h"
 #include "eif_eiffel.h"
-#include "version.h"	/* For 4.3 -> 4.2 compatibility */
-
+#ifdef EIF_WIN32
+#include "eif_econsole.h"
+#endif
 
 int main (int argc,char **argv,char **envp) {
 
@@ -49,6 +50,9 @@ int main (int argc,char **argv,char **envp) {
 	obj = eif_protect (o_str);	/* protect the return value of RTMS, we will
 							     * access to the Eiffel string through
 								 * eif_access (obj)	*/
+
+	printf ("Now printing the Eiffel string from Eiffel.\n\n");
+
 		/* Call to `io.put_string'. Note that `print' can be called instead
 	     * without any initialization of `io' */	
 	(p_put_string) (eif_access (i_io), eif_access (obj));/* Call `io.put_string (o_str)' */
@@ -62,4 +66,16 @@ int main (int argc,char **argv,char **envp) {
 
 
 }
-	
+
+#ifdef EIF_WIN32
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	int argc;
+	char **argv;
+	char **envp;
+
+	get_argcargv (&argc, &argv);
+	envp = (char **) GetEnvironmentStrings ();
+	return main(argc, argv, envp);
+}
+#endif	

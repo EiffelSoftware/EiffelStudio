@@ -217,6 +217,12 @@ feature {NONE}
 			dropped.copy_attribute (data)
 		end
 
+	current_state: BUILD_STATE is
+			-- Current state on the main panel.
+		do
+			Result := main_panel.current_state
+		end
+
 	process_instance (dropped: CMD_INST_STONE) is
 			-- Add command associated to `dropped' in current
 			-- state defined on the main panel.
@@ -246,10 +252,30 @@ feature {NONE}
 			end
 		end
 
-	current_state: BUILD_STATE is
-			-- Current state on the main panel.
+feature {GENERATE_OBJECT_TOOL_CMD}
+
+	associate_instance (inst: CMD_INSTANCE) is
+			-- Associate an `inst' to Current in the `currrent_state'.
+		local
+			the_behavior: BEHAVIOR
 		do
-			Result := main_panel.current_state
+			if current_state = Void then
+				main_panel.set_current_state (app_editor.initial_state_circle.data)
+			end
+			current_state.find_input (Current)
+			if current_state.after then					
+				!! the_behavior.make
+				the_behavior.set_context (Current)
+				the_behavior.set_internal_name ("")
+				current_state.add (Current, the_behavior)
+			else
+				the_behavior := current_state.output.data
+			end
+			the_behavior.set_input_data (default_event)
+			the_behavior.set_output_data (inst)
+			the_behavior.drop_pair
+			the_behavior.reset_input_data
+			the_behavior.reset_output_data	
 		end
 
 	-- ************************
@@ -1886,14 +1912,6 @@ feature
 			retrieve_oui_create (parent_widget)
 			retrieved_node.set_context_attributes (Current)
 			!! tree_element.make (Current)
-			from
-				child_start
-			until
-				child_offright
-			loop
-				child.retrieve_oui_widget
-				child_forth
-			end
 			if is_window then
 				realize
 				temp_w ?= Current
@@ -1902,6 +1920,14 @@ feature
 				end
 			else
 				widget.manage
+			end
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.retrieve_oui_widget
+				child_forth
 			end
 			retrieved_node := Void
 		end

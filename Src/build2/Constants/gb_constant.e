@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Objects that represent an EiffelBuild constant. Note that `value' is only defined
 		in descendents, as for an INTEGER constant, it is an expanded type, and we cannot
-		define it as defferred here.
+		define it as deferred here.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,9 @@ feature -- Access
 			Result_not_void: Result /= Void
 			data_points_to_current: Result.data = Current
 		end
+		
+	referers: ARRAYED_LIST [GB_CONSTANT_CONTEXT]
+			-- All contexts in which `Current' is specified.
 
 feature -- Element change
 
@@ -56,6 +59,26 @@ feature -- Element change
 			name := a_name
 		ensure
 			name_assigned: name = a_name
+		end
+		
+	add_referer (referer: GB_CONSTANT_CONTEXT) is
+			-- Add `referer' to `referers'.
+		require
+			referer_not_void: referer /= Void
+		do
+			referers.extend (referer)
+		ensure
+			has_referer: not referers.has (referer)
+		end
+	
+	remove_referer (referer: GB_CONSTANT_CONTEXT) is
+			-- Remove `referer' from `referers'.
+		require
+			referer_not_void: referer /= Void
+		do
+			referers.prune_all (referer)
+		ensure
+			not_has_referer: not referers.has (referer)
 		end
 
 feature -- Miscellaneous
@@ -73,5 +96,6 @@ feature -- Miscellaneous
 invariant
 	name_not_void: name /= Void
 	type_not_void: type /= Void
+	referers_not_void: referers /= Void
 
 end -- class GB_CONSTANT

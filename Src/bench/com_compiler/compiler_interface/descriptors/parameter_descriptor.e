@@ -25,9 +25,15 @@ feature {NONE} -- Initialization
 			valid_name: not a_name.is_empty
 			non_void_type: a_type /= Void
 			valid_type: not a_type.is_empty
+		local
+			l_display: STRING
 		do
 			name := a_name
-			display := a_name + ": " + a_type
+			create l_display.make (a_name.count + 2 + a_type.count)
+			l_display.append (a_name)
+			l_display.append (": ")
+			l_display.append (a_type)
+			display := l_display
 			type := a_type
 		ensure
 			name_set: name = a_name

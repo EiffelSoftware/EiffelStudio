@@ -61,7 +61,7 @@ feature -- Status setting
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ITEM_LIST_I} -- Implementation
 
 	on_parented is
 			-- `Current' has just been put into a container.
@@ -103,6 +103,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/24 19:17:30  rogers
+--| Changed export status of on_parented and on_orphaned to EV_ITEM_LIST_I from NONE.
+--|
 --| Revision 1.16  2000/03/23 23:37:03  brendel
 --| Added on_parented and on_orphaned. Not called yet.
 --|

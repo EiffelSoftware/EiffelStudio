@@ -16,6 +16,8 @@ inherit
 			realized,
 			set_text,
 			text,
+			width,
+			height,
 			unrealize,
 			set_insensitive
 		end
@@ -43,6 +45,22 @@ feature -- Access
 
 	text: STRING
 
+	width: INTEGER is
+		local
+			system_font: WEL_SYSTEM_FONT
+		do
+			!! system_font.make
+			Result := (text.count + 1) * system_font.log_font.width
+		end	
+	
+	height: INTEGER is
+		local
+			system_font: WEL_SYSTEM_FONT
+		do
+			!! system_font.make
+			Result := system_font.log_font.height
+		end	
+
 feature -- Status setting
 
 	set_text (new_text: STRING) is
@@ -53,7 +71,7 @@ feature -- Status setting
 	set_insensitive (flag: BOOLEAN) is
 			-- Set sensitivity of Current to reflect `flag'.
 		do
-			{BUTTON_IMP} precursor (flag)
+			{BUTTON_IMP} Precursor (flag)
 			if flag then
 				associated_menu.set_insensitive
 			else
@@ -129,14 +147,21 @@ feature {NONE} -- Inapplicable
 	wel_parent: WEL_COMPOSITE_WINDOW
 
 	client_rect: WEL_RECT
+
 	wel_shown, exists, enabled: BOOLEAN
+
 	wel_children: LINKED_LIST [WEL_WINDOW]
+
 	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) is do end
+
 	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
+
 	wel_text: STRING
+
 	resize, wel_move (new_width, new_height: INTEGER) is
 		do
 		end
+
 	set_z_order (flags: INTEGER) is
 		do
 		end

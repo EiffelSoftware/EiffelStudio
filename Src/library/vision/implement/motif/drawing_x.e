@@ -283,6 +283,12 @@ feature -- Output
 
 feature {NONE} -- Implementatin
 
+	n_64_units: INTEGER is 64;
+			-- 64 units
+
+	n_360_degrees: INTEGER is 23040;
+			-- 360 degrees in 64ths of a degree (64*360)
+
 	height: INTEGER is
 			-- Height of drawing area
 		deferred
@@ -297,13 +303,13 @@ feature {NONE} -- Implementatin
 			-- Convert `angle' in an integer in 64th of degree
 			-- (angle_x (360) = 360*64)
 		do
-			Result := (64*angle).truncated_to_integer;
-			if Result > 23040 then
-				Result := Result \\ 23040
+			Result := (n_64_units*angle).truncated_to_integer;
+			if Result > n_360_degrees then
+				Result := Result \\ n_360_degrees
 			end
 		ensure
-			Result >= -23040;
-			Result <= 23040
+			result_greater_than: Result >= - n_360_degrees;
+			result_less_than: Result <= n_360_degrees
 		end;
 
 	join_lines (center: COORD_XY; x0, y0, x1, y1: INTEGER; arc_style: INTEGER) is

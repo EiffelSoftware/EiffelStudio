@@ -40,7 +40,7 @@ feature -- Access
 		end
 
 	frozen id_object (an_id: INTEGER): IDENTIFIED is
-			-- Get the object associated with `an_id'
+			-- Object associated with `an_id' (void if no such object)
 		do
 			Result := eif_id_object (an_id)
 		ensure

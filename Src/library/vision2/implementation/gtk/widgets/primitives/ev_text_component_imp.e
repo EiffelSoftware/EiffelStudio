@@ -28,13 +28,6 @@ inherit
 			create_change_actions
 		end
 
-feature -- Access
-
-	text_length: INTEGER is
-			-- Length of the text in the widget.
-		do
-			Result := text.count
-		end
 
 feature -- Status report
 

@@ -113,9 +113,6 @@ feature -- Status setting
 
 feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
-	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-			-- List of the children
-
 	interface: EV_LIST
 
 end -- class EV_LIST_I
@@ -141,6 +138,11 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/04/20 00:58:52  pichery
+--| Removed `ev_children' from EV_LIST_I.
+--| Now only defined on Windows in
+--| EV_LIST_ITEM_LIST_IMP
+--|
 --| Revision 1.44  2000/04/19 01:26:18  pichery
 --| Changed `selected_items' from LINKED_LIST to
 --| ARRAYED_LIST

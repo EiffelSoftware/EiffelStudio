@@ -191,29 +191,35 @@ feature -- Dotnet creation
 feature -- Access 
 
 	is_dotnet_value: BOOLEAN
+			-- Is Current represent a typical dotnet value ?
+			-- (String are processing in a special way)
 	
 	is_external_type: BOOLEAN
 			-- Is the value corresponding to an external type ?
 			-- (ex: like SystemObject for dotnet)
 			
 	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
+			-- Debug value related to `value_dotnet'
 
 	value_dotnet: ICOR_DEBUG_VALUE
+			-- Dotnet value as an ICorDebugValue interface
 
 	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
+			-- ICorDebugStringValue for the dotnet String
 	
 	value_frame_dotnet: ICOR_DEBUG_FRAME
+			-- ICorDebugFrame in this DUMP_VALUE context
 	
 feature -- change
 
 	set_value_dotnet (v: like value_dotnet) is
-			-- 
+			-- Set `value_dotnet' as `v'
 		do
 			value_dotnet := v	
 		end	
 
 	set_value_frame_dotnet (v: like value_frame_dotnet) is
-			-- 
+			-- Set `value_frame_dotnet' as `v'
 		do
 			value_frame_dotnet := v	
 		end			
@@ -221,13 +227,16 @@ feature -- change
 feature {NONE} -- Implementation dotnet
 
 	string_value: STRING
+			-- String value
 
 	value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE
+			-- Dotnet value as an ICorDebugObjectValue interface
 	
 	value_class_token: INTEGER
+			-- Class token for the dotnet value
 	
 	value_class_name: STRING is
-			-- 
+			-- Class name for the dotnet value
 		do
 			if not is_external_type and then dynamic_class/= Void then
 				Result := dynamic_class.name_in_upper
@@ -264,21 +273,24 @@ feature -- Status report
 			o: DEBUGGED_OBJECT_CLASSIC
 			att: ABSTRACT_DEBUG_VALUE
 		do
-			debug ("debug_recv")
-				print ("DUMP_VALUE.to_basic%N")
-			end
-			create o.make (address, 0, 1)
-			from
-				o.attributes.start
-			until
-				o.attributes.after
-			loop
-				att := o.attributes.item
-				if att.name.is_equal ("item") then
-					Result := att.dump_value
+			if application.is_classic then			
+				debug ("debug_recv")
+					print ("DUMP_VALUE.to_basic%N")
 				end
-				o.attributes.forth
+				create o.make (address, 0, 1)
+				from
+					o.attributes.start
+				until
+					o.attributes.after
+				loop
+					att := o.attributes.item
+					if att.name.is_equal ("item") then
+						Result := att.dump_value
+					end
+					o.attributes.forth
+				end
 			end
+				
 			if Result = Void then
 				Result := Current
 			end
@@ -298,15 +310,12 @@ feature -- Status report
 			elseif type = Type_object and not is_void then
 				if Eiffel_system.string_class.is_compiled then
 					if 
---						dynamic_class /= Void 
---						and then 
 						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
 					then
 						Result := True
 					else
 						dc := debuggable_class
-						Result := --dynamic_class /= Void and then
-									dc /= Void and then
+						Result :=   dc /= Void and then
 									dynamic_class.simple_conform_to (dc)
 					end
 				end
@@ -319,6 +328,8 @@ feature -- Status report
 		end
 
 	string_representation_for_dotnet (min, max: INTEGER): STRING is
+			-- String representation for dotnet value
+			--| FIXME: JFIAT: we should take min,max into account ...
 		require
 			object_with_debug_output: address /= Void and has_formatted_output	
 			dotnet: is_dotnet_value
@@ -484,29 +495,21 @@ feature -- Action
 			inspect (type)
 				when Type_boolean then
 					send_bool_value(value_boolean)
-
 				when Type_character then
 					send_char_value(value_character)
-
 				when Type_integer then
 					send_integer_value(value_integer)
-					
 				when Type_integer_64 then
 					send_integer_64_value (value_integer_64)
-
 				when Type_real then
 					send_real_value(value_real)
-
 				when Type_double then
 					send_double_value(value_double)
-
 				when Type_pointer then
 					send_ptr_value(value_pointer)
-
 				when Type_string then
 					value_string_c := value_object.to_c
 					send_string_value($value_string_c)
-				
 				when Type_object then
 					if value_object /= Void then
 						send_ref_value(hex_to_integer(value_object))

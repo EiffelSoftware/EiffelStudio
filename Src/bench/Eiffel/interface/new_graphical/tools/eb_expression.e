@@ -633,11 +633,24 @@ feature {NONE} -- Implementation
 							create l_params.make (1, parameters.count)
 							l_params_index := 0
 							parameters.start
+							byte_context.set_class_type (l_class_type)
 						until
 							parameters.after or error_message /= Void
 						loop
 							dmp := parameters.item.final_result_value
 							l_params_index := l_params_index + 1
+
+							if
+								dmp.is_basic and
+								(not byte_context.real_type (
+									realf.arguments.i_th (parameters.index).type_i).is_basic)
+							then
+								dmp := evaluator.dotnet_metamorphose_basic_to_ref (dmp)
+								debug ("debugger_trace_eval")
+									print ("Metamorphose ... %N")
+								end
+							end
+							
 							l_params.put (dmp, l_params_index)
 							parameters.forth
 						end
@@ -671,7 +684,6 @@ feature {NONE} -- Implementation
 
 					--| Feature's Evaluation
 				if Application.is_dotnet then
-
 					result_object := evaluator.dotnet_evaluate_function (addr, value, realf.associated_feature_i, l_class_type, l_params)
 					if result_object = Void then
 						error_message := "Error during evaluation"
@@ -980,9 +992,10 @@ feature {NONE} -- Implementation
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
 		end
 		
-feature -- test jfiat
+feature -- Bridge to DBG_EVALUATOR
 
 	evaluator: DBG_EVALUATOR is
+			-- Object used to evaluate dotnet value/features
 		once
 			create Result.make
 		end

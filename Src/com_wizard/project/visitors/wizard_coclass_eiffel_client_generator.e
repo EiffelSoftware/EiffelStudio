@@ -51,7 +51,7 @@ feature -- Access
 			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, True)
 			eiffel_writer.set_class_name (a_class_name)
 
-			add_default_features
+			add_default_features (a_descriptor)
 			if dispatch_interface then
 				eiffel_writer.add_feature (last_error_code_feature, Status_report)
 				eiffel_writer.add_feature (last_error_description_feature, Status_report)
@@ -118,13 +118,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_default_features is
+	add_default_features (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add default features to coclass client. 
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		local
 			a_coclass_name: STRING
 		do
-			a_coclass_name := name_for_feature (clone (coclass_descriptor.eiffel_class_name))
+			a_coclass_name := name_for_feature (clone (a_coclass_descriptor.eiffel_class_name))
 
 			create ccom_create_feature_name.make (0)
 			ccom_create_feature_name.append (Ccom_clause)
@@ -140,12 +140,12 @@ feature {NONE} -- Implementation
 			ccom_delete_feature_name.append ("delete_")
 			ccom_delete_feature_name.append (a_coclass_name)
 
-			eiffel_writer.add_feature (create_coclass_feature (coclass_descriptor), Externals)
+			eiffel_writer.add_feature (create_coclass_feature (a_coclass_descriptor), Externals)
 			eiffel_writer.add_feature (make_feature, Initialization)
-			eiffel_writer.add_feature (delete_coclass_feature (coclass_descriptor), Externals)
+			eiffel_writer.add_feature (delete_coclass_feature (a_coclass_descriptor), Externals)
 			eiffel_writer.add_feature (delete_wrapper_feature, Implementation)
-			eiffel_writer.add_feature (create_coclass_from_pointer_feature (coclass_descriptor), Externals)
-			eiffel_writer.add_feature (ccom_item_feature (coclass_descriptor), Externals)
+			eiffel_writer.add_feature (create_coclass_from_pointer_feature (a_coclass_descriptor), Externals)
+			eiffel_writer.add_feature (ccom_item_feature (a_coclass_descriptor), Externals)
 			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 
 		end

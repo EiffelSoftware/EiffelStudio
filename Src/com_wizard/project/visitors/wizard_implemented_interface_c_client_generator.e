@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Implemented interface generator for C client"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,31 +21,6 @@ inherit
 		end
 
 	WIZARD_COMPONENT_C_CLIENT_GENERATOR
-
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 
@@ -128,10 +103,6 @@ feature -- Basic operations
 		do
 			a_factory.process_coclass_c_client
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
@@ -260,9 +231,6 @@ feature {NONE} -- Implementation
 			valid_descructor: not Result.empty
 		end
 
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR
 

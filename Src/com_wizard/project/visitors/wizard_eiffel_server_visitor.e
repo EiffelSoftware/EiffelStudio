@@ -12,6 +12,7 @@ inherit
 		redefine
 			process_alias,
 			process_coclass,
+			process_implemented_interface,
 			process_interface,
 			process_enum,
 			process_record
@@ -38,6 +39,17 @@ feature -- Processing
 			Precursor (coclass_descriptor)
 			coclass_server_generator.initialize
 			coclass_server_generator.generate (coclass_descriptor)
+		end
+
+	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+			-- process interface
+			-- generated class for interface
+			-- `inteface_descriptor' must provide information on
+			-- every function of interface
+		do
+			Precursor (interface_descriptor)
+			implemented_interface_generator.initialize
+			implemented_interface_generator.generate (interface_descriptor)
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -92,6 +104,12 @@ feature {NONE}
 
 	coclass_server_generator: WIZARD_COCLASS_EIFFEL_SERVER_GENERATOR is
 			-- Coclass eiffel server generator
+		once
+			create Result
+		end
+
+	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR is
+			-- Implemented interface Eiffel server  generator.
 		once
 			create Result
 		end

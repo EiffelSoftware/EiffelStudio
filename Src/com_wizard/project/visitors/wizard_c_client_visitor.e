@@ -115,31 +115,31 @@ feature -- Processing
 feature {NONE} -- Implementation
 
 	alias_client_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR is
-			-- Alias eiffel client generator.
+			-- Alias C client generator.
 		once
 			create Result
 		end
 
 	coclass_client_generator: WIZARD_COCLASS_C_CLIENT_GENERATOR is
-			-- Coclass eiffel client generator.
+			-- Coclass C client generator.
 		once
 			create Result
 		end
 
 	implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR is
-			-- Implemented interface eiffel client generator.
+			-- Implemented interface C client generator.
 		once
 			create Result
 		end
 
 	interface_client_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR is
-			-- Interface eiffel client generator.
+			-- Interface C client generator.
 		once
 			create Result
 		end
 
 	record_client_generator: WIZARD_RECORD_C_CLIENT_GENERATOR is
-			-- Record eiffel client generator.
+			-- Record C client generator.
 		once
 			create Result
 		end

@@ -428,34 +428,39 @@ extern STREAM *sp;
 typedef void (* EVENT_CALLBACK)(EIF_OBJ);
 EVENT_CALLBACK event_callback;
 EIF_OBJ event_object;
+EIF_INTEGER delay;
+UINT event_id;
 
-VOID CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
 void win_ioh_make_client(a, o)
 EIF_POINTER a;
 EIF_OBJ     o;
+/*EIF_INTEGER a_delay;*/
 {
-	FILE *a_file;
-	a_file = fopen ("comm.log", "wb");
-	fwrite ("IO created\n", 1, strlen ("IO created\n"), a_file);
-	fclose (a_file);
-
 	event_callback = (EVENT_CALLBACK) a;
 	event_object = eif_adopt (o);
-	SetTimer (NULL, 0, 100, (TIMERPROC) ioh_timer);
+	delay = 10; /* FIXME - passed as an argument */
 }
 
-VOID CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-	FILE *a_file;
-	a_file = fopen ("comm.log", "wb");
-	fwrite ("Timer callback\n", 1, strlen ("Timer callback\n"), a_file);
-	fclose (a_file);
-
 	/* KillTimer */
 	if (WaitForSingleObject (readev(sp), 0) == WAIT_OBJECT_0)
 		(event_callback)(eif_access(event_object));
-	/* SetTimer */
+}
+
+void start_timer ()
+{
+	/* Start the timer event to check for communications 
+	   between bench and the application */
+	event_id = SetTimer (NULL, 0, delay, (TIMERPROC) ioh_timer);
+}
+
+void stop_timer ()
+{
+	/* Kill the timer event */
+	KillTimer (NULL, event_id);
 }
 
 #endif

@@ -83,8 +83,8 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				-- Create the main container and the left + right panels.
 			create container
 			window.extend (container)
-			create right_panel.make (Current, False)
-			create left_panel.make (Current, window_preferences.left_panel_use_explorer_style)
+			create right_panel.make (Current, False, True)
+			create left_panel.make (Current, window_preferences.left_panel_use_explorer_style, False)
 			create panel
 			panel.extend (left_panel.widget)
 			panel.extend (right_panel.widget)

@@ -26,10 +26,11 @@ create
 
 feature {NONE} -- Implementation
    
-	make (a_parent: EB_EXPLORER_BAR_MANAGER; use_explorer_style: BOOLEAN) is
+	make (a_parent: EB_EXPLORER_BAR_MANAGER; use_explorer_style: BOOLEAN; full_max: BOOLEAN) is
 			-- Initialization
 		do
 			explorer_style := use_explorer_style
+			full_maximize := full_max
 			explorer_bar_manager := a_parent
 			create widget
 
@@ -53,6 +54,9 @@ feature -- Access
 
 	explorer_style: BOOLEAN
 			-- Use the explorer style? (i.e one visible item at most)
+
+	full_maximize: BOOLEAN
+			-- Can the bar take the whole window?
 
 	item_list: ARRAYED_LIST [like item]
 			-- List of all items in the bar.
@@ -114,16 +118,18 @@ feature -- Access
 		local
 			cur: CURSOR
 		do
-			from
-				cur := item_list.cursor
-				item_list.start
-			until
-				Result or item_list.after
-			loop
-				Result := item_list.item.is_maximized
-				item_list.forth
+			if full_maximize then
+				from
+					cur := item_list.cursor
+					item_list.start
+				until
+					Result or item_list.after
+				loop
+					Result := item_list.item.is_maximized
+					item_list.forth
+				end
+				item_list.go_to (cur)
 			end
-			item_list.go_to (cur)
 		end
 
 feature -- Status Report
@@ -514,7 +520,9 @@ feature {NONE} -- Implementation (attributes)
 				end
 	
 				if maximized_item /= Void then
-					explorer_bar_manager.close_all_bars_except (Current)
+					if full_maximize then
+						explorer_bar_manager.close_all_bars_except (Current)
+					end
 					widget.wipe_out
 					widget.extend (build_item_display (maximized_item))
 				else

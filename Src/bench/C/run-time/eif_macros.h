@@ -59,6 +59,7 @@ extern "C" {
 #define EXTERN_DECL(r_type, name, args) extern r_type name args
 #define STATIC_DECL(r_type, name, args) static r_type name args
 #define FUNCTION_CAST(r_type, arg_types) (r_type (*) arg_types)
+#define FUNCTION_CAST_TYPE(r_type, call_type, arg_types) (r_type (call_type *) arg_types)
 
 /* Macro used for initialization of GC profiling:
  *  RTGC calls initialization of GC profiling

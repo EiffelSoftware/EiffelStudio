@@ -54,7 +54,6 @@ rt_private int (*run_idr_read_func) (IDR *bu);	/* `run_idr_read' function. This 
 											 * depending on which version of INDEPENDENT_STORE
 											 * we are using. The old one is based on `short'
 											 * the new one on `long' */
-rt_private int old_run_idr_read (IDR *bu);
 rt_private int run_idr_read (IDR *bu);
 
 rt_public bool_t run_idr_setpos(IDR *idrs, int pos)
@@ -126,14 +125,11 @@ rt_public int run_idrf_create(int size)
 }
 
 
-rt_public void run_idr_init (long idrf_size, EIF_BOOLEAN is_limited_by_short)
+rt_public void run_idr_init (long idrf_size)
 {
 	idrf_buffer_size = idrf_size;
 
-	if (is_limited_by_short) 
-		run_idr_read_func = old_run_idr_read;
-	else
-		run_idr_read_func = run_idr_read;
+	run_idr_read_func = run_idr_read;
 
 	if (-1 == run_idrf_create (idrf_size))
 		eraise ("cannot allocate idrf", EN_MEM);
@@ -146,36 +142,6 @@ rt_public void run_idr_destroy (void)
 {
 	run_mem_destroy(&idrf.i_encode);
 	run_mem_destroy(&idrf.i_decode);
-}
-
-/* Old run_idr_read function. It is based on buffer which are limited by
- * SHORT_MAX, in order to retrieve storable done with version prior or
- * equal to 4.2F */
-rt_private int old_run_idr_read (IDR *bu)
-{
-	register char * ptr = bu->i_buf;
-	short read_size, amount_left;
-	register int part_read;
-	register int total_read = 0;
-
-	if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
-		eise_io("Independent retrieve: unable to read buffer size.");
-
-	read_size = ntohs (read_size);
-#ifdef DEBUG
-	if (read_size > idrs_size (bu))
-		print_err_msg(stderr, "Too large %d info for %d buffer\n", read_size, idrs_size (bu));
-#endif
-
-	amount_left = read_size;
-	while (total_read < read_size) {
-		if ((part_read = char_read_func (ptr, amount_left)) < 0)
-			eio();
-		total_read += part_read;
-		ptr += part_read;
-		amount_left -= part_read;
-		}
-	return total_read;
 }
 
 rt_private int run_idr_read (IDR *bu)

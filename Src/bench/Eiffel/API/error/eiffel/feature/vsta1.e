@@ -53,12 +53,8 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
 			-- in `st'.
-		local
-			c_name: STRING
 		do
-			c_name := clone (class_name)
-			c_name.to_upper
-			st.add_string ("Invalid class name %"" + c_name + "%" in direct access of ")
+			st.add_string ("Invalid class name %"" + class_name.as_upper + "%" in direct access of ")
 			st.add_feature_name (feature_name, class_c)
 			st.add_new_line
 		end

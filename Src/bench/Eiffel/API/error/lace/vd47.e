@@ -27,16 +27,12 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 			-- Debug purpose
-		local
-			upper_name: like old_name
 		do
 			st.add_string ("Cluster path: ");
 			st.add_string (cluster.path);
 			st.add_new_line;
 			st.add_string ("Class name: ");
-			upper_name := clone (old_name);
-			upper_name.to_upper;
-			st.add_string (upper_name);
+			st.add_string (old_name.as_upper);
 			st.add_new_line
 		end;
 

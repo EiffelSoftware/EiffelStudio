@@ -160,6 +160,7 @@ enum
     DISPID_EiffelComCompiler_TargetFeature,
     DISPID_EiffelComCompiler_ParseSourceForExpr,
     DISPID_EiffelComCompiler_FindDefinition,
+    DISPID_EiffelComCompiler_FindInheritedDefinition,
     DISPID_EiffelComCompiler_FlushCompletionFeatures,
     DISPID_EiffelComCompiler_InitializeFeature,
     DISPID_EiffelComCompiler_SetupRenameTables,

@@ -568,6 +568,9 @@ library EiffelComCompiler
         [id (DISPID_EiffelComCompiler_FindDefinition), helpstring ("Find targets definition and return filename and location")]
         HRESULT FindDefinition ([in] BSTR bstrClassText, [in] BSTR bstrTargetFileName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrSourceFileName, [out] ULONG* pulSourceRow);
 
+        [id (DISPID_EiffelComCompiler_FindInheritedDefinition), helpstring ("Find targets definition and return filename and location")]
+        HRESULT FindInheritedDefinition ([in] BSTR bstrClassText, [in] BSTR bstrClassName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrSourceFileName, [out] ULONG* pulSourceRow);
+
         [id (DISPID_EiffelComCompiler_FlushCompletionFeatures), helpstring ("Flush temporary completion features for a specific file")]
         HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
 

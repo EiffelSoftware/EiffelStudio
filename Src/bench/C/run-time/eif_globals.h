@@ -47,6 +47,10 @@ extern "C" {
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
+		/* WEL private data. It needs to be at the top of the structure,
+		 * because we want it to work no matter if WORKBENCH is defined or not. */
+	void *wel_per_thread_data;
+
 #ifdef WORKBENCH
 		/* debug.c */
 	struct dbinfo d_data_cx;			/* Global debugger information */
@@ -88,7 +92,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* storable.c from EiffelNet */
 	int socket_fides_cx;
-
 } eif_global_context_t;
 
 

@@ -21,6 +21,7 @@ feature -- Access
 			-- Generate c writer.
 		local
 			func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
+			a_header_file: STRING
 		do
 			create cpp_class_writer.make
 			cpp_class_writer.set_abstract
@@ -76,6 +77,25 @@ feature -- Access
 					a_descriptor.dispatch_functions.forth
 				end
 			end
+			
+			if a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
+			
+				from
+					a_descriptor.properties.start
+				until
+					a_descriptor.properties.off
+				loop
+					a_header_file := a_descriptor.properties.item.data_type.visitor.c_header_file
+					if 
+						a_header_file /= Void and then
+						not a_header_file.empty 
+					then
+						add_include_file (a_header_file)
+					end
+					
+					a_descriptor.properties.forth
+				end
+			end
 
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
@@ -124,9 +144,7 @@ feature {NONE} -- Implementation
 					func_generator.c_header_files.off
 				loop
 					if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
-						if cpp_class_writer.import_files.occurrences (func_generator.c_header_files.item) = 0 then
-							cpp_class_writer.add_import (func_generator.c_header_files.item)
-						end
+						add_include_file (func_generator.c_header_files.item)
 					end
 					func_generator.c_header_files.forth
 				end
@@ -152,6 +170,19 @@ feature {NONE} -- Implementation
 					func_generator.forward_declarations.forth
 				end
 			end
+		end
+	
+	add_include_file (a_file: STRING) is
+			-- Add include file.
+		require
+			non_void_file: a_file /= Void
+			valid_file: not a_file.empty
+		do
+			if cpp_class_writer.import_files.occurrences (a_file) = 0 then
+				cpp_class_writer.add_import (a_file)
+			end
+		ensure
+			added: cpp_class_writer.import_files.occurrences (a_file) > 0
 		end
 		
 end -- class WIZARD_INTERFACE_C_GENERATOR

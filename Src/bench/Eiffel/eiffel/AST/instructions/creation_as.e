@@ -290,7 +290,7 @@ feature -- Type check, byte code and dead code removal
 						-- if it actually does something or if it is a formal
 						-- creation (because we need to keep the call for polymorphic
 						-- reasons).
-					if is_formal_creation or else not dcr_feat.empty_body then
+					if is_formal_creation or else not dcr_feat.is_empty then
 						dcr_id := default_call.feature_name
 						dcr_id.load (dcr_feat.feature_name)
 						the_call := default_call

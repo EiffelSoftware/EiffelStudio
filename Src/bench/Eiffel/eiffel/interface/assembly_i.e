@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 			prefix_name := a.prefix_name
 			if prefix_name /= Void then
-				prefix_name := prefix_name.as_lower
+				prefix_name := prefix_name.as_upper
 			end
 
 			is_library := True
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 
 			prefix_name := l_ass.name + "_"
 			prefix_name.replace_substring_all (".", "_")
-			prefix_name := prefix_name.as_lower
+			prefix_name := prefix_name.as_upper
 
 			is_library := True
 			is_recursive := True
@@ -267,7 +267,6 @@ feature -- Initialization
 			loop
 				l_class_name := l_types.eiffel_names.item (i)
 				if l_class_name /= Void then
-					l_class_name := l_class_name.as_lower
 					if prefix_name /= Void then
 						l_class_name.prepend (prefix_name)
 					end

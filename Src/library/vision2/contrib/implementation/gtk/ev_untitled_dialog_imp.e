@@ -52,13 +52,6 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	frozen gtk_window_dialog_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_WINDOW_DIALOG"
-		end
-
 	has_wm_decorations: BOOLEAN is
 			-- Does the current window object have window decorations.
 		do

@@ -18,7 +18,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 		local
 			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			rout_id_set: ROUT_ID_SET;

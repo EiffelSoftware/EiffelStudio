@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Display routines of `current_class' that follow `criterium'.
 		local
 				-- Compiler structures

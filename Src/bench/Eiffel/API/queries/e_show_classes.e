@@ -19,7 +19,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show classes in universe
 		local
 			clusters: LINKED_LIST [CLUSTER_I];

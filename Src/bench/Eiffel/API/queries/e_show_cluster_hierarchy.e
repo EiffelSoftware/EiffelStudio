@@ -18,7 +18,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show classes in universe
 		do
 			display_clusters (Eiffel_system.sub_clusters, 0)

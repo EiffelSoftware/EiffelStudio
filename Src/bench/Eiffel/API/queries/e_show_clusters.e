@@ -18,7 +18,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show universe: clusters in class lists.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];

@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Execute Current command.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];

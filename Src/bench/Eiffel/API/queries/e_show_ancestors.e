@@ -18,7 +18,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 		do
 			!! displayed.make;
 			current_class.append_signature (structured_text);

@@ -21,7 +21,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show indexing clauses of clases in universe.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];

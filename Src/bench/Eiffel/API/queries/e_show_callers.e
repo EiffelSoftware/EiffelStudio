@@ -32,7 +32,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Execute the display of callers.
 		do
 			if to_show_all_callers then

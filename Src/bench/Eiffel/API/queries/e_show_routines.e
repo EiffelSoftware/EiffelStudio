@@ -11,16 +11,16 @@ inherit
 
 	E_CLASS_FORMAT_CMD
 		rename
-			execute as class_execute
+			work as class_work
 		export
-			{NONE} class_execute
+			{NONE} class_work
 		end;
 
 	E_CLASS_FORMAT_CMD
 		redefine
-			execute
+			work
 		select
-			execute
+			work
 		end
 
 creation
@@ -44,12 +44,12 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Display the routines and the invariant of `current_class'. 
 		local
 			class_f: CLASS_TEXT_FORMATTER
 		do
-			class_execute;
+			class_work;
 			!! class_f;
 			class_f.set_clickable;
 			class_f.format_invariants (current_class);

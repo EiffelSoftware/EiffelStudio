@@ -17,7 +17,7 @@ creation
 
 feature -- Output
 
-	execute is
+	work is
 			-- Execute Current command.	
 		do
 			!! displayed.make;

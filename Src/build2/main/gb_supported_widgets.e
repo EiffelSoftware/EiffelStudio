@@ -12,9 +12,12 @@ feature -- Access
 
 	containers: ARRAY [STRING] is
 		once
+				--| FIXME, I have removed EV_TABLE and EV_VIEWPORT for
+				--| the first release. These need specific handling, due to their behaviour.
+				--| Julian 11/12/01.
 			Result := <<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_SPLIT_AREA",
-				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_TABLE", "EV_VERTICAL_BOX",
-				"EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>
+				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_VERTICAL_BOX",
+				"EV_VERTICAL_SPLIT_AREA">>
 		end
 				
 	primitives: ARRAY [STRING] is 

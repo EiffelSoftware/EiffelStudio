@@ -6,14 +6,22 @@ inherit
 	
 feature {NONE}
 
-	Size_file: UNIX_FILE is
+	size_file (final_mode: BOOLEAN): UNIX_FILE is
 			-- File where the type sizes are generated
+			--! This is not a once function since
+			--! we want different postfix for the
+			--! file name
 		local
 			file_name: STRING;
-		once
+		do
 			!!file_name.make (generation_path.count + 8);
 			file_name.append (generation_path);
-			file_name.append ("/Esize.c");
+			file_name.append ("/Esize.");
+			if final_mode then
+				file_name.append ("x")
+			else
+				file_name.append ("c")
+			end;
 			!!Result.make (file_name);
 		end;
 

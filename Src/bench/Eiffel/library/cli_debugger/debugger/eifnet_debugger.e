@@ -269,6 +269,7 @@ feature -- Debugging session Termination ...
 						l_pro_hdl := icor_debug.last_icor_debug_process_handle
 					end
 					l_success := cwin_terminate_process (l_pro_hdl, 0)
+					notify_exit_process_occurred
 				end
 			else
 				eif_debug_display ("[EIFDBG] could not find ICorDebugController object ...")

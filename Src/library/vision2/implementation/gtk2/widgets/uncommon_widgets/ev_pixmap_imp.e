@@ -160,11 +160,20 @@ feature -- Element change
 		local
 			a_gdkpix, a_gdkmask, a_gdkpixbuf: POINTER
 		do
-			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+			a_gdkpixbuf := pixbuf_from_drawable
 			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
+		end
+
+	pixbuf_from_drawable: POINTER is
+			-- 
+		do
+			if mask /= default_pointer then
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, 0, 0, 0, 0, -1, -1)
+			end
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -426,7 +435,7 @@ feature {NONE} -- Implementation
 		do			
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
 				-- Perform custom saving with GdkPixbuf
-				a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+				a_gdkpixbuf := pixbuf_from_drawable
 				create a_handle.make (a_filename)
 				create a_filetype.make (a_format.file_extension)
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then

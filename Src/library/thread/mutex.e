@@ -77,7 +77,6 @@ feature {CONDITION_VARIABLE} -- Implementation
 	mutex_pointer: POINTER
 			-- C reference to the mutex.
 
-
 feature {NONE} -- Removal
 
 	dispose is
@@ -85,10 +84,9 @@ feature {NONE} -- Removal
 			-- collected.
 		do
 			if thread_is_owner and is_set then
-				eif_thr_mutex_destroy (mutex_pointer)
+				destroy
 			end
 		end
-
 
 feature {NONE} -- Externals
 

@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			create {COMPILER} compiler.make
 			create {SYSTEM_BROWSER} system_browser.make
 			create {COMPLETION_INFORMATION} completion_information.make
-			create {HTML_DOC_GENERATOR} html_doc_generator.make
 			create eifgen_init.make
 				--| FIXME do not forget to call `dispose' one day !
 		end
@@ -51,8 +50,11 @@ feature -- Access
 	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE
 			-- Completion information
 			
-	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE
+	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
 			-- html document generator for the project
+		once
+			Result := create {HTML_DOC_GENERATOR} html_doc_generator.make
+		end
 			
 	valid_project: BOOLEAN is
 			-- Is project valid?

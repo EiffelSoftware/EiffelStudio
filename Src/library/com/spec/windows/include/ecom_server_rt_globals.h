@@ -33,8 +33,13 @@ extern struct xstack eif_stack;
 	if (return_hr_value = setjmp (exenv)) \
 		return (HRESULT)(MAKE_HRESULT (1, FACILITY_ITF, 1024 + return_hr_value))
 
-#define END_ECATCH expop (&eif_stack);\
-					exok()
+ 
+#ifdef RTEOK 
+	#define END_ECATCH RTEOK 
+#else 
+	#define END_ECATCH expop (&eif_stack);\
+						exok() 
+#endif
 
 #ifdef __cplusplus
 }

@@ -340,15 +340,25 @@ feature -- Event : command association
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
+		local
+			ev_data: EV_EVENT_DATA		
 		do
-			check false end
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+
+			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
+			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False)
 		end	
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unselected.
+		local
+			ev_data: EV_EVENT_DATA		
 		do
-			check false end
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+
+			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
+			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False)
 		end
 
 feature -- Event -- removing command association
@@ -356,16 +366,42 @@ feature -- Event -- removing command association
 	remove_select_commands is
 			-- Empty the list of commands to be executed
 			-- when the item is selected.
-		do			
-			check false end
+		local
+			list: LINKED_LIST [EV_COMMAND]
+		do
+			-- list of the commands to be executed for "select_row" signal.
+			list := (event_command_array @ select_row_id).command_list
+
+			from
+				list.start
+			until
+				list.after
+			loop
+				remove_single_command (parent_imp.widget, select_row_id, list.item)
+				-- we do not need to do "list.forth" as an item has been removed
+				-- that list.
+			end
 		end	
 
 	remove_unselect_commands is
 			-- Empty the list of commands to be executed
 			-- when the item is unselected.
+		local
+			list: LINKED_LIST [EV_COMMAND]
 		do
-			check false end
-		end
+			-- list of the commands to be executed for "unselect_row" signal.
+			list := (event_command_array @ unselect_row_id).command_list
+
+			from
+				list.start
+			until
+				list.after
+			loop
+				remove_single_command (parent_imp.widget, unselect_row_id, list.item)
+				-- we do not need to do "list.forth" as an item has been removed
+				-- that list.
+			end
+		end	
 
 feature {NONE} -- Implementation
 

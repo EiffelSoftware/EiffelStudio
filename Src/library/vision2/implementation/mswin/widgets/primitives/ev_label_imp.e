@@ -88,18 +88,21 @@ feature -- Status setting
 			-- Set text alignment of current label to center.
 		do
 			set_style (basic_style + Ss_center)
+			invalidate
 		end
 
 	set_right_alignment is
 			-- Set text alignment of current label to right.
 		do
 			set_style (basic_style + Ss_right)
+			invalidate
 		end
 
 	set_left_alignment is
 			-- Set text alignment of current label to left.
 		do
 			set_style (basic_style + Ss_left)
+			invalidate
 		end
 
 	set_default_minimum_size is

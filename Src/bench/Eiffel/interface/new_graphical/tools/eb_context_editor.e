@@ -1115,9 +1115,9 @@ feature {NONE} -- Events
 				vertical_scrollbar.value_range.resize_exactly (0, max)
 				vertical_scrollbar.set_leap (area.height.max (1))
 				vertical_scrollbar.set_value (old_value.min (max).max (0))
-				if projector /= Void then
-					projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
-				end
+--				if projector /= Void then
+--					projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
+--				end
 			end
 		end
 

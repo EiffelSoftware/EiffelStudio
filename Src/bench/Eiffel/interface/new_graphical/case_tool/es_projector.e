@@ -226,7 +226,6 @@ feature {NONE} -- Implementation
 		local
 			buffer: EV_PIXMAP
 		do
-			move_buffer
 			buffer ?= drawable
 			if 
 				buffer /= Void
@@ -237,6 +236,8 @@ feature {NONE} -- Implementation
 			then
 				buffer.set_size (area_width * Buffer_scale_factor, area_height * Buffer_scale_factor)
 			end
+			move_buffer
+			update		
 		end		
 	
 	buffer_covers_area: BOOLEAN is

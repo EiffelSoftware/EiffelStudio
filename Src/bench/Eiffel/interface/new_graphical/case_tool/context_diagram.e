@@ -2538,7 +2538,7 @@ feature {NONE} -- Implementation
 				a_x - a_class.point.origin.x_abs,
 				a_y - a_class.point.origin.y_abs)
 			refresh
-			context_editor.projector.project
+			update_display
 		end
 
 	reinclude_dropped_class (a_class: CLASS_FIGURE) is
@@ -2548,6 +2548,7 @@ feature {NONE} -- Implementation
 		do
 			a_class.put_back_on_diagram (Current)
 			included_figures.extend (a_class)
+			update_display
 		end
 	
 	remove_dropped_class (a_class: CLASS_FIGURE) is
@@ -2557,6 +2558,7 @@ feature {NONE} -- Implementation
 		do
 			a_class.remove_from_diagram (False)
 			included_figures.prune_all (a_class)
+			update_display
 		end
 
 	refresh is
@@ -2599,6 +2601,14 @@ feature {NONE} -- Implementation
 			client_supplier_mover_layer.wipe_out
 			label_mover_layer.wipe_out
 		end
+
+	update_display is
+			-- Update display.
+		do
+			context_editor.projector.project
+			context_editor.projector.update
+		end
+		
 		
 feature {NONE} -- Events
 

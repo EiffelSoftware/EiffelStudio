@@ -16,15 +16,7 @@ inherit
 	EV_TEXT_FIELD_IMP
 		undefine
 			make_with_text,
-			destroy,
-			cut_selection,
-			copy_selection,
-			selection_start,
-			selection_end,
-			has_selection,
-			delete_selection,
-			select_all,
-			deselect_all
+			destroy
 		redefine
 			make,
 			text,
@@ -32,13 +24,24 @@ inherit
 			set_text,
 			append_text,
 			prepend_text,
+			position,
 			set_position,
 			set_maximum_text_length,
 			select_region,
 			add_activate_command,
 			add_change_command,
 			remove_activate_commands,
-			remove_change_commands
+			remove_change_commands,
+			cut_selection,
+			copy_selection,
+			paste,
+			selection_start,
+			selection_end,
+			has_selection,
+			delete_selection,
+			select_all,
+			deselect_all,
+			is_editable
 		end
 
 	EV_LIST_IMP
@@ -110,11 +113,46 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_editable: BOOLEAN is
+			-- Is the text editable
+		do
+			Result := c_gtk_editable_editable (entry_widget) /= 0
+		end
+
+	has_selection: BOOLEAN is
+			-- Is something selected?
+		do
+			Result := c_gtk_editable_has_selection (entry_widget) /= 0
+		end
+
+	position: INTEGER is
+			-- Current position of the caret.
+		do
+			Result := gtk_text_get_point (entry_widget) + 1
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected
+		do
+			Result := c_gtk_editable_selection_start (entry_widget) + 1
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected
+		do
+			Result := c_gtk_editable_selection_end (entry_widget)
+		end
+
 feature -- Measurement
 
 	extended_height: INTEGER is
 			-- height of the combo-box when the list is shown
 		do
+			check
+				Not_yet_implemented: False
+			end
 		end
 
 feature -- Status report
@@ -166,7 +204,7 @@ feature -- Status setting
 	
 	set_position (pos: INTEGER) is
 		do
-			gtk_entry_set_position (entry_widget, pos)
+			gtk_text_set_point (entry_widget, pos - 1)
 		end
 	
 	set_maximum_text_length (len: INTEGER) is
@@ -176,7 +214,7 @@ feature -- Status setting
 	
 	select_region (start_pos, end_pos: INTEGER) is
 		do
-			gtk_entry_select_region (entry_widget, start_pos-1, end_pos-1)
+			gtk_entry_select_region (entry_widget, start_pos-1, end_pos)
 		end	
 
 feature -- Element change
@@ -186,6 +224,59 @@ feature -- Element change
 		do
 			clear_ev_children
 			gtk_list_clear_items (list_widget, 0, rows)
+		end
+
+feature -- Basic operation
+
+	select_all is
+			-- Select all the text.
+		do
+			gtk_editable_select_region (entry_widget, 0, text_length)
+		end
+
+	deselect_all is
+			-- Unselect the current selection.
+		do
+			gtk_editable_select_region (entry_widget, 0, 0)
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		do
+			gtk_editable_delete_selection (entry_widget)
+		end
+
+	cut_selection is
+			-- Cut the `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard 
+			-- to paste it later.
+			-- If the `selectd_region' is empty, it does
+			-- nothing.
+		do
+			gtk_editable_cut_clipboard (entry_widget)
+		end
+
+	copy_selection is
+			-- Copy the `selected_region' in the Clipboard
+			-- to paste it later.
+			-- If the `selected_region' is empty, it does
+			-- nothing.
+		do
+			gtk_editable_copy_clipboard (entry_widget)
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the string which is in the 
+			-- Clipboard at the `index' postion in the
+			-- text.
+			-- If the Clipboard is empty, it does nothing. 
+		local
+			pos: INTEGER
+		do
+			pos := position
+			set_position (index)
+			gtk_editable_paste_clipboard (entry_widget)
+			set_position (pos)
 		end
 
 feature -- Event : command association
@@ -201,16 +292,6 @@ feature -- Event : command association
 			add_command ("selection_changed", a_command, arguments)
 			widget := p
 		end
-
--- can't be implemented in GTK and Windows
---	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
---			-- Make `command' executed when an item is
---			-- selected.
---		do
---			check
---				not_yet_implemented: False
---			end
---		end
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
@@ -249,13 +330,6 @@ feature -- Event -- removing command association
 			remove_commands (selection_changed_id)
 			widget := p
 		end
-
---	remove_double_click_selection_commands is	
---			-- Empty the list of commands to be executed
---			-- when the selection has changed.
---		do
---			check False end
---		end
 
 	remove_activate_commands is
 			-- Empty the list of commands to be executed

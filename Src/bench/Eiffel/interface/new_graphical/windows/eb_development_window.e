@@ -1646,7 +1646,7 @@ feature -- Stone process
 	set_stone (a_stone: STONE) is
 			-- Change the currently focused stone.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			cv_cst: CLASSI_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 		do

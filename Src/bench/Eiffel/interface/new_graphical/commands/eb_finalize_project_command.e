@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (
 				3, "confirm_finalize",

@@ -202,7 +202,7 @@ feature {NONE} -- Project Initialization
 			title: STRING
 			project_name: STRING
 			wd: EV_WARNING_DIALOG
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do	
 				-- Retrieve the project
 			Eiffel_project.make (project_dir)

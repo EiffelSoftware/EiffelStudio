@@ -274,7 +274,7 @@ feature {NONE} -- Execution
 			-- is True.
 		local
 			wd: EV_WARNING_DIALOG
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			start_c_compilation := c_compilation_enabled
 			if c_compilation_enabled then
@@ -328,7 +328,7 @@ feature {NONE} -- Execution
 			-- user so and ask for a confirmation.
 			-- If confirmation successful then compile.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if
 				not Application.is_running

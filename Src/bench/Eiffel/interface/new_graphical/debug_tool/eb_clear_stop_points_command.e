@@ -132,7 +132,7 @@ feature -- Execution
 	execute is
 			-- Execute with confirmation dialog.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if Application.has_breakpoints then
 				create cd.make_initialized (

@@ -5,6 +5,7 @@ test	list-put-extend							list002 tcf list
 test	clone-list								list003 tcf list
 
 test	disjoint-sets							set001 tcf set
+test	disjoint-sets-expanded					set001a tcf set
 test	symdif-sets								set002 tcf set
 test	prune-tree-set							set003 tcf set
 

@@ -92,7 +92,21 @@ feature -- Concurrent Eiffel
 			end;
 			generated_file.putstring (gc_comma);
 			if not is_nested then
-				context.generate_current_dtype;
+				if precursor_type /= Void then
+					-- Use dynamic type of parent instead 
+					-- of dynamic type of Current.
+					if context.workbench_mode then
+						generated_file.putstring ("RTUD(");
+						generated_file.putstring (
+						 precursor_type.associated_class_type.id.generated_id
+												 );
+						generated_file.putchar (')');
+					else
+						generated_file.putint (precursor_type.type_id - 1);
+					end;
+				else
+					context.generate_current_dtype;
+				end
 			elseif need_invariant then
 				generated_file.putchar ('"');
 				generated_file.putstring (feature_name);

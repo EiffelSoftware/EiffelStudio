@@ -30,7 +30,7 @@
 					(<A HREF="../../reference/structures/table/hash_table.html#f_put">put</A>) and
 					retrieve
 					(<A HREF="../../reference/structures/table/hash_table.html#f_item">item</A>,
-					<A HREF="../../reference/structures/table/hash_table.html#f_remove">remove</A>).<BR>
+					<A HREF="../../reference/structures/table/hash_table.html#f_remove">remove</A>).<BR />
 					The idea behind hash tables is to try to emulate the data structure that provides the
 					ultimate in efficiency: the array. On an array <SPAN CLASS="elocal">a</SPAN>,
 					for some integer <SPAN CLASS="elocal">i</SPAN> whose value lies
@@ -39,10 +39,10 @@
 					<CODE>
 						<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table_chart.html">put</A>
 						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN>
-						<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
 						<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
 						<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>
-						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
 						<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
 						<SPAN CLASS="elocal">a</SPAN>
 						<A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f__infix_@">@</A>
@@ -58,7 +58,7 @@
 					contiguously in memory, a computer will need just one addition (base address plus
 					index) and one memory access to perform a
 					<A CLASS="elocal" HREF="../../reference/structures/table/hash_table.html#f_put">put</A> or
-					<A CLASS="elocal" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>.<BR>
+					<A CLASS="elocal" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>.<BR />
 					Not only are the operation times small; they are constant (or more precisely
 					bounded by a constant). This is a great advantage over structures such as lists or trees
 					which you must traverse at least in part to retrieve an item, so that access and
@@ -84,7 +84,7 @@
 					must uniquely identify the corresponding object; this is the same as property <B>A2</B>,
 					making keys similar to indices. But keys are not necessarily integers (violating property
 					<B>A1</B>), although it must be possible to associate an integer with each key. The mechanism
-					that maps keys to integers is called the hashing function.<BR>
+					that maps keys to integers is called the hashing function.<BR />
 					Thanks to the hashing mechanism we will indeed be able to store suitable objects
 					into arrays, approaching the optimal efficiency of this data structure. The efficiency will
 					not be quite as good, however, for two reasons:</P>
@@ -105,7 +105,7 @@
 					<CODE>
 						<SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature"  HREF="../../reference/structures/table/hash_table.html#f_put">put</A>
 						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN>
-						<SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
 						<SPAN CLASS="elocal">h</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
 						<SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/table/hash_table.html#f_item">item</A>
 						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -113,7 +113,7 @@
 
 					<P>
 					where <SPAN CLASS="elocal">h</SPAN> is a hash-table and <SPAN CLASS="elocal">k</SPAN>
-					is a key (for example a string) as conceptually equivalent	to the array operations mentioned above.<BR>
+					is a key (for example a string) as conceptually equivalent	to the array operations mentioned above.<BR />
 					The quality of a hashed implementation will depend both on the data structure that
 					will store the objects, and on the choice of hashing function. Class
 					<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A> attempts to
@@ -173,7 +173,7 @@
 					
 					<P>
 					G represents the type of the objects to be stored in the hash table, H the type of
-					their keys.<BR>
+					their keys.<BR />
 					When viewed as an implementation of containers,
 					<A HREF="../../reference/structures/table/hash_table_chart.html">HASH_TABLE</A>, in a strict sense, represents
 					bags rather than sets: unlike the other classes in this chapter, it allows an object to have two or
@@ -212,7 +212,7 @@
 				</TD>
 			</TR>
 		</TABLE>
-		<TABLE CLASS="FOOTER" ID="Table3">
+		<TABLE CLASS="FOOTER">
 			<TR>
 				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
 			</TR>

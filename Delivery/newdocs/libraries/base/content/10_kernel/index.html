@@ -9,7 +9,7 @@
 	</XML>
 		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET"></HEAD>
 	<BODY>
-		<TABLE CLASS="HEADER" ID="Table1">
+		<TABLE CLASS="HEADER">
 			<TR>
 				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
 			</TR>
@@ -105,7 +105,7 @@
 					of the form</P>
 					
 					<CODE>
-					<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+					<SPAN CLASS="ekeyword">inherit</SPAN><BR />
  					&nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
  					</CODE>
  					
@@ -120,19 +120,19 @@
 					you should include an explicit inheritance clause, as in</P>
 					
 					<CODE>
-						<SPAN CLASS="ekeyword">class</SPAN><BR>
-						&nbsp;&nbsp; <SPAN CLASS="eclass">C</SPAN><BR>
-						<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-						&nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rename</SPAN><BR>
+						<SPAN CLASS="ekeyword">class</SPAN><BR />
+						&nbsp;&nbsp; <SPAN CLASS="eclass">C</SPAN><BR />
+						<SPAN CLASS="ekeyword">inherit</SPAN><BR />
+						&nbsp;&nbsp; <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rename</SPAN><BR />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>
-						<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">basic_out</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">redefine</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_print">print</A><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;...<BR>
-						<SPAN CLASS="ekeyword">feature</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;...<BR>
+						<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">basic_out</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">redefine</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_print">print</A><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;...<BR />
+						<SPAN CLASS="ekeyword">feature</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;...<BR />
 						<SPAN CLASS="ekeyword">end</SPAN>
 					</CODE>
 					
@@ -141,7 +141,7 @@
 					may be called under either of the forms</P>
 					
 					<CODE>
-				        <SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A><BR>
+				        <SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A><BR />
 						<SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>
 					</CODE>
 					
@@ -152,7 +152,7 @@
 					<H2>Input and output features</H2>
 					
 					<P>Some of the features of <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A>
-					cover common input and output needs.<BR>
+					cover common input and output needs.<BR />
 					
 					Feature <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A>,
 					of type <A CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</A>,
@@ -166,7 +166,7 @@
 					that provides access to the standard input, the standard output and the error output. As a result, io is never void, so that
 					operations such as
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">io</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_new_line">new_line</A>
-					are always possible.<BR>
+					are always possible.<BR />
 					
 					Function out, of type <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A>,
 					is a universal mechanism for obtaining a simple
@@ -183,7 +183,7 @@
 					in any class to specify any suitable format for displaying instances of the class. To obtain the default representation
 					regardless of any redefinition of <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>, use
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_tagged_out">tagged_out</A>, declared as a frozen synonym of
-					the original <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>.<BR>
+					the original <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A>.<BR />
 					
 					The call <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_print">print</A>
 					<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -217,7 +217,7 @@
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_equal">equal</A>
 					compares two objects for field-by-field equality. This is different from the equality operators
 					<SPAN CLASS="esymbol">=</SPAN> and <SPAN CLASS="esymbol">/=</SPAN> which, in the case of reference types,
-					compare references, not objects.<BR>
+					compare references, not objects.<BR />
 					
 					The function
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_deep_clone">deep_clone</A>
@@ -229,7 +229,7 @@
 					tests provided by
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_clone">clone</A>
 					and
-					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_equal">equal</A>.<BR>
+					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_equal">equal</A>.<BR />
 					
 					A class that needs a specific notion of equality and the corresponding copy
 					semantics may redefine <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_copy">copy</A>
@@ -250,7 +250,7 @@
 					redefines these routines to yield the semantics
 					normally expected by string clients; the frozen variants <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_copy">standard_copy</A>
 					and <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_equal">standard_equal</A>, originally declared as synonyms to equal and copy, remain available with the
-					default semantics.<BR>
+					default semantics.<BR />
 					
 					The function <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_clone">clone</A>
 					is defined in terms of <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_copy">copy</A>, and so will follow any redefinition
@@ -266,7 +266,7 @@
 					<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_conforms_to">conforms_to</A>
 					makes it possible to test dynamically whether the
 					type of an object conforms to that of another - that is to say whether the first one’s
-					generator is a descendant of the second one’s.<BR>
+					generator is a descendant of the second one’s.<BR />
 					
 					These two features enable clients to ascertain the dynamic type of an entity at runtime. They are only useful for low-level components; the normal mechanism for type-dependent operations is dynamic binding.</P>
 					
@@ -275,9 +275,9 @@
 					<P>
 					The query <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A>, of type
 					<SPAN CLASS="eclass">NONE</SPAN>, denotes a reference that is always void - not attached to
-					any object.<BR>
+					any object.<BR />
 					Procedure <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_do_nothing">do_nothing</A>
-					does what its name implies.<BR>
+					does what its name implies.<BR />
 					Function <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default">default</A>
 					also has an
 					empty body; its result type is <SPAN CLASS="ekeyword">like Current</SPAN>, so what it returns is the default value of the
@@ -297,7 +297,7 @@
 					<A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A>,
 					<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>, <A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A>
 					and <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A> are defined
-					by classes of the Kernel library.<BR>
+					by classes of the Kernel library.<BR />
 					
 					In reading the class specifications for the numeric types <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>,
 					<A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A> and <A CLASS="eclass" HREF="../../reference/kernel/double.html">DOUBLE</A>, you might think that the type declarations are too restrictive. For example the
@@ -326,7 +326,7 @@
 					<A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>. This class is “normal” in the sense that it may be used just as any other class
 					by client and descendant classes. It is also somewhat special, however, in that the Eiffel
 					compiler knows about it and uses this knowledge to generate efficient code for array
-					operations.<BR>
+					operations.<BR />
 					
 					To create an instance of <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>, use the creation instruction
 					</P>
@@ -345,7 +345,7 @@
 					is a synonym for <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_count">count</A>. The class invariant expresses
 					the relation between <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_count">count</A>,
 					<A CLASS="efeature" HREF="../../reference/kernel/array.html#f_lower">lower</A>
-					and <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_upper">upper</A>.<BR>
+					and <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_upper">upper</A>.<BR />
 					To access and change the item at index i in array a, you may use features
 					<A CLASS="efeature" HREF="../../reference/kernel/array.html#f_item">item</A>
 					and <A CLASS="efeature" HREF="../../reference/kernel/array.html#f_put">put</A>, as in
@@ -353,9 +353,9 @@
 					
 					<CODE>
 						x := <SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_item">item</A>
-						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
 						<SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_put">put</A>
-						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_value</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)<BR>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_value</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)<BR />
 						</SPAN>
 					</CODE>
 					
@@ -366,9 +366,9 @@
 					so that you may also write the first assignment above more concisely as</P>
 					
 					<CODE>x := <SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol"> </SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_item">@</A>
-						<SPAN CLASS="elocal">i</SPAN><BR>
+						<SPAN CLASS="elocal">i</SPAN><BR />
 						<SPAN CLASS="elocal"></SPAN>
-					</CODE><BR>
+					</CODE><BR />
 
 					Features
 					<A CLASS="efeature" HREF="../../reference/kernel/array.html#f_item">item</A>,
@@ -404,10 +404,10 @@
 					
 					<CODE>
 						<SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>
-						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR />
 						<SPAN CLASS="elocal">direct_access</SPAN><SPAN CLASS="esymbol">:</SPAN>
 						<A CLASS="eclass" HREF="../../reference/kernel/special_chart.html">SPECIAL</A>
-						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+						<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR />
 					</CODE>
 					
 					<P>you may use direct_access in lieu of my_array within a critical loop, provided none of
@@ -418,24 +418,24 @@
 					
 					<CODE>
 						<SPAN CLASS="elocal">direct_access</SPAN><SPAN CLASS="esymbol">:=</SPAN>
-						<SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_area">area</A><BR>
-						<SPAN CLASS="ecomment">-- The critical loop:</SPAN><BR>
-						<SPAN CLASS="ekeyword">from</SPAN><BR>
-						&nbsp;&nbsp; <SPAN CLASS="efeature">some_initialization</SPAN><BR>
-						&nbsp;&nbsp; <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">some_initial_index</SPAN><BR>
-						<SPAN CLASS="ekeyword">until</SPAN><BR>
-						&nbsp;&nbsp; <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">some_final_index</SPAN><BR>
-						<SPAN CLASS="ekeyword">loop</SPAN><BR>
-						&nbsp;&nbsp; ...<BR>
+						<SPAN CLASS="elocal">my_array</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/array.html#f_area">area</A><BR />
+						<SPAN CLASS="ecomment">-- The critical loop:</SPAN><BR />
+						<SPAN CLASS="ekeyword">from</SPAN><BR />
+						&nbsp;&nbsp; <SPAN CLASS="efeature">some_initialization</SPAN><BR />
+						&nbsp;&nbsp; <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">some_initial_index</SPAN><BR />
+						<SPAN CLASS="ekeyword">until</SPAN><BR />
+						&nbsp;&nbsp; <SPAN CLASS="elocal">index</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">some_final_index</SPAN><BR />
+						<SPAN CLASS="ekeyword">loop</SPAN><BR />
+						&nbsp;&nbsp; ...<BR />
 						&nbsp;&nbsp; <SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
 						<SPAN CLASS="elocal">direct_access</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/special.html#f_item">item</A>
-						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-						&nbsp;&nbsp; ...<BR>
+						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
+						&nbsp;&nbsp; ...<BR />
 						&nbsp;&nbsp; <SPAN CLASS="elocal">direct_access</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/special.html#f_item">put</A>
 						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_value</SPAN><SPAN CLASS="esymbol">,</SPAN>
-						<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-						&nbsp;&nbsp; ...<BR>
-						<SPAN CLASS="ekeyword">end</SPAN><BR>
+						<SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">)</SPAN><BR />
+						&nbsp;&nbsp; ...<BR />
+						<SPAN CLASS="ekeyword">end</SPAN><BR />
 					</CODE>
 					
 					<P>
@@ -459,7 +459,7 @@
 					<SPAN CLASS="elocal">my_array</SPAN> is 1 or another small integer, use 0 as lower bound instead when creating
 					<SPAN CLASS="elocal">my_array</SPAN>, but only use the positions starting at lb. You will waste a few memory positions
 					(0 to lb-1), but will not have to change anything in your algorithm and will avoid costly
-					subtractions.<BR>
+					subtractions.<BR />
 					It is important to note that this optimization, if at all necessary, should at most affect
 					a few loops in a large system. You should always begin by writing your software using
 					the normal <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>
@@ -471,12 +471,12 @@
 					
 					<H2>Tuples</H2>
 					
-					<P>A new Kernel Library class is introduced: <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>.<BR>
+					<P>A new Kernel Library class is introduced: <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>.<BR />
 					Alone among all classes, class <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>
 					has a variable number of generic parameters. <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>,
 					<A href="../../reference/kernel/tuple_chart.html">TUPLE</A> [X], <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>
 					[X, Y], <A href="../../reference/kernel/tuple_chart.html">TUPLE</A> [X, Y,
-					Z] and so on are all valid types, assuming valid types X, Y, Z and so on.<BR>
+					Z] and so on are all valid types, assuming valid types X, Y, Z and so on.<BR />
 					Conformance rules:</P>
 					
 					<PRE>[CONF1]
@@ -561,7 +561,7 @@
 					<PRE>	[e<SUB>1</SUB>, e<SUB>2</SUB>, ..., e<SUB>n</SUB>]</PRE>
 					<P>denotes an instance of <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>
 					[T<SUB>1</SUB>, T<SUB>2</SUB>, ..., T<SUB>n</SUB>], whose first element is e<SUB>1</SUB>,
-					the second element being e<SUB>2</SUB> etc.<BR>
+					the second element being e<SUB>2</SUB> etc.<BR />
 					Tuple expressions can be nested: whereas</P>
 					
 					<PRE>	[1, 2, 3]</PRE>
@@ -577,7 +577,7 @@
 					expression represents an instance of <A href="../../reference/kernel/tuple_chart.html">TUPLE</A>
 					[<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>,
 					<A href="../../reference/kernel/tuple_chart.html">TUPLE</A> [<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>,
-					<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>].<BR>
+					<A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A>].<BR />
 					As a special case of tuple expression syntax, the delimiters [ and ] are
 					replaced by parentheses for the tuple representing the actual argument list
 					of a routine call (see section 4).</P>
@@ -629,7 +629,7 @@
 					tuples, with a precisely defined type. No incompatibility is introduced 
 					thanks to rule CONF2. The original syntax for manifest arrays, Result :=             
 					&lt;&lt;e<SUB>1</SUB>, e<SUB>2</SUB>,
-					..., e<SUB>n</SUB>&gt;&gt;, will continue to be supported.<BR>
+					..., e<SUB>n</SUB>&gt;&gt;, will continue to be supported.<BR />
 					Second, we can define functions that return multiple results. This is a
 					quite significant increase in expressive power. No common language has that.
 					(You have to go to Lisp and functional languages.) Just define <A href="../../reference/kernel/tuple_chart.html">TUPLE</A> [...] as 
@@ -695,8 +695,8 @@
 						<SPAN CLASS="elocal">s1</SPAN><SPAN CLASS="esymbol">,</SPAN>
 						<SPAN CLASS="elocal">s2</SPAN><SPAN CLASS="esymbol">,</SPAN>
 						<SPAN CLASS="elocal">s3</SPAN><SPAN CLASS="esymbol">:</SPAN>
-						<A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><BR>
-						...<BR>
+						<A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><BR />
+						...<BR />
 						<SPAN CLASS="ekeyword">create</SPAN>
 						<SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/string.html#f_make">make</A>
 						<SPAN CLASS="esymbol">(30)</SPAN>
@@ -754,7 +754,7 @@
 					<H2>General files</H2>
 					
 					<P><A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</A> describes the notion of sequential file viewed as a data structure which fits in the
-					general taxonomy of EiffelBase.<BR>
+					general taxonomy of EiffelBase.<BR />
 					
 					The class declaration defines files as unbounded sequences of characters. This
 					means that you will find in <A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</A>
@@ -772,13 +772,13 @@
 					
 					<P class="warning">
 					<B>Caution</B>:
-					Note the application to input features of the command-query separation principle.<BR>
+					Note the application to input features of the command-query separation principle.<BR />
 					The input features such as <A CLASS="efeature" HREF="../../reference/kernel/file.html#f_read_integer">read_integer</A>
 					do not by themselves return a result; they set the
-					values of queries such as <A CLASS="efeature" HREF="../../reference/kernel/file.html#f_last_integer">last_integer</A>. So the normal way to read is through two operations:<BR>
-					<BR>
+					values of queries such as <A CLASS="efeature" HREF="../../reference/kernel/file.html#f_last_integer">last_integer</A>. So the normal way to read is through two operations:<BR />
+					<BR />
 					<SPAN CLASS="elocal">my_ file</SPAN><SPAN CLASS="esymbol">.</SPAN>
-					<A CLASS="efeature" HREF="../../reference/kernel/file.html#f_read_integer">read_integer</A><BR>
+					<A CLASS="efeature" HREF="../../reference/kernel/file.html#f_read_integer">read_integer</A><BR />
 					<SPAN CLASS="elocal">new_value</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
 					<SPAN CLASS="elocal">my_ file</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/file.html#f_last_integer">last_integer</A>
 					</P>
@@ -801,8 +801,8 @@
 					as a precondition. This precondition is good for efficiency since it saves an
 					existence test - a relatively expensive operation - when you know that a certain file
 					exists. But it also means that if you have any doubt about the file’s existence you must
-					use the queries in the style<BR>
-					<BR>
+					use the queries in the style<BR />
+					<BR />
 					<SPAN CLASS="ekeyword">if</SPAN>
 					<SPAN CLASS="elocal">my_ file</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/kernel/file.html#f_exists">exists</A>
 					<SPAN CLASS="ekeyword">and then</SPAN>
@@ -812,9 +812,9 @@
 					<P>
 					<A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</A> is a deferred class. Various implementations are possible. A quite detailed one is
 					<A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">PLAIN_TEXT_FILE</A>, which adds many features for accessing
-					reading and writing data from/to a file.<BR>
+					reading and writing data from/to a file.<BR />
 					<A CLASS="eclass" HREF="../../reference/kernel/unix_file_info_chart.html">UNIX_FILE_INFO</A>
-					describes objects that contain internal information, such as protection mode and size, about a file.<BR>
+					describes objects that contain internal information, such as protection mode and size, about a file.<BR />
 					The class <A CLASS="eclass" HREF="../../reference/kernel/directory_chart.html">DIRECTORY</A>
 					describes those files which are directories - nodes in the tree describing the file structure.</P>
 					
@@ -839,7 +839,7 @@
 					<A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_output">output</A>and
 					<A CLASS="efeature" HREF="../../reference/kernel/std_files.html#f_error">error</A>.
 					These features are Once functions, so that the first reference to any one of them will
-					automatically create the corresponding file descriptor and open the associated file.<BR>
+					automatically create the corresponding file descriptor and open the associated file.<BR />
 					To simplify the writing of common input and output operations, the most frequently
 					used features of class <A CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</A>
 					- for reading and writing integers, reals and so on, as discussed next - have been repeated in
@@ -851,7 +851,7 @@
 					<H1>PERSISTENCE, STORAGE AND RETRIEVAL</H1>
 					<P>Most object-oriented applications need the ability to store object 
 					structures on persistent storage for later retrieval, and to transfer 
-					such object structures to other applications.<BR>
+					such object structures to other applications.<BR />
 					Class <A CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
 					STORABLE</A> addresses this need.</P>
 					
@@ -859,12 +859,12 @@
 					
 					<P>A fundamental requirement on object persistence mechanisms is the <I> 
 					Persistence Completeness</I> rule, stated as follows in Eiffel: The 
-					Language:<BR>
+					Language:<BR />
 					Whenever a routine of class <A CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
 					STORABLE</A> stores an object into an external file, it stores with it 
 					the dependents of that object. Whenever one of the associated retrieval 
 					routines retrieves a previously stored object, it also retrieves all its 
-					dependents.<BR>
+					dependents.<BR />
 					Storing an object just by itself would usually result in wrong 
 					semantics: most objects contain references to other objects, which must 
 					also be stored and retrieved with it. The persistence completeness rule 
@@ -881,9 +881,9 @@
 					of <SPAN CLASS="eclass">C</SPAN> may contain a call of the form
 					<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
 					basic_store</A>
-					<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">).<BR>
+					<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">).<BR />
 					</SPAN>The effect of this call will be to store the current object and 
-					all its dependents into the file denoted by my_descriptor.<BR>
+					all its dependents into the file denoted by my_descriptor.<BR />
 					
 					Although
 					<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
@@ -905,7 +905,7 @@
 					an executable assembly of classes, compiled together with the help of an 
 					Ace specification.) This means that you can use procedure <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
 					basic_store</A> to store an object structure during an execution of a 
-					system if you will only retrieve it later in that execution, or in a<BR>
+					system if you will only retrieve it later in that execution, or in a<BR />
 					subsequent execution of the same system. If you need to store objects 
 					from a certain system and then retrieve them from a different system, 
 					possibly running on a different computer, use <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
@@ -932,7 +932,7 @@
 					of the stored structure, whether it was stored by
 					<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
 					basic_store</A> or <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
-					general_store</A>, and will decode it accordingly.<BR>
+					general_store</A>, and will decode it accordingly.<BR />
 					Feature retrieved returns a result of type <A CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
 					STORABLE</A> and is typically used through an assignment attempt of the 
 					form</P>
@@ -942,7 +942,7 @@
 						<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
 						retrieved</A>
 						<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">)</SPAN>
-					</CODE><BR>
+					</CODE><BR />
 					
 					<P>The assignment attempt is necessary because <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
 					retrieved</A> returns a result of type
@@ -978,70 +978,70 @@
 					<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_independent_store">
 					independent_store</A> facility. Each time you retrieve an object of 
 					a certain base class whose schema has changed, the feature 
-					<SPAN class="efeature">correct_mismatch</SPAN> will be called. This 
-					feature is defined in <SPAN class="eclass">ANY</SPAN> and by default will raise an exception. 
+					<SPAN CLASS="efeature">correct_mismatch</SPAN> will be called. This 
+					feature is defined in <SPAN CLASS="eclass">ANY</SPAN> and by default will raise an exception. 
 					To handle the mismatch, you need to redefine 
-					<SPAN class="efeature">correct_mismatch</SPAN> in the base class whose 
-					schema has been changed. For example in EiffelBase, <SPAN class="eclass">
+					<SPAN CLASS="efeature">correct_mismatch</SPAN> in the base class whose 
+					schema has been changed. For example in EiffelBase, <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN> has 
-					changed between version 5.1 and version 5.2 to use <SPAN class="eclass">
+					changed between version 5.1 and version 5.2 to use <SPAN CLASS="eclass">
 					SPECIAL</SPAN> rather than 
-					<SPAN class="eclass">ARRAY </SPAN>for its internal data storage. To retrieve a 5.1 version of <SPAN class="eclass">
+					<SPAN CLASS="eclass">ARRAY </SPAN>for its internal data storage. To retrieve a 5.1 version of <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN> , you need to define 
-					<SPAN class="efeature">correct_mismatch</SPAN> as following:</P>
+					<SPAN CLASS="efeature">correct_mismatch</SPAN> as following:</P>
 					
 					<CODE>
-						<SPAN class="efeature">correct_mismatch</SPAN> <SPAN class="ekeyword">is</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Attempt to correct object mismatch during retrieve using `mismatch_information'.</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">local</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_content</SPAN>: <SPAN class="eclass">ARRAY</SPAN> [G]<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_keys</SPAN>: <SPAN class="eclass">ARRAY</SPAN> [H]<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_marks</SPAN>: <SPAN class="eclass">ARRAY</SPAN> [<SPAN class="eclass">BOOLEAN</SPAN>]<BR>
-						&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">do</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- efficiency reasons. In order to retrieve an old HASH_TABLE we</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- need to convert those ARRAY instances into SPECIAL instances.</SPAN><BR>
-						<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `content' from ARRAY to SPECIAL</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_content</SPAN> ?= <SPAN class="efeature">mismatch_information</SPAN>.<SPAN class="efeature">item</SPAN> ("content")<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_content</SPAN> /= Void <SPAN class="ekeyword">then</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="efeature">content</SPAN> := <SPAN CLASS="elocal">array_content</SPAN>.<SPAN class="efeature">area</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">end</SPAN><BR>
-						<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `keys' from ARRAY to SPECIAL</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_keys</SPAN> ?= <SPAN class="efeature">mismatch_information</SPAN>.<SPAN class="efeature">item</SPAN> ("keys")<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_keys</SPAN> /= Void <SPAN class="ekeyword">then</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="efeature">keys</SPAN> := <SPAN CLASS="elocal">array_keys</SPAN>.<SPAN class="efeature">area</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">end</SPAN><BR>
-						<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `deleted_marks' from ARRAY to SPECIAL</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_marks</SPAN> ?= <SPAN class="efeature">mismatch_information</SPAN>.<SPAN class="efeature">item</SPAN> ("deleted_marks")<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_marks</SPAN> /= Void <SPAN class="ekeyword">then</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="efeature">deleted_marks</SPAN> := <SPAN CLASS="elocal">array_marks</SPAN>.<SPAN class="efeature">area</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">end</SPAN><BR>
-						<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">if</SPAN> <SPAN class="efeature">content</SPAN> = Void or <SPAN class="efeature">keys</SPAN> = Void or <SPAN class="efeature">deleted_marks</SPAN> = Void <SPAN class="ekeyword">then</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Could not retrieve old version of HASH_TABLE. We throw an exception.</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Precursor {TABLE}<BR>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">end</SPAN><BR>
-						&nbsp;&nbsp;&nbsp;<SPAN class="ekeyword">end</SPAN><BR>
+						<SPAN CLASS="efeature">correct_mismatch</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Attempt to correct object mismatch during retrieve using `mismatch_information'.</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_content</SPAN>: <SPAN CLASS="eclass">ARRAY</SPAN> [G]<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_keys</SPAN>: <SPAN CLASS="eclass">ARRAY</SPAN> [H]<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_marks</SPAN>: <SPAN CLASS="eclass">ARRAY</SPAN> [<SPAN CLASS="eclass">BOOLEAN</SPAN>]<BR />
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- efficiency reasons. In order to retrieve an old HASH_TABLE we</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- need to convert those ARRAY instances into SPECIAL instances.</SPAN><BR />
+						<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `content' from ARRAY to SPECIAL</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_content</SPAN> ?= <SPAN CLASS="efeature">mismatch_information</SPAN>.<SPAN CLASS="efeature">item</SPAN> ("content")<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_content</SPAN> /= Void <SPAN CLASS="ekeyword">then</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">content</SPAN> := <SPAN CLASS="elocal">array_content</SPAN>.<SPAN CLASS="efeature">area</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR />
+						<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `keys' from ARRAY to SPECIAL</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_keys</SPAN> ?= <SPAN CLASS="efeature">mismatch_information</SPAN>.<SPAN CLASS="efeature">item</SPAN> ("keys")<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_keys</SPAN> /= Void <SPAN CLASS="ekeyword">then</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">keys</SPAN> := <SPAN CLASS="elocal">array_keys</SPAN>.<SPAN CLASS="efeature">area</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR />
+						<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Convert `deleted_marks' from ARRAY to SPECIAL</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">array_marks</SPAN> ?= <SPAN CLASS="efeature">mismatch_information</SPAN>.<SPAN CLASS="efeature">item</SPAN> ("deleted_marks")<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">array_marks</SPAN> /= Void <SPAN CLASS="ekeyword">then</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">deleted_marks</SPAN> := <SPAN CLASS="elocal">array_marks</SPAN>.<SPAN CLASS="efeature">area</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR />
+						<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">content</SPAN> = Void or <SPAN CLASS="efeature">keys</SPAN> = Void or <SPAN CLASS="efeature">deleted_marks</SPAN> = Void <SPAN CLASS="ekeyword">then</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN class="ecomment">-- Could not retrieve old version of HASH_TABLE. We throw an exception.</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Precursor {TABLE}<BR />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR />
+						&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR />
 					</CODE>
 					
-					<P>Note the use of <SPAN class="efeature">mismatch_information</SPAN>, 
-					this is a once feature of <SPAN class="eclass">ANY</SPAN> of type <SPAN class="eclass">
-					MISMATCH_INFORMATION </SPAN>which behaves like a <SPAN class="eclass">
+					<P>Note the use of <SPAN CLASS="efeature">mismatch_information</SPAN>, 
+					this is a once feature of <SPAN CLASS="eclass">ANY</SPAN> of type <SPAN CLASS="eclass">
+					MISMATCH_INFORMATION </SPAN>which behaves like a <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN>. The keys of the table are the names of the attributes 
 					on which a mismatch occurred and the values are the corresponding object 
-					fields as they were originally stored. In this particular case of <SPAN class="eclass">
+					fields as they were originally stored. In this particular case of <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN> we know that the previous version was an 
-					<SPAN class="eclass">ARRAY</SPAN>, so we do an assignment attempt and 
-					if it succeeds we assign its <SPAN class="efeature">area </SPAN>to the 
-					corresponding attribute of <SPAN class="eclass">
+					<SPAN CLASS="eclass">ARRAY</SPAN>, so we do an assignment attempt and 
+					if it succeeds we assign its <SPAN CLASS="efeature">area </SPAN>to the 
+					corresponding attribute of <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN>.</P>
 
 					<P>If a class name changed, then you need to create an instance of 
-					<SPAN class="eclass">CLASS_NAME_TRANSLATIONS</SPAN>, it behaves like a <SPAN class="eclass">
+					<SPAN CLASS="eclass">CLASS_NAME_TRANSLATIONS</SPAN>, it behaves like a <SPAN CLASS="eclass">
 					HASH_TABLE</SPAN> where the keys represent the old name, and the value 
 					the new name. This instance needs to be created before the call to
 					<A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
@@ -1059,9 +1059,9 @@
 					<P>Class <A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
 					enables you to control the handling of exceptions. <A CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</A>, discussed next, complements it for the special case of fine-grain signal
 					handling on Unix or Unix-like platforms. Both are meant to be inherited by any class
-					that needs their facilities.<BR>
+					that needs their facilities.<BR />
 					The basic exception mechanism treats all exceptions in the same way. In some cases
-					it may be useful to discriminate in a Rescue clause between the various possible causes.<BR>
+					it may be useful to discriminate in a Rescue clause between the various possible causes.<BR />
 					Class <A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
 					provides the features to do this. Each kind of exception has an integer code, which you can use through several features:</P>
 					
@@ -1086,13 +1086,13 @@
 					ascertain the precise nature of an exception. To keep <A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
 					simple these constant attributes are declared in a class <A CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</A>, of which
 					<A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
-					is an heir.<BR>
+					is an heir.<BR />
 					
 					Another occasional requirement is for a mechanism to trigger an exception
 					explicitly. Procedure <A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_raise">raise</A>
 					answers this needs; the argument, a string, is the tag chosen for the exception. The code in this case is Developer_exception; the query
 					<A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_is_developer_exception">is_developer_exception</A>
-					will return true; and the tag is accessible through feature <A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_tag_name">tag_name</A>.<BR>
+					will return true; and the tag is accessible through feature <A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_tag_name">tag_name</A>.<BR />
 					You will notice in the interface specification for <A CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</A>
 					that for some properties of the latest exception there are two features, one with a name such as
 					<A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_exception">exception</A>
@@ -1131,19 +1131,19 @@
 					exception is a signal - an operating system event such as may result from a child
 					process that disappears, a window that is resized, a user that hits the Break key and
 					many others. But they do not give you more details because the exact set of possible
-					signals is highly platform-dependent.<BR>
+					signals is highly platform-dependent.<BR />
 					
 					Class <A CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</A>
 					complements <A CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</A>
 					by providing codes for the signals of Unix and similar systems, such as Sigkill for the “kill” signal and Sigbus for
-					bus error.<BR>
+					bus error.<BR />
 					Query <A CLASS="efeature" HREF="../../reference/kernel/exceptions.html#f_is_defined">is_defined</A>
 					<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_signal</SPAN><SPAN CLASS="esymbol">)</SPAN>, where
 					<SPAN CLASS="elocal">some_signal</SPAN> is an integer code, will
-					determine whether some_signal is supported on the platform.<BR>
+					determine whether some_signal is supported on the platform.<BR />
 					A class whose routines need to perform specific processing depending on the nature
 					of signals received should inherit from <A CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</A>, or a similar class for another
-					platform.<BR>
+					platform.<BR />
 					
 					Because signal codes are platform-dependent, the features of <A CLASS="eclass" HREF="../../reference/kernel/unix_signals_chart.html">UNIX_SIGNALS</A>
 					are
@@ -1155,7 +1155,7 @@
 					<P>Class <A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A>, like <A CLASS="eclass" HREF="../../reference/kernel/exceptions.html">EXCEPTIONS</A>, is meant to be used as an ancestor by classes that
 					need its facilities. It offers a number of features for controlling memory management
 					and fine-tuning the garbage collection mechanism, a key component of the ISE Eiffel
-					environment.<BR>
+					environment.<BR />
 					
 					One of the most useful features in this class is dispose. This procedure describes
 					actions to be applied to an unreachable object just before the garbage collector reclaims
@@ -1182,7 +1182,7 @@
 					unused objects - call procedure full_collect. The remaining features of <A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A>
 					enable finer control of the collection mechanism and are useful in special cases only.
 					You will even find a free procedure providing brave (and competent) developers with a
-					mechanism for reclaiming individual objects manually.<BR>
+					mechanism for reclaiming individual objects manually.<BR />
 					<A CLASS="eclass" HREF="../../reference/kernel/mem_info.html">MEM_INFO</A>, the result type for query
 					<A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_memory_statistics">memory_statistics</A>
 					in
@@ -1202,13 +1202,13 @@
 					<P>
 					although one may conceive of other ways of entering the command arguments, such as
 					tabular or graphical form-filling. In any case the software must be able to access the
-					values passed as command arguments.<BR>
+					values passed as command arguments.<BR />
 					A language mechanism is available for that purpose: the Root Class rule indicates
 					that the creation procedure of the root class may have a single argument (in the Eiffel
 					sense of argument to a routine) of type <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A>
 					[<A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>. The corresponding array of
 					strings will be initialized at the beginning of the system’s execution with the values
-					entered as arguments to that execution of the command.<BR>
+					entered as arguments to that execution of the command.<BR />
 					Although this facility suffices in many cases, it is not always convenient if you
 					suddenly need to access the command arguments in a class that is far-away from the
 					root. An alternative mechanism, class <A CLASS="eclass" HREF="../../reference/kernel/arguments_chart.html">ARGUMENTS</A>, is available. Once again, this is a

@@ -1,5 +1,5 @@
 indexing
-	description: "Dialog for building and executing regular expressions."
+	description: "Dialog for parsing project documents individually or project-wide using XML and/or regular expressions."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,6 +8,12 @@ class
 
 inherit
 	EXPRESSION_DIALOG_IMP
+	
+	XML_ROUTINES
+		undefine
+			default_create,
+			copy
+		end
 	
 	UTILITY_FUNCTIONS
 		undefine
@@ -33,6 +39,8 @@ feature {NONE} -- Initialization
 			apply_button.select_actions.extend (agent apply)
 			okay_button.select_actions.extend (agent okay)
 			cancel_button.select_actions.extend (agent hide)
+			
+				-- Regular Expression Parsing
 			expression_browse_button.select_actions.extend (agent load_expression_file)
 			save_expressions_button.select_actions.extend (agent save_expressions_to_file)
 			expression_button.select_actions.extend (agent update_expression)
@@ -40,6 +48,16 @@ feature {NONE} -- Initialization
 			expression_list.key_press_actions.extend (agent key_pressed)
 			expression_list.set_column_title ("Expression Text", 1)
 			expression_list.set_column_title ("Replacement Text", 2)
+			expression_list.set_column_widths (<<100, 100>>)
+			
+				-- XML Parsing
+			if shared_document_manager.has_schema then
+				initialize_schema_element_selector
+				xml_structure_list.select_actions.extend (agent xml_list_selected)
+			else
+				xml_structure_list.extend (create {EV_TREE_ITEM}.make_with_text ("No schema loaded for project."))
+				xml_widget_box.disable_sensitive
+			end
 		end
 
 feature -- Access		
@@ -47,19 +65,19 @@ feature -- Access
 	overwrite_documents: BOOLEAN is
 			-- Should we overwrite documents
 		do
-			Result := overwrite_documents_check.is_selected
+			Result := overwrite_documents_radio.is_selected
 		end
 		
 	all_documents: BOOLEAN is
 			-- Should parsing be done on all open documents?
 		do
-			Result := all_document_check.is_selected
+			Result := all_open_radio.is_selected
 		end
 		
 	all_project: BOOLEAN is
 			-- Should parsing be done on all documents in loaded projet?
 		do
-			Result := all_project_check.is_selected	
+			Result := all_project_radio.is_selected	
 		end		
 
 feature -- Interface Events
@@ -67,22 +85,18 @@ feature -- Interface Events
 	apply is
 			-- Apply
 		do
-			if is_valid then
-				build_expressions
-				run_expressions
-			end
+			run		
 		end
 		
 	okay is
 			-- Apply changes
 		do
-			if is_valid then
-				build_expressions
-				run_expressions
-			end
+			run
 			hide
 		end
-
+		
+feature {NONE} -- Expressions Implementation
+	
 	list_selected is
 			-- An item in the expression list was selected
 		local
@@ -151,8 +165,6 @@ feature -- Interface Events
 				save_expressions (save_dialog.file_name)
 			end
 		end
-		
-feature {NONE} -- Implementation
 	
 	initialize_expressions (a_filename: STRING) is
 			-- Initial expressions from file
@@ -228,64 +240,6 @@ feature {NONE} -- Implementation
 				expression_list.forth
 			end
 		end		
-	
-	run_expressions is
-			-- Run all expressions in list sequentially
-		do
-			if all_project then
-				run_expressions_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
-			elseif all_documents then
-				run_expressions_on_documents (Shared_document_editor.documents)
-			else
-				run_expressions_on_document (Shared_document_editor.current_document)
-			end
-		end
-		
-	run_expressions_on_directory (a_dir: DIRECTORY) is
-			-- Run expression recursively on files in `a_dir'
-		local
-			cnt: INTEGER
-			l_dir: DIRECTORY
-			l_file: PLAIN_TEXT_FILE
-			l_doc: DOCUMENT
-		do
-			from
-				a_dir.open_read
-				cnt := 0
-			until
-				cnt = a_dir.count
-			loop
-				a_dir.readentry
-				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
-					create l_dir.make (a_dir.name + "\" + a_dir.lastentry)
-					if l_dir /= Void and then l_dir.exists then
-						run_expressions_on_directory (l_dir)
-					else
-						create l_file.make (l_dir.name)
-						if l_file /= void and then l_file.exists and then filetypes.has (file_type (a_dir.lastentry)) then
-							create l_doc.make_from_file (l_file)
-							run_expressions_on_document (l_doc)
-						end
-					end
-				end
-				cnt := cnt + 1
-			end
-		end
-
-	run_expressions_on_documents (documents: ARRAYED_LIST [DOCUMENT]) is
-			-- Run expressions on all DOCUMENTs in `documents'
-		do
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				if documents.item /= Void then
-					run_expressions_on_document (documents.item)
-				end				
-				documents.forth
-			end
-		end		
 
 	run_expressions_on_document (a_doc: DOCUMENT) is
 			-- Run expression on `a_file'
@@ -293,6 +247,7 @@ feature {NONE} -- Implementation
 			doc_not_void: a_doc /= void
 			doc_has_associated_file: a_doc.file.exists
 		local
+			l_filename: FILE_NAME
 			l_file: PLAIN_TEXT_FILE
 			l_file_string, l_subject, l_matched_text, 
 			l_final_string, l_replacement, l_substring: STRING
@@ -318,9 +273,8 @@ feature {NONE} -- Implementation
 				regexp.compile (Ordered_expressions.item)
 				
 					-- Match on a subject.
-				regexp.match (l_subject)
-				
-					-- 
+				regexp.match (l_subject)				
+					
 				if regexp.has_matched then
 					from						
 					until
@@ -348,24 +302,20 @@ feature {NONE} -- Implementation
 				end
 				
 				Ordered_expressions.forth
-			end
-			
-			l_file.close
-			
-			if overwrite_documents then
-				if Shared_document_editor.is_document_open (a_doc.name) then
-					a_doc.set_text (l_final_string)
-					a_doc.save
-				elseif all_project then
-					l_file.wipe_out
-					l_file.open_write
-					l_file.putstring (l_final_string)
-					l_file.close
-				end
-			else
-				
 			end			
-			l_file.close
+			if overwrite_documents then				
+				a_doc.set_text (l_final_string)
+				a_doc.save
+			else
+				l_file.close
+				create l_filename.make_from_string (directory_no_file_name (a_doc.name))
+				l_filename.extend (short_name (file_no_extension (a_doc.name)))
+				l_filename.add_extension ("xml")
+				create l_file.make_create_read_write (l_filename.string)
+				l_file.put_string (l_final_string)
+				l_file.close
+				new_files.extend (l_filename.string)
+			end						
 		end
 	
 	expressions: HASH_TABLE [STRING, STRING] is
@@ -381,15 +331,102 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (5)
 		end		
+
+feature {NONE} -- XML Implementation
+
+	initialize_schema_element_selector is
+			-- Initialize the schema element selector
+		local
+			l_render_factory: SCHEMA_RENDERING_FACTORY
+		do
+			create l_render_factory
+			l_render_factory.element_tree_render (Shared_document_manager.schema, xml_structure_list)
+		end			
+
+	xml_list_selected is
+			-- An item in the schema XML list was selected
+		local
+			l_array: like element_name_array
+		do
+			l_array := element_name_array
+		end	
+
+	element_name_array: ARRAYED_LIST [STRING] is
+			-- Ordered name array denoting selected schema element (minus type information)
+		require
+			item_selected: xml_structure_list.selected_item /= Void
+		local
+			l_tree_item: EV_TREE_NODE
+			l_finished: BOOLEAN			
+			l_string: STRING
+		do
+			create Result.make (1)
+			l_tree_item := xml_structure_list.selected_item
+			from				
+			until
+				l_finished
+			loop			
+				l_string := l_tree_item.text
+				if l_string.index_of ('(', 1) > 0 then
+					l_string := l_string.substring (1, l_string.index_of ('(', 1) - 2)
+				end
+				
+				Result.put_front (l_string)
+				l_tree_item ?= l_tree_item.parent
+				if l_tree_item = Void then
+					l_finished := True
+				end
+			end
+		end		
+
+	run_parsing_on_document (a_doc: DOCUMENT) is
+			-- Run on `a_file'
+		require
+			doc_not_void: a_doc /= void
+			doc_has_associated_file: a_doc.file.exists
+		local
+			l_filename: FILE_NAME
+			l_file: PLAIN_TEXT_FILE
+		do
+			if a_doc.is_valid_xml then
+				if xml_expr_check.is_selected then
+					-- Needs implementing
+				end
+				if xml_name_check.is_selected then
+					set_element_renamed (False)
+					set_element_name (a_doc.xml, element_name_array, xml_name_text.text, 1)
+					if element_renamed and then overwrite_documents then
+						a_doc.set_text (a_doc.xml.text)
+						a_doc.save
+					else
+						create l_filename.make_from_string (directory_no_file_name (a_doc.name))
+						l_filename.extend (short_name (file_no_extension (a_doc.name)))
+						l_filename.add_extension ("psd")
+						create l_file.make_create_read_write (l_filename.string)
+						l_file.put_string (a_doc.xml.text)
+						l_file.close
+						new_files.extend (l_filename.string)
+					end
+				end		
+			end
+		end	
+
+feature {NONE} -- Implementation
 	
 	filetypes: ARRAYED_LIST [STRING] is
 			-- File types to apply parsing to
 		once
 			create Result.make (3)
 			Result.extend ("xml")
---			Result.extend ("html")
---			Result.extend ("htm")
+			Result.extend ("html")
+			Result.extend ("htm")
 			Result.compare_objects
+		end
+
+	new_files: ARRAYED_LIST [STRING] is
+			-- List of newly made filenames
+		once
+			create Result.make (1)
 		end
 
 	is_valid: BOOLEAN is
@@ -398,5 +435,87 @@ feature {NONE} -- Implementation
 			Result := not expression_list.is_empty	
 		end		
 	
+	is_exp_mode: BOOLEAN is
+			-- Is regex mode?
+		do
+			Result := notebook.selected_item_index = 1	
+		end		
+	
+	run is
+			-- Run
+		do
+			new_files.wipe_out
+			if is_exp_mode then
+				build_expressions
+			end
+			if all_project then
+				run_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
+			elseif all_documents then
+				run_on_documents (Shared_document_editor.documents)
+			else
+				run_on_document (Shared_document_editor.current_document)
+			end
+		end		
+		
+	run_on_directory (a_dir: DIRECTORY) is
+			-- Run recursively on files in `a_dir'
+		local
+			cnt, l_dir_cnt: INTEGER
+			l_dir: DIRECTORY
+			l_file: PLAIN_TEXT_FILE
+			l_doc: DOCUMENT
+		do
+			from
+				a_dir.open_read
+				cnt := 0
+				l_dir_cnt := a_dir.count
+			until
+				cnt = l_dir_cnt
+			loop
+				a_dir.readentry
+				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..") or new_files.has (a_dir.lastentry)) then
+					create l_dir.make (a_dir.name + "\" + a_dir.lastentry)
+					if l_dir /= Void and then l_dir.exists then
+						run_on_directory (l_dir)
+					else
+						create l_file.make (l_dir.name)
+						if l_file /= void and then l_file.exists and then filetypes.has (file_type (a_dir.lastentry)) then
+							create l_doc.make_from_file (l_file)
+							run_on_document (l_doc)
+						end
+					end
+				end
+				cnt := cnt + 1
+			end
+		end
+
+	run_on_documents (documents: ARRAYED_LIST [DOCUMENT]) is
+			-- Run on all DOCUMENTs in `documents'
+		do
+			from
+				documents.start
+			until
+				documents.after
+			loop
+				if documents.item /= Void then
+					run_expressions_on_document (documents.item)
+				end				
+				documents.forth
+			end
+		end		
+
+	run_on_document (a_doc: DOCUMENT) is
+			-- Run on `a_file'
+		require
+			doc_not_void: a_doc /= void
+			doc_has_associated_file: a_doc.file.exists
+		do
+			if is_exp_mode then
+				run_expressions_on_document (a_doc)
+			else
+				run_parsing_on_document (a_doc)
+			end
+		end	
+		
 end -- class EXPRESSION_DIALOG
 

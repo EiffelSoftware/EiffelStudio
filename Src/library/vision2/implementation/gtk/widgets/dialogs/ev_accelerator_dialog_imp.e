@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_ACCELERATOR_SELECTION_DIALOG_IMP
+	EV_ACCELERATOR_DIALOG_IMP
 
 inherit
-	EV_ACCELERATOR_SELECTION_DIALOG_I
+	EV_ACCELERATOR_DIALOG_I
 
 	EV_SELECTION_DIALOG_IMP
 		undefine
@@ -53,4 +53,4 @@ feature -- Event -- removing command association
 		do
 		end
 
-end -- class EV_ACCELERATOR_SELECTION_DIALOG_IMP
+end -- class EV_ACCELERATOR_DIALOG_IMP

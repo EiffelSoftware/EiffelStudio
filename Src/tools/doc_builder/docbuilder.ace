@@ -57,9 +57,16 @@ default
 -- GOBO
 
 cluster
-	root_cluster:		"$ISE_DOC_BUILDER"
+	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
+		exclude
+			"doc_builder_classic.e";
+		end
 
 	project (root_cluster):		"$\project"
+
+	managers (project):		"$\managers"
+	
+	filters (project):		"$\filter"
 
 	templates (project):		"$\templates"
 
@@ -79,6 +86,10 @@ cluster
 
 	misc (root_cluster):		"$\miscellaneous"
 
+	patterns (misc):		"$\patterns"
+	
+	observer (patterns):		"$\observer"
+
 	xml (root_cluster):		"$\xml"
 
 	schema (xml):		"$\schema"
@@ -87,13 +98,13 @@ cluster
 
 	validation (xml):		"$\validation"
 
-	help (root_cluster):		"$\help"
+	help (root_cluster):		"$\help"	
 
 	help_shared (help):		"$\shared"
 
 	help_project (help):		"$\project"
 	
-	help_new (help_project):	"$\new"
+	help_toc (help):		"$\toc"
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
@@ -106,17 +117,13 @@ cluster
 		end
 
 assembly
-	"AxSHDocVw":	"$ISE_DOC_BUILDER\AxSHDocVw.dll"
+	"AxSHDocVw":	"$EIFFEL_SRC\tools\doc_builder\AxSHDocVw.dll"
 		
 
-	"SHDocVw":	"$ISE_DOC_BUILDER\SHDocVw.dll"
+	"SHDocVw":	"$EIFFEL_SRC\tools\doc_builder\SHDocVw.dll"
 		prefix
 			SH_
 		end
-
---	"MSHTML":	"$ISE_DOC_BUILDER\resources\modules\MSHTML.dll"
-
---	"Browser":	"$ISE_DOC_BUILDER\resources\modules\Browser.dll"
 
 external
 

@@ -96,6 +96,7 @@ feature
 			if (s = Void) then
 				visual_name := Void;
 				text_modified := False;
+				size_modified := True;
 				widget_set_text (label);
 				update_tree_element
 			else
@@ -107,6 +108,7 @@ feature
 		do
 			text_modified := True;
 			visual_name := clone (s);
+			size_modified := True;
 			widget_set_text (label);
 		end;
 
@@ -155,7 +157,9 @@ feature {CONTEXT}
 				function_string_to_string (Result, context_name, "set_text", text);
 			end;
 			if left_alignment_modified then
-				cond_f_to_string (Result, left_alignment, context_name, "set_center_alignment", "set_left_alignment");
+				cond_f_to_string (Result, left_alignment, context_name, 
+						"set_left_alignment", 
+						"set_center_alignment");
 			end;
 			if resize_policy_disabled_modified then
 				cond_f_to_string (Result, resize_policy_disabled, context_name, "forbid_recompute_size", "allow_recompute_size");

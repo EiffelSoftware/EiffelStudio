@@ -430,7 +430,7 @@ feature -- Plug and Makefile file
 			id: INTEGER
 			to_c_feat, set_count_feat, set_make_feat, creation_feature: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			special_cl: SPECIAL_B

@@ -640,5 +640,8 @@ $inttypes_include
 #$eif_win32	EIF_WIN32	/* NC */
 #$eif_windows EIF_WINDOWS	/* NC */
 
+/* Is SGI platform */
+#$eif_sgi	EIF_SGI		/* NC */
+
 #endif
 !GROK!THIS!

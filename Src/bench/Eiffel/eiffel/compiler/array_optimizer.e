@@ -58,7 +58,7 @@ feature
 			
 			!!array_descendants.make
 
-			!!special_features.make
+			!! special_features.make
 			special_features.compare_objects
 
 			!!unsafe_features.make
@@ -223,23 +223,23 @@ end
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table
 
-				!!dep.make (an_id, select_table.item (put_rout_id))
+				!! dep.make (an_id, select_table.item (put_rout_id))
 				special_features.extend (dep)
-				!!dep.make (an_id, select_table.item (item_rout_id))
+				!! dep.make (an_id, select_table.item (item_rout_id))
 				special_features.extend (dep)
-				!!dep.make (an_id, select_table.item (infix_at_rout_id))
+				!! dep.make (an_id, select_table.item (infix_at_rout_id))
 				special_features.extend (dep)
 
 					-- Record `lower' and `area'
-				!!dep.make (an_id, select_table.item (lower_rout_id))
+				!! dep.make (an_id, select_table.item (lower_rout_id))
 				lower_and_area_features.extend (dep)
-				!!dep.make (an_id, select_table.item (area_rout_id))
+				!! dep.make (an_id, select_table.item (area_rout_id))
 				lower_and_area_features.extend (dep)
 
 					-- Record unsafe features
-				!!dep.make (an_id, select_table.item (make_area_rout_id))
+				!! dep.make (an_id, select_table.item (make_area_rout_id))
 				unsafe_features.extend (dep)
-				!!dep.make (an_id, select_table.item (set_area_rout_id))
+				!! dep.make (an_id, select_table.item (set_area_rout_id))
 				unsafe_features.extend (dep)
 				from
 					d := a_class.descendants
@@ -261,13 +261,12 @@ feature
 			byte_code: BYTE_CODE
 		do
 			if array_optimization_on then
-				!!opt_unit.make (a_class.id, body_index)
+				!! opt_unit.make (a_class.id, body_index)
 				if
 						-- The feature was marked during the type check
 						-- and hasn't been processed yet
 					optimization_tables.feature_set.has (opt_unit)
-				and then
-					not optimized_features.has (opt_unit)
+					and then not optimized_features.has (opt_unit)
 				then
 						-- See if the routine really has a loop
 						-- (incrementality can mess up everything) and
@@ -279,10 +278,10 @@ feature
 						-- we don't want the modified byte code to remain in the cache
 					if
 						byte_code.has_loop
-					and then
-						(byte_code.has_array_as_argument or else
-						 byte_code.has_array_as_local or else
-						 byte_code.has_array_as_result)
+						and then
+							(byte_code.has_array_as_argument or else
+					   		byte_code.has_array_as_local or else
+					   		byte_code.has_array_as_result)
 					then
 							-- The routine calls `put' or `item' on a descendant of ARRAY
 						if not special_features.disjoint (depend_list) then
@@ -369,9 +368,8 @@ feature -- Contexts
 			f := array_type.base_class.feature_table.origin_table.item (item_rout_id)
 
 			type_a ?= f.type
-			type_a := type_a.instantiation_in
-				(array_type_a, array_type.base_class.id)
-				--(array_type_a, System.current_class.id)
+			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.id)
+								--(array_type_a, System.current_class.id)
 
 			if type_a.is_formal then
 				formal_a ?= type_a
@@ -432,7 +430,7 @@ feature -- Detection of safe/unsafe features
 			end
 		end
 
-	is_safe (dep:DEPEND_UNIT): BOOLEAN is
+	is_safe (dep: DEPEND_UNIT): BOOLEAN is
 			-- Can the feature be safely called within an optimized loop?
 		local
 			table: ROUT_TABLE

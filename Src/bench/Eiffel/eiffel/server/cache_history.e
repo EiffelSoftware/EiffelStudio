@@ -1,16 +1,17 @@
-class CACHE_HISTORY[G]
+class
+	CACHE_HISTORY [G]
 
 inherit
-		ARRAY[G]
-			rename count as count_array,
-				make as make_array
-			redefine 
-				wipe_out, clear_all
-			end
+	ARRAY [G]
+		rename
+			count as count_array,
+			make as make_array
+		redefine 
+			wipe_out, clear_all
+		end
 
 creation
-		make
-
+	make
 
 feature
 
@@ -40,7 +41,6 @@ feature
 	to_remove: G
 		-- Last element removed from the history
 		--  by the force function
-
 	
 	make (n: INTEGER) is
 			-- Create an history of size n
@@ -55,16 +55,15 @@ feature
 			from
 				int_array := free_cells
 			until
-					i = n
+				i = n
 			loop
-					int_array.put (i, i)
-					i := i + 1
+				int_array.put (i, i)
+				i := i + 1
 			end
 			size := n
 			younger := -1
 			older := -1
 		end
-
 
 	add (e: G) is
 			-- Add a new element in the history
@@ -97,8 +96,7 @@ feature
 				put (e, new_one)
 			end
 		end
-				
-
+			
 	make_younger (i: INTEGER) is
 			-- Make the element of index i younger
 			-- as it is accessed in the cache
@@ -124,7 +122,6 @@ feature
 				
 			end		
 		end
-
 
 	remove (i: INTEGER) is
 			-- Remove the item of index i from the
@@ -156,8 +153,7 @@ feature
 				younger := -1
 				count := 0
 			end
-			end
-		
+		end
 
 	wipe_out, clear_all is
 		do
@@ -165,7 +161,6 @@ feature
 			younger := -1
 			older := -1
 		end	
-	
 		
 	set_item (e: G; i: INTEGER) is
 		-- change the item at the index i

@@ -182,7 +182,7 @@ extern int munmap ();
 private void free_unused();
 #else
 #ifdef HAS_SBRK
-extern Caddr_t sbrk();					/* Set break (system call) */
+#include <unistd.h>						/* Set break (system call) */
 #endif
 #endif
 

@@ -1214,20 +1214,19 @@ public void buffer_write(data, size)
 register char * data;
 int size;
 {
-    register int i;
-   	
-	if (current_position + size >= buffer_size) {
-    	for (i = 0; i < size; i++) {
-        	*(general_buffer + current_position) = *(data++);
-        	if (++current_position >= buffer_size)
-			store_write_func();
-    	}
-	} else {
-    	for (i = 0; i < size; i++) {
-        	*(general_buffer + current_position++) = *(data++);
-    	}
-	}
+	register int i;
 
+	if (current_position + size >= buffer_size) {
+		for (i = 0; i < size; i++) {
+			*(general_buffer + current_position) = *(data++);
+			if (++current_position >= buffer_size)
+				store_write_func();
+			}
+	} else {
+		for (i = 0; i < size; i++) {
+			*(general_buffer + current_position++) = *(data++);
+		}
+	}
 }
 
 public void flush_st_buffer ()

@@ -13,6 +13,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_TARGET_IMP
+		redefine
+			interface
+		end
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		undefine

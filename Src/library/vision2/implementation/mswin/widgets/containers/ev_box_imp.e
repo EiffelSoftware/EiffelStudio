@@ -33,6 +33,11 @@ inherit
 			interface,
 			initialize
 		end
+		
+	EV_DOCKABLE_TARGET_IMP
+		redefine
+			interface
+		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename

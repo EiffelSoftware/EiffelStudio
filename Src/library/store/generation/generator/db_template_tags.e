@@ -136,7 +136,7 @@ feature -- Basic operations
 		local
 			index: INTEGER
 			option_char: CHARACTER
-			stop, second: BOOLEAN
+			second: BOOLEAN
 		do
 			reset
 			if Attribute_block.is_equal (tag.substring (1, Attribute_block.count)) and then

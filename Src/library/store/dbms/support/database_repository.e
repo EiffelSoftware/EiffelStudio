@@ -325,8 +325,7 @@ feature -- Status report
 		require else
 			object_exists: object /= Void
 		local
-			i, j: INTEGER
-			max_b: INTEGER
+			i: INTEGER
 			ft: INTEGER
 			col_type: ANY
 			t_string, f_name: STRING

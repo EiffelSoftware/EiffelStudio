@@ -83,8 +83,11 @@ feature {NONE}
 
 	apply is
 		do
-			if not text_field_width.same_value (context.drawing_area_width) or else
-				not text_field_height.same_value (context.drawing_area_height) then
+			if	(text_field_width.int_value > 0 and then 
+				text_field_height.int_value > 0) and then 
+				(not text_field_width.same_value (context.drawing_area_width) or else
+				not text_field_height.same_value (context.drawing_area_height))
+			then
 				context.set_drawing_area_size (text_field_width.int_value, 
 					text_field_height.int_value);
 			end;

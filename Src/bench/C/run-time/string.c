@@ -194,6 +194,24 @@ rt_public int str_search(char *str, char c, int start, int len)
 	return i < len ? ++i : 0;
 }
 
+rt_public int str_last_search (char *str, char c, int start_index_from_end)
+			/* The string */
+			/* character to look at */
+			/* start index length of the string */
+{
+	register1 char *s;	/* To walk through the string */
+	register2 int i;	/* Index in string */
+
+	i = start_index_from_end - 1;		/* C index starts at 0*/
+	s = str + i;
+
+	for (; i > 0; i--)
+		if (*s-- == c)
+			break;
+
+	return (i > 0) ? ++i : 0;
+}
+
 rt_public void str_replace(char *str, char *new, int string_length, int new_len, int start, int end)
           			/* The original string */
           			/* The new string for substring replacement */

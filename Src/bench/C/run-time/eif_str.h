@@ -25,6 +25,7 @@ extern void str_rjustify(register char *str, int length, int capacity);
 extern void str_cjustify(register char *str, int length, int capacity);
 extern int str_right(register char *str, int length);
 extern int str_search(char *str, char c, int start, int len);
+extern int str_last_search (char *str, char c, int start_index_from_end)
 extern void str_replace(char *str, char *new, int string_length, int new_len, int start, int end);
 extern void str_insert(char *str, char *new, int string_length, int new_len, int idx);
 extern EIF_INTEGER str_code(EIF_CHARACTER *str, EIF_INTEGER i);

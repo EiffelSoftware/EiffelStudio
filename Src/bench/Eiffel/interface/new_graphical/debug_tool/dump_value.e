@@ -143,6 +143,9 @@ feature -- Status report
 			o: DEBUGGED_OBJECT
 			att: ABSTRACT_DEBUG_VALUE
 		do
+			debug ("debug_recv")
+				print ("DUMP_VALUE.to_basic%N")
+			end
 			create o.make (address, 0, 1)
 			from
 				o.attributes.start
@@ -179,6 +182,11 @@ feature -- Status report
 					end
 				end
 			end
+			debug ("debug_recv")
+				print ("DUMP_VALUE.has_formatted_output is ")
+				print (Result)
+				print ("%N")
+			end
 		end
 
 	string_representation (min, max: INTEGER): STRING is
@@ -197,6 +205,9 @@ feature -- Status report
 			l_conform_to_string: BOOLEAN
 			l_area_name, l_count_name: STRING
 		do
+			debug ("debug_recv")
+				print ("DUMP_VALUE.string_representation of " + dynamic_type.name_in_upper + "%N")
+			end
 			sc := Eiffel_system.string_class.compiled_class
 			l_conform_to_string := dynamic_type /= sc and then dynamic_type.simple_conform_to (sc)
 			if dynamic_type = sc or l_conform_to_string then
@@ -293,6 +304,11 @@ feature -- Status report
 			if type /= type_string and has_formatted_output then
 				Result.append_character ('=')
 				Result.append (formatted_output)
+			end
+			debug ("debug_recv")
+				print ("Output is ")
+				print (Result)
+				print ("%N")
 			end
 		end
 

@@ -352,10 +352,6 @@ feature -- Type check, byte code and dead code removal
 			access := target.byte_node
 			Result.set_target (access)
 		
-			create_info := Creation_types.item;	
-			Result.set_info (create_info)
-			Creation_types.forth
-
 				-- Register information for generation of the final Eiffel
 				-- executable.
 			create_feat ?= create_info
@@ -379,6 +375,10 @@ feature -- Type check, byte code and dead code removal
 				Result.set_call (nested)
 			end
 			Result.set_line_number (line_number)
+
+			create_info := Creation_types.item;	
+			Result.set_info (create_info)
+			Creation_types.forth
 		end
 
 feature -- Replication

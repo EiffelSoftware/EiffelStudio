@@ -976,6 +976,16 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, icon.item)
 		end
 
+	draw_cursor (cursor: WEL_CURSOR; x, y: INTEGER) is
+			-- Draw `cursor' at the `x', `y' position.
+		require
+			exists: exists
+			cursor_not_void: cursor /= Void
+			cursor_exists: cursor.exists
+		do
+			cwin_draw_icon (item, x, y, cursor.item)
+		end
+
 	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF) is
 			-- Set the pixel at `x', `y' position
 			-- with the `color' color.
@@ -1006,7 +1016,7 @@ feature -- Basic operations
 			a: ANY
 		do
 			a := points.to_c
-			cwel_polyline (item, $a, points.count // 2)
+			cwin_polyline (item, $a, points.count // 2)
 		end
 
 	line_to (x, y: INTEGER) is
@@ -1090,7 +1100,7 @@ feature -- Basic operations
 		end
 
 	polygon (points: ARRAY [INTEGER]) is
-			-- Draw a polygon consisting of two or more points
+			-- Draw a polygon consisting of two or more `points'
 			-- connected by lines.
 		require
 			exists: exists
@@ -1100,7 +1110,7 @@ feature -- Basic operations
 			a: ANY
 		do
 			a := points.to_c
-			cwel_polygon (item, $a, points.count // 2)
+			cwin_polygon (item, $a, points.count // 2)
 		end
 
 	ellipse (left, top, right, bottom: INTEGER) is
@@ -1495,10 +1505,12 @@ feature {NONE} -- Externals
 			"LineTo"
 		end
 
-	cwel_polyline (hdc, pts: POINTER; num: INTEGER) is
+	cwin_polyline (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polyline
 		external
-			"C"
+			"C [macro <wel.h>] (HDC, POINT *, int)"
+		alias
+			"Polyline"
 		end
 
 	cwin_rectangle (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
@@ -1542,10 +1554,12 @@ feature {NONE} -- Externals
 			"ExtFloodFill"
 		end
 
-	cwel_polygon (hdc, pts: POINTER; num: INTEGER) is
+	cwin_polygon (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polygon
 		external
-			"C"
+			"C [macro <wel.h>] (HDC, POINT *, int)"
+		alias
+			"Polygon"
 		end
 
 	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER) is

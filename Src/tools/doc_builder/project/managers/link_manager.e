@@ -7,6 +7,7 @@ class
 	LINK_MANAGER
 
 create
+	default_create,
 	make_with_documents
 
 feature -- Creation
@@ -29,30 +30,32 @@ feature -- Commands
 			l_link: DOCUMENT_LINK
 			l_links: like document_links
 		do
-			invalid_links.wipe_out
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				if documents.item.is_valid_xml then					
-					l_links := document_links (documents.item)
-					if not l_links.is_empty then
-						from
-							l_links.start
-						until
-							l_links.after
-						loop							
-							l_link := l_links.item
-							if not l_link.exists then
-								invalid_links.extend (l_link)
+			if documents /= Void then
+				invalid_links.wipe_out
+				from
+					documents.start
+				until
+					documents.after
+				loop
+					if documents.item.is_valid_xml then					
+						l_links := document_links (documents.item)
+						if not l_links.is_empty then
+							from
+								l_links.start
+							until
+								l_links.after
+							loop							
+								l_link := l_links.item
+								if not l_link.exists then
+									invalid_links.extend (l_link)
+								end
+								l_links.forth
 							end
-							l_links.forth
-						end
-					end	
-				end
-				documents.forth
-			end			
+						end	
+					end
+					documents.forth
+				end	
+			end					
 		end		
 
 	update_links (a_old, a_new: DOCUMENT_LINK) is
@@ -64,17 +67,19 @@ feature -- Commands
 			l_doc: DOCUMENT
 			l_formatter: XM_LINK_FORMATTER
 		do
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				l_doc := documents.item
-				create l_formatter.make_with_document (l_doc)
-				l_formatter.set_update_data (a_old.filename, a_new.filename)
-				l_formatter.process_document (l_doc.xml)				
-				documents.forth
-			end		
+			if documents /= Void then
+				from
+					documents.start
+				until
+					documents.after
+				loop
+					l_doc := documents.item
+					create l_formatter.make_with_document (l_doc)
+					l_formatter.set_update_data (a_old.filename, a_new.filename)
+					l_formatter.process_document (l_doc.xml)				
+					documents.forth
+				end		
+			end
 		end
 
 	set_links_relative is
@@ -85,20 +90,22 @@ feature -- Commands
 			l_xml_routines: XML_ROUTINES
 			l_xm_doc: XM_DOCUMENT
 		do
-			create l_xml_routines
-			from
-				documents.start
-			until
-				documents.after
-			loop
-				l_doc := documents.item				
-				create l_formatter.make_with_document (l_doc)
-				l_formatter.set_convert_to_relative (True)
-				l_xm_doc := l_doc.xml
-				if l_xm_doc /= Void then					
-					-- TO DO
+			if documents /= Void then
+				create l_xml_routines
+				from
+					documents.start
+				until
+					documents.after
+				loop
+					l_doc := documents.item				
+					create l_formatter.make_with_document (l_doc)
+					l_formatter.set_convert_to_relative (True)
+					l_xm_doc := l_doc.xml
+					if l_xm_doc /= Void then					
+						-- TO DO
+					end
+					documents.forth
 				end
-				documents.forth
 			end
 		end	
 
@@ -142,8 +149,5 @@ feature -- Access
 		ensure
 			has_result: Result /= Void
 		end
-
-invariant
-	has_documents: documents /= Void
 
 end -- class LINK_FIXER

@@ -113,7 +113,13 @@ feature -- Info
 					-- This is the first time that we launched EiffelBench, so we need
 					-- to store the expiration date, which is the current date plus
 					-- a month
-				date_name := clone ((time + thirty_days).out)
+				from
+					date_name := (time + thirty_days).out
+				until
+					date_name.index_of ('%U', 1) = 0
+				loop
+					date_name := (time + thirty_days).out
+				end
 				environment.put (encoder.encrypt (date_name), "BENCH_TRIAL")
 			end
 			encoder.terminate
@@ -123,13 +129,15 @@ feature -- Info
 			-- Number of days left before license expires
 		local
 			date_of_expiration: INTEGER
+			local_time: INTEGER
 		do
 			date_of_expiration := expiration_date
-			if time > date_of_expiration then
+			local_time := time
+			if local_time > date_of_expiration then
 				Result := -1
 			else
 					-- Get the number of days from a result given in seconds.
-				Result := ((date_of_expiration - time) // 3600) // 24
+				Result := ((date_of_expiration - local_time) // 3600) // 24
 			end
 		end
 
@@ -197,7 +205,7 @@ feature {NONE} -- Implementation
 	number_of_days: INTEGER is
 			-- Number of days since the first installation
 		do
-			Result := ((time - installation_date - 1) // 3600) // 24
+			Result := ((time - installation_date) // 3600) // 24
 		end
 
 	installation_date: INTEGER is
@@ -208,8 +216,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	thirty_days: INTEGER is 2678400
-			-- 31 days translated in seconds.
+	thirty_days: INTEGER is 2592030
+			-- 30 days + 30 seconds translated in seconds.
 
 feature {NONE} -- Externals
 

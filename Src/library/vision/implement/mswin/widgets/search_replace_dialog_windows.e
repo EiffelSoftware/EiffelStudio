@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 			!! radio_box.make_by_id (wd, Idc_radiobox)
 			!! find_static.make_by_id (wd, Id_findstatic)
 			!! replace_static.make_by_id (wd, Id_replacestatic)
+			!! close.make_by_id (wd, Idcancel)
 			activate
 		end
 
@@ -509,6 +510,8 @@ feature {NONE} -- Implementation
 	replace_button: WEL_PUSH_BUTTON
 
 	replace_all_button: WEL_PUSH_BUTTON
+
+	close: WEL_PUSH_BUTTON
 
 	find_edit: WEL_SINGLE_LINE_EDIT
 

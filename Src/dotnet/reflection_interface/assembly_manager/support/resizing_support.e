@@ -62,9 +62,9 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.name.get_length > Result then
-							Result := a_descriptor.name.get_length
-							name := a_descriptor.name
+						if a_descriptor.get_name.get_length > Result then
+							Result := a_descriptor.get_name.get_length
+							name := a_descriptor.get_name
 						end
 					end
 					i := i + 1
@@ -100,9 +100,9 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assembly_descriptor.name.get_length > Result then
-							Result := an_eiffel_assembly.assembly_descriptor.name.get_length
-							name := an_eiffel_assembly.assembly_descriptor.name
+						if an_eiffel_assembly.get_assembly_descriptor.get_name.get_length > Result then
+							Result := an_eiffel_assembly.get_assembly_descriptor.get_name.get_length
+							name := an_eiffel_assembly.get_assembly_descriptor.get_name
 						end
 					end
 					i := i + 1
@@ -138,9 +138,9 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.version.get_length > Result then
-							Result := a_descriptor.version.get_length
-							version := a_descriptor.version
+						if a_descriptor.get_version.get_length > Result then
+							Result := a_descriptor.get_version.get_length
+							version := a_descriptor.get_version
 						end
 					end
 					i := i + 1
@@ -176,9 +176,9 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assembly_descriptor.version.get_length > Result then
-							Result := an_eiffel_assembly.assembly_descriptor.version.get_length
-							version := an_eiffel_assembly.assembly_descriptor.version
+						if an_eiffel_assembly.get_assembly_descriptor.get_version.get_length > Result then
+							Result := an_eiffel_assembly.get_assembly_descriptor.get_version.get_length
+							version := an_eiffel_assembly.get_assembly_descriptor.get_version
 						end
 					end
 					i := i + 1
@@ -214,9 +214,9 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.culture.get_length > Result then
-							Result := a_descriptor.culture.get_length
-							culture := a_descriptor.culture
+						if a_descriptor.get_culture.get_length > Result then
+							Result := a_descriptor.get_culture.get_length
+							culture := a_descriptor.get_culture
 						end
 					end
 					i := i + 1
@@ -252,9 +252,9 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assembly_descriptor.culture.get_length > Result then
-							Result := an_eiffel_assembly.assembly_descriptor.culture.get_length
-							culture := an_eiffel_assembly.assembly_descriptor.culture
+						if an_eiffel_assembly.get_assembly_descriptor.get_culture.get_length > Result then
+							Result := an_eiffel_assembly.get_assembly_descriptor.get_culture.get_length
+							culture := an_eiffel_assembly.get_assembly_descriptor.get_culture
 						end
 					end
 					i := i + 1
@@ -290,9 +290,9 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						if a_descriptor.public_key.get_length > Result then
-							Result := a_descriptor.public_key.get_length
-							public_key := a_descriptor.public_key
+						if a_descriptor.get_public_key.get_length > Result then
+							Result := a_descriptor.get_public_key.get_length
+							public_key := a_descriptor.get_public_key
 						end
 					end
 					i := i + 1
@@ -328,9 +328,9 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.assembly_descriptor.public_key.get_length > Result then
-							Result := an_eiffel_assembly.assembly_descriptor.public_key.get_length
-							public_key := an_eiffel_assembly.assembly_descriptor.public_key
+						if an_eiffel_assembly.get_assembly_descriptor.get_public_key.get_length > Result then
+							Result := an_eiffel_assembly.get_assembly_descriptor.get_public_key.get_length
+							public_key := an_eiffel_assembly.get_assembly_descriptor.get_public_key
 						end
 					end
 					i := i + 1
@@ -421,7 +421,7 @@ feature -- Basic Operations
 					dependancies_string := Void
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then					
-						a_descriptor := an_eiffel_assembly.assembly_descriptor
+						a_descriptor := an_eiffel_assembly.get_assembly_descriptor
 						dependancies := support.dependancies_from_info (a_descriptor)
 						if dependancies /= Void and then dependancies.count > 0 then
 							dependancies_string := support.dependancies_string (dependancies)
@@ -466,9 +466,9 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						if an_eiffel_assembly.eiffel_cluster_path.get_length > Result then
-							Result := an_eiffel_assembly.eiffel_cluster_path.get_length
-							eiffel_path := an_eiffel_assembly.eiffel_cluster_path
+						if an_eiffel_assembly.get_eiffel_cluster_path.get_length > Result then
+							Result := an_eiffel_assembly.get_eiffel_cluster_path.get_length
+							eiffel_path := an_eiffel_assembly.get_eiffel_cluster_path
 						end
 					end
 					i := i + 1
@@ -504,9 +504,9 @@ feature -- Basic Operations
 				loop
 					a_class ?= a_list.get_item (i)
 					if a_class /= Void then
-						if a_class.eiffel_name.get_length > Result then
-							Result := a_class.eiffel_name.get_length
-							name := a_class.eiffel_name
+						if a_class.get_eiffel_name.get_length > Result then
+							Result := a_class.get_eiffel_name.get_length
+							name := a_class.get_eiffel_name
 						end
 					end
 					i := i + 1
@@ -542,9 +542,9 @@ feature -- Basic Operations
 				loop
 					a_class ?= a_list.get_item (i)
 					if a_class /= Void then
-						if a_class.external_name.get_length > Result then
-							Result := a_class.external_name.get_length
-							name := a_class.external_name
+						if a_class.get_external_name.get_length > Result then
+							Result := a_class.get_external_name.get_length
+							name := a_class.get_external_name
 						end
 					end
 					i := i + 1

@@ -125,14 +125,14 @@ feature -- Status Report
 			non_void_class: a_class /= Void
 			non_void_feature_name: a_feature_name /= Void
 		do
-			Result := has_feature (a_class.initialization_features, a_feature_name)
-					or has_feature (a_class.access_features, a_feature_name)
-					or has_feature (a_class.element_change_features, a_feature_name)
-					or has_feature (a_class.basic_operations, a_feature_name)
-					or has_feature (a_class.unary_operators_features, a_feature_name)
-					or has_feature (a_class.binary_operators_features, a_feature_name)
-					or has_feature (a_class.special_features, a_feature_name)
-					or has_feature (a_class.implementation_features, a_feature_name)
+			Result := has_feature (a_class.get_initialization_features, a_feature_name)
+					or has_feature (a_class.get_access_features, a_feature_name)
+					or has_feature (a_class.get_element_change_features, a_feature_name)
+					or has_feature (a_class.get_basic_operations, a_feature_name)
+					or has_feature (a_class.get_unary_operators_features, a_feature_name)
+					or has_feature (a_class.get_binary_operators_features, a_feature_name)
+					or has_feature (a_class.get_special_features, a_feature_name)
+					or has_feature (a_class.get_implementation_features, a_feature_name)
 		end
 
 feature {NONE} -- Implementation
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 				i = a_list.get_count or Result
 			loop
 				a_feature ?= a_list.get_item (i)
-				if a_feature /= Void and then a_feature.eiffel_name.to_lower.equals_string (a_feature_name.to_lower) then
+				if a_feature /= Void and then a_feature.get_eiffel_name.to_lower.equals_string (a_feature_name.to_lower) then
 					eiffel_feature := a_feature
 					Result := True
 				end

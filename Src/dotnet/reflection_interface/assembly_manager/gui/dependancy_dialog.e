@@ -328,10 +328,10 @@ feature {NONE} -- Implementation
 			row.get_Table.get_Default_View.set_Allow_Edit (False)
 			row.get_Table.get_Default_View.set_Allow_New (False)
 			row.get_Table.get_Default_View.set_Allow_Delete (False)
-			row.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.name)
-			row.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.version)
-			row.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.culture)
-			row.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.public_key)			
+			row.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.get_name)
+			row.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.get_version)
+			row.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.get_culture)
+			row.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.get_public_key)			
 		end
 
 	build_empty_row (row_count: INTEGER) is 

@@ -115,7 +115,7 @@ feature -- Status Report
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
-			Result := non_editable_assemblies.contains (a_descriptor.name.to_lower)		
+			Result := non_editable_assemblies.contains (a_descriptor.get_name.to_lower)		
 		end
 		
 feature -- Basic Operations
@@ -346,13 +346,13 @@ feature -- Event handling
 	update_replace (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Display assembly name column if checked."
-			external_name: "DisplayName"
+			external_name: "UpdateReplaceName"
 		require
 			non_void_sender: sender /= Void
 		do
-			current_history.types_table.clear
+			current_history.get_types_table.clear
 		ensure
-			empty_types_table: current_history.types_table.get_count = 0
+			empty_types_table: current_history.get_types_table.get_count = 0
 		end
 			
 	display_name (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -725,8 +725,8 @@ feature -- Event handling
 			else
 				normal_cursor := cursors.get_Arrow
 				set_cursor (normal_cursor)
-				if not reflection_interface.last_read_successful then 
-					error_code := reflection_interface.last_error.code
+				if not reflection_interface.get_last_read_successful then 
+					error_code := reflection_interface.get_last_error.get_code
 					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
 						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
 						if returned_value = returned_value.Retry_ then
@@ -736,8 +736,8 @@ feature -- Event handling
 						end
 					end
 				else
-					if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
-						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					if reflection_interface.get_last_error /= Void and then reflection_interface.get_last_error.get_description /= Void and then reflection_interface.get_last_error.get_description.get_length > 0 then
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.get_last_error.get_description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 					end
 				end
 			end
@@ -810,12 +810,20 @@ feature -- Event handling
 			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			eiffel_generation_dialog: EIFFEL_GENERATION_DIALOG
 			retried: BOOLEAN
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 		do
 			if not retried then
 				selected_row := data_grid.get_Current_Row_Index
 				a_descriptor := current_assembly (selected_row)
 				if a_descriptor /= Void and eiffel_path /= Void then
-					create eiffel_generation_dialog.make (a_descriptor, eiffel_path)
+					if is_non_editable_assembly (a_descriptor) then
+						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Non_editable_assembly, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					else
+						create eiffel_generation_dialog.make (a_descriptor, eiffel_path)
+					end
 				end
 			end
 		rescue
@@ -949,8 +957,8 @@ feature {NONE} -- Implementation
 					else
 						normal_cursor := cursors.get_Arrow
 						set_cursor (normal_cursor)
-						if reflection_interface.last_error /= Void and then reflection_interface.last_error.description /= Void and then reflection_interface.last_error.description.get_length > 0 then
-							returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.last_error.description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+						if reflection_interface.get_last_error /= Void and then reflection_interface.get_last_error.get_description /= Void and then reflection_interface.get_last_error.get_description.get_length > 0 then
+							returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface.get_last_error.get_description, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 						end
 					end
 				end
@@ -972,8 +980,8 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				imported_assemblies := reflection_interface.assemblies
-				if reflection_interface.last_error /= Void then 
-					error_code := reflection_interface.last_error.code
+				if reflection_interface.get_last_error /= Void then 
+					error_code := reflection_interface.get_last_error.get_code
 					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
 						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
 						if returned_value = returned_value.Retry_ then
@@ -993,8 +1001,8 @@ feature {NONE} -- Implementation
 					sort_assemblies
 				end
 			else					
-				if reflection_interface.last_error /= Void then 
-					error_code := reflection_interface.last_error.code
+				if reflection_interface.get_last_error /= Void then 
+					error_code := reflection_interface.get_last_error.get_code
 					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
 						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
 						if returned_value = returned_value.Retry_ then
@@ -1052,7 +1060,7 @@ feature {NONE} -- Implementation
 			loop
 				an_assembly ?= imported_assemblies.get_Item (i)
 				if an_assembly /= Void then
-					build_row (an_assembly.assembly_descriptor, row_count, an_assembly.Eiffel_Cluster_Path)
+					build_row (an_assembly.get_assembly_descriptor, row_count, an_assembly.get_Eiffel_Cluster_Path)
 					row_count := row_count + 1
 				end
 				i := i + 1

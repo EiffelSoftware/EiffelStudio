@@ -40,8 +40,8 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						added := tmp_list.add (a_descriptor.name)
-						tmp_table.add (a_descriptor.name, a_descriptor)
+						added := tmp_list.add (a_descriptor.get_name)
+						tmp_table.add (a_descriptor.get_name, a_descriptor)
 					end
 					i := i + 1
 				end
@@ -97,8 +97,8 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						added := tmp_list.add (an_eiffel_assembly.assembly_descriptor.name)
-						tmp_table.add (an_eiffel_assembly.assembly_descriptor.name, an_eiffel_assembly)
+						added := tmp_list.add (an_eiffel_assembly.get_assembly_descriptor.get_name)
+						tmp_table.add (an_eiffel_assembly.get_assembly_descriptor.get_name, an_eiffel_assembly)
 					end
 					i := i + 1
 				end
@@ -153,8 +153,8 @@ feature -- Basic Operations
 				loop
 					an_eiffel_class ?= a_list.get_item (i)
 					if an_eiffel_class /= Void then
-						added := tmp_list.add (an_eiffel_class.eiffel_name)
-						tmp_table.add (an_eiffel_class.eiffel_name, an_eiffel_class)
+						added := tmp_list.add (an_eiffel_class.get_eiffel_name)
+						tmp_table.add (an_eiffel_class.get_eiffel_name, an_eiffel_class)
 					end
 					i := i + 1
 				end

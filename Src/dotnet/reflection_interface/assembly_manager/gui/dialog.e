@@ -46,7 +46,7 @@ feature -- Basic Operations
 		do
 			create a_label.make_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Version_string.concat_string_string (dictionary.Version_string, assembly_descriptor.version))
+			a_label.set_text (dictionary.Version_string.concat_string_string (dictionary.Version_string, assembly_descriptor.get_version))
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			a_label.set_location (a_point)			
@@ -55,7 +55,7 @@ feature -- Basic Operations
 
 			create a_label.make_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Culture_string.concat_string_string (dictionary.Culture_string, assembly_descriptor.culture))
+			a_label.set_text (dictionary.Culture_string.concat_string_string (dictionary.Culture_string, assembly_descriptor.get_culture))
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			a_label.set_location (a_point)			
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 			create a_label.make_label
 			a_label.set_font (a_font)
-			a_label.set_text (dictionary.Public_key_string.concat_string_string (dictionary.Public_key_string, assembly_descriptor.public_key))
+			a_label.set_text (dictionary.Public_key_string.concat_string_string (dictionary.Public_key_string, assembly_descriptor.get_public_key))
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin + 3 * dictionary.Label_height)
 			a_label.set_location (a_point)			

@@ -73,7 +73,7 @@ feature -- Status Report
 		rescue
 			retried := True
 			support.create_error (error_messages.File_access_failed, error_messages.File_access_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -86,8 +86,8 @@ feature -- Basic Operations
 			external_name: "AddType"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_class_name: an_eiffel_class.eiffel_name /= Void
-			not_empty_eiffel_class_name: an_eiffel_class.eiffel_name.get_length > 0	
+			non_void_eiffel_class_name: an_eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.get_eiffel_name.get_length > 0	
 			not_committed: not committed
 		local
 			public_string: STRING
@@ -105,7 +105,7 @@ feature -- Basic Operations
 				eiffel_class := an_eiffel_class
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				filename := reflection_support.Xml_Type_Filename (eiffel_class.assembly_descriptor, eiffel_class.Full_External_Name)
+				filename := reflection_support.Xml_Type_Filename (eiffel_class.get_assembly_descriptor, eiffel_class.get_full_external_name)
 				filename := filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 				if overwrite or (not overwrite and not exists (filename)) then
 					create text_writer.make_xmltextwriter_1 (filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
@@ -134,7 +134,7 @@ feature -- Basic Operations
 					generate_xml_class_body 
 
 						-- <footer>
-					invariants := eiffel_class.Invariants
+					invariants := eiffel_class.get_invariants
 					if invariants.get_count > 0 then
 						generate_xml_class_footer (invariants)
 					end
@@ -153,7 +153,7 @@ feature -- Basic Operations
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_type_generation_failed, error_messages.XML_type_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 
@@ -179,7 +179,7 @@ feature -- Basic Operations
 		rescue
 			retried := True
 			support.create_error (error_messages.Write_lock_removal_failed, error_messages.Write_lock_removal_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -228,8 +228,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateXmlClassHeader"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_class_name: eiffel_class.Eiffel_Name /= Void
-			not_empty_class_name: eiffel_class.Eiffel_Name.get_length > 0
+			non_void_class_name: eiffel_class.get_Eiffel_Name /= Void
+			not_empty_class_name: eiffel_class.get_Eiffel_Name.get_length > 0
 		local
 			creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST	
 			retried: BOOLEAN
@@ -239,53 +239,53 @@ feature {NONE} -- Implementation
 				text_writer.write_start_element (Header_Element)
 					
 					-- <modified>
-				if eiffel_class.modified then
+				if eiffel_class.get_modified then
 					text_writer.write_element_string (Modified_Element, true_string)
 				else
 					text_writer.write_element_string (Modified_Element, false_string)				
 				end
 				
 					-- <frozen>
-				if eiffel_class.Is_Frozen then
+				if eiffel_class.get_Is_Frozen then
 					text_writer.write_element_string (Frozen_Element, true_string)
 				else
 					text_writer.write_element_string (Frozen_Element, false_string)
 				end			
 
 					-- <expanded>
-				if eiffel_class.Is_Expanded then
+				if eiffel_class.get_Is_Expanded then
 					text_writer.write_element_string (Expanded_Element, true_string)
 				else
 					text_writer.write_element_string (Expanded_Element, false_string)
 				end	
 
 					-- <deferred>
-				if eiffel_class.Is_Deferred then
+				if eiffel_class.get_Is_Deferred then
 					text_writer.write_element_string (Deferred_Element, true_string)
 				else
 					text_writer.write_element_string (Deferred_Element, false_string)
 				end	
 
 					-- <class_eiffel_name>
-				text_writer.write_element_string (Class_Eiffel_Name_Element, eiffel_class.eiffel_name)
+				text_writer.write_element_string (Class_Eiffel_Name_Element, eiffel_class.get_eiffel_name)
 
 					-- <alias>
 				generate_xml_alias_element 
 
 					-- <inherit>
-				parents := eiffel_class.Parents
+				parents := eiffel_class.get_Parents
 				if parents.get_count > 0 then
 					generate_xml_inherit_element
 				end
 
 					-- <create>
-				creation_routines := eiffel_class.Creation_Routines
+				creation_routines := eiffel_class.get_Creation_Routines
 				if creation_routines.get_count > 0 then
 					generate_xml_element_from_list (Create_Element, creation_routines)
 				end
 
 					-- <create_none>
-				if eiffel_class.Create_None then
+				if eiffel_class.get_Create_None then
 					text_writer.write_element_string (Create_None_Element, true_string)
 				else
 					text_writer.write_element_string (Create_None_Element, false_string)
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_class_header_generation_failed, error_messages.Xml_class_header_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 	
@@ -307,8 +307,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateXmlAliasElement"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_eiffel_class_name: eiffel_class.Eiffel_Name /= Void
-			not_empty_eiffel_class_name: eiffel_class.Eiffel_Name.get_length > 0
+			non_void_eiffel_class_name: eiffel_class.get_Eiffel_Name /= Void
+			not_empty_eiffel_class_name: eiffel_class.get_Eiffel_Name.get_length > 0
 		local
 			retried: BOOLEAN
 		do
@@ -317,35 +317,35 @@ feature {NONE} -- Implementation
 				text_writer.write_start_element (Alias_Element)
 
 					-- <simple_name>
-				text_writer.write_element_string (Simple_Name_Element, eiffel_class.External_Name)
+				text_writer.write_element_string (Simple_Name_Element, eiffel_class.get_External_Name)
 
 					-- <namespace>
-				if eiffel_class.Namespace /= Void and then eiffel_class.Namespace.get_length > 0 then
-					text_writer.write_element_string (Namespace_Element, eiffel_class.Namespace)
+				if eiffel_class.get_Namespace /= Void and then eiffel_class.get_Namespace.get_length > 0 then
+					text_writer.write_element_string (Namespace_Element, eiffel_class.get_Namespace)
 				end
 
 					-- <assembly_name>
-				if eiffel_class.Assembly_Descriptor.name /= Void and then eiffel_class.Assembly_Descriptor.name.get_length > 0 then
-					text_writer.write_element_string (Assembly_Name_Element, eiffel_class.Assembly_Descriptor.name)
+				if eiffel_class.get_Assembly_Descriptor.get_name /= Void and then eiffel_class.get_Assembly_Descriptor.get_name.get_length > 0 then
+					text_writer.write_element_string (Assembly_Name_Element, eiffel_class.get_Assembly_Descriptor.get_name)
 				end
 
 					-- <assembly_version>
-				if eiffel_class.Assembly_Descriptor.Version /= Void and then eiffel_class.Assembly_Descriptor.Version.get_length > 0 then
-					text_writer.write_element_string (Assembly_Version_Element, eiffel_class.Assembly_Descriptor.Version)
+				if eiffel_class.get_Assembly_Descriptor.get_Version /= Void and then eiffel_class.get_Assembly_Descriptor.get_Version.get_length > 0 then
+					text_writer.write_element_string (Assembly_Version_Element, eiffel_class.get_Assembly_Descriptor.get_Version)
 				end
 
 					-- <assembly_culture>
-				if eiffel_class.Assembly_Descriptor.Culture /= Void and then eiffel_class.Assembly_Descriptor.Culture.get_length > 0 then
-					text_writer.write_element_string (Assembly_Culture_Element, eiffel_class.Assembly_Descriptor.Culture)
+				if eiffel_class.get_Assembly_Descriptor.get_Culture /= Void and then eiffel_class.get_Assembly_Descriptor.get_Culture.get_length > 0 then
+					text_writer.write_element_string (Assembly_Culture_Element, eiffel_class.get_Assembly_Descriptor.get_Culture)
 				end
 
 					-- <assembly_public_key>
-				if eiffel_class.Assembly_Descriptor.Public_Key /= Void and then eiffel_class.Assembly_Descriptor.Public_Key.get_length > 0 then
-					text_writer.write_element_string (Assembly_Public_Key_Element, eiffel_class.Assembly_Descriptor.Public_Key)
+				if eiffel_class.get_Assembly_Descriptor.get_Public_Key /= Void and then eiffel_class.get_Assembly_Descriptor.get_Public_Key.get_length > 0 then
+					text_writer.write_element_string (Assembly_Public_Key_Element, eiffel_class.get_Assembly_Descriptor.get_Public_Key)
 				end
 					--<enum_type>
-				if eiffel_class.enum_type /= Void and then eiffel_class.enum_type.get_length > 0 then
-					text_writer.write_element_string (Enum_Type_Element, eiffel_class.Enum_Type)
+				if eiffel_class.get_enum_type /= Void and then eiffel_class.get_enum_type.get_length > 0 then
+					text_writer.write_element_string (Enum_Type_Element, eiffel_class.get_Enum_Type)
 				end
 				
 					-- </alias>
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_alias_element_generation_failed, error_messages.Xml_alias_element_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_inherit_element_generation_failed, error_messages.Xml_inherit_element_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 			
@@ -445,8 +445,8 @@ feature {NONE} -- Implementation
 			external_name: "GenerateXmlClassBody"
 		require
 			non_void_eiffel_class: eiffel_class /= Void
-			non_void_eiffel_class_name: eiffel_class.Eiffel_Name /= Void
-			not_empty_eiffel_class_name: eiffel_class.Eiffel_Name.get_length > 0
+			non_void_eiffel_class_name: eiffel_class.get_eiffel_name /= Void
+			not_empty_eiffel_class_name: eiffel_class.get_eiffel_name.get_length > 0
 		local
 			initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST
 			access_features: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 				text_writer.write_start_element (Body_Element)
 
 					-- <initialization>
-				initialization_features := eiffel_class.Initialization_Features
+				initialization_features := eiffel_class.get_initialization_features
 				if initialization_features.get_count > 0 then
 					text_writer.write_start_element (Initialization_Element)
 					generate_xml_features_element (initialization_features)
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <access>
-				access_features := eiffel_class.Access_Features
+				access_features := eiffel_class.get_access_features
 				if access_features.get_count > 0 then
 					text_writer.write_start_element (Access_Element)
 					generate_xml_features_element (access_features)
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <element_change>
-				element_change_features := eiffel_class.Element_Change_Features
+				element_change_features := eiffel_class.get_element_change_features
 				if element_change_features.get_count > 0 then
 					text_writer.write_start_element (Element_Change_Element)
 					generate_xml_features_element (element_change_features)
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <basic_operations>
-				basic_operations_features := eiffel_class.Basic_Operations
+				basic_operations_features := eiffel_class.get_basic_operations
 				if basic_operations_features.get_count > 0 then
 					text_writer.write_start_element (Basic_Operations_Element)
 					generate_xml_features_element (basic_operations_features)
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <unary_operators>
-				unary_operators_features := eiffel_class.Unary_Operators_Features
+				unary_operators_features := eiffel_class.get_unary_operators_features
 				if unary_operators_features.get_count > 0 then
 					text_writer.write_start_element (Unary_Operators_Element)
 					generate_xml_features_element (unary_operators_features)
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <binary_operators>
-				binary_operators_features := eiffel_class.Binary_Operators_Features
+				binary_operators_features := eiffel_class.get_binary_operators_features
 				if binary_operators_features.get_count > 0 then
 					text_writer.write_start_element (Binary_Operators_Element)
 					generate_xml_features_element (binary_operators_features)
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- <specials_operators>
-				specials_features := eiffel_class.Special_Features
+				specials_features := eiffel_class.get_special_features
 				if specials_features.get_count > 0 then
 					text_writer.write_start_element (Specials_Element)
 					generate_xml_features_element (specials_features)
@@ -519,20 +519,27 @@ feature {NONE} -- Implementation
 				end
 
 					-- <implementation>
-				implementation_features := eiffel_class.Implementation_Features
+				implementation_features := eiffel_class.get_implementation_features
 				if implementation_features.get_count > 0 then
 					text_writer.write_start_element (Implementation_Element)
 					generate_xml_features_element (implementation_features)
 					text_writer.write_end_element
 				end
-
+					
+					-- <bit_or_infix>
+				if eiffel_class.get_bit_or_infix then
+					text_writer.write_element_string (Bit_or_infix_element, True_string)
+				else
+					text_writer.write_element_string (Bit_or_infix_element, False_string)
+				end
+				
 					-- </body>
 				text_writer.write_end_element
 			end
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_class_body_generation_failed, error_messages.Xml_class_body_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -557,7 +564,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_class_footer_generation_failed, error_messages.Xml_class_footer_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 	
@@ -621,11 +628,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
-			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
-			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
-			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
-			comments: SYSTEM_COLLECTIONS_ARRAYLIST
-			return_type: STRING
+			value: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -635,127 +638,14 @@ feature {NONE} -- Implementation
 				loop
 					a_feature ?= features.get_item (i)
 					if a_feature /= Void then
-							-- < feature>
-						text_writer.write_start_element (Feature_Element)
-
-							-- <modified_feature>
-						if a_feature.modified then
-							text_writer.write_element_string (Modified_Feature_Element, True_String)
+						if a_feature.get_is_field and a_feature.get_is_static and not a_feature.get_is_enum_literal and a_feature.get_is_literal then
+							value := a_feature.get_literal_value
+							if value /= Void and then value.get_length > 0 then
+								generate_xml_feature_element (a_feature)
+							end
 						else
-							text_writer.write_element_string (Modified_Feature_Element, False_String)
-						end	
-						
-							-- <frozen>
-						if a_feature.Is_Frozen then
-							text_writer.write_element_string (Frozen_Feature_Element, True_String)
-						else
-							text_writer.write_element_string (Frozen_Feature_Element, False_String)
-						end	
-
-							-- <static>
-						if a_feature.Is_Static then
-							text_writer.write_element_string (Static_Element, True_String)
-						else
-							text_writer.write_element_string (Static_Element, False_String)
-						end	
-
-							-- <abstract>
-						if a_feature.Is_Abstract then
-							text_writer.write_element_string (Abstract_Element, True_String)
-						else
-							text_writer.write_element_string (Abstract_Element, False_String)
+							generate_xml_feature_element (a_feature)
 						end
-
-							-- <method>
-						if a_feature.Is_Method then
-							text_writer.write_element_string (Method_Element, True_String)
-						else
-							text_writer.write_element_string (Method_Element, False_String)
-						end
-
-							-- <field>
-						if a_feature.Is_Field then
-							text_writer.write_element_string (Field_Element, True_String)
-						else
-							text_writer.write_element_string (Field_Element, False_String)
-						end
-
-							-- <creation_routine>
-						if a_feature.Is_Creation_Routine then
-							text_writer.write_element_string (Creation_Routine_Element, True_String)
-						else
-							text_writer.write_element_string (Creation_Routine_Element, False_String)
-						end
-
-							-- <prefix>
-						if a_feature.Is_Prefix then
-							text_writer.write_element_string (Prefix_Element, True_String)
-						else
-							text_writer.write_element_string (Prefix_Element, False_String)
-						end
-
-							-- <infix>
-						if a_feature.Is_Infix then
-							text_writer.write_element_string (Infix_Element, True_String)
-						else
-							text_writer.write_element_string (Infix_Element, False_String)
-						end
-
-							-- <new_slot>
-						if a_feature.New_Slot then
-							text_writer.write_element_string (New_Slot_Element, True_String)
-						else
-							text_writer.write_element_string (New_Slot_Element, False_String)
-						end
-
-							-- <enum_literal>
-						if a_feature.Is_Enum_Literal then
-							text_writer.write_element_string (Enum_Literal_Element, True_String)
-						else
-							text_writer.write_element_string (Enum_Literal_Element, False_String)
-						end
-
-							-- <feature_eiffel_name>
-						text_writer.write_element_string (Feature_Eiffel_Name_Element, a_feature.Eiffel_Name)
-
-							-- <feature_external_name>
-						if a_feature.External_Name /= Void and then a_feature.External_Name.get_length > 0 then
-							text_writer.write_element_string (Feature_External_Name_Element, a_feature.External_Name)
-						end
-
-							-- <arguments>
-						arguments := a_feature.Arguments
-						if arguments /= Void and then arguments.get_count > 0 then
-							generate_xml_elements_from_feature_arguments (arguments)
-						end
-
-						if a_feature.Return_Type /= Void then 
-								-- <return_type>
-							text_writer.write_element_string (Return_Type_Element, a_feature.Return_Type.Type_Eiffel_Name)
-								-- <return_type_full_name>
-							text_writer.write_element_string (Return_Type_Full_Name_Element, a_feature.Return_Type.Type_Full_External_Name)
-						end
-
-							-- <comments>
-						comments := a_feature.Comments
-						if comments /= Void and then comments.get_count > 0 then
-							generate_xml_element_from_list (Comments_Element, comments)
-						end
-
-							-- <preconditions>
-						preconditions := a_feature.Preconditions
-						if preconditions.get_count > 0 then
-							generate_xml_elements_from_assertions (preconditions, Precondition_Element)
-						end
-
-							-- <postconditions>
-						postconditions := a_feature.Postconditions
-						if postconditions.get_count > 0 then
-							generate_xml_elements_from_assertions (postconditions, Postcondition_Element)
-						end						
-
-							-- </feature>
-						text_writer.write_end_element 
 					end
 					i := i + 1
 				end
@@ -763,10 +653,161 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_class_features_generation_failed, error_messages.Xml_class_features_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end	
 	
+	generate_xml_feature_element (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+		indexing
+			description: "Generate XML feature element corresponding to `a_feature'."
+			external_name: "GenerateXmlFeatureElement"
+		local
+			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
+			preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
+			postconditions: SYSTEM_COLLECTIONS_ARRAYLIST
+			comments: SYSTEM_COLLECTIONS_ARRAYLIST
+			return_type: STRING
+			retried: BOOLEAN
+			literal_value: STRING		
+		do
+			if not retried then
+					-- < feature>
+				text_writer.write_start_element (Feature_Element)
+	
+					-- <modified_feature>
+				if a_feature.get_modified then
+					text_writer.write_element_string (Modified_Feature_Element, True_String)
+				else
+					text_writer.write_element_string (Modified_Feature_Element, False_String)
+				end	
+	
+					-- <frozen>
+				if a_feature.get_Is_Frozen then
+					text_writer.write_element_string (Frozen_Feature_Element, True_String)
+				else
+					text_writer.write_element_string (Frozen_Feature_Element, False_String)
+				end	
+	
+					-- <static>
+				if a_feature.get_Is_Static then
+					text_writer.write_element_string (Static_Element, True_String)
+				else
+					text_writer.write_element_string (Static_Element, False_String)
+				end	
+	
+					-- <abstract>
+				if a_feature.get_Is_Abstract then
+					text_writer.write_element_string (Abstract_Element, True_String)
+				else
+					text_writer.write_element_string (Abstract_Element, False_String)
+				end
+	
+					-- <method>
+				if a_feature.get_Is_Method then
+					text_writer.write_element_string (Method_Element, True_String)
+				else
+					text_writer.write_element_string (Method_Element, False_String)
+				end
+	
+					-- <field>
+				if a_feature.get_Is_Field then
+					text_writer.write_element_string (Field_Element, True_String)
+				else
+					text_writer.write_element_string (Field_Element, False_String)
+				end
+	
+					-- <creation_routine>
+				if a_feature.get_Is_Creation_Routine then
+					text_writer.write_element_string (Creation_Routine_Element, True_String)
+				else
+					text_writer.write_element_string (Creation_Routine_Element, False_String)
+				end
+	
+					-- <prefix>
+				if a_feature.get_Is_Prefix then
+					text_writer.write_element_string (Prefix_Element, True_String)
+				else
+					text_writer.write_element_string (Prefix_Element, False_String)
+				end
+	
+					-- <infix>
+				if a_feature.get_Is_Infix then
+					text_writer.write_element_string (Infix_Element, True_String)
+				else
+					text_writer.write_element_string (Infix_Element, False_String)
+				end
+	
+					-- <new_slot>
+				if a_feature.get_New_Slot then
+					text_writer.write_element_string (New_Slot_Element, True_String)
+				else
+					text_writer.write_element_string (New_Slot_Element, False_String)
+				end
+	
+					-- <enum_literal>
+				if a_feature.get_Is_Enum_Literal then
+					text_writer.write_element_string (Enum_Literal_Element, True_String)
+				else
+					text_writer.write_element_string (Enum_Literal_Element, False_String)
+				end
+	
+					-- <is_literal>
+				if a_feature.get_is_literal then
+					text_writer.write_element_string (Is_Literal_Element, True_String)
+				else
+					text_writer.write_element_string (Is_Literal_Element, False_String)
+				end
+	
+					-- <feature_eiffel_name>
+				text_writer.write_element_string (Feature_Eiffel_Name_Element, a_feature.get_Eiffel_Name)
+	
+					-- <feature_external_name>
+				if a_feature.get_External_Name /= Void and then a_feature.get_External_Name.get_length > 0 then
+					text_writer.write_element_string (Feature_External_Name_Element, a_feature.get_External_Name)
+				end
+	
+					-- <arguments>
+				arguments := a_feature.get_Arguments
+				if arguments /= Void and then arguments.get_count > 0 then
+					generate_xml_elements_from_feature_arguments (arguments)
+				end
+	
+				if a_feature.get_Return_Type /= Void then 
+						-- <return_type>
+					text_writer.write_element_string (Return_Type_Element, a_feature.get_Return_Type.get_Type_Eiffel_Name)
+						-- <return_type_full_name>
+					text_writer.write_element_string (Return_Type_Full_Name_Element, a_feature.get_Return_Type.get_Type_Full_External_Name)
+				end
+	
+					-- <comments>
+				comments := a_feature.get_Comments
+				if comments /= Void and then comments.get_count > 0 then
+					generate_xml_element_from_list (Comments_Element, comments)
+				end
+	
+					-- <preconditions>
+				preconditions := a_feature.get_Preconditions
+				if preconditions.get_count > 0 then
+					generate_xml_elements_from_assertions (preconditions, Precondition_Element)
+				end
+	
+					-- <postconditions>
+				postconditions := a_feature.get_Postconditions
+				if postconditions.get_count > 0 then
+					generate_xml_elements_from_assertions (postconditions, Postcondition_Element)
+				end						
+	
+					-- <literal_value>
+				literal_value := a_feature.get_Literal_value
+				if literal_value /= Void and then literal_value.get_length > 0 then
+					text_writer.write_element_string (Literal_value_element, literal_value)
+				end	
+	
+					-- </feature>
+				text_writer.write_end_element 
+			end
+		end
+		
 	generate_xml_elements_from_feature_arguments (arguments: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		indexing
 			description: "Generate XML elements from `arguments'"
@@ -796,25 +837,25 @@ feature {NONE} -- Implementation
 							-- <argument>
 						text_writer.write_start_element (Argument_Element)
 
-						an_argument_name := an_argument.Eiffel_Name
+						an_argument_name := an_argument.get_eiffel_name
 						if an_argument_name /= Void and then an_argument_name.get_length > 0 then
 								-- <argument_eiffel_name>
 							text_writer.write_element_string (Argument_Eiffel_Name_Element, an_argument_name)
 						end
 
-						an_argument_external_name := an_argument.External_Name
+						an_argument_external_name := an_argument.get_external_name
 						if an_argument_external_name /= Void and then an_argument_external_name.get_length > 0 then
 								-- <argument_external_name>
 							text_writer.write_element_string (Argument_External_Name_Element, an_argument_external_name)
 						end
 
-						an_argument_type := an_argument.Type_Eiffel_Name
+						an_argument_type := an_argument.get_type_eiffel_name
 						if an_argument_type /= Void and then an_argument_type.get_length > 0 then
 								-- <argument_type>
 							text_writer.write_element_string (Argument_Type_Element, an_argument_type)
 						end
 
-						an_argument_type_full_name := an_argument.Type_Full_External_Name
+						an_argument_type_full_name := an_argument.get_type_full_external_name
 						if an_argument_type_full_name /= Void and then an_argument_type_full_name.get_length > 0 then
 								-- <argument_type_full_name>
 							text_writer.write_element_string (Argument_Type_Full_Name_Element, an_argument_type_full_name)	
@@ -831,7 +872,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_feature_arguments_generation_failed, error_messages.Xml_feature_arguments_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 	
@@ -906,7 +947,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			support.create_error (error_messages.Xml_feature_assertions_generation_failed, error_messages.Xml_feature_assertions_generation_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		

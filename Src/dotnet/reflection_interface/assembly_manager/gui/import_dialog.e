@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
+			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.get_name.get_length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 		local
 			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
@@ -102,10 +102,10 @@ feature -- Status Report
 						a_descriptor := support.assembly_descriptor_from_name (an_assembly_name)
 						if a_descriptor /= Void then
 							reflection_interface.search (a_descriptor)
-							if not reflection_interface.found then
+							if not reflection_interface.get_found then
 								non_imported_dependancies.put (i, an_assembly_name)
 							end
-							Result := Result and reflection_interface.found
+							Result := Result and reflection_interface.get_found
 						end						
 					end
 					i := i + 1

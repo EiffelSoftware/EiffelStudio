@@ -43,7 +43,7 @@ feature -- Access
 			non_void_filename: Result /= Void
 			not_empty_filename: Result.get_length > 0
 		end
-
+		
 	Title: STRING is "Generate Eiffel classes"
 		indexing
 			description: "Window title"

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			type_view := a_type_view
 			is_valid := True
 			children := type_view.children
-			new_inheritance_clauses ?= eiffel_class.parents.clone
+			new_inheritance_clauses ?= eiffel_class.get_parents.clone
 			create errors_in_features.make
 			create errors_in_arguments.make
 		ensure
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			loop
 				a_type ?= assembly_types.get_item (i)
 				if a_type /= Void then
-					Result := a_type.eiffel_name.to_lower.equals_string (a_class_name.to_lower)
+					Result := a_type.get_eiffel_name.to_lower.equals_string (a_class_name.to_lower)
 				end
 				i := i + 1
 			end
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 				i = assembly_types.get_count or class_found
 			loop
 				a_class ?= assembly_types.get_item (i)
-				if a_class.eiffel_name.to_lower.equals_string (eiffel_class.eiffel_name.to_lower) then
+				if a_class.get_eiffel_name.to_lower.equals_string (eiffel_class.get_eiffel_name.to_lower) then
 					a_class.set_eiffel_name (new_name)
 					class_found := True
 				end
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 			end
 			eiffel_class.set_eiffel_name (new_name)
 		ensure
-			new_name_set: eiffel_class.eiffel_name.equals_string (new_name)
+			new_name_set: eiffel_class.get_eiffel_name.equals_string (new_name)
 		end
 
 	rename_children_parent (new_name: STRING) is
@@ -420,11 +420,11 @@ feature {NONE} -- Implementation
 			loop
 				a_child ?= children.get_item (i)
 				if a_child /= Void then
-					parents := a_child.parents
-					if parents.contains (eiffel_class.eiffel_name) then
-						clauses ?= parents.get_item (eiffel_class.eiffel_name)
+					parents := a_child.get_parents
+					if parents.contains (eiffel_class.get_eiffel_name) then
+						clauses ?= parents.get_item (eiffel_class.get_eiffel_name)
 						if clauses /= Void then
-							parents.remove (eiffel_class.eiffel_name)
+							parents.remove (eiffel_class.get_eiffel_name)
 							parents.add (new_name, clauses)
 						end
 					end
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
 			tmp_parent_names: SYSTEM_COLLECTIONS_ARRAYLIST
 		do
-			parents_enumerator := eiffel_class.parents.get_keys.get_enumerator
+			parents_enumerator := eiffel_class.get_parents.get_keys.get_enumerator
 			from
 				create parent_names.make
 			until
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 		do
 			if new_inheritance_clauses.contains (parent_name) then
 				new_inheritance_clauses.remove (parent_name)
-				if a_class.parents.contains (parent_name) and not a_class.eiffel_name.equals_string (parent_name) then
+				if a_class.get_parents.contains (parent_name) and not a_class.get_eiffel_name.equals_string (parent_name) then
 					new_inheritance_clauses.add (parent_name, inheritance_clauses)
 				end
 			end
@@ -699,17 +699,17 @@ feature {NONE} -- Implementation
 			loop
 				a_child ?= children.get_item (i)
 				if a_child /= Void then
-					parents := a_child.parents
-					if parents.contains (eiffel_class.eiffel_name) then
+					parents := a_child.get_parents
+					if parents.contains (eiffel_class.get_eiffel_name) then
 						new_inheritance_clauses ?= parents.clone
-						clauses ?= parents.get_item (eiffel_class.eiffel_name) 
+						clauses ?= parents.get_item (eiffel_class.get_eiffel_name) 
 						if clauses /= Void and then clauses.count = 5 then
 							rename_clauses := clauses.item (0)
 							undefine_clauses := clauses.item (1)		
 							redefine_clauses := clauses.item (2)	
 							select_clauses := clauses.item (3)	
 							intern_update_inheritance_clauses (old_name, new_name)
-							commit_parent_changes (eiffel_class.eiffel_name, a_child)
+							commit_parent_changes (eiffel_class.get_eiffel_name, a_child)
 						end
 					end
 				end
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			parents: SYSTEM_COLLECTIONS_HASHTABLE
 			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
 		do
-			parents := eiffel_class.parents
+			parents := eiffel_class.get_parents
 			clauses ?= parents.get_item (parent_name)
 			if clauses /= Void and then clauses.count = 5 then
 				rename_clauses := clauses.item (0)
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 				i = a_list.get_count or Result
 			loop
 				a_clause ?= a_list.get_item (i)
-				if a_clause /= Void and then a_clause.source_name.to_lower.equals_string (a_feature_name.to_lower) then
+				if a_clause /= Void and then a_clause.get_source_name.to_lower.equals_string (a_feature_name.to_lower) then
 					index_in_list := i
 					Result := True
 				end
@@ -822,9 +822,9 @@ feature {NONE} -- Implementation
 			loop
 				an_get_item ?= rename_clauses.get_item (i)
 				if an_get_item /= Void then
-					if an_get_item.target_name.to_lower.equals_string (a_name.to_lower) then
+					if an_get_item.get_target_name.to_lower.equals_string (a_name.to_lower) then
 						index_in_list := i
-						rename_source := an_get_item.source_name
+						rename_source := an_get_item.get_source_name
 						Result := True
 					end
 				end
@@ -850,14 +850,14 @@ feature {NONE} -- Implementation
 			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			i: INTEGER
 		do
-			arguments := a_feature.arguments
+			arguments := a_feature.get_arguments
 			from
 			until
 				i = arguments.get_count or Result
 			loop
 				an_argument ?= arguments.get_item (i)
-				if an_argument /= Void and then an_argument.eiffel_name /= Void then
-					Result := an_argument.eiffel_name.to_lower.equals_string (new_name.to_lower)
+				if an_argument /= Void and then an_argument.get_eiffel_name /= Void then
+					Result := an_argument.get_eiffel_name.to_lower.equals_string (new_name.to_lower)
 				end
 				i := i + 1
 			end

@@ -26,8 +26,8 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
-			non_void_assembly_name: an_assembly_descriptor.name /= Void
-			not_empty_assembly_name: an_assembly_descriptor.name.get_length > 0
+			non_void_assembly_name: an_assembly_descriptor.get_name /= Void
+			not_empty_assembly_name: an_assembly_descriptor.get_name.get_length > 0
 			non_void_dependancies: assembly_dependancies /= Void
 			not_empty_dependancies: assembly_dependancies.count > 0
 			non_void_question: a_question /= Void
@@ -128,7 +128,7 @@ feature -- Basic Operations
 
 				-- Assembly name
 			create assembly_label.make_label
-			assembly_label.set_text (assembly_descriptor.name)
+			assembly_label.set_text (assembly_descriptor.get_name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)

@@ -93,7 +93,7 @@ feature -- Basic Operations
 
 				-- Assembly name
 			create assembly_label.make_label
-			assembly_label.set_text (assembly_descriptor.name)
+			assembly_label.set_text (assembly_descriptor.get_name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)

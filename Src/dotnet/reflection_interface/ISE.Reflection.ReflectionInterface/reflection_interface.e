@@ -46,7 +46,7 @@ feature -- Access
 			description: "Write lock error code"
 			external_name: "HasWriteLockCode"
 		once
-			Result := support.errors_table.errors_table.get_count
+			Result := support.errors_table.get_errors_table.get_count
 		end
 
 	Has_read_lock_code: INTEGER is
@@ -54,7 +54,7 @@ feature -- Access
 			description: "Read lock error code"
 			external_name: "HasReadLockCode"
 		once
-			Result := support.errors_table.errors_table.get_count
+			Result := support.errors_table.get_errors_table.get_count
 		end
 
 	Read_lock_creation_failed_code: INTEGER is
@@ -62,7 +62,7 @@ feature -- Access
 			description: "Read lock creation error code"
 			external_name: "ReadLockCreationFailedCode"
 		once
-			Result := support.errors_table.errors_table.get_count
+			Result := support.errors_table.get_errors_table.get_count
 		end
 
 	assembly_descriptor_from_type (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
@@ -129,7 +129,7 @@ feature -- Access
 		rescue
 			retried := True
 			support.create_error (error_messages.Invalid_assembly_qualified_name, error_messages.Invalid_assembly_qualified_name_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -178,7 +178,7 @@ feature -- Basic Operations
 		rescue
 			retried := True
 			support.create_error (error_messages.File_access_failed, error_messages.File_access_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 		
@@ -225,18 +225,18 @@ feature -- Retrieval
 					assembly_path := assembly_path.replace (reflection_support.eiffel_key, reflection_support.Eiffel_delivery_path)
 					if support.Has_Read_Lock (assembly_path) then
 						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.last_error
+						last_error := support.get_last_error
 						last_read_successful := False
 					else
 						if support.Has_Write_Lock (assembly_path) then
 							support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-							last_error := support.last_error
+							last_error := support.get_last_error
 							last_read_successful := False		
 						else
 							read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
 							if read_lock = Void then
 								support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-						 		last_error := support.last_error
+						 		last_error := support.get_last_error
 								last_read_successful := False
 							else
 								read_lock.Close
@@ -291,18 +291,18 @@ feature -- Retrieval
 					assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
 					if support.Has_Read_Lock (assembly_path) then
 						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.last_error
+						last_error := support.get_last_error
 						last_read_successful := False
 					else
 						if support.Has_Write_Lock (assembly_path) then
 							support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-							last_error := support.last_error
+							last_error := support.get_last_error
 							last_read_successful := False		
 						else
 							read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
 							if read_lock = Void then
 								support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-								last_error := support.last_error
+								last_error := support.get_last_error
 								last_read_successful := False					
 							else
 								read_lock.Close					
@@ -364,18 +364,18 @@ feature -- Retrieval
 						assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
 						if support.Has_Read_Lock (assembly_path) then
 							support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-							last_error := support.last_error
+							last_error := support.get_last_error
 							last_read_successful := False
 						else
 							if support.Has_Write_Lock (assembly_path) then
 								support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-								last_error := support.last_error
+								last_error := support.get_last_error
 								last_read_successful := False		
 							else
 								read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
 								if read_lock = Void then
 									support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-									last_error := support.last_error
+									last_error := support.get_last_error
 									last_read_successful := False
 								else
 									read_lock.Close
@@ -412,8 +412,8 @@ feature -- Removal
 			external_name: "RemoveAssembly"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
-			non_void_assembly_name: a_descriptor.Name /= Void
-			not_empty_assembly_name: a_descriptor.Name.get_length > 0
+			non_void_assembly_name: a_descriptor.get_Name /= Void
+			not_empty_assembly_name: a_descriptor.get_Name.get_length > 0
 		local
 			cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
 			retried: BOOLEAN
@@ -426,7 +426,7 @@ feature -- Removal
 		rescue
 			retried := True
 			support.create_error (error_messages.Assembly_removal_failed, error_messages.Assembly_removal_failed_message)
-			last_error := support.last_error
+			last_error := support.get_last_error
 			retry
 		end
 	

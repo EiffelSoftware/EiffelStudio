@@ -38,8 +38,8 @@ feature -- Basic Operations
 			external_name: "StartAssemblyGeneration"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.Assembly_Name /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.Assembly_Name.get_Length > 0
+			non_void_eiffel_assembly_name: an_eiffel_assembly.get_Assembly_Name /= Void
+			not_empty_eiffel_assembly_name: an_eiffel_assembly.get_Assembly_Name.get_Length > 0
 		do
 			type_storer := cache_handler.Store_Assembly (an_eiffel_assembly)
 		ensure
@@ -52,8 +52,8 @@ feature -- Basic Operations
 			external_name: "GenerateType"
 		require
 			non_void_eiffel_class: an_eiffel_class /= Void
-			non_void_eiffel_class_name: an_eiffel_class.Eiffel_Name /= Void
-			not_empty_eiffel_class_name: an_eiffel_class.Eiffel_Name.get_Length > 0
+			non_void_eiffel_class_name: an_eiffel_class.get_Eiffel_Name /= Void
+			not_empty_eiffel_class_name: an_eiffel_class.get_Eiffel_Name.get_Length > 0
 		do
 			check
 				non_void_type_storer: type_storer /= Void

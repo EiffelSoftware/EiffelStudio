@@ -12,15 +12,22 @@ class
 feature -- Access
 
 	Reference_type: INTEGER is 1;
-	Character_type: INTEGER is 2;
-	Boolean_type:	INTEGER is 3;
-	Integer_type:	INTEGER is 4;
-	Real_type:	INTEGER is 5;
-	Double_type: 	INTEGER is 6;
-	Expanded_type:	INTEGER is 7;
-	Bit_type:	INTEGER is 8;
-	Pointer_type:	INTEGER is 0;
 
+	Character_type: INTEGER is 2;
+
+	Boolean_type: INTEGER is 3;
+
+	Integer_type: INTEGER is 4;
+
+	Real_type: INTEGER is 5;
+
+	Double_type: INTEGER is 6;
+
+	Expanded_type: INTEGER is 7;
+
+	Bit_type: INTEGER is 8;
+
+	Pointer_type: INTEGER is 0;
 
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
@@ -173,6 +180,79 @@ feature -- Access
 			Result := c_is_special ($object)
 		end;
 
+feature -- Element change 
+
+	set_reference_field (i: INTEGER; object: ANY; value: ANY) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			reference_field: field_type (i, object) = Reference_type;
+		do
+			c_set_reference_field (i - 1, $object, $value)
+		end;
+
+	set_double_field (i: INTEGER; object: ANY; value: DOUBLE) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			double_field: field_type (i, object) = Double_type;
+		do
+			c_set_double_field (i - 1, $object, value)
+		end;
+
+	set_character_field (i: INTEGER; object: ANY; value: CHARACTER) is
+			-- Set character value of `i'-th field of `object' to `value'
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			character_field: field_type (i, object) = Character_type;
+		do
+			c_set_character_field (i - 1, $object, value)
+		end;
+
+	set_boolean_field (i: INTEGER; object: ANY; value: BOOLEAN) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			boolean_field: field_type (i, object) = Boolean_type;
+		do
+			c_set_boolean_field (i - 1, $object, value)
+		end;
+
+	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			integer_field: field_type (i, object) = Integer_type;
+		do
+			c_set_integer_field (i - 1, $object, value)
+		end;
+
+	set_real_field (i: INTEGER; object: ANY; value: REAL) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			real_field: field_type (i, object) = Real_type;
+		do
+			c_set_real_field (i - 1, $object, value)
+		end;
+
+	set_pointer_field (i: INTEGER; object: ANY; value: POINTER) is
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			pointer_field: field_type (i, object) = Pointer_type;
+		do
+			c_set_pointer_field (i - 1, $object, value)
+		end;
+
 feature -- Measurement
 
 	field_count (object: ANY): INTEGER is
@@ -182,7 +262,6 @@ feature -- Measurement
 		do
 			Result := c_field_count ($object)
 		end;
-
 
 	bit_size (i: INTEGER; object: ANY): INTEGER is
 			-- Size (in bit) of the `i'-th bit field of `object'
@@ -336,6 +415,55 @@ feature {NONE} -- Implementation
 			"C"
 		alias
 			"ei_size"
+		end;
+
+	c_set_reference_field (i: INTEGER; object: POINTER; value: POINTER) is
+		external
+			"C"
+		alias
+			"ei_set_reference_field"
+		end;
+
+	c_set_double_field (i: INTEGER; object: POINTER; value: DOUBLE) is
+		external
+			"C"
+		alias
+			"ei_set_double_field"
+		end;
+
+	c_set_character_field (i: INTEGER; object: POINTER; value: CHARACTER) is
+		external
+			"C"
+		alias
+			"ei_set_char_field"
+		end;
+
+	c_set_boolean_field (i: INTEGER; object: POINTER; value: BOOLEAN) is
+		external
+			"C"
+		alias
+			"ei_set_boolean_field"
+		end;
+
+	c_set_integer_field (i: INTEGER; object: POINTER; value: INTEGER) is
+		external
+			"C"
+		alias
+			"ei_set_integer_field"
+		end;
+
+	c_set_real_field (i: INTEGER; object: POINTER; value: REAL) is
+		external
+			"C"
+		alias
+			"ei_set_float_field"
+		end;
+
+	c_set_pointer_field (i: INTEGER; object: POINTER; value: POINTER) is
+		external
+			"C"
+		alias
+			"ei_set_pointer_field"
 		end;
 
 

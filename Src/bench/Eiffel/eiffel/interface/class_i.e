@@ -36,8 +36,8 @@ feature
 	file_name: STRING is
 			-- Full file name of the class
 		do
-			Result := cluster.path.duplicate;
-			Result.append_character (Directory_separator);
+			Result := clone (cluster.path)
+			Result.extend (Directory_separator);
 			Result.append (base_name)
 		end;
 
@@ -157,7 +157,7 @@ feature -- Drag and drop
 		local
 			c_name: STRING;
 		do
-			c_name := class_name.duplicate;
+			c_name := clone (class_name)
 			c_name.to_upper;
 			a_clickable.put_clickable_string (stone, c_name);
 		end;

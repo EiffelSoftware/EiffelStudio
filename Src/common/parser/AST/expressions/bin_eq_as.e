@@ -83,7 +83,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): BINARY_AS is
 			-- Adapt to replication.
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_left (left.replicate (ctxt));
 			Result.set_right (right.replicate (ctxt.new_ctxt));
 		end;

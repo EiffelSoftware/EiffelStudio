@@ -472,7 +472,7 @@ end;
 			-- Used during the time check and the genericity check after pass1
 		do	
 			new_class := True;
-			new_classes.add_front (a_class);
+			new_classes.put_front (a_class);
 		end;
 
 	remove_class (a_class: CLASS_C) is
@@ -481,14 +481,13 @@ end;
 		require
 			 good_argument: a_class /= Void;
 		local
-			parents: FIXED_LIST [CL_TYPE_A];
+			parents: ARRAYED_LIST [CL_TYPE_A];
 			compiled_root_class: CLASS_C;
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
 			supplier: CLASS_C;
 			supplier_clients: LINKED_LIST [CLASS_C];
 			id: INTEGER;
 			types: TYPE_LIST;
-			local_cursor: LINKABLE [SUPPLIER_CLASS];
 			ftable: FEATURE_TABLE;
 			f: FEATURE_I;
 			ext: EXTERNAL_I
@@ -577,24 +576,25 @@ end;
 				Tmp_m_rout_id_server.remove (id);
 				Tmp_m_desc_server.remove (id);
 
-				freeze_set1.remove_item (id);
-				freeze_set2.remove_item (id);
-				melted_set.remove_item (id);
+				freeze_set1.prune (id);
+				freeze_set2.prune (id);
+				melted_set.prune (id);
 				id_array.put (Void, id);
 
 					-- Remove client/supplier syntactical relations
 					-- and remove classes recursively
 				from
-					local_cursor := a_class.syntactical_suppliers.first_element;
+					a_class.syntactical_suppliers.start
 					if root_class /= Void then
 						compiled_root_class := root_class.compiled_class
 					end;
 				until
-					local_cursor = Void
+					a_class.syntactical_suppliers.off
 				loop
-					supplier := local_cursor.item.supplier;
+					supplier := a_class.syntactical_suppliers.item.supplier;
 					supplier_clients := supplier.syntactical_clients;
 					supplier_clients.start;
+					supplier_clients.compare_references
 					supplier_clients.search (a_class);
 					check
 						not_after: not supplier_clients.after
@@ -613,7 +613,7 @@ end;
 					then
 						remove_class (supplier);
 					end;
-					local_cursor := local_cursor.right
+					a_class.syntactical_suppliers.forth
 				end;
 			end;
 		end;
@@ -692,7 +692,7 @@ end;
 					-- to ensure that the object remains the same troughout 
 					-- a session. If you want to change it, think thoroughly
 					-- before! (Dino, that's an allusion to you, -- FRED)
-				original_body_index_table.copy (body_index_table.twin);
+				original_body_index_table.copy (clone (body_index_table));
 				melted_set.wipe_out;
 			end;
 		end;
@@ -987,15 +987,14 @@ end;
 		local
 			a_class: CLASS_C;
 			old_value: INTEGER;
-			local_cursor: LINKABLE [PASS4_C];
 		do
 			old_value := type_id_counter.value;
 			from
-				local_cursor := pass4_controler.changed_classes.first_element
+				pass4_controler.changed_classes.start
 			until
-				local_cursor = Void
+				pass4_controler.changed_classes.after
 			loop
-				a_class := local_cursor.item.associated_class;
+				a_class := pass4_controler.changed_classes.item.associated_class;
 				if a_class.changed and then a_class.generics = Void then
 					if a_class.types.empty then
 							-- For non generic classes, standard initialization
@@ -1003,7 +1002,7 @@ end;
 						a_class.init_types;
 					end;
 				end;
-				local_cursor := local_cursor.right;
+				pass4_controler.changed_classes.forth
 			end;
 				-- For generic classes, compute the types
 			Instantiator.process;
@@ -1022,18 +1021,17 @@ end;
 			-- of CLASS_TYPE) looking for a new one (marked `is_changed also).
 		local
 			a_class: CLASS_C;
-			local_cursor: LINKABLE [PASS4_C];
 			skeleton: SKELETON;
 		do
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("Process_skeleton%N");
 end;
 			from
-				local_cursor := pass4_controler.changed_classes.first_element
+				pass4_controler.changed_classes.start
 			until
-				local_cursor = Void
+				pass4_controler.changed_classes.after
 			loop
-				a_class := local_cursor.item.associated_class;
+				a_class := pass4_controler.changed_classes.item.associated_class;
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("%T");
 io.error.putstring (a_class.class_name);
@@ -1054,7 +1052,7 @@ end;
 					a_class.check_validity;
 				end;
 
-				local_cursor := local_cursor.right;
+				pass4_controler.changed_classes.forth
 			end;
 
 				-- Check expanded client relation
@@ -1095,17 +1093,15 @@ end;
 			class_type: CLASS_TYPE;
 			types: TYPE_LIST;
 			a_class: CLASS_C;
-			local_cursor: LINKABLE [PASS_C];
-			type_cursor: LINKABLE [CLASS_TYPE];
 			check_exp: BOOLEAN;
 		do
 			check_exp := has_expanded;
 			from
-				local_cursor := pass4_controler.changed_classes.first_element
+				pass4_controler.changed_classes.start
 			until
-				local_cursor = Void
+				pass4_controler.changed_classes.after
 			loop
-				a_class := local_cursor.item.associated_class;
+				a_class := pass4_controler.changed_classes.item.associated_class;
 debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on ");
 	io.error.putstring (a_class.class_name);
@@ -1113,11 +1109,11 @@ debug ("CHECK_EXPANDED")
 end;
 				from
 					types := a_class.types;
-					type_cursor := types.first_element;
+					types.start
 				until
-					type_cursor = Void
+					types.after
 				loop
-					class_type := type_cursor.item;
+					class_type := types.item;
 					if class_type.is_changed then
 debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on type of ");
@@ -1131,9 +1127,9 @@ end;
 						class_type.set_is_changed (False);
 					end;
 				
-					type_cursor := type_cursor.right
+					types.forth
 				end;
-				local_cursor := local_cursor.right
+				pass4_controler.changed_classes.forth
 			end;
 		end;
 
@@ -1145,8 +1141,6 @@ end;
 		local
 			a_class: CLASS_C;
 			id_list: LINKED_LIST [INTEGER];
-			local_cursor: BI_LINKABLE [CLASS_C];
-			id_cursor: LINKABLE [INTEGER];
 			i: INTEGER;
 			temp: STRING
 		do
@@ -1166,11 +1160,11 @@ end;
 					-- tables
 				from
 					id_list := melted_set;
-					id_cursor := id_list.first_element;
+					id_list.start
 				until
-					id_cursor = Void
+					id_list.off
 				loop
-					a_class := class_of_id (id_cursor.item);
+					a_class := class_of_id (id_list.item);
 						-- Verbose
 debug ("COUNT")
 	io.error.putstring ("(");
@@ -1179,13 +1173,13 @@ debug ("COUNT")
 	i := i - 1;
 end;
 					io.error.putstring ("Degree 1: class ");
-						temp := a_class.class_name.duplicate;
+						temp := clone (a_class.class_name);
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
-					id_cursor := id_cursor.right;
+					id_list.forth
 				end;
 				melted_set.wipe_out;
 			end;
@@ -1202,8 +1196,6 @@ end;
 			feat_tbl: MELTED_FEATURE_TABLE;
 			class_id, nb_tables: INTEGER;
 			file_pointer: POINTER;
-			id_cursor: LINKABLE [INTEGER];
-			type_cursor: LINKABLE [CLASS_TYPE];
 			cl_type: CLASS_TYPE;
 
 			root_feat: FEATURE_I;
@@ -1248,11 +1240,11 @@ end;
 				-- Count of feature tables to update
 			from
 				id_list := freeze_set2;
-				id_cursor := id_list.first_element
+				id_list.start
 			until
-				id_cursor = Void
+				id_list.after
 			loop
-				a_class := class_of_id (id_cursor.item);
+				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
 	io.error.putstring (a_class.class_name);
@@ -1260,7 +1252,7 @@ debug ("ACTIVITY")
 end;
 				nb_tables := nb_tables + 
 					(a_class.types.count - a_class.nb_precompiled_class_types);
-				id_cursor := id_cursor.right
+				id_list.forth
 			end;
 				-- Write the number of feature tables to update
 			write_int (file_pointer, nb_tables);
@@ -1272,11 +1264,11 @@ end;
 				-- First, open the reading file associated to the melted
 				-- feature table server.
 			from
-				id_cursor := id_list.first_element
+				id_list.start
 			until
-				id_cursor = Void
+				id_list.after
 			loop
-				a_class := class_of_id (id_cursor.item);
+				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
 	io.error.putstring (a_class.class_name);
@@ -1284,23 +1276,23 @@ debug ("ACTIVITY")
 end;
 				from
 					types := a_class.types;
-					type_cursor := types.first_element
+					types.start
 				until
-					type_cursor = Void
+					types.after
 				loop
-					if not type_cursor.item.is_precompiled then
+					if not types.item.is_precompiled then
 						feat_tbl := m_feat_tbl_server.item
-												(type_cursor.item.type_id);
+												(types.item.type_id);
 debug ("ACTIVITY")
 	io.error.putstring ("melting class desc of ");
-	type_cursor.item.type.trace;
+	types.item.type.trace;
 	io.error.new_line;
 end;
 						feat_tbl.store (Update_file);
 					end;
-					type_cursor := type_cursor.right
+					types.forth
 				end;
-				id_cursor := id_cursor.right
+				id_list.forth
 			end;
 
 debug ("ACTIVITY")
@@ -1324,16 +1316,16 @@ end;
 				m_rout_id_server.item (class_id).store (Update_file);
 				from
 					types := a_class.types;
-					type_cursor := types.first_element
+					types.start
 				until
-					type_cursor = Void
+					types.after
 				loop
-					cl_type := type_cursor.item;
+					cl_type := types.item;
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1);
 						-- Write original dynamic type (forst freezing)
 					write_int (file_pointer, cl_type.id - 1);
-					type_cursor := type_cursor.right
+					types.forth
 				end;
 				write_int (Update_file.file_pointer, -1);
 				m_rout_id_server.forth;
@@ -1544,7 +1536,6 @@ feature -- Freeezing
 		local
 			a_class: CLASS_C;
 			id_list: LINKED_LIST [INTEGER];
-			id_cursor: LINKABLE [INTEGER];
 			descriptors: ARRAY [INTEGER];
 			i, nb: INTEGER;
 			temp: STRING
@@ -1585,11 +1576,11 @@ end;
 debug ("COUNT")
 	i := id_list.count;
 end;
-					id_cursor := id_list.first_element
+					id_list.start
 				until
-					id_cursor = Void
+					id_list.off
 				loop
-					a_class := id_array.item (id_cursor.item);
+					a_class := id_array.item (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("(");
 	io.error.putint (i);
@@ -1598,14 +1589,14 @@ debug ("COUNT")
 end;
 						-- Verbose
 					io.error.putstring ("Degree -1: class ");
-						temp := a_class.class_name.duplicate;
+						temp := clone (a_class.class_name);
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
 	
 					a_class.generate_descriptor_tables;
 
-					id_cursor := id_cursor.right
+					id_list.forth
 				end;
 			else
 				from
@@ -1623,14 +1614,14 @@ end;
 				end;
 				from
 					id_list := melted_set;
-					id_cursor := id_list.first_element;
+					id_list.start
 debug ("COUNT")
 	i := melted_set.count;
 end;
 				until
-					id_cursor = Void
+					id_list.off
 				loop
-					a_class := class_of_id (id_cursor.item);
+					a_class := class_of_id (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("(");
 	io.error.putint (i);
@@ -1640,14 +1631,14 @@ end;
 					if a_class /= Void then
 							-- Verbose
 						io.error.putstring ("Degree -1: class ");
-							temp := a_class.class_name.duplicate;
+							temp := clone (a_class.class_name);
 							temp.to_upper;
 						io.error.putstring (temp);
 						io.error.new_line;
 	
 						a_class.generate_descriptor_tables;
 					end;
-					id_cursor := id_cursor.right;
+					id_list.forth
 				end;
 			end;
 
@@ -1659,11 +1650,11 @@ end;
 debug ("COUNT")
 	i := id_list.count;
 end;
-				id_cursor := id_list.first_element;
+				id_list.start
 			until
-				id_cursor = Void
+				id_list.off
 			loop
-				a_class := id_array.item (id_cursor.item);
+				a_class := id_array.item (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("(");
 	io.error.putint (i);
@@ -1672,14 +1663,14 @@ debug ("COUNT")
 end;
 					-- Verbose
 				io.error.putstring ("Degree -2: class ");
-					temp := a_class.class_name.duplicate;
+					temp := clone (a_class.class_name);
 					temp.to_upper;
 				io.error.putstring (temp);
 				io.error.new_line;
 
 				a_class.pass4;
 
-				id_cursor := id_cursor.right;
+				id_list.forth
 			end;
 
 			from
@@ -1687,11 +1678,11 @@ end;
 debug ("COUNT")
 	i := id_list.count;
 end;
-				id_cursor := id_list.first_element
+				id_list.start
 			until
-				id_cursor = Void
+				id_list.off
 			loop
-				a_class := id_array.item (id_cursor.item);
+				a_class := id_array.item (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("(");
 	io.error.putint (i);
@@ -1701,7 +1692,7 @@ end;
 				if not a_class.is_precompiled then
 						-- Verbose
 					io.error.putstring ("Degree -3: class ");
-						temp := a_class.class_name.duplicate;
+						temp := clone (a_class.class_name);
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
@@ -1709,7 +1700,7 @@ end;
 					a_class.generate_feature_table;
 				end;
 
-				id_cursor := id_cursor.right
+				id_list.forth
 			end;
 
 debug ("ACTIVITY")
@@ -1812,18 +1803,17 @@ end;
 	update_valid_body_ids is
 		local
 			id_list: LINKED_LIST [INTEGER];
-			id_cursor: LINKABLE [INTEGER];
 			a_class: CLASS_C;
 		do
 			from
 				id_list := freeze_set1;
-				id_cursor := id_list.first_element;
+				id_list.start
 			until
-				id_cursor = Void
+				id_list.after
 			loop
-				a_class := id_array.item (id_cursor.item);
+				a_class := id_array.item (id_list.item);
 				a_class.update_valid_body_ids;
-				id_cursor := id_cursor.right;
+				id_list.forth
 			end;
 		end;
 
@@ -1932,7 +1922,7 @@ debug ("COUNT");
 end;
 						-- Verbose
 					io.error.putstring ("Degree -4: class ");
-						temp := a_class.class_name.duplicate;
+						temp := clone (a_class.class_name)
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
@@ -1976,7 +1966,7 @@ debug ("COUNT")
 	io.error.putstring (") ");
 end;
 					io.error.putstring ("Degree -5: class ");
-						temp := a_class.class_name.duplicate;
+						temp := clone (a_class.class_name)
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
@@ -2136,7 +2126,6 @@ feature -- Generation
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
 			new_type_id, i, nb: INTEGER;
-			type_cursor: LINKABLE [CLASS_TYPE];
 		do
 				-- First re-process all the type id of instances of
 				-- CLASS_TYPE available in attribute list `types' of
@@ -2175,11 +2164,11 @@ end;
 					-- Types of the class
 				types := class_list.item (i).types;
 				from
-					type_cursor := types.first_element
+					types.start
 				until
-					type_cursor = Void
+					types.after
 				loop
-					class_type := type_cursor.item;
+					class_type := types.item;
 					new_type_id := type_id_counter.next;
 					class_type.set_type_id (new_type_id);
 debug ("ACTIVITY")
@@ -2192,7 +2181,7 @@ debug ("ACTIVITY")
 end;
 						-- Update `class_types'
 					insert_class_type (class_type);
-					type_cursor := type_cursor.right
+					types.forth
 				end;
 				i := i + 1
 			end;
@@ -2366,14 +2355,17 @@ end;
 						if not a_class.skeleton.empty then
 							from
 								types := a_class.types;
-								type_cursor := types.first_element;
+						--		type_cursor := types.first_element;
+								types.start
 							until
-								type_cursor = Void
+						--		type_cursor = Void
+								types.off
 							loop
 								Skeleton_file.putstring ("extern uint32 types");
 								Skeleton_file.putint (types.item.type_id);
 								Skeleton_file.putstring ("[];%N");
-								type_cursor := type_cursor.right;
+						--		type_cursor := type_cursor.right;
+								types.forth
 							end;
 						end;
 					end;
@@ -2511,8 +2503,8 @@ end;
 
 			if final_mode then
 					-- Extern declarations for previous file
-				f_name := Final_generation_path.twin;
-				f_name.append_character (Directory_separator);
+				f_name := clone (Final_generation_path);
+				f_name.extend (Directory_separator);
 				f_name.append ("Ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
@@ -2575,7 +2567,7 @@ end;
 			loop
 				a_class := id_array.item (i);
 				if a_class /= Void then
-					upper_class_name := a_class.external_name.twin;
+					upper_class_name := clone (a_class.external_name);
 					upper_class_name.to_upper;
 					if a_class.generics = Void then
 						Cecil2.put (a_class, upper_class_name);
@@ -2664,7 +2656,7 @@ if class_type /= Void then
 					rout_entry.set_type_id (i);
 					rout_entry.set_written_type_id (i);
 					rout_entry.set_kind (Initialization_id);
-					rout_table.add (rout_entry);
+					rout_table.extend (rout_entry);
 				end;
 end;
 				i := i + 1;
@@ -2741,7 +2733,7 @@ feature -- Dispose routine
 				descendants.after
 			loop
 				d := descendants.item;
-				desc.add (d);
+				desc.extend (d);
 				formulate_mem_descendants (d, desc);
 				descendants.forth;
 			end;
@@ -2777,7 +2769,7 @@ if class_type /= Void then
 					written_type := written_class.meta_type (class_type.type);
 					rout_entry.set_written_type_id (written_type.type_id);
 					rout_entry.set_kind (feature_i.body_id);
-					rout_table.add (rout_entry);
+					rout_table.extend (rout_entry);
 				end;
 end;
 				i := i + 1;
@@ -2818,10 +2810,10 @@ feature -- Plug and Makefile file
 			creation_feature := string_cl.feature_table.item
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
-			str_make_name := Encoder.feature_name
-							(id, creation_feature.body_id).duplicate;
-			set_count_name := Encoder.feature_name
-							(id, set_count_feat.body_id).duplicate;
+			str_make_name := clone (Encoder.feature_name
+							(id, creation_feature.body_id))
+			set_count_name := clone (Encoder.feature_name
+							(id, set_count_feat.body_id))
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
@@ -2847,9 +2839,9 @@ feature -- Plug and Makefile file
 				creators.start;
 				creation_feature := array_cl.feature_table.item
 											(creators.key_for_iteration);
-				arr_make_name := Encoder.feature_name
-								(id, creation_feature.body_id).duplicate;
-				array_make_name := arr_make_name.duplicate;
+				arr_make_name := clone (Encoder.feature_name
+								(id, creation_feature.body_id))
+				array_make_name := clone (arr_make_name)
 			else
 				cl_type := Instantiator.Array_type.associated_class_type; 
 				arr_type_id := cl_type.type_id;
@@ -2861,9 +2853,9 @@ feature -- Plug and Makefile file
 
 			if final_mode then
 				init_name :=
-						Encoder.table_name (Initialization_id).duplicate;
+						clone (Encoder.table_name (Initialization_id))
 				dispose_name := 
-						Encoder.table_name (Dispose_id).duplicate;
+						clone (Encoder.table_name (Dispose_id))
 	
 				Plug_file.putstring ("extern char *(*");
 				Plug_file.putstring (init_name);

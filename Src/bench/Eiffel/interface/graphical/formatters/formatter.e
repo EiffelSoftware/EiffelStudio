@@ -141,7 +141,7 @@ feature {NONE}
 			until
 				j = 0
 			loop
-				Result.append_character (' ');
+				Result.extend (' ');
 				j := j - 1
 			end
 		end;

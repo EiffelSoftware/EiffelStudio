@@ -185,9 +185,9 @@ feature -- Inherited precondition
 			not_have_ct: not has_prec_type (ct);
 		do
 			if not precondition_types.has (ct) then
-				precondition_types.add (ct);
-				precondition_list.add (bc.precondition);
-				prec_arg_list.add (bc.arguments);
+				precondition_types.extend (ct);
+				precondition_list.extend (bc.precondition);
+				prec_arg_list.extend (bc.arguments);
 			end;
 		end;
 
@@ -373,11 +373,11 @@ feature -- inherited postcondition
 			valid_post: bc.postcondition /= Void;
 			not_have_ct: not has_post_type (ct);
 		do
-			postcondition_types.add (ct);
-			postcondition_list.add (bc.postcondition);
-			post_arg_list.add (bc.arguments);
-			post_result_list.add (bc.result_type);
-			old_expression_list.add (bc.old_expressions);
+			postcondition_types.extend (ct);
+			postcondition_list.extend (bc.postcondition);
+			post_arg_list.extend (bc.arguments);
+			post_result_list.extend (bc.result_type);
+			old_expression_list.extend (bc.old_expressions);
 		end;
 
 	has_post_type (ct: CLASS_TYPE): BOOLEAN is

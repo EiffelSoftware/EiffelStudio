@@ -8,11 +8,11 @@ inherit
 	EXTEND_TABLE [FEATURE_DEPENDANCE, STRING];
 	IDABLE
 		undefine
-			twin
+			is_equal, copy
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			is_equal, copy
 		end
 
 creation

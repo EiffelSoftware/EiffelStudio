@@ -86,11 +86,11 @@ feature
 				start_line_pos := file.position;
 				line_number := line_number + 1;
 				file.readline;
-				current_line := file.laststring.duplicate;
+				current_line := clone (file.laststring)
 			end;
 			if not file.end_of_file then
 				file.readline;
-				next_line := file.laststring.duplicate;
+				next_line := clone (file.laststring)
 			end;
 			file.close;
 

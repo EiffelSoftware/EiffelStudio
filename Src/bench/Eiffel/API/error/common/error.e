@@ -65,10 +65,10 @@ feature -- Debug pupose
 			file_name: STRING;
 			file: UNIX_FILE;
 		do
-			file_name := help_path.duplicate;
-			file_name.append_character (Directory_separator);
+			file_name := clone (help_path)
+			file_name.extend (Directory_separator);
 			file_name.append ("short");
-			file_name.append_character (Directory_separator);
+			file_name.extend (Directory_separator);
 			file_name.append (help_file_name);
 			if subcode /= 0 then
 				file_name.append_integer (subcode)

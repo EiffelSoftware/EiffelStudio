@@ -127,7 +127,7 @@ feature	-- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is 
 		do
-			Result := twin;
+			Result := clone (Current);
 			if assertions /= void then
 				Result.set_assertions (assertions.replicate (ctxt));
 			end;

@@ -50,7 +50,7 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.insert_error (veen2a);
 				end;
 					-- Update the type stack
-				context.change_item (feat_type);
+				context.replace (feat_type);
 					-- Update the access line
 				!!access_result;
 				context.access_line.insert (access_result);
@@ -85,7 +85,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
 			ctxt.adapt_Result;
-			Result := twin
+			Result := clone (Current)
 		end;
 
 

@@ -43,7 +43,7 @@ feature -- Type check, byte code and dead code removal
 
 			t := context.item;
 			context.pop (1);
-			context.change_item (t);
+			context.replace (t);
 
 				-- Type check the message
 			message.type_check;
@@ -96,7 +96,7 @@ feature -- Type check, byte code and dead code removal
     Replicate (ctxt: REP_CONTEXT): like Current is
             -- Adapt to replication
         do
-            Result := twin;
+            Result := clone (Current);
             Result.set_target (target.replicate (ctxt));
             Result.set_message (message.replicate (ctxt));
         end;

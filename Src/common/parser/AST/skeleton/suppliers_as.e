@@ -15,7 +15,7 @@ creation
 
 feature
 
-	supplier_ids: SORTED_SET [ID_AS];
+	supplier_ids: TWO_WAY_SORTED_SET [ID_AS];
 			-- Set of supplier class names
 
 	make is
@@ -36,7 +36,7 @@ feature
 		require
 			good_argument: id /= Void
 		do
-			supplier_ids.add (id);
+			supplier_ids.extend (id);
 		end; 
 
 	set is 

@@ -7,7 +7,7 @@ inherit
 	CECIL_TABLE [FEATURE_I];
 	SHARED_DECLARATIONS
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	
 feature 
@@ -73,7 +73,7 @@ end;
 												(actual_type.base_type);
 					end; 
 					c_type := actual_type.type_i.c_type;
-					Extern_declarations.add_routine (c_type, routine_name.twin);
+					Extern_declarations.add_routine (c_type, clone (routine_name));
 				end;
 				file.putstring (",%N");
 				i := i + 1;

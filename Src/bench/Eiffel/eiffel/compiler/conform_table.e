@@ -10,21 +10,21 @@ inherit
 		end;
 	SHARED_CODE_FILES
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	BASIC_ROUTINES
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end
 
 creation

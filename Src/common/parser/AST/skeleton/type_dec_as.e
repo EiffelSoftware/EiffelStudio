@@ -59,8 +59,8 @@ feature  -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to Replication
 		do
-			Result := twin;
-			Result.set_type (type.twin);
+			Result := clone (Current);
+			Result.set_type (clone (type));
 			Result.set_id_list (id_list.replicate (ctxt));
 				--| useful for like ... only
 		end;

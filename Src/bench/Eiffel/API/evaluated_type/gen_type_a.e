@@ -351,7 +351,7 @@ feature -- Primitives
 				i := 1;
 				count := generics.count;
 				!!duplicate_generics.make (1, count);
-				Result := twin;
+				Result := clone (current);
 				Result.set_generics (duplicate_generics);
 			until
 				i > count
@@ -450,7 +450,7 @@ feature -- Primitives
 					constraint_info.set_actual_type (to_check);
 					constraint_info.set_formal_number (i);
 					constraint_info.set_constraint_type (constraint_type);
-					Constraint_error_list.add_front (constraint_info);
+					Constraint_error_list.put_front (constraint_info);
 				end;
 
 					-- Recursion

@@ -8,7 +8,7 @@ inherit
 		end;
 	SHARED_CODE_FILES
 		undefine
-			twin
+			copy, setup, is_equal, consistent
 		end
 
 creation

@@ -125,11 +125,11 @@ feature -- Conveniences
 			a_class.set_is_used_as_expanded
 			if System.in_pass3 then
 				!!d.make (a_class.id, -2);
-				context.supplier_ids.add (d);
+				context.supplier_ids.extend (d);
 				f := a_class.creation_feature;
 				if f /= Void then
 					!!d.make (a_class.id, f.feature_id);
-					context.supplier_ids.add (d);
+					context.supplier_ids.extend (d);
 				end;
 			end;
 		end;
@@ -278,7 +278,7 @@ feature -- Conveniences
 -- some parts of the signature can be clickable !!!
 
 			!!Result.make (class_name.count);
-			dumped_class_name := class_name.duplicate;
+			dumped_class_name := clone (class_name)
 			dumped_class_name.to_upper;
 			Result.append (dumped_class_name);
 			if generics /= Void then
@@ -315,7 +315,7 @@ feature -- stoning
 			s: STRING;
 		do
 			ctxt.begin;
-			s := class_name.duplicate;
+			s := clone (class_name)
 			s.to_upper;
 			ctxt.put_class_name (Universe.class_named (class_name,
 						Inst_context.cluster).compiled_class);
@@ -342,7 +342,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			if generics /= void then
 				Result.set_generics (generics.replicate (ctxt));
 			end;

@@ -201,7 +201,7 @@ feature
 				rout_id := - rout_id_set.first;
 				table := Eiffel_table.item_id (rout_id);
 				if table.is_polymorphic (class_type.type_id) then
-					table_name := Encoder.table_name (rout_id).twin;
+					table_name := clone (Encoder.table_name (rout_id));
 					file.putchar ('(');
 					file.putstring (table_name);
 					file.putchar ('-');

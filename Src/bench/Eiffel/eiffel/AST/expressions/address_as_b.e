@@ -49,7 +49,7 @@ feature -- Type check, byte code and dead code removal
 			end;
 
 				-- Update the type stack
-			context.change_item (id_type);
+			context.replace (id_type);
 		end;
 
 	byte_node: EXPR_B is
@@ -101,7 +101,7 @@ feature	-- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			ctxt.adapt_name (feature_name.internal_name);
 			Result.feature_name.set_name (ctxt.adapted_name);
 		end;

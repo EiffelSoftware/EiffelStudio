@@ -27,13 +27,13 @@ inherit
 		export
 			{NONE} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 
 
@@ -71,7 +71,7 @@ feature
 					!!l.make;
 					put (l, rout_id);
 				end;
-				l.add (info);
+				l.extend (info);
 
 				i := i + 1;
 			end;
@@ -102,7 +102,8 @@ feature
 				end;
 				l := item (rout_id);
 				l.start;
-				l.search_same (info);
+				l.compare_references
+				l.search (info);
 				check
 					not l.after
 				end;

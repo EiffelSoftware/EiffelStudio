@@ -6,10 +6,10 @@ creation
 
 feature
 
-	lines: FIXED_LIST [EIFFEL_LINE];
+	lines: ARRAYED_LIST [EIFFEL_LINE];
 			-- the content of the file, stripped of comments
 
-	comments: FIXED_LIST [EIFFEL_COMMENTS];
+	comments: ARRAYED_LIST [EIFFEL_COMMENTS];
 			-- extracted comments
 
 	between_lines: BOOLEAN;
@@ -38,7 +38,7 @@ feature
 				p := f.position;
 				f.readline;
 				if p > start_pos then
-					!!p_line.make (p, f.laststring.duplicate);
+					!!p_line.make (p, clone (f.laststring));
 					p_line.left_adjust;
 					p_line.right_adjust;
 					comment_line := p_line.comment;
@@ -50,7 +50,7 @@ feature
 						end;
 						comment.add (comment_line.text);
 					else
-						c_list.add (comment);
+						c_list.extend (comment);
 						comment := void;
 					end;
 				end;
@@ -98,7 +98,7 @@ feature
 			loop
 				p := f.position;
 				f.readline;
-				!!p_line.make (p, f.laststring.duplicate);
+				!!p_line.make (p, clone (f.laststring));
 				p_line.left_adjust;
 				p_line.right_adjust;
 				comment_line := p_line.comment;
@@ -110,11 +110,11 @@ feature
 					end;
 					comment.add (comment_line.text);
 				else
-					c_list.add (comment);
+					c_list.extend (comment);
 					comment := void;
 				end;
 				if not p_line.empty then
-					l_list.add (p_line);
+					l_list.extend (p_line);
 				end;
 			end;
 			from

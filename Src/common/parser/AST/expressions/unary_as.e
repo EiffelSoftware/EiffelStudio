@@ -94,7 +94,7 @@ feature -- Type check, byte code and dead code removal
  
 				-- Suppliers update
 			!!depend_unit.make (last_class.id, prefix_feature.feature_id);
-			context.supplier_ids.add (depend_unit);
+			context.supplier_ids.extend (depend_unit);
 
 				-- Assumes here that a prefix feature has no argument
 				-- Update the type stack; instantiate the result of the
@@ -113,7 +113,7 @@ feature -- Type check, byte code and dead code removal
 								(context.item, last_class.id).actual_type;
 			end;
 
-			context.change_item (prefix_feature_type);
+			context.replace (prefix_feature_type);
 
 			!!feature_b;
 			feature_b.init (prefix_feature);
@@ -187,7 +187,7 @@ feature -- Replication
 			new_expression := expr.replicate (ctxt);
 			ctxt.adapt_name (prefix_feature_name);
 			if prefix_feature_name.is_equal (ctxt.adapted_name) then
-				Result := twin
+				Result := clone (Current)
 			else
 				!!u;
 				u.set_prefix_feature_name (ctxt.adapted_name);

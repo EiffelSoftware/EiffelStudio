@@ -28,7 +28,7 @@ feature
 		local
 			hash_size: INTEGER;
 		do
-			hash_size := primes.next_prime (bottom_int_div (5 * n, 4));
+			hash_size := primes.higher_prime (bottom_int_div (5 * n, 4));
 			cecil_table_init (hash_size);
 		end;
 

@@ -13,19 +13,19 @@ inherit
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_TMP_SERVER
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_ARRAY_BYTE
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 	SHARED_BODY_ID
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
 
 creation
@@ -52,7 +52,7 @@ feature -- Creation
 				after
 			loop
 				!! desc.make (class_types.item, s);
-				fl_put (desc);
+				replace (desc);
 				forth;
 				class_types.forth
 			end;

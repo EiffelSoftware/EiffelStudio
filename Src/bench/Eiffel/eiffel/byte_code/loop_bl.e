@@ -139,8 +139,8 @@ feature
 	generate_workbench_test is
 			-- Generate dynamic test in workbench mode
 		require
-			context.workbench_mode;
-			context.dt_current > 1;
+			workbench_mode: context.workbench_mode;
+			dt_current: context.dt_current > 1;
 		do
 			generated_file.putstring ("if (RTAL & CK_LOOP) {");
 			generated_file.new_line;

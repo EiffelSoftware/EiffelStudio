@@ -90,7 +90,7 @@ feature
 					end;
 					gen_file.putchar (']');
 						-- Remember extern declaration
-                    Extern_declarations.add_type_table (create_table_name.twin);
+                    Extern_declarations.add_type_table (clone (create_table_name));
 				end;
 			else
 				gen_file.putstring ("RTWT(");

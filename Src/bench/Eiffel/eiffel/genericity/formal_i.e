@@ -55,7 +55,7 @@ feature
 			a_clickable.put_int (position);
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("Formal #");

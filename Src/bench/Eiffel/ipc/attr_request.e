@@ -110,7 +110,7 @@ feature
 					!REFERENCE_ATTR!attr.make (attr_name, class_c, 
 													type_name, clone (c_tread))
 				end
-				attr_list.add (attr);
+				attr_list.extend (attr);
 				i := i + 1
 			end
 		end;

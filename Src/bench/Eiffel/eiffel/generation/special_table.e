@@ -55,7 +55,7 @@ feature
 	
 						-- Remember external declaration
 					Extern_declarations.add_routine
-								(void_type, r_name.twin);
+								(void_type, clone (r_name));
 				else
 					file.putstring ("(fnptr) 0,%N");
 				end;

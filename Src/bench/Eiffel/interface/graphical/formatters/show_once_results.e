@@ -39,7 +39,7 @@ feature {NONE}
 	display_info (i: INTEGER; object: OBJECT_STONE) is
 		local
 			feature_table: FEATURE_TABLE;
-			once_func_list: SORTED_TWO_WAY_LIST [FEATURE_I];
+			once_func_list: PART_SORTED_TWO_WAY_LIST [FEATURE_I];
 			once_request: ONCE_REQUEST;
 			arguments: FEAT_ARG;
 			feature_i: FEATURE_I;
@@ -57,7 +57,7 @@ feature {NONE}
 				loop
 					feature_i := feature_table.item_for_iteration;
 					if criterium (feature_i) then
-						once_func_list.add (feature_i)
+						once_func_list.extend (feature_i)
 					end
 				feature_table.forth
 				end;

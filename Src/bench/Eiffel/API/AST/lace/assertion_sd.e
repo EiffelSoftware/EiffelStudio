@@ -65,7 +65,7 @@ feature
 					until
 						list.after
 					loop
-						class_name := list.item.duplicate;
+						class_name := clone (list.item)
 						class_name.to_lower;
 						classes.item (class_name).set_assertion_level (v);
 						list.forth;

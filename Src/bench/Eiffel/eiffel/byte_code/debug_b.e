@@ -13,7 +13,7 @@ feature
 	compound: BYTE_LIST [BYTE_NODE];
 			-- Debug compound {list of INSTR_B]: can be Void
 
-	keys: FIXED_LIST [STRING];
+	keys: ARRAYED_LIST [STRING];
 			-- Keys if any
 
 	set_compound (c: like compound) is

@@ -55,7 +55,7 @@ feature
 			adapter.set_context_features (old_feat, new_feat);
 			adapter.set_source_class (a);
 			adapter.set_target_class (d);
-			new_pairs := pairs.twin;
+			new_pairs := clone (pairs);
 			if old_feat.written_class /= a then
 				feat_table := Feat_tbl_server.item (a.id);		
 				from

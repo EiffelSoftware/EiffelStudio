@@ -222,7 +222,7 @@ feature {NONE} -- C code generation
 							("make").rout_id_set.first;
 			entry := Eiffel_table.item_id (rout_id);
 			rout_table ?= entry;
-			internal_name := rout_table.feature_name (real_ty.type_id).twin;
+			internal_name := clone (rout_table.feature_name (real_ty.type_id));
 			generated_file.putstring (internal_name);
 			generate_array_make_arguments;
 				-- Remember extern routine declaration

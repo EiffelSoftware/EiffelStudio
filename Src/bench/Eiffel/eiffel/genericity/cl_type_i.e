@@ -94,6 +94,7 @@ feature
 
 				types := base_class.types;
 				pos := types.index;
+				types.compare_references
 				types.search (Current);
 				exp.set_class_type (types.item);
 				types.go_i_th (pos);
@@ -119,7 +120,7 @@ feature
 			base_class.append_clickable_signature (a_clickable)
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 		do
 			if is_expanded then
 				file.putstring ("expanded ");
@@ -138,6 +139,7 @@ feature
 			else
 				types := base_class.types;
 				pos := types.index;
+				types.compare_references
 				types.search (Current);
 				Result := types.item;
 				types.go_i_th (pos);

@@ -52,7 +52,7 @@ feature
 		local
 			written_type: CL_TYPE_I;
 			written_class: CLASS_C;
-			s: SORTED_SET [INTEGER];
+			s: TWO_WAY_SORTED_SET [INTEGER];
 		do
 			written_class := System.class_of_id (written_in);
 			if written_class /= Void and then

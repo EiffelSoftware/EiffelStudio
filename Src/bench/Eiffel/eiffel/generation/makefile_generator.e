@@ -29,7 +29,7 @@ feature -- Attributes
 			-- Run-time object files to be put in the Cecil
 			-- archive
 
-	empty_class_types: SORTED_SET [INTEGER];
+	empty_class_types: TWO_WAY_SORTED_SET [INTEGER];
 			-- Set of all the class types that have no used
 			-- features (final mode), i.e. the C file would
 			-- be empty.
@@ -606,7 +606,7 @@ feature -- Removal of empty classes
 			-- add `a_class_type' to the set of class types that
 			-- are not generated
 		do
-			empty_class_types.add (a_class_type);
+			empty_class_types.extend (a_class_type);
 		end;
 
 feature {NONE} -- Externals

@@ -14,7 +14,7 @@ feature
 			replicated_name := new_name;
 			conversion_list := pairs;
 			starting_adapter := adapter;
-			current_adapter := adapter.twin;
+			current_adapter := clone (adapter);
 			is_new_expression := True;
 		end;	
 
@@ -64,7 +64,7 @@ feature
 
 	new_ctxt: like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.reset_adapter;
 		end;
 
@@ -84,7 +84,7 @@ feature
 
 	reset_adapter is
 		do
-			Current_adapter := starting_adapter.twin;
+			Current_adapter := clone (starting_adapter);
 			is_new_expression := True;
 		end;
 

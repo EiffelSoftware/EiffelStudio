@@ -52,8 +52,8 @@ feature
 			path := Compilation_path;
 			!!f_name.make (path.count + 6);
 			f_name.append (path);
-			f_name.append_character (Directory_separator);
-			f_name.append_character ('E');
+			f_name.extend (Directory_separator);
+			f_name.extend ('E');
 			f_name.append_integer (i);
 			file_make (f_name);
 			open_binary_write;
@@ -142,8 +142,8 @@ end;
 			end;
 			!!name.make (path.count + 6);
 			name.append (path);
-			name.append_character (Directory_separator);
-			name.append_character ('E');
+			name.extend (Directory_separator);
+			name.extend ('E');
 			name.append_integer (id);
 		end;
 

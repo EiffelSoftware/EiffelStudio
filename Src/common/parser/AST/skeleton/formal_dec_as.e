@@ -95,7 +95,7 @@ feature -- Initialization
 		local
 			s: STRING;
 		do
-			s := formal_name.duplicate;
+			s := clone (formal_name)
 			s.to_upper;
 			ctxt.put_string (s);
 			if constraint /= void then

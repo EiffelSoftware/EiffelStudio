@@ -226,9 +226,9 @@ feature
 			if not d.has_entry (Finish_freezing_script) then
 				!!cp_cmd.make (50);
 				cp_cmd.append (Copy_cmd);
-				cp_cmd.append_character (' ');
+				cp_cmd.extend (' ');
 				cp_cmd.append (freeze_command_name);
-				cp_cmd.append_character (' ');
+				cp_cmd.extend (' ');
 				cp_cmd.append (c_code_directory);
 				cp_cmd.append ("; ");
 				cmd.prepend (cp_cmd);

@@ -33,7 +33,7 @@ feature
 					list.after
 				loop
 					feat2 := list.item.a_feature;
-					redef_assert_feats.add (feat2);
+					redef_assert_feats.extend (feat2);
 					list.forth;
 				end;
 				list := adaptations.item.old_features.features;
@@ -43,7 +43,7 @@ feature
 					list.after
 				loop
 					feat2 := list.item.a_feature;
-					redef_assert_feats.add (feat2);
+					redef_assert_feats.extend (feat2);
 					list.forth;
 				end;
 				if redef_assert_feats.count > 0 then

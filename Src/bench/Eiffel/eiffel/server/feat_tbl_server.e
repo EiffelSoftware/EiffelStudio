@@ -38,6 +38,15 @@ feature
 			Result := 	server_has (an_id)
 						or else
 						Tmp_feat_tbl_server.has (an_id)
+debug ("ZOON")
+    io.putstring ("an_id:")
+    io.putint (an_id)
+    io.putstring ("%NServer count:")
+    io.putint (count)
+    io.putstring ("%NTmp_feat_tbl_server count:")
+    io.putint (Tmp_feat_tbl_server.count)
+    io.new_line
+end
 		end;
 
 	item (an_id: INTEGER): FEATURE_TABLE is

@@ -86,11 +86,11 @@ feature -- Updating
 			-- Update physical addresses of adopted objects after
 			-- an execution step.
 		local
-			h_addrs: ARRAY_SEQUENCE [STRING];
+			h_addrs: ARRAYED_LIST [STRING];
 			h_addr: STRING
 		do
 			from
-				h_addrs := addr_table.sequential_representation;
+				h_addrs := addr_table.linear_representation;
 				addr_table.clear_all;
 				h_addrs.start
 			until

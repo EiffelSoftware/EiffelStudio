@@ -15,9 +15,6 @@ inherit
 			make as ll_make
 		end;
 	IDABLE
-		undefine
-			twin
-		end;
 
 creation
 

@@ -149,7 +149,7 @@ feature -- Conveniences
 					Result.start;
 					parent_class_type := System.class_type_of_id
 												(parent_type.type_id);
-					Result.put_right (parent_class_type);
+					Result.extend (parent_class_type);
 				end;
 			
 				parents.forth;
@@ -158,7 +158,7 @@ feature -- Conveniences
 
 feature -- Generation
 
-	valid_body_ids: SORTED_SET [INTEGER];
+	valid_body_ids: TWO_WAY_SORTED_SET [INTEGER];
 
 	update_valid_body_ids is
 		local
@@ -177,7 +177,7 @@ feature -- Generation
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.to_generate_in (current_class) then
-					valid_body_ids.add (feature_i.body_id);
+					valid_body_ids.extend (feature_i.body_id);
 				end;
 				feature_table.forth;
 			end;
@@ -475,7 +475,7 @@ feature -- Generation
 						class_type.associated_class.creation_feature;
 				if creation_feature /= Void then
 					creat_name := 
-						Encoder.feature_name (class_type.id, creation_feature.body_id).duplicate;
+						clone (Encoder.feature_name (class_type.id, creation_feature.body_id))
 					file.putstring (creat_name);
 					file.putchar ('(');
 					file.putstring ("l[0] + ");
@@ -692,7 +692,7 @@ feature -- Skeleton generation
 			Skeleton_file.putstring ("{%N(long) ");
 			Skeleton_file.putint (skeleton.count);
 			Skeleton_file.putstring (",%N%"");
-			upper_class_name := a_class.class_name.duplicate;
+			upper_class_name := clone (a_class.class_name)
 			upper_class_name.to_upper;
 			Skeleton_file.putstring (upper_class_name);
 			Skeleton_file.putstring ("%",%N");
@@ -879,7 +879,7 @@ feature -- Byte code generation
 			ba.append_short_integer (type_id - 1);
 
 				-- 2. generator string
-			class_name := associated_class.class_name.duplicate;
+			class_name := clone (associated_class.class_name)
 			class_name.to_upper;
 			ba.append_string (class_name);
 

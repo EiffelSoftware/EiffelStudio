@@ -48,7 +48,8 @@ feature -- Type check, byte code and dead code removal
 				an_id := id_list.item;
 				pos := id_list.index;
 				id_list.forth;
-				id_list.search_equal (an_id);
+				id_list.compare_objects
+				id_list.search (an_id);
 				if not id_list.after then
 						-- Id appears more than once in attribute list
 					!!vwst2;
@@ -65,7 +66,7 @@ feature -- Type check, byte code and dead code removal
 					else
 						!!depend_unit.make (context.a_class.id,
 											attribute_i.feature_id);
-						context.supplier_ids.add (depend_unit);
+						context.supplier_ids.extend (depend_unit);
 					end;
 				end;
 				id_list.go_i_th (pos);

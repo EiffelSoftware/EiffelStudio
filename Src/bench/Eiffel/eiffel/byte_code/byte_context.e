@@ -76,7 +76,7 @@ feature
 			-- Initialization
 		do
 			!!register_server.make (true);
-			!!local_vars.make (1, 100);
+			!!local_vars.make (1, 1000);
 			!!local_index_table.make (10);
 			!!associated_register_table.make (10);
 			!!local_list.make;
@@ -472,7 +472,7 @@ feature
 			key: STRING;
 		do
 			if need_gc_hooks and not local_index_table.has(s) then
-				key := s.twin;
+				key := clone (s);
 				local_index_table.put (local_index_counter, key);
 				local_index_counter := local_index_counter + 1;
 				associated_register_table.put (r, key);
@@ -647,11 +647,11 @@ feature
 			saved_dt_current := dt_current;
 			saved_non_gc_reg_vars := non_gc_reg_vars;
 			saved_non_gc_tmp_vars := non_gc_tmp_vars;
-			saved_local_index_table := local_index_table.twin;
+			saved_local_index_table := clone (local_index_table);
 			saved_local_index_counter := local_index_counter;
 			saved_need_gc_hook_computed := need_gc_hook_computed;
 			saved_need_gc_hook_saved := need_gc_hook_saved;
-			saved_associated_register_table := associated_register_table.twin;
+			saved_associated_register_table := clone (associated_register_table);
 		end;
 
 	restore is
@@ -947,7 +947,7 @@ feature
 			good_argument: t /= Void
 		do
 			local_list.finish;
-			local_list.add_right (t);
+			local_list.put_right (t);
 		end;
 
 feature -- Debugger
@@ -993,7 +993,7 @@ feature -- Debugger
 					-- is equal to the position in the byte array 
 					-- minus 1.
 				!! ast_pos.make (ba.position - 1, ast_node);
-				breakable_points.add (ast_pos);
+				breakable_points.extend (ast_pos);
 			end;
 		end;
 

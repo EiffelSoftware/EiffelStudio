@@ -141,7 +141,7 @@ feature
 				-- Set dynamic type
 			!!gen_type;
 			gen_type.set_base_id (System.special_id);
-			gen_type.set_meta_generic (type.meta_generic.twin);
+			gen_type.set_meta_generic (clone (type.meta_generic));
 			file.putstring ("%Tzone->ov_flags |= ");
 			if final_mode then
 				file.putint (gen_type.type_id - 1);
@@ -239,7 +239,7 @@ feature
 					file.putchar (')');
 					file.putstring ("[Dtype(l[0])]");
 						-- Remember extern declaration
-					Extern_declarations.add_attribute_table (table_name.twin);
+					Extern_declarations.add_attribute_table (clone (table_name));
 					   -- Mark attribute table used
 					Eiffel_table.mark_used (rout_id);
 				else

@@ -7,7 +7,7 @@ inherit
 
 	BYTE_NODE
 		undefine
-			twin
+			copy, setup, is_equal, consistent
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code
 		end;
@@ -54,7 +54,7 @@ feature
 				after
 			loop
 				if item.need_enlarging then
-					put (item.enlarged);
+					replace (item.enlarged);
 				else
 					item.enlarge_tree;
 				end;

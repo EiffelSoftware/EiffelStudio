@@ -14,7 +14,7 @@ creation
 	
 feature 
 
-	tags: SORTED_SET [STRING];
+	tags: TWO_WAY_SORTED_SET [STRING];
 			-- Debug tags
 
 	make is

@@ -201,7 +201,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			if from_part /= void then
 				Result.set_from_part (
 					from_part.replicate (ctxt));

@@ -8,7 +8,7 @@ inherit
 		rename
 			position as text_position
 		undefine
-			pass_address, twin
+			pass_address, copy, setup, consistent, is_equal
 		redefine
 			byte_node, type_check,
 			find_breakable,
@@ -145,7 +145,7 @@ feature -- Replication
 		local
 			i, l_count: INTEGER;
 		do
-			Result := twin;
+			Result := clone (Current);
 			from 
 				i := 1;
 				l_count := count;

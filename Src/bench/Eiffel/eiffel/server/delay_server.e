@@ -138,7 +138,7 @@ end;
 				old_server_file := Server_controler.file_of_id (old_info.id);
 				old_server_file.remove_occurence;
 				if old_server_file.occurence = 0 then
-					file_ids.remove_item (old_server_file.id);
+					file_ids.prune (old_server_file.id);
 				end;
 				tbl_remove (real_id);
 			end;

@@ -6,19 +6,18 @@ inherit
 	SCROLLED_T
 		rename
 			count as size,
-			make as text_create
+			make as text_create,
+			lower as lower_window
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end;
-	
 	CLICKABLE
 		redefine
 			clear_window, display
 		end;
-
 	COMMAND_W
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		redefine
 			execute
 		end

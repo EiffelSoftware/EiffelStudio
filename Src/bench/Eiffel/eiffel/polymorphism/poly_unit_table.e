@@ -59,7 +59,7 @@ feature
 				search_after (v)
 			end;
 			if off or else item.id /= v.id then
-				add_left (v);
+				put_left (v);
 				if not_empty then
 					back
 				end
@@ -87,32 +87,30 @@ feature
 			-- Polymorphic table to generate in final mode
 		local
 			types: TYPE_LIST;
-			type_cursor: LINKABLE [CLASS_TYPE];
 			unit: T;
-			local_cursor: BI_LINKABLE [T];
 			associated_class: CLASS_C;
 		do
 			Result := new_poly_table;
 			from
-				local_cursor := first_element
+				start
 			until
-				local_cursor = Void
+				after
 			loop
-				unit := local_cursor.item;
+				unit := item;
 				associated_class := System.class_of_id (unit.id);
 				if associated_class /= Void then
 						-- Classes could be removed
 					from
 						types := associated_class.types;
-						type_cursor := types.first_element
+						types.start
 					until
-						type_cursor = Void
+						types.after
 					loop
-						Result.add (unit.entry (type_cursor.item));
-						type_cursor := type_cursor.right
+						Result.extend (unit.entry (types.item));
+						types.forth
 					end;
 				end;
-				local_cursor := local_cursor.right
+				forth
 			end;
 		end;
 

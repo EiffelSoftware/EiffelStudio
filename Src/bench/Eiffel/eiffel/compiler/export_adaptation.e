@@ -5,11 +5,11 @@ inherit
 	EXTEND_TABLE [EXPORT_I, STRING];
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_ERROR_HANDLER
 		undefine
-			twin
+			copy, is_equal
 		end
 
 creation

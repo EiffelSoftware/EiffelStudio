@@ -75,7 +75,7 @@ feature {WINDOW_MGR}
 				!!Result.make (screen);
 				restore_cursors;
 			end;
-			active_editors.add (Result);
+			active_editors.extend (Result);
 		end;
 
 	has (ed: like editor_type): BOOLEAN is
@@ -119,6 +119,7 @@ feature {WINDOW_MGR}
 			-- Remove an editor `ed'.
 		do
 			active_editors.start;
+			active_editors.compare_references
 			active_editors.search (ed);
 			if
 				not active_editors.after
@@ -129,7 +130,7 @@ feature {WINDOW_MGR}
 				if free_list.count >= free_list_max then
 					ed.destroy
 				else
-					free_list.add (ed)
+					free_list.extend (ed)
 				end;
 			else
 					--| Should never happen but this is ultra

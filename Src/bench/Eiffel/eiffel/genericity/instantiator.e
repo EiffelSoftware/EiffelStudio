@@ -67,10 +67,11 @@ end;
 
 				-- Look for the item in the insertion list
 			insertion_list.start;
-			insertion_list.search_equal (type_i);
+			insertion_list.compare_objects
+			insertion_list.search (type_i);
 			if insertion_list.after then
 					-- New data or item
-				insertion_list.add_front (type_i);
+				insertion_list.put_front (type_i);
 			end;
 
 				-- Recursion on the generic types

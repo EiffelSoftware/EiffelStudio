@@ -8,7 +8,7 @@ inherit
 	CENTRAL_TABLE [DISPATCH_UNIT];
 	SHARED_SERVER
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end
 
 creation

@@ -275,7 +275,7 @@ feature
 	duplicate: like Current is
 			-- Duplication
 		do
-			Result := twin;
+			Result := clone (Current);
 		end;
 
 	good_generics: BOOLEAN is

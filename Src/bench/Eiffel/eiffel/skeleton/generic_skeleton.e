@@ -52,7 +52,7 @@ feature
 			until
 				after
 			loop
-				Result.add (item.instantiation_in (class_type));
+				Result.extend (item.instantiation_in (class_type));
 				forth;
 			end;
 			go_i_th (pos);

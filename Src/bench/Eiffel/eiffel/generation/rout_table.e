@@ -109,7 +109,7 @@ feature
 			
 							-- Remember external routine declaration
 						Extern_declarations.add_routine
-							(entry.type.c_type, routine_name.twin);
+							(entry.type.c_type, clone (routine_name));
 					else
 						file.putstring ("(fnptr) 0,%N");
 					end;

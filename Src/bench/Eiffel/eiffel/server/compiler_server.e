@@ -8,13 +8,13 @@ inherit
 		export
 			{NONE} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 	SHARED_SERVER
 		export
 			{NONE} all
 		undefine
-			twin
+			copy, is_equal
 		end;
 	EXTEND_TABLE [SERVER_INFO, INTEGER]
 		rename
@@ -91,7 +91,7 @@ debug ("SERVER")
 end;
 			Server_controler.compute_new_id;
 			current_id := Server_controler.last_computed_id;
-			file_ids.add (current_id);
+			file_ids.extend (current_id);
 		end;
 
 	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
@@ -99,7 +99,7 @@ end;
 			server_file: SERVER_FILE;
 			info: SERVER_INFO
 		do
-			file_ids.add (fid);
+			file_ids.extend (fid);
 			force (sinf, updated_id(item_id));
 		end;
 
@@ -174,7 +174,7 @@ end;
 				old_server_file := Server_controler.file_of_id (old_info.id);
 				old_server_file.remove_occurence;
 				if old_server_file.occurence = 0 then
-					file_ids.remove_item (old_server_file.id);
+					file_ids.prune (old_server_file.id);
 				end;
 			end;
 			force (info, id);
@@ -206,7 +206,7 @@ end;
 				old_server_file := Server_controler.file_of_id (old_info.id);
 				old_server_file.remove_occurence;
 				if old_server_file.occurence = 0 then
-					file_ids.remove_item (old_server_file.id);
+					file_ids.prune (old_server_file.id);
 				end;
 				tbl_remove (real_id);
 			end;
@@ -333,7 +333,7 @@ end;
 																(old_info.id);
 					old_server_file.remove_occurence;
 					if old_server_file.occurence = 0 then
-						file_ids.remove_item (old_server_file.id);
+						file_ids.prune (old_server_file.id);
 					end;
 				end;
 				force (info, id);
@@ -369,7 +369,7 @@ end;
 			count := 0;
 
 				-- Create a new server which will be copied in Current
-			new := standard_twin;
+			new := clone (Current);
 			new.make;
 debug ("SERVER")
 	io.putstring ("===== Purging: ");

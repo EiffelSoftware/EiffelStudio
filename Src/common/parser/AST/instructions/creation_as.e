@@ -163,7 +163,7 @@ feature -- Type check, byte code and dead code removal
 						end;
 
 							-- Update type stack
-						context.change_item (creation_type);
+						context.replace (creation_type);
 							-- Update the access line
 						access := access.creation_access (creation_type.type_i);
 						context.access_line.change_item (access);
@@ -224,7 +224,7 @@ feature -- Type check, byte code and dead code removal
 							-- (feature id = -1) in the dependance of the
 							-- current feature
 						!!depend_unit.make (creation_class.id, -1);
-						context.supplier_ids.add (depend_unit);
+						context.supplier_ids.extend (depend_unit);
 					elseif creators.empty then
 						!!vgcc5;
 						context.init_error (vgcc5);
@@ -351,7 +351,7 @@ feature -- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_target (target.replicate (ctxt));
 			if type = void then
 				if call /= void then

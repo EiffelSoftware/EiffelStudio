@@ -33,10 +33,10 @@ feature
 			!!makefile_sh_name.make (0);
 			if melt_only then
 					-- The application executed is the `driver'
-				appl_name := Precompilation_driver.duplicate;
+				appl_name := clone (Precompilation_driver)
 			else
 				appl_name.append (Workbench_generation_path);
-				appl_name.append_character (Directory_separator);
+				appl_name.extend (Directory_separator);
 				appl_name.append (system_name);
 				appl_name.append (Executable_suffix);
 			end;
@@ -49,7 +49,7 @@ feature
 				if not melt_only then
 					!!makefile_sh_name.make (0);
 					makefile_sh_name.append (Workbench_generation_path);
-					makefile_sh_name.append_character (Directory_separator);
+					makefile_sh_name.extend (Directory_separator);
 					makefile_sh_name.append (Makefile_SH);
 					!!make_f.make (makefile_sh_name);
 					if make_f.exists and then make_f.date > f.date then
@@ -60,7 +60,7 @@ feature
 				end;
 				if not error then
 						-- Get the arguments
-					appl_name.append_character (' ');
+					appl_name.extend (' ');
 					appl_name.append (arguments);
 					Execution_environment.put (Workbench_generation_path, "MELT_PATH");
 					Execution_environment.system (appl_name);

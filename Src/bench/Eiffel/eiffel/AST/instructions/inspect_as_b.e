@@ -48,7 +48,7 @@ feature -- Type check, byte code and dead code removal
 
 				-- Initialization of the multi-branch controler
 			!!controler.make;
-			Inspect_controlers.add_front (controler);
+			Inspect_controlers.put_front (controler);
 			controler.set_node (Current);
 			controler.set_feature_table (context.a_class.feature_table);
 
@@ -173,7 +173,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_switch (switch.replicate (ctxt));
 			if case_list /= void then
 				Result.set_case_list (

@@ -8,20 +8,7 @@ inherit
 				all;
 			{ANY}
 				cursor, start, forth, after, item, last,
-				finish, off, go_i_th, index
-		redefine
-			add
-		select
-			add	
-		end;
-	TWO_WAY_LIST [TEXT_ITEM]
-		rename
-			add as old_add
-		export
-			{NONE}
-				all;
-			{ANY}
-				cursor
+				finish, off, go_i_th, index, extend
 		end;
 	SHARED_RESCUE_STATUS
 
@@ -33,14 +20,14 @@ feature
 
 	add (v: like item) is
 		do
-			old_add (v);
+			extend (v);
 			finish;
 		end;
 
 	insert (pos: CURSOR; v: like item) is
 		do
 			go_to (pos);
-			add_right (v);
+			put_right (v);
 			finish;
 		end; 
 

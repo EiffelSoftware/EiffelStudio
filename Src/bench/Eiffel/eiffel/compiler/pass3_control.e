@@ -29,7 +29,7 @@ feature
 	invariant_removed: BOOLEAN;
 			-- Is the invariant clause removed ?
 
-	changed_status: SORTED_SET [INTEGER];
+	changed_status: TWO_WAY_SORTED_SET [INTEGER];
 			-- Set of class ids for the classes for which the
 			-- expanded or deferred status has changed
 
@@ -55,7 +55,7 @@ feature
 			-- Add `an_id' to the set of ids for the classes for which the
 			-- expanded or deferred status has changed
 		do
-			changed_status.add (an_id)
+			changed_status.extend (an_id)
 		end;
 
 	update (pass2_control: PASS2_CONTROL) is
@@ -83,7 +83,7 @@ feature
 				depend_list.after or else not Result
 			loop
 				propagators.start;
-				propagators.search_equal (depend_list.item);				
+				propagators.search (depend_list.item);				
 				Result := propagators.off;
 				depend_list.forth;
 			end;
@@ -106,14 +106,14 @@ feature
 				depend_list.after or else not Result
 			loop
 				melted_propagators.start;
-				melted_propagators.search_equal (depend_list.item);
+				melted_propagators.search (depend_list.item);
 				Result := melted_propagators.off;
 				depend_list.forth;
 			end;
 			depend_list.go_i_th (pos);
 		end;
 
-	changed_status_empty_intersection (feature_suppliers: SORTED_SET [INTEGER]): BOOLEAN is
+	changed_status_empty_intersection (feature_suppliers: TWO_WAY_SORTED_SET [INTEGER]): BOOLEAN is
 			-- Is the intersection of `feature_suppliers' and `changed_status' empty ?
 		require
 			good_argument: feature_suppliers /= Void

@@ -16,7 +16,7 @@ feature -- Attributes
 	precursor_count: ARRAY [INTEGER];
 			-- Count of precursors
 
-	outsides: SORTED_TWO_WAY_LIST [T];
+	outsides: PART_SORTED_TWO_WAY_LIST [T];
 			-- Items with precursor count equal to 0
 
 	successors: ARRAY [LINKED_LIST [T]];
@@ -68,7 +68,6 @@ feature -- Initialization
 		local
 			i, k, succ_id: INTEGER;
 			succ: LINKED_LIST [T];
-			local_cursor: LINKABLE [T];
 		do
 			from
 					-- Initialization of `precursor_count'
@@ -83,14 +82,14 @@ feature -- Initialization
 							-- Data structure `successors' for id `i'
 							-- must exist.
 					end;
-					local_cursor := succ.first_element;
+					succ.start
 				until
-					local_cursor = Void
+					succ.off
 				loop
-					succ_id := local_cursor.item.topological_id;
+					succ_id := succ.item.topological_id;
 					k := precursor_count.item (succ_id);
 					precursor_count.put (k + 1, succ_id);
-					local_cursor := local_cursor.right;
+					succ.forth
 				end;
 				i := i + 1;
 			end;
@@ -101,7 +100,7 @@ feature -- Initialization
 				i > count
 			loop
 				if precursor_count.item (i) = 0 then
-					outsides.add (original.item (i));
+					outsides.extend (original.item (i));
 				end;
 				i := i + 1
 			end;
@@ -115,7 +114,6 @@ feature -- Initialization
 			next, k, succ_id: INTEGER;
 			item, succ_item: T;
 			succ: LINKED_LIST [T];
-			local_cursor: LINKABLE [T];
 		do
 			from
 			until
@@ -128,22 +126,22 @@ feature -- Initialization
 				order.put (item, next);
 				from
 					succ := successors.item (item.topological_id);
-					local_cursor := succ.first_element;
+					succ.start
 				until
-					local_cursor = Void
+					succ.off
 				loop
-					succ_item := local_cursor.item;
+					succ_item := succ.item;
 					succ_id := succ_item.topological_id;
 					k := precursor_count.item (succ_id);
 					if k = 0 then
 						-- Nothing
 					elseif k = 1 then
-						outsides.add (succ_item);
+						outsides.extend (succ_item);
 						precursor_count.put (0, succ_id)
 					else
 						precursor_count.put (k - 1, succ_id)
 					end;
-					local_cursor := local_cursor.right;
+					succ.forth
 				end;
 			end;
 		end;

@@ -131,7 +131,7 @@ feature
 					end;
 					int_intervals.forth;
 				end;
-				int_intervals.add (Result);
+				int_intervals.extend (Result);
 			else
 				Result := Void
 			end;
@@ -170,7 +170,7 @@ feature
 					end;
 					char_intervals.forth;
 				end;
-				char_intervals.add (Result);
+				char_intervals.extend (Result);
 			else
 				Result := Void
 			end;
@@ -222,7 +222,7 @@ feature
 						vomb4.set_unique_feature (constant_i);
 						Error_handler.insert_error (vomb4);
 					else
-						unique_names.add (constant_name);
+						unique_names.extend (constant_name);
 						written_class := constant_i.written_class;
 						if last_class = Void then
 							last_class := written_class;

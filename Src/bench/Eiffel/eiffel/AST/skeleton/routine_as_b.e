@@ -524,7 +524,7 @@ feature	-- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- adapt to replication
 		do
-			Result := twin;
+			Result := clone (Current);
 			if precondition /= void then
 				Result.set_precondition	(
 					precondition.replicate (ctxt))

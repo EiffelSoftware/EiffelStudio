@@ -38,7 +38,7 @@ end;
 					after
 				loop
 					if item_for_iteration = latest_old then
-						content.put (new_value, position_for_iteration);
+						content.put (new_value, pos_for_iter);
 						control := Changed_constant;
 					end;
 					forth
@@ -75,10 +75,10 @@ end;
 				if item_for_iteration = latest_new then
 debug
 	io.error.putstring ("FOUND ");
-	io.error.putint (position_for_iteration);
+	io.error.putint (pos_for_iter);
 	io.error.new_line;
 end;
-					content.put (old_value, position_for_iteration);
+					content.put (old_value, pos_for_iter);
 					control := Changed_constant;
 				end;
 				forth

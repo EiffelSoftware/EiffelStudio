@@ -30,7 +30,7 @@ feature -- dragging
 
 	icon_name: STRING is
 		do
-			Result := class_c.class_name.duplicate;
+			Result := clone (class_c.class_name)
 			Result.to_upper;
 		end;
 

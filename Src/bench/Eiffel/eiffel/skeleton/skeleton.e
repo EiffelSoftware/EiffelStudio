@@ -698,7 +698,7 @@ feature
             loop
                 rout_id := item.rout_id;
                 Extern_declarations.add_attribute_table
-                                (Encoder.table_name (rout_id).twin);
+                                (clone (Encoder.table_name (rout_id)));
 				Eiffel_table.mark_used (rout_id);
                 forth
             end;

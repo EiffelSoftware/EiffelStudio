@@ -17,7 +17,7 @@ inherit
 
 	LINKED_SET [BREAKPOINT]
 		rename
---			extend as ls_extend,
+			extend as ls_extend,
 			append as ls_append,
 			make as ls_make
 		export
@@ -27,6 +27,15 @@ inherit
 			{NONE} put_i_th, put_left, put_right
 		redefine
 			index_of
+		select
+			ls_extend, ls_append, ls_make
+		end
+
+	LINKED_SET [BREAKPOINT]
+		undefine
+			index_of
+		redefine
+			extend, make, append
 		end
 
 creation
@@ -40,21 +49,21 @@ feature -- Object comparison features
 			-- (Object comparison)
 			-- 0 if none.
 		local
-			occurrences, pos: INTEGER
+			nb_occurrences, pos: INTEGER
 		do
 			start;
 			pos := 1;
 			from
 			until
-				off or else (occurrences = i)
+				off or else (nb_occurrences = i)
 			loop
 				if v.is_equal (item) then
-					occurrences := occurrences + 1;
+					nb_occurrences := nb_occurrences + 1;
 				end;
 				forth;
 				pos := pos + 1
 			end;
-			if occurrences = i then
+			if nb_occurrences = i then
 				Result := pos - 1
 			end
 		end;
@@ -76,12 +85,12 @@ feature -- Element change
 			-- is already held in the list, this instruction
 			-- is removed or left in the list whether it is
 			-- in contradiction with `bp' or not.
-		require
+		require else
 			bp_exists: bp /= Void
 		do
 			if not has (bp) then
 --				put_front (bp)
-				add (bp)
+				ls_extend (bp)
 			elseif i_th (index_of (bp, 1)).is_continue /= bp.is_continue then
 --				start;
 --				prune (bp)
@@ -92,7 +101,7 @@ feature -- Element change
 
 	append (other: like Current) is
 			-- Add breakpoint instructions held in `other' into `Current'.
-		require
+		require else
 			other_exists: other /= Void
 		do
 			from

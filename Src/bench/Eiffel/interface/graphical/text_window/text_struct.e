@@ -18,7 +18,7 @@ feature
 		do
 			position := position + 1;
 			if clickable_count = 0 then
-				allocate_space (1, 20)
+				resize (1, 20)
 			elseif position > count then
 				resize (1, count*2)
 			end;

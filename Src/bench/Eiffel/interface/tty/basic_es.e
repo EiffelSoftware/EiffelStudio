@@ -139,7 +139,7 @@ feature -- Input/Output
 			until
 				i > nb
 			loop
-				command_list.add (keys @ i);
+				command_list.extend (keys @ i);
 				i := i + 1;
 			end;
 			from
@@ -202,7 +202,7 @@ feature -- Command line options
 			from
 				current_option := 1
 			until
-				(current_option >= argument_count) or else
+				(current_option > argument_count) or else
 				option_error	
 			loop
 				analyze_one_option
@@ -233,7 +233,7 @@ feature -- Command line options
 					command := loop_cmd
 				end;
 			elseif option.is_equal ("-implementers") then
-				if current_option < (argument_count - 2) then
+				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
 					else
@@ -247,7 +247,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-aversions") then
-				if current_option < (argument_count - 2) then
+				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
 					else
@@ -261,7 +261,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-dversions") then
-				if current_option < (argument_count - 2) then
+				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
 					else
@@ -275,7 +275,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-callers") then
-				if current_option < (argument_count - 2) then
+				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
 					else
@@ -289,7 +289,7 @@ feature -- Command line options
 					option_error := True
 				end;
 --			elseif option.is_equal ("-dependents") then
---				if current_option < (argument_count - 2) then
+--				if current_option < (argument_count - 1) then
 --					if command /= Void then
 --						option_error := True
 --					else
@@ -306,14 +306,14 @@ feature -- Command line options
 				option.is_equal ("-short") or else
 				option.is_equal ("-flatshort") 
 			then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
 						current_option := current_option + 1;
 						if argument (current_option).is_equal ("-troff") then
 							troffed := True;
-							if current_option < (argument_count - 1) then
+							if current_option < argument_count then
 									current_option := current_option + 1;
 							else
 								option_error := True
@@ -331,7 +331,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-flat") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
@@ -343,7 +343,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-ancestors") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
@@ -355,7 +355,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-clients") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
@@ -367,7 +367,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-suppliers") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
@@ -379,7 +379,7 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-descendants") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
 					else
@@ -391,16 +391,16 @@ feature -- Command line options
 					option_error := True
 				end;
 			elseif option.is_equal ("-project") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					current_option := current_option + 1;
 					Project_name := argument (current_option)
 				else
 					option_error := True
 				end;
 			elseif option.is_equal ("-ace") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					current_option := current_option + 1;
-					Ace_name := argument (current_option);
+					Ace_name := argument (current_option)
 				else
 					option_error := True
 				end;
@@ -408,7 +408,7 @@ feature -- Command line options
 					-- The compiler stops on errors
 				set_stop_on_error (True);
 			elseif option.is_equal ("-file") then
-				if current_option < (argument_count - 1) then
+				if current_option < argument_count then
 					current_option := current_option + 1;
 					set_file (argument (current_option));
 				else
@@ -431,7 +431,7 @@ feature -- Command line options
 			s: STRING
 		do
 			!!s.make (8);
-			s.append_character ('-');
+			s.extend ('-');
 			s.append_integer (6851006);
 			Result := option.is_equal (s)
 		end;

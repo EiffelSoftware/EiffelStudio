@@ -275,7 +275,7 @@ feature -- Replication
 		local
 			new_feature_names: like feature_names;
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_id (System.feature_counter.next);
 			!!new_feature_names.make (1);
 			new_feature_names.go_i_th (1);

@@ -35,10 +35,10 @@ feature
 	add (f: FEATURE_AS) is
 		do
 			if not order_same_as_text then
-				features.add (f);
+				features.extend (f);
 			else
 				features.finish;
-				features.add_right (f)
+				features.put_right (f)
 			end;
 		end;
 

@@ -5,7 +5,7 @@ inherit
 	EXTEND_TABLE [REP_FEATURE_DEPEND, STRING];
 	IDABLE
 		undefine
-			twin
+			copy, is_equal
 		end;
 
 creation

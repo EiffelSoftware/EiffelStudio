@@ -15,7 +15,7 @@ feature
 		deferred
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		deferred
 		end;

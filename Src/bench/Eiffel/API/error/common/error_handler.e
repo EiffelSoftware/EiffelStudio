@@ -43,7 +43,7 @@ debug
 error_window.put_string ("Inserting error object:%N"); e.trace;
 end;
 			new_error := True;
-			error_list.add (e);
+			error_list.extend (e);
 		end;
 
 	insert_warning (w: WARNING) is
@@ -55,7 +55,7 @@ debug
 error_window.put_string ("Inserting warning object:%N");
 w.trace;
 end;
-			warning_list.add (w);
+			warning_list.extend (w);
 		end;
 
 	mark is

@@ -209,7 +209,7 @@ feature
 	duplicate: like Current is
 			-- Clone
 		do
-			Result := twin
+			Result := clone (Current)
 		end;
 
 	duplicate_arguments is
@@ -619,7 +619,7 @@ feature -- Export checking
 			end;
 		end;
 
-	suppliers: SORTED_SET [INTEGER] is
+	suppliers: TWO_WAY_SORTED_SET [INTEGER] is
 			-- Class ids of all the suppliers of the feature
 		require
 			Tmp_depend_server.has (written_in) or else
@@ -1363,7 +1363,8 @@ end;
 		do
 			if arguments /= Void then
 				argument_names.start;
-				argument_names.search_equal (arg_id);
+				argument_names.compare_objects
+				argument_names.search (arg_id);
 				Result := not argument_names.after
 			end;
 		end;
@@ -1818,7 +1819,7 @@ feature -- Debugging
 				until
 					type_list.after
 				loop
-					Result.add (debuggable (type_list.item));
+					Result.extend (debuggable (type_list.item));
 					type_list.forth
 				end
 			end

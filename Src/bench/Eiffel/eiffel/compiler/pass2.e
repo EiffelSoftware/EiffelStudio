@@ -24,14 +24,14 @@ creation
 
 feature
 
-	changed_classes: SORTED_TWO_WAY_LIST [PASS2_C];
+	changed_classes: PART_SORTED_TWO_WAY_LIST [PASS2_C];
 
-	extra_check_list: SORTED_TWO_WAY_LIST [CLASS_C];
+	extra_check_list: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			-- List of classes that needs to be processed
 			-- at the end of pass 2 (expandeds and 
 			-- replication)
 
-	changed_status: SORTED_SET [INTEGER];
+	changed_status: TWO_WAY_SORTED_SET [INTEGER];
 			-- Sorted set of all the classes for which the expanded
 			-- or deferred status has changed
 		
@@ -93,9 +93,10 @@ end;
 				System.set_current_class (current_class);
 				pass_c.execute;
 				if not extra_check_list.has (current_class) then
-					extra_check_list.add (current_class)
+					extra_check_list.extend (current_class)
 				end;
 				changed_classes.start;
+				changed_classes.compare_references
 				changed_classes.search (pass_c);
 				if not changed_classes.after then
 					changed_classes.remove;
@@ -129,6 +130,9 @@ end;
 			System.set_current_class (Void);
 
 			changed_status.wipe_out;
+debug ("ZOON")
+    io.putstring ("execute pass 2%N")
+end
 		end;
 
 	remove_class (a_class: CLASS_C) is
@@ -190,7 +194,7 @@ end;
 			good_argument: a_class /= Void
 		do
 			set_supplier_status_modified (a_class);
-			changed_status.add (a_class.id)
+			changed_status.extend (a_class.id)
 		end;
 
 feature -- Dino stuff

@@ -33,7 +33,7 @@ feature
 	add_old_expression is
 			-- Add Current to old_expressions.
 		do
-			Context.old_expressions.add_front (Current);
+			Context.old_expressions.put_front (Current);
 		end;
 
 	enlarged: UN_OLD_BL is
@@ -45,7 +45,7 @@ feature
 			!!Result;
 			Result.set_expr (expr.enlarged);
 			old_expr := Context.byte_code.old_expressions;
-			old_expr.add (Result);
+			old_expr.extend (Result);
 		end;
 
 	operator_constant: CHARACTER is

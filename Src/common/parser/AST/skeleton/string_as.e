@@ -73,7 +73,7 @@ feature -- formatter
 				elseif value.item (i) = '%U' then
 					tmp.append ("%%U");
 				else
-					tmp.append_character (value.item (i))
+					tmp.extend (value.item (i))
 				end;
 				i := i + 1
 			end;

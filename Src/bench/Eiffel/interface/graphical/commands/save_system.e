@@ -32,7 +32,7 @@ feature {NONE}
 				!!file_name.make (50);
 				file_name.append (Project_directory.name);
 				if file_name.item (file_name.count) /= Directory_separator then
-					file_name.append_character (Directory_separator);
+					file_name.extend (Directory_separator);
 				end;
 				file_name.append ("Ace");
 			end;

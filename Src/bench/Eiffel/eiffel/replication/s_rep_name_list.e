@@ -37,7 +37,7 @@ feature
 
 	add_replicated_feature (r: S_REP_NAME) is
 		do
-			replicated_features.add_front (r);
+			replicated_features.put_front (r);
 		end;
 
 	parent: CLASS_C is
@@ -62,7 +62,7 @@ feature
 					!!s_rep_name;
 					s_rep_name.set_old_feature (rep_name.old_feature);
 					s_rep_name.set_new_feature (rep_name.new_feature);
-					add_front (s_rep_name);
+					put_front (s_rep_name);
 				end;
 				list.forth
 			end;

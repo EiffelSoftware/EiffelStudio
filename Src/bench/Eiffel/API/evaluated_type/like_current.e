@@ -63,7 +63,7 @@ feature -- Primitives
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			Result := twin;
+			Result := clone (Current);
 			Result.set_actual_type (actual_type.instantiated_in (class_type));
 		end;
 

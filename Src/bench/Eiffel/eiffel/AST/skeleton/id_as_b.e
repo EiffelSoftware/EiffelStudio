@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_AS
 		undefine
-			copy, out, is_equal, twin
+			copy, out, is_equal, setup, consistent
 		redefine
 			pass_address, is_id,
 			good_integer, good_character,
@@ -65,7 +65,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.a_class.feature_table.item (Current);
 			!!depend_unit.make (context.a_class.id, constant_i.feature_id);
-			context.supplier_ids.add (depend_unit);
+			context.supplier_ids.extend (depend_unit);
 		end;
 
 	good_integer: BOOLEAN is

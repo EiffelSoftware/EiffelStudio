@@ -62,6 +62,6 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
 			ctxt.adapt_current;
-			Result := twin
+			Result := clone (Current)
 		end;
 end

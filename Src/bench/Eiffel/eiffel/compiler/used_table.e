@@ -8,7 +8,7 @@ inherit
 		end;
 	SHARED_WORKBENCH
 		undefine
-			twin
+			copy, setup, consistent, is_equal
 		end
 
 creation

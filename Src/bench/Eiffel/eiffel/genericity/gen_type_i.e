@@ -50,8 +50,8 @@ feature
 	duplicate: like Current is
 			-- Duplication
 		do
-			Result := twin;
-			Result.set_meta_generic (meta_generic.twin);
+			Result := clone (Current);
+			Result.set_meta_generic (clone (meta_generic))
 		end;
 
 	instantiation_in (other: like Current): like Current is
@@ -91,7 +91,7 @@ feature
 			end;
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 		local
 			i, count, meta_type: INTEGER;
 		do

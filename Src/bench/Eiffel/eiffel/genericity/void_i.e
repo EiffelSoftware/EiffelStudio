@@ -31,7 +31,7 @@ feature
 			a_clickable.put_string ("VOID");
 		end;
 
-	dump (file: UNIX_FILE) is
+	dump (file: FILE) is
 			-- Debug purpose
 		do
 			file.putstring ("void");

@@ -65,7 +65,7 @@ feature -- Type check
 
 					-- Dependance
 				!!depend_unit.make (last_id, a_feature.feature_id);
-				context.supplier_ids.add (depend_unit);
+				context.supplier_ids.extend (depend_unit);
 
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
@@ -100,7 +100,7 @@ feature	-- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 		do
-			Result := twin;
+			Result := clone (Current);
 			ctxt.adapt_name (feature_name);
 			Result.set_feature_name (ctxt.adapted_name);
 			ctxt.stop_adaptation;

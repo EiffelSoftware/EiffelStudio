@@ -10,58 +10,16 @@ creation
 
 feature -- Iterartion
 
-	start is
-			-- Iteration initialization
-		do
-			position_for_iteration := keys.lower - 1;
-			forth
-		end;
-
 	after: BOOLEAN is
 			-- Is the cursor at the end ?
 		do
-			Result := position_for_iteration > keys.upper
+			Result := pos_for_iter > keys.upper
 		end;
 
 	offright: BOOLEAN is obsolete "Use `after'"
 		do
 			Result := after
 		end;
-
-	forth is
-			-- Advance iteration
-		require
-			not_after: not after
-		local
-			stop: BOOLEAN
-		do
-			from
-			until
-				stop
-			loop
-				position_for_iteration := position_for_iteration + 1;
-				stop := after 
-					or else valid_key (keys.item (position_for_iteration))
-			end
-		end;
-
-	item_for_iteration: T is
-			-- Element at current iteration position
-		require
-			not_after: not after
-		do
-			Result := content.item (position_for_iteration)
-		end;
-
-	key_for_iteration: U is
-			-- Key at current iteration position
-		require
-			not_after: not after
-		do
-			Result := keys.item (position_for_iteration)
-		end;
-
-			
 
 feature -- Merging
 
@@ -82,15 +40,18 @@ feature -- Merging
 
 feature -- Cursor for iteration
 
-	position_for_iteration : INTEGER;
-			-- Cursor for iteration primitives
+    position_for_iteration : INTEGER is
+        obsolete "Use pos_for_iter"
+        do
+            Result := pos_for_iter
+        end
 
 	go (p: INTEGER) is
 			-- set position_for_iteration to p
 		do
-			position_for_iteration := p;
+			pos_for_iter := p;
 			if p < keys.lower then
-				position_for_iteration := keys.lower - 1	
+				pos_for_iter := keys.lower - 1	
 			end;
 		end;
 

@@ -12,7 +12,7 @@ inherit
 			id as class_id,
 			set_id as set_class_id
 		undefine
-			twin
+			copy, is_equal
 		end;
 
 creation

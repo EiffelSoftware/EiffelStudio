@@ -146,7 +146,13 @@ feature {NONE}
 		do
 	   		search_command.close;
 	   		change_font_command.close (text_window);
---			debug_run_command.close
+--			debug_run_command.close;
+			if change_routine_command.choice.is_popped_up then
+				change_routine_command.choice.popdown
+			end;
+			if change_class_command.choice.is_popped_up then
+				change_class_command.choice.popdown
+			end
 	   	 end;
 
 

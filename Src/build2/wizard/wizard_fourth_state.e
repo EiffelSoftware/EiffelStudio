@@ -55,12 +55,18 @@ feature -- Basic Operation
 				-- If we are modifying an existing Envision .bpr, then
 				-- we must load the project now.
 			if is_modify_wizard then
-				xml_handler.load
-				id_compressor.compress_all_id	
+				open_with_name (argument_array @ 1)	
 			end
 			set_updatable_entries(<<>>)
 			first_window.enable_user_resize
 			first_window.enable_maximize
+		end
+		
+	open_with_name (f: STRING) is
+			-- Use the open project command to open
+			-- file `f'.
+		do
+			command_handler.Open_project_command.execute_with_name (f)
 		end
 
 	proceed_with_current_info is

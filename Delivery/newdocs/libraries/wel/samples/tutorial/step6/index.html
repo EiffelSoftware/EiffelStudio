@@ -9,8 +9,8 @@
 
 	<BODY>
 		<H1>Tutorial Step 6</H1>
-		<P> This sample shows you how to set up your first <A HREF="/libraries/wel/support/wel_application_chart.html">WEL_APPLICATION</A> which consists of a <A HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. This
-		is one of the simplest WEL applications you can write, and the output is shown below:
+		<P>This sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A>, but the drawing is no
+		longer lost when Windows re-draws the client area of the <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>.
 		</P>
 		<CENTER><IMG SRC="step6.png" ALT="step6" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
@@ -20,13 +20,20 @@
 		<UL>
 			<LI>Launch [BENCH].
 			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
-			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step1\</I>.
+			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step6\</I>.
 			<LI>Choose <I>Ace.ace</I>
 			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
+		<P>After launching the sample, you should see a <A CLASS="eclass" HREF="/Libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
+		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button,
+		a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> will pop up which allows you to enter the thickness of the line that is drawn. If you re-size
+		the window, then the drawing will be re-drawn.</P>
 		<H2>Under the Hood</H2>
+		<P>This sytem builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A> by redefining <A CLASS="efeature" HREF="/libraries/windows/wel_window.html#f_on_paint">on_paint</A> to re-draw the
+		contents of the window. A <A CLASS="eclass" HREF="/libraries/base/structures/list/linked_list_chart.html">LINKED_LIST</A> of <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step6/lines_chart.html">LINE</A> is used to store all
+		the lines that have been drawn and during <A CLASS="efeature" HREF="/libraries/windows/wel_window.html#f_on_paint">on_paint</A>, this list is traversed in order to re-draw each line.
 
 		<P>This sample contains the following classes:
 			<UL>

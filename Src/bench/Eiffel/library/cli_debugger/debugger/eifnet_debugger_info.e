@@ -138,6 +138,7 @@ feature -- Current CallStack
 		local
 			l_frame: ICOR_DEBUG_FRAME
 			l_chain: ICOR_DEBUG_CHAIN
+			l_frames: ICOR_DEBUG_FRAME_ENUM
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_func: ICOR_DEBUG_FUNCTION
 			l_code : ICOR_DEBUG_CODE
@@ -167,14 +168,18 @@ feature -- Current CallStack
 						l_il_frame := l_frame.query_interface_icor_debug_il_frame
 						if l_il_frame /= Void then
 							current_stack_info.set_synchronized (True)
+-- FIXME jfiat 2004-07-07: check if we should not use directly external on pointer here
+-- this would reduce the burden on GC
+-- NOTA jfiat 2004-07-07: maybe we should redesign this part and try to find a better way to handle stack_info ...
 							l_chain := l_frame.get_chain
+							l_frames := l_chain.enumerate_frames
 							l_code := l_il_frame.get_code
 							l_func 	:= l_il_frame.get_function
 							l_module := l_func.get_module
 							l_class := l_func.get_class
 							l_il_code := l_func.get_il_code
 							
-							current_stack_info.set_current_stack_pseudo_depth (l_chain.enumerate_frames.count)
+							current_stack_info.set_current_stack_pseudo_depth (l_frames.count)
 							current_stack_info.set_current_module_name        (l_module.get_name)
 							current_stack_info.set_current_class_token        (l_class.get_token)
 							current_stack_info.set_current_feature_token      (l_func.get_token)
@@ -182,6 +187,7 @@ feature -- Current CallStack
 							current_stack_info.set_current_il_offset          (l_il_frame.get_ip)
 							current_stack_info.set_current_stack_address      (l_code.get_address.to_hex_string)
 
+							l_frames.clean_on_dispose
 							l_il_code.clean_on_dispose
 							l_class.clean_on_dispose
 							l_module.clean_on_dispose

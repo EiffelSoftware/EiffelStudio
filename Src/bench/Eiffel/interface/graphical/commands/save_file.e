@@ -29,7 +29,8 @@ feature {NONE}
 			new_file: PLAIN_TEXT_FILE;
 			to_write: STRING;
 			aok: BOOLEAN;
-			temp: STRING
+			temp: STRING;
+			char: CHARACTER
 		do
 			if text_window.file_name /= Void then
 				!!new_file.make (text_window.file_name);

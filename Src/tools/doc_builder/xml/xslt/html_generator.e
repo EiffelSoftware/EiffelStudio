@@ -124,7 +124,7 @@ feature {NONE} -- Generation
 							if not is_code_document (l_doc) and l_doc.is_valid_xml and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
-						elseif file_types.has (file_type (l_file)) then
+						elseif shared_constants.application_constants.allowed_file_types.has (file_type (l_file)) then
 									-- Not XML but does need copying
 							create bin_file.make (l_file)
 							create l_filename.make_from_string (target.name)
@@ -175,7 +175,11 @@ feature {NONE} -- Generation
 			create last_generated_file.make_create_read_write (l_filename.string)
 			last_generated_file.put_string (l_html)
 			last_generated_file.close
-			copy_images (a_doc)
+	
+				-- Copy image if this is not full project generation		
+			if not generation_data.is_generating then				
+				copy_images (a_doc)	
+			end
 		end
 
 	generate_from_html (a_doc: DOCUMENT; target: DIRECTORY) is
@@ -215,7 +219,7 @@ feature {NONE} -- Implementation
 					if l_src.exists then
 							-- Determine absolute url and call `temporary location' to build directory
 							-- structure for storage of temporary image file, then copy file
-						l_image_url := temporary_html_location (l_image_url, True)
+						l_image_url := temporary_html_location (l_image_url, True)						
 						create l_target.make (l_image_url)
 						copy_file (l_src, l_target)
 					end						
@@ -230,37 +234,24 @@ feature {NONE} -- Implementation
 			l_question_dialog: EV_MESSAGE_DIALOG
 		do
 			Result := True
---			if Shared_project.has_invalid_files then
---				if Shared_constants.Application_constants.is_gui_mode then
---					create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).invalid_project_files_warning)
---					l_question_dialog.set_title ((create {MESSAGE_CONSTANTS}).report_title)
---					l_question_dialog.set_buttons (<<"Continue", (create {EV_DIALOG_CONSTANTS}).ev_cancel>>)
---					l_question_dialog.show_modal_to_window (Application_window)
---					if l_question_dialog.selected_button.is_equal ("Continue") then
---						l_question_dialog.destroy
---					else
---						l_question_dialog.destroy
---						Result := False
---					end				
---				end				
---			end
+			if Shared_project.has_invalid_files then
+				if Shared_constants.Application_constants.is_gui_mode then
+					create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).invalid_project_files_warning)
+					l_question_dialog.set_title ((create {MESSAGE_CONSTANTS}).report_title)
+					l_question_dialog.set_buttons (<<"Continue", (create {EV_DIALOG_CONSTANTS}).ev_cancel>>)
+					l_question_dialog.show_modal_to_window (Application_window)
+					if l_question_dialog.selected_button.is_equal ("Continue") then
+						l_question_dialog.destroy
+					else
+						l_question_dialog.destroy
+						Result := False
+					end				
+				end				
+			end
 		end
 
 	dir_counter: INTEGER
 			-- Directory counter 
-		
-	file_types: ARRAYED_LIST [STRING] is
-			-- List of file types allowed in HTML project
-		once
-			create Result.make (6)
-			Result.compare_objects
-			Result.extend ("css")
-			Result.extend ("gif")
-			Result.extend ("bmp")
-			Result.extend ("js")
-			Result.extend ("jpg")
-			Result.extend ("png")
-		end
 		
 	excluded_directories: ARRAYED_LIST [STRING] is
 			-- Directories to be excluded from generation

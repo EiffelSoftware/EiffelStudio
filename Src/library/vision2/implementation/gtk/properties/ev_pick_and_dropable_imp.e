@@ -286,7 +286,7 @@ feature -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (signal)
+			a_cs := signal
 			feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 

@@ -639,7 +639,7 @@ feature {EV_ANY_IMP} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("gtk-aux-info")
+			a_cs := "gtk-aux-info"
 			Result := feature {EV_GTK_EXTERNALS}.gtk_object_get_data (
 				c_object,
 				a_cs.item

@@ -42,6 +42,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
 		require 
+			year_positive: y > 0
 			month_large_enough: mo >= 1;
 			month_small_enough: mo <= Months_in_year;
 			day_large_enough: d >= 1;
@@ -68,6 +69,7 @@ feature -- Initialization
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
 		require
+			year_positive: y > 0
 			month_large_enough: mo >= 1;
 			month_small_enough: mo <= Months_in_year;
 			day_large_enough: d >= 1;

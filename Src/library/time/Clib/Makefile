@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 CC= cc
 AR = ar rc
-CFLAGS = -O   -I$(EIFFEL4)/bench/spec/$(PLATFORM)/include
+CFLAGS = -O   -Id:\Eiffel44/bench/spec/$(PLATFORM)/include
 LDFLAGS = 
 LIBS = -lsocket -lnsl -lm
 MAKE = make

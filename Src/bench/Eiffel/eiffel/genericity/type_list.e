@@ -1,10 +1,17 @@
+indexing
+	description: "[
+		List that collects all generic derivation of a generic class
+		in current system.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class TYPE_LIST
 
 inherit
-	LINKED_LIST [CLASS_TYPE]
+	ARRAYED_LIST [CLASS_TYPE]
 		rename
-			search as linked_list_search,
-			append as linked_list_append
+			append as arrayed_list_append
 		end
 
 creation
@@ -15,74 +22,67 @@ feature -- Search
 	has_type (t: TYPE_I): BOOLEAN is
 			-- Is the type `t' present in instances of CLASS_TYPE in the
 			-- list ?
-			-- Does not change cursor position.
 		require
-			good_argument: t /= Void;
+			type_not_void: t /= Void
 		local
-			old_cursor: CURSOR
-			default_value: CLASS_TYPE
+			l_area: like area
+			l_item: like item
+			i, nb: INTEGER
 		do
-			old_cursor := cursor;
-
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after or else item.type.same_as (t)
+				i > nb or Result
 			loop
-				forth
+				l_item := l_area.item (i)
+				Result := l_item.type.same_as (t)
+				i := i + 1
 			end
 
-			if not after then
-				found_item := item
-				Result := True
+			if Result then
+				found_item := l_item
 			else
-				found_item := default_value
+				found_item := Void
 			end
-
-			go_to (old_cursor);
-		end;
-
-	conservative_search_item (t: TYPE_I): CLASS_TYPE is
-			-- Is the type `t' present in instances of CLASS_TYPE in the list?
-			-- If not, return the last item found in the list.
-			-- Does not change cursor position.
-		local
-			old_cursor: CURSOR
-		do
-			old_cursor := cursor
-
-			from
-				start
-			until
-				after or else item.type.same_as (t)
-			loop
-				forth
-			end
-
-				-- FIXME: the following code should make sure that we have an item
-				-- but some time we don't therefore we need to take the last item
-				-- but `item' has a precondition `not off' and we have to use 
-				-- `active.item' to get the last item of the list. We could have used
-				-- `last_element' but it adds a function call overhead.
-			Result := active.item
-			
-			go_to (old_cursor)
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 	search_item (t: TYPE_I): CLASS_TYPE is
 			-- Is the type `t' present in instances of CLASS_TYPE in the list?
 			-- If not, return the last item found in the list.
-			-- Does change cursor position.
+		local
+			l_area: like area
+			l_item: like item
+			i, nb: INTEGER
+			l_found: BOOLEAN
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after or else item.type.same_as (t)
+				i > nb or l_found
 			loop
-				forth
+				l_item := l_area.item (i)
+				l_found := l_item.type.same_as (t)
+				i := i + 1
 			end
-
-			Result := item
+			
+			if l_found then
+				Result := l_item
+			else
+					-- FIXME: the above search should make sure that we have an item
+					-- but some time we don't therefore we return `last', if any, or
+					-- Void otherwise.
+				if nb < 0 then
+					Result := Void
+				else
+					Result := last				
+				end
+			end
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 feature -- Access
@@ -93,124 +93,113 @@ feature -- Access
 	nb_modifiable_types: INTEGER is
 			-- Number of modifiable types (i.e. precompiled or static)
 			-- derived from the current class
+		local
+			l_area: like area
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				if item.is_modifiable then
+				if l_area.item (i).is_modifiable then
 					Result := Result + 1
 				end
-				forth
+				i := i + 1
 			end
+		ensure
+			cursor_not_changed: index = old index
 		end
+
 feature -- Traversals
 
 	pass4 is
 			-- Proceed to the `pass4' on the items of the list.
 		local
-			old_cursor: CURSOR
+			l_area: like area
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-					--| We need to save the position of the cursor, because
-					--| within pass4 we are also doing some traversal (like
-					--| `generate_poly_table').
-				old_cursor := cursor
-				item.pass4
-				go_to (old_cursor)
-				forth
+				l_area.item (i).pass4
+				i := i + 1
 			end
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 	melt is
 			-- Proceed to the `melt' on the items of the list
 		local
-			ct: CLASS_TYPE
+			l_area: like area
+			l_item: like item
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				ct := item
-				if not ct.is_precompiled then
-					ct.melt
+				l_item := l_area.item (i)
+				if not l_item.is_precompiled then
+					l_item.melt
 				end
-				forth
+				i := i + 1
 			end
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 	update_execution_table is
 			-- Proceed to the `update_execution_table' on the items of the list
 		local
-			ct: CLASS_TYPE
+			l_area: like area
+			l_item: like item
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				ct := item
-				if not ct.is_precompiled then
-					ct.update_execution_table
+				l_item := l_area.item (i)
+				if not l_item.is_precompiled then
+					l_item.update_execution_table
 				end
-				forth
+				i := i + 1
 			end
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 	melt_feature_table is
 			-- Proceed to the `melt_feature_table' on the items of the list
 		local
-			ct: CLASS_TYPE
+			l_area: like area
+			l_item: like item
+			i, nb: INTEGER
 		do
 			from
-				start
+				l_area := area
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				ct := item
-				if ct.is_modifiable then
-					ct.melt_feature_table
+				l_item := l_area.item (i)
+				if l_item.is_modifiable then
+					l_item.melt_feature_table
 				end
-				forth
+				i := i + 1
 			end
-		end
-
-feature -- Merging
-
-	append (other: like Current) is
-			-- Append types of `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		local
-			class_type: CLASS_TYPE;
-			other_id: INTEGER
-		do
-			from
-				other.start
-			until
-				other.after
-			loop
-				class_type := other.item;
-				other_id := class_type.static_type_id;
-				from 
-					start
-				until
-					after or else item.static_type_id = other_id
-				loop
-					forth
-				end;
-				if after then
-					extend (class_type)
-				end;
-				other.forth
-			end
+		ensure
+			cursor_not_changed: index = old index
 		end
 
 end

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Helper functions for source interface generation"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,38 +8,10 @@ class
 	WIZARD_SOURCE_INTERFACE_HELPER
 
 inherit
-	ANY
-		rename
+	WIZARD_VARIABLE_NAME_MAPPER
 		export
-		undefine
-		redefine
-		select
+			{NONE} all
 		end
-
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 
@@ -68,20 +40,11 @@ feature -- Basic operations
 			non_void_coclass: a_coclass_writer /= Void
 		do
 			create Result.make (100)
-			Result.append ("p_" + connection_point_inner_class_name (an_interface, a_coclass_writer))
+			Result.append (variable_name (connection_point_inner_class_name (an_interface, a_coclass_writer)))
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_SOURCE_INTERFACE_HELPER
 

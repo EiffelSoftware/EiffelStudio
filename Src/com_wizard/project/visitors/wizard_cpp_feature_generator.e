@@ -35,21 +35,21 @@ inherit
 
 feature {NONE} -- Implementation
 
-	check_interface_pointer (interface_name: STRING): STRING is
+	check_interface_pointer (a_interface_name, a_variable_name: STRING): STRING is
 			-- Code for interface pointer checking
 		require
-			non_void_interface_name: interface_name /= Void 
-			valid_interface_name: not interface_name.is_empty 
+			non_void_interface_name: a_interface_name /= Void 
+			valid_interface_name: not a_interface_name.is_empty 
 		do
 			create Result.make (400)
 			Result.append ("%THRESULT hr;%N%T")
-			Result.append ("if (p_")
-			Result.append (interface_name)
+			Result.append ("if (")
+			Result.append (a_variable_name)
 			Result.append (" == NULL)%N%T{%N%T%T")
 			Result.append ("hr = p_unknown->QueryInterface (")
-			Result.append (iid_name (interface_name))
-			Result.append (", (void **)&p_")
-			Result.append (interface_name)
+			Result.append (iid_name (a_interface_name))
+			Result.append (", (void **)&")
+			Result.append (a_variable_name)
 			Result.append (");%N")
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append ("%N%T};")

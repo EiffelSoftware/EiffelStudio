@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -45,8 +50,7 @@ feature -- Basic operations
 			l_member.set_comment ("Interface pointer")
 
 			create l_name.make (100)
-			l_name.append ("p_")
-			l_name.append (a_descriptor.interface_descriptor.c_type_name)
+			l_name.append (variable_name (a_descriptor.interface_descriptor.name))
 			l_member.set_name (l_name)
 
 			create l_type.make (100)
@@ -111,20 +115,21 @@ feature {NONE} -- Implementation
 			non_void_descriptor: a_descriptor /= Void
 			non_void_interface_descriptor: a_descriptor.interface_descriptor /= Void
 		local
-			l_body: STRING
+			l_body, l_interface_name: STRING
 		do
 			create Result.make
 			Result.set_signature ("IUnknown * a_pointer")
 			create l_body.make (1000)
+			l_interface_name := a_descriptor.interface_descriptor.name
 			l_body.append ("%THRESULT hr, hr2;%N")
 			l_body.append (co_initialize_ex_function)
 			l_body.append (examine_hresult ("hr"))
 			l_body.append ("%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);%N")
 			l_body.append (examine_hresult ("hr"))
 			l_body.append ("%N%N%Thr = a_pointer->QueryInterface(")
-			l_body.append (iid_name (a_descriptor.interface_descriptor.name))
-			l_body.append (", (void **)&p_")
-			l_body.append (a_descriptor.interface_descriptor.name)
+			l_body.append (iid_name (l_interface_name))
+			l_body.append (", (void **)&")
+			l_body.append (variable_name (l_interface_name))
 			l_body.append (");%N")
 			l_body.append (examine_hresult ("hr"))
 			l_body.append ("%N")
@@ -141,18 +146,14 @@ feature {NONE} -- Implementation
 			non_void_interface_descriptors: a_descriptor.interface_descriptor /= Void
 		do
 			create Result.make (1000)
-			Result.append (Tab)
-			Result.append (Iunknown_variable_name)
-			Result.append (Release_function)
-			Result.append (New_line_tab)
+			Result.append ("%Tp_unknown->Release ();%N%T")
 
 			-- Release "excepinfo" if allocated
 			if dispatch_interface then
 				Result.append ("%N%TCoTaskMemFree ((void *)excepinfo);%N%T")
 			end
 
-			Result.append (release_interface (a_descriptor.interface_descriptor.name))
-
+			Result.append (release_interface (variable_name (a_descriptor.interface_descriptor.name)))
 			Result.append ("CoUninitialize ();")
 		ensure
 			non_void_destructor: Result /= void

@@ -12,13 +12,12 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; 
-					a_function: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_function: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
 			non_void_function: a_function /= Void
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.is_empty
+			non_void_interface_name: a_variable_name /= Void
+			valid_interface_name: not a_variable_name.is_empty
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -33,7 +32,7 @@ feature -- Basic operations
 
 			set_client_result_type_and_signature
 
-			ccom_feature_writer.set_body (feature_body (interface_name))
+			ccom_feature_writer.set_body (feature_body (a_interface_name, a_variable_name))
 
 			if ccom_feature_writer.result_type = Void then
 				ccom_feature_writer.set_result_type (("void").twin)
@@ -73,11 +72,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	feature_body (interface_name: STRING): STRING is
+	feature_body (a_interface_name, a_variable_name: STRING): STRING is
 			-- Ccom client feature body
 		require
-			non_void_interface_name: interface_name /= Void 
-			valid_interface_name: not interface_name.is_empty
+			non_void_interface_name: a_interface_name /= Void 
+			valid_interface_name: not a_interface_name.is_empty
+			non_void_variable_name: a_variable_name /= Void 
+			valid_variable_name: not a_variable_name.is_empty
 		local
 			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
@@ -85,7 +86,7 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			tmp_name, l_header_file: STRING
 		do
-			Result := check_interface_pointer (interface_name)
+			Result := check_interface_pointer (a_interface_name, a_variable_name)
 			create return_value.make (10000)
 
 			if func_desc.argument_count > 0 then
@@ -198,8 +199,7 @@ feature {NONE} -- Implementation
 					Result.append (" result = ")
 					return_value.append (return_value_setup (visitor, "result"))
 				end
-				Result.append ("p_")
-				Result.append (interface_name)
+				Result.append (a_variable_name)
 				Result.append ("->")
 				Result.append (func_desc.name)
 				Result.append (signature)
@@ -222,8 +222,7 @@ feature {NONE} -- Implementation
 					Result.append (" result = ")
 					return_value.append (return_value_setup (visitor, "result"))
 				end
-				Result.append ("p_")
-				Result.append (interface_name)
+				Result.append (a_variable_name)
 				Result.append ("->")
 				Result.append (func_desc.name)
 				Result.append (" ();%N")

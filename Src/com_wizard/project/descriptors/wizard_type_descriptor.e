@@ -131,7 +131,7 @@ feature -- Basic Operations
 		end
 
 	set_c_type_name (a_name: STRING) is
-			-- Set `c_type_name' with `a_name'
+			-- Set `c_type_name' with `a_name' and initialize variable_name
 		require
 			non_void_name: a_name /= Void
 		do

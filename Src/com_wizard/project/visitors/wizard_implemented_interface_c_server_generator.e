@@ -106,17 +106,9 @@ feature {NONE} -- Implementation
 
 			create a_signature.make (100)
 			create a_constructor_body.make (1000)
-			a_constructor_body.append (Tab)
-			a_constructor_body.append 	(Type_id)
-			a_constructor_body.append (Space_equal_space)
-			a_constructor_body.append (Eif_type_id_function_name)
-			a_constructor_body.append (Space_open_parenthesis)
-			a_constructor_body.append (Double_quote)
+			a_constructor_body.append ("%Ttype_id = eif_type_id (%"")
 			a_constructor_body.append (a_interface.impl_eiffel_class_name (False))
-			a_constructor_body.append (Double_quote)
-			a_constructor_body.append (Close_parenthesis)
-			a_constructor_body.append (Semicolon)
-
+			a_constructor_body.append ("%");")
 			a_constructor_body.append (constructor_body (a_interface))
 
 			Result.set_body (a_constructor_body)
@@ -127,7 +119,7 @@ feature {NONE} -- Implementation
 	default_dispinterface_name (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): STRING is
 			-- Name of default dispinterface.
 		do
-			Result := a_interface.interface_descriptor.c_type_name
+			Result := a_interface.interface_descriptor.name
 		end
 
 	add_query_interface (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -160,44 +152,16 @@ feature {NONE} -- Implementation
 				l_interface = Void or else l_interface.is_iunknown or else l_interface.is_idispatch
 			loop
 				l_body.append (" ")
-				l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.c_type_name)))
+				l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.name)))
 				l_interface := l_interface.inherited_interface
 			end
 			
-			l_body.append (New_line_tab_tab)
-			l_body.append (Return)
-			l_body.append (Space_open_parenthesis)
-			l_body.append (Star_ppv)
-			l_body.append (Space_equal_space)
-			l_body.append (Zero)
-			l_body.append (Close_parenthesis)
-			l_body.append (Comma_space)
-			l_body.append (E_no_interface)
-			l_body.append (Semicolon)
-			l_body.append (New_line)
-			l_body.append (New_line_tab)
-			l_body.append (Reinterpret_cast)
-			l_body.append (Less)
-			l_body.append (Iunknown)
-			l_body.append (More)
-			l_body.append (Open_parenthesis)
-			l_body.append (Star_ppv)
-			l_body.append (Close_parenthesis)
-			l_body.append (Add_reference_function)
-			l_body.append (New_line_tab)
-			l_body.append (Return_s_ok)
+			l_body.append ("%N%T%Treturn (*ppv = 0), E_NOINTERFACE;%N%N%T")
+			l_body.append ("reinterpret_cast<IUnknown *>(*ppv)->AddRef();%N%T")
+			l_body.append ("return S_OK;")
 
 			l_writer.set_body (l_body)
-
-			check
-				valid_func_writer: l_writer.can_generate
-			end
-
 			cpp_class_writer.add_function (l_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (l_writer)
-			end
 		end
 
 end -- class WIZARD_IMPLEMENTED_INTERFACE_C_SERVER_GENERATOR

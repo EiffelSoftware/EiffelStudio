@@ -136,8 +136,12 @@ feature -- Access
 					if list.item.parent_cluster = Void then
 						assembly_i ?= list.item
 						if assembly_i /= Void then
-							create ass_prop.make (assembly_i.cluster_name, assembly_i.assembly_name, assembly_i.prefix_name,
-														assembly_i.version, assembly_i.culture, assembly_i.public_key_token)
+							if assembly_i.public_key_token /= Void then
+								create ass_prop.make (assembly_i.cluster_name, assembly_i.assembly_name, assembly_i.prefix_name,
+															assembly_i.version, assembly_i.culture, assembly_i.public_key_token)
+							else
+								create ass_prop.make_local (assembly_i.cluster_name, assembly_i.assembly_name, assembly_i.prefix_name)
+							end
 							res.extend (ass_prop)
 						end
 						

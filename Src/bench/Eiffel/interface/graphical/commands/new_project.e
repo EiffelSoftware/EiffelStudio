@@ -29,7 +29,17 @@ inherit
 		end
 
 creation
-	make
+	make, make_from_ebench
+
+feature -- Initialization
+
+	make_from_ebench (a_tool: like project_tool; path_name: STRING) is
+			-- Initialize a command with the `symbol' icon,
+			-- `a_tool' is passed as argument to the activation action.
+		do
+			make (a_tool)
+			create_project (path_name)
+		end
 
 feature -- Callbacks
 
@@ -39,15 +49,15 @@ feature -- Callbacks
 
 	execute_warner_ok (argument: ANY) is
 		do
-			if not project_tool.initialized then
+--			if not project_tool.initialized then
 				if choose_again then
+					choose_again := False
 					last_name_chooser.set_window (Project_tool)
 					last_name_chooser.call (Current)
-					choose_again := False
 				else
 					init_project
 				end
-			end
+--			end
 		end
 
 feature -- License managment
@@ -69,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Popup and let the user choose what he wants.
 		local
 			new_name_chooser: NAME_CHOOSER_W
-			dir_name: STRING
+			dir_name, ebench_name: STRING
 			last_char: CHARACTER
 		do
 			if not project_tool.initialized then
@@ -102,6 +112,41 @@ feature {NONE} -- Implementation
 						create_project (dir_name)
 					end
 				end
+			else
+					-- A Project has been opened, we need to open a new one
+				if argument = project_tool then
+					new_name_chooser := name_chooser (project_tool)
+					new_name_chooser.set_directory_selection
+					new_name_chooser.hide_file_selection_list
+					new_name_chooser.hide_file_selection_label
+					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
+
+					last_name_chooser.set_window (Project_tool);
+					last_name_chooser.call (Current)
+				else
+					dir_name := clone (last_name_chooser.selected_file)
+					if dir_name.empty then
+						choose_again := True
+						warner (Project_tool).custom_call (Current,
+							Warning_messages.w_directory_not_exist (dir_name),
+							Interface_names.b_Ok, Void, Void)
+					else
+							--| Since Vision is returning a directory name with
+							--| a directory separator, we need to be sure that we
+							--| will remove it
+						if dir_name.count > 1 then
+							last_char := dir_name.item (dir_name.count)
+							if last_char = Directory_separator then
+								dir_name.remove (dir_name.count)
+							end
+						end
+						ebench_name := ebench_command_name
+						ebench_name.append (" -create ")
+						ebench_name.append (dir_name)
+						launch_ebench (ebench_name)
+					end
+				end
+
 			end
 		end
 
@@ -110,9 +155,8 @@ feature -- Project initialization
 	create_project (dir: STRING) is
 		local
 			msg: STRING
-			p: PROJECT_EIFFEL_FILE
 		do
-			!! project_dir.make (dir, p);
+			!! project_dir.make (dir, Void);
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir)
 

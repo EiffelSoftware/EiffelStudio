@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			file: RAW_FILE
 			environment_variable: EXECUTION_ENVIRONMENT
 			last_directory_opened:STRING
-			ebench_command_name: STRING
+			ebench_name: STRING
 		do
 			if not project_tool.initialized then
 				if has_project_name then
@@ -202,9 +202,10 @@ feature {NONE} -- Implementation
 									Warning_messages.w_file_not_exist (file_name), 
 									Interface_names.b_Ok, Void, Void)
 							else
-								ebench_command_name := "ebench "
-								ebench_command_name.append (file_name)
-								launch_ebench (ebench_command_name)
+								ebench_name := ebench_command_name
+								ebench_name.append (" ")
+								ebench_name.append (file_name)
+								launch_ebench (ebench_name)
 							end
 						end
 					end

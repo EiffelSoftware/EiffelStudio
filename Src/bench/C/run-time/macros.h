@@ -54,9 +54,11 @@ extern int in_assertion;
 #if defined(__STDC__) || defined(__cplusplus__)
 #define EXTERN_DECL(r_type, name, args) extern r_type name args
 #define STATIC_DECL(r_type, name, args) static r_type name args
+#define FUNCTION_CAST(r_type, arg_types) (r_type (*)arg_types)
 #else  /* K&R */
 #define EXTERN_DECL(r_type, name, args) extern r_type name()
 #define STATIC_DECL(r_type, name, args) static r_type name()
+#define FUNCTION_CAST(r_type, arg_types) (r_type (*)())
 #endif
 
 #ifdef __cplusplus
@@ -446,8 +448,7 @@ extern int fcount;
  *  RTSA(x) saves assertion level for dynamic type 'x'
  *  RTAL is the access to the saved assertion level variable
  */
-#define RTDA struct eif_opt *opt; int current_call_level;\
-	char **saved_prof_top
+#define RTDA struct eif_opt *opt
 #define RTSA(x) opt = eoption + x; check_options(opt, x)
 #define RTAL (~in_assertion & opt->assert_level)
 
@@ -490,7 +491,9 @@ extern int fcount;
 
 #endif
 
-#ifndef WORKBENCH
+#ifdef WORKBENCH
+#define RTDT int current_call_level; char **saved_prof_top    /* Declare saved trace and profile */
+#else
 /* In final mode, an Eiffel call to a deferred feature without any actual
  * implementation could be generated anyway because of the statical dead code
  * removal process; so we need a funciton pointer trigeering an exception

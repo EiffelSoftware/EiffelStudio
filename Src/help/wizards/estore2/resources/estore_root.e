@@ -12,11 +12,12 @@ feature -- Initialization
 	make is
 			-- Initialize
 		local
-			li: LINKED_LIST [<FL1>]
-			s1,s2: STRING
+			li: ARRAYED_LIST [<FL1>]
 		do
-			io.put_string ("%NConnecting with username '<FL4>', password '<FL5>' and data source '<FL6>'...")
-			create estore_example.initialize ("<FL4>","<FL5>","<FL6>")
+			io.put_string ("%NConnecting with username '" + username +
+					"', password '" + password + "' and data source '" +
+					data_source + "'...")
+			create estore_example.initialize (username, password, data_source)
 
 			io.put_string ("%NProcessing Request ...")
 			io.put_string ("%NQuery:<FL3>")
@@ -37,5 +38,14 @@ feature -- Access
 
 	estore_example: ESTORE_EXAMPLE
 		-- Example reference
+
+	username: STRING is "<FL4>"
+		-- Database username.
+
+	password: STRING is "<FL5>"
+		-- Database password.
+
+	data_source: STRING is "<FL6>"
+		-- Database data source.
 
 end -- Class ESTORE_ROOT

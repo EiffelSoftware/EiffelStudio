@@ -4,6 +4,9 @@ indexing
 class 
 	DB_SHARED
 
+inherit
+	DB_SPECIFIC_TABLES_ACCESS_USE
+
 feature -- Access
 
 	db_manager: DATABASE_MANAGER [DATABASE] is

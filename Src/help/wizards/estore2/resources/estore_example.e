@@ -23,17 +23,18 @@ feature -- Initialization
 			b: BOOLEAN
 		do
 			if not b then
-				db_manager.log_and_connect (username,password,data_source)
+				db_manager.set_connection_information (username,password,data_source)
+				db_manager.establish_connection
 				b:= db_manager.session_control.is_connected 
 				if b then
-					initialized := TRUE
+					initialized := True
 				end
 			end
 			if not b then
 				io.put_string ("Connection Failed.%NPLease Check UserName and Password")
 			end
 		rescue
-			b := TRUE
+			b := True
  			retry
 		end
 

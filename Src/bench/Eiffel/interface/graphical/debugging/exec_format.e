@@ -31,7 +31,7 @@ feature -- Execution
 				if holder /= Void then
 					f ?= holder.associated_button
 				end
-				if f /= Void then
+				if f /= Void and then not f.destroyed then
 					f.popdown
 				end;
 				if last_warner /= Void then

@@ -72,8 +72,8 @@ feature
 	byte_stack: EXTEND_STACK [BYTE_CODE];
 			-- Used to record successive byte code informations for assertions
 
-	old_expressions: LINKED_LIST [UN_OLD_BL];
-			-- List of old expressions: list of shared attributes expressions
+	old_expressions: LINKED_LIST [UN_OLD_B];
+			-- Used to record old expressions in Pass 3; 
 
 	make is
 			-- Initialization
@@ -84,8 +84,8 @@ feature
 			!!associated_register_table.make (10);
 			!!type_stack.make;
 			!!byte_stack.make;
-			!!old_expressions.make;
 			!!local_list.make;
+			!!old_expressions.make;
 		end;
 
 	set_class_type (c: CLASS_TYPE) is
@@ -495,6 +495,14 @@ feature
 			end;
 		end;
 
+	clear_old_expressions is
+			-- Clear old expressions.
+		do
+				--! Did this so it won't effect any old_expression 
+				--! referencing this object.
+			!!old_expressions.make
+		end;
+
 	clear_all is
 			-- Reset internal data structures.
 		do
@@ -508,7 +516,6 @@ feature
 			current_used := false;
 			need_gc_hook_computed := false;
 			label := 0;
-			old_expressions.wipe_out;
 			byte_stack.wipe_out;
 			non_gc_reg_vars := 0;
 			non_gc_tmp_vars := 0;
@@ -530,7 +537,6 @@ feature
 			type_stack := Void;
 			byte_stack := Void;
 			class_type := Void;
-			old_expressions := Void;
 		end;
 
 	saved_current_used: BOOLEAN;

@@ -359,13 +359,13 @@ feature -- Generation
 
 			!!dir_name.make_from_string (Result);
 			dir_name.extend (subdirectory);
-			!!dir.make (dir_name.path);
+			!!dir.make (dir_name);
 			if not dir.exists then
 				dir.create
 			end;
-			!!f_name.make_from_string (dir_name.path);
+			!!f_name.make_from_string (dir_name);
 			f_name.set_file_name (base_file_name);
-			Result := f_name.path
+			Result := f_name
 		end;
 
 	base_file_name: STRING is
@@ -408,7 +408,7 @@ feature -- Generation
 			end;
 
 			f_name.set_file_name (temp);
-			Result := f_name.path
+			Result := f_name
 		end
 
 	has_creation_routine: BOOLEAN is

@@ -1,0 +1,219 @@
+system
+	Eif_compiler
+root
+	ECOM_EIF_COMPILER_REGISTRATION: "make"
+
+default
+	assertion (all)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+cluster
+	all com_generated: "$EIFFEL_SRC\com_compiler"
+		exclude
+			"EIFGEN"; 
+			"to_replace";
+			"generated";
+		visible
+			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
+			IEIFFEL_PROJECT_IMPL_PROXY
+			IEIFFEL_COMPILER_IMPL_PROXY
+			IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_PROXY
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY
+			ECOM_EIF_COMPILER_REGISTRATION;
+			CEIFFEL_PROJECT_COCLASS_IMP;
+			CEIFFEL_COMPILER_COCLASS_IMP;
+			IEIFFEL_PROJECT_IMPL_STUB;
+			IEIFFEL_COMPILER_IMPL_STUB;
+			IEIFFEL_SYSTEM_BROWSER_IMPL_STUB;
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_STUB;
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB;
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB;
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB;
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB;
+			CLASS_DESCRIPTOR;
+			CLUSTER_DESCRIPTOR;
+			CLUSTER_PROPERTIES;
+			COMPILER;
+			COM_DEGREE_OUTPUT;
+			COM_ERROR_WINDOW;
+			FEATURE_DESCRIPTOR;
+			PROJECT_MANAGER;
+			PROJECT_PROPERTIES;
+			SYSTEM_BROWSER;
+			CLASS_ENUMERATOR;
+			CLUSTER_ENUMERATOR;
+			FEATURE_ENUMERATOR;
+		end
+
+	-- BASE
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table"; "desc"; "CVS"; 
+		visible
+			INTEGER_REF;
+			CHARACTER_REF;
+			BOOLEAN_REF;
+			REAL_REF;
+			DOUBLE_REF;
+			CELL;
+			STRING;
+			ARRAY;
+		end;
+
+	-- WEL
+	all wel:						"$EIFFEL_SRC\library\wel"
+
+	-- TIME
+	all time: 						"$EIFFEL_SRC\library\time"
+		exclude
+			"french";
+			"german"
+		visible
+			DATE_TIME;
+		end;
+
+	-- COM
+	all ecom:						"$EIFFEL_SRC\library\com"
+		visible
+			ECOM_DECIMAL;
+			ECOM_CURRENCY;
+			ECOM_ARRAY;
+			ECOM_VARIANT;
+			ECOM_GUID;
+			ECOM_EXCEP_INFO;
+			ECOM_DISP_PARAMS;
+			ECOM_STATSTG;
+			ECOM_STREAM;
+			ECOM_STORAGE;
+			ECOM_ROOT_STORAGE;
+			ECOM_ENUM_STATSTG;
+			ECOM_HRESULT;
+			ECOM_WIDE_STRING;
+			ECOM_LARGE_INTEGER;
+			ECOM_ULARGE_INTEGER;
+			ECOM_UNKNOWN_INTERFACE;
+			ECOM_AUTOMATION_INTERFACE;
+			ECOM_STUB;
+			ECOM_QUERIABLE;
+		end;
+
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+		exclude
+			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+		end
+
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+		exclude
+			"CVS"; 
+		end
+
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
+
+
+	interface_switch (switch):		"$\interface\batch_only"
+
+	communications (switch):		"$\no_communication"
+
+	time_lock (switch):		"$\license\time_lock"
+
+	status (communications):		"$\status"
+
+	ipc (communications):		"$\ipc"
+
+	debuging_class (communications):		"$\debug"
+
+	debuging_formatters (communications):		"$\formatters"
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+
+	"common":		"$EIFFEL_SRC\Eiffel\common"
+
+	common_parser (common):		"$\parser"
+
+	old_resources (common):		"$\resources"
+
+	common_eiffel_parser (common_parser):		"$\parser"
+
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
+
+
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+		exclude
+			"CVS"; 
+		end
+
+	liman:		"$EIFFEL_SRC\Eiffel\limand"
+
+
+	liman_bench (liman):		"$\bench"
+
+	liman_abstract (liman):		"$\abstract"
+
+	interface_shared:		"$EIFFEL_SRC\Eiffel\interface\shared"
+
+
+	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
+
+
+	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
+
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
+
+	flat_short (common_parser):		"$\flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
+	encryption:		"$EIFFEL_SRC\library\encryption"
+
+	const:		"$EIFFEL_SRC\Eiffel\const"
+
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; 
+		end
+
+	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
+
+
+external
+	include_path:	"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+			"$(EIFFEL_SRC)\library\time\Clib",
+			"$(EIFFEL_SRC)\library\com\spec\windows\include",
+			"$(EIFFEL_SRC)\com_compiler\Clib",
+			"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
+			"$(EIFFEL_SRC)\library\encryption\Clib",
+			"$(EIFFEL_SRC)\C\bench",
+			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
+			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
+
+	object: 	"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+			"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+			"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
+			"$(EIFFEL_SRC)\C\bench\compiler.lib",
+			"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
+			"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
+			"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
+			"$(EIFFEL_SRC)\C\idrs\idr.lib",
+			"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
+			"$(EIFFEL_SRC)\C\platform\platform.lib",
+			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
+			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
+			"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib"
+end

@@ -145,6 +145,7 @@ feature
 
 invariant
 
+	valid_implementation: implementation /= Void
 	is_valid implies (width > 0);
 	is_valid implies (height > 0);
 	is_valid implies (depth > 0);

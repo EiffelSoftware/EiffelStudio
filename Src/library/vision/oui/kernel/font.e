@@ -246,6 +246,10 @@ feature
 			not (Result = Void)
 		end
 
+invariant
+
+	valid_implementation: implementation /= Void
+
 end
 
 

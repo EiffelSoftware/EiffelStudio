@@ -7,8 +7,9 @@ root
 default
 	il_verifiable (no)
 	msil_generation_type ("exe")
-	assertion (check)
+	assertion (require)
 	assertion (ensure)
+	assertion (check)
 	disabled_debug (yes)
 	debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
@@ -27,14 +28,15 @@ default
 	profile (no)
 	trace (no)
 	check_vape (yes)
-	console_application (no)
+	console_application (yes)
 	syntax_warning (no)
 	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
 	dynamic_runtime (no)
 	exception_trace (yes)
-	inlining (no)
+	inlining (yes)
+	inlining_size ("0")
 	multithreaded (no)
 
 

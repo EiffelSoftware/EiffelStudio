@@ -78,7 +78,7 @@ feature {NONE} -- Initialization of resource categories
 			studio_prefs: EB_SHARED_PREFERENCES
 		do
 			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)			
-			create studio_prefs.make_preferences (l_prefs)						
+			initialize_preferences (l_prefs)						
 		end		
 
 end -- class TTY_RESOURCES

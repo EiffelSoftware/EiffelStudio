@@ -128,9 +128,6 @@ with_cancel, with_help: BOOLEAN) is
 
 feature {NONE} -- Properties
 
-	last_caller: WARNER_CALLBACKS
-			-- Last command which popped up current
-
 	window: EV_WINDOW
 			-- Window to which the warning will apply
 

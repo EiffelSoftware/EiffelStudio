@@ -52,6 +52,7 @@ feature -- Basic operations
 		local
 			l_ctxt: FEATURE_TEXT_FORMATTER;
 			l_file_name, l_docs: STRING
+			l_description: IDM_FEATURE_DESCRIPTION_INTERFACE
 			l_dictionary: IDM_DICTIONARY_INTERFACE
 			l_external_class: EXTERNAL_CLASS_I
 			l_extracted_description, l_first_line: STRING
@@ -60,6 +61,7 @@ feature -- Basic operations
 			create l_extracted_description.make (256)
 			if a_feature_i.written_class.is_true_external then
 				l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
+				l_extracted_description.append ("%N")
 				l_external_class ?= a_feature_i.written_class.lace_class
 				check
 					non_void_external_class: l_external_class /= Void
@@ -68,12 +70,14 @@ feature -- Basic operations
 				if (create {RAW_FILE}.make (l_file_name)).exists then
 					if Documentation_manager /= Void then -- i.e. if Documentation manager is properly registered
 						l_dictionary := Documentation_manager.dictionary (l_file_name)
-						if l_dictionary.is_initialized then
-							l_dictionary.set_type (l_external_class.external_name)
-							l_docs := l_dictionary.feature_documentation (a_feature_i.external_name, dotnet_arguments (a_feature_i))
-							if l_docs /= Void and then not l_docs.is_empty then
-								l_extracted_description.append_character ('%N')
-								l_extracted_description.append (l_docs)
+						if l_dictionary /= Void then
+							l_description := l_dictionary.feature_documentation (l_external_class.external_name, a_feature_i.external_name, dotnet_arguments (a_feature_i))
+							if l_description /= Void then
+								l_docs := l_description.summary
+								if l_docs /= Void and then not l_docs.is_empty then
+									l_extracted_description.append_character ('%N')
+									l_extracted_description.append (l_docs)
+								end
 							end
 						end
 					end
@@ -740,7 +744,7 @@ feature {NONE} -- Implementation
 	type_extracted: BOOLEAN
 			-- Was last call to `extract_type' successful?
 
-	Documentation_manager: DOCUMENTATION_MANAGER_PROXY is
+	Documentation_manager: CDM_DOCUMENTATION_MANAGER_PROXY is
 			-- 	Documentation manager
 		once
 			create Result.make

@@ -107,7 +107,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Is cursor off right edge?
 		do
-			Result := (index = count + 1)
+			Result := (count = 0) or (index = count + 1)
 		end
 
 feature -- Status setting
@@ -194,6 +194,7 @@ feature -- Cursor movement
 			-- where item is equal to `an_item' (shallow equality)
 			-- go off right if none.
 		do
+			private_list.start
 			private_list.compare_objects
 			private_list.search (an_item)
 			index := private_list.index
@@ -212,7 +213,7 @@ feature -- Element change
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		do
-			private_list.go_i_th (index+1)
+			private_list.go_i_th (index + 1)
 			private_list.put_left (an_item)
 			if exists then
 				insert_item (an_item, index)
@@ -226,17 +227,17 @@ feature -- Element change
 			-- Put `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		do
-			if after then
-				private_list.start
+			if private_list.empty then
+				private_list.put_front (an_item)
 			else
 				private_list.go_i_th (index)
+				private_list.put_right (an_item)
 			end
-			private_list.put_right (an_item)
 			if after then
 				private_list.start
 			end
 			if exists then
-				insert_item (an_item, private_list.index+1)
+				insert_item (an_item, private_list.index + 1)
 			end
 		ensure then
 			count_changed: count = old count + 1

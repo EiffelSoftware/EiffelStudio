@@ -27,6 +27,7 @@ inherit
 	EV_MENU_ITEM_LIST_IMP
 		redefine
 			interface,
+			make,
 			initialize
 		end
 
@@ -37,7 +38,8 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 		do
-			Precursor (an_interface)
+			{EV_MENU_ITEM_IMP} Precursor (an_interface)
+			create ev_children.make (2)
 			make_track
 			make_id
 		end
@@ -111,6 +113,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/10 16:27:57  brendel
+--| Modified creation sequence.
+--|
 --| Revision 1.18  2000/03/23 01:06:15  brendel
 --| Implemented show and show-at.
 --|

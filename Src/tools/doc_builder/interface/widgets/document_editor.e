@@ -33,8 +33,9 @@ feature -- Initialization
 			key_constants: EV_KEY_CONSTANTS
 			accelerator: EV_ACCELERATOR
 		once
+			initialize_tag_accelerators
 			create key_constants			
-
+			
 				-- Ctrl-A
 			create key.make_with_code (key_constants.Key_a)
 			create accelerator.make_with_key_combination (key, True, False, False)
@@ -59,18 +60,6 @@ feature -- Initialization
 			accelerator.actions.extend (agent open_search_dialog)
 			Application_window.accelerators.extend (accelerator)
 			
-				-- Ctrl-B
-			create key.make_with_code (key_constants.Key_b)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("bold"))
-			Application_window.accelerators.extend (accelerator)
-			
-				-- Ctrl-I
-			create key.make_with_code (key_constants.Key_i)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("italic"))
-			Application_window.accelerators.extend (accelerator)	
-			
 				-- Ctrl-S
 			create key.make_with_code (key_constants.Key_s)
 			create accelerator.make_with_key_combination (key, True, False, False)
@@ -89,6 +78,26 @@ feature -- Initialization
 			accelerator.actions.extend (agent indent_selection (False))
 			Application_window.accelerators.extend (accelerator)
 		end
+		
+	initialize_tag_accelerators is
+			-- Initialize default accelerators which add XML tags into the editor
+		local
+			key: EV_KEY
+			key_constants: EV_KEY_CONSTANTS
+			accelerator: EV_ACCELERATOR
+		do
+			create key_constants
+			
+				-- Ctrl-B
+			create key.make_with_code (key_constants.Key_b)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			add_tag_accelerator (accelerator, "bold")	
+			
+				-- Ctrl-I
+			create key.make_with_code (key_constants.Key_i)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			add_tag_accelerator (accelerator, "italic")		
+		end		
 		
 feature -- Editing		
 		
@@ -358,6 +367,29 @@ feature -- Status Setting
 			split_position := a_split_position
 		end		
 
+	add_tag_accelerator (a_accelerator: EV_ACCELERATOR; a_tag_text: STRING) is
+			-- Add an accelerator to Current
+		require
+			accelerator_not_void: a_accelerator /= Void
+			tag_text_not_void: a_tag_text /= Void
+		local
+			l_accelerator: EV_ACCELERATOR
+		do		
+			l_accelerator := a_accelerator
+			if application_window.accelerators.has (l_accelerator) then
+				application_window.accelerators.start
+				application_window.accelerators.search (l_accelerator)
+				if not application_window.accelerators.exhausted then					
+					l_accelerator := application_window.accelerators.item
+					l_accelerator.actions.wipe_out
+				end
+			else
+				application_window.accelerators.extend (l_accelerator)
+			end
+			l_accelerator.actions.extend (agent tag_selection (a_tag_text))
+			tag_accelerators.replace (a_tag_text, a_accelerator.key.code)
+		end		
+
 feature -- Access
 
 	documents: ARRAYED_LIST [DOCUMENT] is
@@ -401,7 +433,9 @@ feature -- Events
 			if l_widget /= Void then
 				shared_dialogs.search_dialog.set_widget (l_widget.internal_edit_widget)
 				set_current_document (l_widget.document)
-				l_widget.internal_edit_widget.set_font (preferences.font)
+				if preferences.font /= Void then					
+					l_widget.internal_edit_widget.set_font (preferences.font)	
+				end
 				l_widget.update
 			else
 				set_current_document (Void)
@@ -421,6 +455,39 @@ feature -- Implementation
 
 	notebook: EV_NOTEBOOK
 			-- Notebook
+
+feature -- Shortcuts
+
+	tag_accelerators: HASH_TABLE [STRING, INTEGER] is
+			-- List of keyboard keys which are acceptable for tag accelerators
+			-- hashed by key code
+		local
+			l_key_constants: EV_KEY_CONSTANTS
+		once
+			create l_key_constants
+			create Result.make (10)
+			Result.compare_objects
+			Result.extend ("", l_key_constants.key_q)
+			Result.extend ("", l_key_constants.key_w)
+			Result.extend ("", l_key_constants.key_e)
+			Result.extend ("", l_key_constants.key_r)
+			Result.extend ("", l_key_constants.key_t)
+			Result.extend ("", l_key_constants.key_y)
+			Result.extend ("", l_key_constants.key_u)
+			Result.extend ("", l_key_constants.key_b)
+			Result.extend ("", l_key_constants.key_i)
+			Result.extend ("", l_key_constants.key_o)
+			Result.extend ("", l_key_constants.key_p)
+			Result.extend ("", l_key_constants.key_d)
+			Result.extend ("", l_key_constants.key_g)
+			Result.extend ("", l_key_constants.key_h)
+			Result.extend ("", l_key_constants.key_j)
+			Result.extend ("", l_key_constants.key_k)
+			Result.extend ("", l_key_constants.key_l)
+			Result.extend ("", l_key_constants.key_n)
+			Result.extend ("", l_key_constants.key_m)
+		end
+		
 
 feature {NONE} -- Implementation
 

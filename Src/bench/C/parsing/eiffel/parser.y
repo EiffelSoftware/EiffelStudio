@@ -31,6 +31,7 @@
 extern char token_str[];
 int fclause_pos;	/* To memorize the beginning of a feature clause */
 int fbody_pos;		/* To memorize the beginning of a feature body */
+int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 
 #define CR_EMPTY	0
 #define CR_ROUTINE	1
@@ -1098,10 +1099,10 @@ Creation_clause:			TE_CREATION
 								yacc_error_code=273;}
 	;
 
-Routine_creation:			TE_TILDE TE_LCURLY Type TE_RCURLY Feature_name
-								{$$ = create_node2(ROUTINE_CREATION_AS,$3,click_list_elem($<value>5));}
-	|						TE_TILDE Feature_name
-								{$$ = create_node2(ROUTINE_CREATION_AS,NULL,click_list_elem($<value>2));}
+Routine_creation:			TE_TILDE TE_LCURLY Type TE_RCURLY Feature_name Parameters
+								{$$ = create_routine_object($3,click_list_elem($<value>5),$6);}
+	|						TE_TILDE Feature_name Parameters
+								{$$ = create_routine_object(NULL,click_list_elem($<value>2),$3);}
 	;
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call

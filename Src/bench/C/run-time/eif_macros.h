@@ -1,12 +1,23 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #    #    ##     ####   #####    ####    ####           #    #
- ##  ##   #  #   #    #  #    #  #    #  #               #    #
- # ## #  #    #  #       #    #  #    #   ####           ######
- #    #  ######  #       #####   #    #       #   ###    #    #
- #    #  #    #  #    #  #   #   #    #  #    #   ###    #    #
- #    #  #    #   ####   #    #   ####    ####    ###    #    #
-
+/*
 	Macros used by C code at run time.
 */
 
@@ -49,8 +60,12 @@ RT_LNK void * eif_pointer_identity (void *);
  * be taken care of by the signal handler routine.
  */
 #ifdef USE_BSDJMP
+#ifndef setjmp
 #define setjmp _setjmp
+#endif
+#ifndef longjmp
 #define longjmp _longjmp
+#endif
 #endif
 
 

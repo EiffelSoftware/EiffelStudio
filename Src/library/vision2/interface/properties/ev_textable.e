@@ -12,14 +12,10 @@ deferred class
 	EV_TEXT_CONTAINER
 	
 inherit
-	EV_PRIMITIVE
-		redefine
-			implementation
-		end
 	
 	EV_FONTABLE
-		rename
-			implementation as fontable_implementation
+		redefine
+			implementation
 		end
 	
 

@@ -11,11 +11,12 @@ class EV_ENTRY
 
 inherit
 
-	EV_BAR_ITEM
+	EV_PRIMITIVE
 		redefine
 			make, implementation
 		end
 	
+	EV_BAR_ITEM
 	
 creation
 	
@@ -35,13 +36,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
         text: STRING is
-                        -- Text of current label
+                        -- Text in entry field
                 require
                         exists: not destroyed
                 do
                         Result:= implementation.text
                 end 
-
+	
 feature -- Status setting
 	
 	set_text (txt: STRING) is

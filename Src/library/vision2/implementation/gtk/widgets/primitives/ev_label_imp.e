@@ -12,6 +12,8 @@ class
 	
 inherit
 	EV_LABEL_I
+
+	EV_PRIMITIVE_IMP
 	
 	EV_BAR_ITEM_IMP
 

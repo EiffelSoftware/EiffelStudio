@@ -118,4 +118,9 @@ feature
 			file.putstring ("SK_INT");
 		end;
 
+	type_a: INTEGER_A is
+		do
+			!!Result
+		end
+
 end

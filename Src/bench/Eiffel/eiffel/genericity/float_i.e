@@ -124,4 +124,9 @@ feature
 			file.putstring ("SK_FLOAT");
 		end;
 
+	type_a: REAL_A is
+		do
+			!!Result
+		end
+
 end

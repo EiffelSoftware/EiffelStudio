@@ -7,7 +7,7 @@ inherit
 			is_char, is_boolean, dump, same_as,
 			description, hash_code,
 			associated_reference, generate_cecil_value, sk_value,
-			generate_sk_value
+			generate_sk_value, type_a
 		end
 
 feature
@@ -65,5 +65,10 @@ feature
 		do
 			file.putstring ("SK_BOOL");
 		end;
+
+	type_a: CL_TYPE_A is
+		do
+			!BOOLEAN_A!Result
+		end
 
 end

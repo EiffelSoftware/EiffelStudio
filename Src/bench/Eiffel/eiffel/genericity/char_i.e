@@ -110,4 +110,9 @@ feature
 			file.putstring ("SK_CHAR");
 		end;
 
+	type_a: CL_TYPE_A is
+		do
+			!CHARACTER_A!Result
+		end
+
 end

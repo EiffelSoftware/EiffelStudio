@@ -14,7 +14,8 @@ extern EIF_INTEGER dbg_timer_id ();
 extern void dbg_start_timer();
 extern void dbg_stop_timer();
 extern void dbg_timer_callback();
-extern void dbg_debugger_before_callback(char *);
+extern void dbg_lock_and_wait_callback ();
+extern void dbg_debugger_before_callback(char *, BOOL);
 extern void dbg_debugger_after_callback(char *);
 
 #ifdef __cplusplus

@@ -14,7 +14,8 @@ feature -- High level
 		local
 			l_result: INTEGER
 		once
-			l_result := com_initialize
+--			l_result := com_initialize
+			l_result := com_initialize_multithreaded
 			check
 				call_succeed: l_result = com_S_OK or else l_result = com_S_FALSE
 			end
@@ -32,13 +33,6 @@ feature -- Disposal
 		
 feature {NONE} -- Initialization
 
---	com_initialize is
---			-- Call to `CoInitialize' to initialize COM.
---			-- To be done once.
---		external
---			"C use %"cli_writer.h%""
---		end
-
 	frozen com_initialize: INTEGER is
 		external
 			"C inline use %"unknwn.h%""
@@ -46,19 +40,12 @@ feature {NONE} -- Initialization
 			"CoInitialize(NULL)"
 		end
 
---	com_initialize_apartment_threaded: INTEGER is
---		external
---			"C++ inline use %"objbase.h%""
---		alias
---			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
---		end
---
---	com_initialize_multithreaded: INTEGER is
---		external
---			"C++ inline use %"objbase.h%""
---		alias
---			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
---		end
+	com_initialize_multithreaded: INTEGER is
+		external
+			"C++ inline use %"objbase.h%""
+		alias
+			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
+		end
 
 	frozen com_S_OK: INTEGER is
 		external

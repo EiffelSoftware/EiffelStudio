@@ -28,10 +28,11 @@ feature -- Status report
 	complete: BOOLEAN is
 			-- Is exception information complete?
 		do
-			Result := (type /= Void and then not type.empty) and
-				(origin_class /= Void and then not origin_class.empty) and
-				(origin_feature /= Void and then not origin_feature.empty) and
-				(tag_name /= Void and then not tag_name.empty)
+			Result := (type /= Void and then not type.is_empty) and
+				(origin_class /= Void and then not origin_class.is_empty) and
+				(origin_feature /= Void and then 
+				not origin_feature.is_empty) and
+				(tag_name /= Void and then not tag_name.is_empty)
 		end
 
 feature -- Status setting
@@ -39,7 +40,7 @@ feature -- Status setting
 	set_type (s: STRING) is
 			-- Set exception type to `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			type := s
 		ensure
@@ -49,7 +50,7 @@ feature -- Status setting
 	set_origin_class (s: STRING) is
 			-- Set class where exception was thrown to `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			origin_class := s
 		ensure
@@ -59,7 +60,7 @@ feature -- Status setting
 	set_origin_feature (s: STRING) is
 			-- Set feature where exception was thrown to `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			origin_feature := s
 		ensure
@@ -69,7 +70,7 @@ feature -- Status setting
 	set_tag_name (s: STRING) is
 			-- Set tag name of violated assertion to `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			tag_name := s
 		ensure

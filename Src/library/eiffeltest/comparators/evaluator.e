@@ -23,7 +23,7 @@ feature -- Status report
 	is_setup_ok: BOOLEAN is
 			-- Is evaluator set up?
 		do
-			Result := name /= Void and then not name.empty
+			Result := name /= Void and then not name.is_empty
 		end
 
 	is_true: BOOLEAN is
@@ -38,7 +38,7 @@ feature -- Status setting
 	set_name (s: STRING) is
 			-- Set name to `s'.
 		require
-			non_empty_name: s /= Void and then not s.empty
+			non_empty_name: s /= Void and then not s.is_empty
 		do
 			name := s
 		ensure

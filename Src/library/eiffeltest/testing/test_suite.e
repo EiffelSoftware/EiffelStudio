@@ -77,7 +77,7 @@ feature -- Access
 		do
 			Result := strategy_factory.selected_product_key
 		ensure
-			non_empty_result: Result /= Void and then not Result.empty
+			non_empty_result: Result /= Void and then not Result.is_empty
 		end
 		
 	name: STRING
@@ -115,7 +115,7 @@ feature -- Status report
 	has_strategy (s: STRING): BOOLEAN is
 			-- Is there a strategy named `s'
 		require
-			non_empty_name: s /= Void and then not s.empty
+			non_empty_name: s /= Void and then not s.is_empty
 		do
 			Result := strategy_factory.has_product (s)
 		end
@@ -152,7 +152,7 @@ feature -- Status report
 	is_ready: BOOLEAN is
 			-- Can tests in suite be run?
 		do
-			Result := not empty and is_strategy_set and is_name_set and
+			Result := not is_empty and is_strategy_set and is_name_set and
 				is_number_set and (is_context_needed implies is_context_set)
 		end
 
@@ -160,7 +160,7 @@ feature -- Status report
 			-- Does test suite contain complete tests?
 			-- (`False' means that suite contains test steps.)
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			Result := test (1).is_complete_test
 		end
@@ -168,10 +168,10 @@ feature -- Status report
 	insertable (v: TESTABLE): BOOLEAN is
 			-- Can `v' be inserted into test suite?
 		do
-			Result := empty or else 
+			Result := is_empty or else 
 					(v.is_complete_test = contains_complete_tests)
 		ensure then
-			insertable_definition: empty or else 
+			insertable_definition: is_empty or else 
 					(v.is_complete_test = contains_complete_tests)
 		end
 
@@ -180,7 +180,7 @@ feature -- Status setting
 	select_strategy (s: STRING) is
 			-- Set execution strategy to strategy named `s'.
 		require
-			non_empty_name: s /= Void and then not s.empty
+			non_empty_name: s /= Void and then not s.is_empty
 			existing_strategy: has_strategy (s)
 		do
 			strategy_factory.select_product (s)
@@ -189,7 +189,7 @@ feature -- Status setting
 		ensure
 			strategy_set: is_strategy_set
 			empty_or_ready_or_context_request: 
-				(empty or is_context_needed) xor is_ready
+				(is_empty or is_context_needed) xor is_ready
 			strategy_selected: selected_strategy = s
 			is_suite_set: execution_strategy.is_suite_set
 		end
@@ -197,7 +197,7 @@ feature -- Status setting
 	set_name (n: STRING) is
 			-- Set name to `n'.
 		require
-			non_empty_name: n /= Void and then n.empty
+			non_empty_name: n /= Void and then n.is_empty
 		do
 			name := n
 		ensure
@@ -304,7 +304,7 @@ feature -- Basic operations
 					stop := True
 				end
 			end
-			if not res.empty then 
+			if not res.is_empty then 
 				test_results.add_result (res.linear_representation)
 			end
 			tear_down
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 invariant
 
 	strategy_selected: is_strategy_set
-	non_empty_name: name /= Void and then not name.empty
+	non_empty_name: name /= Void and then not name.is_empty
 	test_result_exists: test_results /= Void
 	
 end -- class TEST_SUITE

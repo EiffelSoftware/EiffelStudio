@@ -18,7 +18,7 @@ feature -- Measurement
 	 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is container empty?
 		deferred
 		end
@@ -52,7 +52,7 @@ feature -- Element change
 	replace (v: G; i: INTEGER) is
 			-- Replace `i'-th item with `v'.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			valid_index: valid_index (i)
 			item_exists: v /= Void
 		deferred
@@ -65,7 +65,7 @@ feature -- Removal
 	remove (i: INTEGER) is
 			-- Remove `i'-th item.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			valid_index: valid_index (i)
 		deferred
 		ensure
@@ -76,12 +76,12 @@ feature -- Removal
 			-- Remove all items.
 		deferred
 		ensure
-			empty: empty
+			empty: is_empty
 		end
 
 invariant
 
-	empty_definition: empty = (count = 0)
+	empty_definition: is_empty = (count = 0)
 
 end -- class BASIC_CONTAINER
 

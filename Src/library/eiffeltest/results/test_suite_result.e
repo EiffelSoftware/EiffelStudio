@@ -114,7 +114,7 @@ feature -- Element change
 	add_result (res: LINEAR [TEST_RUN_RESULT]) is
 			-- Add result from subresults `res'.
 		require
-			results_not_empty: res /= Void and then not res.empty
+			results_not_empty: res /= Void and then not res.is_empty
 		local
 			final_res: TEST_RUN_RESULT
 		do

@@ -50,7 +50,7 @@ feature -- Output
 			pos: INTEGER
 		do
 			str := clone (s)
-			from until str.empty loop
+			from until str.is_empty loop
 				pos := str.index_of ('%N', 1)
 				if pos > 0 then
 					strout := str.substring (1, pos - 1)
@@ -75,7 +75,7 @@ feature -- Output
 	put_header (header: STRING) is
 			-- Output `header' with underlining.
 		require
-			non_empty_header: header /= Void and then not header.empty
+			non_empty_header: header /= Void and then not header.is_empty
 			writable: is_log_writable
 		deferred
 		end
@@ -83,7 +83,7 @@ feature -- Output
 	put_box (s: STRING; c: CHARACTER) is
 			-- Output `s' surrounded by a box out of `c'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 			writable: is_log_writable
 		deferred
 		end
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	standard_put_string (s: STRING) is
 			-- Output `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		deferred
 		end
 	

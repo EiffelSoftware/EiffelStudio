@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			create {TEXT_LOG} f
 			Result.extend (f, "ascii")
 		ensure
-			not_empty: Result /= Void and then not Result.empty
+			not_empty: Result /= Void and then not Result.is_empty
 		end
 
 end -- class FORMAT_FACTORY

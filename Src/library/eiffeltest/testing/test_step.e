@@ -49,7 +49,7 @@ feature -- Status report
 	produces_result: BOOLEAN is
 			-- Does test produce result?
 		do
-			Result := not empty
+			Result := not is_empty
 		end
 
 	insertable (v: EVALUATOR): BOOLEAN is
@@ -79,9 +79,9 @@ feature -- Removal
 			-- Remove `i'-th item.
 		do
 			Precursor (i)
-			if empty then test_results := Void end
+			if is_empty then test_results := Void end
 		ensure then
-			empty_implies_no_result: empty implies test_results = Void
+			empty_implies_no_result: is_empty implies test_results = Void
 		end
 
 feature {NONE} -- Constants
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	evaluators_produce_result: not empty = produces_result
+	evaluators_produce_result: not is_empty = produces_result
 
 end -- class TEST_STEP
 

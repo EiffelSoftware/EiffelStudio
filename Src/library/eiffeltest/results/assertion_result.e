@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make_false (reason: STRING) is
 			-- Create a no pass with `reason'.
 		require
-			non_empty: reason /= Void and then not reason.empty
+			non_empty: reason /= Void and then not reason.is_empty
 		do
 			failure_reason := reason
 		ensure
@@ -65,7 +65,7 @@ feature -- Status report
 			-- Is record in failure state?
 		do
 			Result := not passed and then failure_reason /= Void and then
-				not failure_reason.empty and not 
+				not failure_reason.is_empty and not 
 				equal (failure_reason, Exception_text)
 		end
 
@@ -85,7 +85,7 @@ feature {NONE} -- Constants
 invariant
 
 	well_defined_state: passed xor is_failure xor is_exception
-	reason_not_empty: failure_reason /= Void implies not failure_reason.empty
+	reason_not_empty: failure_reason /= Void implies not failure_reason.is_empty
 	exception_info_complete: exception_info /= Void implies 
 			exception_info.complete
 

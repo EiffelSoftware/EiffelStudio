@@ -135,7 +135,7 @@ feature -- Status setting
 			-- Set prefix to `s'.
 		require
 			not_set: not is_prefix_set
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			prefix_string := s
 		ensure
@@ -146,7 +146,7 @@ feature -- Status setting
 			-- Set reason to `s'.
 		require
 			not_set: not is_reason_set
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 		do
 			reason := s
 		ensure
@@ -223,7 +223,7 @@ feature {NONE} -- Basic operations
 		require
 			produces_result: produces_result
 			name_exists: n /= Void
-			reason_or_name: is_reason_set xor not name.empty
+			reason_or_name: is_reason_set xor not name.is_empty
 		do
 			check_assertion (a, n)
 		ensure
@@ -347,7 +347,7 @@ feature {NONE} -- Basic operations
 			-- Add a failure with reason `r'.
 		require
 			produces_result: produces_result
-			non_empty_reason: r /= Void and then not r.empty
+			non_empty_reason: r /= Void and then not r.is_empty
 		do
 			check_assertion (False, r)
 		ensure
@@ -478,11 +478,58 @@ feature {NONE} -- Implementation
 			do_test
 	 		tear_down
 		end
+
+	compare_exception_info (src, dest: EXCEPTION_INFO): BOOLEAN is
+			-- Does `src' denote the same exception as `dest'?
+		require
+			no_void_source: src /= Void
+			destination_complete: dest /= Void and then dest.complete
+		local
+			src_list: ARRAYED_LIST [STRING]
+			dest_list: ARRAYED_LIST [STRING]
+		do
+			create src_list.make (4)
+			create dest_list.make (4)
+			src_list.extend (src.type)
+			dest_list.extend (dest.type)
+
+			if not src.origin_class.is_empty then
+				src_list.extend (src.origin_class)
+				dest_list.extend (dest.origin_class)
+			end
+
+			if not src.origin_feature.is_empty then
+				src_list.extend (src.origin_feature)
+				dest_list.extend (dest.origin_feature)
+			end
+
+			if not src.tag_name.is_empty then
+				src_list.extend (src.tag_name)
+				dest_list.extend (dest.tag_name)
+			end
+
+			check
+				count_equal: src_list.count = dest_list.count
+					-- Because items have been inserted pairwise into the list.
+			end
+
+			from
+				src_list.start
+				dest_list.start
+				Result := True
+			until
+				not Result or else src_list.after
+			loop
+				Result := equal (src_list.item, dest_list.item)
+				src_list.forth
+				dest_list.forth
+			end
+		end
 		
 invariant
 
-	no_empty_prefix: prefix_string /= Void implies not prefix_string.empty
-	no_empty_reason: reason /= Void implies not reason.empty
+	no_empty_prefix: prefix_string /= Void implies not prefix_string.is_empty
+	no_empty_reason: reason /= Void implies not reason.is_empty
 	run_count_equality: run_count = total_run_count
 
 end -- class SINGLE_TEST

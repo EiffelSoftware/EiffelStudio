@@ -15,7 +15,7 @@ feature -- Access
 	item: G is
 			-- Current item
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		ensure
 			non_void_result: Result /= Void
@@ -24,7 +24,7 @@ feature -- Access
 	i_th (i: INTEGER): G is
 			-- `i'-th item
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			valid_index: valid_index (i)
 		deferred
 		ensure
@@ -41,7 +41,7 @@ feature -- Status setting
 	go_i_th (i: INTEGER) is
 			-- Go to `i'-th position.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			valid_index: valid_index (i)
 		deferred
 		ensure
@@ -50,7 +50,7 @@ feature -- Status setting
 
 invariant
 
-	index_in_range: not empty implies valid_index (index)
+	index_in_range: not is_empty implies valid_index (index)
 
 end -- class ACTIVE_CONTAINER
 

@@ -10,6 +10,7 @@
 	Handling Eiffel-C Transfer of Objects to Routines.
 */
 
+#ifdef ISE_GC
 #include "eif_portable.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
@@ -67,6 +68,8 @@ rt_private struct stack free_stack = {			/* Entries free in hector */
 
 /* Private function declarations */
 rt_private EIF_REFERENCE hpop(void);				/* Pop a free entry off the free stack */
+rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root);	/* Maps an adress to an hector position */
+
 
 #ifndef lint
 rt_private char *rcsid =
@@ -82,7 +85,6 @@ rt_private char *rcsid =
 
 rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
 {
-#ifdef ISE_GC
 	/* This is the most costly routine of Hector. Given an object, we want to
 	 * release it from GC control and prevent it from moving in memory. This is
 	 * dangerous too, as it will spoil the scavenge zones for the partial
@@ -148,9 +150,6 @@ rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
 	zone->ov_size |= B_C;				/* Make it a C block now */
 
 	return root;						/* Freezing succeeded, new location */
-#else /* ISE_GC */
-	return eif_access(object);
-#endif /* ISE_GC */
 }
 
 rt_public EIF_OBJECT eadopt(EIF_OBJECT object)
@@ -174,11 +173,9 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 	EIF_REFERENCE ret;
 
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
-#ifdef ISE_GC
 		plsc();									/* Run GC cycle */
 		if (-1 == epush(&free_stack, object))	/* Again, we can't */
 			eraise("hector weaning", EN_MEM);	/* No more memory */
-#endif
 	}
 	ret = eif_access(object);
 	eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
@@ -188,7 +185,6 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 
 rt_public void eufreeze(EIF_REFERENCE object)
 {
-#ifdef ISE_GC
 	/* The C wants to get rid of a frozen reference which was previously
 	 * obtained through efreeze(). However, the argument is the address of the
 	 * object, not an hector indirection pointer. The B_C bit on the object is
@@ -212,7 +208,6 @@ rt_public void eufreeze(EIF_REFERENCE object)
 
 	HEADER(unprotected_ref)->ov_size &= ~B_C;		/* Back to the Eiffel world */
 	eif_access(address) = (EIF_REFERENCE) 0;				/* Reset hector's entry */
-#endif
 }
 
 /*
@@ -260,11 +255,9 @@ rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
 	EIF_OBJECT address;					/* Address in hector */
 
 	if (-1 == epush(&hec_stack, object)) {		/* Cannot record object */
-#ifdef ISE_GC
 		urgent_plsc(&object);					/* Safe GC cycle */
 		if (-1 == epush(&hec_stack, object))	/* Cannot really do it */
 			eraise("hector recording", EN_MEM);	/* No more memory */
-#endif
 	}
 	address = (EIF_OBJECT) (hec_stack.st_top - 1);	/* Was allocated here */
 	eif_access(address) = object;		/* Record object's physical address */
@@ -309,10 +302,8 @@ rt_public void hfree(EIF_OBJECT address)
 	EIF_GET_CONTEXT
 	eif_access(address) = (EIF_REFERENCE) 0;				/* Reset hector's entry */
 	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
-#ifdef ISE_GC
 		plsc();										/* Run GC cycle */
 		(void) epush(&free_stack, address);			/* Retry, discard errors */
-#endif
 	}
 }
 
@@ -345,7 +336,6 @@ rt_public void spufreeze(EIF_REFERENCE object)
 	/* We want to put back under GC control a frozen object previously
 	 * obtain through spfreeze(). The B_C bit on the object is cleared.
 	 */
-
 #ifdef DEBUG2
 	printf ("<-DEBUG2: EIF_UNSPFREEZE called on %x\n", object);
 #endif
@@ -390,7 +380,8 @@ rt_private EIF_REFERENCE hpop(void)
 	return *top;
 }
 
-rt_public EIF_OBJECT hector_addr(EIF_REFERENCE root)
+
+rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root)
 {
 	/* Given an object's address, look in the stack and find the hector address
 	 * associated with the physical address and return it. This is a linear
@@ -420,3 +411,4 @@ rt_public EIF_OBJECT hector_addr(EIF_REFERENCE root)
 	return 0; /* to avoid a warning */
 }
 
+#endif

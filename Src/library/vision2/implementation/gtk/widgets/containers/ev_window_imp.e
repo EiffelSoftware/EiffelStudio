@@ -55,8 +55,6 @@ feature -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum))
-			set_title ("")
-				-- set title also realizes the window.
 		end
 
 feature  -- Access
@@ -380,11 +378,6 @@ feature -- Element change
 			end
 			create a_cs.make (a_title)
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
-
-			-- Make sure the gtk window has a corresponding gdk window
-			if not has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_REALIZED_ENUM) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
-			end
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

@@ -1,16 +1,29 @@
--- Allow generation of specific formats (troff, mif, TEX, PostScript)
--- for output of clickable, short, flat and flat-short.
+indexing
+
+	description: 
+		"Allow generation of specific formats (troff, mif, TEX,%
+		%PostScript) for output of clickable, short, flat and flat-short";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class TEXT_FILTER
 
 inherit
 
 	TEXT_FORMATTER
+		rename
+			process_text as old_process_text
 		redefine
 			process_filter_item, process_after_class,
-			process_text, process_class_name_text
+			process_class_name_text
 		end;
-
+	TEXT_FORMATTER
+		redefine
+			process_filter_item, process_after_class,
+			process_class_name_text, process_text
+		select
+			process_text
+		end;
 	EIFFEL_ENV;
 	SHARED_TEXT_ITEMS;
 	FILTER_PARSER
@@ -67,11 +80,7 @@ feature -- Text processing
 	process_text (text: STRUCTURED_TEXT) is
 		do
 			structured_text := text;
-			indentation := Void;
-			from text.start until text.after loop
-				process_item (text.item);
-				if not text.after then text.forth end
-			end
+			old_process_text (text);
 		end;
 
 feature {NONE} -- Text processing
@@ -79,19 +88,12 @@ feature {NONE} -- Text processing
 	structured_text: STRUCTURED_TEXT;
 			-- Text being processed
 
-	indentation: NEW_LINE_TEXT;
-			-- Indentation to be added at the beginning of the line
-
 	process_basic_text (text: BASIC_TEXT) is
 			-- Check first if a format has been specified for `text'.
 		local
 			format: CELL2 [STRING, STRING];
 			text_image: STRING
 		do
-			if indentation /= Void then
-				process_indentation (indentation);
-				indentation := Void
-			end;
 			if text.is_keyword or text.is_special then
 				text_image := text.image;
 				text_image.to_lower;
@@ -123,10 +125,6 @@ feature {NONE} -- Text processing
 			format_item: STRING;
 			i, format_item_count: INTEGER
 		do
-			if indentation /= Void then
-				process_indentation (indentation);
-				indentation := Void
-			end;
 			if format_table.has (f_Class_name) then
 				format := format_table.item (f_Class_name);
 				from
@@ -184,7 +182,7 @@ feature {NONE} -- Text processing
 			end
 		end;
 
-	process_new_line_text (text: NEW_LINE_TEXT) is
+	process_new_line (text: NEW_LINE_ITEM) is
 		local
 			format: CELL2 [STRING, STRING]
 		do
@@ -198,10 +196,9 @@ feature {NONE} -- Text processing
 			else
 				image.append ("%N")
 			end;
-			indentation := text
 		end;
 
-	process_indentation (text: NEW_LINE_TEXT) is
+	process_indentation (text: INDENT_TEXT) is
 		local
 			format: CELL2 [STRING, STRING];
 			i: INTEGER
@@ -221,7 +218,7 @@ feature {NONE} -- Text processing
 					i := i + 1
 				end
 			else
-				image.append (text.indent_text)
+				image.append (text.image)
 			end
 		end;
 
@@ -233,10 +230,6 @@ feature {NONE} -- Text processing
 			filter_item: FILTER_ITEM;
 			found: BOOLEAN
 		do
-			if indentation /= Void then
-				process_indentation (indentation);
-				indentation := Void
-			end;
 			construct := text.construct;
 			if format_table.has (construct) then
 				format := format_table.item (construct);
@@ -266,10 +259,6 @@ feature {NONE} -- Text processing
 		local
 			item: BASIC_TEXT
 		do
-			if indentation /= Void then
-				process_indentation (indentation);
-				indentation := Void
-			end;
 			print_escaped_text (" ");
 			process_basic_text (ti_Dashdash);
 			print_escaped_text (" ");

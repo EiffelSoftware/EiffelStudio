@@ -292,12 +292,11 @@ feature -- Inlining
 			if not type_i.is_basic then
 				cl_type ?= type_i; -- Cannot fail
 				base_class := cl_type.base_class;
-				if not (base_class.is_basic or else base_class.is_special) then
+				if not (base_class.is_basic or else (base_class.is_special and feature_name.is_equal ("make_area"))) then
 					f := base_class.feature_table.item (feature_name);
 
 						-- Is it a polymorphic call ?
-					entry := Eiffel_table.poly_table (rout_id);
-					if entry /= Void and then not entry.is_polymorphic (cl_type.type_id) then
+					if Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True) = -1 then
 						inliner := System.remover.inliner;
 						inline := inliner.inline (f)
 					end;
@@ -308,7 +307,11 @@ feature -- Inlining
 					-- Creation of a special node for the entire
 					-- feature (descendant of STD_BYTE_CODE)
 				inliner.set_current_feature_inlined;
-				!!inlined_feat_b;
+				if base_class.is_special then
+					!SPECIAL_INLINED_FEAT_B! inlined_feat_b
+				else
+					!! inlined_feat_b;
+				end
 				inlined_feat_b.fill_from (Current)
 				bc ?= Byte_server.disk_item (f.body_id);
 

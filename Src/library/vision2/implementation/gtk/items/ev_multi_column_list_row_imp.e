@@ -74,6 +74,7 @@ feature -- Access
 
 	index: INTEGER
 			-- Index of the row in the list
+			-- (gtk index starting from 0).
 
 feature -- Status report
 	
@@ -156,7 +157,7 @@ feature -- Status setting
 			ok: INTEGER
 		do
 			!!Result.make (0)
-			ok := gtk_clist_get_text (parent_imp.widget, index, column, $p)
+			ok := gtk_clist_get_text (parent_imp.widget, index, column - 1, $p)
 			check
 				get_text_ok: ok > 0
 			end

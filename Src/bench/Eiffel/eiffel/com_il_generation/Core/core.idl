@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(E5450BB3-943C-347C-A8FA-FF3B6F51A343),
+      uuid(9F1CA01D-E32F-3689-9816-79AF3202178A),
       version(1.0),
       oleautomation
     ]
@@ -50,6 +50,7 @@ library EiffelCompiler
         HRESULT _stdcall EndClass();
         HRESULT _stdcall AddToParentsList([in] long TypeID);
         HRESULT _stdcall AddInterface([in] long TypeID);
+        HRESULT _stdcall AddEiffelInterface([in] long TypeID);
         HRESULT _stdcall EndParentsList();
         HRESULT _stdcall StartFeaturesList([in] long TypeID);
         HRESULT _stdcall MarkInvariant([in] long FeatureID);
@@ -138,6 +139,7 @@ library EiffelCompiler
         HRESULT _stdcall CreateAttributeObject(
                         [in] long TypeID, 
                         [in] long FeatureID);
+        HRESULT _stdcall SetEiffelType([in] long ExportedTypeID);
         HRESULT _stdcall DuplicateTop();
         HRESULT _stdcall Pop();
         HRESULT _stdcall GenerateMetamorphose([in] long TypeID);
@@ -164,6 +166,9 @@ library EiffelCompiler
                         [in] long FeatureID, 
                         [in] VARIANT_BOOL IsVirtual);
         HRESULT _stdcall GeneratePrecursorFeatureAccess(
+                        [in] long TypeID, 
+                        [in] long FeatureID);
+        HRESULT _stdcall PutMethodToken(
                         [in] long TypeID, 
                         [in] long FeatureID);
         HRESULT _stdcall GenerateArgument([in] long n);

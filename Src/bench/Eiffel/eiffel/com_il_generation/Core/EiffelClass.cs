@@ -19,6 +19,9 @@ internal class EiffelClass
 	
 	// Type ID
 	public int TypeID, InterfaceID;
+
+	// ExportedTypeID for generic conformance.
+	public int ExportedTypeID;
 	
 	// Base type
 	public int BaseType;
@@ -44,6 +47,9 @@ internal class EiffelClass
 	// Is class interface?
 	public bool IsInterface;
 
+	// Is class implementation?
+	public bool IsImplementation;
+
 	// Is class an ARRAY class?
 	public bool IsArray;
 
@@ -61,6 +67,9 @@ internal class EiffelClass
 
 	// Creation Routines
 	public EiffelMethod[] CreationRoutines;
+
+	// SetTypeID routine
+	public MethodBuilder set_type_id;
 
 	// Set `FeatureID' of `FeatureIDTable' to be invariant
 	// routine.
@@ -255,6 +264,12 @@ internal class EiffelClass
 			BaseType = ID;
 		}
 	}
+
+	// Add _EIFFEL_TYPE_INFO interface to implementation class
+	public void AddEiffelInterface (int ID) {
+		ExportedTypeID = ID;
+		IsImplementation = true;
+	}
 	
 	// Set feature id table
 	public void SetFeatureIDTable( System.Collections.Hashtable Table )
@@ -300,7 +315,12 @@ internal class EiffelClass
 		Type[] LocalInterfaces;
 		Type ParentType;
 		int i;
-		LocalInterfaces = new Type[ Interfaces.Count ];
+		if (IsImplementation) {
+			LocalInterfaces = new Type [Interfaces.Count + 1];
+			LocalInterfaces [Interfaces.Count] = EiffelReflectionEmit.ISE_EiffelInterface;
+		} else {
+			LocalInterfaces = new Type [Interfaces.Count];
+		}
 		for( i = 0; i < Interfaces.Count; i++ )
 			LocalInterfaces [i] = EiffelReflectionEmit.Classes [( int )Interfaces [i]].Builder;
 		if( BaseType != EiffelReflectionEmit.NoValue )
@@ -326,6 +346,44 @@ internal class EiffelClass
 						DefineDefaultConstructor();
 					}
 				}
+		}
+
+		if (IsImplementation) {
+				// Add ____type_id and ____set_type_id feature
+			TypeBuilder builder = (TypeBuilder) Builder;
+			MethodBuilder method;
+			FieldBuilder attribute;
+			Type int32_type = Type.GetType ("System.Int32");
+			ILGenerator MethodIL;
+
+				// Define storage of type information
+			attribute = builder.DefineField ("$$____type_id", int32_type, FieldAttributes.Family);
+
+				// Define access to type id info
+			method = builder.DefineMethod (
+				"____type_id",
+				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
+					MethodAttributes.Public,
+				int32_type, Type.EmptyTypes);
+
+			MethodIL = method.GetILGenerator();
+			MethodIL.Emit (OpCodes.Ldarg_0);
+			MethodIL.Emit (OpCodes.Ldfld, attribute);
+			MethodIL.Emit (OpCodes.Ret);
+
+			set_type_id = builder.DefineMethod (
+				"____set_type_id",
+				MethodAttributes.Family | MethodAttributes.Virtual | MethodAttributes.Final |
+					MethodAttributes.Public,
+				EiffelReflectionEmit.VoidType,
+				new Type [1] {int32_type});
+
+			MethodIL = set_type_id.GetILGenerator();
+			MethodIL.Emit (OpCodes.Ldarg_0);
+			MethodIL.Emit (OpCodes.Ldarg_1);
+			MethodIL.Emit (OpCodes.Stfld, attribute);
+			MethodIL.Emit (OpCodes.Ret);
+
 		}
 		#if ASSERTIONS
 			TypeBuilderCreated = true;

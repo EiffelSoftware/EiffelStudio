@@ -49,6 +49,7 @@ public interface ICore
 
 	// Add interface with id `TypeID' into list of parents of current tyep.
 	void AddInterface (int TypeID);
+	void AddEiffelInterface (int TypeID);
 
 	// Finish inheritance part description
 	// `StartParentsList' should have been called before.
@@ -217,6 +218,8 @@ public interface ICore
 
 	void CreateAttributeObject( int TypeID, int FeatureID );
 
+	void SetEiffelType (int ExportedTypeID);
+
 /* IL stack managment */
 
 	void DuplicateTop();
@@ -259,6 +262,7 @@ public interface ICore
 	// Generate feature access
 	void GenerateFeatureAccess( int TypeID, int FeatureID, bool IsVirtual );
 	void GeneratePrecursorFeatureAccess( int TypeID, int FeatureID);
+	void PutMethodToken (int TypeID, int FeatureID);
 	
 	// Generate access to `n'-th argument of current feature.
 	// Cannot be `0', reserved for `Current'.

@@ -120,6 +120,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_add_eiffel_interface(  /* [in] */ EIF_INTEGER type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_end_parents_list();
 
 
@@ -366,6 +372,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	void ccom_set_eiffel_type(  /* [in] */ EIF_INTEGER exported_type_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	void ccom_duplicate_top();
 
 
@@ -475,6 +487,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	void ccom_generate_precursor_feature_access(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	void ccom_put_method_token(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id );
 
 
 	/*-----------------------------------------------------------

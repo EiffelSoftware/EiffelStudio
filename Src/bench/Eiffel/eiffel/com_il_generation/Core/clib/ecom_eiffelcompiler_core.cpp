@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_Core.h"
 static const CLSID CLSID_Core_ = {0x9daf83a1,0x15d7,0x3a80,{0xab,0x8f,0x0e,0x03,0x4f,0x47,0x9c,0x3f}};
 
-static const IID IID_ICore_ = {0xe5450bb3,0x943c,0x347c,{0xa8,0xfa,0xff,0x3b,0x6f,0x51,0xa3,0x43}};
+static const IID IID_ICore_ = {0x9f1ca01d,0xe32f,0x3689,{0x98,0x16,0x79,0xaf,0x32,0x02,0x17,0x8a}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -495,6 +495,38 @@ void ecom_EiffelCompiler::Core::ccom_add_interface(  /* [in] */ EIF_INTEGER type
 	tmp_type_id = (LONG)type_id;
 	
 	hr = p_ICore->AddInterface(tmp_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_add_eiffel_interface(  /* [in] */ EIF_INTEGER type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	
+	hr = p_ICore->AddEiffelInterface(tmp_type_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -1890,6 +1922,38 @@ void ecom_EiffelCompiler::Core::ccom_create_attribute_object(  /* [in] */ EIF_IN
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_EiffelCompiler::Core::ccom_set_eiffel_type(  /* [in] */ EIF_INTEGER exported_type_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_exported_type_id = 0;
+	tmp_exported_type_id = (LONG)exported_type_id;
+	
+	hr = p_ICore->SetEiffelType(tmp_exported_type_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_EiffelCompiler::Core::ccom_duplicate_top()
 
 /*-----------------------------------------------------------
@@ -2432,6 +2496,40 @@ void ecom_EiffelCompiler::Core::ccom_generate_precursor_feature_access(  /* [in]
 	tmp_feature_id = (LONG)feature_id;
 	
 	hr = p_ICore->GeneratePrecursorFeatureAccess(tmp_type_id,tmp_feature_id);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelCompiler::Core::ccom_put_method_token(  /* [in] */ EIF_INTEGER type_id,  /* [in] */ EIF_INTEGER feature_id )
+
+/*-----------------------------------------------------------
+	No description available.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_ICore == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_ICore_, (void **)&p_ICore);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LONG tmp_type_id = 0;
+	tmp_type_id = (LONG)type_id;
+	LONG tmp_feature_id = 0;
+	tmp_feature_id = (LONG)feature_id;
+	
+	hr = p_ICore->PutMethodToken(tmp_type_id,tmp_feature_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

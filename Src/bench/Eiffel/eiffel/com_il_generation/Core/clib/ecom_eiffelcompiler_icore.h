@@ -120,6 +120,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP AddEiffelInterface(  /* [in] */ LONG type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP EndParentsList( void ) = 0;
 
 
@@ -366,6 +372,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP SetEiffelType(  /* [in] */ LONG exported_type_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP DuplicateTop( void ) = 0;
 
 
@@ -475,6 +487,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP GeneratePrecursorFeatureAccess(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP PutMethodToken(  /* [in] */ LONG type_id, /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------

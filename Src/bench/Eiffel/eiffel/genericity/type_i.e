@@ -74,6 +74,13 @@ feature
 		do
 			-- Do nothing
 		end
+		
+	is_external: BOOLEAN is
+			-- Is class an external one?
+		do
+			
+		end
+		
 
 	is_boolean: BOOLEAN is
 			-- Is the type a boolean type

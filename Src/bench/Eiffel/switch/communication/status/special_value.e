@@ -128,13 +128,13 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 				ec := dynamic_class;
 				if ec /= Void then
 					ec.append_name (st);
-					st.add_string (Left_square_bracket);
+					st.add_string (Left_address_delim);
 					if Application.is_running and Application.is_stopped then
 						st.add_address (address, name, ec)
 					else
 						st.add_string (address)
 					end;
-					st.add_string (Right_square_bracket);
+					st.add_string (Right_address_delim);
 				else
 					Any_class.append_name (st);
 					st.add_string (Is_unknown)

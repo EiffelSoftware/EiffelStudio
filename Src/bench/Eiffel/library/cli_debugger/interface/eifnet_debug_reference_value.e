@@ -135,9 +135,9 @@ feature {NONE} -- Output
 				if ec /= Void then
 					create Result.make (60)
 					Result.append (ec.name_in_upper)
-					Result.append (Left_square_bracket)
+					Result.append (Left_address_delim)
 					Result.append (address)
-					Result.append (Right_square_bracket)
+					Result.append (Right_address_delim)
 					if is_external_type then
 						Result.append (" token=0x"+ value_class_token.to_hex_string)
 					end

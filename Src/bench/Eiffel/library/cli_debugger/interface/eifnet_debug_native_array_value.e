@@ -92,9 +92,9 @@ feature -- Access
 			create l_str.make (40)
 			if address /= Void then
 				l_str.append (dynamic_class.name_in_upper)
-				l_str.append (Left_square_bracket)
+				l_str.append (Left_address_delim)
 				l_str.append (address)
-				l_str.append (Right_square_bracket)
+				l_str.append (Right_address_delim)
 			else
 				l_str.append (NONE_representation)
 			end

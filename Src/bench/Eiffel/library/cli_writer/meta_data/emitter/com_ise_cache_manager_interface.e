@@ -122,7 +122,6 @@ feature -- Basic Oprtations
 			non_void_path: apath /= Void
 			non_empty_path: apath.length > 0
 			non_void_dest: adest /= Void
-			assembly_exists: (create {RAW_FILE}.make (apath.string)).exists
 			dest_exists: (create {DIRECTORY}.make (adest.string)).exists
 		local
 			bstr_path: BSTR_STRING

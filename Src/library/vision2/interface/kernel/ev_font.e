@@ -79,6 +79,7 @@ feature -- Measurement
 
 	height: INTEGER is
 			-- Height of the font
+			-- Result in points.
 		require
 			exists: not destroyed
 			font_standard: is_standard
@@ -197,6 +198,7 @@ feature -- Element change
 
 	set_height (value: INTEGER) is
 			-- Make `value' the new height.
+			-- The value must be in points.
 		require
 			exists: not destroyed
 			valid_value: value >= 0

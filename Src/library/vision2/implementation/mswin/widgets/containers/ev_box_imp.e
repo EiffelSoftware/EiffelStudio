@@ -22,30 +22,28 @@ inherit
 
 	EV_WIDGET_LIST_IMP
 		undefine
-			set_default_minimum_size,
+			propagate_foreground_color,
+			propagate_background_color,
 			enable_sensitive,
 			disable_sensitive,
 			client_width,
 			client_height
 		redefine
-			interface
-		select
+			enable_sensitive,
+			disable_sensitive,
 			interface
 		end
-	
-	EV_INVISIBLE_CONTAINER_IMP
+
+	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			interface as ev_invisible_container_imp_interface
-		undefine
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
-			client_width,
-			client_height
+			make as ev_wel_control_container_make,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		redefine
-			make,
-			set_focus,
-			has_focus
+			top_level_window_imp,
+			has_focus,
+			set_focus
 		end
 
 feature {NONE} -- Initialization
@@ -53,7 +51,6 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface)is
 				-- Create the box with the default options.
 		do
-			--{EV_INVISIBLE_CONTAINER_IMP} Precursor
 			base_make (an_interface)
 			ev_wel_control_container_make
 			!! ev_children.make (2)
@@ -282,6 +279,83 @@ feature {NONE} -- Basic operation
 			end
 		end
 
+feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
+	
+	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
+			-- List of the children of the box
+
+	top_level_window_imp: EV_WINDOW_IMP
+			-- Top level window that contains the current widget.
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if
+   			-- `flag'.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
+		do
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					if flag then
+						list.item.disable_sensitive
+					else
+						list.item.enable_sensitive
+					end
+					list.forth
+				end
+			end
+		end
+
+	enable_sensitive is 
+		do
+			set_insensitive (False)
+			{EV_WIDGET_LIST_IMP} Precursor
+		end
+
+	disable_sensitive is
+		do
+			set_insensitive (True)
+			{EV_WIDGET_LIST_IMP} Precursor
+		end
+
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		local
+			list: ARRAYED_LIST [EV_WIDGET_IMP]
+		do
+			top_level_window_imp := a_window
+			if not ev_children.empty then
+				list := ev_children
+				from
+					list.start
+				until
+					list.after
+				loop
+					list.item.set_top_level_window_imp (a_window)
+					list.forth
+				end
+			end
+		end
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
+		do
+			Result := True
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		do
+			Result := ev_children.has (a_child)
+		end
+
 feature {EV_ANY_I} -- Interface
 
 	interface: EV_BOX
@@ -309,6 +383,12 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/21 17:11:35  brendel
+--| Moved all features from EV_INVISIBLE_CONTAINER_IMP up, making it
+--| obsolete. If a common ancestor for EV_FIXED and EV_TABLE turn out
+--| to be necessary after all, if only for the implementation, we have to
+--| think of another name.
+--|
 --| Revision 1.30  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

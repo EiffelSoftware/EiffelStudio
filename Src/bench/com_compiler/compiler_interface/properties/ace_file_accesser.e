@@ -18,7 +18,8 @@ inherit
 		end
 		
 create
-	make
+	make,
+	make_in_memory
 
 feature {NONE} -- Initialization
 
@@ -33,6 +34,14 @@ feature {NONE} -- Initialization
 			if root_ast = Void then
 				create root_ast
 			end
+		ensure
+			non_void_ast: root_ast /= Void
+		end
+
+	make_in_memory is
+			-- Initialize AST in memory.
+		do
+			create root_ast
 		ensure
 			non_void_ast: root_ast /= Void
 		end

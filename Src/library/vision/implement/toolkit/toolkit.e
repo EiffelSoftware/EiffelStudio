@@ -36,6 +36,11 @@ feature
 		deferred
 		end;
 
+	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_I is
+			-- Toolkit implementation of `a_color' for `a_screen'
+		deferred
+		end;
+
 	dialog_shell (a_dialog_shell: DIALOG_SHELL; 
 		oui_parent: COMPOSITE): DIALOG_S_I is
 			-- Toolkit implementation of `a_dialog_shell'
@@ -51,6 +56,13 @@ feature
 
 	font (a_font: FONT): FONT_I is
 			-- Toolkit implementation of `a_font'
+		deferred
+		ensure
+			font_exists: Result /= Void
+		end;
+
+	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_I is
+			-- Toolkit implementation of `a_font' for `a_screen'
 		deferred
 		ensure
 			font_exists: Result /= Void
@@ -118,6 +130,13 @@ feature
 			pixmap_exists: Result /= Void
 		end;
 
+	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_I is
+			-- Toolkit implementation of `a_pixmap' for `a_screen'
+		deferred
+		ensure
+			pixmap_exists: Result /= Void
+		end;
+
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursor'.
 	   require
@@ -135,6 +154,13 @@ feature
 		end;
 
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_I is
+			-- Toolkit implementation of `a_cursor'
+		deferred
+		ensure
+			screen_cursor_exists: Result /= Void
+		end;
+
+	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_I is
 			-- Toolkit implementation of `a_cursor'
 		deferred
 		ensure
@@ -296,7 +322,7 @@ feature
 		end;
 
 	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; 
-		oui_parent: COMPOSITE): MENU_B_I is
+		oui_parent: MENU): MENU_B_I is
 			-- Toolkit implementation of `a_menu_b'
 		deferred
 		ensure
@@ -351,7 +377,7 @@ feature
 		end;
 
 	menu_pull (a_new_pull: MENU_PULL; managed: BOOLEAN; 
-		oui_parent: COMPOSITE): MENU_PULL_I is
+		oui_parent: MENU): MENU_PULL_I is
 			-- Toolkit implementation of `a_new_pull'
 		deferred
 		ensure

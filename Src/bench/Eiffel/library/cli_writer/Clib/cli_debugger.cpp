@@ -638,11 +638,13 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 				eval_callback_proceed = true;
 				DBGTRACE("[ES::Eval] ExitProcess Callback Occured !!!");
 				break;
+			case CB_EXCEPTION:
+				eval_callback_proceed = false;
+				DBGTRACE("[ES::Eval] Exception Callback Occured ");
+				break;
 			case CB_DEBUGGER_ERROR:
 			case CB_BREAK:
-			case CB_EXCEPTION:
 				eval_callback_proceed = true;
-				DBGTRACE("[ES::Eval] Exception Callback Occured ");
 				break;
 			default:
 				eval_callback_proceed = false;

@@ -96,6 +96,8 @@ feature {NONE} -- Implementation
 			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
 			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			display_object.drop_actions.extend (agent set_color)
+			display_object.child.drop_actions.extend (agent set_color)
 		end
 
 end -- class GB_CELL_OBJECT

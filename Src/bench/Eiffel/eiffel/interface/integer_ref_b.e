@@ -1,4 +1,7 @@
--- Class INTEGER_REF
+indexing
+	description: "Compiler representation of INTEGER_REF class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INTEGER_REF_B 
 
@@ -30,18 +33,17 @@ feature -- Property
 	size: INTEGER
 			-- `size' in bits of current representation of INTEGER.
 	
-feature 
+feature -- Status report
 
 	valid (desc: ATTR_DESC): BOOLEAN is
 			-- Valididty test for unique attribute of class
 			-- Ensure it is an INTEGER of `size' bits
 		local
-			i: INTEGER_DESC
+			l_int_desc: INTEGER_DESC
 		do
-			Result := desc.is_integer
-			if Result then
-				i ?= desc
-				Result := i.size = size
+			l_int_desc ?= desc
+			if l_int_desc /= Void then
+				Result := l_int_desc.size = size
 			end
 		end
 

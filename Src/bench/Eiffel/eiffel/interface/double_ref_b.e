@@ -1,21 +1,25 @@
--- Class DOUBLE_REF
-
+indexing
+	description: "Compiler representation of DOUBLE_REF class"
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class DOUBLE_REF_B 
 
 inherit
-
 	CLASS_REF_B
 
-creation
-
+create
 	make
 	
-feature 
+feature -- Status report
 
 	valid (desc: ATTR_DESC): BOOLEAN is
 			-- Valididty test for unique attribute of class
+		local
+			l_double_desc: DOUBLE_DESC
 		do
-			Result := desc.is_double;
-		end; -- valid
+			l_double_desc ?= desc
+			Result := l_double_desc /= Void
+		end
 
 end

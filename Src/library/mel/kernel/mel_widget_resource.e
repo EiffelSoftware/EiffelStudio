@@ -59,7 +59,7 @@ feature  -- Status setting
 	set_resource_name (a_name: STRING) is
 			-- Set `resource_name' to `a_name'.
 		require
-			a_name_not_null: a_name /= Void
+			name_not_null: a_name /= Void
 		do
 			resource_name := clone (a_name)
 		ensure
@@ -69,7 +69,7 @@ feature  -- Status setting
 	set_resource_value (a_value: STRING) is
 			-- Set `resource_value' to `a_value'.
 		require
-			a_value_not_null: a_value /= Void
+			value_not_null: a_value /= Void
 		do
 			resource_value := clone (a_value)
 		ensure
@@ -79,7 +79,7 @@ feature  -- Status setting
 	set_widget_name (a_name: STRING) is
 			-- Set `widget_name' to `a_name'.
 		require
-			a_name_not_null: a_name /= Void
+			name_not_null: a_name /= Void
 		do
 			widget_name := clone (a_name)
 		ensure

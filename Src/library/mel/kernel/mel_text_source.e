@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make_from_existing (a_xm_text_source: POINTER) is
 			-- Create the MEL_TEXT_SOURCE object from an existing text source.
 		require	
-			a_xm_text_source_not_null: a_xm_text_source /= default_pointer
+			xm_text_source_not_null: a_xm_text_source /= default_pointer
 		do
 			handle := a_xm_text_source;
 		ensure

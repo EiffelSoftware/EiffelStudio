@@ -256,7 +256,7 @@ feature {NONE} -- Constants
 			af: AST_FACTORY
 		once
 			create af
-			Result := af.new_integer_type_as (32)
+			Result := af.new_none_type_as
 		ensure
 			dummy_clicable_as_not_void: Result /= Void
 		end

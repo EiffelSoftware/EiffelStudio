@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	pixmap: EV_PIXMAP
-			-- Ppixmap that is displayed.
+			-- Pixmap that is displayed.
 
 feature -- Status report
 

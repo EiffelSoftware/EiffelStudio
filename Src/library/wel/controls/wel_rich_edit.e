@@ -103,13 +103,13 @@ feature -- Status report
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := selection.minimum
+			Result := selection_cache.minimum
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := selection.maximum
+			Result := selection_cache.maximum
 		end
 
 	selection: WEL_CHARACTER_RANGE is
@@ -120,23 +120,24 @@ feature -- Status report
 		do
 			create Result.make_empty
 			cwin_send_message (item, Em_exgetsel, 0, Result.to_integer)
-			
 		end
 
 	caret_position: INTEGER is
 		local
 			range: WEL_CHARACTER_RANGE
 		do
-			!! range.make_empty
-			cwin_send_message (item, Em_exgetsel, 0,
-				range.to_integer)
+			range := selection_cell
+			cwin_send_message (item, Em_exgetsel, 0, range.to_integer)
 			Result := range.maximum
 		end
 		
 	has_selection: BOOLEAN is
 			-- Has a current selection?
+		local
+			temp: WEL_CHARACTER_RANGE
 		do
-			Result := selection.minimum /= selection.maximum
+			temp := selection_cache
+			Result := temp.minimum /= temp.maximum
 		end
 
 	default_character_format: WEL_CHARACTER_FORMAT is
@@ -165,6 +166,31 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
+	text_at (i: INTEGER; n: INTEGER): STRING is
+			-- Text of length `n' at position `i'.
+		require
+			exists: exists
+			valid_length: n > 0
+			valid_index: text.valid_index (i + 1)
+			valid_length: text.valid_index (i + n)
+		local
+			new_options, old_options: INTEGER
+			previous_selection: WEL_CHARACTER_RANGE
+		do
+			hide_selection	
+			previous_selection := selection
+			old_options := options
+			new_options := 0
+			set_options (Ecoop_set, new_options)
+
+			set_selection (i, i + n)
+			Result := selected_text
+
+			set_options (Ecoop_set, old_options)
+			cwin_send_message (item, Em_exsetsel, 0, previous_selection.to_integer)
+			show_selection
+		end
+
 	selected_text: STRING is
 			-- Currently selected text
 		require
@@ -172,10 +198,7 @@ feature -- Status report
 			has_selection: has_selection
 		local
 			a_wel_string: WEL_STRING
-			i1,i2: INTEGER
 		do
-			i1 := selection_start
-			i2 := selection_end
 			!! Result.make (selection_end - selection_start)
 			Result.fill_blank
 			!! a_wel_string.make (Result)
@@ -293,12 +316,9 @@ feature -- Status setting
 		local
 			range: WEL_CHARACTER_RANGE
 		do
-			create range.make (start_position, end_position)
+			range := selection_cell
+			range.set_range (start_position, end_position)
 			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
---  			cwin_send_message (item, em_setsel, start_position, end_position)
---  			if scroll_caret_at_selection then
---  				cwin_send_message (item, em_scrollcaret, 0, 0)
---  			end
 		end
 
 	set_caret_position (position: INTEGER) is
@@ -308,12 +328,11 @@ feature -- Status setting
  		local
 			range: WEL_CHARACTER_RANGE
  		do
-			create range.make (position, position)
-			cwin_send_message (item, Em_exsetsel, 0,
-				range.to_integer)
-  		end;
+			range := selection_cell
+			range.set_range (position, position)
+			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+  		end
 
-	
 	move_to_selection is
 			-- Move the selected text to be visible
 		do
@@ -628,7 +647,8 @@ feature -- Basic operations
 			range: WEL_CHARACTER_RANGE
 			flags: INTEGER
 		do
-			!! range.make (start_from, count)
+			range := selection_cell
+			range.set_range (start_from, count)
 			!! find_text.make (range, text_to_find)
 
 			if match_case then
@@ -760,6 +780,19 @@ feature -- Notifications
 			exists: exists
 			msg_filter_exists: a_msg_filter /= Void and then a_msg_filter.exists
 		do
+		end
+
+feature {NONE} -- Query speed up
+
+	selection_cache: WEL_CHARACTER_RANGE is
+		do
+			Result := selection_cell
+			cwin_send_message (item, Em_exgetsel, 0, Result.to_integer)
+		end
+
+	selection_cell: WEL_CHARACTER_RANGE is
+		once
+			create Result.make_empty
 		end
 
 feature -- Obsolete

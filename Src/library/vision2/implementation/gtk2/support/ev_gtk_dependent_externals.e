@@ -8,6 +8,14 @@ class
 
 feature -- Externals
 
+	frozen gtk_tree_path_list_free_contents (a_list: POINTER) is
+			-- Free tree path items contained within `a_list'
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_list_foreach ((GList*) $a_list, gtk_tree_path_free, NULL)"
+		end
+
 	frozen g_value_unset (a_value: POINTER) is
 		external
 			"C signature (GValue*) use <gtk/gtk.h>"

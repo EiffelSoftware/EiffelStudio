@@ -85,6 +85,10 @@ feature -- Access
 			-- Overrides default drop target on a certain position.
 			-- If `Void', will use the default drop target.
 			-- Always void if `Current' is not a widget.
+			
+	real_target: EV_DOCKABLE_TARGET
+			-- `Result' is target used during a dockable transport if
+			-- mouse pointer is above `Current'.
 
 feature -- Status Report
 
@@ -146,6 +150,16 @@ feature -- Status setting
 			(create {EV_ENVIRONMENT}).application.implementation.pnd_targets.extend (interface.object_id)
 		ensure
 			assigned: actual_drop_target_agent = an_agent
+		end
+		
+	set_real_target (a_target: EV_DOCKABLE_TARGET) is
+			-- Assign `a_target' to `real_target'.
+		require
+			target_not_void: a_target /= Void
+		do
+			real_target := a_target
+		ensure
+			assigned: real_target = a_target
 		end
 
 feature -- Element change

@@ -11,6 +11,9 @@ inherit
 	EV_SIMPLE_ITEM_I
 
 	EV_ITEM_IMP
+		undefine
+			set_foreground_color
+		end
 
 	EV_TEXTABLE_IMP
 

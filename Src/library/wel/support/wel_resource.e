@@ -43,8 +43,10 @@ feature {NONE} -- Initialization
 
 	make_by_predefined_id (id: POINTER) is
 			-- Load the resource by an `id', predefined by Windows
+		local
+			a_default_pointer: POINTER
 		do
-			load_item (default_pointer, id)
+			load_item (a_default_pointer, id)
 			shared := True
 		ensure
 			shared: shared

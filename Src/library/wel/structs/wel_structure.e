@@ -14,9 +14,11 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Allocate `item'
+		local
+			a_default_pointer: POINTER
 		do
 			item := c_calloc (1, structure_size)
-			if item = default_pointer then
+			if item = a_default_pointer then
 				-- Memory allocation problem
 				c_enomem
 			end
@@ -69,10 +71,12 @@ feature {NONE} -- Removal
 
 	destroy_item is
 			-- Free `item'
+		local
+			a_default_pointer: POINTER
 		do
-			if item /= default_pointer then
+			if item /= a_default_pointer then
 				c_free (item)
-				item := default_pointer
+				item := a_default_pointer
 			end
 		end
 

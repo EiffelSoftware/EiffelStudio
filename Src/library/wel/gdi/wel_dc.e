@@ -319,10 +319,11 @@ feature -- Status report
 		local
 			a_wel_string: WEL_STRING
 			size: INTEGER
+			a_default_pointer: POINTER
 		do
 			create a_wel_string.make (text)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
-				text.count, 0, default_pointer)
+				text.count, 0, a_default_pointer)
 			create Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
@@ -541,9 +542,11 @@ feature -- Status setting
 		require
 			exists: exists
 			valid_current_map_mode: valid_extent_map_mode (map_mode)
+		local
+			a_default_pointer: POINTER
 		do
 			cwin_set_window_ext_ex (item, x_extent, y_extent,
-				default_pointer)
+				a_default_pointer)
 		ensure
 			x_window_extent_set: map_mode /= Mm_isotropic implies window_extent.width = x_extent
 			y_window_extent_set: map_mode /= Mm_isotropic implies window_extent.height = y_extent
@@ -554,9 +557,10 @@ feature -- Status setting
 			-- associated with the device context
 		require
 			exists: exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_set_window_org_ex (item, x_origin, y_origin,
-				default_pointer)
+			cwin_set_window_org_ex (item, x_origin, y_origin, a_default_pointer)
 		ensure
 			x_window_origin_set: window_origin.x = x_origin
 			y_window_origin_set: window_origin.y = y_origin
@@ -568,9 +572,10 @@ feature -- Status setting
 		require
 			exists: exists
 			valid_current_map_mode: valid_extent_map_mode (map_mode)
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_set_viewport_ext_ex (item, x_extent, y_extent,
-				default_pointer)
+			cwin_set_viewport_ext_ex (item, x_extent, y_extent, a_default_pointer)
 		ensure
 			x_viewport_extent_set: map_mode /= Mm_isotropic implies viewport_extent.width = x_extent
 			y_viewport_extent_set: map_mode /= Mm_isotropic implies viewport_extent.height = y_extent
@@ -581,9 +586,10 @@ feature -- Status setting
 			-- associated with the device context.
 		require
 			exists: exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_set_viewport_org_ex (item, x_origin, y_origin,
-				default_pointer)
+			cwin_set_viewport_org_ex (item, x_origin, y_origin, a_default_pointer)
 		ensure
 			x_viewport_origin_set: viewport_origin.x = x_origin
 			y_viewport_origin_set: viewport_origin.y = y_origin
@@ -945,8 +951,10 @@ feature -- Basic operations
 			-- Remove the current clipping region.
 		require
 			exists: exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_select_clip_rgn (item, Default_pointer)
+			cwin_select_clip_rgn (item, a_default_pointer)
 		end
 
 	text_out (x, y: INTEGER; string: STRING) is
@@ -1080,9 +1088,7 @@ feature -- Basic operations
 		local
 			ffdraw: POINTER
 		do
-			if flicker_free_background = Void then 
-				ffdraw := Default_pointer
-			else
+			if flicker_free_background /= Void then 
 				ffdraw := flicker_free_background.item
 			end
 
@@ -1145,8 +1151,10 @@ feature -- Basic operations
 			-- Set the current position to `x', `y' position.
 		require
 			exists: exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_move_to_ex (item, x, y, default_pointer)
+			cwin_move_to_ex (item, x, y, a_default_pointer)
 		end
 
 	rectangle (left, top, right, bottom: INTEGER) is
@@ -1565,13 +1573,13 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Delete the current device context.
 		local
-			p: POINTER	-- Default_pointer
+			a_default_pointer: POINTER	-- Default_pointer
 		do
 				-- Protect the call to DeleteDC, because `destroy_item' can 
 				-- be called by the GC so without assertions.
-			if item /= p then
+			if item /= a_default_pointer then
 				cwin_delete_dc (item)
-				item := p
+				item := a_default_pointer
 			end
 		end
 

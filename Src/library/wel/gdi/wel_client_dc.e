@@ -50,6 +50,8 @@ feature -- Basic operations
 
 	release is
 			-- Release the device context
+		local
+			a_default_pointer: POINTER
 		do
 			check
 				window_not_void: window /= Void
@@ -57,18 +59,20 @@ feature -- Basic operations
 			end
 			unselect_all
 			cwin_release_dc (hwindow, item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 	quick_release is
 			-- Release the device context
+		local
+			a_default_pointer: POINTER
 		do
 			check
 				window_not_void: window /= Void
 				window_exist: window.exists
 			end
 			cwin_release_dc (hwindow, item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 feature {NONE} -- Implementation
@@ -81,14 +85,14 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Delete the current device context.
 		local
-			p: POINTER	-- Default_pointer
+			a_default_pointer: POINTER	-- Default_pointer
 		do
 				-- Protect the call to DeleteDC, because `destroy_item' can 
 				-- be called by the GC so without assertions.
-			if item /= p then
+			if item /= a_default_pointer then
 				unselect_all
 				cwin_release_dc (hwindow, item)
-				item := p
+				item := a_default_pointer
 			end
 		end
 

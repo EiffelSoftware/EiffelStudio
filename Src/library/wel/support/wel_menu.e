@@ -106,8 +106,10 @@ feature -- Element change
 			-- Append a separator to the current menu.
 		require
 			exists: exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_append_menu (item, Mf_separator, 0, default_pointer)
+			cwin_append_menu (item, Mf_separator, 0, a_default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -199,8 +201,10 @@ feature -- Element change
 			exists: exists
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_insert_menu (item, a_position, Mf_separator + Mf_byposition, 0, default_pointer)
+			cwin_insert_menu (item, a_position, Mf_separator + Mf_byposition, 0, a_default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -315,8 +319,10 @@ feature -- Basic operations
 			not_empty: count > 0
 			window_not_void: window /= Void
 			window_exists: window.exists
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_track_popup_menu (item, default_track_option, x, y, 0, window.item, default_pointer)
+			cwin_track_popup_menu (item, default_track_option, x, y, 0, window.item, a_default_pointer)
 		end
 
 	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW;
@@ -335,11 +341,13 @@ feature -- Basic operations
 			not_empty: count > 0
 			window_not_void: window /= Void
 			window_exists: window.exists
+		local
+			a_default_pointer: POINTER
 		do
 			if rect /= Void then
 				cwin_track_popup_menu (item, option, x, y, 0, window.item, rect.item)
 			else
-				cwin_track_popup_menu (item, option, x, y, 0, window.item, default_pointer)
+				cwin_track_popup_menu (item, option, x, y, 0, window.item, a_default_pointer)
 			end
 		end
 
@@ -502,8 +510,10 @@ feature -- Status report
 		require
 			exists: exists
 			positive_position: position >= 0
+		local
+			a_default_pointer: POINTER
 		do
-			Result := cwin_get_sub_menu (item, position) /= default_pointer
+			Result := cwin_get_sub_menu (item, position) /= a_default_pointer
 		end
 
 feature -- Conversion
@@ -537,9 +547,11 @@ feature {NONE} -- Implementation
 
 	destroy_item is
 			-- Destroy menu.
+		local
+			a_default_pointer: POINTER
 		do
 			cwin_destroy_menu (item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 	Max_name_length: INTEGER is 255

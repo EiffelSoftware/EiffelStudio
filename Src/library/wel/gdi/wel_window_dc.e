@@ -50,6 +50,8 @@ feature -- Basic operations
 
 	release is
 			-- Release the device context
+		local
+			a_default_pointer: POINTER
 		do
 			check
 				window_not_void: window /= Void
@@ -57,7 +59,7 @@ feature -- Basic operations
 			end
 			unselect_all
 			cwin_release_dc (hwindow, item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 	quick_release is
@@ -65,13 +67,15 @@ feature -- Basic operations
 			-- Call this feature only if you are sure
 			-- that no object is selected in the device
 			-- context. Otherwise, use `release' instead.
+		local
+			a_default_pointer: POINTER
 		do
 			check
 				window_not_void: window /= Void
 				window_exist: window.exists
 			end
 			cwin_release_dc (hwindow, item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 feature {NONE} -- Implementation
@@ -80,10 +84,12 @@ feature {NONE} -- Implementation
 			-- Window handle associated with the device context
 
 	destroy_item is
+		local
+			a_default_pointer: POINTER
 		do
 			unselect_all
-			cwin_release_dc (default_pointer, item)
-			item := default_pointer
+			cwin_release_dc (a_default_pointer, item)
+			item := a_default_pointer
 		end
 
 feature {NONE} -- Externals

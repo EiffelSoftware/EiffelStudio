@@ -18,33 +18,33 @@ feature -- Basic operations
 	get is
 			-- Get the device context
 		local
-			p: POINTER
+			a_default_pointer: POINTER
 		do
-			if item = p then
-				item := cwin_get_dc (Default_pointer)
+			if item = a_default_pointer then
+				item := cwin_get_dc (a_default_pointer)
 			end
 		end
 
 	release is
 			-- Release the device context
 		local
-			p: POINTER
+			a_default_pointer: POINTER
 		do
-			if item /= p then
+			if item /= a_default_pointer then
 				unselect_all
-				cwin_release_dc (Default_pointer, item)
-				item := p
+				cwin_release_dc (a_default_pointer, item)
+				item := a_default_pointer
 			end
 		end
 
 	quick_release is
 			-- Release the device context
 		local
-			p: POINTER
+			a_default_pointer: POINTER
 		do
-			if item /= p then
-				cwin_release_dc (Default_pointer, item)
-				item := p
+			if item /= a_default_pointer then
+				cwin_release_dc (a_default_pointer, item)
+				item := a_default_pointer
 			end
 		end
 
@@ -53,14 +53,14 @@ feature {NONE} -- Implementation
 	destroy_item is
 			-- Delete the current device context.
 		local
-			p: POINTER	-- Default_pointer
+			a_default_pointer: POINTER	-- Default_pointer
 		do
 				-- Protect the call to DeleteDC, because `destroy_item' can 
 				-- be called by the GC so without assertions.
-			if item /= p then
+			if item /= a_default_pointer then
 				unselect_all
-				cwin_release_dc (Default_pointer, item)
-				item := p
+				cwin_release_dc (a_default_pointer, item)
+				item := a_default_pointer
 			end
 		end
 

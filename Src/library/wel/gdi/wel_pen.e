@@ -33,9 +33,10 @@ feature {NONE} -- Initialization
 			color_not_void: a_color /= Void
 		local
 			error_code: INTEGER
+			a_default_pointer: POINTER
 		do
 			item := cwin_create_pen (a_style, a_width, a_color.item)
-			if item = default_pointer then
+			if item = a_default_pointer then
 				error_code := cwin_get_last_error
 				debug("WEL")
 					io.putstring("Error while creating a pen in class WEL_PEN. error_code = "+error_code.out+"%N")

@@ -37,10 +37,11 @@ feature {NONE} -- Initialization
 			file_name_not_void: file_name /= Void
 		local
 			a_wel_string: WEL_STRING
+			a_default_pointer: POINTER
 		do
 			create a_wel_string.make (file_name)
 			item := cwin_load_image (
-				default_pointer, 
+				a_default_pointer, 
 				a_wel_string.item,
 				Image_type, 
 				0, 

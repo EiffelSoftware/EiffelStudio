@@ -81,6 +81,7 @@ feature -- Re-initialisation
 			a_log_font_not_void: a_log_font /= Void
 		local
 			object_destroyed: BOOLEAN
+			a_default_pointer: POINTER
 		do
 				-- we delete the current C item
 			debug ("GDI_COUNT")
@@ -90,7 +91,7 @@ feature -- Re-initialisation
 			check
 				c_object_destroyed: object_destroyed
 			end
-			item := Default_pointer
+			item := a_default_pointer
 
 			check
 				c_object_destroyed: not exists

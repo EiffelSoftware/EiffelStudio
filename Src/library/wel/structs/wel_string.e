@@ -43,9 +43,11 @@ feature {NONE} -- Initialization
 			-- C memory area is not initialized.
 		require
 			positive_length: a_length >= 0
+		local
+			a_default_pointer: POINTER
 		do
 			item := c_calloc (1, a_length + 1)
-			if item = default_pointer then
+			if item = a_default_pointer then
 					-- Memory allocation problem
 				c_enomem
 			end

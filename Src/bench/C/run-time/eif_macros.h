@@ -33,7 +33,6 @@
 extern "C" {
 #endif
 
-RT_LNK int in_assertion;
 
 /* On a BSD system, we should use _setjmp and _longjmp if they are available,
  * so that no system call is made to preserve the signal mask flag. It should

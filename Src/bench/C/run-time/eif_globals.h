@@ -201,7 +201,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* main.c */
 	char **EIF_once_values_cx;	/* Once values for a thread */
-    int in_assertion_cx = 0;    /* Is an assertion evaluated? */
+    int in_assertion_cx ;    /* Is an assertion evaluated? */
 
 #ifdef WORKBENCH
 		/* except.c */

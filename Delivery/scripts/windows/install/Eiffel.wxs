@@ -663,7 +663,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				<Control Id="RepairButton" Type="PushButton" X="50" Y="114" Width="38" Height="38" ToolTip="Repair Installation" Icon="yes" FixedSize="yes" IconSize="32" Text="[RepairIcon]">
 					<Publish Property="InstallMode" Value="Repair">1</Publish>
 					<Publish Property="Progress1" Value="Repairing">1</Publish>
-					<Publish Property="Progress2" Value="repaires">1</Publish>
+					<Publish Property="Progress2" Value="repairs">1</Publish>
 					<Publish Event="NewDialog" Value="VerifyRepairDlg">1</Publish>
 				</Control>
 				<Control Id="RemoveLabel" Type="Text" X="105" Y="163" Width="100" Height="10" TabSkip="no">

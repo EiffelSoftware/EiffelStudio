@@ -37,7 +37,6 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			label: EV_LABEL
-			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text (Minimum_width_string)

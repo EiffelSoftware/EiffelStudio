@@ -73,6 +73,20 @@ feature -- Access
 			create Result.make (40)
 		end
 		
+
+	fonts_set: STRING is
+			-- Have one or more fonts been set
+			-- in the system?
+		once
+			Result := ""
+		end
+		
+	pixmaps_set: STRING is
+			-- Have one or more pixmaps been set
+			-- in the system?
+		once
+			Result := ""
+		end
 		
 	
 	id: INTEGER
@@ -139,6 +153,30 @@ feature -- Status setting
 			supported_type_elements.extend (an_element)
 		end
 		
+	enable_fonts_set is
+			-- Make `fonts_set' not `is_empty'.
+		do
+			fonts_set.append_string ("1")
+		end
+		
+	enable_pixmaps_set is
+			-- Make `pixmaps_set' not `is_empty'.
+		do
+			pixmaps_set.append_string ("1")
+		end
+		
+	reset_after_generation is
+			-- Restore once attributes that need to be reset
+			-- for each generation.
+		do
+			fonts_set.wipe_out
+			pixmaps_set.wipe_out
+		end
+		
+		
+		
+		
+	
 feature -- Element change
 
 	new_child: GB_GENERATED_INFO is

@@ -6,11 +6,10 @@ root
 	
 default
 	assertion (all);
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/wel");
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
 
 cluster
-	root_cluster: ".";
+	root_cluster:	".";
 
 	bvp:		"$EIFFEL4\library\math\bvp";
 	eifmath:	"$EIFFEL4\library\math\eifmath";
@@ -33,15 +32,16 @@ external
 end
 
 --|----------------------------------------------------------------
---| EiffelMath: library of reusable components for numerical
---| computation ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering Inc.
+--| EiffelMath: Library of reusable components for numerical
+--| computation ISE Eiffel.
+--| Copyright (C) 1986-1999 Interactive Software Engineering (ISE).
 --| All rights reserved. Duplication and distribution prohibited.
 --|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
---| Telephone 805-685-1006
---| Fax 805-685-6869
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com
+--| For latest info see award-winning pages: http://eiffel.com
 --|----------------------------------------------------------------
-

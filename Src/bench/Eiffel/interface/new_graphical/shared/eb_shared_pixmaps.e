@@ -288,7 +288,7 @@ feature -- Icons
 
 	Icon_is_compiling: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_compiling")
+			Result := pixmap_file_content ("icon_compiling_4")
 		end
 
 	Icon_feature: ARRAY [EV_PIXMAP] is

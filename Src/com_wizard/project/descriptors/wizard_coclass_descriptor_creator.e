@@ -81,7 +81,9 @@ feature -- Basic operations
 
 			create Result.make (Current)
 
-			system_descriptor.add_coclass (Result)
+			if not non_generated_type_libraries.has (Result.type_library_descriptor.guid) then
+				system_descriptor.add_coclass (Result)
+			end
 		ensure then
 			valid_interface_descriptors: interface_descriptors /= Void and then
 				(interface_descriptors.count + source_interface_descriptors.count)  = a_type_info.type_attr.count_implemented_types
@@ -166,6 +168,13 @@ feature -- Basic operations
 				end
 				if is_fsource (tmp_impl_flag) then
 					add_source_interface_descriptor (tmp_interface_descriptor)
+					if is_fdefault (tmp_impl_flag) then
+						if 
+							(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
+						then
+							default_source_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+						end
+					end
 				else
 					add_interface_descriptor (tmp_interface_descriptor)
 					if is_fdefault (tmp_impl_flag) then
@@ -204,6 +213,9 @@ feature -- Basic operations
 				if default_dispinterface_name /= Void and then not default_dispinterface_name.empty then
 					a_descriptor.set_default_dispinterface (default_dispinterface_name)
 				end
+				if default_source_dispinterface_name /= Void and then not default_source_dispinterface_name.empty then
+					a_descriptor.set_default_source_dispinterface_name (default_source_dispinterface_name)
+				end
 				a_descriptor.set_default_interface (default_interface_descriptor)
 				if 
 					source_interface_descriptors /= Void and then 
@@ -231,6 +243,9 @@ feature {NONE} -- Implementation
 
 	default_dispinterface_name: STRING
 			-- Name of default interface.
+
+	default_source_dispinterface_name: STRING
+			-- Name of default source interface.
 
 	default_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			-- Descriptor of default interface.

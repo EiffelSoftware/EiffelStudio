@@ -478,7 +478,8 @@ private void kill_app ()
 {
 	/* Kill the application brutally */
 
-	kill((Pid_t) d_data.d_app, SIGKILL);
+	if (d_data.d_app != 0)		/* Check the application is still running */
+		kill((Pid_t) d_data.d_app, SIGKILL);
 }
 
 public void dead_app()

@@ -19,6 +19,7 @@ cluster
 	iteration:		"$ITERATION";
 	list:			"$LIST";
 	set:			"$SET";
+	set_strategies:	"$SET_STRATEGIES";
 	sort:			"$SORT";
 	storage:		"$STORAGE";
 	table:			"$TABLE";

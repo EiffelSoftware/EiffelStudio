@@ -28,17 +28,11 @@ inherit
 			remove_pixmap,
 			set_pointer_style
 		redefine
-			destroy,
 			parent_imp,
 			interface,
 			on_parented,
 			pnd_press
 		end
-
-	--EV_PIXMAPABLE_IMP
-	--	redefine
-	--		interface
-	--	end
 
 	WEL_LIST_VIEW_ITEM
 		rename
@@ -147,13 +141,6 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	destroy is
-			-- Destroy the actual object.
-		do
-		--	{EV_COMPOSED_ITEM_IMP} Precursor
-		--	internal_text := Void
-		end
-
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
 
 	set_pointer_style (c: EV_CURSOR) is
@@ -225,6 +212,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/04/20 16:38:00  rogers
+--| Removed commented inheritance, Removed redefinition of
+--| destroy.
+--|
 --| Revision 1.35  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

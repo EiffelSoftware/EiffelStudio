@@ -20,7 +20,7 @@ feature -- Access
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
- 			create Result.make_from_cil (feature {ISE_RUNTIME}.generator (Current))
+			Result := feature {ISE_RUNTIME}.generator (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -29,7 +29,7 @@ feature -- Access
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
  		do
- 			create Result.make_from_cil (feature {ISE_RUNTIME}.generating_type (Current))
+			Result := feature {ISE_RUNTIME}.generating_type (Current)
  		ensure
  			result_not_void: Result /= Void
  		end

@@ -22,15 +22,15 @@ applications will be using the GNU C libary.
 
 GLIBC USERS:
 Please check the directories
-$EIFFEL4/bench/spec/$PLATFORM/include/glibc and
-$EIFFEL4/bench/spec/$PLATFORM/lib/glibc
+$EIFFEL5/bench/spec/$PLATFORM/include/glibc and
+$EIFFEL5/bench/spec/$PLATFORM/lib/glibc
 
 Check also
-$EIFFEL4/library/mel/spec/$PLATFORM/lib/glibc
+$EIFFEL5/library/mel/spec/$PLATFORM/lib/glibc
 for MEL
 
 and
-$EIFFEL4/library/net/spec/$PLATFORM/lib/glibc
+$EIFFEL5/library/net/spec/$PLATFORM/lib/glibc
 for EiffelNet
 
 2) `eifid' doesn't return a valid value

@@ -68,13 +68,13 @@ Launch the EiffelCOM Wizard (from the Start menu, open Programs then EiffelXX an
 </A>Click <i>Next</i></LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375704">
-</A>Click the top <i>Browse</i> button and open the file <i>$EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl</i>
-where <i>$EIFFEL4</i> represents the path to your EIFFEL45 directory.</LI>
+</A>Click the top <i>Browse</i> button and open the file <i>$EIFFEL5\examples\com\wizard\string_manipulator\string_manipulator.idl</i>
+where <i>$EIFFEL5</i> represents the path to your EIFFEL50 directory.</LI>
 <LI CLASS="mm.bull">
 <A NAME="pgfId=375705">
 </A>Click the bottom <i>Browse</i> button and select the directory where you
-want to create the project (later referenced as destination folder). Choose <i>$EIFFEL4\examples\com\wizard\string_manipulator\generated</i>
-where <i>$EIFFEL4</i> represents the path to your EIFFEL45 directory. If you
+want to create the project (later referenced as destination folder). Choose <i>$EIFFEL5\examples\com\wizard\string_manipulator\generated</i>
+where <i>$EIFFEL5</i> represents the path to your EIFFEL50 directory. If you
 work on a Windows9x machine, please choose a directory with a shorter path, for
 example c:\string_manipulator because Windows9x are unable to handle long path
 names.</LI>
@@ -124,8 +124,8 @@ implementing the component</H6>
  To do something more interesting than merely return an error to a client edit
  the implementation of the <I>STRING_MANIPULATOR_COCLASS_IMP class</I>. The
  wizard would not overwrite this class in future executions. There is an
- implementation of the class in <i>$EIFFEL4\examples\com\wizard\string_manipulator\server</i>\.
- Copy this file over to <i>$EIFFEL4\examples\com\wizard\string_manipulator\generated\server\component</i>
+ implementation of the class in <i>$EIFFEL5\examples\com\wizard\string_manipulator\server</i>\.
+ Copy this file over to <i>$EIFFEL5\examples\com\wizard\string_manipulator\generated\server\component</i>
  and freeze the project. Voila!, you have your first EiffelCOM component up and
  running.
 </blockquote>
@@ -147,7 +147,7 @@ To develop an EiffelCOM component you need to set the
  same name as the name of your project (e.g. <i>string_manipulator</i>) and add
  the string value named MELT_PATH containing the path to the byte code (.melted
  file). You will find an example of such entry in the file <i>melted_path.reg</i>
- in $EIFFEL4\wizard\config. Edit this file as needed (replace <i>string_manipulator</i>
+ in $EIFFEL5\wizard\config. Edit this file as needed (replace <i>string_manipulator</i>
  with the name of your system and change the path to point on the correct
  location using `\\' as directory separator) and then double click on it to
  enter the information into the registry.</LI>
@@ -163,7 +163,7 @@ of the component executable file.</LI>
 <A NAME="pgfId=375983">
 </A>To complete this tutorial you need to register the component with the
 following command (run from a dos console): <i>regsvr32 string_manipulator.dll</i>
-and to enter the information in <i>$EIFFEL4\wizard\config\melted_path.reg</i>.
+and to enter the information in <i>$EIFFEL5\wizard\config\melted_path.reg</i>.
 You have to change the content of this file if you have not installed Eiffel
 under C:\ and/or have used a different destination directory.</LI>
 </UL>
@@ -196,25 +196,25 @@ need to modify any Eiffel or C code.</p>
 <DIV>
 
 <ul>
-<li>Create a new Eiffel project in the directory <i>$EIFFEL4\examples\com\wizard\e2idl\eproject</i>
-  where $EIFFEL4 represents the path to your EIFFEL45 directory.
+<li>Create a new Eiffel project in the directory <i>$EIFFEL5\examples\com\wizard\e2idl\eproject</i>
+  where $EIFFEL5 represents the path to your EIFFEL50 directory.
 <li>Select Ace file from the same directory and compile.
 <li>Launch the EiffelCOM Wizard (from the Start menu, open Programs then
   EiffelXX and click EiffelCOM Wizard)
 <li>Choose <i>Create a new project from an existing Eiffel project</i>.
 <li>Click <i>Next</i>
 <li>Click <i>Next</i> again
-<li>Click the top Browse button and open the file <i>$EIFFEL4\examples\com\wizard\e2idl\eproject\string.epr</i>
-  where $EIFFEL4 represents the path to your EIFFEL45 directory.
-<li>Click the second Browse button and open the file <i>$EIFFEL4\examples\com\wizard\e2idl\
-  eproject\Ace.ace</i> where $EIFFEL4 represents the path to your EIFFEL45
+<li>Click the top Browse button and open the file <i>$EIFFEL5\examples\com\wizard\e2idl\eproject\string.epr</i>
+  where $EIFFEL5 represents the path to your EIFFEL50 directory.
+<li>Click the second Browse button and open the file <i>$EIFFEL5\examples\com\wizard\e2idl\
+  eproject\Ace.ace</i> where $EIFFEL5 represents the path to your EIFFEL50
   directory.
 <li>In the third entry field enter <i>string_manipulator</i>.
 <li>In the forth entry field enter <i>root_cluster</i>.
 <li>Click <i>Next</i>.
 <li>Click the Browse button and select the directory where you want to create
-  the project (the destination folder). Choose <i>$EIFFEL4\examples\com\wizard\e2idl\generated</i>
-  where $EIFFEL4 represents the path to your EIFFEL45 directory. If you work on
+  the project (the destination folder). Choose <i>$EIFFEL5\examples\com\wizard\e2idl\generated</i>
+  where $EIFFEL5 represents the path to your EIFFEL50 directory. If you work on
   a Windows 9x machine, please choose a directory with a shorter path, for
   example c:\e2idl.
 <li>Click <i>Next</i>
@@ -292,15 +292,15 @@ Click <i> Next</i> again</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375768">
  </A>
-Click the top <i> Browse</i> button and open the file <i> $EIFFEL4\examples\com\wizard\string_manipulator\string_manipulator.idl
-</i> where <i> $EIFFEL4</i> represents the path to your EIFFEL45 directory. You could also choose to open the type library (.tlb) that was generated by the wizard when
+Click the top <i> Browse</i> button and open the file <i> $EIFFEL5\examples\com\wizard\string_manipulator\string_manipulator.idl
+</i> where <i> $EIFFEL5</i> represents the path to your EIFFEL50 directory. You could also choose to open the type library (.tlb) that was generated by the wizard when
 <A HREF="getting_started.html#29789" CLASS="XRef">Creating a new COM component.</A>
  in the destination folder of that first project.</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375783">
  </A>
 Click the bottom <i> Browse</i> button and select the directory where you want to create the project (later referenced as destination folder). Choose
-<i> $EIFFEL4\examples\com\wizard\string_manipulator\client\generated</i> where <i> $EIFFEL4</i> represents the path to your EIFFEL45 directory.</LI>
+<i> $EIFFEL5\examples\com\wizard\string_manipulator\client\generated</i> where <i> $EIFFEL5</i> represents the path to your EIFFEL50 directory.</LI>
 <LI CLASS="mm-bull">
 <A NAME="pgfId=375791">
  </A>
@@ -341,7 +341,7 @@ First look at the generated code</H6>
 <blockquote>
 <A NAME="pgfId=375858"></A>
  To implement a client of the StringManipulator component open a new
- EiffelBench. Create the project in <i>$EIFFEL4\examples\com\wizard\string_manipulator\client</i>
+ EiffelBench. Create the project in <i>$EIFFEL5\examples\com\wizard\string_manipulator\client</i>
  using the ace file found in that directory. Freeze and run the project. You are
  now accessing the previously built component and calling functions on its
  interfaces!. The class <em>MY_STRING_MANIPULATOR</em> inherits from the

@@ -15,7 +15,7 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/mvision")
+	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/mvision")
 
 cluster
 
@@ -26,40 +26,40 @@ cluster
 
 -- EiffelBase
 
-		access:				"$EIFFEL4/library/base/structures/access";
-		cursors:			"$EIFFEL4/library/base/structures/cursors";
-		cursor_tree:		"$EIFFEL4/library/base/structures/cursor_tree";
-		dispenser:			"$EIFFEL4/library/base/structures/dispenser";
-		iteration:			"$EIFFEL4/library/base/structures/iteration";
-		kernel:				"$EIFFEL4/library/base/kernel";
-		list:				"$EIFFEL4/library/base/structures/list";
-		obsolete:			"$EIFFEL4/library/base/structures/obsolete";
-		set:				"$EIFFEL4/library/base/structures/set";
-		sort:				"$EIFFEL4/library/base/structures/sort";
-		storage:			"$EIFFEL4/library/base/structures/storage";
-		support:			"$EIFFEL4/library/base/support";
-		table:				"$EIFFEL4/library/base/structures/table";
-		traversing:			"$EIFFEL4/library/base/structures/traversing";
-		tree:				"$EIFFEL4/library/base/structures/tree";
+		access:				"$EIFFEL5/library/base/structures/access";
+		cursors:			"$EIFFEL5/library/base/structures/cursors";
+		cursor_tree:		"$EIFFEL5/library/base/structures/cursor_tree";
+		dispenser:			"$EIFFEL5/library/base/structures/dispenser";
+		iteration:			"$EIFFEL5/library/base/structures/iteration";
+		kernel:				"$EIFFEL5/library/base/kernel";
+		list:				"$EIFFEL5/library/base/structures/list";
+		obsolete:			"$EIFFEL5/library/base/structures/obsolete";
+		set:				"$EIFFEL5/library/base/structures/set";
+		sort:				"$EIFFEL5/library/base/structures/sort";
+		storage:			"$EIFFEL5/library/base/structures/storage";
+		support:			"$EIFFEL5/library/base/support";
+		table:				"$EIFFEL5/library/base/structures/table";
+		traversing:			"$EIFFEL5/library/base/structures/traversing";
+		tree:				"$EIFFEL5/library/base/structures/tree";
 
 -- EiffelVision
 
-		graph_resources:	"$EIFFEL4/library/vision/implement/motif/Resources";
-		graph_widgets:		"$EIFFEL4/library/vision/implement/motif/widgets";
-		graph_toolkit:		"$EIFFEL4/library/vision/implement/toolkit";
-		graph_X:			"$EIFFEL4/library/vision/implement/X";
-		graph_commands:		"$EIFFEL4/library/vision/oui/commands";
-		graph_kernel:		"$EIFFEL4/library/vision/oui/kernel";
-		graph_oui_widgets:	"$EIFFEL4/library/vision/oui/widgets";
-		graph_tools:		"$EIFFEL4/library/vision/tools";
-		graph_figures:		"$EIFFEL4/library/vision/figures";
+		graph_resources:	"$EIFFEL5/library/vision/implement/motif/Resources";
+		graph_widgets:		"$EIFFEL5/library/vision/implement/motif/widgets";
+		graph_toolkit:		"$EIFFEL5/library/vision/implement/toolkit";
+		graph_X:			"$EIFFEL5/library/vision/implement/X";
+		graph_commands:		"$EIFFEL5/library/vision/oui/commands";
+		graph_kernel:		"$EIFFEL5/library/vision/oui/kernel";
+		graph_oui_widgets:	"$EIFFEL5/library/vision/oui/widgets";
+		graph_tools:		"$EIFFEL5/library/vision/tools";
+		graph_figures:		"$EIFFEL5/library/vision/figures";
 
 external
 
 	object:
 
-		"$(EIFFEL4)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a";
-		"$(EIFFEL4)/library/vision/spec/$(PLATFORM)/lib/Xt.a";
+		"$(EIFFEL5)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a";
+		"$(EIFFEL5)/library/vision/spec/$(PLATFORM)/lib/Xt.a";
 		"-lXm -lXt -lX11"
 			
 end

@@ -61,24 +61,24 @@ default
 	override_cluster(&quot;your_override_cluster&quot;)
 	profile (no)
 	shared_library_definition (&quot;file_name.def&quot;)
-	precompiled (&quot;$EIFFEL4\precomp\spec\$PLATFORM\base&quot;);
+	precompiled (&quot;$EIFFEL5\precomp\spec\$PLATFORM\base&quot;);
 
 cluster
 	root_cluster: &quot;c:\temp&quot;;
 
 		-- EiffelBase
-	all base:	&quot;$EIFFEL4\library\base&quot;
+	all base:	&quot;$EIFFEL5\library\base&quot;
 		exclude
 			&quot;desc&quot;;&quot;table_eiffel3&quot;
 		end
 
-	thread:	&quot;$EIFFEL4\library\thread&quot;
+	thread:	&quot;$EIFFEL5\library\thread&quot;
 
 external
 	include_path:
-		&quot;$(EIFFEL4)\library\wel\spec\windows\include&quot;
+		&quot;$(EIFFEL5)\library\wel\spec\windows\include&quot;
 	object:
-		&quot;$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib&quot;
+		&quot;$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib&quot;
 end
 </pre></td></tr>
 </table>
@@ -253,7 +253,7 @@ External options</h2>
 <center><table>
 <tr><td bgcolor="#FFFFE3"><pre>
 	-- EiffelBase
-all base: &quot;$EIFFEL4\library\base&quot;
+all base: &quot;$EIFFEL5\library\base&quot;
 	exclude
 		&quot;table_eiffel3&quot;
 	end</pre>

@@ -47,22 +47,22 @@
       <p>If EiffelBench is misbehaving or crashing for any reasons:
       <ol>
         <li>Delete your EIFGEN
-        <li>Edit the file `general.cfg' located in $EIFFEL4/eifinit/bench and
+        <li>Edit the file `general.cfg' located in $EIFFEL5/eifinit/bench and
           replace the line `automatic_backup: False' by `automatic_backup:
           True'.
-        <li>Edit the file `general.cfg' located in $EIFFEL4/eifinit/bench and
+        <li>Edit the file `general.cfg' located in $EIFFEL5/eifinit/bench and
           replace the line `fail_on_rescue: False' by `fail_on_rescue: True'.
         <li>Change the es4 binary to use the RTEA version which gives more debug
           information, useful to us to find what could be the problem:
           <ul>
-            <li>On Unix, in the directory $EIFFEL4/bench/spec/$PLATFORM/bin
+            <li>On Unix, in the directory $EIFFEL5/bench/spec/$PLATFORM/bin
               rename es4 into old_es4 and es4_rtea into es4
-            <li>On Windows, in the directory $EIFFEL4/bench/spec/windows/bin
+            <li>On Windows, in the directory $EIFFEL5/bench/spec/windows/bin
               rename es4.exe into old_es4.exe and es4.exe-rtea into es4.exe</li>
           </ul>
         <li>Relaunch your compilation until it fails. On Windows, if a DOS
           console appears, a copy of its content will be saved in
-          $EIFFEL4\bench\spec\windows\bin\exception_trace.log. On Unix, copy the
+          $EIFFEL5\bench\spec\windows\bin\exception_trace.log. On Unix, copy the
           output into a file called `exception_trace.log'.
         <li>Send us through the Web support page a package containing the file `exception_trace.log'
           and the BACKUP directory located in your EIFGEN directory.</li>

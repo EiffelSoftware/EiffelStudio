@@ -25,7 +25,7 @@ non multithreaded mode. In MT-mode the executables running on `linux'
 platforms using libc5 do not work on `linux-glibc' platforms. 
 
 All the C libraries libMel.a, libmtMel.a, libnet.a, libmtnet.a, and those in
-$EIFFEL4/bench/spec/linux-glibc/lib are compiled with glibc. 
+$EIFFEL5/bench/spec/linux-glibc/lib are compiled with glibc. 
 
 The precompiled base library is also compiled with glibc. MEL and
 EiffelVision precompiled libraries are not provided for glibc. You can use
@@ -34,5 +34,5 @@ libraries to precomp/linux-glibc). You can also precompile them yourself.
 
 The binaries are compiled with libc5.
 
-Please read $EIFFEL4/Release_notes/spec/linux/README file for more
+Please read $EIFFEL5/Release_notes/spec/linux/README file for more
 information.

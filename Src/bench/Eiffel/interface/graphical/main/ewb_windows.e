@@ -13,14 +13,6 @@ inherit
 			init_toolkit
 		end;
 
-	IO_HANDLER
-		rename
-			make as io_handler_create
-		export
-			{NONE} all
-		redefine
-			init_toolkit
-		end
 	COMMAND
 
 creation
@@ -33,12 +25,27 @@ feature {NONE}
 			!!Result.make ("ebench")
 		end;
 
-feature 
-
 	create_handler is
 		do
-			io_handler_create
-			set_read_call_back (Void, Current, Current)
+print ("toto%N")
+			win_ioh_make_client ($call_back, Current)
+print ("toto2%N")
 		end;
 
-end
+	call_back is
+			-- Call the command.
+		do
+print ("toto3%N")
+			execute (Current)	
+print ("toto4%N")
+		end
+
+feature {NONE} -- Externals
+
+	win_ioh_make_client (cb: POINTER; obj: like Current) is
+			-- Make the io handler function
+		external
+			"C"
+		end
+
+end -- class EWB_WINDOWS

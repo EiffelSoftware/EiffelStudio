@@ -18,9 +18,15 @@ inherit
 			{NONE} all
 		end;
 
-	TASK_I;
+	TASK_I
+		undefine
+			copy, is_equal
+		end
 
 	INPUT_EVENT_X
+		undefine
+			copy, is_equal
+		end
 
 creation
 

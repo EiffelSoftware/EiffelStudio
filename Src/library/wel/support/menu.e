@@ -129,7 +129,7 @@ feature -- Element change
 		end
 
 	insert_string (a_string: STRING; a_position, an_id: INTEGER) is
-			-- Insert `a_string' at zero-based `position' with
+			-- Insert `a_string' at zero-based `a_position' with
 			-- `an_id'.
 		require
 			exists: exists
@@ -150,7 +150,7 @@ feature -- Element change
 		end
 
 	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING) is
-			-- Insert a popup menu `a_menu' at zero-based `position'
+			-- Insert a popup menu `a_menu' at zero-based `a_position'
 			-- with `a_title'.
 		require
 			exists: exists
@@ -171,7 +171,7 @@ feature -- Element change
 		end
 
 	insert_separator (a_position: INTEGER) is
-			-- Insert a separator at zero-based `position'.
+			-- Insert a separator at zero-based `a_position'.
 		require
 			exists: exists
 			a_position_large_enough: a_position >= 0
@@ -184,7 +184,7 @@ feature -- Element change
 		end
 
 	insert_bitmap (bitmap: WEL_BITMAP; a_position, an_id: INTEGER) is
-			-- Insert `bitmap' at zero-based `position' with
+			-- Insert `bitmap' at zero-based `a_position' with
 			-- `an_id'.
 		require
 			exists: exists

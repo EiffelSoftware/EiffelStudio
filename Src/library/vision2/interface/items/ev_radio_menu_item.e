@@ -21,7 +21,8 @@ inherit
 		end
 	
 creation
-	make_with_text
+	make_with_text,
+	make_peer_with_text
 	
 feature {NONE} -- Initialization
 
@@ -32,7 +33,28 @@ feature {NONE} -- Initialization
 			!EV_RADIO_MENU_ITEM_IMP!implementation.make_with_text (par, txt)
 			implementation.set_interface (Current)
 			par.implementation.add_item (Current)
-		end	
+		end
+
+	make_peer_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
+			-- Create a radio menu item and put it in
+			-- the same group as peer
+		do
+			make_with_text (par, txt)
+			set_peer (peer)
+			set_state (False)
+		end
+
+feature -- Status Setting
+
+	set_peer (peer: EV_RADIO_MENU_ITEM) is
+			-- Put in same group as peer
+		require
+			exists: not destroyed
+		do
+			implementation.set_peer (peer)
+		ensure
+			implementation.is_peer (peer)
+		end
 
 feature -- Implementation
 

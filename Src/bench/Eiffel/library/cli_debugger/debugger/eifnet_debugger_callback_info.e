@@ -122,8 +122,7 @@ feature {ICOR_DEBUG_MANAGED_CALLBACK} -- Callback status
 	callback_enabled (cb_id: INTEGER): BOOLEAN is
 			-- Do we process callback `cb_id' ?
 		do
-			Result := managed_callback_status_info.has (cb_id) 
-						and then managed_callback_status_info.item (cb_id) --| = True
+			Result := managed_callback_status_info.item (cb_id) --| = True
 		end
 
 	callback_disabled (cb_id: INTEGER): BOOLEAN is

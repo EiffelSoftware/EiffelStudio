@@ -3,7 +3,7 @@ indexing
 		Duplication (conceptual) and actual duplication (code duplication is handled here).
 		Each line of the ORIGIN_TABLE is processes separately.
 		Each line correponds to a routine id, in other words, each line represents one
-		routine (the notion of routine corresponds to a feature introduced intp a class
+		routine (the notion of routine corresponds to a feature introduced into a class
 		without ant predecessors, and all its evolutions throughout the various inheritance
 		adaptations and branches).
 
@@ -120,6 +120,7 @@ feature
 		local
 			selected: FEATURE_I
 			vmrc3: VMRC3
+			l_computed: like computed
 		do
 			debug
 				io.error.putstring ("========= START TRACE, class ")
@@ -127,20 +128,21 @@ feature
 				io.error.putstring (" ============%N")
 			end
 			from
-				create computed.make (count)
+				create l_computed.make (count)
+				computed := l_computed
 				start
 			until
 				after
 			loop
 				selected := item_for_iteration.selection (parents, old_t, new_t)
-				if selected = Void then
-						-- No selected feature
+				if selected /= Void then
+					l_computed.put (selected, key_for_iteration)
+				else
+							-- No selected feature
 					create vmrc3
 					vmrc3.set_class (System.current_class)
 					vmrc3.set_selection_list (item_for_iteration)
 					Error_handler.insert_error (vmrc3)
-				else
-					computed.put (selected, key_for_iteration)
 				end
 				forth
 			end

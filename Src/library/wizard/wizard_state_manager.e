@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	STATE_MANAGER
+	WIZARD_STATE_MANAGER
 
 inherit
-	SHARED
+	WIZARD_SHARED
 
 feature {WIZARD_WINDOW} -- Basic Operations
 
@@ -17,7 +17,7 @@ feature {WIZARD_WINDOW} -- Basic Operations
 		require
 			possible: history.count>1 and then not history.isfirst
 		local
-			win: STATE_WINDOW
+			win: WIZARD_STATE_WINDOW
 		do
 			history.back
 			history.item.clean_screen
@@ -72,7 +72,7 @@ feature {WIZARD_WINDOW} -- Basic Operations
 
 feature {NONE} -- Internal Operations
 
-	proceed_with_new_state(a_window: STATE_WINDOW) is
+	proceed_with_new_state(a_window: WIZARD_STATE_WINDOW) is
 			-- Proceed with new step , the next step being 'a_window'.
 		require
 			user_entries_checked: history.count>0 implies history.item.entries_checked
@@ -97,4 +97,4 @@ feature {NONE} -- Implementation
 
 invariant
 	state_information_defined: state_information /= Void
-end -- class STATE_MANAGER
+end -- class WIZARD_STATE_MANAGER

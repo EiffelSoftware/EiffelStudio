@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SMART_TEXT_FIELD
+	WIZARD_SMART_TEXT_FIELD
 
 inherit
 	EV_VERTICAL_BOX
@@ -15,7 +15,7 @@ creation
 
 feature -- Initialization
 
-	make(lab,some_text: STRING;lab_size,text_size: INTEGER; caller: STATE_WINDOW) is
+	make(lab,some_text: STRING;lab_size,text_size: INTEGER; caller: WIZARD_STATE_WINDOW) is
 		do
 			default_Create
 			Create label.make_with_text(lab)
@@ -57,4 +57,4 @@ feature {NONE} -- Implementation
 
 	label: EV_LABEL
 
-end -- class SMART_TEXT_FIELD
+end -- class WIZARD_SMART_TEXT_FIELD

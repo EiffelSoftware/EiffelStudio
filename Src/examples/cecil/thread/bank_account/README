@@ -1,0 +1,32 @@
+CECIL multithreaded example: tst
+
+DESCRIPTION
+	This program launch two types of threads: the spenders withdraw some money
+	from a shared bank acccount while the savers make some deposits on it.
+	The Eiffel Threads are launched from C. The synchronization is done
+	from Eiffel. The shared bank account is a C structure, and is updated
+	by the Eiffel Threads using C externals.
+	This is a good example of interaction between C and Eiffel.
+
+	In main.c:
+	LISTSZ size of bank account history.
+	SAVERS numbers of savers.
+	SPENDERS numbers of spenders.
+
+COMPILATION
+	From ebench: open a new project in this directory, choose the proper
+	ace file (unix.ace, linux.ace, win.ace depending on your platforms), and		then select Compile>finalize. 
+	From a console:
+	> es4 -finalize -ace platform.win
+	where platform is unix, linux or win.
+
+	The executable name is `tst' and is located in the root cluster: 
+	it displays the bank account report every LISTSZ transactions.
+	
+NOTE
+	The Makefile works only in with a finalized CECIL library.
+	On windows, the Makefile only works with MS Visual C++.
+	You must rewrite the Makefile for frozen mode and for other Windows
+	C compilers.
+	
+

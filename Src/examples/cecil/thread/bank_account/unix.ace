@@ -1,0 +1,50 @@
+system
+	bank_account
+
+root
+	BANK_ACCOUNT: "make"
+
+default
+	assertion (require)
+	multithreaded (yes)
+	dead_code_removal (yes)
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt");
+
+
+cluster
+	
+	root_cluster: "."
+		visible
+			POST_OFFICE;
+			SPENDER;
+			SAVER;
+		end
+
+	-- EiffelBase
+	all base:				"$EIFFEL4/library/base"
+		exclude 
+			"desc"; "table_eiffel3"
+		visible 
+			BOOLEAN_REF;
+		end
+
+	-- EiffelThread
+	thread:				"$EIFFEL4/library/thread"
+		visible
+			THREAD_CONTROL;
+			PROXY
+				export 
+					"make",
+					"item"
+				end
+			MUTEX;
+		end
+
+external
+	include_path:
+		"../../.."
+	object:
+		"../../fext.o"
+	make:	"../../Make"
+
+end

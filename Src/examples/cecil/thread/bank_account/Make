@@ -1,0 +1,15 @@
+SHELL=sh
+MAKE=make
+
+all: tst
+
+tst:
+	cd ../..; \
+	$(SHELL) Makefile.SH; \
+	$(MAKE); \
+	cd EIFGEN/F_code
+
+
+
+
+

@@ -1,0 +1,43 @@
+system
+	web_demo
+
+root
+	sample: make
+
+default
+	assertion (all)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("exe")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (yes)
+	array_optimization (no)
+	dead_code_removal (yes)
+	exception_trace (yes)
+	inlining (no)
+
+cluster
+	root_cluster:		"$ISE_EIFFEL/examples/web/basic"
+
+	library base:		"$ISE_EIFFEL/library/base"
+		exclude
+			"desc"; "table_eiffel3"; 
+		end
+
+	library web:		"$ISE_EIFFEL/library/web"
+
+	time:		"$ISE_EIFFEL/library/time"
+
+	time_format (time):		"$/format"
+
+	time_english (time):		"$/format/english"
+
+end

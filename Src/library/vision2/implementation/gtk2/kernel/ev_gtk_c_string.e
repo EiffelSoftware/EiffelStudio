@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 	pointer_diff (a_ptr1, a_ptr2: POINTER): INTEGER is
 			-- Difference between two pointers
-			--| FIXME Remove when pointer arithmetic is added
+			--| FIXME Remove when pointer arithmetic is added to POINTER_REF
 		external
 			"C inline"
 		alias
@@ -65,7 +65,6 @@ feature -- Access
 			str_ptr: POINTER
 			bytes_read, bytes_written: INTEGER
 			gerror: POINTER
-			len: INTEGER
 		do
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, managed_data.count - 1, $bytes_read, $bytes_written, $gerror, $str_ptr)
 			if str_ptr /= default_pointer then

@@ -78,7 +78,10 @@
 				<bold>Windows</bold>
 				<list ordered="false">
 					<item>
-						<bold>EV_WINDOW</bold> - `move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.
+						<bold>EV_WINDOW</bold>
+						 <list ordered="false"><item>`move_actions' was always passing positive values for the x and y coordinates of the window, even if they should have been negative.</item>
+						<item>Showing two or more dialogs relative to a window and then hiding the focused relative dialog could cause the window to move behing the next window in the Z order. This has now been fixed.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_FONT</bold> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.    

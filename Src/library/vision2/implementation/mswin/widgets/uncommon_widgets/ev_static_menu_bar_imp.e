@@ -32,10 +32,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	parent: EV_WIDGET is
-			-- The parent of the Current widget
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
+	parent: EV_WINDOW is
+			-- The window that has the current menu
 		do
 			if parent_imp /= Void then
 				Result := parent_imp.interface

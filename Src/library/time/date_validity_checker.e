@@ -28,14 +28,10 @@ feature -- Preconditions
 			code_exists: code_string /= Void
 		local
 			code: DATE_TIME_CODE_STRING
-			date: DATE
 		do
 			create code.make (code_string)
-			if code.precise_date and code.correspond (s) and 
-				code.is_date (s) then
-				date := code.create_date (s)
-				Result := True
-			end
+			Result := code.precise_date and code.correspond (s) and then
+				code.is_date (s)
 		end
 
 	date_valid_default (s: STRING): BOOLEAN is

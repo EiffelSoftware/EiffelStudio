@@ -101,13 +101,11 @@ feature -- Access
 		do
 			value := fix_operator.value;
 			first_char := value.item (1);
-			if	first_char = '%A'
-				or else
-				first_char = '%S'
-				or else
-				first_char = '%V'
-				or else
-				first_char = '&'
+			if
+				first_char = '%A'
+				or else first_char = '%S'
+				or else first_char = '%V'
+				or else first_char = '&'
 			then
 				from
 					Result := True;

@@ -367,7 +367,6 @@ feature -- Status setting
 			end
 		end
 
-
 feature -- Element change
 
 	append_column (column: WEL_LIST_VIEW_COLUMN) is

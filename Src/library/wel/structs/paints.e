@@ -17,8 +17,6 @@ feature -- Access
 
 	erase: BOOLEAN is
 			-- Must the background be erased?
-		require
-			exists: exists
 		do
 			Result := cwel_paintstruct_get_ferase (item)
 		end
@@ -26,8 +24,6 @@ feature -- Access
 	rect_paint: WEL_RECT is
 			-- Rectangle that specifies which part
 			-- must be painted.
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (
 				cwel_paintstruct_get_rcpaint (item))

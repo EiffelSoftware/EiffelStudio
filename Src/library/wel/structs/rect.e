@@ -74,48 +74,36 @@ feature -- Access
 
 	left, x: INTEGER is
 			-- Position of the left border
-		require
-			exists: exists
 		do
 			Result := cwel_rect_get_left (item)
 		end
 
 	top, y: INTEGER is
 			-- Position of the top border
-		require
-			exists: exists
 		do
 			Result := cwel_rect_get_top (item)
 		end
 
 	right: INTEGER is
 			-- Position of the right border
-		require
-			exists: exists
 		do
 			Result := cwel_rect_get_right (item)
 		end
 
 	bottom: INTEGER is
 			-- Position of the bottonm border
-		require
-			exists: exists
 		do
 			Result := cwel_rect_get_bottom (item)
 		end
 
 	width: INTEGER is
 			-- Width of current rect
-		require
-			exists: exists
 		do
 			Result := right - left
 		end
 
 	height: INTEGER is
 			-- Height of current rect
-		require
-			exists: exists
 		do
 			Result := bottom - top
 		end
@@ -127,7 +115,6 @@ feature -- Element change
 			-- with `a_left', `a_top', `a_right', `a_bottom'
 			-- respectively.
 		require
-			exists: exists
 			right_larger_than_left: a_right >= a_left
 			bottom_larger_than_top: a_bottom >= a_top
 		do
@@ -142,7 +129,6 @@ feature -- Element change
 	set_left (a_left: INTEGER) is
 			-- Set `left' with `a_left'
 		require
-			exists: exists
 			left_smaller_than_right: a_left <= right
 		do
 			cwel_rect_set_left (item, a_left)
@@ -153,7 +139,6 @@ feature -- Element change
 	set_top (a_top: INTEGER) is
 			-- Set `top' with `a_top'
 		require
-			exists: exists
 			top_smaller_than_bottom: a_top <= bottom
 		do
 			cwel_rect_set_top (item, a_top)
@@ -164,7 +149,6 @@ feature -- Element change
 	set_right (a_right: INTEGER) is
 			-- Set `right' with `a_right'
 		require
-			exists: exists
 			right_larger_than_left: a_right >= left
 		do
 			cwel_rect_set_right (item, a_right)
@@ -175,7 +159,6 @@ feature -- Element change
 	set_bottom (a_bottom: INTEGER) is
 			-- Set `bottom' with `a_bottom'
 		require
-			exists: exists
 			bottom_larger_than_top: a_bottom >= top
 		do
 			cwel_rect_set_bottom (item, a_bottom)
@@ -188,8 +171,6 @@ feature -- Basic operations
 	offset (a_x, a_y: INTEGER) is
 			-- Moves the rectangle by the specified
 			-- offsets `a_x' and `a_y'.
-		require
-			exists: exists
 		do
 			cwin_offset_rect (item, a_x, a_y)
 		ensure
@@ -203,8 +184,6 @@ feature -- Basic operations
 			-- Inflate the rectangle by `a_x' and `a_y'.
 			-- Positive values increase the width and height,
 			-- and negative values decrease them.
-		require
-			exists: exists
 		do
 			cwin_inflate_rect (item, a_x, a_y)
 		ensure
@@ -219,11 +198,8 @@ feature -- Basic operations
 			-- rectangle that contains both source
 			-- rectangles `rect1' and `rect2'.
 		require
-			exists: exists
 			rect1_not_void: rect1 /= Void
-			rect1_exists: rect1.exists
 			rect2_not_void: rect2 /= Void
-			rect2_exists: rect2.exists
 		do
 			cwin_union_rect (item, rect1.item, rect2.item)
 		end
@@ -232,11 +208,8 @@ feature -- Basic operations
 			-- Set the current rectangle by subtracting
 			-- `rect1' from `rect2'.
 		require
-			exists: exists
 			rect1_not_void: rect1 /= Void
-			rect1_exists: rect1.exists
 			rect2_not_void: rect2 /= Void
-			rect2_exists: rect2.exists
 		do
 			cwin_subtract_rect (item, rect1.item, rect2.item)
 		end
@@ -246,11 +219,8 @@ feature -- Basic operations
 			-- and `rect2'. If `rect1' and `rect2' do not
 			-- intersect then `empty' becomes True.
 		require
-			exists: exists
 			rect1_not_void: rect1 /= Void
-			rect1_exists: rect1.exists
 			rect2_not_void: rect2 /= Void
-			rect2_exists: rect2.exists
 		do
 			cwin_intersect_rect (item, rect1.item, rect2.item)
 		end
@@ -264,8 +234,6 @@ feature -- Status report
 			-- of the left side, or the coordinate of the bottom
 			-- side is less than or equal to the coordinate of
 			-- the top side.
-		require
-			exists: exists
 		do
 			Result := cwin_is_rect_empty (item)
 		end
@@ -273,9 +241,7 @@ feature -- Status report
 	point_in (point: WEL_POINT): BOOLEAN is
 			-- Is `point' in the rectangle?
 		require
-			exists: exists
 			point_not_void: point /= Void
-			point_exists: point.exists
 		do
 			Result := cwin_pt_in_rect (item, point.item)
 		end
@@ -435,10 +401,10 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	right_larger_than_left: exists implies right >= left
-	bottom_larger_than_top: exists implies bottom >= top
-	positive_width: exists implies width >= 0
-	positive_height: exists implies height >= 0
+	right_larger_than_left: right >= left
+	bottom_larger_than_top: bottom >= top
+	positive_width: width >= 0
+	positive_height: height >= 0
 
 end -- class WEL_RECT
 

@@ -34,16 +34,12 @@ feature -- Access
 
 	width: INTEGER is
 			-- Width of the rectangle
-		require
-			exists: exists
 		do
 			Result := cwel_size_get_cx (item)
 		end
 
 	height: INTEGER is
 			-- Height of the rectangle
-		require
-			exists: exists
 		do
 			Result := cwel_size_get_cy (item)
 		end
@@ -52,8 +48,6 @@ feature -- Element change
 
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'
-		require
-			exists: exists
 		do
 			cwel_size_set_cx (item, a_width)
 		ensure
@@ -62,8 +56,6 @@ feature -- Element change
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height'
-		require
-			exists: exists
 		do
 			cwel_size_set_cy (item, a_height)
 		ensure

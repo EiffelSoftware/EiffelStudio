@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			a := a_string.to_c
 			memory_copy ($a, capacity)
 		ensure
-			exists: exists
 			--string_set: string.is_equal (a_string)
 			capacity_set: capacity = a_string.count + 1
 		end
@@ -49,7 +48,6 @@ feature {NONE} -- Initialization
 			s.fill_blank
 			make (s)
 		ensure
-			exists: exists
 			capacity_set: capacity = a_length + 1
 		end
 
@@ -57,8 +55,6 @@ feature -- Access
 
 	string: STRING is
 			-- Eiffel string
-		require
-			exists: exists
 		do
 			!! Result.make (0)
 			Result.from_c (item)
@@ -104,8 +100,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
-
-	capacity_ok: exists implies string.count < capacity
+	capacity_ok: string.count < capacity
 
 end -- class WEL_STRING
 

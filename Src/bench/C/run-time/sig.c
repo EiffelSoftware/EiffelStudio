@@ -105,6 +105,7 @@ rt_shared struct s_stack sig_stk;
 
 #endif /* EIF_THREADS */
 
+#ifdef HAS_SIGALTSTACK
 /*
 doc:	<attribute name="c_sig_stk" return_type="stack_t" export="private">
 doc:		<summary>Stack used for evaluation signal handlers.</summary>
@@ -114,6 +115,7 @@ doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_private stack_t c_sig_stk;
+#endif
 
 
 /* Routine declarations */

@@ -351,7 +351,7 @@ feature {NONE} -- Status setting
 				list_com := event_command_array @ event_id
 				from
 					list_com.start
-					list_com.search (cmd)
+					list_com.search_cmd (cmd)
 				until
 					list_com.exhausted
 				loop
@@ -359,12 +359,55 @@ feature {NONE} -- Status setting
 						-- remove the command in GTK
 					list_com.remove
 						-- update of the event_command_array
-					list_com.search (cmd)
+					list_com.search_cmd (cmd)
 				end
 			end
 		end
 
+feature {NONE} -- Basic operations
 
+	command_from_connexion_id (con_id: INTEGER): EV_COMMAND is
+			-- Give the command associated to the given connection id.
+		require
+			valid_con_id: con_id > 0
+		local
+			list_com: EV_GTK_COMMAND_LIST
+			ev_id: INTEGER
+			found: BOOLEAN
+		do
+			found := False
+			if (event_command_array /= Void) then
+				from
+					ev_id := 1
+				until
+					(ev_id > command_count) or found
+				loop
+					list_com := event_command_array @ ev_id
+					if (list_com /= Void) then
+						from
+							list_com.start
+							list_com.search_con_id (con_id)
+						until
+							(list_com.exhausted) or found
+						loop
+							found := True
+						end
+					end
+					ev_id := ev_id + 1
+				end
+
+				if (found = True) then
+					-- The con_id has been found.
+					Result := list_com.command_list.item
+				else
+					-- The con_id has not been found.
+					Result := Void
+				end
+			else
+				-- The event array is empty.
+				Result := Void
+			end
+		end
 
 feature {NONE} -- Deferred features
 

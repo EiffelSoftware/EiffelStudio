@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			exit_mutex.lock
 			make_top ("Ovals")
 			resize (200,200)
-			!! client_window.make (Current, "Client Window")
+			create  client_window.make (Current, "Client Window")
 			ptr_window := client_window.item
 			launch_demo
 			resize (200,200)
@@ -102,7 +102,7 @@ feature -- Redefined features
 	class_background: WEL_LIGHT_GRAY_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make
+			create  Result.make
 		end
 
 	closeable: BOOLEAN is

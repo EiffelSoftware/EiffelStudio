@@ -9,7 +9,7 @@ inherit
 
 	APPLICATION_IDS
 
-creation
+create
 	make
 
 feature

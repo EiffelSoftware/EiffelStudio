@@ -4,7 +4,7 @@ class
 inherit
 	DEMO_WIN
 
-creation
+create
 	make
 
 feature -- deferred

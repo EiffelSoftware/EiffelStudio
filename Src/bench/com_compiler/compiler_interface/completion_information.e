@@ -315,9 +315,9 @@ feature {NONE} -- Implementation
 			until
 				locals.after
 			loop
-				type := type_from_type_name (locals.item_for_iteration)
+				type := type_from_type_name (locals.key_for_iteration)
 				if type /= Void then
-					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), locals.key_for_iteration)				
+					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), locals.item_for_iteration)				
 				end
 				locals.forth
 			end
@@ -326,9 +326,9 @@ feature {NONE} -- Implementation
 			until
 				arguments.after
 			loop
-				type := type_from_type_name (arguments.item_for_iteration)
+				type := type_from_type_name (arguments.key_for_iteration)
 				if type /= Void then
-					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), arguments.key_for_iteration)				
+					Result.put (Local_evaluator.evaluated_type (type, feature_table, fi), arguments.item_for_iteration)				
 				end
 				arguments.forth
 			end
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				Type_parser.parse_from_string (name)
+				Type_parser.parse_from_string ("toto " + name)
 				Result := Type_parser.type_node
 			end
 		rescue

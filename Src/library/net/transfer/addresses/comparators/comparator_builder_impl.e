@@ -127,7 +127,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 			if character_array @ start = True then
-				create_comparator (start.to_character, (255).to_character)
+				create_comparator (start.to_character, (255).to_integer.to_character)
 			end
 		end
 

@@ -230,28 +230,6 @@ feature -- Status setting
 			foreground_color_set: foreground_color = color
 		end
 
-	-- What is this for?
--- 	grab (a_cursor: SCREEN_CURSOR) is
--- 			-- Grab the mouse and the keyboard , i.e.
--- 			-- channel all events to Current widget 
--- 			-- regardless of where they occur
--- 			-- If `cursor' is not void, the pointer 
--- 			-- will have `a_cursor' shape during the grab.
--- 		require
--- 			exists: not destroyed
--- 		do
--- 			implementation.grab (a_cursor)
--- 		end
-
--- 	ungrab is
--- 			-- Release the mouse and the keyboard 
--- 			-- from an earlier grab.
--- 		require
--- 			exists: not destroyed
--- 		do
--- 			implementation.ungrab
--- 		end 
-
 feature -- Measurement 
 	
 	x: INTEGER is
@@ -312,27 +290,6 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end 
 	
--- 	-- Do we need this?
--- 	real_x: INTEGER is
--- 			-- Vertical position relative to root window
--- 		require
--- 			exists: not destroyed
--- 		do
--- 			Result := implementation.real_x
--- 		end 
--- 	-- Do we need this?
--- 	real_y: INTEGER is
--- 			-- Horizontal position relative to root window
--- 		require
--- 			exists: not destroyed
--- 		do
--- 			Result := implementation.real_y
--- 		end 
--- 	-- Do we need this?
--- 	depth: INTEGER
-			-- Depth of Current widget
-			-- (top_shell's depth is 0, its child's depth is 1,...)
-
 feature -- Resizing
 
 	set_size (new_width: INTEGER; new_height: INTEGER) is

@@ -44,8 +44,6 @@ feature -- initialization
 			b.set_real_parent (Current)
 		end
 
-	cell: EV_CELL
-
 feature -- Implementation
 
 	interface: EV_WIDGET
@@ -75,6 +73,9 @@ end -- class EV_AGGREGATE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/22 17:32:26  rogers
+--| Removed 'cell' which was no longer required.
+--|
 --| Revision 1.5  2000/02/21 20:04:47  rogers
 --| Now inherits EV_HORIZONTAL_BOX_IMP. Removed features that had been defined within this class but are now inherited from EV_HORIZONTAL_BOX_IMP.
 --|

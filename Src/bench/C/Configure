@@ -6767,6 +6767,8 @@ $startsh
 # Target system: $myuname
 
 d_bsdsig='undef'
+shared_prefix='lib'
+shared_suffix='.so'
 d_bsd='$d_bsd'
 d_eunice='$d_eunice'
 d_xenix='$d_xenix'

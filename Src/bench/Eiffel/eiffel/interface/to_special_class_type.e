@@ -22,11 +22,11 @@ feature
 	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generate feature `feat' in `buffer'.
 		local
-			feature_name: STRING;
+			f_name_id: INTEGER;
 		do
-			feature_name := feat.feature_name
+			f_name_id := feat.feature_name_id
 
-			if feature_name.is_equal ("make_area") then
+			if f_name_id = Names_heap.make_area_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_make_area (feat, buffer);
 			else

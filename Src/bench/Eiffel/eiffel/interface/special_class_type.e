@@ -96,14 +96,17 @@ feature -- C code generation
 	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generate feature `feat' in `buffer'.
 		local
-			feature_name: STRING;
+			f_name_id: INTEGER
 		do
-			feature_name := feat.feature_name
+			f_name_id := feat.feature_name_id
 
-			if feature_name.is_equal ("put") then
+			if f_name_id = Names_heap.put_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_put (feat, buffer);
-			elseif feature_name.is_equal ("item") then
+			elseif
+				f_name_id = Names_heap.item_name_id or 
+				f_name_id = Names_heap.infix_at_name_id
+			then
 					-- Generate built-in feature `item' of class SPECIAL
 				generate_item (feat, buffer);
 			else

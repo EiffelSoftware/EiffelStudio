@@ -407,7 +407,6 @@ rt_private void internal_store(char *object)
 	 */
 	char c;
 
-
 	if (accounting) {		/* Prepare character array */
 		account = (char *) xmalloc(scount * sizeof(char), C_T, GC_OFF);
 		if (account == (char *) 0)

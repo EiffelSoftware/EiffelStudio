@@ -61,7 +61,6 @@ extern int inherit_context;		/* Flag for context sensitivity of
 extern struct location *current_location;		/* Position marks */
 
 extern char token_str[];		/* Buffer for ids and strings */
-extern int nb_tilde;			/* Number of occurences of ~ */
 
 struct token {					/* For gperf */
 	char *name;					/* This is the keyword value */
@@ -105,12 +104,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 								current_location->end_position += yyleng;
 								current_location->line_number = yylineno;}
 {D}+/".."					{return process_name(TE_INTEGER);}
-("~")+						{return process_tilde(TE_TILDE);}
 ";"							{return process(TE_SEMICOLON);}
 ":"							{return process(TE_COLON);}
 ","							{return process(TE_COMMA);}
 ".."						{return process(TE_DOTDOT);}
 "."							{return process(TE_DOT);}
+"}.."						{return process(TE_CURLYDOTDOT);}
 "$"							{return process(TE_ADDRESS);}
 ":="						{return process(TE_ASSIGN);}
 "?="						{return process(TE_ACCEPT);}
@@ -175,12 +174,6 @@ static int process(int token_code)
 	current_location->end_position += yyleng;
 	current_location->line_number = yylineno;
 	return token_code;
-}
-
-static int process_tilde (int token_code)
-{
-	nb_tilde = yyleng;	
-	return process (token_code);
 }
 
 static int process_name(int token_code)

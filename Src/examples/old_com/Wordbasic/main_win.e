@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			-- Unitialize OLE before destroying window.
 		do
 			wordbasic.file_exit
-			wordbasic.destroy
+			wordbasic.terminate
 		end
 
 	enter_text: STRING is

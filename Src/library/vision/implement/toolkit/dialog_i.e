@@ -43,12 +43,6 @@ feature
 		deferred
 		end;
 
-	is_poped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
-		obsolete "Use is_popped_up instead, corrected feature spelling."
-		deferred
-		end;
-
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		deferred

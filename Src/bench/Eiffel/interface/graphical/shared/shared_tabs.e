@@ -2,7 +2,7 @@ class SHARED_TABS
 
 inherit
 
-	SHARED_RESOURCES
+	SHARED_BENCH_RESOURCES
 
 feature
 

@@ -2,7 +2,7 @@ class SET_WINDOW_ATTRIBUTES
 
 inherit
 	
-	SHARED_RESOURCES
+	SHARED_BENCH_RESOURCES
 
 feature -- Access
 

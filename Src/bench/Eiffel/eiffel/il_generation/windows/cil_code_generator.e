@@ -1079,7 +1079,7 @@ feature -- Class info
 
 			start_new_body (l_meth_token)
 			put_system_string (l_class_name)
-			generate_return
+			generate_return (True)
 			method_writer.write_current_body
 
 			if
@@ -1124,7 +1124,7 @@ feature -- Class info
 				generate_current
 				generate_argument (1)
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_type_field_token)
-				generate_return
+				generate_return (False)
 				method_writer.write_current_body
 
 					-- Define `____type'.
@@ -1146,7 +1146,7 @@ feature -- Class info
 				start_new_body (l_meth_token)
 				generate_current
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_field_token)
-				generate_return
+				generate_return (True)
 				method_writer.write_current_body
 
 					-- Define `____standard_twin'
@@ -1163,11 +1163,13 @@ feature -- Class info
 					-- If `current_class_type' is expanded, cloning is done by compiler.
 				if not class_type.is_expanded then
 					generate_current
-					method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
-						0, True)
+					method_body.put_call (feature {MD_OPCODES}.Call,
+						current_module.memberwise_clone_token, 0, True)
 					generate_check_cast (Void, class_type.type)
+					generate_return (True)
+				else
+					generate_return (False)
 				end
-				generate_return
 				method_writer.write_current_body
 
 					-- Define `____copy'
@@ -1186,7 +1188,7 @@ feature -- Class info
 				generate_argument (1)
 				generate_check_cast (Void, any_type)
 				internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
-				generate_return
+				generate_return (False)
 				method_writer.write_current_body
 
 					-- Define `____is_equal'
@@ -1205,7 +1207,7 @@ feature -- Class info
 				generate_argument (1)
 				generate_check_cast (Void, any_type)
 				internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
-				generate_return
+				generate_return (True)
 				method_writer.write_current_body
 			end
 		end
@@ -2063,7 +2065,7 @@ feature -- IL Generation
 				end
 			end
 			method_body.put_call (feature {MD_OPCODES}.callvirt, l_eiffel_meth_token, nb, False)
-			method_body.put_opcode (feature {MD_OPCODES}.ret)
+			generate_return (True)
 			method_writer.write_current_body					
 		end
 
@@ -2090,7 +2092,7 @@ feature -- IL Generation
 			if not l_type.is_void then
 				put_default_value (l_type)
 			end
-			method_body.put_opcode (feature {MD_OPCODES}.Ret)
+			generate_return (not l_type.is_void)
 			method_writer.write_current_body
 		end
 
@@ -2122,7 +2124,7 @@ feature -- IL Generation
 				start_new_body (l_meth_token)
 				generate_current
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_token)
-				method_body.put_opcode (feature {MD_OPCODES}.Ret)
+				generate_return (True)
 				method_writer.write_current_body
 
 				l_meth_token := setter_token (current_type_id, feat.feature_id)
@@ -2131,7 +2133,7 @@ feature -- IL Generation
 				generate_argument (1)
 				generate_check_cast (Void, argument_actual_type (feat.type.actual_type.type_i))
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, l_token)
-				method_body.put_opcode (feature {MD_OPCODES}.Ret)
+				generate_return (False)
 				method_writer.write_current_body
 			else
 				l_token := implementation_feature_token (a_type_id, code_feature_id)
@@ -2215,15 +2217,19 @@ feature -- IL Generation
 						end
 						i := i + 1
 					end
-					method_body.put_call (feature {MD_OPCODES}.Call, l_token,
-						nb, feat.has_return_value)
+					if not feat.is_c_external then
+						method_body.put_call (feature {MD_OPCODES}.call, l_token, nb,
+							feat.has_return_value)
+					else
+						method_body.put_static_call (l_token, nb, feat.has_return_value)
+					end
 					if feat.has_return_value then
 						if is_verifiable and l_cur_sig.item (0) /= l_impl_sig.item (0) then
 							method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 								class_type_token (l_cur_sig.item (0)))
 						end
 					end
-					generate_return
+					generate_return (feat.has_return_value)
 					method_writer.write_current_body
 				end
 			end
@@ -2260,8 +2266,8 @@ feature -- IL Generation
 				generate_argument (i)
 				i := i + 1
 			end
-			method_body.put_call (feature {MD_OPCODES}.Call, l_token, nb, feat.has_return_value)
-			generate_return
+			method_body.put_static_call (l_token, nb, feat.has_return_value)
+			generate_return (feat.has_return_value)
 			method_writer.write_current_body
 		end
 
@@ -2334,11 +2340,11 @@ feature -- IL Generation
 				-- If `current_class_type' is expanded, cloning is done by compiler.
 			if not current_class_type.is_expanded then
 				generate_current
-				method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
-					0, True)
+				method_body.put_call (feature {MD_OPCODES}.Call,
+					current_module.memberwise_clone_token, 0, True)
 				generate_check_cast (Void, current_class_type.type)
 			end
-			generate_return
+			generate_return (True)
 			method_writer.write_current_body
 		end
 
@@ -2481,7 +2487,7 @@ feature -- IL Generation
 							class_type_token (l_inh_sig.item (0)))
 					end
 				end
-				generate_return
+				generate_return (cur_feat.has_return_value)
 				method_writer.write_current_body
 
 				md_emit.define_method_impl (current_class_token, l_token,
@@ -2518,7 +2524,7 @@ feature -- IL Generation
 						setter_token (current_type_id, cur_feat.feature_id),
 						nb, cur_feat.has_return_value)
 
-					generate_return
+					generate_return (cur_feat.has_return_value)
 					method_writer.write_current_body
 
 					md_emit.define_method_impl (current_class_token, l_setter_token,
@@ -2850,8 +2856,10 @@ feature -- IL Generation
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
 
 				inspect ext_kind
-				when Creator_call_type, Static_type, Operator_type then
+				when Creator_call_type then
 					method_body.put_call (feature {MD_OPCODES}.Call, l_token, nb, l_has_return_type)
+				when Static_type, Operator_type then
+					method_body.put_static_call (l_token, nb, l_has_return_type)
 				when Normal_type, Deferred_type then
 					if is_virtual then
 						method_body.put_call (
@@ -2861,8 +2869,7 @@ feature -- IL Generation
 							feature {MD_OPCODES}.Call, l_token, nb, l_has_return_type)
 					end
 				when Creator_type then
-					method_body.put_call (
-						feature {MD_OPCODES}.Newobj, l_token, nb, True)
+					method_body.put_newobj (l_token, nb)
 				end
 			end
 		end
@@ -2950,8 +2957,7 @@ feature -- Object creation
 		require
 			valid_type_id: a_type_id > 0
 		do
-			method_body.put_call (feature {MD_OPCODES}.Newobj,
-				constructor_token (a_type_id), 0, True)
+			method_body.put_newobj (constructor_token (a_type_id), 0)
 		end
 
 	create_like_object is
@@ -3550,18 +3556,16 @@ feature -- Conversion
 
 feature -- Return statements
 
-	generate_return is
+	generate_return (has_return_value: BOOLEAN) is
 			-- Generate simple end of routine
 		do
 			method_body.put_opcode (feature {MD_OPCODES}.Ret)
-		end
-
-	generate_return_value is
-			-- Generate end of routine which returns `Result'.
-		do
-				-- Push result on stack.
-			generate_result
-			generate_return
+			if has_return_value then
+					-- We need to remove `1' to the current stack depth since
+					-- we remove the return value from the stack with the `ret'
+					-- statement.
+				method_body.update_stack_depth (-1)
+			end
 		end
 
 feature -- Once management
@@ -3775,7 +3779,7 @@ feature -- Exception handling
 				-- We need to increment stack depth of 1 because CLI runtime automatically
 				-- puts the exception object on top of stack and there is no automatic
 				-- way to add it.
-			method_body.increment_stack_depth (1)
+			method_body.update_stack_depth (1)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld,
 				current_module.ise_last_exception_token)
 		end
@@ -3791,7 +3795,7 @@ feature -- Exception handling
 	generate_end_exception_block is
 			-- Mark end of rescue clause.
 		do
-			method_body.put_opcode (feature {MD_OPCODES}.rethrow)
+			method_body.put_rethrow
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
 		end
@@ -3801,8 +3805,7 @@ feature -- Assertions
 	generate_in_assertion_status is
 			-- Generate value of `in_assertion' on stack.
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, current_module.ise_in_assertion_token,
-				0, True)
+			method_body.put_static_call (current_module.ise_in_assertion_token, 0, True)
 		end
 
 	generate_is_assertion_checked (level: INTEGER) is
@@ -3816,8 +3819,7 @@ feature -- Assertions
 				level = feature {ASSERTION_I}.ck_invariant
 		do
 			if System.in_final_mode then
-				method_body.put_call (feature {MD_OPCODES}.Call, current_module.ise_in_assertion_token,
-					0, True)
+				method_body.put_static_call (current_module.ise_in_assertion_token, 0, True)
 				method_body.put_opcode (feature {MD_OPCODES}.ldc_i4_0);
 				method_body.put_opcode (feature {MD_OPCODES}.ceq)
 			else
@@ -3834,8 +3836,7 @@ feature -- Assertions
 	generate_set_assertion_status is
 			-- Set `in_assertion' flag with top of stack.
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call,
-				current_module.ise_set_in_assertion_token, 1, False)
+			method_body.put_static_call (current_module.ise_set_in_assertion_token, 1, False)
 		end
 
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
@@ -3899,9 +3900,8 @@ feature -- Assertions
 			put_integer_32_constant (feature {EXCEP_CONST}.precondition)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld,
 				current_module.ise_assertion_tag_token)
-			method_body.put_call (feature {MD_OPCODES}.Newobj,
-				current_module.ise_eiffel_exception_ctor_token, 1, True)
-			method_body.put_opcode (feature {MD_OPCODES}.Throw)
+			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 1)
+			method_body.put_throw
 		end
 
 	generate_raise_exception (a_code: INTEGER; a_tag: STRING) is
@@ -3916,9 +3916,8 @@ feature -- Assertions
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr,
 					md_emit.define_string (uni_string))
 			end
-			method_body.put_call (feature {MD_OPCODES}.Newobj,
-				current_module.ise_eiffel_exception_ctor_token, 1, True)
-			method_body.put_opcode (feature {MD_OPCODES}.Throw)
+			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 1)
+			method_body.put_throw
 		end
 
 	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
@@ -3953,7 +3952,7 @@ feature -- Assertions
 					feature {MD_METHOD_ATTRIBUTES}.Managed)
 
 				start_new_body (l_invariant_token)
-				method_body.put_opcode (feature {MD_OPCODES}.Ret)
+				generate_return (False)
 				method_writer.write_current_body
 			end
 
@@ -3971,7 +3970,7 @@ feature -- Assertions
 			start_new_body (l_dotnet_invariant_token)
 			generate_current
 			method_body.put_call (feature {MD_OPCODES}.Call, l_invariant_token, 0, False)
-			generate_return
+			generate_return (False)
 			method_writer.write_current_body
 		end
 		
@@ -4013,8 +4012,7 @@ feature -- Assertions
 			a_label_not_void: a_label /= Void
 		do
 			put_type_token (current_class_type.type.static_type_id)
-			method_body.put_call (feature {MD_OPCODES}.Call,
-				current_module.ise_is_invariant_checked_for_token, 1, True)
+			method_body.put_static_call (current_module.ise_is_invariant_checked_for_token, 1, True)
 			branch_on_true (a_label)
 		end
 
@@ -4025,8 +4023,7 @@ feature -- Assertions
 			type_i_not_void: type_i /= Void
 		do
 			put_boolean_constant (System.in_final_mode)
-			method_body.put_call (feature {MD_OPCODES}.Call,
-				current_module.ise_check_invariant_token, 1, False)
+			method_body.put_static_call (current_module.ise_check_invariant_token, 2, False)
 		end
 
 feature -- Constants generation
@@ -4251,8 +4248,7 @@ feature -- Binary operator generation
 			when il_gt then method_body.put_opcode (feature {MD_OPCODES}.Cgt)
 			when il_star then method_body.put_opcode (feature {MD_OPCODES}.Mul)
 			when il_power then
-				method_body.put_call (
-					feature {MD_OPCODES}.Call, current_module.power_method_token, 2, True)
+				method_body.put_static_call (current_module.power_method_token, 2, True)
 			when il_plus then method_body.put_opcode (feature {MD_OPCODES}.Add)
 			when il_mod then method_body.put_opcode (feature {MD_OPCODES}.Rem)
 			when il_minus then method_body.put_opcode (feature {MD_OPCODES}.Sub)
@@ -4292,7 +4288,7 @@ feature -- Basic feature
 	generate_is_digit is
 			-- Generate `is_digit' on CHARACTER.
 		local
-			l_min_token: INTEGER
+			l_is_digit_token: INTEGER
 			l_sig: like method_sig
 		do
 			l_sig := method_sig
@@ -4304,10 +4300,10 @@ feature -- Basic feature
 			set_signature_type (l_sig, Char_c_type)
 
 			uni_string.set_string ("IsDigit")
-			l_min_token := md_emit.define_member_ref (uni_string, current_module.char_type_token,
-				l_sig)
+			l_is_digit_token := md_emit.define_member_ref (uni_string,
+				current_module.char_type_token, l_sig)
 
-			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 1, True)
+			method_body.put_static_call (l_is_digit_token, 1, True)
 		end
 
 	generate_min (type: TYPE_I) is
@@ -4332,7 +4328,7 @@ feature -- Basic feature
 			l_min_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
-			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 2, True)
+			method_body.put_static_call (l_min_token, 2, True)
 		end
 
 	generate_max (type: TYPE_I) is
@@ -4357,7 +4353,7 @@ feature -- Basic feature
 			l_max_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
-			method_body.put_call (feature {MD_OPCODES}.Call, l_max_token, 2, True)
+			method_body.put_static_call (l_max_token, 2, True)
 		end
 
 	generate_abs (type: TYPE_I) is
@@ -4382,7 +4378,7 @@ feature -- Basic feature
 			l_abs_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
-			method_body.put_call (feature {MD_OPCODES}.Call, l_abs_token, 1, True)
+			method_body.put_static_call (l_abs_token, 1, True)
 		end
 
 	generate_to_string is
@@ -4798,7 +4794,8 @@ feature {NONE} -- Implementation: generation
 
 				pop
 			end
-			generate_return_value
+			generate_result
+			generate_return (True)
 
 			method_writer.write_current_body
 		end

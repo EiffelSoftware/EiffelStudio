@@ -1080,13 +1080,8 @@ feature -- Conversion
 
 feature -- Return statements
 
-	generate_return is
+	generate_return (has_return_value: BOOLEAN) is
 			-- Generate simple end of routine
-		do
-		end
-
-	generate_return_value is
-			-- Generate end of routine which returns `Result'.
 		do
 		end
 

@@ -514,6 +514,7 @@ feature -- Code generation
 			entry_type_token: INTEGER
 			l_sig: like method_sig
 			l_type_id: INTEGER
+			l_nb_args: INTEGER
 		do
 			l_type_id := a_class_type.implementation_id
 
@@ -553,23 +554,23 @@ feature -- Code generation
 			end
 
 				-- Create root object and call creation procedure.
-			il_code_generator.method_body.put_call (feature {MD_OPCODES}.Newobj,
-				constructor_token (creation_type_id), 0, True)
+			il_code_generator.method_body.put_newobj (constructor_token (creation_type_id), 0)
 
 			if a_has_arguments then
 					-- Generate conversion from the command line arguments
 					-- from .NET to an Eiffel array.
 				generate_argument_array
+				l_nb_args := 1
 			end
 
 			if a_class_type.is_generated_as_single_type then
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
-					feature_token (l_type_id, a_feature_id), 0, False)
+					feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			else
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call,
-					implementation_feature_token (l_type_id, a_feature_id), 0, False)
+					implementation_feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			end
-			il_code_generator.method_body.put_opcode (feature {MD_OPCODES}.Ret)
+			il_code_generator.generate_return (False)
 
 			method_writer.write_current_body
 		end
@@ -953,7 +954,7 @@ feature -- Metadata description
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call, l_ctor_token,
 					0, False)
 
-				il_code_generator.generate_return
+				il_code_generator.generate_return (False)
 				method_writer.write_current_body
 
 			end

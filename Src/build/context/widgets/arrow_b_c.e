@@ -12,13 +12,13 @@ inherit
 			create_context as button_create_context
 		redefine
 			stored_node, is_fontable, widget,
-			add_to_option_list
+			add_to_option_list, retrieve_set_visual_name
 		end;
 	BUTTON_C
 		redefine
 			create_context, stored_node, reset_modified_flags, 
 			copy_attributes, is_fontable, context_initialization,
-			add_to_option_list, widget
+			add_to_option_list, widget, retrieve_set_visual_name
 		select
 			copy_attributes, context_initialization, reset_modified_flags,
 			create_context
@@ -57,6 +57,11 @@ feature {NONE}
 							Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.arrow_b_att_form_nbr,
 							Context_const.Attribute_format_nbr);
+		end;
+
+	retrieve_set_visual_name (s: STRING) is
+		do
+			visual_name := clone (s);
 		end;
 
 feature 

@@ -106,6 +106,18 @@ void mclist_click_column_callback(GtkWidget *clist,
     (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
+gboolean mouse_enter_set_cursor (GtkWidget *widget, GdkEventCrossing *event, gpointer cursor)
+{
+	gdk_window_set_cursor (widget->window, cursor);
+	return TRUE;
+}
+
+gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor)
+{
+	return gtk_signal_connect (GTK_OBJECT (widget), "enter-notify-event",
+	GTK_SIGNAL_FUNC (mouse_enter_set_cursor), cursor);
+}
+
 gint timeout_callback (gpointer data){
 	//Callback called when a GtkTimeout is set
 	callback_data_t *pcbd;

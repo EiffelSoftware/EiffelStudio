@@ -178,7 +178,7 @@ rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
 	char *object;					/* Eiffel object's physical address */
 	int dtype;						/* Dynamic type associated with class ID */
 	
-	dtype = Deif_bid(cid_to_dtype(cid));		/* Convert class ID to dynamic type */
+	dtype = cid_to_dtype(cid);		/* Convert class ID to dynamic type */
 	if (dtype < 0)					/* Was not a valid reference type */
 		return (EIF_OBJ) 0;			/* No creation, return null pointer */
 

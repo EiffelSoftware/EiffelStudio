@@ -153,7 +153,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column (a_column).implementation
+			a_col_i := column_internal (a_column)
 			if not a_col_i.is_visible then
 				a_col_i.set_is_visible (True)
 				visible_column_count := visible_column_count + 1
@@ -171,7 +171,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column (a_column).implementation
+			a_col_i := column_internal (a_column)
 			if a_col_i.is_visible then
 				a_col_i.set_is_visible (False)
 				visible_column_count := visible_column_count - 1
@@ -188,7 +188,7 @@ feature -- Status setting
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
 			column_displayed: column_displayed (a_column)
 		do
-			to_implement ("EV_GRID_I.hide_column")
+			column_internal (a_column).enable_select
 		ensure
 			-- column_selected: column (a_column).forall (item (j).is_selected
 		end
@@ -199,7 +199,7 @@ feature -- Status setting
 			a_row_within_bounds: a_row > 0 and a_row <= row_count
 			column_displayed: column_displayed (a_row)
 		do
-			to_implement ("EV_GRID_I.hide_column")
+			row_internal (a_row).enable_select
 		ensure
 			-- column_selected: column (a_row).forall (item (i).is_selected
 		end
@@ -209,6 +209,10 @@ feature -- Status setting
 			-- unselecting any previous rows.
 		do
 			to_implement ("EV_GRID_I.enable_single_row_selection")
+			single_item_selection_enabled := False
+			multiple_item_selection_enabled := False
+			multiple_row_selection_enabled := False
+			single_row_selection_enabled := True
 		ensure
 			single_row_selection_enabled: single_row_selection_enabled
 		end
@@ -218,6 +222,10 @@ feature -- Status setting
 			-- Multiple rows may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_row_selection")
+			single_item_selection_enabled := False
+			multiple_item_selection_enabled := False
+			multiple_row_selection_enabled := True
+			single_row_selection_enabled := False
 		ensure
 			multiple_row_selection_enabled: multiple_row_selection_enabled
 		end
@@ -227,6 +235,10 @@ feature -- Status setting
 			-- unselecting any previous items.
 		do
 			to_implement ("EV_GRID_I.enable_single_item_selection")
+			single_item_selection_enabled := True
+			multiple_item_selection_enabled := False
+			multiple_row_selection_enabled := False
+			single_row_selection_enabled := False
 		ensure
 			single_item_selection_enabled: single_item_selection_enabled
 		end
@@ -236,6 +248,10 @@ feature -- Status setting
 			-- Multiple items may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_item_selection")
+			single_item_selection_enabled := False
+			multiple_item_selection_enabled := True
+			multiple_row_selection_enabled := False
+			single_row_selection_enabled := False
 		ensure
 			multiple_item_selection_enabled: multiple_item_selection_enabled
 		end
@@ -494,33 +510,21 @@ feature -- Status report
 			Result := a_col_i.is_visible
 		end
 		
-	single_row_selection_enabled: BOOLEAN is
+	single_row_selection_enabled: BOOLEAN
 			-- Does clicking an item select the whole row, unselecting
 			-- any previous rows?
-		do
-			to_implement ("EV_GRID_I.single_row_selection_enabled")
-		end
 
-	multiple_row_selection_enabled: BOOLEAN is
+	multiple_row_selection_enabled: BOOLEAN
 			-- Does clicking an item select the whole row, with multiple
 			-- row selection permitted?
-		do
-			to_implement ("EV_GRID_I.multiple_row_selection_enabled")
-		end
 		
-	single_item_selection_enabled: BOOLEAN is
+	single_item_selection_enabled: BOOLEAN
 			-- Does clicking an item select the item, unselecting
 			-- any previous items?
-		do
-			to_implement ("EV_GRID_I.single_item_selection_enabled")
-		end
 
-	multiple_item_selection_enabled: BOOLEAN is
+	multiple_item_selection_enabled: BOOLEAN
 			-- Does clicking an item select the item, with multiple
 			-- item selection permitted?
-		do
-			to_implement ("EV_GRID_I.multiple_item_selection_enabled")
-		end
 		
 	first_visible_row: INTEGER is
 			-- Index of first row visible in `Current' or 0 if `row_count' = 0.
@@ -768,16 +772,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- (`row_list' @ (i - 1)) @ (visible_physical_column_indexes @ (j - 1)) returns the 'j'-th visible column value for the `i'-th row in the grid.
 		local
 			i: INTEGER
-			a_col: EV_GRID_COLUMN
+			a_col: EV_GRID_COLUMN_I
 		do
 			create Result.make (visible_column_count)
 			from
 				i := 1
 			until
-				i > visible_column_count
+				i > column_count
 			loop
-				a_col := column (i)
-				Result.put (i - 1, a_col.implementation.physical_index)
+				a_col := column_internal (i)
+				if a_col.is_visible then
+					Result.put (i - 1, a_col.physical_index)
+				end
 				i := i + 1
 			end
 		end

@@ -1,49 +1,39 @@
 indexing
 
-	description: 
-	"SCROLLABLE_AREA_DEMO_WINDOW, demo window to test scrollable area widget. Belongs to EiffelVision example."
+	description: "EiffelVision pixmap, implementation interface"
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
-	SCROLLABLE_AREA_DEMO_WINDOW
+
+deferred class
+
+	EV_PIXMAP_I 
 
 inherit
 
-	DEMO_WINDOW
-	
-creation
+	EV_PRIMITIVE_I
 
-	make
+feature {NONE} -- Initialization
 
-feature -- Access
+        make (par: EV_CONTAINER) is
+                        -- Create a pixmap implementation.
+		deferred
+                end	
 
-	main_widget: EV_SCROLLABLE_AREA is
-		once
-			!!Result.make (Current)
-		end
+feature -- Element change
+	
+	read_from_file (file_name: STRING) is
+			-- Load the pixmap described in 'file_name'. 
+			-- If the file does not exist or it is in a 
+			-- wrong format, an exception is raised.
+		require
+			file_name_exists: file_name /= Void
+		deferred
+		end	
 	
 	
-feature -- Status setting
-	
-	set_widgets is
-		local
-			p: EV_PIXMAP
-		do
-			!!p.make (main_widget)
-			p.read_from_file ("../pixmaps/vision.xpm")
-		end
-	
-feature -- Status setting
-	
-	set_values is
-		do
-			set_title ("Scrollable area demo")
-		end
+end -- class EV_PIXMAP_I
 
-end
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -60,3 +50,4 @@ end
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+

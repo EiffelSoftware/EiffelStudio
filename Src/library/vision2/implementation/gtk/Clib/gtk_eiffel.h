@@ -68,10 +68,6 @@ void c_gtk_signal_disconnect (GtkObject *widget,
 /* True, if widget is destroyed */
 int c_gtk_widget_destroyed (GtkWidget *widget);
 
-/* Create a pixmap widget from an xpm file */
-GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
-
-
 /* Set widget flags */
 void c_gtk_widget_set_flags (GtkWidget *widget, int flags);
 
@@ -193,3 +189,13 @@ void c_gtk_widget_show_children (GtkWidget *widget);
 EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
 
+/* Create an empty pixmap */
+GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget);
+
+/* Create a pixmap widget from an xpm file */
+GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
+
+/* Read the pixmap for xpm file */
+void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
+				  GtkWidget *pixmap_parent,
+				  char *file_name );

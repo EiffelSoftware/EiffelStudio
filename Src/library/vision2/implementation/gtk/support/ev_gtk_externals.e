@@ -251,7 +251,7 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 
-	 gtk_table_new (rows, columns: INTEGER; homogenous: BOOLEAN): POINTER is
+	gtk_table_new (rows, columns: INTEGER; homogenous: BOOLEAN): POINTER is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -467,7 +467,12 @@ feature {NONE} -- GTK C functions
 	gtk_paned_add2 (paned: POINTER; child: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
-						
+	
+	--pixmap
+	gtk_pixmap_new (pixmap, mask: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end 
+	
 feature {NONE} -- code in the glue library
 
 
@@ -489,10 +494,6 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 	
-	c_gtk_pixmap_create_from_xpm (parent: POINTER; fname: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
-		end
-
 	c_gtk_widget_set_flags (w: POINTER; flags: INTEGER) is
 		external "C | %"gtk_eiffel.h%""
 		end
@@ -584,6 +585,21 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end
 	
+	-- pixmap
+	c_gtk_pixmap_create_empty (parent: POINTER): POINTER is
+		external "C | %"gtk_eiffel.h%""
+		end
+	
+	c_gtk_pixmap_create_from_xpm (parent: POINTER; file_name: POINTER): POINTER is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+
+	c_gtk_pixmap_read_from_xpm (widget, parent: POINTER; file_name: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+
 feature {NONE} -- Implementation
 	
 	routine_address (routine: POINTER): POINTER is

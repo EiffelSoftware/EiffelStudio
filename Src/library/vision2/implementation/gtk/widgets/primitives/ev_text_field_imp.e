@@ -90,18 +90,38 @@ feature -- Status setting
 			gtk_entry_set_max_length (widget, len)
 		end
 	
+	get_maximum_text_length: INTEGER is
+			-- Return the maximum number of characters that the
+			-- user may enter.
+		do
+			Result := c_gtk_entry_get_max_length (widget)
+		end
+
 feature -- Event - command association
 	
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be
-			-- executed when the button is pressed
+			-- Use 'add_return_command' instead.
 		do
-			add_command (widget, "activate", cmd,  arg)
+			add_command (widget, "activate", cmd,  arg, default_pointer)
+		end
+
+	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		do
+			add_command (widget, "activate", cmd,  arg, default_pointer)
 		end
 
 feature -- Event -- removing command association
 
 	remove_activate_commands is
+			-- Use 'remove_return_command' instead.
+		do
+			remove_commands (widget, activate_id)
+		end
+
+	remove_return_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.

@@ -932,15 +932,8 @@ end
 			end
 
 			if is_global_once then
-					-- Need `volatile' qualifier for global once in
-					-- multithreaded environment, to ensure that we
-					-- read the value in memory and not value from
-					-- the processor cache.
-				buf.put_string ("static volatile EIF_BOOLEAN done = 0;")
-				buf.put_new_line
-				buf.put_string ("static volatile EIF_BOOLEAN finished = 0;")
-				buf.put_new_line
-				buf.put_string ("static volatile EIF_POINTER thread_id = NULL;")
+					-- Generate locals for global once routine
+				buf.put_string ("RTOPD")
 				buf.put_new_line
 			end
 

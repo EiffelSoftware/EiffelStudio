@@ -115,23 +115,24 @@ extern "C" {
 /* Exported routines (used by the generated C code or run-time) */
 RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
 RT_LNK void eraise(EIF_CONTEXT char *tag, long num);			/* Raise an Eiffel exception */
-extern void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
+RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
 RT_LNK void enomem(EIF_CONTEXT_NOARG);			/* Raises an "Out of memory" exception */
-extern struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
-extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
+RT_LNK struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
+RT_LNK void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
 RT_LNK void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
 RT_LNK void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
-extern void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
-extern void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
-extern void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
-extern void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
-extern void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
-extern void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
-extern void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
-extern struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */
-extern void excatch(EIF_CONTEXT char *jmp);			/* Set exception catcher from C to interpret */
-extern void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
+RT_LNK void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
+RT_LNK void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
+RT_LNK void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
+RT_LNK void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
+RT_LNK void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
+RT_LNK void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
+RT_LNK void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
+RT_LNK struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */
+RT_LNK void excatch(EIF_CONTEXT char *jmp);			/* Set exception catcher from C to interpret */
+RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
+
 #ifndef WORKBENCH
 extern struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif

@@ -46,7 +46,7 @@ feature
 			if e_cmd /= Void then
 				e_cmd.execute
 			end;
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("Application stopped - reading (STOPPED_HDLR):%N");
 end;
 				-- Physical address of objects held in object tools
@@ -88,7 +88,7 @@ end;
 				-- Read assertion tag.
 			read_string;
 
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("Application stopped - finished reading%N");
 	io.error.putstring ("Setting app status for routine: ");
 	io.error.putstring (name);
@@ -102,14 +102,14 @@ end;
 			status.set (name, address, org_type, dyn_type, offset, reason);
 			status.set_exception (last_int, last_string);
 
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("Finished setting status (Now calling after cmd)%N")
 end;
 			e_cmd := Application.after_stopped_command;
 			if e_cmd /= Void then
 				e_cmd.execute
 			end;
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("Finished calling after_cmd (STOPPED_HDLR)%N")
 end;
 		end;

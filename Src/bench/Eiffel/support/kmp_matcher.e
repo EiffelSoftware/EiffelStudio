@@ -84,10 +84,8 @@ feature -- Search
 				if is_not_case_sensitive then
 					old_text := text
 					old_pattern := pattern
-					pattern := pattern.out
-					pattern.to_lower
-					text := text.out
-					text.to_lower
+					pattern := pattern.as_lower
+					text := text.as_lower
 				end
 				init_arrays 
 				pattern_area := pattern.area
@@ -135,10 +133,8 @@ feature -- Search
 				if is_not_case_sensitive then
 					old_text := text
 					old_pattern := pattern
-					pattern := pattern.out
-					pattern.to_lower
-					text := text.out
-					text.to_lower
+					pattern := pattern.as_lower
+					text := text.as_upper
 				end
 				init_arrays 
 				create t.make (10)

@@ -129,7 +129,7 @@ feature -- Execution
 			until
 				sorted_class_names.after
 			loop
-				structured_text.add_char ('%T');
+				structured_text.add_indent;
 				a_classi := classes.item (sorted_class_names.item);
 				a_classe := a_classi.compiled_eclass;
 				if a_classe /= Void then

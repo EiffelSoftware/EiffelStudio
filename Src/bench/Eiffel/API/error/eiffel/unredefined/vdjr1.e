@@ -28,14 +28,16 @@ feature -- Output
 		do
 			st.add_string ("First type: ");
 			old_type.append_to (st);
-			st.add_string ("%NSecond type: ");
+			st.add_new_line;
+			st.add_string ("Second type: ");
 			type.append_to (st);
 			st.add_new_line;
 		end;
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Result types are different%N");
+			st.add_string ("Result types are different");
+			st.add_new_line;
 			print_types (st);
 			print_signatures (st);
 		end;

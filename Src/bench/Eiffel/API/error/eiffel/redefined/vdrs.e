@@ -30,7 +30,8 @@ feature -- Output
             -- Build specific explanation explain for current error
             -- in `st'.
         do
-			st.add_string ("%TFeature: ");
+			st.add_indent;
+			st.add_string ("Feature: ");
 			st.add_string (feature_name);
 			st.add_new_line;
 		end;

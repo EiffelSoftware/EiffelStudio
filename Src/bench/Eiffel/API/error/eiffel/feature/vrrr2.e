@@ -29,10 +29,11 @@ feature -- Output
 		do
 			st.add_string ("Kind of routine: ");
 			if is_deferred then
-				st.add_string ("deferred%N")
+				st.add_string ("deferred")
 			else
-				st.add_string ("external%N")
+				st.add_string ("external")
 			end;
+			st.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -50,7 +50,8 @@ feature -- Output
 			unique_feature.append_name (st, wclass);
 			st.add_string (" From: ");
 			wclass.append_name (st);
-			st.add_string ("%NOrigin of conflicting constants: ");
+			st.add_new_line;
+			st.add_string ("Origin of conflicting constants: ");
 			written_class.append_name (st);
 			st.add_new_line;
 		end;

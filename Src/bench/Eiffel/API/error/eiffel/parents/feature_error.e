@@ -50,14 +50,15 @@ feature -- Output
 			print_error_message (st);
 			st.add_string ("Class: ");
 			e_class.append_signature (st);
+			st.add_new_line;
 			if e_feature /= Void then
-				st.add_string ("%NFeature: ");
+				st.add_string ("Feature: ");
 				e_feature.append_name (st, e_class);
 			elseif feature_name /= Void then
-				st.add_string ("%NFeature: ");
+				st.add_string ("Feature: ");
 				st.add_string (feature_name);
 			else
-				st.add_string ("%NFeature: invariant");
+				st.add_string ("Feature: invariant");
 			end;
 			st.add_new_line;
 			build_explain (st)

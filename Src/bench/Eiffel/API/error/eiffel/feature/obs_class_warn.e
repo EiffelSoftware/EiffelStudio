@@ -69,9 +69,11 @@ feature -- Output
 		do
 			st.add_string ("Class: ");
 			associated_class.append_name (st);
-			st.add_string ("%NObsolete class: ");
+			st.add_new_line;
+			st.add_string ("Obsolete class: ");
 			obsolete_class.append_name (st);
-			st.add_string ("%NObsolete message: ");
+			st.add_new_line;
+			st.add_string ("Obsolete message: ");
 			st.add_string (obsolete_class.obsolete_message);
 			st.add_new_line;
 		end;

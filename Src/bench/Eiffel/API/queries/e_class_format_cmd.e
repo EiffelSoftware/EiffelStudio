@@ -95,7 +95,9 @@ feature -- Execution
 				structured_text.add_string ("Class ");
 				e_class := classes.item;
 				e_class.append_signature (structured_text);
-				structured_text.add_string (":%N%N");
+				structured_text.add_string (":");
+				structured_text.add_new_line;
+				structured_text.add_new_line;
 				list := table.item (e_class.id);
 				list.sort;
 				from
@@ -104,7 +106,7 @@ feature -- Execution
 					list.after
 				loop
 					e_feature := list.item;
-					structured_text.add_char ('%T');
+					structured_text.add_indent;
 					display_feature (e_feature, c, structured_text);
 					structured_text.add_new_line;
 					list.forth

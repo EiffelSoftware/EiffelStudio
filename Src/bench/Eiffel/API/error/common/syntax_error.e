@@ -63,7 +63,8 @@ feature -- Output
 			if not msg.empty then
 				st.add_char ('(');
 				st.add_string (msg)
-				st.add_string (")%N");
+				st.add_string (")");
+				st.add_new_line
 			end
 		end;
 
@@ -106,7 +107,8 @@ feature -- Output
 						-- Error happened while parsing a "use" file
 					st.add_string (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						st.add_string ("%N	 File: "); 
+						st.add_new_line;
+						st.add_string ("	 File: "); 
 						st.add_string (file_name);
 					end;
 				end
@@ -170,7 +172,8 @@ feature -- Output
 			st.add_new_line;
 			position := pos + 3*nb_tab;
 			if position = 0 then
-				st.add_string ("^---------------------------%N");
+				st.add_string ("^---------------------------");
+				st.add_new_line
 			else
 				from
 					i := 1;
@@ -180,7 +183,8 @@ feature -- Output
 					st.add_char ('-');
 					i := i + 1;
 				end;
-				st.add_string ("^%N");
+				st.add_string ("^");
+				st.add_new_line
 			end;
 		end;
 

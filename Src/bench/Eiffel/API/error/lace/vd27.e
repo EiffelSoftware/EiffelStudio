@@ -25,7 +25,8 @@ feature -- Output
 		do
 			st.add_string ("Root class: ");
 			root_class.append_name (st);
-			st.add_string ("%NInvalid procedure name: ");
+			st.add_new_line;
+			st.add_string ("Invalid procedure name: ");
 			st.add_string (creation_routine);
 			st.add_new_line
 		end;

@@ -49,10 +49,11 @@ feature -- Output
 			st.add_string (" from ");
 			wclass.append_name (st);
 			if old_feature.is_external then
-				st.add_string (" is an external routine%N")
+				st.add_string (" is an external routine")
 			else
-				st.add_string (" is not an external routine%N")
+				st.add_string (" is not an external routine")
 			end;
+			st.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER}

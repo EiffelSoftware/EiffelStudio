@@ -99,14 +99,26 @@ feature {QUERY_EXECUTER} -- Implementation
 				if not current_item.is_equal ("last_output") then
 					profile_information ?= store.retrieve_by_name (expanded_filenames.item);
 					if profile_information /= Void then
-						st.add_string ("%N%N:::::::::::::::::::::::::::::::::::%N");
+						st.add_new_line;
+						st.add_new_line;
+						st.add_string (":::::::::::::::::::::::::::::::::::");
+						st.add_new_line;
 						st.add_string (expanded_filenames.item);
-						st.add_string ("%N:::::::::::::::::::::::::::::::::::%N%N")
+						st.add_new_line;
+						st.add_string (":::::::::::::::::::::::::::::::::::")
+						st.add_new_line;
+						st.add_new_line;
 					end
 				else
-					st.add_string ("%N%N:::::::::::::::::::::::::::::::%N");
+					st.add_new_line;
+					st.add_new_line;
+					st.add_string (":::::::::::::::::::::::::::::::");
+					st.add_new_line;
 					st.add_string ("last output");
-					st.add_string ("%N:::::::::::::::::::::::::::::::%N%N");
+					st.add_new_line;
+					st.add_string (":::::::::::::::::::::::::::::::");
+					st.add_new_line;
+					st.add_new_line;
 					profile_information := int_last_output
 				end
 			end
@@ -246,10 +258,10 @@ feature {QUERY_EXECUTER} -- Implementation
 				i > prof_options.output_names.count
 			loop
 				st.add_string (prof_options.output_names.item(i));
-				st.add_string("%T");
+				st.add_indent;
 				i := i + 1
 			end;
-			st.add_string("%N")
+			st.add_new_line
 		end;
 
 	print_result is
@@ -602,24 +614,24 @@ feature {QUERY_EXECUTER} -- Implementation
 			loop
 				if prof_options.output_names.item (i).is_equal ("featurename") then
 					st.add_string (item.function.out);
-					st.add_string ("%T")
+					st.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("calls") then
 					st.add_string (item.number_of_calls.out)
 				elseif prof_options.output_names.item (i).is_equal ("self") then
 					st.add_string (item.self_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendents") then
 					st.add_string (item.descendents_sec.out);
-					st.add_string ("%T")
+					st.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("total") then
 					st.add_string (item.total_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then
 					st.add_string (item.percentage.out);
-					st.add_string ("%T")
+					st.add_indent
 				end
-				st.add_string("%T");
+				st.add_indent
 				i := i + 1
 			end;
-			st.add_string("%N")
+			st.add_new_line
 		end;
 
 feature {NONE} -- Attributes

@@ -31,17 +31,17 @@ feature {NONE} -- Implementation
 
 	displayed: LINKED_LIST [CL_TYPE_A];
 
-	tabs (i: INTEGER): STRING is
+	add_tabs (st: STRUCTURED_TEXT; i: INTEGER) is
+			-- Add `i' tabs to `structured_text'.
 		local
 			j: INTEGER
 		do
 			from
 				j := 1;
-				!!Result.make (i)
 			until
 				j > i
 			loop
-				Result.append_character ('%T');
+				structured_text.add_indent;
 				j := j + 1
 			end;
 		end;
@@ -79,10 +79,11 @@ feature {NONE} -- Implementation
 						parents.after
 					loop
 						parent_class := parents.item.associated_eclass;
-						st.add_string (tabs (i));
+						add_tabs (st, i);
 						parent_class.append_signature (st);
 						if already_processed (parents.item) then
-							st.add_string ("...%N")
+							st.add_string ("...");
+							st.add_new_line;
 						else	
 							st.add_new_line;
 							displayed.extend (parents.item);

@@ -269,7 +269,9 @@ feature -- Access
 				cn := clone (c.name)
 				cn.to_upper;
 				Result.add_classi (c.lace_class, cn);
-				Result.add_string ("%N%N%T");
+				Result.add_new_line;
+				Result.add_new_line;
+				Result.add_indent;
 				if
 					class_text.count >= end_position and
 					start_position < end_position
@@ -278,7 +280,7 @@ feature -- Access
 								(start_position + 1, end_position);
 					Result.add_feature (Current, c, class_text)
 				end;
-				Result.add_string ("%N");
+				Result.add_new_line;
 			end
 		end;
 

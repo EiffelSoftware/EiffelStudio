@@ -38,11 +38,14 @@ feature -- Output
 			print_called_feature (st);
 			st.add_string ("Argument name: ");
 			st.add_string (argument_name);
-			st.add_string ("%NArgument position: ");
+			st.add_new_line;
+			st.add_string ("Argument position: ");
 			st.add_int (argument_position);
-			st.add_string ("%NActual argument type: ");
+			st.add_new_line;
+			st.add_string ("Actual argument type: ");
 			actual_type.append_to (st);
-			st.add_string ("%NFormal argument type: ");
+			st.add_new_line;
+			st.add_string ("Formal argument type: ");
 			formal_type.append_to (st);
 			st.add_new_line;
 		end;

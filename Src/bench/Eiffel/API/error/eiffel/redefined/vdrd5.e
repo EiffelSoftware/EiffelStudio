@@ -56,7 +56,8 @@ feature -- Output
 			redeclaration.append_signature (st, r_class);
 			st.add_string (" From: ");
 			r_class.append_name (st);
-			st.add_string ("%NPrecursor: ");
+			st.add_new_line;
+			st.add_string ("Precursor: ");
 			precursor.append_signature (st, p_class);
 			st.add_string (" From: ");
 			p_class.append_name (st);

@@ -48,15 +48,17 @@ feature -- Output
 		do
 			st.add_string ("Feature: ");
 			a_feature.append_name (st, a_feature.written_class);
+			st.add_new_line;
 			if postcondition then
 				if precondition then
-					st.add_string ("%NInvalid assertion clauses: precondition and postcondition%N")
+					st.add_string ("Invalid assertion clauses: precondition and postcondition")
 				else
-					st.add_string ("%NInvalid assertion clause: postcondition%N")
+					st.add_string ("Invalid assertion clause: postcondition")
 				end;
 			else
-				st.add_string ("%NInvalid assertion clause: precondition%N")
+				st.add_string ("Invalid assertion clause: precondition")
 			end;
+			st.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER}

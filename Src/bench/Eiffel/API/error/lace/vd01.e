@@ -30,7 +30,8 @@ feature -- Output
 		do
 			st.add_string ("Cluster name: ");
 			st.add_string (cluster_name);
-			st.add_string ("%NPath name: ");
+			st.add_new_line;
+			st.add_string ("Path name: ");
 			st.add_string (path);
 			st.add_new_line
 		end;

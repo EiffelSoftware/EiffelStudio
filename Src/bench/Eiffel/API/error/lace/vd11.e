@@ -29,9 +29,11 @@ feature -- Output
 			put_cluster_name (st);
 			st.add_string ("Class name: ");
 			st.add_string (a_class.class_name);
-			st.add_string ("%NFirst file: ");
+			st.add_new_line;
+			st.add_string ("First file: ");
 			st.add_string (file_name);
-			st.add_string ("%NSecond file: ");
+			st.add_new_line;
+			st.add_string ("Second file: ");
 			st.add_string (a_class.file_name);
 			st.add_new_line
 		end;

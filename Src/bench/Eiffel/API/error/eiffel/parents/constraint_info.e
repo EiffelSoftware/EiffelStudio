@@ -29,11 +29,15 @@ feature -- Output
 		do
 			st.add_string ("For type: ");
 			type.append_to (st);
-			st.add_string ("%NArgument number: ");
+			st.add_new_line;
+			st.add_string ("Argument number: ");
 			st.add_int (formal_number);
-			st.add_string (":%NActual generic parameter: ");
+			st.add_string (":");
+			st.add_new_line;
+			st.add_string ("Actual generic parameter: ");
 			actual_type.append_to (st);
-			st.add_string ("%NType to which it should conform: ");
+			st.add_new_line;
+			st.add_string ("Type to which it should conform: ");
 			c_type.append_to (st);
 			st.add_new_line;
 		end

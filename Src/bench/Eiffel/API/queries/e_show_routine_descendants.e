@@ -34,9 +34,12 @@ feature -- Execution
 			until
 				i > rout_id_set.count
 			loop
-				structured_text.add_string ("%NHistory branch #");
+				structured_text.add_new_line;	
+				structured_text.add_string ("History branch #");
 				structured_text.add_int (i);
-				structured_text.add_string ("%N-----------------%N");
+				structured_text.add_new_line;	
+				structured_text.add_string ("-----------------");
+				structured_text.add_new_line;	
 				from
 					classes.start
 				until
@@ -48,7 +51,9 @@ feature -- Execution
 						e_class.append_name (structured_text);
 						structured_text.add_string (" ");
 						other_feature.append_signature (structured_text, classes.item);
-						structured_text.add_string ("%N%TVersion from class ");
+						structured_text.add_new_line;
+						structured_text.add_indent;
+						structured_text.add_string ("Version from class ");
 						other_feature.written_class.append_name (structured_text);
 						structured_text.add_new_line;	
 					end;

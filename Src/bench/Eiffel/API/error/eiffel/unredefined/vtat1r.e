@@ -24,7 +24,8 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Anchor name: Result%N");
+			st.add_string ("Anchor name: Result");
+			st.add_new_line;
 			old_build_explain (st);
 		end;
 

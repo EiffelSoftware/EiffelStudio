@@ -61,7 +61,7 @@ feature -- Execution
 				loop
 					cfeat := list.item;
 					feat := client.feature_with_name (cfeat);
-					structured_text.add_char ('%T');
+					structured_text.add_indent;
 					if feat = Void then
 						structured_text.add_string ("invariant")
 					else

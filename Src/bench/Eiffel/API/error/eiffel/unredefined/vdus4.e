@@ -28,7 +28,8 @@ feature -- Output
 		do
 			st.add_string ("Duplicate name: ");
 			st.add_string (feature_name);
-			st.add_string ("%NIn Undefine clause for parent: ");
+			st.add_new_line;
+			st.add_string ("In Undefine clause for parent: ");
 			st.add_string (parent_name);
 			st.add_new_line;
 		end;

@@ -113,14 +113,17 @@ feature {NONE} -- Implementation
 
 	display_error_error (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Exception occurred while displaying error message.%N%
-						%Please contact ISE to report this bug.%N");
+			st.add_string ("Exception occurred while displaying error message.");
+			st.add_new_line;
+			st.add_string ("Please contact ISE to report this bug.");
+			st.add_new_line
 		end;
 
 	display_separation_line (st: STRUCTURED_TEXT) is
 		do
 			st.add_string
-("-------------------------------------------------------------------------------%N");
+("-------------------------------------------------------------------------------");
+			st.add_new_line
 		end;
 
 invariant

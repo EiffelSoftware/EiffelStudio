@@ -43,7 +43,8 @@ feature -- Output
 			-- Build specific explanation image for current error
 			-- in `st'.
 		do
-			st.add_string ("%TThere is no feature ");
+			st.add_indent;
+			st.add_string ("There is no feature ");
 			st.add_string (op_name);
 			st.add_string (" in class ");
 			other_class.append_name (st);

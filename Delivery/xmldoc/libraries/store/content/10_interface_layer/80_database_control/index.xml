@@ -1,7 +1,7 @@
 <document output="studio" title="Database control">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Use the DB_CONTROL class to check or change database status and behavior. The main operations you are likely to use are:</paragraph>
+		<paragraph>Use the <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> class to check or change database status and behavior. The main operations you are likely to use are:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -26,7 +26,7 @@
 			<size>2</size>Handling database errors
 		</heading>
 		<paragraph>Every EiffelStore interface class has an is_ok feature. This enables to check directly if the last database operation has been successful.</paragraph>
-		<paragraph>When an error is detected, you can access through DB_CONTROL further information about the error:</paragraph>
+		<paragraph>When an error is detected, you can access through <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> further information about the error:</paragraph>
 		<list ordered="false">
 			<item>error_message provides a description of the error that occurred.</item>
 			<item>error_code returns a code corresponding to the error type. This code enables to handle specific errors within your code without parsing the error_message.</item>
@@ -36,9 +36,17 @@
 		<heading>
 			<size>2</size>Managing database connection
 		</heading>
-		<paragraph>DB_CONTROL lets you connect, check connection and disconnect from the database.</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> lets you connect, check connection and disconnect from the database.</paragraph>
 		<paragraph>The following example sum up these capabilities:</paragraph>
-		<code_block>Missing</code_block>
+<code_block>
+	<feature_name>session_control</feature_name><symbol>:</symbol> <class_name>DB_CONTROL</class_name>
+	...
+	<feature_name>session_control</feature_name>.<feature_name>connect</feature_name>
+	<keyword>if</keyword> <feature_name>session_control</feature_name>.<feature_name>is_connected</feature_name> <keyword>then</keyword>
+		<comment>-- Perform your transactions here.</comment>
+		<feature_name>session_control</feature_name>.<feature_name>disconnect</feature_name>
+	<keyword>end</keyword>
+</code_block>
 		<heading>
 			<size>2</size>Committing changes in the database
 		</heading>
@@ -52,7 +60,21 @@
 			</item>
 		</list>
 		<paragraph>The following example illustrates the use of these commands:</paragraph>
-		<code_block>Missing</code_block>
+<code_block>
+	<feature_name>session_control</feature_name><symbol>:</symbol> <class_name>DB_CONTROL</class_name>
+	...
+	<keyword>from</keyword>
+	<keyword>until</keyword>
+		<feature_name>transaction_completed</feature_name> <keyword>or</keyword> <keyword>else</keyword> <keyword>not</keyword> <feature_name>session_control</feature_name>.<feature_name>is_ok</feature_name>
+	<keyword>loop</keyword>
+		<comment>-- Perform your transaction here.</comment>
+	<keyword>end</keyword>
+	<keyword>if</keyword> <feature_name>session_control</feature_name>.<feature_name>is_ok</feature_name> <keyword>then</keyword>
+		<feature_name>session_control</feature_name>.<feature_name>commit</feature_name>
+	<keyword>else</keyword>
+		<feature_name>session_control</feature_name>.<feature_name>rollback</feature_name>
+	<keyword>end</keyword>
+</code_block>
 		<paragraph>The loop performs a multi-step transaction. If transaction is not carried out entirely, the database could stay in an invalid state: this code ensures that database remains in a valid state.</paragraph>
 		<warning>
 			<bold>Caution</bold>: Some databases can be in an auto-commit mode. Furthermore, some special database commands can automatically commit database changes.

@@ -108,15 +108,22 @@
 		<paragraph>EiffelVision provides programmers with high-level classes, that provide all mechanism and data structures needed to build advanced user interfaces for deployment on almost all platforms without having to worry about detailed requirements of toolkits.</paragraph>
 		<paragraph>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type STRING) on BUTTON.</paragraph>
 		<note>
-			<bold>Note</bold>: all class names in EiffelVision are  pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes EV_BUTTON, etc. 
+			<bold>Note</bold>: all class names in EiffelVision are  pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes <code><class_name>EV_BUTTON</class_name></code>, etc. 
 		</note>
 		<heading>
 			<size>2</size>Properties
 		</heading>
 		<paragraph>When talking about a property of a class, like `text', in fact we are talking about multiple features. One is a query of the state of the property, in this case simply the query `text'. The other is the set-routine, which is by convention named `set_text' taking exactly one argument of the type of property. A property can be read-only, which means that it cannot be set by clients of the class.</paragraph>
-		<code_block>Missing</code_block>
+<code_block>
+	<feature_name>text</feature_name><symbol>:</symbol> <class_name>STRING</class_name>
+	<feature_name>set_text</feature_name> <symbol>(</symbol>a_text<symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol> <keyword>is</keyword> <feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>
+</code_block>
 		<paragraph>  Boolean properties have a different convention. Instead of one set-routine, it has one enable-routine and one disable-routine. The first one sets the property to true, the second to false. This has been done like this because sometimes these enable/disable features have trivial equivalents, for example for feature `enable_visible' a clearer name is `show'. </paragraph>
-		<code_block>Missing</code_block>
+<code_block>
+	<feature_name>is_sensitive</feature_name><symbol>:</symbol> <class_name>BOOLEAN</class_name>
+	<feature_name>enable_sensitive</feature_name> <keyword>is</keyword> <feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name> 
+	<feature_name>disable_sensitive</feature_name> <keyword>is</keyword> <feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name> 
+</code_block>
 		<heading>
 			<size>2</size>Implementation
 		</heading>

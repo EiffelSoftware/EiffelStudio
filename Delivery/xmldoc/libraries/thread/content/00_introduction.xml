@@ -1,12 +1,12 @@
 <document output="studio" title="EiffelThread Content">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Multithreaded applications provide a flexible, exciting way of    utilizing the power of modern computer systems. ISE Eiffel supports a    powerful multithreaded model, fast and easy to use.</paragraph>
+		<paragraph>Multithreaded applications provide a flexible, exciting way of utilizing the power of modern computer systems. ISE Eiffel supports a    powerful multithreaded model, fast and easy to use.</paragraph>
 		<paragraph>The 
 			<link>
 				<url>10_thread_library.xml</url>
 				<label>EiffelThread library</label>
-			</link>    is mapped to the C thread standard libraries: it supports    Windows, POSIX-like and Unix International Threads. EiffelThread is    supported by the ISE compiler and run-time on Windows, Linux, FreeBSD,    LinuxPPC, Solaris, SGI, VxWorks, LynxOS, CRAY and Unixware.
+			</link>    is mapped to the C thread standard libraries: it supports Windows, POSIX-like and Unix International Threads. EiffelThread is    supported by the ISE compiler and run-time on Windows, Linux, FreeBSD,    LinuxPPC, Solaris, SGI, VxWorks, LynxOS, CRAY and Unixware.
 		</paragraph>
 		<paragraph>This document will explain 
 			<link>
@@ -14,7 +14,7 @@
 				<label>how to use the EiffelThread library</label>
 			</link>.    To fully take advantage of this documentation you should know some    basics about multithreaded systems
 		</paragraph>
-		<paragraph>To enable multithreading in the ISE EiffelStudio environment, you    will need to do some changes in your 
+		<paragraph>To enable multithreading in the ISE EiffelStudio environment, you will need to do some changes in your 
 			<link>
 				<url>/technologies/threads/10_compilation.xml</url>
 				<label>project    settings</label>
@@ -24,11 +24,11 @@
 				<label>here</label>
 			</link>.
 		</paragraph>
-		<paragraph>Users of the EiffelThread library in version 4.5 and older should    read " 
+		<paragraph>Users of the EiffelThread library in version 4.5 and older should read "
 			<link>
 				<url>/technologies/threads/30_changes_between_45_and_50.xml</url>
-				<label>changes    between 4.5 and 5.0</label>
-			</link>" to get the info they need to migrate their    code to the new implementation of threads in Eiffel.
+				<label>changes between 4.5 and 5.0</label>
+			</link>" to get the info they need to migrate their code to the new implementation of threads in Eiffel.
 			<paragraph>If you encounter problems, take a look at the 
 				<link>
 					<url>20_faq.xml</url>

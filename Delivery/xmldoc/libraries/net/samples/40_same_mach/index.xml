@@ -1,4 +1,4 @@
-<document output="studio" title="Same Mach">
+<document output="studio" title="Same Machine">
 	<meta_data/>
 	<paragraph>
 		<heading>
@@ -18,7 +18,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\net\polling\client\</italic>. 
+				<italic>$ISE_EIFFEL\examples\net\polling\client\</italic>. 
 			</item>
 			<item>Select 
 				<italic>Ace.unix.ace</italic> on Unix platforms. 
@@ -38,7 +38,7 @@
 				<bold>OK</bold>. 
 			</item>
 			<item>Browse to 
-				<italic>Eiffel52\examples\net\polling\server\</italic>. 
+				<italic>$ISE_EIFFEL\examples\net\polling\server\</italic>. 
 			</item>
 			<item>Select 
 				<italic>Ace.unix.ace</italic> on Unix platforms. 

@@ -9,14 +9,14 @@
 	<paragraph>
 		<paragraph>  Pick and drop is a mechanism which allows data to be transported from a 
 			<bold>source</bold> object to a 
-			<bold>target</bold>. Any Vision2 object inheriting  EV_PICK_AND_DROPABLE  can be used to transport or receive data. 
+			<bold>target</bold>. Any Vision2 object inheriting  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.html</url><label>EV_PICK_AND_DROPABLE</label></link>  can be used to transport or receive data. 
 		</paragraph>
 		<heading>
 			<size>2</size>A simple pick and drop example
 		</heading>
 		<paragraph>  Two necessary components for a pick and drop transport are a 
 			<bold>source</bold> and a 
-			<bold>target</bold>, both of which must conform to  EV_PICK_AND_DROPABLE. The data that is to be transported is known as a 
+			<bold>target</bold>, both of which must conform to  <link><url>../../reference/interface/properties/EV_PICK_AND_DROPABLE_chart.html</url><label>EV_PICK_AND_DROPABLE</label></link>. The data that is to be transported is known as a 
 			<bold>pebble</bold>.
 		</paragraph>
 		<paragraph>  The following steps need to be undertaken to set up a simple pick and drop:  
@@ -31,10 +31,13 @@
 				</item>
 			</list>
 			<paragraph>  A simple example of this is demonstrated here: </paragraph>
-			<code_block>Missing</code_block>
+<code_block>
+	<feature_name>button1</feature_name>.<feature_name>set_pebble</feature_name> <symbol>(</symbol><string>"A PND transport has occured%N"</string><symbol>)</symbol>
+	<feature_name>button2</feature_name>.<feature_name>drop_actions</feature_name>.<feature_name>extend</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print</feature_name> <symbol>(</symbol>?<symbol>)</symbol><symbol>)</symbol>
+</code_block>
 			<paragraph>  As print takes an argument of type  
 				<link>
-					<url>../../../base/reference/kernel/string_chart.xml</url>
+					<url>.../../reference/kernel/STRING_chart.html</url>
 					<label>STRING</label>
 				</link>, button2 becomes a  valid target for the pebble contained in button1. Right clicking  the mouse pointer over the 
 				<bold>source</bold> will start the transport, and right clicking  with the mouse pointer over a valid 
@@ -52,17 +55,17 @@
 			<paragraph>  There are three different modes of transport available for pick and drop. They are listed below with details of their use:  
 				<list ordered="false">
 					<item>Pick and Drop mode.
-						<line_break/>This is the default mode for pick and drop, but can be set with  set_pick_and_drop_mode. Right clicking on a  
+						<line_break/>This is the default mode for pick and drop, but can be set with  <code><feature_name>set_pick_and_drop_mode</feature_name></code>. Right clicking on a  
 						<bold>source</bold> starts the transport and right clicking on a valid 
 						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Pressing the left mouse button or the escape key during execution will end the transport.
 					</item>
 					<item>Drag and drop mode
-						<line_break/>This mode can be set with set_drag_and_drop_mode. Left clicking on a 
+						<line_break/>This mode can be set with <code><feature_name>set_drag_and_drop_mode</feature_name></code>. Left clicking on a 
 						<bold>source</bold> starts the transport and releasing the left mouse button over a valid  
 						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Releasing the left mouse button or pressing the escape key during execution will end the transport.
 					</item>
 					<item>Target menu mode
-						<line_break/>This mode can be set with set_target_menu_mode. Right clicking on a 
+						<line_break/>This mode can be set with <code><feature_name>set_target_menu_mode</feature_name></code>. Right clicking on a 
 						<bold>source</bold> brings up a menu of all the valid drop 
 						<bold>targets</bold> in the system. Selecting one  of these targets completes the transport.
 					</item>
@@ -71,8 +74,8 @@
 			<heading>
 				<size>2</size>Accept and deny cursors
 			</heading>
-			<paragraph>  When mode_is_pick_and_drop or  mode_is_drag_and_drop then the shape of the  mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling  set_accept_cursor allows you to customize this cursor used to represent a valid 
-				<bold>target</bold> while  calling set_deny_cursor allows you to customize the cursor used for non valid 
+			<paragraph>  When <code><feature_name>mode_is_pick_and_drop</feature_name></code> or <code><feature_name> mode_is_drag_and_drop</feature_name></code> then the shape of the  mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling  <code><feature_name>set_accept_cursor</feature_name></code> allows you to customize this cursor used to represent a valid 
+				<bold>target</bold> while  calling <code><feature_name>set_deny_cursor</feature_name></code> allows you to customize the cursor used for non valid 
 				<bold>targets</bold>. 
 			</paragraph>
 		</paragraph>

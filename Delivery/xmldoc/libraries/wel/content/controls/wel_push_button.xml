@@ -6,7 +6,7 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph> A WEL_PUSH_BUTTON is a control that the user can click to provide notification to the application. 
+	<paragraph> A <link><url>../../reference/controls/WEL_PUSH_BUTTON_chart.html</url><label>WEL_PUSH_BUTTON</label></link> is a control that the user can click to provide notification to the application. 
 		<heading>
 			<size>2</size>Appearance
 		</heading>

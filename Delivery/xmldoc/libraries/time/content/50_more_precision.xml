@@ -15,17 +15,17 @@
 			</code> and 
 			<code>
 				<class_name>TIME_DURATION</class_name>
-			</code> have an attribute fine_second (inheritedfrom 
+			</code> have an attribute <code><feature_name>fine_second</feature_name></code> (inherited from 
 			<code>
 				<class_name>TIME_VALUE</class_name>
-			</code>) which allows high precision. This attribute represents the number of seconds with fractions (it is an instance of DOUBLE). From this attribute are calculated second and fractional_second (which are functions): second is the truncated-to-integer part and fractional_second is the difference between the two previous one, so that the sum of second and fractional_second is always equal to fine_second (see invariant in 
+			</code>) which allows high precision. This attribute represents the number of seconds with fractions (it is an instance of <code><class_name>DOUBLE</class_name></code>). From this attribute are calculated second and fractional_second (which are functions): second is the truncated-to-integer part and fractional_second is the difference between the two previous one, so that the sum of second and fractional_second is always equal to fine_second (see invariant in 
 			<code>
 				<class_name>TIME_VALUE</class_name>
 			</code>).
 		</paragraph>
-		<paragraph>As a result of this, when fine_second is positive (3.55 for example), second and fractional_second are also positive (3 and 0.55). When fine_second is negative (- 3.55 for example), second and fractional_second are also negative (- 3 and - 0.55).</paragraph>
+		<paragraph>As a result of this, when <code><feature_name>fine_second</feature_name></code> is positive (3.55 for example), <code><feature_name>second</feature_name></code> and <code><feature_name>fractional_second</feature_name></code> are also positive (3 and 0.55). When <code><feature_name>fine_second</feature_name></code> is negative (- 3.55 for example), <code><feature_name>second</feature_name></code> and <code><feature_name>fractional_second</feature_name></code> are also negative (- 3 and - 0.55).</paragraph>
 		<paragraph>Manipulation on second and fractional_second are in fact always made through fine_second. Users who do not want to deal with precision do not need to care about this.</paragraph>
-		<paragraph>Features dealing with fine_second and fractional_second are described here.</paragraph>
+		<paragraph>Features dealing with <code><feature_name>fine_second</feature_name></code> and <code><feature_name>fractional_second</feature_name></code> are described here.</paragraph>
 		<heading>
 			<size>4</size>Creation (common to 
 			<content>
@@ -38,8 +38,8 @@
 			</content>
 		</heading>
 		<list ordered="false">
-			<item>make_fine looks like make but it takes a DOUBLE for its third argument (instead of an INTEGER). fine_second is then set to this value.</item>
-			<item>make_by_fine_seconds looks like make_by_seconds but it takes a DOUBLE for argument (instead of an INTEGER). Comparison (common) There are no new features. The same ones are available since they are written to deal with precision. It is possible to compare two instances, one with precision and the other one without.</item>
+			<item><code><feature_name>make_fine</feature_name></code> looks like make but it takes a <code><class_name>DOUBLE </class_name></code>for its third argument (instead of an <code><class_name>INTEGER</class_name></code>). fine_second is then set to this value.</item>
+			<item><code><feature_name>make_by_fine_seconds</feature_name></code> looks like <code><feature_name>make_by_seconds</feature_name></code> but it takes a <code><class_name>DOUBLE</class_name></code> for argument (instead of an <code><class_name>INTEGER</class_name></code>). Comparison (common) There are no new features. The same ones are available since they are written to deal with precision. It is possible to compare two instances, one with precision and the other one without.</item>
 		</list>
 		<heading>
 			<size>4</size>Measurement and access
@@ -49,45 +49,45 @@
 				<class_name>TIME</class_name>
 			</code>:
 		</paragraph>
-		<paragraph>- fine_seconds looks like seconds but it contains fractions.</paragraph>
+		<paragraph>- <code><feature_name>fine_seconds</feature_name></code> looks like seconds but it contains fractions.</paragraph>
 		<paragraph>In 
 			<code>
 				<class_name>TIME_DURATION</class_name>
 			</code>:
 		</paragraph>
-		<paragraph>- fine_seconds_count looks like seconds_count but it contains fractions.</paragraph>
+		<paragraph>- <code><feature_name>fine_seconds_count</feature_name></code> looks like <code><feature_name>seconds_count</feature_name></code> but it contains fractions.</paragraph>
 		<heading>
 			<size>4</size>Element change
 		</heading>
 		<list ordered="false">
-			<item>set_fine_second allows to set directly fine_second to a DOUBLE. In 
+			<item><code><feature_name>set_fine_second</feature_name></code> allows to set directly <code><feature_name>fine_second</feature_name></code> to a <code><class_name>DOUBLE</class_name></code>. In 
 				<code>
 					<class_name>TIME</class_name>
 				</code>, a precondition requires that the argument stands in the allowed range.
 			</item>
-			<item>set_fractionals allows to set directly fractional_second to a DOUBLE. In TIME a precondition requires that the argument is positive and smaller than one. In 
+			<item><code><feature_name>set_fractionals</feature_name></code> allows to set directly <code><feature_name>fractional_second</feature_name></code> to a <code><class_name>DOUBLE</class_name></code>. In <code><class_name>TIME </class_name></code>a precondition requires that the argument is positive and smaller than one. In 
 				<code>
 					<class_name>TIME_DURATION</class_name>
-				</code> the preconditionis particular: it is not allowed to have an argument with a different sign than second. Otherwise, as long as fractional_second and second are linked to fine_second, such a setting would mean that second is also changed and fractional_second set to a different value. For example if fine_second = 4.5 (then second = 4 and fractional_second = 0.5) and - 0.8 is the argument of set_fractionals.
+				</code> the precondition is particular: it is not allowed to have an argument with a different sign than second. Otherwise, as long as <code><feature_name>fractional_second</feature_name></code> and <code><feature_name>second</feature_name></code> are linked to <code><feature_name>fine_second</feature_name></code>, such a setting would mean that second is also changed and <code><feature_name>fractional_second</feature_name></code> set to a different value. For example if <code><feature_name>fine_second</feature_name></code> = 4.5 (then second = 4 and fractional_second = 0.5) and - 0.8 is the argument of <code><feature_name>set_fractionals</feature_name></code>.
 			</item>
 		</list>
-		<paragraph>The result of that would be fine_second = 3.2 (then second = 3 andfractional_second = 0.2). It is better to prohibit that.</paragraph>
-		<paragraph>Comment: feature set_second (from both 
+		<paragraph>The result of that would be<code><feature_name> fine_second</feature_name></code> = 3.2 (then <code><feature_name>second</feature_name></code> = 3 and <code><feature_name>fractional_second</feature_name></code> = 0.2). It is better to prohibit that.</paragraph>
+		<paragraph>Comment: feature <code><feature_name>set_second</feature_name></code> (from both 
 			<code>
 				<class_name>TIME</class_name>
 			</code> and 
 			<code>
 				<class_name>TIME_DURATION</class_name>
-			</code>) will cut down fractional_second to zero.
+			</code>) will cut down <code><feature_name>fractional_second</feature_name></code> to zero.
 		</paragraph>
 		<heading>
 			<size>4</size>Operations
 		</heading>
-		<paragraph>- fine_second_add looks like second_add but takes a DOUBLE for argument.</paragraph>
+		<paragraph>- <code><feature_name>fine_second_add</feature_name></code> looks like <code><feature_name>second_add</feature_name></code> but takes a <code><feature_name>DOUBLE</feature_name></code> for argument.</paragraph>
 		<paragraph>In 
 			<code>
 				<class_name>TIME_DURATION</class_name>
 			</code>:
 		</paragraph>
-		<paragraph>- canonical and to_canonical deals already with precision. There is nothing different.</paragraph>
+		<paragraph>- <code><feature_name>canonical</feature_name></code> and <code><feature_name>to_canonical</feature_name></code> deals already with precision. There is nothing different.</paragraph>
 	</paragraph></document>

@@ -17,11 +17,36 @@
 			<line_break/>Your thread is represented by a class which inherits from 
 			<code>
 				<class_name>THREAD</class_name>
-			</code> (deferredclass).
+			</code> (deferred class).
 			<line_break/>
 			<paragraph>
-				<code_block>Missing</code_block>Creating a thread is like creating an Eiffel object:
-				<code_block>Missing</code_block>
+<code_block>
+	<keyword>class</keyword>
+		<class_name>MY_THREAD</class_name>
+
+	<keyword>inherit</keyword>
+		<class_name>THREAD</class_name>
+		...
+
+	<keyword>feature</keyword>
+
+		<feature_name>execute</feature_name> <keyword>is</keyword>
+				<comment>-- define the deferred feature from THREAD.</comment>
+			<keyword>do</keyword>
+				...
+			<keyword>end</keyword>
+		...
+
+	<keyword>end</keyword> -- <keyword>class</keyword> <class_name>MY_THREAD</class_name>
+</code_block>
+Creating a thread is like creating an Eiffel object:
+<code_block>
+	<feature_name>my_thread</feature_name><symbol>:</symbol> <class_name>MY_THREAD</class_name>
+		<comment>-- MY_THREAD inherits from THREAD and defines</comment>
+		<comment>-- the deferred procedure `execute'</comment>
+
+	<keyword>create</keyword><feature_name> my_thread</feature_name>
+</code_block>
 				<note>
 					<bold>Note</bold>: You have created a thread object but have not started the thread itself yet.
 					<line_break/>To run the thread, use the feature 
@@ -32,7 +57,7 @@
 						<class_name>THREAD</class_name>
 					</code>.
 				</note>
-				<code_block>Missing</code_block>On the Eiffel side, the procedure 
+				<code_block>	<feature_name>my_thread</feature_name>.<feature_name>launch</feature_name></code_block>On the Eiffel side, the procedure 
 				<code>
 					<feature_name>execute</feature_name>
 				</code> will be launched. This procedureis deferred in class 
@@ -59,35 +84,35 @@
 								<class_name>MUTEX</class_name>
 							</code> can be shared between different thread.
 							<paragraph>
-								<code_block>Missing</code_block>
+								<code><feature_name>my_mutex.pointer</feature_name></code> is the pointer to the nested C mutex of <code><feature_name>my_mutex</feature_name></code>.
 								<list ordered="false">
 									<item>Declaration of the mutex:
-										<code_block>Missing</code_block>
+										<code_block>	<feature_name>my_mutex</feature_name><symbol>:</symbol> <class_name>MUTEX</class_name></code_block>
 									</item>
 									<item>Creation of mutex:
-										<code_block>Missing</code_block>
+										<code_block>	<keyword>create</keyword> <feature_name>my_mutex</feature_name>.<feature_name>make</feature_name></code_block>
 									</item>
 									<item>Locking the mutex:
-										<code_block>Missing</code_block>
+										<code_block>	<feature_name>my_mutex</feature_name>.<feature_name>lock</feature_name></code_block>
 									</item>
 									<item>Unlocking the mutex:
-										<code_block>Missing</code_block>
+										<code_block>	<feature_name>my_mutex</feature_name>.<feature_name>unlock</feature_name></code_block>
 									</item>
 									<item>
 										<code>
 											<feature_name>try_lock</feature_name>
 										</code>: if it is not locked yet, lock the mutex and return True, otherwise it returns False.
-										<code_block>Missing</code_block>
+										<code_block>	<feature_name>my_mutex</feature_name>.<feature_name>lock</feature_name></code_block>
 									</item>
 									<item>Is my mutex initialized?
-										<code_block>Missing</code_block>
+										<code_block>	<feature_name>my_mutex</feature_name>.<feature_name>is_set</feature_name></code_block>
 									</item>
 								</list>
 								<note>
 									<bold>Note</bold>: on Windows: The 
 									<code>
 										<class_name>MUTEX</class_name>
-									</code> objects on Windows are recursive while they are not on Unix. Ar ecursive mutex can be locked twice by the same thread.
+									</code> objects on Windows are recursive while they are not on Unix. A recursive mutex can be locked twice by the same thread.
 								</note>
 								<warning>
 									<bold>Caution</bold>: be sure that a mutex is unlocked when it is disposed.
@@ -105,23 +130,15 @@
 									<list ordered="false">
 										<item>Declaration of the semaphore :
 											<paragraph>
-												<code>
-													<local_variable>my_sem</local_variable>
-												</code>
-												<code>
-													<symbol>:</symbol>
-												</code>
-												<code>
-													<class_name>SEMAPHORE</class_name>
-												</code>
+												<code_block>	<local_variable>my_sem</local_variable><symbol>: </symbol><class_name>SEMAPHORE</class_name></code_block>
 											</paragraph>Creation of semaphore: initialize semaphore with nb_tokens, it requires nb_tokens &gt; = 0
-											<code_block>Missing</code_block>
+											<code_block>	<keyword>create</keyword> <feature_name>my_sem</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><feature_name>nb_tokens</feature_name><symbol>)</symbol></code_block>
 										</item>
 										<item>Wait for a token:
-											<code_block>Missing</code_block>
+											<code_block>	<feature_name>my_sem</feature_name>.<feature_name>wait</feature_name></code_block>
 										</item>
 										<item>Give back a token:
-											<code_block>Missing</code_block>
+											<code_block>	<feature_name>my_sem</feature_name>.<feature_name>post</feature_name></code_block>
 										</item>
 										<item>
 											<code>
@@ -136,7 +153,7 @@
 											<code>
 												<symbol>False</symbol>
 											</code>.
-											<code_block>Missing</code_block>
+											<code_block>	<feature_name>my_sem</feature_name>.<feature_name>try_wait</feature_name></code_block>
 										</item>
 									</list>
 									<warning>
@@ -151,16 +168,16 @@
 										</code> can be shared between threads.
 										<list ordered="false">
 											<item>Declaration of the condition variable
-												<code_block>Missing</code_block>
+												<code_block>	<feature_name>my_cond</feature_name><symbol>:</symbol> <class_name>CONDITION_VARIABLE</class_name></code_block>
 											</item>
 											<item>Creation:
-												<code_block>Missing</code_block>
+												<code_block>	<keyword>create</keyword> <feature_name>my_cond</feature_name>.<feature_name>make</feature_name></code_block>
 											</item>
 											<item>Wait for a signal (send by 
 												<code>
 													<feature_name>signal</feature_name>
 												</code>). You need to use a mutex.
-												<code_block>Missing</code_block>
+												<code_block>	<feature_name>my_mutex</feature_name><symbol>:</symbol> <class_name>MUTEX</class_name><line_break/><line_break/>	<keyword>create</keyword> <feature_name>my_mutex</feature_name>.<feature_name>make</feature_name></code_block>
 												<paragraph>
 													<code>
 														<local_variable>my_mutex</local_variable>
@@ -183,18 +200,27 @@
 													<code>
 														<local_variable>my_mutex</local_variable>
 													</code>;
-													<code_block>Missing</code_block>
+<code_block>
+	<feature_name>my_mutex</feature_name>.<feature_name>lock</feature_name>
+		<comment>-- You must lock `my_mutex' before calling wait.</comment>
+
+	<feature_name>my_cond</feature_name>.<feature_name>wait</feature_name> <symbol>(</symbol><feature_name>my_mutex</feature_name><symbol>)</symbol>
+		<comment>-- Here the critical code to execute when `my_cond' received a signal.</comment>
+
+	<feature_name>my_mutex</feature_name>.<feature_name>unlock</feature_name>
+		<comment>-- Unlock the mutex at the end of the critical section.</comment>
+</code_block>
 												</paragraph>
 											</item>
 											<item>Send a signal one thread blocked on the condition variable `my_cond'.
-												<code_block>Missing</code_block>
+												<code_block>	<feature_name>my_cond</feature_name>.<feature_name>signal</feature_name></code_block>
 											</item>
 											<item>Send a signal to all the threads blocked on the condition variable `my_cond'.
-												<code_block>Missing</code_block>
+												<code_block>	<feature_name>my_cond</feature_name>.<feature_name>broadcast</feature_name></code_block>
 											</item>
 											<item>
 												<warning>
-													<bold>Caution</bold>: be sure that a condition variable is unblocked when it isdisposed.
+													<bold>Caution</bold>: be sure that a condition variable is unblocked when it is disposed.
 												</warning>
 											</item>
 										</list>
@@ -204,7 +230,7 @@
 										<paragraph>class 
 											<code>
 												<class_name>THREAD_ATTRIBUTES</class_name>
-											</code>: defines theattributes of an Eiffel Thread regarding the thread scheduling policy andpriority.
+											</code>: defines theattributes of an Eiffel Thread regarding the thread scheduling policy and priority.
 											<heading>
 												<size>2</size>Controlling execution: THREAD_CONTROL
 											</heading>
@@ -212,14 +238,14 @@
 												<item>
 													<code>
 														<feature_name>yield</feature_name>
-													</code>: the calling thread yields its execution in favor of an otherthread of same priority.
+													</code>: the calling thread yields its execution in favor of an other thread of same priority.
 												</item>
 												<item>
 													<code>
 														<feature_name>join_all</feature_name>
-													</code>: the calling thread waits for all other threads to finished (allits children).
+													</code>: the calling thread waits for all other threads to finished (all its children).
 												</item>
-												<item>A parent thread can wait for the termination of a child process throughthe feature 
+												<item>A parent thread can wait for the termination of a child process through the feature 
 													<code>
 														<feature_name>join</feature_name>
 													</code> of class 
@@ -229,7 +255,13 @@
 													<code>
 														<class_name>THREAD</class_name>
 													</code>):
-													<code_block>Missing</code_block>
+<code_block>
+	<feature_name>thr</feature_name><symbol>:</symbol> <class_name>MY_THREAD</class_name>
+	...
+	<feature_name>thr</feature_name>.<feature_name>launch</feature_name>
+	...
+	<feature_name>thr</feature_name>.<feature_name>join</feature_name>
+</code_block>
 												</item>
 											</list>
 										</paragraph>

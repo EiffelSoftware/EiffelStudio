@@ -102,7 +102,7 @@ extern "C" {
 #ifdef EIF_WIN32 
 #define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
     if (pthread_cond_timedwait (pcond, pmutex, timeout)) eraise (msg, EN_EXT)
-#else \
+#else
 #define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
 	struct timespec tspec; \
 	tspec.tv_sec = time(NULL) + a_timeout; \

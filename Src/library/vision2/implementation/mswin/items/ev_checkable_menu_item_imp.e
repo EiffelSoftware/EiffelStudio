@@ -172,6 +172,7 @@ feature {NONE} -- WEL Implementation
 				draw_dc.set_text_color (foreground_color)
 				draw_dc.bit_blt (rect.left, rect.top + (rect.height - text_height) // 2, rect.width, text_height, check_dc, 0, 0, Wel_drawing_constants.Srccopy)
 			end
+			check_dc.unselect_bitmap
 			check_dc.delete
 			check_bitmap.delete
 		end

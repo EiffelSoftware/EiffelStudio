@@ -161,7 +161,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			has_layout_item: has (layout_item)
 		end
 		
-feature {GB_WINDOW_SELECTOR} -- Implementation
+feature {GB_WINDOW_SELECTOR, GB_OBJECT} -- Implementation
 
 	set_root_window (a_window: GB_OBJECT) is
 			-- Ensure that `a_window' is displayed in `Current'.

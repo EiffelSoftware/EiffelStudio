@@ -955,10 +955,11 @@ end;
 		local
 			a_class: CLASS_C;
 			local_cursor: LINKABLE [PASS4_C];
+-- FIXME: changed_skeletons is NOT used!!!
 			changed_skeletons: LINKED_LIST [CLASS_C];
 			skeleton: SKELETON;
 		do
-debug ("ACTIVITY")
+debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("Process_skeleton%N");
 end;
 			from
@@ -968,7 +969,7 @@ end;
 				local_cursor = Void
 			loop
 				a_class := local_cursor.item.associated_class;
-debug ("ACTIVITY")
+debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("%T");
 io.error.putstring (a_class.class_name);
 io.error.putstring ("%N");

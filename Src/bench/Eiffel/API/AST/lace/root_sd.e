@@ -39,11 +39,15 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			root_name ?= yacc_arg (0);
+			root_name.to_lower;
 			cluster_mark ?= yacc_arg (1);
+			if cluster_mark /= Void then
+				cluster_mark.to_lower;
+			end;
 			creation_procedure_name ?= yacc_arg (2);
-		ensure then
-			root_name_exists: root_name /= Void;
-			cluster_mark_exists: cluster_mark /= Void;
+			if creation_procedure_name /= Void then
+				creation_procedure_name.to_lower;
+			end;
 		end;
 
 	adapt is
@@ -53,15 +57,11 @@ feature -- Initialization
 			a_class: CLASS_I;
 			vd19: VD19;
 			vd20: VD20;
-			root_class_name, creation_name: STRING;
 			clusters: LINKED_LIST [CLUSTER_I];
 			found: BOOLEAN;
 			vd29: VD29;
 			vd30: VD30;
 		do
-			root_class_name := root_name.duplicate;
-			root_class_name.to_lower;
-
 			if cluster_mark = Void then
 				from
 					clusters := Universe.clusters;
@@ -69,12 +69,12 @@ feature -- Initialization
 				until
 					clusters.after
 				loop
-					if clusters.item.classes.has (root_class_name) then
+					if clusters.item.classes.has (root_name) then
 						if found then
 							!!vd29;
 							vd29.set_cluster (cluster);
 							vd29.set_second_cluster_name (clusters.item.cluster_name);
-							vd29.set_root_class_name (root_class_name);
+							vd29.set_root_class_name (root_name);
 							Error_handler.insert_error (vd29);
 							Error_handler.checksum;
 						else
@@ -86,7 +86,7 @@ feature -- Initialization
 				end;
 				if not found then
 					!!vd30;
-					vd30.set_root_class_name (root_class_name);
+					vd30.set_root_class_name (root_name);
 					Error_handler.insert_error (vd30);
 					Error_handler.checksum;
 				end;
@@ -99,21 +99,17 @@ feature -- Initialization
 				Error_handler.insert_error (vd19);
 			else
 				System.set_root_cluster (cluster);
-				a_class := cluster.classes.item (root_class_name);
+				a_class := cluster.classes.item (root_name);
 				if a_class = Void then
 					!!vd20;
 					vd20.set_cluster (cluster);
 					vd20.set_class_name (root_name);
 					Error_handler.insert_error (vd20);
 				else
-					System.set_root_class_name (root_class_name);
+					System.set_root_class_name (root_name);
 					file_name := a_class.file_name;
-					if creation_procedure_name /= Void then
-						creation_name := creation_procedure_name.duplicate;
-						creation_name.to_lower;
-					end;
 						-- Void string if no creation routine
-					System.set_creation_name (creation_name);
+					System.set_creation_name (creation_procedure_name);
 				end;
 			end;
 				-- Check sum error

@@ -33,6 +33,15 @@ feature
 							and then
 							value.int_val = other_unique.value.int_val
 			end;
+--io.error.putstring (feature_name);
+--if Result then
+--io.error.putstring (" is equiv%N")
+--else
+--io.error.putstring (" is NOT equiv%N")
+--end;
+			if Not Result then
+				System.current_class.insert_changed_feature (feature_name);
+			end;
 		end;
 
 	check_types (feat_tbl: FEATURE_TABLE) is

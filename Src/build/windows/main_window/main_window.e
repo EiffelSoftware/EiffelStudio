@@ -929,6 +929,7 @@ feature -- Enable/Disable EiffelBuild
 			-- hidden tools.
 		do
 			menu_bar.set_sensitive
+			menu_bar.manage
 		end
 
 	disable is
@@ -936,6 +937,7 @@ feature -- Enable/Disable EiffelBuild
 			-- every tools.
 		do
 			menu_bar.set_insensitive
+			menu_bar.manage
 		end
 
 feature -- Closing Current

@@ -57,6 +57,8 @@ static  void    print_ctype (short);
 
 /*------------------------------------------------------------------*/
 
+#define MAX_TYPE 256
+
 main (int argc, char **argv)
 
 {
@@ -119,7 +121,7 @@ static  void    prepare_types ()
 	(void) rlong ();
 
 
-	dtype_size  = 256;
+	dtype_size  = MAX_TYPE;
 	dtype_max   = -1;
 	dtype_names = (char **) malloc (dtype_size * sizeof (char *));
 
@@ -131,7 +133,7 @@ static  void    prepare_types ()
 		memset (dtype_names, 0, dtype_size * sizeof (char *));
 	}
 
-	ctype_size  = 256;
+	ctype_size  = MAX_TYPE;
 	ctype_max   = -1;
 	ctype_names = (char **) malloc (ctype_size * sizeof (char *));
 

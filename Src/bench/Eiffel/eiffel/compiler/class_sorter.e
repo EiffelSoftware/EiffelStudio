@@ -303,11 +303,9 @@ feature {NONE} -- Filling
 						inserted or else i > nb_item
 					loop
 						if
-							nb_prec > index.item (i) or else
+							nb_prec < index.item (i) or else
 							(nb_prec = index.item (i) and then
-							nb_succ >= successors.item (Result.item (i).topological_id).count) or else
-							(nb_prec = index.item (i) and then nb_succ < successors.item (Result.item (i).topological_id).count
-							and then nb_clients > Result.item (i).syntactical_suppliers.count)
+							nb_succ <= successors.item (Result.item (i).topological_id).count)
 						then
 							inserted := True
 							nb_item := nb_item + 1

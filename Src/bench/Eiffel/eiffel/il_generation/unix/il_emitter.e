@@ -11,8 +11,13 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (runtime_version: STRING) is
+	make (a_path, a_runtime_version: STRING) is
 			-- Create new instance of IL_EMITTER
+		require
+			a_path_not_void: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+			a_runtime_version_not_void: a_runtime_version /= Void
+			a_runtime_version_not_empty: not a_runtime_version.is_empty
 		do
 			check
 				False
@@ -24,6 +29,16 @@ feature -- Status report
 	exists: BOOLEAN is
 		do
 			Result := False
+		end
+
+	is_initialized: BOOLEAN is
+			-- Is consumer initialized for given path?
+		require
+			exists: exists
+		do
+			check
+				False
+			end
 		end
 
 	assembly_found: BOOLEAN

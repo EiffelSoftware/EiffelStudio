@@ -33,7 +33,7 @@ external
 				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Client\Include",
 				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Common\Include";
 
-	object:	 	"$(ISE_EIFFEL)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+	object:	 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 				"$(ISE_EIFFEL)\library\time\spec\msc\lib\datetime.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com.lib",
 				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com_runtime.lib",

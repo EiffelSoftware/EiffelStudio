@@ -372,9 +372,11 @@ feature -- Settings
 		local
 			arg: TYPE_I
 			i, j, count: INTEGER
+			l_is_external: BOOLEAN
 		do
 			if arguments /= Void then
 				count := arguments.count
+				l_is_external := is_external
 				if generate_current then
 					create Result.make (1, count + 1)
 					Result.put ("EIF_REFERENCE", 1)
@@ -389,7 +391,13 @@ feature -- Settings
 					i > count
 				loop
 					arg := real_type (arguments.item (i))
-					Result.put (arg.c_type.c_string, j)
+					if l_is_external and arg.is_reference then
+							-- An external that accepts a reference as argument is automatically
+							-- promoted to an EIF_OBJECT.
+						Result.put ("EIF_OBJECT", j)
+					else
+						Result.put (arg.c_type.c_string, j)
+					end
 					i := i + 1
 					j := j + 1
 				end

@@ -104,7 +104,7 @@ feature
 	reactivate (body_id: INTEGER) is
 		local
 			i: INTEGER;
-			real_id: INTEGER
+			real_id, ubi: INTEGER
 		do
 			real_id := updated_id (body_id);
 			from
@@ -112,7 +112,8 @@ feature
 			until
 				i > nb_useless
 			loop
-				if (updated_id(useless_body_ids.item (i)) = real_id) then
+				ubi := useless_body_ids.item (i);
+				if (ubi /= -1) and then (updated_id(ubi) = real_id) then
 					useless_body_ids.put (-1, i);
 				end;
 				i := i + 1

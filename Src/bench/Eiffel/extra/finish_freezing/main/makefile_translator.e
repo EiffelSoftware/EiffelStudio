@@ -108,6 +108,9 @@ feature -- Status report
 
 feature -- Access
 
+	eiffel_dir: STRING
+			-- $ISE_EIFFEL directory
+
 	makefile_sh: PLAIN_TEXT_FILE	
 			-- Makefile.SH to read from
 
@@ -1533,6 +1536,12 @@ feature {NONE} -- Implementation
 
 	borland_setup: BORLAND_SETUP
 			-- Borland setup details.
+
+	env: EXECUTION_ENVIRONMENT is
+			-- Execution environment
+		once
+			 create Result
+		end
 
 	search_and_replace(line: STRING) is
 			-- search words starting with $ and replace with option or env variable

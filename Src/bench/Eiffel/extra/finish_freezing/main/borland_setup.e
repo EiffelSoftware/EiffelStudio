@@ -27,8 +27,9 @@ feature -- Initialization
 			l_config_file: RAW_FILE
 			l_arg_string: STRING
 			l_file_name: FILE_NAME
+			eiffel_dir: STRING
 		do
-			eiffel_dir := env.get ("ISE_EIFFEL")
+			eiffel_dir := (create {EXECUTION_ENVIRONMENT}).get ("ISE_EIFFEL")
 			create l_file_name.make_from_string (eiffel_dir)
 			l_file_name.extend ("BCC55")
 			l_file_name.extend ("BIN")
@@ -41,7 +42,7 @@ feature -- Initialization
 										%-I$(ISE_EIFFEL)\BCC55\include %
 										%-L$(ISE_EIFFEL)\BCC55\lib %
 										%-L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-					l_arg_string.replace_substring_all ("$(ISE_EIFFEL)", short_path)
+					l_arg_string.replace_substring_all ("$(ISE_EIFFEL)", short_path (eiffel_dir))
 					l_config_file.make_open_write (l_file_name)
 					l_config_file.put_string (l_arg_string)
 					l_config_file.close

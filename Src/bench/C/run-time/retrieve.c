@@ -442,12 +442,14 @@ rt_private void free_type_conversion_table (type_table *table)
 					}
 					xfree ((char *) t->attributes);
 					t->attributes = NULL;
-					xfree ((char *) t->name);
-					t->name = NULL;
 				}
 				if (t->generics != NULL) {
 					xfree ((char *) t->generics);
 					t->generics = NULL;
+				}
+				if (t->name != NULL) {
+					xfree (t->name);
+					t->name = NULL;
 				}
 			}
 			xfree ((char *) table->descriptions);
@@ -465,7 +467,7 @@ rt_private int type_defined (int16 old_type)
 	return result;
 }
 
-rt_private type_descriptor *type_description (int16 old_type)
+rt_private type_descriptor *type_description (int32 old_type)
 {
 	type_descriptor *result;
 	int16 i = type_conversions->type_index[old_type];
@@ -541,13 +543,6 @@ rt_private void free_mismatch_table (mismatch_table *table)
 	table->capacity = 0;
 	table->count = 0;
 	xfree ((char *) table);
-}
-
-rt_private void recoverable_retrieve_reset (void)
-{
-	run_idr_destroy ();
-	xfree (idr_temp_buf);
-	idr_temp_buf = (char *) 0;
 }
 
 /*
@@ -828,10 +823,12 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		retrieved = rt_make();
 	}
 
-	if (rt_kind)
+	if (rt_kind) {
 		xfree((char *) dtypes);					/* Free the correspondance table */
-	if (rt_kind == INDEPENDENT_STORE)
+	}
+	if ((rt_kind == INDEPENDENT_STORE) || (rt_kind == RECOVERABLE_STORE)) {
 		xfree((char *) spec_elm_size);					/* Free the element size table */
+	}
 
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
@@ -842,11 +839,8 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:
 		case INDEPENDENT_STORE_5_0:
-			independent_retrieve_reset ();
-			break;
-
 		case RECOVERABLE_STORE_5_3:
-			recoverable_retrieve_reset ();
+			independent_retrieve_reset ();
 			break;
 	}
 	rt_reset_retrieve();
@@ -950,18 +944,24 @@ rt_private void independent_retrieve_init (long idrf_size)
 	memset  ((char *)dattrib, 0, scount * sizeof (int *));
 }
 
-rt_private void independent_retrieve_reset (void) {
+rt_private void independent_retrieve_reset (void)
+	/* Clean allocated data structures for independent store */
+{
 	int i;
 
 	run_idr_destroy ();
-	xfree (idr_temp_buf);
-	idr_temp_buf = (char *) 0;
-	for (i = 0; i < scount; i++) {
-		if (*(dattrib + i))
-			xfree ((char *)(*(dattrib +i)));
+	if (idr_temp_buf != NULL) {
+		xfree (idr_temp_buf);
+		idr_temp_buf = NULL;
 	}
-	xfree ((char *) dattrib);
-	dattrib = (int **) 0;
+	if (dattrib != NULL) {
+		for (i = 0; i < scount; i++) {
+			if (*(dattrib + i))
+				xfree ((char *)(*(dattrib +i)));
+		}
+		xfree ((char *) dattrib);
+		dattrib = NULL;
+	}
 }
 
 /* Create a hash table to hold `count' objects, each of `size'. */
@@ -1862,21 +1862,7 @@ rt_private void rt_clean(void)
 	}
 	epop(&hec_stack, nb_recorded);				/* Pop hector records */
 	if (rt_kind == INDEPENDENT_STORE || rt_kind == RECOVERABLE_STORE) {
-		run_idr_destroy ();
-		if (!(idr_temp_buf == (char *)0)) {
-			xfree (idr_temp_buf);
-			idr_temp_buf = (char *)0;
-		}
-		if (!(dattrib == (int **) 0)) {
-			int i;
-
-			for (i = 0; i < scount; i++) {
-				if (*(dattrib + i))
-					xfree ((char *) (*(dattrib +i)));
-			}
-			xfree ((char *) dattrib);
-			dattrib = (int **) 0;
-		}
+		independent_retrieve_reset ();
 	}
 	free_sorted_attributes();
 	rt_reset_retrieve();
@@ -2616,7 +2602,7 @@ rt_private char *name_of_old_attribute_type (int16 type)
 		}
 		else {
 			sprintf (buffer, "expanded %s",
-					type_description ((int16) (EXPANDED_LEVEL - type))->name);
+					type_description (EXPANDED_LEVEL - type)->name);
 			result = buffer;
 		}
 	}
@@ -2663,7 +2649,7 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 				result = buffer;
 			}
 			else
-				result = type_description ((int16) (gtype & SK_DTYPE))->name;
+				result = type_description (gtype & SK_DTYPE)->name;
 			break;
 		case SK_BOOL:    result = "BOOLEAN";        break;
 		case SK_CHAR:    result = "CHARACTER";      break;
@@ -2718,7 +2704,7 @@ rt_shared void print_generic_names (struct gt_info *info, int type)
 rt_shared void print_object_summary (
 		char *prefix, EIF_REFERENCE object, long expanded_offset, uint32 flags)
 {
-	type_descriptor *conv = type_description ((int16) (flags & EO_TYPE));
+	type_descriptor *conv = type_description (flags & EO_TYPE);
 	if (object == NULL)
 		printf ("  old %s\n", conv->name);
 	else {
@@ -3099,7 +3085,7 @@ rt_private int16 map_generics (struct gt_info *info, int16 count, int32 *generic
 			else if ((ntype & SK_EXP) && (otype & SK_EXP)) {
 				type_descriptor *t = NULL;
 				if (type_defined ((int16) (otype & SK_DTYPE)))
-					t = type_description ((int16) (otype & SK_DTYPE));
+					t = type_description (otype & SK_DTYPE);
 				if (t != NULL && t->new_type >= 0)
 					matched = (t->new_type == (ntype & SK_DTYPE));
 				else {
@@ -4022,8 +4008,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 	EIF_REFERENCE result = NULL;
 	EIF_REFERENCE old_values = NULL;
 	EIF_REFERENCE comp_values = NULL;
-	uint32 old_type = flags & EO_TYPE;
-	type_descriptor *conv = type_description (old_type);
+	type_descriptor *conv = type_description (flags & EO_TYPE);
 	attribute_detail *attributes = conv->attributes;
 	uint32 num_attrib = conv->attribute_count;
 	uint32 new_type = conv->new_type;
@@ -4188,8 +4173,8 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				}
 				else {
 					if (mismatched) {
-						uint32 otype = old_flags & EO_TYPE;
-						old_value = emalloc (type_description (otype)->new_type);
+						old_value =
+							emalloc (type_description (old_flags & EO_TYPE)->new_type);
 					}
 					if (attr_address == NULL)
 						old_vals = object_rread_attributes (old_value, old_flags, 0L);
@@ -4243,14 +4228,13 @@ rt_private EIF_REFERENCE object_rread_special_expanded (
 	EIF_REFERENCE result = NULL;
 	EIF_INTEGER spec_size = RT_SPECIAL_ELEM_SIZE (object);
 	type_descriptor *conv;
-	uint32 old_type, new_type;
+	uint32 new_type;
 	uint32 old_flags, hflags, new_flags;
 	int i;
 
 	ridr_norm_int (&old_flags);
 	rt_id_read_cid (NULL, &hflags, old_flags);
-	old_type = old_flags & EO_TYPE;
-	conv = type_description (old_type);
+	conv = type_description (old_flags & EO_TYPE);
 	new_type = conv->new_type;
 	new_flags = new_type | (old_flags & EO_UPPER);
 	if (conv->mismatched)
@@ -4282,7 +4266,7 @@ rt_private EIF_REFERENCE object_rread_special (
 {
 	EIF_REFERENCE result = NULL;
 	uint32 old_type = flags & EO_TYPE;
-	type_descriptor *conv = type_description (old_type);
+	type_descriptor *conv = type_description (flags & EO_TYPE);
 	EIF_REFERENCE addr, trash = NULL;
 
 	CHECK ("Must have generics", conv->generic_count > 0);

@@ -98,7 +98,7 @@ feature -- Access
 		do
 			if in_menu then
 				if realized then
-					if parent /= Void and parent.realized and then parent.exists then
+					if parent /= Void and parent.realized then
 						if not managed and then flag then
 							managed := flag
 							if is_parent_menu_pull then

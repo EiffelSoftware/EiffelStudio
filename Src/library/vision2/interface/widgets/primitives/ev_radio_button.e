@@ -14,24 +14,43 @@ inherit
 	EV_SELECT_BUTTON
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			is_in_default_state
+		end
+
+	EV_RADIO_PEER
+		redefine
+			implementation,
+			is_in_default_state
 		end
 
 create
 	default_create,
 	make_with_text
 
-feature -- Implementation
-
-	implementation: EV_RADIO_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Initialization
 
 	create_implementation is
 			-- Create the implementation for the toggle button.
 		do
 			Create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
+
+feature -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+			-- Radio buttons are selected by default.
+		do
+			Result := {EV_RADIO_PEER} Precursor
+				and then {EV_SELECT_BUTTON} Precursor
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_RADIO_BUTTON_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 	
 end -- class EV_RADIO_BUTTON
 
@@ -56,6 +75,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/25 01:45:35  brendel
+--| Revised. Connection to container needs implementing.
+--|
 --| Revision 1.14  2000/02/24 18:16:24  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

@@ -226,10 +226,15 @@ feature
 			-- Run time with which the application must be linked
 		do
 			create Result.make (256)
+			
+			if System.has_dynamic_runtime then
+				Result.append ("-L")
+			end
+			
 			Result.append (lib_location)
 
 			if System.has_dynamic_runtime then
-				Result.append ("$shared_prefix")
+				Result.append (" -l")
 			else
 				Result.append ("$prefix")
 			end
@@ -244,9 +249,7 @@ feature
 
 			Result.append ("$eiflib")
 
-			if System.has_dynamic_runtime then
-				Result.append ("$shared_rt_suffix")
-			else
+			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
 			end
 

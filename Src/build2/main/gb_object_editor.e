@@ -134,6 +134,23 @@ feature -- Status setting
 			-- Assign `an_object' to `object'.
 			-- Set up `Current' to modify `object'.
 		do
+			-- | FIXME - revisit as soon as time allows.
+			-- This really is a hack, but I do not have time to fix it correctly now.
+			-- When in the process of editing a name, if you click on the the layout constructor
+			-- then for some reason the select_actions of that tree seemed to be called before
+			-- the focus out actions of the text field. This was giving bad behaviour,
+			-- so this section of code was added as a temporary fix.
+			if object /= Void then
+				if object.name /= object.edited_name then
+					if object_handler.named_object_exists (object.edited_name, object) then
+						object.cancel_edited_name
+						update_editors_for_name_change (object.object, Current)
+					else
+						object.accept_edited_name
+					end
+				end
+			end
+			
 			make_empty
 			
 			object := an_object
@@ -142,7 +159,7 @@ feature -- Status setting
 				-- reflect the name.
 			set_title_from_name
 
-			construct_editor	
+			construct_editor
 		end
 		
 	make_empty is
@@ -247,6 +264,12 @@ feature {NONE} -- Implementation
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
 			create name_field.make_with_text (object.name)
+			
+			--| FIXME - revisit
+			--| I dont think this shoud be called here. Julian.
+			object.set_edited_name (object.name)
+			
+			
 			name_field.focus_in_actions.extend (agent start_name_change_on_object)
 			name_field.focus_out_actions.extend (agent end_name_change_on_object)
 			name_field.change_actions.extend (agent update_visual_representations_on_name_change)

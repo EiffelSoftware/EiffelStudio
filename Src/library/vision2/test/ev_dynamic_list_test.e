@@ -21,6 +21,7 @@ feature -- Initialization
 		do
 			first_window.set_title ("EV_BOX test")
 			post_launch_actions.extend (~do_tests)
+			(create {MEMORY}).collection_off
 		end
 
 	do_tests is
@@ -34,9 +35,9 @@ feature -- Initialization
 			hbox_test.execute
 			vbox_test.execute
 			nb_test.execute
-			print (hbox_test.description)
-			print (vbox_test.description)
-			print (nb_test.description)
+			print (hbox_test.description + "%N")
+			print (vbox_test.description + "%N")
+			print (nb_test.description + "%N")
 			if
 				hbox_test.test_successful and
 				vbox_test.test_successful and

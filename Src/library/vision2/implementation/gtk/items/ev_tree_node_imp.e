@@ -54,8 +54,6 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the tree item.
-		local
-			box: POINTER
 		do
 			base_make (an_interface)
 			textable_imp_initialize
@@ -456,6 +454,9 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/21 23:44:20  king
+--| Removed unused local
+--|
 --| Revision 1.4  2001/06/21 22:30:35  king
 --| Now updating parent pnd status
 --|

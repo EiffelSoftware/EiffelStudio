@@ -55,12 +55,15 @@ feature -- Initialization
 			create cmd2.make (~get_font_size)
 			create f1.make (Current, 3, 0, "Font Size", cmd1, cmd2)
 
-
-	--		create cmd1.make (~remove_text)
-	--		create b1.make_with_text (Current, "Remove Selected Text")
-	--		b1.add_click_command(cmd1, Void)
-	--		set_child_position (b1, 7, 1, 8, 2)
-	--		b1.set_vertical_resize(False)
+			create cmd1.make (~set_line_number)
+			create cmd2.make (~get_line_number)
+			create f2.make (Current, 4, 0, "Line Number", cmd1, cmd2)
+			
+			create cmd1.make (~remove_text)
+			create b1.make_with_text (Current, "Remove Selected Text")
+			b1.add_click_command(cmd1, Void)
+			set_child_position (b1, 7, 1, 8, 2)
+			b1.set_vertical_resize(False)
 
 	--		create h1.make (Current)
 	--		set_child_position (h1, 8, 0, 9, 3)
@@ -68,7 +71,7 @@ feature -- Initialization
 		end
 
 	name:STRING is
-			-- Returns the name of the tab
+			-- Returns the name of the tab.
 		do
 			Result:="Rich Text"
 		end
@@ -78,7 +81,7 @@ feature -- Access
 
 	
 	set_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Sets the font style of the selected font
+			-- Sets the font style of the selected font.
 		local
 			new_format: EV_CHARACTER_FORMAT
 		do
@@ -99,7 +102,7 @@ feature -- Access
 		end
 
 	get_font_style (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Returns the font style of current selected text
+			-- Returns the font style of current selected text.
 		do
 			if current_widget.has_selection then
 				if current_widget.character_format.is_bold then
@@ -113,7 +116,7 @@ feature -- Access
 		end
 
 	set_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Sets the color of the selected text
+			-- Sets the color of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
 			color: EV_COLOR
@@ -134,12 +137,12 @@ feature -- Access
 		end
 
 	get_font_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Returns the color of the selected text
+			-- Returns the color of the selected text.
 		do
 		end
 
 	set_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Sets the font of the selected text
+			-- Sets the font of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
 			font: EV_FONT
@@ -162,35 +165,37 @@ feature -- Access
 		end
 
 	get_font (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Displays the font name of the selected text
+			-- Displays the font name of the selected text.
 		do
 		end
 
 	set_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Sets the font size of the selected text
+			-- Sets the font size of the selected text.
 		local
 			new_format: EV_CHARACTER_FORMAT
 			font: EV_FONT
 		do
-			if current_widget.has_selection then
+			if current_widget.has_selection and f1.get_text.is_integer then
 				create new_format.make
-				create font.make
-				font.set_name ("impact")
-				io.putint (current_widget.character_format.font.height)
-				font.set_height(72)
-				io.putstring (" = before, after = ")
+				font ?= current_widget.character_format.font
+				font.set_height(f1.get_text.to_integer)
 				new_format.set_font(font)
-				io.putstring ("%N")
-				io.putint (font.height)
 				current_widget.set_character_format(new_format)	
-				io.putint (current_widget.character_format.font.height)
-				current_widget.set_position(1)
-		
 			end	
 		end
 
 	get_font_size (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Displays the font size of the selected text
+			-- Displays the font size of the selected text.
+		do
+		end
+
+	set_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		-- Sets the line number in the rich edit primitive.
+		do
+		end
+
+	get_line_number (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Returns the current line number on which the cursor is set to.
 		do
 		end
 
@@ -204,7 +209,7 @@ feature -- Access
 
 	current_widget: EV_RICH_TEXT
 
-	f1: TEXT_FEATURE_MODIFIER
+	f1, f2, f3: TEXT_FEATURE_MODIFIER
 		-- text box for feature modification
    
 	c1, c2, c3: COMBO_FEATURE_MODIFIER

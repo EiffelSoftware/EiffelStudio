@@ -49,7 +49,9 @@ inherit
 		end
 
 creation 
-	make
+	make,
+	make_by_pointer,
+	make_by_font
 
 feature {NONE} -- Initialization
 
@@ -58,7 +60,6 @@ feature {NONE} -- Initialization
 			-- `a_face_name' as `face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
-			a_face_name_not_empty: not a_face_name.empty
 			valid_count: a_face_name.count <= Max_face_name_length
 		do
 			structure_make
@@ -91,6 +92,16 @@ feature {NONE} -- Initialization
 			has_default_pitch: has_default_pitch
 			is_dont_care_family: is_dont_care_family
 			face_name_set: face_name.is_equal (a_face_name)
+		end
+
+	make_by_font (font: WEL_FONT) is
+			-- Make a log font using the information of `font'.
+		require
+			font_not_void: font /= Void
+			font_exists: font.exists
+		do
+			structure_make
+			cwin_get_object (font.item, structure_size, item)
 		end
 
 feature -- Access
@@ -210,7 +221,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwel_log_font_get_outprecision (item)
+			Result := cwel_log_font_get_clipprecision (item)
 		end
 
 	quality: INTEGER is
@@ -249,7 +260,6 @@ feature -- Access
 			!! Result.make (0)
 			Result.from_c (cwel_log_font_get_facename (item))
 		ensure
-
 			result_exists: Result /= Void
 		end
 
@@ -875,7 +885,6 @@ feature -- Status setting
 		require
 			exists: exists
 			a_face_name_not_void: a_face_name /= Void
-			a_face_name_not_empty: not a_face_name.empty
 			valid_count: a_face_name.count <= Max_face_name_length
 		local
 			a: ANY
@@ -1057,6 +1066,14 @@ feature {NONE} -- Externals
 	cwel_log_font_get_facename (ptr: POINTER): POINTER is
 		external
 			"C [macro <logfont.h>]"
+		end
+
+	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
+			object: POINTER) is
+		external
+			"C [macro <wel.h>] (HGDIOBJ, int, LPVOID)"
+		alias
+			"GetObject"
 		end
 
 	Lf_facesize: INTEGER is

@@ -116,6 +116,9 @@ feature -- Status report
 			ft: FEATURE_TABLE
 			f: FEATURE_I
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.to_tree_item%N")
+			end
 			attributes_loaded := False
 			onces_loaded := False
 			create title.make (50)
@@ -150,7 +153,7 @@ feature -- Status report
 				ft.forth
 			end
 
-			if has_attributes or dtype.is_special then
+			if has_attributes or dtype.is_special or dtype.is_tuple then
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
 				attr_item.set_pixmap (Pixmaps.Icon_attributes)
 				ost.set_associated_tree_item (attr_item)
@@ -238,6 +241,9 @@ feature -- Status setting
 			list: LIST [ABSTRACT_DEBUG_VALUE]
 			obj: DEBUGGED_OBJECT
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.refresh%N")
+			end
 			attr_item.wipe_out
 			attr_item.expand_actions.wipe_out
 			attr_item.collapse_actions.wipe_out
@@ -355,6 +361,9 @@ feature {NONE} -- Implementation
 			list: LIST [ABSTRACT_DEBUG_VALUE]
 			obj: DEBUGGED_OBJECT
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
+			end
 			create obj.make (address, spec_lower, spec_higher)
 			list := obj.attributes
 			from

@@ -43,7 +43,7 @@ inherit
 			{NONE} all
 		end
 
-	OPERATING_ENVIRONMENT
+	SYSTEM_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -131,7 +131,6 @@ feature -- Access from debugger
 				Result := l_info_from_module.class_type_for_token (a_class_token)
 			end
 		end
-
 
 	has_feature_info_about_module_class_token (a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER): BOOLEAN is
 			-- Do we have information for feature identified by `a_module_name' , `a_class_token', and `a_feature_token' ?
@@ -271,42 +270,6 @@ feature -- From compiler world
 			end
 
 			Result := l_output
-		end
-		
-	class_tokens_for_class (a_class: CLASS_C): LIST [INTEGER] is
-			-- Return tokens related to `a_class'
-			-- this computing is not related to the IL Token recording
-		require
-			arg_not_void: a_class /= Void
-		local
-			l_types: TYPE_LIST
-			l_class_type: CLASS_TYPE
-			l_types_cursor: CURSOR
-		do
-			create {LINKED_LIST [INTEGER]} Result.make
-			l_types := a_class.types
-
-			l_types_cursor := l_types.cursor
-			from
-				l_types.start
-			until
-				l_types.after
-			loop
-				l_class_type := l_types.item
-				Result.extend (class_token_for (l_class_type))
-				l_types.forth
-			end
-			l_types.go_to (l_types_cursor)
-		ensure
-			at_least_one_token: Result /= Void and then not Result.is_empty
-		end		
-
-	class_token_for (a_class_type: CLASS_TYPE): INTEGER is
-			-- Class token for class type `a_class_type'
-		require
-			arg_class_type_not_void: a_class_type /= Void
-		do
-			Result := a_class_type.last_implementation_type_token
 		end
 
 feature -- To compiler world
@@ -684,7 +647,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			-- Save info into file.
 		local
 			l_il_info_file: RAW_FILE	
-			l_data_to_save: TUPLE[ANY,ANY,INTEGER]
+--			l_data_to_save: TUPLE [ANY, ANY, INTEGER]
+			l_object_to_save: IL_DEBUG_INFO_STORAGE
 		do
 			if is_debug_info_enabled then
 				debug ("debugger_il_info_trace")
@@ -693,12 +657,20 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				
 					--| class_token : feature_token -- classname : feature_name
 				create l_il_info_file.make_create_read_write (Il_info_file_name)
-				l_data_to_save := [
-									modules_debugger_info, 
-									class_types_debugger_info,
-									entry_point_token
-								]
-				l_il_info_file.independent_store (l_data_to_save)
+--				l_data_to_save := [
+--									modules_debugger_info, 
+--									class_types_debugger_info,
+--									entry_point_token
+--								]
+					--| Prepare object to be saved
+				create l_object_to_save.make
+				l_object_to_save.set_modules_debugger_info (modules_debugger_info)
+				l_object_to_save.set_class_types_debugger_info (class_types_debugger_info)
+				l_object_to_save.set_entry_point_token (entry_point_token)
+
+--				l_il_info_file.independent_store (l_data_to_save)
+				l_il_info_file.independent_store (l_object_to_save)
+
 				l_il_info_file.close
 			end
 		end
@@ -727,12 +699,12 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					l_precomp_dirs.after
 				loop
 					l_remote_project_directory := l_precomp_dirs.item_for_iteration
-					l_pfn := l_remote_project_directory.precomp_eiffel_debug_info_file
+					l_pfn := l_remote_project_directory.precomp_il_info_file
 					debug ("debugger_il_info_trace")
 						print (l_pfn)
 						io.put_new_line
 					end
-					l_succeed := import_file_data (l_remote_project_directory.precomp_eiffel_debug_info_file, l_remote_project_directory.system_name, True)
+					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
 					l_precomp_dirs.forth
 				end
 			end
@@ -742,7 +714,10 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
-			l_data_to_save: TUPLE[ANY,ANY,INTEGER]
+			l_data_to_save: TUPLE [ANY,ANY,INTEGER]
+			l_retrieved: ANY
+			l_retrieved_object: IL_DEBUG_INFO_STORAGE
+
 			l_modules_debugger_info: like modules_debugger_info
 			l_class_types_debugger_info: like class_types_debugger_info
 			l_entry_point_token: like entry_point_token		
@@ -761,14 +736,24 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						--| File does not exists !
 				else
 					l_il_info_file.open_read
-					l_data_to_save ?= l_il_info_file.retrieved
+					l_retrieved := l_il_info_file.retrieved
 					l_il_info_file.close
-					
-						--| Get values
-					l_modules_debugger_info ?= l_data_to_save.item (1)
-					l_class_types_debugger_info ?= l_data_to_save.item (2)
-					l_entry_point_token := l_data_to_save.integer_item (3)
 
+						--| Get values
+					l_retrieved_object ?= l_retrieved
+					if l_retrieved_object /= Void then
+						l_modules_debugger_info     := l_retrieved_object.modules_debugger_info
+						l_class_types_debugger_info := l_retrieved_object.class_types_debugger_info
+						l_entry_point_token         := l_retrieved_object.entry_point_token
+					else --| Doomed to be removed
+						print ("Retrieved old data %N")
+						l_data_to_save ?= l_retrieved
+							--| Get values
+						l_modules_debugger_info ?= l_data_to_save.item (1)
+						l_class_types_debugger_info ?= l_data_to_save.item (2)
+						l_entry_point_token := l_data_to_save.integer_item (3)
+					end
+					
 						--| Assign values
 					if is_from_precompiled then
 							--| Update and Merge data
@@ -813,8 +798,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			-- Filename for IL info storage
 		once
 			create Result.make_from_string (Workbench_generation_path)
-			Result.set_file_name (System.name)
-			Result.add_extension ("pdbe")	
+			Result.set_file_name (Il_info_name)
+			Result.add_extension (Il_info_extension)	
 		end	
 
 feature {NONE} -- Class Specific info

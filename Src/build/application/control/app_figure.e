@@ -71,7 +71,7 @@ feature
 			temp_int: INTERIOR
 		do
 			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (Resources.background_figure_color);
+			temp_int.set_foreground_color (Resources.app_background_figure_color);
 			text_image_init;
 			draw;
 		end; -- deselect
@@ -122,9 +122,9 @@ feature
 			temp_int: INTERIOR
 		do
 			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (Resources.foreground_figure_color);
-			text_image.set_foreground_color (Resources.background_figure_color);
-			text_image.set_background_color (Resources.foreground_figure_color);
+			temp_int.set_foreground_color (Resources.app_foreground_figure_color);
+			text_image.set_foreground_color (Resources.app_background_figure_color);
+			text_image.set_background_color (Resources.app_foreground_figure_color);
 			draw
 		end;
 
@@ -193,7 +193,7 @@ feature
 
 	valid_text_image: BOOLEAN is
 		do
-			result := text_image /= Void;
+			Result := text_image /= Void;
 		end;
 
 
@@ -225,9 +225,9 @@ feature {NONE}
 			int: INTERIOR
 		do
 			!!int.make;
-			int.set_foreground_color (Resources.background_figure_color);
+			int.set_foreground_color (Resources.app_background_figure_color);
 			!!a_path.make;
-			a_path.set_foreground_color (Resources.foreground_figure_color);
+			a_path.set_foreground_color (Resources.app_foreground_figure_color);
 			a_path.set_line_width (App_const.standard_thickness);
 			inner_figure.set_interior (int);
 			inner_figure.set_path (a_path);
@@ -241,9 +241,9 @@ feature {NONE}
 		do	
 			!!a_path.make;
 			a_path.set_line_width (App_const.standard_thickness);
-			a_path.set_foreground_color (Resources.foreground_figure_color);
+			a_path.set_foreground_color (Resources.app_foreground_figure_color);
 			!!interior.make;
-			interior.set_foreground_color (Resources.background_figure_color);
+			interior.set_foreground_color (Resources.app_background_figure_color);
 			outer_figure.set_interior (interior);
 			outer_figure.set_path (a_path);
 		end;
@@ -255,8 +255,8 @@ feature {NONE}
 	text_image_init is
 			-- Initialize the text (Secret)
 		do
-			text_image.set_background_color (Resources.background_figure_color);
-			text_image.set_foreground_color (Resources.foreground_figure_color);
+			text_image.set_background_color (Resources.app_background_figure_color);
+			text_image.set_foreground_color (Resources.app_foreground_figure_color);
 		end; -- text_image_init
 	
 	xyrotate (f: REAL; px, py: INTEGER) is

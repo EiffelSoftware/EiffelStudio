@@ -23,6 +23,19 @@ feature -- Initialization
 			ASSERTIONS.ENSURE ("tag_set", tag == a_tag);
 		#endif
 	}
+
+	public EIFFEL_EXCEPTION (int a_code, string a_tag, Exception an_inner_exception) : base (exception_message (a_code, a_tag), an_inner_exception)
+		// New instance with `code' set to `a_code' and `tag' with `a_tag'
+		// and `InnerException' set to `an_inner_exception'.
+	{
+		code = a_code;
+		tag = a_tag;
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("code_set", code == a_code);
+			ASSERTIONS.ENSURE ("tag_set", tag == a_tag);
+			ASSERTIONS.ENSURE ("InnerException_set", InnerException == an_inner_exception);
+		#endif
+	}
 /*
 feature -- Access
 */

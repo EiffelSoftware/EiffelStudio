@@ -274,7 +274,7 @@ feature -- Status report
 			if not Result then
 				ct ?= feature_as.body.type
 				if ct /= Void then
-					if System.any_class.compiled then
+					if System.any_class.is_compiled then
 						class_c_any := System.any_class.compiled_class
 							--| FIXME remove argument from `associated_eiffel_class'.
 						type_as_class_c := ct.associated_eiffel_class(class_c_any)

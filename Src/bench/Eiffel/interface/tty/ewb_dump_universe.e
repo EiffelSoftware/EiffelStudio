@@ -50,7 +50,7 @@ feature
 					until
 						l.after
 					loop
-						if l.item.compiled then
+						if l.item.is_compiled then
 							s := l.item.name
 							s.to_upper
 							print (s + "%N")

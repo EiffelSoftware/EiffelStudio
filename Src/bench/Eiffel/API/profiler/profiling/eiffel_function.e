@@ -53,7 +53,7 @@ feature -- Output
 					cluster := Eiffel_universe.cluster_of_name (int_cluster_name);
 					if cluster /= Void then
 						class_i := Eiffel_universe.class_named (int_class_name, cluster);
-						if class_i.compiled then	
+						if class_i.is_compiled then	
 							class_id := class_i.compiled_class.class_id;
 						end
 					end

@@ -189,8 +189,8 @@ feature {NONE}
 	check_array_class is
 			-- Force an array type in the system
 		require
-			any_compiled: System.any_class.compiled;
-			array_compiled: System.array_class.compiled;
+			any_compiled: System.any_class.is_compiled;
+			array_compiled: System.array_class.is_compiled;
 		local
 			array_cl: CLASS_C;
 			array_t: GEN_TYPE_I;
@@ -204,7 +204,7 @@ feature {NONE}
 	check_tuple_class is
 			-- Force a tuple type in the system
 		require
-			tuple_compiled: System.tuple_class.compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			tuple_cl: CLASS_C;
 			tuple_t: GEN_TYPE_I;
@@ -217,10 +217,10 @@ feature {NONE}
 	check_function_class is
 			-- Force a function type in the system
 		require
-			function_compiled: System.function_class.compiled
-			any_compiled: System.any_class.compiled
-			array_compiled: System.array_class.compiled
-			tuple_compiled: System.tuple_class.compiled
+			function_compiled: System.function_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			funct_cl: CLASS_C;
 		do
@@ -231,10 +231,10 @@ feature {NONE}
 	check_procedure_class is
 			-- Force a procedure type in the system
 		require
-			procedure_compiled: System.procedure_class.compiled
-			any_compiled: System.any_class.compiled
-			array_compiled: System.array_class.compiled
-			tuple_compiled: System.tuple_class.compiled
+			procedure_compiled: System.procedure_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			proc_cl: CLASS_C;
 		do
@@ -247,8 +247,8 @@ feature
 	Array_type_a: GEN_TYPE_A is
 			-- Default array type
 		require
-			any_compiled: System.any_class.compiled;
-			array_compiled: System.array_class.compiled;
+			any_compiled: System.any_class.is_compiled;
+			array_compiled: System.array_class.is_compiled;
 		local
 			any_type: CL_TYPE_A;
 			generics: ARRAY [TYPE_A];
@@ -265,7 +265,7 @@ feature
 	Tuple_type_a: TUPLE_TYPE_A is
 			-- Default tuple type: TUPLE
 		require
-			tuple_compiled: System.tuple_class.compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			generics: ARRAY [TYPE_A]
 		do
@@ -278,10 +278,10 @@ feature
 	Function_type_a: GEN_TYPE_A is
 			-- Default function type: FUNCTION [ANY, TUPLE, ANY]
 		require
-			function_compiled: System.function_class.compiled
-			any_compiled: System.any_class.compiled
-			array_compiled: System.array_class.compiled
-			tuple_compiled: System.tuple_class.compiled
+			function_compiled: System.function_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
 			generics: ARRAY [TYPE_A]
@@ -300,10 +300,10 @@ feature
 	Procedure_type_a: GEN_TYPE_A is
 			-- Default procedure type: PROCEDURE [ANY, TUPLE]
 		require
-			procedure_compiled: System.procedure_class.compiled
-			any_compiled: System.any_class.compiled
-			array_compiled: System.array_class.compiled
-			tuple_compiled: System.tuple_class.compiled
+			procedure_compiled: System.procedure_class.is_compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
+			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
 			generics: ARRAY [TYPE_A]

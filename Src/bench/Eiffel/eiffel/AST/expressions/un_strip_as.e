@@ -93,8 +93,8 @@ feature -- Type check, byte code and dead code removal
 	Strip_type: GEN_TYPE_A is
 			-- Type of strip expression (ARRAY [ANY])
 		require
-			any_compiled: System.any_class.compiled
-			array_compiled: System.array_class.compiled
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
 		local
 			generics: ARRAY [TYPE_A]
 			any_type: CL_TYPE_A

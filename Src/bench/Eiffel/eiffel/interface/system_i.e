@@ -451,7 +451,7 @@ feature -- Properties
 						if a_visible_i /= Void and then a_visible_i.has_visible then
 							-- Add visible class to system if
 							-- not in the system yet.
-							if not a_class_i.compiled then
+							if not a_class_i.is_compiled then
 								local_workbench.change_class (a_class_i)
 							end
 						end
@@ -623,7 +623,7 @@ end
 	change_classes is
 			-- Mark classes to be recompiled.
 		do
-			if not any_class.compiled then
+			if not any_class.is_compiled then
 					-- First compilation.
 				init
 			else
@@ -1691,7 +1691,7 @@ feature -- Freeezing
 	freeze_system is
 			-- Worrkbench C code generation
 		require
-			root_class.compiled
+			root_class.is_compiled
 		do
 			freezing_occurred := True
 			if Compilation_modes.is_precompiling then
@@ -1833,7 +1833,7 @@ feature -- Final mode generation
 	finalize_system (keep_assert: BOOLEAN) is
 			-- Finalized generation.
 		require
-			root_class_compiled: root_class.compiled
+			root_class_compiled: root_class.is_compiled
 		local
 			old_remover_off: BOOLEAN
 			old_exception_stack_managed: BOOLEAN
@@ -3680,7 +3680,7 @@ feature -- Precompilation
 	init_precompilation is
 			-- Initialization before a precompilation.
 		do
-			if not any_class.compiled then
+			if not any_class.is_compiled then
 				init
 			else
 				add_visible_classes

@@ -453,7 +453,7 @@ feature {NONE} -- Initialization
 					end
 				end
 				
-				if not l_result.compiled then
+				if not l_result.is_compiled then
 					Workbench.add_class_to_recompile (l_result)
 				end
 				l_class := l_result.compiled_class

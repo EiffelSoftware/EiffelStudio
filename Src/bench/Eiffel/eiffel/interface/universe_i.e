@@ -158,7 +158,7 @@ feature -- Access
 			until
 				Result.after
 			loop
-				if Result.item.compiled then
+				if Result.item.is_compiled then
 					Result.forth
 				else
 					Result.remove

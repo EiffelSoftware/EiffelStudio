@@ -414,7 +414,7 @@ feature -- Commands
 						class_list.after
 					loop
 						cl := class_list.item_for_iteration
-						if cl.compiled then
+						if cl.is_compiled then
 							str := cl.file_name.to_c
 							file_date := eif_date ($str)
 							if file_date /= cl.date then

@@ -1163,6 +1163,8 @@ rt_public void reclaim(void)
 	struct chunk *c, *cn;
 #endif
 
+	DISCARD_BREAKPOINTS;
+
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
 
@@ -1172,11 +1174,13 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef ISE_GC
-	if (eif_no_reclaim || (g_data.status & GC_STOP))	/* Does user want no reclaim? */
+	if (eif_no_reclaim || (g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
 #else
-	if (eif_no_reclaim)
+	if (eif_no_reclaim) {
 #endif
+		UNDISCARD_BREAKPOINTS;
 		return;	
+	}
 
 #ifdef RECLAIM_DEBUG
 	fprintf(stderr, "reclaim: collecting all objects...\n");
@@ -1234,6 +1238,8 @@ rt_public void reclaim(void)
 
 		/* Final collection terminated, unmark the flag */
 	eif_is_in_final_collect = EIF_FALSE;
+
+	UNDISCARD_BREAKPOINTS;
 }
 
 #ifdef ISE_GC

@@ -27,9 +27,6 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create
-		end
 
 feature -- Access
 

@@ -7,6 +7,7 @@ class
 	EB_PRINT_DIALOG
 
 inherit
+	EB_GENERAL_DATA
 	NEW_EB_CONSTANTS
 	EV_DIALOG
 		redefine
@@ -50,9 +51,9 @@ feature {NONE} -- Initialization
 			ok_b.set_width (cancel_b.width)
 
 			shell_cmd_field.set_width (150)
-			shell_cmd_field.add_activate_command (Current, ok_it)
+			shell_cmd_field.add_return_command (Current, ok_it)
 
-			set_modal
+			set_modal (true)
 --			set_composite_attributes (Current)
 		end
 

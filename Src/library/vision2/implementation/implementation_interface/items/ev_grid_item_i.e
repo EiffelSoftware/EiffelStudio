@@ -174,9 +174,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			item_is_selected: is_selected
 		do
-			internal_is_selected := False
 			parent_row_i.decrease_selected_item_count
 			parent_column_i.decrease_selected_item_count
+			internal_is_selected := False
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation

@@ -3189,12 +3189,12 @@ feature -- Main file generation
 
 			Main_file.putstring ("%N%
 				%#include %"except.h%"%N%
+				%#include %"option.h%"%N%
 				%extern void emain();%N%
 				%extern void reclaim();%N%
 				%extern void failure();%N%
 				%extern void initsig();%N%
 				%extern void initstk();%N%
-				%extern void initprf();%N%
 				%extern void eif_rtinit();%N%N%
 				%void main(argc, argv, envp)%N%
 				%int argc;%N%
@@ -3210,7 +3210,7 @@ feature -- Main file generation
 				%%Tif (echval = setjmp(exenv))%N%
 				%%T%Tfailure();%N%N%
 				%%Teif_rtinit(argc, argv, envp);%N%
-				%%Tinitprf();%N%
+				%%Tif (eif_profiler_on) initprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N}%N");

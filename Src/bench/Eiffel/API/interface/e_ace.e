@@ -33,6 +33,12 @@ feature -- Access
 			Result := Lace.root_ast
 		end;
 
+	successful: BOOLEAN is
+			-- Was the last compilation of the Ace file successful?
+		do
+			Result := Lace.successfull
+		end;
+
 	text: STRING is
 			-- Text of the Lace file.
 			-- Void if unreadable file

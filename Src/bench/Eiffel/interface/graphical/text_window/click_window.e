@@ -10,25 +10,29 @@ deferred class CLICK_WINDOW
 inherit
 
 	TEXT_STRUCT;
-	TEXT_AREA
+	TEXT_WINDOW
 		export
 			{ANY} process_text
 		undefine
 			copy, setup, consistent, is_equal
 		redefine
-			process_after_class, process_address_text, process_error_text,
-			process_feature_name_text, process_feature_text, process_class_name_text,
 			put_address, put_feature_name, put_feature,
-			put_error, put_class, put_classi, put_cluster,
-			put_class_syntax, put_ace_syntax, process_quoted_text,
-			process_new_line, process_indentation, process_basic_text,
-			process_cl_syntax, process_ace_syntax
+			put_error, put_class, put_after_class, put_classi, put_cluster,
+			put_class_syntax, put_ace_syntax, process_breakpoint, 
+			process_padded, disable_clicking, update_clickable_from_stone,
+			put_operator
 		end
 
 feature -- Properties
 
 	focus_start, focus_end: INTEGER; 
 			-- Bounds of focus in the structured text
+
+	last_click_break: CLICK_BREAKABLE;
+			-- Keep track of it until we reach the end of its line
+
+	changed: BOOLEAN;
+			-- Has the text been edited since last display?
 
 feature -- Access
 
@@ -54,6 +58,30 @@ feature -- Settings
 
 feature -- Input
 
+	put_after_class (e_class: E_CLASS; str: STRING) is
+			-- Put "-- class" followed by `t' in the text.
+		local
+			class_stone: CLASSC_STONE
+		do
+			put_string (" -- class ");
+			!! class_stone.make (e_class);
+			put_stone (class_stone, e_class.name_in_upper);
+			new_line
+		end;
+
+	put_operator (str: STRING;
+			e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
+		   -- Process operator text.
+		do
+			put_feature (e_feature, e_class, str)
+		end;
+
+	put_breakpoint_stone (a_stone: BREAKABLE_STONE; stone_string: STRING) is
+			-- Add breakpoint stone `a_stone' with image `stone_string'.
+		do
+			put_stone (a_stone, stone_string)
+		end
+
 	put_string (s: STRING) is
 			-- Add `s' to the text image, don't record it in internal structure.
 		do
@@ -72,50 +100,6 @@ feature -- Input
 		do
 			image.extend ('%N');
 			text_position := text_position + 1
-		end;
-
-	process_error_text (text: ERROR_TEXT) is
-			-- Process the error `text'.
-		do
-			put_error (text.error, text.error_text)
-		end;
-
-	process_cl_syntax (text: CL_SYNTAX_ITEM) is
-			-- Process the syntax error `text'.
-		do
-			put_class_syntax (text.syntax_error, text.e_class, text.error_text)
-		end;
-
-	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
-			-- Process the syntax error `text'.
-		do
-			put_ace_syntax (text.syntax_error, text.error_text)
-		end;
-
-	process_address_text (text: ADDRESS_TEXT) is
-			-- Process the address `text'.
-		do
-			put_address (text.address, text.e_class)
-		end;
-
-	process_quoted_text (text: QUOTED_TEXT) is
-			-- Process the quoted `text' within a comment.
-		do
-			put_string (text.image);
-		end;
-
-	put_stone (a_stone: STONE; stone_string: STRING) is
-			-- Add `stone_string' to the text image and 
-			-- record `a_stone' as clickable.
-		local
-			p: CLICK_STONE;
-			length: INTEGER;
-		do
-			image.append (stone_string);
-			length := stone_string.count;
-			!!p.make (a_stone, text_position, text_position + length);
-			add_click_stone (p);
-			text_position := text_position + length;
 		end;
 
 	put_classi (e_class: CLASS_I; str: STRING) is
@@ -201,23 +185,95 @@ feature -- Input
 			put_stone (stone, str)
 		end;
 
-feature {NONE} -- Implementation
+feature -- Processing for text_struct
+
+	process_padded is
+			-- Process padded spaces in place of breakpoints.
+		do
+			if last_click_break /= Void then
+				last_click_break.set_end_focus (text_position);
+				last_click_break := Void
+			end;
+			put_string ("   ");
+		end;
+
+	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
+			-- Put a 'break stone' in the text.
+		local
+			breakable_stone: BREAKABLE_STONE;
+			debug_mark: STRING
+		do
+			if last_click_break /= Void then
+				last_click_break.set_end_focus (text_position);
+				last_click_break := Void
+			end;
+			put_string (" ");
+			!! breakable_stone.make (a_bp.e_feature, a_bp.index);
+			image.append (breakable_stone.sign);
+			!! last_click_break.make (breakable_stone,
+					text_position, text_position + 3);
+			add_click_stone (last_click_break);
+			text_position := text_position + 3;
+			put_string (" ")
+		end;
+
+feature -- Update
+
+	update_clickable_from_stone is
+			-- Update the clickable information from tool's stone.
+			-- click list if text uses character position.
+		local
+			c_list: ARRAY [CLICK_STONE]
+		do
+			c_list := tool.stone.click_list;
+			if c_list /= Void then
+				share (c_list)
+			end
+		end;
 
 	update_focus (i: INTEGER) is
 			-- Select the stone corresponding to text position `i'.
 		do
-debug
-io.putstring ("In update focus with: ");
-io.putint (i);
-io.putstring ("%N");
-end;
 			if clickable_count /= 0 then
 				search_by_index (i);
 				set_bounds (item (position).start_focus, item (position).end_focus)
 			end
 		end;
 
-feature -- Output processing for text_struct
+	disable_clicking is
+			-- Disable the drag and drop mechanism.
+		do
+			clear_clickable;
+			changed := False
+		end;
+
+feature -- Breakpoint update
+
+	highlight_breakable (f: E_FEATURE; index: INTEGER) is
+			-- Highlight the line containing the `index'-th breakable point.
+		local
+			cb: CLICK_BREAKABLE
+		do
+			cb := breakable_for (f, index);
+			if index >= 1 and cb /= Void then
+				set_bounds (cb.start_focus, cb.end_focus);
+				highlight_focus
+			end
+		end;
+
+	highlight_focus is
+			-- Highlight focus (using reverse video) on the screen 
+			-- from `focus_start' to `focus_end'.
+			-- Put cursor on the focus if not already done.
+		do
+			highlight_selected (focus_start, focus_end);
+			set_cursor_position (focus_start);
+		end;
+
+feature {NONE} -- Implementation
+
+	text_position: INTEGER;
+			-- Current position in the structured document text
 
 	image: STRING is
 			-- Textual image generated by `build_image'
@@ -225,70 +281,46 @@ feature -- Output processing for text_struct
 			!!Result.make (10000)
 		end; -- image
 
-	text_position: INTEGER;
-			-- Current position in the structured document text
-
-	process_basic_text (t: BASIC_TEXT) is
-			-- Puts normal, i.e. non clickable, text `t' in the
-			-- text.
-		do
-			put_string (t.image);
-		end;
-
-	process_class_name_text (t: CLASS_NAME_TEXT) is
-			-- Process clickable text `t'.
+	breakable_for (f: E_FEATURE; index: INTEGER): CLICK_BREAKABLE is
+			-- Breakable stone for `f' with index `index'
 		local
-			stone: STONE;
-			e_class: E_CLASS;
+			cb: CLICK_BREAKABLE;
+			b: BREAKABLE_STONE;
+			bid: BODY_ID;
+			found: BOOLEAN;
+			i: INTEGER
 		do
-			e_class := t.class_i.compiled_eclass;
-			if e_class /= Void then
-				!CLASSC_STONE! stone.make (e_class)
-			else
-				!CLASSI_STONE! stone.make (t.class_i)
+			from
+				bid := f.body_id;
+				i := 1
+			until
+				i > count or else found
+			loop
+				cb ?= item (i);
+				if cb /= Void then
+					b := cb.breakable;
+					found := (bid.is_equal (b.routine.body_id) and then
+						b.index = index)
+				end
+				i := i + 1
 			end;
-			put_stone (stone, t.image)
+			if found then
+				Result := cb
+			end
 		end;
 
-	process_feature_name_text (t: FEATURE_NAME_TEXT) is
-			-- Process clickable text `t'.
+	put_stone (a_stone: STONE; stone_string: STRING) is
+			-- Add `stone_string' to the text image and 
+			-- record `a_stone' as clickable.
 		local
-			st: FEATURE_NAME_STONE
+			p: CLICK_STONE;
+			length: INTEGER;
 		do
-			!! st.make (t.image, t.e_class);
-			put_stone (st, t.image);	
-		end;
-
-	process_feature_text (t: FEATURE_TEXT) is
-			-- Process clickable text `t'.
-		local
-			st: FEATURE_STONE
-		do
-			!! st.make (t.e_feature, t.e_class);
-			put_stone (st, t.image)
-		end;
-
-	process_indentation (t: INDENT_TEXT) is
-			-- Process non clickable text `t'.
-		do
-			put_string (t.image)
-		end;
-
-	process_new_line (t: NEW_LINE_ITEM) is
-			-- Put a new line in the text.
-		do
-			new_line;
-		end;
-
-	process_after_class (t: AFTER_CLASS) is
-			-- Put "-- class" followed by `t' in the text.
-		local
-			class_stone: CLASSC_STONE
-		do
-			put_string (" -- class ");
-			!! class_stone.make (t.e_class);
-			put_stone (class_stone, t.e_class.name_in_upper);
-			new_line
+			image.append (stone_string);
+			length := stone_string.count;
+			!!p.make (a_stone, text_position, text_position + length);
+			add_click_stone (p);
+			text_position := text_position + length;
 		end;
 
 end -- class CLICK_WINDOW

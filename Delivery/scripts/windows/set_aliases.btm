@@ -11,11 +11,12 @@ set DEFAULT_CVS_TAG=HEAD
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=g:\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-set INSTALL_DIR=f:\InstalledEiffel56
-REM Where Visual C++ is installed (to recompile the run-time)
-set C_COMPILER_PATH=d:\\apps\\MSVC\\VC98
-REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.
-set PATH=%PATH;"D:\apps\HTMLHelp";"d:\apps\Wise;e:\src\wix\bin"
+set INSTALL_DIR=F:\InstalledEiffel56
+
+REM Check for Windows 64 bits.
+iff "%ISE_PLATFORM%" == "windows64"
+	set WIN64=True
+endiff
 
 REM OK The rest is private, no need for you to see it :)
 
@@ -39,7 +40,7 @@ alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
 REM Clean exit
-alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
+alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
 
 REM CVS Commands: up, checkout, export
 alias up `call cvs -z 9 -q up -Pd %$ >>& %INSTALL_LOG`

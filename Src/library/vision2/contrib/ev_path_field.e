@@ -43,6 +43,8 @@ feature -- Status
 			not_destroyed: not is_destroyed
 		do
 			Result := field.text
+		ensure
+			result_not_void: Result /= Void
 		end
 			
 feature -- Settings
@@ -83,7 +85,7 @@ feature -- Removal
 		do
 			field.remove_text
 		ensure
-			path_cleared: path = Void
+			path_cleared: path.is_empty
 		end
 
 feature {NONE} -- GUI building

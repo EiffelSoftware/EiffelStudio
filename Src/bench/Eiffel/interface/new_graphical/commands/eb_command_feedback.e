@@ -34,9 +34,9 @@ feature -- Status setting
 			-- Set both `button' and `menu_entry'
 			-- to be selected or not, according to `flag'.
 		do
-			if button /= Void then
-				button.set_selected (flag)
-			end
+--			if button /= Void then
+--				button.set_selected (flag)
+--			end
 			if menu_item /= Void then
 				menu_item.set_selected (flag)
 			end
@@ -57,8 +57,10 @@ feature -- Status setting
 
 feature -- Access
 
-	button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button on the toolbars.
+--	button: EV_TOOL_BAR_TOGGLE_BUTTON
+--			-- Button on the toolbars.
+
+	button: EV_BUTTON
 
 	menu_item: EV_MENU_ITEM
 			-- Menu entry in the menus.

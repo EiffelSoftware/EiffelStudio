@@ -19,9 +19,17 @@ feature {NONE} -- Initialization
 			-- New instance of a IFusionSupport.
 		do
 			item := new_fusion_support
+			if item = default_pointer then
+				exists := False
+			else
+				exists := True
+			end
 		end
 
 feature -- Access
+
+	exists: BOOLEAN
+			-- Was components correctly initialized?
 
 	signed (a_loc: UNI_STRING): BOOLEAN is
 			-- Is assembly at 'a_loc' signed?

@@ -16,6 +16,8 @@ inherit
 		rename
 			make as wel_make,
 			item as wel_item
+		redefine
+			insert_string
 		end
 
 feature {NONE} -- Initialization
@@ -96,6 +98,7 @@ feature {NONE} -- Implementation
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
 			pix_imp: EV_PIXMAP_IMP
 			rgroup: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
+			chk_imp: EV_CHECK_MENU_ITEM_IMP
 		do
 			menu_item_imp ?= item_imp
 
@@ -136,6 +139,10 @@ feature {NONE} -- Implementation
 					--|		insert_bitmap (pix_imp.bitmap, pos - 1 , menu_item_imp.id)
 					--|	end
 					insert_string (menu_item_imp.text, pos - 1, menu_item_imp.id)
+					check
+						inserted: position_to_item_id (pos - 1) = menu_item_imp.id
+						inserted_on_same_place: position_to_item_id (pos - 1) = (ev_children @ pos).id
+					end
 
 					radio_imp ?= item_imp
 					if radio_imp /= Void then
@@ -161,6 +168,21 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+
+				-- This is to change the state if necessary.
+				-- (see invariant EV_MENU_ITEM_IMP).
+			if not is_menu_separator_imp (item_imp) then
+				if not menu_item_imp.is_sensitive then
+					menu_item_imp.disable_sensitive
+				end
+				chk_imp ?= item_imp
+				if chk_imp /= Void then
+					if chk_imp.is_selected then
+						chk_imp.enable_select
+					end
+				end
+			end
+
 			ev_children.go_i_th (pos - 1)
 		end
 
@@ -263,6 +285,10 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	menu_item_clicked (an_id: INTEGER) is
+			-- Call `on_activate' for menu item with `an_id'.
+			--| We could also use a hash-table but considering the number
+			--| of menu items does not exceed 200 (in general), it is not
+			--| necessary. This is more space efficient.
 		local
 			cur: CURSOR
 			sub_menu: EV_MENU_IMP
@@ -284,6 +310,17 @@ feature {EV_ANY_I} -- Implementation
 				ev_children.forth
 			end
 			ev_children.go_to (cur)
+		end
+
+	insert_string (a_string: STRING; a_position, an_id: INTEGER) is
+			-- Insert `a_string' at zero-based `a_position' with
+			-- `an_id'.
+		local
+			a_wel_string: WEL_STRING
+		do
+			!! a_wel_string.make (a_string)
+			cwin_insert_menu (wel_item, a_position,
+				Mf_string + Mf_byposition, an_id, a_wel_string.item)
 		end
 
 end -- class EV_MENU_ITEM_LIST_IMP
@@ -309,6 +346,12 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/25 20:22:12  brendel
+--| Added redefine of insert_string, since there is a bug in WEL. Remove this
+--| redeclaration and fix WEL as soon as this is known to be the right fix.
+--| Added fix that makes sure the state of menu items is actually set in
+--| the menu.
+--|
 --| Revision 1.6  2000/02/24 01:41:22  brendel
 --| Fully implemented radio item grouping.
 --|

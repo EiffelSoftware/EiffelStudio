@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	check_callback is
 			-- 

@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 	dummy_tree_node: POINTER
 		-- Added to prevent seg fault on wipeout by adding temporarily
 		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	expand_callback (a_tree_item: POINTER) is
 			-- Expand callback passing expanded `a_tree_item' node pointer.

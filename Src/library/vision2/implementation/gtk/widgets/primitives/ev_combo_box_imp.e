@@ -149,7 +149,7 @@ feature -- Status setting
 			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
-feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_LIST_ITEM_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	container_widget: POINTER
 			-- Gtk combo struct

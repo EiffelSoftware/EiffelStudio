@@ -65,7 +65,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 			a_toolbar_button_imp.select_actions_internal.call (empty_tuple)
 		end
 
-feature {EV_ANY_IMP} -- List and list item intermediary agent routines
+feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list item intermediary agent routines
 		
 	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- List item selected

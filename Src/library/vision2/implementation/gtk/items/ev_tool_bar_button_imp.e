@@ -12,7 +12,7 @@ class
 inherit
 	EV_TOOL_BAR_BUTTON_I
 		export
-			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
 			interface,
 			pointer_double_press_actions_internal,

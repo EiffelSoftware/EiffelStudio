@@ -15,9 +15,8 @@ feature -- Access
 	length: INTEGER
 		-- Number of characters represented by the token.
 
-	position: INTEGER
-		-- Position in the line of the first character of
-		-- this token. The position is counted in characters.
+	width: INTEGER
+		-- Width in pixel of last display.
 
 feature -- Element Change
 
@@ -41,5 +40,6 @@ feature -- Miscellaneous
 invariant
 	image_not_void: image /= Void
 	length_positive: length > 0
+	width_positive_or_null: width >= 0
 
 end -- class EDITOR_TOKEN

@@ -48,6 +48,9 @@ feature -- Miscellaneous
 
 				-- Handle next tabulations.
 			Result := Result + Tabulation_width * (number_of_tabs - 1)
+
+				-- update width
+			width := Result - d_x
 		end
 
 feature {NONE} -- Implementation

@@ -35,6 +35,9 @@ feature -- Miscellaneous
 			--[ Don't display anything. If an option is set to see the spaces, 
 			--  put it here ]
 			Result := d_x + dc.string_width(image)
+
+				-- update width
+			width := Result - d_x
 		end
 
 feature {NONE} -- Implementation

@@ -32,6 +32,9 @@ feature -- Miscellaneous
 		do
 			dc.text_out (d_x, d_y, image)
 			Result := d_x + dc.string_width(image)
+
+				-- update width
+			width := Result - d_x
 		end
 
 end -- class EDITOR_TOKEN

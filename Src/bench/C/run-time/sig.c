@@ -35,15 +35,6 @@
 /*#define DEBUG 1		/**/
 #define dprintf(n)		if (DEBUG & (n)) printf
 
-/* Make sure NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
-#ifndef NSIG
-#ifdef EIF_WINDOWS
-#define NSIG 16
-#else
-#define NSIG 32		/* Number of signals (acess from 1 to NSIG-1) */
-#endif
-#endif
-
 #define DESC_LEN	29		/* Maximum length for signal description */
 
 /* Array of signal handlers used by the run-time to dispatch signals as they
@@ -54,24 +45,28 @@
  */
 rt_public Signal_t (*esig[NSIG])(int);	/* Array of signal handlers */
 
+#ifndef EIF_THREADS
+
 /* Records whether a signal is ignored by default or not. Some of these
  * values where set during the initialization, others were hardwired. We also
  * record the original signal status to know whether by default a signal is
  * ignored or not.
  */
-rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */
-rt_public char osig_ign[NSIG];			/* Original signal default (1 = ignored) */
+rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */ /* %%ss mt should be private */
+rt_public char osig_ign[NSIG];			/* Original signal default (1 = ignored) */ /* %%ss mt should be private */
 
 /* Global signal handler status. If set to 0, then signal handler is activated
  * an normal processing occurs. Otherwise, signals are queued if they are not
  * ignored, for later processing.
  */
-rt_shared int esigblk = 0;				/* By default, signals are not blocked */
+rt_shared int esigblk = 0;				/* By default, signals are not blocked */ /* %%ss mt */
 
 /* The FIFO stack (circular buffer) used to record arrived signals while
  * esigblk was set (for instance, while in the garbage collector).
  */
-rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */
+rt_shared struct s_stack sig_stk;		/* Initialized by initsig() */ /* %%ss mt */
+
+#endif /* EIF_THREADS */
 
 /* Routine declarations */
 rt_public char *signame(int sig);				/* Give English description of a signal */
@@ -274,7 +269,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	 * automatically reinstanciated by the run-time (although race conditions
 	 * may occur if this is not done by the kernel).
 	 */
-
+	EIF_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
@@ -305,6 +300,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 		oldfunc = SIG_DFL;
 
 	return oldfunc;				/* Previous signal handler */
+	EIF_END_GET_CONTEXT
 }
 
 #ifndef HAS_SIGVEC
@@ -388,7 +384,7 @@ rt_shared void initsig(void)
 	 * properly initialize signals. This code is thus executed only once
 	 * and was made as short as possible--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 int sig;				/* To loop over the signals */
 	register2 Signal_t (*old)();	/* Old signal handler */
 
@@ -489,7 +485,7 @@ rt_shared void initsig(void)
 	for (sig = 1; sig < NSIG; sig++)
 		sig_ign[sig] = 0;
 #endif
-
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -504,7 +500,7 @@ rt_private void spush(int sig)
 	 * are BSD reliable signals out there, race conditions may occur and lead
 	 * to duplicate signals and/or losses--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 #ifdef HAS_SIGSETMASK
 	 int oldmask;	/* To save old signal blocking mask */ /* %%ss addded #if ..#endif */
 #endif
@@ -546,6 +542,7 @@ rt_private void spush(int sig)
 #ifdef HAS_SIGSETMASK
 	(void) sigsetmask(oldmask);			/* Restore old mask */
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int spop(void)
@@ -553,7 +550,7 @@ rt_private int spop(void)
 	/* Pops off a signal from the FIFO stack and returns its value. If the
 	 * stack is empty, return 0.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 int newpos;		/* Position we'll go to if we read something */
 	int cursig;					/* Current signal to be sent */
 
@@ -597,6 +594,7 @@ rt_private int spop(void)
 #endif
 
 	return cursig;			/* Signal to be dealt with */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -791,6 +789,7 @@ rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 
 rt_public void esigcatch(long int sig)
 {
+	EIF_GET_CONTEXT
 	/* Catch signal `sig'.
 	 * Check that the signal is defined
 	 */
@@ -845,10 +844,12 @@ rt_public void esigcatch(long int sig)
 		return;
 	}
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void esigignore(long int sig)
 {
+	EIF_GET_CONTEXT
 	/* Ignore signal `sig'.
 	 * Check that the signal is defined
      */
@@ -903,10 +904,12 @@ rt_public void esigignore(long int sig)
 		return;
 	}
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char esigiscaught(long int sig)
 {
+	EIF_GET_CONTEXT
 	/* Is signal of number `sig' caught?
 	 * Check that the signal is defined
      */
@@ -915,6 +918,7 @@ rt_public char esigiscaught(long int sig)
 		return ((sig_ign[sig] == 1)?(char)0:(char)1);
 	else
 		return (char) 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char esigdefined (long int sig)
@@ -937,7 +941,7 @@ rt_public char esigdefined (long int sig)
 void esigresall(void)
 {
 	/* Reset all the signals to their default handling */
-
+	EIF_GET_CONTEXT
 	int sig;
 	for (sig = 1; sig < NSIG; sig++)
 #ifdef SIGPROF
@@ -965,11 +969,13 @@ void esigresall(void)
 #ifdef SIGFPE
 	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
 #endif
-
+	EIF_END_GET_CONTEXT
 }
 
 void esigresdef(long int sig)
 {
+	EIF_GET_CONTEXT
+
 	/* Reset signal `sig' to its default handling */
 	if (!(esigdefined(sig) == (char) 1))
 		return;
@@ -1021,6 +1027,7 @@ void esigresdef(long int sig)
 		return;
 	}
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef TEST

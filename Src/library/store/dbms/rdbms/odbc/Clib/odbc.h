@@ -22,6 +22,7 @@
 
 extern char *error_message;
 extern char *warn_message;
+extern int error_number;
 
 /* Macro for memory allocation */
 #define ODBC_SAFE_ALLOC(x,function)	\
@@ -41,7 +42,7 @@ extern char *warn_message;
 #define SQL_HANDLE_DBC      2
 #endif
 
-#ifndef SQL_HANDLE_SMTM		
+#ifndef SQL_HANDLE_SMTM
 #define SQL_HANDLE_SMTM		3
 #endif
 
@@ -132,7 +133,7 @@ typedef void *          SQLPOINTER;
 
 /* the following are lengthes of some data types in EiffelStore on ODBC */
 #define DB_DATE_LEN                             26
-#define DB_MAX_NAME_LEN                 	40      
+#define DB_MAX_NAME_LEN                 	40
 #define DB_MAX_TABLE_LEN			50
 #define DB_MAX_COLS                             300
 // Added by David
@@ -155,9 +156,9 @@ typedef void *          SQLPOINTER;
 
 /* the following are some flags  */
 #define ODBC_SQL                0
-#define ODBC_CATALOG_COL        1       
-#define ODBC_CATALOG_TAB        2       
-#define ODBC_CATALOG_PROC       3       
+#define ODBC_CATALOG_COL        1
+#define ODBC_CATALOG_TAB        2
+#define ODBC_CATALOG_PROC       3
 #define ODBC_TIME		0
 #define ODBC_DATE		1
 #define ODBC_TIMESTAMP		2
@@ -184,7 +185,7 @@ extern void enomem ();
 
 /*
 **  Description:
-**      The SQLDA is a structure for holding data descriptions, used by 
+**      The SQLDA is a structure for holding data descriptions, used by
 **      EiffelStore on ODBC run-time system during execution of
 **      dynamic SQL statements.
 **

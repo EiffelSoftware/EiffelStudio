@@ -44,6 +44,38 @@ feature -- Access
 			protected: Result.protected
 		end
 
+feature -- Generation
+
+	generate_offsets (file: INDENT_FILE) is
+			-- Generate `offset' declarations into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			class_subcounter: CLASS_SUBCOUNTER
+		do
+			from start until after loop
+				class_subcounter ?= item_for_iteration;
+				class_subcounter.generate_offset (file);	
+				forth
+			end
+		end
+
+	generate_extern_offsets (file: INDENT_FILE) is
+			-- Generate `offset' extern declarations into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			class_subcounter: CLASS_SUBCOUNTER
+		do
+			from start until after loop
+				class_subcounter ?= item_for_iteration;
+				class_subcounter.generate_extern_offset (file);	
+				forth
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	current_subcounter: CLASS_SUBCOUNTER;

@@ -40,23 +40,24 @@ feature {NONE}
 	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `ca' types.
 		local
-			relative_path, a_absolute_path: STRING
+			relative_path: STRING
 			a_dir: DIRECTORY
 		do
 			relative_path := relative_assembly_path_from_consumed_assembly (ca)
-			create a_absolute_path.make (local_cache_path.count + relative_path.count)
-			a_absolute_path.append (local_cache_path)
-			a_absolute_path.append (relative_path)
+			create Result.make (local_cache_path.count + relative_path.count)
+			Result.append (local_cache_path)
+			Result.append (relative_path)
 
 			-- Check if path in local cache exists, if not then it must be in EAC
-			create a_dir.make (a_absolute_path)
+			create a_dir.make (Result)
 			if not a_dir.exists then
-				create a_absolute_path.make (Eiffel_path.count + Eac_path.count + relative_path.count)
-				a_absolute_path.append (Eiffel_path)
-				a_absolute_path.append (Eac_path)
-				a_absolute_path.append (relative_path)
+				create Result.make (Eiffel_path.count + Eac_path.count + clr_version.count + 1 + relative_path.count)
+				Result.append (Eiffel_path)
+				Result.append (Eac_path)
+				Result.append (clr_version)
+				Result.append_character ('\')
+				Result.append (relative_path)
 			end
-			Result := a_absolute_path
 		end
 		
 	local_info_path: STRING is

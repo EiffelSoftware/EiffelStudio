@@ -25,10 +25,7 @@ feature
 		do
 			real_ty ?= context.real_type (type);
 			target_type := real_ty.meta_generic.item (1); 
-			if 
-				not (target_type.is_expanded or target_type.is_basic) 
-				and (source_type.is_basic or source_type.is_expanded)
-			then
+			if (not target_type.is_basic) and (source_type.is_basic) then
 				Result := True;
 			end;
 		end;
@@ -77,7 +74,7 @@ feature
 			feat_id: INTEGER;
 			expr: EXPR_B;
 			target_type: TYPE_I;
-			basic_i: BASIC_I
+			basic_i: BASIC_I;
 		do
 			real_ty ?= context.real_type (type);
 			target_type := real_ty.meta_generic.item (1);
@@ -86,7 +83,6 @@ feature
 			feat_id := feat_i.feature_id;
 			ba.append (Bc_array);
 			ba.append_short_integer (real_ty.associated_class_type.id - 1);
-			ba.append_short_integer (real_ty.type_id - 1);
 			ba.append_short_integer (feat_id);
 			ba.append_integer (expressions.count);
 			from
@@ -98,16 +94,15 @@ feature
 				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
 				if need_metamorphosis (actual_type) then
-					if actual_type.is_expanded then
-							-- Expanded objects are cloned
-						ba.append (Bc_clone)
-					else 
-							-- Simple type objects are metamorphosed
-						basic_i ?= actual_type;	
-						ba.append (Bc_metamorphose);
-					end
+						-- Simple type objects are metamorphosed
+					basic_i ?= actual_type;	
+					ba.append (Bc_metamorphose);
 				end;
 				ba.append (Bc_insert);
+				if actual_type.is_expanded then
+						-- Require position in array for expandeds
+					ba.append_integer (expressions.index - 1);
+				end;
 				expressions.forth;
 			end;
 			ba.append (Bc_end_insert)

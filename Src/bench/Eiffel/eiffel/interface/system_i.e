@@ -41,7 +41,8 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_ID;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_CONFIGURE_RESOURCES
+	SHARED_CONFIGURE_RESOURCES;
+	SHARED_BENCH_LICENSES
 
 feature -- Counters
 
@@ -890,6 +891,9 @@ feature -- Recompilation
 			precomp_r: PRECOMP_R
 		do
 			freezing_occurred := False;
+
+			check_precompiled_licenses;
+
 			If System.uses_precompiled then
 					-- Validate the precompilation.
 				!! precomp_r;

@@ -13,6 +13,7 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
 		redefine
+			parent_imp,
 			interface
 		end
 
@@ -24,23 +25,26 @@ inherit
 			destroy,
 			parent
 		redefine
+			parent_imp,
 			interface,
 			set_foreground_color,
 			set_background_color,
 			foreground_color,
-			background_color,
-			set_parent
+			background_color
 		end
 
 create
-	make,
-	make_with_text
+	make
+	--make_with_text
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create an row with one empty column.
+	make (an_interface: like interface) is
+			-- Create a row with one empty column.
 		do
+
+			base_make (an_interface)
+
 			-- create the arrayed_list where the text will be stored.
 			create internal_text.make (0)
 			internal_text.extend ("")
@@ -97,8 +101,8 @@ feature -- Access
 		local
 			r, g, b: INTEGER
 		do
-			c_gtk_clist_get_bg_color (parent_imp.widget, index - 1, $r, $g, $b)
-			create Result.make_rgb (r, g, b)
+			C.c_gtk_clist_get_bg_color (parent_imp.list_widget, index - 1, $r, $g, $b)
+			create Result.make_with_rgb (r, g, b)
 		end
 
 	foreground_color: EV_COLOR is
@@ -110,8 +114,8 @@ feature -- Access
 		local
 			r, g, b: INTEGER
 		do
-			c_gtk_clist_get_fg_color (parent_imp.widget, index - 1, $r, $g, $b)
-			create Result.make_rgb (r, g, b)
+			C.c_gtk_clist_get_fg_color (parent_imp.list_widget, index - 1, $r, $g, $b)
+			create Result.make_with_rgb (r, g, b)
 		end
 
 feature -- Status report
@@ -149,24 +153,24 @@ feature -- Status setting
 			local_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 		do
 			-- moving the gtk row
-			gtk_clist_row_move (parent_imp.widget, index - 1, value - 1)
+			C.gtk_clist_row_move (parent_imp.list_widget, index - 1, value - 1)
 
 			-- updating the parent `ev_children' array
-			local_array := parent_imp.ev_children
-			local_array.search (Current)
-			local_array.remove
+			--local_array := parent_imp.ev_children
+			--local_array.search (Current)
+			--local_array.remove
 
-			local_array.go_i_th (value)
-			local_array.put_left (Current)
+			--local_array.go_i_th (value)
+			--local_array.put_left (Current)
 		end
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				gtk_clist_select_row (parent_imp.widget, index - 1, 0)
+				C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
 			else
-				gtk_clist_unselect_row (parent_imp.widget, index - 1, 0)
+				C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
 			end
 		end
 
@@ -220,9 +224,9 @@ feature -- Element Change
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void) then
-				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, pix_imp.widget, $txt)
+				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pix_imp.c_object, $txt)
 			else
-				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, default_pointer, $txt)
+				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, default_pointer, $txt)
 			end
 			-- Update the `internal_text' and `internal_pixmaps' arrays.
 			internal_text.go_i_th (column)
@@ -243,9 +247,9 @@ feature -- Element Change
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void) then
-				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, pix_imp.widget, $a)
+				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, pix_imp.c_object, $a)
 			else
-				c_gtk_clist_set_pixtext (parent_imp.widget, index - 1, column - 1, default_pointer, $a)
+				C.c_gtk_clist_set_pixtext (parent_imp.list_widget, index - 1, column - 1, default_pointer, $a)
 			end
 			-- Update the `internal_text' and `internal_pixmaps' arrays.
 			internal_pixmaps.go_i_th (column)
@@ -255,24 +259,7 @@ feature -- Element Change
 	unset_cell_pixmap (column: INTEGER) is
 			-- Sets the pixmap of the given column of the current row to `pixmap'.
 		do
-			c_gtk_clist_unset_pixmap (parent_imp.widget, index - 1, column - 1)
-		end
-
-	set_parent (par: EV_MULTI_COLUMN_LIST) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
-		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if (par /= void) then
-				parent_imp ?= par.implementation
-				check
-					parent_not_void: parent_imp /= Void
-				end
-				parent_imp.add_item (Current)
-			end					
+			C.c_gtk_clist_unset_pixmap (parent_imp.list_widget, index - 1, column - 1)
 		end
 
 	set_background_color (color: EV_COLOR) is
@@ -281,7 +268,7 @@ feature -- Element Change
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
 		do
-			c_gtk_clist_set_bg_color (parent_imp.widget, index - 1, color.red, color.green, color.blue)
+			--C.c_gtk_clist_set_bg_color (parent_imp.list_widget, index - 1, color.red, color.green, color.blue)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -290,7 +277,7 @@ feature -- Element Change
 			-- for the whole mclist and not for each row.
 			-- Therefore, this feature is not available to the client, yet.
 		do
-			c_gtk_clist_set_fg_color (parent_imp.widget, index - 1, color.red, color.green, color.blue)
+			--C.c_gtk_clist_set_fg_color (parent_imp.list_widget, index - 1, color.red, color.green, color.blue)
 		end
 
 feature -- Event : command association
@@ -300,7 +287,7 @@ feature -- Event : command association
 			-- when the item is selected.
 		do
 			-- We need the index so we pass it as the extra_data.
-			add_command (parent_imp.widget, "select_row", cmd, arg, c_gtk_integer_to_pointer (index))
+			--add_command (parent_imp.list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
 		end	
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -308,7 +295,7 @@ feature -- Event : command association
 			-- when the item is unselected.
 		do
 			-- We need the index so we pass it as the extra_data.
-			add_command (parent_imp.widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (index))
+			--add_command (parent_imp.list_widget, "unselect_row", cmd, arg, C.c_gtk_integer_to_pointer (index))
 		end
 
 feature -- Event -- removing command association
@@ -320,14 +307,14 @@ feature -- Event -- removing command association
 			list: LINKED_LIST [EV_COMMAND]
 		do
 			-- list of the commands to be executed for "select_row" signal.
-			list := (event_command_array @ select_row_id).command_list
+			--list := (event_command_array @ select_row_id).command_list
 
 			from
 				list.start
 			until
 				list.after
 			loop
-				remove_single_command (parent_imp.widget, select_row_id, list.item)
+			--	remove_single_command (parent_imp.list_widget, select_row_id, list.item)
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
@@ -340,25 +327,25 @@ feature -- Event -- removing command association
 			list: LINKED_LIST [EV_COMMAND]
 		do
 			-- list of the commands to be executed for "unselect_row" signal.
-			list := (event_command_array @ unselect_row_id).command_list
+			--list := (event_command_array @ unselect_row_id).command_list
 
 			from
 				list.start
 			until
 				list.after
 			loop
-				remove_single_command (parent_imp.widget, unselect_row_id, list.item)
+			--	remove_single_command (parent_imp.list_widget, unselect_row_id, list.item)
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
 		end	
 
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW
 
-	--parent_imp: EV_MULTI_COLUMN_LIST_IMP
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 		-- Multi-column list that own the current object 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -384,6 +371,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/15 19:21:50  king
+--| Made compilable
+--|
 --| Revision 1.23  2000/02/14 11:40:27  oconnor
 --| merged changes from prerelease_20000214
 --|

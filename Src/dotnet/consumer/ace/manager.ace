@@ -47,8 +47,16 @@ cluster
 		end
 
 assembly
-	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
-	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+	mscorlib: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
+
+	system_: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
 	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"XML_"
+		end
 
 end

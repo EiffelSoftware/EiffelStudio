@@ -250,11 +250,13 @@ feature -- Extras
 
 	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
 			-- Search for the string `text_to_find' in the TEXT
+			--| The commented line are not working with Motif 1.2, until all the
+			--|	platforms support Motif 1.2 we have to use another method.
 		local
-			pattern, text: ANY
 			lower_text: STRING
 			lower_pattern: STRING
-			dummy_object: like screen_object
+			pattern, text: ANY
+--			dummy_object: like screen_object
 		do
 			if match_case then
 				pattern := text_to_find.to_c
@@ -263,16 +265,24 @@ feature -- Extras
 				lower_text.to_lower
 				lower_pattern := clone (text_to_find)
 				lower_pattern.to_lower
-				text := lower_text.to_c
-				pattern := lower_pattern.to_c 
-				dummy_object := xm_create_text (parent.screen_object, $pattern, default_pointer, 0)
-				xm_text_set_string (dummy_object, $text)
+--				text := lower_text.to_c
+--				pattern := lower_pattern.to_c 
+--				dummy_object := xm_create_text (parent.screen_object, $pattern, default_pointer, 0)
+--				xm_text_set_string (dummy_object, $text)
  			end
 
 			if match_case then
 				Result := xm_text_find_string (screen_object, start_from, $pattern)
 			else
-				Result := xm_text_find_string (dummy_object, start_from, $pattern)
+--				Result := xm_text_find_string (dummy_object, start_from, $pattern)
+--				xt_destroy_widget (dummy_object)
+					-- Compatible search method which does not use `dummy_object'.
+				if start_from >= lower_text.count then
+					Result := lower_text.substring_index (lower_pattern, 0)
+				else
+					Result := lower_text.substring_index (lower_pattern, start_from)
+				end
+				Result := Result - 1
 			end
 		end
 

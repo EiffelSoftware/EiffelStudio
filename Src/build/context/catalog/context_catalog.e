@@ -25,25 +25,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is 
+	make (par: EV_BOX) is 
 		do
 			{EV_NOTEBOOK} Precursor (par)
+			par.set_child_expandable (Current, False)
 			create container_page.make (Current)
 			create menu_page.make (Current)
 			create toolbar_page.make (Current)
 			create primitive_page.make (Current)
 			create text_page.make (Current)
 			create group_page.make (Current)
-			set_values
 		end
 
-	set_values is
-		do
-			set_minimum_height (65)
-			set_expand (False)
-		end
-
-feature 
+feature -- Catalog pages
 
 	container_page: CONTAINER_PAGE
 	toolbar_page: TOOLBAR_PAGE

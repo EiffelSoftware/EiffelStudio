@@ -44,16 +44,16 @@ feature {NONE} -- Initialization
 			box_make (Void)
 			create hbox.make (Current)
 			hbox.set_spacing (3)
-			hbox.set_expand (False)
+			set_child_expandable (hbox, False)
 				--| Labels
 			create vbox.make (hbox)
 			create labels.make (vbox)
 			labels.set_column_title ("Labels:", 1)
 			labels.set_minimum_height (55)
 			create hbox1.make (vbox)
-			hbox1.set_expand (False)
+			set_child_expandable (hbox1, False)
 			create label.make_with_text (hbox1, "New label:")
-			label.set_expand (False)
+			set_child_expandable (label, False)
 			create new_label_text.make (hbox1)
 				--| Observed commands
 			create vbox.make (hbox)
@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 			observed_commands.set_column_title ("description", 2)
 			observed_commands.set_minimum_height (53)
 			create hbox.make (vbox)
-			hbox.set_expand (False)
+			set_child_expandable (hbox, False)
 			create undoable_check.make (hbox)
-			undoable_check.set_expand (False)
+			set_child_expandable (undoable_check, False)
 			create fixed.make (hbox)
 			create tbar.make (hbox)
 			create add_ancestor_hole.make_with_editor (tbar, Current)
@@ -78,7 +78,6 @@ feature {NONE} -- Initialization
 			-- Set the values for the GUI elements.
 		do
 			undoable_check.set_text ("Undoable")
-			undoable_check.set_expand (False)
 		end
 
 	set_callbacks is

@@ -398,7 +398,7 @@ feature -- Removal
 		do
 			file_count := 1
 			create deleted_files.make (file_number)
-			create deleted_files_tuple.make
+			create deleted_files_tuple
 
 			l := linear_representation
 			current_directory := "."

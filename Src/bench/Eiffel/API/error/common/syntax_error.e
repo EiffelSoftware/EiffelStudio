@@ -98,7 +98,7 @@ feature -- Output
 			st.add_string ("Syntax error at line ");
 			st.add_int (line_number);
 			if Lace.parsed then
-				if Lace.successfull then
+				if Lace.successful then
 						-- Error happened in a class
 					st.add_string (" in class ");
 					st.add_class_syntax (Current, System.current_class, 

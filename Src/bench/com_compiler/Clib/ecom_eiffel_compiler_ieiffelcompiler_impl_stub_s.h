@@ -89,6 +89,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Is the compiler a trial version.
+	-----------------------------------------------------------*/
+	STDMETHODIMP has_signable_generation(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	Remove file locks
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_file_locks( void );

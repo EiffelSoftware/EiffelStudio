@@ -203,27 +203,111 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP title(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
-	Project working directory.
+	Project title.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_working_directory(  /* [in] */ BSTR return_value );
+	STDMETHODIMP set_title(  /* [in] */ BSTR return_value );
 
 
 	/*-----------------------------------------------------------
-	Update the project Ace file according to the current settings.
+	Project description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP update_project_ace_file(  /* [in] */ BSTR project_ace_file_name );
+	STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
-	Synchronize the current settings with the project Ace file.
+	Project description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP synchronize_with_project_ace_file(  /* [in] */ BSTR project_ace_file_name );
+	STDMETHODIMP set_description(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	STDMETHODIMP company(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Project company.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_company(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	STDMETHODIMP product(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Product.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_product(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	STDMETHODIMP version(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Project version.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_version(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	STDMETHODIMP trademark(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Project trademark.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_trademark(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	STDMETHODIMP copyright(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Project copyright.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_copyright(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	STDMETHODIMP key_file_name(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly signing key file name.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_key_file_name(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	STDMETHODIMP culture(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Asembly culture.
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_culture(  /* [in] */ BSTR return_value );
 
 
 	/*-----------------------------------------------------------

@@ -31,6 +31,12 @@ feature -- Access
 			Result := ccom_cluster_tree (initializer)
 		end
 
+	flat_clusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Cluster in a flat form.
+		do
+			Result := ccom_flat_clusters (initializer)
+		end
+
 feature -- Status Report
 
 	last_error_code: INTEGER is
@@ -110,6 +116,13 @@ feature -- Basic Operations
 			Result := ccom_is_valid_name (initializer, cluster_name)
 		end
 
+	get_cluster_fullname (cluster_name: STRING): STRING is
+			-- Retrieves a clusters full name from its name
+			-- `cluster_name' [in].  
+		do
+			Result := ccom_get_cluster_fullname (initializer, cluster_name)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -122,6 +135,12 @@ feature {NONE}  -- Externals
 
 	ccom_cluster_tree (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
 			-- Cluster tree.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_flat_clusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
+			-- Cluster in a flat form.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
@@ -166,6 +185,12 @@ feature {NONE}  -- Externals
 			-- Checks to see if a cluster name is valid
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
+		end
+
+	ccom_get_cluster_fullname (cpp_obj: POINTER; cluster_name: STRING): STRING is
+			-- Retrieves a clusters full name from its name
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_system_clusters_impl_proxy (a_pointer: POINTER) is

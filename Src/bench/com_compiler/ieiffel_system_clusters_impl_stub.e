@@ -18,6 +18,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	flat_clusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Cluster in a flat form.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	store is
@@ -66,6 +72,13 @@ feature -- Basic Operations
 
 	is_valid_name (cluster_name: STRING): BOOLEAN is
 			-- Checks to see if a cluster name is valid
+			-- `cluster_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	get_cluster_fullname (cluster_name: STRING): STRING is
+			-- Retrieves a clusters full name from its name
 			-- `cluster_name' [in].  
 		do
 			-- Put Implementation here.

@@ -71,6 +71,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Cluster in a flat form.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_flat_clusters(  );
+
+
+	/*-----------------------------------------------------------
 	Save changes.
 	-----------------------------------------------------------*/
 	void ccom_store();
@@ -110,6 +116,12 @@ public:
 	Checks to see if a cluster name is valid
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_is_valid_name(  /* [in] */ EIF_OBJECT cluster_name );
+
+
+	/*-----------------------------------------------------------
+	Retrieves a clusters full name from its name
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_get_cluster_fullname(  /* [in] */ EIF_OBJECT cluster_name );
 
 
 	/*-----------------------------------------------------------

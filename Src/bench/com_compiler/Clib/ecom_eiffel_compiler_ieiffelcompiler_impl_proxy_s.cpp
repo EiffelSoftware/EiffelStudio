@@ -303,6 +303,39 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_freeze_comm
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_has_signable_generation(  )
+
+/*-----------------------------------------------------------
+	Is the compiler a trial version.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelCompiler->has_signable_generation( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_remove_file_locks()
 
 /*-----------------------------------------------------------

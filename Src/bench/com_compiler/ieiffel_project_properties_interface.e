@@ -199,29 +199,127 @@ feature -- Status Report
 			Result := True
 		end
 
-	working_directory_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `working_directory'.
+	title_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `title'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_working_directory_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_working_directory'.
+	set_title_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_title'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	update_project_ace_file_user_precondition (project_ace_file_name: STRING): BOOLEAN is
-			-- User-defined preconditions for `update_project_ace_file'.
+	description_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `description'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	synchronize_with_project_ace_file_user_precondition (project_ace_file_name: STRING): BOOLEAN is
-			-- User-defined preconditions for `synchronize_with_project_ace_file'.
+	set_description_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_description'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	company_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `company'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_company_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_company'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	product_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `product'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_product_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_product'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	version_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_version_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	trademark_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `trademark'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_trademark_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_trademark'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	copyright_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `copyright'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_copyright_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_copyright'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	key_file_name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `key_file_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_key_file_name_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_key_file_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	culture_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `culture'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_culture_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_culture'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -465,37 +563,155 @@ feature -- Basic Operations
 
 		end
 
-	working_directory: STRING is
-			-- Project working directory.
+	title: STRING is
+			-- Project title.
 		require
-			working_directory_user_precondition: working_directory_user_precondition
+			title_user_precondition: title_user_precondition
 		deferred
 
 		end
 
-	set_working_directory (return_value: STRING) is
-			-- Project working directory.
+	set_title (return_value: STRING) is
+			-- Project title.
 			-- `return_value' [in].  
 		require
-			set_working_directory_user_precondition: set_working_directory_user_precondition (return_value)
+			set_title_user_precondition: set_title_user_precondition (return_value)
 		deferred
 
 		end
 
-	update_project_ace_file (project_ace_file_name: STRING) is
-			-- Update the project Ace file according to the current settings.
-			-- `project_ace_file_name' [in].  
+	description: STRING is
+			-- Project description.
 		require
-			update_project_ace_file_user_precondition: update_project_ace_file_user_precondition (project_ace_file_name)
+			description_user_precondition: description_user_precondition
 		deferred
 
 		end
 
-	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
-			-- Synchronize the current settings with the project Ace file.
-			-- `project_ace_file_name' [in].  
+	set_description (return_value: STRING) is
+			-- Project description.
+			-- `return_value' [in].  
 		require
-			synchronize_with_project_ace_file_user_precondition: synchronize_with_project_ace_file_user_precondition (project_ace_file_name)
+			set_description_user_precondition: set_description_user_precondition (return_value)
+		deferred
+
+		end
+
+	company: STRING is
+			-- Project company.
+		require
+			company_user_precondition: company_user_precondition
+		deferred
+
+		end
+
+	set_company (return_value: STRING) is
+			-- Project company.
+			-- `return_value' [in].  
+		require
+			set_company_user_precondition: set_company_user_precondition (return_value)
+		deferred
+
+		end
+
+	product: STRING is
+			-- Product.
+		require
+			product_user_precondition: product_user_precondition
+		deferred
+
+		end
+
+	set_product (return_value: STRING) is
+			-- Product.
+			-- `return_value' [in].  
+		require
+			set_product_user_precondition: set_product_user_precondition (return_value)
+		deferred
+
+		end
+
+	version: STRING is
+			-- Project version.
+		require
+			version_user_precondition: version_user_precondition
+		deferred
+
+		end
+
+	set_version (return_value: STRING) is
+			-- Project version.
+			-- `return_value' [in].  
+		require
+			set_version_user_precondition: set_version_user_precondition (return_value)
+		deferred
+
+		end
+
+	trademark: STRING is
+			-- Project trademark.
+		require
+			trademark_user_precondition: trademark_user_precondition
+		deferred
+
+		end
+
+	set_trademark (return_value: STRING) is
+			-- Project trademark.
+			-- `return_value' [in].  
+		require
+			set_trademark_user_precondition: set_trademark_user_precondition (return_value)
+		deferred
+
+		end
+
+	copyright: STRING is
+			-- Project copyright.
+		require
+			copyright_user_precondition: copyright_user_precondition
+		deferred
+
+		end
+
+	set_copyright (return_value: STRING) is
+			-- Project copyright.
+			-- `return_value' [in].  
+		require
+			set_copyright_user_precondition: set_copyright_user_precondition (return_value)
+		deferred
+
+		end
+
+	key_file_name: STRING is
+			-- Asembly signing key file name.
+		require
+			key_file_name_user_precondition: key_file_name_user_precondition
+		deferred
+
+		end
+
+	set_key_file_name (return_value: STRING) is
+			-- Asembly signing key file name.
+			-- `return_value' [in].  
+		require
+			set_key_file_name_user_precondition: set_key_file_name_user_precondition (return_value)
+		deferred
+
+		end
+
+	culture: STRING is
+			-- Asembly culture.
+		require
+			culture_user_precondition: culture_user_precondition
+		deferred
+
+		end
+
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
+		require
+			set_culture_user_precondition: set_culture_user_precondition (return_value)
 		deferred
 
 		end

@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
 			stop_processing_requested_msg := cwin_register_window_message (ev_stop_processing_requested.item)
+			cwin_disable_xp_ghosting
 		end
 
 	launch  is
@@ -577,6 +578,25 @@ feature {NONE} -- Blocking Dispatcher
 
 feature {NONE} -- Externals
 
+	cwin_disable_xp_ghosting is
+			-- Disable XP ghosting.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+			{
+				FARPROC disable_ghosting = NULL;
+				HMODULE user32_module = LoadLibrary ("user32.dll");
+				if (user32_module) {
+					disable_ghosting = GetProcAddress (user32_module, "DisableProcessWindowsGhosting");
+					if (disable_ghosting) {
+						(FUNCTION_CAST_TYPE(void,WINAPI,(void)) disable_ghosting) ();
+					}
+				}
+			}
+			]"
+		end
+	
 	cwin_register_window_message (message_name: POINTER): INTEGER is
 			-- Register a custom window message named `message_name'.
 			-- `Result' is id of new message.

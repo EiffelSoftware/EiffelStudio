@@ -326,6 +326,29 @@ feature -- Basic operation
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+feature {GB_XML_OBJECT_BUILDER} -- Basic operations
+
+	build_object (new_object: GB_OBJECT) is
+			-- Build internal representations of `new_object'
+			-- such as the layout item and display object.
+			-- `new_object' is not added to `objects'.
+		require
+			new_object_exists: new_object /= Void
+		do
+			if new_object.layout_item = Void then
+				new_object.create_layout_item
+			end
+			if new_object.object = Void then
+				new_object.create_object_from_type
+				new_object.build_display_object
+				new_object.set_up_display_object_events (new_object.display_object, new_object.object)
+			end
+		ensure
+			new_object_layout_item_not_void: new_object.layout_item /= Void
+			new_object_display_object_not_void: new_object.display_object /= Void
+			new_object_object_not_void: new_object.object /= Void
+		end
 
 feature -- Access
 

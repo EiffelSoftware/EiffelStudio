@@ -34,6 +34,11 @@ inherit
 		end
 		
 	GB_DEFAULT_STATE
+	
+	GB_ACCESSIBLE_XML_HANDLER
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	default_create
@@ -41,7 +46,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			-- initialize `Current'.
+				-- initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_main_window_title)
@@ -50,7 +55,8 @@ feature {NONE} -- Initialization
 			set_up_first_window
 			set_minimum_size (640, 480)
 				-- When `Current' is closed, end the application.
-			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+		--	close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+			close_request_actions.extend (agent close_application)
 		end
 
 feature {NONE} -- Implementation
@@ -177,6 +183,15 @@ feature {NONE} -- Implementation
 		do
 			create about_dialog.make
 			about_dialog.show_modal_to_window (Current)
+		end
+		
+feature {NONE} -- Implementation
+
+	close_application is
+			-- End the current application.
+		do
+			xml_handler.save_components;
+			(create {EV_ENVIRONMENT}).application.destroy
 		end
 		
 

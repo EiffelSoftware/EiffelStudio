@@ -38,8 +38,11 @@ feature {NONE} -- Initialization
 		
 	add_new_component (an_object: GB_OBJECT) is
 			-- Add a new component representing `an_object'.
+		local
+			component: GB_COMPONENT
 		do
-			
+			create component.make_from_object (an_object, "Component_" + (count + 1).out)
+			extend (component.list_item)
 		end
 		
 	is_valid_object (an_object: GB_OBJECT): BOOLEAN is
@@ -58,6 +61,27 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-		
+feature {GB_XML_HANDLER} -- Basic operation
+
+	add_components (list: ARRAYED_LIST [STRING]) is
+			-- For every item in `list', add a matching
+			-- component to `Current'.
+		require
+			list_not_void: list /= Void
+		local
+			component: GB_COMPONENT
+		do
+			from
+				list.start
+			until
+				list.off
+			loop
+				create component.make_with_name (list.item)
+				extend (component.list_item)
+				list.forth
+			end
+		ensure
+			count_increased_correctly: count = old count + list.count
+		end
 		
 end -- class GB_COMPONENT_SELECTOR

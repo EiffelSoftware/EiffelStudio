@@ -36,6 +36,135 @@ feature -- Basic operations
 			to_implement ("EV_GRID_DRAWER_I.full_redraw")
 		end
 		
+	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM is
+			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
+			-- of the viewport in which the grid is displayed.
+		require
+			an_x_positive: an_x >= 0
+			a_y_positive: a_y >= 0
+		local
+			virtual_x_position, virtual_y_position: INTEGER
+			vertical_buffer_offset: INTEGER
+			horizontal_buffer_offset: INTEGER
+			column_widths: ARRAYED_LIST [INTEGER]
+			
+			current_row: SPECIAL [EV_GRID_ITEM_I]
+			visible_physical_column_indexes: SPECIAL [INTEGER]
+			first_column_index, first_row_index: INTEGER
+			last_column_index, last_row_index: INTEGER
+			first_column_index_set, last_column_index_set, first_row_index_set, last_row_index_set: BOOLEAN
+			grid_item: EV_GRID_ITEM_I
+			grid_item_interface: EV_GRID_ITEM
+			current_index_in_row, current_index_in_column: INTEGER
+			column_counter, row_counter: INTEGER
+			bool: BOOLEAN
+			printing_values: BOOLEAN
+			column_offsets, row_offsets: ARRAYED_LIST [INTEGER]
+			invalid_x_start, invalid_x_end, invalid_y_start, invalid_y_end: INTEGER
+			current_column_width, current_row_height: INTEGER
+			rectangle_width, rectangle_height: INTEGER
+			i: INTEGER
+			grid_item_exists: BOOLEAN
+			current_item_y_position, current_item_x_position: INTEGER
+			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+		do
+			dynamic_content_function := grid.dynamic_content_function
+			printing_values := False
+			
+			create column_widths.make (8)
+			column_widths.extend (0)
+			
+			visible_physical_column_indexes := grid.visible_physical_column_indexes
+			
+			virtual_x_position := grid.virtual_x_position
+			virtual_y_position := grid.virtual_y_position
+			
+			vertical_buffer_offset := grid.viewport.y_offset
+			horizontal_buffer_offset := grid.viewport.x_offset
+			
+			
+			if not grid.header.is_empty then
+				if printing_values then
+					print ("%NCalculating columns to draw%N")
+				end
+				column_offsets := grid.column_offsets
+					-- Retrieve the column offsets from `grid'.
+				check
+					column_offsets_count_equal_to_columns: column_offsets.count = grid.column_count + 1
+					-- If this fails it means that somebody did not call `grid.recompute_column_offsets' when
+					-- they should have done.
+				end
+				
+					-- Calculate the columns that must be displayed.
+					-- If row heights are fixed we can perform a quick search.
+				
+				row_offsets := grid.row_offsets					
+					fixme ("implement using a binary search")
+				from
+					column_offsets.start
+						-- Compute the virtual positions of the invalidated area.
+					invalid_x_start := virtual_x_position + an_x - horizontal_buffer_offset
+--					invalid_x_end := virtual_x_position + an_x - horizontal_buffer_offset + a_width		
+				until
+					last_column_index_set or column_offsets.off
+				loop
+					i := column_offsets.item
+					if not first_column_index_set and then i > invalid_x_start then
+						first_column_index := column_offsets.index - 1
+						first_column_index_set := True
+					end
+--					if not last_column_index_set and then invalid_x_end < column_offsets.item then
+--						last_column_index := column_offsets.index - 1
+--						last_column_index_set := True
+--					end
+					column_offsets.forth
+				end
+--				if last_column_index = 0 then
+--					last_column_index := grid.column_count
+--				end
+				if first_column_index = 0 then
+					first_column_index := grid.column_count
+				end
+				
+					-- Calculate the rows that must be displayed.
+					-- Compute the virtual positions of the invalidated area.
+				invalid_y_start := virtual_y_position + a_y - vertical_buffer_offset
+--				invalid_y_end := virtual_y_position + a_y - vertical_buffer_offset + a_height
+				if grid.is_row_height_fixed then
+						-- If row heights are fixed we can calculate instead of searching.
+					first_row_index := ((invalid_y_start) // grid.row_height) + 1
+--					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
+				else
+					fixme ("implement using a binary search")
+					from
+						row_offsets.start
+					until
+						last_row_index_set or row_offsets.off
+					loop
+						i := row_offsets.item
+						if not first_row_index_set and then i > invalid_y_start then
+							first_row_index := row_offsets.index - 1
+							first_row_index_set := True
+						end
+--						if not last_row_index_set and then invalid_y_end < row_offsets.item then
+--							last_row_index := row_offsets.index - 1
+--							last_row_index_set := True
+--						end
+						row_offsets.forth
+					end
+				end
+--				if last_row_index = 0 then
+--					last_row_index := grid.row_count
+--				end
+				if first_row_index = 0 then
+					first_row_index := grid.row_count
+				end
+				
+				Result := grid.item (first_row_index, first_column_index)
+			end
+		end
+		
+		
 	partial_redraw (an_x, a_y, a_width, a_height: INTEGER) is
 			-- Redraw part of client area within `grid' specified by
 			-- coordinates `an_x', `a_y', `a_width', `a_height'.

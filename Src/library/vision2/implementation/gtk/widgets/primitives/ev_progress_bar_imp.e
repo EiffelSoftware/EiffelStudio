@@ -36,7 +36,7 @@ feature -- Status report
 			-- Is display segmented?
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_progress_bar_struct_bar_style (gtk_progress_bar) =
-				feature {EV_GTK_EXTERNALS}.gtk_progress_discrete_enum
+				gtk_progress_discrete_enum
 		end
 
 feature -- Status setting
@@ -46,7 +46,7 @@ feature -- Status setting
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
 				gtk_progress_bar,
-				feature {EV_GTK_EXTERNALS}.gtk_progress_discrete_enum
+				gtk_progress_discrete_enum
 			)
 		end
 
@@ -55,11 +55,25 @@ feature -- Status setting
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
 				gtk_progress_bar,
-			 	feature {EV_GTK_EXTERNALS}.gtk_progress_continuous_enum
+			 	gtk_progress_continuous_enum
 			)
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	gtk_progress_discrete_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_PROGRESS_DISCRETE"
+		end
+
+	gtk_progress_continuous_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_PROGRESS_CONTINUOUS"
+		end
 
 	gtk_progress_bar: POINTER
 

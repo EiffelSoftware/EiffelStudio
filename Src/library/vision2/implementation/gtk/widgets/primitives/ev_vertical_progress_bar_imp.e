@@ -27,10 +27,17 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, feature {EV_GTK_EXTERNALS}.gtk_progress_bottom_to_top_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_bottom_to_top_enum)
 		end
 			
 feature {EV_ANY_I} -- Implementation
+
+	gtk_progress_bottom_to_top_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_PROGRESS_BOTTOM_TO_TOP"
+		end
 
 	interface: EV_VERTICAL_PROGRESS_BAR
 

@@ -478,7 +478,7 @@ feature -- Status report
 		do
 			if list_widget /= NULL then
 				Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_flags (list_widget).bit_and (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_show_titles_enum
+					gtk_clist_show_titles_enum
 				).to_boolean
 			end
 		end
@@ -1250,6 +1250,13 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Externals
+
+	frozen gtk_clist_show_titles_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CLIST_SHOW_TITLES"
+		end
 
 	calloc (nmemb, size: INTEGER): POINTER is
 			-- void *calloc(size_t nmemb, size_t size);

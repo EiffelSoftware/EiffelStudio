@@ -384,6 +384,10 @@ feature {NONE} -- Implementation
 						invalid_state := True
 						create warning_dialog.make_with_text (Event_feature_name_warning)
 						warning_dialog.show_modal_to_window (Current)
+					elseif repeated_name ((all_text_fields @ counter).text.as_lower, counter) then
+						invalid_state := True
+						create warning_dialog.make_with_text (Duplicate_event_feature_name_warning)
+						warning_dialog.show_modal_to_window (Current)
 					end	
 				end
 				counter := counter + 1
@@ -410,6 +414,27 @@ feature {NONE} -- Implementation
 				destroy	
 			end
 		end
+		
+	repeated_name (current_name: STRING; index: INTEGER): BOOLEAN is
+			-- Is `current_name' the text of an expanded feature
+			-- name entry, exluding `index' position?
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+			until
+				counter > all_check_buttons.count or Result
+			loop
+				if (all_check_buttons @ counter).is_selected and index /= counter then
+					if (all_text_fields @ counter).text.as_lower.is_equal (current_name) then
+						Result :=True
+					end
+				end
+				counter := counter + 1
+			end
+		end
+		
 		
 	red: EV_COLOR is
 			-- `Result' is red EV_COLOR.

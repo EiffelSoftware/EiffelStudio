@@ -72,8 +72,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
---			background_color_assigned: 
---				interface.background_color.is_equal (a_color)
+			background_color_assigned: is_useable implies
+				interface.background_color.is_equal (a_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -82,8 +82,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
---			foreground_color_assigned: 
---				interface.foreground_color.is_equal (a_color)
+			foreground_color_assigned: is_useable implies
+				interface.foreground_color.is_equal (a_color)
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -92,8 +92,8 @@ feature -- Element change
 			a_width_positive_or_zero: a_width >= 0
 		deferred
 		ensure
---			line_width_assigned: 
---				interface.line_width = a_width
+			line_width_assigned: is_useable implies
+				interface.line_width = a_width
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
@@ -102,8 +102,8 @@ feature -- Element change
 			a_mode_valid: valid_drawing_mode (a_mode)
 		deferred
 		ensure
---			drawing_mode_assigned: 
---				interface.drawing_mode = a_mode
+			drawing_mode_assigned: is_useable implies
+				interface.drawing_mode = a_mode
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE) is
@@ -112,16 +112,15 @@ feature -- Element change
 			an_area_not_void: an_area /= Void
 		deferred
 		ensure
---			clip_area_assigned: 
---				interface.clip_area.is_equal (an_area)
+			clip_area_assigned: is_useable implies
+				interface.clip_area.is_equal (an_area)
 		end
 
 	remove_clip_area is
 			-- Do not apply any clipping.
 		deferred
 		ensure
---			clip_area_void: 
---				interface.clip_area = Void
+			clip_area_void: is_useable implies interface.clip_area = Void
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -131,32 +130,30 @@ feature -- Element change
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		ensure
---			tile_assigned: 
---				interface.tile /= Void
+			tile_assigned: is_useable implies interface.tile /= Void
 		end
 
 	remove_tile is
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
---			tile_void: 
---				interface.tile = Void
+			tile_void: is_useable implies interface.tile = Void
 		end
 
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		deferred
 		ensure
---			dashed_line_style_enabled: 
---				interface.dashed_line_style
+			dashed_line_style_enabled: is_useable implies
+				interface.dashed_line_style
 		end
 
 	disable_dashed_line_style is
 			-- Draw lines solid.
 		deferred
 		ensure
---			dashed_line_style_disabled: 
---				not interface.dashed_line_style
+			dashed_line_style_disabled: is_useable implies
+				not interface.dashed_line_style
 		end
 
 	set_font (a_font: EV_FONT) is
@@ -165,8 +162,8 @@ feature -- Element change
 			a_font_not_void: a_font /= Void
 		deferred
 		ensure
---			assigned: 
---				interface.font.is_equal (a_font)
+			assigned: is_useable implies
+				interface.font.is_equal (a_font)
 		end
 
 feature -- Clearing and drawing operations
@@ -333,6 +330,9 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/11 23:17:49  oconnor
+--| replaced postconditions previously commented out
+--|
 --| Revision 1.19  2000/04/11 21:53:23  oconnor
 --| Commented out PCs causing seg fault.
 --| Will put back in ASAP.

@@ -100,14 +100,14 @@ feature -- Status setting
 			-- Enable sensitivity to user input events.
 		deferred
 		ensure
---			is_sensitive: interface.is_sensitive
+			is_sensitive: is_useable implies interface.is_sensitive
 		end
 
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		deferred
 		ensure
---			not_is_sensitive: not interface.is_sensitive
+			not_is_sensitive: is_useable implies not interface.is_sensitive
 		end
 
 	set_default_colors is
@@ -139,8 +139,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			background_color_assigned: 
---				interface.background_color.is_equal (a_color)
+			background_color_assigned: is_useable implies
+				interface.background_color.is_equal (a_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -149,8 +149,8 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_assigned: 
---				interface.foreground_color.is_equal (a_color)
+			foreground_color_assigned: is_useable implies
+				interface.foreground_color.is_equal (a_color)
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
@@ -159,7 +159,8 @@ feature -- Element change
 			a_minimum_width_positive: a_minimum_width > 0
 		deferred
 		ensure
---			minimum_width_assigned: interface.minimum_width = a_minimum_width
+			minimum_width_assigned: is_useable implies
+				interface.minimum_width = a_minimum_width
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
@@ -168,7 +169,8 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
---			minimum_height_assigned: interface.minimum_height = a_minimum_height
+			minimum_height_assigned: is_useable implies 
+				interface.minimum_height = a_minimum_height
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -179,8 +181,10 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height > 0
 		deferred
 		ensure
---			minimum_width_assigned: interface.minimum_width = a_minimum_width
---			minimum_height_assigned: interface.minimum_height = a_minimum_height
+			minimum_width_assigned: is_useable implies 
+				interface.minimum_width = a_minimum_width
+			minimum_height_assigned: is_useable implies 
+				interface.minimum_height = a_minimum_height
 		end
 
 	set_tooltip (a_text: STRING) is
@@ -375,6 +379,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/11 23:13:10  oconnor
+--| replaced postconditions previously commented out
+--|
 --| Revision 1.63  2000/04/11 21:53:17  oconnor
 --| Commented out PCs causing seg fault.
 --| Will put back in ASAP.

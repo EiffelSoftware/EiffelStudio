@@ -9,9 +9,7 @@ class RAISE_TOOL_CMD
 
 inherit
 	TOOL_COMMAND
-		redefine
-			tool
-		end
+
 creation
 	make
 
@@ -22,34 +20,41 @@ feature {NONE} -- Initialization
 			tool := a_tool
 		end
 
-feature -- Access
-
-	tool: BAR_AND_TEXT
-
 feature -- Execution
 
 	work (arg: ANY) is
 			-- Execute Current.
 		do
-			tool.raise_forced
+			tool.force_raise
 		end
 
 feature -- Status report
 
 	name: STRING is
 		do
-			Result := tool.title
+			if tool = Project_tool then
+				Result := Interface_names.f_Raise_project
+			else
+				Result := tool.title
+			end
 		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := tool.title
+			if tool = Project_tool then
+				Result := Interface_names.m_Raise_project
+			else
+				Result := tool.title
+			end
 		end;
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
+			if tool = Project_tool then
+				Result := Interface_names.a_Raise_project
+			end
 		end;
 
 end -- class RAISE_TOOL_CMD

@@ -190,6 +190,7 @@ liman/licence/mkey/Jmakefile
 liman/licence/mkey/Makefile.SH
 liman/licence/mkey/dkey.c
 liman/licence/mkey/dumpkey.c
+liman/licence/mkey/eiflicense.c
 liman/licence/mkey/hostkey.c
 liman/licence/mkey/key.c
 liman/licence/mkey/lexic.l

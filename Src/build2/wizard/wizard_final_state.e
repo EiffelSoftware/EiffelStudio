@@ -95,8 +95,6 @@ feature {NONE} -- Implementation
 			-- Process the wizard information
 		local
 			code_generator: GB_CODE_GENERATOR
-			window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			eifp_document: EIFP_DOCUMENT
 			eiffel_files: FILE_FOLDER_NODE_FRAGMENT
 			build_files: FILE_FOLDER_NODE_FRAGMENT
@@ -120,32 +118,8 @@ feature {NONE} -- Implementation
 				eiffel_files := eifp_document.files_node.eiffel_source_files_node
 				build_files := eifp_document.files_node.other_source_files_node
 
--- FIXMEd
---				from 
---					window_selector.start
---				until
---					window_selector.off
---				loop
---					window_selector_item ?= window_selector.item
---					 if window_selector_item /= Void then
---					 	eiffel_files.add_file ((window_selector_item.object.name).as_lower + ".e", True)
---					end
---					window_selector_layout ?= window_selector.item
---					if window_selector_layout /= Void then
---						from
---							window_selector_layout.start
---						until
---							window_selector_layout.off
---						loop
---							window_selector_item ?= window_selector_layout.item
---							if window_selector_item /= Void then
---								eiffel_files.add_file ((window_selector_layout.text + "\" + window_selector_item.object.name).as_lower + ".e", True)								
---							end
---							window_selector_layout.forth
---						end
---					end
---					window_selector.forth
---				end
+				add_files_to_project (window_selector, eiffel_files)
+
 				eiffel_files.add_file (system_status.current_project_settings.constants_class_name.as_lower + ".e", True)
 				eiffel_files.add_file (system_status.current_project_settings.constants_class_name.as_lower +  Class_implementation_extension.as_lower + ".e", True)
 			end
@@ -159,10 +133,56 @@ feature {NONE} -- Implementation
 			--| doing.
 		end
 		
+	add_files_to_project (selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM; eiffel_files: FILE_FOLDER_NODE_FRAGMENT) is
+			-- Recursively add all files in `selector_item' to `eiffel_files'.
+		require
+			selector_item_not_void: selector_item /= Void
+			eiffel_files_not_void: eiffel_files /= Void
+		local
+			l_children: ARRAYED_LIST [GB_WINDOW_SELECTOR_COMMON_ITEM]
+			current_widget_item: GB_WINDOW_SELECTOR_ITEM
+			current_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			path: ARRAYED_LIST [STRING]
+			path_string: STRING
+		do
+			l_children := selector_item.children
+			from
+				l_children.start
+			until
+				l_children.off
+			loop
+				current_widget_item ?= l_children.item
+				if current_widget_item /= Void then
+					current_directory_item ?= current_widget_item.parent
+					if current_directory_item /= Void then
+						path_string := ""
+						path := current_directory_item.path
+						from
+							path.start
+						until
+							path.off
+						loop
+							path_string.append (path.item + "\")
+							path.forth
+						end
+					end
+					eiffel_files.add_file (path_string + current_widget_item.object.name.as_lower + ".e", True)
+				else
+					current_directory_item ?= l_children.item
+					if current_directory_item /= Void then
+						add_files_to_project (current_directory_item, eiffel_files)
+					end
+				end
+				l_children.forth
+			end
+		end
+
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (system_status.current_project_settings.project_location)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	proceed_with_current_info is

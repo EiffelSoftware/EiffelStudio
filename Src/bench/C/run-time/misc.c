@@ -124,25 +124,25 @@ EIF_CHARACTER c;
 public EIF_BOOLEAN chis_upper(c)
 EIF_CHARACTER c;
 {
-	return (EIF_BOOLEAN)isupper(c);
+	return EIF_TEST(isupper(c));
 }
 
 public EIF_BOOLEAN chis_lower(c)
 EIF_CHARACTER c;
 {
-	return (EIF_BOOLEAN)islower(c);
+	return EIF_TEST(islower(c));
 }
 
 public EIF_BOOLEAN chis_digit(c)
 EIF_CHARACTER c;
 {
-	return (EIF_BOOLEAN)isdigit(c);
+	return EIF_TEST(isdigit(c));
 }
 
 public EIF_BOOLEAN chis_alpha(c)
 EIF_CHARACTER c;
 {
-	return (EIF_BOOLEAN)isalpha(c);
+	return EIF_TEST(isalpha(c));
 }
 
 public EIF_INTEGER eschar_size()

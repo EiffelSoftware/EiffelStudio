@@ -25,12 +25,29 @@ inherit
 			is_feature, associated_feature_name
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 -- Undefined is_equal of AST_EIFFEL and CLICKABLE_AST because these are
 -- not consistent with infix < operator
 -- < is defined by the terms of < of feature name and is_equal 
 -- (from ANY is c_standard_is_equal)
 
 feature -- Stoning
+
+	internal_name_id: INTEGER is
+			-- `internal_name' ID in NAMES_HEAP.
+		local
+			l_names_heap: like Names_heap
+		do
+			l_names_heap := Names_heap
+			l_names_heap.put (internal_name)
+			Result := l_names_heap.found_item
+		end
 
 	internal_name: ID_AS is
 			-- Internal name used by the compiler.

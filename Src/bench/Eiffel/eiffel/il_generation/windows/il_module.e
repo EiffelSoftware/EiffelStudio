@@ -310,6 +310,32 @@ feature {IL_CODE_GENERATOR} -- Custom attributes: modification
 			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, empty_custom_attribute).do_nothing
 		end
 
+feature {IL_CODE_GENERATOR} -- Synchronization tokens
+
+	define_monitor_method_token (method_name: STRING): INTEGER is
+			-- Define token for a procedure of type "System.Threading.Monitor" that takes one argument of type "System.Object"
+		require
+			method_name_not_void: method_name /= Void
+			method_name_is_valid:
+				method_name.is_equal ("Enter") or else method_name.is_equal ("Exit") or else
+				method_name.is_equal ("Pulse") or else method_name.is_equal ("PulseAll")
+		local
+			monitor_token: INTEGER
+			l_sig: like method_sig
+		do
+			monitor_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.Threading.Monitor"), mscorlib_token)
+			l_sig := method_sig
+			l_sig.reset
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+			l_sig.set_parameter_count (1)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
+			uni_string.set_string (method_name)
+			Result := md_emit.define_member_ref (uni_string, monitor_token, l_sig)
+		ensure
+			defined: Result /= 0
+		end
+
 feature {IL_CODE_GENERATOR} -- Once manifest strings: access
 
 	once_string_field_token (is_cil_string: BOOLEAN): INTEGER is

@@ -33,6 +33,7 @@ feature -- types
 			type_i: TUPLE_TYPE_I
 		do
 			create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
+			type_i.set_is_expanded (is_expanded)
 			class_type := new_type (type_i)
 			types.extend (class_type)
 			System.insert_class_type (class_type)
@@ -46,14 +47,20 @@ feature -- types
 			filter: CL_TYPE_I
 			l_gen_type: GEN_TYPE_I
 			l_class_type: CLASS_TYPE
+			type_i: TUPLE_TYPE_I
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
 				derivations.insert_derivation (class_id, data)
 				
-				if types.is_empty then
+				if types.has_type (data) then
+					l_class_type := types.found_item
+				else
 						-- Found a new type for the class
-					init_types
+					create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
+					type_i.set_is_expanded (data.is_expanded)
+					type_i.set_is_separate (data.is_separate)
+					l_class_type := new_type (type_i)
 
 						-- If the $ operator is used in the class,
 						-- an encapsulation of the feature must be generated
@@ -67,13 +74,14 @@ feature -- types
 					changed4 := True
 					Degree_2.insert_new_class (Current)
 						-- Insertion of the new class type
+					types.extend (l_class_type)
+					System.insert_class_type (l_class_type)
 				end
 
 					-- Propagation along the filters since we have a new type
 					-- Clean the filters. Some of the filters can be obsolete
 					-- if the base class has been removed from the system
 				filters.clean
-				l_class_type := types.first
 				l_gen_type ?= data
 				from
 					filters.start

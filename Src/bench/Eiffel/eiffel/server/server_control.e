@@ -220,7 +220,26 @@ feature -- Status report
 				end;
 				files.forth
 			end
-		end;
+		end
+
+	exists: BOOLEAN is
+			-- Do the server files exist?
+		local
+			file: SERVER_FILE
+		do
+			from
+				Result := True;
+				files.start
+			until
+				not Result or files.after
+			loop
+				file:= files.item_for_iteration;
+				if file /= Void then
+					Result := file.exists
+				end
+				files.forth
+			end
+		end	
 
 feature -- Initialization
 

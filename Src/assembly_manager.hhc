@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="WindowName" value="AMHC">
+	<param name="Window Styles" value="0x800025">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ISE Assembly Manager">
+		<param name="Local" value="dotnet\reflection_interface\docs\index.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Introduction">
+			<param name="Local" value="dotnet\reflection_interface\docs\introduction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Guided tour">
+			<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\index.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="How to's">
+			<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\index.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to import a signed assembly into the Eiffel assembly cache?">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\01_import_a_signed_assembly_to_the_EAC\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to remove an assembly from the Eiffel assembly cache?">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\10_remove_an_assembly_from_the_EAC\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to edit an imported assembly?">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\20_edit_an_imported_assembly\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to update Eiffel classes?">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\30_update_eiffel_classes\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to view an assembly dependencies?">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\40_view_assembly_dependencies\index.html">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Reference">
+			<param name="Local" value="dotnet\reflection_interface\docs\reference\index.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Definitions">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\00_definitions\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Imported assembly viewer">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\01_imported_assembly_viewer\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Dependency viewer">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\10_dependency_viewer\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Assembly view">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\20_assembly_view\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Type view">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\30_type_view\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Eiffel generation dialog">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\40_eiffel_generation_dialog\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Import tool">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\50_import_tool\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Import dialog">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\60_import_dialog\index.html">
+				</OBJECT>
+		</UL>
+	</UL>
+</UL>
+</BODY></HTML>

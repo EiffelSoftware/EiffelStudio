@@ -1168,7 +1168,10 @@ feature -- Class info
 					generate_check_cast (Void, class_type.type)
 					generate_return (True)
 				else
-					generate_return (False)
+					generate_current
+					generate_load_from_address (class_type.type)
+					generate_metamorphose (class_type.type)
+					generate_return (True)
 				end
 				method_writer.write_current_body
 
@@ -1186,8 +1189,13 @@ feature -- Class info
 				start_new_body (l_meth_token)
 				generate_current
 				generate_argument (1)
-				generate_check_cast (Void, any_type)
-				internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
+				if class_type.is_expanded then
+					internal_generate_feature_access (class_type.implementation_id,
+						class_type.associated_class.feature_with_rout_id (copy_rout_id).feature_id,
+						1, False, False)
+				else
+					internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
+				end
 				generate_return (False)
 				method_writer.write_current_body
 
@@ -1205,8 +1213,14 @@ feature -- Class info
 				start_new_body (l_meth_token)
 				generate_current
 				generate_argument (1)
-				generate_check_cast (Void, any_type)
-				internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
+				if class_type.is_expanded then
+					internal_generate_feature_access (class_type.implementation_id,
+						class_type.associated_class.
+							feature_with_rout_id (is_equal_rout_id).feature_id,
+						1, True, False)
+				else
+					internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
+				end
 				generate_return (True)
 				method_writer.write_current_body
 			end
@@ -1506,6 +1520,9 @@ feature -- Features info
 					l_field_sig)
 
 				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
+				if l_is_single_class then
+					insert_signature (l_signature, a_type_id, l_feat.feature_id)
+				end
 			else
 					-- Normal method
 				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
@@ -1695,6 +1712,9 @@ feature -- Features info
 					current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
+				if is_single_class then
+					insert_signature (l_signature, current_type_id, feat.feature_id)
+				end
 			else
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
 					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
@@ -3052,7 +3072,7 @@ feature -- Variables access
 			end
 			if
 				l_class_type /= Void and then
-				l_class_type.is_generated_as_single_type
+				(l_class_type.is_generated_as_single_type or l_class_type.is_expanded)
 			then
 				if need_target then
 					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
@@ -3068,18 +3088,6 @@ feature -- Variables access
 			end
 		end
 
-	generate_any_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
-			is_function, is_virtual: BOOLEAN)
-		is
-			-- Generate access to feature of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
-		do
-			internal_generate_feature_access (type_i.static_type_id, a_feature_id, nb,
-				is_function, True)
-		end
-
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
 		is
@@ -3087,9 +3095,19 @@ feature -- Variables access
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
+		local
+			l_type_id: INTEGER
+			l_virtual: BOOLEAN
 		do
-			internal_generate_feature_access (type_i.static_type_id, a_feature_id, nb,
-				is_function, True)
+			if type_i.is_expanded then
+				l_type_id := type_i.implementation_id
+				l_virtual := False
+			else
+				l_type_id := type_i.static_type_id
+				l_virtual := True
+			end
+			internal_generate_feature_access (l_type_id, a_feature_id, nb,
+				is_function, l_virtual)
 		end
 
 	generate_precompiled_feature_access (type_i: TYPE_I; a_feature: FEATURE_I) is
@@ -3200,9 +3218,15 @@ feature -- Variables access
 			-- corresponding reference type.
 		require
 			type_i_not_void: type_i /= Void
+			type_is_expanded: type_i.is_expanded
 		do
+				-- It has to be the `implementation_id' because for us `box'
+				-- can only be applied to expanded types and only `implementation_id'
+				-- refers to the value type implementation for Eiffel generated types,
+				-- and for .NET classes `static_type_id' and `implementation_id' are
+				-- the same.
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Box,
-				actual_class_type_token (type_i.static_type_id))
+				actual_class_type_token (type_i.implementation_id))
 		end
 
 
@@ -3211,12 +3235,11 @@ feature -- Variables access
 			-- Load content of address resulting from unbox operation.
 		require
 			type_i_not_void: type_i /= Void
-		local
-			l_type_id: INTEGER
+			type_is_expanded: type_i.is_expanded
 		do
-			l_type_id := type_i.static_type_id
+				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Unbox,
-				actual_class_type_token (l_type_id))
+				actual_class_type_token (type_i.implementation_id))
 			generate_load_from_address (type_i)
 		end
 
@@ -3313,6 +3336,7 @@ feature -- Addresses
 			-- Load value of `a_type' type from address pushed on stack.
 		require
 			type_not_void: a_type /= Void
+			type_is_expanded: a_type.is_expanded
 		do
 			inspect a_type.element_type
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
@@ -3342,7 +3366,10 @@ feature -- Addresses
 			when feature {MD_SIGNATURE_CONSTANTS}.Element_type_i then
 				method_body.put_opcode (feature {MD_OPCODES}.Ldind_i)
 			else
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj, actual_class_type_token (a_type.static_type_id))
+					-- See comment on `generate_metamorphose' to see why we
+					-- use `implementation_id'.
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj,
+					actual_class_type_token (a_type.implementation_id))
 			end
 		end
 
@@ -3352,25 +3379,37 @@ feature -- Assignments
 			-- Generate `Isinst' byte code instruction.
 		require
 			type_i_not_void: type_i /= Void
+		local
+			l_token: INTEGER
 		do
 				-- We use `actual_class_type_token' because we really want to know
 				-- if we inherit really from ANY.
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst,
-				actual_class_type_token (type_i.static_type_id))
+			if type_i.is_expanded then
+				l_token := actual_class_type_token (type_i.implementation_id)
+			else
+				l_token := actual_class_type_token (type_i.static_type_id)
+			end
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst, l_token)
 		end
 
 	generate_is_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction where ANY is replaced by SYSTEM_OBJECT.
 		require
 			type_i_not_void: type_i /= Void
+		local
+			l_token: INTEGER
 		do
 				-- We use `mapped_class_type_token' because if we do:
 				-- a: ANY
 				-- o: SYSTEM_OBJECT
 				-- a := o -- valid because SYSTEM_OBJECT inherits from ANY
 				-- a ?= o -- should also be valid.
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst,
-				mapped_class_type_token (type_i.static_type_id))
+			if type_i.is_expanded then
+				l_token := mapped_class_type_token (type_i.implementation_id)
+			else
+				l_token := mapped_class_type_token (type_i.static_type_id)
+			end
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Isinst, l_token)
 		end
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
@@ -3379,6 +3418,7 @@ feature -- Assignments
 			target_type_not_void: target_type /= Void
 		local
 			l_source, l_target: CL_TYPE_I
+			l_token: INTEGER
 		do
 			if is_verifiable and not target_type.is_expanded then
 				l_source ?= source_type
@@ -3388,8 +3428,12 @@ feature -- Assignments
 					l_source = Void or else l_target = Void or else
 					not l_source.base_class.simple_conform_to (l_target.base_class)
 				then
-					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
-						mapped_class_type_token (target_type.static_type_id))
+					if target_type.is_expanded then
+						l_token := mapped_class_type_token (target_type.implementation_id)
+					else
+						l_token := mapped_class_type_token (target_type.static_type_id)
+					end
+					method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass, l_token)
 				end
 			end
 		end
@@ -4852,19 +4896,35 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 	is_equal_feat_id: INTEGER is
 			-- Feature ID of `is_equal' of ANY.
 		once
-			Result := System.any_class.compiled_class.
-				feature_table.item_id (feature {PREDEFINED_NAMES}.is_equal_name_id).feature_id
+			Result := System.any_class.compiled_class.feature_with_rout_id (is_equal_rout_id).feature_id
 		ensure
 			is_equal_feat_id_positive: Result > 0
+		end
+
+	is_equal_rout_id: INTEGER is
+			-- Routine ID of `is_equal' of ANY.
+		once
+			Result := System.any_class.compiled_class.
+				feature_table.item_id (feature {PREDEFINED_NAMES}.is_equal_name_id).rout_id_set.first
+		ensure
+			is_equal_rout_id_positive: Result > 0
 		end
 
 	copy_feat_id: INTEGER is
 			-- Feature ID of `copy' of ANY.
 		once
-			Result := System.any_class.compiled_class.
-				feature_table.item_id (feature {PREDEFINED_NAMES}.copy_name_id).feature_id
+			Result := System.any_class.compiled_class.feature_with_rout_id (copy_rout_id).feature_id
 		ensure
 			copy_feat_id_positive: Result > 0
+		end
+
+	copy_rout_id: INTEGER is
+			-- Routine ID of `copy' of ANY.
+		once
+			Result := System.any_class.compiled_class.
+				feature_table.item_id (feature {PREDEFINED_NAMES}.copy_name_id).rout_id_set.first
+		ensure
+			copy_rout_id_positive: Result > 0
 		end
 
 feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition

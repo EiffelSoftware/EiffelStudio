@@ -29,7 +29,12 @@ inherit
 			set_tab_stops,
 			set_text,
 			wel_set_text,
-			destroy
+			destroy,
+			has_selection,
+			selection_start,
+			selection_end,
+			wel_selection_start,
+			wel_selection_end
 		redefine
 			interface,
 			initialize,
@@ -49,9 +54,7 @@ inherit
 		select
 			wel_line_index,
 			wel_current_line_number,
-			wel_selection_start,
 			wel_line_count,
-			wel_selection_end,
 			deselect_all,
 			copy_selection,
 			cut_selection,
@@ -86,7 +89,9 @@ inherit
 			set_text as wel_set_text,
 			line as wel_line,
 			line_number_from_position as wel_line_number_from_position,
-			item as wel_item
+			item as wel_item,
+			selection_start as wel_selection_start,
+			selection_end as wel_selection_end
 		undefine
 			hide,
 			line_count,
@@ -110,9 +115,6 @@ inherit
 			selected_text,
 			current_line_number,
 			on_en_change,
-			selection_end,
-			selection_start,
-			has_selection,
 			set_selection,
 			set_text_limit,
 			select_all,
@@ -373,11 +375,14 @@ feature -- Status report
 			mask: INTEGER
 			wel_character_format: WEL_CHARACTER_FORMAT2
 			range_already_selected: BOOLEAN
+			current_selection: WEL_CHARACTER_RANGE
 		do
 			disable_redraw
-			if start_index = wel_selection_start + 1 and end_index = wel_selection_end + 1 then
+			current_selection := selection
+			if has_selection and selection_start + 1 = start_index and selection_end + 1 = end_index then
 				range_already_selected := True
 			else
+				set_selection (start_index, end_index)
 				safe_store_caret
 			end
 			create wel_character_format.make

@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<title>Garbage Collector Settings</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+
+<h1>Garbage collector settings</h1>
+
+<p>Dated from September 1999.</p>
+<h2>Garbage collector marking algorithm</h2>
+<h3>Iterative marking</h3>
+<p>The marking of the objects is iterative. This algorithm is robust, but slower 
+than the others. It is usually used with Operating Systems, which cannot support 
+a high level of recursion, such as VXWORKS. </p>
+<h3> Recursive marking</h3>
+<p>The marking of objects is recursive. This algorithm is fast but may cause a 
+stack overflow if your system uses objects, which have a high level of 
+references, such as LINKED_LISTs.</p>
+<h3>Hybrid marking</h3>
+<p>This algorithm combines both iterative and recursive mechanisms. It is slightly 
+slower than the recursive mechanism but it can handle objects with a high level 
+of references. This is the default.</p>
+<h2>Garbage collector mode</h2>
+<h3>Generation scavenging</h3>
+<p>The garbage collector uses a copying and generation based algorithm. Unlike the 
+Mark-and-Sweep, this algorithm moves the objects, allocation is faster, 
+fragmentation and page faults are reduced. Moreover, it only scans the young 
+objects, assuming that the older an object is, the longer it is likely to 
+survive: this makes the GC heap smaller and consequently collections are faster. 
+However, this mode requires a lot of memory.</p>
+<h3>Mark-and-Sweep</h3>
+<p>This algorithm is robust but slower in all aspects. The main advantage is that 
+it does not move the objects: therefore interfacing a system with another 
+language is easier, since it does not require to use the Cecil protection 
+mechanism. It does not require a lot of memory but may produce fragmentation.</p>
+<h3>Partial scavenging</h3>
+<p>This algorithm is a compacting Mark-and-Sweep combined with a cycling Scavenging 
+on the whole memory. Not too much memory is required and fragmentation is 
+avoided. It is a faster than the Mark-and-Sweep mechanism.</p>
+<h3>Default mode</h3>
+<p>Generation scavenging is applied only for small objects. Otherwise objects are 
+allocated in a Partial Scavenging area. In fact, the memory is divided in two 
+areas running their own algorithm.</p>
+<h2>Garbage collector optimization</h2>
+<h3>Big arrays optimization</h3>
+<p>The Garbage collector may take a long time in scanning huge arrays of 
+references, this algorithm makes the time spent in scanning these objects only 
+proportional to the number of its new sub-references. This is implemented for 
+4.5 and is the default on this version. It can easily be added to previous 
+versions. However, It may be useless on small systems, which do not allocate big 
+arrays. In the latter case, it is better to disable it since it brings 
+substantial overhead.</p>
+<h3>String optimization</h3>
+<p>It allocates the Eiffel Strings in the Generation Scavenge Zone, making their 
+allocation faster. It is disabled by default.</p>
+<h3>Memory objects optimization</h3>
+<p>In the same manner as the string optimization, it allocates the objects of type 
+MEMORY, which are usually those that encapsulate C objects, in the GSZ instead 
+of the partial scavenging area. Their allocation is faster. This optimization is 
+on the version 4.5, and disabled by default on 4.4 </p>
+<h2>Parameters settings</h2>
+<p>Additionally the user can define some GC parameters (see class MEMORY)</p>
+<h3>Size of memory chunks</h3>
+<p>The Eiffel run-time allocates memory in chunks. You can define their size.</p>
+<h3>Size of Generation Scavenging zone</h3>
+<p>The generation scavenge zone is dedicated for small and young objects. You can 
+define its size.</p>
+<h3>Maximum size of objects allocated in the Generation scavenge zone</h3>
+<p>This defines what is a small object. Objects under this size are allocated in 
+the GSZ (except the objects of type SPECIAL, such as ARRAYs or STRINGs)</p>
+<h3>Maximum age before tenuring.</h3>
+<p>This defines the maximum age of an object before it is tenured, which means that 
+it will be considered as old and reallocated in the partial scavenging area, if 
+it is not there yet. The age of an object corresponds to the number of 
+Generation collection that it has survived. A generation collection is a light, 
+local collection, which scans only the young objects.</p>
+<h3>Period of full collection</h3>
+<p>Every P collection, a full collection is launched, otherwise a Generation 
+collection is done. A full collection is expensive because it scans the whole 
+memory, both GSZ and partial scavenging area, which means young and old objects. 
+It does not make any aging unlike the Generation collection. </p>
+<h3> Period of full coalesce</h3>
+<p>Every P collections, a full coalesce is performed. It applies to the whole 
+memory and tries to compact it as much as possible. By default, its value is 
+null, which means that no full coalesce is done: the GC algorithms should be 
+sufficient.</p>
+<h3>Memory threshold</h3>
+<p>Every M bytes requested in the free-lists, a collection is launched. This does 
+not include the memory allocated in the GSZ, since there are pre-allocated 
+buffers for small and young objects. </p>
+<h3> Maximum amount of memory allocated allowed</h3>
+<p>If the amount of memory exceeds this limit, an Eiffel exception is raised. It is 
+a per thread value.</p>
+</body>
+</html>

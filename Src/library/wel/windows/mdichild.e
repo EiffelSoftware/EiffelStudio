@@ -46,7 +46,8 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' position.
 		do
 			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0, Swp_nosize + Swp_nozorder)
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
 		end
 
 	move_absolute (a_x, a_y: INTEGER) is
@@ -76,6 +77,7 @@ feature {NONE} -- Implementation
 		do
 			parent := a_parent
 			!! mdi_cs.make (class_name, a_name)
+			mdi_cs.set_style (default_style)
 			item := cwel_integer_to_pointer (
 				cwin_send_message_result (a_parent.client_window.item,
 				Wm_mdicreate, 0, cwel_pointer_to_integer (mdi_cs.item)))

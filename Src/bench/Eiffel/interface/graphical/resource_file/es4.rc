@@ -1,0 +1,90 @@
+#include "windows.h"
+
+#define DLG_SELECTDIR                   100
+#define ID_LA_DIR                       101
+#define Dlg_graphical_degree_output     101
+#define ID_CB_LASTDIR                   102
+#define ID_CB_DRIVE                     103
+#define ID_LB_DIR                       104
+#define IDD_REPLACEDIALOG               108
+#define Prg_compilation_progress        1000
+#define Txt_degree                      1001
+#define Txt_entity                      1002
+#define Txt_current_degree              1003
+#define Txt_nbr_to_go                   1004
+#define Txt_current_entity              1005
+#define Txt_current_nbr_to_go           1006
+#define ID_FINDNEXT                     3000
+#define ID_REPLACEALL                   3002
+#define IDC_FINDEDIT                    3007
+#define IDC_REPLACEEDIT                 3008
+#define IDC_WORDCHECK                   3009
+#define IDC_CASECHECK                   3010
+#define ID_REPLACE                      3011
+#define IDC_RADIOUP                     3014
+#define IDC_RADIODOWN                   3015
+#define IDC_RADIOBOX                    3016
+#define ID_FINDSTATIC                   3017
+#define ID_REPLACESTATIC                3018
+#define Txt_percentage                  3019
+
+DLG_SELECTDIR DIALOG DISCARDABLE  20, 20, 173, 188
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select directory"
+FONT 8, "HELV"
+BEGIN
+    LTEXT           "",ID_LA_DIR,6,48,161,8
+    LTEXT           "&Choice",-1,6,5,82,8
+    COMBOBOX        ID_CB_LASTDIR,6,15,161,95,CBS_DROPDOWN | WS_GROUP | 
+                    WS_TABSTOP
+    LTEXT           "&Directories:",-1,6,36,72,8
+    LISTBOX         ID_LB_DIR,6,62,82,89,LBS_SORT | WS_VSCROLL | WS_GROUP | 
+                    WS_TABSTOP
+    LTEXT           "Dri&ves",-1,6,155,36,8
+    COMBOBOX        ID_CB_DRIVE,6,165,82,53,CBS_DROPDOWNLIST | WS_GROUP | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,116,62,51,15,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,116,82,51,15,WS_GROUP
+END
+
+IDD_REPLACEDIALOG DIALOG DISCARDABLE  10, 10, 228, 82
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Replace"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Replace &All",ID_REPLACEALL,178,40,46,16,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,178,58,46,16,WS_GROUP
+    PUSHBUTTON      "&Replace",ID_REPLACE,178,23,46,14,WS_GROUP
+    DEFPUSHBUTTON   "&Find Next",ID_FINDNEXT,178,4,46,16,WS_GROUP
+    LTEXT           "Fi&nd what:",ID_FINDSTATIC,8,10,37,8
+    EDITTEXT        IDC_FINDEDIT,55,9,116,12,ES_AUTOHSCROLL
+    LTEXT           "Re&place with:",ID_REPLACESTATIC,8,28,46,9
+    EDITTEXT        IDC_REPLACEEDIT,55,26,116,12,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    CONTROL         "Match &whole word only",IDC_WORDCHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,8,50,86,10
+    CONTROL         "Match &case",IDC_CASECHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,8,65,49,9
+    GROUPBOX        "Direction",IDC_RADIOBOX,101,49,69,29
+    CONTROL         "&Up",IDC_RADIOUP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,107,58,21,14
+    CONTROL         "&Down",IDC_RADIODOWN,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,135,58,29,14
+END
+
+Dlg_graphical_degree_output DIALOG DISCARDABLE  0, 0, 183, 79
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,72,59,50,14
+    CONTROL         "Progress1",Prg_compilation_progress,"msctls_progress32",
+                    WS_BORDER,9,43,145,11
+    LTEXT           "text degree",Txt_degree,7,7,59,10
+    LTEXT           "100 %",Txt_percentage,158,45,18,10
+    LTEXT           "current degree",Txt_current_degree,74,7,102,10
+    LTEXT           "Current entity",Txt_current_entity,74,16,102,10
+    LTEXT           "text entity",Txt_entity,7,16,59,10
+    LTEXT           "current nbr togo",Txt_current_nbr_to_go,74,25,102,10
+    LTEXT           "nbr togo text",Txt_nbr_to_go,7,25,59,10
+END

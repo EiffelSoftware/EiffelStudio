@@ -775,7 +775,7 @@ feature {NONE} -- GTK C functions for pixmaps
 
 	c_gtk_pixmap_create_empty (parent: POINTER): POINTER is
 		external
-			"C | %"gtk_eiffel.h%""
+			"C (GtkWidget *): EIF_POINTER | %"gtk_eiffel.h%""
         end
 
 	c_gtk_pixmap_set_from_pixmap (pixmapDest, pixmapSource: POINTER) is

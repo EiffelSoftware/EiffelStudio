@@ -60,6 +60,8 @@ feature -- Access
 	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Arguments if any.
 		do
+		ensure
+			arguments_not_void: has_arguments implies Result /= Void
 		end
 		
 	return_type: CONSUMED_REFERENCED_TYPE is
@@ -200,7 +202,7 @@ feature -- Status report
 		do
 			if 
 				is_field or 
-				(eiffel_name.substring (1, 4).is_equal ("get_") and arguments.is_empty)
+				(eiffel_name.substring (1, 4).is_equal ("get_") and not has_arguments)
 			then
 				Result := True
 			end
@@ -210,7 +212,8 @@ feature -- Status report
 			-- Is current entity a 'Status Setting' type?
 		do
 			if
-				eiffel_name.substring (1, 4).is_equal ("set_") and arguments.count = 1
+				eiffel_name.substring (1, 4).is_equal ("set_") and 
+					(has_arguments and then arguments.count = 1)
 			then
 				Result := True
 			end

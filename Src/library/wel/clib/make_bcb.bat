@@ -6,6 +6,8 @@ echo Compiling monothreaded version of the library
 %ISE_EIFFEL%\BCC55\bin\make.exe /s /f makefile.bcb > make.log
 echo Compiling multithreaded version of the library
 %ISE_EIFFEL%\BCC55\bin\make.exe /s /f mt-makefile.bcb >> make.log
+echo Compiling IL version of the library
+%ISE_EIFFEL%\BCC55\bin\make.exe /s /f makefile.bcb.il >> make.log
 
 echo. 
 echo ------------------------------------------------------------------------

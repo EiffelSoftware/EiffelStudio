@@ -1,0 +1,32 @@
+# ilwel.lib - Makefile for Borland C
+
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib
+CFLAGS = -DEIF_IL_DLL -q -w-8064 -w-8065 -w-8057 -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+
+.c.obj:
+	$(CC) @&&|
+	$(CFLAGS) $<
+|
+
+OBJ = disptchr.obj enumfont.obj enum_child_windows.obj choose_folder.obj estream.obj msgboxpa.obj diskspace.obj dynload.obj drawstate.obj mousehook.obj
+
+ilwel.lib: $(OBJ)
+	if exist $@ del $@
+	$(AR) $@ +disptchr.obj
+	$(AR) $@ +enumfont.obj
+	$(AR) $@ +enum_child_windows.obj
+	$(AR) $@ +estream.obj
+	$(AR) $@ +choose_folder.obj
+	$(AR) $@ +msgboxpa.obj
+	$(AR) $@ +diskspace.obj
+	$(AR) $@ +dynload.obj
+	$(AR) $@ +drawstate.obj
+	$(AR) $@ +mousehook.obj
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
+	del $@
+	del *.obj
+	del *.bak

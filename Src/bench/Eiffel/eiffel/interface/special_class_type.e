@@ -151,7 +151,7 @@ feature -- C code generation
 				-- 1. Dynamic type with flags
 			buffer.put_string (" = RTLNSP(")
 			info.generate_type_id (buffer, final_mode)
-			if gen_param.is_reference or else gen_param.is_bit then
+			if gen_param.is_reference or else l_exp_has_references or else gen_param.is_bit then
 				buffer.put_string (" | EO_REF")
 			end
 			if l_param_is_expanded then
@@ -442,7 +442,7 @@ feature {NONE} -- C code generation
 
 			result_type := feat.type.actual_type.type_i
 			if result_type.has_formal then
-				result_type := result_type.instantiation_in (type)
+				result_type := result_type.instantiation_in (Current)
 			end
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
@@ -508,7 +508,7 @@ feature {NONE} -- C code generation
 
 			result_type := feat.type.actual_type.type_i
 			if result_type.has_formal then
-				result_type := result_type.instantiation_in (type)
+				result_type := result_type.instantiation_in (Current)
 			end
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);

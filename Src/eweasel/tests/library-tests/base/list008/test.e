@@ -10,11 +10,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Execute test.
 		do
-			Io.put_string ("Fill...%N")
-			fill_list
-			Io.put_string ("Prune...%N")
+			fill_list (1)
 			prune
-			Io.put_string ("Check...%N")
+			check_result
+			fill_list (Items)
+			prune
 			check_result
 		end
 
@@ -30,14 +30,22 @@ feature {NONE} -- Implementation
 	
 	ones: INTEGER
 
-	fill_list is
+	fill_list (n: INTEGER) is
 			-- Fill up list.
+		require
+			positive: n > 0
 		local
 			i: INTEGER
 			val: INTEGER
 		do
-			create l.make (Items)
-			from i := 1 until i > Items loop
+			if n > 1 then
+				Io.put_string ("Fill with " + n.out + " items...%N")
+			else
+				Io.put_string ("Fill with 1 item...%N")
+			end
+			create l.make (n)
+			ones := 0
+			from i := 1 until i > n loop
 				if (i - 1) \\ One_frequency = 0 then
 					val := 1
 				else
@@ -47,13 +55,12 @@ feature {NONE} -- Implementation
 				if val = 1 then ones := ones + 1 end
 				i := i + 1
 			end
-		ensure
-			ones_correct: ones = Items // One_frequency
 		end
 
 	prune is
 			-- Prune all ones.
 		do
+			Io.put_string ("Prune...%N")
 			l.prune_all (1)
 		ensure
 			count_correct: l.count = old l.count - ones
@@ -62,10 +69,11 @@ feature {NONE} -- Implementation
 	check_result is
 			-- Check result of pruning.
 		do
+			Io.put_string ("Check...%N")
 			if l.has (1) then
-				Io.put_string ("Pruning... FAILED%N")
+				Io.put_string ("Pruning... FAILED%N%N")
 			else
-				Io.put_string ("Pruning... OK%N")
+				Io.put_string ("Pruning... OK%N%N")
 			end
 		end
 

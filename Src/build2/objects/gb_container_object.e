@@ -35,9 +35,13 @@ feature -- Basic operation
 			display_object.drop_actions.wipe_out
 			layout_item.drop_actions.wipe_out
 			display_object.drop_actions.extend (agent add_new_object (?))
+			display_object.drop_actions.extend (agent add_new_component (?))
 			layout_item.drop_actions.extend (agent add_new_object (?))
+			layout_item.drop_actions.extend (agent add_new_component (?))
 				-- We must add a veto pebble function which stops us dropping
-				-- an object on one of its children.
+				-- an object on one of its children. There is no need to veto a component
+				-- being dropped, as a component generates a new object instance and therefore
+				-- cannot be a child.
 			display_object.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
 			layout_item.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))
 		end

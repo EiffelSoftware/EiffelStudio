@@ -44,7 +44,9 @@ feature -- Basic operations
 			layout_item.drop_actions.wipe_out
 			if object.is_empty then		
 				display_object.drop_actions.extend (agent add_new_object (?))
+				display_object.drop_actions.extend (agent add_new_component (?))
 				layout_item.drop_actions.extend (agent add_new_object (?))
+				layout_item.drop_actions.extend (agent add_new_component (?))
 					-- We must add a veto pebble function which stops us dropping
 					-- an object on one of its children.
 				display_object.drop_actions.set_veto_pebble_function (agent override_drop_on_child (?))

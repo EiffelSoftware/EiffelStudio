@@ -20,12 +20,17 @@ feature -- Access
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
-			a_class_name: STRING
+			l_name: STRING
+			l_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_descriptor)
 
-			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, True)
-			eiffel_writer.set_class_name (a_class_name)
+			l_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, True)
+			eiffel_writer.set_class_name (l_name)
+
+			create l_visible.make
+			l_visible.set_name (l_name)
+			system_descriptor.add_visible_class_client (l_visible)
 
 			add_default_features (a_descriptor)
 			if dispatch_interface then

@@ -143,6 +143,30 @@ feature -- Access
 		once
 			create Result.make
 		end
+		
+	cut_object_command: GB_CUT_OBJECT_COMMAND is
+			-- Command representing cutting of selected object from layout selector.
+		once
+			create Result.make
+		end
+		
+	copy_object_command: GB_COPY_OBJECT_COMMAND is
+			-- Command representing copying of selected object from layout selector.
+		once
+			create Result.make
+		end
+		
+	paste_object_command: GB_PASTE_OBJECT_COMMAND is
+			-- Command representing pasting of copied object from clipboard.
+		once
+			create Result.make
+		end
+		
+	clipboard_command: GB_CLIPBOARD_COMMAND is
+			-- Command representing clipboard functionality.
+		once
+			create Result.make
+		end
 
 feature -- Basic operation
 
@@ -201,6 +225,10 @@ feature {GB_MAIN_WINDOW} -- Implementation
 			Result.extend (generation_command)
 			Result.extend (set_root_window_command)
 			Result.extend (import_project_command)
+			Result.extend (cut_object_command)
+			Result.extend (copy_object_command)
+			Result.extend (paste_object_command)
+			Result.extend (clipboard_command)
 		end
 		
 	all_two_state_commands: ARRAYED_LIST [GB_TWO_STATE_COMMAND] IS

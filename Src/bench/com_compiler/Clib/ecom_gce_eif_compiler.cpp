@@ -1440,10 +1440,10 @@ void ecom_gce_Eif_compiler::ccom_free_memory_pointed_61( BSTR * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_Eif_compiler::ccom_free_memory_pointed_62( LONG * a_pointer )
+void ecom_gce_Eif_compiler::ccom_free_memory_pointed_62( ULONG * a_pointer )
 
 /*-----------------------------------------------------------
-	Free memory of LONG *.
+	Free memory of ULONG *.
 -----------------------------------------------------------*/
 {
 	if (a_pointer != NULL)

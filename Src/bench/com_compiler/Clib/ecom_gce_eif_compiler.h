@@ -502,9 +502,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of LONG *.
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_62( LONG * a_pointer );
+	void ccom_free_memory_pointed_62( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------

@@ -1,7 +1,9 @@
 indexing 
 	description: "EiffelVision Combo-box. Implementation interface"
+	note: "We cannot cahnge the feature `set_style' of wel_window%
+		% to switch from editable to non editable because it%
+		% doesn't for this kind of style changing."
 	status: "See notice at end of class"
-	names: widget
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,57 +13,54 @@ class
 inherit
 	EV_COMBO_BOX_I
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-
-	EV_ITEM_CONTAINER_IMP
-		redefine
-			ev_children
-		end
+	EV_LIST_ITEM_CONTAINER_IMP
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			parent_ask_resize
+			parent_ask_resize,
+			set_editable
 		end
 		
 	EV_BAR_ITEM_IMP
 
-	WEL_DROP_DOWN_COMBO_BOX
-		rename
-			make as wel_make,
-			parent as wel_parent,
-			font as wel_font,
-			set_font as wel_set_font,
-			destroy as wel_destroy,
-			selected_item as wel_selected_item,
-			select_item as wel_select_item,
-			height as wel_height
-		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
-			remove_command,
-			set_width,
-			set_height,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up,
-
-			-- XX Temporary
-			wel_height,
-			list_shown,
-			show_list,
-			hide_list
+--	WEL_DROP_DOWN_COMBO_BOX
+--		rename
+--			make as wel_make,
+--			parent as wel_parent,
+--			font as wel_font,
+--			set_font as wel_set_font,
+--			destroy as wel_destroy,
+--			selected_item as wel_selected_item,
+--			select_item as wel_select_item,
+--			height as wel_height
+--		undefine
+--			-- We undefine the features redefined by EV_WIDGET_IMP,
+--			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
+--			remove_command,
+--			set_width,
+--			set_height,
+--			on_left_button_down,
+--			on_right_button_down,
+--			on_left_button_up,
+--			on_right_button_up,
+--			on_left_button_double_click,
+--			on_right_button_double_click,
+--			on_mouse_move,
+--			on_char,
+--			on_key_up,
+--			text_length,
+	--		default_process_message,
+--			-- XX Temporary
+--			wel_height,
+---			list_shown,
+--			show_list,
+--			hide_list
 			
-		redefine
-			on_cbn_selchange,
-			on_cbn_editupdate,
-			default_style
-		end
+--		redefine
+--			on_cbn_selchange,
+--			on_cbn_editupdate,
+--			default_style
+--		end
 
 	WEL_DROP_DOWN_LIST_COMBO_BOX
 		rename
@@ -89,6 +88,7 @@ inherit
 			on_char,
 			on_key_up
 		redefine
+			default_process_message,
 			on_cbn_selchange,
 			on_cbn_editupdate,
 			default_style
@@ -111,18 +111,12 @@ feature {NONE} -- Initialization
 			is_editable := True
 			wel_make (par_imp, 0, 0, 0, 90, 0)
 			set_minimum_height (height)
-			initialize
+			!! ev_children.make
 		end
 
 feature -- Access
 
-	get_item (index: INTEGER): EV_COMBO_BOX_ITEM is
-			-- Text at the one-based `index'
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
-
-	selected_item: EV_COMBO_BOX_ITEM is
+	selected_item: EV_LIST_ITEM is
 			-- Give the item which is currently selected
 			-- It start with a zero index in wel and with a
 			-- one index for the array.
@@ -165,45 +159,49 @@ feature -- Status setting
 			wel_select_item (index - 1)
 		end
 
+	set_editable (flag: BOOLEAN) is
+			-- `flag' true make the component read-write and
+			-- `flag' false make the component read-only.
+		local
+			color: EV_COLOR
+		do
+			if flag then
+				set_read_write
+			else
+				set_read_only
+			end
+		end
+
 feature -- Element change
 
 	clear_items is
 			-- Remove all the elements of the combo-box.
-			-- XX Need to be reimplemented with the set_parent
-			-- XX feature.
 		do
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				ev_children.item.interface.remove_implementation
-				ev_children.forth
-			end
 			reset_content
-			ev_children.wipe_out
+			clear_ev_children
 		end
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when the selection has changed.
 		do
-			add_command (Cmd_selection, a_command, arguments)
+			add_command (Cmd_selection, cmd, arg)
 		end
 
-	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when the text in the field
-			-- is activated, i.e. the user press the enter key.
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the text in the field is activated, i.e. the
+			-- user press the enter key.
 		do
 			check
 				not_yet_implemented: False
 			end
-			add_command (Cmd_activate, a_command, arguments)
+			add_command (Cmd_activate, cmd, arg)
 		end
 
-feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
-
-	ev_children: LINKED_LIST [EV_COMBO_BOX_ITEM_IMP]
+feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	item_height: INTEGER is
 			-- height needed for an item
@@ -211,34 +209,13 @@ feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 			Result := wel_font.log_font.height
 		end
 
-	add_item (an_item: EV_COMBO_BOX_ITEM) is
-			-- Add an item to the list of the combo-box
-		local
-			item_imp: EV_COMBO_BOX_ITEM_IMP
+	is_selected (an_id: INTEGER): BOOLEAN is
+			-- Is item given by `an_id' selected?
 		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
-			ev_children.extend (item_imp)
-			add_string (name_item)
-			item_imp.set_id (ev_children.count - 1)
+			Result := (an_id = wel_selected_item + 1)
 		end
 
-	remove_item (an_id: INTEGER) is
-			-- Remove the child whose id is `id'.
-		do
-			delete_string (an_id)
-			ev_children.go_i_th (an_id + 1)
-			ev_children.remove
-			from
-			until
-				ev_children.after
-			loop
-				ev_children.item.set_id (ev_children.index - 1)
-				ev_children.forth
-			end
-		end
+feature {EV_CONTAINER_IMP} -- Implementation
 
    	parent_ask_resize (a_width, a_height: INTEGER) is
    			-- When we resize a combo-box, we resize the list,
@@ -367,12 +344,28 @@ feature {NONE} -- Wel implementation
 
 	default_style: INTEGER is
 		do
+			Result := Ws_visible + Ws_child + Ws_group +
+					  Ws_tabstop + Ws_vscroll + Cbs_autohscroll +
+					  Cbs_ownerdrawfixed + Cbs_hasstrings
 			if is_editable then
-				Result := {WEL_DROP_DOWN_COMBO_BOX} Precursor
+				Result := Result + Cbs_dropdown
 			else
-				Result := {WEL_DROP_DOWN_LIST_COMBO_BOX} Precursor
+				Result := Result + Cbs_dropdownlist
 			end
 		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+		   -- Process `msg' which has not been processed by
+		   -- `process_message'.
+		local
+			top: INTEGER
+			paint_dc: WEL_PAINT_DC
+			rect: WEL_RECT
+		do
+			if msg = Wm_erasebkgnd then
+				disable_default_processing
+			end
+ 		end
 
 end -- class EV_COMBO_BOX_IMP
 

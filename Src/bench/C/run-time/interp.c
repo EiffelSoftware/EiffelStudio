@@ -79,7 +79,7 @@
 
 /* Access to precursor type */
 
-#define GET_PTYPE   (is_extern ? -1 : get_short ())
+#define GET_PTYPE   (get_short ())
 
 #ifndef EIF_THREADS
 

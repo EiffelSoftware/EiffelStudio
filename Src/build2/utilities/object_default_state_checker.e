@@ -13,6 +13,7 @@ inherit
 	INTERNAL
 		export
 			{NONE} all
+			{GB_OBJECT_EDITOR} default_create
 		end
 	
 	EV_ANY_HANDLER

@@ -204,6 +204,48 @@ feature {NONE} -- Implementation
 		ensure
 		end
 		
+	add_to_cecil_call_arguments (visitor: WIZARD_DATA_TYPE_VISITOR; an_argument_name: STRING) is
+			-- Add to CECIL call arguments.
+		require
+			non_void_visitor: visitor /= Void
+			non_void_an_argument_name: an_argument_name /= Void
+			valid_an_argument_name: not an_argument_name.empty
+		do
+			if 
+				visitor.is_basic_type or 
+				visitor.is_enumeration or
+				visitor.vt_type = Vt_bool
+			then
+				arguments.append (Comma_space)
+				arguments.append (Open_parenthesis)
+				arguments.append (visitor.cecil_type)
+				arguments.append (Close_parenthesis)
+				arguments.append (Tmp_clause)
+				arguments.append (an_argument_name)
+
+			else
+				arguments.append (", ((" + Tmp_clause + an_argument_name + 
+							" != NULL) ? eif_access (" + Tmp_clause + an_argument_name + ") : NULL)")
+			end
+		end
+		
+	add_free_object_code (an_argument_name: STRING)is
+			-- Add code for freeing object.
+		require
+			non_void_an_argument_name: an_argument_name /= Void
+			valid_an_argument_name: not an_argument_name.empty
+		do
+			free_object.append ("if (" + Tmp_clause + an_argument_name + " != NULL)")
+			free_object.append (New_line_tab_tab)
+			free_object.append (Eif_wean)
+			free_object.append (Space_open_parenthesis)
+			free_object.append (Tmp_clause)
+			free_object.append (an_argument_name)
+			free_object.append (Close_parenthesis)
+			free_object.append (Semicolon)
+			free_object.append (New_line_tab)
+		end
+		
 	process_argument (an_argument: WIZARD_PARAM_DESCRIPTOR) is
 			-- Process argument.
 		require
@@ -231,28 +273,12 @@ feature {NONE} -- Implementation
 				variables.append (variable_set_up (an_argument.name, visitor))
 				variables.append (New_line_tab)
 
-				if 
-					visitor.is_basic_type or 
-					visitor.is_enumeration or
-					visitor.vt_type = Vt_bool
-				then
-					arguments.append (Comma_space)
-					arguments.append (Open_parenthesis)
-					arguments.append (visitor.cecil_type)
-					arguments.append (Close_parenthesis)
-					arguments.append (Tmp_clause)
-					arguments.append (an_argument.name)
-
-				else
-					arguments.append (Comma_space)
-					arguments.append (Eif_access)
-					arguments.append (Space_open_parenthesis)
-					arguments.append (Tmp_clause)
-					arguments.append (an_argument.name)
-					arguments.append (Close_parenthesis)
-				end
+				add_to_cecil_call_arguments (visitor, an_argument.name)
 				
-				if is_paramflag_fout (an_argument.flags) then					
+				if 
+					is_paramflag_fout (an_argument.flags) and
+					not is_array (visitor.vt_type) 
+				then					
 					return_value.append (out_value_set_up (an_argument.name, visitor))
 					return_value.append (New_line_tab)
 
@@ -262,13 +288,7 @@ feature {NONE} -- Implementation
 						not visitor.is_enumeration and
 						not (visitor.vt_type = Vt_bool) 
 					then
-						free_object.append (Eif_wean)
-						free_object.append (Space_open_parenthesis)
-						free_object.append (Tmp_clause)
-						free_object.append (an_argument.name)
-						free_object.append (Close_parenthesis)
-						free_object.append (Semicolon)
-						free_object.append (New_line_tab)
+						add_free_object_code (an_argument.name)
 					end
 				end
 			end
@@ -354,6 +374,10 @@ feature {NONE} -- Implementation
 
 				end
 
+				if not visitor.is_structure then 
+					Result.append ("if (" + arg_name + " != NULL)")
+					Result.append (New_line_tab_tab)
+				end
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
 				Result.append (Space_equal_space)
@@ -409,25 +433,27 @@ feature {NONE} -- Implementation
 				not visitor.is_interface_pointer and
 				not (is_void (visitor.vt_type) and is_byref (visitor.vt_type))
 			then
-				if visitor.need_generate_ec then
-					Result.append (Generated_ec_mapper)
-				else
-					Result.append (Ec_mapper)
+				if not is_array (visitor.vt_type) then
+					if visitor.need_generate_ec then
+						Result.append (Generated_ec_mapper)
+					else
+						Result.append (Ec_mapper)
+					end
+					Result.append (Dot)
+					Result.append (visitor.ec_function_name)
+					Result.append (Space_open_parenthesis)
 				end
-				Result.append (Dot)
-				Result.append (visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
 				Result.append (Eif_wean)
 				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
-				Result.append (Comma_space)
-
-				Result.append (arg_name)
-				Result.append (Close_parenthesis)
+				if not is_array (visitor.vt_type) then
+					Result.append (Comma_space)
+					Result.append (arg_name)
+					Result.append (Close_parenthesis)
+				end
 				Result.append (Semicolon)
-
 			end
 		end
 
@@ -583,7 +609,7 @@ feature {NONE} -- Implementation
 		end
 
 	cecil_function_call: STRING is
-			--
+			-- CECIL feature call.
 		require
 			non_void_arguments: arguments /= Void
 		do

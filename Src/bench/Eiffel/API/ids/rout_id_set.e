@@ -1,3 +1,10 @@
+indexing
+ 
+	description:
+		"Routine identifier sets.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class ROUT_ID_SET 
 
 inherit
@@ -107,7 +114,7 @@ feature -- Output
 			until
 				i > count
 			loop
-				io.error.putint (item (i).id);
+				item (i).trace;
 				io.error.putchar (' ');
 				i := i + 1;
 			end;

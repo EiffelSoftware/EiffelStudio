@@ -11,7 +11,7 @@ inherit
 	EWB
 		redefine
 			init_toolkit
-		end
+		end;
 
 	IO_HANDLER
 		rename
@@ -21,6 +21,7 @@ inherit
 		redefine
 			init_toolkit
 		end
+	COMMAND
 
 creation
 	make

@@ -10,17 +10,17 @@ default
 	il_generation ("dll")
 
 cluster	
-	root_cluster: "F:\reflection_interface\ISE.Reflection.EiffelAssemblyCacheNotifier"
+	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.EiffelAssemblyCacheNotifier"
 
-	eiffel_components_generated: "F:\reflection_interface\generated\eiffel_components_generated"
+	eiffel_components_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
 	
-	all dot_net_base: "F:\Eiffel50\library\base.net"
+	all dot_net_base: "F:\Src\dotnet\library.net"
 		exclude
-			"accessbility"; "system_data"; "system_drawing"; "system_web"; "system_web_services"; "system_windows_forms";
+			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
 		end
 
 external
-	assembly: 	"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+	assembly: 	"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll"
 

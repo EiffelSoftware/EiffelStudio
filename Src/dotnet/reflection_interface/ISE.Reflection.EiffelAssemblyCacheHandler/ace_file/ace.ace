@@ -2,7 +2,7 @@ system
 	"ISE.Reflection.EiffelAssemblyCacheHandler"
 
 root
-	EIFFEL_ASSEMBLY_CACHE_HANDLER (root_cluster): "make"
+	EIFFEL_ASSEMBLY_CACHE_HANDLER (root_cluster): "make_cache_handler"
 
 default
 	assertion (all)
@@ -10,24 +10,24 @@ default
 	il_generation ("dll")
 
 cluster
-	root_cluster: "F:\reflection_interface\ISE.Reflection.EiffelAssemblyCacheHandler"
+	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.EiffelAssemblyCacheHandler"
 	
-	eiffel_components_generated: "F:\reflection_interface\generated\eiffel_components_generated"
+	eiffel_components_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
 	
-	support_generated: "F:\reflection_interface\generated\support_generated"
+	support_generated: "F:\Src\dotnet\reflection_interface\generated\support_generated"
 	
-	notifier_generated: "F:\reflection_interface\generated\notifier_generated"
+	notifier_generated: "F:\Src\dotnet\reflection_interface\generated\notifier_generated"
 	
-	all dot_net_base: "F:\Eiffel50\library\base.net"
+	all dot_net_base: "F:\Src\dotnet\library.net"
 		exclude
-			"accessbility"; "system_data"; "system_drawing"; "system_web"; "system_web_services"; "system_windows_forms";
+			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
 		end
 
 external
 	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
-			"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-			"F:\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
-			"F:\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll"		
+			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+			"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
+			"F:\Src\dotnet\Reflection_interface\generated\support_generated\ISE.Reflection.Support.dll"		
 	
 end

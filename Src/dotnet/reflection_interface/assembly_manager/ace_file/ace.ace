@@ -1,5 +1,5 @@
 system
-	"AssemblyManager"
+	"ISE.AssemblyManager"
 
 root
 	ASSEMBLY_VIEWER (root_cluster): "make"
@@ -10,23 +10,18 @@ default
 	il_generation ("exe")
 
 cluster	
-	root_cluster: "F:\Src\dotnet\reflection\assembly_manager\gui"
+	root_cluster: "F:\Src\dotnet\reflection_interface\assembly_manager\gui"
 	
-	assembly_manager: "F:\Src\dotnet\reflection\assembly_manager"
+	dictionaries: "F:\Src\dotnet\reflection_interface\assembly_manager\dictionaries"
 	
-	dictionaries: "F:\Src\dotnet\reflection\assembly_manager\dictionaries"
+	gac_browser: "F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser"
 	
-	gac_browser: "F:\Src\dotnet\reflection\assembly_manager\gac_browser"
+	support: "F:\Src\dotnet\reflection_interface\assembly_manager\support"
 	
-	support: "F:\Src\dotnet\reflection\assembly_manager\support"
-	
-	all generated: "F:\Src\dotnet\reflection\generated"
+	all generated: "F:\Src\dotnet\reflection_interface\generated"
 
-	all dot_net_base: "$EIFFEL\library\base.net"
-		exclude
-			"system_design"; "system_web"; "system_web_services";
-		end
-
+	all dot_net_base: "F:\Src\dotnet\library.net"
+	
 external
 	assembly: 	
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
@@ -35,11 +30,12 @@ external
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\SYSTEM.WINDOWS.FORMS.DLL",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\Accessibility.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Data.dll",
-			"F:\Src\dotnet\reflection\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
-			"F:\Src\dotnet\reflection\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-	 		"F:\Src\dotnet\reflection\generated\emitter_generated\NewEmitterMain.exe",
-	 		"F:\Src\dotnet\reflection\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
-	 		"F:\Src\dotnet\reflection\generated\support_generated\ISE.Reflection.Support.dll",
-	 		"F:\Src\dotnet\reflection\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
-	 		"F:\Src\dotnet\reflection\assembly_manager\gac_browser\WindowsDirectoryExtractor.dll"
+			"F:\Src\dotnet\reflection_interface\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
+			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\NewEmitterMain.exe",
+	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+	 		"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
+	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
+	 		"F:\Src\dotnet\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
+	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\WindowsDirectoryExtractor.dll"
 end

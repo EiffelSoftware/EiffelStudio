@@ -24,6 +24,49 @@ feature -- Basic operations
 				Result := window
 			end	
 		end
+		
+	x_position_relative_to_window (widget: EV_WIDGET): INTEGER is
+			-- `Result' is the x position of `widget' relative to
+			-- the EV_WINDOW containing `widget'.
+			-- If `widget' is not contained in an EV_WINDOW, then
+			-- there will be problems.
+		local
+			window: EV_WINDOW
+		do
+			Result := Result + widget.x_position
+			window ?= widget.parent
+			if window = Void then
+				if widget.parent /= Void then
+					Result := Result + x_position_relative_to_window (widget.parent)
+				else
+					check
+						Widget_was_not_parented_in_a_window: False
+					end
+				end
+			end
+		end
+		
+	y_position_relative_to_window (widget: EV_WIDGET): INTEGER is
+			-- `Result' is the y position of `widget' relative to
+			-- the EV_WINDOW containing `widget'.
+			-- If `widget' is not contained in an EV_WINDOW, then
+			-- there will be problems.
+		local
+			window: EV_WINDOW
+		do
+			Result := Result + widget.y_position
+			window ?= widget.parent
+			if window = Void then
+				if widget.parent /= Void then
+					Result := Result + y_position_relative_to_window (widget.parent)
+				else
+					check
+						Widget_was_not_parented_in_a_window: False
+					end
+				end
+			end
+		end
+		
 
 	extend_no_expand (a_box: EV_BOX; a_widget: EV_WIDGET) is
 			-- Extend `a_widget' into `a_box' and disable expandability.

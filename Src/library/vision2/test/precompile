@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Make a temporary directory.
+cd /tmp
+tmpdir=v2_precompile_$$
+mkdir $tmpdir
+cd $tmpdir
+
+# All platforms except for windows use GEL.
+platform_lib=gel
+platform_sep='/'
+if [ uname | grep CYGWIN > /dev/null 2>&1 ]
+then
+	platform_lib=wel
+	platform_sep='\\'
+fi
+
+# Check out base, event, the platform library and vision2.
+cvs -d :pserver:$USER@cvs:/home/cvs co base > /dev/null 2>&1
+cvs -d :pserver:$USER@cvs:/home/cvs co event > /dev/null 2>&1
+cvs -d :pserver:$USER@cvs:/home/cvs co $platform_lib > /dev/null 2>&1
+cvs -d :pserver:$USER@cvs:/home/cvs co vision2 > /dev/null 2>&1
+
+# Delete files that are marked "Not for release".
+cd vision2
+make > /dev/null 2>&1
+for file in `find . -name '*.e'`
+do
+	if grep "^--| FIXME Not for release" $file > /dev/null 2>&1
+	then
+		rm -f $file
+	fi
+done
+cd ..
+
+# Create an Ace file for precompilation.
+echo "system test" > Ace.ace
+echo "root ANY" >> Ace.ace
+echo "cluster" >> Ace.ace
+echo "dev: \"${platform_sep}tmp$platform_sep$tmpdir\"" >> Ace.ace
+echo "event(dev): \"\$${platform_sep}event\"" >> Ace.ace
+echo "$platform_lib(dev): \"\$${platform_sep}$platform_lib\"" >> Ace.ace
+echo "all vision2(dev): \"\$${platform_sep}vision2\"" >> Ace.ace
+echo "  exclude" >> Ace.ace
+echo "    \"mswin\";" >> Ace.ace
+echo "    \"new_figures\";" >> Ace.ace
+echo "    \"obsolete\";" >> Ace.ace
+echo "    \"test\";" >> Ace.ace
+echo "    \"release\";" >> Ace.ace
+echo "  end" >> Ace.ace
+echo "all base(dev): \"\$${platform_sep}base\"" >> Ace.ace
+echo "  exclude" >> Ace.ace
+echo "    \"table_eiffel3\";" >> Ace.ace
+echo "  end" >> Ace.ace
+echo "end" >> Ace.ace
+
+# Run the compiler.
+if es4 -precompile -stop > out 2>&1
+then
+	cd /tmp
+	rm -rf $tmpdir
+	exit 0
+else
+	cat out
+	cd /tmp
+	rm -rf $tmpdir
+	exit 1
+fi

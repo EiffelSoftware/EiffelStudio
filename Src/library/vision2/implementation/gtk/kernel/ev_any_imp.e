@@ -54,8 +54,6 @@ feature {EV_ANY_I} -- Access
 				print (generator + " created%N")
 			end
 			feature {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
-		ensure
-			c_object_assigned: c_object = a_c_object
 		end
 
 	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
@@ -99,23 +97,6 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 		end
 
 feature {EV_ANY_I} -- Event handling
-
-	signal_connect (
-		a_signal_name: STRING;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
-		) is
-			-- Connect `an_agent' to `a_signal_name'.
-			-- Use `translate' to convert GTK+ event data to TUPLE.
-		require
-			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.is_empty
-			an_agent_not_void: an_agent /= Void
-		do
-			real_signal_connect (c_object, a_signal_name, an_agent, translate)
-		ensure
-			signal_connection_id_positive: last_signal_connection_id > 0
-		end
 
 	signal_connect_true (
 		a_signal_name: STRING;
@@ -175,14 +156,6 @@ feature {EV_ANY_I} -- Event handling
 
 	last_signal_connection_id: INTEGER
 			-- GTK signal connection id of the most recent `signal_connect'.
-
-	signal_disconnect (a_connection_id: INTEGER) is
-			-- Disconnect signal connection with `a_connection_id'.
-		require
-			a_connection_id_positive: a_connection_id > 0
-		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, a_connection_id)
-		end
 		
 feature {NONE} -- Implementation
 
@@ -224,6 +197,8 @@ feature {NONE} -- Implementation
 			c_object_detached: c_object = NULL
 		end
 
+feature {EV_ANY_I} -- Access
+
 	visual_widget: POINTER is
 			-- Pointer to the widget viewed by user.
 		local
@@ -238,7 +213,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	App_implementation: EV_APPLICATION_IMP is
 			-- 

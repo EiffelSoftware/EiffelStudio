@@ -46,24 +46,27 @@ rt_public bool_t idr_string(IDR *idrs, char **sp, int maxlen)
 			return FALSE;
 		}
 		len = (unsigned int) strlen(string);
-		if (maxlen > 0 && (int) len > maxlen){
+		if (maxlen > 0 && (int) len > maxlen)
 			return FALSE;
-		}
-		if (maxlen < 0 && (int) len > -maxlen){
+
+		if (maxlen < 0 && (int) len > -maxlen)
 			len = (unsigned int) -maxlen;				/* Truncate string if too long */
-		}
-		if (!idr_u_int(idrs, &len)){		/* Emit string length */
+
+		if (!idr_u_int(idrs, &len))		/* Emit string length */
 			return FALSE;
-		}
+
 		CHK_SIZE(idrs, len);			/* Make sure there is enough room */
 		bcopy(string, idrs->i_ptr, len + 1);
 	} else {
-		if (!idr_u_int(idrs, &len)){		/* Get string length */
+		if (!idr_u_int(idrs, &len))		/* Get string length */
 			return FALSE;
-		}
-		if (maxlen != 0 && (int) len > maxlen){
+
+		if (maxlen > 0 && (int) len > maxlen)
 			return FALSE;
-		}
+
+		if (maxlen < 0 && (int) len > -maxlen)
+			return FALSE;
+
 		string = *sp;
 		if (string == (char *) 0) {
 			string = malloc(len + 1);	/* Don't forget trailing null byte */

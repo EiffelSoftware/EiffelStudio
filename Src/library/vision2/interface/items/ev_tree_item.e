@@ -21,7 +21,7 @@ inherit
 
 		end
 
-	EV_ITEM_LIST [EV_TREE_ITEM]
+	EV_TREE_ITEM_HOLDER
 		redefine
 			implementation,
 			create_action_sequences
@@ -176,6 +176,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/07 01:32:10  king
+--| Now inheriting from ev_tree_item_holder
+--|
 --| Revision 1.35  2000/03/01 20:28:52  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -23,6 +23,9 @@ inherit
 		end
 		
 	GB_CONSTANTS
+		undefine
+			default_create
+		end
 	
 	GB_SHARED_STATUS_BAR
 		undefine

@@ -150,12 +150,12 @@ feature -- Status setting
 			-- Set `left_margin' to `a_margin'.
 		local
 			screen_dc: WEL_SCREEN_DC
-		do
+		do			
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
 			
-			set_start_indent (pixel_to_point (screen_dc, a_margin) * 20)
+			set_start_indent (pixel_to_point (screen_dc, a_margin * 20))
 			
 			screen_dc.release
 		end
@@ -169,7 +169,7 @@ feature -- Status setting
 			create screen_dc
 			screen_dc.get
 			
-			set_right_indent (pixel_to_point (screen_dc, a_margin) * 20)
+			set_right_indent (pixel_to_point (screen_dc, a_margin * 20))
 			
 			screen_dc.release
 		end
@@ -183,7 +183,7 @@ feature -- Status setting
 			create screen_dc
 			screen_dc.get
 			
-			set_space_before (pixel_to_point (screen_dc, a_spacing) * 20)
+			set_space_before (pixel_to_point (screen_dc, a_spacing * 20))
 			
 			screen_dc.release
 		end
@@ -196,7 +196,7 @@ feature -- Status setting
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			set_space_after (pixel_to_point (screen_dc, a_spacing) * 20)
+			set_space_after (pixel_to_point (screen_dc, a_spacing * 20))
 			
 			screen_dc.release
 		end

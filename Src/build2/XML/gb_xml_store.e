@@ -194,7 +194,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 					check
 						gb_ev_any_exists: gb_ev_any /= Void
 					end
-					
+					gb_ev_any.set_object (an_object)
 					gb_ev_any.add_object (an_object.object)
 					new_type_element := new_child_element (element, vision2_type, "")
 					element.force_last (new_type_element)	
@@ -241,7 +241,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			namespace: XM_NAMESPACE
-			constants_list: ARRAYED_LIST [GB_CONSTANT]
+			constants_list: HASH_TABLE [GB_CONSTANT, STRING]
 		do
 			object_count := object_handler.objects.count
 			objects_written := 0
@@ -258,7 +258,24 @@ feature {GB_CODE_GENERATOR} -- Implementation
 
 				-- Add `application_element' as the root element of `document'.
 			document.force_first (application_element)
+			
+				-- Firstly store all constants.
+			 constants_list := constants.all_constants
+			 
+			 window_element := create_widget_instance (application_element, Constants_string)
+					application_element.force_last (window_element)
+			from
+				constants_list.start
+			until
+				constants_list.off
+			loop
+				new_type_element := new_child_element (window_element, constant_string, "")
+					window_element.force_last (new_type_element)
+					constants_list.item (constants_list.key_for_iteration).generate_xml (new_type_element)
+				constants_list.forth
+			end
 
+				-- Now store all directories and windows.
 			from 
 				window_selector.start
 			until
@@ -296,21 +313,6 @@ feature {GB_CODE_GENERATOR} -- Implementation
 					item_is_directory_or_window: window_selector_item /= Void or window_selector_layout /= Void
 				end
 				window_selector.forth
-			end
-			 	--	Now store all constants.
-			 constants_list := constants.all_constants
-			 
-			 window_element := create_widget_instance (application_element, Constants_string)
-					application_element.force_last (window_element)
-			from
-				constants_list.start
-			until
-				constants_list.off
-			loop
-				new_type_element := new_child_element (window_element, "Constant", "")
-					window_element.force_last (new_type_element)
-					constants_list.item.generate_xml (new_type_element)
-				constants_list.forth
 			end
 		end
 		

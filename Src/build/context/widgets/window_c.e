@@ -67,6 +67,12 @@ feature -- Specification
 			--| configure events to be queued at the end of the sequence
 			--| recording geometry commands out of sequence.
 		
+feature -- Default event
+	default_event: MOUSE_ENTER_EV is
+		do
+			Result := mouse_enter_ev
+		end	
+
 feature -- Setting values
 
 	set_default_position (b: BOOLEAN) is

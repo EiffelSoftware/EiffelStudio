@@ -43,6 +43,12 @@ feature
 
 	widget: ARROW_B;
 
+feature -- Default event
+
+	default_event: BUT_ACT_EV is
+		do
+			Result := but_act_ev
+		end
 	
 feature {NONE}
 

@@ -41,7 +41,14 @@ feature
 
 	widget: SCALE;
 
+
+feature -- Default event
+	default_event: VALUE_CHANGED_EV is
+		do
+			Result := value_changed_ev
+		end
 	
+
 feature {NONE}
 
 	namer: NAMER is

@@ -49,6 +49,13 @@ feature
 					Context_const.Attribute_format_nbr);
 		end;
 
+feature -- Default event
+
+	default_event: TEXT_MODIFIED_EV is
+		do
+			Result := text_modify_ev
+		end
+
 feature {NONE}
 
 	namer: NAMER is

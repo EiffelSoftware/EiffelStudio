@@ -8,7 +8,7 @@ indexing
 deferred class CONTEXT  
 
 inherit
-
+	SHARED_EVENTS
 	SHARED_MODE
 		rename
 			current_mode as executing_or_editing_mode
@@ -36,7 +36,7 @@ inherit
 		rename
 			target as widget
 		redefine
-			process_attribute, compatible
+			process_attribute, compatible, process_instance
 		end
 	REMOVABLE
 	NAMABLE
@@ -207,6 +207,7 @@ feature {NONE}
 	compatible (st: STONE): BOOLEAN is
 		do
 			Result := st.stone_type = Stone_types.attribute_type
+					or st.stone_type = Stone_types.command_type
 		end
 
 	process_attribute (dropped: ATTRIB_STONE) is
@@ -214,6 +215,24 @@ feature {NONE}
 			-- By default, process only the attrib_stones
 		do
 			dropped.copy_attribute (data)
+		end
+
+	process_instance (dropped: CMD_INST_STONE) is
+			-- Retarget the associted command tool creating
+			-- a new instance of `dropped.data'.
+
+		local
+			the_stone: COMMAND_TOOL_HOLE
+			the_behavior: BEHAVIOR
+		do
+			the_stone ?= dropped
+			if the_stone /= Void then
+				!! the_behavior.make
+				the_behavior.set_context(Current)
+				the_behavior.set_input_data(default_event)
+				the_behavior.set_output_data(the_stone.data)
+			--	the_behavior.drop_pair
+			end
 		end
 
 	-- ************************
@@ -994,7 +1013,12 @@ feature -- Font
 	font_name_modified: BOOLEAN
 
 	
-feature {NONE}
+feature {NONE} 
+
+	default_event: EVENT is
+			-- Default event.
+		deferred
+		end	
 
 	copy_attributes (other_context: like Current) is
 			-- Copy the attributes of Current to `other_context'

@@ -20,6 +20,12 @@ inherit
 			create_context
 		end
 	
+feature -- Default event
+	default_event: MOUSE_ENTER_EV is
+		do
+			Result := mouse_enter_ev
+		end
+
 feature 
 
 	--full_name: STRING is

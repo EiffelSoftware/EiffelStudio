@@ -66,6 +66,12 @@ feature
 			horizontal_line.draw;
 			vertical_line.draw;
 		end;
+
+feature -- Default event
+	default_event: INPUT_EV is
+		do
+			Result := input_ev
+		end
 	
 feature {NONE}
 

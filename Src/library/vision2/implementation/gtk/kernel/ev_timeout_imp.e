@@ -1,6 +1,5 @@
 indexing
 	description: "Eiffel Vision timeout. GTK+ implementation."
-		" EiffelVision timeout, implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,6 +103,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/02 15:14:10  brendel
+--| Removed redundent line.
+--|
 --| Revision 1.6  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

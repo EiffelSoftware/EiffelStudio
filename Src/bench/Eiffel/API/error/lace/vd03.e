@@ -24,7 +24,7 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Unknstn cluster name: ");
+			st.add_string ("Unknown cluster name: ");
 			st.add_string (cluster_name);
 			st.add_new_line
 		end;

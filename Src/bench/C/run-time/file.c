@@ -353,8 +353,7 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	return (EIF_INTEGER) buf.st_size;
 }
 
-rt_public EIF_BOOLEAN file_feof(fp)
-FILE *fp;      
+rt_public EIF_BOOLEAN file_feof(FILE *fp) 
 {
 	return (EIF_BOOLEAN) (feof(fp) != 0);	/* End of file? */
 }

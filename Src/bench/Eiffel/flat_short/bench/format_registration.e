@@ -13,6 +13,10 @@ inherit
 	SHARED_SERVER;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
+	AST_REGISTRATION
+		rename
+			class_ast as current_ast
+		end;
 	MEMORY
 
 creation
@@ -38,9 +42,8 @@ feature -- Initialization
 		do
 			!! processed_parents.make (5);
 			!! categories.make;
-			!! current_category.make;
 			!! invariant_server.make;
-			!! class_comments.make;
+			!! current_category.make;
 		end;
 
 feature -- Properties
@@ -57,11 +60,11 @@ feature -- Properties
 	current_feature_table: FEATURE_TABLE;
 			-- Feature table for for current_ast structure
 
-	comments_server: EIFFEL_FILE;
-			-- Server for comments
-
-	categories:	SORTED_TWO_WAY_LIST [CATEGORY];
+	categories:	PART_SORTED_TWO_WAY_LIST [CATEGORY];
 			-- Categories for class_c
+
+	class_comments: CLASS_COMMENTS;
+			-- Class comments for precompiled current_class
 
 	current_category: CATEGORY;
 			-- Current category 
@@ -71,9 +74,6 @@ feature -- Properties
 
 	target_ast: like current_ast;
 			-- Ast structure for target_class
-
-	current_ast: CLASS_AS_B;
-			-- Current ast structure being analyzed
 
 	processed_parents: ARRAYED_LIST [CLASS_C];
 			-- Processed parents when analyzing ancestors
@@ -89,16 +89,50 @@ feature -- Properties
 	   		-- Table containing replicated (conceptual) features of
 	   		-- class being flattend indexed by body_index
 
-	class_comments: LINKED_LIST [EIFFEL_COMMENTS];
-			-- Comments at the top of the class 
-			-- text file for target_class
-
 feature -- Access
+
+	already_extracted_comments: BOOLEAN is
+			-- Has the comments been extracted for the
+			-- current class ast being registered
+		do
+			Result := eiffel_file = Void
+		ensure then
+			valid_result: Result implies current_class.is_precompiled
+		end;
 
 	chained_assertion_of_fid (fid: INTEGER): CHAINED_ASSERTIONS is
 			-- Chained assertion for feature id `fid'
 		do
 			Result := assert_server.chained_assertion_of_fid (fid)
+		end;
+
+	feature_clause_comments (ast: FEATURE_CLAUSE_AS_B): EIFFEL_COMMENTS is
+			-- Feature clause comments for `ast'
+		require
+			non_void_ast: ast /= Void;
+			consistency: not current_class.is_precompiled implies
+					eiffel_file.current_feature_clause = ast
+		do
+			if current_class.is_precompiled then
+				Result := class_comments.item (ast.position)
+			else
+				Result := eiffel_file.current_feature_clause_comments
+			end
+		end;
+
+	feature_comments (ast: FEATURE_AS_B): EIFFEL_COMMENTS is
+			-- Feature comments for feature `ast'
+		require
+			non_void_ast: ast /= Void;
+			consistency: not current_class.is_precompiled implies
+					eiffel_file.current_feature.has_feature_name 
+								(ast.feature_names.first)
+		do
+			if current_class.is_precompiled then
+				Result := class_comments.item (ast.start_position)
+			else
+				Result := eiffel_file.current_feature_comments
+			end
 		end;
 
 feature -- Setting
@@ -110,7 +144,6 @@ feature -- Setting
 			valid_categories: categories /= Void;
 			valid_processed_parents: processed_parents /= Void;
 			valid_current_category: current_category /= Void;
-			valid_class_comments: class_comments /= Void;
 		do
 			target_class := target;
 		ensure
@@ -124,8 +157,8 @@ feature -- Element change
 			-- then only fill the data structures for target_class. 
 			-- Otherwize, fill the data structures of the inherited
 			-- classes.
-		local
-			local_comments: EIFFEL_COMMENTS;
+		require
+			valid_target_class: target_class /= Void
 		do
 		-- initialize
 			target_feature_table := feat_tbl_server.item (target_class.id);
@@ -147,16 +180,7 @@ debug ("FLAT_SHORT")
 end;
 			current_ast := current_class_ast;
 			target_ast := current_ast;
-			current_ast.register (Current);
-			from
-				comments_server.go_before (1);
-				local_comments := comments_server.trailing_comment;
-			until
-				local_comments = void
-			loop
-				class_comments.extend (local_comments);
-				local_comments := comments_server.next_comment;
-			end;
+			register_current_ast;
 			if not current_class_only then
 				parse_ancestors;
 			end;
@@ -166,16 +190,16 @@ debug ("FLAT_SHORT")
 end;
 		end;
 
-	register_replicated_feature (feat_adapter: FEATURE_ADAPTER) is
-			-- Register replicated feature `f'.
+	record_replicated_feature (feat_adapter: FEATURE_ADAPTER) is
+			-- Record replicated feature `f' in `category'.
 		require
 			valid_feat_adapter: feat_adapter /= Void
 		do
 			current_category.add (feat_adapter);
 		end;
 
-	register_feature (feat_adapter: FEATURE_ADAPTER) is
-			-- Register feature `f'.
+	record_feature (feat_adapter: FEATURE_ADAPTER) is
+			-- Record feature `f' in `current category'.
 		require
 			valid_feat_adapter: feat_adapter /= Void
 		do
@@ -187,35 +211,59 @@ end;
 			end
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
-			-- Register feature_clause `feature_clause' after
-			-- registering the features.
-		require
-			valid_feature_clause: feature_clause /= Void
-		do
-			if not current_category.empty then
-				current_category.set_comment (feature_clause.comment);
-				if order_same_as_text then
-					categories.finish;
-					categories.put_right (current_category);
-				else
-					search_comment (feature_clause.comment);
-					if not categories.after then
-						categories.item.merge (current_category);
-					else
-						categories.extend (current_category);
-					end;
-				end
-			end;
-			!! current_category.make;
-		end;
-	
-	register_invariant (inv: INVARIANT_ADAPTER) is
-			-- Register invariant `i'.
+	record_invariant (inv: INVARIANT_ADAPTER) is
+			-- Record invariant `inv' in format.
 		require
 			valid_inv: inv /= Void
 		do
 			invariant_server.extend (inv);
+		end;
+
+	register_feature (feature_as: FEATURE_AS_B) is
+			-- Register feature `feature_as' for format
+			-- processing
+		local
+			feat_adapter: FEATURE_ADAPTER;
+		do
+			!! feat_adapter;
+			feat_adapter.register (feature_as, Current);
+		end;
+
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS_B) is
+			-- Register feature clause `feature_clause' after registering
+			-- features.
+			--| The reason that the feature clause is register last is
+			--| is that the registered features might change their export
+			--| policy and would require it to be placed in a separate
+			--| feature clause.
+		local
+			comments: EIFFEL_COMMENTS
+		do
+			if not current_category.empty then
+				comments := feature_clause_comments (feature_clause);
+				current_category.set_comments (comments);
+				if order_same_as_text then
+					categories.finish;
+					categories.put_right (current_category);
+				else
+					search_comment (comments);
+					if not categories.after then
+						categories.item.merge (current_category);
+					else
+						categories.extend (current_category);
+					end
+				end
+			end;
+			!! current_category.make;
+		end;
+
+	register_invariant (invariant_part: INVARIANT_AS_B) is
+			-- Register invariant `invariant_part'. 
+		local
+			inv_adapter: INVARIANT_ADAPTER
+		do
+			!! inv_adapter;
+			inv_adapter.register (invariant_part, Current);	
 		end;
 
 feature -- Removal
@@ -230,8 +278,8 @@ feature -- Removal
 			processed_parents.wipe_out;
 			categories.wipe_out;
 			current_category.wipe_out;
-			class_comments.wipe_out;
 			assert_server := Void;
+			class_comments := Void;
 			target_replicated_feature_table := Void;
 		end;
 
@@ -242,6 +290,7 @@ feature -- Removal
 			current_class := Void;
 			current_feature_table := Void;
 			target_replicated_feature_table := Void;
+			eiffel_file := Void;
 		end;
 
 feature -- Output
@@ -250,13 +299,18 @@ feature -- Output
 			-- Format categories into `ctxt'.
 		require
 			valid_ctxt: ctxt /= Void
+		local
+			cat: like current_category
 		do
 			from
 				categories.start;
 			until
 				categories.after
 			loop
-				categories.item.format (ctxt);
+				cat := categories.item;
+				if not cat.empty then
+					cat.format (ctxt);
+				end;
 				categories.forth;
 			end;	
 		end;
@@ -268,21 +322,6 @@ feature -- Output
 		do
 			invariant_server.format (ctxt);
 		end;
-
-	format_class_comments (ctxt: FORMAT_CONTEXT_B) is
-			-- Format comments into `ctxt'.
-		do
-			from
-				class_comments.start
-			until
-				class_comments.after
-			loop
-				ctxt.put_comment (class_comments.item);
-				ctxt.new_line;
-				ctxt.new_line;
-				class_comments.forth;
-			end;
-		end;	
 
 feature -- EiffelCase output
 
@@ -327,7 +366,7 @@ feature -- EiffelCase output
 					s_clauses.extend (f_clause)
 				end;
 				s.set_feature_clause_list (s_clauses)
-				invariant_server.storage_info (s);
+				invariant_server.store_case_info (s);
 			end;
 		end;
 
@@ -342,12 +381,15 @@ feature {NONE} -- Implementation
 			class_file_name: STRING;
 			vd21: VD21;
 		do
-			--!! comments_server.make (file);
-			!! comments_server.dummy_make;
 			if current_class.is_precompiled or else
 				not current_class.lace_class.date_has_changed
 			then
-					current_feature_table := current_class.feature_table;
+debug ("FLAT_SHORT")
+	io.error.putstring ("Retrieving class ast: ");
+	io.error.putstring (current_class.class_name);
+	io.error.new_line;
+end;
+				current_feature_table := current_class.feature_table;
 				Result := Ast_server.item (current_class.id)
 			else
 debug ("FLAT_SHORT")
@@ -385,19 +427,14 @@ end;
 
 	search_comment (comment: EIFFEL_COMMENTS) is
 			-- Search comment `comment' for a category.
-		local
-			stop: BOOLEAN
 		do
 			from
 				categories.start;
 			until	
-				categories.after
-				or else stop
+				categories.after or else 
+				categories.item.same_comment (comment)
 			loop
-				stop := categories.item.same_comment (comment);
-				if not stop then
-					categories.forth;
-				end
+				categories.forth
 			end;
 		end;
 
@@ -423,7 +460,7 @@ debug ("FLAT_SHORT")
 	io.error.new_line;
 end;
 					current_ast := current_class_ast;
-					current_ast.register (Current);
+					register_current_ast;
 					processed_parents.extend (current_class);
 					index := parents.index;
 					parse_ancestors;
@@ -433,11 +470,51 @@ end;
 			end;
 		end;
 
+	register_current_ast is
+			-- Register the current_ast in the format registration.
+		do
+			if current_class.is_precompiled then
+				if Class_comments_server.has (current_class.id) then
+					class_comments := Class_comments_server.disk_item (current_class.id);
+				else
+					!! class_comments.make (current_class.id, 0);
+				end;
+				debug ("COMMENTS")
+					if class_comments = Void then
+						io.error.putstring ("Comments not exist for class: ")
+						io.error.putstring (current_class.class_name);
+						io.error.new_line;
+					else
+						io.error.putstring ("Comments for class: ")
+						io.error.putstring (current_class.class_name);
+						io.error.new_line;
+						class_comments.trace
+					end;
+				end;
+				eiffel_file := Void;
+			else
+				class_comments := Void;
+				!! eiffel_file.make (current_class.file_name, current_ast.end_position);
+			end;
+			current_ast.register (Current);
+		ensure
+			consistency: (eiffel_file = Void) = (class_comments /= Void)
+		end;
+
 feature {NONE} -- External features
 
 	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
 		external
 			"C"
 		end;
+
+invariant
+	
+	valid_comments: (current_class /= Void and then
+				current_class.is_precompiled) implies 
+						class_comments /= Void
+	valid_eiffel_file: (current_class /= Void and then
+				not current_class.is_precompiled) implies 
+						eiffel_file /= Void
 
 end -- class FORMAT_REGISTRATION

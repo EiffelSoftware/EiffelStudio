@@ -113,8 +113,8 @@ feature {LINK_FIGURE} -- Implementation
 		do
 			link_figure.source.world.context_editor.history.do_named_undoable (
 				Interface_names.t_Diagram_move_midpoint_cmd,
-				~change_position (mover.point.x, mover.point.y),
-				~change_position (saved_x, saved_y))
+				agent change_position (mover.point.x, mover.point.y),
+				agent change_position (saved_x, saved_y))
 		end
 
 	change_position (a_x, a_y: INTEGER) is

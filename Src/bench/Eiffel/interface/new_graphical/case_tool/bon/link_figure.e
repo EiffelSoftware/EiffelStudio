@@ -147,8 +147,8 @@ feature -- Status setting
 			midpoint.set (Current, new_line, mover)
 			midpoint.set_point (mover.point)
 			mover.extend (midpoint)
-			mover.move_actions.extend (~on_move)
-			mover.move_actions.force_extend (~update_scrollable_area_size)
+			mover.move_actions.extend (agent on_move)
+			mover.move_actions.force_extend (agent update_scrollable_area_size)
 			mover.start_actions.extend (agent start_capture)
 			mover.end_actions.extend (agent stop_capture)
 			
@@ -170,10 +170,10 @@ feature -- Status setting
 
 			extend (new_line)
 
-			mover.end_actions.extend_kamikaze (~update_origin)
+			mover.end_actions.extend_kamikaze (agent update_origin)
 			if not before_drag and source /= target then
-				mover.start_actions.extend (midpoint~save_midpoint_position)
-				mover.end_actions.extend (midpoint~extend_history)
+				mover.start_actions.extend (agent midpoint.save_midpoint_position)
+				mover.end_actions.extend (agent midpoint.extend_history)
 			end
 			
 			source.world.full_redraw_performed
@@ -238,7 +238,7 @@ feature -- Status setting
 
 			extend (new_line)
 
-			mp.mover.end_actions.extend_kamikaze (~update_origin)
+			mp.mover.end_actions.extend_kamikaze (agent update_origin)
 			cur_origin := actual_origin
 			if cur_origin /= Void then
 				mp.set_origin (actual_origin)
@@ -766,8 +766,8 @@ feature {EB_LINK_TOOL_COMMAND, EB_DELETE_DIAGRAM_ITEM_COMMAND} -- Implementation
 				insert_midpoint (1, mp.x, mp.y, False)
 				new_midpoint := midpoints.i_th (i)
 				new_mover := new_midpoint.mover
-				new_mover.move_actions.extend (~on_move)
-				new_mover.move_actions.force_extend (~update_scrollable_area_size)
+				new_mover.move_actions.extend (agent on_move)
+				new_mover.move_actions.force_extend (agent update_scrollable_area_size)
 				new_mover.start_actions.extend (agent start_capture)
 				new_mover.end_actions.extend (agent stop_capture)
 				
@@ -860,7 +860,7 @@ feature {NONE} -- Implementation
 			-- Create new line segment with default values.
 		do
 			create Result
-			Result.pointer_button_press_actions.extend (~on_click (?, ?, ?, ?, ?, ?, ?, ?, Result))
+			Result.pointer_button_press_actions.extend (agent on_click (?, ?, ?, ?, ?, ?, ?, ?, Result))
 		end
 
 	start_drag (mp: LINK_MIDPOINT; i: INTEGER) is
@@ -869,7 +869,7 @@ feature {NONE} -- Implementation
 			mp_not_void: mp /= Void
 		do
 			mp.mover.enable_capture
-			mp.mover.end_actions.extend_kamikaze (~end_drag (mp, i))
+			mp.mover.end_actions.extend_kamikaze (agent end_drag (mp, i))
 			update
 		end
 	
@@ -877,12 +877,12 @@ feature {NONE} -- Implementation
 			-- The first move of `i'-th point, which is `p', just ended.
 			-- If `i'-th point is not `p', re-create `p'.
 		do
-			p.mover.start_actions.extend (p~save_midpoint_position)
-			p.mover.end_actions.extend (p~extend_history)
+			p.mover.start_actions.extend (agent p.save_midpoint_position)
+			p.mover.end_actions.extend (agent p.extend_history)
 			source.world.context_editor.history.register_named_undoable (
 				Interface_names.t_Diagram_insert_midpoint_cmd,
-				[<<~put_midpoint (p, i - 1), ~update, ~project>>],
-				[<<~remove_midpoint (p), ~update, ~project>>])
+				[<<agent put_midpoint (p, i - 1), agent update, agent project>>],
+				[<<agent remove_midpoint (p), agent update, agent project>>])
 		end
 
 	remove_midpoints is

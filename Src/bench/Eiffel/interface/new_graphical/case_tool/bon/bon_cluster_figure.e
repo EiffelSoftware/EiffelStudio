@@ -1027,10 +1027,10 @@ feature {CLUSTER_FIGURE} -- Events
 					-- Current has been moved inside its parent if it has one
 				cluster_diagram.context_editor.history.do_named_undoable (
 					"Move cluster",
-					[<<point~set_position (point.x, point.y),
-						~update_and_project>>],
-					[<<point~set_position (saved_x, saved_y),
-						~update_and_project>>])
+					[<<agent point.set_position (point.x, point.y),
+						agent update_and_project>>],
+					[<<agent point.set_position (saved_x, saved_y),
+						agent update_and_project>>])
 			else
 					point.set_position (saved_x, saved_y)
 					update_and_project

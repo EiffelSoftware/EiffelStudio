@@ -513,7 +513,7 @@ feature -- Implementation
 			until
 				lower_bound = upper_bound
 			loop
-				curr_assembly := assemblies.ith_assembly_info (lower_bound)
+				curr_assembly := assemblies.i_th (lower_bound)
 				from
 					gac_assembly_list.start
 					add_to_gac_dialog := True

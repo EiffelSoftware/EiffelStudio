@@ -201,16 +201,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
 					create propvalue.make (name)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string, propvalue.item)					
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
 				end
 				if applicable_attributes.font_height then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
 				end
 				if applicable_attributes.font_shape then
 					if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string, 2)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 2)
 					else
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string, 0)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string.item, 0)
 					end
 				end
 				if applicable_attributes.font_weight then
@@ -219,19 +219,19 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					when
 						feature {EV_FONT_CONSTANTS}.weight_bold
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_bold)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_bold)
 					when
 						feature {EV_FONT_CONSTANTS}.weight_regular
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_normal)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_normal)
 					when
 						feature {EV_FONT_CONSTANTS}.weight_thin
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_ultra_light)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_ultra_light)
 					when
 						feature {EV_FONT_CONSTANTS}.weight_black
 					then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_heavy)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, feature {EV_FONT_IMP}.pango_weight_heavy)
 					end				
 				end
 			end
@@ -241,7 +241,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string, color_struct, default_pointer)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string.item, color_struct, default_pointer)
 							
 			end
 
@@ -249,105 +249,78 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (bcolor |>> 16) * 257)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((bcolor |<< 16) |>> 24) * 257)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((bcolor |<< 24) |>> 24) * 257)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, background_gdk_string, color_struct, default_pointer)			
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, background_gdk_string.item, color_struct, default_pointer)			
 			end	
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string, is_striked_out)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
 				end
 				if applicable_attributes.effects_underlined then 
 					if is_underlined then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
 					else
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_none_enum)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_none_enum)
 					end
 				end
 				if applicable_attributes.effects_vertical_offset then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string, vertical_offset)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string.item, vertical_offset)
 				end
 			end
 		end
 		
-	family_string: POINTER is
+	family_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("family")
-			Result := a_str.item	
+		once
+			create Result.make ("family")	
 		end
 
-	size_string: POINTER is
+	size_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("size")
-			Result := a_str.item	
+		once
+			create Result.make ("size")	
 		end
 
-	style_string: POINTER is
+	style_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("style")
-			Result := a_str.item	
+		once
+			create Result.make ("style")
 		end
 
-	weight_string: POINTER is
+	weight_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("weight")
-			Result := a_str.item	
+		once
+			create Result.make ("weight")	
 		end
 
-	foreground_gdk_string: POINTER is
+	foreground_gdk_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("foreground-gdk")
-			Result := a_str.item	
+		once
+			create Result.make ("foreground-gdk")	
 		end
 
-	background_gdk_string: POINTER is
+	background_gdk_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("background-gdk")
-			Result := a_str.item	
+		once
+			create Result.make ("background-gdk")	
 		end
 
-	underline_string: POINTER is
+	underline_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("underline")
-			Result := a_str.item	
+		once
+			create Result.make ("underline")	
 		end
 
-	strikethrough_string: POINTER is
+	strikethrough_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("strikethrough")
-			Result := a_str.item	
+		once
+			create Result.make ("strikethrough")	
 		end
 
-	rise_string: POINTER is
+	rise_string: EV_GTK_C_STRING is
 			-- String optimization
-		local
-			a_str: EV_GTK_C_STRING
-		do
-			create a_str.make ("rise")
-			Result := a_str.item	
+		once
+			create Result.make ("rise")	
 		end
 
 feature {NONE} -- Implementation

@@ -66,7 +66,11 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := weight < other.weight
+			if weight < other.weight then
+				Result := True
+			elseif weight = other.weight then
+				Result := internal_type.to_string.compare_to_string (other.internal_type.to_string) < 0
+			end
 		end
 
 	is_equal (other: like Current): BOOLEAN is

@@ -34,8 +34,7 @@ feature -- Access
 			-- Always room for one more tree item.
 		do
 			Result := False
-		end
-		
+		end		
 		
 feature {GB_OBJECT_HANDLER} -- Implementation
 		
@@ -60,6 +59,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				layout_item.go_i_th (position)
 				layout_item.put_left (an_object.layout_item)			
 			end
+			add_child (an_object, position)
 		end
 		
 feature {NONE} -- Implementation

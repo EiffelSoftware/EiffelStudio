@@ -20,6 +20,8 @@ inherit
 	GB_PARENT_OBJECT
 		export
 			{NONE} all
+		redefine
+			add_child_object
 		end
 
 	GB_SHARED_TOOLS
@@ -212,6 +214,7 @@ feature -- Access
 						layout_item.expand	
 					end
 				end
+				add_child (menu_object, 1)
 			else
 				widget ?= an_object.object
 				check
@@ -226,6 +229,7 @@ feature -- Access
 				if not layout_item.has (an_object.layout_item) then
 					layout_item.extend (an_object.layout_item)
 				end
+				add_child (an_object, children.count)
 			end
 		end
 		

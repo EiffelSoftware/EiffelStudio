@@ -88,17 +88,12 @@ feature {NONE} -- Initialization
 			register_basic_graphical_types
 			initialize_resources (System_general, Eiffel_preferences)
 			create pref_strs
-			if Platform_constants.is_windows then
-				pref_strs.Pixmaps_extension_cell.put ("ico")
-				create fn.make_from_string (Bitmaps_path)
-				fn.extend ("ico")
-				pref_strs.Pixmaps_path_cell.put (fn)
-			else
-				pref_strs.Pixmaps_extension_cell.put ("png")
-				create fn.make_from_string (Bitmaps_path)
-				fn.extend ("png")
-				pref_strs.Pixmaps_path_cell.put (fn)
-			end
+				-- Initialize pixmaps
+			pref_strs.Pixmaps_extension_cell.put ("png")
+			create fn.make_from_string (Bitmaps_path)
+			fn.extend ("png")
+			pref_strs.Pixmaps_path_cell.put (fn)
+
 
 				-- Initialization of compiler resources.
 			create new_resources.initialize

@@ -86,9 +86,11 @@ extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to t
 	dp = get_next_execution_vector();
 	while (dp && (sent < elem_nb)) {	/* While still some data to send */
 		if ((int) dp != EIF_IGNORE)
+		{
 			send_dump(s, dp);
+			sent++;
+		}
 		dp = get_next_execution_vector();
-		sent++;
 	}
 	restore_stacks();
 	send_ack(s, AK_OK);			/* End of list -- you got everything */

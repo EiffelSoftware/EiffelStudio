@@ -27,6 +27,12 @@ extern int eif_no_reclaim;		/* Call reclaim ion termination? */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 extern char *starting_working_directory;
 
+#ifdef EIF_WIN32
+/* Console management for Windows */
+extern void eif_console_cleanup (EIF_BOOLEAN);
+extern void eif_show_console (void);					/* Show the DOS console if needed */
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -24,6 +24,7 @@ feature
 				-- Type checking and maybe byte code production
 				-- for a class
 			associated_class.pass3;
+			associated_class.set_reverse_engineered (False)
 
 				-- No error happened: set the compilation status
 				-- of class `associated_class'

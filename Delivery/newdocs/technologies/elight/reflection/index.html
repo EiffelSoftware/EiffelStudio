@@ -2,6 +2,7 @@
 	<head>
 		<title>Reflection interface specification index</title>
 		<LINK REL="StyleSheet" HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="Reflection system, Index">
 	</head>
 
 	<body>
@@ -13,10 +14,10 @@
 		<br><br>
 
 			<p>
-				ISE reflection system is composed of four components interacting with each other: `Emitter.exe', `ISE.EiffelComponents.dll', `ISE.CodeGenerator.dll' and `ISE.ReflectionInterface.dll'.
-				The two entry points are `Emitter.exe' and `ISE.ReflectionInterface.dll':<br>
+				ISE reflection system is composed of five components interacting with each other: `ISE.Reflection.Emitter.exe', `ISE.Reflection.EiffelComponents.dll', `ISE.Reflection.Support.dll', `ISE.Reflection.CodeGenerator.dll' and `ISE.Reflection.ReflectionInterface.dll'.
+				The two entry points are `ISE.Reflection.Emitter.exe' and `ISE.Reflection.ReflectionInterface.dll':<br>
 				<ul>
-					<li>The emitter enables you to generate Eiffel classes and Xml files from a .NET assembly.</li>
+					<li>The emitter enables you to generate Eiffel classes and XML files from a .NET assembly.</li>
 					<li>The ISE reflection interface is aimed at connecting .NET names with corresponding Eiffel names by using XML files. It is a kind of database where you put XML files describing .NET types and you retrieve a more user-friendly type description. </li>
 				<ul>
 			</p>
@@ -29,7 +30,7 @@
 				</tr>
 				<tr height = 10></tr>
 				<tr>
-					<td><a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents.dll</a>
+					<td><a href = "./Eiffel_components.html" target = "_parent">2. ISE.Reflection.EiffelComponents.dll</a>
 						<table border = 0>
 							<tr>
 								<td width = 60></td>
@@ -48,7 +49,7 @@
 				</tr>
 				<tr height = 10></tr>
 				<tr>
-					<td><a href = "./reflection_interface.html" target = "_parent">3. ISE.ReflectionInterface.dll</a>
+					<td><a href = "./reflection_interface.html" target = "_parent">3. ISE.Reflection.ReflectionInterface.dll</a>
 
 						<table border = 0>
 						<tr>
@@ -96,7 +97,13 @@
 						<tr>
 							<td width = 60></td>
 							<td>
-								<a href = "./reflection_interface.html#hash_value" target = "_parent">3.3 MD5 Hash algorithm</a>
+								<a href = "./reflection_interface.html#removal" target = "_parent">3.3 How can I remove an assembly from the database?</a>
+							</td>
+						</tr>
+						<tr>
+							<td width = 60></td>
+							<td>
+								<a href = "./reflection_interface.html#hash_value" target = "_parent">3.4 MD5 Hash algorithm</a>
 							</td>
 						</tr>
 						</table>
@@ -104,7 +111,7 @@
 				</tr>
 				<tr height = 10></tr>
 				<tr>
-					<td><a href = "./code_generator.html" target = "_parent">4. ISE.CodeGenerator.dll</a>
+					<td><a href = "./code_generator.html" target = "_parent">4. ISE.Reflection.CodeGenerator.dll</a>
 						<table border = 0>
 							<tr>
 								<td width = 60></td>
@@ -131,7 +138,7 @@
 				</tr>
 				<tr height = 10></tr>
 				<tr>
-					<td><a href = "./emitter.html" target = "_parent">5. Emitter.exe</a>
+					<td><a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a>
 						<table border = 0>
 							<tr>
 								<td width = 60></td>

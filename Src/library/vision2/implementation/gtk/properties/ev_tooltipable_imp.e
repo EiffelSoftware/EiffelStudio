@@ -22,8 +22,18 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING
+	tooltip: STRING is
 			-- Tooltip that has been set.
+		local
+			tip_ptr: POINTER
+		do
+			tip_ptr := C.gtk_tooltips_data_get (c_object)
+			if tip_ptr /= NULL then
+				create Result.make_from_c (C.gtk_tooltips_data_struct_tip_text (tip_ptr))
+			else
+				Result := ""
+			end
+		end
 
 feature -- Element change
 
@@ -32,7 +42,6 @@ feature -- Element change
 		local
 			tempstr: ANY
 		do
-			tooltip := clone (a_text)
 			tempstr := tooltip.to_c
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
@@ -45,7 +54,6 @@ feature -- Element change
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
 	    do
-			tooltip := ""
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				c_object,

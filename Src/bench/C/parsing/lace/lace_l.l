@@ -86,7 +86,10 @@ int token_code;
 	struct token *key;
 	
 	/* truncation of identifiers */
-	length= (yyleng<IDLENGTH) ? yyleng:IDLENGTH;
+	length= yyleng;
+
+	if (length >= IDLENGTH)
+		return LAC_ERROR7;
 
 	/* Copy into `token_str' */
 	strncpy(token_str,yytext,length);
@@ -125,6 +128,7 @@ static int get_string()
 
 	s = token_str;			/* Statically allocated buffer */
 	start_position = end_position;
+	end_position++;
 
 	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH) {
 		end_position++;
@@ -170,6 +174,7 @@ static int get_string()
 		if (s == token_str)
 			return LAC_ERROR6;
 		else
+			end_position++;
 			return LAC_STRING;
 	}
 }

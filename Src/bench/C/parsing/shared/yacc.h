@@ -110,6 +110,7 @@ extern fnptr syntax3;				/* Routine for bad string extension */
 extern fnptr syntax4;				/* Routine for uncompleted string */
 extern fnptr syntax5;				/* Routine for bad character */
 extern fnptr syntax6;				/* Routine for empty string */
+extern fnptr syntax7;				/* Routine for identifier too long */
 
 /*
  * Id position managment

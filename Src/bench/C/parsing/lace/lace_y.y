@@ -64,6 +64,7 @@
 %token LAC_ERROR3
 %token LAC_ERROR4
 %token LAC_ERROR6
+%token LAC_ERROR7
 
 %type <node>			Ace System Root Cluster_mark Creation_procedure Clusters
 						Cluster_clause Cluster_tag Use Include

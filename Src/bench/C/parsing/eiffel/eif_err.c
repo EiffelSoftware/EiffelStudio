@@ -35,9 +35,17 @@ void yyerror(s)
 		 * of class ERROR_HANDLER.
 		 */
 		(*syntax4)(Error_handler);
+		break;
 	case EIF_ERROR5:
 		/* Bad character */
 		(*syntax5)(Error_handler);
+		break;
+	case EIF_ERROR7:
+		/* Identifier too long: call feature `make_id_too_long' of
+		 * class ERROR_HANDLER.
+		 */
+		(*syntax7)(Error_handler);
+		break;
 	default:
 		/* Common syntax error */
 		(*syntax1)(Error_handler);

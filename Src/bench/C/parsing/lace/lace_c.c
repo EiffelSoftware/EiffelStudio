@@ -54,7 +54,7 @@ void lp_init()
 	/* Initialization of the buffer with Eiffel routine 'make' of
 	 * class ID_SD.
 	 */
-	(*c_id_create)(id_string, (long) MAXLINELEN);
+	(*c_id_create)(id_string, (long) IDLENGTH);
 
 	/* Initialization of the list managment */
 	object_stack = (char **) cmalloc(STACK_CHUNK * sizeof(char *));

@@ -69,7 +69,7 @@ void eif_init()
 	/* Initialization of the buffer with Eiffel routine 'Create' of
 	 * class ID_AS.
 	 */
-	(*c_id_create)(id_string, (long) MAXLINELEN);
+	(*c_id_create)(id_string, (long) IDLENGTH);
 
 	/* Initialization of the formal generic type array. */
 	for(i=0; i<MAXG; i++) {

@@ -771,7 +771,7 @@ feature -- Form child status setting
 		end;
 
 	attach_left_to_widget (a_target: MEL_RECT_OBJ) is
-			-- Attach the left side of widget' to the left side of `a_target'.
+			-- Attach the left side of widget to the right side of `a_target'.
 		require
 			exists: not is_destroyed;
 			has_form_parent: parent.is_form;

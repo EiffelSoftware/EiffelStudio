@@ -1673,16 +1673,18 @@ feature -- PS
 			bd: INTEGER
 		do
 			bd := body_id;
-			if Body_server.has (bd) or else Rep_feat_server.has (bd) then
-				if is_code_replicated then
-					body := Rep_feat_server.item (bd)
-				else
-					body := Body_server.item (bd)
-				end;
-				!!Result.make (Current, c, body.start_position, body.end_position);
+			if Tmp_body_server.has (bd) then
+				body := Tmp_body_server.item (bd)
+			elseif Body_server.has (bd) then	
+				body := Body_server.item (bd)
+			elseif Rep_feat_server.has (bd) then
+				body := Rep_feat_server.item (bd)
 			else
-io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: FIX ME%N");
+				-- FIXME
 				!!Result.make (Void, c, 0, 0);
+			end;
+			if body /= Void then
+				!!Result.make (Current, c, body.start_position, body.end_position);
 			end;
 		end;
 

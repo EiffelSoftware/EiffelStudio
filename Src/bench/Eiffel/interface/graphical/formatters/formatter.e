@@ -21,7 +21,7 @@ feature
 				text_window.tool.clean_type
 			elseif argument = warner then
 				set_global_cursor (watch_cursor);
-				format (formatted);
+				execute_licenced (formatted);
 				restore_cursors;
 			elseif not text_window.changed then
 				if argument = text_window then
@@ -30,7 +30,7 @@ feature
 					formatted ?= argument
 				end;
 				set_global_cursor (watch_cursor);
-				format (formatted);
+				execute_licenced (formatted);
 				restore_cursors;
 			else
 				warner.call (Current, l_File_changed)

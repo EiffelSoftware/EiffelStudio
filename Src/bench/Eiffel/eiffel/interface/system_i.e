@@ -1053,6 +1053,7 @@ end;
 			local_cursor: BI_LINKABLE [CLASS_C];
 			id_cursor: LINKABLE [INTEGER];
 			i: INTEGER;
+			temp: STRING
 		do
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
@@ -1082,8 +1083,10 @@ debug ("COUNT")
 	io.error.putstring (") ");
 	i := i - 1;
 end;
-					io.error.putstring ("Pass 5 on class ");
-					io.error.putstring (a_class.class_name);
+					io.error.putstring ("Degree 1: class ");
+						temp := a_class.class_name.duplicate;
+						temp.to_upper;
+					io.error.putstring (temp);
 					io.error.new_line;
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
@@ -1430,6 +1433,7 @@ feature  -- Freeezing
 			id_cursor: LINKABLE [INTEGER];
 			descriptors: ARRAY [INTEGER];
 			i, nb: INTEGER;
+			temp: STRING
 		do
 			if precompilation then
 				!PRECOMP_MAKER!makefile_generator.make
@@ -1482,8 +1486,10 @@ debug ("COUNT")
 	i := i - 1;
 end;
 						-- Verbose
-					io.error.putstring ("Generating descriptors of ");
-					io.error.putstring (a_class.class_name);
+					io.error.putstring ("Degree -1: class ");
+						temp := a_class.class_name.duplicate;
+						temp.to_upper;
+					io.error.putstring (temp);
 					io.error.new_line;
 	
 					a_class.generate_descriptor_tables;
@@ -1522,9 +1528,10 @@ debug ("COUNT")
 end;
 					if a_class /= Void then
 							-- Verbose
-						io.error.putstring ("Generating descriptors of ");
-						io.error.putstring (a_class.class_name);
-						io.error.new_line;
+						io.error.putstring ("Degree -1: class ");
+							temp := a_class.class_name.duplicate;
+							temp.to_upper;
+						io.error.putstring (temp);
 	
 						a_class.generate_descriptor_tables;
 					end;
@@ -1552,8 +1559,10 @@ debug ("COUNT")
 	i := i - 1;
 end;
 					-- Verbose
-				io.error.putstring ("Pass 4 on class ");
-				io.error.putstring (a_class.class_name);
+				io.error.putstring ("Degree -2: class ");
+					temp := a_class.class_name.duplicate;
+					temp.to_upper;
+				io.error.putstring (temp);
 				io.error.new_line;
 
 				a_class.pass4;
@@ -1579,8 +1588,10 @@ debug ("COUNT")
 end;
 				if not a_class.is_precompiled then
 						-- Verbose
-					io.error.putstring ("Pass 5 on class ");
-					io.error.putstring (a_class.class_name);
+					io.error.putstring ("Degree -3: class ");
+						temp := a_class.class_name.duplicate;
+						temp.to_upper;
+					io.error.putstring (temp);
 					io.error.new_line;
 
 					a_class.generate_feature_table;
@@ -1650,6 +1661,9 @@ end;
 			external_unit: EXT_EXECUTION_UNIT;
 			info: EXTERNAL_INFO;		
 		do
+
+			update_valid_body_ids;
+
 			from
 				!!new_exec.init;
 				!!new_dispatch.init;
@@ -1686,6 +1700,24 @@ end;
 			dispatch_table.copy (new_dispatch);
 		end;
 
+	update_valid_body_ids is
+		local
+			id_list: LINKED_LIST [INTEGER];
+			id_cursor: LINKABLE [INTEGER];
+			a_class: CLASS_C;
+		do
+			from
+				id_list := freeze_set1;
+				id_cursor := id_list.first_element;
+			until
+				id_cursor = Void
+			loop
+				a_class := id_array.item (id_cursor.item);
+				a_class.update_valid_body_ids;
+				id_cursor := id_cursor.right;
+			end;
+		end;
+
 	shake is
 		local
 			exec_unit: EXECUTION_UNIT;
@@ -1695,6 +1727,8 @@ end;
 				-- Real shake compresses the dispatch and execution tables
 				-- Not called because the descriptors must be reprocessed
 				-- if a dispatch unit is moved (real_body_index changes)
+
+			update_valid_body_ids;
 
 			execution_table.shake;
 			dispatch_table.shake;
@@ -1747,6 +1781,7 @@ feature -- Final mode generation
 		local
 			i, nb: INTEGER;
 			a_class: CLASS_C;
+			temp: STRING
 		do
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
@@ -1768,8 +1803,10 @@ debug ("COUNT");
 	io.error.putstring (") ");
 end;
 						-- Verbose
-					io.error.putstring ("Processing polymorphism of class ");
-					io.error.putstring (a_class.class_name);
+					io.error.putstring ("Degree -4: class ");
+						temp := a_class.class_name.duplicate;
+						temp.to_upper;
+					io.error.putstring (temp);
 					io.error.new_line;
 
 					a_class.process_polymorphism;
@@ -1782,7 +1819,7 @@ end;
 			tmp_poly_server.flush;
 
 				-- Verbose
-			io.error.putstring ("Pass 5 on system%N");
+			io.error.putstring ("Removing dead code...%N");
 
 				-- Dead code removal
 			if not remover_off then
@@ -1811,8 +1848,10 @@ debug ("COUNT")
 	io.error.putint (nb-i+1);
 	io.error.putstring (") ");
 end;
-					io.error.putstring ("Pass 6 on class ");
-					io.error.putstring (a_class.class_name);
+					io.error.putstring ("Degree -5: class ");
+						temp := a_class.class_name.duplicate;
+						temp.to_upper;
+					io.error.putstring (temp);
 					io.error.new_line;
 
 					a_class.pass4;
@@ -2767,7 +2806,7 @@ feature -- Main file generation
 				%extern void emain();%N%
 				%extern void reclaim();%N%
 				%extern void failure();%N%
-				%extern void eif_init();%N%N");
+				%extern void eif_rtinit();%N%N");
 
 			Main_file.putstring ("void main(argc, argv, envp)%N%
 				%int argc;%N%
@@ -2782,7 +2821,7 @@ feature -- Main file generation
 				%%Texvect->ex_jbuf = (char *) exenv;%N%
 				%%Tif (echval = setjmp(exenv))%N%
 				%%T%Tfailure();%N%N%
-				%%Teif_init(argc, argv, envp);%N%
+				%%Teif_rtinit(argc, argv, envp);%N%
 				%%Temain((char *) 0);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N%

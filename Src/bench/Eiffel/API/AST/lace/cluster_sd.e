@@ -100,7 +100,7 @@ feature -- Lace recompilation
 					Error_handler.raise_error;
 				end;
 					-- Verbose
-				io.error.putstring ("Pass 0 on cluster ");
+				io.error.putstring ("Degree 6: cluster ");
 				io.error.putstring (cluster_name);
 				io.error.new_line;
 	

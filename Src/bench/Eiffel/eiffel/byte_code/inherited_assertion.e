@@ -522,6 +522,7 @@ feature -- inherited postcondition
 						Context.add_local
 								(context.real_type (item.type));
 						item.set_position (position);
+						position := position + 1;
 						old_expressions.forth;
 					end;
 				end;

@@ -4,6 +4,9 @@ class SAVE_AS_FILE
 inherit
 
 	ICONED_COMMAND
+		redefine
+			licence_checked
+		end;
 
 creation
 
@@ -17,6 +20,8 @@ feature
 		end;
 	
 feature {NONE}
+
+	licence_checked: BOOLEAN is True;
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.

@@ -17,7 +17,7 @@ feature {NONE}
 	Freeze_command_name: STRING is
 		once
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bench/spec/$(PLATFORM)/bin/finish_freezing ")
+			Result.append ("/bench/spec/$PLATFORM/bin/finish_freezing ")
 		end;
 
 	help_path: STRING is

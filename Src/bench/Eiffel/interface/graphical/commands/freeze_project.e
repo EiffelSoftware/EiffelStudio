@@ -8,7 +8,8 @@ inherit
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	SHARED_DIALOG
  
 creation
 
@@ -49,14 +50,11 @@ feature {NONE}
 							System.freeze_system;
 							project_tool.set_changed (false);
 							system.server_controler.wipe_out;
-							!!file.make (Project_file_name);
-							file.open_write;
-							workbench.basic_store (file);
-							file.close;
+							save_workbench_file;
 							finish_freezing;
+							error_window.put_string ("System recompiled%N");
+							error_window.display;
 						end;
-						error_window.put_string ("System recompiled%N");
-						error_window.display;
 					end;
 					restore_cursors;
 				elseif argument = warner then
@@ -91,8 +89,24 @@ feature {NONE}
 			end;
 		end;
 
+    save_workbench_file is
+            -- Save the `.workbench' file.
+        local
+            file: UNIX_FILE
+        do
+            !!file.make (Project_file_name);
+            file.open_write;
+            workbench.basic_store (file);
+            file.close;
+        rescue
+            if not file.is_closed then
+                file.close
+            end;
+            Dialog_window.display 
+				("Error in opening/writing EIFFELGEN/.workbench file ");
+            retry
+        end;
  
-	
 feature 
 
 	symbol: PIXMAP is 
@@ -139,7 +153,7 @@ feature {NONE}
 		do
 				!!file_name.make (50);	
 				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace.default");
+				file_name.append ("/bench/help/defaults/Ace");
 				system_tool.text_window.show_file_content (file_name);
 		end;
 

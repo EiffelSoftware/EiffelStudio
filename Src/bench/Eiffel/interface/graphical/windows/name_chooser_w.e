@@ -8,7 +8,8 @@ inherit
 	FILE_SEL_D
 		rename
 			make as file_sel_d_create
-		end
+		end;
+	BUILD_LIC
 
 creation
 
@@ -36,18 +37,32 @@ feature
 			last_caller_recorded: last_caller = a_command
 		end;
 
+feature -- Licence managment
+ 
+	discard_licence is
+		do
+			if licence.licenced then
+				licence.free_licence;
+			end;
+			if licence.registered then
+				licence.unregister
+			end;
+		end;
 	
 feature {NONE}
 
 	work (argument: ANY) is
-        do
+		do
 			popdown;
 			if argument = Current then
 				last_caller.execute (Current)
 			else
 				set_global_cursor (watch_cursor);
-                project_tool.set_changed (false);
-				exit
+				project_tool.set_changed (false);
+				if not project_tool.initialized then
+					discard_licence;
+					exit
+				end;
 			end
 		end;
 

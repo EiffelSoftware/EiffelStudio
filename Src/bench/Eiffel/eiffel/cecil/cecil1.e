@@ -21,6 +21,8 @@ feature
 			routine_name: STRING;
 			feat: FEATURE_I;
 			c_type: TYPE_C;
+			class_type: CLASS_TYPE;
+			actual_type: TYPE_A
 		do
 			file.putstring ("static char *(*cr");
 			file.putint (type_id);
@@ -34,13 +36,20 @@ feature
 				if feat = Void then
 					file.putstring ("(char *(*)()) 0");
 				else
+					class_type := System.class_type_of_id (type_id);
 					routine_name := Encoder.feature_name
-						(System.class_type_of_id (type_id).id, feat.body_id);
+										(class_type.id, feat.body_id);
 					file.putstring ("(char *(*)()) ");
 					file.putstring (routine_name);
 
+					actual_type := feat.type.actual_type;
 						-- Remember extern declarations
-					c_type := feat.type.actual_type.type_i.c_type;
+					if actual_type.is_formal then
+						actual_type := 
+							class_type.associated_class.constraint 
+												(actual_type.base_type);
+					end; 
+					c_type := actual_type.type_i.c_type;
 					Extern_declarations.add_routine (c_type, routine_name.twin);
 				end;
 				file.putstring (",%N");

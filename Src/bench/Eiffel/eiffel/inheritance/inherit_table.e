@@ -152,7 +152,6 @@ feature
 			a_class := pass_c.associated_class;
 			supplier_status_modified := is_supplier_status_modified;
 
-				-- Verbose
 			a_cluster := a_class.cluster;
 				-- Initialization of the context for evaluation of actual
 				-- types

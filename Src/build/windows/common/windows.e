@@ -64,7 +64,7 @@ feature {NONE} -- Initial windowing
 
 	display_init_windows is
 		do
-			main_panel.hide_command_editor
+--			main_panel.hide_command_editor
 --			if not tree.realized then
 --				tree.realize
 --			end

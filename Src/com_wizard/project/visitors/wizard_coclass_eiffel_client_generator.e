@@ -15,7 +15,6 @@ inherit
 
 	WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR
 
-
 feature -- Access
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -100,8 +99,10 @@ feature {NONE} -- Implementation
 			ccom_delete_feature_name.append ("delete_")
 			ccom_delete_feature_name.append (a_coclass_name)
 
-			eiffel_writer.add_feature (create_coclass_feature (a_coclass_descriptor), Externals)
-			eiffel_writer.add_feature (make_feature, Initialization)
+			if is_typeflag_fcancreate (a_coclass_descriptor.flags) then
+				eiffel_writer.add_feature (create_coclass_feature (a_coclass_descriptor), Externals)
+				eiffel_writer.add_feature (make_feature, Initialization)
+			end
 			eiffel_writer.add_feature (delete_coclass_feature (a_coclass_descriptor), Externals)
 			eiffel_writer.add_feature (delete_wrapper_feature, Implementation)
 			eiffel_writer.add_feature (create_coclass_from_pointer_feature (a_coclass_descriptor), Externals)
@@ -150,7 +151,9 @@ feature {NONE} -- Implementation
 	add_creation is
 			-- Add creation routines.
 		do
-			eiffel_writer.add_creation_routine (Make_word)
+			if is_typeflag_fcancreate (coclass_descriptor.flags) then
+				eiffel_writer.add_creation_routine (Make_word)
+			end
 			eiffel_writer.add_creation_routine (Make_from_other)
 			eiffel_writer.add_creation_routine (Make_from_pointer)
 		end

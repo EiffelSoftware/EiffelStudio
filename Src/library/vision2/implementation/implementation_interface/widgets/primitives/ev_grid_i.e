@@ -139,11 +139,21 @@ feature -- Access
 feature -- Status setting
 
 	enable_tree is
-			-- Enable tree functionality for GRID
+			-- Enable tree functionality for `Current'.
 		do
-			to_implement ("EV_GRID_I.enable_tree")
+			is_tree_enabled := True
+			redraw_client_area
 		ensure
 			tree_enabled: is_tree_enabled
+		end	
+		
+	disable_tree is
+			-- Disable tree functionality for `Current'.
+		do
+			is_tree_enabled := False
+			redraw_client_area
+		ensure
+			tree_disabled: not is_tree_enabled
 		end	
 		
 	show_column (a_column: INTEGER) is
@@ -493,11 +503,8 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_tree_enabled: BOOLEAN is
+	is_tree_enabled: BOOLEAN
 			-- Is tree functionality enabled?
-		do
-			to_implement ("EV_GRID_I.is_tree_enabled")
-		end
 		
 	column_displayed (a_column: INTEGER): BOOLEAN is
 			-- Is column `a_column' displayed in `Current'?

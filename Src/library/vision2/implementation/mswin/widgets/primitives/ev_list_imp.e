@@ -154,8 +154,7 @@ feature -- Access
 		do
 			Result := clone (internal_selected_items)
 		ensure then
-			internal_selected_items_uptodate implies 
-				Result.is_equal (retrieve_selected_items)
+			valid_result: valid_selected_items (Result)
 		end
 
 feature -- Status setting
@@ -440,6 +439,37 @@ feature {NONE} -- Implementation
 			end		
 		end
 
+	valid_selected_items (a_selected_items: like selected_items): BOOLEAN is
+			-- Validate `a_selected_items' as selected items list.
+		local
+			good_selected_items: like selected_items
+		do
+			Result := True
+			good_selected_items := retrieve_selected_items
+
+				-- Test if `a_selected_items' is included into
+				-- `good_selected_items'
+			from
+				a_selected_items.start
+			until
+				(a_selected_items.after) or (Result = False)
+			loop
+				Result := good_selected_items.has(a_selected_items.item)
+				a_selected_items.forth
+			end
+
+				-- Test if `good_selected_items' is included into
+				-- `a_selected_items'
+			from
+				good_selected_items.start
+			until
+				(good_selected_items.after) or (Result = False)
+			loop
+				Result := a_selected_items.has(good_selected_items.item)
+				good_selected_items.forth
+			end
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -514,8 +544,8 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.71  2000/04/19 02:03:57  pichery
---| Fixed a small display bug
+--| Revision 1.72  2000/04/19 02:23:25  pichery
+--| Changed postcondition in `selected_items'.
 --|
 --| Revision 1.69  2000/04/18 21:22:45  pichery
 --| MAJOR CHANGE:

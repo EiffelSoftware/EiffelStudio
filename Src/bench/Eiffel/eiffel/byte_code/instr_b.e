@@ -8,7 +8,15 @@ class INSTR_B
 inherit
 	BYTE_NODE
 		redefine
-			line_number, set_line_number
+			line_number, set_line_number, enlarged
+		end
+
+feature -- Enlargment
+
+	enlarged: INSTR_B is
+			-- Enlarge current node for C code generation
+		do
+			Result := Precursor {BYTE_NODE}
 		end
 
 feature -- Access

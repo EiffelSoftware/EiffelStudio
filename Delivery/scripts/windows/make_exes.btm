@@ -305,7 +305,7 @@ iff not exist setup.exe then
 endiff
 iff not defined WIN64 then
 	call upx.exe setup.exe
-end
+endiff
 move setup.exe %INSTALL_DIR
 
 remtrace Recompile configure_all
@@ -339,12 +339,9 @@ safe_md bin
 nmake /f makefile.win
 cd ..
 cd legacy
-msdev legaproj.dsw /make ALL - RELEASE >>& %INSTALL_LOG
+nmake -f makefile.win
 iff not exist legacy.exe then
 	remtrace Couldnt generate legacy.exe
 	CANCEL
 endiff
 move legacy.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-
-remtrace Put the last files into the bin directory
-REM quick_move studio\spec\%ISE_PLATFORM\bin\legacy.exe

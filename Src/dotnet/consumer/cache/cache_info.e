@@ -35,7 +35,10 @@ feature -- Access
 			-- Array of assemblies in EAC
 			
 	clr_version: STRING
-			-- Runtime version.	
+			-- Runtime version.
+			
+	is_dirty: BOOLEAN
+			-- Is info ditry?
 
 feature {CACHE_WRITER} -- Element Settings
 	
@@ -46,6 +49,7 @@ feature {CACHE_WRITER} -- Element Settings
 			valid_assembly: not assemblies.has (ass)
 		do
 			assemblies.force (ass, assemblies.count + 1)
+			set_is_dirty (True)
 		end
 		
 	update_assembly (a_assembly: CONSUMED_ASSEMBLY) is
@@ -64,6 +68,7 @@ feature {CACHE_WRITER} -- Element Settings
 			loop
 				if assemblies.item (i).is_equal (a_assembly) then
 					assemblies.put (a_assembly, i)
+					set_is_dirty (True)
 					l_done := True
 				else
 					i := i + 1
@@ -93,6 +98,7 @@ feature {CACHE_WRITER} -- Element Settings
 			loop
 				if not assemblies.item (i).is_equal (ass) then
 					new.put (assemblies.item (i), j)
+					set_is_dirty (True)
 					j := j + 1
 				end
 				i := i + 1
@@ -100,6 +106,14 @@ feature {CACHE_WRITER} -- Element Settings
 			assemblies := new
 		ensure
 			removed: not assemblies.has (ass)
+		end
+		
+	set_is_dirty (a_dirty: BOOLEAN) is
+			-- Sets `is_dirty' with `a_dirty'
+		do
+			is_dirty := a_dirty
+		ensure
+			is_dirty_set: is_dirty = a_dirty
 		end
 		
 invariant

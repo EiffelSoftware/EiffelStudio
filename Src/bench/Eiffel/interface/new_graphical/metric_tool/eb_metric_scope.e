@@ -73,12 +73,12 @@ feature -- Access
 
 feature -- Scopes creation
 
-	list_of_scopes: LINKED_LIST [EB_METRIC_SCOPE] is
+	list_of_scopes: ARRAYED_LIST [EB_METRIC_SCOPE] is
 			-- List of scopes available in the metric tool.
 		local
 			a_feature, a_class, a_cluster, a_system, an_archive: EB_METRIC_SCOPE
 		do
-			create Result.make
+			create Result.make (5)
 			create a_feature.make (interface_names.metric_this_feature, Feature_scope)
 			Result.extend (a_feature)
 			create a_class.make (interface_names.metric_this_class, Class_scope)

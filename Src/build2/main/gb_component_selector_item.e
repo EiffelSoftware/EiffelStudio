@@ -62,11 +62,9 @@ feature {NONE} -- Implementation
 	generate_pebble: GB_COMPONENT is
 			-- `Result' is used for a pick and drop.
 		local
-			environment: EV_ENVIRONMENT
 			component: GB_COMPONENT
 		do
-			create environment
-			if environment.application.ctrl_pressed then
+			if application.ctrl_pressed then
 				create component.make_with_name (text)
 				component_viewer.set_component (component)
 					-- We don't call execute on the component viewer command

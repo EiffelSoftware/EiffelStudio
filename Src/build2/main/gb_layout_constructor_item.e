@@ -129,17 +129,13 @@ feature {NONE} -- Implementation
 			-- Retrieve pebble for transport.
 			-- A convenient was of setting up the drop
 			-- actions for GB_OBJECT.
-		local
-			environment: EV_ENVIRONMENT
-		do
-			
+		do			
 			--| FIXME This is currently identical to version in 
 			--| GB_OBJECT
-			create environment
 				-- If the ctrl key is pressed, then we must
 				-- start a new object editor for `Current', instead
 				-- of beginning the pick and drop.
-			if environment.application.ctrl_pressed then
+			if application.ctrl_pressed then
 				new_object_editor (object)
 			else
 				type_selector.update_drop_actions_for_all_children (object)

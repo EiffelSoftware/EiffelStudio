@@ -8,15 +8,15 @@ indexing
 	revision: "$Revision$"
 
 class
-	
 	EXEC_LAST
 
 inherit
-
 	EXEC_FORMAT
+		rename
+			Out_of_routine as execution_mode
+		end
 
 creation
-
 	make
 
 feature -- Properties
@@ -29,21 +29,15 @@ feature -- Properties
 
 feature {NONE} -- Attributes
 
-	execution_mode: INTEGER is
-			-- Mode for the execution.
-		once
-			Result := Out_of_routine
-		end;
-
 	name: STRING is
 			-- Name of the command.
-		do
+		once
 			Result := Interface_names.f_Exec_last
 		end;
 
 	menu_name: STRING is
 			-- Name used in menu entry
-		do
+		once
 			Result := Interface_names.m_Exec_last
 		end;
 

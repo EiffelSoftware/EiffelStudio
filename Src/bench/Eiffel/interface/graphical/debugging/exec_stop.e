@@ -9,11 +9,12 @@ indexing
 class EXEC_STOP
 
 inherit
-
 	EXEC_FORMAT
+		rename
+			User_stop_points as execution_mode
+		end
 
 creation
-
 	make
 
 feature -- Properties
@@ -26,21 +27,15 @@ feature -- Properties
 
 feature {NONE} -- Attributes
 
-	execution_mode: INTEGER is
-			-- Mode of execution.
-		once
-			Result := User_stop_points
-		end;
-	
 	name: STRING is
 			-- Name of the command.
-		do
+		once
 			Result := Interface_names.f_Exec_stop
 		end;
 
 	menu_name: STRING is
 			-- Name used in menu entry
-		do
+		once
 			Result := Interface_names.m_Exec_stop
 		end;
 

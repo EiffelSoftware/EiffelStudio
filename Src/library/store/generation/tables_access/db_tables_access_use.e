@@ -1,5 +1,5 @@
 indexing
-	description: "Access to the class DB_SPECIFIC_TABLES_ACCESS"
+	description: "Access to the class DB_TABLES_ACCESS"
 	author: "Cedric Reduron"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,17 +15,46 @@ feature -- Status report
 			Result := tables.is_valid (code)
 		end
 
+	tables_set: BOOLEAN is
+			-- Is abstract description of database tables
+			-- set?
+		do
+			Result := tables_cell.item /= Void
+		end
+
 feature {NONE} -- Access
 
-	tables: DB_SPECIFIC_TABLES_ACCESS is
-			-- Description of specific database tables.
-		once
-			create Result.make
+	tables: DB_TABLES_ACCESS is
+			-- Abstract description of database tables.
+		require
+			tables_set: tables_set
+		do
+			Result := tables_cell.item
 		ensure
 			result_not_void: Result /= Void
 		end
 
-end -- class DB_TABLES_USE
+feature {NONE} -- Basic operations
+
+	set_tables (t: DB_TABLES_ACCESS) is
+			-- Set `t' to `tables'.
+		require
+			not_void: t /= Void
+		do
+			tables_cell.put (t)
+		ensure
+			tables_set: tables_set
+		end
+
+feature {NONE} -- Implementation
+
+	tables_cell: CELL [DB_TABLES_ACCESS] is
+			-- `tables' cell.
+		once
+			create Result.put (Void)
+		end
+
+end -- class DB_TABLES_ACCESS_USE
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.

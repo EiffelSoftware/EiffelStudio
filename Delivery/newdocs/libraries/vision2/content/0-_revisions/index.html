@@ -48,7 +48,9 @@
 					<li><B>item</B> - If you were using `item', you should change this to `item_at_position'. A call to `item' will now return the current item.</li>
 					<li><B>put</B> - If you were using `put', you must now replace this with `put_at_position'.
 					<li><B>extend</B> and <B>replace</B> - These are now both exported, as before, they were exported to {NONE}.</li>
-					<li>features inherited from <B>ARRAY</B> - These are no longer available, but the feature `item_list' is available, which returns the table represented as an ARRAYED_LIST [WIDGET].</li>
+					<li>features inherited from <B>ARRAY</B> - These are no longer available but you may use the  feature `to_array', which returns the contents of the table represented as an ARRAY [EV_WIDGET]. This feature is marked as obsolete, as it is temporary, to simplify the transition to the new inheritence structure of EV_TABLE.</li>
+					<li><B>count</B> - The previous version of `count' was the one from ARRAY, which returned the number of available (not empty) cells in the table. We now use the version of `count' inherited from EV_CONTAINER which returns the number of widgets currently contained. Previously, the feature `widget_count' was used to return the number of items, but this feature has now been made obsolete. Therefore, if you were previously using `count', replace this with `rows' * `columns', and if you were using `widget_count', replace this with a call to `count'.</li>
+					<li><B>item_list</B> - This is now obsolete. You may use `linear_representation' to retrieve the contents of the table, or simply traverse the table.</li>
 				</ul>
 			</li>
 		</ul>

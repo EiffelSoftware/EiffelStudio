@@ -160,8 +160,10 @@ feature -- XML constants
 	
 feature -- Warnings
 
-	Component_name_warning: STRING is "is not a valid Component name.%NComponent names should only include%N%
+	Component_invalid_name_warning: STRING is " is not a valid Component name.%NComponent names should only include%N%
 		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
-		%please select a different class name."
+		%please select a different component name."
+		
+	Component_identical_name_warning: STRING is " is already used as a component name.%NPlease enter a unique component name."
 
 end -- class GB_CONSTANTS

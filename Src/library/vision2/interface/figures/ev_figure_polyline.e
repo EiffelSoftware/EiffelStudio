@@ -68,8 +68,8 @@ feature -- Status report
 		do
 			if points.count >= 2 then
 				a_point := points.i_th (2)
-				Result := 2 * Pi - line_angle (start_point.x_abs, start_point.y_abs,
-					a_point.x_abs, a_point.y_abs)
+				Result := modulo (Pi + line_angle (start_point.x_abs, start_point.y_abs,
+					a_point.x_abs, a_point.y_abs), 2 * Pi)
 			else
 				Result := 0
 			end
@@ -82,7 +82,7 @@ feature -- Status report
 		do
 			if points.count >= 2 then
 				a_point := points.i_th (points.count - 1)
-				Result := Pi - line_angle (a_point.x_abs, a_point.y_abs,
+				Result := line_angle (a_point.x_abs, a_point.y_abs,
 					end_point.x_abs, end_point.y_abs)
 			else
 				Result := 0

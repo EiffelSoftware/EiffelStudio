@@ -6,8 +6,7 @@ indexing
 
 deferred class
 	GB_EV_ANY
-	
-	
+
 inherit
 	ANY
 		redefine
@@ -59,6 +58,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_CONSTANTS
+		undefine
+			default_create
+		end
 
 feature -- Initialization
 		
@@ -74,18 +78,8 @@ feature -- Access
 	parent_editor: GB_OBJECT_EDITOR
 		-- Object editor containing `Current'.
 		
-	object: GB_OBJECT is
-			-- Object referenced by `Current', contained in `parent_editor'.
-			-- Sometimes `parent_editor' may be Void when we have just created `Current'
-			-- for a useful facility, such as code generation. In this situation,
-			-- you may not query `object' as there is no associated object.
-		require
-			parent_editor_not_void: parent_editor /= Void
-		do
-			Result := parent_editor.object
-		ensure
-			Result_not_void: Result /= Void
-		end
+	object: GB_OBJECT
+			-- Object referenced by `Current'. May be Void when generating code.
 		
 	type: STRING is
 			-- String representation of object_type modifyable by `Current'.
@@ -152,6 +146,15 @@ feature -- Status setting
 			objects.has (an_object)
 		end
 		
+	set_object (an_object: GB_OBJECT) is
+			-- Assign `an_object' to `object'.
+		do
+			object := an_object
+		ensure
+			object_set: object = an_object
+		end
+		
+		
 	set_parent_editor (an_editor: GB_OBJECT_EDITOR) is
 			-- Assign `an_editor' to `parent_editor'.
 		require
@@ -174,6 +177,7 @@ feature {GB_XML_STORE} -- Output
 				-- no reason for objects to have more than one representation of the
 				-- widget that we wish to work with at this point.
 			objects_only_has_one_item: objects.count = 1
+			has_associated_object: object /= Void
 		deferred
 		ensure
 				-- Why are we calling generate_xml on an GB_EV_ANY
@@ -191,6 +195,7 @@ feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Status setting
 			-- Update all items in `objects' based on information held in `element'.
 		require
 			element_not_void: element /= Void
+			has_associated_object: object /= Void
 		deferred
 		end
 		
@@ -301,6 +306,45 @@ feature {NONE} -- Implementation
 			system_status.enable_project_modified
 			command_handler.update
 		end
+		
+	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is
+			--
+		local
+			integer_constant: GB_INTEGER_CONSTANT
+			element_info: ELEMENT_INFORMATION
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					integer_constant ?= Constants.all_constants.item (element_info.data)
+					create constant_context.make_with_context (integer_constant, object, type, a_type_name)
+					integer_constant.add_referer (constant_context)
+					object.add_constant_context (constant_context)
+					Result := integer_constant.value
+				else
+					Result := element_info.data.to_integer
+				end
+			end				
+		end
+		
+	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER) is
+			-- Add an element containing an INTEGER to `element', with name `name' and
+			-- value `current_value' if no constant is specified, of the value of the constant
+			-- in another constant element, if the current setting is represented by a constant.
+		require
+			element_not_void: element /= Void
+			name_not_void: name /= Void
+		do	
+			if object.constants.item (type + name) /= Void then
+				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
+			else
+				add_element_containing_integer (element, name, current_value)
+			end
+		end
+		
+	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+		-- Result of last call to `get_unique_full_info'.
 
 invariant
 

@@ -68,6 +68,7 @@ feature -- Status report
 			end
 			mode := m
 		rescue
+			Io.put_string ("foo%N")
 			mode := m
 			failed := True
 			retry
@@ -176,6 +177,8 @@ feature -- Output
 					error_code := Write_error
 				end
 			end
+		rescue
+			error_code := Write_error
 		end
 
 feature -- Input
@@ -197,6 +200,8 @@ feature -- Input
 				(is_count_valid and bytes_transferred = count) then
 				is_packet_pending := False 
 			end
+		rescue
+			error_code := Transfer_failed
 		end
 
 feature {DATA_RESOURCE} -- Implementation

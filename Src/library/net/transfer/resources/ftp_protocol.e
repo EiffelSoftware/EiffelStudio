@@ -128,6 +128,8 @@ feature -- Status setting
 			is_logged_in := False
 		ensure then
 			not_logged_in: not is_logged_in
+		rescue
+			error_code := Transmission_error
 		end
 	
 	initiate_transfer is
@@ -235,6 +237,8 @@ feature {NONE} -- Status setting
 					(address.port, address.host)
 				main_socket.connect
 			end
+		rescue
+			error_code := Connection_refused
 		end
 
 feature -- Output
@@ -259,6 +263,8 @@ feature -- Output
 					end
 				end
 			end
+		rescue
+			error_code := Write_error
 		end
 
 feature -- Input
@@ -287,6 +293,8 @@ feature -- Input
 					end
 				end
 			end
+		rescue
+			error_code := Transfer_failed
 		end
 
 feature {DATA_RESOURCE} -- Implementation

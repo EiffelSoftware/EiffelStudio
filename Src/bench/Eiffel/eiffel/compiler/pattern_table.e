@@ -26,16 +26,19 @@ feature
 	patterns: SEARCH_TABLE [PATTERN];
 			-- Shared references on patterns
 
-	info_array: ARRAY [PATTERN_INFO];
-			-- Array of pattern information in order to reference them
+	info_array: HASH_TABLE [PATTERN_INFO, PATTERN_ID];
+			-- Table of pattern information in order to reference them
 			-- through an index.
 
-	last_pattern_id: INTEGER;
+	last_pattern_id: PATTERN_ID;
 			-- Pattern id processed after last insertion
 
 	
 	c_patterns: SEARCH_TABLE [C_PATTERN_INFO];
 			-- Non formal patterns present already in the system
+
+	pattern_id_counter: PATTERN_ID_COUNTER
+			-- Pattern id counter
 
 	c_pattern_id_counter: COUNTER;
 			-- Counter of C patterns
@@ -45,8 +48,9 @@ feature
 		do
 			search_table_make (Chunk);
 			!!patterns.make (Chunk);
-			!!info_array.make (1, Chunk);
+			!!info_array.make (Chunk);
 			!!c_pattern_id_counter;
+			!! pattern_id_counter.make;
 			!!c_patterns.make (Chunk);
 		end;
 
@@ -56,7 +60,6 @@ feature
 	process is
 			-- Process the table of C patterns
 		local
-			i: INTEGER;
 			c_pattern: C_PATTERN;
 			types: LINKED_LIST [CLASS_TYPE];
 			info: PATTERN_INFO;
@@ -64,11 +67,11 @@ feature
 			assoc_class: CLASS_C;
 		do
 			from
-				i := 1;
+				info_array.start
 			until
-				i > count
+				info_array.after
 			loop
-				info := info_array.item (i);	
+				info := info_array.item_for_iteration;
 				assoc_class := info.associated_class;
 				if assoc_class /= Void then
 						-- Classes could be removed
@@ -90,7 +93,7 @@ feature
 						types.forth;
 					end;
 				end;
-				i := i + 1;
+				info_array.forth
 			end;
 		end;
 				
@@ -112,27 +115,23 @@ feature
 				end;
 				put (info);
 
-				info.set_pattern_id (count);
-				last_pattern_id := count;
-				if count > info_array.count then
-					info_array.resize (1, count + Chunk);
-				end;
-				info_array.put (info, count);
+				last_pattern_id := pattern_id_counter.next_id;
+				info.set_pattern_id (last_pattern_id);
+				info_array.put (info, last_pattern_id);
 			else
 				last_pattern_id := other_info.pattern_id;
 			end;
 		end;
 
-	pattern_of_id (i: INTEGER; type: CL_TYPE_I): PATTERN is
+	pattern_of_id (i: PATTERN_ID; type: CL_TYPE_I): PATTERN is
 			-- Pattern information of id `i'.
 		require
-			index_small_enough: i <= info_array.count;
-			index_large_enough: i > 0;
+			valid_id: info_array.has (i)
 		do
 			Result := info_array.item (i).instantiation_in (type);
 		end;
 
-	c_pattern_id (pattern_id: INTEGER; cl_type: CL_TYPE_I): INTEGER is
+	c_pattern_id (pattern_id: PATTERN_ID; cl_type: CL_TYPE_I): INTEGER is
 			-- Pattern id of C pattern `p'
 		require
 			good_type: cl_type /= Void;
@@ -152,6 +151,42 @@ feature
 		once
 			!!Result;
 		end;
+
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		local
+			pattern, other_pattern: PATTERN;
+			info, other_info: PATTERN_INFO;
+			other_info_array: HASH_TABLE [PATTERN_INFO, PATTERN_ID]
+		do
+			pattern_id_counter.append (other.pattern_id_counter);
+			other_info_array := other.info_array;
+			from other_info_array.start until other_info_array.after loop
+				info := other_info_array.item_for_iteration;
+				other_info := item (info);
+				if other_info = Void then
+					pattern := info.pattern;
+					other_pattern := patterns.item (pattern);
+					if other_pattern = Void then
+						patterns.put (pattern)
+					else
+						info.set_pattern (other_pattern)
+					end;
+					put (info);
+					info.set_pattern_id (last_pattern_id);
+					info_array.put (info, other_info_array.key_for_iteration)
+				end;
+				other_info_array.forth
+			end;
+			process
+		end;
+
+feature -- Generation
 
 	generate is
 			-- Generate patterns

@@ -19,12 +19,16 @@ feature
 		local
 			type_i: TYPE_I;
 			buf: GENERATION_BUFFER
+			class_id: INTEGER
 		do
 			buf := buffer
 			type_i := real_type (result_type);
+			class_id := context.original_class_type.id.id
 			buf.putstring ("if (MTOG((");
 			type_i.c_type.generate (buf);
-			buf.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
+			buf.putstring ("*),*(EIF_once_values + EIF_oidx_off")
+			buf.putint (class_id)
+			buf.putstring (" + ");
 			buf.putint (context.once_index);
 			buf.putstring ("),PResult))");
 			buf.new_line;
@@ -67,7 +71,9 @@ feature
 				buf.putstring ("*) 1;");
 			end;
 			buf.new_line;
-			buf.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
+			buf.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off")
+			buf.putint (class_id)
+			buf.putstring (" + ");
 			buf.putint (context.once_index);
 			buf.putstring ("),PResult);");
 			buf.new_line;

@@ -240,7 +240,8 @@ feature {NONE} -- Implementation
 				set_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
 
 				-- Add code which implements `show' if necessary, when using EV_WINDOW
-					-- as client.
+				-- as client. Also export `initialize' as necessary. If client, then it
+				-- must be exported to {ANY}.
 				if project_settings.client_of_window then
 					add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_feature, custom_feature_tag)
 				else
@@ -260,14 +261,14 @@ feature {NONE} -- Implementation
 				set_progress (0.8)
 				
 					-- Generate the widget building code.
-				generate_structure (current_document.root_element, 1, "", "")
+				generate_structure
 				
 				set_progress (0.9)
 					-- Generate the widget setting code.
-				generate_setting (current_document.root_element, 1)
+				generate_setting
 				
 					-- Generate the event code.
-				generate_events (current_document.root_element, 1)
+				generate_events
 				
 				
 					-- Now we must check the status of the prepass, and remove the
@@ -436,10 +437,11 @@ feature {NONE} -- Implementation
 			-- With information in element, build information into `info'.
 		local
 			current_element: XML_ELEMENT
-			current_name: STRING
-			current_type: STRING
+			current_data_element: XML_CHARACTER_DATA
+			current_name, current_type: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 		do
 			info.set_element (element)
 			if element.has_attribute_by_name (type_string) then
@@ -482,7 +484,22 @@ feature {NONE} -- Implementation
 							info.names_by_id.put (info.name, info.id)
 							all_ids.extend (info.id)
 						elseif current_name.is_equal (Events_string) then
-								-- Do nothing
+							prepass_xml (current_element, info, depth + 1)
+								-- We must now loop through the element, and retrieve all the events.
+						elseif current_name.is_equal (Event_string) then
+								-- Now record all events for the current object.
+							from
+								current_element.start
+							until
+								current_element.off
+							loop
+								current_data_element ?= current_element.item_for_iteration
+								if current_data_element /= Void then
+									action_sequence_info := string_to_action_sequence_info (current_data_element.content.to_utf8)
+									info.add_new_event (action_sequence_info)
+								end
+								current_element.forth
+							end
 						else
 							info.supported_types.extend (current_name)
 							info.supported_type_elements.extend (current_element)
@@ -506,15 +523,16 @@ feature {NONE} -- Implementation
 				all_ids.off
 			loop
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
-				if generated_info.name /= Void and then not generated_info.name.is_empty and then
-					generated_info.name /= Client_window_string then
+				if generated_info.name /= Void and then not generated_info.name.is_empty then
+					if generated_info.name /= Client_window_string then
 						-- If the name is equal to `client_window_string' then we must be the window
 						-- in a client based system. This has a special attribute clauses added in the
 						-- file, so we do not add it in the same fashion as other attributes.
-					if system_status.current_project_settings.grouped_locals then
-						add_local_on_grouped_line (generated_info.type, generated_info.name)
-					else
-						add_local_on_single_line (generated_info.type, generated_info.name)
+						if system_status.current_project_settings.grouped_locals then
+							add_local_on_grouped_line (generated_info.type, generated_info.name)
+						else
+							add_local_on_single_line (generated_info.type, generated_info.name)
+						end
 					end
 					create_local (generated_info.name)
 				end
@@ -522,8 +540,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_structure (element: XML_ELEMENT; depth: INTEGER; parent_name, parent_type: STRING) is
-			-- With information in `element', generate code which will
+	generate_structure is
+			-- With information in `document_info', generate code which will
 			-- parent all objects.
 		local
 			new_object : GB_OBJECT
@@ -567,8 +585,8 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	generate_setting (element: XML_ELEMENT; depth: INTEGER) is
-			-- With information in `element', generate code which will
+	generate_setting is
+			-- With information in `document_info', generate code which will
 			-- set_all_objects.
 		local
 			gb_ev_any: GB_EV_ANY
@@ -602,139 +620,112 @@ feature {NONE} -- Implementation
 				all_ids.forth
 			end
 		end
-
-	generate_events (element: XML_ELEMENT; depth: INTEGER) is
-			-- With information in `element', generate code which will
-			-- connect all events.
+		
+	generate_events is
+			-- Using `document_info' which was generated in `prepass_xml',
+			-- generate source code corresponding to selected events.
 		local
-			current_element: XML_ELEMENT
-			current_data_element: XML_CHARACTER_DATA
-			current_name: STRING
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			current_iterative_name: STRING
-			another_element: XML_ELEMENT
+			gb_ev_any: GB_EV_ANY
+			generated_info: GB_GENERATED_INFO
+			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 			action_sequence: GB_EV_ACTION_SEQUENCE
-			local_name: STRING
-			comment_object_name, parameters: STRING
-			feature_implementation: STRING
 			renamed_action_sequence_name: STRING
-		do
-			if element.has_attribute_by_name (type_string) then
-				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
-			end
+			local_name: STRING
+			comment_object_name: STRING
+			parameters: STRING
+			feature_implementation: STRING
+		do	
 			from
-				element.start
+				all_ids.start
 			until
-				element.off
+				all_ids.off
 			loop
-				current_element ?= element.item_for_iteration
-				if current_element /= Void then
-					current_name := current_element.name.to_utf8
-					if current_name.is_equal (Item_string) then	
-						generate_events (current_element, depth + 1)
+				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				events := generated_info.events
+				from
+					events.start
+				until
+					events.off
+				loop
+					action_sequence_info := events.item
+					action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequence_info.type))
+					check
+						action_sequence_not_void: action_sequence /= Void
+					end
+						-- If we are generating an event for an window, then there is no attribute name
+						-- generated.
+					if generated_info.name.is_empty then --type.is_equal (Ev_titled_window_string) then
+						local_name := ""
 					else
-						if current_name.is_equal (Internal_properties_string) then
-							full_information := get_unique_full_info (current_element)
-							element_info := full_information @ (name_string)
-							current_iterative_name := element_info.data
-							last_name := element_info.data
-						elseif current_name.is_equal (Events_string) then
-								-- We must now call `generate_events' again, the XML is in this format
-								-- <Events>
-								--		<Event>
-								--		<Event>
-								-- This allows us to iterate through all the Event data's.
-							generate_events (current_element, depth)
-						elseif current_name.is_equal (Event_string) then
-							another_element := current_element
-							from
-								another_element.start
-							until
-								another_element.off
-							loop
-								current_data_element ?= another_element.item_for_iteration
-								if current_data_element /= Void then
-										-- Build `action_sequence_info' from the current data.
-									action_sequence_info := string_to_action_sequence_info (current_data_element.content.to_utf8)
-										-- Build `action_sequence' for generating additional information required.
-									action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequence_info.type))
-									check
-										action_sequence_not_void: action_sequence /= Void
-									end
-										-- If we are generating an event for an window, then there is no attribute name
-										-- generated.
-									if stored_current_type.is_equal (Ev_titled_window_string) then
-										local_name := ""
-									else
-										local_name := last_name + "."
-									end
+						local_name := generated_info.name + "."
+					end
+						
+						-- Adjust event names that have been renamed in Vision2 interface
+					renamed_action_sequence_name := modified_action_sequence_name (generated_info.type, action_sequence_info)
 									
-										-- Adjust event names that have been renamed in Vision2 interface
-									renamed_action_sequence_name := modified_action_sequence_name (stored_current_type, action_sequence_info)
-									
-										-- If there are no arguments to the action sequence then generate no open arguments.
-									if action_sequence.count = 0 then
-										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
-									else
-										add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))")
-									end
+						-- If there are no arguments to the action sequence then generate no open arguments.
+					if action_sequence.count = 0 then
+						add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + ")")
+					else
+						add_event_connection (local_name + renamed_action_sequence_name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))")
+					end
 										
-										-- We must not generate the feature names again, if we have multiple events connected
-										-- to a single action sequence and we have already generated the feature.
-									if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
-										all_generated_events.extend (action_sequence_info.feature_name.as_lower)
-											-- Use `Current' in comment if the event is connected to the window.
-										if stored_current_type.is_equal (Ev_titled_window_string) then
-											comment_object_name := "Current"
-										else
-											comment_object_name := last_name
-										end
-										
-											-- No parameters if zero arguments.
-										if action_sequence.count = 0 then
-											parameters := " is"
-										else
-											parameters := " (" +action_sequence.parameter_list + ") is"
-										end	
-										
-											-- If the user has selected that they wish to generate debugging output, 
-											-- then we build a representation in `feature_implementation' otherwise,
-											-- the feature implementation will be empty.
-										if project_settings.debugging_output then
-											if action_sequence.count = 0 then
-												feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
-											else
-												feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
-											end
-										else
-											feature_implementation := ""
-										end
-										
-											-- Now we must generate the event declarations.
-										add_event_declaration (action_sequence_info.feature_name + parameters +
-										indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-										indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
-										
-										add_event_implementation (action_sequence_info.feature_name + parameters +
-										indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
-										indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
-									end
-								end
-								another_element.forth
-							end
+						-- We must not generate the feature names again, if we have multiple events connected
+						-- to a single action sequence and we have already generated the feature.
+					if not all_generated_events.has (action_sequence_info.feature_name.as_lower) then
+						all_generated_events.extend (action_sequence_info.feature_name.as_lower)
+							-- Use `Current' in comment if the event is connected to the window.
+						if generated_info.type.is_equal (Ev_titled_window_string) then
+							comment_object_name := "Current"
+						else
+							comment_object_name := generated_info.name
 						end
 					end
+					
+						-- No parameters if zero arguments.
+					if action_sequence.count = 0 then
+						parameters := " is"
+					else
+						parameters := " (" +action_sequence.parameter_list + ") is"
+					end	
+					
+						-- If the user has selected that they wish to generate debugging output, 
+						-- then we build a representation in `feature_implementation' otherwise,
+						-- the feature implementation will be empty.
+					if project_settings.debugging_output then
+						if action_sequence.count = 0 then
+							feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%%N%%N%")"
+						else
+							feature_implementation := indent + "io.putstring (%"" + action_sequence_info.feature_name + " executed%%N%")" + indent + action_sequence.debugging_info
+						end
+					else
+						feature_implementation := ""
+					end
+					
+						-- Now we must generate the event declarations.
+					add_event_declaration (action_sequence_info.feature_name + parameters +
+					indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+					indent_less_one + "deferred" + indent_less_one + "end" + indent_less_two)
+					
+					add_event_implementation (action_sequence_info.feature_name + parameters +
+					indent + "-- Called by `" + action_sequence_info.name + "' of `" + comment_object_name + "'." +
+					indent_less_one + "do" + feature_implementation + indent_less_one + "end" + "%N%N")
+					events.forth
 				end
-				element.forth
+				
+				all_ids.forth
+			end
+			
+				-- Now we must connect the close event of the window:
+			add_event_connection ("%T-- Close the application when an interface close")
+			add_event_connection ("%T-- request is recieved on `Current'. i.e. the cross is clicked.")
+			if System_status.current_project_settings.client_of_window then
+				add_event_connection (Client_window_string + ".close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
+			else
+				add_event_connection ("close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
 			end
 		end
-		
-	last_name, stored_current_type: STRING
-		-- Attributes used within `generate_events'.
-		-- Cannot use locals as the recursion is more complicated in `generate_events'
-		-- than in `generate_setting'.
 
 	add_local_on_single_line (local_type, name: STRING) is
 			-- Add code representation of new local named `name' of type

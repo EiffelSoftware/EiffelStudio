@@ -576,8 +576,6 @@ feature -- Basic operations
 
 	disambiguate_eiffel_names is
 			-- Disambiguate feature names.
-		local
-			tmp_string, tmp_string2: STRING
 		do
 			if feature_eiffel_names.empty then
 				if 
@@ -640,8 +638,6 @@ feature -- Basic operations
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
 			valid_coclass_descriptor: a_coclass_descriptor.feature_c_names /= Void
-		local
-			tmp_name: STRING
 		do
 			if 
 				inherited_interface /= Void and

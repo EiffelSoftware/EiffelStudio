@@ -190,9 +190,8 @@ feature {NONE} -- Implementation
 			non_void_type: l_type /= Void
 			valid_type: not l_type.empty
 		local
-			g_type, ar_type, c_type: STRING
+			g_type: STRING
 		do
-
 			g_type := l_type.substring (l_type.index_of ('%(', 1) + 1, l_type.index_of ('%)', 1) -1 )
 
 			if cell_types.has (g_type) then

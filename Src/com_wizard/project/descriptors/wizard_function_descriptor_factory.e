@@ -56,7 +56,6 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			a_count: INTEGER
-			tmp_string: STRING
 		do
 			member_id := a_func_desc.member_id
 			description := a_type_info.documentation (member_id).doc_string

@@ -57,27 +57,27 @@ feature -- Access
 			Result := item /= default_pointer
 		end;
 
-	item: POINTER;
+	item: POINTER
 			-- Pointer to COM object wrapper.
 
 feature {NONE} -- Implementation
 
 	initializer: POINTER;
-			-- Pointer to C++ wrapper
+			-- Pointer to C++ wrapper.
 
 	dispose is
-			-- Delete C++ wrapper
+			-- Delete C++ wrapper.
 		do
 			delete_wrapper
-		end;
+		end
 
 	delete_wrapper is
-			-- Delete C++ wrapper
+			-- Delete C++ wrapper.
 		deferred
-		end;
+		end
 
 invariant
-	queriable_invariant: initializer /= default_pointer and then exists;
+	queriable_invariant: initializer /= default_pointer and then exists
 
 end -- class ECOM_QUERIABLE
 

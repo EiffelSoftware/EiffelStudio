@@ -32,8 +32,6 @@ feature -- Basic operations
 			a_var_desc: ECOM_VAR_DESC
 			a_type_desc: ECOM_TYPE_DESC
 			a_documentation: ECOM_DOCUMENTATION
-			var_type: INTEGER
-			tmp_string: STRING
 		do
 			a_var_desc := a_type_info.var_desc (an_index)
 			a_documentation := a_type_info.documentation (a_var_desc.member_id)

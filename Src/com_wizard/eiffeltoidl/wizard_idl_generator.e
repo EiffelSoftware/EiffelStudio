@@ -92,7 +92,6 @@ feature {NONE} -- Basic operations
 			-- Wait for end of process and write output to `output_message'.
 		local
 			a_string: STRING
-			a_wel_string1, a_wel_string2: WEL_STRING
 			a_boolean: BOOLEAN
 			an_integer: INTEGER
 			a_last_process_result: INTEGER

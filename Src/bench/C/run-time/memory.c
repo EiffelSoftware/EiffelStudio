@@ -115,8 +115,9 @@ rt_public void mem_tiny(void)
 /*
  * Memory coalescing.
  */
-
+#ifndef EIF_THREADS
 rt_private int m_largest = 0;		/* Size of the largest coalesced block */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_public int mem_largest(void)
 {
@@ -176,8 +177,9 @@ rt_public void mem_pset(long int value)
 /*
  * Memory usage.
  */
-
+#ifndef EIF_THREADS
 rt_private struct emallinfo mem_stats; /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_public void mem_stat(long int type)
 {
@@ -220,9 +222,10 @@ rt_public long mem_info(long int field)
 /*
  * GC statistics.
  */
-
+#ifndef EIF_THREADS
 rt_private struct gacstat gc_stats; /* %%ss mt */
-rt_private long gc_count; /* %%ss mt */
+rt_private long gc_count = 0; /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_public void gc_mon(char flag)
 {

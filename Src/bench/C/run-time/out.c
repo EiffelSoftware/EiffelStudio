@@ -28,12 +28,12 @@
  * Private declarations
  */
 
-/* #define TAG_SIZE 512	*//* Maximum size for a single tagged expression */ /* %%ss moved to eif_constants.h */
-
-rt_private char buffero[TAG_SIZE];	/* Buffer for printing an object in a string */ /* %%ss mt renamed */
-rt_private char *tagged_out;		/* String where the tagged out is written */ /* %%ss mt */
-rt_private int tagged_max;			/* Actual maximum size of `tagged_out' */ /* %%ss mt */
-rt_private int tagged_len;			/* Actual length of `tagged_out' */ /* %%ss mt */
+#ifndef EIF_THREADS
+rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */ /* %%ss mt renamed */
+rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */ /* %%ss mt */
+rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */ /* %%ss mt */
+rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
 rt_private void write_char(EIF_CHARACTER c, char *buf);		/* Write a character */

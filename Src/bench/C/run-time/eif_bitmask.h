@@ -20,7 +20,7 @@ extern "C" {
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
-#ifndef EIF_WIN32
+#if !defined EIF_WIN32 && !defined __VMS
 #include <sys/param.h>		/* For NOFILE */
 #endif
 

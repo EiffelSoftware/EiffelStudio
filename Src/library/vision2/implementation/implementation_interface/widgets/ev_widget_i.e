@@ -5,18 +5,29 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_WIDGET_I 
 
 
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
+			-- Create the widget with `par' as parent.
 		deferred
 		end
 	
 feature {EV_WIDGET} -- Initialization
-		
+
+	widget_make (par: EV_CONTAINER) is
+			-- This is a general initialization for 
+			-- widgets and has to be called by all the 
+			-- widgets with parents.
+		require
+			valid_parent: par /= Void
+		deferred
+		ensure
+ 			exists: not destroyed
+		end
+	
 	plateform_build (par: EV_CONTAINER_I) is
 			-- Plateform dependant initializations.
 		deferred
@@ -114,6 +125,16 @@ feature -- Status setting
 		ensure
 			destroyed: destroyed
 		end
+
+--	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+--		require
+--			exists: not destroyed
+--		deferred
+--		ensure
+--			parent_set: parent = par
+--		end
 
 	hide is
 			-- Make widget invisible on the screen.
@@ -487,14 +508,6 @@ feature -- Event - command association
 		end
 	
 feature -- Implementation
-
---	test_and_set_parent (par: EV_CONTAINER) is
-			-- Set the parent to `par.implementation'.
-			-- It is not possible to change the parent,
-			-- therefore, if there is already a parent,
-			-- we don't do anything
---		deferred
---		end
 
 	set_interface (the_interface: EV_WIDGET) is
 			-- Make `interface' the interface of the current object.

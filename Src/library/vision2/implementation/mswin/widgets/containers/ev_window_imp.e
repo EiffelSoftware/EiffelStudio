@@ -421,29 +421,39 @@ feature -- Element change
 		end
 
 	enable_modal is
-			-- Set `is_modal' to `True'.
+			-- Set `is_modal' to `True', set the window to be
+			-- "Top most"
+		local
+			loc_ex_style: INTEGER
 		do
+				-- Change the `ex_style' of the window to turn
+				-- it into top most.
+			loc_ex_style := ex_style
+			if not flag_set (loc_ex_style, Ws_ex_topmost) then
+				loc_ex_style := set_flag (loc_ex_style, Ws_ex_topmost)
+				set_ex_style (loc_ex_style)
+			end
+			set_ex_style (default_ex_style + Ws_ex_topmost)
 			is_modal := True
-
-			--| FIXME VB: This is not working AT ALL.
-			--| We might need to recreate the window as modal.
-			--| I tried creating a WEL_MODAL_DIALOG, but did not succeed
-			--| in putting in it.
-
-			--|if is_show_requested and then not has_capture then
-			--|	set_capture_type (Capture_normal)
-			--|	enable_capture
-			--|end
 		end
 
 	disable_modal is
-			-- Set `is_modal' to `False'.
+			-- Set `is_modal' to `False', Set the window not 
+			-- to be "Top most" if it is not part of its 
+			-- default style.
+		local
+			loc_ex_style: INTEGER
 		do
+				-- Remove the TopMost flag only it is not part
+				-- of `default_ex_style'.
+			loc_ex_style := ex_style
+			if (not flag_set (Default_ex_style, Ws_ex_topmost)) and
+			   flag_set (loc_ex_style, Ws_ex_topmost)
+			then
+				loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
+				set_ex_style (loc_ex_style)
+			end
 			is_modal := False
-			--|if has_capture then
-			--|	disable_capture
-			--|	set_capture_type (Capture_heavy)
-			--|end
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is
@@ -505,9 +515,19 @@ feature -- Basic operations
 		do
 			{WEL_FRAME_WINDOW} Precursor
 			if is_modal then
-				enable_modal
+				block
 			end
 		end
+
+	block is
+			-- Wait until window is closed by the user.
+		local
+			modal_emul: EV_MODAL_EMULATION_IMP
+		do
+			create modal_emul.make_with_window (Current)
+			modal_emul.block
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -1030,6 +1050,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/05/01 19:38:03  pichery
+--| Changed the implementation of `enable_modal'
+--| and `disable_modal'.
+--|
 --| Revision 1.44  2000/04/29 00:43:56  brendel
 --| Improved status bar resizing.
 --|

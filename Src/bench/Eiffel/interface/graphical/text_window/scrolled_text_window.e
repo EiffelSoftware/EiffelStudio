@@ -58,23 +58,23 @@ creation
 
 feature -- Initialization
 
-	make_from_tool (a_name: STRING a_tool: TOOL_W) is
+	make_from_tool (a_name: STRING; form: COMPOSITE; a_tool: TOOL_W) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require
 			valid_tool: a_tool /= Void and then a_tool.global_form /= Void
 		do
-			make (a_name, a_tool.global_form)
+			make (a_name, form)
 			a_tool.init_modify_action (Current)
 		end
 
-	make (a_name: STRING a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require else
 			valid_parent: a_parent /= Void 
 		do
-			{SCROLLED_T} precursor (a_name, a_parent)
+			{SCROLLED_T} Precursor (a_name, a_parent)
 			initialize_transport
 			upper := -1 			-- Init clickable array.
 
@@ -168,7 +168,7 @@ feature -- Changing
 		do
 			set_editable
 			changed := True
-			{SCROLLED_T} precursor (a_text)
+			{SCROLLED_T} Precursor (a_text)
 			changed := False
 		ensure then
 			not_changed: not changed	
@@ -177,7 +177,7 @@ feature -- Changing
 	set_background_color (new_color: COLOR) is
 			-- Set `background_color' to `a_color'.
 		do
-			{SCROLLED_T} precursor (new_color)
+			{SCROLLED_T} Precursor (new_color)
 			set_scrolled_text_background_color (implementation, 
 				Graphical_resources.text_background_color.actual_value)
 		end
@@ -316,7 +316,7 @@ feature -- Update
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				{SCROLLED_T} precursor (a_position)
+				{SCROLLED_T} Precursor (a_position)
 			end
 		end
 
@@ -325,11 +325,11 @@ feature -- Update
 			-- is not out of bounds.
 		do
 			if a_position <= count then
-				{SCROLLED_T} precursor (a_position)
+				{SCROLLED_T} Precursor (a_position)
 			end
 		end
 
-	search_text (s: STRING is_case_sensitive: BOOLEAN) is
+	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
 		local
 			start_position: INTEGER
@@ -424,7 +424,7 @@ feature -- Update
 			end
 		end
 
-	redisplay_breakable_mark (f: E_FEATURE index: INTEGER) is
+	redisplay_breakable_mark (f: E_FEATURE; index: INTEGER) is
 			-- Redisplay the sign of the `index'-th breakable point.
 		local
 			start_pos, end_pos: INTEGER

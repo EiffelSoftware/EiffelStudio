@@ -87,27 +87,27 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	column_resize_actions: EV_COLUMN_ACTION_SEQUENCE is
+	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
 			-- Actions to be performed 
 		do
-			if column_resize_actions_internal = Void then
-				column_resize_actions_internal :=
-					 create_column_resize_actions
+			if column_resized_actions_internal = Void then
+				column_resized_actions_internal :=
+					 create_column_resized_actions
 			end
-			Result := column_resize_actions_internal
+			Result := column_resized_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	create_column_resize_actions: EV_COLUMN_ACTION_SEQUENCE is
+	create_column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
 			-- Create a column_resize action sequence.
 		deferred
 		end
 
-	column_resize_actions_internal: EV_COLUMN_ACTION_SEQUENCE
-			-- Implementation of once per object `column_resize_actions'.
+	column_resized_actions_internal: EV_COLUMN_ACTION_SEQUENCE
+			-- Implementation of once per object `column_resized_actions'.
 
 end
 

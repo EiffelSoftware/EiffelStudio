@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	plateform_build (par: EV_CONTAINER_IMP) is
+	plateform_build (par: EV_CONTAINER_I) is
 			-- Plateform dependant initializations.
 		do
 			{EV_WIDGET_IMP} Precursor (par)

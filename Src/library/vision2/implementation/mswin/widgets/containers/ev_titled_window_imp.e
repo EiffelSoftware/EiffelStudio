@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 
 feature {EV_WINDOW} -- Initialization
 
-	plateform_build (par: EV_CONTAINER_IMP) is
+	plateform_build (par: EV_CONTAINER_I) is
 			-- Initialize few variables
 		do
 			{EV_CONTAINER_IMP} Precursor (par)
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			-- Called when the window is destroy.
 			-- Set the parent sensitive if it exists.
 		do
-			if parent_imp /= Void and then parent_imp.insensitive then
+			if parent_imp.is_valid and then parent_imp.insensitive then
 				parent_imp.set_insensitive (False)
 			end
 		end

@@ -94,7 +94,9 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			end
 			callback_notification_processed := True
 		end
-		
+
+feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR}  -- Trigger eStudio status
+
 	callback_notification_processed: BOOLEAN		
 		
 feature {APPLICATION_EXECUTION} -- load and save

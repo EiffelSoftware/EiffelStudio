@@ -217,7 +217,7 @@ static int curr_modify = NO_CURRMODIF;
 		dmove(arg_1);
 		break;
 	case BREAK:						/* Add/delete breakpoints */
-		dsetbreak(arg_1, (uint32) arg_3, arg_2);
+		dsetbreak(arg_1, (int) arg_3, arg_2);
 		break;
 	case RESUME:					/* Resume execution */
 		if (!gc_stopped) gc_run();

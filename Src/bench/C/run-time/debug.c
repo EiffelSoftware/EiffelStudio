@@ -680,7 +680,7 @@ rt_private void safe_dbreak (int why)
 /* (next breakable point will be turned into a breakpoint. 'DT_SET_STACK' */
 /* to put a stack-breakpoint (usefull for stepout & step-by-step)         */
 /**************************************************************************/
-rt_public void dsetbreak(BODY_INDEX body_id, uint32 offset, int what)
+rt_public void dsetbreak(BODY_INDEX body_id, int offset, int what)
 	{
 	EIF_GET_CONTEXT
 	/* set a breakpoint according to its nature (what) */
@@ -700,7 +700,9 @@ rt_public void dsetbreak(BODY_INDEX body_id, uint32 offset, int what)
 		case DT_SET_STACK:
 			/* set the minimum stack depth.. if the stack depth is below than */
 			/* depth_stop, application  will stop (step by step, step out) */
-			d_data.db_callstack_depth_stop = offset; /* offset = current stack depth */
+			/* d_data.db_callstack_depth_stop = offset; */
+					/* offset = current stack depth */
+			d_data.db_callstack_depth_stop = d_data.db_callstack_depth + offset; /* offset = current stack depth */
 			break;
 		#ifdef MAY_PANIC
 		default:

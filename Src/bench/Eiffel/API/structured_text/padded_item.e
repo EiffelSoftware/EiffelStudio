@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"Item to padd out start of line. Used on lines that %
 		%do not have breakpoints.";
@@ -21,10 +20,10 @@ feature -- Properties
 
 feature {TEXT_FORMATTER} -- Implementation
 
-    append_to (text: TEXT_FORMATTER) is
-            -- Append Current debug new line text to `text'.
-        do
+	append_to (text: TEXT_FORMATTER) is
+		-- Append Current debug new line text to `text'.
+		do
 			text.process_padded 
-        end
+		end
 
 end -- class PADDED_ITEM

@@ -324,6 +324,7 @@ feature
 	close is
 			-- Close Current Editor
 		do
+			edited_command.reset
 			clear
 			window_mgr.close (Current)
 		end
@@ -601,6 +602,7 @@ feature -- COMMAND features
 			if already_open then
 				set_height (height - bottom_split_form.height)
 			end
+			edited_command.reset
 			command_editor.hide
 			bottom_split_form.unmanage
 		end

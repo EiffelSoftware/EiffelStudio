@@ -97,7 +97,8 @@ feature {NONE} -- Access
 feature -- Reflection
 
 	find_class (name: STRING): JAVA_CLASS is
-			-- Load in the Java class with the given name
+			-- Load in the Java class with the given name.
+			-- Namespace if any are delimited by `/'
 		require
 			name_valid: name /= Void
 		local
@@ -128,7 +129,8 @@ feature -- Reflection
 		end
 
 	find_class_pointer (name: STRING): POINTER is
-			-- find class pointer only (used during creation in descendants)
+			-- Find class pointer only (used during creation in descendants).
+			-- Namespace if any are delimited by `/'
 		local
 			l_name_to_c: C_STRING
 		do

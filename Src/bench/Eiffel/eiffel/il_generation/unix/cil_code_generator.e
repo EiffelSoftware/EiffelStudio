@@ -1444,6 +1444,30 @@ feature -- Labels and branching
 		do
 		end
 
+feature -- Switch instruction
+
+	switch_count: INTEGER
+			-- Number of switch labels to be generated
+
+	put_switch_start (count: INTEGER) is
+			-- Generate start of a switch instruction with `count' items.
+		require
+			valid_count: count > 0
+		do
+		ensure
+			switch_count_set: switch_count = count
+		end
+
+	put_switch_label (label: IL_LABEL) is
+			-- Generate a branch to `label' in switch instruction.
+		require
+			label_not_void: label /= Void
+			positive_switch_count: switch_count > 0
+		do
+		ensure
+			switch_count_decremented: switch_count = old switch_count - 1
+		end
+
 feature -- Binary operator generation
 
 	generate_binary_operator (code: INTEGER) is

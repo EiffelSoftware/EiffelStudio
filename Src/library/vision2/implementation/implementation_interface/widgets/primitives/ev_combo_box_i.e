@@ -13,7 +13,8 @@ inherit
 
 	EV_LIST_I
 		undefine
-			build
+			set_default_colors,
+			set_default_options
 		end
 
 feature -- Status Report

@@ -10,12 +10,12 @@ deferred class
 inherit
 	EV_SEPARATOR_I
 		redefine
-			build
+			set_default_options
 		end
 
 feature {NONE} -- Initialization
 
-	build is
+	set_default_options is
 			-- Common initializations for Gtk and Windows.
 		do
 			{EV_SEPARATOR_I} Precursor

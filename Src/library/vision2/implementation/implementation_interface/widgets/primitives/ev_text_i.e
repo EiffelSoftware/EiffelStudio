@@ -12,27 +12,28 @@ deferred class
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
-			build
+			set_default_options
 		end	
 
-feature {EV_WIDGET} -- Initialization
+feature {NONE} -- Initialization
 
-	build is
-			-- Common initializations for Gtk and Windows.
-		local
-			color: EV_COLOR
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		deferred
+		end
+
+feature -- Status settings
+
+	set_default_options is
+			-- Initialize the options of the widget.
 		do
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			!! color.make_rgb (255, 255, 255)
-			set_background_color (color)
-			!! color.make_rgb (0, 0, 0)
-			set_foreground_color (color)
 		end
 
-end --class EV_TEXT_FIELD_I
-
+end -- class EV_TEXT_AREA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -6,7 +6,7 @@ system
 	my_vision2_application
 
 root 
-	BUILD_APPLICATION (root_cluster): "make_and_launch"
+	<APPLICATION> (root_cluster): "make_and_launch"
 
 default
 	assertion (require)

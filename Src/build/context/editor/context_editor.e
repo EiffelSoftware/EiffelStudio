@@ -275,7 +275,7 @@ feature
 			!! tmp.make (0);
 			tmp.append (Widget_names.Context_name);
 			tmp.append (": ");
-			tmp.append (edited_context.full_label)
+			tmp.append (edited_context.title_label)
 			set_title (tmp);
 			set_icon_name (tmp);
 		end;
@@ -423,6 +423,15 @@ feature -- Reseting
 				behavior_form.is_initialized 
 			then
 				behavior_form.reset_editor
+			end
+		end;
+
+	update_state_name_in_behavior_page (s: STATE) is
+			-- Update the state name in behavior page
+			-- that displays `state'.
+		do
+			if behavior_form_shown then
+				behavior_form.update_state_name (s)
 			end
 		end;
 

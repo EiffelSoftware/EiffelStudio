@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 				-- Reset the minimum width on `first'
 			original_id := Object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
-			Object_handler.reset_object (parent_editor.object)
+			Object_handler.reset_object (object)
 				-- Reset the object referenced by `Current'
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 				-- Reset the minimum height on `first'
 			original_id := Object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
-			Object_handler.reset_object (parent_editor.object)
+			Object_handler.reset_object (object)
 				-- Reset the object referenced by `Current'
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.

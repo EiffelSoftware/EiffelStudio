@@ -79,6 +79,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
+	object: GB_OBJECT is
+			-- Object referenced by `Current'.
+		deferred
+		end
+		
 	update_editors is
 			-- Short version for calling everywhere.
 		deferred
@@ -102,7 +107,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
-	rebuild_associated_editors (object: EV_ANY) is
+	rebuild_associated_editors (an_object: EV_ANY) is
 			-- For all editors referencing `vision2_object', rebuild any associated object editors.
 		deferred
 		end
@@ -113,7 +118,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
-	new_object_editor (object: GB_OBJECT) is
+	new_object_editor (an_object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		deferred
 		end
@@ -125,17 +130,17 @@ feature {NONE} -- Implementation
 			a_widget_not_void: a_widget /= Void
 		local
 			shared_handler: GB_SHARED_OBJECT_HANDLER
-			object: GB_OBJECT
+			an_object: GB_OBJECT
 		do
 			create shared_handler
-			object := shared_handler.object_handler.object_from_display_widget (a_widget)
+			an_object := shared_handler.object_handler.object_from_display_widget (a_widget)
 			check
-				object_not_void: object /= Void
+				object_not_void: an_object /= Void
 			end
 			if object.name.is_empty then
 				create Result.make_with_text (class_name (a_widget))
 			else
-				create Result.make_with_text (object.name + " : " + class_name (a_widget))
+				create Result.make_with_text (an_object.name + " : " + class_name (a_widget))
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -154,14 +159,14 @@ feature {NONE} -- Implementation
 			-- A convenient was of setting up the drop
 			-- actions for GB_OBJECT.
 		local
-			object: GB_OBJECT
+			an_object: GB_OBJECT
 			shared_tools: GB_SHARED_TOOLS
 			shared_handler: GB_SHARED_OBJECT_HANDLER
 		do
 			create shared_handler
-			object := shared_handler.object_handler.object_from_display_widget (a_widget)
+			an_object := shared_handler.object_handler.object_from_display_widget (a_widget)
 			check
-				object_not_void: object /= Void
+				object_not_void: an_object /= Void
 			end
 			
 				--| FIXME This is currently identical to version in 
@@ -170,11 +175,11 @@ feature {NONE} -- Implementation
 				-- start a new object editor for `Current', instead
 				-- of beginning the pick and drop.
 			if application.ctrl_pressed then
-				new_object_editor (object)
+				new_object_editor (an_object)
 			else
 				create shared_tools
-				shared_tools.type_selector.update_drop_actions_for_all_children (object)
-				Result := object
+				shared_tools.type_selector.update_drop_actions_for_all_children (an_object)
+				Result := an_object
 			end
 		end
 

@@ -242,7 +242,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			check
 				object_was_container: container /= Void
 			end
-			grouped_container ?= parent_editor.object.object
+			grouped_container ?= object.object
 			check
 				object_was_container: grouped_container /= Void
 			end
@@ -254,7 +254,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			check
 				was_container_display_object: link_display_object /= Void
 			end
-			current_display_object ?= parent_editor.object.display_object
+			current_display_object ?= object.display_object
 			check
 				object_was_a_contained: current_display_object /= Void
 			end

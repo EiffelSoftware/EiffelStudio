@@ -77,6 +77,8 @@ cluster
 		exclude
 			"xml_implementation"; 
 		end
+		
+	all patterns: "$EIFFEL_SRC/library/patterns"
 
 	all ast:		"$EIFFEL_SRC/Eiffel/common/parser/AST"
 

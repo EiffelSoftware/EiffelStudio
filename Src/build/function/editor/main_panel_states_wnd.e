@@ -25,8 +25,8 @@ feature -- Initialization
 	make (a_parent: COMPOSITE; c: STATE_HOLE) is
 			-- Creation routine
 		do
-			caller := c;
-			choice_make (a_parent);
+			caller := c
+			choice_make (a_parent)
 		end
 
 	caller: STATE_HOLE

@@ -90,33 +90,33 @@ feature {NONE}  -- Initialization
 feature -- Access
 
 	origin: EV_RELATIVE_POINT
-			-- The origin the position is relative to.
-			-- If this is Void, the x and y are relative to (0, 0).
+			-- Origin the position is relative to.
+			-- If this is Void, x and y are relative to (0, 0).
 
 	x: INTEGER
-			-- The x-coordinate relative to origin.
+			-- X-coordinate relative to origin.
 			--| This is in fact not the actual x coordinate relative to
 			--| the origin.
 			--| The actual place is a calculation including scale_x and angle.
 
 	y: INTEGER
-			-- The y-coordinate relative to origin.
+			-- Y-coordinate relative to origin.
 			--| This is in fact not the actual x coordinate relative to
 			--| the origin.
 			--| The actual place is a calculation including scale_y and angle.
 
 	angle: DOUBLE
-			-- The angle in radians relative to origin.
+			-- Angle in radians relative to origin.
 			--| This angle has few to do with this point.
 			--| It's main purpose is to
 			--| propagate it to the points who have this point as origin.
 
 	scale_x: DOUBLE
-			-- The relative horizontal scaling factor.
+			-- Relative horizontal scaling factor.
 			--| Only propagation purpose.
 
 	scale_y: DOUBLE
-			-- The relative vertical scaling factor.
+			-- Relative vertical scaling factor.
 			--| Only propagation purpose.
 
 	positioner: PROCEDURE [ANY, TUPLE [like Current]]
@@ -128,7 +128,7 @@ feature -- Access
 			--| When a positioner is used, origin is ignored.
 
 	x_abs: INTEGER is
-			-- The x relative to (0, 0). Updates if necessary.
+			-- X relative to (0, 0). Updates if necessary.
 		do
 			calculate_absolute_position
 			Result := last_x_abs
@@ -137,7 +137,7 @@ feature -- Access
 		end
 
 	y_abs: INTEGER is
-			-- The y relative to (0, 0). Updates if necessary.
+			-- Y relative to (0, 0). Updates if necessary.
 		do
 			calculate_absolute_position
 			Result := last_y_abs
@@ -153,7 +153,7 @@ feature -- Access
 		end
 
 	angle_abs: DOUBLE is
-			-- The angle relative to 0. Updates if necessary.
+			-- Angle relative to 0. Updates if necessary.
 		do
 			calculate_absolute_position
 			Result := last_angle_abs
@@ -162,7 +162,7 @@ feature -- Access
 		end		
 
 	scale_x_abs: DOUBLE is
-			-- The final horizontal scaling factor. Updates if necessary.
+			-- Final horizontal scaling factor. Updates if necessary.
 		do
 			calculate_absolute_position
 			Result := last_scale_x_abs
@@ -171,7 +171,7 @@ feature -- Access
 		end		
 
 	scale_y_abs: DOUBLE is
-			-- The final vertical scaling factor. Updates if necessary.
+			-- Final vertical scaling factor. Updates if necessary.
 		do
 			calculate_absolute_position
 			Result := last_scale_y_abs
@@ -222,10 +222,11 @@ feature -- Element change
 		end
 
 	set_origin (new_origin: EV_RELATIVE_POINT) is
-			-- Set the point this point is relative to.
+			-- Set point this point is relative to.
 		require
 			new_origin_not_void: new_origin /= Void
 			no_dependance_circle: not new_origin.relative_to (Current)
+				and new_origin /= Current
 		do
 			if origin /= Void then
 				origin.notify_list_ids.prune (object_id)
@@ -236,7 +237,7 @@ feature -- Element change
 		end
 
 	change_origin (new_origin: EV_RELATIVE_POINT) is
-			-- Set the point this point is relative to.
+			-- Set point this point is relative to.
 			-- Do not change absolute coordinates if
 			-- scaling factors and angle do not change.
 		require
@@ -249,42 +250,42 @@ feature -- Element change
 		end
 
 	set_x (new_x: INTEGER) is
-			-- Change the relative horizontal position.
+			-- Change relative horizontal position.
 		do
 			x := new_x
 			notify_of_position_change
 		end
 
 	set_y (new_y: INTEGER) is
-			-- Change the relative vertical position.
+			-- Change relative vertical position.
 		do
 			y := new_y
 			notify_of_position_change
 		end
 
 	set_angle (new_angle: DOUBLE) is
-			-- Set the angle of this point (in radians).
+			-- Set angle of this point (in radians).
 		do
 			angle := new_angle
 			notify_of_position_change
 		end
 
 	set_scale_x (new_scale_x: DOUBLE) is
-			-- Set the the relative horizontal scaling factor.
+			-- Set relative horizontal scaling factor.
 		do
 			scale_x := new_scale_x
 			notify_of_position_change
 		end
 
 	set_scale_y (new_scale_y: DOUBLE) is
-			-- Set the the relative vertical scaling factor.
+			-- Set relative vertical scaling factor.
 		do
 			scale_y := new_scale_y
 			notify_of_position_change
 		end
 
 	set_scale (new_scale: DOUBLE) is
-			-- Set the relative scaling factor.
+			-- Set relative scaling factor.
 		do
 			scale_y := new_scale
 			scale_x := new_scale
@@ -300,7 +301,7 @@ feature -- Element change
 		end
 
 	set_x_abs (new_x_abs: INTEGER) is
-			-- Change the absolute position.
+			-- Change absolute position.
 		do
 			last_x_abs := new_x_abs
 		ensure
@@ -308,7 +309,7 @@ feature -- Element change
 		end
 
 	set_y_abs (new_y_abs: INTEGER) is
-			-- Change the absolute position.
+			-- Change absolute position.
 		do
 			last_y_abs := new_y_abs
 		ensure
@@ -316,7 +317,7 @@ feature -- Element change
 		end
 
 	set_angle_abs (new_angle_abs: DOUBLE) is
-			-- Change the absolute angle.
+			-- Change absolute angle.
 		do
 			last_angle_abs := new_angle_abs
 		ensure
@@ -324,7 +325,7 @@ feature -- Element change
 		end
 
 	set_scale_x_abs (new_scale_x_abs: DOUBLE) is
-			-- Change the absolute horizontal scaling factor.
+			-- Change absolute horizontal scaling factor.
 		do
 			last_scale_x_abs := new_scale_x_abs
 		ensure
@@ -332,7 +333,7 @@ feature -- Element change
 		end
 
 	set_scale_y_abs (new_scale_y_abs: DOUBLE) is
-			-- Change the absolute vertical scaling factor.
+			-- Change absolute vertical scaling factor.
 		do
 			last_scale_y_abs := new_scale_y_abs
 		ensure
@@ -342,23 +343,23 @@ feature -- Element change
 feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 
 	last_x_abs: INTEGER
-			-- The last calculated x relative to (0, 0).
+			-- Last calculated x relative to (0, 0).
 
 	last_y_abs: INTEGER
-			-- The last calculated y relative to (0, 0).
+			-- Last calculated y relative to (0, 0).
 
 	last_angle_abs: DOUBLE
-			-- The last calculated cumulative angle (relative to 0).
+			-- Last calculated cumulative angle (relative to 0).
 
 	last_scale_x_abs: DOUBLE
-			-- The last calculated final horizontal scaling factor.
+			-- Last calculated final horizontal scaling factor.
 
 	last_scale_y_abs: DOUBLE
-			-- The last calculated final vertical scaling factor.
+			-- Last calculated final vertical scaling factor.
 
 	x_transformed (ang, scale: DOUBLE): INTEGER is
-			-- The x if the point it was rotated by `abs'.
-			-- Used to add to the absolute coordinate of origin.
+			-- X if point was rotated by `abs'.
+			-- Used to add to absolute coordinate of origin.
 			-- Formula: rx = (x cos ang - y sin ang) * scale
 			--| This is used to add to the absolute coordinates of the origin
 			--| to get this point's absolute coordinates.
@@ -375,8 +376,8 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 		end
 
 	y_transformed (ang, scale: DOUBLE): INTEGER is
-			-- The y if the point it was rotated by `angle'.
-			-- Used to add to the absolute coordinate of origin.
+			-- Y if point was rotated by `angle'.
+			-- Used to add to absolute coordinate of origin.
 			-- Formula: ry = (x sin ang + y cos ang) * scale
 		do
 			if ang = 0.0 and scale = 1.0 then
@@ -390,7 +391,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 		end
 
 	calculate_absolute_position is
-			-- Do the absolute calculation if needed.
+			-- Do absolute calculation if needed.
 			-- Do nothing if absolute_position is already valid.
 			--| It is not really necessary to call this directly.
 			--| Only when you want every calculation to be done at the
@@ -439,7 +440,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 		end
 
 	absolute_position_valid: BOOLEAN is
-			-- Are the absolute coordinates of this figure valid?
+			-- Are absolute coordinates of this figure valid?
 			--| If they are not, calculate_absolute_position is called first.
 		do
 			Result := not position_changed
@@ -482,11 +483,8 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 	--| and use the angle on point_a as orientation.
 
 	angle_rel_to (pnt: EV_RELATIVE_POINT): DOUBLE is
-			-- Get the angle relative to `pnt'.
+			-- Get angle relative to `pnt'.
 			-- This point must originate from `pnt'.
-			--| FIXME This function is not correct.
-			--| It adds its own angle to the result. (=wrong)
-			--| VB: Tried to fix it, but not yet sure if it works.
 		require
 			pnt_exists: pnt /= Void
 			relative_to_pnt: relative_to (pnt)
@@ -500,7 +498,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 		end
 
 	x_rel_to (pnt: EV_RELATIVE_POINT): INTEGER is
-			-- Get the x relative to `pnt'.
+			-- X relative to `pnt'.
 			-- This point must originate from `pnt'.
 		require
 			pnt_exists: pnt /= Void
@@ -513,7 +511,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT} -- Implementation
 		end
 
 	y_rel_to (pnt: EV_RELATIVE_POINT): INTEGER is
-			-- Get the y relative to `pnt'.
+			-- Y relative to `pnt'.
 			-- This point must originate from `pnt'.
 		require
 			pnt_exists: pnt /= Void
@@ -545,7 +543,7 @@ feature -- Representation
 feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 
 	position_changed: BOOLEAN
-			-- Is the position updated since last calculation?
+			-- Is position updated since last calculation?
 
 	controlled_by_positioner: BOOLEAN
 			-- Checks whether this position is somehow controlled by a
@@ -592,7 +590,7 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 			-- Immediate dependant points and figures using weak referencing.
 
 	notify_of_position_change is
-			-- Set the flag `position_changed' and in all referring positions.
+			-- Set flag `position_changed' and in all referring positions.
 		local
 			i: EV_RELATIVE_POINT
 			f: EV_FIGURE

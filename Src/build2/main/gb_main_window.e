@@ -72,6 +72,39 @@ feature {NONE} -- Initialization
 			close_request_actions.extend (agent close_requested)
 		end
 
+feature -- Basic operation
+
+	show_tools is
+			-- Place tools in `Current'.
+		require
+			has_item: item /= Void
+			item_is_filler: item = filler
+		do
+				-- Remove the filler.
+			wipe_out
+				-- Add the tools.
+			extend (tool_holder)
+		ensure
+			has_item: item /= Void
+			item_is_tool_holder: item = tool_holder
+		end
+		
+		
+	hide_tools is
+			-- Remove tools from `Current'.
+		require
+			has_item: item /= Void
+			item_is_tool_holder: item = tool_holder
+		do
+				-- Remove the tools
+			wipe_out
+				-- Add the filler
+			extend (filler)
+		ensure
+			has_item: item /= Void
+			item_is_filler: item = filler
+		end
+
 feature {NONE} -- Implementation
 
 	build_menu is
@@ -135,26 +168,24 @@ feature {NONE} -- Implementation
 	build_widget_structure is
 			-- create and layout "widgets" within `Current'.
 		local
-			vertical_box: EV_VERTICAL_BOX
 			separator: EV_HORIZONTAL_SEPARATOR
 			split_area: EV_HORIZONTAL_SPLIT_AREA
 			vertical_box1: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 			vertical_split_area: EV_VERTICAL_SPLIT_AREA
 		do
-			create vertical_box
-			extend (vertical_box)
+			create tool_holder
 			create separator
-			vertical_box.extend (separator)
-			vertical_box.disable_item_expand (separator)
-			vertical_box.extend (tool_bar)
-			vertical_box.disable_item_expand (tool_bar)
+			tool_holder.extend (separator)
+			tool_holder.disable_item_expand (separator)
+			tool_holder.extend (tool_bar)
+			tool_holder.disable_item_expand (tool_bar)
 			create separator
-			vertical_box.extend (separator)
-			vertical_box.disable_item_expand (separator)
+			tool_holder.extend (separator)
+			tool_holder.disable_item_expand (separator)
 			create split_area
 			create horizontal_box
-			vertical_box.extend (horizontal_box)
+			tool_holder.extend (horizontal_box)
 			horizontal_box.extend (split_area)
 			create vertical_split_area
 			split_area.extend (vertical_split_area)
@@ -169,6 +200,10 @@ feature {NONE} -- Implementation
 			vertical_box1.extend (layout_constructor)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
+			
+			create filler
+			extend (filler)
+			--extend (tool_holder)
 			builder_window.show
 		end
 		
@@ -185,8 +220,6 @@ feature {NONE} -- Implementation
 	tool_bar: EV_TOOL_BAR is
 			-- Tool bar of `Current'
 		local
-		--	delete_button: GB_DELETE_TOOL_BAR_BUTTON
-		--	a_new_object_editor: GB_NEW_OBJECT_EDITOR_BUTTON
 			undo_button: GB_UNDO_TOOL_BAR_BUTTON
 			redo_button: GB_REDO_TOOL_BAR_BUTTON
 			separator: EV_TOOL_BAR_SEPARATOR
@@ -240,5 +273,13 @@ feature {NONE} -- Implementation
 				-- Destroy the application.
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
+		
+	tool_holder: EV_VERTICAL_BOX
+		-- Holds all the tools to be placed in `Current'.
+			
+	filler: EV_TREE
+		-- To be placed in `Current' when we do not want
+		-- the tools to be available.
+
 
 end -- class GB_MAIN_WINDOW

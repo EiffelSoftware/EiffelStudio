@@ -43,14 +43,14 @@ feature -- Creation
 					if substrg.count > 0 then
 						create code.make (substrg)
 						value.put (code, i)
+						i := i + 1
 					end
 					if substrg2.count > 0 then
-						i := i + 1
 						value.put (create {DATE_TIME_CODE}.make (substrg2), i)
+						i := i + 1
 						separators_used := True
 					end
 					pos1 := pos2 + 1
-					i := i + 1
 				end
 			end
 			base_century := (create {C_DATE}).year_now // 100 * -100
@@ -180,32 +180,33 @@ feature -- Interface
 					pos1 := pos2 + 1
 				else
 					if code /= Void then
-						Result := substrg.count <= code.count_max and 
-						substrg.count >= code.count_min
-						if code.is_numeric then
-							Result := Result and substrg.is_integer
-							if code.value_max /= -1 and 
-								code.value_min /= -1 then
-								Result := Result and 
-									substrg.to_integer <= code.value_max and
-									substrg.to_integer >= code.value_min
-							end
-						else
-							if code.is_day_text (code.value) then 
-								Result := Result and days.has (substrg)
+						if substrg.count > 0 then
+							Result := substrg.count <= code.count_max and 
+							substrg.count >= code.count_min
+							if code.is_numeric then
+								Result := Result and substrg.is_integer
+								if code.value_max /= -1 and 
+									code.value_min /= -1 then
+									Result := Result and 
+										substrg.to_integer <= code.value_max and
+										substrg.to_integer >= code.value_min
+								end
 							else
-								Result := Result and months.has (substrg)
+								if code.is_day_text (code.value) then 
+									Result := Result and days.has (substrg)
+								else
+									Result := Result and months.has (substrg)
+								end
 							end
+							i := i + 1
 						end
 						if has_seps then
-							code := value.item (i + 1)
+							code := value.item (i)
+							i := i + 1
 							if code /= Void then
 								Result := Result and (pos2 /= s.count) and 
 									substrg2.is_equal (code.value)
 							end
-							i := i + 2
-						else
-							i := i + 1
 						end
 						pos1 := pos2 + 1
 					else

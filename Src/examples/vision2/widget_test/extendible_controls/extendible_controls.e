@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			default_create
 			current_type := an_any_item
 			create combo_control
+			combo_control.disable_edit
 			from
 				counter := 1
 			until
@@ -51,7 +52,6 @@ feature {NONE} -- Initialization
 				counter := counter + 1
 			end
 			input_control_holder.extend (combo_control)
-			combo_control.change_actions.extend (agent extend_item)
 			object_editor := editor
 		end
 		

@@ -57,8 +57,7 @@ feature {NONE} -- Implementation
 				until
 					func_desc.arguments.off
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor
 
 					Result.append (Beginning_comment_paramflag)
 
@@ -89,8 +88,7 @@ feature {NONE} -- Implementation
 				if func_desc.return_type.name.is_equal (Void_c_keyword) then
 					Result.remove (Result.count)
 				else
-					create visitor
-					visitor.visit (func_desc.return_type)
+					visitor := func_desc.return_type.visitor
 					Result.append (Beginning_comment_paramflag)
 					Result.append (Out_keyword)
 					Result.append (Comma_space)
@@ -133,8 +131,7 @@ feature {NONE} -- Implementation
 				until
 					func_desc.arguments.after
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
 						variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
@@ -144,7 +141,7 @@ feature {NONE} -- Implementation
 
 						arguments.append (Comma_space)
 
-						if visitor.is_basic_type then
+						if visitor.is_basic_type or visitor.is_enumeration then
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)
 						else
@@ -157,14 +154,14 @@ feature {NONE} -- Implementation
 					else
 						variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						if visitor.is_basic_type then
+						if visitor.is_basic_type or visitor.is_enumeration then
 							arguments.append (Comma_space)
 							arguments.append (Open_parenthesis)
 							arguments.append (visitor.cecil_type)
 							arguments.append (Close_parenthesis)
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)
-						elseif is_boolean (visitor.vt_type)  then
+						elseif  (visitor.vt_type = Vt_bool)  then
 							arguments.append (Comma_space)
 							arguments.append (Open_parenthesis)
 							arguments.append (Eif_boolean)
@@ -180,7 +177,11 @@ feature {NONE} -- Implementation
 							arguments.append (Close_parenthesis)
 						end
 	
-						if not visitor.is_basic_type and not (is_boolean (visitor.vt_type) and not visitor.is_pointed) then
+						if 
+							not visitor.is_basic_type and 
+							not (visitor.vt_type = Vt_bool) and 
+							not visitor.is_enumeration
+						then
 							free_object.append (Eif_wean)
 							free_object.append (Space_open_parenthesis)
 							free_object.append (Tmp_clause)
@@ -194,8 +195,7 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				create visitor
-				visitor.visit (func_desc.return_type)
+				visitor := func_desc.return_type.visitor
 				if visitor.c_type.is_equal (Void_c_keyword) then
 					cecil_call := cecil_procedure_set_up
 				else
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 					Result.append (visitor.c_type)
 					Result.append (Close_parenthesis)
 
-					if visitor.is_basic_type then
+					if visitor.is_basic_type or visitor.is_enumeration then
 						Result.append (Tmp_variable_name)
 						Result.append (Semicolon)
 					else

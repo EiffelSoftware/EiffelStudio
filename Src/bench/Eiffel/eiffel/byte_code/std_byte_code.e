@@ -22,7 +22,7 @@ inherit
 	SHARED_ERROR_HANDLER
 
 	SHARED_DECLARATIONS
-
+	
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]
@@ -206,7 +206,8 @@ feature -- Analyzis
 					arg := real_type (args @ 1)
 					if arg.is_true_expanded then
 							-- Force GC hook and its usage even if not used within
-							-- body of current routine. See FIXME of `generate_expanded_cloning'
+							-- body of current routine.
+							-- See FIXME of `generate_expanded_arguments_cloning'
 							-- for possible improvement.
 						context.force_gc_hooks
 						arg_var.set_position (i)
@@ -267,6 +268,9 @@ feature -- Analyzis
 			generate_execution_declarations
 			generate_locals
 
+				-- Clone expanded parameters.
+			generate_expanded_initialization
+
 				-- If necessary, generate the once stuff (i.e. checks if
 				-- the value of the once was already set within the same
 				-- thread).  That way we do not enter the body of the
@@ -281,10 +285,6 @@ feature -- Analyzis
 				-- Record the locals, arguments and Current address for debugging.
 			generate_push_db
 			
-				-- Clone expanded parameters, raise exception in caller if
-				-- needed (void assigned to expanded).
-			generate_expanded_cloning
-
 				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
@@ -489,13 +489,154 @@ end
 		do
 		end
 
+	generate_expanded_arguments is
+			-- Generate declaration for locals `earg' that will hold a copy of passed
+			-- arguments.
+		local
+			l_arguments: like arguments
+			i, nb: INTEGER
+			l_buf: like buffer
+			l_has_expanded: BOOLEAN
+			l_type: CL_TYPE_I
+			l_arg_name: STRING
+			l_class_type: CLASS_TYPE
+		do
+			l_arguments := arguments
+			if l_arguments /= Void then
+				from
+					i := l_arguments.lower
+					nb := l_arguments.upper
+					l_buf := buffer
+				until
+					i > nb
+				loop
+					l_type ?= real_type (l_arguments.item (i))
+					if l_type /= Void and then l_type.is_true_expanded then
+						create l_arg_name.make (6)
+						l_arg_name.append ("sarg")
+						l_arg_name.append_integer (i)
+						l_class_type := l_type.associated_class_type
+						l_class_type.generate_expanded_structure_declaration (l_buf, l_arg_name)
+						l_buf.put_new_line
+						l_buf.put_string ("EIF_REFERENCE earg")
+						l_buf.put_integer (i)
+						l_buf.put_string (" = (EIF_REFERENCE) (")
+						l_buf.put_string (l_arg_name)
+						l_buf.put_string (".data")
+						l_class_type.generate_expanded_overhead_size (l_buf)
+						l_buf.put_string (");")
+						l_buf.put_new_line
+						l_has_expanded := True
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	generate_expanded_initialization is
+			-- Clone expanded parameters and initialize local expanded objects.
+		local
+			l_type: CL_TYPE_I
+			i, count: INTEGER
+			buf: GENERATION_BUFFER
+			l_list: ARRAY [TYPE_I]
+			l_class_type: CLASS_TYPE
+			l_loc_name: STRING
+		do
+			l_list := arguments
+			if l_list /= Void then
+				from
+					i := l_list.lower
+					count := l_list.count
+					buf := buffer
+				until
+					i > count
+				loop
+					l_type ?= real_type (l_list.item (i))
+					if l_type /= Void and then l_type.is_true_expanded then
+							-- FIXME: Manu: 05/10/2004: if argument is not
+							-- used and if associated type does not redefine `copy'
+							-- then we could skip this call for more efficiency.
+							-- See `analyze_arguments' too as the above fixme is related
+							-- to what `analyze_arguments' does to mark the expanded
+							-- arguments used.
+							-- FIXME: Manu: 05/11/2004: We need to call `copy' if it
+							-- is redefined, not the equivalent of `standard_copy'.
+							-- Note: Safe to use `memcpy' since target is allocated on the
+							-- stack and no one can have a reference to it.
+						l_class_type := l_type.associated_class_type
+						buf.put_string ("memcpy (sarg")
+						buf.put_integer (i)
+						buf.put_string (".data, HEADER(arg")
+						buf.put_integer (i)
+						buf.put_string ("), ")
+						if context.workbench_mode then
+							l_class_type.skeleton.generate_workbench_size (buf)
+						else
+							l_class_type.skeleton.generate_size (buf)
+						end
+						l_class_type.generate_expanded_overhead_size (buf)
+						buf.put_string (");")
+						buf.put_new_line
+						buf.put_string ("((union overhead *) sarg")
+						buf.put_integer (i)
+						buffer.put_string (".data)->ov_size = 0;")
+						buf.put_new_line
+					end
+					i := i + 1
+				end
+			end
+
+			l_list := locals
+			if locals /= Void then
+				from
+					i := l_list.lower
+					count := l_list.count
+					buf := buffer
+				until
+					i > count
+				loop
+					l_type ?= real_type (l_list.item (i))
+					if l_type /= Void and then l_type.is_true_expanded then
+							-- FIXME: Manu: 05/12/2004: if local is not
+							-- used and if associated type does not redefine `default_create'
+							-- then we could skip this call for more efficiency.
+
+							-- First we reset the memory to `0'.
+						create l_loc_name.make (6)
+						l_loc_name.append ("sloc")
+						l_loc_name.append_integer (i)
+
+						buf.put_string ("memset (")
+						buf.put_string (l_loc_name)
+						buf.put_string (".data, 0, ")
+						l_class_type := l_type.associated_class_type
+						if context.workbench_mode then
+							l_class_type.skeleton.generate_workbench_size (buf)
+						else
+							l_class_type.skeleton.generate_size (buf)
+						end
+						l_class_type.generate_expanded_overhead_size (buf)
+						buf.put_string (");")
+						buf.put_new_line
+
+							-- Then we update the type information
+						l_class_type.generate_expanded_type_initialization (buf, l_loc_name)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 	generate_expanded_variables is
 			-- Create local expanded variables and Result
 		local
 			i, count: INTEGER
 			type_i: TYPE_I
 			used_upper: INTEGER
+			l_buffer: like buffer
 		do
+			l_buffer := buffer
 			if locals /= Void then
 				from
 					i := locals.lower
@@ -507,10 +648,12 @@ end
 							-- Generate only if variable used
 					if i <= used_upper and then context.local_vars.item(i) then
 						type_i := real_type (locals.item (i))
-						if type_i.is_true_expanded or type_i.is_bit then
+						if type_i.is_true_expanded then
 							local_var.set_position (i)
-							type_i.generate_expanded_creation (Current, local_var,
-								context.workbench_mode)
+							type_i.generate_expanded_initialization (l_buffer, local_var.register_name)
+						elseif type_i.is_bit then
+							local_var.set_position (i)
+							type_i.generate_expanded_creation (l_buffer, local_var.register_name)
 						end
 					end
 					i := i + 1
@@ -519,43 +662,10 @@ end
 			if context.result_used then
 				type_i := real_type (result_type)
 				if type_i.is_true_expanded or type_i.is_bit then
-					type_i.generate_expanded_creation (Current, context.result_register,
-						context.workbench_mode)
-				end
-			end
-		end
-
-	generate_expanded_cloning is
-			-- Clone expanded parameters
-		local
-			arg: TYPE_I
-			i, count: INTEGER
-			buf: GENERATION_BUFFER
-		do
-			if arguments /= Void then
-				from
-					i := arguments.lower
-					count := arguments.count
-					buf := buffer
-				until
-					i > count
-				loop
-					arg := real_type (arguments.item (i))
-					if arg.is_true_expanded then
-							-- FIXME: Manu: 05/10/2004: if argument is not
-							-- used and if associated type does not redefine `copy'
-							-- then we could skip this call for more efficiency.
-							-- See `analyze_arguments' too as the above fixme is related
-							-- to what `analyze_arguments' does to mark the expanded
-							-- arguments used.
-						arg_var.set_position (i)
-						arg_var.print_register
-						buf.put_string (" = RTCL(")
-						arg_var.print_register
-						buf.put_string (");")
-						buf.put_new_line
-					end
-					i := i + 1
+					type_i.generate_expanded_creation (l_buffer,
+						context.result_register.register_name)
+					type_i.generate_expanded_initialization (l_buffer,
+						context.result_register.register_name)
 				end
 			end
 		end
@@ -592,7 +702,11 @@ end
 							-- the local variable array "l[]"
 						buf.put_string ("RTLU(")
 						type_i.c_type.generate_sk_value (buf)
-						buf.put_string (",&arg")
+						if type_i.is_true_expanded then
+							buf.put_string (",&earg")
+						else
+							buf.put_string (",&arg")
+						end
 						buf.put_integer (i)
 						buf.put_string (");")
 						buf.put_new_line
@@ -721,15 +835,18 @@ end
 	generate_locals is
 			-- Declare C local variables
 		local
-			i			: INTEGER
-			count		: INTEGER
-			type_i		: TYPE_I
-			buf			: GENERATION_BUFFER
-			used_local	: BOOLEAN
-			wkb_mode	: BOOLEAN
+			i: INTEGER
+			count: INTEGER
+			type_i: TYPE_I
+			buf: GENERATION_BUFFER
+			used_local: BOOLEAN
+			wkb_mode: BOOLEAN
 			used_upper: INTEGER
 			has_rescue: BOOLEAN
 			l_is_once: BOOLEAN
+			l_loc_name: STRING
+			l_type: CL_TYPE_I
+			l_class_type: CLASS_TYPE
 		do
 				-- Cache accessed attributes
 			buf := buffer
@@ -754,9 +871,22 @@ end
 					end
 					
 							-- Generate only if variable used
-					if wkb_mode or used_local then
+					if wkb_mode or (used_local or type_i.is_true_expanded) then
 							-- Local reference variable are declared via
 							-- the local variable array "l[]".
+						if type_i.is_true_expanded then
+							create l_loc_name.make (6)
+							l_loc_name.append ("sloc")
+							l_loc_name.append_integer (i)
+							l_type ?= type_i
+							check
+									-- Only a CL_TYPE_I could be an expanded
+								l_type_not_void: l_type /= Void
+							end
+							l_class_type := l_type.associated_class_type
+							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
+							buf.put_new_line
+						end
 						if has_rescue and then not wkb_mode and then type_i.is_basic then
 							buf.put_string ("EIF_VOLATILE ")
 						end
@@ -764,13 +894,25 @@ end
 						buf.put_string ("loc")
 						buf.put_integer (i)
 						buf.put_string (" = ")
-						type_i.c_type.generate_cast (buf)
-						buf.put_string (" 0;")
-						buf.put_new_line
+						if type_i.is_true_expanded then
+							type_i.c_type.generate_cast (buf)
+							buf.put_string (" (")
+							buf.put_string (l_loc_name)
+							buf.put_string (".data")
+							l_class_type.generate_expanded_overhead_size (buf)
+							buf.put_string (");")
+							buf.put_new_line
+						else
+							type_i.c_type.generate_cast (buf)
+							buf.put_string (" 0;")
+							buf.put_new_line
+						end
 					end
 					i := i + 1
 				end
 			end
+			
+			generate_expanded_arguments
 
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables

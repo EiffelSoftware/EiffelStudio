@@ -172,12 +172,20 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
+			Result := "$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/$prefix"
+
+			if Lace.ace_options.has_multithreaded then
+				Result.append ("$mt_prefix")
+			end
+
 			if System.has_separate then
-				Result := "%
-					%$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libcwkbench.a %
-					%$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
-			else
-				Result := "$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
+				Result.append ("$concurrent_prefix")
+			end
+
+			Result.append ("$wkeiflib$suffix")
+
+			if System.has_separate then
+				Result.append ("$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a")
 			end
 		end;
 

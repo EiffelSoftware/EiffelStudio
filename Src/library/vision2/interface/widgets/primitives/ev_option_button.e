@@ -10,7 +10,7 @@ class
 	EV_OPTION_BUTTON
 
 inherit
-	EV_MENU_ITEM_CONTAINER
+	EV_MENU_CONTAINER
 		redefine
 			implementation
 		end
@@ -34,9 +34,6 @@ feature {NONE} -- Initialization
 			-- window
 		do
 			!EV_OPTION_BUTTON_IMP!implementation.make (par)
-			implementation.set_interface (Current)
-			implementation.test_and_set_parent (par)
-			implementation.build
 			managed := par.manager
 			widget_make (par)
 		end	

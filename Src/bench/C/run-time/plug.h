@@ -34,6 +34,7 @@ struct bit {
  */
 
 extern char *makestr();				/* Build an Eiffel string object */
+extern char *makebit();				/* Build an Eiffel bit object */
 extern int str_dtype;				/* Dynamic type for string */
 extern int bit_dtype;				/* Dynamic type for bit */
 extern void (*strmake)();			/* STRING creation feature */

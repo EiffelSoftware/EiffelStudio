@@ -12,7 +12,8 @@ inherit
 		rename
 			make as button_make
 		end;
-	WINDOWS
+	WINDOWS;
+	WIDGET_ROUTINES
 
 creation
 	make
@@ -25,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			associated_command := cmd;
 			button_make (button_name, a_parent);
+			init_button (implementation);
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.tool);
 			initialize_focus 
@@ -45,12 +47,6 @@ feature -- Access
 			-- The pixmap representing Current.
 		do
 			Result := associated_command.symbol
-		end;
-
-	grey_symbol: PIXMAP is
-			-- Insensitive version of `symbol'
-		do
-			Result := associated_command.grey_symbol
 		end;
 
 	focus_string: STRING is

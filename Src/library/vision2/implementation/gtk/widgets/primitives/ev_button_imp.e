@@ -41,6 +41,12 @@ inherit
 			initialize
 		end
 
+	EV_FONTABLE_IMP
+		redefine
+			interface,
+			initialize
+		end
+
 	EV_BUTTON_ACTION_SEQUENCES_IMP
 		export
 			{INTERMEDIARY_ROUTINES} select_actions_internal

@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Submitting a Bug Report</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Submitting a Bug Report</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center"><nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<table cols="1" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>How to fill a bug report</h1>
+      <p>By following these recommendations, it will improve the speed of our
+      response to your problem.</p>
+      <p>&nbsp;</p>
+      <h2>A library bug</h2>
+      <p>When you find a problem using a certain library in a specific context,
+      please send a complete package through the Web support page.&nbsp; If you
+      are using a precompiled library, make sure that the problem still occurs
+      when removing it. The package should contain your Ace file (without a
+      precompiled library), your Eiffel source code files and if any your
+      configuration files.
+      <p>If the problem occurs only with a precompiled library, please look
+      below, it is most probably an EiffelBench misbehavior.
+      <p>&nbsp;
+      <h2>An EiffelBench bug</h2>
+      <p>If EiffelBench is misbehaving or crashing for any reasons:
+      <ol>
+        <li>Delete your EIFGEN
+        <li>Edit the file `general.cfg' located in $EIFFEL4/eifinit/bench and
+          replace the line `automatic_backup: False' by `automatic_backup:
+          True'.
+        <li>Edit the file `general.cfg' located in $EIFFEL4/eifinit/bench and
+          replace the line `fail_on_rescue: False' by `fail_on_rescue: True'.
+        <li>Change the es4 binary to use the RTEA version which gives more debug
+          information, useful to us to find what could be the problem:
+          <ul>
+            <li>On Unix, in the directory $EIFFEL4/bench/spec/$PLATFORM/bin
+              rename es4 into old_es4 and es4_rtea into es4
+            <li>On Windows, in the directory $EIFFEL4/bench/spec/windows/bin
+              rename es4.exe into old_es4.exe and es4.exe-rtea into es4.exe</li>
+          </ul>
+        <li>Relaunch your compilation until it fails. On Windows, if a DOS
+          console appears, a copy of its content will be saved in
+          $EIFFEL4\bench\spec\windows\bin\exception_trace.log. On Unix, copy the
+          output into a file called `exception_trace.log'.
+        <li>Send us through the Web support page a package containing the file `exception_trace.log'
+          and the BACKUP directory located in your EIFGEN directory.</li>
+      </ol>
+      <p>If it is an incremental misbehavior, follow step 1,2, 3. Repeat 4 until
+      your i-th compilation fails. Then follow step 5.</p>
+      <p>&nbsp;</p>
+      <h2>Other products bug</h2>
+      <p>If you have a problem with any other ISE products, please send us the
+      detailed instruction that you followed to make the problem appears.
+      <p>&nbsp;<h1>How to send the bug report</h1>
+      <p>Go to <a href="http://support.eiffel.com/cgi-bin/submit-bug.pl">http://support.eiffel.com/cgi-bin/submit-bug.pl</a>
+      <p>You can attach a file at the end of the page. <p>&nbsp;</td>
+  </tr>
+</table>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

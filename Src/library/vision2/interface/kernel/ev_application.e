@@ -141,7 +141,6 @@ feature -- Basic operation
 			-- Call `prepare' the Begin event processing.
 		require
 			not_destroyed: not is_destroyed
-			default_create_called: default_create_called
 			not_already_launched: not is_launched
 		do
 			is_launched := True

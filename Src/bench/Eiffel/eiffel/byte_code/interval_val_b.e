@@ -61,12 +61,13 @@ feature -- Iteration
 
 feature -- Evaluation
 
-	inspect_interval (upper: like Current): INTERVAL_B is
+	inspect_interval (upper: like Current): TYPED_INTERVAL_B [like Current] is
 			-- Interval with lower set to `Current' and upper set to `upper'
 		require
 			upper_not_void: upper /= Void
-			compatible_type: conforms_to (upper) or upper.conforms_to (Current)
-		deferred
+			same_type: same_type (upper)
+		do
+			create Result.make (Current, upper)
 		ensure
 			result_not_void: Result /= Void
 			lower_set: Result.lower = Current
@@ -88,6 +89,32 @@ feature -- IL code generation
 			-- Generate code to subtract this value if `is_included' is true or
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
+		deferred
+		end
+
+feature {INTERVAL_B} -- C code generation
+
+	generate_interval (other: like Current) is
+			-- Generate interval Current..`other'.
+		require
+			other_not_void: other /= Void
+			same_type: same_type (other)
+			good_range: Current <= other
+		deferred
+		end
+
+feature {INTERVAL_B} -- IL code generation
+
+	il_load_value is
+			-- Load value to IL stack.
+		deferred
+		end
+
+	il_load_difference (other: like Current) is
+			-- Load a difference between current and `other' to IL stack.
+		require
+			other_not_void: other /= Void
+			same_type: same_type (other)
 		deferred
 		end
 

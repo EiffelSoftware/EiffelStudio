@@ -21,19 +21,13 @@ feature -- Comparison
 	infix "<" (other: INT_VAL_B): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
-			Result := generation_value < other.generation_value
-		end
-
-	is_next (other: like Current): BOOLEAN is
-			-- Is `other' next to Current?
-		do
-			Result := other.generation_value = generation_value + 1
+			Result := value < other.value
 		end
 
 	is_allowed_unique_value: BOOLEAN is
 			-- Does `Current' represent an allowed unique value?
 		do
-			Result := generation_value > 0
+			Result := value > 0
 		end
 
 feature -- Measurement
@@ -42,18 +36,10 @@ feature -- Measurement
 			-- Distance between `other' and Current
 		do
 				-- Convert to result type first to avoid overflow if difference is higher than maximum integer
-			Result := other.generation_value
-			Result := (Result - generation_value).abs
+			Result := other.value
+			Result := (Result - value).abs
 		end
 		
-feature -- Evaluation
-
-	inspect_interval (upper: like Current): INT_INTER_B is
-			-- Interval with lower set to `Current' and upper set to `upper'
-		do
-			create Result.make (Current, upper)
-		end
-
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is
@@ -67,11 +53,11 @@ feature -- Iteration
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		local
-			i: like generation_value
-			j: like generation_value
+			i: like value
+			j: like value
 		do
-			i := generation_value
-			j := other.generation_value
+			i := value
+			j := other.value
 			if i <= j and then (is_included or else i < i + 1) and then (is_other_included or else j - 1 < j) then
 				if not is_included then
 					i := i + 1
@@ -99,7 +85,7 @@ feature -- Byte code generation
 			-- Generate byte code for an integer constant in an interval.
 		do
 			ba.append (Bc_int32)
-			ba.append_integer (generation_value)
+			ba.append_integer (value)
 		end
 
 feature -- IL code generation
@@ -109,7 +95,7 @@ feature -- IL code generation
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		do
 			instruction.generate_il_load_value
-			il_generator.put_integer_32_constant (generation_value)
+			il_load_value
 			if is_included then
 				il_generator.branch_on_condition ({MD_OPCODES}.bgt, label)
 			else
@@ -122,9 +108,9 @@ feature -- IL code generation
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
 		local
-			i: like generation_value
+			i: like value
 		do
-			i := generation_value
+			i := value
 			if not is_included then
 				i := i + 1
 			end
@@ -132,6 +118,38 @@ feature -- IL code generation
 				il_generator.put_integer_32_constant (i)
 				il_generator.generate_binary_operator ({IL_CONST}.il_minus)
 			end
+		end
+
+feature {TYPED_INTERVAL_B} -- IL code generation
+
+	il_load_value is
+			-- Load value to IL stack.
+		do
+			il_generator.put_integer_32_constant (value)
+		end
+
+	il_load_difference (other: like Current) is
+			-- Load a difference between current and `other' to IL stack.
+		do
+			il_generator.put_integer_32_constant (value - other.value)
+		end
+
+feature {NONE} -- Implementation: C generation
+
+	generate_value (v: like value) is
+			-- Generate single value `v'.
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_integer (v)
+			buf.put_character ('L')
+		end
+
+	next_value (v: like value): like value is
+			-- Value after given value `v'
+		do
+			Result := v + 1
 		end
 
 end

@@ -224,6 +224,19 @@ feature -- Element change
 			not_full: position > lower
 		end
 
+feature -- Removal
+
+	wipe_out is
+			-- Wipe out buffer.
+		do
+			flush
+			filled := False
+		ensure
+			wiped_out: count = 0
+			beginning_of_line: beginning_of_line
+			not_filled: not filled
+		end
+
 feature {NONE} -- Implementation
 
 	resize is

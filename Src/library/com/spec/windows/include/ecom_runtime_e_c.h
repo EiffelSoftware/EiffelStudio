@@ -12,6 +12,8 @@
 #ifndef __ECOM_RUNTIME_EC_H_INC__
 #define __ECOM_RUNTIME_EC_H_INC__
 
+class ecom_runtime_ec;
+
 #include <objbase.h>
 #include <oleauto.h>
 #include <string.h>
@@ -20,6 +22,7 @@
 #include "E_bstr.h"
 #include "E_wide_string.h"
 #include "eif_except.h"
+#include "ecom_rt_globals.h"
 
 
 class ecom_runtime_ec
@@ -54,20 +57,20 @@ class ecom_runtime_ec
 		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
 
 		// ARRAY
-		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension);
-		short * ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension);
-		HRESULT * ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimension);
-		CURRENCY * ccom_ec_array_currency (EIF_REFERENCE a_ref, int dimension);
-		VARIANT * ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimension);
-		DECIMAL * ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimension);
-		VARIANT_BOOL * ccom_ec_array_boolean (EIF_REFERENCE a_ref, int dimension);
-		LARGE_INTEGER * ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension);
-		ULARGE_INTEGER * ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension);
-		IDispatch * ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int dimension);
-		IUnknown * ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension);
-		LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension);
-		LPSTR * ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension);
-		BSTR * ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension);
+		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, DATE * old);
+		short * ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension, short * old);
+		HRESULT * ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimension, HRESULT * old);
+		CURRENCY * ccom_ec_array_currency (EIF_REFERENCE a_ref, int dimension, CURRENCY * old);
+		VARIANT * ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimension, VARIANT * old);
+		DECIMAL * ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimension, DECIMAL * old);
+		VARIANT_BOOL * ccom_ec_array_boolean (EIF_REFERENCE a_ref, int dimension, VARIANT_BOOL * old);
+		LARGE_INTEGER * ccom_ec_array_long_long (EIF_REFERENCE a_ref, int dimension, LARGE_INTEGER * old);
+		ULARGE_INTEGER * ccom_ec_array_ulong_long (EIF_REFERENCE a_ref, int dimension, ULARGE_INTEGER * old);
+		IDispatch * ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int dimension, IDispatch * old);
+		IUnknown * ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension, IUnknown * old);
+		LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension, LPWSTR * old);
+		LPSTR * ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension, LPSTR * old);
+		BSTR * ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, BSTR * old);
 
 		// SAFEARRAY
 		SAFEARRAY * ccom_ec_safearray_char (EIF_REFERENCE a_ref);
@@ -86,6 +89,5 @@ class ecom_runtime_ec
 		SAFEARRAY * ccom_ec_safearray_unknown (EIF_REFERENCE a_ref);
 };
 
-#include "ecom_rt_globals.h"
-;
+
 #endif // !__ECOM_RUNTIME_EC_H_INC__

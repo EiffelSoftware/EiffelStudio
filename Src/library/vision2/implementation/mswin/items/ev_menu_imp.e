@@ -265,7 +265,9 @@ feature {NONE} -- Implementation
 				cwin_modify_menu (parent_imp.wel_item, pos - 1, Mf_Byposition +
 					Mf_String + Mf_popup, to_integer, wel_string.item)
 					-- Re-draw the menu bar.
-				cwin_draw_menu_bar (top_level_window_imp.wel_item)
+				if top_level_window_imp /= Void then
+					cwin_draw_menu_bar (top_level_window_imp.wel_item)
+				end
 			end
 		end
 

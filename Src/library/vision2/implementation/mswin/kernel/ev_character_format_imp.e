@@ -126,6 +126,7 @@ feature -- Access
 			font_imp ?= Result.implementation
 			create a_wel_font.make_indirect (log_font)
 			font_imp.set_by_wel_font (a_wel_font)
+
 			if shape = shape_italic then
 				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
 			end
@@ -165,7 +166,19 @@ feature -- Status setting
 			if font_imp.internal_face_name /= Void then
 				set_face_name (font_imp.internal_face_name)
 			end
-			set_pitch_and_family (font_imp.wel_log_font.pitch_and_family)
+				
+				-- It is important to note the the following code will not work here:
+				--
+				--			set_pitch_and_family (font_imp.wel_log_font.pitch_and_family)
+				--
+				-- This is because `wel_log_font' is defined as a once in EV_FONT_IMP and therefore
+				-- may not be in snych with the current settings of a paticular font.
+				-- `wel_log_font' is used as a temporary go between when modifying a font
+				-- and its properties including `wel_font'.
+				-- Therefore, we must query the `log_font' from `wel_font' directly to ensure
+				-- that it is the correct version. Julian.
+			set_pitch_and_family (font_imp.wel_font.log_font.pitch_and_family)
+			
 			set_height_in_pixels (font_imp.height)
 			set_char_set (font_imp.wel_log_font.char_set)			
 			if font_imp.wel_font.log_font.weight >= 700 then
@@ -259,7 +272,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		
 	wel_screen_font_family: INTEGER
 		-- Font family of the wel screen font.
-		
+
 	Default_wel_log_font: WEL_LOG_FONT is
 			-- Structure used to initialize fonts.
 		once

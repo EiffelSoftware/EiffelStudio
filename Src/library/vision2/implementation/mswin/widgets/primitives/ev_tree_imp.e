@@ -236,6 +236,8 @@ feature -- Basic operations
 					c.forth
 				end
 				item_imp.set_internal_children (c)
+			else
+				item_imp.set_internal_children (create {ARRAYED_LIST [EV_TREE_NODE_IMP]}.make (0))
 			end
 			if item_imp = selected_item_imp then
 				item_imp.deselect_actions.call (Void)

@@ -92,8 +92,12 @@ feature -- Access
 				titled_window_object ?= objects.item
 				objects.forth
 			end
-				-- Only executable if there is at least one window within the system.
-			Result := system_status.project_open and titled_window_object /= Void
+				-- Only executable if there is at least one window within the system in project mode.
+				-- If in class generation mode, then you can generate at any time.
+			Result := system_status.project_open
+			if Result and system_status.current_project_settings.complete_project then
+				Result := Result  and titled_window_object /= Void
+			end
 		end
 
 feature -- Basic operations

@@ -15,7 +15,8 @@ inherit
 creation
 	make,
 	make_by_code,
-	make_by_pixmap
+	make_by_pixmap,
+	make_by_filename
 
 feature {NONE} -- Initialization
 
@@ -38,6 +39,14 @@ feature {NONE} -- Initialization
 
 	make_by_pixmap (pix: EV_PIXMAP) is
 			-- Create a cursor with `pix' as appearance
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	make_by_filename (filename: STRING) is
+			-- Create a cursor from the given file path
 		do
 			check
 				not_yet_implemented: False

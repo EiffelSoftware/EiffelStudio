@@ -649,8 +649,8 @@ feature -- Initialization
 			-- Set graphical elements to their default value.
 		do
 			Precursor {EB_SYSTEM_TAB}
-			clusters.wipe_out
 			cluster_tree.wipe_out
+			clusters.wipe_out
 			has_override_cluster := False
 			is_in_select_action := True
 			reset_cluster_info

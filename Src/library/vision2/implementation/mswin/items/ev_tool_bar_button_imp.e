@@ -1,7 +1,6 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		" EiffelVision Toolbar button, mswindows implementation."
+	description: " EiffelVision Toolbar button, mswindows implementation."
 	note: " Menu-items have even ids and tool-bar buttons have%
 		% odd ids because both use the on_wm_command."
 	status: "See notice at end of class"
@@ -21,12 +20,12 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			parent,
-			set_pointer_style
+			set_pointer_style,
+			pnd_press
 		redefine
 			set_pixmap,
 			parent_imp,
-			interface,
-			pnd_press
+			interface
 		end
 
 	EV_ID_IMP
@@ -37,7 +36,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the item.
+			-- Create `Current'.
 		do
 			base_make (an_interface)
 			make_id
@@ -96,7 +95,7 @@ feature -- Access
 		local
 			tool_bar_imp: EV_TOOL_BAR_IMP
 		do
-			tool_bar_imp ?= parent_imp
+		tool_bar_imp ?= parent_imp
 			check
 				parent_not_void: tool_bar_imp /= Void
 			end
@@ -205,82 +204,6 @@ feature -- Element change
 			gray_pixmap := Void
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is selected.
---|FIXME		do
---|FIXME			add_command (Cmd_item_activate, cmd, arg)			
---|FIXME		end	
-
---|FIXME	add_button_press_command (mouse_button: INTEGER; 
---|FIXME		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when button number 'mouse_button' is pressed.
---|FIXME		do
---|FIXME			inspect mouse_button 
---|FIXME			when 1 then
---|FIXME				add_command (Cmd_button_one_press, cmd, arg)
---|FIXME			when 2 then
---|FIXME				add_command (Cmd_button_two_press, cmd, arg)
---|FIXME			when 3 then
---|FIXME				add_command (Cmd_button_three_press, cmd, arg)
---|FIXME			end
---|FIXME		end
-
---|FIXME	add_button_release_command (mouse_button: INTEGER;
---|FIXME		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when button number 'mouse_button' is released.
---|FIXME		do
---|FIXME			inspect mouse_button
---|FIXME			when 1 then
---|FIXME				add_command (Cmd_button_one_release, cmd, arg)
---|FIXME			when 2 then
---|FIXME				add_command (Cmd_button_two_release, cmd, arg)
---|FIXME			when 3 then
---|FIXME				add_command (Cmd_button_three_release, cmd, arg)
---|FIXME			end
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_activate)			
---|FIXME		end	
-
---|FIXME	remove_button_press_commands (mouse_button: INTEGER) is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- button number 'mouse_button' is pressed.
---|FIXME		do
---|FIXME			inspect mouse_button 
---|FIXME			when 1 then
---|FIXME				remove_command (Cmd_button_one_press)
---|FIXME			when 2 then
---|FIXME				remove_command (Cmd_button_two_press)
---|FIXME			when 3 then
---|FIXME				remove_command (Cmd_button_three_press)
---|FIXME			end
---|FIXME		end
-
---|FIXME	remove_button_release_commands (mouse_button: INTEGER) is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- button number 'mouse_button' is released.
---|FIXME		do
---|FIXME			inspect mouse_button 
---|FIXME			when 1 then
---|FIXME				remove_command (Cmd_button_one_release)
---|FIXME			when 2 then
---|FIXME				remove_command (Cmd_button_two_release)
---|FIXME			when 3 then
---|FIXME				remove_command (Cmd_button_three_release)
---|FIXME			end
---|FIXME		end
-
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
 
 	on_activate is
@@ -347,6 +270,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/06 18:47:47  rogers
+--| Removed old command association.
+--|
 --| Revision 1.18  2000/03/31 19:13:49  rogers
 --| Removed inheritance from EV_PICK_AND_DROPABLE_IMP.
 --| Added pnd_press and set_pointer_Style.

@@ -18,7 +18,9 @@ inherit
 		end
 
 	EV_BAR_ITEM
-	
+		redefine
+			make, implementation
+		end
 creation
 	
 	make

@@ -176,14 +176,16 @@ feature {NONE} -- Properties
 			-- from the dynamic value of object (minus the show_)
 			-- so it is very important to name the format as
 			-- SHOW_<type of format>
-			-- FIXME***********************************
-			--		use of generator is not portable
 		do
 			!!Result.make(0);
 			Result.append (generator);
 			Result.to_lower;
 				--| remove the SHOW_
-			Result := Result.substring (6, Result.count);
+				--| Maximum length is 3. (Portability)
+			Result := Result.substring (6, Result.count.min (9))
+		ensure
+			Result_not_void: Result /= Void;
+			valid_extension: Result.count <= 3
 		end;
 
 	title_part: STRING is

@@ -59,6 +59,7 @@ feature -- Access
 				pnd_commands_list.force (list, zero_type)
 			end
 			create com.make (cmd, args)
+			(pnd_commands_list.item (zero_type)).extend (com)
 		end
 
 feature {NONE} -- Access

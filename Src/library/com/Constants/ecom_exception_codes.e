@@ -47,7 +47,7 @@ feature -- Access
 		external
 			"C [macro <winerror.h>]"
 		alias
-			"E_UNEXPECTED"
+			"E_NOTIMPL"
 		end
 		
 	E_outofmemory: INTEGER is

@@ -67,6 +67,9 @@ feature -- Basic operations
 				create dispinterface_creator
 				dispinterface_descriptor := dispinterface_creator.create_dispinterface_descriptor (a_documentation, a_type_info)
 			else
+				check
+					not_dual: not dual
+				end
 				tmp_type_info := a_type_info
 			end
 			Result := interface_descriptor (tmp_type_info)
@@ -88,12 +91,14 @@ feature -- Basic operations
 			if type_kind = Tkind_dispatch then
 				dispinterface := True
 			end
-			flags := a_type_info.type_attr.flags
-			if is_typeflag_fdual (flags) then
-				dual := True
-			end
+	--		flags := a_type_info.type_attr.flags
+	--		if is_typeflag_fdual (flags) then
+	--			dual := True
+	--		end
 
 			Result := interface_descriptor (a_type_info)
+		ensure
+			non_void_dispinterface: Result /= Void
 		end
 
 	interface_descriptor (a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
@@ -152,7 +157,11 @@ feature -- Basic operations
 			create feature_names.make
 			create_function_descriptors (a_type_info)
 			create_property_descriptors (a_type_info)
-			if not (inherited_interface = Void) or c_type_name.is_equal (Iunknown_type) then
+			if 
+				inherited_interface /= Void or 
+				inherited_interface_descriptor /= Void or 
+				c_type_name.is_equal (Iunknown_type) 
+			then
 				create Result.make (Current)
 			end
 		ensure then
@@ -162,7 +171,7 @@ feature -- Basic operations
 			valid_properties: a_type_info.type_attr.count_variables > 0 implies
 					properties /= Void 
 			valid_interface: a_type_info.type_attr.count_implemented_types > 0 implies
-						inherited_interface /= Void 
+						inherited_interface /= Void or inherited_interface_descriptor /= Void
 		end
 
 	initialize_descriptor (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -174,6 +183,7 @@ feature -- Basic operations
 				a_descriptor.set_functions (functions)
 				a_descriptor.set_properties (properties)
 				a_descriptor.set_inherited_interface (inherited_interface)
+				a_descriptor.set_inherited_interface_descriptor (inherited_interface_descriptor)
 				a_descriptor.update_dual (dual)
 				a_descriptor.update_dispinterface (dispinterface)
 				a_descriptor.set_lcid (lcid)
@@ -283,18 +293,18 @@ feature -- Basic operations
 				tmp_library_descriptor.generate
 			end;
 			if tmp_library_descriptor.descriptors.item (tmp_descriptor_index) = void then
-				tmp_documentation := tmp_type_lib.documentation (tmp_type_info.index_in_type_lib)
-				tmp_interface_descriptor ?= type_descriptor_factory.create_type_descriptor (tmp_documentation, tmp_type_info)
-				tmp_library_descriptor.add_descriptor (tmp_interface_descriptor, tmp_descriptor_index)
+				create inherited_interface_descriptor.make (tmp_library_descriptor, tmp_descriptor_index)
+				
 			else
-				tmp_interface_descriptor ?= tmp_library_descriptor.descriptors.item (tmp_descriptor_index);
+				tmp_interface_descriptor ?= tmp_library_descriptor.descriptors.item (tmp_descriptor_index)
 				if tmp_interface_descriptor = void then
 					raise ("Type descriptor is not inteface descriptor")
 				end
 			end;
 			inherited_interface := tmp_interface_descriptor
 		ensure
-			valid_interfaces: a_type_info.type_attr.count_implemented_types > 0 implies inherited_interface /= void
+			valid_interfaces: a_type_info.type_attr.count_implemented_types > 0 implies 
+						(inherited_interface /= void or inherited_interface_descriptor /= Void)
 		end;
 
 feature {NONE} -- Implementation
@@ -307,6 +317,9 @@ feature {NONE} -- Implementation
 
 	inherited_interface: WIZARD_INTERFACE_DESCRIPTOR
 			-- Description of inherited interface
+
+	inherited_interface_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR
+			-- Interface descriptor.
 
 	dual: BOOLEAN
 			-- Is dual interface?
@@ -347,6 +360,8 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_item (1)
 		end
+invariant
+	dual: dual implies dispinterface_descriptor /= Void
 
 end -- class WIZARD_INTERFACE_DESCRIPTOR_CREATOR
 

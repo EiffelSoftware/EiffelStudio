@@ -176,6 +176,12 @@ feature -- Conveniences
 		require
 			valid_size: size = 64
 		do
+				-- FIXME: Manu 12/24/2001: lower needs to be converted to
+				-- an unsigned INTEGER_32 before conversion to INTEGER_64
+				-- as we don't want the bit sign to be marked in the conversion
+				-- as it is `upper' that holds the sign of the resulting
+				-- INTEGER_64. We need to have UNSIGNED_INTEGER_32 to do
+				-- this.
 			Result := (upper.to_integer_64 |<< 32) | lower.to_integer_64
 		end
 

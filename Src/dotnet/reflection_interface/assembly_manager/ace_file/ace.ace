@@ -43,5 +43,6 @@ external
 	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
 	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
-	 		"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\ISE.AssemblyManager.FolderDialog.dll"
+	 		--"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\ISE.AssemblyManager.FolderDialog.dll"
+	 		"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\FolderDialog.dll"
 end

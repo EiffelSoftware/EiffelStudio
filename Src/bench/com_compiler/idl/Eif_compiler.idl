@@ -109,7 +109,6 @@ interface IEiffelCompilerEvents: IUnknown
 interface IEnumClass : IUnknown
 {
     HRESULT Next(
-        [in] ULONG celt,
         [out] IEiffelClassDescriptor **rgelt,
         [out] ULONG *pceltFetched);
 
@@ -136,7 +135,6 @@ interface IEnumClass : IUnknown
 interface IEnumCluster : IUnknown
 {
     HRESULT Next(
-        [in] ULONG celt,
         [out] IEiffelClusterDescriptor **rgelt,
         [out] ULONG *pceltFetched);
 
@@ -162,7 +160,6 @@ interface IEnumCluster : IUnknown
 interface IEnumFeature : IUnknown
 {
     HRESULT Next(
-        [in] ULONG celt,
         [out] IEiffelFeatureDescriptor **rgelt,
         [out] ULONG *pceltFetched);
 

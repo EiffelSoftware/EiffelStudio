@@ -12,8 +12,12 @@
 
 #include <gtk/gtk.h>
 
-void
-c_gtk_menu_popup (GtkMenu * menu, gint x, gint y);
+typedef struct {
+	gint x_position;
+	gint y_position;
+} c_position;
+
+void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
 
 #endif
 
@@ -38,6 +42,9 @@ c_gtk_menu_popup (GtkMenu * menu, gint x, gint y);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2004/03/08 20:01:05  king
+// Added struct definition to header so that it can be referenced in Eiffel inline code
+//
 // Revision 1.1  2003/04/03 01:40:50  king
 // Initial gtk 2 conversion
 //

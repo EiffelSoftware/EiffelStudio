@@ -10,12 +10,15 @@ class
 inherit
 	<INHERITED_CLASS_NAME>
 
+<CREATION>
+
 feature {NONE} -- Initialization
 
 	user_initialization is
 			-- called by `initialize'.
 			-- Any custom user initialization that
-			-- could not be performed in `initialize'
+			-- could not be performed in `initialize',
+			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
 		end

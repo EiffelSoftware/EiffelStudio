@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	eraise (str: POINTER; code: INTEGER) is
 			-- Raise an exception
 		external
-			"C | %"eif_except.h%""
+			"C signature (char *, long) use %"eif_except.h%""
 		end
 
 	c_trace_exception (b: BOOLEAN) is

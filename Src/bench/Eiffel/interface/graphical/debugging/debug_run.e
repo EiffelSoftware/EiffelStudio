@@ -142,6 +142,11 @@ end;
 										w_Makefile_more_recent (Makefile_SH), 
 										" OK ", Void, "Cancel")
 							else
+								restore_cursors;
+								debug_window.clear_window;
+								debug_window.put_string ("Launching system...%N");
+								debug_window.display;
+								set_global_cursor (watch_cursor);
 								temp := clone (application_name);
 								temp.extend (' ');
 								temp.append (argument_window.argument_list);

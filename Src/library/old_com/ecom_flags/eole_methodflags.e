@@ -8,6 +8,9 @@ indexing
 class
 	EOLE_METHOD_FLAGS
 
+inherit
+	EOLE_FLAGS
+
 feature -- Access
 
 	Dispatch_method: INTEGER is
@@ -54,7 +57,31 @@ feature -- Access
 						flag = Dispatch_propertyput or
 						flag = Dispatch_propertyputref
 		end
-		
+	
+	is_dispatch_method (flag: INTEGER): BOOLEAN is
+			-- Is dispatch method bit is set?
+		do
+			Result := c_and (Dispatch_method, flag) = Dispatch_method
+		end
+	
+	is_dispatch_propertyget (flag: INTEGER): BOOLEAN is
+			-- Is dispatch propertyget bit is set?
+		do
+			Result := c_and (Dispatch_propertyget, flag) = Dispatch_propertyget
+		end
+
+	is_dispatch_propertyput (flag: INTEGER): BOOLEAN is
+			-- Is dispatch propertyput bit is set?
+		do
+			Result := c_and (Dispatch_propertyput, flag) = Dispatch_propertyput
+		end
+
+	is_dispatch_propertyputref (flag: INTEGER): BOOLEAN is
+			-- Is dispatch propertyputref bit is set?
+		do
+			Result := c_and (Dispatch_propertyputref, flag) = Dispatch_propertyputref
+		end
+
 end -- class EOLE_METHOD_FLAGS
 
 --|----------------------------------------------------------------

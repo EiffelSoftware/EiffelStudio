@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_SYS_KIND
+	EOLE_SYS_KIND 
 
 feature -- Access
 

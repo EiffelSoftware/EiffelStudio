@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 class
-	GB_TOOL_HOLDER
+	MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 
 inherit
 	EV_HORIZONTAL_BOX
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			-- A dock has ended, so close dialog, and restore `Current'
 		local
 			dialog: EV_DOCKABLE_DIALOG
-			tool_holder: GB_TOOL_HOLDER
+			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			box: EV_VERTICAL_BOX
 			original_position, new_position: INTEGER
 			above: BOOLEAN
@@ -175,7 +175,7 @@ feature -- Basic operation
 			command_tool_bar_set: command_tool_bar = a_tool_bar
 		end
 		
-feature {MULTIPLE_SPLIT_AREA, GB_TOOL_HOLDER}-- Access
+feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	
 	lower_box, upper_box: EV_VERTICAL_BOX
 	
@@ -252,7 +252,7 @@ feature -- Access
 			maximize_button.set_pixmap (parent_area.maximize_pixmap)
 		end
 
-feature {GB_TOOL_HOLDER} -- Implementation
+feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	top_insert_cell, bottom_insert_cell: EV_CELL
 		
@@ -400,7 +400,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		end
 		
 
-feature {GB_TOOL_HOLDER} -- Implementation
+feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	maximize_button, minimize_button, close_button: EV_TOOL_BAR_BUTTON
 		-- Buttons representing minimize and maximize commands.
@@ -421,4 +421,4 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	
 	minimum_size_cell: EV_CELL
 
-end -- class GB_TOOL_HOLDER
+end -- class MULTIPLE_SPLIT_AREA_TOOL_HOLDER

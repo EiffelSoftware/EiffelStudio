@@ -229,6 +229,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			lower, upper: INTEGER
 			current_child_name: STRING
 			rows, columns: STRING
+			column_position, row_position, column_span, row_span: STRING
 		do
 
 			Result := ""
@@ -298,9 +299,18 @@ feature {GB_CODE_GENERATOR} -- Output
 				lower := (counter - 1) * 4 + 1
 				upper := (counter - 1) * 4 + 4
 				current_child_name := children_names @ counter
-				Result := Result + indent + a_name + ".put (" + current_child_name + ", " + temp_column_positions_string.substring (lower, upper) + ", " +
-				temp_row_positions_string.substring (lower, upper) + ", " + temp_column_spans_string.substring (lower, upper) + ", " +
-				temp_row_spans_string.substring (lower, upper) + ")"			
+				column_position := temp_column_positions_string.substring (lower, upper)
+				row_position := temp_row_positions_string.substring (lower, upper)
+				column_span := temp_column_spans_string.substring (lower, upper)
+				row_span := temp_row_spans_string.substring (lower, upper)
+					-- Now remove all leading 0's from strings.
+					-- 0's were added for storage in XML.
+				column_position.prune_all_leading ('0')
+				row_position.prune_all_leading ('0')
+				column_span.prune_all_leading ('0')
+				row_span.prune_all_leading ('0')
+				Result := Result + indent + a_name + ".put (" + current_child_name + ", " + column_position + ", " +
+					row_position + ", " + column_span + ", " + row_span + ")"			
 				counter := counter + 1
 			end			
 

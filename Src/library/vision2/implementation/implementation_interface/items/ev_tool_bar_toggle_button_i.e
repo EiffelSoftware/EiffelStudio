@@ -10,23 +10,9 @@ deferred class
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 
 inherit
-	EV_TOOL_BAR_BUTTON_I
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the current button selected?
-		deferred
-		end
+	EV_TOOL_BAR_SELECT_BUTTON_I
 
 feature -- Status setting
-
-	enable_select is
-			-- Select the current button.
-		deferred
-		ensure
-			selected: is_selected
-		end
 
 	disable_select is
 			-- Unselect the current button.
@@ -58,6 +44,10 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/04 17:08:59  rogers
+--| Now inherits EV_TOOL_BAR_sELECT_BUTTON_I. Removed is_selected and
+--| enable_select.
+--|
 --| Revision 1.8  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

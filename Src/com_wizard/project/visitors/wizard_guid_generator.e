@@ -48,20 +48,28 @@ feature -- Basic operations
 			non_void_guid: a_guid /= Void
 		do
 			create Result.make (1000)
-			Result.append ("static ")
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (iid_name (a_name))
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (a_guid.to_definition_string)
-			Result.append (Semicolon)
+			if 
+				not a_name.is_equal ("IDispatch") and
+				not a_name.is_equal ("IUnknown") and
+				not a_name.is_equal ("IConnectionPointContainer") and
+				not a_name.is_equal ("IConnectionPoint")  and
+				not a_name.is_equal ("IProvideClassInfo") and
+				not a_name.is_equal ("IProvideClassInfo2")
+			then
+				Result.append ("static ")
+				Result.append (Const)
+				Result.append (Space)
+				Result.append (Iid_type)
+				Result.append (Space)
+				Result.append (iid_name (a_name))
+				Result.append (Space)
+				Result.append (Equal_sign)
+				Result.append (Space)
+				Result.append (a_guid.to_definition_string)
+				Result.append (Semicolon)
+			end
 		ensure
 			non_void_definition: Result /= Void
-			valid_definition: not Result.is_empty
 		end
 
 	libid_name (name: STRING): STRING is

@@ -118,6 +118,12 @@ feature -- Resource Update
 				else
 					format_bar.remove
 				end
+			elseif old_res = pr.selector_window then
+				if new_res.actual_value then
+					selector_part.show_selector
+				else
+					selector_part.hide_selector
+				end
 			elseif old_res = pr.debugger_show_all_callers then
 				if feature_part /= Void then
 					rout_cli_cmd ?= feature_part.showroutclients_frmt_holder.associated_command
@@ -406,6 +412,9 @@ feature -- Window Forms
 	global_form: FORM
 			-- Form which contains split windows and toolbars
 
+	global_verti_split_window: SPLIT_WINDOW
+			-- Global Vertical Split window
+
 	hori_split_window: SPLIT_WINDOW
 			-- Horizontal Split window
 
@@ -417,6 +426,12 @@ feature -- Window Forms
 
 	top_form, bottom_form: SPLIT_WINDOW_CHILD
 			-- Form on which the project tool is displayed
+
+	common_form: SPLIT_WINDOW_CHILD
+			-- Common Form for the project, object, and feature tool
+
+	selector_form: SPLIT_WINDOW_CHILD
+			-- Form on which the selector tool is displayed
 
 	project_form: SPLIT_WINDOW_CHILD
 			-- Form on which the project tool is displayed
@@ -696,16 +711,19 @@ feature -- Update
 	add_class_entry (c_w: CLASS_W) is
 		do
 			add_tool_to_menu (c_w, menus @ open_classes_menu)
+			selector_part.add_class_entry(c_w)
 		end
 
 	change_class_entry (c_w: CLASS_W) is
 		do
 			change_tool_in_menu (c_w, menus @ open_classes_menu)
+			selector_part.change_class_entry(c_w)
 		end
 
 	remove_class_entry (c_w: CLASS_W) is
 		do
 			remove_tool_from_menu (c_w, menus @ open_classes_menu)
+			selector_part.remove_class_entry(c_w)
 		end
 
 	add_object_entry (o_w: OBJECT_W) is
@@ -766,14 +784,24 @@ feature -- Graphical Interface
 
 			!! global_form.make (new_name, Current)
 
-			!! hori_split_window.make_horizontal (new_name, global_form)
-			!! top_form.make (new_name, hori_split_window)
---			!! bottom_form.make (new_name, hori_split_window)
+  			!! global_verti_split_window.make_vertical_with_proportion (new_name, global_form, 15)
 
-			!! top_verti_split_window.make_vertical (new_name, top_form)
---			!! bottom_verti_split_window.make_vertical (new_name, bottom_form)
+ 			!! selector_form.make (new_name, global_verti_split_window)
+			!! selector_part.make ("Selector",selector_form) 
+
+			!! common_form.make (new_name, global_verti_split_window)
+
+  			!! hori_split_window.make_horizontal_with_proportion (new_name, common_form,60)
+
+			!! top_form.make (new_name, hori_split_window)
+			top_form.set_size(hori_split_window.width,hori_split_window.height)
+
+			!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 60)
 
 			!! project_form.make (new_name, top_verti_split_window)
+			!! object_form.make (new_name, top_verti_split_window)
+			
+			!! feature_form.make (new_name, hori_split_window)
 
 			create_toolbar (global_form)
 			build_menu
@@ -784,21 +812,20 @@ feature -- Graphical Interface
 			build_toolbar_menu
 --			exec_stop_frmt_holder.execute (Void)
 
---			!! class_form.make (new_name, top_verti_split_window)
 --			!! class_part.form_create (class_form,
---					menus @ special_feature_menu,
+--					menus @ open_feature_menu,
 --					menus @ edit_feature_menu,
 --					menus @ format_feature_menu,
 --					menus @ special_feature_menu)
 
-			!! feature_form.make (new_name, hori_split_window)
-			!! feature_part.form_create (feature_form, 
-					menus @ special_feature_menu, 
-					menus @ edit_feature_menu, 
-					menus @ format_feature_menu,
-					menus @ special_feature_menu)
 
-			!! object_form.make (new_name, top_verti_split_window)
+ 			!! feature_part.form_create (feature_form, 
+ 					menus @ special_feature_menu, 
+ 					menus @ edit_feature_menu, 
+ 					menus @ format_feature_menu,
+ 					menus @ special_feature_menu)
+
+
 			!! object_part.form_create ( object_form, 
 					menus @ special_object_menu, 
 					menus @ edit_object_menu, 
@@ -953,6 +980,8 @@ feature -- Graphical Interface
 			project_toolbar.init_toggle (toolbar_t)
 			!! toolbar_t.make (format_bar.identifier, menus @ special_menu)
 			format_bar.init_toggle (toolbar_t)
+			!! toolbar_t.make (selector_part.identifier, menus @ special_menu)
+			selector_part.init_toggle (toolbar_t)
 		end
 
 	build_top is
@@ -1002,14 +1031,23 @@ feature -- Graphical Interface
 			update_button: EB_BUTTON
 			quick_update_cmd: UPDATE_PROJECT
 			quick_update_button: EB_BUTTON
-			version_button: PUSH_B
+--  			version_button: PUSH_B
 
+			about_menu_entry: EB_MENU_ENTRY
+			about_cmd: ABOUT_COMMAND
+			about_tool:ABOUT_W
 			local_menu: MENU_PULL
 		do
 			build_file_menu
 
-			!! version_button.make (Version_number, help_menu)
+			-- Help Menu
+--			!! version_button.make (Version_number, help_menu)
 
+			!! about_tool.make ("About_Dialog", screen)
+			!! about_cmd.make (about_tool)
+			!! about_menu_entry.make_default (about_cmd, help_menu)
+
+				-- Edit Menu
 			build_edit_menu (project_toolbar)
 
 				-- Close all command
@@ -1308,30 +1346,30 @@ feature -- Graphical Interface
 			global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			global_form.attach_right (toolbar_parent, 0)
 
-			global_form.attach_left (hori_split_window, 0)
-			global_form.attach_top_widget (toolbar_parent, hori_split_window, 0)
-			global_form.attach_right (hori_split_window, 0)
-			global_form.attach_bottom (hori_split_window, 0)
+			global_form.attach_left (global_verti_split_window, 0)
+			global_form.attach_top_widget (toolbar_parent, global_verti_split_window, 0)
+			global_form.attach_right (global_verti_split_window, 0)
+			global_form.attach_bottom (global_verti_split_window, 0)
 
---			hori_split_window.attach_left (bottom_verti_split_window, 0)
---			hori_split_window.attach_top (bottom_verti_split_window, 0)
---			hori_split_window.attach_right (bottom_verti_split_window, 0)
---			hori_split_window.attach_bottom (bottom_verti_split_window, 0)
+			common_form.attach_left (hori_split_window, 0)
+			common_form.attach_top (hori_split_window, 0)
+			common_form.attach_right (hori_split_window, 0)
+			common_form.attach_bottom (hori_split_window, 0)
 
---			bottom_form.attach_left (bottom_verti_split_window, 0)
---			bottom_form.attach_top (bottom_verti_split_window, 0)
---			bottom_form.attach_right (bottom_verti_split_window, 0)
---			bottom_form.attach_bottom (bottom_verti_split_window, 0)
+ 			top_form.attach_left (top_verti_split_window, 0)
+ 			top_form.attach_top (top_verti_split_window, 0)
+ 			top_form.attach_right (top_verti_split_window, 0)
+ 			top_form.attach_bottom (top_verti_split_window, 0)
 
-			top_form.attach_left (top_verti_split_window, 0)
-			top_form.attach_top (top_verti_split_window, 0)
-			top_form.attach_right (top_verti_split_window, 0)
-			top_form.attach_bottom (top_verti_split_window, 0)
+ 			project_form.attach_left (text_window.widget, 0)
+ 			project_form.attach_top (text_window.widget, 0)
+ 			project_form.attach_right (text_window.widget, 0)
+ 			project_form.attach_bottom (text_window.widget, 0)
 
-			project_form.attach_left (text_window.widget, 0)
-			project_form.attach_top (text_window.widget, 0)
-			project_form.attach_right (text_window.widget, 0)
-			project_form.attach_bottom (text_window.widget, 0)
+			selector_form.attach_left(selector_part,2)
+ 			selector_form.attach_top (selector_part, 2)
+ 			selector_form.attach_right (selector_part, 2)
+ 			selector_form.attach_bottom (selector_part, 2)
 		end
 
 	build_recent_project_menu_entries is
@@ -1423,7 +1461,7 @@ feature -- Graphical Interface
 					i := i + 1
 				end
 				!! environment_variable
-				environment_variable.put (last_opened_projects, "BENCH_RECENT_FILES")
+				environment_variable.put (last_opened_projects, Bench_Recent_Files)
 			end
 		end
 
@@ -1444,6 +1482,9 @@ feature {NONE} -- Properties
 
 	object_part: OBJECT_W
 			-- Object part of Current for debugging
+
+	selector_part: SELECTOR_W
+			-- Selector part
 
 	class_part: CLASS_W
 			-- Class part of Current for debugging
@@ -1785,8 +1826,8 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 		do
 			!! mp.set_watch_cursor
 
-			feature_height := height // 2
-			feature_width := width // 2
+			feature_height := common_form.height // 2
+			feature_width := common_form.width // 2
 
 			shown_portions := shown_portions + 1
 
@@ -1801,6 +1842,48 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			else
 				feature_form.set_width (feature_width)
 				feature_form.manage
+			end
+			forbid_resize
+
+			show_current_stoppoint
+			mp.restore
+		end
+
+feature {NONE} -- Implementation
+
+	hide_class_portion is
+			-- Hide the feature potion and hide the menu entries
+			-- regarding the feature tool.
+		do
+			shown_portions := shown_portions - 1
+
+			allow_resize
+			feature_form.unmanage
+			feature_part.close_windows
+			forbid_resize
+		end
+
+	show_class_portion is
+			-- Show the feature portion and the menu entries
+			-- regarding the feature tool.
+		local
+			class_height, class_width: INTEGER
+			mp: MOUSE_PTR
+		do
+			!! mp.set_watch_cursor
+
+			class_height := common_form.height // 2
+			class_width := common_form.width // 2
+
+			shown_portions := shown_portions + 1
+
+			allow_resize
+			if not hori_split_window.is_vertical then
+				class_form.set_height (class_height)
+				class_form.manage
+			else
+				class_form.set_width (class_width)
+				class_form.manage
 			end
 			forbid_resize
 
@@ -1848,10 +1931,10 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 
 			allow_resize
 			if not hori_split_window.is_vertical then
-				object_form.set_height (object_height)
+--  				object_form.set_height (object_height)
 				object_form.manage
 			else
-				object_form.set_width (object_width)
+--  				object_form.set_width (object_width)
 				object_form.manage
 			end
 			forbid_resize

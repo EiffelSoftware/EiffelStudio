@@ -86,15 +86,6 @@ feature -- Status setting
 		do
 			parent_imp.internal_deselect (Current)
 		end
-		
-	toggle is
-			-- Change the state of selection of the item.
-			-- Must be in a multi column list.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
 
 feature {NONE} -- Implementation
 
@@ -226,6 +217,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/23 19:36:56  brendel
+--| Removed feature `toggle'.
+--|
 --| Revision 1.28  2000/03/23 18:18:03  brendel
 --| Revised.
 --| To be implemented.

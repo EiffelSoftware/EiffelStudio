@@ -314,9 +314,16 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 			button: EV_BUTTON
 			hbox: EV_HORIZONTAL_BOX
+			l_accelerator: EV_ACCELERATOR
 		do
 			set_title (default_name)
 			set_minimized_title (default_name)
+			
+				-- Close window when user press escape.
+			create l_accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_escape), False, False, False)
+			l_accelerator.actions.extend (agent cancel_action)
+			window.accelerators.extend (l_accelerator)
 
 			create hbox
 			hbox.set_padding (Layout_constants.Small_padding_size)

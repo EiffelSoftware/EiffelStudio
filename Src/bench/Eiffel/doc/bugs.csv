@@ -40,7 +40,7 @@ Editor,,,,,,,,,,
 ,2,4,Pressing Page up/Page down while the cursor is not visible scrolls from the cursor instead of from what is visible,,Julian,,,,EDT0008,11/29/2001
 ,3,3,When there are several locals on the same line only the first one is taken into account by the completion,,Xavier,,,,EDT0009,11/30/2001
 ,4,3,Modifications in the user-defined string do not seem to be taken into account,,Julian,Xavier,1,closed(we now say that the application needs to be restarted),EDT0010,12/17/2001
-
+,2,3,"When selecting some text that is not visible (if the bottom of the editor is outside the screen), the display is messed up",,Julian,,,,EDT0011,1/10/2002
 
 
 

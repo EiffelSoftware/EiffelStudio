@@ -34,11 +34,11 @@ feature -- Access
 			"_internal_ErrorMessages"
 		end
 
-	get_last_read_successful: BOOLEAN is
+	get_last_error: ISE_REFLECTION_ERRORINFO is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
 		alias
-			"get_LastReadSuccessful"
+			"get_LastError"
 		end
 
 	frozen a_internal_last_read_successful: BOOLEAN is
@@ -83,20 +83,20 @@ feature -- Access
 			"_internal_SearchResult"
 		end
 
-	get_last_error: ISE_REFLECTION_ERRORINFO is
+	get_last_read_successful: BOOLEAN is
 		external
-			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
 		alias
-			"get_LastError"
+			"get_LastReadSuccessful"
 		end
 
 feature -- Basic Operations
 
-	has_read_lock_code: INTEGER is
+	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
 		external
-			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
+			"IL signature (System.Type): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
 		alias
-			"HasReadLockCode"
+			"Type"
 		end
 
 	assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ISE_REFLECTION_EIFFELASSEMBLY is
@@ -118,13 +118,6 @@ feature -- Basic Operations
 			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
 		alias
 			"EiffelType"
-		end
-
-	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
-		external
-			"IL signature (System.Type): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
-		alias
-			"Type"
 		end
 
 	assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -183,11 +176,11 @@ feature -- Basic Operations
 			"ReadLockCreationFailedCode"
 		end
 
-	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+	has_read_lock_code: INTEGER is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
 		alias
-			"Search"
+			"HasReadLockCode"
 		end
 
 	current_history: ISE_REFLECTION_HISTORY is
@@ -195,6 +188,13 @@ feature -- Basic Operations
 			"IL signature (): ISE.Reflection.History use ISE.Reflection.ReflectionInterface"
 		alias
 			"CurrentHistory"
+		end
+
+	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"Search"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONINTERFACE

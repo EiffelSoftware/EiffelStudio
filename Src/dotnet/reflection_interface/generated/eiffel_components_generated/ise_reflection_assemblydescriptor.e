@@ -95,18 +95,18 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	make (a_name: STRING; a_version: STRING; a_culture: STRING; a_public_key: STRING) is
-		external
-			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
-		alias
-			"Make"
-		end
-
 	make_from_assembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
 		external
 			"IL signature (System.Reflection.Assembly): System.Void use ISE.Reflection.AssemblyDescriptor"
 		alias
 			"MakeFromAssembly"
+		end
+
+	make (a_name: STRING; a_version: STRING; a_culture: STRING; a_public_key: STRING) is
+		external
+			"IL signature (System.String, System.String, System.String, System.String): System.Void use ISE.Reflection.AssemblyDescriptor"
+		alias
+			"Make"
 		end
 
 end -- class ISE_REFLECTION_ASSEMBLYDESCRIPTOR

@@ -57,6 +57,13 @@ feature -- Basic Operations
 			"AsKeyword"
 		end
 
+	set_target_name (a_target_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
+		alias
+			"SetTargetName"
+		end
+
 	make_from_info (a_source_name: STRING; a_target_name: STRING) is
 		external
 			"IL signature (System.String, System.String): System.Void use ISE.Reflection.RenameClause"
@@ -69,13 +76,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
 			"RenameKeyword"
-		end
-
-	set_target_name (a_target_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
-		alias
-			"SetTargetName"
 		end
 
 	space: STRING is

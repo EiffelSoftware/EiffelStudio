@@ -120,11 +120,11 @@ feature -- Basic Operations
 			"Support"
 		end
 
-	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
+	clean_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.String use ISE.Reflection.ReflectionSupport"
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionSupport"
 		alias
-			"XmlAssemblyFilename"
+			"CleanAssembly"
 		end
 
 	key: STRING is
@@ -134,18 +134,18 @@ feature -- Basic Operations
 			"Key"
 		end
 
-	clean_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionSupport"
-		alias
-			"CleanAssembly"
-		end
-
 	xml_type_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; type_full_external_name: STRING): STRING is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor, System.String): System.String use ISE.Reflection.ReflectionSupport"
 		alias
 			"XmlTypeFilename"
+		end
+
+	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.String use ISE.Reflection.ReflectionSupport"
+		alias
+			"XmlAssemblyFilename"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONSUPPORT

@@ -44,7 +44,7 @@ feature -- Status Report
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is
 			-- 	Is `member' CLS compliant?
 		local
-			ca: CLSCOMPLIANT_ATTRIBUTE
+			ca: CLS_COMPLIANT_ATTRIBUTE
 		do
 			ca ?= feature {ATTRIBUTE}.get_custom_attribute_member_info_type (member, Cls_compliant_attribute_type)
 			Result := ca = Void or else ca.is_compliant

@@ -57,7 +57,11 @@ feature
 			list.put_right ("-- cancel --");
 			list.forth;
 			list.merge_right (name_list);
-			list.set_visible_item_count (list.count);
+			if list.count >= 15 then
+				list.set_visible_item_count (15);
+			else
+				list.set_visible_item_count (list.count);
+			end;
 			set_x_y (parent.real_x, parent.real_y);
 			os_popup;
 			raise

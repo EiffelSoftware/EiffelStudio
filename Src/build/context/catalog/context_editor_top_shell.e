@@ -38,7 +38,6 @@ feature -- Creation
 	make (a_name: STRING a_screen: SCREEN) is
 		local
 			i: INTEGER
-			close_button: CLOSE_WINDOW_BUTTON
 			geometry_form: GEOMETRY_FORM
 			label_text_form: LABEL_TEXT_FORM
 			perm_wind_form: PERM_WIND_FORM
@@ -59,45 +58,52 @@ feature -- Creation
 			bull_resize_form: BULL_RESIZE_FORM
 			grid_form: GRID_FORM
 			del_com: DELETE_WINDOW
+			exit_cmd: EXIT_EIFFEL_BUILD_CMD
 			focus_area_form: FORM
+			window_menu_bar: BAR
+			file_category: MENU_PULL
+			exit_tool_entry: PUSH_B
+			exit_entry: PUSH_B
 		do
-			!!form_list.make (1, Context_const.total_nbr_of_forms);
+			!!form_list.make (1, Context_const.total_nbr_of_forms)
 
-			Precursor (a_name, a_screen);
-			set_title (Widget_names.context_editor);
-			set_icon_name (Widget_names.context_editor);
+			Precursor (a_name, a_screen)
+			set_title (Widget_names.context_editor)
+			set_icon_name (Widget_names.context_editor)
 			if Pixmaps.context_pixmap.is_valid then
-				set_icon_pixmap (Pixmaps.context_pixmap);
-			end;
+				set_icon_pixmap (Pixmaps.context_pixmap)
+			end
 			!!top_form.make (Widget_names.form, Current)
-			!!focus_area_form.make (Widget_names.form1, top_form);
-
-			!! context_hole.make (Current, focus_area_form);
-			!! trash_hole.make (focus_area_form);
-			!! close_button.make (Current, focus_area_form)
+			!!focus_area_form.make (Widget_names.form1, top_form)
+			
+			!! window_menu_bar.make (menu_names.menu_bar, Current)
+			!! file_category.make (menu_names.file, window_menu_bar)
+			!! exit_tool_entry.make (menu_names.exit_tool, file_category)
+			!! exit_entry.make (menu_names.exit, file_category)
+			!! menu_separator.make (Widget_names.separator, top_form)
+			!! context_hole.make (Current, focus_area_form)
+			!! trash_hole.make (focus_area_form)
 			!! first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
 			!! second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
 			!! formats_rc.make (Widget_names.row_column, top_form) 
 			formats_rc.set_row_layout
---			formats_rc.set_preferred_count (1)
---			formats_rc.set_spacing (5)
 			!! scrolled_w.make ("", top_form)
 
-			focus_area_form.attach_top (close_button, 0)
 			focus_area_form.attach_top (context_hole, 0)
 			focus_area_form.attach_top (trash_hole, 0)
-			focus_area_form.attach_right (close_button, 0)
 			focus_area_form.attach_left (context_hole, 0)
 			focus_area_form.attach_left_widget (context_hole, trash_hole, 0)
 			focus_area_form.attach_bottom (context_hole, 0)
 			focus_area_form.attach_bottom (trash_hole, 0)
-			focus_area_form.attach_bottom (close_button, 0)
 
-			top_form.attach_top (focus_area_form, 0);
-			top_form.attach_left (focus_area_form, 0);
-			top_form.attach_right (focus_area_form, 0);
+			top_form.attach_top (menu_separator, 0)
+			top_form.attach_left (menu_separator, 0)
+			top_form.attach_right (menu_separator, 0)
+			top_form.attach_top_widget (menu_separator, focus_area_form, 0)
+			top_form.attach_left (focus_area_form, 0)
+			top_form.attach_right (focus_area_form, 0)
 			top_form.attach_top_widget (focus_area_form, first_separator, 2)
 			top_form.attach_left (first_separator, 0)
 			top_form.attach_right (first_separator, 0)
@@ -141,10 +147,13 @@ feature -- Creation
 
 			!! format_list.make (formats_rc, Current)
 
-			current_form_number := 0;
-			!! del_com.make (Current);
-			set_delete_command (del_com);
-			initialize_window_attributes;
+			current_form_number := 0
+			!! del_com.make (Current)
+			set_delete_command (del_com)
+			exit_tool_entry.add_activate_action (del_com, Void) 
+			!! exit_cmd
+			exit_entry.add_activate_action (exit_cmd, Void)
+			initialize_window_attributes
 		end
 
 --	attach_attributes_form (a_form: EDITOR_FORM) is
@@ -161,10 +170,11 @@ feature -- Geometry
 		do
 			set_size (Resources.cont_ed_width,
 					Resources.cont_ed_height)
-		end;
+		end
 
 feature {NONE} -- Attributes
 
+	menu_separator,
 	first_separator,
 	second_separator: THREE_D_SEPARATOR
 	
@@ -177,20 +187,20 @@ feature -- Update
 		local
 			tmp: STRING
 		do
-			!! tmp.make (0);
-			tmp.append (Widget_names.Context_name);
-			tmp.append (": ");
+			!! tmp.make (0)
+			tmp.append (Widget_names.Context_name)
+			tmp.append (": ")
 			tmp.append (edited_context.title_label)
-			set_title (tmp);
-			set_icon_name (tmp);
-		end;
+			set_title (tmp)
+			set_icon_name (tmp)
+		end
 
 feature -- Closeable feature
 
 	close is
 			-- Close current editor
 		do
-			clear;
+			clear
 			window_mgr.close (Current)
 		end
 

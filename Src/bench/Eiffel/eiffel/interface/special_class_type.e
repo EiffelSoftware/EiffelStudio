@@ -18,7 +18,9 @@ inherit
 	SHARED_IL_CODE_GENERATOR
 
 	IL_CONST
-
+	
+	PREDEFINED_NAMES
+	
 creation
 	make
 
@@ -346,11 +348,10 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il (name: STRING) is
-			-- Generate call to `name' from SPECIAL.
+	generate_il (name_id: INTEGER) is
+			-- Generate call to `name_id' from SPECIAL.
 		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
+			valid_name_id: name_id > 0
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
 		local
@@ -393,11 +394,16 @@ feature -- IL code generation
 
 				ref ?= gen_param
 
-				if item_name.is_equal (name) then
+				inspect
+					name_id
+
+				when item_name_id, infix_at_name_id then
 					il_generator.generate_array_access (type_kind)
- 				elseif put_name.is_equal (name) then
+
+				when put_name_id then
  					il_generator.generate_array_write (type_kind)
- 				elseif make_name.is_equal (name) then
+
+				when make_name_id then
 					if ref /= Void and then not is_expanded then
 						generic_type_id := System.any_class.compiled_class.
 							types.first.static_type_id
@@ -409,36 +415,20 @@ feature -- IL code generation
 						generic_type_id := cl_type.associated_class_type.static_type_id
 					end
 					il_generator.generate_array_creation (generic_type_id)
- 				elseif count_name.is_equal (name) then
+					
+				when count_name_id then
  					il_generator.generate_array_count
- 				elseif lower_name.is_equal (name) then
+
+				when lower_name_id then
  					il_generator.generate_array_lower
- 				elseif upper_name.is_equal (name) then
- 					il_generator.generate_array_upper
--- 				elseif equals_name.is_equal (name) then
--- 					il_generator.generate_array_equals
--- 				elseif gethashcode_name.is_equal (name) then
--- 					il_generator.generate_array_gethashcode
--- 				elseif gettype_name.is_equal (name) then
--- 					il_generator.generate_array_gettype
--- 				elseif tostring_name.is_equal (name) then
--- 					il_generator.generate_array_tostring
+
+	 			when upper_name_id then
+	 				il_generator.generate_array_upper
+
+				else
+					
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	put_name: STRING is "put"
-	item_name: STRING is "item"
-	make_name: STRING is "make"
-	count_name: STRING is "count"
-	lower_name: STRING is "lower"
-	upper_name: STRING is "upper"
-	equals_name: STRING is "equals"
-	gethashcode_name: STRING is "gethashcode"
-	gettype_name: STRING is "gettype"
-	tostring_name: STRING is "tostring"
-			-- Features names of SPECIAL that needs to be inlined.
 
 end

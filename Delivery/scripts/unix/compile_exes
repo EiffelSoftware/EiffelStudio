@@ -90,8 +90,10 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 
-cp C/run-time/*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
-cp C/run-time/*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
+cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR

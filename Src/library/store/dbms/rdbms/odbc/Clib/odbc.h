@@ -24,10 +24,6 @@
 extern "C" {
 #endif
 
-extern char *error_message;
-extern char *warn_message;
-extern int error_number;
-
 /* Macro for memory allocation */
 #define ODBC_SAFE_ALLOC(x,function)	\
 	x = function; \

@@ -627,6 +627,10 @@ feature
 			if how = None_assignment then
 				buf.putstring ("(EIF_REFERENCE) 0");
 			else
+					-- Always ensure that we perform a cast to type of target.
+					-- Cast in case of basic type will never loose information
+					-- as it has been validated by the Eiffel compiler.
+				target.c_type.generate_cast (buf)
 				source_print_register;
 			end;
 			buf.putchar (';');

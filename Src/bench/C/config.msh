@@ -5,78 +5,55 @@ microsoft-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\nmake'
-link32='$compiler_path\bin\link'
+#
+output_cmd='-Fo'
+input_cmd='-Fd$(INDIR)\\'
+resource_compiler='rc'
+extra_object_files=''
 #
 obj='obj'
 lib='lib'
 #
-#-- MT debug
-#-----------
-#ccflags='-W3 -nologo -Zi -MTd -DEIF_THREADS'
-#dllflags='-nologo -MTd -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
-#-- MT no debug
-#--------------
-#ccflags='-W3 -nologo -MT -DEIF_THREADS'
-#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-#
-#-- MT DLL debug
-#--------------
-#ccflags='-W3 -nologo -Zi -MDd -DEIF_THREADS'
-#dllflags='-nologo -MDd -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
-#
-#-- MT DLL no debug
+# Standard runtime:
 #------------------
-#ccflags='-W3 -nologo -MD -DEIF_THREADS'
-#dllflags='-nologo -MD -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-#
-#-- DLL: MT no debug
-#--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo -MT -DEIF_THREADS'
-#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-#
-#
-#-- DLL: no MT no debug
-#--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo'
-#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-#link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
-#
-#-- no MT debug
-#--------
-#ccflags='-W3 -Zi -nologo'
-#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -DEBUG'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
-#link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
-#
-#-- no MT no debug
-#--------
-ccflags='-W3 -nologo'
+ccflags='-W3 $debug -nologo'
+mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
-link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
+#-- MT
+#-----
+#ccflags='-W3 -nologo $debug -MT -DEIF_THREADS'
+#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
 #
-optimize='-O2 -Ogityb2 -Gs'
-#optimize=''
-output_cmd='/Fo'
-input_cmd='/Fd$(INDIR)\\'
+#-- DLL: MT
+#--------
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
+#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
+#
+#-- DLL:
+#--------
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug'
+#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
+#
+#
+#Link Lines in non debug mode:
+#-----------------------------
+link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) $link_debug'
+link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) $link_debug'
+link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS) $link_debug'
+link_mtline='$compiler_path\bin\lib -OUT:$@ $(MT_OBJECTS) $link_debug'
+link_mtwline='$compiler_path\bin\lib -OUT:$@ $(MT_WOBJECTS) $link_debug'
+#
+#
+#optimize='-O2 -Ogityb2 -Gs'
+optimize=''
+debug=''
+#debug='Zi'
+link_debug=''
+#link_debug='-DEBUGTYPE:BOTH'
+#
 cc='cl'
-resource_compiler='rc'
-extra_object_files=''
+link32='$compiler_path\bin\link'
 compiler_path='d:\apps\MSVC\VC98'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

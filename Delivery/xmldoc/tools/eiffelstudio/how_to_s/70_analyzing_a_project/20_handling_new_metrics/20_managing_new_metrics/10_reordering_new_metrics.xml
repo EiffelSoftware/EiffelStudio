@@ -1,0 +1,52 @@
+<document output="studio" title="Example procedure topic">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Reordering new metrics
+		</heading>
+		<paragraph>To reorder new metrics, you must have already clicked on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+			</image> in the "Metric" tab of the context tool.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/manage.png</url>
+			</image>
+		</paragraph>
+		<paragraph>You can then either use the "Up" and "Down" buttons, or use the pick and drop facility.</paragraph>
+		<paragraph>1) The "Up" and "Down" buttons</paragraph>
+		<list ordered="true">
+			<item>Select a metric ("Up" and "down" are not sensitive when nothing is selected, neither if if the selected metric is respectively the first or the last one)          </item>
+			<item>To move up the metric, click on "Up", if sensitive, as many times as needed.</item>
+			<item>To move down the metric, click on "Down", if sensitive, as many times as needed.</item>
+			<item>Click on "Save" to validate your changes.</item>
+			<item>Click on "Exit" to hide the dialog.</item>
+		</list>
+		<paragraph>2) The pick and drop facility</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/reorder_drop.png</url>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Select a metric by right clicking.</item>
+			<item>Drop the selected metric on another one to insert it.</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>Pick and drop, 
+			<link>
+				<url>20_deleting_new_metrics.xml</url>
+				<label>deleting new metrics</label>
+			</link>, 
+			<link>
+				<url>30_editing_new_metrics.xml</url>
+				<label>editing new metrics</label>
+			</link>,        
+			<link>
+				<url>40_importing_new_metrics.xml</url>
+				<label>importing new metrics</label>
+			</link>.
+		</seealso>
+	</paragraph></document>

@@ -1,0 +1,42 @@
+<document output="studio" title="Example procedure topic">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Deleting new metrics
+		</heading>
+		<paragraph>To delete a useless metric, you must have already clicked on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+			</image>        in the "Metric" tab of the context tool.
+		</paragraph>
+		<paragraph>
+			<image> border="0" height="396" 
+				<url>/images/eiffelstudio/metrics_png/manage.png</url>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Select a metric          </item>
+			<item>Click on the "Delete" button. </item>         
+			<item>Click on "Save" to make deletion effective.          </item>
+			<item>Click on "Exit" to hide the interface.</item>
+		</list>
+		<warning>
+			<bold>Caution</bold>: After you have saved, metric is        definitely lost. If you have clicked on "delete" by mistake,        do not save changes!
+		</warning>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>10_reordering_new_metrics.xml</url>
+				<label>reordering new metrics</label>
+			</link>, 
+			<link>
+				<url>30_editing_new_metrics.xml</url>
+				<label>editing        new metrics</label>
+			</link>, 
+			<link>
+				<url>40_importing_new_metrics.xml</url>
+				<label>importing new        metrics</label>
+			</link>.
+		</seealso>
+	</paragraph></document>

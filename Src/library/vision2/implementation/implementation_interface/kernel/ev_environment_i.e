@@ -45,6 +45,12 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 			-- a mouse wheel scroll event.
 		deferred
 		end
+		
+	has_printer: BOOLEAN is
+			-- Is a default printer available?
+			-- `Result' is `True' if at least one printer is installed.
+		deferred
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -1,0 +1,88 @@
+system
+	"ISE.Cache.Manager"
+
+root
+	EMITTER: make
+
+default
+	namespace ("ISE.Cache")
+	assertion (no)
+	msil_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	msil_generation_type ("dll")
+	check_vape (yes)
+	console_application (yes)
+	msil_version ("5.2.0.0")
+	msil_full_name ("ISE.Cache.Manager")
+
+
+-- EiffelBase
+
+cluster
+	all root_cluster:		"$EIFFEL_SRC\dotnet\consumer\emitter"
+		exclude
+			"EIFGEN"; "CVS"; 
+		end
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; "CVS"; 
+		end
+
+	all base_net:		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS"; 
+		end
+
+	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+		exclude
+			"CVS"; 
+		end
+
+	components:		"$EIFFEL_SRC\dotnet\consumer\components"
+		exclude
+			"CVS"; 
+		end
+
+	xml_serializer:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+		exclude
+			"CVS"; 
+		end
+
+	all support:		"$EIFFEL_SRC\dotnet\consumer\support"
+		exclude
+			"CVS"; 
+		end
+
+	library xml:		"$ISE_EIFFEL\library.net\xml"
+		exclude
+			"CVS"; 
+		end
+
+	library system_:		"$ISE_EIFFEL\library.net\system"
+		exclude
+			"CVS"; 
+		end
+
+	cache:		"$EIFFEL_SRC\dotnet\consumer\cache"
+		exclude
+			"CVS"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+external
+
+	include_path:
+		"\$(EIFFEL_SRC)\library\wel\spec\windows\include"
+
+	assembly:
+		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\system.dll",
+		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
+
+end

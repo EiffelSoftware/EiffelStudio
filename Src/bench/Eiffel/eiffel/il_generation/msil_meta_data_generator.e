@@ -58,7 +58,7 @@ feature -- Generation
 						False, -- is_expanded,
 						False, -- Class is not external,
 						class_type.static_type_id)
-					generate_interface_ancestors (class_c, class_type)
+					generate_interface_ancestors (class_c, class_type, False)
 				end
 
 					-- Define implementation
@@ -73,7 +73,7 @@ feature -- Generation
 				if not is_frozen then
 					generate_implementation_ancestors (class_c, class_type)
 				else
-					generate_interface_ancestors (class_c, class_type)
+					generate_interface_ancestors (class_c, class_type, True)
 				end
 			end
 		end
@@ -157,7 +157,7 @@ feature -- Generation
 		
 feature {NONE} -- Implementation: ancestors description
 
-	generate_interface_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE) is
+	generate_interface_ancestors (class_c: CLASS_C; class_type: CLASS_TYPE; is_implementation_class: BOOLEAN) is
 			-- Generate ancestors map of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
@@ -169,6 +169,7 @@ feature {NONE} -- Implementation: ancestors description
 			id: INTEGER
 			pars: SEARCH_TABLE [CLASS_INTERFACE]
 			class_interface: CLASS_INTERFACE
+			nb_generics: INTEGER
 		do
 			parents := class_c.parents
 			create class_interface.make_from_context (class_c.class_interface, class_type)
@@ -197,6 +198,12 @@ feature {NONE} -- Implementation: ancestors description
 			end
 			class_interface.set_parents (pars)
 			class_type.set_class_interface (class_interface)
+			if is_implementation_class then
+				if class_c.is_generic then
+					nb_generics := class_c.generics.count
+				end
+				il_generator.add_eiffel_interface (nb_generics)
+			end
 			il_generator.end_parents_list
 		end
 
@@ -205,12 +212,16 @@ feature {NONE} -- Implementation: ancestors description
 		require
 			class_c_not_void: class_c /= Void
 		local
+			nb_generics: INTEGER
 --			parents: FIXED_LIST [CL_TYPE_A]
 --			parent_type: CL_TYPE_I
 --			cl_type: CLASS_TYPE
 --			pars: SEARCH_TABLE [CLASS_INTERFACE]
 --			class_interface: CLASS_INTERFACE
 		do
+			if class_c.is_generic then
+				nb_generics := class_c.generics.count
+			end
 -- FIXME: following code to use when we are able to do single inheritance
 -- to avoid code duplication of stubs.
 -- 			parents := class_c.parents
@@ -219,6 +230,7 @@ feature {NONE} -- Implementation: ancestors description
 -- 			parent_type ?= byte_context.real_type (parents.first.type_i)
 -- 			cl_type := parent_type.associated_class_type
 -- 			il_generator.add_to_parents_list (cl_type.implementation_id)
+			il_generator.add_eiffel_interface (nb_generics)
 			il_generator.add_interface (class_type.static_type_id)
 			il_generator.end_parents_list
 		end

@@ -133,6 +133,11 @@ feature -- Class info
 		do
 		end
 
+	add_eiffel_interface (type_id: INTEGER) is
+			-- Add interface of `type_id' into list of parents of current type.
+		do
+		end
+
 	end_parents_list is
 			-- Finishing inheritance part description
 		do
@@ -374,6 +379,10 @@ feature -- Object creation
 		do
 		end
 
+	set_eiffel_type (type_id: INTEGER) is
+		do
+		end
+
 	mark_creation_routines (feature_ids: ARRAY [INTEGER]) is
 			-- Mark routines of `feature_ids' in Current class as creation
 			-- routine of Current class.
@@ -419,6 +428,10 @@ feature -- Variables access
 		do
 		end
 
+	put_method_token (type_id, feature_id: INTEGER) is
+			-- Generate access to feature of `feature_id' in `type_id'.
+		do
+		end
 
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.

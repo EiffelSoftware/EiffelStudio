@@ -26,7 +26,7 @@ feature -- Properties
 			else
 				!! ctxt
 				ctxt.set_clickable
-	--			ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
 					Result := ctxt.text
@@ -49,7 +49,7 @@ feature -- Properties
 			else
 				!! ctxt
 				ctxt.set_clickable
---				ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.set_is_short
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
@@ -75,7 +75,7 @@ feature -- Properties
 				ctxt.set_clickable
 				ctxt.set_is_short
 				ctxt.set_one_class_only
-	--			ctxt.set_feature_clause_order (feature_clause_order)
+				ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.format (stone.e_class)
 				if not ctxt.error then
 					Result := ctxt.text

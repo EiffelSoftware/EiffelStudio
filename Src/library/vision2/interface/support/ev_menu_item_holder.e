@@ -13,16 +13,16 @@ deferred class
 
 feature -- Element change
 
-	add_menu (sub_menu: EV_MENU) is
-			-- Add a menu in the container.
+	add_menu (an_item: EV_MENU) is
+			-- Add a sub-menu in the container.
 		do
-			implementation.add_menu (sub_menu)
+			implementation.add_menu (an_item)
 		end
 
-	add_menu_item (menu_item: EV_MENU_ITEM) is
+	add_menu_item (an_item: EV_MENU_ITEM) is
 			-- Add an item in the container.
 		do
-			implementation.add_menu_item (menu_item)
+			implementation.add_menu_item (an_item)
 		end
 
 feature -- Implementation

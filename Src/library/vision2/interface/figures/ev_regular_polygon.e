@@ -70,7 +70,7 @@ feature -- Access
 			angle: EV_ANGLE
 		do
 			create angle.make_degrees (180 / number_of_sides)
-			Result := (2 * radius / (cos(angle))).truncated_to_integer
+			Result := (2 * radius / angle.cosine).truncated_to_integer
 		end
 
 feature -- Element change
@@ -133,7 +133,7 @@ feature -- Element change
 			angle: EV_ANGLE
 		do
 			create angle.make_radians (180.0 / number_of_sides)
-			radius := (a_size*cos (angle)/2).truncated_to_integer
+			radius := (a_size * angle.cosine / 2).truncated_to_integer
 			set_modified
 		ensure
 			--rounding_error_allowance: a_size - 1 <= size_of_side and size_of_side <= a_size + 1
@@ -187,9 +187,9 @@ feature -- Output
 				loop
 					create angle.make_degrees ((i * (360 // number_of_sides) + orientation.degrees.truncated_to_integer) \\ 360)
 					create a_point.set (center.x + (radius *
-										cos (angle)).truncated_to_integer,
+										angle.cosine).truncated_to_integer,
 									center.y + (radius *
-										sin(angle)).truncated_to_integer)
+										angle.sine).truncated_to_integer)
 					if polygon.off then
 						polygon.add (a_point)
 					else

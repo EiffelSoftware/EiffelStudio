@@ -7,6 +7,14 @@
 #
 
 # Configured by: manuelt 02.05.99
+
+optimize=' -O3 -n32 -mips3 '
+wkoptimize=' -O3 -n32 -mips3 '
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
+
 command_makefile='make'
 d_bsdsig='define'
 lngpad_2='8'
@@ -109,11 +117,10 @@ ccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174 -DEIF_SGI'
 sharedccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174 -DEIF_SGI'
 cppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174 -DEIF_SGI'
 sharedcppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174 -DEIF_SGI'
-ldflags='-multigot -IPA'
-ldsharedflags='-multigot -IPA -shared '
+ldflags='-multigot -n32 -mips3 '
+ldsharedflags='-multigot -n32 -mips3  -shared '
 sharedlink='ld'
-lkflags='-multigot -IPA'
-optimize='-O3 -IPA'
+lkflags='-multigot -n32 -mips3 '
 cf_by='manuelt'
 cf_time='Wed Dec 10 19:31:36 PST 1997'
 charsize='1'
@@ -350,9 +357,10 @@ ld='ld'
 mtprefix='mt'
 mtccflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1009 -DEIF_SGI'
 mtcppflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1009 -DEIF_SGI'
-mtldflags='-IPA'
+mtldflags='-n32 -mips3 '
 mtlibs='-lm -lpthread '
 mtsharedlibs='-lm -lpthread '
 suffix='.a'
 shared_suffix='.so'
 wkeiflib='wkbench'
+

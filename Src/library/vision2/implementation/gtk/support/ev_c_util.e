@@ -1,8 +1,8 @@
 class
 	EV_C_UTIL
 
-inherit
-	C_GSLIST_STRUCT
+--inherit
+--	C_GSLIST_STRUCT
 
 feature -- Initialization
 

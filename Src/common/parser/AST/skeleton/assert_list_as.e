@@ -10,6 +10,9 @@ class ASSERT_LIST_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -23,6 +26,14 @@ feature -- Properties
 
 	assertions: EIFFEL_LIST [TAGGED_AS];
 			-- Assertion list
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (assertions, other.assertions)
+		end
 
 feature -- Access
 
@@ -88,15 +99,6 @@ feature {AST_EIFFEL} -- Output
 				ctxt.new_line
 			end;
 			ctxt.commit;
-		end;
-
-feature {ROUTINE_AS}
-
-	reset is
-		do
-			if assertions /= Void then
-				assertions.start
-			end;
 		end;
 
 feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication

@@ -9,6 +9,15 @@ inherit
 		end;
 	SHARED_WORKBENCH
 	
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := bit_count = other.bit_count and then
+				bit_val.is_equal (other.bit_val)
+		end
+
 feature 
 
 	bit_val: STRING;

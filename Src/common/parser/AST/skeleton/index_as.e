@@ -10,6 +10,9 @@ class INDEX_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -32,10 +35,17 @@ feature -- Properties
 
 feature -- Comparison
 
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (tag, other.tag) and
+				equivalent (index_list, other.index_list)
+		end
+
 	is_equiv (other: like Current): BOOLEAN is
 		do
-			Result := deep_equal (tag, other.tag) and then
-						deep_equal (index_list, other.index_list)
+			Result := equivalent (tag, other.tag) and then
+						equivalent (index_list, other.index_list)
 		end;
 
 feature {AST_EIFFEL} -- Output

@@ -27,6 +27,14 @@ feature -- Property
 			Result := True;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := position = other.position
+		end
+
 feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is

@@ -14,7 +14,7 @@ inherit
 			copy, out, is_equal, setup, consistent
 		redefine
 			pass_address, is_id, good_integer, good_character,
-			record_dependances
+			record_dependances, is_equivalent
 		end;
 	STRING
 		rename
@@ -46,6 +46,14 @@ feature -- Properties
 			Result := True;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := is_equal (other)
+		end
+
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences
 
 	record_dependances is
@@ -76,11 +84,11 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_string (Current);
 		end;
 
-    string_value: STRING is
-        do
-            !! Result.make (0);
-            Result.append (Current)
-        end
+	string_value: STRING is
+		do
+			!! Result.make (0);
+			Result.append (Current)
+		end
 
 feature {COMPILER_EXPORTER}
 

@@ -31,16 +31,15 @@ feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
-			--| default version uses `deep_equal'
 		require
 			arg_non_void: other /= Void
-		do
-			Result := c_deep_equal ($Current, $other)
+			same_type: same_type (other)
+		deferred
 		end
 
 	frozen equivalent (o1, o2: AST_EIFFEL): BOOLEAN is
 			-- Are `o1' and `o2' equivalent ?
-			-- this feature is similatr to `deep_equal'
+			-- this feature is similar to `deep_equal'
 			-- but ARRAYs and STRINGs are processed correctly
 			-- (`deep_equal' will compare the size of the `area')
 		do

@@ -11,7 +11,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_character, good_character
+			is_character, good_character, is_equivalent
 		end;
 	CHARACTER_ROUTINES
 
@@ -40,12 +40,20 @@ feature -- Properties
 			Result := True;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := value = other.value
+		end
+
 feature -- Output
 
-    string_value: STRING is
-        do
-            Result := char_text (value)
-        end
+	string_value: STRING is
+		do
+			Result := char_text (value)
+		end
 
 feature {AST_EIFFEL} -- Output
 

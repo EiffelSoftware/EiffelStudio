@@ -16,7 +16,7 @@ inherit
 
 	BINARY_AS_B
 		undefine
-			set, operator_is_keyword
+			set, operator_is_keyword, is_equivalent
 		redefine
 			left, right
 		end

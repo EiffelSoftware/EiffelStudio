@@ -10,6 +10,9 @@ class CREATE_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,6 +32,15 @@ feature -- Properties
 
 	feature_list: EIFFEL_LIST [FEATURE_NAME];
 			-- Feature list
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (clients, other.clients) and
+				equivalent (feature_list, other.feature_list)
+		end
 
 feature -- Access
 

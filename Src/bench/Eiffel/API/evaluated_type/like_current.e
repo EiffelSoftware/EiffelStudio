@@ -13,7 +13,7 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, is_like_current,
-			meta_type, is_deep_equal, has_associated_class
+			meta_type, has_associated_class
 		end
 
 feature -- Properties
@@ -58,6 +58,14 @@ feature -- Access
 		do
 			Result := actual_type.associated_eclass;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (actual_type, other.actual_type)
+		end
 
 feature -- Output
 
@@ -141,15 +149,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- C type for `actual_type'
 		do
 			Result := actual_type.meta_type
-		end;
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			like_c: LIKE_CURRENT
-		do
-			like_c ?= other;
-			Result := like_c /= Void and then
-				like_c.actual_type.is_deep_equal (actual_type);
 		end;
 
 	create_info: CREATE_CURRENT is

@@ -10,6 +10,9 @@ class EXPORT_ITEM_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -27,6 +30,15 @@ feature -- Properties
 
 	features: FEATURE_SET_AS;
 			-- Feature set
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (clients, other.clients) and
+				equivalent (features, other.features)
+		end
 
 feature {AST_EIFFEL} -- Output
 

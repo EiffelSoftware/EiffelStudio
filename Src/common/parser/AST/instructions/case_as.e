@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			number_of_stop_points
+			number_of_stop_points, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -32,6 +32,15 @@ feature -- Properties
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (compound, other.compound) and
+				equivalent (interval, other.interval)
+		end
 
 feature -- Access
 

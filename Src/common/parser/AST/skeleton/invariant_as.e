@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_invariant_obj
+			is_invariant_obj, is_equivalent
 		end;
 
 feature {NONE} -- Initialization
@@ -32,6 +32,15 @@ feature -- Properties
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS];
 			-- Assertion list
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+				-- FIXME: optimize (order doesn't matter)
+			Result := equivalent (assertion_list, other.assertion_list)
+		end
 
 feature {AST_EIFFEL} -- Output
 

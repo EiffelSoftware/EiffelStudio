@@ -15,14 +15,16 @@ inherit
 		redefine
 			is_bits, associated_class, dump,
 			heaviest, same_as, append_to,
-			check_conformance, format, associated_eclass
+			check_conformance, format, associated_eclass,
+			is_equivalent
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as, append_to,
-			check_conformance, format, associated_eclass
+			check_conformance, format, associated_eclass,
+			is_equivalent
 		select
 			internal_conform_to
 		end;
@@ -34,6 +36,14 @@ feature -- Property
 		do
 			Result := True;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := bit_count = other.bit_count
+		end
 
 feature -- Access
 

@@ -11,6 +11,9 @@ class NESTED_EXPR_AS
 inherit
 
 	CALL_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -23,6 +26,15 @@ feature {NONE} -- Initialization
 			target_exists: target /= Void;
 			message_exists: message /= Void;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (message, other.message) and
+				equivalent (target, other.target)
+		end
 
 feature -- Properties
 

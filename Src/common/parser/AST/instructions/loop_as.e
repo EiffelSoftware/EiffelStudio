@@ -63,42 +63,15 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-			-- Is `other' instruction equivalent to Current?
-		local
-			loop_as: LOOP_AS
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			loop_as ?= other
-			if loop_as /= Void then
-				-- May be equivalent
-				Result := equiv (loop_as)
-			else
-				-- NOT equivalent
-				Result := False
-			end
-		end;
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' loop_as equivalent to Current?
-		do
-			Result := deep_equal (from_part, other.from_part)
-			if Result then
-				-- May be equivalent
-				Result := deep_equal (invariant_part, other.invariant_part)
-				if Result then
-					-- May be equivalent
-					Result := deep_equal (variant_part, other.variant_part)
-					if Result then
-						-- May be equivalent
-						Result := deep_equal (stop, other.stop)
-						if Result then
-							-- May be equivalent
-							Result := deep_equal (compound, other.compound)
-						end
-					end
-				end
-			end
-		end;
+			Result := equivalent (compound, other.compound) and then
+				equivalent (from_part, other.from_part) and then
+				equivalent (invariant_part, other.invariant_part) and then
+				equivalent (stop, other.stop) and then
+				equivalent (variant_part, other.variant_part)
+		end
 
 feature {AST_EIFFEL} -- Output
 

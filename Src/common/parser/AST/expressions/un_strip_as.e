@@ -31,6 +31,14 @@ feature -- Property
 	id_list: EIFFEL_LIST [ID_AS];
 			-- Attribute list
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (id_list, other.id_list)
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

@@ -13,15 +13,14 @@ inherit
 		rename
 			dump as basic_dump,
 			set as basic_set,
-			is_deep_equal as basic_is_deep_equal,
 			simple_format as basic_simple_format
 		end;
 
 	CLASS_TYPE_AS
 		redefine
-			dump, set, is_deep_equal, simple_format
+			dump, set, simple_format
 		select
-			dump, set, is_deep_equal, simple_format
+			dump, set, simple_format
 		end;
 
 feature {NONE} -- Initialization
@@ -38,16 +37,6 @@ feature {NONE} -- Initialization
 			-- `solved_type' and `actual type' are called in pass3 for
 			-- local variables
 		do
-		end;
-
-feature -- Access
-
-	is_deep_equal (other: TYPE): BOOLEAN is
-		local
-			o: like Current
-		do
-			o ?= other;
-			Result := o /= Void and then basic_is_deep_equal (other)
 		end;
 
 feature -- Output

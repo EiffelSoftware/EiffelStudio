@@ -21,20 +21,11 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 		
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-			-- Is `other' instruction equivalent to Current?
-		local
-			retry_as: RETRY_AS
-		do
-			retry_as ?= other
-			Result := retry_as /= Void
-		end;
-	
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' retry_as equivalent to Current?
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
-		end;
+		end
 
 feature {AST_EIFFEL} -- Output
 

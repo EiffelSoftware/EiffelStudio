@@ -15,7 +15,16 @@ inherit
 		redefine
 			feature_type, instantiation_in, instantiation_of,
 			meta_type, is_basic, internal_conform_to,
-			good_generics, is_valid, error_generics
+			good_generics, is_valid, error_generics,
+			is_equivalent
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := True
 		end
 
 feature -- Access

@@ -10,6 +10,14 @@ inherit
 	SHARED_WORKBENCH;
 	CHARACTER_ROUTINES
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := str_val.is_equal (other.str_val)
+		end
+
 feature 
 
 	str_val: STRING;

@@ -11,7 +11,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set
+			set, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -28,6 +28,14 @@ feature -- Properties
 
 	bits_value: INTEGER_AS;
 			-- Bits value
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (bits_value, other.bits_value)
+		end
 
 feature -- Output
 

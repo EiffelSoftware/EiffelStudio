@@ -16,8 +16,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			is_equivalent
 		redefine 
 			fill_calls_list, replicate
 		end

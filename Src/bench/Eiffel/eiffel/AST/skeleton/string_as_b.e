@@ -11,8 +11,6 @@ inherit
 	STRING_AS;
 
 	ATOMIC_AS_B
-		undefine
-			is_equivalent
 		redefine
 			type_check, byte_node, value_i
 		end;

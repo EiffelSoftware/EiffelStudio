@@ -11,7 +11,7 @@ inherit
 	COMPILER_EXPORTER
 	AST_EIFFEL
 		redefine
-			position
+			position, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -37,6 +37,15 @@ feature -- Properties
 
 	position: INTEGER;
 			-- Position after feature keyword
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (clients, other.clients) and
+				equivalent (features, other.features)
+		end
 
 feature -- Access
 
@@ -136,36 +145,14 @@ feature -- Access
 			end
 		end;
 
-	features_deep_equal (other: like features): BOOLEAN is
-		do
-			if features = Void and other = Void then
-				Result := True
-			elseif features /= Void and then
-				other /= Void and then
-				other.count = features.count
-			then
-				Result := True
-				from
-					features.start;
-					other.start
-				until
-					features.after or else not Result
-				loop
-					Result := features.item.is_equiv (other.item)
-					features.forth
-					other.forth
-				end
-			end
-		end
-
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' feature clause equivalent to Current?
 		require
 			valid_other: other /= Void
 		do
 			Result := 
-				deep_equal (clients, other.clients) and then
-				features_deep_equal (other.features)	
+				equivalent (clients, other.clients) and then
+				equivalent (features, other.features)	
 		end
 
 feature {COMPILER_EXPORTER, CLASS_AS} -- Element change

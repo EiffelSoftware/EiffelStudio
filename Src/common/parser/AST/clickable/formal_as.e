@@ -45,6 +45,14 @@ feature -- Properties
 			Result := True
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := position = other.position
+		end
+
 feature -- Output
 
 	dump: STRING is

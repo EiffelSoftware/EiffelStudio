@@ -11,7 +11,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			number_of_stop_points
+			number_of_stop_points, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -33,15 +33,24 @@ feature -- Properties
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (expr, other.expr) and
+				equivalent (compound, other.compound)
+		end
+
 feature -- Access
 
 	number_of_stop_points: INTEGER is
 			-- Number of stop points for AST
 		do
-            if compound /= Void then
-                Result := compound.number_of_stop_points
-            end;
-            Result := Result + 1
+			if compound /= Void then
+				Result := compound.number_of_stop_points
+			end;
+			Result := Result + 1
 		end
 
 feature {AST_EIFFEL} -- Output

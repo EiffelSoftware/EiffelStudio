@@ -73,6 +73,15 @@ feature -- Properties
 			Result := infix_function_name;	
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (left, other.left) and then
+				equivalent (right, other.right)
+		end
+
 feature {AST_EIFFEL} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is

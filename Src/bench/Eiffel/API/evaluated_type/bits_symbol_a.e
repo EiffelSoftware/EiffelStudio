@@ -14,7 +14,7 @@ inherit
 			base_class_id as class_id
 		redefine
 			solved_type, dump, append_to,
-			is_deep_equal
+			is_equivalent
 		end;
 
 creation {COMPILER_EXPORTER}
@@ -35,6 +35,17 @@ feature -- Properties
 	feature_name: STRING;
 
 	rout_id: ROUTINE_ID;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := bit_count = other.bit_count and then
+				equal (rout_id, other.rout_id) and then
+				feature_name.is_equal (other.feature_name) and then
+				equal (class_id, other.class_id)
+		end
 
 feature -- Output
 
@@ -107,19 +118,6 @@ feature {COMPILER_EXPORTER}
 			end;
 			rout_id := anchor_feature.rout_id_set.first;
 			Result := clone (Current);
-		end;
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			bits_s: BITS_SYMBOL_A
-		do
-			bits_s ?= other;
-			Result := bits_s /= Void and then
-				bits_s.bit_count = bit_count and then
-				bits_s.is_expanded = is_expanded and then
-				equal (bits_s.class_id, class_id) and then
-				bits_s.rout_id.is_equal (rout_id) and then
-				feature_name.is_equal (bits_s.feature_name)
 		end;
 
 end -- class BITS_SYMBOL_A

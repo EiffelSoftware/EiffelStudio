@@ -10,6 +10,9 @@ class BIT_CONST_AS
 inherit
 
 	ATOMIC_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -26,13 +29,21 @@ feature -- Properties
 	value: ID_AS;
 			-- Bit value (sequence of 0 and 1)
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (value, other.value)
+		end
+
 feature -- Output
 
-    string_value: STRING is
-        do
-            !! Result.make (0);
+	string_value: STRING is
+		do
+			!! Result.make (0);
 			Result.append (value)
-        end
+		end
 
 feature {AST_EIFFEL} -- Output
 

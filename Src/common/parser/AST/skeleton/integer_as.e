@@ -11,7 +11,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_integer, good_integer
+			is_integer, good_integer, is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -33,12 +33,20 @@ feature -- Properties
 			Result := True;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := value = other.value
+		end
+
 feature -- Output
 
-    string_value: STRING is
-        do
-            Result := value.out
-        end	
+	string_value: STRING is
+		do
+			Result := value.out
+		end	
 
 feature {AST_EIFFEL} -- Output
 

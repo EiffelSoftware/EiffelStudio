@@ -13,7 +13,7 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, conformance_type, meta_type,
-			is_like_argument, is_deep_equal, has_associated_class
+			is_like_argument, has_associated_class
 		end;
 	SHARED_LIKE_CONTROLER;
 	SHARED_ARG_TYPES;
@@ -34,6 +34,15 @@ feature -- Properties
 		do
 			Result := True;
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := position = other.position and then
+				equivalent (actual_type, other.actual_type)
+		end
 
 feature -- Access
 
@@ -185,16 +194,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Is the current actual type a basic one ?
 		do
 			Result := actual_type.is_basic;
-		end;
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			other_like_arg: LIKE_ARGUMENT;
-		do
-			other_like_arg ?= other;
-			Result := other_like_arg /= Void and then
-				other_like_arg.position = position and then
-				other_like_arg.actual_type.is_deep_equal (actual_type)
 		end;
 
 	create_info: CREATE_ARG is

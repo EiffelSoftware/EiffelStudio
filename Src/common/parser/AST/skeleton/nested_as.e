@@ -10,6 +10,9 @@ class NESTED_AS
 inherit
 
 	CALL_AS
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -30,6 +33,15 @@ feature -- Properties
 
 	message: CALL_AS;
 			-- Message send to the target
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (message, other.message) and
+				equivalent (target, other.target)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -11,7 +11,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like, is_deep_equal, simple_format
+			has_like, simple_format
 		end;
 
 feature {NONE} -- Initialization
@@ -29,16 +29,15 @@ feature -- Properties
 	anchor: ID_AS;
 			-- Anchor name
 
-feature -- Access
+feature -- Comparison
 
-	is_deep_equal (other: TYPE): BOOLEAN is
-		local
-			o: like Current
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			o ?= other;
-			Result := o /= Void and then
-				anchor.is_equal (o.anchor);
-		end;
+			Result := equivalent (anchor, other.anchor)
+		end
+
+feature -- Access
 
 	has_like: BOOLEAN is
 			-- Has the type anchored type in its definition ?

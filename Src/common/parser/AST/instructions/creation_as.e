@@ -38,34 +38,13 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-			-- Is `other' instruction equivalent to Current?
-		local
-			creation_as: CREATION_AS
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
 		do
-			creation_as ?= other
-			if creation_as /= Void then
-				-- May be equivalent
-				Result := equiv (creation_as)
-			else
-				-- NOT equivalent
-				Result := False
-			end
-		end;
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' creation_as equivalent to Current?
-		do
-			Result := deep_equal (type, other.type)
-			if Result then
-				-- May be equivalent
-				Result := deep_equal (target, other.target)
-				if Result then
-					-- May be equivalent
-					Result := deep_equal (call, other.call)
-				end
-			end
-		end;
+			Result := equivalent (call, other.call) and then
+				equivalent (target, other.target) and then
+				equivalent (type, other.type)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -32,10 +32,17 @@ feature -- Properties
 
 feature -- Comparison
 
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (tag, other.tag) and then
+				equivalent (expr, other.expr)
+		end
+
 	is_equiv (other: like Current): BOOLEAN is
 			-- Is `other' tagged as equivalent to Current?
 		do
-			Result := deep_equal (tag, other.tag) and then deep_equal (expr, other.expr)
+			Result := equivalent (tag, other.tag) and then equivalent (expr, other.expr)
 		end;	
 
 feature {AST_EIFFEL} -- Output

@@ -11,7 +11,8 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, offset, simple_format, visual_name
+			is_infix, is_valid, offset, simple_format, visual_name,
+			is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -37,6 +38,15 @@ feature -- Properties
 		do
 			Result := True;
 		end; -- is_infix
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (fix_operator, other.fix_operator) and
+				is_frozen = other.is_frozen
+		end
 
 feature -- Access
 

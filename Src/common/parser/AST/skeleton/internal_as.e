@@ -12,7 +12,8 @@ inherit
 	ROUT_BODY_AS
 		redefine
 			has_instruction, index_of_instruction,
-			number_of_stop_points
+			number_of_stop_points,
+			is_equivalent
 		end
 
 feature {NONE} -- Initialization
@@ -27,6 +28,14 @@ feature -- Properties
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS];
 			-- Compound
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (compound, other.compound)
+		end
 
 feature -- Access
 
@@ -47,7 +56,7 @@ feature -- Access
 			until
 				Result or else compound.off
 			loop
-				Result := compound.item.is_equiv (i)
+				Result := equivalent (compound.item, i)
 				compound.forth
 			end
 		end;
@@ -58,7 +67,7 @@ feature -- Access
 			from
 				compound.start
 			until
-				compound.off or else compound.item.is_equiv (i)
+				compound.off or else equivalent (i, compound.item)
 			loop
 				compound.forth
 			end

@@ -11,7 +11,8 @@ inherit
 
 	TYPE
 		redefine
-			has_like, is_deep_equal, simple_format
+			has_like, simple_format,
+			is_equivalent
 		end;
 	CLICKABLE_AST
 		redefine
@@ -81,6 +82,15 @@ feature {AST_EIFFEL} -- Output
 			end;
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (class_name, other.class_name) and then
+				equivalent (generics, other.generics)
+		end
+
 feature {COMPILER_EXPORTER} -- Conveniences
 
 	set_class_name (s: like class_name) is
@@ -93,41 +103,6 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			-- Assign `g' to `generics'.
 		do
 			generics := g;
-		end;
-
-	is_deep_equal (other: TYPE): BOOLEAN is
-		local
-			o: CLASS_TYPE_AS;
-			o_g: like generics;
-			p, o_p: INTEGER
-		do
-			o ?= other;
-			Result := o /= Void and then
-				class_name.is_equal (o.class_name)
-			if Result then
-				o_g := o.generics;
-				if generics = Void then
-					Result := o_g = Void
-				elseif o_g = Void then
-					Result := False
-				else
-					p := generics.index;
-					o_p := o_g.index;
-					from
-						generics.start;
-						o_g.start;
-						Result := o_g.count = generics.count
-					until
-						generics.after or else not Result
-					loop
-						Result := generics.item.is_deep_equal (o_g.item);
-						generics.forth;
-						o_g.forth
-					end;
-				end;
-				generics.go_i_th (p);
-				o_g.go_i_th (o_p);
-			end;
 		end;
 
 	dump: STRING is

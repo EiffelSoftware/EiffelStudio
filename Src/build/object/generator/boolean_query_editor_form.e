@@ -87,11 +87,11 @@ feature {NONE} --GUI
 			menu_false_field.set_text ("No")
 			menu_false_field.set_width (115)
 			query_label.set_left_alignment
---			if object_tool_generator.precondition_test.state then
+			if object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
---			else	
---				test_text_field.set_insensitive
---			end
+			else	
+				test_text_field.set_insensitive
+			end
 		end
 
 	attach_all is
@@ -299,20 +299,16 @@ feature {NONE} -- Heuristic
 			current_application_class_not_void: current_application_class /= Void
 		local
 			menu_entry, menu_entry_bis: APPLICATION_METHOD_PUSH_B
-			possible_command_list: LINKED_LIST [APPLICATION_COMMAND]
-			possible_routine_list: LINKED_LIST [APPLICATION_ROUTINE]
 			procedure_empty: BOOLEAN
 		do
-			possible_command_list ?= sort_possible_commands (current_application_class.command_list)
-			possible_routine_list ?= sort_possible_commands (current_application_class.routine_list)
-			if not possible_command_list.empty then
+			if not query.possible_commands.empty then
 				from 
-					possible_command_list.start
+					query.possible_commands.start
 				until
-					possible_command_list.after
+					query.possible_commands.after
 				loop
-					!! menu_entry.make (possible_command_list.item, procedure_opt_pull)
-					possible_command_list.forth
+					!! menu_entry.make (query.possible_commands.item, procedure_opt_pull)
+					query.possible_commands.forth
 				end
 				procedure_opt_pull.set_selected_button (menu_entry)
 			else
@@ -322,15 +318,15 @@ feature {NONE} -- Heuristic
 				procedure_empty := True
 			end
 
-			if not possible_routine_list.empty then
+			if not query.possible_routines.empty then
 				from 
-					possible_routine_list.start
+					query.possible_routines.start
 				until
-					possible_routine_list.after
+					query.possible_routines.after
 				loop
-					!! menu_entry.make (possible_routine_list.item, true_opt_pull)
-					!! menu_entry_bis.make (possible_routine_list.item, false_opt_pull)
-					possible_routine_list.forth
+					!! menu_entry.make (query.possible_routines.item, true_opt_pull)
+					!! menu_entry_bis.make (query.possible_routines.item, false_opt_pull)
+					query.possible_routines.forth
 				end
 				true_opt_pull.set_selected_button (menu_entry)
 				false_opt_pull.set_selected_button (menu_entry_bis)
@@ -345,42 +341,6 @@ feature {NONE} -- Heuristic
 				end
 				two_procedure_toggle_b.set_insensitive
 			end	
-		end
-
-	sort_possible_commands (cmd_list: LINKED_LIST [APPLICATION_METHOD]): LINKED_LIST [APPLICATION_METHOD] is
-			-- Sort `cmd_list' and return the list of compatible commands
-			-- beginning with that containing the name of the query.
-		local
-			command: APPLICATION_COMMAND
-			routine: APPLICATION_ROUTINE
-		do
-			!! Result.make
-			from 
-				cmd_list.start
-			until
-				cmd_list.after
-			loop
-				command ?= cmd_list.item
-				if command /= Void then
-					if command.argument_type.is_equal (query.query_type) then
-						if command.command_name.substring_index (query.query_name, 1) > 0 then
-							Result.put_front (command)
-						else
-							Result.extend (command)
-						end
-					end
-				else
-					routine ?= cmd_list.item
-					if routine.argument_list.empty then
-						if routine.routine_name.substring_index (query.query_name, 1) > 0 then
-							Result.put_front (routine)
-						else
-							Result.extend (routine)
-						end	
-					end
-				end
-				cmd_list.forth
-			end
 		end
 
 feature -- Execution
@@ -460,9 +420,12 @@ feature -- Interface generation
 				!! new_toggle_b_c
  				new_toggle_b_c := new_toggle_b_c.create_context (a_perm_wind_c)
 				new_toggle_b_c.set_visual_name (check_field.text)
- 				new_toggle_b_c.set_x_y (base_x+20, base_y+20)
+ 				new_toggle_b_c.set_x_y (base_x + 130, base_y)
+				new_toggle_b_c.set_font_named ("MS Sans Serif,13,400,,default,dontcare,ansi,0,0,5,draft,stroke,string")
+				new_toggle_b_c.set_size (130, new_toggle_b_c.height)
  				display_new_context (new_toggle_b_c)
  				check_box_name := new_toggle_b_c.entity_name
+				minimum_height := 30
  			elseif radio_toggle_b.state then
  				!! new_radio_box_c
  				!! true_toggle_b_c
@@ -470,27 +433,31 @@ feature -- Interface generation
  				new_radio_box_c := new_radio_box_c.old_create_context (a_perm_wind_c)
  				true_toggle_b_c := true_toggle_b_c.create_context (new_radio_box_c)
 				true_toggle_b_c.set_visual_name (radio_true_field.text)
+				true_toggle_b_c.set_font_named ("MS Sans Serif,13,400,,default,dontcare,ansi,0,0,5,draft,stroke,string")
 				false_toggle_b_c := false_toggle_b_c.create_context (new_radio_box_c)
 				false_toggle_b_c.set_visual_name (radio_false_field.text)
- 				new_radio_box_c.set_x_y (base_x+20, base_y)
+				false_toggle_b_c.set_font_named ("MS Sans Serif,13,400,,default,dontcare,ansi,0,0,5,draft,stroke,string")
+ 				new_radio_box_c.set_x_y (base_x + 130, base_y)
  				display_new_context (new_radio_box_c)
  				radio_box_name := new_radio_box_c.entity_name
  				true_toggle_b_name := true_toggle_b_c.entity_name
 				false_toggle_b_name := false_toggle_b_c.entity_name
+				minimum_height := 60
  			elseif menu_toggle_b.state then
  			!! new_label_c
 				new_label_c := new_label_c.create_context (a_perm_wind_c)
 				new_label_c.set_visual_name (query.query_name)
 				new_label_c.set_x_y (base_x, base_y)
-				new_label_c.set_size (100, new_label_c.height)
+				new_label_c.set_size (130, new_label_c.height)
  				!! new_opt_pull_c
  				new_opt_pull_c := new_opt_pull_c.create_context (a_perm_wind_c)
- 				new_opt_pull_c.set_x_y (base_x + 100, base_y)
- 				new_opt_pull_c.set_size (100, new_opt_pull_c.height)
+ 				new_opt_pull_c.set_x_y (base_x + 130, base_y)
+ 				new_opt_pull_c.set_size (130, new_opt_pull_c.height)
  				add_to_menu (menu_true_field.text, new_opt_pull_c)
 				add_to_menu (menu_false_field.text, new_opt_pull_c)
  				display_new_context (new_opt_pull_c)
  				opt_pull_name := new_opt_pull_c.entity_name
+				minimum_height := 25
  			end
 		end
 
@@ -506,7 +473,7 @@ feature -- Interface generation
 
 feature -- Interface generation
 
-	minimum_height: INTEGER is 60
+	minimum_height: INTEGER
 			-- Height needed to fit the generated elements
 			-- on the permanent window.
 

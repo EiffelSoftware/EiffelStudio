@@ -16,7 +16,6 @@ inherit
 	EV_BUTTON_IMP
 		undefine
 			default_style,
-			on_key_down,
 			on_bn_clicked,
 			process_message,
 			default_alignment,
@@ -29,7 +28,8 @@ inherit
 			internal_default_height,
 			set_default_minimum_size,
 			next_dlggroupitem,
-			on_getdlgcode
+			on_getdlgcode,
+			on_key_down
 		select
 			wel_make
 		end
@@ -81,7 +81,6 @@ inherit
 			on_mouse_move,
 			on_mouse_wheel,
 			on_key_up,
-			on_key_down,
 			on_char,
 			on_set_focus,
 			on_kill_focus,
@@ -168,8 +167,8 @@ feature {NONE} -- Implementation
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed.
 		do
-			Precursor {WEL_RADIO_BUTTON} (virtual_key, key_data)
 			process_tab_and_arrows_keys (virtual_key)
+			Precursor {EV_BUTTON_IMP} (virtual_key, key_data)
 		end
 
 	on_getdlgcode is

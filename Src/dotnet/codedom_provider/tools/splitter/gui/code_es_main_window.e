@@ -181,10 +181,10 @@ feature {NONE} -- Events Handling
 			l_dir: STRING
 			l_res: SYSTEM_OBJECT
 		do
-			if destination_folders_combo.text.is_empty then
-				l_dir := folders_combo_box.text
-			else
+			if destination_radio_button.is_selected then
 				l_dir := destination_folders_combo.text
+			else
+				l_dir := folders_combo_box.text
 			end
 			if not l_dir.is_empty then
 				l_res := feature {SYSTEM_DLL_PROCESS}.start_string_string ("explorer.exe", l_dir)

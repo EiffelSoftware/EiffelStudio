@@ -59,7 +59,7 @@ feature -- Access
 
 			if c_w /= Void then
 				if c_w.class_text_field.text.empty then
-					t:="..."
+					t:= clone (tool.title)
 				else
 					t := clone (tool.eb_shell.icon_name)
 				end

@@ -54,4 +54,21 @@ feature
 			!! Result.make;
 		end;
 
+	clear_values is
+			-- Remove all old values, to be able to
+			-- reset values to their defaults.
+		local
+			empty_array: ARRAY [ STRING ]
+		do
+			!! empty_array.make (1, 0);
+			output_names.copy (empty_array);
+			filenames.copy (empty_array);
+			language_names.copy (empty_array);
+			column_names.copy (empty_array);
+			binary_operators.copy (empty_array);
+			values.copy (empty_array);
+			boolean_operators.copy (empty_array);
+			subqueries.wipe_out
+		end
+
 end -- class SHARED_QUERY_VALUES

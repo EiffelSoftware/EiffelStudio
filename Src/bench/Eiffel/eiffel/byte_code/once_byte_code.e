@@ -39,7 +39,7 @@ feature -- IL code generation
 			-- Generate IL byte code
 		local
 			has_result: BOOLEAN
-			il_label_compute: IL_LABEL
+			il_label_done: IL_LABEL
 			r_type: TYPE_I
 		do
 				-- Put a breakable point on feature name.
@@ -57,16 +57,9 @@ feature -- IL code generation
 				il_generator.generate_once_result_info (feature_name, r_type)
 			end
 
-			il_label_compute := il_label_factory.new_label
 			il_generator.generate_once_test
-			il_generator.branch_on_false (il_label_compute)
-
-			if has_result then
-				il_generator.generate_once_result
-			end
-			il_generator.generate_return (has_result)
-
-			il_generator.mark_label (il_label_compute)
+			il_label_done := il_label_factory.new_label
+			il_generator.branch_on_true (il_label_done)
 
 				-- Mark once as being computed from now on.
 			il_generator.generate_once_computed
@@ -74,10 +67,8 @@ feature -- IL code generation
 
 			il_generator.put_debug_info (end_location)
 
-			if has_result then
-				il_generator.generate_once_result
-			end
-			il_generator.generate_return (has_result)
+			il_generator.mark_label (il_label_done)
+			il_generator.generate_once_return (has_result)
 			
 			il_generator.set_once_generation (False)
 		end

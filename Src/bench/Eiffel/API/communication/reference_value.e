@@ -48,6 +48,9 @@ feature
 						cw.put_string (" = ");
 						cw.put_string (string_value)
 					end
+				else
+					System.any_class.compiled_class.append_clickable_name (cw);
+					cw.put_string (" = Unknown")
 				end
 			end
 		end;

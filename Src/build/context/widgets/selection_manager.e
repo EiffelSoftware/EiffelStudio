@@ -4,7 +4,10 @@ class SELECTION_MANAGER
 inherit
 
 	WINDOWS;
-	COMMAND;
+	COMMAND
+		redefine
+			context_data_useful
+		end;
 	COMMAND_ARGS;
 	CONSTANTS;
 	PAINTER
@@ -46,6 +49,12 @@ feature {NONE}
 			Result := context.widget
 		end;
 
+	context_data_useful: BOOLEAN is 
+			-- Is the context data useful (yes it is)?
+		do
+			Result := True
+		end
+
 feature 
 
 	group: LINKED_LIST [CONTEXT];
@@ -82,14 +91,16 @@ feature {NONE}
 		local
 			parent: CONTEXT;
 			new_x, new_y: INTEGER;
-			ct: INTEGER
+			ct: INTEGER;
+			bt_data: MOTNOT_DATA
 		do
+			bt_data ?= context_data;
 			x := context.real_x;
 			y := context.real_y;
 			width := context.width;
 			height := context.height;
-			new_x := eb_screen.x;
-			new_y := eb_screen.y;
+			new_x := bt_data.absolute_x;
+			new_y := bt_data.absolute_y;
 			delta_w := new_x - x;
 			delta_h := new_y - y;
 			if cursor_shape /= Void and then
@@ -265,11 +276,13 @@ feature {NONE}
 	move_group is
 		local
 			new_x, new_y: INTEGER;
+			motnot: MOTNOT_DATA
 		do
+			motnot ?= context_data;
+			new_x := motnot.absolute_x;
+			new_y := motnot.absolute_y;
 			motion := true;
 			display_rectangle;
-			new_x := eb_screen.x;
-			new_y := eb_screen.y;
 			if new_x > delta_w then
 				x := delta_w;
 				width := new_x - delta_w;
@@ -288,18 +301,23 @@ feature {NONE}
 		end;
 
 	move_rectangle is
+		local
+			motnot: MOTNOT_DATA
 		do
+			motnot ?= context_data;
 			display_selected_rectangles;
-			x :=  eb_screen.x - delta_w;
-			y :=  eb_screen.y - delta_h;
+			x := motnot.absolute_x - delta_w;
+			y := motnot.absolute_y - delta_h;
 			display_selected_rectangles
 		end;
 
 	resize_rectangle is
 		local
 			new_x, new_y: INTEGER;
-			ct: INTEGER
+			ct: INTEGER;
+			motnot: MOTNOT_DATA
 		do
+			motnot ?= context_data;
 			if context.is_group_composite then
 				draw_grouped_comp_items
 			elseif shift_selected then
@@ -307,8 +325,8 @@ feature {NONE}
 			else
 				display_rectangle;
 			end;
-			new_x := eb_screen.x;
-			new_y := eb_screen.y;
+			new_x := motnot.absolute_x;
+			new_y := motnot.absolute_y;
 			ct := cursor_shape.type;
 			if ct = Cursors.top_left_corner then
 				width := width - new_x + x;
@@ -577,6 +595,7 @@ feature {PERM_WIND_C}
 			bull: BULLETIN_C;
 			a_context: CONTEXT;
 			arrow_cmd: ARROW_MOVE_CMD
+			bd: BUTTON_DATA
 		do
 			if (argument = First) then
 					-- Pointer motion
@@ -633,12 +652,13 @@ feature {PERM_WIND_C}
 				selected := true;
 				ctrl_selected := true;
 				motion := false;
-				x := eb_screen.x;
-				y := eb_screen.y;
+				bd ?= context_data
+				x := bd.absolute_x
+				y := bd.absolute_y
 				width := 0;
 				height := 0;
-				delta_w := eb_screen.x;
-				delta_h := eb_screen.y;
+				delta_w := bd.absolute_x
+				delta_h := bd.absolute_y
 				display_rectangle;
 				widget.grab (Cursors.cross_cursor);
 			elseif argument = Sixth then

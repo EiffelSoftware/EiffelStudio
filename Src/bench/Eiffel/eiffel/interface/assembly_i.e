@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			create renamings.make
 			create ignore.make
 			create sub_clusters.make (0)
+			create classes.make (0)
 		ensure
 			cluster_name_set: cluster_name = a.cluster_name
 			assembly_name_set: assembly_name = a.assembly_name

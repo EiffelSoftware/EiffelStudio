@@ -125,7 +125,6 @@ feature {NONE} -- Inapplicable
 
 end -- class COUNTABLE_SEQUENCE
 
-
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1997 Interactive Software Engineering Inc.

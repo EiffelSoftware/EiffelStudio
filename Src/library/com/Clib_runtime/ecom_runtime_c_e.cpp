@@ -27,6 +27,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
 	make = eif_procedure ("make", eif_currency_id);
 	result = eif_create (eif_currency_id);
+	nstcall = 0;
 	(FUNCTION_CAST (void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_currency, sizeof (CURRENCY));
@@ -36,7 +37,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 
-// Create ECOM_DECIMAL from C  
+// Create ECOM_DECIMAL from C
 {
 	EIF_OBJECT result = 0;
 	EIF_TYPE_ID eif_decimal_id = -1;
@@ -46,6 +47,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_procedure ("make", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
+	nstcall = 0;
 	(FUNCTION_CAST (void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_decimal, sizeof (DECIMAL));
@@ -65,7 +67,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT a_variant)
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
 	make = eif_procedure ("make", eif_variant_id);
 	result = eif_create (eif_variant_id);
-	make (eif_access (result));
+	nstcall = 0;
+	(FUNCTION_CAST (void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_variant, sizeof (VARIANT));
 	return eif_wean (result);
@@ -85,7 +88,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a
 	type_id = eif_type_id (a_class_name);
 	make = eif_procedure ("make", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_record_pointer, a_size);
 	return eif_wean (result);
@@ -108,7 +112,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
 	if ( VariantTimeToSystemTime( a_date, &a_sys_time))
 	{
 		date_make = eif_procedure ("make", date_tid);
-		date_make (eif_access (date_object), a_sys_time.wYear,
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER,
+		EIF_INTEGER, EIF_INTEGER))date_make) (eif_access (date_object), a_sys_time.wYear,
 				a_sys_time.wMonth, a_sys_time.wDay, a_sys_time.wHour,
 				a_sys_time.wMinute, a_sys_time.wSecond);
 	}
@@ -133,7 +139,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_hresult (HRESULT a_hresult)
 	make = eif_procedure ("make_from_integer", type_id);
 	result = eif_create (type_id);
 
-	make (eif_access (result), (EIF_INTEGER) a_hresult);
+	nstcall = 0;
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))make) (eif_access (result), (EIF_INTEGER) a_hresult);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -178,7 +186,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
 		eif_string_id = eif_type_id ("STRING");
 		string_make = eif_procedure ("make", eif_string_id);
 		name = eif_create (eif_string_id);
-		string_make (eif_access (name), 0);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))string_make) (eif_access (name), 0);
 	}
 	return eif_wean (name);
 };
@@ -214,7 +223,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 	eif_variant_id = eif_type_id ("ECOM_VARIANT");
 	make = eif_procedure ("make_from_pointer", eif_variant_id);
 	result = eif_create (eif_variant_id);
-	make (eif_access (result), (EIF_POINTER)a_variant);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_variant);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -230,7 +240,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unknown (IUnknown * a_unknown)
 	eif_id = eif_type_id ("ECOM_UNKNOWN_INTERFACE");
 	make = eif_procedure ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
-	make (eif_access (result), (EIF_POINTER)a_unknown);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_unknown);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -246,7 +257,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 	eif_id = eif_type_id ("ECOM_AUTOMATION_INTERFACE");
 	make = eif_procedure ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
-	make (eif_access (result), (EIF_POINTER)a_dispatch);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make)(eif_access (result), (EIF_POINTER)a_dispatch);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -266,7 +278,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OB
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))set_item) (eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -290,7 +303,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), (EIF_INTEGER)*a_hresult);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))set_item) (eif_access (result), (EIF_INTEGER)*a_hresult);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -315,7 +329,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJE
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))set_item) (eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -340,7 +355,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_integer (int * an_integer, EIF_OB
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), (EIF_INTEGER)*an_integer);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))set_item)(eif_access (result), (EIF_INTEGER)*an_integer);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -365,7 +381,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJE
 
 	set_item = (EIF_SET_REAL_ITEM)eif_procedure ("set_item", type_id);
 
-	set_item (eif_access (result), (EIF_REAL)*a_real);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REAL))set_item)(eif_access (result), (EIF_REAL)*a_real);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -389,7 +406,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EI
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), *a_double);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_DOUBLE))set_item)(eif_access (result), *a_double);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -413,7 +432,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (char * a_character, EI
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), (EIF_INTEGER)*a_character);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE,
+	EIF_CHARACTER))set_item) (eif_access (result), (EIF_CHARACTER)*a_character);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -437,7 +459,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, E
 		result = an_object;
 
 	set_item = eif_procedure ("set_item", type_id);
-	set_item (eif_access (result), ccom_ce_boolean (*a_bool));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_BOOLEAN))set_item) (eif_access (result), ccom_ce_boolean (*a_bool));
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
@@ -457,7 +481,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_currency (CURRENCY * a_currency)
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
 	currency_make = eif_procedure ("make_from_pointer", eif_currency_id);
 	result = eif_create (eif_currency_id);
-	currency_make (eif_access (result), (EIF_POINTER)a_currency);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE,
+	EIF_POINTER))currency_make)(eif_access (result), (EIF_POINTER)a_currency);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -473,7 +500,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_procedure ("make_from_pointer", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
-	make (eif_access (result), (EIF_POINTER)a_decimal);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make)(eif_access (result), (EIF_POINTER)a_decimal);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -489,6 +518,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 	type_id = eif_type_id (a_class_name);
 	make = eif_procedure ("make_from_pointer", type_id);
 	result = eif_create (type_id);
+	nstcall = 0;
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_record_pointer);
 	return eif_wean (result);
 };
@@ -505,7 +535,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_interface (void * a_interface_poi
 	type_id = eif_type_id (a_class_name);
 	make = eif_procedure ("make_from_pointer", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), (EIF_POINTER)a_interface_pointer);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE,
+			EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_interface_pointer);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -521,7 +554,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long_long (LARGE_INTEGER * a_larg
 	eif_large_integer_id = eif_type_id ("ECOM_LARGE_INTEGER");
 	large_integer_make = eif_procedure ("make_from_pointer", eif_large_integer_id);
 	result = eif_create (eif_large_integer_id);
-	large_integer_make (eif_access (result), (EIF_POINTER)a_large_integer);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE,
+			EIF_POINTER))large_integer_make) (eif_access (result), (EIF_POINTER)a_large_integer);
 	return eif_wean (result);
 };
 //----------------------------------------------------------------------------
@@ -537,7 +573,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_u
 	eif_ularge_integer_id = eif_type_id ("ECOM_ULARGE_INTEGER");
 	ularge_integer_make = eif_procedure ("make_from_pointer", eif_ularge_integer_id);
 	result = eif_create (eif_ularge_integer_id);
-	ularge_integer_make (eif_access (result), (EIF_POINTER)an_ularge_integer);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE,
+			EIF_POINTER))ularge_integer_make)(eif_access (result), (EIF_POINTER)an_ularge_integer);
 	return eif_wean (result);
 };
 //----------------------------------------------------------------------------
@@ -566,6 +605,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short
 	else
 		result = an_object;
 
+	nstcall = 0;
 	eif_make_from_c (eif_access (result), c_array, (EIF_INTEGER)element_number, EIF_INTEGER);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -590,6 +630,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long
 	else
 		result = an_object;
 
+	nstcall = 0;
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_INTEGER);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -614,6 +655,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_float
 	else
 		result = an_object;
 
+	nstcall = 0;
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_REAL);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -638,6 +680,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double
 	else
 		result = an_object;
 
+	nstcall = 0;
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_DOUBLE);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -661,6 +704,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character
 		result = ccom_create_array ("CHARACTER", dim_count, element_count);
 	else
 		result = an_object;
+
+	nstcall = 0;
 	eif_make_from_c (eif_access (result), an_array, element_number, EIF_CHARACTER);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -693,7 +738,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make) (eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -705,7 +752,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 		an_array_element = (CURRENCY *)&((ccom_c_array_element (an_array, i,CURRENCY)));
 		eif_object_buf = eif_protect (ccom_ce_pointed_currency (an_array_element));
 
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put) (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -721,7 +769,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -732,7 +783,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -741,7 +795,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_currency
 			make = eif_procedure ("make_from_array", type_id);
 
 				result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))	make) (eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -775,7 +831,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make) (eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -787,7 +845,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 		an_array_element = (BSTR )((ccom_c_array_element (an_array, i, BSTR)));
 
 		eif_object_buf = eif_protect (ccom_ce_bstr ((BSTR)an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put) (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -803,7 +862,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -814,7 +876,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -823,7 +887,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_bstr
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make) (eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -857,7 +924,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 	if (((an_object == NULL) || (eif_access (an_object) == NULL)))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -869,7 +938,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 	{
 		an_array_element = (DECIMAL *)&((ccom_c_array_element (an_array, i, DECIMAL)));
 		eif_object_buf = eif_protect (ccom_ce_pointed_decimal (an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put) (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -885,7 +955,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -896,7 +968,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -905,7 +979,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -939,7 +1015,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+		EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -947,7 +1025,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (VARIANT_BOOL *)&((ccom_c_array_element (an_array, i, VARIANT_BOOL)));
-		put (eif_access (intermediate_array), ccom_ce_boolean ((VARIANT_BOOL)*an_array_element), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN,
+				EIF_INTEGER))put)(eif_access (intermediate_array), ccom_ce_boolean ((VARIANT_BOOL)*an_array_element), i + 1);
 	}
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -962,7 +1041,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -973,7 +1054,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make) (eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -982,7 +1065,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_boolean
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make) (eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1016,7 +1101,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make) (eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1027,7 +1114,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 	{
 		an_array_element = (DATE *)&((ccom_c_array_element (an_array, i, DATE)));
 		eif_object_buf = eif_protect (ccom_ce_date ((DATE)*an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1043,7 +1131,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1054,7 +1144,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1063,7 +1155,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_date
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1097,7 +1191,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1108,7 +1204,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 	{
 		an_array_element = (VARIANT *)&(ccom_c_array_element (an_array, i, VARIANT));
 		eif_object_buf = eif_protect (ccom_ce_pointed_variant ((VARIANT *)an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1124,7 +1221,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1135,7 +1234,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1144,7 +1245,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_variant
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1177,7 +1281,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1188,7 +1294,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 	{
 		an_array_element = (HRESULT *)&((ccom_c_array_element (an_array, i, HRESULT)));
 		eif_object_buf = eif_protect (ccom_ce_hresult ((HRESULT)*an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1204,7 +1311,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1215,7 +1324,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1224,7 +1335,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_hresult
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1257,7 +1370,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1268,7 +1383,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 	{
 		an_array_element = (LPSTR )((ccom_c_array_element (an_array, i, LPSTR)));
 		eif_object_buf = eif_protect (ccom_ce_lpstr ((LPSTR)an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1284,7 +1400,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1295,7 +1413,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1304,7 +1424,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1337,7 +1459,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1348,7 +1472,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 	{
 		an_array_element = (LPWSTR)((ccom_c_array_element (an_array, i, LPWSTR)));
 		tmp_object = eif_protect (ccom_ce_lpwstr ((LPWSTR)an_array_element));
-		put (eif_access (intermediate_array), eif_access(tmp_object), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access(tmp_object), i + 1);
 		eif_wean (tmp_object);
 	}
 
@@ -1365,7 +1490,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1376,7 +1503,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1385,7 +1514,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1418,7 +1549,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1429,7 +1562,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 	{
 		an_array_element = (LARGE_INTEGER *)&((ccom_c_array_element (an_array, i, LARGE_INTEGER)));
 		tmp_object = eif_protect (ccom_ce_pointed_long_long (an_array_element));
-		put (eif_access (intermediate_array), eif_access (tmp_object), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (tmp_object), i + 1);
 		eif_wean (tmp_object);
 	}
 
@@ -1445,7 +1579,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1456,7 +1592,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1465,7 +1603,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long_long
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1499,7 +1639,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1510,7 +1652,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 	{
 		an_array_element = (ULARGE_INTEGER *)&((ccom_c_array_element (an_array, i, ULARGE_INTEGER)));
 		tmp_object = eif_protect (ccom_ce_pointed_ulong_long (an_array_element));
-		put (eif_access (intermediate_array), eif_access (tmp_object), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (tmp_object), i + 1);
 	}
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
@@ -1525,7 +1668,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1536,7 +1681,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1545,7 +1692,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_ulong_long
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1579,7 +1728,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 	else
 		intermediate_array = an_object;
@@ -1590,7 +1741,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 	{
 		an_array_element = (IUnknown *)&((ccom_c_array_element (an_array, i, IUnknown *)));
 		eif_object_buf = eif_protect (ccom_ce_pointed_unknown ((IUnknown *)an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf) , i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf) , i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1606,7 +1758,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1617,7 +1771,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1626,7 +1782,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unknown
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1660,7 +1818,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
 		intermediate_array = eif_create (type_id);
-		make (eif_access (intermediate_array), 1, element_number);
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_number);
 	}
 
 	EIF_OBJECT eif_object_buf;
@@ -1669,7 +1829,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 	{
 		an_array_element = (IDispatch *)&((ccom_c_array_element (an_array, i, IDispatch *)));
 		eif_object_buf = eif_protect (ccom_ce_pointed_unknown ((IDispatch *)an_array_element));
-		put (eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);
 	}
 
@@ -1685,7 +1846,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 			int_array_id = eif_type_id ("ARRAY [INTEGER]");
 			make = eif_procedure ("make", int_array_id);
 			eif_lower_indeces = eif_create (int_array_id);
-			make (eif_access (eif_lower_indeces), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 			lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 			for ( i = 0; i < dim_count; i++)
@@ -1696,7 +1859,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 
 			// Create array of element counts
 			eif_element_count = eif_create (int_array_id);
-			make (eif_access (eif_element_count), 1, dim_count);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+					EIF_INTEGER))make)(eif_access (eif_element_count), 1, dim_count);
 
 			eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -1705,7 +1870,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_dispatch
 			make = eif_procedure ("make_from_array", type_id);
 
 			result = eif_create (type_id);
-			make (eif_access (result), eif_access (intermediate_array),
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+					EIF_REFERENCE))make)(eif_access (result), eif_access (intermediate_array),
 					dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 			eif_wean (intermediate_array);
 		}
@@ -1767,26 +1934,35 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [INTEGER]
 	type_id = eif_type_id ("ECOM_ARRAY [INTEGER]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+			EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -1803,7 +1979,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_REFERENCE))put)(eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -1879,26 +2056,34 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [INTEGER]
 	type_id = eif_type_id ("ECOM_ARRAY [INTEGER]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))
+	make)(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index_aaaa, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -1915,7 +2100,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
+				EIF_REFERENCE))put) (eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index_aaaa));
 
@@ -1947,7 +2133,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_bstr (BSTR *a_string)
 	EIF_TYPE_ID tid = eif_type_id ("CELL[STRING]");
 	EIF_OBJECT result = eif_create (tid);
 	EIF_PROCEDURE put = eif_procedure ("put", tid);
-	put (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put)(eif_access (result), eif_access (eif_object));
 	return eif_wean(result);
 }
 
@@ -1958,7 +2145,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_date (DATE *a_date)
 	EIF_TYPE_ID tid = eif_type_id ("CELL[DATE_TIME]");
 	EIF_OBJECT result = eif_create (tid);
 	EIF_PROCEDURE put = eif_procedure ("put", tid);
-	put (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put)(eif_access (result), eif_access (eif_object));
 	return eif_wean(result);
 }
 
@@ -1974,7 +2162,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_short (SAFEARRAY ** a_s
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -1991,7 +2180,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_long (SAFEARRAY ** a_sa
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2008,7 +2198,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_float (SAFEARRAY ** a_s
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2025,7 +2216,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_double (SAFEARRAY ** a_
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2042,7 +2234,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_currency (SAFEARRAY ** 
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2059,7 +2252,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_date (SAFEARRAY ** a_sa
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2076,7 +2270,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_sa
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2093,7 +2288,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
 }
@@ -2110,7 +2306,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2127,7 +2324,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_variant (SAFEARRAY ** a
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2144,7 +2342,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2161,7 +2360,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_char (SAFEARRAY ** a_sa
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2178,7 +2378,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** 
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2195,7 +2396,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_unknown (SAFEARRAY ** a
 	result = eif_create (tid);
 	put_proc = eif_procedure ("put", tid);
 
-	put_proc (eif_access (result), eif_access (eif_object));
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
 }
@@ -2253,26 +2455,39 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [REAL]
 	type_id = eif_type_id ("ECOM_ARRAY [REAL]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+			EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2289,7 +2504,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REAL,
+				EIF_REFERENCE))put)(eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2365,26 +2581,38 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [DOUBLE]
 	type_id = eif_type_id ("ECOM_ARRAY [DOUBLE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+			EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2401,7 +2629,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_DOUBLE,
+				EIF_REFERENCE))put)(eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2477,26 +2706,40 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [CHARACTER]
 	type_id = eif_type_id ("ECOM_ARRAY [CHARACTER]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_REFERENCE, EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2513,7 +2756,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_CHARACTER,
+				EIF_REFERENCE))put)(eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2590,26 +2835,39 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make) (eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [BOOLEAN]
 	type_id = eif_type_id ("ECOM_ARRAY [BOOLEAN]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+			EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2627,7 +2885,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
 		eif_array_element = (sa_element == 0) ? EIF_FALSE : EIF_TRUE;
-		put (eif_access (result), eif_array_element, eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN,
+				EIF_REFERENCE))put)(eif_access (result), eif_array_element, eif_access (eif_index));
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2703,26 +2962,39 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+			EIF_INTEGER))make)(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_CURRENCY]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_CURRENCY]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE,
+			EIF_REFERENCE))make)(eif_access (result), dim_count,
+			eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2738,7 +3010,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 		}
 
 		eif_array_element = eif_create (currency_id);
-		make (eif_access (eif_array_element));
+
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
 		sa_element = (CURRENCY *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
@@ -2746,7 +3020,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+				EIF_REFERENCE))put)(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+
 		eif_wean (eif_array_element);
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -2823,30 +3100,43 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [DATE_TIME]
 	type_id = eif_type_id ("ECOM_ARRAY [DATE_TIME]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
 
+	EIF_OBJECT date_object = 0;
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -2859,7 +3149,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), ccom_ce_date (sa_element), eif_access (eif_index));
+
+		date_object = eif_protect (ccom_ce_date (sa_element));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (date_object), eif_access (eif_index));
+
+		eif_wean (date_object);
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -2935,26 +3231,38 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_DECIMAL]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_DECIMAL]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -2970,7 +3278,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 		}
 
 		eif_array_element = eif_create (decimal_id);
-		make (eif_access (eif_array_element));
+
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
+
 		sa_element = (DECIMAL *) eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
@@ -2978,7 +3289,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+
 		eif_wean (eif_array_element);
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3055,29 +3369,43 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [STRING]
 	type_id = eif_type_id ("ECOM_ARRAY [STRING]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
+
+	EIF_OBJECT string_object = 0;
 
 	do
 	{
@@ -3091,7 +3419,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), ccom_ce_bstr (sa_element), eif_access (eif_index));
+
+		string_object = eif_protect (ccom_ce_bstr (sa_element));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (string_object), eif_access (eif_index));
+
+		eif_wean (string_object);
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
@@ -3167,26 +3501,38 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_VARIANT]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_VARIANT]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
@@ -3202,7 +3548,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 		}
 
 		eif_array_element = eif_create (variant_id);
-		make (eif_access (eif_array_element));
+
+		nstcall = 0;
+		(FUNCTION_CAST ( void, (EIF_REFERENCE))make)(eif_access (eif_array_element));
+
 		sa_element = (VARIANT *)eif_field (eif_access (eif_array_element), "item", EIF_POINTER);
 
 		hr = SafeArrayGetElement (a_safearray, sa_indeces, sa_element);
@@ -3210,7 +3559,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));
+
 		eif_wean (eif_array_element);
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3287,29 +3638,43 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_HRESULT]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_HRESULT]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
+
+	EIF_OBJECT hresult_object = 0;
 
 	do
 	{
@@ -3323,8 +3688,12 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), ccom_ce_hresult (sa_element), eif_access (eif_index));
+		hresult_object = eif_protect (ccom_ce_hresult (sa_element));
 
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (hresult_object), eif_access (eif_index));
+
+		eif_wean (hresult_object);
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
 
 	// free memory
@@ -3399,30 +3768,43 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
 
+	EIF_OBJECT unknown_object = 0;
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -3435,7 +3817,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), ccom_ce_pointed_unknown (sa_element), eif_access (eif_index));
+
+		unknown_object = eif_protect (ccom_ce_pointed_unknown (sa_element));
+
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put)
+				(eif_access (result), eif_access (unknown_object), eif_access (eif_index));
+		eif_wean (unknown_object);
+
 		sa_element->AddRef();
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3512,30 +3900,43 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 	int_array_id = eif_type_id ("ARRAY [INTEGER]");
 	make = eif_procedure ("make", int_array_id);
 	eif_lower_indeces = eif_create (int_array_id);
-	make (eif_access (eif_lower_indeces), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_lower_indeces), lower_indeces, dim_count, EIF_INTEGER);
 
 	// Create array of element counts
 	eif_element_counts = eif_create (int_array_id);
-	make (eif_access (eif_element_counts), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_element_counts), 1, dim_count);
 
 	eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);
 
 	// Create array of indeces
 	eif_index = eif_create (int_array_id);
-	make (eif_access (eif_index), 1, dim_count);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_index), 1, dim_count);
 
 	// Create ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]
 	type_id = eif_type_id ("ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE]");
 	make = eif_procedure ("make", type_id);
 	put = eif_procedure ("put", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+			(eif_access (result), dim_count,  eif_access (eif_lower_indeces), eif_access (eif_element_counts));
 
 	// Initialize `result' to contents of SAFEARRAY
 	memcpy (index, lower_indeces, dim_count * sizeof(EIF_INTEGER));
 
+	EIF_OBJECT dispatch_object = 0;
 	do
 	{
 		eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
@@ -3548,7 +3949,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 		{
 			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 		}
-		put (eif_access (result), ccom_ce_pointed_dispatch (sa_element), eif_access (eif_index));
+		dispatch_object = eif_protect (ccom_ce_pointed_dispatch (sa_element));
+
+		put (eif_access (result), eif_access (dispatch_object), eif_access (eif_index));
+		eif_wean (dispatch_object);
 		sa_element->AddRef();
 
 	} while (ccom_safearray_next_index (dim_count, lower_indeces, upper_indeces, index));
@@ -3588,7 +3992,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer, EIF_O
 		result = eif_create (type_id);
 	else
 		result = an_object;
-	set_item (eif_access (result), *a_pointer);
+
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))set_item)(eif_access (result), (EIF_POINTER)*a_pointer);
+
 	CoTaskMemFree (a_pointer);
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);

@@ -40,7 +40,10 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 		free (array_name);
 		make = eif_procedure ("make", type_id);
 		result = eif_create (type_id);
-		make (eif_access (result), 1, *element_count);
+
+		nstcall = 0;
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+					(eif_access (result), 1, *element_count);
 	}
 	else
 	{
@@ -48,7 +51,10 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 		int_array_id = eif_type_id ("ARRAY [INTEGER]");
 		make = eif_procedure ("make", int_array_id);
 		eif_lower_indeces = eif_create (int_array_id);
-		make (eif_access (eif_lower_indeces), 1, dim_count);
+
+		nstcall = 0;
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+			(eif_access (eif_lower_indeces), 1, dim_count);
 
 		lower_indeces = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));
 		for ( i = 0; i < dim_count; i++)
@@ -59,7 +65,10 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 
 		// Create array of element counts
 		eif_element_count = eif_create (int_array_id);
-		make (eif_access (eif_element_count), 1, dim_count);
+
+		nstcall = 0;
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)
+				(eif_access (eif_element_count), 1, dim_count);
 
 		eif_make_from_c (eif_access (eif_element_count), element_count, dim_count, EIF_INTEGER);
 
@@ -74,7 +83,10 @@ EIF_OBJECT ecom_runtime_ce::ccom_create_array (char * element_name, EIF_INTEGER 
 		free (array_name);
 		make = eif_procedure ("make", type_id);
 		result = eif_create (type_id);
-		make (eif_access (result), dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
+
+		nstcall = 0;
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)
+				(eif_access (result), dim_count, eif_access (eif_lower_indeces), eif_access (eif_element_count));
 	}
 	return result;
 };
@@ -171,22 +183,3 @@ int ecom_runtime_ce::ccom_safearray_next_index (EIF_INTEGER dim_count,
 	return result;
 };
 //--------------------------------------------------------------------------
-
-
-//--------------------------------------------------------------------------
-
-
-//--------------------------------------------------------------------------
-
-
-//--------------------------------------------------------------------------
-
-
-
-//--------------------------------------------------------------------------
-
-
-
-//--------------------------------------------------------------------------
-
-

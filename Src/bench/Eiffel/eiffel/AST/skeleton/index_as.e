@@ -14,6 +14,10 @@ inherit
 			type_check
 		end
 
+create
+	default_create,
+	initialize
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (t: like tag; i: like index_list) is

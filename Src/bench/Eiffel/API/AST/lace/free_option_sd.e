@@ -166,7 +166,10 @@ feature {COMPILER_EXPORTER}
 				elseif value.is_no then
 					System.set_array_optimization_on (False)
 				elseif value.is_yes then
-					System.set_array_optimization_on (True)
+						-- FIXME: Since it is not working with 4.5.020 and
+						-- because we haven't find a bug fix yet, we disable
+						-- array optimization in 4.5.021.
+					System.set_array_optimization_on (False)
 				else
 					error_found := True;
 				end;

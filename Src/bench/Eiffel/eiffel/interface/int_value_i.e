@@ -4,9 +4,17 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_integer, is_equal, equiv
+			generate, is_integer, is_equal, is_propagation_equivalent
 		end
 	
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := int_val = other.int_val
+		end
+
 feature 
 
 	int_val: INTEGER;
@@ -36,9 +44,9 @@ feature
 			Result := int_val = other.int_val;
 		end;
 
-	equiv (other: INT_VALUE_I): BOOLEAN is
+	is_propagation_equivalent (other: INT_VALUE_I): BOOLEAN is
 		do
-			Result := is_equal (other)
+			Result := same_type (other) and then int_val = other.int_val
 		end;
 
 	generate (file: INDENT_FILE) is

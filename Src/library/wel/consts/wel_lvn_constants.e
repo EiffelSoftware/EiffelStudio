@@ -9,79 +9,93 @@ class
 
 feature -- Access
 
+	Lvn_begindrag: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"LVN_BEGINDRAG"
+		end
+
 	Lvn_beginlabeledit: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_BEGINLABELEDIT"
 		end
 
+	Lvn_beginrdrag: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"LVN_BEGINRDRAG"
+		end
+
 	Lvn_columnclick: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_COLUMNCLICK"
 		end
 
 	Lvn_deleteallitems: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_DELETEALLITEMS"
 		end
 
 	Lvn_deleteitem: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_DELETEITEM"
 		end
 
 	Lvn_endlabeledit: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_ENDLABELEDIT"
 		end
 
 	Lvn_getdispinfo: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_GETDISPINFO"
 		end
 
 	Lvn_insertitem: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_INSERTITEM"
 		end
 
 	Lvn_itemchanged: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_ITEMCHANGED"
 		end
 
 	Lvn_itemchanging: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_ITEMCHANGING"
 		end
 
 	Lvn_keydown: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_KEYDOWN"
 		end
 
 	Lvn_setdispinfo: INTEGER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVN_SETDISPINFO"
 		end

@@ -7,11 +7,7 @@ indexing
 deferred class
 	<CLASS_NAME>
 
-inherit
-	EV_TITLED_WINDOW
-		redefine
-			initialize, is_in_default_state
-		end
+<INHERITANCE>
 
 feature {NONE} -- Initialization
 
@@ -19,7 +15,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		<LOCAL>
 		do
-			Precursor {EV_TITLED_WINDOW}
+			<PRECURSOR>
 			<CREATE>
 			<BUILD>
 			<SET>
@@ -27,12 +23,12 @@ feature {NONE} -- Initialization
 
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
-			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+			--close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 
 				-- Call `user_initialization'.
 			user_initialization
 		end
-
+<CUSTOM_FEATURE>
 
 feature {NONE} -- Implementation
 
@@ -42,6 +38,11 @@ feature {NONE} -- Implementation
 			-- Re-implement if you wish to enable checking
 			-- for `Current'.
 			Result := True
+		end
+	
+	user_initialization is
+			-- Feature for custom initialization, called at end of `initialize'.
+		deferred
 		end
 	<ATTRIBUTE>
 	<EVENT_DECLARATION>

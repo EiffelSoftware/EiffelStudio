@@ -56,32 +56,6 @@ inherit
 		end
 
 feature {NONE} -- Initialization
-		
-	internal_enable_dockable is
-			-- Activate drag mechanism.
- 		do
---			check
---				button_release_not_connected: button_release_connection_id = 0
---			end
---			if button_press_connection_id > 0 then
---				signal_disconnect (button_press_connection_id)
---			end
-			real_signal_connect (
-				c_object,
-				"button-press-event",
-				agent (App_implementation.gtk_marshal).start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate
-			)
-			--button_press_connection_id := last_signal_connection_id
-		ensure then
-			press_connection_successful: button_press_connection_id > 0
-		end
-		
-	internal_disable_dockable is
-			-- 
-		do
-			
-		end
 
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
@@ -211,6 +185,15 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
+			if a_type = C.GDK_BUTTON_PRESS_ENUM then
+				if a_button = 4 then
+					-- This is for scrolling up
+					--key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_up)])
+				elseif a_button = 5 then
+					-- This is for scrolling down
+					--key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_down)])
+				end	
+			end
 			if a_type = C.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)

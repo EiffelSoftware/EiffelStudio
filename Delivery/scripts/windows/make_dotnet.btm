@@ -11,7 +11,7 @@ copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace
-finalize metadata_consumer.ace
+finalize metadata_consumer.%ISE_PLATFORM%.ace
 fff
 iff not exist EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll

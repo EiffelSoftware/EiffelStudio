@@ -5,14 +5,23 @@ inherit
 
 	ATTRIB_STONE
 
+creation
+
+	make
+
 feature {NONE}
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.font_att_label
+		end;
 
 	command: FONT_STONE_CMD is
 		once
 			!!Result
 		end;
 
-	pixmap: PIXMAP is
+	symbol: PIXMAP is
 		do
 			Result := Pixmaps.font_pixmap
 		end;

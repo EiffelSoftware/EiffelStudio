@@ -7,12 +7,17 @@ inherit
 
 feature {NONE}
 
+	focus_string: STRING is
+		do
+			Result := Focus_labels.colors_att_label
+		end;
+
 	command: CLR_STONE_CMD is
 		once
 			!!Result
 		end;
 
-	pixmap: PIXMAP is
+	symbol: PIXMAP is
 		do
 			Result := Pixmaps.color_stone_pixmap
 		end;

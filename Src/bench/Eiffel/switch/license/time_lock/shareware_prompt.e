@@ -29,7 +29,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (license: LICENSE) is
+	make (license: LICENSE; duration: INTEGER) is
 			-- Create the dialog.
 		local
 			dispatcher: WEL_DISPATCHER
@@ -45,16 +45,19 @@ feature {NONE} -- Initialization
 
 				-- Storing license information
 			license_info := license
+
+				-- Setting duration
+			nb_seconds := duration
 		end
 
 feature -- Behavior
 
 	setup_dialog is
 		do
-			nb_seconds := Total_seconds
 			registered_user := False
 			id_ok.set_text (nb_seconds.out)
 			id_ok.disable
+			id_cancel.disable
 			set_timer (id_ok.id, Timer_interval)	
 		end
 
@@ -80,6 +83,7 @@ feature -- Behavior
 				kill_timer (id_ok.id)
 				id_ok.set_text ("OK")
 				id_ok.enable
+				id_cancel.enable
 			else
 				id_ok.set_text (nb_seconds.out)
 			end

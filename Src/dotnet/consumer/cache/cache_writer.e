@@ -139,10 +139,9 @@ feature -- Basic Operations
 					end
 					l_assembly_folder := cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
 					create l_dir.make (l_assembly_folder)
-					check
-						assembly_folder_already_exists: not l_dir.exists
+					if not l_dir.exists then
+						l_dir.create_dir
 					end
-					l_dir.create_dir
 
 					if status_printer /= Void then
 						l_consumer.set_status_printer (status_printer)
@@ -220,7 +219,7 @@ feature -- Basic Operations
 				l_ca := consumed_assembly_from_path (a_path)
 				l_info := cache_reader.info
 				remove_assembly_internal (a_path)
-				l_ca := create_consumed_assembly_from_path (l_ca.unique_id, a_path)
+				l_ca := create_consumed_assembly_from_path (l_ca.unique_id, l_ca.location)
 				l_info.update_assembly (l_ca)
 				update_info (l_info)
 			else

@@ -1,0 +1,9 @@
+SRCLIST = formatter.cs
+
+.SUFFIXES: .dll .cs
+
+.cs.dll:
+	csc $*.cs
+
+ISE.Reflection.Formatter.dll : $(SRCLIST) makefile
+	csc /t:library /out:ISE.Reflection.Formatter.dll $(SRCLIST) 

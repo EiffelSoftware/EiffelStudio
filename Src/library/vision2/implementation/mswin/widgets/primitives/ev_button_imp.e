@@ -10,7 +10,7 @@ indexing
 	%pixmap will be displayed. On gtk, everything works%N%
 	%like it is suppose to be, you have both text and%N%
 	%pixmap visible."
-	date: "$date: $"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -372,6 +372,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/06/09 01:33:27  manus
+--| Fixed a typo in log
+--|
 --| Revision 1.52  2000/06/09 01:32:52  manus
 --| Merged version 1.35.8.6 from DEVEL branch to trunc
 --|

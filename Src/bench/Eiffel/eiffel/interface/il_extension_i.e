@@ -76,12 +76,11 @@ feature -- Call generation
 			valid_call: alias_name_id > 0 or else
 				type = feature {SHARED_IL_CONSTANTS}.Creator_type
 		do
-			if type = enum_field_type then
-				il_generator.put_integer_32_constant (Names_heap.item (alias_name_id).to_integer)
-			else
-				il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
-					type, argument_types, return_type, is_polymorphic)
+			check
+				type_not_enum: type /= Enum_field_type
 			end
+			il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
+				type, argument_types, return_type, is_polymorphic)
 		end
 
 	generate_creation_call is

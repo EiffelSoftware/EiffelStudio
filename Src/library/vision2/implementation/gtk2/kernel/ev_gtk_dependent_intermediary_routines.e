@@ -159,7 +159,7 @@ feature {EV_ANY_I} -- Implementation
 	boolean_cell_renderer_toggle_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER) is
 			-- Called when a cell renderer is toggled (EV_CHECKABLE_LIST)
 		local
-			a_list_imp: EV_CHECKABLE_LIST_IMP
+			a_list_imp: EV_GTK_TREE_VIEW
 			a_tree_path_str: POINTER
 		do
 			a_list_imp ?= eif_id_object (a_object_id)

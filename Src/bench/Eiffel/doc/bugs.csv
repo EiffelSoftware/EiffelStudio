@@ -32,7 +32,7 @@ Editor,,,,,,,,,,
 ,3,1,The editor doesn't support more than 32000 lines of text (scrollbars jump to the top),,Julian,,,,EDT0001,11/16/2001
 ,4,1,"Writing 256 times ""io.putstring (""A message"");"" on the same line messes up the editor",,Julian,,,,EDT0002,11/16/2001
 ,5,3,"When dropping a dragged selection at the start of a line, EiffelStudio is frozen",,Xavier,,,,EDT0003,11/16/2001
-
+,3,2,After recompiling it is possible to edit library classes,,Xavier,,,,EDT0004,11/20/2001
 
 
 

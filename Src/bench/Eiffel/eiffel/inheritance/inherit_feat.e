@@ -5,7 +5,6 @@
 class INHERIT_FEAT 
 
 inherit
-
 	SHARED_INHERITED;
 	SHARED_WORKBENCH;
 	SHARED_SERVER;
@@ -14,9 +13,7 @@ inherit
 	COMPILER_EXPORTER
 
 creation
-
 	make
-
 	
 feature 
 
@@ -29,7 +26,7 @@ feature
 	inherited_info: INHERIT_INFO;
 			-- Feature inherited chosen among the deferred features and
 			-- the non-deferred.  If a redefinition is expected, this
-			-- attribute will be void after feature `process'.
+			-- attribute will be Void after feature `process'.
 
 	rout_id_set: ROUT_ID_SET;
 			-- Set of routine ids computed for the inherited feature
@@ -37,10 +34,10 @@ feature
 	make is
 			-- Lists creation
 		do
-			!!deferred_features.make;
-			!!features.make;
-			!!rout_id_set.make (5);
-		end;
+			!! deferred_features.make
+			!! features.make
+			!! rout_id_set.make (5);
+		end
 
 	has_assertion: BOOLEAN is
 			-- Do deferred_features or features have assertions?
@@ -138,7 +135,7 @@ feature
 			end;
 		end;
 
-	treat_renamings (feat: like features) is
+	treat_renamings (feat: LINKED_LIST [INHERIT_INFO]) is
 			-- Check renamings in the feature list `feat'.
 		require
 			good_argument: feat /= Void
@@ -330,15 +327,15 @@ feature
 				inherited_info := features.first;
 -- TEMPORARY fix
 				att ?= inherited_info.a_feature
-				if att /= void and then att.generate_in = void then
+				if att /= Void and then att.generate_in = Void then
 					from
 						features.start
-						inherited_info := void
+						inherited_info := Void
 					until
 						features.after or else inherited_info /= Void
 					loop
 						att ?= features.item.a_feature
-						if att /= void and then att.generate_in /= Void then
+						if att /= Void and then att.generate_in /= Void then
 							inherited_info := features.item
 						end
 						features.forth

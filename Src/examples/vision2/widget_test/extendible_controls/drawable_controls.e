@@ -89,7 +89,11 @@ feature {NONE} -- Initialization
 			list_item.select_actions.extend (agent drawable.set_and_mode)
 				-- Ensure copy mode is selected
 			mode_combo.first.enable_select
-			main_vertical_box.extend (mode_combo)
+			create horizontal_box
+			main_vertical_box.extend (horizontal_box)
+			horizontal_box.extend (create {EV_LABEL}.make_with_text ("Drawing mode "))
+			horizontal_box.disable_item_expand (horizontal_box.i_th (1))
+			horizontal_box.extend (mode_combo)
 			
 			
 				-- Add drawing operation controls.
@@ -495,6 +499,9 @@ feature {NONE} -- Implementation
 		local
 			a_parent: EV_VERTICAL_BOX
 		do
+			if filled_check_button.parent /= Void then
+				filled_check_button.parent.prune (filled_check_button)
+			end
 			filled_check_button.disable_select
 			argument_holder.go_i_th (1)
 			argument_holder.put_left (filled_check_button)

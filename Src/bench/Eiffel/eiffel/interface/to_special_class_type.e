@@ -31,7 +31,7 @@ feature
 				generate_make_area (feat, file);
 			else
 					-- Basic generation
-				{CLASS_TYPE} precursor (feat, file);
+				{CLASS_TYPE} Precursor (feat, file);
 			end;
 		end;
 
@@ -64,10 +64,7 @@ feature
 				--		{
 				--			char *ref;
 				--			struct union overhead *zone;
-			file.putstring ("%
-				%/*%N%
-				% * make_area%N%
-				% */%N");
+			file.putstring ("/* make_area */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);

@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EV_PND_SOURCE_I
+		redefine
+			initialize_transport
+		end
 
 	EV_EVENT_HANDLER_IMP
 
@@ -17,13 +20,20 @@ inherit
 
 feature -- Implementation
 
-	initialize_transport (args: EV_ARGUMENT3 [INTEGER, EV_POINT, EV_COMMAND]; data: EV_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		local
 			transporter: EV_PND_TRANSPORTER_IMP
 			arg1, arg2: EV_ARGUMENT3 [INTEGER, EV_PND_SOURCE_IMP, INTEGER]
 			mouse_button: INTEGER
+			com: EV_COMMAND
+			arg: EV_ARGUMENT
 		do
+			com ?= args.second.item (1)
+			if com /= Void then
+				arg ?= args.second.item (2)
+				com.execute (arg, data)
+			end
 			mouse_button := args.first
 			if transportable then
 				!! transporter
@@ -52,30 +62,30 @@ feature -- Implementation
 			end
 		end
 
-	terminate_transport (transporter: EV_PND_TRANSPORTER_IMP; mouse_button: INTEGER) is
+	terminate_transport (transporter: EV_PND_TRANSPORTER_IMP; mouse_button: INTEGER; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
 			-- Terminate the pick and drop mechanim.
 		local
-			cmd: EV_ROUTINE_COMMAND
-			arg: EV_ARGUMENT2 [INTEGER, EV_COMMAND]
+			com: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]
 		do
-			!! cmd.make (~initialize_transport)
-			!! arg.make (mouse_button, cmd)
+			!! com.make (~initialize_transport)
+			!! arg.make (mouse_button, cmd, com)
 			inspect mouse_button
 			when 1 then
 				remove_single_command (Cmd_button_one_press, transporter)
 				remove_single_command (Cmd_button_two_release, transporter)
 				remove_single_command (Cmd_button_three_release, transporter)
-				add_command (Cmd_button_one_press, cmd, arg)
+				add_command (Cmd_button_one_press, com, arg)
 			when 2 then
 				remove_single_command (Cmd_button_two_press, transporter)
 				remove_single_command (Cmd_button_one_release, transporter)
 				remove_single_command (Cmd_button_three_release, transporter)
-				add_command (Cmd_button_two_press, cmd, arg)
+				add_command (Cmd_button_two_press, com, arg)
 			when 3 then
 				remove_single_command (Cmd_button_three_press, transporter)
 				remove_single_command (Cmd_button_one_release, transporter)
 				remove_single_command (Cmd_button_two_release, transporter)
-				add_command (Cmd_button_three_press, cmd, arg)
+				add_command (Cmd_button_three_press, com, arg)
 			end
 			remove_single_command (Cmd_motion_notify, transporter)
 		end

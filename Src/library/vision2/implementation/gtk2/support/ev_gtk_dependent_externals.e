@@ -2185,6 +2185,11 @@ feature -- Externals
 			"C signature (GtkTextTagTable*, GtkTextTag*) use <gtk/gtk.h>"
 		end
 
+	frozen gtk_text_tag_table_lookup (a_table: POINTER; a_name: POINTER): POINTER is
+		external
+			"C signature (GtkTextTagTable*, gchar*): GtkTextTag* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_text_buffer_remove_all_tags (a_buffer: POINTER; a_start: POINTER; a_end: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"

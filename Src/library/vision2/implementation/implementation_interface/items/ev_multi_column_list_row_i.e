@@ -13,7 +13,7 @@ inherit
 feature -- Initialization
 
 	make (par: EV_MULTI_COLUMN_LIST) is
-		-- Create an empty row.
+		-- Create an empty row with `par' as parent.
 		require
 			valid_parent: is_valid (par)
 		deferred

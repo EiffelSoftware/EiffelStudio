@@ -93,7 +93,8 @@ feature
 			selected: selected
 		do
 			set_symbol (symbol);
-			catalog_page.hide
+--			catalog_page.hide
+			catalog_page.unmanage
 		ensure
 			not_selected: not selected
 		end;

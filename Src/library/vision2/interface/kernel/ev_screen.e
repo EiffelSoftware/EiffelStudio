@@ -122,6 +122,22 @@ feature -- Measurement
 			positive: Result > 0
 		end
 		
+	vertical_resolution: INTEGER is
+			-- Number of pixels per inch along screen height.
+		do
+			Result := implementation.vertical_resolution
+		ensure
+			positive: Result > 0
+		end
+		
+	horizontal_resolution: INTEGER is
+			-- Number of pixels per inch along screen width.
+		do
+			Result := implementation.horizontal_resolution
+		ensure
+			positive: Result > 0
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SCREEN_I

@@ -25,6 +25,20 @@ feature -- Status report
 			-- Widget at position (`x', `y') if any.
 		deferred
 		end
+		
+	vertical_resolution: INTEGER is
+			-- Number of pixels per inch along screen height.
+		deferred
+		ensure
+			positive: Result > 0
+		end
+		
+	horizontal_resolution: INTEGER is
+			-- Number of pixels per inch along screen width.
+		deferred
+		ensure
+			positive: Result > 0
+		end
 
 feature -- Basic operation
 

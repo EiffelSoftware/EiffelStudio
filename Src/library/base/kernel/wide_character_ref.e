@@ -74,7 +74,7 @@ feature -- Output
 			create Result.make (6)
 			Result.extend ('U')
 			Result.extend ('+')
-			Result.append (chcode (item).to_hexa_string)
+			Result.append (chcode (item).to_hex_string)
 		end
 
 feature {NONE} -- Implementation

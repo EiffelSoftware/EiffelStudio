@@ -283,7 +283,7 @@ feature -- Conversion
 			Result := item.to_integer_64
 		end
 
-	to_hexa_string: STRING is
+	to_hex_string: STRING is
 			-- Convert `item' into an hexadecimal string.
 		local
 			i, val: INTEGER
@@ -298,7 +298,7 @@ feature -- Conversion
 				i = 0
 			loop
 				a_digit := (val & 0xF)
-				Result.put (a_digit.to_hexa_character, i)
+				Result.put (a_digit.to_hex_character, i)
 				val := val |>> 4 
 				i := i - 1
 			end
@@ -307,7 +307,7 @@ feature -- Conversion
 			Result_valid_count: Result.count = (create {PLATFORM}).Integer_bits // 4
 		end
 
-	to_hexa_character: CHARACTER is
+	to_hex_character: CHARACTER is
 			-- Convert `item' into an hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15

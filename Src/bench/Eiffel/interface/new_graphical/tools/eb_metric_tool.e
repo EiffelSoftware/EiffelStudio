@@ -412,6 +412,9 @@ feature -- Metric
 			menu_item: EV_MENU_ITEM
 		do
 			create basic_metrics
+			if metric_menu /= Void then
+				metric_menu.destroy
+			end
 			metric_menu := basic_metrics.metric_menu
 			from
 				metrics.go_i_th (nb_basic_metrics + 1)

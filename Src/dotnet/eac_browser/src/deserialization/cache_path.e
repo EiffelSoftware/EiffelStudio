@@ -8,6 +8,7 @@ class
 
 inherit
 	COMMON_PATH
+	EAC_COMMON_PATH
 
 feature -- Access
 

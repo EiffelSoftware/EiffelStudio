@@ -489,6 +489,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			creators_table: EXTEND_TABLE [EXPORT_I, STRING]
 			creation_constraint_list: LINKED_LIST [FEATURE_I]
 			error_list: LINKED_LIST [CONSTRAINT_INFO]
+			formal_dec_as: FORMAL_DEC_AS
 		do
 			from
 				i := 1
@@ -547,31 +548,37 @@ feature {COMPILER_EXPORTER} -- Primitives
 					generate_constraint_error (Result, to_check, constraint_type, i)
 				end
 
-					-- Check now for the validity of the creation constraint clause if there is one
-				creation_constraint_list := associated_class.generics.i_th (i).constraint_creation_list
-				if creation_constraint_list /= Void then
-					creators_table := to_check.associated_class.creators
-
-						-- A creation procedure has to be specified, so if none is specified
-						-- or if there is no creation procedure in the class corresponding to
-						-- `to_check', this is not valid.
-					matched := creators_table /= Void and then not creators_table.empty
-					if matched then
-						from
-							creation_constraint_list.start
-						until
-							matched or else creation_constraint_list.after
-						loop
-							matched := creators_table.has (creation_constraint_list.item.feature_name)
-							creation_constraint_list.forth
-						end
-					end
+					-- Check now for the validity of the creation constraint clause if
+					-- there is one.
+					--| This can be done only when the associated constraint class
+					--| has a computed feature table.
+				formal_dec_as := associated_class.generics.i_th (i)
+				if formal_dec_as.has_computed_feature_table then
+					creation_constraint_list := formal_dec_as.constraint_creation_list
+					if creation_constraint_list /= Void then
+						creators_table := to_check.associated_class.creators
 	
-					if not matched then
-						if Result = Void then
-							!! Result.make
+							-- A creation procedure has to be specified, so if none is
+							-- specified or if there is no creation procedure in the class
+							-- corresponding to `to_check', this is not valid.
+						matched := creators_table /= Void and then not creators_table.empty
+						if matched then
+							from
+								creation_constraint_list.start
+							until
+								matched or else creation_constraint_list.after
+							loop
+								matched := creators_table.has (creation_constraint_list.item.feature_name)
+								creation_constraint_list.forth
+							end
 						end
-						generate_constraint_error (Result, to_check, constraint_type, i)
+		
+						if not matched then
+							if Result = Void then
+								!! Result.make
+							end
+							generate_constraint_error (Result, to_check, constraint_type, i)
+						end
 					end
 				end
 

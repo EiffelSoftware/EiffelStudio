@@ -103,6 +103,8 @@ feature -- Status
 
 	constraint_creation_list: LINKED_LIST [FEATURE_I] is
 			-- Actual creation routines from a constraint clause
+		require
+			has_computed_feature_table: has_computed_feature_table
 		local
 			class_type: CL_TYPE_A
 			class_id: CLASS_ID
@@ -130,6 +132,25 @@ feature -- Status
 						Result.forth
 						creation_feature_list.forth
 					end
+				end
+			end
+		end
+
+	has_computed_feature_table: BOOLEAN is
+			-- Check that we can retrieve a FEATURE_TABLE from the class
+			-- on which we want to check the validity rule about creation
+			-- constraint.
+			--| Basically, sometimes (degree 4) for example, we need to access
+			--| the information on a class which has not been yet compiled, because
+			--| of the order of the compilation which does not take into account
+			--| the constraint part.
+		local
+			class_type: CL_TYPE_A
+		do
+			if creation_feature_list /= Void then
+				class_type ?= constraint_type
+				if class_type /= Void then
+					Result := Feat_tbl_server.item (class_type.base_class_id) /= Void
 				end
 			end
 		end

@@ -32,7 +32,8 @@ feature
 			fdep := dep.item (f.feature_name);
 
 			!! st.make
-			st.add_string ("Dependents:%N");
+			st.add_string ("Dependents:");
+			st.add_new_line;
 			from
 				fdep.start
 			until

@@ -177,6 +177,8 @@ feature {NONE} -- Removal
 			destroyed: not exists
 		end
 
+feature {EV_IMAGE_LIST_IMP} -- Implementation
+
 	internal_object_id: INTEGER
 			-- Object ID of Current if recorded.
 

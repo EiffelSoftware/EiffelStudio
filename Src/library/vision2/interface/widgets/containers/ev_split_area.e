@@ -12,14 +12,14 @@ deferred class
 inherit
 	EV_CONTAINER
 		rename
-			implementation as ev_container_implementation,
-			item as ev_container_item
+			implementation as ev_container_implementation
 		export
 			{NONE} fill
 		undefine
 			extend,
 			put
 		redefine
+			item,
 			replace,
 			client_height,
 			client_width,
@@ -59,11 +59,11 @@ feature {NONE} -- Initialization
 			scr.set_invert_mode
 			sep.set_minimum_height (8)
 			sep.set_minimum_width (8)
-			create first_cell
+			create first_cell.make_with_real_parent (Current)
 			split_box.extend (first_cell)
 			split_box.extend (sep)
 			split_box.disable_item_expand (sep)
-			create second_cell
+			create second_cell.make_with_real_parent (Current)
 			split_box.extend (second_cell)
 			implementation.box.extend (split_box)
 			first_cell.merge_radio_button_groups (second_cell)
@@ -75,15 +75,13 @@ feature -- Access
 
 	item: EV_WIDGET is
 			-- Item at current position.
-		require
-			readable: readable
 		do
 			if index = 1 then
 				Result := first_cell.item
 			elseif index = 2 then
 				Result := second_cell.item
 			end
-		ensure
+		ensure then
 			not_void: Result /= Void
 		end
 
@@ -502,7 +500,7 @@ feature {NONE} -- Implementation
 	previous_split_position: INTEGER
 		-- Previous split_position.
 
-	first_cell, second_cell: EV_CELL
+	first_cell, second_cell: EV_AGGREGATE_CELL
 		-- Two client areas.
 
 	split_box: EV_BOX
@@ -557,6 +555,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/21 00:15:01  king
+--| Added aggregate cell, now redefining item to avoid seg faults from invariant
+--|
 --| Revision 1.28  2000/03/20 19:39:52  king
 --| Added item_is_old_item postcond on extend
 --|

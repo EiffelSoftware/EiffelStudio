@@ -27,6 +27,7 @@ extern "C" {
 
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
 RT_LNK long ei_field_type_of_type(long i, EIF_INTEGER type_id);
+RT_LNK long ei_field_static_type_of_type(long i, EIF_INTEGER type_id);
 RT_LNK char *ei_exp_type(long i, EIF_REFERENCE object);
 RT_LNK long ei_bit_size(long i, EIF_REFERENCE object);
 RT_LNK long ei_size(EIF_REFERENCE object);

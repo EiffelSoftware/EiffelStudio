@@ -72,7 +72,7 @@ feature
 				old_contexts.forth
 			end;
 				-- undo cut on old_contexts
-			undo_cut_old_contexts;
+			undo_cut_old_contexts (True);
 
 			--from
 				--old_contexts.start
@@ -114,10 +114,10 @@ feature
 				old_contexts.forth
 			end;
 				-- Restore previous elements
-			undo_cut_old_contexts;
+			undo_cut_old_contexts (false);
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
-			--context_catalog.remove_group (context.group_type);
+			context_catalog.remove_group_type (context.type);
 			mp.restore
 		end;
 
@@ -148,10 +148,10 @@ feature
 				context.add_group_child (old_contexts.item);
 				old_contexts.forth
 			end;
-			undo_cut_old_contexts;
+			undo_cut_old_contexts (false);
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
-			--context_catalog.add_new_group (context.group_type);
+			context_catalog.add_new_group (context.group_type);
 			mp.restore
 		end;
 
@@ -170,9 +170,10 @@ feature {NONE}
 			end;
 		end;
 
-	undo_cut_old_contexts is
+	undo_cut_old_contexts (add_tree_element: BOOLEAN) is
 		local
-			list: LINKED_LIST [CONTEXT]
+			list: LINKED_LIST [CONTEXT];
+			group_c: GROUP_C
 		do
 			from
 				list := cut_old_command.context_list;
@@ -181,6 +182,14 @@ feature {NONE}
 				list.after
 			loop
 				list.item.undo_cut;
+				if add_tree_element then
+					group_c ?= list.item;
+					if group_c /= Void then
+						group_c.group_type.decrement_counter
+					end
+				else
+					list.item.remove_tree_element
+				end;
 				list.forth
 			end;
 		end;

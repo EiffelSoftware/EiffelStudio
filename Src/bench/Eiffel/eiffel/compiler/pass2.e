@@ -3,19 +3,11 @@ class PASS2
 
 inherit
 
+	SHARED_TMP_SERVER;
 	SHARED_WORKBENCH;
 	SORTED_PASS
-		rename
-			remove_class as old_remove_class
 		redefine
 			changed_classes, execute, make
-		end;
-	SORTED_PASS
-		redefine
-			changed_classes, execute, make,
-			remove_class
-		select
-			remove_class
 		end
 
 creation
@@ -27,6 +19,9 @@ feature
 	changed_classes: SORTED_TWO_WAY_LIST [PASS2_C];
 
 	extra_check_list: SORTED_TWO_WAY_LIST [CLASS_C];
+			-- List of classes that needs to be processed
+			-- at the end of pass 2 (expandeds and 
+			-- replication)
 
 	changed_status: SORTED_SET [INTEGER];
 			-- Sorted set of all the classes for which the expanded
@@ -44,12 +39,6 @@ feature
 			!!Result.make (a_class)
 		end;
 
-	remove_class (a_class: CLASS_C) is
-		do
-			old_remove_class (a_class);
-			extra_check_list.remove_all_occurrences (a_class);
-		end;
-
 	execute is
 			-- Inheritance anlysis on the changed classes. Since the
 			-- classes contained in `changed_classes' are sorted by class
@@ -60,6 +49,7 @@ feature
 		local
 			pass_c: PASS2_C;
 			current_class: CLASS_C;
+			id: INTEGEr
 		do
 			from
 			until
@@ -92,6 +82,12 @@ end;
 				current_class := extra_check_list.first;
 				System.set_current_class (current_class);
 				current_class.check_expanded;
+				id := current_class.id;
+				if Tmp_rep_info_server.has (id) then
+					current_class.process_replicated_features;
+				elseif Tmp_rep_server.has (id) then
+					Tmp_rep_server.remove (id)
+				end;
 				extra_check_list.remove;
 			end;
 			System.set_current_class (Void);

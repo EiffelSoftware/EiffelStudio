@@ -184,7 +184,11 @@ feature -- Access
 							if target_type /= Void and then not target_type.is_void then
 								targets.start
 								targets.remove
-								Result := features_from_table (recursive_lookup (target_type, targets))
+								if not targets.is_empty then
+									Result := target_features (targets.item, feature_name, file_name)
+								else
+									Result := features_from_table (recursive_lookup (target_type, targets))									
+								end
 							end
 						end
 					end
@@ -450,7 +454,6 @@ feature {NONE} -- Implementation
 					if type_extracted then
 						Result := extracted_type
 					else
-						target.prune_all (' ')
 						if target.item (target.count).is_equal ('.') then
 							target.keep_head (target.count - 1) -- Remove trailing '.'								
 						end
@@ -476,13 +479,18 @@ feature {NONE} -- Implementation
 					if type_extracted then
 						Result := extracted_type
 					else
-						target.keep_head (target.count - 1) -- Remove trailing '.'
+						if target.item (target.count).is_equal ('.') then
+							target.keep_head (target.count - 1) -- Remove trailing '.'								
+						end
 						Result := identifier_type (target, table, ids)						
 					end
 				end
 			elseif target.item (1) = '!' then
 				-- Creation call
 				set_creation_call
+				if target.item (target.count).is_equal ('.') then
+					target.keep_head (target.count - 1) -- Remove trailing '.'								
+				end
 				if target.substring (1, 2).is_equal ("!!") then
 					target.keep_tail (target.count - 2)
 					Result := identifier_type (target, table, ids)
@@ -522,6 +530,8 @@ feature {NONE} -- Implementation
 				loop
 					i := i + 1							
 				end
+				target.prune_all_leading (' ')
+				target.prune_all_leading ('%T')
 				c := target.item (1)
 				if c = '{' then
 					s := target.substring (2, target.index_of ('}', 3) - 1)

@@ -17,9 +17,6 @@ feature -- Basic operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 			non_void_coclass: a_component /= Void
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_signature, a_result_type: STRING
 		do
 			func_desc := a_descriptor
 			coclass_name := a_component.name
@@ -87,10 +84,6 @@ feature {NONE} -- Implementation
 	
 	body: STRING is
 			-- Feature body
-		local
-			tmp_string: STRING
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			create Result.make (10000)
 			if is_return_hresult then

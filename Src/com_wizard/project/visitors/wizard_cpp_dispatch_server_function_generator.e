@@ -18,9 +18,6 @@ feature -- Basic operation
 
 	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			--Generate C server feature
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_signature, tmp_string: STRING
 		do
 			func_desc := a_descriptor
 			coclass_name := a_component.name

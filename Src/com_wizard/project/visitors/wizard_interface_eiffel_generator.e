@@ -21,7 +21,6 @@ feature -- Access
 			-- Generate eiffel writer
 		local
 			inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE
-			item_writer: WIZARD_WRITER_FEATURE
 		do	
 			create eiffel_writer.make
 			eiffel_writer.set_deferred

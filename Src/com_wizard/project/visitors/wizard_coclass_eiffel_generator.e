@@ -16,8 +16,6 @@ feature -- Basic Operations
 
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
-		local
-			generated_file: PLAIN_TEXT_FILE
 		do
 			create eiffel_writer.make
 			coclass_descriptor := a_coclass

@@ -35,9 +35,6 @@ feature -- Access
 				end
 				a_coclass.interface_descriptors.forth
 			end
-	--		if Result.dual then
-	--			Result := Result.dispinterface_descriptor
-	--		end
 		end
 
 feature -- Basic operations
@@ -45,7 +42,6 @@ feature -- Basic operations
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate c server for coclass.
 		local
-			member_writer: WIZARD_WRITER_C_MEMBER
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
 			tmp_string: STRING
 		do

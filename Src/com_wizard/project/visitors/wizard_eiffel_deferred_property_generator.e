@@ -33,9 +33,8 @@ feature -- Basic operations
 	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate deferred access and setting features from property.
 		local
-			tmp_string, tmp_tag, tmp_body: STRING
+			tmp_body: STRING
 			tmp_assertion: WIZARD_WRITER_ASSERTION
-			flags: ECOM_PARAM_FLAGS
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			an_access_name, a_set_name, an_argument, a_comment: STRING
 		do

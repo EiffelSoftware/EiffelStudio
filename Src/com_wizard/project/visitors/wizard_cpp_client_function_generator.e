@@ -99,7 +99,6 @@ feature {NONE} -- Implementation
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
-			tmp_safearray: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR
 			pointer_var: LINKED_LIST[STRING]
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
@@ -426,9 +425,6 @@ feature {NONE} -- Implementation
 			valid_name: not name.empty
 			non_void_data_type: data_type /= Void
 			non_void_visitor: visitor /= Void
-		local
-			tmp_string: STRING
-			array_data_type: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 		do
 			create Result.make (1000)
 			if visitor.is_basic_type or visitor.is_enumeration then
@@ -510,8 +506,6 @@ feature {NONE} -- Implementation
 			non_void_name: name /= Void
 			valid_name: not name.empty
 			non_void_visitor: visitor /= Void
-		local
-			tmp_string: STRING
 		do
 			create Result.make (1000)
 			

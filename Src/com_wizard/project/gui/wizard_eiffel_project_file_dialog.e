@@ -72,7 +72,7 @@ feature -- Behavior
 	on_ok is
 			-- Process Next button activation.
 		local
-			folder_name, project_file_name, idl_file_name, eiffel_class_name, ace_file_name, cluster_name: STRING
+			project_file_name, eiffel_class_name, ace_file_name, cluster_name: STRING
 			a_file: RAW_FILE
 		do
 			project_file_name := project_file_edit.text

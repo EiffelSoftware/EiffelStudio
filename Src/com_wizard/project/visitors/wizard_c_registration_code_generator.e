@@ -49,7 +49,6 @@ feature -- Basic operations
 			-- Generate Registration code.
 		local
 			tmp_string: STRING
-			member_writer: WIZARD_WRITER_C_MEMBER
 		do
 			create c_writer.make
 

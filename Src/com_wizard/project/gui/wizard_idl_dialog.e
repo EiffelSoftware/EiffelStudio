@@ -58,8 +58,6 @@ feature -- Behavior
 
 	on_ok is
 			-- Process next button activation
-		local
-			a_file: RAW_FILE
 		do
 			Shared_wizard_environment.set_automation (automation_radio.checked)
 			shared_wizard_environment.set_use_universal_marshaller (virtual_table_universal_radio.checked or automation_radio.checked)

@@ -20,8 +20,6 @@ feature -- Basic operations
 
 	generate is
 			-- Generate Eiffel registration code for out-of-process server.
-		local
-			tmp_name: STRING
 		do
 			create eiffel_writer.make
 

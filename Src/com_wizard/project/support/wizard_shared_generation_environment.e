@@ -432,8 +432,6 @@ feature -- Access
 
 	c_keywords: HASH_TABLE [STRING, STRING] is
 			-- List of C key words.
-		local
-			tmp_string: STRING
 		once
 			create Result.make (100)
 			Result.compare_objects
@@ -509,8 +507,6 @@ feature -- Access
 
 	generator_words: HASH_TABLE [STRING, STRING] is
 			-- List of generator words.
-		local
-			tmp_string: STRING
 		once
 			create Result.make (100)
 			Result.compare_objects
@@ -530,8 +526,6 @@ feature -- Access
 		
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel runtime macros.
-		local
-			tmp_string: STRING
 		once
 			create Result.make (1000)
 			Result.compare_objects
@@ -854,9 +848,7 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
-			a_count, i: INTEGER
-			a_name, a_file_protector: BOOLEAN
+			tmp_path, a_line: STRING
 			a_structure: WIZARD_WINDOWS_STRUCTURE
 		once
 			create Result.make (500)
@@ -889,7 +881,6 @@ feature -- Access
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
 			tmp_path, a_line: STRING
-			a_count, i: INTEGER
 		once
 			create Result.make (500)
 			Result.compare_objects
@@ -924,8 +915,7 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			tmp_path, a_line, tmp_string1, tmp_string2, tmp_string3: STRING
-			a_count, i: INTEGER
+			tmp_path, a_line: STRING
 		once
 			create Result.make (500)
 			Result.compare_objects

@@ -336,12 +336,12 @@ feature -- Status report
 			end
 		end
 
-	y_coordinate (windows_char_pos: INTEGER): INTEGER is
+	y_coordinate (char_pos: INTEGER): INTEGER is
 			-- Y coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
 		do
 			if exists then
-				Result := position_from_character_index (windows_char_pos).y
+				Result := position_from_character_index (char_pos).y
 			end
 		end
 
@@ -576,12 +576,42 @@ feature -- Status setting
 	set_selection (first, last: INTEGER) is
 			-- Highlight the substring between `first' and `last' positions
 			-- leave the caret at `first'
+		local
+			previous_y_coord: INTEGER
+			size: INTEGER
+			last_line_position: INTEGER
+			number_line_to_scroll: INTEGER
 		do
 			private_begin_selection := first
 			private_end_selection := last
 			
 			if exists then
-				wel_set_selection (first, last)
+					-- We will always begin the selection at the end to the
+					-- beginning in order to make visible the beginning of
+					-- the selection for the user
+
+					--| If the text can fit in the window, it will be fit by
+					--| using a scrolling of the selection
+					--| If the text is bigger than the window, the beginning
+					--| of the text will be on the first line of the window
+					--| only if the beginning of the text is not already in
+					--| the first quarter of the window
+				previous_y_coord := y_coordinate (first)
+
+				wel_set_selection (last, first)
+				size := y_coordinate (last) - y_coordinate (first)
+
+				if
+					previous_y_coord >= height or else
+					size > height and then
+					y_coordinate (first) > 1 * height // 4
+				then
+					set_top_character_position (first)
+				elseif size < height and then y_coordinate (last) > height then
+					last_line_position := character_index_from_position (0, height)
+					number_line_to_scroll := line_from_char(last) - line_from_char (last_line_position - 1)
+					scroll (0, number_line_to_scroll.min (line_from_char (first) - first_visible_line))
+				end
 			end
 		end
 

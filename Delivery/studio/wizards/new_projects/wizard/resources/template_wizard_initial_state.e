@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			message.set_text ("Describe here what your wizard does.")
 		end
 	
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: FILE_NAME is "eiffel_wizard_icon.bmp"
 			-- Icon for the Eiffel Store Wizard
 
 end -- class WIZARD_INITIAL_STATE

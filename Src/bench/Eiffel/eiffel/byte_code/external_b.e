@@ -252,7 +252,7 @@ feature -- IL code generation
 							if written_in = cl_type.base_id then
 								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
 							else							
-								generate_il_metamorphose (cl_type, void, real_metamorphose)
+								generate_il_metamorphose (cl_type, Void, real_metamorphose)
 							end
 						end
 					end
@@ -268,20 +268,19 @@ feature -- IL code generation
 						-- to a constructor.
 					if is_static_call or else precursor_type /= Void then
 							-- A call to precursor or a static call is never polymorphic.
-						il_ext.generate_call (external_name, cl_type, feature_id, False)
+						il_ext.generate_call (external_name, False)
 					else
 							-- Standard call to an external feature.
 							-- Call will be polymorphic if it target of call is a reference
 							-- or if target has been boxed, or if type of external
 							-- forces a static binding (eg static features).
-						il_ext.generate_call (external_name, cl_type, feature_id,
-							cl_type.is_reference or else real_metamorphose)
+						il_ext.generate_call (external_name, cl_type.is_reference or else real_metamorphose)
 					end
 				else
 						-- Current external is a creation, we perform a slightly different
 						-- call to constructor, but basically it is very close to `generate_call'
 						-- but doing a static binding.
-					il_ext.generate_creation_call (external_name, cl_type, feature_id)
+					il_ext.generate_creation_call (external_name)
 				end
 			end
 		end
@@ -363,7 +362,7 @@ feature -- IL code generation
 					-- FIXME: performance problem here since we are retrieving the
 					-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
 					-- node we add the feature_id in the parent class.
-				if precursor_type /= Void then
+				if is_static_call or else precursor_type /= Void then
 						-- In IL, if you can call Precursor, it means that parent is
 						-- not expanded and therefore we can safely generate a static
 						-- call to Precursor feature.

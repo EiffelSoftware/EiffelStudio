@@ -118,7 +118,7 @@ feature -- Factory
 		require
 			non_void_name: a_name /= Void
 		do
-			Result := type_reference (a_name, Void, Void, Void, True, True, True)
+			Result := type_reference (a_name, Void, Void, Void, True, True, False)
 		ensure
 			non_void_type_reference: Result /= Void
 		end

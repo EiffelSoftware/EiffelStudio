@@ -297,14 +297,20 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved
 		do
-			move_actions.add (Current, a_command, arg)
+				--| Guillaume added the test
+			if managed then
+				move_actions.add (Current, a_command, arg)
+			end
 		end
 
 	add_value_changed_action (a_command: COMMAND; arg: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		do
-			value_changed_actions.add (Current, a_command, arg)
+				--| Guillaume added the test
+			if managed then
+				value_changed_actions.add (Current, a_command, arg)
+			end
 		end
 
 feature -- Removal
@@ -356,7 +362,9 @@ feature {NONE} -- Implementation
 			-- indicates the scrollbar or trackbar
 			-- control activated.
 		do
-			on_scroll (scroll_code, a_position, bar) 
+			if managed then
+				on_scroll (scroll_code, a_position, bar) 
+			end
 		end
 
 	on_horizontal_scroll_control (scroll_code, a_position: INTEGER;
@@ -367,7 +375,7 @@ feature {NONE} -- Implementation
 			-- indicates the scrollbar or trackbar
 			-- control activated.
 		do
-			on_scroll (scroll_code, a_position, bar) 
+				on_scroll (scroll_code, a_position, bar) 
 		end
 
 	on_scroll  (scroll_code, a_position: INTEGER;

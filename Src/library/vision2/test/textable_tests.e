@@ -28,8 +28,6 @@ feature -- Initialization
 			tst: EV_TEST_TEXTABLE
 			fail: BOOLEAN
 			hb: EV_HORIZONTAL_BOX
-			s: EV_SCROLLABLE_AREA
-			c: EV_COMBO_BOX
 		do
 			create tests.make
 			create tst.make_with_item ("EV_TREE_ITEM", create {EV_TREE_ITEM},
@@ -39,16 +37,16 @@ feature -- Initialization
 				create {EV_STATUS_BAR_ITEM},
 				create {EV_STATUS_BAR})
 			tests.extend (tst)
-		--	create tst.make_with_item ("EV_TOOL_BAR_BUTTON",
-		--		create {EV_TOOL_BAR_BUTTON},
-		--		create {EV_TOOL_BAR})
-		--	tests.extend (tst)
-		--	create tst.make_with_item ("EV_TOOL_BAR_TOGGLE_BUTTON",
-		--		create {EV_TOOL_BAR_TOGGLE_BUTTON}, create {EV_TOOL_BAR})
-		--	tests.extend (tst)
-		--	create tst.make_with_item ("EV_TOOL_BAR_RADIO_BUTTON",
-		--		create {EV_TOOL_BAR_RADIO_BUTTON}, create {EV_TOOL_BAR})
-		--	tests.extend (tst)
+			create tst.make_with_item ("EV_TOOL_BAR_BUTTON",
+				create {EV_TOOL_BAR_BUTTON},
+				create {EV_TOOL_BAR})
+			tests.extend (tst)
+			create tst.make_with_item ("EV_TOOL_BAR_TOGGLE_BUTTON",
+				create {EV_TOOL_BAR_TOGGLE_BUTTON}, create {EV_TOOL_BAR})
+			tests.extend (tst)
+			create tst.make_with_item ("EV_TOOL_BAR_RADIO_BUTTON",
+				create {EV_TOOL_BAR_RADIO_BUTTON}, create {EV_TOOL_BAR})
+			tests.extend (tst)
 			create tst.make_with_item ("EV_MENU_ITEM", create {EV_MENU_ITEM},
 				create {EV_MENU})
 			tests.extend (tst)
@@ -60,9 +58,9 @@ feature -- Initialization
 				create {EV_CHECK_MENU_ITEM},
 				create {EV_MENU})
 			tests.extend (tst)
-		--	create tst.make_with_item ("EV_MENU", create {EV_MENU},
-		--		create {EV_MENU_BAR})
-		--	tests.extend (tst)
+			create tst.make_with_item ("EV_MENU", create {EV_MENU},
+				create {EV_MENU_BAR})
+			tests.extend (tst)
 			create tst.make_with_item ("EV_LIST_ITEM", create {EV_LIST_ITEM},
 				create {EV_LIST})
 			tests.extend (tst)

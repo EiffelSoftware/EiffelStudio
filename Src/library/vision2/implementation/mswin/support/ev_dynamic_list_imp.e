@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): like item is
 			-- Item at `i'-th position.
 		do
 			Result := imp_to_int (ev_children.i_th (i))

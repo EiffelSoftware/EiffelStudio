@@ -90,7 +90,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.cursor)
 		end
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): like item is
 			-- Item at `i'-th position.
 			--| Redefined for performance reasons.
 		do

@@ -11,7 +11,7 @@ inherit
 		undefine
 			compilation_id, is_precompiled
 		redefine
-			generated_id
+			generated_id, counter
 		end;
 	ENCODER
 		export
@@ -41,6 +41,14 @@ feature -- Access
 				!! Result.make (5);
 				Result.append_integer (id - 1)
 			end
+		end
+
+feature {NONE} -- Implementation
+ 
+	counter: REAL_BODY_INDEX_SUBCOUNTER is
+			-- Counter associated with the id
+		do
+			Result := Real_body_index_counter.item (compilation_id)
 		end
 
 end -- class P_REAL_BODY_INDEX

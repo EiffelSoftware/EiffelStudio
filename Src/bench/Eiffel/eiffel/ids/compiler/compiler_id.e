@@ -5,7 +5,7 @@ deferred class COMPILER_ID
 inherit
 
 	SHARED_ID;
-	SHARED_WORKBENCH;
+	SHARED_COUNTER;
 	HASHABLE;
 	COMPARABLE
 		undefine

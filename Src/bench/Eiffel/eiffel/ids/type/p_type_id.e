@@ -11,7 +11,7 @@ inherit
 		undefine
 			compilation_id, is_precompiled
 		redefine
-			generated_id
+			generated_id, counter, prefix_name
 		end
 
 creation
@@ -37,6 +37,22 @@ feature -- Access
 				!! Result.make (5);
 				Result.append_integer (id - 1)
 			end
+		end
+
+feature {BODY_ID} -- Access
+ 
+	prefix_name: STRING is
+			-- Prefix for generated C function names
+		do
+			Result := counter.prefix_name
+		end
+ 
+feature {NONE} -- Implementation
+ 
+	counter: TYPE_SUBCOUNTER is
+			-- Counter associated with the id
+		do
+			Result := Static_type_id_counter.item (compilation_id)
 		end
 
 end -- class P_TYPE_ID

@@ -26,8 +26,8 @@ feature {NONE} -- Implementation
 
 	counter: REAL_BODY_ID_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.execution_table.counter.item (compilation_id)
+		once
+			Result := Real_body_id_counter.item (Normal_compilation)
 		end
 
 end -- class REAL_BODY_ID

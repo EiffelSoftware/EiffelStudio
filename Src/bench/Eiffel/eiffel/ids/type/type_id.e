@@ -68,7 +68,7 @@ feature {BODY_ID} -- Access
 
 	prefix_name: STRING is
 			-- Prefix for generated C function names
-		do
+		once
 			Result := counter.prefix_name
 		end
 
@@ -76,8 +76,8 @@ feature {NONE} -- Implementation
 
 	counter: TYPE_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.static_type_id_counter.item (compilation_id)
+		once
+			Result := Static_type_id_counter.item (Normal_compilation)
 		end
 
 end -- class TYPE_ID

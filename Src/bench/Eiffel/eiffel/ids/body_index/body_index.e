@@ -14,8 +14,8 @@ feature {NONE} -- Implementation
 
 	counter: BODY_INDEX_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.body_index_counter.item (compilation_id)
+		once
+			Result := Body_index_counter.item (Normal_compilation)
 		end
 
 end -- class BODY_INDEX

@@ -9,7 +9,7 @@ inherit
 		undefine
 			is_dynamic, compilation_id
 		redefine
-			directory_path
+			directory_path, counter
 		end
 
 creation
@@ -22,6 +22,14 @@ feature -- Access
 			-- Server file directory path
 		once
 			Result := Compilation_path
+		end
+
+feature {NONE} -- Implementation
+ 
+	counter: FILE_SUBCOUNTER is
+			-- Counter associated with the id
+		once
+			Result := File_counter.item (Dle_compilation)
 		end
 
 end -- class DLE_FILE_ID

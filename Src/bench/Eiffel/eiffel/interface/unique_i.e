@@ -30,7 +30,7 @@ feature
 					and then value.int_val = other_unique.value.int_val
 			end;
 			if Not Result then
-				System.current_class.insert_changed_feature (feature_name)
+				System.current_class.insert_changed_feature (feature_name_id)
 			end
 		end
 

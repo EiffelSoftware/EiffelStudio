@@ -183,6 +183,13 @@ feature {NONE} -- Access
 
 	local_sig: MD_LOCAL_SIGNATURE
 			-- Permanent signature for locals.
+			
+	boolean_native_signature: MD_NATIVE_TYPE_SIGNATURE is
+			-- Marshaller signature for converting IL boolean to Eiffel C boolean
+		once
+			create Result.make
+			Result.set_native_type (feature {MD_SIGNATURE_CONSTANTS}.native_type_i1)
+		end
 
 	local_types: ARRAYED_LIST [PAIR [TYPE_I, STRING]]
 			-- To store types of local variables.
@@ -1700,9 +1707,19 @@ feature -- Features info
 							feature {MD_PARAM_ATTRIBUTES}.In)
 					end
 
+					if is_static and then l_is_c_external then
+						if l_return_type /= Void and then l_return_type.is_boolean then
+							uni_string.set_string ("Result")
+							l_param_token := md_emit.define_parameter (l_meth_token,
+								uni_string, 0, 0)
+							md_emit.set_field_marshal (l_param_token, boolean_native_signature)
+						end
+					end
+
 					if l_has_arguments then
 						from
 							l_feat_arg := feat.arguments
+							l_feat_arg.start
 							i := 1
 						until
 							i > l_parameter_count
@@ -1710,6 +1727,16 @@ feature -- Features info
 							uni_string.set_string (l_feat_arg.item_name (i))
 							l_param_token := md_emit.define_parameter (l_meth_token, uni_string,
 								i + j, feature {MD_PARAM_ATTRIBUTES}.In)
+							if is_static and l_is_c_external then
+									-- Define marshalling info here.
+								l_type_i := argument_actual_type (
+									l_feat_arg.item.actual_type.type_i)
+								if l_type_i.is_boolean then
+									md_emit.set_field_marshal (l_param_token,
+										boolean_native_signature)
+								end
+							end
+							l_feat_arg.forth
 							i := i + 1
 						end
 					end

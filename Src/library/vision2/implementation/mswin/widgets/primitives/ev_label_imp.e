@@ -129,14 +129,14 @@ feature -- Status setting
 		-- Resize to a default size.
 		local
 			fw: EV_FONT_IMP
+			t: TUPLE [INTEGER, INTEGER]
 		do
 			fw ?= font.implementation
 			check
 				font_not_void: fw /= Void
 			end
-			fw.calculate_text_extent (safe_text)
-			internal_set_minimum_size (fw.last_text_width, fw.last_text_height)
-			--internal_set_minimum_size (fw.string_width (safe_text) + 10, line_count * (fw.height + )-- 7 * fw.height // 4 - 2)
+			t := fw.string_width_and_height (safe_text)
+			internal_set_minimum_size (t.integer_item (1), t.integer_item (2))
 		end
 
 feature -- Element change
@@ -248,6 +248,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/03 01:40:35  brendel
+--| Fixed bug in minimum size calculation.
+--|
 --| Revision 1.32  2000/03/03 00:57:19  brendel
 --| Changed set_minimum_size to use new features of EV_FONT_IMP.
 --|

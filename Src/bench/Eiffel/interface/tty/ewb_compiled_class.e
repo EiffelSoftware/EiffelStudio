@@ -17,9 +17,8 @@ inherit
 
 feature {NONE} -- Properties
 
-	want_compiled_class: BOOLEAN is
-			-- Does current menu selection want a
-			-- compiled class (e_class)?
+	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+			-- Does current menu selection want `class_i' to be compiled?
 			-- (True)
 		do
 			Result := True

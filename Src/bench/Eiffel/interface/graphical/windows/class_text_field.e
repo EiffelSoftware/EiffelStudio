@@ -73,6 +73,9 @@ feature {NONE} -- Implementation
 	choice: CHOICE_W;
 			-- Window for user choices.
 
+	class_list: LINKED_LIST [CLASS_I];
+			-- List of classes displayed in `choice'
+
 feature {NONE} -- Execution
 
 	execute (arg: ANY) is
@@ -81,79 +84,121 @@ feature {NONE} -- Execution
 			classi_stone: CLASSI_STONE;
 			classc_stone: CLASSC_STONE;
 			cname, class_name: STRING;
-			class_names: SORTED_TWO_WAY_LIST [STRING];
 			clusters: LINKED_LIST [CLUSTER_I];
+			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			class_i: CLASS_I;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			choice_position: INTEGER;
+			at_pos: INTEGER;
+			cluster: CLUSTER_I;
+			cluster_name: STRING
 		do
 			if (choice /= Void) and then (arg = choice) then
-				if choice.position /= 1 then
-					set_text (choice.selected_item);
-					execute (Void)
+				check
+					class_list /= Void
+				end;
+				choice_position := choice.position;
+				if choice_position /= 1 then
+					class_i := class_list.i_th (choice_position - 1);
+					class_list := Void;
+					cname := clone (class_i.class_name);
+					cname.to_upper;
+					set_text (cname);
+					execute (class_i)
 				end
+				class_list := Void
 			elseif project_initialized then
-				cname := clone (text);
-				cname.left_adjust;
-				cname.right_adjust;
-				if not cname.empty then
-					cname.to_lower;
-					!! mp.set_watch_cursor;
-					if cname.item (cname.count) = '*' then
-						!! class_names.make;
-						cname.head (cname.count - 1);
-						from
-							clusters := Eiffel_universe.clusters;
-							clusters.start
-						until
-							clusters.after
-						loop
-							from
-								classes := clusters.item.classes;
-								classes.start
-							until
-								classes.after
-							loop
-								class_name := classes.key_for_iteration;
-								if 
-									cname.empty or else
-									(class_name.count >= cname.count and then
-									class_name.substring 
-											(1, cname.count).is_equal (cname))
-								then
-									class_name := clone (class_name);
-									class_name.to_upper;
-									class_names.put_front (class_name)
-								end;
-								classes.forth
-							end;
-							clusters.forth
-						end;
-						class_names.sort;
-						if choice = Void then
-							!! choice.make_with_widget (parent, Current)
-						end;
-						choice.popup (Current, class_names)
+				class_i ?= arg;
+				if class_i = Void then
+					cname := clone (text);
+					cname.left_adjust;
+					cname.right_adjust;
+					if cname.empty then
+						warner (popup_parent).gotcha_call (w_Specify_a_class)
 					else
-						class_i := Eiffel_universe.class_with_name (cname);	
-						if class_i /= Void then
-							if class_i.compiled then
-								!! classc_stone.make (class_i.compiled_eclass)
-								tool.process_class (classc_stone);
+						cname.to_lower;
+						if cname.item (cname.count) /= '*' then
+							!! mp.set_watch_cursor;
+							at_pos := cname.index_of ('@', 1);
+							if at_pos = 0 then
+								class_list :=
+									Eiffel_universe.classes_with_name (cname)
+								mp.restore;
+								if class_list.empty then
+									class_list := Void;
+									if new_class_win = Void then
+										!! new_class_win.make (tool)
+									end;
+									new_class_win.call (cname, tool.cluster)
+								elseif class_list.count = 1 then
+									class_i := class_list.first;
+									class_list := Void
+								else
+									display_choice
+								end
+							elseif at_pos = cname.count then
+								cname.head (cname.count - 1);
+								set_text (cname);
+								execute (Void)
 							else
-								!! classi_stone.make (class_i)
-								tool.process_classi (classi_stone);
-							end;
+								cluster_name := cname.substring (at_pos + 1, cname.count)
+								if at_pos > 1 then
+									cname := cname.substring (1, at_pos - 1)
+								else
+									cname := ""
+								end;
+								cluster := Eiffel_universe.cluster_of_name (cluster_name);
+								mp.restore;
+								if cluster = Void then
+									warner (popup_parent).gotcha_call (w_Cannot_find_cluster (cluster_name))
+								else
+									class_i := cluster.classes.item (cname)
+									if class_i = Void then
+										if new_class_win = Void then
+											!! new_class_win.make (tool)
+										end;
+										new_class_win.call (cname, cluster)
+									end
+								end	
+							end
 						else
-							if new_class_win = Void then
-								!! new_class_win.make (tool);
+							!! mp.set_watch_cursor;
+							!! sorted_classes.make;
+							cname.head (cname.count - 1);
+							clusters := Eiffel_universe.clusters;
+							from clusters.start until clusters.after loop
+								classes := clusters.item.classes;
+								from classes.start until classes.after loop
+									class_name := classes.key_for_iteration;
+									if 
+										cname.empty or else
+										(class_name.count >= cname.count
+										and then class_name.substring 
+											(1, cname.count).is_equal (cname))
+									then
+										sorted_classes.put_front
+											(classes.item_for_iteration)
+									end;
+									classes.forth
+								end;
+								clusters.forth
 							end;
-							new_class_win.call (cname, tool.cluster)
+							sorted_classes.sort;
+							class_list := sorted_classes;
+							mp.restore;
+							display_choice
 						end
-					end;
-					mp.restore
-				else
-					warner (popup_parent).gotcha_call (w_Specify_a_class)
+					end
+				end;
+				if class_i /= Void then
+					if class_i.compiled then
+						!! classc_stone.make (class_i.compiled_eclass)
+						tool.process_class (classc_stone);
+					else
+						!! classi_stone.make (class_i)
+						tool.process_classi (classi_stone);
+					end
 				end
 			end
 		end;
@@ -161,5 +206,46 @@ feature {NONE} -- Execution
 	work (arg: ANY) is
 		do
 		end;
+
+	display_choice is
+				-- Display class names from `class_list' to `choice'.
+		require
+			class_list_not_void: class_list /= Void
+		local
+			class_names: ARRAYED_LIST [STRING];
+			class_i, last_class: CLASS_I;
+			cname, last_name: STRING
+			first_ambiguous: BOOLEAN
+		do
+			!! class_names.make (class_list.count);
+			from class_list.start until class_list.after loop
+				class_i := class_list.item;
+				cname := clone (class_i.class_name);
+				if
+					last_class /= Void and then
+					last_class.class_name.is_equal (cname)
+				then
+					if not first_ambiguous then
+						first_ambiguous := True
+						last_name := class_names.last;
+						last_name.extend ('@');
+						last_name.append (last_class.cluster.cluster_name)
+					end
+					cname.to_upper;
+					cname.extend ('@');
+					cname.append (class_i.cluster.cluster_name)
+				else
+					cname.to_upper;
+					first_ambiguous := False
+				end;
+				class_names.extend (cname);
+				last_class := class_i;
+				class_list.forth
+			end;
+			if choice = Void then
+				!! choice.make_with_widget (parent, Current)
+			end;
+			choice.popup (Current, class_names)
+		end
 
 end -- class CLASS_TEXT_FIELD

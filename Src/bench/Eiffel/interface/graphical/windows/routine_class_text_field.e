@@ -70,42 +70,6 @@ feature -- Properties
 
 	name: STRING is "change routine";
 
-	classc_stone: CLASSC_STONE is
-			-- Stone for a compiled class.
-		local
-			stone: STONE;
-			cname: STRING;
-			class_name_in_tool: STRING;
-			fs: FEATURE_STONE;
-			class_i: CLASS_I
-		do
-			cname := clone (text);
-			cname.left_adjust;
-			cname.right_adjust;
-			cname.to_lower;
-			fs := tool.stone;
-			if fs /= Void then
-				class_name_in_tool := clone (fs.e_class.name);
-				if class_name_in_tool.is_equal (cname) then
-					--| Name in class field same as class
-					--| for routine. Just retrieve stone.
-					!! Result.make (fs.e_class)
-				elseif not cname.empty then
-					--| Get class stone for cname
-					class_i := Eiffel_universe.class_with_name (cname);	
-					if class_i /= Void and then class_i.compiled then
-						!! Result.make (class_i.compiled_eclass)
-					end;
-				end
-			elseif not cname.empty then
-					--| Get class stone for cname
-				class_i := Eiffel_universe.class_with_name (cname);	
-				if class_i /= Void and then class_i.compiled then
-					!! Result.make (class_i.compiled_eclass)
-				end;
-			end
-		end;
-
 feature -- Closure
 
 	close_choice_window is
@@ -121,118 +85,177 @@ feature -- Closure
 			execute (Void)
 		end
 
-feature {NONE} -- Implementation
+feature {ROUTINE_TEXT_FIELD} -- Implementation
 
 	execute (arg: ANY) is
 			-- Execution of the command.
 		local
 			stone: CLASSC_STONE;
 			cname, class_name: STRING;
-			rname, temp: STRING;
-			routine_tf: ROUTINE_TEXT_FIELD;
-			fs: FEATURE_STONE;
-			feat: E_FEATURE;
-			class_names: SORTED_TWO_WAY_LIST [STRING];
 			clusters: LINKED_LIST [CLUSTER_I];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
-			mp: MOUSE_PTR
+			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
+			mp: MOUSE_PTR;
+			choice_position: INTEGER;
+			class_i: CLASS_I;
+			at_pos: INTEGER;
+			cluster_name: STRING;
+			cluster: CLUSTER_I
 		do
 			if (choice /= Void) and then arg = choice then
+				check
+					class_list /= Void
+				end;
+				choice_position := choice.position;
 				if choice.position /= 1 then
-					set_text (choice.selected_item);
-					execute (Void)
+					class_i := class_list.i_th (choice_position - 1);
+					class_list := Void;
+					cname := clone (class_i.class_name);
+					cname.to_upper;
+					set_text (cname);
+					execute (class_i)
 				end
 			else
-				cname := clone (text);
-				cname.left_adjust;
-				cname.right_adjust;
-				if not cname.empty then
-					!! mp.set_watch_cursor;
-					cname.to_lower;
-					if cname.item (cname.count) = '*' then
-						!! class_names.make;
-						cname.head (cname.count - 1);
-						from
-							clusters := Eiffel_universe.clusters;
-							clusters.start
-						until
-							clusters.after
-						loop
-							from
-								classes := clusters.item.classes;
-								classes.start
-							until
-								classes.after
-							loop
-								class_name := classes.key_for_iteration;
-								if
-									classes.item_for_iteration.compiled and 
-									(cname.empty or else
-									(class_name.count >= cname.count and then
-									class_name.substring
-											(1, cname.count).is_equal (cname)))
-								then
-									class_name := clone (class_name);
-									class_name.to_upper;
-									class_names.extend (class_name)
-								end;
-								classes.forth
-							end;
-							clusters.forth
-						end;
-
-						if choice = Void then
-							!! choice.make_with_widget (parent, Current)
-						end;
-						mp.restore;
-						choice.popup (Current, class_names)
+				class_i ?= arg;
+				if class_i = Void then
+					cname := clone (text);
+					cname.left_adjust;
+					cname.right_adjust;
+					if cname.empty then
+						warner (popup_parent).gotcha_call (w_Specify_a_class)
 					else
-						stone := classc_stone;
-						if stone /= Void then
-							routine_tf := tool.routine_text_field;
-							rname := clone (routine_tf.text);
-							rname.to_lower;
-							rname.left_adjust;
-							rname.right_adjust;
-							fs := tool.stone;
-							--if fs /= void and then rname.is_equal (fs.feature_i.feature_name) then
-									-- Use same feature in tool for update
-								--routine_text.receive (stone);
-							if rname.empty then
-									-- Retrieve feature
+						cname.to_lower;
+						if cname.item (cname.count) /= '*' then
+							!! mp.set_watch_cursor;
+							at_pos := cname.index_of ('@', 1);
+							if at_pos = 0 then
+								class_list := Eiffel_universe.compiled_classes_with_name (cname);
 								mp.restore;
-								warner (popup_parent).gotcha_call (w_Specify_a_feature)
-							elseif rname.item (rname.count) = '*' then
-								routine_tf.popup_choice_window
-							else
-								feat := classc_stone.e_class.feature_with_name (rname);
-								if feat = Void then
-									mp.restore;
-									warner (popup_parent).gotcha_call 
-										(w_Cannot_find_feature (rname, cname));
+								if class_list.empty then
+									class_list := Void;
+									warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+								elseif class_list.count = 1 then
+									class_i := class_list.first;
+									class_list := Void
 								else
-									!! fs.make (feat, classc_stone.e_class);
-									tool.process_feature (fs);
+									display_choice
 								end
-							end	
+							elseif at_pos = cname.count then
+								cname.head (cname.count - 1);
+								set_text (cname);
+								execute (Void)
+							else
+								cluster_name := cname.substring (at_pos + 1,
+cname.count)
+								if at_pos > 1 then
+									cname := cname.substring (1, at_pos - 1)
+								else
+									cname := ""
+								end;
+								cluster := Eiffel_universe.cluster_of_name (cluster_name);
+								mp.restore;
+								if cluster = Void then
+									warner (popup_parent).gotcha_call (w_Cannot_find_cluster (cluster_name))
+								else
+									class_i := cluster.classes.item (cname)
+									if class_i = Void then
+										warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+									end
+								end
+							end
 						else
+							!! mp.set_watch_cursor;
+							!! sorted_classes.make;
+							cname.head (cname.count - 1);
+							clusters := Eiffel_universe.clusters;
+							from clusters.start until clusters.after loop
+								classes := clusters.item.classes;
+								from classes.start until classes.after loop
+									class_name := classes.key_for_iteration;
+									class_i := classes.item_for_iteration
+									if
+										class_i.compiled and
+										(cname.empty or else
+										(class_name.count >= cname.count
+										and then class_name.substring
+											(1, cname.count).is_equal (cname)))
+									then
+										sorted_classes.put_front (class_i)
+									end;
+									classes.forth
+								end;
+								clusters.forth
+							end;
+							class_i := Void;
+							sorted_classes.sort;
+							class_list := sorted_classes;
 							mp.restore;
-							warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
-						end;
-					end;
-					mp.restore;
-				else
-					warner (popup_parent).gotcha_call (w_Specify_a_class)
+							display_choice
+						end
+					end
+				end;	
+				if class_i /= Void then
+					check
+						class_i.compiled
+					end
+					!! stone.make (class_i.compiled_eclass);
+					tool.routine_text_field.execute (stone)
 				end
 			end
 		end;
+
+feature {NONE} -- Implementation
 
 	work (arg: ANY) is
 			-- Work that is to be done for the command.
 		do
 		end;
 
+	display_choice is
+				-- Display class names from `class_list' to `choice'.
+		require
+			class_list_not_void: class_list /= Void
+		local
+			class_names: ARRAYED_LIST [STRING];
+			class_i, last_class: CLASS_I;
+			cname, last_name: STRING
+			first_ambiguous: BOOLEAN
+		do
+			!! class_names.make (class_list.count);
+			from class_list.start until class_list.after loop
+				class_i := class_list.item;
+				cname := clone (class_i.class_name);
+				if
+					last_class /= Void and then
+					last_class.class_name.is_equal (cname)
+				then
+					if not first_ambiguous then
+						first_ambiguous := True
+						last_name := class_names.last;
+						last_name.extend ('@');
+						last_name.append (last_class.cluster.cluster_name)
+					end
+					cname.to_upper;
+					cname.extend ('@');
+					cname.append (class_i.cluster.cluster_name)
+				else
+					cname.to_upper;
+					first_ambiguous := False
+				end;
+				class_names.extend (cname);
+				last_class := class_i;
+				class_list.forth
+			end;
+			if choice = Void then
+				!! choice.make_with_widget (parent, Current)
+			end;
+			choice.popup (Current, class_names)
+		end
+
 	choice: CHOICE_W;
 			-- Window where the user can make his/her choices.
+
+	class_list: LINKED_LIST [CLASS_I];
+			-- List of compiled classes displayed in `choice'
 
 end -- class ROUTINE_CLASS_TEXT_FIELD

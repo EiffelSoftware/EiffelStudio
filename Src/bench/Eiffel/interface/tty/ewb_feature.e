@@ -49,9 +49,8 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature_name for current menu selection
 
-	want_compiled_class: BOOLEAN is
-			-- Does current menu selection want a
-			-- compiled class (class_c)?
+	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+			-- Does current menu selection want `class_i" to be compiled?
 			-- (Yes it does)
 		do
 			Result := True

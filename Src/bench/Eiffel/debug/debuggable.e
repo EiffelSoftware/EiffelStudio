@@ -21,18 +21,6 @@ feature -- Data
 
 	breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 
-	total_local_count: INTEGER;
-			-- Number of locals for byte code: it includes Eiffel local
-			-- variables, variants of loops and old expressions
-			-- (The Result entity, if any, is not taken into account)
-
-	local_count: INTEGER;
-			-- Number of user-declared local variables (appearing in the
-			-- local clause of the routine)
-
-	argument_count: INTEGER;
-			-- Number of arguments
-
 feature -- Status
 
 	is_breakpoint_set (i: INTEGER): BOOLEAN is
@@ -81,21 +69,6 @@ feature -- Setting
 	set_was_frozen is
 		do
 			was_frozen := True
-		end;
-
-	set_total_local_count (i: INTEGER) is
-		do
-			total_local_count := i
-		end;
-
-	set_local_count (i: INTEGER) is
-		do
-			local_count := i
-		end;
-
-	set_argument_count (i: INTEGER) is
-		do
-			argument_count := i
 		end;
 
 feature -- Tracing

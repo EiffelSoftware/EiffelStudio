@@ -34,6 +34,10 @@ feature -- Basic operations
 
 			need_generate_ce := False
 			need_generate_ec := False
+			
+			need_free_memory := True
+			need_generate_free_memory := False
+			free_memory_function_name := "rt_ce.free_memory_safearray"
 
 			an_element_type := a_safearray_descriptor.array_element_descriptor.type
 			vt_type := binary_or (an_element_type, Vt_array)
@@ -382,7 +386,7 @@ feature -- Basic operations
 						
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 	safearray_safearray_ec_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
@@ -501,7 +505,7 @@ feature -- Basic operations
 						
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 
@@ -628,7 +632,7 @@ feature -- Basic operations
 						
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 
@@ -663,95 +667,95 @@ feature -- Basic operations
 				%EIF_PROCEDURE make = 0, put = 0;%N%T" + 
 				tmp_element_c_type + "sa_element = 0;%N%T%
 				%EIF_OBJECT eif_array_element = 0;%N%N%T%
-				%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%
-				%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%
-				%for (i = 0; i < dim_count; i++)%N%T%
-				%%<%N%T%T%
-					%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%T%
-						%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-					%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%
-					%%<%N%T%T%T%
-						%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
-						%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%
-					%%>%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-				%%>%N%N%T%
-				%%
-				%// Create array of lower indices%N%T%
-				%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%
-				%make = eif_procedure (%"make%", int_array_id);%N%T%
-				%eif_lower_indices = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					% (eif_access (eif_lower_indices), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of element counts%N%T%
-				%eif_element_counts = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					%(eif_access (eif_element_counts), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of indices%N%T%
-				%eif_index = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					% (eif_access (eif_index), 1, dim_count);%N%T%
-				%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%
-				%make = eif_procedure (%"make%", type_id);%N%T%
-				%put = eif_procedure (%"put%", type_id);%N%T%
-				%result = eif_create (type_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T% 
-					% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%
-				%// Initialize `result' to contents of SAFEARRAY%N%T%
-				%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%
-				%do%N%T%
-				%%<%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%
+				%if (a_safearray != NULL)%N%T%
+				%{%N%T%T%
+					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%T%
+					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%T%
 					%for (i = 0; i < dim_count; i++)%N%T%T%
 					%%<%N%T%T%T%
-						%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%
-					%%>%N%T%T%
-					%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%N%T%T%
-					%if (hr != S_OK)%N%T%T%
+						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%T%
+							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%T%
+							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%T%
+						%%>%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+					%%>%N%N%T%T%
+					%%
+					%// Create array of lower indices%N%T%T%
+					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%T%
+					%make = eif_procedure (%"make%", int_array_id);%N%T%T%
+					%eif_lower_indices = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						% (eif_access (eif_lower_indices), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of element counts%N%T%T%
+					%eif_element_counts = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						%(eif_access (eif_element_counts), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of indices%N%T%T%
+					%eif_index = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						% (eif_access (eif_index), 1, dim_count);%N%T%T%
+					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%T%
+					%make = eif_procedure (%"make%", type_id);%N%T%T%
+					%put = eif_procedure (%"put%", type_id);%N%T%T%
+					%result = eif_create (type_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T%T%
+						% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%T%
+					%// Initialize `result' to contents of SAFEARRAY%N%T%T%
+					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%T%
+					%do%N%T%T%
 					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-					%eif_array_element = eif_protect (" + Generated_ce_mapper + "." + tmp_element_ce_function + "(sa_element));%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
-					%eif_wean (eif_array_element);%N%T%
-				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
-				%// free memory%N%T%
-				%hr = SafeArrayDestroy (a_safearray);%N%T%
-				%if (hr != S_OK)%N%T%
-				%%<%N%T%T%
-					%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%
-				%%>%N%T%
-				%free (lower_indices);%N%T%
-				%free (element_counts);%N%T%
-				%free (upper_indices);%N%T%
-				%free (index);%N%T%
-				%free (sa_indices);%N%T%
-				%eif_wean (eif_lower_indices);%N%T%
-				%eif_wean (eif_element_counts);%N%T%
-				%eif_wean (eif_index);%N%T%
-				%return eif_wean (result);"
+						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%T%
+						%for (i = 0; i < dim_count; i++)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%T%
+						%%>%N%T%T%T%
+						%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%N%T%T%T%
+						%if (hr != S_OK)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+						%eif_array_element = eif_protect (" + Generated_ce_mapper + "." + tmp_element_ce_function + "(sa_element));%N%T%T%T%
+						%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%T%
+						%eif_wean (eif_array_element);%N%T%T%
+					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%T%
+					%// free memory%N%T%T%
+					%free (lower_indices);%N%T%T%
+					%free (element_counts);%N%T%T%
+					%free (upper_indices);%N%T%T%
+					%free (index);%N%T%T%
+					%free (sa_indices);%N%T%T%
+					%eif_wean (eif_lower_indices);%N%T%T%
+					%eif_wean (eif_element_counts);%N%T%T%
+					%eif_wean (eif_index);%N%T%T%
+					%return eif_wean (result);%N%T%
+				%}%N%T%
+				%else%N%T%T%
+					%return NULL;"
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 	safearray_record_ce_function_body (a_record_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR): STRING is
@@ -785,101 +789,102 @@ feature -- Basic operations
 				%EIF_PROCEDURE make = 0, put = 0;%N%T" + 
 				tmp_element_c_type + " * sa_element = 0;%N%T%
 				%EIF_OBJECT eif_array_element = 0;%N%N%T%
-				%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%
-				%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%
-				%for (i = 0; i < dim_count; i++)%N%T%
-				%%<%N%T%T%
-					%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%T%
-						%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-					%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%
-					%%<%N%T%T%T%
-						%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
-						%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%
-					%%>%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-				%%>%N%N%T%
 				%%
-				%// Create array of lower indices%N%T%
-				%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%
-				%make = eif_procedure (%"make%", int_array_id);%N%T%
-				%eif_lower_indices = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					% (eif_access (eif_lower_indices), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of element counts%N%T%
-				%eif_element_counts = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					% (eif_access (eif_element_counts), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of indices%N%T%
-				%eif_index = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					% (eif_access (eif_index), 1, dim_count);%N%T%
-				%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%
-				%make = eif_procedure (%"make%", type_id);%N%T%
-				%put = eif_procedure (%"put%", type_id);%N%T%
-				%result = eif_create (type_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T% 
-					% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%
-				%// Initialize `result' to contents of SAFEARRAY%N%T%
-				%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%
-				%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%N%T%
-				%make = eif_procedure (%"make%", element_id);%N%T%
-				%do%N%T%
-				%%<%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%
+				%if (a_safearray != NULL)%N%T%
+				%{%N%T%T%
+					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%T%
+					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%T%
 					%for (i = 0; i < dim_count; i++)%N%T%T%
 					%%<%N%T%T%T%
-						%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%
-					%%>%N%T%T%
-					%eif_array_element = eif_create (element_id);%N%T%T%
+						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%T%
+							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%T%
+							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%T%
+						%%>%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+					%%>%N%N%T%T%
+					%%
+					%// Create array of lower indices%N%T%T%
+					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%T%
+					%make = eif_procedure (%"make%", int_array_id);%N%T%T%
+					%eif_lower_indices = eif_create (int_array_id);%N%T%T%
 					%nstcall = 0;%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (eif_array_element));%N%T%T%
-					%sa_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_array_element), %"item%", EIF_POINTER);%N%T%T%
-					%hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);%N%T%T%
-					%if (hr != S_OK)%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						% (eif_access (eif_lower_indices), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of element counts%N%T%T%
+					%eif_element_counts = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						% (eif_access (eif_element_counts), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of indices%N%T%T%
+					%eif_index = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						% (eif_access (eif_index), 1, dim_count);%N%T%T%
+					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%T%
+					%make = eif_procedure (%"make%", type_id);%N%T%T%
+					%put = eif_procedure (%"put%", type_id);%N%T%T%
+					%result = eif_create (type_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T% 
+						% (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%T%
+					%// Initialize `result' to contents of SAFEARRAY%N%T%T%
+					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%T%
+					%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%N%T%T%
+					%make = eif_procedure (%"make%", element_id);%N%T%T%
+					%do%N%T%T%
 					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-					%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,EIF_REFERENCE))put) %N%T%T%T%
-						%(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
-					%eif_wean (eif_array_element);%N%T%
-				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
-				%// free memory%N%T%
-				%hr = SafeArrayDestroy (a_safearray);%N%T%
-				%if (hr != S_OK)%N%T%
-				%%<%N%T%T%
-					%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%
-				%%>%N%T%
-				%free (lower_indices);%N%T%
-				%free (element_counts);%N%T%
-				%free (upper_indices);%N%T%
-				%free (index);%N%T%
-				%free (sa_indices);%N%T%
-				%eif_wean (eif_lower_indices);%N%T%
-				%eif_wean (eif_element_counts);%N%T%
-				%eif_wean (eif_index);%N%T%
-				%return eif_wean (result);"
+						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%T%
+						%for (i = 0; i < dim_count; i++)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%T%
+						%%>%N%T%T%T%
+						%eif_array_element = eif_create (element_id);%N%T%T%T%
+						%nstcall = 0;%N%T%T%T%
+						%(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (eif_array_element));%N%T%T%T%
+						%sa_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_array_element), %"item%", EIF_POINTER);%N%T%T%T%
+						%hr = SafeArrayGetElement (a_safearray, sa_indices, sa_element);%N%T%T%T%
+						%if (hr != S_OK)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+						%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,EIF_REFERENCE))put) %N%T%T%T%T%
+							%(eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%T%
+						%eif_wean (eif_array_element);%N%T%T%
+					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%T%
+					%// free memory%N%T%T%
+					%free (lower_indices);%N%T%T%
+					%free (element_counts);%N%T%T%
+					%free (upper_indices);%N%T%T%
+					%free (index);%N%T%T%
+					%free (sa_indices);%N%T%T%
+					%eif_wean (eif_lower_indices);%N%T%T%
+					%eif_wean (eif_element_counts);%N%T%T%
+					%eif_wean (eif_index);%N%T%T%
+					%return eif_wean (result);%N%T%
+				%}%N%T%
+				%else%N%T%T%
+					%return NULL;"
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 	safearray_safearray_ce_function_body (a_safearray_descriptor: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR): STRING is
@@ -913,107 +918,108 @@ feature -- Basic operations
 				%EIF_PROCEDURE make = 0, put = 0;%N%T" + 
 				tmp_element_c_type + "sa_element = 0;%N%T%
 				%EIF_OBJECT eif_array_element = 0;%N%N%T%
-				%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%
-				%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%
-				%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%
-				%for (i = 0; i < dim_count; i++)%N%T%
-				%%<%N%T%T%
-					%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%T%
-						%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-					%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%
-					%if (SUCCEEDED (hr))%N%T%T%
-					%%<%N%T%T%T%
-						%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
-						%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%
-					%%>%N%T%T%
-					%else%N%T%T%
-					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
-				%%>%N%N%T%
 				%%
-				%// Create array of lower indices%N%T%
-				%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%
-				%make = eif_procedure (%"make%", int_array_id);%N%T%
-				%eif_lower_indices = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					%  (eif_access (eif_lower_indices), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of element counts%N%T%
-				%eif_element_counts = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					%  (eif_access (eif_element_counts), 1, dim_count);%N%T%
-				%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%
-				%// Create array of indices%N%T%
-				%eif_index = eif_create (int_array_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T% 
-					%  (eif_access (eif_index), 1, dim_count);%N%T%
-				%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%
-				%make = eif_procedure (%"make%", type_id);%N%T%
-				%put = eif_procedure (%"put%", type_id);%N%T%
-				%result = eif_create (type_id);%N%T%
-				%nstcall = 0;%N%T%
-				%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T% 
-					%  (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%
-				%// Initialize `result' to contents of SAFEARRAY%N%T%
-				%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%
-				%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%N%T%
-				%make = eif_procedure (%"make%", element_id);%N%T%
-				%do%N%T%
-				%%<%N%T%T%
-					%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%
+				%if (a_safearray != NULL)%N%T%
+				%{%N%T%T%
+					%dim_count = (EIF_INTEGER) SafeArrayGetDim (a_safearray);%N%T%T%
+					%lower_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%upper_indices = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%element_counts = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%index = (EIF_INTEGER *) calloc (dim_count, sizeof (EIF_INTEGER));%N%T%T%
+					%sa_indices = (long *) calloc (dim_count, sizeof (long));%N%N%T%T%
 					%for (i = 0; i < dim_count; i++)%N%T%T%
 					%%<%N%T%T%T%
-						%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%
-					%%>%N%T%T%
-					%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%N%T%T%
-					%if (hr != S_OK)%N%T%T%
+						%hr = SafeArrayGetLBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%T%
+							%lower_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+						%hr = SafeArrayGetUBound (a_safearray, dim_count - i, &tmp_long);%N%T%T%T%
+						%if (SUCCEEDED (hr))%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%upper_indices%(i%) = (EIF_INTEGER)tmp_long;%N%T%T%T%T%
+							%element_counts%(i%) = upper_indices%(i%) - lower_indices%(i%) + 1;%N%T%T%T%
+						%%>%N%T%T%T%
+						%else%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
+					%%>%N%N%T%T%
+					%%
+					%// Create array of lower indices%N%T%T%
+					%int_array_id = eif_type_id (%"ARRAY %(INTEGER%)%");%N%T%T%
+					%make = eif_procedure (%"make%", int_array_id);%N%T%T%
+					%eif_lower_indices = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						%  (eif_access (eif_lower_indices), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_lower_indices), lower_indices, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of element counts%N%T%T%
+					%eif_element_counts = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						%  (eif_access (eif_element_counts), 1, dim_count);%N%T%T%
+					%eif_make_from_c (eif_access (eif_element_counts), element_counts, dim_count, EIF_INTEGER);%N%T%T%
+					%// Create array of indices%N%T%T%
+					%eif_index = eif_create (int_array_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))make)%N%T%T%T%
+						%  (eif_access (eif_index), 1, dim_count);%N%T%T%
+					%type_id = eif_type_id (%"ECOM_ARRAY %(" + tmp_element_eiffel_type  + "%)%");%N%T%T%
+					%make = eif_procedure (%"make%", type_id);%N%T%T%
+					%put = eif_procedure (%"put%", type_id);%N%T%T%
+					%result = eif_create (type_id);%N%T%T%
+					%nstcall = 0;%N%T%T%
+					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))make)%N%T%T%T%
+						%  (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));%N%T%T%
+					%// Initialize `result' to contents of SAFEARRAY%N%T%T%
+					%memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));%N%T%T%
+					%element_id = eif_type_id (%"" + tmp_element_eiffel_type + "%");%N%T%T%
+					%make = eif_procedure (%"make%", element_id);%N%T%T%
+					%do%N%T%T%
 					%%<%N%T%T%T%
-						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%
-					%%>%N%T%T%
+						%eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);%N%T%T%T%
+						%for (i = 0; i < dim_count; i++)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%sa_indices %(i%) = index %(dim_count - 1 - i%);%N%T%T%T%
+						%%>%N%T%T%T%
+						%hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);%N%T%T%T%
+						%if (hr != S_OK)%N%T%T%T%
+						%%<%N%T%T%T%T%
+							%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%T%
+						%%>%N%T%T%T%
 
-					%eif_array_element = eif_protect ("
+						%eif_array_element = eif_protect ("
 
-					if a_visitor.need_generate_ce then
-						Result.append (Generated_ce_mapper)
-					else
-						Result.append (Ce_mapper)
-					end
-					Result.append (Dot)
-					Result.append (tmp_element_ce_function)
-					Result.append (" (sa_element));%N%T%T%
-					%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%
-					%eif_wean (eif_array_element);%N%T%
-				%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%
-				%// free memory%N%T%
-				%hr = SafeArrayDestroy (a_safearray);%N%T%
-				%if (hr != S_OK)%N%T%
-				%%<%N%T%T%
-					%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%
-				%%>%N%T%
-				%free (lower_indices);%N%T%
-				%free (element_counts);%N%T%
-				%free (upper_indices);%N%T%
-				%free (index);%N%T%
-				%free (sa_indices);%N%T%
-				%eif_wean (eif_lower_indices);%N%T%
-				%eif_wean (eif_element_counts);%N%T%
-				%eif_wean (eif_index);%N%T%
-				%return eif_wean (result);")
+						if a_visitor.need_generate_ce then
+							Result.append (Generated_ce_mapper)
+						else
+							Result.append (Ce_mapper)
+						end
+						Result.append (Dot)
+						Result.append (tmp_element_ce_function)
+						Result.append (" (sa_element));%N%T%T%T%
+						%(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))put) (eif_access (result), eif_access (eif_array_element), eif_access (eif_index));%N%T%T%T%
+						%eif_wean (eif_array_element);%N%T%T%
+					%%> while (rt_ce.ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));%N%T%T%
+					%// free memory%N%T%T%
+					%free (lower_indices);%N%T%T%
+					%free (element_counts);%N%T%T%
+					%free (upper_indices);%N%T%T%
+					%free (index);%N%T%T%
+					%free (sa_indices);%N%T%T%
+					%eif_wean (eif_lower_indices);%N%T%T%
+					%eif_wean (eif_element_counts);%N%T%T%
+					%eif_wean (eif_index);%N%T%T%
+					%return eif_wean (result);%N%T%
+				%}%N%T%
+				%else%N%T%T%
+					%return NULL")
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 

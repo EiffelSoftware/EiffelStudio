@@ -21,16 +21,21 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (addr: STRING; dclass: E_CLASS) is
+	make (addr: STRING; a_name: STRING; dclass: E_CLASS) is
 		require
 			not_addr_void: addr /= Void;
-			dclass_exists: dclass /= Void
+			dclass_exists: dclass /= Void;
+			not_name_void: a_name /= Void
 		do
+			name := a_name;
 			object_address := addr;
 			dynamic_class := dclass
 		end;
  
 feature -- Properties
+
+	name: STRING;
+			-- Name associated with address (arg, local, result)
 
 	object_address: STRING;
 			-- Hector address (with an indirection)
@@ -68,7 +73,12 @@ feature -- Access
 
 	signature: STRING is
 		do
-			Result := "object at ";
+			!! Result.make (0);
+			Result.append (name);
+			Result.append (" (");
+			Result.append (dynamic_class.name_in_upper)
+			Result.append (")");
+			Result := " object at ";
 			Result.append (object_address)
 		end;
  
@@ -86,22 +96,29 @@ feature -- Access
 			-- Name used in the history list
 		do
 			!! Result.make (0);
-			Result.append (object_address);
-			Result.append (": ");
+			Result.append (name);
+			Result.append (" (");
 			Result.append (dynamic_class.name_in_upper)
+			Result.append (")");
+			Result.append (" [");
+			Result.append (object_address);
+			Result.append ("]");
 		end;
 
 feature -- Status report
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: STONE): BOOLEAN is
 			-- Do `Current' and `other' reference the same object?
+		local
+			o: like Current
 		do
-			if object_address /= Void and then other /= Void and then
-					other.object_address /= Void then
-				Result := object_address.is_equal (other.object_address)
+			o ?= other;
+			if object_address /= Void and then o /= Void and then
+					o.object_address /= Void then
+				Result := object_address.is_equal (o.object_address)
 			else
 				Result := object_address = Void and
-					(other /= Void and then other.object_address = Void)
+					(o /= Void and then o.object_address = Void)
 			end
 		end;
 

@@ -21,6 +21,11 @@ inherit
 			handle_available as descriptor_available
 		end
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+		
 creation {SOCKET}
 
 	create_from_descriptor
@@ -97,18 +102,28 @@ feature -- Basic commands
 			-- Create socket from the socket descriptor `fd'.
 		local
 			ext: ANY
+			retried: BOOLEAN
 		do
-			descriptor := fd;
-			create address.make;
-			ext := address.socket_address;
-			c_sock_name (descriptor, $ext, address.count);
-			family := address.family;
-			descriptor_available := True;
-			is_open_read := True;
-			is_open_write := True
+			if not retried then
+				descriptor := fd;
+				create address.make;
+				ext := address.socket_address;
+				c_sock_name (descriptor, $ext, address.count);
+				family := address.family;
+				descriptor_available := True;
+				is_open_read := True;
+				is_open_write := True
+			end
 		ensure
 			family_valid: family = address.family;
 			opened_all: is_open_write and is_open_read
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
 		end;
 
 	bind is 
@@ -118,10 +133,19 @@ feature -- Basic commands
 			valid_local_address: address /= Void
 		local
 			ext: ANY
+			retried: BOOLEAN
 		do
-			ext := address.socket_address;
-			c_bind (descriptor, $ext, address.count);
-			is_open_read := True
+			if not retried then
+				ext := address.socket_address;
+				c_bind (descriptor, $ext, address.count);
+				is_open_read := True
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				retried := True
+				retry
+			end
 		end;
 
 	connect is
@@ -131,11 +155,21 @@ feature -- Basic commands
 			valid_peer_address: peer_address /= Void
 		local
 			ext: ANY
+			retried: BOOLEAN
 		do
-			ext := peer_address.socket_address;
-			c_connect (descriptor, $ext, peer_address.count);
-			is_open_write := True;
-			is_open_read := True
+			if not retried then
+				ext := peer_address.socket_address;
+				c_connect (descriptor, $ext, peer_address.count);
+				is_open_write := True;
+				is_open_read := True
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
 		end;
 
 	make_socket is

@@ -33,6 +33,30 @@ feature {EV_ANY_I} -- Implementation
 
 	pick_actions_internal: EV_PND_START_ACTION_SEQUENCE
 			-- Implementation of once per object `pick_actions'.
+			
+feature -- Event handling
+
+	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+			-- Actions to be performed when a transport from `Current' ends.
+		do
+			if pick_ended_actions_internal = Void then
+				pick_ended_actions_internal :=
+					 create_pick_ended_actions
+			end
+			Result := pick_ended_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+			-- Create a conforming_pick ended sequence.
+		deferred
+		end
+
+	pick_ended_actions_internal: EV_PND_FINISHED_ACTION_SEQUENCE
+			-- Implementation of once per object `pick_ended_actions'.
 
 
 feature -- Event handling

@@ -85,9 +85,13 @@ feature -- Execution
 					else
 						formatted ?= argument
 					end;
-					confirmer (popup_parent).call (Current, 
+					if formatted = Void then
+						execute_licenced (Void)
+					else
+						confirmer (popup_parent).call (Current, 
 							"This format requires exploring the entire%N%
 							%system and may take a long time...", "Continue")
+					end
 				end
 			end
 		end;

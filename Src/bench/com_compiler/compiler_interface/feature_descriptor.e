@@ -183,7 +183,7 @@ feature -- Access
 			ast: FEATURE_AS
 		do
 			ast := compiler_feature.e_feature.ast
-			if ast /= Void then
+			if not compiler_feature.is_il_external and ast /= Void then
 				create ef.make (compiler_feature.e_feature.written_class.file_name, ast.end_position)
 				ef.set_current_feature (ast)
 				comments := ef.current_feature_comments				

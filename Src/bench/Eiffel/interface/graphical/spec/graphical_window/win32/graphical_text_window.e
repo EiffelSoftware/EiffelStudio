@@ -55,7 +55,7 @@ inherit
 			copy, setup, set_tab_length
 		redefine
 			implementation, put_stone, put_string, new_line, display,
-			put_after_class, put_normal_string, reset
+			put_after_class, put_normal_string, reset, disable_clicking
 		end;
 
 	SCROLLED_TEXT_WINDOW
@@ -71,7 +71,7 @@ inherit
 			put_keyword, put_comment, process_call_stack_item, put_stone,
 			put_string, new_line, display,
 			clear_window, init_resource_values, put_after_class, 
-			put_normal_string, reset, process_text
+			put_normal_string, reset, process_text, disable_clicking
 		select
 			put_address, put_feature_name, put_feature, put_feature_error,
 			put_error, put_class, put_classi, put_cluster,
@@ -163,6 +163,20 @@ feature -- Output
 		end
 
 feature -- Update
+
+	disable_clicking is
+			-- Feature which needs to be redefined on Windows
+		local
+			previous_position: INTEGER
+		do
+			implementation.hide_selection
+			previous_position := implementation.cursor_position
+			implementation.set_selection (0, implementation.count)
+			implementation.set_character_format_word (text_format)
+			implementation.set_selection (previous_position, previous_position)
+			implementation.show_selection
+			{SCROLLED_TEXT_WINDOW} precursor
+		end
 
 	put_after_class (e_class: E_CLASS; str: STRING) is
 			-- Put "-- class" followed by `t' in the text.

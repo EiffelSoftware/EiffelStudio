@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 							if pointed_descriptor /= Void then
 								create visitor
 								visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-								if visitor.is_basic_type then
+								if visitor.is_basic_type or visitor.is_enumeration then
 									ccom_feature_writer.set_result_type (visitor.cecil_type)
 								else
 									ccom_feature_writer.set_result_type (Eif_reference)
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 						tmp_string.append (Beginning_comment_paramflag)
 						tmp_string.append ("in")
 						tmp_string.append (End_comment_paramflag)
-						if visitor.is_basic_type then
+						if visitor.is_basic_type or visitor.is_enumeration then
 							tmp_string.append (visitor.cecil_type)
 
 						elseif 

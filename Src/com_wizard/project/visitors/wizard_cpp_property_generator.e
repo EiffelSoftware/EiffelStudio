@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 				pointer_var.extend (Tmp_variable_name)
 			end
 
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				tmp_body.append (Open_parenthesis)
 				tmp_body.append (visitor.c_type)
 				tmp_body.append (Close_parenthesis)

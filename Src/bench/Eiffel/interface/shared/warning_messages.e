@@ -265,6 +265,8 @@ feature -- Warning messages
 
 	w_Feature_not_compiled: STRING is "Feature is not compiled"
 
+	w_Features_not_compiled: STRING is "Features not yet compiled"
+
 	w_Finalize_warning: STRING is "Finalizing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
 

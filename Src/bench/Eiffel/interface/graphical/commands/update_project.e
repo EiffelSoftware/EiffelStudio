@@ -14,7 +14,7 @@ inherit
 	PROJECT_CONTEXT;
 	PIXMAP_COMMAND
 		rename
-			init_from_tool as make
+			init as make
 		redefine
 			tool
 		end;
@@ -157,8 +157,8 @@ feature {NONE} -- Implementation
 			saved_msg.append (messages);
 			if Window_manager.has_active_editor_tools then
 				Degree_output.put_string (l_Resynchronizing_tools);
-				Window_manager.class_win_mgr.synchronize;
-				Window_manager.routine_win_mgr.synchronize;
+				Window_manager.class_win_mgr.synchronize_to_default;
+				Window_manager.routine_win_mgr.synchronize_to_default;
 			end;
 			if system_tool.realized and then system_tool.shown then
 				system_tool.set_default_format;

@@ -1007,6 +1007,16 @@ feature -- Warning messages
 	
 	w_does_not_have_enclosing_cluster: STRING is "This cluster does not have an enclosing cluster."
 	
+	w_No_internet_browser_selected: STRING is "No browser was given in the preferences"
+	
+	w_No_url_to_replace: STRING is "There is no $url part in the browser preference.%N%
+									%Please fix your preferences."
+	
+	w_No_ise_eiffel: STRING is "Environment variable ISE_EIFFEL is not defined."
+
+	w_Page_not_exist: STRING is "The requested page does not exist.%N%
+								%Please check your ISE Eiffel installation."
+	
 	w_Environment_not_initialized: STRING is "$ISE_EIFFEL is not initialized. Execution impossible%N"
 
 	w_Feature_not_compiled: STRING is "Feature is not compiled."

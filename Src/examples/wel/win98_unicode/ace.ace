@@ -1,0 +1,64 @@
+system
+	"unicode_demo"
+
+root
+	UNICODE_DEMO: make
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+
+-- EiffelBase
+-- Unicode
+-- unicode_demo
+
+cluster
+	root_cluster:		"$EIFFEL_SRC\examples\win98_unicode"
+
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"spec"; "clib"; 
+		end
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include -D_UNICODE -DUNICODE",
+		"F:\52dev\examples\unicode\clib"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"F:\52dev\examples\unicode\clib\eiflocale.lib",
+		"Imm32.lib",
+		"F:\52dev\examples\win98_unicode\clib\unicows.lib"
+
+end

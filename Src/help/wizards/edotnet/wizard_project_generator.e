@@ -103,20 +103,28 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
-		
+	
+	selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			-- Selected assemblies
+			
+	dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			-- Dependencies of selected assemblies
+			
+	local_assemblies: HASH_TABLE [STRING, STRING]
+			-- Locally imported assemblies
+			-- | Key: Assembly filename
+			-- | Value: Path to folder where Eiffel classes were generated
+	
 	external_classes: STRING is
 			-- List of directories where Eiffel classes are stored
 		require
 			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
 			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
-		local
-			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
+		local			
 			an_assembly: ASSEMBLY_INFORMATION
-			assembly_name: STRING
-			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
+			assembly_name: STRING			
 			a_dependency: ASSEMBLY_INFORMATION
-			a_dependency_name: STRING
-			local_assemblies: HASH_TABLE [STRING, STRING]
+			a_dependency_name: STRING			
 			a_local_assembly: STRING
 			i: INTEGER
 		do
@@ -173,18 +181,17 @@ feature {NONE} -- Implementation
 			non_void_selected_assemblies: wizard_information.selected_assemblies /= Void
 			not_empty_selected_assemblies: not wizard_information.selected_assemblies.is_empty
 		local
-			selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			an_assembly: ASSEMBLY_INFORMATION
-			dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			a_dependency: ASSEMBLY_INFORMATION
-			local_assemblies: HASH_TABLE [STRING, STRING]
 			a_local_assembly: STRING
 			local_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			a_local_dependency: ASSEMBLY_INFORMATION			
 		do
 			create Result.make (1024)
 			Result.append (External_keyword + New_line + Tab + Assembly_keyword + New_line)
-			selected_assemblies := wizard_information.selected_assemblies
+			if selected_assemblies = Void then
+				selected_assemblies := wizard_information.selected_assemblies
+			end
 			from
 				selected_assemblies.start
 			until
@@ -195,7 +202,9 @@ feature {NONE} -- Implementation
 				selected_assemblies.forth
 			end
 			
-			dependencies := wizard_information.dependencies
+			if dependencies = Void then
+				dependencies := wizard_information.dependencies
+			end
 			from
 				dependencies.start
 			until
@@ -206,7 +215,9 @@ feature {NONE} -- Implementation
 				dependencies.forth
 			end
 
-			local_assemblies := wizard_information.local_assemblies
+			if local_assemblies = Void then
+				local_assemblies := wizard_information.local_assemblies
+			end
 			from
 				local_assemblies.start
 			until
@@ -219,15 +230,17 @@ feature {NONE} -- Implementation
 				local_assemblies.forth
 			end	
 
-			local_dependencies := wizard_information.local_dependencies
-			from
-				local_dependencies.start
-			until
-				local_dependencies.after
-			loop
-				a_local_dependency := local_dependencies.item
-				Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (a_local_dependency) + Inverted_comma + Comma + New_line)
-				dependencies.forth
+			if local_assemblies /= Void and then not local_assemblies.is_empty then
+				local_dependencies := wizard_information.local_dependencies
+				from
+					local_dependencies.start
+				until
+					local_dependencies.after
+				loop
+					a_local_dependency := local_dependencies.item
+					Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (a_local_dependency) + Inverted_comma + Comma + New_line)
+					dependencies.forth
+				end
 			end
 			
 			Result.right_adjust

@@ -48,13 +48,6 @@ feature -- Basic Operations
 			"FormatTypeName"
 		end
 
-	frozen set_enums (some_enums: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use Formatter"
-		alias
-			"SetEnums"
-		end
-
 	frozen is_enum (type: SYSTEM_TYPE): BOOLEAN is
 		external
 			"IL signature (System.Type): System.Boolean use Formatter"

@@ -33,7 +33,7 @@ EIF_INTEGER *linarea, *colarea;
 char *allowed;
 EIF_INTEGER b, e, end;
 {
-	EIF_INTEGER c;
+	EIF_CHARACTER c;
 	EIF_INTEGER i = 0;
 	EIF_INTEGER n = e - b;
 
@@ -88,7 +88,7 @@ EIF_INTEGER *linarea, *colarea;
 char *allowed;
 EIF_INTEGER b,e,end;
 {
-	EIF_INTEGER c;
+	EIF_CHARACTER c;
 	EIF_INTEGER i = 0;
 	EIF_INTEGER n = e - b;
 

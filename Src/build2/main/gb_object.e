@@ -37,6 +37,7 @@ inherit
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
+			{GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER} object_handler
 		end
 	
 	GB_SHARED_XML_HANDLER
@@ -84,7 +85,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			-- `a_type' to `type'.
 		require
 			an_object_not_void: an_object /= Void
-			type_matches_object: is_instance_of (an_object, dynamic_type_from_string (a_type))
+			type_matches_object: type_matches_object (a_type, an_object)
 		do
 			object := an_object
 			type := a_type
@@ -483,18 +484,6 @@ feature -- Basic operations
 			layout_item_not_void: an_object.layout_item /= Void
 		end
 		
-	set_name (new_name: STRING) is
-			-- Assign `new_name' to `name'.
-		require
-			name_not_void: new_name /= Void
-			no_object_has_name: not object_handler.name_in_use (new_name, Current)
-		do
-			name := new_name
-			edited_name := new_name
-		ensure
-			name_assigned: name.is_equal (new_name)
-		end
-		
 	set_id (a_new_id: INTEGER) is
 			-- Assign `new_id' to `id'.
 		require
@@ -513,7 +502,20 @@ feature {GB_ID_COMPRESSOR}
 		do
 			id := conversion_data @ id
 		end
-		
+
+feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic operation
+
+	set_name (new_name: STRING) is
+			-- Assign `new_name' to `name'.
+		require
+			name_not_void: new_name /= Void
+			no_object_has_name: not object_handler.name_in_use (new_name, Current)
+		do
+			name := new_name
+			edited_name := new_name
+		ensure
+			name_assigned: name.is_equal (new_name)
+		end
 
 feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 
@@ -733,6 +735,16 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 			-- Assign `False' to `is_expanded'.
 		do
 			is_expanded := False
+		end
+		
+feature -- Contract Support
+
+	type_matches_object (a_type: STRING; an_object: ANY): BOOLEAN is
+			-- Is `an_object' an instance of `a_type'?
+		require
+			an_object_not_void: an_object /= Void
+		do
+			Result := is_instance_of (an_object, dynamic_type_from_string (a_type))
 		end
 		
 feature {NONE} -- Implementation

@@ -650,7 +650,6 @@ feature {NONE} -- Implementation
 					else
 						row := expression_to_row (expr, row)
 					end
-					ev_list.replace (row)
 				end
 				ev_list.forth
 			end

@@ -262,7 +262,7 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 			l_icdv.clean_on_dispose
 		end
 		
-feature {DBG_EVALUATOR} -- Class construction facilities
+feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 
 	icdv_string_from_icdv_system_string (a_frame: ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'

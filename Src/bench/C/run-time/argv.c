@@ -11,17 +11,17 @@
 */
 
 #include "config.h"
+#ifdef I_STRING
+#include <string.h>				/* For strcpy(), strlen() */
+#else
+#include <strings.h>
+#endif
 #include "portable.h"
 #include "malloc.h"				/* For cmalloc() */
 #include "plug.h"				/* For makestr() */
 #include "except.h"				/* For fatal_error() */
 #include "argv.h"
 
-#ifdef I_STRING
-#include <string.h>				/* For strcpy(), strlen() */
-#else
-#include <strings.h>
-#endif
 
 rt_public int eif_argc;			/* Initial argc value (argument count) */
 rt_public char **eif_argv;			/* Copy of initial argv (argument vector) */

@@ -77,7 +77,7 @@ feature {EB_SLICE_DIALOG} -- Implementation
 				if tool.format_is_show_attibutes then
 					old_do_format := current_format.do_format
 					current_format.set_do_format (true)
-					current_format.format (tool.stone)
+					current_format.format
 					current_format.set_do_format (old_do_format)
 				end
 			end

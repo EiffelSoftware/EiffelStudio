@@ -1,0 +1,104 @@
+<script src="../instal.js"></script>
+
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Monitor synchronisation</title>
+<LINK REL=StyleSheet HREF="../../../../default.css">
+
+<style>
+<!--
+    .FixedText{MARGIN-LEFT: 3ex;FONT-FAMILY: Lucida Console;FONT-SIZE: x-small;FONT-WEIGHT: Bold}
+-->
+</style>
+</head>
+
+<body>
+
+<h1>
+Monitor_synchronization example</h1>
+
+<p class="Text">This sample demonstrates how to use the <span class="eClass">MONITOR</span> (Monitor) class 
+for thread synchronization. The sample queues up 5 asynchronous method calls. 
+Each method grabs the lock for <b>Current</b>, writes to the console, sleeps, 
+and then writes to the console a second time. The Monitor type's static 
+functions are used to enforce mutually exclusive access to a protected block of 
+code.</p>
+<p class="Text">&nbsp;</p>
+
+<H2>Compiling</H2>
+<script language="JavaScript">
+<!--
+var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\menu\\";
+var ace_file_name = "Ace";
+var path_eifp_file = "..\\..\\examples\\threading\\monitor\\"
+var eifp_name = "Eiffel project.eifp";
+
+if (eiffel_studio) {
+	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
+}
+else {
+	write_envision_compiling_instruction (path_eifp_file, eifp_name)
+}
+-->
+</script>
+<noscript>
+<p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
+<h2>Running</h2>
+		<P>
+			After you launch the sample, the following output appears:
+		</P>
+<pre>Start Resource access (Thread = 0).
+Stop Resource access (Thread = 0).
+Start Resource access (Thread = 1).
+Stop Resource access (Thread = 1).
+Start Resource access (Thread = 2).
+Stop Resource access (Thread = 2).
+Start Resource access (Thread = 3).
+Stop Resource access (Thread = 3).
+Start Resource access (Thread = 4).
+Stop Resource access (Thread = 4).
+</PRE>
+		<P>
+			When the display is finished, the application wait for you to 
+            pressed the return key to finished the application.</P>
+		<P>
+			&nbsp;</P>
+<h2>Under the Hood</h2>
+<p>This application shows how use the thread <span class="eClass">MONITOR</span>, 
+and lock the Current thread. In this example, the thread lock the access to the 
+resource, like that none of the other thread can take the resource as long as  the do not 
+release it. The resource here is the output and we can see on the output that 
+the thread can not access the output simultaneously. the command line to lock a 
+resource is: <span class="eKeyword">feature</span> {<span class="eClass">MONITOR</span>}.<span class="eFeature">enter</span> (<span class="eKeyword">Current</span>).</p>
+<p>This sample contains the following class: </p>
+<ul>
+  <li>
+  <span class="eClass">MONITOR</span></li>
+  <li>
+  <span class="eClass">
+  THREAD_POOL</span></li>
+  <li>
+  <span class="eClass">
+  WAIT_CALLBACK</span></li>
+  <li>
+  <span class="eClass">
+  AUTO_RESET_EVENT</span></li>
+  <li>
+  <span class="eClass">THREAD</span></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>Notes</h2></a>
+<p class="Text">This sample is translated from the example located in the 
+Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK 
+samples directory of Microsoft Visual Studio .NET. </p>
+
+</body>
+
+</html>

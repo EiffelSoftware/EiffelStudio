@@ -434,9 +434,9 @@ feature -- Interface
 			value.put (tmp_code, i+4)
 			!! tmp_code.make ("yy")
 			value.put (tmp_code, i+5)
-			s.append (" 1/1/1")
+			s.append (" 1/1/01")
 			Result := create_date_time (s).time
-			s.replace_substring_all (" 1/1/1", "")
+			s.replace_substring_all (" 1/1/01", "")
 			value := tmp_ht
 		ensure
 			time_exists: Result /= Void

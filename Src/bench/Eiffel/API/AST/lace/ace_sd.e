@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			root := r
 			defaults := d
 			clusters := c
+			assemblies := a
 			externals := e
 			click_list := cl
 		ensure
@@ -280,6 +281,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- in the clusters
 			build_clusters
 
+				-- Then build assemblies
+			build_assemblies
+
 				-- Reset the options of the CLASS_I
 			reset_options
 
@@ -403,6 +407,48 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			end;
 			Universe.process_override_cluster
 		end;
+
+	build_assemblies is
+			-- Read information about assemblies referenced in Ace file.
+		local
+			l_assembly: ASSEMBLY_SD
+			l_compiled_assembly, l_old_assembly: ASSEMBLY_I
+			l_new_assemblies: ARRAYED_LIST [ASSEMBLY_I]
+		do
+			if assemblies /= Void then
+					-- Read available assemblies from Ace file.
+				from
+					assemblies.start
+					create l_new_assemblies.make (assemblies.count)
+				until
+					assemblies.after
+				loop
+					l_assembly := assemblies.item
+					create l_compiled_assembly.make_from_ast (l_assembly)
+					Universe.insert_cluster (l_compiled_assembly)
+					l_old_assembly ?= Lace.old_universe.
+						cluster_of_name (l_compiled_assembly.cluster_name)
+					if l_old_assembly = Void then
+						l_new_assemblies.extend (l_compiled_assembly)
+					else
+						l_compiled_assembly.make_from_old_cluster (l_old_assembly, Void)
+					end
+					assemblies.forth
+				end
+
+					-- Import data for newly introduced assemblies.
+					-- FIXME: Manu 05/03/2002: we should do something here so that
+					-- we take care of possible incremental changes in XML files.
+				from
+					l_new_assemblies.start
+				until
+					l_new_assemblies.after
+				loop
+					l_new_assemblies.item.import_data
+					l_new_assemblies.forth
+				end
+			end
+		end
 
 	build_clusters is
 			-- Analysis of AS description of SDF in order to 

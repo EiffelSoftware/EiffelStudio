@@ -116,7 +116,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
 			check
-				called_by_replace_implementation_only: false
+				called_by_replace_implementation_only: False
 					-- replace_implementation calls turns assertions off.
 			end
 			interface := an_interface
@@ -129,7 +129,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
 			check
-				called_by_replace_implementation_only: false
+				called_by_replace_implementation_only: False
 					-- replace_implementation calls turns assertions off.
 			end
 			is_initialized := True
@@ -142,7 +142,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
 			check
-				called_by_replace_implementation_only: false
+				called_by_replace_implementation_only: False
 					-- replace_implementation calls turns assertions off.
 			end
 			is_initialized := False

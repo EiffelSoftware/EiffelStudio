@@ -28,17 +28,29 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Quit project after saving.
-
 		do
 			if project_tool.initialized then
 				-- Project_file is not void
-				if last_confirmer /= Void and argument = last_confirmer then
+				if last_warner /= Void and argument = last_warner then
+					do_exit := false
+				elseif 
+					do_exit or else
+					(last_confirmer /= Void and argument = last_confirmer)
+				then
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (false);
 					restore_cursors;
 					quit_cmd.exit_now;
 					discard_licence;
 					exit
+				elseif
+					(window_manager.class_win_mgr.changed or
+					system_tool.text_window.changed)
+				then
+					do_exit := true;
+					warner (text_window).custom_call (Current,
+						"Some files have not been saved.",
+						"Don't exit", "Exit anyway", Void)
 				else
 					confirmer (text_window).call (Current, 
 						"Do you really want to exit?", "Exit");
@@ -48,6 +60,9 @@ feature {NONE}
 				exit
 			end;
 		end;
+
+	do_exit: BOOLEAN;
+			-- Do we really have to exit?
 
 feature -- Licence managment
 	

@@ -5,21 +5,15 @@ root
 	sample (root_cluster): "make"
 	
 default
-	assertion (no)
+	assertion (require)
 	msil_generation (yes)
-	disabled_debug (yes)
-	debug (no)
-	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
-	dotnet_naming_convention (no)
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
-	msil_clr_version ("v1.0.3705")
 
 cluster
 	
@@ -48,18 +42,18 @@ cluster
 	time_english:		"$ISE_EIFFEL\library\time\format\english";
 
 assembly
-	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 
-	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
 		prefix
-			system_dll_
+			"SYSTEM_DLL_"
 		end
 
-	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
-			xml_
+			"XML_"
 		end
-	
+
 external
 	include_path:
 		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib"

@@ -103,6 +103,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/04 20:56:14  oconnor
+--| formatting
+--|
 --| Revision 1.5  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|
@@ -171,7 +174,6 @@ end -- class EV_SCREEN_IMP
 --|
 --| Revision 1.3.2.2  1999/11/02 17:20:05  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

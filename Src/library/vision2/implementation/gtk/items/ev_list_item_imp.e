@@ -73,7 +73,10 @@ feature -- Access
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 
+			Result := C.gtk_list_child_position (
+				parent_imp.list_widget,
+				Current.c_object
+			) + 1 
 		end
 
 feature -- Status report
@@ -81,21 +84,28 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := C.c_gtk_list_item_is_selected (parent_imp.list_widget, c_object) = 1
+			Result := C.c_gtk_list_item_is_selected (
+				parent_imp.list_widget,
+				c_object
+			) = 1
 		end
 
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		do
-			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 = 1
+			Result := C.gtk_list_child_position (
+				parent_imp.list_widget,
+				Current.c_object
+			) + 1 = 1
 		end
 
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := C.gtk_list_child_position
-				(parent_imp.list_widget, Current.c_object) + 1 
-					= C.c_gtk_list_rows (parent_imp.list_widget)
+			Result := (C.gtk_list_child_position (
+				parent_imp.list_widget,
+				Current.c_object
+			) + 1 ) = C.c_gtk_list_rows (parent_imp.list_widget)
 		end
 
 feature -- Status setting
@@ -124,7 +134,10 @@ feature -- element change
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
-				C.gtk_combo_set_item_string (combo_par.c_object, c_object, eiffel_to_c (txt))
+				C.gtk_combo_set_item_string (
+					combo_par.c_object,
+					c_object, eiffel_to_c (txt)
+				)
 			end
 		end
 
@@ -165,6 +178,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/04 20:50:06  oconnor
+--| formatting
+--|
 --| Revision 1.31  2000/03/29 22:11:55  king
 --| Added enable/disable select, removed redundant set_index
 --|
@@ -235,7 +251,8 @@ end -- class EV_LIST_ITEM_IMP
 --| removed old command stuff
 --|
 --| Revision 1.23.6.4  1999/12/01 19:24:13  oconnor
---| removed ev_children stuff and renamed initialize_text_box to ev_textable_imp_initialize
+--| removed ev_children stuff and renamed initialize_text_box to
+--| ev_textable_imp_initialize
 --|
 --| Revision 1.23.6.3  1999/12/01 17:37:10  oconnor
 --| migrating to new externals
@@ -248,7 +265,6 @@ end -- class EV_LIST_ITEM_IMP
 --|
 --| Revision 1.23.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

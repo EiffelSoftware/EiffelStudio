@@ -185,7 +185,7 @@ feature {EV_ANY_I} -- Event handling
 		end
 
 	opo_signal_ids: ARRAYED_LIST [INTEGER]
-			-- Once per object for implmentation for `signal_ids'.
+			-- Once per object for implementation for `signal_ids'.
 	
 	action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]] is
 			-- Action sequences connected to GTK signals.
@@ -249,7 +249,7 @@ feature {EV_ANY_I} -- Event handling
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			an_action_sequence.not_empty_actions.extend (
-				agent connect_signal_to_actions_now (
+				agent default_window_imp.connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
 					an_action_sequence,
@@ -284,37 +284,11 @@ feature {EV_ANY_I} -- Event handling
 				agent an_action_sequence.call (?),
 				translate
 			)
-			disconnect_agent := agent signal_disconnect (last_signal_connection_id)
+			disconnect_agent := agent gtk_marshal.signal_disconnect_agent_routine (visual_widget, last_signal_connection_id, signal_ids)
 			an_action_sequence.empty_actions.extend (disconnect_agent)
 			an_action_sequence.empty_actions.extend (
-				kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
+				gtk_marshal.kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
 			)
-		end
-
-	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE]):
-		PROCEDURE [ANY, TUPLE []] is
-			-- Agent to remove `target' and itself form `an_action_sequence'.
-		local
-			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
-		do
-			create kamikaze_cell.put (Void)
-			Result := agent do_kamikaze (
-				an_action_sequence,
-				target,
-				kamikaze_cell
-			)
-			kamikaze_cell.put (Result)
-		end
-	
-	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE];
-		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
-			-- Remove `target' and agent for self (from `kamikaze_cell') from
-			-- `an_action_sequence'.
-		do
-			an_action_sequence.prune_all (target)
-			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
 
 	gtk_value_pointer (arg: POINTER): POINTER is
@@ -354,7 +328,7 @@ feature {NONE} -- Implementation
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-				gtk_object_destroy (c_object)
+				gtk_object_unref (c_object)
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -383,8 +357,7 @@ feature {NONE} -- Implementation
 	default_gtk_window: POINTER is
 			-- Pointer to a default GtkWindow.
 		once
-			Result := C.gtk_window_new (C.Gtk_window_toplevel_enum)
-			C.gtk_widget_realize (Result)
+			Result := default_window_imp.c_object
 		end
 
 	default_gdk_window: POINTER is
@@ -392,6 +365,18 @@ feature {NONE} -- Implementation
 			-- access default visual information (color depth).
 		do
 			Result := C.gtk_widget_struct_window (default_gtk_window)
+		end
+		
+	default_window: EV_WINDOW is
+			-- Default Window used for creation of agents.
+		once
+			create Result
+		end
+		
+	default_window_imp: EV_WINDOW_IMP is
+			--
+		once
+			Result ?= default_window.implementation
 		end
 	
 	app_implementation: EV_APPLICATION_IMP is
@@ -459,6 +444,13 @@ feature {NONE} -- External implementation
 		end
 
 	gtk_object_destroy (a_c_object: POINTER) is
+			-- Only for use in dispose.
+			-- (Dispose cannot call C.gtk_object_destroy)
+        	external
+            		"C (GtkObject*) | <gtk/gtk.h>"
+        	end
+
+	gtk_object_unref (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_destroy)
         	external

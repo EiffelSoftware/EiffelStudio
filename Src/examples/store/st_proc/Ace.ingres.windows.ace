@@ -37,7 +37,7 @@ cluster
 	time_english:		"$ISE_EIFFEL\library\time\format\english";
 
 external
-	object:		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+	object:
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\ingres_store.lib",
 		"$(II_SYSTEM)\ingres\lib\ingres.lib"
 

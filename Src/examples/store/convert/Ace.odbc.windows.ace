@@ -44,8 +44,6 @@ external
 		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib"
 
 	object:
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
 		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\odbc_store.lib",
--- Specify the correct path
-		"odbc32.lib" 
+		"odbc32.lib" -- Specify the correct path
 end

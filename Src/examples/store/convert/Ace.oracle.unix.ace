@@ -39,7 +39,7 @@ external
 --Specify the path
 		"\$(ORACLE_HOME)/rdbms/public"
 
-	object: "$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/libsupport.a",
+	object:
 		"$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/liboracle.a",
 -- Specify the path
 		"-L$(ORACLE_HOME)/lib/ -lclntsh";

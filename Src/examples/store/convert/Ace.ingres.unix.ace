@@ -42,9 +42,7 @@ cluster
 external
 	object:
 		"-L$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib",
-		"-lsupport",
 		"-lingres_store",
-		"-ldatetime",
 		"-L$(II_SYSTEM)/ingres/lib",
 		"-lingres"
 

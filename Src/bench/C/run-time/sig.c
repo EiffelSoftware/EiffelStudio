@@ -421,6 +421,7 @@ rt_shared void initsig(void)
 
 #ifdef SIGCHLD
 	sig_ign[SIGCHLD] = 1;			/* Ignore death of a child */
+	signal(SIGCHLD, SIG_DFL);		/* Restore the default value */
 #endif
 #ifdef SIGCLD
 	sig_ign[SIGCLD] = 1;			/* Ignore death of a child */

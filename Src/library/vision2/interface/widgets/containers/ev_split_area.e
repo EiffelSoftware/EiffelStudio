@@ -76,6 +76,19 @@ feature -- Access
 
 feature -- Status report
 
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
+		do
+			Result := item /= Void
+		end
+
+
+	writable: BOOLEAN is
+			-- Is there a current item that may be modified?
+		do
+			Result := item /= Void
+		end
+
 	empty: BOOLEAN is
 			-- Is there no element?
 		do
@@ -96,9 +109,6 @@ feature -- Status report
 
 	prunable: BOOLEAN is True
 			-- Items may be removed.
-
-	writable: BOOLEAN is True
-			-- Is there a current item that may be modified?
 
 	split_position: INTEGER is
 			-- Current position of the splitter.
@@ -317,6 +327,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/01 19:59:07  rogers
+--| Fixed writeable and added readable.
+--|
 --| Revision 1.14  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

@@ -14,16 +14,29 @@ feature -- Access
 			shared_eiffel: SHARED_EIFFEL_PROJECT
 			l_args_file: RAW_FILE
 			l_last_string: STRING
+			l_project: PROJECT_CONTEXT
 		do
 			if current_selected_cmd_line_argument.item /= Void then
 				Result := Current_selected_cmd_line_argument.item
 			else
-				create l_args_file.make ("arguments.wb")
+				create l_project
+				create l_args_file.make (l_project.Arguments_file_name)
 				if not l_args_file.exists then
-					Result := ""
+					create shared_eiffel
+					if not shared_eiffel.Eiffel_ace.lace.argument_list.is_empty then
+						Result := shared_eiffel.Eiffel_ace.lace.argument_list.i_th (1)
+						if Result.is_equal (" ") then
+							Result := ""
+						else
+								-- If it contains some environment variables, they are translated.
+							Result := (create {ENV_INTERP}).interpreted_string (Result)
+						end
+					else
+						Result := ""
+					end
 				else
-					l_args_file.open_read
 					if not l_args_file.is_empty then
+						l_args_file.open_read
 						l_args_file.start
 						l_args_file.read_line
 						l_last_string := clone (l_args_file.last_string)

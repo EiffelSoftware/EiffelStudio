@@ -126,19 +126,11 @@ feature -- Debuggables (Byte code,...)
 			-- Switch `f' from debugged to removed or from removed to debugged.
 		require
 			has_feature (f)
-		local
-			d_list: LINKED_LIST [DEBUGGABLE];
-			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			r_body_id: INTEGER;
-			bp: BREAKPOINT;
-			breakpoints: BREAK_LIST;
-			removed: BOOLEAN
 		do
 			if debugged_routines.has (f) then
 				debugged_routines.start;
 				debugged_routines.prune (f);
 				removed_routines.extend (f);
-				removed := True
 			else
 				removed_routines.start;
 				removed_routines.prune (f);
@@ -319,7 +311,13 @@ feature -- Breakpoints
 				debug_item := debug_bodies.item;
 				debug_item.breakable_points.i_th (i).set_stop (is_stop);
 				debug_bodies.forth
-			end	
+			end;
+			if 
+				(is_stop and removed_routines.has (f)) or
+				(not has_breakpoint_set (f) and debugged_routines.has (f))
+			then
+				switch_feature (f)
+			end
 		end;
 			
 
@@ -379,8 +377,6 @@ feature -- Breakpoints setting
 
 	set_routine_breakpoints (fi: FEATURE_I) is
 			-- Set the user-defined breakpoints in `fi'.
-			-- If `fi' has no user-defined breakpoints set, 
-			-- set internally the first one (i.e. routine entrance).
 		require
 			fi_exists: fi /= Void;
 			has_feature (fi);
@@ -403,30 +399,19 @@ feature -- Breakpoints setting
 				loop
 					breakable_points := d_list.item.breakable_points;
 					r_body_id := d_list.item.real_body_id;
-					if not d_list.item.has_breakpoint_set then
-							-- If the routine has no user-defined breakpoint
-							-- set, set internally the first one (i.e. routine
-							-- entrance).
-						!! bp;
-						bp.set_stop;
-						bp.set_offset (breakable_points.i_th (1).position);
-						bp.set_real_body_id	(r_body_id);
-						new_breakpoints.extend (bp);
-					else
-						from
-							breakable_points.start
-						until
-							breakable_points.after
-						loop
-							if breakable_points.item.is_set then
-								!! bp;
-								bp.set_stop;
-								bp.set_offset (breakable_points.item.position);
-								bp.set_real_body_id	(r_body_id);
-								new_breakpoints.extend (bp);
-							end;
-							breakable_points.forth
+					from
+						breakable_points.start
+					until
+						breakable_points.after
+					loop
+						if breakable_points.item.is_set then
+							!! bp;
+							bp.set_stop;
+							bp.set_offset (breakable_points.item.position);
+							bp.set_real_body_id	(r_body_id);
+							new_breakpoints.extend (bp);
 						end;
+						breakable_points.forth
 					end;
 					d_list.forth
 				end

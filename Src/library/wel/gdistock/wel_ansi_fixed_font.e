@@ -15,7 +15,7 @@ inherit
 
 	WEL_GDI_STOCK
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

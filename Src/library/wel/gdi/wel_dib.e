@@ -22,7 +22,7 @@ inherit
 
 	WEL_OBJECT_ID_MANAGER
 
-creation
+create
 	make_by_file,
 	make_by_content_pointer
 

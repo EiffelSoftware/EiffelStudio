@@ -13,7 +13,7 @@ inherit
 			make as dll_make
 		end
 
-creation
+create
 	make
 
 feature

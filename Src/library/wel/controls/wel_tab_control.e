@@ -68,7 +68,7 @@ inherit
 			all
 		end
 
-creation
+create
 	make,
 	make_by_id
 
@@ -357,7 +357,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 	resize (a_width, a_height: INTEGER) is
    			-- Resize the window with `a_width', `a_height'.
  		do
- 			{WEL_CONTROL} Precursor (a_width, a_height)
+ 			Precursor {WEL_CONTROL} (a_width, a_height)
 			adjust_items
 		end
 
@@ -365,7 +365,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
    			-- Move the window to `a_x', `a_y' position and
    			-- resize it with `a_width', `a_height'.
 		do
-			{WEL_CONTROL} Precursor (a_x, a_y, a_width, a_height, repaint)
+			Precursor {WEL_CONTROL} (a_x, a_y, a_width, a_height, repaint)
 			adjust_items
 		end
 

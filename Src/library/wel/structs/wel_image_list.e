@@ -16,7 +16,7 @@ inherit
 			all
 		end
 
-creation
+create
 	make, make_by_pointer
 
 feature -- Initialization

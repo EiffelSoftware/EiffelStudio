@@ -15,7 +15,7 @@ inherit
 			set_caret_position
 		end
 
-creation
+create
 	make,
 	make_by_id
 

@@ -13,7 +13,7 @@ inherit
 			make as structure_make
 		end
 
-creation
+create
 	make,
 	make_by_bitmap
 

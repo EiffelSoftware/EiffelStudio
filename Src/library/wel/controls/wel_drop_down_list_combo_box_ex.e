@@ -13,7 +13,7 @@ inherit
 			text
 		end
 
-creation
+create
 	make
 
 feature -- Status report

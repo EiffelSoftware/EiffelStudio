@@ -22,7 +22,7 @@ inherit
 			on_size
 		end
 
-creation
+create
 	make
 
 feature -- Access

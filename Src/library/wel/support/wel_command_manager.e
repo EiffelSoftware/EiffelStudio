@@ -16,7 +16,7 @@ inherit
 			remove as hash_table_remove
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

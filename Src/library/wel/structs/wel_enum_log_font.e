@@ -11,7 +11,7 @@ class
 inherit
 	WEL_STRUCTURE
 
-creation
+create
 	make_with_pointer
 
 feature -- Creation

@@ -14,7 +14,7 @@ inherit
 			{ANY} is_equal, valid_color_constant
 		end
 
-creation
+create
 	make,
 	make_rgb,
 	make_system,

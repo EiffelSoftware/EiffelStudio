@@ -12,7 +12,7 @@ class
 inherit
 	C_STRING
 
-creation
+create
 	make,
 	make_empty,
 	make_by_pointer

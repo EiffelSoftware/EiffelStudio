@@ -12,7 +12,7 @@ class
 inherit
 	WEL_ANY
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

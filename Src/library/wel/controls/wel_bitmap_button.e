@@ -31,7 +31,7 @@ inherit
 
 	WEL_IMAGE_CONSTANTS
 
-creation
+create
 	make,
 	make_by_id
 
@@ -40,7 +40,7 @@ feature {NONE} -- Initialisation
 	make (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a button.
 		do
-			{WEL_BUTTON} Precursor (a_parent, a_name, a_x, a_y, a_width, a_height, an_id)
+			Precursor {WEL_BUTTON} (a_parent, a_name, a_x, a_y, a_width, a_height, an_id)
 			current_pixmap := -1
 		ensure then
 			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
@@ -50,7 +50,7 @@ feature {NONE} -- Initialisation
 			-- Make a control identified by `an_id' with `a_parent'
 			-- as parent.
 		do
-			{WEL_BUTTON} Precursor (a_parent, an_id)
+			Precursor {WEL_BUTTON} (a_parent, an_id)
 			current_pixmap := -1
 		ensure then
 			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap

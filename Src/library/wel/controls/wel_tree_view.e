@@ -70,7 +70,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_by_id
 

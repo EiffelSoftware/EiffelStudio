@@ -19,7 +19,7 @@ inherit
 			{ANY} valid_pen_style_constant
 		end
 
-creation
+create
 	make,
 	make_by_pen
 

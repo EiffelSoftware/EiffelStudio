@@ -13,7 +13,7 @@ inherit
 			{NONE} set_item
 		end
 
-creation
+create
 	make,
 	make_by_pointer,
 	make_by_current_time

@@ -28,7 +28,7 @@ inherit
 			wel_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	wel_make is
 			-- Make and setup the structure.
 		do
-			{WEL_PRINT_DIALOG} Precursor
+			Precursor {WEL_PRINT_DIALOG}
 			enable_page_numbers
 			set_maximum_range (1)
 		end

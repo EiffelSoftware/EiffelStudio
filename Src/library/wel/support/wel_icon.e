@@ -10,7 +10,7 @@ class
 inherit
 	WEL_GRAPHICAL_RESOURCE
 
-creation
+create
 	make_by_id,
 	make_by_name,
 	make_by_predefined_id,

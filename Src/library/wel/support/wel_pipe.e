@@ -12,7 +12,7 @@ inherit
 
 	STRING_HANDLER
 
-creation
+create
 	make, 
 	make_named, 
 	make_client

@@ -135,7 +135,7 @@ inherit
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

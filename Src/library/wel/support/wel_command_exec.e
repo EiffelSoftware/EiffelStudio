@@ -7,7 +7,7 @@ indexing
 class
 	WEL_COMMAND_EXEC
 
-creation
+create
 	make
 
 feature -- Initialization

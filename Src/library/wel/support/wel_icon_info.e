@@ -262,7 +262,7 @@ feature {NONE} -- Removal
 		local
 			a_bitmap: WEL_BITMAP
 		do
-			{WEL_STRUCTURE} Precursor
+			Precursor {WEL_STRUCTURE}
 
 			a_bitmap ?= eif_id_object (internal_mask_bitmap_object_id)
 			if a_bitmap /= Void and then a_bitmap.reference_tracked then

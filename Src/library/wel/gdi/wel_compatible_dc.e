@@ -19,7 +19,7 @@ inherit
 			destroy_item
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

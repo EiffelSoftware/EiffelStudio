@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_by_pointer
 
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a_window_pos: WEL_WINDOW_POS
 		do
-			{WEL_STRUCTURE} Precursor
+			Precursor {WEL_STRUCTURE}
 			create a_window_pos.make
 			set_window_pos (a_window_pos)
 		end

@@ -1,7 +1,7 @@
 class 
 	CONVERTER
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -16,7 +16,7 @@ inherit
 			make as rich_edit_stream_out_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

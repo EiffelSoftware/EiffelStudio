@@ -10,7 +10,7 @@ class
 inherit
 	WEL_FILE_DIALOG
 
-creation
+create
 	make
 
 feature -- Basic operations

@@ -10,7 +10,7 @@ class
 inherit
 	WEL_GDI_ANY
 
-creation
+create
 	make,
 	make_by_pointer
 

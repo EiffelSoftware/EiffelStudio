@@ -10,7 +10,7 @@ class
 inherit
 	WEL_GDI_ANY
 
-creation
+create
 	make_by_sys_color,
 	make_solid,
 	make_hatch,

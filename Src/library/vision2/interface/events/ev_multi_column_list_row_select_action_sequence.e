@@ -14,7 +14,7 @@ inherit
 	-- EV_ACTION_SEQUENCE [TUPLE [item: EV_MULTI_COLUMN_LIST_ROW]]
 	-- (ETL3 TUPLE with named parameters)
 	
-creation
+create
 	default_create
 
 feature -- Access

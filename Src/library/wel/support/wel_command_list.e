@@ -15,7 +15,7 @@ inherit
 
 	LINKED_LIST [WEL_COMMAND_EXEC]
 
-creation
+create
 	make
 
 feature -- Element change

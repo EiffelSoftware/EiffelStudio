@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -27,32 +27,32 @@ feature -- Initialization
 			positive_message: message >= 0
 		do
 			if message = Wm_size then
-				!WEL_SIZE_MESSAGE! message_information.make (
+				create {WEL_SIZE_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_move then
-				!WEL_MOVE_MESSAGE! message_information.make (
+				create {WEL_MOVE_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_command then
-				!WEL_COMMAND_MESSAGE! message_information.make (
+				create {WEL_COMMAND_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_syscommand then
-				!WEL_SYSTEM_COMMAND_MESSAGE! message_information.make (
+				create {WEL_SYSTEM_COMMAND_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_timer then
-				!WEL_TIMER_MESSAGE! message_information.make (
+				create {WEL_TIMER_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_showwindow then
-				!WEL_SHOW_WINDOW_MESSAGE! message_information.make (
+				create {WEL_SHOW_WINDOW_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_menuselect then
-				!WEL_MENU_SELECT_MESSAGE! message_information.make (
+				create {WEL_MENU_SELECT_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_windowposchanged or
 				message = Wm_windowposchanging then
-				!WEL_WINDOW_POSITION_MESSAGE! message_information.make (
+				create {WEL_WINDOW_POSITION_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_notify then
-				!WEL_NOTIFY_MESSAGE! message_information.make (
+				create {WEL_NOTIFY_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_char or
 				message = Wm_syschar or
@@ -60,7 +60,7 @@ feature -- Initialization
 				message = Wm_keyup or
 				message = Wm_syskeydown or
 				message = Wm_syskeyup then
-				!WEL_KEY_MESSAGE! message_information.make (
+				create {WEL_KEY_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			elseif message = Wm_mousemove or
 				message = Wm_lbuttondown or
@@ -72,7 +72,7 @@ feature -- Initialization
 				message = Wm_lbuttondblclk or
 				message = Wm_mbuttondblclk or
 				message = Wm_rbuttondblclk then
-				!WEL_MOUSE_MESSAGE! message_information.make (
+				create {WEL_MOUSE_MESSAGE} message_information.make (
 					window, message, wparam, lparam)
 			else 
 				-- `message' is not handled by WEL.

@@ -39,7 +39,7 @@ inherit
 
 	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
 
-creation
+create
 	make
 	
 feature {NONE} --

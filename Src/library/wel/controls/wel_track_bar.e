@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_vertical,
 	make_horizontal,
 	make_by_id

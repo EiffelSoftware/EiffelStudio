@@ -11,7 +11,7 @@ class
 inherit
 	WEL_DIB
 	
-creation
+create
 	make_by_file, make_by_stream
 
 feature {NONE} -- Initialization

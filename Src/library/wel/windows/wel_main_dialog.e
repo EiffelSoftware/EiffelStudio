@@ -17,7 +17,7 @@ inherit
 			activate
 		end
 
-creation
+create
 	make_by_id,
 	make_by_name
 

@@ -23,7 +23,7 @@ inherit
 			move_absolute
 		end
 
-creation
+create
 	make
 
 feature -- Access

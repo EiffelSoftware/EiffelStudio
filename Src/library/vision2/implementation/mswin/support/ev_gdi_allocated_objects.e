@@ -15,7 +15,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	default_create
 
 feature -- Initialization

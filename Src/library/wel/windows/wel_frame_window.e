@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_child, make_top
 
 feature {NONE} -- Initialization

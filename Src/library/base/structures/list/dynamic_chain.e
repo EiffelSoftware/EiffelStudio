@@ -28,7 +28,31 @@ deferred class DYNAMIC_CHAIN [G] inherit
 
 	UNBOUNDED
 
-feature -- Insertion
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-chain beginning at cursor position
+			-- and having min (`n', `count' - `index' + 1) items
+		local
+			pos: CURSOR;
+			counter: INTEGER
+		do
+			pos := cursor;
+			Result := new_chain;
+			from
+			until
+				(counter = n) or else off
+			loop
+				Result.add (item);
+				forth;
+				counter := counter + 1
+			end;
+			go_to (pos)
+		end;
+
+feature -- Modification & Insertion
+
 
 	add_front (v: like item) is
 			-- Add `v' to the beginning of `Current'.
@@ -36,7 +60,7 @@ feature -- Insertion
 			extensible: extensible
 		deferred
 		ensure
-	--		new_count: count = old count + 1;
+	 		new_count: count = old count + 1;
 			item_inserted: first = v
 		end;
 
@@ -48,8 +72,8 @@ feature -- Insertion
 			not_off: not off
 		deferred
 		ensure
-	--		new_count: count = old count + 1;
-	--		new_index: index = old index + 1
+	 		new_count: count = old count + 1;
+	 		new_index: index = old index + 1
 		end;
 
 	add_right (v: like item) is
@@ -60,8 +84,8 @@ feature -- Insertion
 			not_off: not off
 		deferred
 		ensure
-	--		new_count: count = old count + 1;
-	--		same_index: index = old index
+	 		new_count: count = old count + 1;
+	 		same_index: index = old index
 		end;
 
 	merge_left (other: like Current) is
@@ -73,8 +97,8 @@ feature -- Insertion
 			other_exists: other /= Void
 		deferred
 		ensure
-	--		new_count: count = old count + old other.count;
-	--		new_index: index = old index + old other.count;
+	 		new_count: count = old count + old other.count;
+	 		new_index: index = old index + old other.count;
 			is_empty: other.empty
 		end;
 
@@ -87,15 +111,12 @@ feature -- Insertion
 			other_exists: other /= Void
 		deferred
 		ensure
-	--		new_count: count = old count + old other.count;
-	--		same_index: index = old index;
+	 		new_count: count = old count + old other.count;
+	 		same_index: index = old index;
 			is_empty: other.empty
 		end;
 
-	extensible: BOOLEAN is true;
-			-- May new items be added to `Current'?
-
-feature -- Deletion
+feature -- Removal
 
 	remove_item (v: like item) is
 			-- Remove `v' from `Current'.
@@ -118,8 +139,8 @@ feature -- Deletion
 			contractable: contractable
 		deferred
 		ensure
-	--		new_count: count = old count - 1;
-	--		new_index: index = old index - 1
+	 		new_count: count = old count - 1;
+	 		new_index: index = old index - 1
 		end;
 
 	remove_right is
@@ -130,8 +151,8 @@ feature -- Deletion
 			contractable: contractable
 		deferred
 		ensure
-	--		new_count: count = old count - 1;
-	--		same_index: index = old index
+	 		new_count: count = old count - 1;
+	 		same_index: index = old index
 		end;
 
 	remove_all_occurrences (v: like item) is
@@ -165,48 +186,23 @@ feature -- Deletion
 			end
 		end;
 
+
+
+feature -- Status report
+
+	extensible: BOOLEAN is true;
+			-- May new items be added to `Current'?
+
+
+
 	contractable: BOOLEAN is
 			-- May items be removed from `Current'?
 		do
 			Result := not off
 		end;
 
-feature -- Transformation
 
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
-			-- and having min (`n', `count' - `index' + 1) items
-		local
-			pos: CURSOR;
-			counter: INTEGER
-		do
-			pos := cursor;
-			Result := new_chain;
-			from
-			until
-				(counter = n) or else off
-			loop
-				Result.add (item);
-				forth;
-				counter := counter + 1
-			end;
-			go_to (pos)
-		end;
-
-feature {DYNAMIC_CHAIN} -- Creation
-
-	new_chain: like Current is
-			-- Instance of class `like Current'.
-			-- This feature should be implemented in
-			-- every effective descendant of DYNAMIC_CHAIN,
-			-- so as to return an adequatly allocated and
-			-- initialized object.
-		deferred
-		ensure
-			result_exists: Result /= Void
-		end;
-
-feature -- Obsolete features
+feature -- Obsolete, Removal
 
 	remove_n_left (n: INTEGER) is
 			obsolete "Use ``remove_left'' repeatedly"
@@ -237,6 +233,20 @@ feature -- Obsolete features
 				counter := counter + 1
 			end
 		end;
+
+feature  {DYNAMIC_CHAIN} -- Initialization
+
+	new_chain: like Current is
+			-- Instance of class `like Current'.
+			-- This feature should be implemented in
+			-- every effective descendant of DYNAMIC_CHAIN,
+			-- so as to return an adequatly allocated and
+			-- initialized object.
+		deferred
+		ensure
+			result_exists: Result /= Void
+		end;
+
 
 invariant
 

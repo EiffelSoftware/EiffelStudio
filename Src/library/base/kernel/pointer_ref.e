@@ -5,6 +5,10 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Basic type with no exported feature.
+-- Useful as arguments to be passed to external routines.
+
+
 indexing
 
 	date: "$Date$";
@@ -19,10 +23,12 @@ inherit
 			out
 		end
 
-feature
+feature -- Access
 
 	item: POINTER;
 			-- Pointer value
+
+feature -- Ouput
 
 	out: STRING is
 			-- Return a printable representation of `Current'.
@@ -30,8 +36,7 @@ feature
 			Result := c_outp ($item)
 		end;
 
-feature {NONE}
-			-- External
+feature  {NONE} -- External, Ouput
 
 	c_outp (p: POINTER): STRING is
 			-- Return a printable representation of `Current'.

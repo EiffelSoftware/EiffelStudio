@@ -5,6 +5,9 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+
+-- Booleans values and expressions
+
 indexing
 
 	date: "$Date$";
@@ -19,24 +22,14 @@ inherit
 			out
 		end
 
-feature	-- Characteristic
+feature -- Access
 
 	item: BOOLEAN;
 			-- Boolean value
 
-	set_item (b: BOOLEAN) is
-			-- Assign `b' to `item'.
-		do
-			item := b;
-		end;
 
-	out: STRING is
-			-- Return a printable representation of `Current'.
-		do
-			Result := c_outb ($item)
-		end;
 
-feature -- Boolean
+feature -- Basic operation
 
 	infix "and" (other: BOOLEAN_REF): BOOLEAN_REF is
 			-- Boolean conjunction of `Current' and `other'
@@ -100,11 +93,27 @@ feature -- Boolean
 			Result.set_item (item xor other.item)
 		end;
 
-feature {NONE}
-			-- External
+feature -- Modification & Insertion
+
+	set_item (b: BOOLEAN) is
+			-- Assign `b' to `item'.
+		do
+			item := b;
+		end;
+
+
+feature -- Ouput
+
+	out: STRING is
+			-- Return a printable representation of `Current'.
+		do
+			Result := c_outb ($item)
+		end;
+
+feature  {NONE} -- External, Ouput
 
 	c_outb (b: BOOLEAN): STRING is
-			-- Return a prinatable representation of `Current'.
+			-- Return a printable representation of `Current'.
 		external
 			"C"
 		end;

@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Built-in representation of integer number
+
 indexing
 
 	date: "$Date$";
@@ -27,7 +29,7 @@ inherit
 			infix "\\"
 		end
 
-feature	-- Comparison
+feature -- Comparison
 
 	infix "<" (other: INTEGER): BOOLEAN is
 			-- Is `other' greater than Current ?
@@ -35,7 +37,7 @@ feature	-- Comparison
 			-- Built-in
 		end;
 
-feature -- Numeric
+feature -- Basic operation
 
 	infix "+" (other: INTEGER): INTEGER is
 			-- Sum of `Current' and `other'
@@ -72,8 +74,6 @@ feature -- Numeric
 		do
 			-- Built-in
 		end; 
-
-feature	-- Div, mod
 
 	infix "//" (other: INTEGER): INTEGER is
 			-- Integer division of Current by `other'

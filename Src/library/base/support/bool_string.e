@@ -28,7 +28,7 @@ creation
 
 	make
 
-feature  -- Creation
+feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate area of `n' booleans.
@@ -52,6 +52,96 @@ feature -- Access
 			Result := area.item (i - 1) 
 		end;
 
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of boolean in the area.
+		do
+			Result := area.count
+		end;
+
+feature -- Basic operation
+
+	infix "and" (other: like Current): like Current is
+		-- Logical and of 'Current' and `other'
+		require
+			same_size: other.count = count;
+			other_not_void: other /= Void;
+		local
+			other_area, result_area: like area;
+		do
+			!! Result.make (count);
+			result_area := Result.area;
+			other_area := other.area;
+			bl_str_and ($area, $other_area, $result_area, count);
+		end;
+
+	infix "or" (other: like Current): like Current is
+			-- Logical or of 'Current' and `other'
+		require
+			same_size: other.count = count;
+			other_not_void: other /= Void;
+		local
+			other_area, result_area: like area;
+		do
+			!! Result.make (count);
+			result_area := Result.area;
+			other_area := other.area;
+			bl_str_or ($area, $other_area, $result_area, count);
+		end;
+
+	infix "xor" (other: like Current): like Current is
+		-- Logical exclusive or of 'Current' and `other'	
+		require
+			same_size: other.count = count;
+			other_not_void: other /= Void;
+		local
+			other_area, result_area: like area;
+		do
+			!! Result.make (count);
+			result_area := Result.area;
+			other_area := other.area;
+			bl_str_xor ($area, $other_area, $result_area, count);
+		end;
+
+	prefix "not": like Current is
+			-- Negation of 'Current'
+		local
+			result_area: like area;
+		do
+			!! Result.make (count);	
+			result_area := Result.area;
+			bl_str_not ($area, $result_area, count);
+		end;
+
+	right_shifted (n: INTEGER): like Current is
+			-- Right shifted 'Current' set, by `n' positions
+		require
+			positive_shift: n >= 0
+		local
+			result_area: like area;
+		do
+			!! Result.make (count);
+			result_area := Result.area;
+			bl_str_shiftr ($area, $result_area, count, n);
+		end;
+
+	left_shifted (n: INTEGER): like Current is
+			-- Left shifted 'Current' set, by `n' positions
+		require
+			positive_shift: n >= 0
+		local
+			result_area: like area;
+		do
+			!! Result.make (count);
+			result_area := Result.area;
+			bl_str_shiftl ($area, $result_area, count, n);
+		end;
+
+
+
+feature -- Modification & Insertion
+
 	put (v: like item; i: INTEGER) is
 			-- Put boolean `v' at `i'-th position
 			-- beginning at left, 1 origin.
@@ -62,11 +152,6 @@ feature -- Access
 			area.put (v, i - 1)
 		end; 
 
-	count: INTEGER is
-			-- Number of boolean in the area.
-		do
-			Result := area.count
-		end;
 
 	all_true is
 			-- Set all booleans to true.
@@ -80,80 +165,8 @@ feature -- Access
 			bl_str_set ($area, count, 0);
 		end;
 
-	infix "and" (other: like Current): like Current is
-			-- Apply logic and on current set with `other'
-		require
-			same_size: other.count = count
-		local
-			other_area, result_area: like area;
-		do
-			!! Result.make (count);
-			result_area := Result.area;
-			other_area := other.area;
-			bl_str_and ($area, $other_area, $result_area, count);
-		end;
 
-	infix "or" (other: like Current): like Current is
-			-- Apply logic or on current set with `other'
-		require
-			same_size: other.count = count
-		local
-			other_area, result_area: like area;
-		do
-			!! Result.make (count);
-			result_area := Result.area;
-			other_area := other.area;
-			bl_str_or ($area, $other_area, $result_area, count);
-		end;
-
-	infix "xor" (other: like Current): like Current is
-			-- Apply exclusive or on current set with `other'
-		require
-			same_size: other.count = count
-		local
-			other_area, result_area: like area;
-		do
-			!! Result.make (count);
-			result_area := Result.area;
-			other_area := other.area;
-			bl_str_xor ($area, $other_area, $result_area, count);
-		end;
-
-	prefix "not": like Current is
-			-- Negation of current set
-		local
-			result_area: like area;
-		do
-			!! Result.make (count);	
-			result_area := Result.area;
-			bl_str_not ($area, $result_area, count);
-		end;
-
-	right_shifted (n: INTEGER): like Current is
-			-- Right shifted current set, by `n' positions
-		require
-			positive_shift: n >= 0
-		local
-			result_area: like area;
-		do
-			!! Result.make (count);
-			result_area := Result.area;
-			bl_str_shiftr ($area, $result_area, count, n);
-		end;
-
-	left_shifted (n: INTEGER): like Current is
-			-- Left shifted current set, by `n' positions
-		require
-			positive_shift: n >= 0
-		local
-			result_area: like area;
-		do
-			!! Result.make (count);
-			result_area := Result.area;
-			bl_str_shiftl ($area, $result_area, count, n);
-		end;
-
-feature {NONE} -- Externals
+feature  {NONE} -- External, Basic operation
 
 	bl_str_and (a1, a2, a3: like area; size: INTEGER) is
 			-- Apply logic and on `a1' with `a2'.
@@ -191,6 +204,8 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
+feature  {NONE} -- External, Modification & Insertion
+
 	bl_str_set (a1: like area; size, value: INTEGER) is
 			-- Set all booleans to true if `value' = 1
 			-- or false if `value' = 0.
@@ -198,4 +213,4 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-end
+end -- class BOOL_STRING

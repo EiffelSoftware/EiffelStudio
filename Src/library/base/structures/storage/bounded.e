@@ -1,8 +1,8 @@
 --|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
+--|   Copyright (C) Interactive Software Engineering, Inc.      			--
+--|    270 Storke Road, Suite 7 Goleta, California 93117        			--
+--|                   (805) 685-1006                            				--
+--| All rights reserved. Duplication or distribution prohibited 			--
 --|---------------------------------------------------------------
 
 -- Bounded data structures; notion of "capacity"
@@ -17,13 +17,15 @@ deferred class BOUNDED inherit
 
 	FINITE
 
-feature -- Number of elements
+feature -- Measurement
 
 	capacity: INTEGER is
 			-- Number of items that may
 			-- be stored into `Current'.
 		deferred
 		end;
+
+feature -- Status report
 
 	full : BOOLEAN is
 			-- Is `Current' full?

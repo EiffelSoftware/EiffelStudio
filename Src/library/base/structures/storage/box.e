@@ -16,7 +16,7 @@ indexing
 
 deferred class BOX
 
-feature -- Number of elements
+feature -- Status report
 
 	empty: BOOLEAN is
 			-- Is `Current' empty?

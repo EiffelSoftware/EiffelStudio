@@ -48,23 +48,24 @@ feature -- Access
 		end;
 
 	search_equal (v: like item) is
-            -- Move cursor to first position
-            -- (at or after current cursor position)
-            -- where `item' and `v' are equal.
-            -- (According to the `equal' rule)
-            -- `exhausted' becomes true if `Current'
-            -- does not include `v'.
-        do
-            if before then forth end;
-            seq_search_equal (v)
-        end;
+            		-- Move cursor to first position
+            		-- (at or after current cursor position)
+            		-- where `item' and `v' are equal.
+            		-- (According to the `equal' rule)
+            		-- `exhausted' becomes true if `Current'
+            		-- does not include `v'.
+       		 do
+            		if before then forth end;
+            		seq_search_equal (v)
+        	end;
 
-feature -- Cursor
 
 	index: INTEGER is
 			-- Index of `item'.
 		deferred
 		end;
+
+feature -- Cursor movement
 
 	forth is
 			-- Move to next position.
@@ -72,7 +73,7 @@ feature -- Cursor
 			not_after: not after
 		deferred
 		ensure then
-	--		moved_forth: index = old index + 1
+			moved_forth: index = old index + 1
 		end;
 
 	back is
@@ -81,8 +82,10 @@ feature -- Cursor
 			not_before: not before
 		deferred
 		ensure then
-	--		moved_back: index = old index - 1
+			moved_back: index = old index - 1
 		end;
+
+feature -- Status report
 
 	after: BOOLEAN is
 			-- Is there no position to the right of current position?

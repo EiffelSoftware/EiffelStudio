@@ -5,6 +5,10 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+
+-- Allocate special data area of objects
+
+
 indexing
 
 	date: "$Date$";
@@ -16,12 +20,14 @@ creation
 
 	make_area
 
-feature
+
+feature -- Access
 
 	area: SPECIAL [T];
 			-- Special data zone
 
-feature {NONE}
+
+feature  {NONE} -- Initialization
 
 	make_area (n: INTEGER) is
 			-- Creates a special object for `n' entries.
@@ -33,10 +39,12 @@ feature {NONE}
 			area_allocated: area /= Void and then area.count = n
 		end;
 
+feature  {NONE} -- Modification & Insertion
+
 	set_area (other: like area) is
 			-- Assign `other' to `area'
 		do
 			area := other
 		end;
 
-end
+end -- class TO_SPECIAL

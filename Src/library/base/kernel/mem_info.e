@@ -22,7 +22,29 @@ creation
 
 	make
 
-feature
+feature -- Initialization
+
+	make, update (memory: INTEGER) is
+			-- Update Current for `memory' type.
+		do
+			mem_stat (memory);
+			type := memory;
+			total := mem_info (1);
+			used := mem_info (2);
+			overhead := mem_info (3);
+		ensure
+			Type_updated: type = memory
+		end;
+
+feature -- Access
+	
+	type: INTEGER;
+			-- Memory type (Total, Eiffel, C)
+
+
+
+feature -- Measurement
+
 
 	total: INTEGER;
 			-- Total number of bytes allocated for `type'
@@ -44,23 +66,10 @@ feature
 	overhead: INTEGER;
 			-- Number of bytes used by memory management scheme for `type'
 			-- before last call to `update'
-	
-	type: INTEGER;
-			-- Memory type (Total, Eiffel, C)
 
-	make, update (memory: INTEGER) is
-			-- Update Current for `memory' type.
-		do
-			mem_stat (memory);
-			type := memory;
-			total := mem_info (1);
-			used := mem_info (2);
-			overhead := mem_info (3);
-		ensure
-			Type_updated: type = memory
-		end;
+
 	
-feature {NONE}
+feature  {NONE} -- Access
 
 	mem_stat (mem: INTEGER) is
 			-- Initialize run-time buffer used by mem_info to retrieve the
@@ -79,4 +88,4 @@ invariant
 
 	Consistent: total = free + used + overhead
 
-end
+end -- class MEM_INFO

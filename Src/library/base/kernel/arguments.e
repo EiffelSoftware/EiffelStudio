@@ -7,9 +7,15 @@
 
 -- Access to command-line arguments.
 
+indexing
+
+	date: "$Date$";
+	revision: "$Revision$"
+
+
 class ARGUMENTS 
 
-feature 
+feature -- Access 
 
 	argument (i: INTEGER): STRING is
 			-- Command line argument number `i'
@@ -20,6 +26,8 @@ feature
 			Result := arg_option (i) 
 		end;
 
+feature -- Measurement
+
 	argument_count: INTEGER is
 			-- Number of arguments on the command line
 			-- (including command name)
@@ -27,7 +35,7 @@ feature
 			Result := arg_number
 		end;
 
-feature {NONE} -- External features
+feature  {NONE} -- External, Access
 
 	arg_number: INTEGER is
 		external
@@ -39,4 +47,4 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-end
+end -- class ARGUMENTS 

@@ -26,7 +26,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (i: INTEGER) is
 			-- Create an empty tree.
@@ -50,7 +50,45 @@ feature -- Access
 			Result := item_table.item (active)
 		end;
 
-feature -- Insertion
+	cursor: CURSOR is
+			-- Current cursor position
+		do
+			!COMPACT_TREE_CURSOR! Result.make
+				(active, after, before, below)
+		end;
+
+	arity: INTEGER is
+			-- Number of children of `Current'.
+			-- This function may be called when
+			-- the cursor is above the tree in
+			-- which case it returns 0 for an
+			-- empty tree and 1 for a non empty
+			-- one
+		local
+			index: INTEGER
+		do
+			index := first_child_table.item (active);
+			if index > 0 then
+				from
+				until
+					index < 0
+				loop
+					Result := Result + 1;
+					index := next_sibling_table.item (index)
+				end
+			end
+		end;
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items in `Current'
+		do
+			Result := last - free_list_count - 1
+		end;
+
+
+feature -- Modification & Insertion
 
 	replace (v: G) is
 			-- Replace current item by `v'
@@ -109,37 +147,90 @@ feature -- Insertion
 			end;
 		end;
 
-feature -- Number of elements
 
-	count: INTEGER is
-			-- Number of items in `Current'
-		do
-			Result := last - free_list_count - 1
-		end;
+feature -- Removal
 
-	arity: INTEGER is
-			-- Number of children of `Current'.
-			-- This function may be called when
-			-- the cursor is above the tree in
-			-- which case it returns 0 for an
-			-- empty tree and 1 for a non empty
-			-- one
+	remove is
+			-- Remove node at cursor position
+			-- (and consequently the corresponding
+			-- subtree). Cursor moved one level upward.
 		local
-			index: INTEGER
+			removed_entries: LINKED_LIST [INTEGER];
+			removed, index, l: INTEGER;
+			pos: CURSOR
 		do
-			index := first_child_table.item (active);
-			if index > 0 then
-				from
-				until
-					index < 0
-				loop
-					Result := Result + 1;
-					index := next_sibling_table.item (index)
+				-- Build list with indexes of removed entries
+			from
+				pos := cursor;
+				!! removed_entries.make;
+				removed_entries.add_right (active);
+				l := level;
+				preorder_forth
+			until
+				level <= l
+			loop
+				removed_entries.add_right (active);
+				preorder_forth
+			end;
+			go_to (pos);
+			removed := active;
+			up;
+			if first_child_table.item (active) = removed then
+					-- The removed child is the first sibling
+				index := next_sibling_table.item (removed);
+				if index > 0 then
+						-- There is more than one sibling
+					first_child_table.put (index, active)
+				else
+					first_child_table.put (0, active)
 				end
+			else
+				from
+					index := first_child_table.item (active)
+				until
+					next_sibling_table.item (index) = removed
+				loop
+					index := next_sibling_table.item (index)
+				end;
+				next_sibling_table.put (next_sibling_table.item (removed), index)
+			end;
+				-- Add the removed nodes to the free list.
+			from
+				removed_entries.start
+			until
+				removed_entries.offright
+			loop
+				free_list_count := free_list_count + 1;
+				first_child_table.put (Removed_mark, removed_entries.item);
+				next_sibling_table.put (free_list_index, removed_entries.item);
+				free_list_index := removed_entries.item;
+				removed_entries.forth
 			end
+		ensure then
+			not_off_unless_empty: empty or else not off
 		end;
 
-feature -- Cursor
+	wipe_out is
+			-- Empty `Current'.
+		do
+			item_table.resize (1, Block_threshold + 1);
+			next_sibling_table.resize (1, Block_threshold + 1);
+			first_child_table.resize (1, Block_threshold + 1);
+			last := 1;
+			active := 1;
+			free_list_count := 0;
+			free_list_index := 0;
+			after := false;
+			before := false;
+			below := false;
+			item_table.clear_all;
+			next_sibling_table.clear_all;
+			first_child_table.clear_all
+		ensure then
+			cursor_above: above
+		end;
+
+feature -- Cursor movement
 
 	back is
 			-- Move cursor one position backward.
@@ -276,12 +367,8 @@ feature -- Cursor
 			below := temp.below
 		end;
 
-	cursor: CURSOR is
-			-- Current cursor position
-		do
-			!COMPACT_TREE_CURSOR! Result.make
-				(active, after, before, below)
-		end;
+
+feature -- Status report
 
 	after: BOOLEAN;
 			-- Is there no position to the right of the cursor?
@@ -334,94 +421,10 @@ feature -- Cursor
 			end
 		end;
 
-feature -- Deletion
-
-	remove is
-			-- Remove node at cursor position
-			-- (and consequently the corresponding
-			-- subtree). Cursor moved one level upward.
-		local
-			removed_entries: LINKED_LIST [INTEGER];
-			removed, index, l: INTEGER;
-			pos: CURSOR
-		do
-				-- Build list with indexes of removed entries
-			from
-				pos := cursor;
-				!! removed_entries.make;
-				removed_entries.add_right (active);
-				l := level;
-				preorder_forth
-			until
-				level <= l
-			loop
-				removed_entries.add_right (active);
-				preorder_forth
-			end;
-			go_to (pos);
-			removed := active;
-			up;
-			if first_child_table.item (active) = removed then
-					-- The removed child is the first sibling
-				index := next_sibling_table.item (removed);
-				if index > 0 then
-						-- There is more than one sibling
-					first_child_table.put (index, active)
-				else
-					first_child_table.put (0, active)
-				end
-			else
-				from
-					index := first_child_table.item (active)
-				until
-					next_sibling_table.item (index) = removed
-				loop
-					index := next_sibling_table.item (index)
-				end;
-				next_sibling_table.put (next_sibling_table.item (removed), index)
-			end;
-				-- Add the removed nodes to the free list.
-			from
-				removed_entries.start
-			until
-				removed_entries.offright
-			loop
-				free_list_count := free_list_count + 1;
-				first_child_table.put (Removed_mark, removed_entries.item);
-				next_sibling_table.put (free_list_index, removed_entries.item);
-				free_list_index := removed_entries.item;
-				removed_entries.forth
-			end
-		ensure then
-			not_off_unless_empty: empty or else not off
-		end;
-
-	wipe_out is
-			-- Empty `Current'.
-		do
-			item_table.resize (1, Block_threshold + 1);
-			next_sibling_table.resize (1, Block_threshold + 1);
-			first_child_table.resize (1, Block_threshold + 1);
-			last := 1;
-			active := 1;
-			free_list_count := 0;
-			free_list_index := 0;
-			after := false;
-			before := false;
-			below := false;
-			item_table.clear_all;
-			next_sibling_table.clear_all;
-			first_child_table.clear_all
-		ensure then
-			cursor_above: above
-		end;
-
-feature -- Number of elements
 
 	full: BOOLEAN is false;
 			-- Is `Current' full?
 
-feature -- Assertion check
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
@@ -434,7 +437,7 @@ feature -- Assertion check
 			end
 		end;
 
-feature {COMPACT_CURSOR_TREE} -- Creation
+feature  {COMPACT_CURSOR_TREE} -- Initialization
 
 	new_tree: like Current is
 			-- Instance of class `like Current'
@@ -446,7 +449,7 @@ feature {COMPACT_CURSOR_TREE} -- Creation
 			!! Result.make (Block_threshold)
 		end;
 
-feature {NONE} -- Representation
+feature  {NONE} -- Access
 
 	item_table: ARRAY [G];
 			-- Array containing the items
@@ -460,15 +463,6 @@ feature {NONE} -- Representation
 	active: INTEGER;
 			-- Index into `item_table'; yields current item
 
-	last: INTEGER;
-			-- Index into `item_table'; yields last item
-
-	free_list_index: INTEGER;
-			-- Index to first empty space in `item_table'
-			
-	free_list_count: INTEGER;
-			-- Number of empty spaces in `item_table'
-
 	Block_threshold: INTEGER is 5;
 			-- Minimum number of extra entries to allocate when resizing
 			-- the tables.
@@ -480,4 +474,19 @@ feature {NONE} -- Representation
 	Removed_mark: INTEGER is -1;
 			-- Mark for removed child in `first_child_table'
 
-end
+	last: INTEGER;
+			-- Index into `item_table'; yields last item
+
+
+feature  {NONE} -- Measurement
+
+
+	free_list_index: INTEGER;
+			-- Index to first empty space in `item_table'
+			
+	free_list_count: INTEGER;
+			-- Number of empty spaces in `item_table'
+
+
+
+end -- class COMPACT_CURSOR_TREE

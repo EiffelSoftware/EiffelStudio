@@ -7,7 +7,18 @@
 
 class INTERNAL
 
-feature
+feature -- Access
+
+	Reference_type: INTEGER is 1;
+	Character_type: INTEGER is 2;
+	Boolean_type:	INTEGER is 3;
+	Integer_type:	INTEGER is 4;
+	Real_type:		INTEGER is 5;
+	Pointer_type:	INTEGER is 6;
+	Double_type: 	INTEGER is 7;
+	Expanded_type:	INTEGER is 8;
+	Bit_type:		INTEGER is 9;
+
 
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
@@ -24,17 +35,6 @@ feature
 		do
 			Result := c_dynamic_type ($object)
 		end;
-
-feature
-
-	field_count (object: ANY): INTEGER is
-			-- Number of logical fields in `object'
-		require
-			object_not_void: object /= Void
-		do
-			Result := c_field_count ($object)
-		end;
-
 
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object referenced by the i-th field of `object'
@@ -94,19 +94,6 @@ feature
 			Result := c_expanded_type (i - 1, $object)
 		ensure
 			Result_exists: Result /= Void
-		end;
-
-	bit_size (i: INTEGER; object: ANY): INTEGER is
-			-- Size (in bit) of the i-th bit field of `object'
-		require
-			object_not_void: object /= Void;
-			index_large_enough: i >= 1;
-			index_small_enough: i <= field_count (object);
-			is_bit: field_type (i, object) = Bit_type
-		do
-			Result := c_bit_size (i - 1, $object)
-		ensure
-			positive_result: Result > 0
 		end;
 
 	character_field (i: INTEGER; object: ANY): CHARACTER is
@@ -183,7 +170,33 @@ feature
 			Result := c_is_special ($object)
 		end;
 
-feature
+
+
+
+feature -- Measurement
+
+	field_count (object: ANY): INTEGER is
+			-- Number of logical fields in `object'
+		require
+			object_not_void: object /= Void
+		do
+			Result := c_field_count ($object)
+		end;
+
+
+	bit_size (i: INTEGER; object: ANY): INTEGER is
+			-- Size (in bit) of the i-th bit field of `object'
+		require
+			object_not_void: object /= Void;
+			index_large_enough: i >= 1;
+			index_small_enough: i <= field_count (object);
+			is_bit: field_type (i, object) = Bit_type
+		do
+			Result := c_bit_size (i - 1, $object)
+		ensure
+			positive_result: Result > 0
+		end;
+
 
 	physical_size (object: ANY): INTEGER is
 			-- Space occupied by `object' in bytes
@@ -193,19 +206,8 @@ feature
 			Result := c_size ($object)
 		end;
 
-feature -- Constants
 
-	Reference_type: INTEGER is 1;
-	Character_type: INTEGER is 2;
-	Boolean_type:	INTEGER is 3;
-	Integer_type:	INTEGER is 4;
-	Real_type:		INTEGER is 5;
-	Double_type: 	INTEGER is 6;
-	Expanded_type:	INTEGER is 7;
-	Bit_type:		INTEGER is 8;
-	Pointer_type:	INTEGER is 0;
-
-feature {NONE} -- Externals
+feature  {NONE} -- External, Access
 
 	c_dynamic_type (object: ANY): INTEGER is
 			-- Dynamic type of `object'
@@ -213,14 +215,6 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"ei_dtype"
-		end;
-			
-	c_field_count (object: ANY): INTEGER is
-			-- Number of logical fields in `object'
-		external
-			"C"
-		alias
-			"ei_count_field"
 		end;
 
 	c_field (i: INTEGER; object: ANY): ANY is
@@ -253,14 +247,6 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"ei_exp_type"
-		end;
-
-	c_bit_size (i: INTEGER; object: ANY): INTEGER is
-			-- Size (in bit) of the i-th bit field of `object'
-		external
-			"C"
-		alias
-			"ei_bit_size"
 		end;
 
 	c_character_field (i: INTEGER; object: ANY): CHARACTER is
@@ -311,14 +297,6 @@ feature {NONE} -- Externals
 			"ei_double_field"
 		end;
 
-	c_size (object: ANY): INTEGER is
-			-- Physical size of `object'
-		external
-			"C"
-		alias
-			"ei_size"
-		end;
-
 	c_is_special (object: ANY): BOOLEAN is
 			-- Is `object' a special object ?
 		external
@@ -334,5 +312,34 @@ feature {NONE} -- Externals
 		alias
 			"ei_offset"
 		end;
+
+feature  {NONE} -- External, Measurement
+			
+	c_field_count (object: ANY): INTEGER is
+			-- Number of logical fields in `object'
+		external
+			"C"
+		alias
+			"ei_count_field"
+		end;
+
+
+	c_bit_size (i: INTEGER; object: ANY): INTEGER is
+			-- Size (in bit) of the i-th bit field of `object'
+		external
+			"C"
+		alias
+			"ei_bit_size"
+		end;
+
+
+	c_size (object: ANY): INTEGER is
+			-- Physical size of `object'
+		external
+			"C"
+		alias
+			"ei_size"
+		end;
+
 
 end -- class INTERNAL

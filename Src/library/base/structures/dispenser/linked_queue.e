@@ -55,35 +55,7 @@ feature -- Access
 			Result := first
 		end;
 
-feature -- Insertion
-
-	add (v: G) is
-			-- Add item `v' to `Current'.
-		do
-			if empty then
-				ll_add (v)
-			else
-				add_right (v)
-			end;
-			forth
-		ensure then
-	--		(old empty) implies (item = v);
-		end;
-
-feature -- Deletion
-
-	remove is
-			-- Remove oldest item.
-		do
-			first_element := first_element.right;
-			if count = 1 then
-				active := Void;
-				before := true
-			end;
-			count := count - 1
-		end;
-
-feature -- Transformation
+feature -- Conversion
 
 	sequential_representation: ARRAY_SEQUENCE [G] is
 			-- Sequential representation of `Current'.
@@ -111,6 +83,9 @@ feature -- Transformation
 				-- been redefined and selected.
 		end;
 
+feature -- Duplication
+
+
 	duplicate (n: INTEGER): like Current is
 			-- Return a queue with the `n' latest items inserted
 			-- in `Current'. If `n' is greater than `count', it
@@ -133,8 +108,38 @@ feature -- Transformation
 			back
 		end;
 
+
+feature -- Modification & Insertion
+
+	add (v: G) is
+			-- Add item `v' to `Current'.
+		do
+			if empty then
+				ll_add (v)
+			else
+				add_right (v)
+			end;
+			forth
+		ensure then
+			(old empty) implies (item = v);
+		end;
+
+feature -- Removal
+
+	remove is
+			-- Remove oldest item.
+		do
+			first_element := first_element.right;
+			if count = 1 then
+				active := Void;
+				before := true
+			end;
+			count := count - 1
+		end;
+
+
 invariant
 
 	is_always_empty_orlast: empty or else islast
 
-end
+end -- class LINKED_QUEUE

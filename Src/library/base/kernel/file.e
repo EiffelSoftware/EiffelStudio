@@ -73,29 +73,53 @@ feature -- Access
 		deferred
 		end;
 
-	lastchar: CHARACTER;
-			-- Last character read
-
-	laststring: STRING;
-			-- Last string read
-
-	lastint: INTEGER;
-			-- Last integer read by `readint'
-
-	lastreal: REAL;
-			-- Last real read by `readreal'
-
-	lastdouble: DOUBLE;
-			-- Last double read by `readdouble'
-
-	file_readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		do
-			Result := (mode >= Read_Write_file or mode = Read_file)
-						and readable
+	open_read is
+			-- Open `Current' in read mode.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_reading: is_open_read;
 		end;
 
-feature -- Insertion
+	open_write is
+			-- Open `Current' in write mode and
+			-- create a file `name' as a physical
+			-- representation if non-existent.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_writing: is_open_write;
+			file_exists: exists;
+		end;
+
+	open_append is
+			-- Open `Current' in append mode and
+			-- create a file `name' as a physical
+			-- representation if non-existent.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_appending: is_open_append;
+			file_exists: exists;
+		end;
+
+	close is
+			-- Close file.
+		deferred
+		end;
+
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Size of `Current' in bytes
+		deferred
+		end;
+
+feature -- Modification & Insertion
 
 	add (v: CHARACTER) is
 			-- Include `v' in `Current'.
@@ -145,71 +169,9 @@ feature -- Insertion
 		deferred
 		end;
 	
-	file_writable: BOOLEAN is
-			-- Is there a current item that may be modified?
-		do
-			Result := mode >= Write_file
-		end;
 
-	extensible: BOOLEAN is
-			-- May new items be added to `Current'?
-		do
-			Result := mode >= Write_file
-		end;
 
-feature -- Deletion
-
-	file_contractable: BOOLEAN is
-			-- May items be removed from `Current'?
-		do
-			Result := mode >= Write_file and contractable
-		end;
-
-	contractable: BOOLEAN is
-			-- Is there an item to be removed from `Current'?
-		do
-			Result := not off
-		end
-
-feature -- File handling
-
-	open_read is
-			-- Open `Current' in read mode.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_reading: is_open_read;
-		end;
-
-	open_write is
-			-- Open `Current' in write mode and
-			-- create a file `name' as a physical
-			-- representation if non-existent.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_writing: is_open_write;
-			file_exists: exists;
-		end;
-
-	open_append is
-			-- Open `Current' in append mode and
-			-- create a file `name' as a physical
-			-- representation if non-existent.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_appending: is_open_append;
-			file_exists: exists;
-		end;
-
-	close is
-			-- Close file.
-		deferred
-		end;
+feature -- Removal
 
 	delete is
 			-- Forget link between `Current' and (physical) file.
@@ -229,13 +191,35 @@ feature -- File handling
 			file_closed: is_closed
 		end;
 
-feature -- Status
+feature -- Status report
+
+	lastchar: CHARACTER;
+			-- Last character read
+
+	laststring: STRING;
+			-- Last string read
+
+	lastint: INTEGER;
+			-- Last integer read by `readint'
+
+	lastreal: REAL;
+			-- Last real read by `readreal'
+
+	lastdouble: DOUBLE;
+			-- Last double read by `readdouble'
+
+	file_readable: BOOLEAN is
+			-- Is there a current item that may be read?
+		do
+			Result := (mode >= Read_Write_file or mode = Read_file)
+						and readable
+		end;
 
 	exists: BOOLEAN is
 			-- Does (physical) file exist?
 		deferred
 		ensure
-	--		mode = old mode
+			mode = old mode
 		end;
 
 	is_readable: BOOLEAN is
@@ -288,7 +272,31 @@ feature -- Status
 			Result := mode = Append_file
 		end;
 
-feature {UNIX_FILE, UNIX_STD, FILE} -- Status
+	file_writable: BOOLEAN is
+			-- Is there a current item that may be modified?
+		do
+			Result := mode >= Write_file
+		end;
+
+	extensible: BOOLEAN is
+			-- May new items be added to `Current'?
+		do
+			Result := mode >= Write_file
+		end;
+
+	file_contractable: BOOLEAN is
+			-- May items be removed from `Current'?
+		do
+			Result := mode >= Write_file and contractable
+		end;
+
+	contractable: BOOLEAN is
+			-- Is there an item to be removed from `Current'?
+		do
+			Result := not off
+		end;
+
+feature  {UNIX_FILE, UNIX_STD, FILE} -- Access
 
 	mode: INTEGER;
 			-- Input-output mode
@@ -300,6 +308,8 @@ feature {UNIX_FILE, UNIX_STD, FILE} -- Status
 	Append_file: INTEGER is 3;
 	Read_Write_file: INTEGER is 4;
 	Append_Read_file: INTEGER is 5;
+
+feature  {UNIX_FILE, UNIX_STD, FILE} -- Modification & Insertion
 
 	set_read_mode is
 			-- Define file mode as read.
@@ -313,14 +323,21 @@ feature {UNIX_FILE, UNIX_STD, FILE} -- Status
 			mode := Write_file
 		end;
 
-feature -- Number of elements
 
-	count: INTEGER is
-			-- Size of `Current' in bytes
-		deferred
+feature  {NONE} -- Modification & Insertion
+
+	replace (v: like item) is
+			-- Replace current item by `v'.
+		require else
+			is_writable: file_writable
+		do
+		ensure then
+			item = v;
+		  	count = old count
 		end;
 
-feature {NONE}
+feature  {NONE} -- Removal
+
 		-- deferred features inherited from COLLECTION and ACTIVE
 		-- which have no sense in class FILE
 
@@ -331,26 +348,18 @@ feature {NONE}
 		do
 		ensure then
 			not full;
-		--  count = (old count - 1)
+		  	count = (old count - 1)
 		end;
 
-	replace (v: like item) is
-			-- Replace current item by `v'.
-		require else
-			is_writable: file_writable
-		do
-		ensure then
-			item = v;
-		--  count = old count
-		end;
+
 
 	remove_item	(v: like item) is
 			-- Remove `v' from `Current'.
 		require else
 			is_contractable: file_contractable
 		do
-		ensure then
-		--  count <= old count
+		ensure 	then
+		  	count <= old count
 		end;
 
 end -- class FILE

@@ -49,7 +49,7 @@ creation
 
 	make
 
-feature -- Cursor
+feature -- Cursor movement
 
 	forth is
 			-- Move to next item in `Current'.
@@ -84,7 +84,7 @@ feature -- Cursor
 			twl_move (modulo (ind + i, count) - ind)
 		end;
 
-feature {TWO_WAY_CIRCULAR} -- Creation
+feature  {TWO_WAY_CIRCULAR} -- Initialization
 
 	new_chain: like Current is
 			-- Instance of class `like Current'.

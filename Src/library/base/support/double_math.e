@@ -1,7 +1,7 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) 1989 Interactive Software Engineering, Inc. --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
+--|	270 Storke Road, Suite 7 Goleta, California 93117	--
+--|				   (805) 685-1006		--
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
@@ -16,7 +16,19 @@ inherit
 			{NONE} all
 		end
 	
-feature 
+feature -- Access 
+
+	log_2 (v: DOUBLE): DOUBLE is
+			-- Base 2 logarithm of `v'
+		local
+			a: DOUBLE
+		do
+			a := 2.0;
+			Result := log (v) / log (a)
+		end;
+
+	
+feature -- External, Access 
 
 	cosine (v: DOUBLE): DOUBLE is
 			-- Trigonometric cosine of radian `v' approximated
@@ -100,19 +112,10 @@ feature
 		alias
 			"ceil"
 		end;
-	
-feature 
 
-	log_2 (v: DOUBLE): DOUBLE is
-			-- Base 2 logarithm of `v'
-		local
-			a: DOUBLE
-		do
-			a := 2.0;
-			Result := log (v) / log (a)
-		end;
 
-feature {NONE}
+feature  {NONE} -- External, Access
+
 
 	dabs (v: DOUBLE): DOUBLE is
 			-- Absolute of `v'
@@ -122,4 +125,4 @@ feature {NONE}
 			"fabs"
 		end;
 
-end
+end -- class DOUBLE_MATH

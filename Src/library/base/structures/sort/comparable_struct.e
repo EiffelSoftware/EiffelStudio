@@ -19,7 +19,7 @@ deferred class COMPARABLE_STRUCT [G -> PART_COMPARABLE] inherit
 
 	SEQUENTIAL [G]
 
-feature -- Access
+feature -- Measurement
 
 	min: like item is
 			-- Minimum in `Current'

@@ -5,9 +5,9 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
--- Sequences, i.e. data structures in which items are
--- arranged linearly, to which items can be appended, and
--- which items can be accessed in sequence only
+-- Sequences, i.e. container structures where existing items are arranged
+-- and accessed sequentially, and new ones can be added at the end.
+
 
 indexing
 
@@ -23,15 +23,7 @@ deferred class SEQUENCE [G] inherit
 	
 	SEQUENTIAL [G]
 
-feature -- Access
-
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		do
-			Result := not off
-		end;
-
-feature -- Insertion
+feature -- Modification & Insertion
 
 	put (v: like item) is
 			-- Add `v' to the end of `Current'.
@@ -41,7 +33,7 @@ feature -- Insertion
 		do
 			add (v)
 		ensure
-	--		new_count: count = old count + 1;
+	 		new_count: count = old count + 1;
 			item_inserted: has (v)
 		end;
 
@@ -59,8 +51,18 @@ feature -- Insertion
 				s.forth
 			end
 		ensure
-	--		new_count: count >= old count
+	 		new_count: count >= old count
 		end;
+
+
+feature -- Status report
+
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
+		do
+			Result := not off
+		end;
+
 
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?

@@ -28,15 +28,9 @@ deferred class DISPENSER [G] inherit
 			append
 		end
 
-feature -- Access
+ 	
 
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		do
-			Result := not empty
-		end;
-
-feature -- Insertion
+feature -- Modification & Insertion
 
 	append (s: SEQUENCE [G]) is
 			-- Append a copy of `s' to `Current'.
@@ -45,18 +39,30 @@ feature -- Insertion
 			fill (s)
 		end;
 
-	writable: BOOLEAN is
-			-- Is there a current item that may be modified?
+
+feature -- Status report
+
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
 		do
 			Result := not empty
 		end;
 
-feature {NONE} -- Deletion
+	writable: BOOLEAN is
+			-- Is there a current item that may be modified?
+		do
+			Result := not empty
+		end;	
+
+
+feature  {NONE} -- Removal
 
 	remove_item (v: G) is
 			-- Remove `v' from `Current'.
 		do
 		end;
+
+feature  {NONE} -- Status report
 
 	contractable: BOOLEAN is
 			-- May items be removed from `Current'?
@@ -70,4 +76,4 @@ invariant
 	writable_definition: writable = not empty;
 	contractable_definition: contractable = not empty
 
-end
+end -- class DISPENSER

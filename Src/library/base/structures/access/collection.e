@@ -5,7 +5,7 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
--- Collections, i.e. containers which 
+-- Collections, i.e. containers whose 
 -- items are there solely by themselves
 
 indexing
@@ -20,7 +20,7 @@ deferred class COLLECTION [G] inherit
 
 	CONTAINER [G]
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	add (v: G) is
 			-- Include `v' in `Current'.
@@ -28,7 +28,7 @@ feature -- Insertion
 			extensible: extensible
 		deferred
 		ensure
-	--		new_count: count >= old count;
+			new_count: count >= old count;
 			item_inserted: has (v)
 		end;
 
@@ -38,6 +38,8 @@ feature -- Insertion
 			-- The representations of `other' and `Current'
 			-- need not be the same. (This feature enables you
 			-- to map one implementation to another.)
+		require
+                      other_not_void: other /= Void
 		local
 			lin_rep: SEQUENTIAL [G]
 		do
@@ -52,12 +54,8 @@ feature -- Insertion
 			end
 		end;
 
-	extensible: BOOLEAN is
-			-- May new items be added to `Current'?
-		deferred
-		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove_item (v: G) is
 			-- Remove `v' from `Current'.
@@ -65,13 +63,23 @@ feature -- Deletion
 			contractable: contractable
 		deferred
 		ensure
-	--		new_count: count <= old count
+			new_count: count <= old count
+		end;
+
+	
+feature -- Status report
+
+	extensible: BOOLEAN is
+			-- May new items be added to `Current'?
+		deferred
 		end;
 
 	contractable: BOOLEAN is
 			-- May items be removed from `Current'?
 		deferred
 		end;
+
+
 
 invariant
 

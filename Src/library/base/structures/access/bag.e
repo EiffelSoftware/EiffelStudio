@@ -22,13 +22,13 @@ deferred class BAG [G] inherit
 			add
 		end
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	add (v: G) is
 			-- Add `v' to `Current'.
 		deferred
 		ensure then
-	--		new_count: count = old count + 1
+			new_count: count = old count + 1
 		end;
 
 end -- class BAG

@@ -15,9 +15,7 @@ indexing
 
 class MEM_CONST
 
-feature
-
--- Memory types:
+feature -- Access
 
 	Total_memory: INTEGER is 0;
 			-- Code for all the memory managed by the garbage collector
@@ -28,13 +26,10 @@ feature
 	C_memory: INTEGER is 2;
 			-- Code for the C memory managed by the garbage collector
 
--- Collector types:
-
 	Full_collector: INTEGER is 0;
 			-- Statistics for full collections
 
 	Incremental_collector: INTEGER is 1
 			-- Statistics for incremental collections
 
-end
-
+end -- class MEM_CONST

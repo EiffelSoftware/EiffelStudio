@@ -40,7 +40,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate hash table for at least `n' items.
@@ -70,7 +70,7 @@ feature -- Creation
 										deleted_marks.capacity >= 5
 		end;
 
-feature -- Access and queries
+feature -- Access
 
 	item, infix "@" (key: H): G is
 			-- Item associated with `key', if present;
@@ -83,8 +83,7 @@ feature -- Access and queries
 		end;
 
 	has (key: H): BOOLEAN is
-			-- Is `access_key' currently used?
-			-- (Shallow equality)
+			-- Is there an item in the table with key `key'?(d.H)
 		do
 			internal_search (key);
 			Result := (control = Found_constant)
@@ -109,8 +108,12 @@ feature -- Access and queries
 
 	key_at (n: INTEGER): H is
 			-- Key corresponding to entry `n'
-		do
-			Result := keys.item (n)
+		do	
+			if n >=0 and n < keys.count  then	
+				Result := keys.item (n);
+			else
+				Result := void;
+			end;
 		end;
 
 	current_keys: ARRAY [H] is
@@ -134,9 +137,61 @@ feature -- Access and queries
 			end
 		ensure
 			good_count: Result.count = count
+ 		end;
+
+	position: INTEGER;
+			-- Hash table cursor, updated after each query:
+			-- put, remove, has, replace, force, change_key...
+
+
+feature -- Measurement
+
+	count: INTEGER;
+			-- Number of items actually in `Current'
+
+	
+
+feature -- Conversion
+
+	sequential_representation: ARRAY_SEQUENCE [G] is
+				-- Sequential representation of `Current'.
+				-- This feature enables you to manipulate each
+				-- item of `Current' regardless of its
+				-- actual structure.
+		local
+			i, table_size: INTEGER;
+		do
+			from
+				!! Result.make (count);
+				table_size := content.upper;
+			until
+				i > table_size
+			loop
+				if valid_key (keys.item (i)) then
+					Result.add (content.item (i));
+				end;
+				i := i + 1
+			end;
+		ensure then
+			Result_exists: Result /= Void;
+			good_count: Result.count = count
 		end;
 
-feature -- Insertion, deletion
+
+
+feature -- Duplication
+ 
+	twin: like Current is
+			-- Clone object
+		do
+			Result := basic_twin;
+			Result.set_keys (keys.twin);
+			Result.set_content (content.twin);
+			Result.set_deleted_marks (deleted_marks.twin);
+		end;
+
+
+feature -- Modification & Insertion
 
 	put (new: G; key: H) is
 			-- Attempt to insert `new' with `key'.
@@ -228,6 +283,8 @@ feature -- Insertion, deletion
 			changed: control = Changed_constant implies not has (old_key)
 		end;
 
+feature -- Removal
+
 	remove (key: H) is
 			-- Remove item associated with `key', if present.
 			-- Set `control' to `Removed_constant' or `Not_found_constant'.
@@ -261,38 +318,65 @@ feature -- Insertion, deletion
 			position := 0
 		end;
 
-feature -- Transformation
-
-	sequential_representation: ARRAY_SEQUENCE [G] is
-				-- Sequential representation of `Current'.
-				-- This feature enables you to manipulate each
-				-- item of `Current' regardless of its
-				-- actual structure.
-		local
-			i, table_size: INTEGER;
+feature -- Status report
+ 
+	valid_key (k: H): BOOLEAN is
+			-- Is `k' a valid key?
 		do
-			from
-				!! Result.make (count);
-				table_size := content.upper;
-			until
-				i > table_size
-			loop
-				if valid_key (keys.item (i)) then
-					Result.add (content.item (i));
-				end;
-				i := i + 1
-			end;
-		ensure then
-			Result_exists: Result /= Void;
-			good_count: Result.count = count
+			Result := k /= Void and then k.hash_code > 0
 		end;
 
-feature -- Number of elements
+ 
+	conflict: BOOLEAN is
+			-- Did the last operation lead to a conflict status?
+		do
+			Result := control = Conflict_constant
+		end;
 
-	count: INTEGER;
-			-- Number of items actually inserted in `Current'
+	inserted: BOOLEAN is
+			-- Did the last operation lead to an insertion?
+		do
+			Result := control = Inserted_constant
+		end;
 
-feature {NONE} -- Internal features
+	changed: BOOLEAN is
+			-- Did the last operation lead to a replacement?
+		do
+			Result := control = Changed_constant
+		end;
+
+	found: BOOLEAN is
+			-- Did the last operation lead to a found status?
+		do
+			Result := control = Found_constant
+		end;
+
+	not_found: BOOLEAN is
+			-- Did the last operation lead to a not-found status?
+		do
+			Result := control = Not_found_constant
+		end;
+
+feature -- Obsolete, Measurement
+
+	max_size: INTEGER is obsolete "Use ``capacity''"
+		do
+			Result := keys.count
+		end;
+
+
+feature -- Obsolete, Modification & Insertion
+
+	change_item (new: G; access_key: H) is obsolete "Use ``replace''"
+		do
+			replace (new, access_key)
+		end;
+
+	
+
+
+
+feature  {NONE} -- Access
 
 	internal_search (search_key: H) is
 			-- Search for item of `search_key'.
@@ -354,6 +438,64 @@ feature {NONE} -- Internal features
 			end;
 		end;
 
+	Inserted_constant: INTEGER is unique;
+			-- Insertion successful
+
+	Found_constant: INTEGER is unique;
+			-- Key found
+
+	Changed_constant: INTEGER is unique;
+			-- Change successful
+
+	Removed_constant: INTEGER is unique;
+			-- Remove successful
+
+	Conflict_constant: INTEGER is unique;
+			-- Could not insert an already existing key
+
+	Not_found_constant: INTEGER is unique;
+			-- Key not found
+
+
+feature  {HASH_TABLE} -- Access
+
+	content: ARRAY [G];
+			-- Array of contents
+
+	keys: ARRAY [H];
+			-- Array of keys
+
+	deleted_marks: ARRAY [BOOLEAN];
+			-- Array of deleted marks
+
+	Size_threshold: INTEGER is 80;
+			-- Filling percentage over which some resizing is done
+
+ 
+feature  {HASH_TABLE} -- Modification & Insertion
+
+	set_content (c: like content) is
+			-- Assign `c' to `content'.
+		do
+			content := c
+		end;
+
+	set_keys (c: like keys) is
+			-- Assign `c' to `keys'.
+		do
+			keys := c
+		end;
+
+	set_deleted_marks (c: like deleted_marks) is
+			-- Assign `c' to `deleted_marks'.
+		do
+			deleted_marks := c
+		end;
+
+
+feature  {NONE} -- Resizing
+
+
 	add_space is
 			-- Increase capacity of `Current'.
 		local
@@ -378,8 +520,9 @@ feature {NONE} -- Internal features
 			deleted_marks := other.deleted_marks
 		end;
 
-	Size_threshold: INTEGER is 80;
-			-- Filling percentage over which some resizing is done
+
+feature  {NONE} -- Status report
+
 
 	soon_full: BOOLEAN is
 			-- Is `Current' close to being filled?
@@ -388,129 +531,16 @@ feature {NONE} -- Internal features
 			Result := (keys.count * Size_threshold <= 100 * count)
 		end;
 
-feature -- Assertion check
-
-	valid_key (k: H): BOOLEAN is
-			-- Is `k' a valid key?
-		do
-			Result := k /= Void and then k.hash_code > 0
-		end;
-
-feature -- Status queries
-
-	position: INTEGER;
-			-- Hash table cursor, updated after each query:
-			-- put, remove, has, replace, force, change_key...
-
-	conflict: BOOLEAN is
-			-- Did the last query lead to a conflict status?
-		do
-			Result := control = Conflict_constant
-		end;
-
-	inserted: BOOLEAN is
-			-- Did the last query lead to an insertion?
-		do
-			Result := control = Inserted_constant
-		end;
-
-	changed: BOOLEAN is
-			-- Did the last query lead to a replacement?
-		do
-			Result := control = Changed_constant
-		end;
-
-	found: BOOLEAN is
-			-- Did the last query lead to a found status?
-		do
-			Result := control = Found_constant
-		end;
-
-	not_found: BOOLEAN is
-			-- Did the last query lead to a not-found status?
-		do
-			Result := control = Not_found_constant
-		end;
-
-feature {HASH_TABLE}
-
-	content: ARRAY [G];
-			-- Array of contents
-
-	keys: ARRAY [H];
-			-- Array of keys
-
-	deleted_marks: ARRAY [BOOLEAN];
-			-- Array of deleted marks
-
-	set_content (c: like content) is
-			-- Assign `c' to `content'.
-		do
-			content := c
-		end;
-
-	set_keys (c: like keys) is
-			-- Assign `c' to `keys'.
-		do
-			keys := c
-		end;
-
-	set_deleted_marks (c: like deleted_marks) is
-			-- Assign `c' to `deleted_marks'.
-		do
-			deleted_marks := c
-		end;
-
-feature {NONE} -- Status
 
 	control: INTEGER;
 			-- Control code set by operations that may return
 			-- several possible conditions.
 			-- Possible control codes are the following:
 
-	Inserted_constant: INTEGER is unique;
-			-- Insertion successful
 
-	Found_constant: INTEGER is unique;
-			-- Key found
-
-	Changed_constant: INTEGER is unique;
-			-- Change successful
-
-	Removed_constant: INTEGER is unique;
-			-- Remove successful
-
-	Conflict_constant: INTEGER is unique;
-			-- Could not insert an already existing key
-
-	Not_found_constant: INTEGER is unique;
-			-- Key not found
-
-feature -- Clone
-
-	twin: like Current is
-			-- Clone object
-		do
-			Result := basic_twin;
-			Result.set_keys (keys.twin);
-			Result.set_content (content.twin);
-			Result.set_deleted_marks (deleted_marks.twin);
-		end;
-
-feature -- Obsolete features
-
-	change_item (new: G; access_key: H) is obsolete "Use ``replace''"
-		do
-			replace (new, access_key)
-		end;
-
-	max_size: INTEGER is obsolete "Use ``capacity''"
-		do
-			Result := keys.count
-		end;
 
 invariant
 
 	count_big_enough: 0 <= count;
 
-end
+end -- class HASH_TABLE

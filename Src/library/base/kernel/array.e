@@ -5,6 +5,11 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+
+-- Homogeneous sequences of values conforming to an arbitrary 
+-- type accessing through contiguous integer indices          
+
+
 indexing
 
 	date: "$Date$";
@@ -43,7 +48,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (minindex, maxindex: INTEGER) is
 			-- Allocate array; set index interval to `minindex' .. `maxindex'
@@ -61,16 +66,12 @@ feature -- Creation
 
 feature -- Access
 
-	array_is_equal (array: like Current): BOOLEAN is
-		do
-			Result := area.is_equal (array.area);
-		end;
-
 	item, infix "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval.
 		do
 			Result := area.item (i - lower);
 		end;
+
 
 	has (v: G): BOOLEAN is
 			-- Does `Current' include `v'?
@@ -89,7 +90,61 @@ feature -- Access
 			Result := not (i > upper);
 		end;
 
-feature -- Insertion
+
+feature -- Measurement
+
+	
+	lower: INTEGER;
+			-- Minimum index
+
+	upper: INTEGER;
+			-- Maximum index
+
+	count, capacity: INTEGER is
+			-- Available indices
+		do
+			Result := upper - lower + 1
+		end;
+
+	
+feature -- Conversion
+		
+	sequential_representation: SEQUENTIAL [G] is
+			-- Sequential representation of `Current'.
+			-- This feature enables you to manipulate each
+            		-- item of `Current' regardless of its
+            		-- actual structure.
+		local
+			temp: ARRAY_SEQUENCE [G];
+			i: INTEGER;
+		do
+			!! temp.make (count);
+			from
+				i := lower;
+			until
+				i > upper
+			loop
+				temp.add (item (i));
+				i := i + 1;
+			end;
+			Result := temp;
+		end;
+
+feature -- Duplication
+
+
+	twin: like Current is
+			-- New object field-by-field identical to `Current'
+		do
+			Result := standard_twin;
+			Result.set_area (area.standard_twin);
+		ensure then
+			equal_areas: area.is_equal (Result.area)
+		end;
+
+
+feature -- Modification & Insertion
+ 
 
 	put (v: G; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
@@ -118,11 +173,11 @@ feature -- Insertion
 			put (v, i)
 		ensure
 			inserted: item (i) = v;
-	--		higher_capacity: capacity >= old capacity
+			higher_capacity: capacity >= old capacity
 		end;
 
+feature -- Removal
 
-feature -- Deletion
 
 	wipe_out is
 			-- Empty `Current': discard all items.
@@ -132,7 +187,30 @@ feature -- Deletion
 			make_area (0)
 		end;
 
-feature -- Number of elements
+	clear_all is
+			-- Reset all items to default values.
+		local
+			i: INTEGER;
+			dead_element: G
+		do
+			from
+				i := lower
+			variant
+				upper + 1 - i
+			until
+				i > upper
+			loop
+				put (dead_element, i);
+				i := i + 1
+			end
+		ensure
+			all_cleared: all_cleared
+		end;
+
+
+
+ 
+ feature -- Resizing
 
 	grow (i: INTEGER) is
 			-- Change the capacity of `Current' to at least `i'.
@@ -146,6 +224,8 @@ feature -- Number of elements
 			-- Rearrange `Current' so that it can accommodate
 			-- indices down to `minindex' and up to `maxindex'.
 			-- Do not lose any previously entered item.
+	require
+		valid_indices: minindex <= maxindex
 		local
 			i: INTEGER
 		do
@@ -173,42 +253,11 @@ feature -- Number of elements
 			maxindex <= upper
 		end;
 
-	lower: INTEGER;
-			-- Minimum index
+feature -- Status report
 
-	upper: INTEGER;
-			-- Maximum index
-
-	count, capacity: INTEGER is
-			-- Available indices
-		do
-			Result := upper - lower + 1
-		end;
 
 	full: BOOLEAN is false;
 			-- Is `Current' full?
-
-feature -- Transformation
-
-	clear_all is
-			-- Reset all items to default values.
-		local
-			i: INTEGER;
-			dead_element: G
-		do
-			from
-				i := lower
-			variant
-				upper + 1 - i
-			until
-				i > upper
-			loop
-				put (dead_element, i);
-				i := i + 1
-			end
-		ensure
-			all_cleared: all_cleared
-		end;
 
 	all_cleared: BOOLEAN is
 			-- Are all items set to default values?
@@ -228,52 +277,46 @@ feature -- Transformation
 			Result := i > upper;
 		end;
 
-	sequential_representation: SEQUENTIAL [G] is
-			-- Sequential representation of `Current'.
-            -- This feature enables you to manipulate each
-            -- item of `Current' regardless of its
-            -- actual structure.
-		local
-			temp: ARRAY_SEQUENCE [G];
-			i: INTEGER;
-		do
-			!! temp.make (count);
-			from
-				i := lower;
-			until
-				i > upper
-			loop
-				temp.add (item (i));
-				i := i + 1;
-			end;
-			Result := temp;
-		end;
+		
 
-feature -- Duplication
 
-	twin: like Current is
-			-- New object field-by-field identical to `Current'
-		do
-			Result := standard_twin;
-			Result.set_area (area.standard_twin);
-		ensure then
-			equal_areas: area.is_equal (Result.area)
-		end;
-
-feature -- Obsolete
+feature -- Obsolete, Duplication
 
 	duplicate: like Current is obsolete "Use ``twin''"
 		do
 			Result := twin
 		end;
 
-feature -- External representation
+feature  {NONE} -- Initialization
+
+	allocate_space (minindex, maxindex: INTEGER) is
+			-- Allocate memory and initialize indexes.
+		require
+			valid_indices: maxindex >= minindex - 1
+		do
+			lower := minindex;
+			upper := maxindex;
+			make_area (maxindex - minindex + 1)
+		end;
+
+
+feature -- External, Access
 
 	to_c: ANY is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
 		do
 			Result := area
+		end;
+
+feature  {ARRAY} -- External, Duplication
+
+	arycpy (old_area: like area; newsize, s, n: INTEGER): like area is
+			-- New area of size `newsize' containing `n' items
+			-- from `oldarea'.
+			-- Old items are at position `s' in new area.
+		external
+			"C"
 		end;
 
 feature -- Assertion check
@@ -284,29 +327,9 @@ feature -- Assertion check
 			Result := (lower <= i) and then (i <= upper)
 		end;
 
-feature {ARRAY} -- Externals
-
-	arycpy (old_area: like area; newsize, s, n: INTEGER): like area is
-			-- New area of size `newsize' containing `n' items
-			-- from `oldarea'.
-			-- Old items are at position `s' in new area.
-		external
-			"C"
-		end;
-
-feature {NONE} -- Secret
-
-	allocate_space (minindex, maxindex: INTEGER) is
-			-- Allocate memory and initialize indexes.
-		do
-			lower := minindex;
-			upper := maxindex;
-			make_area (maxindex - minindex + 1)
-		end;
-
 invariant
 
 	consistent_size: capacity = upper - lower + 1;
 	non_negative_size: count >= 0;
 
-end
+end -- class ARRAY

@@ -20,4 +20,4 @@ deferred class QUEUE [G] inherit
 
 	DISPENSER [G]
 
-end
+end -- class QUEUE

@@ -32,7 +32,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (v: like item) is
 			-- Create node with item `v'.
@@ -49,7 +49,24 @@ feature -- Access
 	parent: BINARY_TREE [G]
 			-- Parent of `Current'
 
-feature -- Insertion
+feature -- Measurement
+
+	height: INTEGER is
+			-- Height of the tree: 1 + (max height of the children)
+		local
+			hl, hr: INTEGER
+		do
+			if has_left then hl := left_child.height end;
+			if has_right then hr := right_child.height end;
+			if hl > hr then
+				Result := 1 + hl
+			else
+				Result := 1 + hr
+			end
+		end;
+
+
+feature -- Modification & Insertion
 
 	child_put_left (v: like item) is
 			-- Put item `v' at left child position;
@@ -83,7 +100,7 @@ feature -- Insertion
 			right_child_item: right_child.item = v
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove_left_child is
 			-- Remove the left child of `Current'.
@@ -103,7 +120,7 @@ feature -- Deletion
 			right_child_removed: right_child = Void
 		end;
 
-feature -- Number of elements
+feature -- Status report
 
 	has_left: BOOLEAN is
 			-- Does left child exist?
@@ -137,21 +154,9 @@ feature -- Number of elements
 			has_none_definition: Result = (not has_left and not has_right)
 		end;
 
-	height: INTEGER is
-			-- Height of the tree: 1 + (max height of the children)
-		local
-			hl, hr: INTEGER
-		do
-			if has_left then hl := left_child.height end;
-			if has_right then hr := right_child.height end;
-			if hl > hr then
-				Result := 1 + hl
-			else
-				Result := 1 + hr
-			end
-		end;
 
-feature {NONE} -- Secret
+
+feature  {NONE} -- Modification & Insertion
 
 	put_left_child (other: like parent) is
 			-- Make `other' the left child of `Current'.

@@ -113,7 +113,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (v: like item) is
 			-- Create single node with item `v'.
@@ -133,7 +133,7 @@ feature -- Access
 	last_child: like parent;
 			-- Last child of `Current'
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	child_add (v: like item) is
 			-- Add `v' to the children list of `Current'.
@@ -269,22 +269,8 @@ feature -- Insertion
 			twl_merge_right (other)
 		end;
 
-feature {NONE} -- Insertion
 
-	attach (other: like first_child) is
-				-- Attach all children of `other' to `Current'.
-		do
-			from
-				other.child_start
-			until
-				other.child_off
-			loop
-				other.child.attach_to_parent (Current);
-				other.child_forth
-			end
-		end;
-
-feature {LINKED_TREE} -- Creation
+feature  {LINKED_TREE} -- Initialization
 
 
 	new_cell (v: like item): like first_child is
@@ -301,6 +287,22 @@ feature {LINKED_TREE} -- Creation
 		do
 			!!Result.make (item)
 		end;
+
+feature  {NONE} -- Modification & Insertion
+
+	attach (other: like first_child) is
+				-- Attach all children of `other' to `Current'.
+		do
+			from
+				other.child_start
+			until
+				other.child_off
+			loop
+				other.child.attach_to_parent (Current);
+				other.child_forth
+			end
+		end;
+
 
 invariant
 

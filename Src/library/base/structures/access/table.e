@@ -23,17 +23,15 @@ feature -- Access
 
 	item, infix "@" (k: H): G is
 			-- Entry of key `k'.
-			-- Applicable only if `k' is a valid key.
 		require
 			valid_key: valid_key (k)
 		deferred
 		end;
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	put (v: G; k: H) is
 			-- Associate value `v' with key `k'.
-			-- Applicable only if `k' is a valid key.
 		require
 			valid_key: valid_key (k)
 		deferred
@@ -41,7 +39,7 @@ feature -- Insertion
 			insertion_done: equal (item (k), v)
 		end;
 
-feature -- Assertion check
+feature -- Status report
 
 	valid_key (k: H): BOOLEAN is
 			-- Is `k' a valid key?

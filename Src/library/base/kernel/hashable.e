@@ -5,7 +5,7 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
--- Hashable elements
+-- Enable hashing function to instances
 
 indexing
 

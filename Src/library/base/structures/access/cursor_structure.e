@@ -19,7 +19,15 @@ deferred class CURSOR_STRUCTURE [G] inherit
 
 	ACTIVE [G]
 
-feature -- Cursor
+feature -- Access
+
+	cursor: CURSOR is
+			-- Current cursor position
+		deferred
+		end;
+
+
+feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
@@ -28,12 +36,8 @@ feature -- Cursor
 		deferred
 		end;
 		
-	cursor: CURSOR is
-			-- Current cursor position
-		deferred
-		end;
 
-feature -- Assertion check
+feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?

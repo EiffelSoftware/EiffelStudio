@@ -58,7 +58,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate list with `n' elements.
@@ -93,26 +93,29 @@ feature -- Access
 			Result := i_th (count)
 		end;
 
-feature -- Insertion
+	index: INTEGER;
+			-- Index of `item', if valid.
 
-	replace (v: like first) is
-			-- Replace current item by `v'.
+	cursor: CURSOR is
+			-- Current cursor position
 		do
-			put_i_th (v, index)
-		end;
-
-	extensible: BOOLEAN is false;
-			-- May new items be added to current?
-
-feature {NONE} -- Insertion
-
-	add (v: like item) is
-			-- Include `v' in `Current'.
-			-- No sense in a fixed list because not extensible.
-		do
+			!FIXED_LIST_CURSOR! Result.make (index)
 		end;
 
 feature -- Transformation
+
+	swap (i: INTEGER) is
+			-- Exchange item at `i'-th position with item
+			-- at cursor position.
+		local
+			old_item: like item
+		do
+			old_item := item;
+			replace (i_th (i));
+			put_i_th (old_item, i)
+		end;
+
+feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-list beginning at cursor position
@@ -135,18 +138,16 @@ feature -- Transformation
 			go_i_th (pos)
 		end;
 
-	swap (i: INTEGER) is
-			-- Exchange item at `i'-th position with item
-			-- at cursor position.
-		local
-			old_item: like item
+
+feature -- Modification & Insertion
+
+	replace (v: like first) is
+			-- Replace current item by `v'.
 		do
-			old_item := item;
-			replace (i_th (i));
-			put_i_th (old_item, i)
+			put_i_th (v, index)
 		end;
 
-feature -- Cursor
+feature -- Cursor movement
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.
@@ -189,16 +190,10 @@ feature -- Cursor
 			index := fl_c.index
 		end;
 
-	index: INTEGER;
-			-- Index of `item', if valid.
+feature -- Status report
 
-	cursor: CURSOR is
-			-- Current cursor position
-		do
-			!FIXED_LIST_CURSOR! Result.make (index)
-		end;
-
-feature -- Assertion check
+	extensible: BOOLEAN is false;
+			-- May new items be added to current?
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
@@ -211,4 +206,16 @@ feature -- Assertion check
 			end
 		end;
 
-end
+
+
+feature  {NONE} -- Modification & Insertion
+
+	add (v: like item) is
+			-- Include `v' in `Current'.
+			-- No sense in a fixed list because not extensible.
+		do
+		end;
+
+
+ 
+end -- class FIXED_LIST

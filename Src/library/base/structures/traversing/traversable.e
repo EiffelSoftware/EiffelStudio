@@ -25,6 +25,17 @@ feature -- Access
 			is_readable: readable	
 		deferred
 		end;
+	
+
+feature -- Cursor movement
+
+
+	start is
+			-- Move to first position.
+		deferred
+		end;
+
+feature -- Status report
 
 	readable: BOOLEAN is
 			-- Is there a current item to be read?
@@ -38,17 +49,10 @@ feature -- Access
 			Result := off
 		end;
 
-feature -- Cursor
-
 	off: BOOLEAN is
 			-- Is there no current item?
 		deferred
-		end;
-
-	start is
-			-- Move to first position.
-		deferred
-		end;
+		end;	
 
 invariant
 

@@ -44,11 +44,12 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (nb_rows, nb_columns: INTEGER) is
-			-- Create a two dimensional array,
-			-- with lower bounds starting at 1.
+		  	-- Create a two dimensional array which has `nb_rows'
+			-- rows and `nb_columns' columns,
+			-- with lower bounds starting at 1.(d.H)
 		require
 			not_flat: nb_rows > 0;
 			not_thin: nb_columns > 0
@@ -60,50 +61,6 @@ feature -- Creation
 			new_count: count = height * width
 		end;
 
-feature -- Access
-
-	item (row, column: INTEGER): G is
-			-- Entry at coordinates (`row', `column')
-		require
-			valid_row: (1 <= row) and (row <= height);
-			valid_column: (1 <= column) and (column <= width)
-		do
-			Result := array_item ((row - 1) * width + column)
-		end;
-
-feature -- Insertion
-
-	put (v: like item; row, column: INTEGER) is
-			-- Replace entry at coordinates (`row', `column') by `v'.
-		require
-			valid_row: 1 <= row and row <= height;
-			valid_column: 1 <= column and column <= width
-		do
-			array_put (v,  (row - 1) * width + column)
-		end;
-
-	force (v: like item; row, column: INTEGER) is
-			-- Assign item `v' at coordinates (`row', `column').
-			-- Resize if necessary.
-		require
-			row_large_enough: 1 <= row;
-			column_large_enough: 1 <= column
-		do
-			resize (row, column);
-			put (v, row, column)
-		end;
-
-feature -- Deletion
-
-	wipe_out is
-			-- Empty `Current': discard all items.
-		do
-			height := 0;
-			width := 0;
-			array_wipe_out
-		end;
-
-feature -- Transformation
 
 	initialize (v: G) is
 			-- Assign `v' to each entry.
@@ -127,28 +84,19 @@ feature -- Transformation
 			end
 		end;
 
-feature {NONE} -- Transformation
 
-	transfer (new: like Current; in_old, in_new, nb: INTEGER) is
-			-- Copy `nb' items from `Current',
-			-- starting from `in_old', to `new', starting from
-			-- `in_new'. Do not copy out_of_bounds items.
-		local
-			i, j: INTEGER
+feature -- Access
+
+	item (row, column: INTEGER): G is
+			-- Entry at coordinates (`row', `column')
+		require
+			valid_row: (1 <= row) and (row <= height);
+			valid_column: (1 <= column) and (column <= width)
 		do
-			from
-				i := in_old;
-				j := in_new
-			until
-				i = in_old + nb
-			loop
-				new.array_put (array_item (i), j);
-				i := i + 1;
-				j := j + 1
-			end
+			Result := array_item ((row - 1) * width + column)
 		end;
 
-feature -- Number of elements
+feature -- Measurement
 
 	height: INTEGER;
 			-- Number of rows
@@ -156,11 +104,49 @@ feature -- Number of elements
 	width: INTEGER;
 			-- Number of columns
 
+ 
+
+
+feature -- Modification & Insertion
+
+	put (v: like item; row, column: INTEGER) is
+			-- Replace entry at coordinates (`row', `column') by `v'.
+		require
+			valid_row: 1 <= row and row <= height;
+			valid_column: 1 <= column and column <= width
+		do
+			array_put (v,  (row - 1) * width + column)
+		end;
+
+	force (v: like item; row, column: INTEGER) is
+			-- Assign item `v' at coordinates (`row', `column').
+			-- Resize if necessary.
+		require
+			row_large_enough: 1 <= row;
+			column_large_enough: 1 <= column
+		do
+			resize (row, column);
+			put (v, row, column)
+		end;
+
+feature -- Removal
+
+	wipe_out is
+			-- Empty `Current': discard all items.
+		do
+			height := 0;
+			width := 0;
+			array_wipe_out
+		end;
+
+feature -- Resizing
+
 	resize (nb_rows, nb_columns: INTEGER) is
 			-- Rearrange `Current' so that it can accommodate
-			-- width and height without losing any previously
+                      	-- `nb_rows' rows and `nb_columns' columns without
+  			-- losing any previously
 			-- entered items, nor changing their coordinates;
-			-- do nothing if not possible.
+			-- do nothing if not possible.(d.H)
 		require
 			valid_row: nb_rows >= 1;
 			valid_column: nb_columns >= 1
@@ -200,8 +186,31 @@ feature -- Number of elements
 			end
 		end;
 
+
+feature  {NONE} -- Duplication
+
+	transfer (new: like Current; in_old, in_new, nb: INTEGER) is
+			-- Copy `nb' items from `Current',
+			-- starting from `in_old', to `new', starting from
+			-- `in_new'. Do not copy out_of_bounds items.
+		local
+			i, j: INTEGER
+		do
+			from
+				i := in_old;
+				j := in_new
+			until
+				i = in_old + nb
+			loop
+				new.array_put (array_item (i), j);
+				i := i + 1;
+				j := j + 1
+			end
+		end;
+
+
 invariant
 
 	items_number: count = width * height
 
-end
+end -- class ARRAY2

@@ -1,7 +1,7 @@
 --|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.		--
---|    270 Storke Road, Suite 7 Goleta, California 93117		--
---|                   (805) 685-1006							--
+--|   Copyright (C) Interactive Software Engineering, Inc.	--
+--|    270 Storke Road, Suite 7 Goleta, California 93117	--
+--|                   (805) 685-1006				--
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
@@ -35,7 +35,50 @@ feature -- Access
 			Result := active.item
 		end;
 
-feature -- Insertion
+	arity: INTEGER is
+			-- Number of children of active node.
+			-- This function may be called when
+			-- the cursor is above the tree in
+			-- which case it returns 0 for an
+			-- empty tree and 1 for a non empty
+			-- one
+		do
+			Result := active.arity
+		end;
+
+	cursor: CURSOR is
+			-- Current cursor position
+		local
+			temp: like cursor_anchor
+		do
+			!! temp.make (active, active_parent, after, before, below);
+			Result := temp
+		end;
+
+
+
+feature -- Measurement
+
+
+	count: INTEGER is
+			-- Number of items in the tree
+		local
+			pos: like cursor_anchor
+		do
+			pos ?= cursor;
+			from
+				start
+			until
+				off
+			loop
+				Result := Result + 1;
+				preorder_forth
+			end;
+			go_to (pos);
+			corresponding_child;
+		end;
+
+feature -- Modification & Insertion
 
 	replace (v: G) is
 			-- Replace current item by `v'.
@@ -43,7 +86,7 @@ feature -- Insertion
 			active.replace (v)
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove is
 			-- Remove node at cursor position
@@ -74,44 +117,8 @@ feature -- Deletion
 			cursor_above: above;
 		end;
 
-feature -- Number of elements
 
-	empty: BOOLEAN is
-			-- Is the tree empty?
-		do
-			Result := (above_node.arity = 0)
-		end;
-
-	count: INTEGER is
-			-- Number of items in the tree
-		local
-			pos: like cursor_anchor
-		do
-			pos ?= cursor;
-			from
-				start
-			until
-				off
-			loop
-				Result := Result + 1;
-				preorder_forth
-			end;
-			go_to (pos);
-			corresponding_child;
-		end;
-
-	arity: INTEGER is
-			-- Number of children of active node.
-			-- This function may be called when
-			-- the cursor is above the tree in
-			-- which case it returns 0 for an
-			-- empty tree and 1 for a non empty
-			-- one
-		do
-			Result := active.arity
-		end;
-
-feature -- Cursor
+feature -- Cursor movement
 
 	back is
 			-- Move cursor one position backward.
@@ -206,13 +213,15 @@ feature -- Cursor
 			unchecked_go (temp)
 		end;
 
-	cursor: CURSOR is
-			-- Current cursor position
-		local
-			temp: like cursor_anchor
+
+
+feature -- Status report
+
+
+	empty: BOOLEAN is
+			-- Is the tree empty?
 		do
-			!! temp.make (active, active_parent, after, before, below);
-			Result := temp
+			Result := (above_node.arity = 0)
 		end;
 
 	after: BOOLEAN;
@@ -253,36 +262,6 @@ feature -- Cursor
 			end
 		end;
 
-feature {NONE} -- Cursor
-
-	cursor_anchor: RECURSIVE_TREE_CURSOR [G];
-			-- Anchor for definitions concerning cursors
-
-	corresponding_child is
-			-- Make `active' the current child of `active_parent'.
-		do
-			if active_parent /= Void then
-				active_parent.child_go_i_th (1);	
-				active_parent.search_child (active);
-			end;
-		end;
-
-	unchecked_go (p: like cursor_anchor) is
-			-- Make an attempt to move cursor
-			-- to position `p', without checking
-			-- whether `p' is a valid cursor position
-			-- or not.
-		do
-			active_parent := p.active_parent;
-			active := p.active;
-			corresponding_child;
-			after := p.after;
-			before := p.before;
-			below := p.below
-		end;
-
-feature -- Assertion check
-
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 		local
@@ -310,7 +289,9 @@ feature -- Assertion check
 			end
 		end;
 
-feature {NONE} -- Representation
+
+
+feature  {NONE} -- Access
 
 	active: TREE [G];
 			-- Current node
@@ -321,4 +302,35 @@ feature {NONE} -- Representation
 	above_node: like active;
 			-- Node above root; physical root of tree
 
-end
+	cursor_anchor: RECURSIVE_TREE_CURSOR [G];
+			-- Anchor for definitions concerning cursors
+
+feature  {NONE} -- Cursor movement
+
+	corresponding_child is
+			-- Make `active' the current child of `active_parent'.
+		do
+			if active_parent /= Void then
+				active_parent.child_go_i_th (1);	
+				active_parent.search_child (active);
+			end;
+		end;
+
+	unchecked_go (p: like cursor_anchor) is
+			-- Make an attempt to move cursor
+			-- to position `p', without checking
+			-- whether `p' is a valid cursor position
+			-- or not.
+		do
+			active_parent := p.active_parent;
+			active := p.active;
+			corresponding_child;
+			after := p.after;
+			before := p.before;
+			below := p.below
+		end;
+
+ 
+
+ 
+end -- class RECURSIVE_CURSOR_TREE

@@ -47,7 +47,7 @@ deferred class DYNAMIC_LIST [G] inherit
 			wipe_out
 		end
 
-feature -- Insertion
+feature -- Modification & Insertion
 
 	add_left (v: like item) is
 			-- Put `v' to the left of cursor position.
@@ -110,7 +110,7 @@ feature -- Insertion
 			end
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove is
 			-- Remove current item.
@@ -146,7 +146,7 @@ feature -- Deletion
 			before: before
 		end;
 
-feature -- Obsolete features
+feature -- Obsolete, Modification & Insertion
 
 	put_left (v: like item) is obsolete "Use ``add_left''"
 		require

@@ -17,7 +17,7 @@ deferred class UNBOUNDED inherit
 
 	FINITE
 
-feature -- Number of elements
+feature -- Status report
 	
 	full: BOOLEAN is false;
 			-- Is `Current' full?

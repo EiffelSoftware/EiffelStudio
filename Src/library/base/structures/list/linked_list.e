@@ -30,7 +30,7 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make is
 			-- Create an empty list.
@@ -104,44 +104,63 @@ feature -- Access
 			end
 		end;
 
-	readable: BOOLEAN is
-			-- Is there a current item that may be read?
-		do
-			Result := not off
-		end;
-
-feature {LINKED_LIST} -- Access
-
-	previous: like first_element is
-			-- Element left of cursor
+	index: INTEGER is
+			-- Current cursor index
 		local
-			p: like first_element;
+			p: like first_element
 		do
 			if after then
-				Result := active
-			elseif not (isfirst or before) then
+				Result := count + 1
+			elseif not before then
 				from
-					p := first_element
+					p := first_element;
+					Result := 1
 				until
-					p.right = active
+					p = active
 				loop
-					p := p.right
-				end;
-				Result := p;
+					p := p.right;
+					Result := Result + 1
+				end
 			end
 		end;
 
-	next: like first_element is
-			-- Element right of cursor
+	cursor: CURSOR is
+			-- Current cursor position
 		do
-			if before then
-				Result := active
-			elseif active /= Void then
-				Result := active.right
+			!LINKED_LIST_CURSOR [G]! Result.make
+				(active, after, before)
+		end;
+
+
+
+	first_element: LINKABLE [G];
+			-- Head of list
+
+	last_element: like first_element is
+			-- Tail of list
+		local
+			p: like first_element
+		do
+			if not empty then
+				from
+					Result := active;
+					p := active.right
+				until
+					p = Void
+				loop
+					Result := p;
+					p := p.right
+				end
 			end
 		end;
 
-feature -- Insertion
+
+feature -- Measurement
+
+	count: INTEGER;
+			-- Number of items in `Current'
+
+feature -- Modification & Insertion
 
 	add_front (v: like item) is
 			-- Add `v' to the beginning of `Current'.
@@ -290,7 +309,7 @@ feature -- Insertion
 			end
 		end;
 
-feature -- Deletion
+feature -- Removal
 
 	remove is
 			-- Remove current item.
@@ -361,38 +380,10 @@ feature -- Deletion
 			count := 0
 		end;
 
-feature -- Number of elements
 
-	count: INTEGER;
-			-- Number of items in `Current'
 
-feature -- Cursor
+feature -- Cursor movement
 
-	index: INTEGER is
-			-- Current cursor index
-		local
-			p: like first_element
-		do
-			if after then
-				Result := count + 1
-			elseif not before then
-				from
-					p := first_element;
-					Result := 1
-				until
-					p = active
-				loop
-					p := p.right;
-					Result := Result + 1
-				end
-			end
-		end;
-
-	after: BOOLEAN;
-			-- Is there no position to the right of the cursor?
-
-	before: BOOLEAN;
-			-- Is there no position to the left of the cursor?
 
 	start is
 			-- Move cursor to first position.
@@ -500,12 +491,12 @@ feature -- Cursor
 				end
 			end
 		ensure then
-	--		moved_if_inbounds:
-	--			(old index + i) >= 0 and
-	--			(old index + i) <= (count + 1)
-	--				implies index = (old index + i);
-	--		(old index + i) <= 0 implies before;
-	--		(old index + i) >= (count + 1) implies after
+	 		moved_if_inbounds:
+	 			(old index + i) >= 0 and
+	 			(old index + i) <= (count + 1)
+	 				implies index = (old index + i);
+	 		(old index + i) <= 0 implies before;
+	 		(old index + i) >= (count + 1) implies after
 		end;
 
 	go_i_th (i: INTEGER) is
@@ -544,12 +535,23 @@ feature -- Cursor
 			end
 		end;
 
-	cursor: CURSOR is
-			-- Current cursor position
+
+feature -- Status report
+
+	readable: BOOLEAN is
+			-- Is there a current item that may be read?
 		do
-			!LINKED_LIST_CURSOR [G]! Result.make
-				(active, after, before)
+			Result := not off
 		end;
+
+
+
+	after: BOOLEAN;
+			-- Is there no position to the right of the cursor?
+
+	before: BOOLEAN;
+			-- Is there no position to the left of the cursor?
+
 
 	isfirst: BOOLEAN is
 			-- Is cursor at first position in `Current'?
@@ -566,13 +568,6 @@ feature -- Cursor
 					and then not before
 					and then active.right = Void
 		end;
-
-feature {LINKED_LIST} -- Cursor
-
-	active: like first_element;
-			-- Element at cursor position
-
-feature -- Assertion check
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
@@ -595,30 +590,8 @@ feature -- Assertion check
 			end
 		end;
 
-feature -- Representation
 
-	first_element: LINKABLE [G];
-			-- Head of list
-
-	last_element: like first_element is
-			-- Tail of list
-		local
-			p: like first_element
-		do
-			if not empty then
-				from
-					Result := active;
-					p := active.right
-				until
-					p = Void
-				loop
-					Result := p;
-					p := p.right
-				end
-			end
-		end;
-
-feature {LINKED_LIST} -- Creation
+feature  {LINKED_LIST} -- Initialization
 
 	new_chain: like Current is
 			-- Instance of class `like Current'.
@@ -643,11 +616,50 @@ feature {LINKED_LIST} -- Creation
 			result_exists: Result /= Void
 		end;
 
+
+feature  {LINKED_LIST} -- Access
+
+	previous: like first_element is
+			-- Element left of cursor
+		local
+			p: like first_element;
+		do
+			if after then
+				Result := active
+			elseif not (isfirst or before) then
+				from
+					p := first_element
+				until
+					p.right = active
+				loop
+					p := p.right
+				end;
+				Result := p;
+			end
+		end;
+
+	next: like first_element is
+			-- Element right of cursor
+		do
+			if before then
+				Result := active
+			elseif active /= Void then
+				Result := active.right
+			end
+		end;
+
+
+	active: like first_element;
+			-- Element at cursor position
+
+ 
+
+
+
 invariant
 
 	empty_constraint: empty implies ((first_element = Void) and (active = Void));
 	before_constraint: before implies (active = first_element);
 	after_constraint: after implies (active = last_element)
 
-end
-
+end -- class LINKED_LIST

@@ -5,6 +5,10 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Hashable comparable integer number
+-- Representation uses at most 'Integer_bits' from constant 
+-- attribute in class 'PLATFORM'
+
 indexing
 
 	date: "$Date$";
@@ -29,30 +33,18 @@ inherit
 			out
 		end
 
-feature
+feature -- Access
 
 	item: INTEGER;
 			-- Numeric double value
-
-	set_item (i: INTEGER) is
-			-- Assign `i' to `item'.
-		do
-			item := i
-		end;
-
-	out: STRING is
-			-- Return a printable representation of `Current'.
-		do
-			Result := c_outi ($item)
-		end;
-
-feature -- Hashcode
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
 			Result := item;
 		end;
+
+
 
 feature -- Comparison
 
@@ -64,7 +56,7 @@ feature -- Comparison
 			Result := item < other.item
 		end;
 
-feature	-- Numeric
+feature -- Basic operation
 
 	infix "+" (other: INTEGER_REF): INTEGER_REF is
 			-- Sum of `Current' and `other'
@@ -110,7 +102,6 @@ feature	-- Numeric
 			Result.set_item (- item)
 		end;
 
-feature	-- div, mod
 
 	infix "//" (other: INTEGER_REF): INTEGER_REF is
 			-- Integer division of Current by `other'
@@ -130,8 +121,25 @@ feature	-- div, mod
 			Result.set_item (item \\ other.item)
 		end;
 
-feature {NONE}
-			-- External
+feature -- Modification & Insertion
+
+
+	set_item (i: INTEGER) is
+			-- Assign `i' to `item'.
+		do
+			item := i
+		end;
+
+feature -- Ouput
+
+	out: STRING is
+			-- Return a printable representation of `Current'.
+		do
+			Result := c_outi ($item)
+		end;
+
+
+feature  {NONE} -- External, Ouput
 
 	c_outi (i: INTEGER): STRING is
 			-- Return a printable representation of `Current'.

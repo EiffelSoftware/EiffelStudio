@@ -21,7 +21,7 @@ creation
 
 	make
 
-feature {COMPACT_CURSOR_TREE} -- Creation
+feature  {COMPACT_CURSOR_TREE} -- Initialization
 
 	make (i: INTEGER; aft, bef, bel: BOOLEAN) is
 			-- Create a cursor and set it up on `i'.
@@ -32,10 +32,14 @@ feature {COMPACT_CURSOR_TREE} -- Creation
 			before := bef;
 		end;
 
-feature {COMPACT_CURSOR_TREE} -- Representation
+feature  {COMPACT_CURSOR_TREE} -- Access
 
 	active: INTEGER;
 			-- Index of current item
+
+
+
+feature  {COMPACT_CURSOR_TREE} -- Status report
 
 	after: BOOLEAN;
 

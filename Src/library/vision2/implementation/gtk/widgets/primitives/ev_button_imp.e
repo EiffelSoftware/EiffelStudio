@@ -117,6 +117,7 @@ feature {NONE} -- Initialization
 
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, left_side_label)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+	
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
 		ensure

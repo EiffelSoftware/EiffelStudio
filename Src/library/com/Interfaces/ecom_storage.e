@@ -8,7 +8,7 @@ class
 	ECOM_STORAGE
 
 inherit
-	ECOM_WRAPPER
+	ECOM_QUERIABLE
 
 	ECOM_STORAGE_ROUTINES
 
@@ -24,9 +24,17 @@ creation
 	make_new_doc_file,
 	make_temporary_doc_file,
 	make_open_file,
+	make_from_other,
 	make_from_pointer
 
 feature {NONE} -- Initialization
+
+	make_from_pointer (cpp_obj: POINTER) is
+			-- Make from pointer
+		do
+			initializer := ccom_create_c_storage_from_pointer (cpp_obj)
+			item := ccom_item (initializer)
+		end
 
 	make_new_doc_file (filename: FILE_NAME; a_mode: INTEGER) is
 			-- Create new compound file with path `filename' 
@@ -39,9 +47,9 @@ feature {NONE} -- Initialization
 			wide_string: ECOM_WIDE_STRING
 		do
 			initializer := ccom_create_c_storage;
-			!! wide_string.make_from_string (filename)
+			create wide_string.make_from_string (filename)
 			ccom_create_doc_file (initializer, wide_string.item, a_mode)
-			item := ccom_storage (initializer)
+			item := ccom_item (initializer)
 		ensure
 			compound_file_created: exists
 		end
@@ -54,7 +62,7 @@ feature {NONE} -- Initialization
 		do
 			initializer := ccom_create_c_storage;
 			ccom_create_doc_file (initializer, default_pointer, a_mode)
-			item := ccom_storage (initializer)
+			item := ccom_item (initializer)
 		ensure
 			compound_file_created: exists
 		end
@@ -71,9 +79,9 @@ feature {NONE} -- Initialization
 			wide_string: ECOM_WIDE_STRING
 		do
 			initializer := ccom_create_c_storage;				
-			!! wide_string.make_from_string (filename)
+			create wide_string.make_from_string (filename)
 			ccom_open_root_storage (initializer, wide_string.item, a_mode)	
-			item := ccom_storage (initializer)
+			item := ccom_item (initializer)
 		ensure
 			compound_file_open: exists			
 		end
@@ -93,8 +101,8 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			!! Result.make_from_pointer (ccom_create_stream (initializer, 
+			create wide_string.make_from_string (a_name)
+			create Result.make_from_pointer (ccom_create_stream (initializer, 
 					wide_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
@@ -113,8 +121,8 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			!! Result.make_from_pointer (ccom_open_stream (initializer, 
+			create wide_string.make_from_string (a_name)
+			create Result.make_from_pointer (ccom_open_stream (initializer, 
 					wide_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
@@ -132,8 +140,8 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			!! Result.make_from_pointer (ccom_create_storage (initializer, 
+			create wide_string.make_from_string (a_name)
+			create Result.make_from_pointer (ccom_create_storage (initializer, 
 					wide_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
@@ -153,8 +161,8 @@ feature -- Access
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
-			!! Result.make_from_pointer (ccom_open_storage (initializer, 
+			create wide_string.make_from_string (a_name)
+			create Result.make_from_pointer (ccom_open_storage (initializer, 
 					wide_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
@@ -168,14 +176,14 @@ feature -- Access
 		do
 			ptr := ccom_root_storage (initializer)
 			if (ptr /= default_pointer) then
-				!! Result.make_from_pointer (ptr)
+				create Result.make_from_pointer (ptr)
 			end
 		end 
 
 	elements: ECOM_ENUM_STATSTG is
 			-- Substorages and substreams enumerator		
 		do
-			!! Result.make_from_pointer (ccom_enum_elements (initializer))
+			create Result.make_from_pointer (ccom_enum_elements (initializer))
 		ensure
 			Result /= Void
 		end
@@ -300,7 +308,7 @@ feature -- Basic Operations
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)	
+			create wide_string.make_from_string (a_name)	
 			ccom_destroy_element (initializer, wide_string.item)
 		ensure
 			element_removed: not is_valid_name (a_name)
@@ -316,8 +324,8 @@ feature -- Basic Operations
 		local
 			wide_string1, wide_string2: ECOM_WIDE_STRING
 		do
-			!! wide_string1.make_from_string (old_name)
-			!! wide_string2.make_from_string (new_name)
+			create wide_string1.make_from_string (old_name)
+			create wide_string2.make_from_string (new_name)
 			ccom_rename_element (initializer, wide_string1.item, 
 						wide_string2.item)
 		ensure
@@ -346,8 +354,8 @@ feature -- Element Change
 		local
 			wide_string1, wide_string2: ECOM_WIDE_STRING
 		do
-			!! wide_string1.make_from_string (a_element_name)
-			!! wide_string2.make_from_string (new_name)
+			create wide_string1.make_from_string (a_element_name)
+			create wide_string2.make_from_string (new_name)
 			ccom_move_element_to (initializer, wide_string1.item, dest_storage.item, 
 							wide_string2.item, a_mode)
 		ensure
@@ -363,7 +371,7 @@ feature -- Element Change
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!! wide_string.make_from_string (a_element_name)
+			create wide_string.make_from_string (a_element_name)
 			ccom_set_element_times (initializer, wide_string.item, a_creation_time.item,
 						default_pointer, default_pointer)
 		ensure
@@ -379,7 +387,7 @@ feature -- Element Change
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!! wide_string.make_from_string (a_element_name)
+			create wide_string.make_from_string (a_element_name)
 			ccom_set_element_times (initializer, wide_string.item, default_pointer,
 						an_access_time.item, default_pointer)
 		ensure
@@ -395,7 +403,7 @@ feature -- Element Change
 		local
 			wide_string: ECOM_WIDE_STRING	
 		do
-			!! wide_string.make_from_string (a_element_name)
+			create wide_string.make_from_string (a_element_name)
 			ccom_set_element_times (initializer, wide_string.item, default_pointer,
 						default_pointer, a_modification_time.item)
 		ensure
@@ -446,12 +454,6 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	create_wrapper (a_pointer: POINTER): POINTER is
-			-- Create structure.
-		do
-			Result := ccom_create_c_storage_from_pointer (a_pointer)
-		end
-
 	delete_wrapper is
 			-- Delete structure.
 		do
@@ -464,7 +466,7 @@ feature {NONE} -- Implementation
 		require
 			valid_flag: is_valid_stat_flag (a_flag)
 		do
-			!! Result.make_from_pointer (ccom_stat (initializer, a_flag))
+			create Result.make_from_pointer (ccom_stat (initializer, a_flag))
 		ensure
 			valid_description: Result /= Void
 		end
@@ -574,17 +576,17 @@ feature {NONE} -- Externals
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (DWORD): EIF_POINTER"
 		end
-
-	ccom_storage (cpp_obj: POINTER) : POINTER is
-			-- Pointer to IStorage interface
-		external
-			"C++ [E_IStorage %"E_IStorage.h%"] ():EIF_POINTER"
-		end
 	
 	ccom_root_storage (cpp_obj: POINTER) : POINTER is
 			-- Pointer to IRootStorage interface
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] ():EIF_POINTER"
+		end
+
+	ccom_item (cpp_obj: POINTER): POINTER is
+			-- Item
+		external
+			"C++ [E_IStorage %"E_IStorage.h%"]():EIF_POINTER"
 		end
 	
 end -- class ECOM_STORAGE

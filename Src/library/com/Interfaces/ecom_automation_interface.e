@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Automation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

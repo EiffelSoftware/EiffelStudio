@@ -8,10 +8,20 @@ class
 	ECOM_ROOT_STORAGE
 
 inherit
-	ECOM_WRAPPER
+	ECOM_QUERIABLE
 
 creation
+	make_from_other,
 	make_from_pointer
+
+feature {NONE}  -- Initialization
+
+	make_from_pointer (cpp_obj: POINTER) is
+			-- Make from pointer
+		do
+			initializer := ccom_create_c_iroot_storage(cpp_obj)
+			item := ccom_item (initializer)
+		end
 
 feature -- Basic Operations
 
@@ -25,16 +35,11 @@ feature -- Basic Operations
 		local
 			wide_string: ECOM_WIDE_STRING
 		do
-			!! wide_string.make_from_string (a_name)
+			create wide_string.make_from_string (a_name)
 			ccom_switch_to_file (initializer, wide_string.item)
 		end
 
 feature {NONE} -- Implementation
-
-	create_wrapper (a_pointer: POINTER): POINTER is
-		do
-			Result := ccom_create_c_iroot_storage(a_pointer)
-		end
 
 	delete_wrapper is
 			-- delete structure
@@ -46,7 +51,7 @@ feature {NONE} -- Externals
 
 	ccom_create_c_iroot_storage(a_pointer: POINTER): POINTER is
 		external
-			"C++ [new E_IRootStorage %"E_IRootStorage.h%"](EIF_POINTER)"
+			"C++ [new E_IRootStorage %"E_IRootStorage.h%"](IUnknown *)"
 		end
 
 	ccom_delete_c_iroot_storage (cpp_obj: POINTER) is
@@ -54,7 +59,7 @@ feature {NONE} -- Externals
 			"C++ [delete E_IRootStorage %"E_IRootStorage.h%"]()"
 		end
 
-	ccom_iroot_storage (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER is
 		external
 			"C++ [E_IRootStorage %"E_IRootStorage.h%"](): EIF_POINTER"
 		end

@@ -1,5 +1,5 @@
 indexing
-	description: "COM interface"
+	description: "COM interface."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"

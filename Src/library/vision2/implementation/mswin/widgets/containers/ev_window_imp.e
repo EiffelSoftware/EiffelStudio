@@ -175,13 +175,8 @@ feature -- Status setting
 			-- Initialize the size of the widget.
 		do
 			internal_set_minimum_size (system_metrics.window_minimum_width, system_metrics.window_minimum_height)
---			internal_set_minimum_width (system_metrics.window_minimum_width)
---			internal_set_minimum_height (system_metrics.window_minimum_height)
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
---			if parent_imp /= Void then
---				notify_change (1 + 2)
---			end
 		end
 
 --	set_horizontal_resize (flag: BOOLEAN) is
@@ -543,13 +538,13 @@ feature {NONE} -- Implementation
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		do
-			execute_command (Cmd_size, Void)
 			if child /= Void then
 				child.parent_ask_resize (client_width, client_height)
 			end
 			if status_bar /= Void then
 				status_bar.reposition
 			end
+			execute_command (Cmd_size, Void)
 		end
 
    	on_move (x_pos, y_pos: INTEGER) is

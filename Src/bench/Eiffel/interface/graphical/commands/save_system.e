@@ -26,10 +26,10 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local   
-			new_file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
+			new_file, tmp_file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			to_write: STRING;
-			file_name: STRING;
-			aok: BOOLEAN;
+			file_name, tmp_name: STRING;
+			aok, create_backup: BOOLEAN;
 			show_text: SHOW_TEXT;
 			default_name: FILE_NAME
 		do
@@ -56,23 +56,41 @@ feature {NONE} -- Implementation
 				warner (popup_parent).gotcha_call (Warning_messages.w_Not_creatable (new_file.name))
 			end;
 
+				-- Create a backup of the file in case there will be a problem during the savings.
+			tmp_name := clone (file_name)
+			tmp_name.append (".swp")
+			!! tmp_file.make (tmp_name)
+			create_backup := not tmp_file.exists and then tmp_file.is_creatable
+
+			if not create_backup then
+				tmp_file := new_file
+			end
+
 			if aok then
 				to_write := text_window.text;
-				new_file.open_write;
+				tmp_file.open_write;
 				if not to_write.empty then
 					to_write.prune_all ('%R')
 					if general_resources.text_mode.value.is_equal ("UNIX") then
-						new_file.putstring (to_write)
+						tmp_file.putstring (to_write)
 						if to_write.item (to_write.count) /= '%N' then 
 							-- Add a carriage return like `vi' if there's none at the end 
-							new_file.new_line
+							tmp_file.new_line
 						end
 					else
 						to_write.replace_substring_all ("%N", "%R%N")
-						new_file.putstring (to_write)
+						tmp_file.putstring (to_write)
 					end
 				end;
-				new_file.close;
+				tmp_file.close;
+
+				if create_backup then
+						-- We need to copy the backup file to the original file and then
+						-- delete the backup file
+					new_file.delete
+					tmp_file.change_name (file_name)
+				end
+
 				show_text ?= tool.last_format.associated_command;
 				if show_text /= Void then
 					--| Only set the file name if it is an Ace file

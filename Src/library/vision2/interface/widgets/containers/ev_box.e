@@ -20,7 +20,7 @@ inherit
 feature -- Status report
 
 	is_homogeneous: BOOLEAN is
-			-- Are all items forced to have the same dimensions.
+			-- Are all items forced to have same dimensions.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -67,7 +67,7 @@ feature -- Status report
 feature -- Status setting
 	
 	enable_homogeneous is
-			-- Force all items to have the same dimensions.
+			-- Force all items to have same dimensions.
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -16,6 +16,12 @@ echo -----------------------------------------------------------------
 cdd %EIFFEL_SRC%\help\wizards
 call cvs up -Pd
 echo -----------------------------------------------------------------
+echo ----------------- C Compilation ---------------------------------
+echo -----------------------------------------------------------------
+cdd %EIFFEL_SRC\help\wizards\edotnet\reflection_interface_generated\Client\Clib
+call make_finalize.bat
+cdd %EIFFEL_SRC%\help\wizards
+echo -----------------------------------------------------------------
 echo ----------------- Compilation -----------------------------------
 echo -----------------------------------------------------------------
 %ISE_EIFFEL%\bench\spec\windows\bin\ec -finalize -ace %EIFFEL_SRC%\help\wizards\dotnet_wizard.ace -project_path %TEMP%\dotnet_wizard

@@ -30,7 +30,7 @@ feature -- Access
 	is_set: BOOLEAN is
 			-- Is cond_pointer initialized?
 		do
-			Result := (cond_pointer /= cond_pointer)
+			Result := (cond_pointer /= default_pointer)
 		end
 
 feature -- Status setting

@@ -318,6 +318,8 @@ feature {NONE} -- Implementation
 		do
 			inspect
 				c
+		 	when '&' then
+				buffer.append_string ("&amp;")
 		 	when '<' then
 				buffer.append_string ("&lt;")
 		 	when '>' then

@@ -24,7 +24,8 @@ inherit
 			update_integer_resource,
 			update_array_resource,
 			set_default_size,
-			resources, close, update_graphical_resources
+			resources, close, update_graphical_resources,
+			raise
 		end;
 	EB_CONSTANTS;
 
@@ -175,6 +176,14 @@ feature -- Status setting
 		end;
 
 feature -- Update
+
+	raise is
+			-- Raise the tool.
+		do
+			if realized and then shown then
+				eb_shell.raise
+			end
+		end;
 
 	close is
 			-- Close the system tool.
@@ -337,6 +346,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! save_as_button.make (save_as_cmd, edit_bar);
 			!! save_as_menu_entry.make (save_as_cmd, file_menu);
 			!! save_as_cmd_holder.make (save_as_cmd, save_as_button, save_as_menu_entry);
+			build_print_menu_entry;
 			!! sep.make (new_name, file_menu);
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
@@ -394,9 +404,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			showclass_cmd: SHOW_CLASS_LIST;
 			showclass_button: FORMAT_BUTTON;
 			showclass_menu_entry: EB_TICKABLE_MENU_ENTRY;
-			-- 3.5 showheir_cmd: SHOW_CLUSTER_HIERARCHY;
-			-- showheir_button: FORMAT_BUTTON;
-			-- showheir_menu_entry: EB_TICKABLE_MENU_ENTRY;
+			showhier_cmd: SHOW_CLUSTER_HIERARCHY;
+			showhier_button: FORMAT_BUTTON;
+			showhier_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showindex_cmd: SHOW_INDEXING;
 			showindex_button: FORMAT_BUTTON
 			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY;
@@ -415,10 +425,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! showclass_button.make (showclass_cmd, format_bar);
 			!! showclass_menu_entry.make (showclass_cmd, format_menu);
 			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry);
-			-- 3.5 !! showheir_cmd.make (Current);
-			-- !! showheir_button.make (showheir_cmd, format_bar);
-			-- !! showheir_menu_entry.make (showheir_cmd, format_menu);
-			-- !! showheir_frmt_holder.make (showheir_cmd, showheir_button, showheir_menu_entry);
+			!! showhier_cmd.make (Current);
+			!! showhier_button.make (showhier_cmd, format_bar);
+			!! showhier_menu_entry.make (showhier_cmd, format_menu);
+			!! showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry);
 			!! stat_cmd.make (Current);
 			!! stat_button.make (stat_cmd, format_bar);
 			!! stat_menu_entry.make (stat_cmd, format_menu);
@@ -435,14 +445,14 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- Now we attach everything (this is done here for reason of speed).
 			format_bar.attach_top (showtext_button, 0);
 			format_bar.attach_left (showtext_button, 0);
-			-- format_bar.attach_top (showheir_button, 0);
-			-- format_bar.attach_left_widget (showtext_button, showheir_button, 0);
 			format_bar.attach_top (list_button, 0);
 			format_bar.attach_left_widget (showtext_button, list_button, 0);
 			format_bar.attach_top (showclass_button, 0);
 			format_bar.attach_left_widget (list_button, showclass_button, 0);
+			format_bar.attach_top (showhier_button, 0);
+			format_bar.attach_left_widget (showclass_button, showhier_button, 0);
 			format_bar.attach_top (stat_button, 0);
-			format_bar.attach_left_widget (showclass_button, stat_button, 0);
+			format_bar.attach_left_widget (showhier_button, stat_button, 0);
 			format_bar.attach_top (mod_button, 0);
 			format_bar.attach_left_widget (stat_button, mod_button, 0);
 			format_bar.attach_top (showindex_button, 0);
@@ -499,8 +509,6 @@ feature {NONE} -- Attributes; Commands
 	showlist_frmt_holder: FORMAT_HOLDER;
 
 	showclasses_frmt_holder: FORMAT_HOLDER;
-
-	-- 3.5 showheir_frmt_holder: FORMAT_HOLDER;
 
 	showhier_frmt_holder: FORMAT_HOLDER;
 

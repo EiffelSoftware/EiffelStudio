@@ -14,26 +14,59 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMPONENT_VIEWER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_ID
+		export
+			{NONE} all
+		end
 
 create
 	make

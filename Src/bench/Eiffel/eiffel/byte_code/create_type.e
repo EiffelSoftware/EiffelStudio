@@ -5,7 +5,7 @@ class CREATE_TYPE
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid
+			generate_cid, generate_reverse
 		end
 	
 feature -- Access
@@ -117,6 +117,24 @@ feature -- Generic conformance
 		do
 			Result ?= context.real_type (type)
 		end;
+
+feature -- Assignment attempt
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+
+		local
+			cl_type_i : CL_TYPE_I
+		do
+			cl_type_i ?= context.real_type (type)
+
+			if context.workbench_mode then
+				buffer.putstring ("RTUD(")
+				cl_type_i.associated_class_type.id.generated_id (buffer)
+				buffer.putchar (')')
+			else
+				buffer.putint (cl_type_i.type_id - 1)
+			end
+		end
 
 feature -- Debug
 

@@ -28,17 +28,17 @@ inherit
  
 	EV_PIXMAPABLE_IMP
 		redefine
-			set_pixmap,
-			remove_pixmap,
 			interface,
 			initialize
 		end
      
 	EV_TEXTABLE_IMP
 		redefine
-			set_text,
 			interface,
-			initialize
+			initialize,
+			align_text_left,
+			align_text_center,
+			align_text_right
 		end
 
 	EV_FONTABLE_IMP
@@ -93,12 +93,45 @@ feature {NONE} -- Initialization
 			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, padding)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, padding)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
+
+				-- Set up alignment dummy labels.
+			left_side_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
+			right_side_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (left_side_label)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (right_side_label)
+
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, left_side_label)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
+			
+			set_child_expandable (box, pixmap_box, False)
+			set_child_expandable (box, text_label, False)
 		ensure
 			button_box /= NULL
+		end
+		
+	set_child_expandable (a_box: POINTER; a_child: POINTER; flag: BOOLEAN) is
+			-- Set whether `child' expands to fill available spare space.
+		local
+			old_expand, fill, pad, pack_type: INTEGER
+		do
+			feature {EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
+				a_box,
+				a_child,
+				$old_expand,
+				$fill,
+				$pad,
+				$pack_type
+			)
+			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
+				a_box,
+				a_child,
+				flag,
+				fill.to_boolean,
+				pad,
+				pack_type
+			)
 		end
 		
 	fontable_widget: POINTER is
@@ -106,6 +139,9 @@ feature {NONE} -- Initialization
 		do
 			Result := text_label
 		end
+		
+	left_side_label, right_side_label: POINTER
+			-- Dummy labels used for text/pixmap alignment
 
 feature -- Access
 
@@ -114,6 +150,30 @@ feature -- Access
 			-- for a particular container?
 		
 feature -- Status Setting
+
+	align_text_center is
+			-- Display `text' centered.
+		do
+			Precursor {EV_TEXTABLE_IMP}
+			set_child_expandable (button_box, left_side_label, True)
+			set_child_expandable (button_box, right_side_label, True)
+		end
+
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			Precursor {EV_TEXTABLE_IMP}
+			set_child_expandable (button_box, left_side_label, False)
+			set_child_expandable (button_box, right_side_label, True)
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			Precursor {EV_TEXTABLE_IMP}
+			set_child_expandable (button_box, left_side_label, True)
+			set_child_expandable (button_box, right_side_label, False)
+		end
 
 	enable_default_push_button is
 			-- Set the style of the button corresponding
@@ -165,42 +225,6 @@ feature -- Status Setting
 	set_foreground_color (a_color: EV_COLOR) is
 		do
 			real_set_foreground_color (text_label, a_color)
-		end
-
-feature -- Element change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-			--| Redefined because we want the text to be:
-			--| 	- middle-aligned if there is no pixmap
-			--| 	- left-aligned if there is a pixmap
-		do
-			if text = Void then
-				feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
-					button_box,
-					pixmap_box,
-					False,      -- Don't expand box.
-					False,
-					padding,
-					feature {EV_GTK_EXTERNALS}.Gtk_pack_end_enum
-				)
-			end
-			Precursor {EV_TEXTABLE_IMP} (a_text)
-		end
-
-	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Assign `a_pixmap' to `pixmap'.
-		do
-			align_text_left
-			Precursor {EV_PIXMAPABLE_IMP} (a_pixmap)
-		end
-
-	remove_pixmap is
-			-- Assign Void to `pixmap'.
-		do
-			Precursor {EV_PIXMAPABLE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
-			align_text_center
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

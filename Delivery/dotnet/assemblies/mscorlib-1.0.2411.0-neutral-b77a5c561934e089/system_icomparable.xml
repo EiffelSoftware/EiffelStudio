@@ -1,0 +1,57 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>False</frozen>
+		<expanded>False</expanded>
+		<deferred>True</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_ICOMPARABLE</class_eiffel_name>
+		<alias>
+			<simple_name>IComparable</simple_name>
+			<namespace>System</namespace>
+			<assembly_name>mscorlib</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>ANY</parent_name>
+				<undefine>finalize, get_hash_code, equals, to_string</undefine>
+			</parent>
+		</inherit>
+		<create_none>False</create_none>
+	</header>
+	<body>
+		<basic_operations>
+			<feature>
+				<feature_modified>False</feature_modified>
+				<frozen_feature>False</frozen_feature>
+				<static>False</static>
+				<abstract>True</abstract>
+				<method>True</method>
+				<field>False</field>
+				<creation_routine>False</creation_routine>
+				<prefix>False</prefix>
+				<infix>False</infix>
+				<new_slot>True</new_slot>
+				<enum_literal>False</enum_literal>
+				<is_literal>False</is_literal>
+				<feature_eiffel_name>compare_to</feature_eiffel_name>
+				<feature_external_name>CompareTo</feature_external_name>
+				<arguments>
+					<argument>
+						<argument_eiffel_name>obj</argument_eiffel_name>
+						<argument_external_name>obj</argument_external_name>
+						<argument_type>ANY</argument_type>
+						<argument_type_full_name>System.Object</argument_type_full_name>
+					</argument>
+				</arguments>
+				<return_type>INTEGER</return_type>
+				<return_type_full_name>System.Int32</return_type_full_name>
+			</feature>
+		</basic_operations>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

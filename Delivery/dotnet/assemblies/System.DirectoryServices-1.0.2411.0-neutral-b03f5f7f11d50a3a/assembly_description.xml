@@ -1,0 +1,32 @@
+<!DOCTYPE assembly_description SYSTEM "../assembly_description.dtd">
+<assembly>
+	<assembly_name>System.DirectoryServices</assembly_name>
+	<assembly_version>1.0.2411.0</assembly_version>
+	<assembly_culture>neutral</assembly_culture>
+	<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+	<eiffel_cluster_path>$ISE_EIFFEL\library.net\system.directoryservices</eiffel_cluster_path>
+	<emitter_version_number>2.7b2</emitter_version_number>
+	<assembly_types>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryservicespermissionentrycollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_searchscope.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_sortdirection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_searchresultcollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_sortoption.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_searchresult.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryservicespermissionaccess.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryservicespermissionattribute.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_resultpropertyvaluecollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_dsdescriptionattribute.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_propertyvaluecollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryentries.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryservicespermissionentry.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_schemanamecollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_resultpropertycollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_propertycollection.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryentry.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directoryservicespermission.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_referralchasingoption.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_directorysearcher.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_directoryservices_authenticationtypes.xml</assembly_type_filename>
+	</assembly_types>
+</assembly>

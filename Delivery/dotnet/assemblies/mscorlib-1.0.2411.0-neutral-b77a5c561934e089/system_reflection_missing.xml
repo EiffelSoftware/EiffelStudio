@@ -1,0 +1,43 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>True</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_REFLECTION_MISSING</class_eiffel_name>
+		<alias>
+			<simple_name>Missing</simple_name>
+			<namespace>System.Reflection</namespace>
+			<assembly_name>mscorlib</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<access>
+			<feature>
+				<feature_modified>False</feature_modified>
+				<frozen_feature>True</frozen_feature>
+				<static>True</static>
+				<abstract>False</abstract>
+				<method>False</method>
+				<field>True</field>
+				<creation_routine>False</creation_routine>
+				<prefix>False</prefix>
+				<infix>False</infix>
+				<new_slot>True</new_slot>
+				<enum_literal>False</enum_literal>
+				<is_literal>False</is_literal>
+				<feature_eiffel_name>value</feature_eiffel_name>
+				<feature_external_name>Value</feature_external_name>
+				<return_type>SYSTEM_REFLECTION_MISSING</return_type>
+				<return_type_full_name>System.Reflection.Missing</return_type_full_name>
+			</feature>
+		</access>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

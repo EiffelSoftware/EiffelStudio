@@ -1,0 +1,28 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>True</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_DRAWING_DRAWING2D_GRAPHICSCONTAINER</class_eiffel_name>
+		<alias>
+			<simple_name>GraphicsContainer</simple_name>
+			<namespace>System.Drawing.Drawing2D</namespace>
+			<assembly_name>System.Drawing</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>SYSTEM_MARSHALBYREFOBJECT</parent_name>
+			</parent>
+		</inherit>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

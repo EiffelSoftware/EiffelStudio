@@ -1,0 +1,31 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>False</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_RUNTIME_REMOTING_METADATASERVICES_SUDSGENERATOREXCEPTION</class_eiffel_name>
+		<alias>
+			<simple_name>SUDSGeneratorException</simple_name>
+			<namespace>System.Runtime.Remoting.MetadataServices</namespace>
+			<assembly_name>System.Runtime.Remoting</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE</parent_name>
+			</parent>
+			<parent>
+				<parent_name>SYSTEM_EXCEPTION</parent_name>
+			</parent>
+		</inherit>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

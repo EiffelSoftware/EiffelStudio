@@ -1,0 +1,45 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>False</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_XML_SCHEMA_XMLSCHEMAPATTERNFACET</class_eiffel_name>
+		<alias>
+			<simple_name>XmlSchemaPatternFacet</simple_name>
+			<namespace>System.Xml.Schema</namespace>
+			<assembly_name>System.Xml</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<inherit>
+			<parent>
+				<parent_name>SYSTEM_XML_SCHEMA_XMLSCHEMAFACET</parent_name>
+			</parent>
+		</inherit>
+		<create_none>False</create_none>
+	</header>
+	<body>
+		<initialization>
+			<feature>
+				<feature_modified>False</feature_modified>
+				<frozen_feature>True</frozen_feature>
+				<static>False</static>
+				<abstract>False</abstract>
+				<method>False</method>
+				<field>False</field>
+				<creation_routine>True</creation_routine>
+				<prefix>False</prefix>
+				<infix>False</infix>
+				<new_slot>False</new_slot>
+				<enum_literal>False</enum_literal>
+				<is_literal>False</is_literal>
+				<feature_eiffel_name>make_xmlschemapatternfacet</feature_eiffel_name>
+			</feature>
+		</initialization>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

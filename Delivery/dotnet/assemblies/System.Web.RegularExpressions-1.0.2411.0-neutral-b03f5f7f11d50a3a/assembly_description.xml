@@ -1,0 +1,26 @@
+<!DOCTYPE assembly_description SYSTEM "../assembly_description.dtd">
+<assembly>
+	<assembly_name>System.Web.RegularExpressions</assembly_name>
+	<assembly_version>1.0.2411.0</assembly_version>
+	<assembly_culture>neutral</assembly_culture>
+	<assembly_public_key>b03f5f7f11d50a3a</assembly_public_key>
+	<eiffel_cluster_path>$ISE_EIFFEL\library.net\system.web.regularexpressions</eiffel_cluster_path>
+	<emitter_version_number>2.7b2</emitter_version_number>
+	<assembly_types>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_tagregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_directiveregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_endtagregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_aspcoderegex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_aspexprregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_databindexprregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_commentregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_includeregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_textregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_gtregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_ltregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_servertagsregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_runatserverregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_simpledirectiveregex.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a\system_web_regularexpressions_databindregex.xml</assembly_type_filename>
+	</assembly_types>
+</assembly>

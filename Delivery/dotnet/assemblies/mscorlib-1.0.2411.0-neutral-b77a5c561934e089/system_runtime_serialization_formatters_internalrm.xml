@@ -1,0 +1,23 @@
+<!DOCTYPE type SYSTEM "../type.dtd">
+<class>
+	<header>
+		<modified>False</modified>
+		<frozen>True</frozen>
+		<expanded>False</expanded>
+		<deferred>False</deferred>
+		<generic>False</generic>
+		<class_eiffel_name>SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_INTERNALRM</class_eiffel_name>
+		<alias>
+			<simple_name>InternalRM</simple_name>
+			<namespace>System.Runtime.Serialization.Formatters</namespace>
+			<assembly_name>mscorlib</assembly_name>
+			<assembly_version>1.0.2411.0</assembly_version>
+			<assembly_culture>neutral</assembly_culture>
+			<assembly_public_key>b77a5c561934e089</assembly_public_key>
+		</alias>
+		<create_none>True</create_none>
+	</header>
+	<body>
+		<bit_or_infix>False</bit_or_infix>
+	</body>
+</class>

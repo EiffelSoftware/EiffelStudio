@@ -1,0 +1,42 @@
+<!DOCTYPE assembly_description SYSTEM "../assembly_description.dtd">
+<assembly>
+	<assembly_name>System.Runtime.Remoting</assembly_name>
+	<assembly_version>1.0.2411.0</assembly_version>
+	<assembly_culture>neutral</assembly_culture>
+	<assembly_public_key>b77a5c561934e089</assembly_public_key>
+	<eiffel_cluster_path>$ISE_EIFFEL\library.net\system.runtime.remoting</eiffel_cluster_path>
+	<emitter_version_number>2.7b2</emitter_version_number>
+	<assembly_types>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_tcp_tcpchannel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_metadata.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_servicetype.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_http_httpchannel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_soapclientformattersinkprovider.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_soapclientformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_soapserverformattersinkprovider.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_soapserverformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\protocol_in_system_runtime_remoting_channels_soapserverformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_tcp_tcpserverchannel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_commontransportkeys.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_services_remotingclientproxy.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_services_remotingservice.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_http_httpremotinghandler.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_http_httpremotinghandlerfactory.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_sdlchannelsinkprovider.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_sdlchannelsink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_binaryclientformattersinkprovider.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_binaryclientformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_binaryserverformattersinkprovider.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_binaryserverformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\protocol_in_system_runtime_remoting_channels_binaryserverformattersink.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_tcp_tcpclientchannel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_activation_iremotingdispatcher.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_activation_remotingdispatcher.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_sudsgeneratorexception.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_activationhook.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_sdltype.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_metadataservices_sudsparserexception.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_http_httpserverchannel.xml</assembly_type_filename>
+		<assembly_type_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089\system_runtime_remoting_channels_http_httpclientchannel.xml</assembly_type_filename>
+	</assembly_types>
+</assembly>

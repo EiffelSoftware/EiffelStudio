@@ -188,7 +188,7 @@ feature {NONE} -- Formatting
 			l_member_info: MEMBER_INFORMATION
 			l_summary: LIST [STRING]
 		do
-			l_member_info := a_ctxt.assembly_info.find_type (dotnet_name)
+			l_member_info := a_ctxt.assembly_info.find_type (a_ctxt.assembly_name, dotnet_name)
 			a_ctxt.put_text_item (ti_Before_indexing)
 			a_ctxt.put_text_item (ti_Indexing_keyword)
 			a_ctxt.indent

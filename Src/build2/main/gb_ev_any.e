@@ -36,9 +36,6 @@ feature -- Initialization
 			-- Create `Current'.
 			-- Create `objects' to hold 2 items.
 		do
-		--	check
-		--		parent_editor_exists: parent_editor /= Void
-		--	end
 			create objects.make (2)
 		end
 		

@@ -831,15 +831,15 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	else if (accounting == RECOVER_ACCOUNT) {
 		widr_multi_int32 (&obj_nb, 1);
 #ifdef RECOVERABLE_DEBUG
-		printf ("-- Storing %ld objects\n", (long) obj_nb);
+		printf ("-- Storing %d objects\n", obj_nb);
 		object_count = 0;
 #endif
 	}
 	else
-		buffer_write((char *)(&obj_nb), sizeof(long));
+		buffer_write((char *)(&obj_nb), sizeof(uint32));
 
 #if DEBUG & 3
-		printf (" %lx", obj_nb);
+		printf (" %x", obj_nb);
 #endif
 
 	st_store(object);		/* Write objects to be stored */

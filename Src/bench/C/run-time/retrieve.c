@@ -1353,10 +1353,10 @@ rt_shared uint32 special_generic_type (uint32 o_type)
 rt_public EIF_REFERENCE rt_make(void)
 {
 		/* Make the retrieve of all objects in file */
-	long objectCount;
+	uint32 objectCount;
 
 		/* Read the object count in the file header */
-	buffer_read((char *) &objectCount, (sizeof(long)));
+	buffer_read((char *) &objectCount, (sizeof(uint32)));
 
 	return rt_nmake(objectCount);
 }
@@ -1474,10 +1474,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 rt_public EIF_REFERENCE grt_make(void)
 {
 		/* Make the retrieve of all objects in file */
-	long objectCount;
+	uint32 objectCount;
 
 		/* Read the object count in the file header */
-	buffer_read((char *) &objectCount, sizeof(long));
+	buffer_read((char *) &objectCount, sizeof(uint32));
 
 	return grt_nmake(objectCount);
 }
@@ -1644,7 +1644,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 rt_public EIF_REFERENCE irt_make(void)
 {
 	/* Make the retrieve of all objects in file */
-	EIF_INTEGER_32 objectCount;
+	uint32 objectCount;
 
 	/* Read the object count in the file header */
 	ridr_multi_int32 (&objectCount, 1);
@@ -1809,7 +1809,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 rt_public EIF_REFERENCE rrt_make (void)
 {
 	/* Make the retrieve of all objects in file */
-	EIF_INTEGER_32 objectCount;
+	uint32 objectCount;
 
 	/* Read the object count in the file header */
 	ridr_multi_int32 (&objectCount, 1);

@@ -50,7 +50,7 @@ feature {NONE}
 			-- Assign `i' to `position'.
 		require
 			pos_large_enough: i > 0
-			pos_small_enough: i <= size
+			pos_small_enough: i <= count
 		do
 			position := i
 		end
@@ -68,8 +68,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Int_8_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_uint_8_from_int (i, position);
 			position := new_position
@@ -85,8 +85,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Int_16_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_uint_16_from_int (i, position);
 			position := new_position
@@ -102,8 +102,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Int_16_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_sint_16_from_int (i, position);
 			position := new_position
@@ -121,8 +121,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Int_32_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_uint_32_from_int (i, position)
 			position := new_position
@@ -140,8 +140,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Int_32_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_sint_32_from_int (i, position)
 			position := new_position
@@ -152,13 +152,13 @@ feature {ANY}
 			-- using network byte order
 		require
 			i_positive: i >= 0
-			i_small_enough: i < 18446744073709551616 -- 2^64
+			i_small_enough: i < {INTEGER_64}.max_value
 		local
 			new_position: INTEGER
 		do
 			new_position := position + Int_64_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_uint_64_from_int_64 (i, position);
 			position := new_position
@@ -171,15 +171,13 @@ feature {ANY}
 			-- so there should never be an overflow here
 		require
 			i_positive: i >= 0
-			i_small_enough: i < 18446744073709551616 -- 2^64	Double_size: INTEGER is 8
-			
-
+			i_small_enough: i < {INTEGER_64}.max_value
 		local
 			new_position: INTEGER
 		do
 			new_position := position + Int_64_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_sint_64_from_int_64 (i, position);
 			position := new_position
@@ -223,12 +221,12 @@ feature {ANY}
 			end
 			new_position := position + other.position - 1
 			if
-				new_position > size
+				new_position > count
 			then
 				resize (new_position + Inc_size)
 			end
 			other_area := other.area
-			ca_copy ($other_area, $area, other.position - 1, position)
+			internal_copy (other_area, area, other.position - 1, position)
 		end
 						
 	append_double_from_double (d: DOUBLE) is
@@ -237,8 +235,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Double_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_double_from_double (d, position);
 			position := new_position
@@ -249,8 +247,8 @@ feature {ANY}
 			new_position: INTEGER
 		do
 			new_position := position + Float_size
-			if new_position > size then
-				resize (size + Inc_size)
+			if new_position > count then
+				resize (count + Inc_size)
 			end
 			put_float_from_real (f, position);
 			position := new_position

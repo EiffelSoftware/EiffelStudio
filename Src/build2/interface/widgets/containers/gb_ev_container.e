@@ -101,7 +101,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				until
 					linked_groups.off
 				loop
-					temp_output := info.Names_by_id.item (linked_groups.item) + ".merge_radio_button_groups (" + info.name + ")"
+					temp_output := info.name + ".merge_radio_button_groups (" + info.Names_by_id.item (linked_groups.item) + ")"
 					Result.extend (temp_output)
 					linked_groups.forth
 				end

@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 					new_button.enable_sensitive
 					modify_button.enable_sensitive
 				end
-			elseif name_field_valid and entry_valid then
+			elseif name_field_valid and entry_valid and Constants.all_constants.item (name_field.text.as_lower) = Void then
 				new_button.enable_sensitive
 				modify_button.disable_sensitive
 			else
@@ -423,6 +423,9 @@ feature {NONE} -- Implementation
 			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
 				select_pixmap
 			end
+			
+				-- Now disable the new button as you may not add the same constant twice.
+			new_button.disable_sensitive
 			
 				-- Update system to reflect a change.
 			system_status.enable_project_modified

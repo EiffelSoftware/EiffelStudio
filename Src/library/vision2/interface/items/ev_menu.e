@@ -60,13 +60,14 @@ feature -- Element change
 		end
 
 	set_text (txt: STRING) is
+			-- Assign `txt' to `text'.
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
 		do
 			implementation.set_text (txt)
 		ensure
-			text_set: equal (txt, text)
+			text_set: text.is_equal (txt)
 		end
 
 feature -- Implementation

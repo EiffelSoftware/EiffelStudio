@@ -127,6 +127,7 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item (ti_Else_keyword);
 				ctxt.indent;
 				ctxt.new_line;
+				ctxt.set_new_line_between_tokens;
 				ctxt.format_ast (else_part);
 				ctxt.exdent;
 				ctxt.new_line;

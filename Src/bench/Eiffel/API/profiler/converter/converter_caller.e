@@ -62,7 +62,7 @@ feature {EWB_GENERATE} -- Initialization
 
 feature {PROF_CONVERTER} -- Implementation
 
-	check_profile_file(profile_name: STRING; comp_type: STRING) is
+	check_profile_file (profile_name: STRING; comp_type: STRING) is
 			-- Checks if the file exists.
 		local
 			file: PLAIN_TEXT_FILE

@@ -72,7 +72,7 @@ feature -- Comparison
 feature -- Code generation
 
 	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
-				entry: POLY_TABLE [ENTRY]; cl_type: CL_TYPE_I; ret_type: TYPE_C) is
+				cl_type: CL_TYPE_I; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
 		do
 			check

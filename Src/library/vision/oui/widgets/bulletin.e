@@ -43,6 +43,50 @@ feature -- Creation
 			implementation.set_default_position (flag);
 		end;
 
+	circulate_up is
+			--circulate the children of this widget up
+		do
+			implementation.circulate_up;
+		end;
+
+	circulate_down is
+			--circulate the children of this widget down
+		do
+			implementation.circulate_down;
+		end;
+
+	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
+			-- the stackable's in the array have to have the
+			-- same parent.
+		require
+			valid_restackable: valid_stackables( a_stackable_array);
+		do
+			implementation.restack_children (a_stackable_array);
+		end;
+
+	valid_stackables (a_stackable_array: ARRAY [STACKABLE]): BOOLEAN is
+			-- check that the array of stackables meets the critea
+			-- require for widgets to be restacked
+		require
+			valid_array: a_stackable_array /= Void and then
+					not a_stackable_array.empty;
+		local
+			index1: INTEGER;
+		do
+			Result := True;
+			from index1 := a_stackable_array.lower 
+			until  not Result or else index1 > a_stackable_array.upper
+			loop
+				If a_stackable_array.item (index1) = Void  then
+					Result := False;
+				elseif not a_stackable_array.item (index1).is_stackable or else
+				  not a_stackable_array.item (index1).realized or else
+				  a_stackable_array.item (index1).parent /= a_stackable_array.item(a_stackable_array.lower).parent then
+					Result := False;
+				end;
+				index1 := index1 + 1;
+			end;
+		end;
 
 feature {NONE}
 

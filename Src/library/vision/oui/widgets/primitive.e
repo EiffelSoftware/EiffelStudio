@@ -14,7 +14,12 @@ inherit
 	WIDGET
 		redefine
 			implementation, parent
-		end
+		end;
+
+	STACKABLE
+		redefine
+			implementation
+		end;
 	
 feature -- Widget hierarchy
 

@@ -95,7 +95,7 @@ feature -- Input
 			end;
 			ext_addr := peer_address.socket_address;
 			peer_addr_size := peer_address.count;
-			!!Result.make (size);
+			create Result.make (size);
 			ext_data := Result.data;
 			return_val := c_rcv_from (descriptor, $ext_data, Result.count, flags, $ext_addr, $peer_addr_size);
 		ensure

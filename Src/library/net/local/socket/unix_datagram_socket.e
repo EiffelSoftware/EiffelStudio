@@ -51,7 +51,7 @@ feature -- Initialization
 		local
 			an_address: UNIX_SOCKET_ADDRESS
 		do
-			!! an_address.make_from_path (a_path);
+			create an_address.make_from_path (a_path);
 			make_bound_to_address (an_address)
 		end;
 
@@ -60,7 +60,7 @@ feature -- Initialization
 		local
 			an_address: UNIX_SOCKET_ADDRESS
 		do
-			!! an_address.make_from_path (a_peer_path);
+			create an_address.make_from_path (a_peer_path);
 			make_connected_to_peer (an_address)
 		end
 
@@ -73,14 +73,14 @@ feature -- Miscellaneous
 		local
 			an_address: UNIX_SOCKET_ADDRESS
 		do
-			!! an_address.make_from_path (a_peer_path);
+			create an_address.make_from_path (a_peer_path);
 			connect_to_peer (an_address)
 		end;
 
 	make_peer_address is
 			-- Create a peer address.
 		do
-			!! peer_address.make
+			create peer_address.make
 		end
 
 

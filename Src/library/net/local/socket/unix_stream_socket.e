@@ -54,7 +54,7 @@ feature -- Initialization
 			valid_path: a_peer /= Void
 		do
 			make;
-			!!peer_address.make;
+			create peer_address.make;
 			peer_address.set_path (clone (a_peer))
 		end;
 
@@ -65,7 +65,7 @@ feature -- Initialization
 			valid_path: a_name /= Void and then not a_name.empty
 		do
 			make;
-			!!address.make;
+			create address.make;
 			address.set_path (clone (a_name));
 			bind
 		end

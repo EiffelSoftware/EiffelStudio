@@ -54,7 +54,7 @@ feature -- Status_report
 		local
 			ext: ANY
 		do
-			!!Result.make (data_area_size);
+			create Result.make (data_area_size);
 			ext := Result.data;
 			c_get_data ($ext, $data, Result.count)
 		end;

@@ -53,7 +53,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
-			!! an_address.make_local_from_port (a_port);
+			create an_address.make_local_from_port (a_port);
 			make_bound_to_address (an_address)
 		end;
 
@@ -63,7 +63,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
-			!! an_address.make_from_name_and_port (a_hostname, a_peer_port);
+			create an_address.make_from_name_and_port (a_hostname, a_peer_port);
 			make_connected_to_peer (an_address)
 		end;
 
@@ -73,7 +73,7 @@ feature -- Initialization
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
 		do
-			!! an_address.make_from_ip_and_port (an_ip_number, a_peer_port);
+			create an_address.make_from_ip_and_port (an_ip_number, a_peer_port);
 			make_connected_to_peer (an_address)
 		end;
 
@@ -98,16 +98,16 @@ feature -- Initialization
 				i := i + 1
 			end;
 			if descriptor_available then
-				!!h_address.make;
+				create h_address.make;
 				if is_hostname then
 					h_address.set_address_from_name (a_peer_host)
 				else
 					h_address.set_host_address (a_peer_host)
 				end;
-				!!peer_address.make;
+				create peer_address.make;
 				peer_address.set_host_address (h_address);
 				peer_address.set_port (a_peer_port);
-				!!address.make;
+				create address.make;
 				bind
 			end
 		end;
@@ -130,16 +130,16 @@ feature -- Initialization
 				i := i + 1
 			end;
 			if descriptor_available then
-				!!h_address.make;
+				create h_address.make;
 				if is_hostname then
 					h_address.set_address_from_name (a_peer_host)
 				else
 					h_address.set_host_address (a_peer_host)
 				end
-				!!peer_address.make;
+				create peer_address.make;
 				peer_address.set_host_address (h_address);
 				peer_address.set_port (a_peer_port);
-				!!address.make;
+				create address.make;
 				address.set_port (a_local_port);
 				bind
 			end
@@ -155,9 +155,9 @@ feature -- Initialization
 		do
 			make;
 			if descriptor_available then
-				!!h_address.make;
+				create h_address.make;
 				h_address.set_in_address_any;
-				!!address.make;
+				create address.make;
 				address.set_host_address (h_address);
 				address.set_port (a_port);
 				bind
@@ -175,7 +175,7 @@ feature -- Miscellaneous
 		local
 			a_peer_address: NETWORK_SOCKET_ADDRESS
 		do
-			!! a_peer_address.make_from_name_and_port (a_hostname, a_peer_port);
+			create a_peer_address.make_from_name_and_port (a_hostname, a_peer_port);
 			connect_to_peer (a_peer_address);
 		end;
 
@@ -187,14 +187,14 @@ feature -- Miscellaneous
 		local
 			a_peer_address: NETWORK_SOCKET_ADDRESS
 		do
-			!! a_peer_address.make_from_ip_and_port (an_ip_number, a_peer_port);
+			create a_peer_address.make_from_ip_and_port (an_ip_number, a_peer_port);
 			connect_to_peer (a_peer_address);
 		end;
 
 	make_peer_address is
 			-- Create peer address.
 		do
-			!!peer_address.make
+			create peer_address.make
 		end
 
 feature -- Status setting

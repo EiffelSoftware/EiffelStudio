@@ -58,7 +58,7 @@ feature -- Status report
 	path: STRING is
 			-- Path of the socket address file
 		do
-			!!Result.make(0);
+			create Result.make(0);
 			Result.from_c (get_unix_sock_path($socket_address))
 		end
 

@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			str: STRING
 			h_addr: HOST_ADDRESS
 		do
-			!! h_addr.make
+			create h_addr.make
 			h_addr.set_address_from_name (h_addr.local_host_name)
 			Result := clone (Ftp_port_command)
 			Result.extend (' ')
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 		do
 			from
 				divisor := (256 ^ (num - 1)).rounded
-				!! Result.make (20)
+				create Result.make (20)
 				number := n
 			variant
 				divisor

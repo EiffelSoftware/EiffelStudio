@@ -225,18 +225,18 @@ feature {NONE} -- implementation
 	make_listen_list is
 			-- Create three sublists regarding listen sockets.
 		do
-			!! listen_socket_list.make;
-			!! listen_command_list.make;
-			!! listen_argument_list.make;
+			create listen_socket_list.make;
+			create listen_command_list.make;
+			create listen_argument_list.make;
 			listen_list_exhausted := True
 		end;
 
 	make_service_list is
 			-- Create three sublists regarding service sockets.
 		do	
-			!! service_socket_list.make;
-			!! service_command_list.make;
-			!! service_argument_list.make;
+			create service_socket_list.make;
+			create service_command_list.make;
+			create service_argument_list.make;
 			service_list_exhausted := True
 		end;
 

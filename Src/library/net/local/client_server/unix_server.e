@@ -27,7 +27,7 @@ feature -- Access
 			-- Create an unix socket server bound to address
 			-- `a_path'.
 		do
-			!!in.make_server (a_path);
+			create in.make_server (a_path);
 			if queued = 0 then
 				in.listen (5)
 			else

@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Create timer and socket_poller.
 		do
 			poller_make
-			!!timer.make
+			create timer.make
 		end
 
 feature -- Activation

@@ -28,7 +28,7 @@ feature -- Access
 	Eiffel_dynamic_lib: E_DYNAMIC_LIB is
 		require
 			initialized: Eiffel_project.initialized
-		once
+		do
 			Result := Eiffel_project.dynamic_lib
 		ensure
 			result_is_sys: Result = Eiffel_project.dynamic_lib

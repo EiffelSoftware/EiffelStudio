@@ -13,7 +13,8 @@ inherit
 		end
 	SHARED_LICENSE;
 	SHARED_RESCUE_STATUS;
-	SHARED_RESOURCES
+	SHARED_RESOURCES;
+	SHARED_BATCH_COMPILER
 
 feature -- Licence managment
 
@@ -66,7 +67,7 @@ feature
 				else
 					set_batch_mode (True);
 					if init_licence then
-						!!batch_compiler.make;
+						start_batch_compiler;
 						discard_licence;
 					end;
 				end;
@@ -93,8 +94,6 @@ feature
 		end;
 
 feature {NONE}
-
-	batch_compiler: ES;
 
 	init_windowing is
 			-- Initialize the windowing environment.

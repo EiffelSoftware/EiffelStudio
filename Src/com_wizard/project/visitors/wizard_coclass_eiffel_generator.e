@@ -31,14 +31,11 @@ feature -- Access
 			-- Process interfaces.
 			create interface_processor.make (a_coclass, eiffel_writer)
 			interface_processor.process_interfaces
-
 			dispatch_interface := interface_processor.dispatch_interface
+			interface_processor := Void
 
 			set_default_ancestors (eiffel_writer)
 			add_creation
-
-		ensure then
-			non_void_eiffel_writer: not shared_wizard_environment.new_eiffel_project implies eiffel_writer /= Void
 		end
 
 feature {NONE} -- Implementation

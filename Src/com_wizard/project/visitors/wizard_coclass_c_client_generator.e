@@ -90,8 +90,8 @@ feature -- Basic operations
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-		ensure then
-			non_void_cpp_class_writer: cpp_class_writer /= Void
+
+			cpp_class_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

@@ -8,6 +8,38 @@ class
 
 feature -- Externals
 
+	frozen gtk_icon_theme_get_default: POINTER is
+		external
+			"C signature (): GtkIconTheme* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_icon_theme_has_icon (icon_theme, icon_name: POINTER): BOOLEAN is
+		external
+			"C signature (GtkIconTheme*, gchar*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gtk_icon_theme_load_icon (theme, icon_name: POINTER; size, flags: INTEGER; a_error: TYPED_POINTER [POINTER]): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_icon_theme_load_icon ((GtkIconTheme*) $theme, (char*) $icon_name, (gint) $size, (GtkIconLookupFlags) $flags, (GError**) $a_error)"
+		end
+
+	frozen gtk_window_group_new: POINTER is
+		external
+			"C signature (): GtkWindowGroup* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_group_add_window (a_group, a_window: POINTER) is
+		external
+			"C signature (GtkWindowGroup*, GtkWindow*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_group_remove_window (a_group, a_window: POINTER) is
+		external
+			"C signature (GtkWindowGroup*, GtkWindow*) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_button_set_label (tool_button, a_text: POINTER) is
 		external
 			"C signature (GtkButton*, gchar*) use <gtk/gtk.h>"
@@ -111,12 +143,17 @@ feature -- Externals
 			"C signature (GValue*) use <gtk/gtk.h>"
 		end
 
-	frozen gdk_keymap_lookup_key (a_keymap, a_key: POINTER): INTEGER is
+	frozen gdk_keymap_lookup_key (a_keymap, a_key: POINTER): NATURAL_32 is
 		external
 			"C signature (GdkKeymap*, GdkKeymapKey*): guint use <gtk/gtk.h>"
 		end
 
-	frozen gdk_keymap_get_entries_for_keyval (a_keymap: POINTER; a_keyval: INTEGER; a_keymapkey_array: TYPED_POINTER [POINTER]; n_keys: TYPED_POINTER [INTEGER]): BOOLEAN is
+	frozen gdk_keyval_convert_case (a_keyval: NATURAL_32; a_lower, a_upper: TYPED_POINTER [NATURAL_32]) is
+		external
+			"C signature (guint, guint*, guint*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_keymap_get_entries_for_keyval (a_keymap: POINTER; a_keyval: NATURAL_32; a_keymapkey_array: TYPED_POINTER [POINTER]; n_keys: TYPED_POINTER [INTEGER]): BOOLEAN is
 		external
 			"C signature (GdkKeymap*, guint, GdkKeymapKey**, gint*): gboolean use <gtk/gtk.h>"
 		end
@@ -181,6 +218,13 @@ feature -- Externals
 			"C macro use <gtk/gtk.h>"
 		alias
 			"GTK_WIDGET_GET_CLASS"
+		end
+
+	frozen gtk_tree_view_column_grow_only_enum: INTEGER is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_TREE_VIEW_COLUMN_GROW_ONLY"
 		end
 
 	frozen gtk_tree_view_column_autosize_enum: INTEGER is
@@ -327,6 +371,11 @@ feature -- Externals
 	frozen gdk_window_process_all_updates is
 		external
 			"C use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_process_updates (a_window: POINTER; process_children: BOOLEAN) is
+		external
+			"C signature (GdkWindow*, gboolean) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_event_box_set_visible_window (a_event_box: POINTER; visible_window: BOOLEAN) is
@@ -934,6 +983,13 @@ feature -- Externals
 			"gtk_tree_view_column_get_cell_renderers ((GtkTreeViewColumn*) $a_tree_view_column)"
 		end
 
+	frozen gtk_tree_view_column_cell_get_size (a_tree_view_column: POINTER; a_cell_area: POINTER; a_x_offset, a_y_offset, a_width, a_height: TYPED_POINTER [INTEGER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_cell_get_size ((GtkTreeViewColumn*) $a_tree_view_column, (GdkRectangle*) $a_cell_area, (gint*) $a_x_offset, (gint*) $a_y_offset, (gint*) $a_width, (gint*) $a_height)"
+		end
+
 	frozen gtk_tree_view_columns_autosize (a_tree_view: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -978,10 +1034,15 @@ feature -- Externals
 
 	frozen gtk_tree_path_get_indices (a_tree_path: POINTER): POINTER is
 		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gtk_tree_path_get_indices ((GtkTreePath*) $a_tree_path)"
+			"C signature (GtkTreePath*): gint* use <gtk/gtk.h>"
 		end
+
+	frozen sizeof_gint: INTEGER is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"sizeof(gint)"
+			end
 
 	frozen gtk_tree_path_next (a_tree_path: POINTER) is
 		external
@@ -1276,6 +1337,13 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_view_insert_column ((GtkTreeView*) $a_tree_view, (GtkTreeViewColumn*) $a_column, (gint) $a_position)"
+		end
+
+	frozen gtk_tree_view_remove_column (a_tree_view: POINTER; a_column: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_remove_column ((GtkTreeView*) $a_tree_view, (GtkTreeViewColumn*) $a_column)"
 		end
 
 	frozen gtk_tree_view_append_column (a_tree_view: POINTER; a_column: POINTER) is
@@ -1990,7 +2058,7 @@ feature -- Externals
 			"g_value_get_flags ((GValue*) $arg)"
 		end
 
-	frozen gtk_value_uint (arg: POINTER): INTEGER is
+	frozen gtk_value_uint (arg: POINTER): NATURAL_32 is
 			-- Integer value from a GtkArg.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -2006,6 +2074,16 @@ feature -- Externals
 	frozen pango_layout_set_font_description (a_layout, a_font_desc: POINTER) is
 		external
 			"C signature (PangoLayout*, PangoFontDescription*) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_set_width (a_layout: POINTER; a_width: INTEGER) is
+		external
+			"C signature (PangoLayout*, int) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
+		external
+			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
 		end
 
 	frozen pango_layout_get_pixel_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is

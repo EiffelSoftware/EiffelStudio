@@ -48,7 +48,8 @@ feature -- Status setting
 		do
 			pixmap := a_pixmap
 			if (fixed_size_flag and (pixmap.height + 6 > height or pixmap.width + 6 > width)) or not fixed_size_flag then 
-				set_size (pixmap.width + 6, pixmap.height + 6)
+				set_form_width (pixmap.width + 6)
+				set_form_height (pixmap.height + 6)
 			end
 			if exists then
 				invalidate
@@ -59,7 +60,8 @@ feature -- Status setting
 			-- Set default of button
 		do
 			if pixmap /= Void then
-				set_size (pixmap.width + 6, pixmap.height + 6)
+				set_form_width (pixmap.width + 6)
+				set_form_height (pixmap.height + 6)
 			end
 		end
 

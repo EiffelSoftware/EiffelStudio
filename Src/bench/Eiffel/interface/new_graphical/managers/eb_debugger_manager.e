@@ -1015,6 +1015,7 @@ feature {NONE} -- Implementation
 			else
 				element_nb.set_value (critical_stack_depth)
 			end
+			element_nb.set_minimum_width (100)
 			
 				-- Set up actions.
 			cancelb.select_actions.extend (~close_dialog)

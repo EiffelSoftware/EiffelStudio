@@ -14,6 +14,63 @@ inherit
 		redefine
 			interface
 		end
+		
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+
+	insertion_position: INTEGER is
+			-- `Result' is insertion position in `Current' based on
+			-- Current screen pointer.
+		local
+			curs: CURSOR
+			offset: INTEGER
+			current_pos: INTEGER
+			current_widget_height: INTEGER
+			next_position: INTEGER
+			current_position: INTEGER
+			last_position: INTEGER
+			temp1, temp2: INTEGER
+		do
+			Result := -1
+			curs := cursor
+			offset := Internal_screen.pointer_position.y - screen_y
+				-- As the current mouse position may have changed since the
+				-- motion event was received, we only perform the
+				-- following if this is not the case
+			if offset >= 0 and offset <= height then
+			if offset >= height - border_width then
+				Result := interface.count + 1
+			elseif offset < border_width then
+				Result := 1
+				else
+		
+				from
+					interface.start
+					last_position := border_width
+				until
+					Result /= -1
+				loop
+					current_position := current_position + interface.item.height
+					if interface.index = 1 then
+						current_position := current_position + border_width
+					else
+						current_position := current_position + interface.padding_width
+					end
+						if offset >= last_position and then offset <= current_position then
+							temp1 := (current_position - last_position) // 2
+							temp2 := last_position + temp1 + (interface.padding_width // 2)
+							if offset > temp2 then
+								Result := interface.index + 1
+							else
+								Result := interface.index
+							end
+						end	
+					last_position := current_position
+					interface.forth
+				end 
+				go_to (curs)
+			end
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -10,7 +10,7 @@ deferred class
 	EV_PICK_AND_DROPABLE_IMP
 
 inherit
-	EV_ANY_IMP
+	EV_GTK_WIDGET_IMP
 		redefine
 			interface
 		end
@@ -149,6 +149,11 @@ feature -- Implementation
 		do
 			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
 				(mode_is_pick_and_drop and then a_button = 3)
+		end
+
+	is_dockable: BOOLEAN is
+			-- Is `Current' dockable?
+		deferred
 		end
 
 	set_to_drag_and_drop: BOOLEAN is
@@ -378,11 +383,6 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 		end
-		
-	pointer_style: EV_CURSOR is
-			-- Style of the mouse pointer for `Current'
-		deferred
-		end
 
 	call_press_actions (targ: EV_ABSTRACT_PICK_AND_DROPABLE; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		local
@@ -531,39 +531,7 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 	
 	pre_pnd_state: INTEGER
 	
-	internal_non_sensitive: BOOLEAN is
-			-- 
-		deferred
-		end
-
-	is_dockable: BOOLEAN is
-			-- 
-		deferred
-		end
-	
 feature {NONE} -- Implementation
-
-	event_widget: POINTER is
-			-- Pointer to the widget handling the widget events
-		local
-			a_visual_widget: POINTER
-		do
-			a_visual_widget := visual_widget
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (a_visual_widget) then
-				Result := a_visual_widget
-			else
-				Result := c_object
-			end
-		end
-
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
-			-- Widget implementation at current mouse pointer position (if any)
-		deferred
-		end
-
-	width: INTEGER is deferred end
-	height: INTEGER is deferred end
-	has_focus: BOOLEAN is deferred end
 
 	x_origin, y_origin: INTEGER
 		-- Temp coordinate values for origin of Pick and Drop.

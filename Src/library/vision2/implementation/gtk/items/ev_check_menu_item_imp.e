@@ -10,20 +10,14 @@ class
 inherit
 	EV_CHECK_MENU_ITEM_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
 			interface,
-			on_activate,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			on_activate
 		end
 
 create
@@ -82,15 +76,6 @@ feature {NONE} -- Implementation
 		
 	ignore_select_actions: BOOLEAN
 			-- Should select actions be ignore, ues if enable_select is called.
-			
-			
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature {NONE} -- Implementation
 

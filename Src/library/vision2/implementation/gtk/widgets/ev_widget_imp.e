@@ -18,8 +18,14 @@ inherit
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface,
+			initialize,
 			is_displayed,
-			destroy
+			button_press_switch,
+			destroy,
+			minimum_width,
+			minimum_height,
+			enable_capture,
+			disable_capture
 		end
 
 	EV_SENSITIVE_IMP
@@ -53,33 +59,6 @@ inherit
 
 feature {NONE} -- Initialization
 
-	Gdk_events_mask: INTEGER is
-			-- Mask of all the gdk events the gdkwindow shall receive.
-		once
-			Result := feature {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM |
-			feature {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
-		end
-
-	initialize_events is
-		do
-				-- Initialize events
-			if needs_event_box then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
-			end
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
-			end			
-		end
-		
-
 	initialize is
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
@@ -88,12 +67,7 @@ feature {NONE} -- Initialization
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			initialize_events
-			if not feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			else
-				feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
-			end
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
 			
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
@@ -102,10 +76,8 @@ feature {NONE} -- Initialization
 				
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
-			if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+			if not is_parentable then
 				real_signal_connect_after (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
-			else
-				real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
 	
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
@@ -124,9 +96,6 @@ feature {NONE} -- Initialization
 			end
 			is_initialized := True
 		end
-
-	button_press_switch_is_connected: BOOLEAN
-			-- Is `button_press_switch' connected to its event source.
 		
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
@@ -179,16 +148,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				end
 			end
 		end
-		
-	connect_button_press_switch is
-			-- Connect `button_press_switch' to its event sources.
-		do
-			if not button_press_switch_is_connected then
-				real_signal_connect (event_widget,  "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
-				button_press_switch_is_connected := True
-			end
-		end
-       
+
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
 		do
@@ -196,7 +156,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				last_width := a_width
 				last_height := a_height
 				if resize_actions_internal /= Void then
-					resize_actions_internal.call ([a_x, a_y, a_width, a_height])
+					app_implementation.gtk_marshal.set_dimension_tuple (a_x, a_y, a_width, a_height)
+					resize_actions_internal.call (App_implementation.gtk_marshal.dimension_tuple)
 				end
 				if parent_imp /= Void then
 					parent_imp.child_has_resized (Current)
@@ -234,11 +195,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| We attach the signal to this switching feature to look at the
 			--| event type and pass the event data to the appropriate action
 			--| sequence.
-		require
-			valid_button_press:
-				a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM or
-				a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM or
-				a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
@@ -305,9 +261,6 @@ feature -- Access
 			create Result.set (x, y)
 		end
 
-	pointer_style: EV_CURSOR
-			-- Cursor displayed when the pointer is over this widget.
-
 feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 
 	screen_x: INTEGER is
@@ -365,18 +318,6 @@ feature -- Status report
 			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
 		end
 
-	has_focus: BOOLEAN is
-			-- Does widget have the keyboard focus?
-		do
-			Result := gtk_widget_has_focus (visual_widget)
-		end
-		
-	has_capture: BOOLEAN is
-			-- Has capture?
-		do
-			Result := has_struct_flag (event_widget, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
-		end
-
 feature -- Status setting
 
 	hide is
@@ -391,38 +332,11 @@ feature -- Status setting
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 
-	set_focus is
-			-- Grab keyboard focus.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
-		end
-
 	enable_capture is
 			-- Grab all the mouse and keyboard events.
-			--| Used by pick and drop.
-		local
-			i: INTEGER
 		do
-			if not has_capture then
-				disable_debugger
-				set_focus
-				App_implementation.set_captured_widget (interface)
-				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
-				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
-					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
-					1, -- gint owner_events
-					feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
-					feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
-				--	feature {EV_GTK_EXTERNALS}.GDK_BUTTON_MOTION_MASK_ENUM +
-					feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM,
-					NULL,						-- GdkWindow* confine_to 
-					NULL,						-- GdkCursor *cursor
-					0)							-- guint32 time
-				i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (
-					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
-					True, -- gint owner events
-					0) -- guint32 time				
-			end
+			App_implementation.set_captured_widget (interface)
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 	disable_capture is
@@ -430,39 +344,10 @@ feature -- Status setting
 			--| Used by pick and drop.
 		do
 			App_implementation.set_captured_widget (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
-				0 -- guint32 time
-			)
-			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
-			enable_debugger				
+			Precursor {EV_PICK_AND_DROPABLE_IMP}				
 		end
 
 feature -- Element change
-
-	set_pointer_style (a_cursor: like pointer_style) is
-			-- Assign `a_cursor' to `pointer_style'.
-		do
-			pointer_style := a_cursor.twin
-			internal_set_pointer_style (a_cursor)
-		end
-		
-	internal_set_pointer_style (a_cursor: like pointer_style) is
-			-- Assign `a_cursor' to `pointer_style', used for PND
-		local
-			a_cursor_ptr: POINTER
-		do
-			a_cursor_ptr := App_implementation.gdk_cursor_from_pixmap (a_cursor)
-			set_composite_widget_pointer_style (a_cursor_ptr)
-			feature {EV_GTK_EXTERNALS}.gdk_cursor_destroy (a_cursor_ptr)
-		end
-		
-	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
-			-- Used to set the gdkcursor for composite widgets.
-		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), a_cursor_ptr)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cursor_ptr)
-		end
 	
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
@@ -520,58 +405,24 @@ feature -- Measurement
 			end
 			Result := Result.max (0)
 		end	
-
-	width: INTEGER is
-			-- Horizontal size measured in pixels.
-		do
-			if parent_imp /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
-			else
-				update_request_size
-			end
-			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)
-			).max (minimum_width)
-		end
-
-	height: INTEGER is
-			-- Vertical size measured in pixels.
-		do
-			if parent_imp /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_container_check_resize (parent_imp.c_object)
-			else
-				update_request_size
-			end
-			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)
-			).max (minimum_height)
-		end
 		
 	minimum_width: INTEGER is
 			-- Minimum width that the widget may occupy.
-		local
-			gr: POINTER
 		do	
 			if internal_minimum_width /= -1 then
 				Result := internal_minimum_width
-			elseif not is_destroyed then
-				update_request_size
-				gr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
-				Result := feature {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+			else
+				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
 		
 	minimum_height: INTEGER is
 			-- Minimum width that the widget may occupy.
-		local
-			gr: POINTER
 		do
 			if internal_minimum_height /= -1 then
 				Result := internal_minimum_height
-			elseif not is_destroyed then
-				update_request_size
-				gr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
-				Result := feature {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+			else
+				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
 
@@ -582,32 +433,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Called by EV_FIXED and EV_VIEWPORT implementations.
 		do
 			internal_set_minimum_size (internal_minimum_width, internal_minimum_height)
-		end
-				
-feature {NONE} -- Implementation
-
-	has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
-			-- Has this widget the flag `a_flag' in struct_flags?
-		do
-				--| Shift to put bit in least significant place then take mod 2.
-			if a_gtk_object /= NULL then
-				Result := (((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_gtk_object) // a_flag) \\ 2)) = 1
-			end
-		end
-
-	cursor_signal_tag: INTEGER
-			-- Tag returned from Gtk used to disconnect `enter-notify' signal
-			
-	enable_debugger is
-			-- Enable the Eiffel debugger
-		do
-			set_debug_mode (1)
-		end
-
-	disable_debugger is
-			-- Disable the Eiffel debugger
-		do
-			set_debug_mode (0)
 		end
 	
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
@@ -699,12 +524,6 @@ feature {NONE} -- Agent functions.
 		once
 			Result := agent (App_implementation.gtk_marshal).key_event_translate
 		end
-		
-	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for size allocation events
-		once
-			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
-		end
 
 	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for size allocation events
@@ -712,14 +531,6 @@ feature {NONE} -- Agent functions.
 			Result := agent (App_implementation.gtk_marshal).configure_translate
 		end
 
-feature {EV_CONTAINER_IMP} -- Implementation
-
-	update_request_size is
-			-- Force the requisition struct to be updated.
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, feature {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object))
-		end
-	
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_widget_mapped is
@@ -741,18 +552,6 @@ feature {NONE} -- Implementation
 			end
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 			update_request_size
-		end
-
-	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is
-			-- Does `a_c_object' have the focus.
-		do
-				--| Shift to put bit in least significant place then take mod 2.
-			if a_c_object /= NULL then
-				Result := has_struct_flag (a_c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
-				check
-					Result = ((((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (a_c_object) // feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM) \\ 2)) = 1)
-				end
-			end
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
@@ -820,33 +619,6 @@ feature {NONE} -- Implementation
 
 	in_resize_event: BOOLEAN
 			-- Is `interface.resize_actions' being executed?
-
-feature {EV_ANY_I} -- Contract Support
-
-	parent_is_sensitive: BOOLEAN is
-			-- Is the parent sensitive?
-		local
-			a_par: EV_CONTAINER_IMP
-		do
-			a_par := parent_imp
-			Result := a_par.is_sensitive
-		end
-
-	has_parent: BOOLEAN is
-			-- Is `Current' parented?
-		do
-			Result := parent_imp /= Void
-		end
-		
-feature {NONE} -- External
-
-	set_debug_mode (a_mode: INTEGER) is
-			-- Set the value of run time value `debug_mode' to turn Eiffel debugger on or off
-		require
-			valid_mode: a_mode = 0 or a_mode = 1
-		external
-			"C use %"ev_any_imp.h%""
-		end
 
 feature {EV_ANY_I} -- Implementation
 

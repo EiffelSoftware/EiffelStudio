@@ -10,20 +10,14 @@ class
 inherit
 	EV_RADIO_MENU_ITEM_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
 			on_activate,
 			interface,
-			make,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			make
 		end
 
 	EV_RADIO_PEER_IMP
@@ -80,12 +74,6 @@ feature {EV_ANY_I} -- Implementation
 
 	ignore_select_actions: BOOLEAN
 		-- Should select_actions be called.
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	on_activate is
 		do

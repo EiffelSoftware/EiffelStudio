@@ -37,6 +37,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -62,6 +67,10 @@ feature -- Basic Operation
 		local
 			integer_constant: GB_INTEGER_CONSTANT
 			string_constant: GB_STRING_CONSTANT
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			directory_constant: GB_DIRECTORY_CONSTANT
+			filename_constant: GB_FILENAME_CONSTANT
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			if internal_constant.type.is_equal (Integer_constant_type) then
 				integer_constant ?= internal_constant
@@ -69,7 +78,26 @@ feature -- Basic Operation
 			elseif internal_constant.type.is_equal (String_constant_type) then
 				string_constant ?= internal_constant
 				Constants.add_string (string_constant)
+			elseif internal_constant.type.is_equal (Pixmap_constant_type) then
+				pixmap_constant ?= internal_constant
+				Constants.add_pixmap (pixmap_constant)
+			elseif internal_constant.type.is_equal (Directory_constant_type) then
+				directory_constant ?= internal_constant
+				Constants.add_directory (directory_constant)
+			elseif internal_constant.type.is_equal (Filename_constant_type) then
+				filename_constant ?= internal_constant
+				Constants.add_filename (filename_constant)
 			end
+			editors := all_editors
+			from
+				editors.start
+			until
+				editors.off
+			loop
+				editors.i_th (editors.index).constant_added (internal_constant)
+				editors.forth
+			end
+			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -80,8 +108,19 @@ feature -- Basic Operation
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
+		local
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			Constants.remove_constant (internal_constant)
+			editors := all_editors
+			from
+				editors.start
+			until
+				editors.off
+			loop
+				editors.i_th (editors.index).constant_removed (internal_constant)
+				editors.forth
+			end
 			command_handler.update
 		end
 		

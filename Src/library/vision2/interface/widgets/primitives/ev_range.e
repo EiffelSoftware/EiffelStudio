@@ -1,8 +1,10 @@
 indexing 
 	description:
-		"Eiffel Vision range. Widgets that can be used to let the %N%
-		%user select an integer value in a certain range."
+		"Interactive range widget. A sliding thumb displays the current `value'%
+		%and allows it to be adjusted%N%
+		%See EV_HORIZONTAL_RANGE and EV_VERTICAL_RANGE"
 	status: "See notice at end of class"
+	keywords: "range, slide, adjust"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +20,7 @@ inherit
 feature {NONE} -- Implementation
 
 	implementation: EV_RANGE_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_RANGE
 
@@ -43,6 +45,9 @@ end -- class EV_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.7  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|
@@ -66,7 +71,6 @@ end -- class EV_RANGE
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

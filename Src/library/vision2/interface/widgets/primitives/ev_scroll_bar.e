@@ -1,6 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision scrollbar."
+		"Base class for interactive scrolling widgets.%N%
+		%See EV_HORIZONTAL_SCROLL_BAR and EV_VERTICAL_SCROLL_BAR"
 	status: "See notice at end of class."
 	keywords: "scroll, bar, horizontal, vertical, gauge, leap, step, page"
 	date: "$Date$"
@@ -18,7 +19,7 @@ inherit
 feature {NONE} -- Implementation
 
 	implementation: EV_SCROLL_BAR_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_SCROLL_BAR
 
@@ -43,6 +44,9 @@ end -- class EV_SCROLL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.6  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|
@@ -72,7 +76,6 @@ end -- class EV_SCROLL_BAR
 --|
 --| Revision 1.3.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

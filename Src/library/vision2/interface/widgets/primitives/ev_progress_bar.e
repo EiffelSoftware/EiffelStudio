@@ -1,7 +1,9 @@
 indexing 
 	description:
-		"Eiffel Vision progress bar. Gauge displaying a bar graph."
+		"Base class for bar graph gauges that display progress of a process.%N%
+		%See EV_HORIZONTAL_PROGRESS_BAR and EV_VERTICAL_PROGRESS_BAR"
 	note: "Default step is 10."
+	--| FIXME this not is not inforced, need to add `is_in_default_state'.
 	status: "See notice at end of class"
 	keywords: "status, progress, bar"
 	date: "$Date$"
@@ -39,7 +41,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_segmentation is
-			-- Display bar divided into segments.
+			-- Divide display of bar into segments.
 		do
 			implementation.enable_segmentation
 		ensure
@@ -47,7 +49,7 @@ feature -- Status setting
 		end
 
 	disable_segmentation is
-			-- Display bar without segments.
+			-- Display continuous bar.
 		do
 			implementation.disable_segmentation
 		ensure
@@ -55,20 +57,20 @@ feature -- Status setting
 		end
 
 	set_proportion (a_proportion: REAL) is
-			-- Display bar with `a_proportion' filled.
+			-- Assign `a_proportion' to `proportion'.
 		require
 			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
 		do
 			implementation.set_proportion (a_proportion)
 		ensure
-			assigned: (proportion - a_proportion).abs < step / (maximum - minimum)
+			a_proportion_assigned:
+				(proportion - a_proportion).abs < step / (maximum - minimum)
 		end
 
 feature {NONE} -- Implementation
 
 	implementation: EV_PROGRESS_BAR_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	proportion_within_range: proportion >= 0 and proportion <= 1
@@ -97,6 +99,9 @@ end -- class EV_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.9  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

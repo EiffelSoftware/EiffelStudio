@@ -1,7 +1,10 @@
 indexing
 	description:
-		"Eiffel Vision radio button. Select state is mutually%N%
-		%exclusive with respect to other radio buttons in a container."
+		"Toggle button with state displayed as a circular check box.%N%
+		%State is mutually exclusive with respect to other radio buttons%
+		%in `parent' container."
+	appearance:
+		" (*) `text' "
 	status: "See notice at end of class"
 	keywords: "toggle, radio, button"
 	date: "$Date$"
@@ -30,14 +33,6 @@ create
 	make_with_text_and_action,
 	make_for_test
 
-feature {NONE} -- Initialization
-
-	create_implementation is
-			-- Create the implementation for the toggle button.
-		do
-			create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
-		end
-
 feature -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -51,8 +46,13 @@ feature -- Contract support
 feature {NONE} -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
+		end
 	
 end -- class EV_RADIO_BUTTON
 
@@ -77,6 +77,9 @@ end -- class EV_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.18  2000/03/01 03:28:04  oconnor
 --| added make_for_test
 --|

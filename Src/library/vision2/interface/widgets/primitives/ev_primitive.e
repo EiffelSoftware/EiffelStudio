@@ -1,7 +1,6 @@
 indexing
 	description:
-		"EiffelVision primitive.%N%
-		%Base class for simple, non container widgets."
+		"Base class for simple, non container widgets."
 	status: "See notice at end of class"
 	keywords: "widget, primitive"
 	date: "$Date$"
@@ -36,6 +35,9 @@ end -- class EV_PRIMITIVE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.7  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|
@@ -56,7 +58,6 @@ end -- class EV_PRIMITIVE
 --|
 --| Revision 1.5.2.3  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -1,7 +1,10 @@
 indexing
 	description: 
-		"Eiffel Vision toggle button. Button that toggles between one of two%N%
-		%states (raised and depressed) each time it is pressed."
+		"Button that toggles between states each time it is pressed."
+	appearance:
+		" ------------ %N%
+		%|   `text'   |%N%
+		% ============"
 	status: "See notice at end of class"
 	keywords: "toggle, button"
 	date: "$Date$"
@@ -34,7 +37,7 @@ feature -- Status setting
 		end
 
 	toggle is
-			-- Invert the value of `is_selected'.
+			-- Change `is_selected'.
 		do
 			implementation.toggle
 		ensure
@@ -44,11 +47,10 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	implementation: EV_TOGGLE_BUTTON_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
-			-- Create the implementation for the toggle button.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			Create {EV_TOGGLE_BUTTON_IMP} implementation.make (Current)
 		end
@@ -76,6 +78,9 @@ end -- class EV_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.23  2000/03/01 03:27:16  oconnor
 --| added make_for_test
 --|
@@ -89,7 +94,8 @@ end -- class EV_TOGGLE_BUTTON
 --| `disable_select' and `toggle'.
 --|
 --| Revision 1.20  2000/02/23 20:20:41  rogers
---| Corrected spelling mistake in keywords, removed smiley face from comment on is_selected.
+--| Corrected spelling mistake in keywords, removed smiley face from comment on
+--| is_selected.
 --|
 --| Revision 1.19  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting

@@ -2,7 +2,7 @@ indexing
 	description:
 		"Widget onto which graphical primatives may be drawn.%N%
 		%Primatives are drawn directly onto the screen without buffering.%
-		%(When buffering is required use {EV_PIXMAP}.)"
+		%(When buffering is required use EV_PIXMAP.)"
 	status: "See notice at end of class"
 	keywords: "drawable, expose, primitive, figure, draw, paint, image"
 	date: "$Date$"
@@ -137,6 +137,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.18  2000/03/21 02:35:12  oconnor
 --| indexing
 --|

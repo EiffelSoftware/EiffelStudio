@@ -1,9 +1,9 @@
 indexing 
 	description:
-		"Eiffel Vision separator.%N%
-		%Base class for horizontal and vertical seperators."
+		"Base class for simple scored line separator widgets.%N%
+		%See EV_HORIZONTAL_SEPARATOR and EV_VERTICAL_SEPARATOR"
 	status: "See notice at end of class"
-	keywords: "seperator"
+	keywords: "seperator, line, score"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,8 +19,7 @@ inherit
 feature {NONE} -- Implementation
 
 	implementation: EV_SEPARATOR_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_SEPARATOR
 
@@ -45,6 +44,9 @@ end -- class EV_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 19:10:39  oconnor
+--| comments, formatting
+--|
 --| Revision 1.6  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

@@ -211,8 +211,12 @@ feature {NONE} -- Implementation
 					exp_name := match_name (a_try_string)
 					if exp_name /= Void and then not exp_name.is_empty then
 						create Result.make (exp_name)
-						preloaded.put (Result, a_try_string)
-						name := a_try_face
+						if Result.c_object /= NULL then
+							preloaded.put (Result, a_try_string)
+							name := a_try_face						
+						else
+							fonts_not_found.extend (a_try_string)
+						end
 					else
 							fonts_not_found.extend (a_try_string)
 					end

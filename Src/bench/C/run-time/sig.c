@@ -184,7 +184,70 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 	int sig;						/* Signal number to be set */
 
 	for (sig = 1; sig < NSIG; sig++)
+#ifdef EIF_THREADS
+	/* In Multi-threaded mode, we do not want to call
+     * signal () on some specific signals.
+	 */
+
+	switch (sig) {
+	
+#ifdef EIF_DFLT_SIGUSR
+		/* So far, used in Linux threads */
+		case SIGUSR1:
+			break;
+
+		case SIGUSR2:
+			break;
+#endif /* EIF_DFLT_SIGUSR */
+
+#ifdef EIF_DFLT_SIGVTALARM
+		/* So far, used in PCTHREADS (obsolete, anyway) */
+		case SIGVTALRM:
+			break;
+#endif /* EIF_DFLT_SIGVTALARM */
+
+#ifdef EIF_DFLT_SIGPTRESCHED
+		/* So far, used in Posix 1003.1c threads */
+		case SIGPTRESCHED:
+			break;
+#endif /* EIF_DFLT_SIGPTRESCHED */
+
+#ifdef EIF_DFLT_SIGPTINTR
+		/* So far, used in Posix 1003.1c */
+		case SIGPTINTR:
+			break;
+#endif /* EIF_DFLT_SIGPTINTR */
+
+#ifdef EIF_DFLT_SIGRTMIN
+		/* So far, used in Posix 1003.1b */
+		case SIGRTMIN:
+			break;
+#endif /* EIF_DFLT_SIGRTMIN */
+
+#ifdef EIF_DFLT_SIGRTMAX
+		/* So far, used in Posix 1003.1b */
+		case SIGRTMAX:
+			break;
+#endif /* EIF_DFLT_SIGRTMAX */
+
+#ifdef EIF_DFLT_SIGWAITING 
+		/* So far, used in solaris threads (SunOS 5.5+ and Unixware 2.0)
+		 * On solaris 2.4, it is not used, which is a bug of the thread lib 
+		 */
+		case SIGWAITING:
+			break;
+#endif /* EIF_DFLT_SIGWAITING */
+
+/*#ifdef VXWORKS
+		case 34528:
+			break;
+*/
+		default:
 		(void) signal(sig, handler);	/* Ignore EINVAL errors */
+	}			
+#else
+		(void) signal(sig, handler);	/* Ignore EINVAL errors */
+#endif	/* EIF_THREADS */
 
 	/* Do not catch SIGTSTP (stop signal from tty like ^Z under csh or ksh)
 	 * otherwise job control will not be allowed. However, SIGSTOP is caught.

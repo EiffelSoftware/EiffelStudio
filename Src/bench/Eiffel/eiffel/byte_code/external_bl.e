@@ -108,6 +108,7 @@ feature
 					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
+				context.mark_current_used
 			end;
 			if not reg.is_predefined and is_polymorphic_access then
 					-- BEWARE!! The function call is polymorphic hence we'll
@@ -143,6 +144,7 @@ feature
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
+			local_argument_types: ARRAY [STRING]
 		do
 			check
 				final_mode: context.final_mode
@@ -211,11 +213,11 @@ feature
 						buf.putstring (external_name);
 					else
 						buf.putchar ('(')
-						type_c.generate_function_cast
-							(buf, argument_types);
+						local_argument_types := argument_types
+						type_c.generate_function_cast (buf, local_argument_types);
 						buf.putstring (external_name);
 							-- Remember external routine declaration
-						Extern_declarations.add_routine (type_c, external_name);
+						Extern_declarations.add_routine_with_signature (type_c, external_name, local_argument_types);
 						buf.putchar (')')
 					end;
 				end;

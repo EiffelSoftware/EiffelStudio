@@ -32,19 +32,19 @@ feature {NONE} -- Initialization
 			--put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 			
-			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
+			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
 			
 			gtk_init
 			gtk_dependent_initialize
 			
 			enable_ev_gtk_log (0)
 				-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
-			feature {EV_GTK_EXTERNALS}.gdk_set_show_events (False)
+			{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 		
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
 
-			tooltips := feature {EV_GTK_EXTERNALS}.gtk_tooltips_new
+			tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
 			set_tooltip_delay (500)
 			create window_oids.make
 			
@@ -80,15 +80,15 @@ feature {NONE} -- Initialization
 			until 
 				is_destroyed
 			loop
-				events_pending := feature {EV_GTK_EXTERNALS}.gtk_events_pending
-				gdk_event := feature {EV_GTK_EXTERNALS}.gdk_event_get
+				events_pending := {EV_GTK_EXTERNALS}.gtk_events_pending
+				gdk_event := {EV_GTK_EXTERNALS}.gdk_event_get
 				if gdk_event /= default_pointer or else events_pending > 0 then
 					if gdk_event /= default_pointer then
 						--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
-						feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
-						feature {EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
+						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+						{EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
 					else
-						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (False)
+						main_running := {EV_GTK_EXTERNALS}.g_main_iteration (False)
 					end
 				else
 						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 							call_idle_actions
 					else
 								-- Block loop by running a gmain loop iteration with blocking enabled.
-						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
+						main_running := {EV_GTK_EXTERNALS}.g_main_iteration (True)
 					end
 				end				
 			end
@@ -131,19 +131,19 @@ feature -- Access
 	ctrl_pressed: BOOLEAN is
 			-- Is ctrl key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and (feature {EV_GTK_EXTERNALS}.gdk_control_mask_enum)).to_boolean
+			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_control_mask_enum)).to_boolean
 		end
 
 	alt_pressed: BOOLEAN is
 			-- Is alt key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and (feature {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum)).to_boolean
+			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_mod1_mask_enum)).to_boolean
 		end
 
 	shift_pressed: BOOLEAN is
 			-- Is shift key currently pressed?
 		do
-			Result := (keyboard_modifier_mask.bit_and (feature {EV_GTK_EXTERNALS}.gdk_shift_mask_enum)).to_boolean
+			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_shift_mask_enum)).to_boolean
 		end
 
 	window_oids: LINKED_LIST [INTEGER] 
@@ -196,7 +196,7 @@ feature -- Basic operation
 				stop_processing_requested
 			loop
 					-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
-				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+				main_not_running := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 		
@@ -209,7 +209,7 @@ feature -- Basic operation
 			stop_processing_requested := True
 				-- Send a message to our hidden window to fire up 'process_events_until_stopped' loop.
 			temp_str := "hide"
-			feature {EV_GTK_EXTERNALS}.gtk_signal_emit_by_name (default_gtk_window, temp_str.item)
+			{EV_GTK_EXTERNALS}.gtk_signal_emit_by_name (default_gtk_window, temp_str.item)
 		end
 
 	process_events is
@@ -221,9 +221,9 @@ feature -- Basic operation
 		do
 			from
 			until 
-				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
+				{EV_GTK_EXTERNALS}.gtk_events_pending = 0
 			loop
-					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+					main_not_running := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
 						-- We only want to process the current events so we don't want any blocking.
 			end
 		end
@@ -252,7 +252,7 @@ feature -- Status setting
 			-- Set `tooltip_delay' to `a_delay'.
 		do
 			tooltip_delay := a_delay
-			feature {EV_GTK_EXTERNALS}.gtk_tooltips_set_delay (tooltips, a_delay)
+			{EV_GTK_EXTERNALS}.gtk_tooltips_set_delay (tooltips, a_delay)
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
@@ -324,7 +324,7 @@ feature -- Implementation
 			temp_mask, temp_x, temp_y: INTEGER
 			temp_ptr: POINTER
 		do
-			temp_ptr := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
+			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			Result := temp_mask
 		end
 
@@ -353,7 +353,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			-- Pointer to a default GdkWindow that may be used to
 			-- access default visual information (color depth).
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (default_gtk_window)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (default_gtk_window)
 		end
 		
 	default_window: EV_WINDOW is
@@ -373,8 +373,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			temp_style: POINTER
 		do
-			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
+			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
+			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
 		
 	default_font_ascent: INTEGER is
@@ -382,8 +382,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			temp_style: POINTER
 		do
-			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
+			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
+			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
 		
 	default_font_descent: INTEGER is
@@ -391,8 +391,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			temp_style: POINTER
 		do
-			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_descent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
+			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
+			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
 		
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
@@ -405,8 +405,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			a_success: BOOLEAN
 		once
-			Result := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			a_success := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
 		
 	fg_color: POINTER is
@@ -414,17 +414,17 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			a_success: BOOLEAN
 		once
-			Result := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (Result, 65535)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
-			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (Result, 65535)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
+			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
 
 	reusable_color_struct: POINTER is
 			-- Persistent GdkColorStruct
 		once
-			Result := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 		end
 
 feature {NONE} -- External implementation

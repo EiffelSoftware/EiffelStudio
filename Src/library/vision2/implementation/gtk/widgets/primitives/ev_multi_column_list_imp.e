@@ -65,11 +65,11 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 			
 			update_children_agent := agent update_children
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 			if a_row_number > 0 and then a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
 			end
-			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
+			if a_type = {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
 				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
-			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then --and not is_transport_enabled then
+			elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then --and not is_transport_enabled then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -156,8 +156,8 @@ feature {NONE} -- Initialization
 			end
 			create default_alignment
 			
-			list_widget := feature {EV_GTK_EXTERNALS}.gtk_clist_new (a_columns)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
+			list_widget := {EV_GTK_EXTERNALS}.gtk_clist_new (a_columns)
+			{EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			disable_multiple_selection
 		
 			real_signal_connect (
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 				set_row_height (App_implementation.default_font_height + 5)
 			end
 
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 
 			show_title_row
 
@@ -249,17 +249,17 @@ feature {NONE} -- Initialization
 			until
 				ev_children.after
 			loop
-				p := calloc (feature {EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
-				i := feature {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
+				p := calloc ({EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
+				i := {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
 				p.memory_free;
 				ev_children.item.dirty_child
 				update_child (ev_children.item, ev_children.index)
 				ev_children.forth
 			end
 			if old_list_widget /= NULL then
-				feature {EV_GTK_EXTERNALS}.gtk_container_remove (c_object, old_list_widget)
+				{EV_GTK_EXTERNALS}.gtk_container_remove (c_object, old_list_widget)
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
 			--feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 			if is_multiple_selected then
 				enable_multiple_selection
@@ -301,7 +301,7 @@ feature {NONE} -- Initialization
 			-- 
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
-			if pixmaps_height > feature {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
+			if pixmaps_height > {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
 				set_row_height (pixmaps_height)
 			end
 		end
@@ -382,7 +382,7 @@ feature -- Access
 			-- Number of columns in the list.
 		do
 			if list_widget /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget)
+				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget)
 			end
 		end
 
@@ -405,8 +405,8 @@ feature -- Access
 		do
 			if
 				list_widget /= NULL and
-				feature {EV_GTK_EXTERNALS}.g_list_length (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
+				{EV_GTK_EXTERNALS}.g_list_length (
+					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
 				) = 0
 			then
 					-- there is no selected item
@@ -414,8 +414,8 @@ feature -- Access
 			elseif list_widget /= NULL then
 					-- there is one selected item
 				an_index := pointer_to_integer (
-					feature {EV_GTK_EXTERNALS}.g_list_nth_data (
-						feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
+					{EV_GTK_EXTERNALS}.g_list_nth_data (
+						{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
 						0
 					)
 				)
@@ -436,8 +436,8 @@ feature -- Access
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			if list_widget /= NULL then
-				upper := feature {EV_GTK_EXTERNALS}.g_list_length (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
+				upper := {EV_GTK_EXTERNALS}.g_list_length (
+					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
 				)
 			end
 			create Result.make (0)
@@ -447,8 +447,8 @@ feature -- Access
 				i = upper
 			loop
 				an_index := pointer_to_integer (
-					feature {EV_GTK_EXTERNALS}.g_list_nth_data (
-						feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
+					{EV_GTK_EXTERNALS}.g_list_nth_data (
+						{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
 						i
 					)
 				)
@@ -464,8 +464,8 @@ feature -- Status report
 			-- Is at least one item selected ?
 		do
 			if list_widget /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_length (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
+				Result := {EV_GTK_EXTERNALS}.g_list_length (
+					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
 				).to_boolean
 			end
 		end
@@ -479,7 +479,7 @@ feature -- Status report
 			-- False if the title row is not shown.
 		do
 			if list_widget /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_flags (list_widget).bit_and (
+				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_flags (list_widget).bit_and (
 					gtk_clist_show_titles_enum
 				).to_boolean
 			end
@@ -497,13 +497,13 @@ feature -- Status setting
 	show_title_row is
 			-- Show the row of the titles.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_column_titles_show (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_show (list_widget)
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_column_titles_hide (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_hide (list_widget)
 		end
 
 	enable_multiple_selection is
@@ -514,14 +514,14 @@ feature -- Status setting
 			multiple_selection_enabled := True
 			ignore_select_callback := True
 			if selection_mode_is_single then
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+				{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 					list_widget,
-					feature {EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM
+					{EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM
 				)
 			else
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+				{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 					list_widget,
-					feature {EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM
+					{EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM
 				)
 			end
 			ignore_select_callback := False
@@ -542,9 +542,9 @@ feature -- Status setting
 			if not sel_items.is_empty then
 				sel_item := sel_items.first
 			end	
-			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+			{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 				list_widget,
-				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
+				{EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
 			)
 			if sel_item /= Void then
 				sel_item.enable_select
@@ -574,7 +574,7 @@ feature -- Status setting
 			if list_widget /= NULL then
 				switch_to_single_mode_if_necessary
 				ignore_select_callback := True
-				feature {EV_GTK_EXTERNALS}.gtk_clist_unselect_all (list_widget)
+				{EV_GTK_EXTERNALS}.gtk_clist_unselect_all (list_widget)
 				ignore_select_callback := False
 			end
 		end
@@ -584,7 +584,7 @@ feature -- Status setting
 		do
 			if list_widget /= NULL then
 				column_width_changed (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_optimal_column_width (list_widget, a_column - 1).max (column_width (a_column)),
+					{EV_GTK_EXTERNALS}.gtk_clist_optimal_column_width (list_widget, a_column - 1).max (column_width (a_column)),
 					a_column
 				)
 			end
@@ -595,9 +595,9 @@ feature -- Element change
 	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
 			-- Copy `s' to end of `Current'.  Do not move cursor.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			Precursor (s)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)			
+			{EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)			
 		end
 
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
@@ -607,7 +607,7 @@ feature -- Element change
 		do
 			if list_widget /= NULL then
 				create a_cs.make (a_txt)
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_column_title (
+				{EV_GTK_EXTERNALS}.gtk_clist_set_column_title (
 					list_widget,
 					a_column - 1,
 					a_cs.item
@@ -620,7 +620,7 @@ feature -- Element change
 			-- `column'.
 		do
 			if list_widget /= NULL then
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_column_width (list_widget, column - 1, value)
+				{EV_GTK_EXTERNALS}.gtk_clist_set_column_width (list_widget, column - 1, value)
 			end
 		end
 
@@ -630,14 +630,14 @@ feature -- Element change
 			an_alignment_code: INTEGER
 		do
 			if an_alignment.is_left_aligned then
-				an_alignment_code := feature {EV_GTK_EXTERNALS}.gTK_JUSTIFY_LEFT_ENUM
+				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_LEFT_ENUM
 			elseif an_alignment.is_center_aligned then
-				an_alignment_code := feature {EV_GTK_EXTERNALS}.gTK_JUSTIFY_CENTER_ENUM
+				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_CENTER_ENUM
 			else
-				an_alignment_code := feature {EV_GTK_EXTERNALS}.gTK_JUSTIFY_RIGHT_ENUM
+				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_RIGHT_ENUM
 			end
 
-			feature {EV_GTK_EXTERNALS}.gtk_clist_set_column_justification (
+			{EV_GTK_EXTERNALS}.gtk_clist_set_column_justification (
 				list_widget,
 				a_column - 1,
 				an_alignment_code
@@ -648,7 +648,7 @@ feature -- Element change
 			-- Make `value' the new height of all the rows.
 		do
 			if list_widget /= NULL then
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_row_height (list_widget, value)
+				{EV_GTK_EXTERNALS}.gtk_clist_set_row_height (list_widget, value)
 			end
 			user_set_row_height := value
 		end
@@ -662,7 +662,7 @@ feature -- Element change
 		do
 			if rows > 0 then
 				ev_children.wipe_out	
-				feature {EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
+				{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
 			end
 		end
 		
@@ -673,7 +673,7 @@ feature -- Element change
 		do
 				-- Remove all items (GTK part)
 			clear_selection
-			feature {EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
 			from
 				ev_children.start
 			until
@@ -737,7 +737,7 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, button_press_connection_id)
 			end
 			real_signal_connect (c_object,
 				"button-press-event", 
@@ -938,8 +938,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			ver_adj: POINTER
 			temp_a_y, ver_offset: INTEGER
 		do
-			ver_adj := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (c_object)
-			ver_offset := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (ver_adj).rounded
+			ver_adj := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (c_object)
+			ver_offset := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (ver_adj).rounded
 			temp_a_y := a_y + ver_offset
 			Result := temp_a_y // (row_height) + 1
 			if Result > ev_children.count then
@@ -979,7 +979,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then
 				pixmap_imp ?= ev_children.i_th (a_row).internal_pixmap.implementation
 				
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_pixtext (
+				{EV_GTK_EXTERNALS}.gtk_clist_set_pixtext (
 					list_widget,
 					a_row - 1,
 					a_column - 1,
@@ -989,7 +989,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 					pixmap_imp.mask
 				)
 			else
-				feature {EV_GTK_EXTERNALS}.gtk_clist_set_text (
+				{EV_GTK_EXTERNALS}.gtk_clist_set_text (
 					list_widget,
 					a_row - 1,
 					a_column - 1,
@@ -1105,16 +1105,16 @@ feature {NONE} -- Implementation
 							or else
 						selected_items.count <= 1
 					then
-						feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+						{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 							list_widget,
-							feature {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
+							{EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
 						)
 						selection_mode_is_single := True
 					end
 				else
-					feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 						list_widget,
-						feature {EV_GTK_EXTERNALS}.gtk_selection_single_enum
+						{EV_GTK_EXTERNALS}.gtk_selection_single_enum
 					)
 					selection_mode_is_single := True
 				end
@@ -1129,14 +1129,14 @@ feature {NONE} -- Implementation
 			if list_widget /= NULL and then selection_mode_is_single then
 				ignore_select_callback := True
 				if multiple_selection_enabled then
-					feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 						list_widget, 
-						feature {EV_GTK_EXTERNALS}.gtk_selection_extended_enum
+						{EV_GTK_EXTERNALS}.gtk_selection_extended_enum
 					)					
 				else
-					feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
+					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
 						list_widget,
-						feature {EV_GTK_EXTERNALS}.gtk_selection_browse_enum
+						{EV_GTK_EXTERNALS}.gtk_selection_browse_enum
 					)
 				end
 				ignore_select_callback := False
@@ -1176,8 +1176,8 @@ feature {NONE} -- Implementation
 				create_list (v.count)
 			else
 				-- add row to the existing gtk column list:
-				p := calloc (feature {EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
-				dummy := feature {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
+				p := calloc ({EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
+				dummy := {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
 				p.memory_free;
 				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
@@ -1192,7 +1192,7 @@ feature {NONE} -- Implementation
 			
 			if i < count then
 				-- reorder_child (v, v_imp, i)
-				feature {EV_GTK_EXTERNALS}.gtk_clist_row_move (
+				{EV_GTK_EXTERNALS}.gtk_clist_row_move (
 					list_widget,
 					item_imp.index - 1,
 					i - 1
@@ -1209,7 +1209,7 @@ feature {NONE} -- Implementation
 			clear_selection
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_remove (list_widget, a_position - 1)
+			{EV_GTK_EXTERNALS}.gtk_clist_remove (list_widget, a_position - 1)
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
@@ -1221,7 +1221,7 @@ feature {NONE} -- Implementation
 	row_height: INTEGER is
 		do
 			if list_widget /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) + 1
+				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) + 1
 			end			
 		end
 

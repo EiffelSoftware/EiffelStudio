@@ -46,8 +46,8 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
 			item_ptr := imp.c_object
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
 			imp.set_item_parent_imp (Void)
 		end
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toolbar_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
 		end
 		
 	initialize is
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			
 			initialize_tool_bar_style (list_widget)
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
 			has_vertical_button_style := True
 		end
 
@@ -155,16 +155,16 @@ feature -- Implementation
 				
 				if has_text and has_pixmap then
 					if has_vertical_button_style then
-						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
 					else
-						a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
 					end
 				elseif has_text then
-					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
+					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
 				else
-					a_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end
 		end	
 
@@ -193,7 +193,7 @@ feature -- Implementation
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
-			feature {EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
+			{EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 			add_radio_button (v)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
@@ -211,7 +211,7 @@ feature -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
+				{EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
 				radio_group := r.radio_group
 			end
 		end

@@ -41,13 +41,13 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			-- The mask consisting of alt, shift and control keys.
 		do
 			if control_required then
-				Result := feature {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
+				Result := {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
 			end
 			if alt_required then
-				Result := Result.bit_or (feature {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
+				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
 			end
 			if shift_required then
-				Result := Result.bit_or (feature {EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
+				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
 		end		
 
@@ -67,17 +67,17 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			
 			if shift_required then
 					-- We need to get the key val for the uppercase symbol
-				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, key_code_to_gtk (key.code), $a_keymap_array, $n_keys)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
-				internal_gdk_key_code := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
-				feature {EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, key_code_to_gtk (key.code), $a_keymap_array, $n_keys)
+				{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
+				internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
+				{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
 			else
 				internal_gdk_key_code := key_code_to_gtk (key.code)
 			end
 			
 			if internal_gdk_key_code > 0 then
 					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist
-				feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
+				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 					a_window_imp.accel_box,
 					a_cs.item,
 					a_window_imp.accel_group,
@@ -94,7 +94,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
+			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
 				a_window_imp.accel_box,
 				a_window_imp.accel_group,
 				internal_gdk_key_code,

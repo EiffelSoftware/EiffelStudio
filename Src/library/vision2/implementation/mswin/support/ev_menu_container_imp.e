@@ -29,16 +29,16 @@ feature {NONE} -- Implementation
 			corresponding_menu: WEL_MENU
 			char_code: CHARACTER
 		do
-			if msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_drawitem) then
+			if msg = ({WEL_WINDOW_CONSTANTS}.Wm_drawitem) then
 				create draw_item_struct.make_by_pointer (lparam)
 				on_draw_item (wparam, draw_item_struct)
 				Result := True
-			elseif msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_measureitem) then
+			elseif msg = ({WEL_WINDOW_CONSTANTS}.Wm_measureitem) then
 				create measure_item_struct.make_by_pointer (lparam)
 				on_measure_item (wparam, measure_item_struct)
 				Result := True
-			elseif msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_menuchar) then
-				if (cwin_hi_word (wparam) /= feature {WEL_MF_CONSTANTS}.Mf_sysmenu) then
+			elseif msg = ({WEL_WINDOW_CONSTANTS}.Wm_menuchar) then
+				if (cwin_hi_word (wparam) /= {WEL_MF_CONSTANTS}.Mf_sysmenu) then
 					char_code := cwin_lo_word(wparam).to_character
 					create corresponding_menu.make_by_pointer (lparam)
 					on_menu_char (char_code, corresponding_menu)
@@ -66,7 +66,7 @@ feature {NONE} -- WEL Implementation
 			item_type: INTEGER
 		do
 			item_type := measure_item.ctl_type
-			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
+			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
 				menu_item_imp ?= eif_id_any_object (measure_item.item_data.to_integer_32)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_measure_item (measure_item)
@@ -87,7 +87,7 @@ feature {NONE} -- WEL Implementation
 			menu_item_imp: EV_MENU_ITEM_IMP
 		do
 			item_type := draw_item.ctl_type
-			if item_type = (feature {WEL_ODT_CONSTANTS}.Odt_menu) then
+			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
 				menu_item_imp ?= eif_id_any_object (draw_item.item_data.to_integer_32)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_draw_item (draw_item)

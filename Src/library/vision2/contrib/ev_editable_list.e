@@ -307,8 +307,8 @@ feature {NONE} -- Actions
 	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG) is
 			-- Actions to check if user has press the return key on 'a_dialog'.
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.key_enter or 
-				key.code = feature {EV_KEY_CONSTANTS}.key_tab then
+			if key.code = {EV_KEY_CONSTANTS}.key_enter or 
+				key.code = {EV_KEY_CONSTANTS}.key_tab then
 				update_actions
 			end
 		end

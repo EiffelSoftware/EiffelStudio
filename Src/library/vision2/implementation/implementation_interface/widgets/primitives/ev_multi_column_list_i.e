@@ -337,7 +337,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				-- Firstly add the first column as left aligned as the first column is
 				-- always left aligned in a multi column list.
 			if column_alignments.is_empty then
-				column_alignments.extend (feature {EV_TEXT_ALIGNMENT}.left_alignment)
+				column_alignments.extend ({EV_TEXT_ALIGNMENT}.left_alignment)
 			end
 			
 			from

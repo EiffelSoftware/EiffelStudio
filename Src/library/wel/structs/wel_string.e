@@ -111,7 +111,7 @@ feature -- Element change
 			-- value represented by `n' in a two bytes representation.
 		require
 			valid_size: n > 0
-			small_enough: n <= feature {INTEGER_16}.Max_value
+			small_enough: n <= {INTEGER_16}.Max_value
 		do
 			managed_data.put_integer_16 (n.to_integer_16, 0)
 		end

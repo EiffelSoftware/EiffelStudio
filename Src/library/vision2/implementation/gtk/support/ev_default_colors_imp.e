@@ -15,10 +15,10 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (feature {EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
-			r := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
+			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
+			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
+			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -29,10 +29,10 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (feature {EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
-			r := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
+			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
+			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
+			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -45,10 +45,10 @@ feature -- Access
 			color: POINTER
 		do
 --| FIXME, can you implement it Sam ?
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (feature {EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
-			r := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
+			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
+			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
+			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end
@@ -61,10 +61,10 @@ feature -- Access
 			color: POINTER
 		do
 --| FIXME, can you implement it Sam ?
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (feature {EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
-			r := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
-			g := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
-			b := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg ({EV_GTK_EXTERNALS}.gtk_widget_get_default_style)
+			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
+			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
+			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			create Result
 			Result.set_rgb_with_16_bit (r, g, b)
 		end

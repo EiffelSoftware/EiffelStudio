@@ -194,7 +194,7 @@ feature -- Access
 	is_show_requested: BOOLEAN is
 			-- Is `Current' displayed in its parent?
 		do
-			Result := flag_set (bar.style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
+			Result := flag_set (bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
 
 feature -- Status report
@@ -227,7 +227,7 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (bar.item, feature {WEL_WINDOW_CONSTANTS}.Sw_show)
+			show_window (bar.item, {WEL_WINDOW_CONSTANTS}.Sw_show)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -239,7 +239,7 @@ feature -- Status setting
 		local
 			p_imp: like parent_imp
 		do
-			show_window (bar.item, feature {WEL_WINDOW_CONSTANTS}.Sw_hide)
+			show_window (bar.item, {WEL_WINDOW_CONSTANTS}.Sw_hide)
 			p_imp := parent_imp
 			if p_imp /= Void then
 				p_imp.notify_change (Nc_minsize, Current)
@@ -369,7 +369,7 @@ feature -- Element change
 			
 				-- Also take care of toggled state if a toggle button.
 			if toggle_button /= Void and then toggle_button.is_selected then
-				but.set_state  (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_checked | feature {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
+				but.set_state  ({WEL_TB_STATE_CONSTANTS}.Tbstate_checked | {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
 			end
 			
 				-- If we are a separator then there is no need to handle the text.
@@ -922,7 +922,7 @@ feature {NONE} -- WEL Implementation
 			-- Default style used to create the control
 		once
 			Result := Ws_visible | Ws_child | Ws_clipchildren | Ws_clipsiblings |
-				Tbstyle_tooltips | feature {WEL_CCS_CONSTANTS}.Ccs_nodivider
+				Tbstyle_tooltips | {WEL_CCS_CONSTANTS}.Ccs_nodivider
 
 				-- Add the flat style if available.
 			if comctl32_version >= version_470 then

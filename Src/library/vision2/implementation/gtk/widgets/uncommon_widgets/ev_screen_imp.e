@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, feature {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
+			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (gc, {EV_GTK_EXTERNALS}.gdk_include_inferiors_enum)
 			init_default_values
 		end
 
@@ -56,7 +56,7 @@ feature -- Status report
 			a_x, a_y: INTEGER
 			temp_pointer: POINTER
 		do
-			temp_pointer := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $a_x, $a_y, default_pointer)
+			temp_pointer := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $a_x, $a_y, default_pointer)
 			create Result.set (a_x, a_y)
 		end
 
@@ -71,15 +71,15 @@ feature -- Status report
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
 		do
-			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= default_pointer then				
 				from
-					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
+					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
 					Result /= Void or else gtkwid = default_pointer
 				loop
-					Result ?= feature {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
-					gtkwid := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
+					Result ?= {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
+					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
 		end
@@ -104,7 +104,7 @@ feature -- Basic operation
 			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
 		do
 			Result := x_test_query_extension (
-					feature {EV_GTK_EXTERNALS}.gdk_display, 
+					{EV_GTK_EXTERNALS}.gdk_display, 
 					$a_event_base,
 					$a_error_base,
 					$a_maj_ver,
@@ -120,7 +120,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := x_test_fake_motion_event (feature {EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
+			a_success_flag := x_test_fake_motion_event ({EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
 			check
 				pointer_position_set: a_success_flag
 			end		
@@ -134,7 +134,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
+			a_success_flag := x_test_fake_button_event ({EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
 			check
 				fake_pointer_button_press_success: a_success_flag
 			end		
@@ -148,7 +148,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := x_test_fake_button_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
+			a_success_flag := x_test_fake_button_event ({EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
 			check
 				fake_pointer_button_release_success: a_success_flag
 			end		
@@ -164,8 +164,8 @@ feature -- Basic operation
 				x_test_capable: x_test_capable
 			end
 			a_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_key_code := x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
-			a_success_flag := x_test_fake_key_event (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
+			a_key_code := x_keysym_to_keycode ({EV_GTK_EXTERNALS}.gdk_display, a_key_code)
+			a_success_flag := x_test_fake_key_event ({EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
 			check
 				fake_key_press_success: a_success_flag
 			end		
@@ -181,9 +181,9 @@ feature -- Basic operation
 				x_test_capable: x_test_capable
 			end
 			a_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_key_code := x_keysym_to_keycode (feature {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
+			a_key_code := x_keysym_to_keycode ({EV_GTK_EXTERNALS}.gdk_display, a_key_code)
 			a_success_flag := x_test_fake_key_event (
-								feature {EV_GTK_EXTERNALS}.gdk_display,
+								{EV_GTK_EXTERNALS}.gdk_display,
 								a_key_code,
 								False,
 								0
@@ -216,13 +216,13 @@ feature -- Measurement
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gdk_screen_height
+			Result := {EV_GTK_EXTERNALS}.gdk_screen_height
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gdk_screen_width
+			Result := {EV_GTK_EXTERNALS}.gdk_screen_width
 		end
 
 feature {NONE} -- Externals (XTEST extension)
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 
 	destroy is
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+			{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 			is_destroyed := True
 		end
 		
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 	drawable: POINTER is
 			-- Pointer to the screen (root window)
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gdk_root_parent
+			Result := {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
 	mask: POINTER

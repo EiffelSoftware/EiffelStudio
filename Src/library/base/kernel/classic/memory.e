@@ -159,7 +159,7 @@ feature -- Status report
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			Result := find_instance_of (feature {ISE_RUNTIME}.dynamic_type ($an_object),
+			Result := find_instance_of ({ISE_RUNTIME}.dynamic_type ($an_object),
 				special_any_dynamic_type)
 		end
 
@@ -187,7 +187,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := feature {ISE_RUNTIME}.dynamic_type ($l_item)
+					dtype := {ISE_RUNTIME}.dynamic_type ($l_item)
 					Result.search (dtype)
 					if Result.found then
 						l_list := Result.found_item
@@ -224,7 +224,7 @@ feature -- Status report
 			loop
 				l_item := l_spec.item (i)
 				if l_item /= Void then
-					dtype := feature {ISE_RUNTIME}.dynamic_type ($l_item)
+					dtype := {ISE_RUNTIME}.dynamic_type ($l_item)
 					Result.search (dtype)
 					if Result.found then
 						Result.force (Result.found_item + 1, dtype)
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 		once
 			create a.make (0, 0)
 			spec := a.area
-			Result := feature {ISE_RUNTIME}.dynamic_type ($spec)
+			Result := {ISE_RUNTIME}.dynamic_type ($spec)
 		end
 
 indexing

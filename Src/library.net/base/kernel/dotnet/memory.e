@@ -334,14 +334,14 @@ feature -- Removal
 			-- Force a partial collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		do
-			feature {GC}.collect (0)
+			{GC}.collect (0)
 		end
 
 	full_collect is
 			-- Force a full collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		do
-			feature {GC}.collect
+			{GC}.collect
 		end
 
 feature {NONE} -- Implementation

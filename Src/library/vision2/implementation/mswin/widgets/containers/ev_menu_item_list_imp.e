@@ -132,11 +132,11 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 							if Result = default_pointer then
 									-- item with the right letter found,
 									-- execute it.
-								Result := cwin_make_long (child_index, feature {WEL_MNC_CONSTANTS}.Mnc_execute)
+								Result := cwin_make_long (child_index, {WEL_MNC_CONSTANTS}.Mnc_execute)
 							else
 									-- There is a second item with the right letter,
 									-- just select the first one.
-								Result := cwin_make_long (cwin_lo_word (Result), feature {WEL_MNC_CONSTANTS}.Mnc_select)
+								Result := cwin_make_long (cwin_lo_word (Result), {WEL_MNC_CONSTANTS}.Mnc_select)
 							end
 						end
 					end

@@ -114,7 +114,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			temp_key_string: STRING
 			a_capture_widget_imp: EV_WIDGET_IMP
 		do
-			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = feature {EV_KEY_CONSTANTS}.Key_escape then
+			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.Key_escape then
 					-- If a PND is in action and the Esc key is pressed then cancel it
 				if App_implementation.captured_widget /= Void then
 						-- We are definitely in PND so we set a_capture_widget_imp for start_transport to be executed on it
@@ -136,11 +136,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 									-- The key pressed is an action key, we only want
 								inspect
 									a_key.code
-								when feature {EV_KEY_CONSTANTS}.Key_space then
+								when {EV_KEY_CONSTANTS}.Key_space then
 									temp_key_string := " "
-								when feature {EV_KEY_CONSTANTS}.Key_enter then
+								when {EV_KEY_CONSTANTS}.Key_enter then
 									temp_key_string := "%N"
-								when feature {EV_KEY_CONSTANTS}.Key_tab then
+								when {EV_KEY_CONSTANTS}.Key_tab then
 									temp_key_string := "%T"
 								else
 										-- The action key pressed has no printable value
@@ -215,11 +215,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
-			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+			if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+			elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
 				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+			elseif a_type = {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
 				mouse_wheel_delta := 1
 			end
 			if a_button = 4 and mouse_wheel_delta > 0 then
@@ -235,11 +235,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			
 			if a_button >= 1 and then a_button <= 3 then
-				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 					if pointer_button_press_actions_internal /= Void then
 						pointer_button_press_actions_internal.call (t)
 					end
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+				elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
 					if pointer_double_press_actions_internal /= Void then
 						pointer_double_press_actions_internal.call (t)
 					end
@@ -269,7 +269,7 @@ feature -- Access
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
+			child := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
 			create Result.set (x, y)
 		end
 
@@ -283,14 +283,14 @@ feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retr
 			i: INTEGER
 		do
 			if is_displayed then	
-					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				    	$a_x, NULL)
 					Result := a_x
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
-					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
 			end
 		end
@@ -303,14 +303,14 @@ feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retr
 			i: INTEGER
 		do
 			if is_displayed then
-					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				    	NULL, $a_y)
 					Result := a_y
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
-					Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end
 		end
@@ -321,13 +321,13 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
+			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
+			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
 		end
 
 feature -- Status setting
@@ -335,7 +335,7 @@ feature -- Status setting
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 	enable_capture is
@@ -383,10 +383,10 @@ feature -- Measurement
 			a_aux_info: POINTER
 			tmp_struct_x: INTEGER
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_x (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= NULL then
-				tmp_struct_x := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+				tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
 				if tmp_struct_x >= 0 then
 					Result := tmp_struct_x
 				end
@@ -401,10 +401,10 @@ feature -- Measurement
 			a_aux_info: POINTER
 			tmp_struct_y: INTEGER
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_y (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= NULL then
-				tmp_struct_y := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+				tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				if tmp_struct_y >= 0 then
 					Result := tmp_struct_y
 				end
@@ -494,7 +494,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		local
 			wind_ptr: POINTER
 		do
-			wind_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 			if wind_ptr /= NULL then
 				Result ?= eif_object_from_c (wind_ptr)
 			end
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 			if a_minimum_height /= -1 then
 				internal_minimum_height := a_minimum_height
 			end
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 			update_request_size
 		end
 
@@ -550,22 +550,22 @@ feature {NONE} -- Implementation
 			fg: EV_COLOR
 			a_child_list: POINTER
 		do
-			if feature {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object) then
+			if {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
-					a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object) 
+					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object) 
 					l := a_child_list
 				until
 					l = NULL
 				loop
-					child := feature {EV_GTK_EXTERNALS}.glist_struct_data (l)
+					child := {EV_GTK_EXTERNALS}.glist_struct_data (l)
 					real_set_foreground_color (child, fg)
-					if feature {EV_GTK_EXTERNALS}.gtk_is_container (child) then
+					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
 						propagate_foreground_color_internal (fg, child)
 					end
-					l := feature {EV_GTK_EXTERNALS}.glist_struct_next (l) 
+					l := {EV_GTK_EXTERNALS}.glist_struct_next (l) 
 				end
-				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
@@ -580,23 +580,23 @@ feature {NONE} -- Implementation
 			a_child_list: POINTER
 		do
 			if
-				feature {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object)
+				{EV_GTK_EXTERNALS}.gtk_is_container (a_c_object)
 			then
 				from
 					bg := a_color
-					a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object)
+					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
 				loop
-					child := feature {EV_GTK_EXTERNALS}.glist_struct_data (l)
+					child := {EV_GTK_EXTERNALS}.glist_struct_data (l)
 					real_set_background_color (child, bg)
-					if feature {EV_GTK_EXTERNALS}.gtk_is_container (child) then
+					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
 						propagate_background_color_internal (bg, child)
 					end
-					l := feature {EV_GTK_EXTERNALS}.glist_struct_next (l) 
+					l := {EV_GTK_EXTERNALS}.glist_struct_next (l) 
 				end
-				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
 			end

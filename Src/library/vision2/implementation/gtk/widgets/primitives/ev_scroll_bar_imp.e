@@ -27,10 +27,10 @@ feature -- Element change
 			-- We redefine it to keep the page size the same as leap.
 		do
 			if leap /= a_leap then
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_size (adjustment, a_leap)
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_size (adjustment, a_leap)
+				{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			range_same: value_range.is_equal (old value_range)
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	internal_set_upper is
 			-- Sets the upper value of the adjustment struct to take 'leap' in to account
 		do
-			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
+			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
 				adjustment,
 				value_range.upper + leap
 			)			

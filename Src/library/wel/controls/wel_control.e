@@ -156,7 +156,7 @@ feature {WEL_DIALOG} -- Implementation
 			cwin_set_window_long (item, Gwlp_wndproc, cwel_window_procedure_address)
 				
 			p := internal_data
-			feature {WEL_INTERNAL_DATA}.set_default_window_procedure (p, default_window_procedure)
+			{WEL_INTERNAL_DATA}.set_default_window_procedure (p, default_window_procedure)
 		end
 
 	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is

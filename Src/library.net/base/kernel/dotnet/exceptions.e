@@ -60,7 +60,7 @@ feature -- Status report
 		local
 			conv_de: EIFFEL_EXCEPTION
 		do
-			conv_de ?= feature {ISE_RUNTIME}.last_exception
+			conv_de ?= {ISE_RUNTIME}.last_exception
 			Result := conv_de.tag
 		end
 
@@ -86,7 +86,7 @@ feature -- Status report
 			conv_fl: EIFFEL_EXCEPTION
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				conv_fl ?= le
 				if conv_fl /= Void then
@@ -105,7 +105,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.target_site.name)
 			else
@@ -119,7 +119,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.target_site.reflected_type.full_name)
 			else
@@ -132,7 +132,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				Result := exception_to_code (le)
 			else
@@ -145,7 +145,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				create Result.make_from_cil (le.stack_trace)
 			else
@@ -160,7 +160,7 @@ feature -- Status report
 			conv_fl: EIFFEL_EXCEPTION
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				from until le.inner_exception = Void loop
 					le := le.inner_exception
@@ -182,7 +182,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				from until le.inner_exception = Void loop
 					le := le.inner_exception
@@ -199,7 +199,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				from until le.inner_exception = Void loop
 					le := le.inner_exception
@@ -216,7 +216,7 @@ feature -- Status report
 		local
 			le: EXCEPTION
 		do
-			le := feature {ISE_RUNTIME}.last_exception
+			le := {ISE_RUNTIME}.last_exception
 			if le /= Void then
 				from until le.inner_exception = Void loop
 					le := le.inner_exception
@@ -255,7 +255,7 @@ feature -- Status setting
 			fle: EIFFEL_EXCEPTION
 		do
 			create fle.make (Developer_exception, name)
-			feature {ISE_RUNTIME}.raise (fle)
+			{ISE_RUNTIME}.raise (fle)
 		end
 
 	raise_retrieval_exception (name: STRING) is
@@ -264,14 +264,14 @@ feature -- Status setting
 			fle: EIFFEL_EXCEPTION
 		do
 			create fle.make (Retrieve_exception, name)
-			feature {ISE_RUNTIME}.raise (fle)
+			{ISE_RUNTIME}.raise (fle)
 		end
 
 	die (code: INTEGER) is
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		do
-			feature {ENVIRONMENT}.exit (code)
+			{ENVIRONMENT}.exit (code)
 		end
 
 	new_die (code: INTEGER) is obsolete "Use ``die''"

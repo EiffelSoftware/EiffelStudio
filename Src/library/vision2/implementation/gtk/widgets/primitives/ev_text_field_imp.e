@@ -44,12 +44,12 @@ feature {NONE} -- Initialization
 			-- Create a gtk entry.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
-			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_entry_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			entry_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
+			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
 			--| Minimum sizes need to be similar on both platforms
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
 			set_text ("")
 		end
 
@@ -58,7 +58,7 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in field.
 		do
-			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
+			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
 		end
 
 feature -- Status setting
@@ -69,7 +69,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
 	append_text (txt: STRING) is
@@ -80,7 +80,7 @@ feature -- Status setting
 		do
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
 	
@@ -92,20 +92,20 @@ feature -- Status setting
 		do
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
 		
 	set_capacity (len: INTEGER) is
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
 	capacity: INTEGER is
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
 		end
 
 feature -- Status Report
@@ -114,9 +114,9 @@ feature -- Status Report
 			-- Current position of the caret.
 		do
 			if in_change_action and not last_key_backspace then
-				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
+				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
 			else
-				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1	
+				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1	
 			end
 		end
 	
@@ -131,7 +131,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_key_press then
 					-- The event is a key press event.
 				if a_key /= Void then
-					if a_key.code = feature {EV_KEY_CONSTANTS}.Key_back_space then
+					if a_key.code = {EV_KEY_CONSTANTS}.Key_back_space then
 						last_key_backspace := True
 					else
 						last_key_backspace := False
@@ -159,14 +159,14 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
-				feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
+				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
 	selection_start: INTEGER is
@@ -174,8 +174,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.min (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
+			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.min ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
 	selection_end: INTEGER is
@@ -183,8 +183,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.max (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
+			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
 	clipboard_content: STRING is
@@ -199,13 +199,13 @@ feature -- status settings
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
 		end
 
 	set_position (pos: INTEGER) is
 			-- Set current insertion position.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 	set_caret_position (pos: INTEGER) is
@@ -224,7 +224,7 @@ feature -- Basic operation
 		do
 			pos := caret_position - 1
 			create a_cs.make (txt)
-			feature {EV_GTK_EXTERNALS}.gtk_editable_insert_text (
+			{EV_GTK_EXTERNALS}.gtk_editable_insert_text (
 				entry_widget,
 				a_cs.item,
 				txt.count,
@@ -247,19 +247,19 @@ feature -- Basic operation
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 		end
 
 	cut_selection is
@@ -269,7 +269,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
 		end
 
 	copy_selection is
@@ -278,7 +278,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
 	paste (index: INTEGER) is
@@ -300,7 +300,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is

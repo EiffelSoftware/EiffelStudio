@@ -644,7 +644,7 @@ feature {NONE}-- Messages
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (to_lresult (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
 feature {NONE} -- Implementation

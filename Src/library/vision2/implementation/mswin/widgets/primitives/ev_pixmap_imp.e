@@ -1291,7 +1291,7 @@ feature {NONE} -- Implementation
 							--| Studio uses black as the color underneath for all icons
 						create source_dc.make
 						source_dc.select_bitmap (private_mask_bitmap)
-						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Maskpaint)
+						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Maskpaint)
 						source_dc.unselect_bitmap
 						source_dc.delete
 						

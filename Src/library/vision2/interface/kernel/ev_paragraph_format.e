@@ -36,25 +36,25 @@ feature -- Status report
 	is_left_aligned: BOOLEAN is
 			-- Is `Current' left aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_left
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
 		
 	is_center_aligned: BOOLEAN is
 			-- Is `Current' center aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_center
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
 	
 	is_right_aligned: BOOLEAN is
 			-- Is `Current' right aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_right
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
 	
 	is_justified: BOOLEAN is
 			-- Is `Current' justified?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 		
 	left_margin: INTEGER is
@@ -96,7 +96,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_left)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 		ensure
 			is_left_aligned: is_left_aligned
 		end
@@ -106,7 +106,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_center)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 		ensure
 			is_center_aligned: is_center_aligned
 		end
@@ -116,7 +116,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_right)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 		ensure
 			is_right_aligned: is_right_aligned
 		end
@@ -126,7 +126,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 		ensure
 			is_justified: is_justified
 		end
@@ -193,10 +193,10 @@ feature -- Contract Support
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_left or
-				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_center or
-				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_right or
-				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+			Result := an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left or
+				an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center or
+				an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right or
+				an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

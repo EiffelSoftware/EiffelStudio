@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			a_cs := "Font Selection Dialog"
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
 						a_cs.item
 					))
 		end
@@ -76,7 +76,7 @@ feature -- Access
 			create Result
 			font_imp ?= Result.implementation
 			
-			a_utf8_ptr := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
+			a_utf8_ptr := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
 			create a_cs.make_from_pointer (a_utf8_ptr)
 			font_desc := a_cs.string.as_lower
 			font_names := App_implementation.font_names_on_system
@@ -101,19 +101,19 @@ feature -- Access
 			font_imp.set_height_in_points (split_values.last.to_integer)
 			
 			if split_values.has ("italic") or else split_values.has ("oblique") then
-				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			else
-				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
+				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 			end
 			
 			if split_values.has ("bold") then
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			elseif split_values.has ("light") then
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_thin)
+				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_thin)
 			elseif split_values.has ("superbold") then
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_black)
+				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_black)
 			else
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)
+				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 			end		
 		end
 
@@ -128,14 +128,14 @@ feature -- Element change
 			a_font_des_str: POINTER
 		do
 			font_imp ?= a_font.implementation
-			a_font_des_str := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
+			a_font_des_str := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
 			if a_font_des_str /= default_pointer then
 				create a_cs.make_from_pointer (a_font_des_str)
-				feature {EV_GTK_EXTERNALS}.g_free (a_font_des_str)
+				{EV_GTK_EXTERNALS}.g_free (a_font_des_str)
 			else
 				create a_cs.make (font_imp.name + " " + font_imp.height_in_points.out)
 			end
-			a_success_flag := feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
+			a_success_flag := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 							c_object,
 							a_cs.item
 						)

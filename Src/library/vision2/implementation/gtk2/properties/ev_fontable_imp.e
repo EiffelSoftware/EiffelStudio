@@ -46,9 +46,9 @@ feature -- Status setting
 				font_imp ?= private_font.implementation
 				if font_imp.font_is_default then
 						-- If we are setting with the default font then we set to NULL so that its size is controlled by the user
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, default_pointer)				
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, default_pointer)				
 				else
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, font_imp.font_description)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, font_imp.font_description)
 				end
 			end
 		end

@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			-- Enable sensitivity of button
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
+			{EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 		end
 
 	event_widget: POINTER is
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_button_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_button_new)
 		end
 
 	initialize is
@@ -91,8 +91,8 @@ feature {NONE} -- Initialization
 			-- create button box to hold label and pixmap.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (visual_widget, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
+			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (visual_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -105,21 +105,21 @@ feature {NONE} -- Initialization
 		local
 			box: POINTER
 		do
-			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 
 				-- Set up alignment dummy labels.
-			left_side_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
-			right_side_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (left_side_label)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (right_side_label)
+			left_side_label := {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
+			right_side_label := {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (left_side_label)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (right_side_label)
 
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, left_side_label)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, left_side_label)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
 	
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
 		ensure
 			button_box /= NULL
 		end
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 		local
 			old_expand, fill, pad, pack_type: INTEGER
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
+			{EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
 				a_box,
 				a_child,
 				$old_expand,
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 				$pad,
 				$pack_type
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
+			{EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
 				a_box,
 				a_child,
 				flag,
@@ -206,7 +206,7 @@ feature -- Status Setting
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, feature {EV_GTK_ENUMS}.gtk_can_default_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_can_default_enum)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -243,8 +243,8 @@ feature {NONE} -- implementation
 
 	foreground_color_pointer: POINTER is
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
+			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
 			)
 		end
 
@@ -257,9 +257,9 @@ feature {NONE} -- implementation
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (visual_widget)
-			Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 		end
 
 feature {EV_ANY_I} -- implementation

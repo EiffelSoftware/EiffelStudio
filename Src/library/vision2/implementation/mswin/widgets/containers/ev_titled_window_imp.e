@@ -136,7 +136,7 @@ feature -- Status setting
 		local
 			hwnd: POINTER
 		do
-			hwnd := feature {WEL_C_EXTERNALS}.set_active_window (wel_item)
+			hwnd := {WEL_C_EXTERNALS}.set_active_window (wel_item)
 		end
 		
 	lower is

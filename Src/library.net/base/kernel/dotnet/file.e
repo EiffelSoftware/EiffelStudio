@@ -369,7 +369,7 @@ feature -- Status report
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -388,7 +388,7 @@ feature -- Status report
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.write,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -416,7 +416,7 @@ feature -- Status report
 			if not retried then
 					-- Is the parent directory writable?
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable
@@ -442,8 +442,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.device) = 
-				feature {FILE_ATTRIBUTES}.device
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.device) = 
+				{FILE_ATTRIBUTES}.device
 		end
 
 	is_directory: BOOLEAN is
@@ -452,8 +452,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.directory) = 
-				feature {FILE_ATTRIBUTES}.directory
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) = 
+				{FILE_ATTRIBUTES}.directory
 		end
 
 	is_symlink: BOOLEAN is
@@ -639,7 +639,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.create_, feature {FILE_ACCESS}.write)
+				{FILE_MODE}.create_, {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -654,7 +654,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.append, feature {FILE_ACCESS}.write)
+				{FILE_MODE}.append, {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -668,7 +668,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open, feature {FILE_ACCESS}.read_write)
+				{FILE_MODE}.open, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -684,7 +684,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.create_, feature {FILE_ACCESS}.read_write)
+				{FILE_MODE}.create_, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -712,7 +712,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -725,7 +725,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -738,7 +738,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -751,7 +751,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read_write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -766,7 +766,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read_write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read_write)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -894,7 +894,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, feature {SEEK_ORIGIN}.begin)
+			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
 		end
 
 	finish is
@@ -904,7 +904,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, feature {SEEK_ORIGIN}.end_)
+			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
 		end
 
 	forth is
@@ -914,7 +914,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((1).to_integer_64, feature {SEEK_ORIGIN}.current_)
+			i := internal_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	back is
@@ -922,7 +922,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((-1).to_integer_64, feature {SEEK_ORIGIN}.current_)
+			i := internal_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	move (offset: INTEGER) is
@@ -932,7 +932,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (offset.to_integer_64, feature {SEEK_ORIGIN}.current_)
+			i := internal_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	go (abs_position: INTEGER) is
@@ -954,7 +954,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (abs_position.to_integer_64, feature {SEEK_ORIGIN}.end_)
+			i := internal_stream.seek (abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
 		end
 
 	next_line is
@@ -1205,7 +1205,7 @@ feature -- Element change
 		local
 			now: SYSTEM_DATE_TIME
 		do
-			now := feature {SYSTEM_DATE_TIME}.now
+			now := {SYSTEM_DATE_TIME}.now
 			internal_file.refresh
 			internal_file.set_last_access_time (now)
 			internal_file.set_last_write_time (now)
@@ -1499,7 +1499,7 @@ feature {FILE} -- Implementation
 		do
 			if internal_sread = Void and internal_stream.can_read then
 				create {STREAM_READER} internal_sread.make_from_stream_and_encoding (
-					internal_stream, feature {ENCODING}.default)
+					internal_stream, {ENCODING}.default)
 			end
 			Result := internal_sread
 		end
@@ -1509,7 +1509,7 @@ feature {FILE} -- Implementation
 		do
 			if internal_swrite = Void and internal_stream.can_write then
 				create {STREAM_WRITER} internal_swrite.make_from_stream_and_encoding (
-					internal_stream, feature {ENCODING}.default)
+					internal_stream, {ENCODING}.default)
 			end
 			Result := internal_swrite
 		end

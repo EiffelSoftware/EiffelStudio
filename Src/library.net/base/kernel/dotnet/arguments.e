@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		local
 			cmd_line: NATIVE_ARRAY [SYSTEM_STRING]
 		do
-			cmd_line := feature {ENVIRONMENT}.get_command_line_args
+			cmd_line := {ENVIRONMENT}.get_command_line_args
 			Result := cmd_line.count
 		end
 
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 		local
 			cmd_line: NATIVE_ARRAY [SYSTEM_STRING]
 		do
-			cmd_line := feature {ENVIRONMENT}.get_command_line_args
+			cmd_line := {ENVIRONMENT}.get_command_line_args
 			Result := create {STRING}.make_from_cil (cmd_line.item (i))
 		end
 

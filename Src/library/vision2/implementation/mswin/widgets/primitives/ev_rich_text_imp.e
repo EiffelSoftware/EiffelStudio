@@ -545,31 +545,31 @@ feature -- Status report
 			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
 			mask := wel_character_format.mask
 			if flag_set (mask, cfm_face) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
 			end
 			if flag_set (mask, cfm_bold) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight
 			end
 			if flag_set (mask, cfm_italic) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape
 			end
 			if flag_set (mask, cfm_size) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_height
 			end
 			if flag_set (mask, cfm_color) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.color
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.color
 			end
 			if flag_set (mask, cfm_backcolor) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
 			end
 			if flag_set (mask, cfm_strikeout) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
 			end
 			if flag_set (mask, cfm_underline) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
 			end
 			if flag_set (mask, cfm_offset) then
-				flags := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
+				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
 			end
 
 			create Result.make_with_flags (flags)
@@ -607,19 +607,19 @@ feature -- Status report
 			
 			mask := wel_paragraph_format.mask
 			if flag_set (mask, pfm_alignment) then
-				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.alignment
+				flags := flags | {EV_PARAGRAPH_CONSTANTS}.alignment
 			end
 			if flag_set (mask, pfm_startindent) then
-				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.left_margin
+				flags := flags | {EV_PARAGRAPH_CONSTANTS}.left_margin
 			end
 			if flag_set (mask, pfm_rightindent) then
-				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.right_margin
+				flags := flags | {EV_PARAGRAPH_CONSTANTS}.right_margin
 			end
 			if flag_set (mask, pfm_spacebefore) then
-				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.top_spacing
+				flags := flags | {EV_PARAGRAPH_CONSTANTS}.top_spacing
 			end
 			if flag_set (mask, pfm_spaceafter) then
-				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
+				flags := flags | {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
 			end
 			create Result.make_with_flags (flags)
 			if not range_already_selected then
@@ -1031,7 +1031,7 @@ feature -- Status setting
 							add_rtf_keyword (temp_string, rtf_strikeout_string + "0")
 							is_current_format_striked_through := False
 						end
-						format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
+						format_bold := formats.i_th (format_index).font.weight = {EV_FONT_CONSTANTS}.weight_bold
 						if not is_current_format_bold and format_bold then
 							add_rtf_keyword (temp_string, rtf_bold_string)
 							is_current_format_bold := True
@@ -1039,7 +1039,7 @@ feature -- Status setting
 							add_rtf_keyword (temp_string, rtf_bold_string + "0")
 							is_current_format_bold := False
 						end						
-						format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
+						format_italic := formats.i_th (format_index).font.shape = {EV_FONT_CONSTANTS}.shape_italic
 						if not is_current_format_italic and format_italic then
 							add_rtf_keyword (temp_string, rtf_italic_string)
 							is_current_format_italic := True
@@ -1372,7 +1372,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 						-- direction the selection is changing, and set it appropriately.
 					last_known_caret_position := internal_caret_position
 				end
-				if selection_type = feature {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
+				if selection_type = {WEL_EN_SELCHANGE_CONSTANTS}.sel_empty then
 					if must_fire_final_selection then
 							-- A selection has just been removed from `Current' so fire `selection_change_actions'
 							-- one final time.

@@ -28,14 +28,14 @@ feature -- Initialize
 	gtk_dependent_initialize is
 			-- Gtk dependent `initialize'
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_rgb_init
+			{EV_GTK_EXTERNALS}.gdk_rgb_init
 		end
 
 	gtk_dependent_launch_initialize is
 			-- Gtl dependent initialization for `launch'
 		do
-			if feature {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then feature {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then feature {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + feature {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
+				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end			
 		end
 
@@ -56,22 +56,22 @@ feature -- Initialize
 			end
 			bitmap_data := a_cursor_imp.bitmap_array
 			a_cur_data := bitmap_data.to_c
-			cur_pix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
+			cur_pix := {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
 			
 			if a_cursor_imp.mask = Default_pointer then
 					-- If mask isn't available then we create one
-				a_mask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, a_cursor_imp.width, a_cursor_imp.height, 1)
-				a_gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (a_gc, feature {EV_GTK_EXTERNALS}.Gdk_copy_enum)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (a_gc, fg_color)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_set_background (a_gc, bg_color)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (a_mask, a_gc, 1, 0, 0, a_cursor_imp.width, a_cursor_imp.height)
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (a_gc)
+				a_mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, a_cursor_imp.width, a_cursor_imp.height, 1)
+				a_gc := {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (a_gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (a_gc, fg_color)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_background (a_gc, bg_color)
+				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (a_mask, a_gc, 1, 0, 0, a_cursor_imp.width, a_cursor_imp.height)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (a_gc)
 			else
 				a_mask := a_cursor_imp.mask
 			end
 
-			a_cursor_ptr := feature {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			a_cursor_ptr := {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
 			Result := a_cursor_ptr
 		end
 		

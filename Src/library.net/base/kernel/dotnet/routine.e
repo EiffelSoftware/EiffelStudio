@@ -108,8 +108,8 @@ feature -- Status report
 			-- associated with `other'.
 		do
 				--| Do not compare implementation data
-			Result := feature {SYSTEM_OBJECT}.equals (internal_operands, other.internal_operands)
-				and then feature {SYSTEM_OBJECT}.equals (open_map, other.open_map)
+			Result := {SYSTEM_OBJECT}.equals (internal_operands, other.internal_operands)
+				and then {SYSTEM_OBJECT}.equals (open_map, other.open_map)
 				and then (rout_disp = other.rout_disp)
 				and then (target_object = other.target_object)
 				and then (is_cleanup_needed = other.is_cleanup_needed)
@@ -255,7 +255,7 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 			i, nb: INTEGER
 			l_internal: like internal_operands
 		do
-			rout_disp := feature {METHOD_BASE}.get_method_from_handle (handle)
+			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
 			target_object := args.fast_item (0)
 			nb := args.count - 1

@@ -42,7 +42,7 @@ feature -- Initialization
 			-- Create an unix standard input file.
 		do
 			make (fn)
-			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_input
+			internal_stream := {SYSTEM_CONSOLE}.open_standard_input
 			set_read_mode
 		end
 
@@ -50,7 +50,7 @@ feature -- Initialization
 			-- Create an unix standard output file.
 		do
 			make (fn)
-			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_output
+			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
 			set_write_mode
 		end
 
@@ -58,7 +58,7 @@ feature -- Initialization
 			-- Create an unix standard error file.
 		do
 			make (fn)
-			internal_stream := feature {SYSTEM_CONSOLE}.open_standard_error
+			internal_stream := {SYSTEM_CONSOLE}.open_standard_error
 			set_write_mode
 		end
 
@@ -120,7 +120,7 @@ feature {NONE} -- Inapplicable
 		do
 			if internal_swrite = Void and internal_stream.can_write then
 				create l_stream.make_from_stream_and_encoding (
-					internal_stream, feature {ENCODING}.default)
+					internal_stream, {ENCODING}.default)
 				l_stream.set_auto_flush (True)
 				internal_swrite := l_stream
 			end

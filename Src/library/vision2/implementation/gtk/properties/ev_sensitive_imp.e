@@ -31,8 +31,8 @@ feature -- Status report
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
 				Result := (
-					(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (sensitive_widget)
-					// feature {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
+					({EV_GTK_EXTERNALS}.gtk_object_struct_flags (sensitive_widget)
+					// {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
 				) = 1				
 			end
 		end
@@ -42,13 +42,13 @@ feature -- Status setting
 	enable_sensitive is
 			-- Allow the object to be sensitive to user input.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, True)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, True)
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, False)
 		end
 
 feature {EV_ANY_I} -- Implementation

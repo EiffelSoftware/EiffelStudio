@@ -70,19 +70,19 @@ feature -- Externals
 	default_priority: INTEGER is
 			-- Get default thread priority for the current architecture.
 		do
-			Result := feature {THREAD_PRIORITY}.normal.to_integer
+			Result := {THREAD_PRIORITY}.normal.to_integer
 		end
 
 	min_priority: INTEGER is
 			-- Get minimum thread priority for the current architecture.
 		do
-			Result := feature {THREAD_PRIORITY}.lowest.to_integer
+			Result := {THREAD_PRIORITY}.lowest.to_integer
 		end
 
 	max_priority: INTEGER is
 			-- Get maximum thread priority for the current architecture.
 		do
-			Result := feature {THREAD_PRIORITY}.highest.to_integer
+			Result := {THREAD_PRIORITY}.highest.to_integer
 		end
 
 end -- class THREAD_ATTRIBUTES

@@ -39,8 +39,8 @@ feature -- Initialize
 	gtk_dependent_launch_initialize is
 			-- Gtk dependent code for `launch' 
 		do
-			if feature {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then feature {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then feature {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + feature {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
+				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
 			
 				-- Initialize the default font values
@@ -66,13 +66,13 @@ feature -- Implementation
 	pango_layout: POINTER is
 			-- PangoLayout structure used for rendering fonts
 		once
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
 		end
 
 	pango_iter: POINTER is
 			-- Retrieve PangoLayoutIter from our default layout object, Result must be freed when not needed
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 		end
 
 	writeable_pixbuf_formats: ARRAYED_LIST [STRING] is
@@ -97,21 +97,21 @@ feature -- Implementation
 			format_name: STRING
 			pixbuf_format: POINTER
 		do
-			formats := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_formats
-			format_count := feature {EV_GTK_EXTERNALS}.g_slist_length (formats)
+			formats := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_formats
+			format_count := {EV_GTK_EXTERNALS}.g_slist_length (formats)
 			from
 				i := 0
 				create Result.make (0)
 			until
 				i = format_count
 			loop
-				pixbuf_format := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)				
-				create format_name.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
+				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)				
+				create format_name.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
 				if format_name.is_equal ("jpeg") then
 					format_name := "jpg"
 				end
 				if a_writeable then
-					if feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_is_writable (pixbuf_format) then
+					if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_is_writable (pixbuf_format) then
 						Result.extend (format_name.as_upper)
 					end					
 				else
@@ -119,7 +119,7 @@ feature -- Implementation
 				end
 				i := i + 1
 			end
-			feature {EV_GTK_EXTERNALS}.g_slist_free (formats)
+			{EV_GTK_EXTERNALS}.g_slist_free (formats)
 		end
 
 	initialize_default_font_values is
@@ -153,19 +153,19 @@ feature -- Implementation
 			default_font_point_height_internal := split_values.last.to_integer
 			
 			if split_values.has ("italic") or else split_values.has ("oblique") then
-				default_font_style_internal := feature {EV_FONT_CONSTANTS}.shape_italic
+				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_italic
 			else
-				default_font_style_internal := feature {EV_FONT_CONSTANTS}.shape_regular
+				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_regular
 			end
 			
 			if split_values.has ("bold") then
-				default_font_weight_internal := feature {EV_FONT_CONSTANTS}.weight_bold
+				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_bold
 			elseif split_values.has ("light") then
-				default_font_weight_internal := feature {EV_FONT_CONSTANTS}.weight_thin
+				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_thin
 			elseif split_values.has ("superbold") then
-				default_font_weight_internal := feature {EV_FONT_CONSTANTS}.weight_black
+				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_black
 			else
-				default_font_weight_internal := feature {EV_FONT_CONSTANTS}.weight_regular
+				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_regular
 			end		
 		end
 	
@@ -238,10 +238,10 @@ feature -- Implementation
 			font_name_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			create a_cs.make_from_pointer (font_name_ptr)
 			Result := a_cs.string
-			feature {EV_GTK_EXTERNALS}.g_free (font_name_ptr)
+			{EV_GTK_EXTERNALS}.g_free (font_name_ptr)
 		end
 
 	gtk_font_name_setting: EV_GTK_C_STRING is
@@ -253,7 +253,7 @@ feature -- Implementation
 	default_gtk_settings: POINTER is
 			-- Default GtkSettings
 		once
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
 		end
 
 	font_names_on_system: ARRAYED_LIST [STRING] is
@@ -312,28 +312,28 @@ feature -- Implementation
 			a_pixbuf: POINTER
 		do
 			a_cursor_imp ?= a_cursor.implementation
-			if a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_watch_enum)
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_left_ptr_enum)
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_crosshair_enum)
+			if a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
 				
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_xterm_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
 
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_fleur_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
 
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
 
-			elseif a_cursor_imp.internal_xpm_data = feature {EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm then
-				Result := feature {EV_GTK_EXTERNALS}.gdk_cursor_new (feature {EV_GTK_ENUMS}.gdk_watch_enum)
+			elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			else
 				a_pixbuf := a_cursor_imp.pixbuf_from_drawable
-				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_pixbuf, a_cursor.x_hotspot, a_cursor.y_hotspot)
-				feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_pixbuf, a_cursor.x_hotspot, a_cursor.y_hotspot)
+				{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 			end
 		end
 

@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
 		end
 
 	initialize is
@@ -61,11 +61,11 @@ feature {NONE} -- Initialization
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
-			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (box)
-			feature {EV_GTK_EXTERNALS}.gtk_object_sink (box)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (box)
+			{EV_GTK_EXTERNALS}.gtk_object_sink (box)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 		
 feature {NONE} -- Implementation
@@ -89,7 +89,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose is
 			-- Unreference unwanted gtk widgets.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (box)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (box)
 			Precursor
 		end
 		

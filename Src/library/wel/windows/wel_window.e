@@ -1843,9 +1843,9 @@ feature -- Registration
 		local
 			p: POINTER
 		do
-			p := p.memory_alloc (feature {WEL_INTERNAL_DATA}.structure_size)
-			p.memory_set (0, feature {WEL_INTERNAL_DATA}.structure_size)
-			feature {WEL_INTERNAL_DATA}.set_object_id (p, eif_object_id (Current))
+			p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
+			p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
+			{WEL_INTERNAL_DATA}.set_object_id (p, eif_object_id (Current))
 			set_internal_data (p)
 		end
 
@@ -1893,7 +1893,7 @@ feature {NONE} -- Removal
 			null, l_data: POINTER
 		do
 			l_data := internal_data
-			object_id := feature {WEL_INTERNAL_DATA}.object_id (l_data)
+			object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
 			check
 					-- `internal_data' cannot be 0 when the Window has not yet been
 					-- destroyed by Windows.
@@ -1902,8 +1902,8 @@ feature {NONE} -- Removal
 
 			eif_object_id_free (object_id)
 			
-			feature {WEL_INTERNAL_DATA}.set_object_id (l_data, 0)
-			feature {WEL_INTERNAL_DATA}.set_default_window_procedure (l_data, null)
+			{WEL_INTERNAL_DATA}.set_object_id (l_data, 0)
+			{WEL_INTERNAL_DATA}.set_default_window_procedure (l_data, null)
 			l_data.memory_free
 
 				-- Remove `object_id' from `internal_data' of Current.

@@ -373,11 +373,11 @@ feature {NONE} -- WEL Implementation
 			
 			theme_drawer.draw_widget_background (Current, memory_dc, invalid_rect, bk_brush)
 
-			if alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
+			if alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
 				text_pos := Text_padding
-			elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
+			elseif alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center then
 				text_pos := (cur_width - text_width) // 2
-			elseif alignment = feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
+			elseif alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right then
 				text_pos := cur_width - text_width - Text_padding
 			end
 
@@ -441,7 +441,7 @@ feature {NONE} -- WEL Implementation
 				end
 				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_disabled, text, dt_center, is_sensitive, text_rect, color_imp)
 			end
-			paint_dc.bit_blt (invalid_rect.left, invalid_rect.top, invalid_rect.width, invalid_rect.height, memory_dc, invalid_rect.left, invalid_rect.top, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			paint_dc.bit_blt (invalid_rect.left, invalid_rect.top, invalid_rect.width, invalid_rect.height, memory_dc, invalid_rect.left, invalid_rect.top, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 			memory_dc.unselect_all
 			memory_dc.delete
 			disable_default_processing

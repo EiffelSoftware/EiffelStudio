@@ -35,25 +35,25 @@ feature -- Status report
 	is_left_aligned: BOOLEAN is
 			-- Is `Current' left aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_left
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
 		
 	is_center_aligned: BOOLEAN is
 			-- Is `Current' center aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_center
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
 	
 	is_right_aligned: BOOLEAN is
 			-- Is `Current' right aligned?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_right
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
 	
 	is_justified: BOOLEAN is
 			-- Is `Current' justified?
 		do
-			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 		
 	left_margin: INTEGER
@@ -73,25 +73,25 @@ feature -- Status setting
 	enable_left_alignment is
 			-- Ensure `is_left_aligned' is `True'.
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_left)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 		end
 		
 	enable_center_alignment is
 			-- Ensure `is_center_aligned' is `True'.
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_center)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 		end
 		
 	enable_right_alignment is
 			-- Ensure `is_right_aligned' is `True'.
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_right)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 		end
 		
 	enable_justification is
 			-- Ensure `is_justified' is `True'.
 		do
-			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified)
+			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 		end
 
 	set_alignment (a_alignment: INTEGER) is
@@ -131,41 +131,41 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		local
 			propname: EV_GTK_C_STRING
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
 			if applicable_attributes.alignment then
 				propname := "justification"
 				inspect
 					alignment
-				when feature {EV_PARAGRAPH_CONSTANTS}.alignment_left then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
-				when feature {EV_PARAGRAPH_CONSTANTS}.alignment_center then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
-				when feature {EV_PARAGRAPH_CONSTANTS}.alignment_right then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
-				when feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, feature {EV_GTK_EXTERNALS}.gtk_justify_fill_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_left then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_center then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_right then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_fill_enum)
 				end
 			end
 			
 			if applicable_attributes.left_margin then
 				propname := "left-margin"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)				
 			end
 			
 			if applicable_attributes.right_margin then
 				propname := "right-margin"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)				
 			end
 
 			if applicable_attributes.top_spacing then
 				propname := "pixels-above-lines"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)				
 			end
 			
 			if applicable_attributes.bottom_spacing then
 				propname := "pixels-below-lines"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)				
 			end
 		end
 
@@ -173,11 +173,11 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- 
 		do
 			create Result.make_with_flags (
-				feature {EV_PARAGRAPH_CONSTANTS}.alignment
-				| feature {EV_PARAGRAPH_CONSTANTS}.left_margin
-				| feature {EV_PARAGRAPH_CONSTANTS}.right_margin
-				| feature {EV_PARAGRAPH_CONSTANTS}.top_spacing
-				| feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
+				{EV_PARAGRAPH_CONSTANTS}.alignment
+				| {EV_PARAGRAPH_CONSTANTS}.left_margin
+				| {EV_PARAGRAPH_CONSTANTS}.right_margin
+				| {EV_PARAGRAPH_CONSTANTS}.top_spacing
+				| {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
 			)
 		end
 

@@ -43,22 +43,22 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
 		
 					-- Creating the gtk_list, pointed by `list_widget':
-			list_widget := feature {EV_GTK_EXTERNALS}.gtk_list_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_flags (
+			list_widget := {EV_GTK_EXTERNALS}.gtk_list_new
+			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (
 				c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
+				{EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (
+			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (
 				c_object,
 				list_widget
 			)
@@ -106,7 +106,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 			l_item: EV_LIST_ITEM_IMP
 		do
 		 	l_item ?= eif_object_from_c (
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 			)
 			if l_item /= Void and then not l_item.is_destroyed then
 				if l_item.deselect_actions_internal /= Void then
@@ -127,9 +127,9 @@ feature -- Status report
 		local
 			item_pointer: POINTER
 		do
-			item_pointer := feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
+			item_pointer := {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
 			if item_pointer /= NULL then
-				item_pointer := feature {EV_GTK_EXTERNALS}.gslist_struct_data (item_pointer)
+				item_pointer := {EV_GTK_EXTERNALS}.gslist_struct_data (item_pointer)
 				if item_pointer /= NULL then
 					Result ?= eif_object_from_c (item_pointer).interface
 					check Result_not_void: Result /= Void end
@@ -154,7 +154,7 @@ feature -- Status setting
 	clear_selection is
 			-- Clear the selection of the list.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_list_unselect_all (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_list_unselect_all (list_widget)
 		end
 
 feature -- Removal
@@ -166,9 +166,9 @@ feature -- Removal
 			a_child_list: POINTER
 		do
 			clear_selection
-			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (list_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_list_remove_items_no_unref (list_widget, a_child_list)
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_list_remove_items_no_unref (list_widget, a_child_list)
+			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			from
 				start
 			until
@@ -207,25 +207,25 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 			a_child_list: POINTER
 			a_child_pos: INTEGER
 		do
-			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_container)
-			a_child_pos := feature {EV_GTK_EXTERNALS}.gtk_list_child_position (a_container, a_child)
+			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_container)
+			a_child_pos := {EV_GTK_EXTERNALS}.gtk_list_child_position (a_container, a_child)
 			check
 				a_child_pos_correct: a_child_pos >= 0 and a_child_pos < count
 			end
-			item_list := feature {EV_GTK_EXTERNALS}.g_list_nth (
+			item_list := {EV_GTK_EXTERNALS}.g_list_nth (
 						a_child_list,
 						a_child_pos
 					)	
 			check
 				item_list_not_null: item_list /= NULL
 			end
-			new_item_list := feature {EV_GTK_EXTERNALS}.g_list_copy (item_list)
+			new_item_list := {EV_GTK_EXTERNALS}.g_list_copy (item_list)
 			item_list := NULL
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
-			item_pointer := feature {EV_GTK_EXTERNALS}.g_list_nth_data (new_item_list, 0)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_pointer)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_container, item_pointer)
-			feature {EV_GTK_EXTERNALS}.gtk_list_insert_items (a_container, new_item_list, a_position)
+			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+			item_pointer := {EV_GTK_EXTERNALS}.g_list_nth_data (new_item_list, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_pointer)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, item_pointer)
+			{EV_GTK_EXTERNALS}.gtk_list_insert_items (a_container, new_item_list, a_position)
 		end
 
 	interface: EV_LIST_ITEM_LIST
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			end
 			item_imp ?= child_array.i_th (an_index).implementation
 			item_imp.set_item_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
 				-- Remove the row from the `ev_children'
 			child_array.go_i_th (child_array.index_of (item_imp.interface, 1))
 			child_array.remove	
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			if v_imp.internal_pixmap /= Void then
 				v_imp.internal_set_pixmap (v_imp.internal_pixmap, pixmaps_width, pixmaps_height)
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 
 			v_imp.real_signal_connect (

@@ -84,7 +84,7 @@ feature -- Basic operations
 	update_button_text_rect_for_state (wel_item: pointer; a_state: INTEGER; a_rect: WEL_RECT) is
 			-- Update `a_rect' to reflect new position for text drawn on a button with state `a_state'.
 		do
-			if flag_set (a_state, feature {WEL_ODS_CONSTANTS}.Ods_selected) then
+			if flag_set (a_state, {WEL_ODS_CONSTANTS}.Ods_selected) then
 				a_rect.offset (1, 1)
 			end
 		end
@@ -92,7 +92,7 @@ feature -- Basic operations
 	update_button_pixmap_coordinates_for_state (open_theme: POINTER; a_state: INTEGER; coordinate: EV_COORDINATE) is
 			-- Update `coordinate' to reflect new coordinates for a pixmap drawn on a button with state `a_state'.
 		do
-			if flag_set (a_state, feature {WEL_ODS_CONSTANTS}.Ods_selected) then
+			if flag_set (a_state, {WEL_ODS_CONSTANTS}.Ods_selected) then
 				coordinate.set (coordinate.x + 1, coordinate.y + 1)
 			end
 		end
@@ -115,7 +115,7 @@ feature {NONE} -- implementation
 		do
 				-- If `current' is a default puch button, then it must have a bold rectangle.
 				-- default push buttons are only used in dialogs.
-			if flag_set (state, feature {WEL_ODS_CONSTANTS}.ods_default) then
+			if flag_set (state, {WEL_ODS_CONSTANTS}.ods_default) then
 				create color.make_rgb (0, 0, 0)
 				draw_line (dc, r.left,  r.top, r.right, r.top, color)
 				draw_line (dc, r.left, r.top, r.left, r.bottom, color)
@@ -125,7 +125,7 @@ feature {NONE} -- implementation
 			end
 				-- If the button is out then display it accordingly. The further check
 				-- is used for handling toggle buttons.
-			if flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_grayed) or not flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_selected) then
+			if flag_set (state, {WEL_ODS_CONSTANTS}.Ods_grayed) or not flag_set (state, {WEL_ODS_CONSTANTS}.Ods_selected) then
 				color := Rhighlight
 				draw_line (dc, r.left, r.top, r.right, r.top, color)
 				draw_line (dc, r.left, r.top,r.left,  r.bottom, color)
@@ -142,7 +142,7 @@ feature {NONE} -- implementation
 			end
 			
 				-- If the button is in, then draw the appropriate border.
-	  		if flag_set (state, feature {WEL_ODS_CONSTANTS}.Ods_selected) then
+	  		if flag_set (state, {WEL_ODS_CONSTANTS}.Ods_selected) then
 	  			color := rdark_shadow
 				draw_line (dc, r.left, r.top, r.right, r.top, color)
 				draw_line (dc, r.left, r.top, r.left, r.bottom, color)

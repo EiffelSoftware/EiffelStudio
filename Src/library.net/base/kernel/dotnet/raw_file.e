@@ -85,7 +85,7 @@ feature -- Output
 			until
 				i > (size - 1)
 			loop
-				writer.write (feature {MARSHAL}.read_byte (p + i))
+				writer.write ({MARSHAL}.read_byte (p + i))
 				i := i + 1
 			end
 		end
@@ -203,7 +203,7 @@ feature -- Input
 				i > (nb_bytes - 1)
 			loop
 				byte := reader.read_byte
-				feature {MARSHAL}.write_byte (p + i, byte)
+				{MARSHAL}.write_byte (p + i, byte)
 				i := i + 1
 			end
 			internal_end_of_file := reader.peek_char = -1

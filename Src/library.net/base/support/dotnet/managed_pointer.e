@@ -153,7 +153,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_byte (item, pos)
+			Result := {MARSHAL}.read_byte (item, pos)
 		end
 
 	read_natural_16 (pos: INTEGER): NATURAL_16 is
@@ -189,7 +189,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_byte (item, pos).as_integer_8
+			Result := {MARSHAL}.read_byte (item, pos).as_integer_8
 		end
 
 	read_integer_16 (pos: INTEGER): INTEGER_16 is
@@ -198,7 +198,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_int_16 (item, pos)
+			Result := {MARSHAL}.read_int_16 (item, pos)
 		end
 
 	read_integer_32 (pos: INTEGER): INTEGER is
@@ -207,7 +207,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_int_32 (item, pos)
+			Result := {MARSHAL}.read_int_32 (item, pos)
 		end		
 
 	read_integer_64 (pos: INTEGER): INTEGER_64 is
@@ -216,7 +216,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_int_64 (item, pos)
+			Result := {MARSHAL}.read_int_64 (item, pos)
 		end
 
 	read_pointer (pos: INTEGER): POINTER is
@@ -225,7 +225,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Pointer_bytes) <= count
 		do
-			Result := feature {MARSHAL}.read_int_ptr (item, pos)
+			Result := {MARSHAL}.read_int_ptr (item, pos)
 		end
 
 	read_boolean (pos: INTEGER): BOOLEAN is
@@ -249,7 +249,7 @@ feature -- Access: Platform specific
 			l_target: NATIVE_ARRAY [CHARACTER]
 		do
 			create l_target.make (1)
-			feature {MARSHAL}.copy (item + pos, l_target, 0, 1)
+			{MARSHAL}.copy (item + pos, l_target, 0, 1)
 			Result := l_target.item (0)
 		end		
 
@@ -262,7 +262,7 @@ feature -- Access: Platform specific
 			l_target: NATIVE_ARRAY [REAL]
 		do
 			create l_target.make (1)
-			feature {MARSHAL}.copy (item + pos, l_target, 0, 1)
+			{MARSHAL}.copy (item + pos, l_target, 0, 1)
 			Result := l_target.item (0)
 		end
 
@@ -275,7 +275,7 @@ feature -- Access: Platform specific
 			l_target: NATIVE_ARRAY [DOUBLE]
 		do
 			create l_target.make (1)
-			feature {MARSHAL}.copy (item + pos, l_target, 0, 1)
+			{MARSHAL}.copy (item + pos, l_target, 0, 1)
 			Result := l_target.item (0)
 		end
 
@@ -309,7 +309,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_8_bytes) <= count
 		do
-			feature {MARSHAL}.write_byte (item + pos, i)
+			{MARSHAL}.write_byte (item + pos, i)
 		ensure
 			inserted: i = read_natural_8 (pos)
 		end
@@ -320,7 +320,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			feature {MARSHAL}.write_byte (item + pos, i.as_natural_8)
+			{MARSHAL}.write_byte (item + pos, i.as_natural_8)
 		ensure
 			inserted: i = read_integer_8 (pos)
 		end
@@ -331,7 +331,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			feature {MARSHAL}.write_int_16 (item + pos, i)
+			{MARSHAL}.write_int_16 (item + pos, i)
 		ensure
 			inserted: i = read_integer_16 (pos)
 		end
@@ -342,7 +342,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			feature {MARSHAL}.write_int_32 (item + pos, i)
+			{MARSHAL}.write_int_32 (item + pos, i)
 		ensure
 			inserted: i = read_integer_32 (pos)
 		end
@@ -353,7 +353,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			feature {MARSHAL}.write_int_64 (item + pos, i)
+			{MARSHAL}.write_int_64 (item + pos, i)
 		ensure
 			inserted: i = read_integer_64 (pos)
 		end
@@ -364,7 +364,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Pointer_bytes) <= count
 		do
-			feature {MARSHAL}.write_int_ptr (item + pos, p)
+			{MARSHAL}.write_int_ptr (item + pos, p)
 		ensure
 			inserted: p = read_pointer (pos)
 		end
@@ -394,7 +394,7 @@ feature -- Element change: Platform specific
 		do
 			create l_source.make (1)
 			l_source.put (0, c)
-			feature {MARSHAL}.copy (l_source, 0, item + pos, 1)
+			{MARSHAL}.copy (l_source, 0, item + pos, 1)
 		ensure
 			inserted: c = read_character (pos)
 		end			
@@ -409,7 +409,7 @@ feature -- Element change: Platform specific
 		do
 			create l_source.make (1)
 			l_source.put (0, r)
-			feature {MARSHAL}.copy (l_source, 0, item + pos, 1)
+			{MARSHAL}.copy (l_source, 0, item + pos, 1)
 		ensure
 			inserted: r = read_real (pos)
 		end
@@ -424,7 +424,7 @@ feature -- Element change: Platform specific
 		do
 			create l_source.make (1)
 			l_source.put (0, d)
-			feature {MARSHAL}.copy (l_source, 0, item + pos, 1)
+			{MARSHAL}.copy (l_source, 0, item + pos, 1)
 		ensure
 			inserted: d = read_double (pos)
 		end
@@ -436,7 +436,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + data.count) <= count
 		do
-			feature {MARSHAL}.copy (data.to_cil, 0, item + pos, data.count)
+			{MARSHAL}.copy (data.to_cil, 0, item + pos, data.count)
 		ensure
 			inserted: data.is_equal (read_array (pos, data.count))
 		end

@@ -47,14 +47,14 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- This means that when the drawing area is resized, only the new portions are redrawn
-			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
-			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
+			{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			init_default_values
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
 		end
 
 feature {NONE} -- Implementation
@@ -78,12 +78,12 @@ feature {NONE} -- Implementation
 		do
 			a_drawable := drawable
 			if a_drawable /= NULL then
-				a_rectangle := feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-				feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
-				feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
-				feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
-				feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-				feature {EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
+				a_rectangle := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
+				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
+				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
+				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
+				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
 				a_rectangle.memory_free				
 			end
 		end
@@ -110,7 +110,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
 
 	mask: POINTER
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
-				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 				gc := NULL
 			end
 		end

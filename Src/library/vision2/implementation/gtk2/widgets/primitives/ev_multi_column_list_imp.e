@@ -73,18 +73,18 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-			scrollable_area := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			set_c_object (scrollable_area)
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 			create ev_children.make (0)
 
-			tree_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
+			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
 		end
 
 	initialize is
@@ -117,7 +117,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_selection: POINTER
 		do
 			if selection_signal_id = 0 then
-				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 				real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 				selection_signal_id := last_signal_connection_id				
 			end
@@ -129,8 +129,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_selection: POINTER
 		do
 			if selection_signal_id /= 0 then
-				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-				feature {EV_GTK_EXTERNALS}.signal_disconnect (a_selection, selection_signal_id)
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				{EV_GTK_EXTERNALS}.signal_disconnect (a_selection, selection_signal_id)
 				selection_signal_id := 0				
 			end
 		end
@@ -219,7 +219,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				clear_selection
 					-- This follows the Windows behavior of clearing selection if list is clicked on
 			end
-			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
+			if a_type = {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
@@ -229,7 +229,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
-			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
+			elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -288,20 +288,20 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do		
 			if a_columns > model_column_count - 1 then
-				create a_type_array.make ((a_columns + 1) * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+				create a_type_array.make ((a_columns + 1) * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 				from
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
+					{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
 					i := 1
 				until
 					i > a_columns
 				loop
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, i * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+					{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, i * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 					i := i + 1
 				end
 
-				list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, a_type_array.item)
+				list_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, a_type_array.item)
 				
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
 	
 				from
 					ev_children.start
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 					ev_children.after
 				loop
 					create a_tree_iter.make
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, ev_children.index - 1)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, ev_children.index - 1)
 					ev_children.item.set_list_iter (a_tree_iter)
 					update_child (ev_children.item, ev_children.index)
 					ev_children.forth
@@ -342,23 +342,23 @@ feature {NONE} -- Implementation
 				i > a_columns
 			loop
 
-				a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (a_column, True)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+				a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (a_column, True)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 				
 				if i = 1 then
-					a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
+					a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
 					a_gtk_c_str := "pixbuf"
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 				end
 				
-				a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
+				a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
 				a_gtk_c_str := "text"
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, i)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, i - 1)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, i)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, i - 1)
 
 
 				if column_titles /= Void and then
@@ -445,10 +445,10 @@ feature -- Access
 		local
 			col_list: POINTER
 		do
-			col_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_columns (tree_view)
+			col_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_columns (tree_view)
 			if col_list /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_length (col_list)
-				feature {EV_GTK_EXTERNALS}.g_list_free (col_list)
+				Result := {EV_GTK_EXTERNALS}.g_list_length (col_list)
+				{EV_GTK_EXTERNALS}.g_list_free (col_list)
 			end
 		end
 
@@ -456,7 +456,7 @@ feature -- Access
 			-- Number of columns in GtkTreeModel
 		do
 			if list_store /= NULL then
-				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_n_columns (list_store)
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_n_columns (list_store)
 			end
 		end
 
@@ -482,16 +482,16 @@ feature -- Access
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_selection := feature {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			a_tree_path_list := feature {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 			
 			if a_tree_path_list /= NULL then
-					a_tree_path := feature {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
-					a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
 					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
-					feature {EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -510,21 +510,21 @@ feature -- Access
 			mp: MANAGED_POINTER
 		do
 			create Result.make (0)
-			a_selection := feature {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			a_tree_path_list := feature {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 			if a_tree_path_list /= NULL then
 				from
 				until
 					a_tree_path_list = NULL
 				loop
-					a_tree_path := feature {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
-					a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
 					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
-					a_tree_path_list := feature {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
+					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
-				feature {EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+				{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -535,8 +535,8 @@ feature -- Status report
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_count_selected_rows (a_selection) > 0
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_count_selected_rows (a_selection) > 0
 		end
 
 	multiple_selection_enabled: BOOLEAN is
@@ -545,15 +545,15 @@ feature -- Status report
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_get_mode (a_selection) = feature {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_get_mode (a_selection) = {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
 		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_headers_visible (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_headers_visible (tree_view)
 		end
 
 feature -- Status setting
@@ -568,13 +568,13 @@ feature -- Status setting
 	show_title_row is
 			-- Show the row of the titles.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, True)
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
 			resize_column_to_content (1)
 		end
 
@@ -585,8 +585,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, feature {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
 		end
 
 	disable_multiple_selection is
@@ -596,8 +596,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, feature {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 		end
 
 	select_item (an_index: INTEGER) is
@@ -606,8 +606,8 @@ feature -- Status setting
 			a_selection: POINTER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, (ev_children @ an_index).list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
 				call_selection_actions (a_row_imp)
@@ -620,8 +620,8 @@ feature -- Status setting
 			a_selection: POINTER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, (ev_children @ an_index).list_iter.item)
 			if selection_signal_id = 0 then
 				a_row_imp := ev_children.i_th (an_index)
 				call_deselect_actions (a_row_imp)
@@ -633,8 +633,8 @@ feature -- Status setting
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			feature {EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
 		end
 
 	resize_column_to_content (a_column: INTEGER) is
@@ -642,8 +642,8 @@ feature -- Status setting
 		local
 			a_column_ptr: POINTER
 		do
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_autosize_enum)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_autosize_enum)
 		end
 
 feature -- Element change
@@ -657,12 +657,12 @@ feature -- Element change
 			if a_column > column_count then
 				expand_column_count_to (a_column)
 			end
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
 			check
 				a_column_not_null: a_column_ptr /= default_pointer
 			end
 			a_cs := a_txt
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
 
 	column_width_changed (value: INTEGER; a_column: INTEGER) is
@@ -672,9 +672,9 @@ feature -- Element change
 			a_column_ptr: POINTER
 		do
 			if column_widths /= Void then
-				a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+				a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
 				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (a_column_ptr, value)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)				
 			end
 		end
 
@@ -694,21 +694,21 @@ feature -- Element change
 				alignment := 1.0
 			end
 			
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			from
 				i := 0
 				create a_gtk_c_str.make ("xalign")
 			until
-				i = feature {EV_GTK_EXTERNALS}.g_list_length (a_cell_rend_list)
+				i = {EV_GTK_EXTERNALS}.g_list_length (a_cell_rend_list)
 			loop
-				a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, i)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
+				a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, i)
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
 				i := i + 1
 			end
 
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_alignment (a_column_ptr, alignment)
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_alignment (a_column_ptr, alignment)
+			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
 
 	set_row_height (value: INTEGER) is
@@ -718,17 +718,17 @@ feature -- Element change
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
-			a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			
 				-- Row height setting has to take the vertical spacing of the tree view in to account
 			create a_gtk_c_str.make ("vertical-separator")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			
 			create a_gtk_c_str.make ("height")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
 
 	wipe_out is
@@ -738,7 +738,7 @@ feature -- Element change
 		do
 				-- Remove all items (GTK part)
 			clear_selection
-			feature {EV_GTK_EXTERNALS}.gtk_list_store_clear (list_store)
+			{EV_GTK_EXTERNALS}.gtk_list_store_clear (list_store)
 			from
 				ev_children.start
 			until
@@ -804,7 +804,7 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (visual_widget,
 				"button-press-event", 
@@ -1011,12 +1011,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
 			if a_success then
-				a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
 				Result := mp.read_integer_32 (0) + 1	
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end
 		end
 		
@@ -1044,19 +1044,19 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_cs := a_text
 				-- Replace when we have UTF16 support
 			str_value := g_value_string_struct
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (str_value)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (str_value)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)				
 		end
 
 	g_value_string_struct: POINTER is
 			-- Optimization for GValue struct access
 		once
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -1069,8 +1069,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			pixmap_imp ?= a_pixmap.implementation
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
-			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
+			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is
@@ -1079,7 +1079,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_list_iter: POINTER
 		do
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, NULL)
 		end
 
 feature {NONE} -- Implementation
@@ -1134,9 +1134,9 @@ feature {NONE} -- Implementation
 			a_path: POINTER
 		do	
 			list_item_imp ?= a_item.implementation
-			a_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is
@@ -1160,7 +1160,7 @@ feature {NONE} -- Implementation
 				-- Add row to model
 			create a_tree_iter.make
 			item_imp.set_list_iter (a_tree_iter)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			update_child (item_imp, ev_children.count)
 			
 			if item_imp.is_transport_enabled then
@@ -1179,7 +1179,7 @@ feature {NONE} -- Implementation
 		do
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
+			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
@@ -1195,14 +1195,14 @@ feature {NONE} -- Implementation
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
-			a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, NULL, $Result)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, NULL, $Result)
 			
 			a_gtk_c_str := "vertical-separator"
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			Result := Result + a_vert_sep
 		end
 

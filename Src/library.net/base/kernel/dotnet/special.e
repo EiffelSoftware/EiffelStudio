@@ -202,7 +202,7 @@ feature -- Duplication
 				native_array := l_old_native
 			end
 			
-			feature {SYSTEM_ARRAY}.copy (other.native_array, native_array, other.count)
+			{SYSTEM_ARRAY}.copy (other.native_array, native_array, other.count)
 		end
 
 feature -- Resizing

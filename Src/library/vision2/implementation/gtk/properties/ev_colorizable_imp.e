@@ -32,7 +32,7 @@ feature -- Access
 			color: POINTER
 		do
 			check
-				normal_color_at_head_of_array: feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM = 0 
+				normal_color_at_head_of_array: {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM = 0 
 					--| GtkStyle has GdkColor bg[5] with 5 background colors
 					--| for the 5 gtk states, since normal state is at the 
 					--| front we just treat is as: GdkColor* bg_state_normal
@@ -41,9 +41,9 @@ feature -- Access
 
 			create Result
 			Result.set_rgb_with_16_bit (
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color),
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color),
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+				{EV_GTK_EXTERNALS}.gdk_color_struct_red (color),
+				{EV_GTK_EXTERNALS}.gdk_color_struct_green (color),
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			)
 		end
 
@@ -53,15 +53,15 @@ feature -- Access
 			color: POINTER
 		do
 			check
-				normal_color_at_head_of_array: feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM = 0 
+				normal_color_at_head_of_array: {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM = 0 
 					--| See `background_color'
 			end
 			color := foreground_color_pointer
 			create Result
 			Result.set_rgb_with_16_bit (
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color),
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color),
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+				{EV_GTK_EXTERNALS}.gdk_color_struct_red (color),
+				{EV_GTK_EXTERNALS}.gdk_color_struct_green (color),
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
 			)
 		end
 
@@ -94,62 +94,62 @@ feature -- Status setting
 				default_background_color := background_color
 			end
 			
-			style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+			style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
 			r := a_color.red_16_bit
 			g := a_color.green_16_bit
 			b := a_color.blue_16_bit
 			if
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color) /= r or else
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color) /= g or else
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color) /= b or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_red (color) /= r or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_green (color) /= g or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color) /= b or else
 				(r = 0 and g = 0 and b = 0)
 			then
 				m := a_color.Max_16_bit
-				style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (style)
+				style := {EV_GTK_EXTERNALS}.gtk_style_copy (style)
 					--| Set normal state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
 					--| Set active state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_ACTIVE_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_ACTIVE_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
 				nr := (r * Highlight_scale).rounded
 				ng := (g * Highlight_scale).rounded
 				nb := (b * Highlight_scale).rounded
 				if nr < 0 then nr := 0 end
 				if ng < 0 then ng := 0 end
 				if nb < 0 then nb := 0 end
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, nr)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, ng)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, nb)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, nr)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, ng)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, nb)
 					--| Set prelight state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_PRELIGHT_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_PRELIGHT_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
 				nr := (r * Prelight_scale).rounded.min (m)
 				ng := (g * Prelight_scale).rounded.min (m)
 				nb := (b * Prelight_scale).rounded.min (m)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, nr)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, ng)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, nb)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, nr)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, ng)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, nb)
 					--| Set selected state color to reverse.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_SELECTED_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red   (color, m - r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, m - g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, m - b//2)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_SELECTED_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red   (color, m - r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, m - g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, m - b//2)
 					--| Set the insensitive state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_INSENSITIVE_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
 				mx := r.max (g).max (b)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red   (color, mx + ((r - mx)//4))
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, mx + ((g - mx)//4))
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red   (color, mx + ((r - mx)//4))
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, mx + ((g - mx)//4))
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))
 
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (a_c_object, style)
-				feature {EV_GTK_EXTERNALS}.gtk_style_unref (style)
+				{EV_GTK_EXTERNALS}.gtk_widget_set_style (a_c_object, style)
+				{EV_GTK_EXTERNALS}.gtk_style_unref (style)
 			end
 		end
 
@@ -178,48 +178,48 @@ feature -- Status setting
 			if default_foreground_color= Void then
 				default_foreground_color := foreground_color
 			end
-			style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
-			color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
+			style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_c_object)
+			color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
 			r := a_color.red_16_bit
 			g := a_color.green_16_bit
 			b := a_color.blue_16_bit
 			if
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (color) /= r or else
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (color) /= g or else
-				feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color) /= b or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_red (color) /= r or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_green (color) /= g or else
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color) /= b or else
 				(r = 0 and g = 0 and b = 0)
 			then
 				m := a_color.Max_16_bit
-				style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (style)
+				style := {EV_GTK_EXTERNALS}.gtk_style_copy (style)
 					--| Set normal state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
 					--| Set active state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_ACTIVE_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_ACTIVE_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
 					--| Set prelight state color.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_PRELIGHT_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_PRELIGHT_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
 					--| Set selected state color to reverse.
-				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
-					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_SELECTED_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, m - r)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, m - g)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, m - b)
+				color := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (style)
+					 + ({EV_GTK_EXTERNALS}.gTK_STATE_SELECTED_ENUM * {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, m - r)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, m - g)
+				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, m - b)
 					--| Don't touch insensitive state color
 					--| (GTK_STATE_INSENSITIVE_ENUM)
 
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (a_c_object, style)
-				feature {EV_GTK_EXTERNALS}.gtk_style_unref (style)
+				{EV_GTK_EXTERNALS}.gtk_widget_set_style (a_c_object, style)
+				{EV_GTK_EXTERNALS}.gtk_style_unref (style)
 			end
 		end
 
@@ -245,16 +245,16 @@ feature {NONE} -- Implementation
 	background_color_pointer: POINTER is
 			-- Pointer to bg color for `a_widget'.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
 			)
 		end
 
 	foreground_color_pointer: POINTER is
 			-- Pointer to fg color for `a_widget'.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
 			)
 		end
 

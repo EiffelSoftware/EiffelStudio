@@ -38,7 +38,7 @@ feature -- Status report
 				l_data := window.internal_data
 				if l_data /= null then
 					Result := eif_id_object (
-						feature {WEL_INTERNAL_DATA}.object_id (l_data)) /= Void
+						{WEL_INTERNAL_DATA}.object_id (l_data)) /= Void
 				end
 			end
 		end

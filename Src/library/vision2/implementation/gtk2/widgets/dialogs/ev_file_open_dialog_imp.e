@@ -56,20 +56,20 @@ feature {NONE} -- Access
 		do
 			create Result.make (1)
 			if selected_button /= Void and then selected_button.is_equal (internal_accept) then
-					fnlist := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filenames (c_object)
+					fnlist := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filenames (c_object)
 			end
 			if fnlist /= Default_pointer then
 				from
 				until
 					fnlist = default_pointer
 				loop
-					fname := feature {EV_GTK_EXTERNALS}.gslist_struct_data (fnlist)
+					fname := {EV_GTK_EXTERNALS}.gslist_struct_data (fnlist)
 					create fnstring.make_from_c (fname)
 					Result.extend (fnstring)
-					feature {EV_GTK_EXTERNALS}.g_free (fname)
-					fnlist := feature {EV_GTK_EXTERNALS}.gslist_struct_next (fnlist)
+					{EV_GTK_EXTERNALS}.g_free (fname)
+					fnlist := {EV_GTK_EXTERNALS}.gslist_struct_next (fnlist)
 				end
-				feature {EV_GTK_EXTERNALS}.g_slist_free (fnlist)
+				{EV_GTK_EXTERNALS}.g_slist_free (fnlist)
 			end
 		end
 
@@ -78,14 +78,14 @@ feature {NONE} -- Setting
 	enable_multiple_selection is
 			-- Enable multiple file selection
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, True)
 			multiple_selection_enabled := True 
 		end
 
 	disable_multiple_selection is
 			-- Disable multiple file selection
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, False)
 			multiple_selection_enabled := False
 		end
 
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	file_chooser_action: INTEGER is
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
 		end
 
 	interface: EV_FILE_OPEN_DIALOG

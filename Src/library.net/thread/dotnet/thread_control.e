@@ -75,12 +75,12 @@ feature {THREAD_CONTROL} -- Threads id
 
 	thread_imp: SYSTEM_THREAD is
 		do
-			Result := feature {SYSTEM_THREAD}.current_thread
+			Result := {SYSTEM_THREAD}.current_thread
 		end
 
 	current_thread_id: INTEGER is
 		do
-			Result := feature {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
+			Result := {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
 		end
 
 feature -- Sleep
@@ -91,8 +91,8 @@ feature -- Sleep
 		require
 			non_negative_nanoseconds: nanoseconds >= 0
 		do
-			feature {SYSTEM_THREAD}.sleep_time_span
-				(feature {TIME_SPAN}.from_ticks (nanoseconds // 100))
+			{SYSTEM_THREAD}.sleep_time_span
+				({TIME_SPAN}.from_ticks (nanoseconds // 100))
 		end
 
 feature {NONE} -- Threads management

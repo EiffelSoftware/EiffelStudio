@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			textable_imp_initialize
 			set_c_object (text_label)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 			align_text_center
 		end
 

@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 			-- Create implementation for `an_interface'
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vseparator_new)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_vseparator_new)
 		end
 	
 	initialize is
 			-- Initialize some stuff useless to separators.
 		do
 			Precursor {EV_ITEM_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
 			is_initialized := True
 		end
 

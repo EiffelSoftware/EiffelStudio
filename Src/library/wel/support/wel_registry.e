@@ -249,7 +249,7 @@ feature -- Access
 					create l_ext.make (l_size)
 					if cwin_reg_query_value (key, l_subkey.item, l_ext.item, $l_size) = error_success then
 						last_call_successful := True
-						create Result.make_with_data (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, l_ext)
+						create Result.make_with_data ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, l_ext)
 					end
 				end
 			else

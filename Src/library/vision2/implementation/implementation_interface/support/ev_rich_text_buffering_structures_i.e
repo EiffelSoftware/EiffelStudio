@@ -461,10 +461,10 @@ feature {NONE} -- Implementation
 				end
 				a_font := all_fonts.item (current_format.character_format).twin
 				if current_format.is_bold then
-					a_font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+					a_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				end
 				if current_format.is_italic then
-					a_font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+					a_font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 				end
 				create effects
 				if current_format.is_striked_out then
@@ -678,13 +678,13 @@ feature {NONE} -- Implementation
 			elseif tag.is_equal (rtf_new_paragraph) then
 				current_format.reset_paragraph
 			elseif tag.is_equal (rtf_paragraph_left_aligned) then
-				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_left)
+				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 			elseif tag.is_equal (rtf_paragraph_center_aligned) then
-				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_center)
+				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 			elseif tag.is_equal (rtf_paragraph_right_aligned) then
-				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_right)
+				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 			elseif tag.is_equal (rtf_paragraph_justified) then
-				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified)
+				current_format.set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 			elseif tag.is_equal (rtf_paragraph_left_indent) then
 				current_format.set_left_margin (half_points_to_pixels (tag_value.to_integer) // 10)
 			elseif tag.is_equal (rtf_paragraph_right_indent) then

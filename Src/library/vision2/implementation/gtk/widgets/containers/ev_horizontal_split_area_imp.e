@@ -31,7 +31,7 @@ feature -- initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)	
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_hpaned_new
+			container_widget := {EV_GTK_EXTERNALS}.gtk_hpaned_new
 			set_c_object (container_widget)
 		end
 

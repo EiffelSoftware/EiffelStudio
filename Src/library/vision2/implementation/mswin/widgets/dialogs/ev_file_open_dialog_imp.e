@@ -58,7 +58,7 @@ feature -- Status report
 	multiple_selection_enabled: BOOLEAN is
 			-- Can more than one item be selected?
 		do
-			Result := has_flag (feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
+			Result := has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		end
 		
 	file_names: ARRAYED_LIST [STRING] is
@@ -92,13 +92,13 @@ feature -- Status setting
 	enable_multiple_selection is
 			-- Allow multiple items to be selected.
 		do
-			set_flags (flags | feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect | feature {WEL_OFN_CONSTANTS}.ofn_explorer)
+			set_flags (flags | {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect | {WEL_OFN_CONSTANTS}.ofn_explorer)
 		end
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
 		do
-			remove_flag (feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
+			remove_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		end
 
 feature {EV_ANY_I}

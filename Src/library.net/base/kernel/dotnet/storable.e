@@ -155,7 +155,7 @@ feature -- Element change
 				file.close
 			else
 				a := ("write permission failure").to_cil
-				feature {ISE_RUNTIME}.raise (create {IO_EXCEPTION}.make_from_message (a))
+				{ISE_RUNTIME}.raise (create {IO_EXCEPTION}.make_from_message (a))
 			end
 		end
 

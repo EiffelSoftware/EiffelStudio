@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_new)
-			feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_show_toggle (c_object, True)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_check_menu_item_new)
+			{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_show_toggle (c_object, True)
 			disable_select
 		end
 
@@ -39,7 +39,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is this menu item checked?
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_struct_active (c_object).to_boolean
+			Result := {EV_GTK_EXTERNALS}.gtk_check_menu_item_struct_active (c_object).to_boolean
 		end
 
 feature -- Status setting
@@ -49,7 +49,7 @@ feature -- Status setting
 		do
 			if not is_selected then
 				ignore_select_actions := True
-				feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (c_object, True)		
+				{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (c_object, True)		
 				ignore_select_actions := False
 			end
 		end
@@ -59,7 +59,7 @@ feature -- Status setting
 		do
 			if is_selected then
 				ignore_select_actions := True
-				feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (c_object, False)
+				{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (c_object, False)
 				ignore_select_actions := False
 			end	
 		end

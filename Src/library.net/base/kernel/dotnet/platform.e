@@ -42,7 +42,7 @@ feature -- Access bytes size
 	Boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type `BOOLEAN'
 		do
-			Result := feature {MARSHAL}.size_of_object (True)
+			Result := {MARSHAL}.size_of_object (True)
 		end
 
 	Character_bytes, Wide_character_bytes: INTEGER is
@@ -54,67 +54,67 @@ feature -- Access bytes size
 	natural_8_bytes: INTEGER is
 			-- Number of bytes in a value of type `NATURAL_8'
 		do
-			Result := feature {MARSHAL}.size_of_object ((8).to_natural_8)
+			Result := {MARSHAL}.size_of_object ((8).to_natural_8)
 		end
 		
 	natural_16_bytes: INTEGER is
 			-- Number of bytes in a value of type `NATURAL_16'
 		do
-			Result := feature {MARSHAL}.size_of_object ((16).to_natural_16)
+			Result := {MARSHAL}.size_of_object ((16).to_natural_16)
 		end
 
 	natural_32_bytes: INTEGER is
 			-- Number of bytes in a value of type `NATURAL_32'
 		do
-			Result := feature {MARSHAL}.size_of_object ((32).to_natural_32)
+			Result := {MARSHAL}.size_of_object ((32).to_natural_32)
 		end
 
 	natural_64_bytes: INTEGER is
 			-- Number of bytes in a value of type `NATURAL_64'
 		do
-			Result := feature {MARSHAL}.size_of_object ((64).to_natural_64)
+			Result := {MARSHAL}.size_of_object ((64).to_natural_64)
 		end
 
 	Integer_8_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_8'
 		do
-			Result := feature {MARSHAL}.size_of_object ((8).to_integer_8)
+			Result := {MARSHAL}.size_of_object ((8).to_integer_8)
 		end
 		
 	Integer_16_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_16'
 		do
-			Result := feature {MARSHAL}.size_of_object ((16).to_integer_16)
+			Result := {MARSHAL}.size_of_object ((16).to_integer_16)
 		end
 
 	Integer_bytes, Integer_32_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_32'
 		do
-			Result := feature {MARSHAL}.size_of_object (32)
+			Result := {MARSHAL}.size_of_object (32)
 		end
 
 	Integer_64_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_64'
 		do
-			Result := feature {MARSHAL}.size_of_object ((64).to_integer_64)
+			Result := {MARSHAL}.size_of_object ((64).to_integer_64)
 		end
 
 	Real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		do
-			Result := feature {MARSHAL}.size_of_object ((0.0).truncated_to_real)
+			Result := {MARSHAL}.size_of_object ((0.0).truncated_to_real)
 		end
 
 	Double_bytes: INTEGER is
 			-- Number of bytes in a value of type `DOUBLE'
 		do
-			Result := feature {MARSHAL}.size_of_object (0.0)
+			Result := {MARSHAL}.size_of_object (0.0)
 		end
 
 	Pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type `POINTER'
 		do
-			Result := feature {MARSHAL}.size_of_object (default_pointer)
+			Result := {MARSHAL}.size_of_object (default_pointer)
 		end
 
 feature -- Access bits size
@@ -202,7 +202,7 @@ feature -- Access min max values
 	Maximum_character_code: INTEGER is
 			-- Largest supported code for CHARACTER values
 		do
-			Result := feature {CHARACTER}.Max_value
+			Result := {CHARACTER}.Max_value
 		ensure
 			meaningful: Result >= 127
 		end
@@ -210,7 +210,7 @@ feature -- Access min max values
 	Maximum_integer: INTEGER is 
 			-- Largest supported value of type INTEGER.
 		do
-			Result := feature {INTEGER}.Max_value
+			Result := {INTEGER}.Max_value
 		ensure
 			meaningful: Result >= 0
 		end
@@ -218,7 +218,7 @@ feature -- Access min max values
 	Minimum_character_code: INTEGER is
 			-- Smallest supported code for CHARACTER values
 		do
-			Result := feature {CHARACTER}.Min_value
+			Result := {CHARACTER}.Min_value
 		ensure
 			meaningful: Result <= 0
 		end
@@ -226,7 +226,7 @@ feature -- Access min max values
 	Minimum_integer: INTEGER is
 			-- Smallest supported value of type INTEGER
 		do
-			Result := feature {INTEGER}.Min_value
+			Result := {INTEGER}.Min_value
 		ensure
 			meaningful: Result <= 0
 		end

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create the titled window.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
 		
 feature {NONE} -- Accelerators
@@ -84,8 +84,8 @@ feature -- Status report
 	is_minimized: BOOLEAN is
 			-- Is displayed iconified/minimised?
 		do
-			Result := feature {EV_GTK_EXTERNALS}.c_gdk_window_is_iconified (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			Result := {EV_GTK_EXTERNALS}.c_gdk_window_is_iconified (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
 			)
 		end
 
@@ -107,19 +107,19 @@ feature -- Status setting
 	raise is
 			-- Request that window be displayed above all other windows.
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_raise (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 	lower is
 			-- Request that window be displayed below all other windows.
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_lower (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{EV_GTK_EXTERNALS}.gdk_window_lower ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 	minimize is
 			-- Display iconified/minimised.
 		do
-			feature {EV_GTK_EXTERNALS}.c_gdk_window_iconify (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			{EV_GTK_EXTERNALS}.c_gdk_window_iconify ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 			App_implementation.process_events
 		end
 
@@ -129,7 +129,7 @@ feature -- Status setting
 			r: EV_RECTANGLE
 		do
 			old_geometry := geometry
-			create r.make (0, 0, feature {EV_GTK_EXTERNALS}.gdk_screen_width, feature {EV_GTK_EXTERNALS}.gdk_screen_height)
+			create r.make (0, 0, {EV_GTK_EXTERNALS}.gdk_screen_width, {EV_GTK_EXTERNALS}.gdk_screen_height)
 			set_geometry (r)
 		end
 
@@ -137,8 +137,8 @@ feature -- Status setting
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_minimized then
-				feature {EV_GTK_EXTERNALS}.c_gdk_window_deiconify (
-					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+				{EV_GTK_EXTERNALS}.c_gdk_window_deiconify (
+					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
 				)
 				App_implementation.process_events
 			elseif is_maximized then
@@ -155,8 +155,8 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (an_icon_name)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
+			{EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.twin
 		end
 
@@ -172,7 +172,7 @@ feature -- Element change
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 		
 feature {NONE} -- Implementation
@@ -190,12 +190,12 @@ feature {EV_ANY_I} -- Implementation
 		local
 			x, y, w, h: INTEGER
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_geometry (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			{EV_GTK_EXTERNALS}.gdk_window_get_geometry (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				$x, $y, $w, $h, NULL)
 				--| `x' and `y' are not working, so:
-			feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			{EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				$x, $y)
 			create Result.make (x, y, w, h)
 		end
@@ -203,8 +203,8 @@ feature {EV_ANY_I} -- Implementation
 	set_geometry (a_rect: EV_RECTANGLE) is
 			-- Set `geometry' to `a_rect'.
 		do
-			feature {EV_GTK_EXTERNALS}.gdk_window_move_resize (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+			{EV_GTK_EXTERNALS}.gdk_window_move_resize (
+				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				a_rect.x, a_rect.y,
 				a_rect.width, a_rect.height)
 			--| FIXME Window geometry doesn't take border or title bar in to account.

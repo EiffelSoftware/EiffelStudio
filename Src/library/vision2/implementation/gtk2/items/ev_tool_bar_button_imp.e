@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_tool_button_new (NULL, NULL))
 		end
 
 	initialize is
@@ -65,12 +65,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
-			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 			
 			Precursor {EV_ITEM_IMP}
 			initialize_events
 
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 
 			create tooltip.make (0)
 			is_initialized := True
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 	event_widget: POINTER is
 			-- Pointer to the Gtk widget that handles the events
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (pixmap_box)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (pixmap_box)
 		end
 
 feature -- Access
@@ -90,7 +90,7 @@ feature -- Access
 			a_txt: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			a_txt := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
+			a_txt := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
 			if a_txt /= Default_pointer then
 				create a_cs.make_from_pointer (a_txt)
 				Result := a_cs.string				
@@ -114,7 +114,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_set_label (visual_widget, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_set_label (visual_widget, a_cs.item)
 			a_parent_imp ?= parent_imp
 			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
 				a_parent_imp.update_toolbar_style
@@ -140,7 +140,7 @@ feature -- Element change
 		do
 			tooltip := a_text.twin
 			a_cs := a_text
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,
 				app_implementation.tooltips,
 				a_cs.item,

@@ -52,18 +52,18 @@ feature -- Initialization
 		do
 			create di.make (name.to_cil)
 			create l_full_path.make_from_cil (di.full_name)
-			l_sep_index := l_full_path.last_index_of (feature {PATH}.directory_separator_char,
+			l_sep_index := l_full_path.last_index_of ({PATH}.directory_separator_char,
 				(1).max (l_full_path.count - 1))
 			if l_sep_index = 0 then
-				di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
+				di := {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
 			else
 					-- Might be a complex path, we need to check that path up to `l_sep_index'
 					-- does not exist.
 				l_sub_dir := l_full_path.substring (1, l_sep_index - 1)
-				if feature {SYSTEM_DIRECTORY}.exists (l_sub_dir.to_cil) then
-					di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
+				if {SYSTEM_DIRECTORY}.exists (l_sub_dir.to_cil) then
+					di := {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
 				else
-					feature {ISE_RUNTIME}.raise (create {IO_EXCEPTION}.make)
+					{ISE_RUNTIME}.raise (create {IO_EXCEPTION}.make)
 				end
 			end
 		end
@@ -81,7 +81,7 @@ feature -- Access
 			l_name: SYSTEM_STRING
 		do
 			l_name := name.to_cil
-			ent := feature {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
+			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
 			if search_index >= ent.count then
 				lastentry := Void
 			else
@@ -112,7 +112,7 @@ feature -- Access
 			c: INTEGER
 		do
 			l_name := name.to_cil
-			ent := feature {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
+			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
 			en := entry_name.to_cil
 			c := ent.count
 			from
@@ -160,7 +160,7 @@ feature -- Access
 			if l_info.exists then
 				l_info.delete
 			end
-			feature {SYSTEM_DIRECTORY}.move (name.to_cil, new_name.to_cil)
+			{SYSTEM_DIRECTORY}.move (name.to_cil, new_name.to_cil)
 			name := new_name
 		ensure
 			name_changed: name.is_equal (new_name)
@@ -176,7 +176,7 @@ feature -- Measurement
 			l_name: SYSTEM_STRING
 		do
 			l_name := name.to_cil
-			Result := feature {SYSTEM_DIRECTORY}.get_file_system_entries (l_name).count
+			Result := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name).count
 		end
 
 feature -- Conversion
@@ -187,7 +187,7 @@ feature -- Conversion
 			ent: NATIVE_ARRAY [SYSTEM_STRING]
 			i, c, dc: INTEGER
 		do
-			ent := feature {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
+			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
 			c := ent.count
 			dc := name.count
 			if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
@@ -236,7 +236,7 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Does the directory exist?
 		do
-			Result := feature {SYSTEM_DIRECTORY}.exists (name.to_cil)
+			Result := {SYSTEM_DIRECTORY}.exists (name.to_cil)
 		end
 
 	is_readable: BOOLEAN is
@@ -250,7 +250,7 @@ feature -- Status report
 		do
 			if not retried then
 				create di.make (name.to_cil)
-				create pa.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.Read,
+				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.Read,
 					di.full_name)
 				pa.demand
 			end
@@ -272,7 +272,7 @@ feature -- Status report
 			if not retried then
 				create di.make (name.to_cil)
 				create pa.make_from_access_and_path (
-					feature {FILE_IO_PERMISSION_ACCESS}.path_discovery,
+					{FILE_IO_PERMISSION_ACCESS}.path_discovery,
 					di.full_name)
 				pa.demand
 			end
@@ -293,7 +293,7 @@ feature -- Status report
 		do
 			if not retried then
 				create di.make (name.to_cil)
-				create pa.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.write,
+				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
 					di.full_name)
 				pa.demand
 			end
@@ -311,7 +311,7 @@ feature -- Removal
 			directory_exists: exists
 			empty_directory: is_empty
 		do
-			feature {SYSTEM_DIRECTORY}.delete (name.to_cil)
+			{SYSTEM_DIRECTORY}.delete (name.to_cil)
 		end
 
 	delete_content is
@@ -361,7 +361,7 @@ feature -- Removal
 		require
 			directory_exists: exists
 		do
-			feature {SYSTEM_DIRECTORY}.delete_string_boolean (name.to_cil, True)
+			{SYSTEM_DIRECTORY}.delete_string_boolean (name.to_cil, True)
 		end
 
 	delete_content_with_action (

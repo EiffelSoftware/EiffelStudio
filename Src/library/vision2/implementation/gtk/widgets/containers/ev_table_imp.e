@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
                         -- parent.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
 			
 			-- Initialize internal values
 			rows := 1
@@ -66,15 +66,15 @@ feature -- Status report
 	border_width: INTEGER is
 			-- Width of border around container in pixels.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
-					feature {EV_GTK_EXTERNALS}.gtk_box_struct_container (container_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
+					{EV_GTK_EXTERNALS}.gtk_box_struct_container (container_widget)
 				)
 		end
 
 	resize (a_column, a_row: INTEGER) is
 		do
 			Precursor {EV_TABLE_I} (a_column, a_row)
-			feature {EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
+			{EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
 feature -- Status settings
@@ -83,7 +83,7 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, True)
+			{EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, True)
 			is_homogeneous := True
 		end
 
@@ -91,26 +91,26 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, False)
+			{EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, False)
 			is_homogeneous := False
 		end
 
 	set_border_width (a_value: INTEGER) is
 			-- Set the tables border width to `a_value' pixels.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, a_value)
+			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, a_value)
 		end
 
 	set_row_spacing (a_value: INTEGER) is
 			-- Spacing between two rows of the table.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_table_set_row_spacings (container_widget, a_value)
+			{EV_GTK_EXTERNALS}.gtk_table_set_row_spacings (container_widget, a_value)
 		end
 
 	set_column_spacing (a_value: INTEGER) is
 			-- Spacing between two columns of the table.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_table_set_col_spacings (container_widget, a_value)
+			{EV_GTK_EXTERNALS}.gtk_table_set_col_spacings (container_widget, a_value)
 		end
 
 	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
@@ -121,7 +121,7 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			feature {EV_GTK_EXTERNALS}.gtk_table_attach_defaults (
+			{EV_GTK_EXTERNALS}.gtk_table_attach_defaults (
 					container_widget,
 					item_imp.c_object,
 					a_column - 1,
@@ -139,8 +139,8 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
+			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
 		
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is

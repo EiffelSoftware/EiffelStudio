@@ -145,8 +145,8 @@ feature -- Status setting
 					-- from the image list.
 				set_iimage (image_list.last_position)
 			else
-				set_mask (clear_flag (mask, feature {WEL_HDI_CONSTANTS}.hdi_image))
-				set_format (clear_flag (format, feature {WEL_HDF_CONSTANTS}.hdf_image))
+				set_mask (clear_flag (mask, {WEL_HDI_CONSTANTS}.hdi_image))
+				set_format (clear_flag (format, {WEL_HDF_CONSTANTS}.hdf_image))
 			end
 			parent_imp.refresh_item (Current)
 		end
@@ -165,7 +165,7 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-			if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+			if flag_set (mask, {WEL_HDI_CONSTANTS}.hdi_format) then
 				l_format := format
 			else
 				l_format := 0
@@ -182,7 +182,7 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-		 	if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+		 	if flag_set (mask, {WEL_HDI_CONSTANTS}.hdi_format) then
 				l_format := format
 			else
 				l_format := 0
@@ -199,7 +199,7 @@ feature -- Status setting
 		local
 			l_format: INTEGER
 		do
-		 	if flag_set (mask, feature {WEL_HDI_CONSTANTS}.hdi_format) then
+		 	if flag_set (mask, {WEL_HDI_CONSTANTS}.hdi_format) then
 				l_format := format
 			else
 				l_format := 0

@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
 			entry_widget := gtk_text_new (NULL, NULL)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
 			gtk_text_set_editable (entry_widget, True)
 			enable_word_wrapping
 		end
@@ -54,9 +54,9 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, -1)
+			p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, -1)
 			create Result.make_from_c (p)
-			feature {EV_GTK_EXTERNALS}.g_free (p)
+			{EV_GTK_EXTERNALS}.g_free (p)
 		end
 
 	line (i: INTEGER): STRING is
@@ -89,9 +89,9 @@ feature -- Access
 				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
 			end
 
-			p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
+			p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
 			create Result.make_from_c (p)
-			feature {EV_GTK_EXTERNALS}.g_free (p)
+			{EV_GTK_EXTERNALS}.g_free (p)
 		end
 
 	line_number_from_position (i: INTEGER): INTEGER is
@@ -107,7 +107,7 @@ feature -- Status report
 		local
 			temp_text: STRING
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
 			temp_text := text
 			if temp_text /= Void then
 				Result := Result.max (temp_text.occurrences ('%N') + 1)
@@ -125,9 +125,9 @@ feature -- Status report
 			if is_displayed then
 				Result := (gtk_text_struct_cursor_pos_y (entry_widget) + gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
 			else
-				p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
+				p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
 				create temp_string.make_from_c (p)
-				feature {EV_GTK_EXTERNALS}.g_free (p)
+				{EV_GTK_EXTERNALS}.g_free (p)
 				Result := temp_string.occurrences ('%N') + 1
 			end
 		end
@@ -189,7 +189,7 @@ feature -- Status setting
 			-- Set the position of the caret to `pos'.
 		do
 			gtk_text_set_point (entry_widget, pos - 1)
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 		
 	insert_text_at_position (txt: STRING; a_position: INTEGER) is
@@ -211,7 +211,7 @@ feature -- Status setting
 	
 	set_text (txt: STRING) is
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, 0, -1)
+			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, 0, -1)
 			insert_text (txt)
 		end
 	
@@ -231,7 +231,7 @@ feature -- Status setting
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
+			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
 		end
 
 	freeze is
@@ -262,7 +262,7 @@ feature -- Basic operation
 	scroll_to_line (i: INTEGER) is
 		do
 			freeze
-			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
+			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 			thaw
 		end
 
@@ -270,9 +270,9 @@ feature -- Basic operation
 			-- Set 'has_word_wrapping' to True.
 		do
 			has_word_wrapping := True
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 1)
 			gtk_text_set_word_wrap (entry_widget, 1)
 		end
@@ -281,9 +281,9 @@ feature -- Basic operation
 			-- Set 'has_word_wrapping' to False.
 		do
 			has_word_wrapping := False
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 0)
 		end
 		
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
 		end
 
 	line_height: INTEGER is
@@ -421,14 +421,14 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
-				feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
+				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
 	selection_start: INTEGER is
@@ -436,8 +436,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.min (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
+			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.min ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
 	selection_end: INTEGER is
@@ -445,8 +445,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.max (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
+			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
 	clipboard_content: STRING is
@@ -461,13 +461,13 @@ feature -- status settings
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
 		end
 
 	set_position (pos: INTEGER) is
 			-- Set current insertion position.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 	set_caret_position (pos: INTEGER) is
@@ -493,19 +493,19 @@ feature -- Basic operation
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 		end
 
 	cut_selection is
@@ -515,7 +515,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
 		end
 
 	copy_selection is
@@ -524,7 +524,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
 	paste (index: INTEGER) is

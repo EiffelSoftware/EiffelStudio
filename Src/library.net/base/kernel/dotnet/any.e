@@ -21,7 +21,7 @@ feature -- Access
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
-			Result := feature {ISE_RUNTIME}.generator (Current)
+			Result := {ISE_RUNTIME}.generator (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -30,7 +30,7 @@ feature -- Access
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
  		do
-			Result := feature {ISE_RUNTIME}.generating_type (Current)
+			Result := {ISE_RUNTIME}.generating_type (Current)
  		ensure
  			result_not_void: Result /= Void
  		end
@@ -80,7 +80,7 @@ feature -- Comparison
 		do
 			Result := Current = other
 			if not Result then
-				Result := feature {ISE_RUNTIME}.standard_is_equal (Current, other)
+				Result := {ISE_RUNTIME}.standard_is_equal (Current, other)
 			end
 		ensure
 			same_type: Result implies same_type (other)
@@ -129,7 +129,7 @@ feature -- Comparison
 			else
 				Result := other = some
 				if not Result then
-					Result := feature {ISE_RUNTIME}.deep_equal (Current, some, other)
+					Result := {ISE_RUNTIME}.deep_equal (Current, some, other)
 				end
 			end
 		ensure
@@ -147,10 +147,10 @@ feature -- Duplication
 		local
 			l_temp: BOOLEAN
 		do
-			l_temp := feature {ISE_RUNTIME}.check_assert (False)
-			Result ?= feature {ISE_RUNTIME}.standard_clone (Current)
+			l_temp := {ISE_RUNTIME}.check_assert (False)
+			Result ?= {ISE_RUNTIME}.standard_clone (Current)
 			Result.copy (Current)
-			l_temp := feature {ISE_RUNTIME}.check_assert (l_temp)
+			l_temp := {ISE_RUNTIME}.check_assert (l_temp)
 		ensure
 			twin_not_void: Result /= Void
 			is_equal: Result.is_equal (Current)
@@ -163,7 +163,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			feature {ISE_RUNTIME}.standard_copy (Current, other)
+			{ISE_RUNTIME}.standard_copy (Current, other)
 		ensure
 			is_equal: is_equal (other)
 		end
@@ -175,7 +175,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			feature {ISE_RUNTIME}.standard_copy (Current, other)
+			{ISE_RUNTIME}.standard_copy (Current, other)
 		ensure
 			is_standard_equal: standard_is_equal (other)
 		end
@@ -226,7 +226,7 @@ feature -- Duplication
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		do
-			Result ?= feature {ISE_RUNTIME}.deep_twin (Current)
+			Result ?= {ISE_RUNTIME}.deep_twin (Current)
 		ensure
 			deep_equal: deep_equal (Current, Result)
 		end

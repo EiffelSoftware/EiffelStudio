@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Initialize `Current'.
 		do
-			make_area (feature {CHARACTER}.Max_value + 1)
+			make_area ({CHARACTER}.Max_value + 1)
 		end
 
 feature -- Access

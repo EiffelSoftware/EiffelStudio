@@ -68,7 +68,7 @@ feature -- Initialize
 				-- Set to single selection
 			multiple_selection_enabled := False
 			selection_mode_is_single := True
-			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 		end
 		
 feature -- Status Report
@@ -88,7 +88,7 @@ feature -- Status setting
 			item_imp ?= an_item.implementation
 			
 				-- Show the item at position `item_index'
-			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
+			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
 			--| FIXME IEK This needs to be properly implement
 		end
 
@@ -99,9 +99,9 @@ feature -- Status setting
 		do
 			multiple_selection_enabled := True
 			if selection_mode_is_single then
-				feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM)
+				{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM)
 			else
-				feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM)
+				{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM)
 			end
 		end
 
@@ -119,7 +119,7 @@ feature -- Status setting
 			if not sel_items.is_empty then
 				sel_item := sel_items.first
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM)
+			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM)
 			if sel_item /= Void then
 				sel_item.enable_select
 			end
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
 		end
 
 	select_callback (n_args: INTEGER; args: POINTER) is
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM_IMP
 		do
 			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args))
+		 	l_item ?= eif_object_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args))
 			call_select_actions (l_item)
 		end
 
@@ -217,11 +217,11 @@ feature {NONE} -- Implementation
 				if multiple_selection_enabled then
 					sel_items := selected_items
 					if sel_items = Void or else selected_items.count <= 1 then
-						feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
+						{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
 						selection_mode_is_single := True
 					end
 				else
-					feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 					selection_mode_is_single := True
 				end
 			end
@@ -233,9 +233,9 @@ feature {NONE} -- Implementation
 		do
 			if selection_mode_is_single then
 				if multiple_selection_enabled then
-					feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gtk_selection_extended_enum)					
+					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_extended_enum)					
 				else
-					feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
+					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 				end
 				selection_mode_is_single := False
 			end
@@ -263,8 +263,8 @@ feature {NONE} -- Implementation
 			button_pressed_mask: INTEGER
 			temp_ptr: POINTER
 		do
-			temp_ptr := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
-			button_pressed_mask := feature {EV_GTK_EXTERNALS}.gdk_button1_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_button2_mask_enum + feature {EV_GTK_EXTERNALS}.gdk_button3_mask_enum
+			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
+			button_pressed_mask := {EV_GTK_EXTERNALS}.gdk_button1_mask_enum + {EV_GTK_EXTERNALS}.gdk_button2_mask_enum + {EV_GTK_EXTERNALS}.gdk_button3_mask_enum
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
 		end	
 

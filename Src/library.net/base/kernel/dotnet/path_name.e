@@ -110,7 +110,7 @@ feature -- Status setting
 			if capacity < new_size then
 				resize (new_size)
 			end
-			append_character (feature {PATH}.directory_separator_char)
+			append_character ({PATH}.directory_separator_char)
 			append (directory_name)
 		ensure
 			valid_file_name: is_valid
@@ -128,7 +128,7 @@ feature -- Status setting
 			if capacity < new_size then
 				resize (new_size)
 			end
-			append_character (feature {PATH}.directory_separator_char)
+			append_character ({PATH}.directory_separator_char)
 			append (directory_name)
 		ensure
 			valid_file_name: is_valid

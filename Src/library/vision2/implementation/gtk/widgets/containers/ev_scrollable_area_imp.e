@@ -44,12 +44,12 @@ feature {NONE} -- Initialization
 				-- Initialize.
 		do
 			base_make (an_interface)
-			scrolled_window := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			set_c_object (scrolled_window)
-			set_scrolling_policy (feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM, feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM)
-			viewport := feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (viewport)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, viewport)
+			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM, {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM)
+			viewport := {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (viewport)
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, viewport)
 			set_horizontal_step (10)
 			set_vertical_step (10)
 		end
@@ -60,38 +60,38 @@ feature -- Access
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (horizontal_adjustment).rounded
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (horizontal_adjustment).rounded
 		end
 
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scrollbar.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (vertical_adjustment).rounded
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (vertical_adjustment).rounded
 		end
 
 	is_horizontal_scroll_bar_visible: BOOLEAN is
 			-- Should horizontal scroll bar be displayed?
 		do
-			Result := horizontal_policy = feature {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
+			Result := horizontal_policy = {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
 		end
 
 	is_vertical_scroll_bar_visible: BOOLEAN is
 			-- Should vertical scroll bar be displayed?
 		do
-			Result := vertical_policy = feature {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
+			Result := vertical_policy = {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
 		end
 
 	x_offset: INTEGER is
 			-- Horizontal position of viewport relative to `item'.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (horizontal_adjustment).rounded
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (horizontal_adjustment).rounded
 		end
 
 	y_offset: INTEGER is
 			-- Vertical position of viewport relative to `item'.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (vertical_adjustment).rounded
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (vertical_adjustment).rounded
 		end
 
 feature -- Element change
@@ -112,8 +112,8 @@ feature -- Element change
 			-- Set `horizontal_step' to `a_step'.
 		do
 			if horizontal_step /= a_step then
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (horizontal_adjustment, a_step)
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (horizontal_adjustment)
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (horizontal_adjustment, a_step)
+				{EV_GTK_EXTERNALS}.gtk_adjustment_changed (horizontal_adjustment)
 			end
 		end
 
@@ -121,33 +121,33 @@ feature -- Element change
 			-- Set `vertical_step' to `a_step'.
 		do
 			if vertical_step /= a_step then
-				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (vertical_adjustment, a_step)
-				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (vertical_adjustment)
+				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (vertical_adjustment, a_step)
+				{EV_GTK_EXTERNALS}.gtk_adjustment_changed (vertical_adjustment)
 			end
 		end
 
 	show_horizontal_scroll_bar is
 			-- Display horizontal scroll bar.
 		do
-			set_scrolling_policy (feature {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)			
+			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)			
 		end
 
 	hide_horizontal_scroll_bar is
 			-- Do not display horizontal scroll bar.
 		do
-			set_scrolling_policy (feature {EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM, vertical_policy)
+			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM, vertical_policy)
 		end
 
 	show_vertical_scroll_bar is
 			-- Display vertical scroll bar.
 		do
-			set_scrolling_policy (horizontal_policy, feature {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM)
+			set_scrolling_policy (horizontal_policy, {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM)
 		end
 
 	hide_vertical_scroll_bar is
 			-- Do not display vertical scroll bar.
 		do
-			set_scrolling_policy (horizontal_policy, feature {EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM)
+			set_scrolling_policy (horizontal_policy, {EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM)
 		end
 
 feature {NONE} -- Implementation
@@ -162,26 +162,26 @@ feature {NONE} -- Implementation
 			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
 			if item /= Void then
 				item_imp ?= item.implementation
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 			end	
 		end
 		
 	child_has_resized (item_imp: EV_WIDGET_IMP) is
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (scrolled_window)
+			Result := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (scrolled_window)
 		end
 
 	vertical_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the vscrollbar
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (scrolled_window)
+			Result := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (scrolled_window)
 		end
 
 	horizontal_policy: INTEGER
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 	set_scrolling_policy (hscrollpol, vscrollpol: INTEGER) is
 			-- Set the policy for both scrollbars.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrolled_window,
 				hscrollpol,
 				vscrollpol

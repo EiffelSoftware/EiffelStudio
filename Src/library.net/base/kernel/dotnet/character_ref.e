@@ -172,14 +172,14 @@ feature -- Conversion
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
-			Result := feature {DOTNET_CHARACTER}.to_upper (item)
+			Result := {DOTNET_CHARACTER}.to_upper (item)
 		end
 
 	as_lower, lower: CHARACTER is
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
-			Result := feature {DOTNET_CHARACTER}.to_lower (item)
+			Result := {DOTNET_CHARACTER}.to_lower (item)
 		end
 
 feature -- Status report
@@ -187,27 +187,27 @@ feature -- Status report
 	is_lower: BOOLEAN is
 			-- Is `item' lowercase?
 		do
-			Result := feature {DOTNET_CHARACTER}.is_lower (item)
+			Result := {DOTNET_CHARACTER}.is_lower (item)
 		end
 
 	is_upper: BOOLEAN is
 			-- Is `item' uppercase?
 		do
-			Result := feature {DOTNET_CHARACTER}.is_upper (item)
+			Result := {DOTNET_CHARACTER}.is_upper (item)
 		end
 
 	is_digit: BOOLEAN is
 			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
-			Result := feature {DOTNET_CHARACTER}.is_digit (item)
+			Result := {DOTNET_CHARACTER}.is_digit (item)
 		end
 
 	is_alpha: BOOLEAN is
 			-- Is `item' alphabetic?
 			-- Alphabetic is `is_upper' or `is_lower'
 		do
-			Result := feature {DOTNET_CHARACTER}.is_letter (item)
+			Result := {DOTNET_CHARACTER}.is_letter (item)
 		end
 
 feature {NONE} -- Implementation
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 	chcode (c: like item): INTEGER is
 			-- Associated integer value
 		do
-			Result := feature {SYSTEM_CONVERT}.to_int_32_character (c)
+			Result := {SYSTEM_CONVERT}.to_int_32_character (c)
 		end
 
 indexing

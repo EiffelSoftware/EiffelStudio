@@ -50,6 +50,8 @@ feature -- Basic Operation
 				-- We only want to generate the interface once.
 			if choice_box.is_empty then
 				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)
+			else
+				Main_window.show_external_tools (First_window)
 			end
 			
 				-- If we are modifying an existing Envision .bpr, then

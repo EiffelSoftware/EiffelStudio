@@ -130,6 +130,18 @@ feature -- Access
 	is_resizing_divider_solid: BOOLEAN
 			-- Is resizing divider displayed during column resizing drawn as a solid line?
 			-- If `False', a dashed line style is used.
+			
+	is_horizontal_scrolling_per_item: BOOLEAN
+			-- Is horizontal scrolling performed on a per-item basis?
+			-- If `True', each change of the horizontal scroll bar increments the horizontal
+			-- offset by the current column width.
+			-- If `False', the scrolling is smooth on a per-pixel basis.
+		
+	is_vertical_scrolling_per_item: BOOLEAN
+			-- Is vertical scrolling performed on a per-item basis?
+			-- If `True', each change of the vertical scroll bar increments the vertical
+			-- offset by the current row height.
+			-- If `False', the scrolling is smooth on a per-pixel basis.
 
 feature -- Status setting
 
@@ -295,6 +307,38 @@ feature -- Status setting
 			is_resizing_divider_solid := False
 		ensure
 			dashed_resizing_divider: not is_resizing_divider_solid
+		end
+		
+	enable_horizontal_scrolling_per_item is
+			-- Ensure horizontal scrolling is performed on a per-item basis.
+		do
+			is_horizontal_scrolling_per_item := True
+		ensure
+			horizontal_scrolling_performed_per_item: is_horizontal_scrolling_per_item
+		end
+		
+	disable_horizontal_scrolling_per_item is
+			-- Ensure horizontal scrolling is performed on a per-pixel basis.
+		do
+			is_horizontal_scrolling_per_item := False
+		ensure
+			horizontal_scrolling_performed_per_pixel: not is_horizontal_scrolling_per_item
+		end
+		
+	enable_vertical_scrolling_per_item is
+			-- Ensure vertical scrolling is performed on a per-item basis.
+		do
+			is_vertical_scrolling_per_item := True
+		ensure
+			vertical_scrolling_performed_per_item: is_vertical_scrolling_per_item
+		end
+		
+	disable_vertical_scrolling_per_item is
+			-- Ensure vertical scrolling is performed on a per-pixel basis.
+		do
+			is_vertical_scrolling_per_item := False
+		ensure
+			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
 
 feature -- Status report
@@ -666,6 +710,10 @@ feature {NONE} -- Drawing implementation
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			set_background_color (white)
+			is_horizontal_scrolling_per_item := False
+			is_vertical_scrolling_per_item := True
+			is_header_displayed := True
+			
 			create internal_row_data.make
 			create grid_columns.make
 			create grid_rows.make

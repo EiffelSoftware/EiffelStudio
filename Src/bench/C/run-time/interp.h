@@ -13,6 +13,8 @@
 #ifndef _interp_h_
 #define _interp_h_
 
+#include "eif_globals.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -88,8 +88,8 @@ feature -- Access
 	error_message: STRING
 			-- Error's message if any otherwise Void
 	
-	error_occured: BOOLEAN is
-			-- Did an error occured ?
+	error_occurred: BOOLEAN is
+			-- Did an error occurred ?
 		do
 			Result := error_message /= Void
 		end		

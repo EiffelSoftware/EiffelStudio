@@ -68,7 +68,7 @@ feature {NONE} -- Internal Initialisation
 		local
 			l_type: INTEGER
 		do
-			if not error_occured then
+			if not error_occurred then
 				referenced_address := icd_referenced_value.get_address
 				object_address := icd_prepared_value.get_address					
 				
@@ -116,7 +116,7 @@ feature {NONE} -- Internal Initialisation
 				end				
 			end
 		rescue
-			error_occured := True
+			error_occurred := True
 			retry
 		end
 
@@ -418,8 +418,8 @@ feature {NONE} -- Implementation
 	icd_prepared_value: ICOR_DEBUG_VALUE
 			-- prepared Object encapsulated by Current
 
-	error_occured: BOOLEAN
-			-- Did an error occured ?
+	error_occurred: BOOLEAN
+			-- Did an error occurred ?
 
 invariant
 

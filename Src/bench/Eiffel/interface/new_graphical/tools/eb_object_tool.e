@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 			l_exception_message, l_exception_to_string: STRING
 			exception_item: EV_TREE_ITEM
 		do
-			if Application.is_dotnet and then Application.imp_dotnet.exception_occured then
+			if Application.is_dotnet and then Application.imp_dotnet.exception_occurred then
 				l_exception_detail := Application.imp_dotnet.exception_details
 				if l_exception_detail /= Void then
 					l_exception_module_detail ?= l_exception_detail.item (2)

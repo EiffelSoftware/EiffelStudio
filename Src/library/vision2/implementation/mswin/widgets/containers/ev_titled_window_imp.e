@@ -34,12 +34,7 @@ feature {NONE} -- Initialization
                         -- parents
 		do
 			!!wel_window.make_top ("EV_WINDOW")
-			wel_window.add_child (Current)
-		--	set_x_y (wel_window.default_x, wel_window.default_y)
-		--	set_size (wel_window.minimal_width, wel_window.minimal_height)
-			set_minimum_width (system_metrics.window_minimum_width)
-			set_minimum_height (system_metrics.window_minimum_height)
-	--		attach_to_window
+			wel_window.attach_container (Current)
 		end
 
 		
@@ -189,17 +184,13 @@ feature -- Redefine for windows
 			-- Minimum width of window
 			-- Must be bigger than the mswin minimum, or it does nothing
 		do
-			if min_width >= system_metrics.window_minimum_width then
-				minimum_width := min_width
-			end
+			minimum_width := min_width --.max (system_metrics.window_minimum_width)
 		end
 
 	set_minimum_height (min_height: INTEGER) is
 			-- Minimum heigth of window, must be bigger than the mswin minimum
 		do
-			if min_height >= system_metrics.window_minimum_height then
-				minimum_height := min_height
-			end
+			minimum_height := min_height --.max (system_metrics.window_minimum_height)
 		end
 
 feature --{EV_WINOW_IMP} -- Implementation

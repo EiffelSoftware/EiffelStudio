@@ -36,10 +36,15 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #ifndef _config_h_
 #define _config_h_
 
+/* VMS:
+ *	This symbol, if defined, indicates that the program is running under
+ *	VMS.  It is currently only set in conjunction with the EUNICE symbol.
+ */
 /* BSD:
  *	This symbol, if defined, indicates that the program is running under
  *	a BSD system.
  */
+#$d_eunice VMS		/**/
 #$d_bsd BSD		/**/
 
 /* ABORTSIG:
@@ -700,6 +705,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
 #$d_getgrgid HAS_GETGRGID	/**/
 
 #$d_geteuid HAS_GETEUID	/**/
+
+/* HAS_UTIME:
+ *	This symbol, if defined, indicates that the utime routine is
+ *	available.
+ */
+#$d_utime HAS_UTIME	/**/
 
 /* I_DIRECT:
  *	This symbol, if defined, indicates to the C program that it should

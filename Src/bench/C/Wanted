@@ -1,5 +1,6 @@
 
 !>P
+!>READDIR
 >ABORTSIG
 >BSD
 >BYTEORDER
@@ -51,6 +52,7 @@
 >HAS_TIMES
 >HAS_UNAME
 >HAS_USLEEP
+>HAS_UTIME
 >INTSIZE
 >I_DIRECT
 >I_DIRENT
@@ -102,6 +104,7 @@
 >USE_TIOCNOTTY
 >Uid_t
 >VAL_NOFILE
+>VMS
 >W_OK
 >X_OK
 >_
@@ -148,6 +151,7 @@ d_chown
 d_dirnamlen
 d_dup2
 d_eofpipe
+d_eunice
 d_fcntl
 d_ftime
 d_geteuid
@@ -193,6 +197,7 @@ d_time
 d_times
 d_uname
 d_usleep
+d_utime
 d_voidtty
 date
 doublesize

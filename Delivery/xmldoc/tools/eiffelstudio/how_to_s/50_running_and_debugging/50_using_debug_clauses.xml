@@ -24,9 +24,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Using debug clauses
-		</heading>
 		<paragraph>Eiffel provides ways to add debug code to features to help during their debugging. You may think of it as the well-known C construct: 
 			<code/>
 		</paragraph>
@@ -36,8 +33,11 @@
 		<paragraph>The corresponding construct in Eiffel is provided by the debug keyword. It is possible to wrap code inside a debug clause like this:</paragraph> 
 		<code/>
 		<paragraph>
-			<code_block><keyword>debug</keyword>("MY_DEBUG_FLAG")<comment>-- Debug code is here.</comment><keyword>end</keyword></code_block>
-		</paragraph>
+			<code_block>
+	<keyword>debug</keyword>("MY_DEBUG_FLAG")
+		<comment>-- Debug code is here.</comment>
+	<keyword>end</keyword></code_block>
+	</paragraph>
 		<paragraph>It is then possible to enable or disable debug clauses globally.</paragraph>
 		<paragraph>To modify the debug clauses status:</paragraph>
 		<list ordered="false">

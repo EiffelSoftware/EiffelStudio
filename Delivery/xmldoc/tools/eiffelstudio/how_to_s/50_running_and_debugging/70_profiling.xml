@@ -86,12 +86,28 @@
 		</tip>
 		<paragraph>In the root feature:</paragraph>
 		<paragraph>
-			<code_block><keyword>local</keyword>ps: PROFILER_SETTING<comment>-- Other local variables if necessary.</comment><keyword>do</keyword>  <keyword>create</keyword> psps.stop_profiling<comment>-- Real program execution.</comment>ps.start_profiling<keyword>end</keyword></code_block>
+			<code_block>
+	<keyword>local</keyword>
+		ps: PROFILER_SETTING
+			<comment>-- Other local variables if necessary.</comment>
+	<keyword>do</keyword>
+		<keyword>create</keyword> psps.<feature_name>stop_profiling</feature_name>
+			<comment>-- Real program execution.</comment>
+		ps.<feature_name>start_profiling</feature_name>
+	<keyword>end</keyword></code_block>
 		</paragraph>
 		<paragraph>And in the feature(s) that needs to be profiled:</paragraph>
 		<code/>
 		<paragraph>
-			<code_block><keyword>local</keyword>ps: PROFILER_SETTING<comment>-- Other local variables if necessary.</comment><keyword>do</keyword>  <keyword>create</keyword> psps.start_profiling<comment>-- What needs to be profiled.</comment>ps.stop_profiling<keyword>end</keyword></code_block>
+			<code_block>
+	<keyword>local</keyword>
+		ps: PROFILER_SETTING
+			<comment>-- Other local variables if necessary.</comment>
+	<keyword>do</keyword>
+		<keyword>create</keyword> psps.<feature_name>start_profiling</feature_name>
+			<comment>-- What needs to be profiled.</comment>
+		ps.<feature_name>stop_profiling</feature_name>
+	<keyword>end</keyword></code_block>
 		</paragraph>
 		<note>
 			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the 

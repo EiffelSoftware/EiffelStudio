@@ -4,8 +4,7 @@
 class SKELETON 
 
 inherit
-
-	GENERIC_SKELETON;
+	TO_SPECIAL [ATTR_DESC]
 	SHARED_LEVEL
 		export
 			{ANY} all
@@ -19,103 +18,228 @@ inherit
 
 creation
 	make
-	
-feature 
+
+feature -- Initialization
+
+	make (n: INTEGER) is
+			-- Create a specific skeleton corresponding to a certain CLASS_TYPE
+		do
+			make_area (n)
+			count := n
+			position := 0
+		end
+
+feature -- Access
+
+	count: INTEGER
+			-- Number of items in skeleton.
+
+	position: INTEGER
+			-- Current position in skeleton.
+
+	item: ATTR_DESC is
+			-- Access `position'-th element.
+		require
+			good_range: position >= 0 and then position < count
+		do
+			Result := area.item (position)	
+		end
+
+feature -- Comparison
+
+	equiv (other: SKELETON): BOOLEAN is
+			-- Is the current skeleton equivqlent to `other' ?
+		require
+			good_argument: other /= Void
+		local
+			i, nb: INTEGER
+			current_area, other_area: SPECIAL [ATTR_DESC]
+		do
+			nb := count
+			if nb = other.count then
+				from
+					current_area := area
+					other_area := other.area
+					Result := True;
+					i := 0
+				until
+					not Result or else i = nb
+				loop
+					Result := current_area.item (i).same_as (other_area.item (i));
+					i := i + 1
+				end;
+			end;
+		end;
+
+feature -- Element change
+
+	put (v: ATTR_DESC; i: INTEGER) is
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		do
+			area.put (v, i);
+		end
+
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		do
+			position := position + 1
+		end;
+
+	go_to (pos: INTEGER) is
+			-- Move cursor until `pos'
+		do
+			position := pos
+		end
+
+feature -- Status
+
+	empty: BOOLEAN is
+			-- Is there an item in current skeleton?
+		do
+			Result := count = 0
+		end
+
+	after: BOOLEAN is
+			-- Is there no valid cursor position to the right of cursor?
+		do
+			Result := position >= count
+		end
+
+	off: BOOLEAN is
+			-- Is cursor position a valid one?
+		do
+			Result := position < 0 or else position >= count
+		end
+
+	first: ATTR_DESC is
+		do
+			Result := area.item (0)
+		end
 
 	has_feature_id (feature_id: INTEGER): BOOLEAN is
 			-- Has the skeleton an attribute of feature id `feature_id' ?
 		do
 			search_feature_id (feature_id);
-			Result := not after;
+			Result := not (position = count);
 		end;
 
 	search_feature_id (feature_id: INTEGER) is
 			-- Search an attribute description fo feature id `feature_id'
 		require
-			not empty;
+			not empty
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+			found: BOOLEAN
 		do
 			from
-				start;
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after or else item.feature_id = feature_id
+				found or else i > nb
 			loop
-				forth
-			end;
-		end;
+				found := current_area.item (i).feature_id = feature_id
+				i := i + 1
+			end
+			if not found then
+				position := nb
+			else
+				position := i - 1
+			end
+		end
 
 	nb_reference: INTEGER is
 			-- Numer of reference attributes
 		do
-			Result := nb_level (Reference_level);
-		end;
-
-	nb_integer: INTEGER is
-			-- Number of integer attributes
-		do
-			Result := nb_level (Integer_level);
+			Result := nb_level (0, Reference_level);
 		end;
 
 	nb_character: INTEGER is
 			-- Number of character and boolean attributes
+			-- `nb_reference' has to be called before this function
 		do
-			Result := nb_level (Character_level) + nb_level (Boolean_level);
+			Result := nb_level (position, Character_level) + nb_level (position, Boolean_level);
+		end;
+
+	nb_integer: INTEGER is
+			-- Number of integer attributes
+			-- `nb_character' has to be called before this function
+		do
+			Result := nb_level (position, Integer_level);
 		end;
 
 	nb_real: INTEGER is
 			-- Number of real attributes
+			-- `nb_integer' has to be called before this function
 		do
-			Result := nb_level (Real_level);
-		end;
-
-	nb_double: INTEGER is
-			-- Number of double attributes
-		do
-			Result := nb_level (Double_level);
+			Result := nb_level (position, Real_level);
 		end;
 
 	nb_pointer: INTEGER is
 			-- Number of pointer attributes
+			-- `nb_real' has to be called before this function
 		do
-			Result := nb_level (Pointer_level);
+			Result := nb_level (position, Pointer_level);
+		end;
+
+	nb_double: INTEGER is
+			-- Number of double attributes
+			-- `nb_pointer' has to be called before this function
+		do
+			Result := nb_level (position, Double_level);
 		end;
 
 	nb_bits: INTEGER is
 			-- Number of bits attribute
+			-- `nb_double' has to be called before this function
 		do
-			Result := nb_level (Bits_level);
+			Result := nb_level (position, Bits_level);
 		end;
 
 	nb_expanded: INTEGER is
 			-- Number of expanded attributes
+			-- `nb_bits' has to be called before this function
 		do
-			Result := nb_level (Expanded_level);
+			Result := nb_level (position, Expanded_level);
 		end;
-
 	
-	nb_level (level: INTEGER): INTEGER is
-			-- Number of item of level `level'.
+	nb_level (start_index, level: INTEGER): INTEGER is
+			-- Number of item of level `level', when searching
+			-- from `start_index'
+			--| Item at `start_index' should be greater or equal than `level'
 		require
-			level <= Expanded_level and then level >= Reference_level;
+			good_level: level <= Expanded_level and then level >= Reference_level
 		local
-			old_cursor: CURSOR;
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+			last_level: INTEGER
+			done: BOOLEAN
 		do
-			from
-				old_cursor := cursor;
-				goto (level);
-			until
-				after or else item.level > level
-			loop
-				Result := Result + 1;
-				forth;
-			end;
-			go_to (old_cursor);
-		end;
-
-	go_reference is
-			-- Go to the reference attributes
-		do
-			goto (Reference_level);
-		end;
+			if count /= 0 then
+				from
+					current_area := area
+					i := start_index
+					nb := count - 1
+					if i <= nb then
+						done := current_area.item (i).level > level
+					end
+				until
+					done or else i > nb
+				loop
+					if current_area.item (i).level = level then
+						Result := Result + 1
+						i := i + 1
+					else
+						done := True
+					end
+				end
+				position := i
+			end
+		end
 
 	go_expanded is
 			-- Go to the expanded
@@ -133,14 +257,20 @@ feature
 			-- Position the cursor to the first reference of level `level'.
 		require
 			level >= Reference_level and then level <= Expanded_level;
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			from
-				start
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after or else item.level >= level
+				i > nb or else current_area.item (i).level >= level
 			loop
-				forth
+				i := i + 1
 			end;
+			position := i
 		end;
 
 	generate_size (buffer: GENERATION_BUFFER) is
@@ -151,41 +281,64 @@ feature
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
+			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
+			bits_pos, expanded_pos, i, nb: INTEGER
+			current_area: SPECIAL [ATTR_DESC]
 		do
+			nb_ref := nb_reference
+			nb_char := nb_character
+			nb_int := nb_integer
+			nb_flt := nb_real
+			nb_ptr := nb_pointer
+			nb_dbl := nb_double
+				-- Record `position' where BIT description starts
+			bits_pos := position
+			nb_bit := nb_bits
+				-- Record `position' where EXPANDED description starts
+			expanded_pos := position
+			nb_exp := nb_expanded
+
 			buffer.putstring ("@OBJSIZ(");
-			buffer.putint (nb_reference + nb_expanded);
+			buffer.putint (nb_ref + nb_exp);
 			buffer.putchar (',');
-			buffer.putint (nb_character);
+			buffer.putint (nb_char);
 			buffer.putchar (',');
-			buffer.putint (nb_integer);
+			buffer.putint (nb_int);
 			buffer.putchar (',');
-			buffer.putint (nb_real);
+			buffer.putint (nb_flt);
 			buffer.putchar (',');
-			buffer.putint (nb_pointer);
+			buffer.putint (nb_ptr);
 			buffer.putchar (',');
-			buffer.putint (nb_double);
+			buffer.putint (nb_dbl);
 			buffer.putchar (')');
-			go_bits;
+
 			from
+					-- Go at the bits level
+				current_area := area
+				i := bits_pos
+				nb := count - 1
 			until
-				after or else item.level /= Bits_level
+				i > nb or else current_area.item (i).level /= Bits_level
 			loop
-				bit_desc ?= item;
+				bit_desc ?= current_area.item (i)
 				buffer.putstring ("+OVERHEAD+BITOFF(");
 				buffer.putint (bit_desc.value);
 				buffer.putchar (')');
-				forth;
+				i := i + 1;
 			end;
-			go_expanded;
+
 			from
+					-- Go at the expanded level
+				current_area := area
+				i := expanded_pos
 			until
-				after
+				i > nb
 			loop
-				expanded_desc ?= item;
+				expanded_desc ?= current_area.item (i)
 				expanded_skeleton := expanded_desc.class_type.skeleton;
 				buffer.putstring ("+OVERHEAD+");
 				expanded_skeleton.generate_size (buffer);
-				forth;
+				i := i + 1;
 			end;
 		end;
 
@@ -201,32 +354,48 @@ feature
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
+			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
+			bits_pos, expanded_pos, i, nb: INTEGER
+			current_area: SPECIAL [ATTR_DESC]
 		do
-			Result := objsiz(
-							nb_reference + nb_expanded,
-							nb_character,
-							nb_integer,
-							nb_real,
-							nb_pointer,
-							nb_double);
+			nb_ref := nb_reference
+			nb_char := nb_character
+			nb_int := nb_integer
+			nb_flt := nb_real
+			nb_ptr := nb_pointer
+			nb_dbl := nb_double
+				-- Record `position' where BIT description starts
+			bits_pos := position
+			nb_bit := nb_bits
+				-- Record `position' where EXPANDED description starts
+			expanded_pos := position
+			nb_exp := nb_expanded
+
+			Result := objsiz(nb_ref + nb_exp, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl);
+
+			current_area := area
 			from
-				go_bits;
+					-- Go at the bits level
+				i := bits_pos
+				nb := count - 1
 			until
-				after or else item.level /= Bits_level
+				i > nb or else current_area.item (i).level /= Bits_level
 			loop
-				bit_desc ?= item;
+				bit_desc ?= current_area.item (i)
 				Result := Result + ovhsiz + bitoff(bit_desc.value);
-				forth;
+				i := i + 1;
 			end;
-			go_expanded;
+
 			from
+				i := bits_pos
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				expanded_desc ?= item;
+				expanded_desc ?= current_area.item (i)
 				expanded_skeleton := expanded_desc.class_type.skeleton;
 				Result := Result + ovhsiz + expanded_skeleton.workbench_size;
-				forth;
+				i := i + 1;
 			end;
 		end;
 
@@ -240,6 +409,12 @@ feature
 			search_feature_id (feature_id);
 			generate (buffer, is_in_attr_table);
 		end;
+
+	offset (feature_id: INTEGER): INTEGER is
+		do
+			search_feature_id (feature_id)
+			Result := position
+		end
 
 	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
 			-- Generate offset for attribute of feature id `feature_id'
@@ -258,18 +433,22 @@ feature
 			not_off: not off;
 			good_argument: buffer /= Void;
 		local
-			nb_ref, nb_int, nb_char, nb_flt, nb_dbl, nb_ptr: INTEGER;
-			pos, level: INTEGER;
+			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
+			bits_pos, expanded_pos: INTEGER
+			current_area: SPECIAL [ATTR_DESC]
+			index, level, i: INTEGER;
 			real_nb_ref, nb: INTEGER;
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			value: INTEGER
 		do
 			level := item.level;
+				-- Save index of current found item
+			index := position
 			inspect
 				level
 			when Reference_level then
-				value := index - 1
+				value := index
 				if value /= 0 then
 					buffer.putstring (" + @REFACS(");
 					buffer.putint (value);
@@ -282,7 +461,7 @@ feature
 				buffer.putstring ("+ @CHROFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - 1)
+				buffer.putint (index - nb_ref)
 				buffer.putchar (')');
 			when Integer_level then
 				nb_ref := nb_reference;
@@ -290,9 +469,9 @@ feature
 				buffer.putstring ("+ @LNGOFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
-				buffer.putint (nb_character);
+				buffer.putint (nb_char);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - 1)
+				buffer.putint (index - nb_ref - nb_char)
 				buffer.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
@@ -305,7 +484,7 @@ feature
 				buffer.putchar (',');
 				buffer.putint (nb_int);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int - 1)
+				buffer.putint (index - nb_ref - nb_char - nb_int)
 				buffer.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
@@ -321,7 +500,7 @@ feature
 				buffer.putchar (',');
 				buffer.putint (nb_flt);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1)
+				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt)
 				buffer.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
@@ -340,7 +519,7 @@ feature
 				buffer.putchar (',');
 				buffer.putint (nb_ptr);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1)
+				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr)
 				buffer.putchar (')');
 			else
 				nb_ref := nb_reference;
@@ -349,6 +528,8 @@ feature
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_dbl := nb_double;
+					-- Save where the Bit level start
+				bits_pos := position
 				buffer.putstring ("+ @OBJSIZ(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
@@ -364,42 +545,42 @@ feature
 				buffer.putchar (')');
 				if level = Bits_level then
 					from
-						pos := index;
-						go_bits;
+						current_area := area
+						i := bits_pos
 					until
-						index >= pos
+						i >= index
 					loop
-						buffer.putstring ("+OVERHEAD+BITOFF(");
-						bit_desc ?= item;
+						buffer.putstring (" + OVERHEAD + BITOFF(");
+						bit_desc ?= current_area.item (i);
 						buffer.putint (bit_desc.value);
 						buffer.putchar (')');
-						forth;
+						i := i + 1;
 					end;
-					buffer.putstring ("+OVERHEAD");
+					buffer.putstring (" + OVERHEAD");
 				else
+					current_area := area
 					from
-						pos := index;
-						go_bits;
+						i := bits_pos
 					until
-						after or else item.level /= Bits_level
+						current_area.item(i).level > Bits_level
 					loop
-						buffer.putstring ("+OVERHEAD+BITOFF(");
-						bit_desc ?= item;
+						buffer.putstring (" + OVERHEAD + BITOFF(");
+						bit_desc ?= current_area.item (i);
 						buffer.putint (bit_desc.value);
 						buffer.putchar (')');
-						forth;
+						i := i + 1;
 					end;
+
 					from
-						go_expanded;
 					until
-						index >= pos
+						i >= index
 					loop
-						buffer.putstring ("+OVERHEAD+");
-						expanded_desc ?= item;
+						buffer.putstring (" + OVERHEAD + ");
+						expanded_desc ?= current_area.item (i)
 						expanded_desc.class_type.skeleton.generate_size (buffer);
-						forth
+						i := i + 1
 					end;
-					buffer.putstring ("+OVERHEAD");
+					buffer.putstring (" + OVERHEAD");
 				end;
 			end;
 		end;
@@ -410,54 +591,50 @@ feature
 		require
 			not_off: not off;
 		local
-			nb_ref, nb_int, nb_char, nb_flt, nb_dbl, nb_ptr: INTEGER;
-			pos, level: INTEGER;
-			real_nb_ref, nb: INTEGER;
+			nb_ref, nb_char, nb_int, nb_flt, nb_dbl, nb_ptr: INTEGER;
+			index, level, bits_pos: INTEGER;
+			real_nb_ref, nb, i: INTEGER;
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			exp_skel: SKELETON;
+			current_area: SPECIAL [ATTR_DESC]
 		do
 			level := item.level;
+				-- Save index of current found item
+			index := position
 			inspect
 				level
 			when Reference_level then
-				Result := refacs (index - 1);
+				Result := refacs (index);
 			when Character_level, Boolean_level then
 				nb_ref := nb_reference;
-				Result := 
-					chroff (nb_ref + nb_expanded) +
-					chracs (index - nb_ref - 1);
+				Result := chroff (nb_ref + nb_expanded) + chracs (index - nb_ref);
 			when Integer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				Result := 
-					lngoff (nb_ref+nb_expanded, nb_char) +
-					lngacs (index - nb_ref - nb_char - 1);
+				Result := lngoff (nb_ref + nb_expanded, nb_char) +
+							lngacs (index - nb_ref - nb_char);
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
-				Result :=
-					fltoff (nb_ref+nb_expanded, nb_char, nb_int) +
-					fltacs (index - nb_ref - nb_char - nb_int - 1); 
+				Result := fltoff (nb_ref + nb_expanded, nb_char, nb_int) +
+							fltacs (index - nb_ref - nb_char - nb_int); 
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
-				Result :=
-					ptroff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt) +
-					ptracs (index - nb_ref - nb_char - nb_int - nb_flt - 1);
+				Result := ptroff (nb_ref + nb_expanded, nb_char, nb_int, nb_flt) +
+							ptracs (index - nb_ref - nb_char - nb_int - nb_flt);
 			when Double_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				Result :=
-					dbloff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr) +
-					dblacs
-				(index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1);
+				Result := dbloff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr) +
+							dblacs (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr);
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -465,60 +642,66 @@ feature
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_dbl := nb_double;
-				Result := 
-					objsiz
-					(nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl);
+					-- Save where the Bit level start
+				bits_pos := position
+				Result := objsiz (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl);
 				if level = Bits_level then
 					from
-						pos := index;
-						go_bits;
+						current_area := area
+						i := bits_pos
 					until
-						index >= pos
+						i >= index
 					loop
-						bit_desc ?= item;
+						bit_desc ?= current_area.item (i)
 						Result := Result + ovhsiz + bitoff(bit_desc.value);
-						forth;
+						i := i + 1
 					end;
 					Result := Result + ovhsiz;
 				else
 					from
-						pos := index;
-						go_bits;
+						current_area := area
+						i := bits_pos
 					until
-						after or else item.level /= Bits_level
+						current_area.item (i).level > Bits_level
 					loop
-						bit_desc ?= item;
+						bit_desc ?= current_area.item (i);
 						Result := Result + ovhsiz + bitoff(bit_desc.value);
-						forth;
+						i := i + 1;
 					end;
+
 					from
-						go_expanded;
 					until
-						index >= pos
+						i >= index
 					loop
-						expanded_desc ?= item;
+						expanded_desc ?= current_area.item (i);
 						exp_skel := expanded_desc.class_type.skeleton;
 						Result := Result + ovhsiz + exp_skel.workbench_size;
-						forth
+						i := i + 1
 					end;
 					Result := Result + ovhsiz;
 				end;
 			end;
 		end;
--- Skeleton byte code
+
+feature -- Skeleton byte code
 	
 	make_names_byte_code (ba: BYTE_ARRAY) is
 			-- Generate attribute names in `ba'.
 		require
 			good_argument: ba /= Void
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			from
-				start
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				ba.append_string (item.attribute_name);
-				forth;
+				ba.append_string (current_area.item (i).attribute_name);
+				i := i + 1;
 			end;
 		end;
 
@@ -526,14 +709,19 @@ feature
 			-- Generate routine id array in `ba'.
 		require
 			good_argument: ba /= Void
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			from
-				start;
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				ba.append_int32_integer (item.rout_id.id);
-				forth;
+				ba.append_int32_integer (current_area.item (i).rout_id.id);
+				i := i + 1;
 			end;
 		end;
 
@@ -541,18 +729,23 @@ feature
 			-- Generate meta-type array byte code
 		require
 			good_argument: ba /= Void
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			from
-				start
+				current_area := area
+				i := 0
+				nb := count - 1	
 			until
-				after
+				i > nb
 			loop
 				if System.java_generation then
-					ba.append_uint32_integer (item.real_sk_value)
+					ba.append_uint32_integer (current_area.item (i).real_sk_value)
 				else
-					ba.append_uint32_integer (item.sk_value)
+					ba.append_uint32_integer (current_area.item (i).sk_value)
 				end
-				forth
+				i := i + 1
 			end;
 		end;
 
@@ -569,16 +762,8 @@ feature
 			has_feature_id: has_feature_id (feature_id);
 		do
 			search_feature_id (feature_id);
-			make_offset (ba);
-		end;
-
-	make_offset (ba: BYTE_ARRAY) is
-			-- Generate byte code description of attribute at the current
-			-- description
-		require
-			not_off: not off;
-			good_argument: ba /= Void
-		do
+				-- Generate byte code description of attribute at the current
+				-- description
 			ba.append_integer (workbench_offset);
 		end;
 
@@ -589,19 +774,23 @@ feature
 			not empty;
 		local
 			buffer: GENERATION_BUFFER
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			buffer := generation_buffer
 			buffer.putchar ('{');
 			buffer.new_line;
 			from
-				start
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
 				buffer.putchar ('"');
-				buffer.putstring (item.attribute_name);
+				buffer.putstring (current_area.item (i).attribute_name);
 				buffer.putstring ("%",%N");
-				forth;
+				i := i + 1;
 			end;
 			buffer.putstring ("};%N%N");
 		end;
@@ -613,18 +802,22 @@ feature
 			not empty;
 		local
 			buffer: GENERATION_BUFFER
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			buffer := generation_buffer
 			buffer.putchar ('{');
 			buffer.new_line;
 			from
-				start
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				item.generate_code (buffer);
+				current_area.item (i).generate_code (buffer);
 				buffer.putstring (",%N");
-				forth;
+				i := i + 1;
 			end;
 			buffer.putstring ("};%N%N");
 		end;
@@ -636,45 +829,33 @@ feature
 		local
 			buffer: GENERATION_BUFFER
 			rout_id: ROUTINE_ID;
-			tbl: POLY_TABLE [ENTRY];
+			tbl: ATTR_TABLE
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			buffer := generation_buffer
 			buffer.putchar ('{');
 			buffer.new_line;
 			from
-				start;
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				rout_id := item.rout_id;
-				tbl := Eiffel_table.poly_table (rout_id);
-					-- Generate a special prefix when dealing with DLE.
-				buffer.putstring (rout_id.table_name);
-				buffer.putstring (" - ");
-				buffer.putint (tbl.min_type_id - 1);
+--				rout_id := current_area.item (i).rout_id;
+--				tbl ?= Eiffel_table.poly_table (rout_id);
+					--| In this instruction, we put `True' as second
+					--| arguments. This means we will generate something if there is nothing
+					--| to generate (ie `0'). Remember that `False' is used in all other case
+--				generate_offset (buffer, tbl.first.feature_id, True)
+				position := i
+				generate (buffer, True)
 				buffer.putstring (",%N");
-				forth;
+				 i := i + 1;
 			end;
 			buffer.putstring ("};%N%N");
 		end;
-
-	make_extern_declarations is
-		-- Prepare extern declarations for final mode
-		-- generation
-	local
-		rout_id: ROUTINE_ID;
-	do
-		from
-			start
-		until
-			after
-		loop
-			rout_id := item.rout_id;
-			Extern_declarations.add_skeleton_attribute_table (rout_id.table_name);
-			Eiffel_table.mark_used (rout_id);
-			forth
-		end;
-	end;
 
 	generate_rout_id_array is
 			-- Generate static C array of attributes routine ids
@@ -682,21 +863,128 @@ feature
 			not empty;
 		local
 			buffer: GENERATION_BUFFER
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
 		do
 			buffer := generation_buffer
 			buffer.putchar ('{');
 			buffer.new_line;
 			from
-				start;
+				current_area := area
+				i := 0
+				nb := count - 1
 			until
-				after
+				i > nb
 			loop
-				buffer.putint (item.rout_id.id);
+				buffer.putint (current_area.item (i).rout_id.id);
 				buffer.putstring (",%N");
-				forth;
+				i := i + 1;
 			end;
 			buffer.putstring ("};%N%N");
 		end;
+
+feature -- Sort
+
+	sort is
+			-- Sort skeleton in ascending order.
+		do
+			quick_sort (0, count - 1)
+		end
+
+feature {NONE} -- Implementation of quick sort algorithm
+
+	quick_sort (min, max: INTEGER) is
+			-- Apply `quick_sort' algorithm.
+		require
+			in_bounds: min < max
+		local
+			pivo_index: INTEGER
+		do
+			if min < max then
+				pivo_index := partition_quick_sort (min, max)
+				quick_sort (min, pivo_index - 1)
+				quick_sort (pivo_index + 1, max)
+			end
+		end
+
+	partition_quick_sort  (min, max: INTEGER): INTEGER is
+			-- Apply `quick_sort' algorithm to position [`min'..`max']
+		require
+			correct_bounds: min <= max
+		local
+			up, down: INTEGER
+			x, temp: ATTR_DESC 
+			current_area: SPECIAL [ATTR_DESC]
+		do
+			current_area := area
+				-- Define the pivot value as the first element of table
+			x := current_area.item (min)
+
+				-- Initialize UP to first
+			up := min
+
+				-- Initialize DOWN to last
+			down := max
+
+			from
+			until
+				up >= down    -- Repeat until up meets or passes down
+			loop
+					-- Increment up until up selects the first element
+					-- greater than the pivot value
+				from
+				until
+					up >= max or else current_area.item (up) > x
+				loop
+					up := up + 1
+				end
+			
+					-- Decrement down until it selects the first element
+					-- lesser than or equal to the pivot
+				from
+				until
+					current_area.item (down) <= x
+				loop
+					down := down - 1
+				end
+
+				if up < down then
+						-- If up < down  exchange their values until up
+						-- meets or passes down
+					temp := current_area.item (up)
+					current_area.put (current_area.item (down), up)
+					current_area.put (temp, down)
+				end
+			end
+
+			temp := current_area.item (down)
+			current_area.put (current_area.item (min), down)
+			current_area.put (temp, min)
+			Result := down
+		end
+
+feature -- Trace
+
+	trace is
+			-- Debug purpose
+		local
+			current_area: SPECIAL [ATTR_DESC]
+			i, nb: INTEGER
+		do
+			from
+				current_area := area
+				i := 0
+				nb := count - 1
+			until
+				i > nb
+			loop
+				io.error.putstring (current_area.item (i).attribute_name);
+				io.error.putstring (": ");
+				item.trace;
+				io.error.new_line;
+				i := i + 1;
+			end;
+		end
 
 feature {NONE} -- Externals
 

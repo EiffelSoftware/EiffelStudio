@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	execute is
+	execute (arg: ANY) is
 			-- do the work of the command
 		deferred
 		end

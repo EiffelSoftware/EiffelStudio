@@ -10,45 +10,35 @@ inherit
 	SHARED_OBJECTS
 	
 	UTILITY_FUNCTIONS
-
-	GENERATOR	
+	
+	XML_ROUTINES
 	
 feature -- Initialize
 
 	initialize is
 			-- Initialize project from `preferences'
+		require
+			has_preferences: preferences /= Void
 		local
 			l_constants: APPLICATION_CONSTANTS
+			l_documents: like documents
 		do
-			if preferences.is_valid then
+			if preferences.is_valid then		
+				is_valid := True			
+				create filter_manager.make
 				create invalid_files.make (5)
-				create modified_files.make (5)
 				invalid_files.compare_objects
 				l_constants := Shared_constants.Application_constants
-				has_been_validated := False
-						-- Schema
-				if preferences.has_schema then
-					Shared_document_manager.initialize_schema (preferences.schema_file)
-				end
-						-- XSL
-				if preferences.has_transform_file then
-					Shared_document_manager.initialize_xslt (preferences.transform_file)
-							-- CSS
-					if Shared_document_manager.has_xsl and then preferences.has_stylesheet_file then
-						Shared_document_manager.xsl.set_stylesheet (preferences.stylesheet_file)
-					end
-				end
-						-- Index file
-				if preferences.has_index_file_name then
-					Shared_constants.Application_constants.set_index_file_name (preferences.index_filename)
-				end
-				l_constants.set_make_index_root (preferences.is_index_root)
-				l_constants.set_include_empty_directories (preferences.include_empty_directories)
-				l_constants.set_include_directories_no_index (preferences.include_directories_no_index)
-				l_constants.set_include_skipped_sub_directories (preferences.include_skipped_sub_directories)
+				has_been_validated := False				
+				
+						-- Initialize tree widget if in gui mode
 				if l_constants.is_gui_mode then
 					initialize_document_selector
 				end
+						-- Retrieve documents
+				all_documents_read := False
+				files_changed := False
+				l_documents := documents
 			end
 			update
 		end		
@@ -61,27 +51,51 @@ feature -- Initialize
 			if document_map /= Void then
 				document_map.clear
 			end
-			create document_map.make (preferences.root_directory, Application_window.document_selector)
+			create document_map.make (root_directory, Application_window.document_selector)
 		end		
+
+feature -- Access
+
+	name: STRING
+			-- Project name
+
+	root_directory: STRING
+			-- Location of project root directory
+
+	full_name: FILE_NAME is
+			-- Full project name including directory
+		do
+			create Result.make_from_string (root_directory)
+			Result.extend (name)
+		end
 
 feature -- Commands
 
 	update is
 			-- Update
 		do
-			Application_window.render_schema
+			Application_window.update
+			if Shared_document_manager.has_schema then
+				Application_window.render_schema	
+			end
 		end
 
-	open_new is
-			-- Create a new project from scratch.  Can only be done
-			-- via the template dialog.
+	create_new is
+			-- Create a new project
+		local
+			l_file_name: FILE_NAME
+			l_file: PLAIN_TEXT_FILE
 		do
-			create preferences
-			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)
+			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)			
+			create l_file_name.make_from_string (full_name)
+			create l_file.make_create_read_write (l_file_name)
+			l_file.close
+			create preferences.make_from_file (l_file)
+			preferences.write
 			initialize
 		end
 		
-	open_from_existing_project is
+	open is
 			-- Open an existing project
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -93,56 +107,18 @@ feature -- Commands
 			end		
 		end		
 
-	load (a_filename: STRING) is
-			-- Load preference from `a_filename'
-		do
-			create preferences.make_from_file (a_filename)
-			initialize
-		end
-
 	close is
 			-- Close open project
 		do
-			document_map.clear
 			Shared_document_editor.close_documents
 		end
 
 	build_toc is
-			-- Build a TOC tree from Current
+			-- Build a TOC tree from Current			
 		do
 			if can_build_toc then
-				create document_toc.make (preferences.root_directory)
-				if not document_toc.is_empty then
-					Application_window.set_document_toc (document_toc)
-				end
-			end			
-		end		
-
-	validate_links (a_dir: DIRECTORY) is
-			-- Validate links in all files recursively.
-		local
-			l_documents: ARRAYED_LIST [DOCUMENT]
-			l_document: DOCUMENT
-		do		
-			if error_report /= Void then
-				error_report.clear
-			else
-				create error_report.make_empty ("Invalid Links")
+				Shared_toc_manager.build_toc (create {DIRECTORY}.make (root_directory))				
 			end
-			from				
-				l_documents := documents (Void)
-				l_documents.start
-			until
-				l_documents.after
-			loop				
-				l_document := l_documents.item
-				l_document.check_links
-				if not l_document.invalid_links.is_empty then
-					error_report.append_report (l_document.invalid_links) 
-				end
-				l_documents.forth
-			end
-			error_report.show
 		end
 
 	update_links (a_old, a_new: DOCUMENT_LINK) is
@@ -154,20 +130,61 @@ feature -- Commands
 			l_documents: ARRAYED_LIST [DOCUMENT]
 			l_link_manager: LINK_MANAGER
 		do
-			l_documents := documents (Void)
-			create l_link_manager.make_with_documents (l_documents)
+			create l_link_manager.make_with_documents (documents)
 			l_link_manager.run (a_old, a_new, False, False)
-		end		
+		end	
 
-feature -- Status Setting
+feature {VALIDATOR_TOOL_DIALOG} -- Validation
 
-	set_toc (a_toc: DOCUMENT_TOC) is
-			-- Set `document_toc'
-		require
-			toc_not_void: a_toc /= Void
+	validate_files is
+			-- Validate files in Current to loaded schema.  Put invalid files
+			-- in `invalid_files' list.
+		do			
+			if not has_been_validated then
+				has_been_validated := True
+				invalid_files.wipe_out
+				progress_generator.set_title ("File Validation")
+				progress_generator.set_procedure (agent validate_against_schema)
+				progress_generator.set_heading_text ("Validating project files...")
+				progress_generator.set_upper_range (documents.count)
+				progress_generator.generate	
+			end
+			build_error_report
+			show_error_report
+		end
+
+	validate_links (a_dir: DIRECTORY) is
+			-- Validate links in all files recursively.
+		local
+			l_link_manager: LINK_MANAGER
 		do
-			document_toc := a_toc
-		end			
+			create l_link_manager.make_with_documents (documents)
+			l_link_manager.check_links
+		end	
+
+feature -- Status Setting	
+
+	set_name (a_name: STRING) is
+			-- Set `name'
+		require
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
+	set_root_directory (a_name: STRING) is
+			-- Set `root_directory'
+		require
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+		do
+			root_directory := a_name
+		ensure
+			dir_set: root_directory = a_name
+		end
 
 	add_invalid_file (a_filename: STRING) is
 			-- Add `a_filename' to list of invalid files
@@ -193,52 +210,12 @@ feature -- Status Setting
 			files_changed := True
 		end
 
+	is_valid: BOOLEAN
+			-- Is this a valid project?
+
 feature -- Access
 			
-	documents (a_dir: DIRECTORY): ARRAYED_LIST [DOCUMENT] is
-			-- Get project xml documents from disk
-		local
-			cnt: INTEGER
-			l_dir, l_sub_dir: DIRECTORY
-			l_file: PLAIN_TEXT_FILE
-			path: STRING
-			doc: DOCUMENT
-		do
-			if internal_documents = Void then
-					-- Since `internal_documents' is Void this is first generation		
-				if a_dir = Void then
-					path := preferences.root_directory
-				else
-					path := a_dir.name
-				end			
-				create l_dir.make (path)
-				create Result.make (l_dir.count)
-				from
-					cnt := 0
-					l_dir.open_read
-					l_dir.start
-				until
-					cnt = l_dir.count
-				loop
-					l_dir.readentry
-					if not (l_dir.lastentry.is_equal (".") or l_dir.lastentry.is_equal ("..")) then
-						create l_sub_dir.make (path + "\" + l_dir.lastentry)
-						if not l_sub_dir.exists then
-							create l_file.make (path + "\" + l_dir.lastentry)
-							if l_file.exists and then file_type (l_file.name).is_equal ("xml") then
-								create doc.make_from_file (l_file, Void)
-								Result.extend (doc)
-							end
-						else
-							Result.append (documents (l_sub_dir))
-						end
-					end
-					cnt := cnt + 1
-				end	
-			else
-				Result := internal_documents
-			end			
-		end		
+	filter_manager: FILTER_MANAGER				
 			
 	preferences: DOCUMENT_PROJECT_FILE
 			-- Preferences file
@@ -246,37 +223,16 @@ feature -- Access
 	document_map: DOCUMENT_SELECTOR
 			-- Document selector	
 
-	document_toc: DOCUMENT_TOC
-			-- Document TOC
-
-	validate_files is
-			-- Validate files in Current to loaded schema.  Put invalid files
-			-- in `invalid_files' list.
-		do			
-			if has_been_validated then
-				build_error_report				
-				show_error_report
-			else
-				generate
-			end
-		end
-
 	has_invalid_files: BOOLEAN is
 			-- Has Current any invalid files
 		do
-			if not has_been_validated then			
-				generate	
+			if not has_been_validated then
+				validate_files
 			end
-			Result := invalid_files.count > 0				
+			Result := invalid_files.count > 0			
 		end		
 
-	file_count: INTEGER is
-			-- Number of files in project
-		do
-			Result := upper_range_value			
-		end
-
-feature {DOCUMENT_SELECTOR, DOCUMENT_TOC} -- Access 
+feature {DOCUMENT_SELECTOR, XML_TABLE_OF_CONTENTS} -- Access 
 
 	allowed_file_types: ARRAYED_LIST [STRING] is
 			-- List of allowed file types
@@ -289,6 +245,21 @@ feature {DOCUMENT_SELECTOR, DOCUMENT_TOC} -- Access
 		end	
 
 feature {NONE} -- Implementation
+		
+	documents: ARRAYED_LIST [DOCUMENT] is
+			-- Get all project documents from disk		
+		do
+			if not all_documents_read then
+				progress_generator.set_title ("Retrieving Documents")
+				Progress_generator.set_heading_text ("Retrieving file...")
+				progress_generator.set_procedure (agent retrieve_documents (create {DIRECTORY}.make (root_directory)))
+				progress_generator.suppress_progress_bar (True)
+				progress_generator.generate
+				progress_generator.suppress_progress_bar (False)
+				all_documents_read := True
+			end
+			Result := Shared_document_manager.documents.linear_representation
+		end			
 		
 	has_been_validated: BOOLEAN
 			-- Has Current been validated?
@@ -303,33 +274,22 @@ feature {NONE} -- Implementation
 			l_document: DOCUMENT
 		do		
 			from
-				l_documents := documents (Void)
+				l_documents := documents
 				l_documents.start
 			until
 				l_documents.after
 			loop
 				l_document := l_documents.item
+				progress_generator.set_status_text (l_document.name)
 				if not l_document.is_valid_to_schema then
 					if not invalid_files.has (l_document.name) then
-						invalid_files.extend (l_document.name)
+						add_invalid_file (l_document.name)
 					end
 				end
 				l_documents.forth
-				update_progress_report
+				progress_generator.update_progress_report
 			end
-		end
-
-	internal_generate is
-			-- Generation
-		do
-			has_been_validated := True
-			invalid_files.wipe_out
-			validate_against_schema
-			if has_invalid_files then
-				build_error_report
-				show_error_report
-			end
-		end		
+		end	
 
 	build_error_report is
 			-- Build a new error report
@@ -337,7 +297,9 @@ feature {NONE} -- Implementation
 			l_actions: ERROR_ACTIONS
 		do
 			if error_report = Void or files_changed then
-				if error_report /= Void then
+				if error_report = Void then					
+					create error_report.make_empty ((create {MESSAGE_CONSTANTS}).invalid_files_title)
+				else
 					error_report.clear
 				end
 				create l_actions
@@ -346,11 +308,7 @@ feature {NONE} -- Implementation
 				until
 					invalid_files.after
 				loop
-					if error_report /= Void then
-						error_report.append_error (invalid_files.item, 0, 0)
-					else
-						create error_report.make ((create {MESSAGE_CONSTANTS}).invalid_files_title, invalid_files.item, 0, 0)
-					end
+					error_report.append_error (invalid_files.item, 0, 0)
 					invalid_files.forth
 				end
 				error_report.set_error_action (agent l_actions.load_file (?))
@@ -367,9 +325,7 @@ feature {NONE} -- Implementation
 			l_message_dialog: EV_MESSAGE_DIALOG
 			l_constants: EV_DIALOG_CONSTANTS
 		do
-			if has_invalid_files then
-				error_report.show
-			end
+			error_report.show
 		end
 
 	can_build_toc: BOOLEAN is
@@ -402,25 +358,72 @@ feature {NONE} -- Implementation
 	invalid_files: ARRAYED_LIST [STRING]
 			-- List of filenames for known invalid files in Current
 
-	modified_files: ARRAYED_LIST [DOCUMENT]
-			-- List of files which have been modified since `documents' was first calculated
-			
-	internal_documents: ARRAYED_LIST [DOCUMENT]
-			-- List of documents
-
 	error_report: ERROR_REPORT
 			-- Error report
 
-feature {NONE} -- Generation	
+feature {NONE} -- Document Retrieval
 
-	progress_title: STRING is "Validating project files"
-			-- Render bar title
-	
-	Upper_range_value: INTEGER is
-			-- Upper value range for progress bar
-		once
-			Result := directory_recursive_count (create {DIRECTORY}.make (preferences.root_directory), preferences.root_directory)
-		end	
+	retrieve_documents (a_dir: DIRECTORY) is
+			-- Retrieve all documents recusrsively in `a_dir'.
+		require
+			a_dir_not_void: a_dir /= Void
+			a_dir_exists: a_dir.exists
+		local
+			cnt: INTEGER
+			l_dir, l_sub_dir: DIRECTORY
+			l_file: PLAIN_TEXT_FILE
+			path: STRING
+			doc: DOCUMENT
+			l_filename: FILE_NAME
+		do
+			path := a_dir.name
+			create l_dir.make (path)
+			from
+				cnt := 0
+				l_dir.open_read
+				l_dir.start
+			until
+				cnt = l_dir.count
+			loop
+				l_dir.readentry
+				if not (l_dir.lastentry.is_equal (".") or l_dir.lastentry.is_equal ("..")) then
+					create l_filename.make_from_string (path)
+					l_filename.extend (l_dir.lastentry)
+					create l_sub_dir.make (l_filename.string)
+					if not l_sub_dir.exists then
+						create l_file.make (l_filename.string)
+						if l_file.exists and then file_type (l_file.name).is_equal ("xml") then
+								-- Read documents
+							create doc.make_from_file (l_file)
+								-- Add to manager
+							Shared_document_manager.add_document (doc)							
+							progress_generator.set_status_text (doc.name)
+						end
+					else
+							-- Retrieve sub directory documents
+						retrieve_documents (l_sub_dir)
+					end
+				end
+				cnt := cnt + 1
+				progress_generator.update_progress_report
+			end
+		end
+
+	all_documents_read: BOOLEAN
+			-- Have all project documents been read?
+
+feature {ARGUMENTS_PARSER} -- Retrieval
+
+	load (a_filename: STRING) is
+			-- Load from `a_filename'
+		local
+			l_file: PLAIN_TEXT_FILE
+		do
+			create l_file.make (a_filename)
+			create preferences.make_from_file (l_file)
+			preferences.read
+			initialize
+		end
 
 invariant
 	has_preferences: preferences /= Void

@@ -1,5 +1,5 @@
 indexing
-	description: "Document link.  A url and the name of the file in which it occurs.  The `url'%
+	description: "Document link.  A url and (optionally) the name of the file in which it occurs.  The `url'%
 		%property could be in any format, relative, absolute or external.  Use functions to%
 		%convert between formats."
 	date: "$Date$"
@@ -21,12 +21,13 @@ feature -- Creation
 	make (a_filename, a_url: STRING) is
 			-- Make from `a_url'
 		require
-			filename_not_void: a_filename /= Void
 			url_not_void: a_url /= Void
 		do
 			filename := a_filename
 			url := a_url
 			tidy
+		ensure
+			has_url: url /= Void
 		end
 
 feature -- Access
@@ -51,9 +52,15 @@ feature -- Access
 			
 	relative_url: STRING is
 			-- The relative value of `url' in relation to `filename'.
+		require
+			occurs_in_file: filename /= Void
 		local
 			l_abs, l_url_name, l_file_name: STRING
-			l_url_arr, l_filename_arr: ARRAY [STRING]
+			l_url_arr, l_filename_arr, 
+			l_big_arr, l_small_arr: ARRAY [STRING]
+			cnt: INTEGER
+			l_match, l_parent: BOOLEAN
+			l_filename: FILE_NAME
 		do
 			if not external_link then				
 				if relative_from_document then
@@ -65,13 +72,67 @@ feature -- Access
 						l_file_name := short_name (filename)
 						l_url_arr := directory_array (url)
 						l_filename_arr := directory_array (filename)
+						create Result.make_from_string (l_url_name)
 						if l_url_arr /= Void and l_filename_arr /= Void then
+									-- Determine the larger of the arrays.  If the url
+									-- array is larger the Result refers to a subdirectory
+									-- of `filename', otherwise it refers to a parent directory.
+							if l_url_arr.count >= l_filename_arr.count then
+								l_big_arr := l_url_arr
+								l_small_arr := l_filename_arr
+							else
+								l_big_arr := l_filename_arr
+								l_small_arr := l_url_arr
+								l_parent := True
+							end
 							
+									-- Compare array directory items until they don't match
+							from
+								cnt := 1
+								l_match := True
+							until
+								cnt > l_big_arr.count or cnt > l_small_arr.count or not l_match
+							loop
+								l_match := l_big_arr.item (cnt).is_equal (l_small_arr.item (cnt))
+								cnt := cnt + 1
+							end
+							
+								-- Build result based on position of first non-match
+							from
+								create l_filename.make
+							until
+								cnt > l_big_arr.count
+							loop
+								if l_parent then
+									l_filename.extend ("..")
+								else
+									l_filename.extend (l_big_arr.item (cnt))									
+								end
+								cnt := cnt + 1
+							end
+							if not l_filename.is_empty then
+								l_filename.extend (l_url_name)
+								create l_filename.make_from_string (l_filename.string.substring (2, l_filename.string.count))
+							else
+								create l_filename.make_from_string (Result)
+							end
+							Result := l_filename.string
 						end
 					end
 				end	
 			end
 		end		
+		
+	root_url: STRING is
+			-- The value of `url' in relation to root directory.
+		do
+			if relative_from_root then
+				Result := url
+			else
+				Result := absolute_url
+				Result.replace_substring_all (root_directory, "")
+			end
+		end	
 			
 	absolute_url: STRING is
 			-- Return the absolute directory path from `url'.
@@ -80,6 +141,8 @@ feature -- Access
 			-- the result would be, `C:\my_project\a_project\a_dir\a_file.html'.
 			-- For a root level link of the type `/a_dir/a_file.html' return the absolute
 			-- url from the known root directory in `root_directory'.
+		require
+			occurs_in_file: filename /= Void
 		local
 			l_char: CHARACTER
 			l_substring: STRING
@@ -102,7 +165,7 @@ feature -- Access
 					l_char := url.item (cnt)
 					l_substring.append_character (l_char)
 					if l_char = '\' or l_char = '/' then
-						if l_substring.is_equal ("../") then
+						if l_substring.is_equal ("../") or l_substring.is_equal ("..\") then
 							l_parents := l_parents + 1
 						end
 						l_substring.wipe_out
@@ -116,7 +179,7 @@ feature -- Access
 					else
 						create Result.make_from_string (url)
 					end
-					Result := Result.substring (l_parents * 3, Result.count)
+					Result := Result.substring ((l_parents * 3) + 1, Result.count)
 				else
 					Result := url
 				end
@@ -158,12 +221,14 @@ feature -- Access
 feature -- Commands
 
 	format (a_type: INTEGER): STRING is
-			-- Return `url' foramtted according to `a_type'
+			-- Return `url' formatted according to `a_type'
 		require
 			valid_type: (a_type = document_relative) or (a_type = root_relative) or (a_type = absolute)
 		do
-			if a_type = Document_relative or a_type = Root_relative then
+			if a_type = Document_relative then
 				Result := relative_url
+			elseif a_type = Root_relative then
+				Result := root_url
 			else
 				Result := absolute_url
 			end		
@@ -186,12 +251,14 @@ feature -- Query
 			else					
 				l_this_url := absolute_url
 				l_that_url := a_link.absolute_url
+				l_this_url.replace_substring_all ("\", "/")
+				l_that_url.replace_substring_all ("\", "/")
 				Result := l_this_url.is_equal (l_that_url)
 			end
 		end
 
 	exists: BOOLEAN is
-			-- Does `url' physically exists?  Use this finction to determine bad links in `filename'
+			-- Does `url' physically exists?  Use this function to determine bad links
 		local
 			l_file: RAW_FILE
 			l_url: STRING
@@ -199,11 +266,18 @@ feature -- Query
 			if external_link then
 					-- TO DO:  Check for existence of external resource	
 			else
-				l_url := absolute_url
-				if l_url /= Void and then not l_url.is_empty then
-					create l_file.make (l_url)
-					Result := l_file.exists
-				end
+					-- First check raw url
+				create l_file.make (url)
+				Result := l_file.exists
+				
+					-- If fails convert url and check again
+				if not Result and then filename /= Void then
+					l_url := absolute_url
+					if l_url /= Void and then not l_url.is_empty then
+						create l_file.make (l_url)
+						Result := l_file.exists
+					end
+				end				
 			end
 		end		
 
@@ -211,6 +285,8 @@ feature {DOCUMENT_LINK} -- Query
 
 	relative_from_document: BOOLEAN is
 			-- Is `url' relative to document from which it is referenced?
+		require
+			occurs_in_file: filename /= Void
 		local			
 			l_first_char: CHARACTER
 			l_file: RAW_FILE
@@ -220,22 +296,22 @@ feature {DOCUMENT_LINK} -- Query
 			l_first_char := url.item (1)
 			Result := l_first_char = '.'
 			
-					-- Can a file be created from `url'.  If so it must be
-					-- absolute
+					-- Can file be created from location of filename appended with
+					-- url?  If so must be relative to document
+			if not Result and then (url.occurrences (':') = 0)then
+				create l_filename.make_from_string (directory_no_file_name (filename))
+				l_filename.extend (url)
+				create l_file.make (l_filename)
+				Result := l_file.exists
+			end
+			
+					-- Can a file be created from `url'.  If so it must be absolute, not relative
 			if not Result then
 				create l_file.make (url)
-				Result := l_file.exists
-						-- Can file be created from location of filename appended with
-						-- url?  If so must be relative to document
-				if not Result and then not (url.occurrences (':') > 0) then
-					create l_filename.make_from_string (directory_no_file_name (filename))
-					l_filename.extend (url)
-					create l_file.make (l_filename)
-					Result := l_file.exists
-				else
-					Result := not Result
+				if l_file.exists then
+					Result := False
 				end
-			end				
+			end
 		end		
 	
 	relative_from_root: BOOLEAN is
@@ -254,7 +330,8 @@ feature {DOCUMENT_LINK} -- Query
 				url.has_substring ("www.") or 
 				url.has_substring ("http:") or
 				url.has_substring ("https:") or
-				url.has_substring ("ftp:")
+				url.has_substring ("ftp:") or
+				url.has_substring ("mailto:")
 		end
 
 	in_document (a_document: DOCUMENT): BOOLEAN is
@@ -288,10 +365,10 @@ feature {NONE} -- Implmentation
 	root_directory: STRING is
 			-- Root
 		do
-			Result := Shared_project.preferences.root_directory
+			Result := Shared_project.root_directory
 		end
 
-feature -- Implemntation
+feature -- Implementation
 		
 	document_relative,
 	root_relative,

@@ -31,22 +31,16 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				error_handler_activated.set_item(debug_mode)
 				parse_input
-				if not error_happened then
-					execute
-				else
-					raise_error
-				end
+				execute
 			else
-				handle_exception
+				if debug_mode then
+					handle_exception
+				end
 			end
 		rescue
 			retried := True
-			if debug_mode then
-				response_header.send_trace(exception_trace)
-				retry
-			end
+			retry
 		end
 
 feature -- Miscellanous
@@ -126,7 +120,7 @@ feature {CGI_FORMS}-- Access
 					stdin.read_stream (Content_length.to_integer);
 					Result := stdin.last_string
 				else
-					set_error ("Incorrect value for CONTENT_LENGTH")
+					raise_error ("Incorrect value for CONTENT_LENGTH")
 				end
 			else
 				Result := Query_string

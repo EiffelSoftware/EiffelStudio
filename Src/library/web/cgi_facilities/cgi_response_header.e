@@ -64,7 +64,7 @@ feature -- Basic Operations
 			message_exists: a_message /= Void
 			header_void: header /= Void  
 		do
-			header.append("%NStatus: "+a_status.out+" "+a_message)
+			header.append( "%NStatus: "+a_status.out+" "+a_message)
 		end	
 
 	reinitialize_header is
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			reinitialized: header = Void and not is_complete_header and not is_sent
 		end
 
-feature {CGI_INTERFACE} -- Exception handling
+feature {CGI_ERROR_HANDLING} -- Exception handling
 
 	send_trace(s: STRING) is
 			-- Send the exception trace 's' to the browser, when

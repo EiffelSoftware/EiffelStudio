@@ -63,7 +63,6 @@ OBJECTS = \
 	"$(INDIR)\boolstr.obj" \
 	"$(INDIR)\search.obj" \
 	"$(INDIR)\main.obj" \
-	"$(INDIR)\dle.obj" \
 	"$(INDIR)\option.obj" \
 	"$(INDIR)\console.obj" \
 	"$(INDIR)\run_idr.obj" \
@@ -123,7 +122,6 @@ WOBJECTS = \
 	"$(INDIR)\wbench.obj" \
 	"$(INDIR)\wconsole.obj" \
 	"$(INDIR)\wrun_idr.obj" \
-	"$(INDIR)\wdle.obj" \
 	"$(INDIR)\wpath_name.obj" \
 	"$(INDIR)\wobject_id.obj" \
 	"$(INDIR)\compress.obj" \
@@ -178,7 +176,6 @@ EOBJECTS = \
 	"$(INDIR)\wbench.obj" \
 	"$(INDIR)\wconsole.obj" \
 	"$(INDIR)\wrun_idr.obj" \
-	"$(INDIR)\wdle.obj" \
 	"$(INDIR)\wpath_name.obj" \
 	"$(INDIR)\wobject_id.obj" \
 	"$(INDIR)\compress.obj" \
@@ -405,9 +402,6 @@ eif_portable.h : $(TOP)\eif_portable.h
 "$(RTSRC)\wobject_id.c" : object_id.c
 	$(LN) object_id.c wobject_id.c
 
-"$(RTSRC)\wdle.c" : dle.c
-	$(LN) dle.c wdle.c
-
 "$(RTSRC)\weif_project.c" : eif_project.c
 	$(LN) eif_project.c weif_project.c
 
@@ -438,9 +432,6 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 "$(INDIR)\dir.obj" :	"$(RTSRC)\dir.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\dir.c"
-
-"$(INDIR)\dle.obj" :	"$(RTSRC)\dle.c"
-	$(CC) $(JCFLAGS) "$(RTSRC)\dle.c"
 
 "$(INDIR)\eif_cond_var.obj" :	"$(RTSRC)\eif_cond_var.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\eif_cond_var.c"
@@ -585,9 +576,6 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 "$(INDIR)\wdir.obj" :	"$(RTSRC)\wdir.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wdir.c"
-
-"$(INDIR)\wdle.obj" :	"$(RTSRC)\wdle.c"
-	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wdle.c"
 
 "$(INDIR)\weif_cond_var.obj" :	"$(RTSRC)\weif_cond_var.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_cond_var.c"

@@ -14,7 +14,7 @@ inherit
 
 	S_TYPE_INFO
 		redefine
-			is_not_actual_class_type, is_basic
+			is_not_actual_class_type
 		end
 
 creation
@@ -34,13 +34,6 @@ feature {NONE} -- Initialization
 		end;
 
 feature -- Access
-
-	is_basic: BOOLEAN is
-			-- Is Current a basic type?
-			--| Yes, it is.
-		do
-			Result := True
-		end;
 
 	is_not_actual_class_type: BOOLEAN is True
 			-- Is Current a basic formal or like feature or

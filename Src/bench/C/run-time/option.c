@@ -30,6 +30,7 @@
 #include <sys/param.h>      /* For value of HZ */
 #endif
 #endif
+#include "err_msg.h"
 
 EIF_INTEGER eif_profiler_level;
 
@@ -98,6 +99,7 @@ struct prof_info {
 
 /* Internal Macros */
 #ifdef HAS_GETRUSAGE
+
 #define u_seconds	user_time.seconds
 #define u_micro		user_time.micro_seconds
 #define s_seconds	system_time.seconds
@@ -614,14 +616,14 @@ void start_trace(char *name, int origin, int dtype)
 	int i;				/* Counter needed for loops */
 
 	if (trace_call_level != 0 && last_dtype != -1) {
-		fprintf(stderr, "\n");
+		print_err_msg(stderr, "\n");
 		for (i = 0; i < trace_call_level - 1; i++)
-			fprintf (stderr, "|  ");		/* Print preceding spaces */
+			print_err_msg (stderr, "|  ");		/* Print preceding spaces */
 
-		fprintf(stderr, ">>> %s from %s", last_name, Classname(last_dtype));		/* Standard message for entering features */
+		print_err_msg(stderr, ">>> %s from %s", last_name, Classname(last_dtype));		/* Standard message for entering features */
 
 		if (last_dtype != last_origin)	/* Check if it is inherited... */
-			fprintf(stderr, " (%s)", Classname(last_origin));
+			print_err_msg(stderr, " (%s)", Classname(last_origin));
 	}
 
 	trace_call_level++;		/* Increase the call_level */
@@ -642,22 +644,22 @@ void stop_trace(char *name, int origin, int dtype)
 
 	trace_call_level--;		/* Decrease the call_level */
 
-	fprintf(stderr, "\n");
+	print_err_msg(stderr, "\n");
 
 	for (i = 0; i < trace_call_level; i++)
-		fprintf(stderr, "|  ");		/* Print preceding spaces */
+		print_err_msg(stderr, "|  ");		/* Print preceding spaces */
 
 	if ((strcmp(last_name, name) == 0) && (last_dtype == dtype) && (last_origin == origin)) {
-		fprintf(stderr, "---");
+		print_err_msg(stderr, "---");
 		last_dtype = -1;
 	} else {
-		fprintf(stderr, "<<<");
+		print_err_msg(stderr, "<<<");
 	}
 
-	fprintf(stderr, " %s from %s", name, Classname(dtype));		/* Standard message for leaving features */
+	print_err_msg(stderr, " %s from %s", name, Classname(dtype));		/* Standard message for leaving features */
 
 	if (dtype != origin)	/* Check if it is inherited... */
-		fprintf(stderr, " (%s)", Classname(origin));
+		print_err_msg(stderr, " (%s)", Classname(origin));
 }
 
 struct prof_info* prof_stack_pop(void)

@@ -11,58 +11,56 @@ class
 	CMD_ED_HOLE
 
 inherit
-
 	EDIT_BUTTON
 		redefine
-			process_command, process_instance,
-			compatible, make
-		end;
+			make
+		end
 
 creation
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-    make (a_parent: COMPOSITE) is
-        do
-            Precursor (a_parent)
-        end
+	make (par: EV_CONTAINER) is
+		local
+			cmd: EV_ROUTINE_COMMAND
+		do
+			{EDIT_BUTTON} Precursor (par)
+			create cmd.make (~create_editor)
+			add_pnd_command (Pnd_types.command_type, cmd, Void)
+			add_pnd_command (Pnd_types.instance_type, cmd, Void)
+		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.command_pixmap
-		end;
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.command_type
-		end;
+feature {CMD_ED_HOLE} -- Pick and Drop
 
-	compatible (st: STONE): BOOLEAN is
+	create_editor (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+		local
+--			cmd: CMD
+--			cmd_inst: CMD_INSTANCE
 		do
-			Result :=
-				st.stone_type = Stone_types.command_type or else
-				st.stone_type = Stone_types.instance_type
-		end;
+--			cmd ?= ev_data.data
+--			if cmd /= Void then
+--				cmd.create_editor
+--			else
+--				cmd_inst ?= ev_data.data
+--				cmd_inst.create_editor
+--			end
+		end
 
-	process_command (dropped: CMD_STONE) is
-		do
-			dropped.data.create_editor
-		end;
-
-	process_instance (dropped: CMD_INST_STONE) is
-		do
-			dropped.data.create_editor
-		end;
-
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.command_type_label)
-		end;
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.command_type_label)
+--		end
 
 	create_empty_editor is
 		do
 			window_mgr.display (window_mgr.command_tool)	
-		end;
+		end
+ 
+end -- class CMD_ED_HOLE
 
-end

@@ -270,6 +270,7 @@ feature {NONE} -- Implementation : WEL features
 			-- command of the item if necessary.
 		local
 			last, actual: EV_LIST_ITEM_IMP
+			actual_index: INTEGER
 		do
 			-- A local variable for speed
 			last := last_selected_item
@@ -294,6 +295,7 @@ feature {NONE} -- Implementation : WEL features
 			else
 				if selected then
 					actual := ev_children @ (selected_index + 1)
+					actual_index := interface.index_of (actual.interface, 1)
 						-- Get the selected item.
 					if last /= Void and then last /= actual then
 							-- If there was a previously selected item, different
@@ -310,7 +312,19 @@ feature {NONE} -- Implementation : WEL features
 						interface.select_actions.call ([selected_index + 1, actual.interface])
 						actual.interface.select_actions.call ([])
 					end
-					last_selected_item := ev_children @ (selected_index + 1)
+					if selected then
+						-- Check that the user has not done something that may have
+						-- unselected and item.
+						last_selected_item := ev_children @ (selected_index + 1)
+					else
+						-- If so then there will be no last selected item, and we need
+						-- to call the deselect actions.
+						if actual /= Void then
+								-- We check that `actual' has not been destroyed during the agent call.
+							actual.interface.deselect_actions.call ([])
+						end
+						interface.deselect_actions.call ([actual_index, actual.interface])
+					end
 				else
 						-- Call the deselect events on the previously selected item.
 					last_selected_item := Void
@@ -519,6 +533,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/02/25 21:41:12  rogers
+--| In on_lbn_selchange, added code to handle the possibility of an item being destroyed within an action sequence.
+--|
 --| Revision 1.39  2000/02/25 00:34:41  rogers
 --| Clear selection, will only now call on_lbn_selchange when not in multiple_selection mode when there was an item selected. Fixes bug where an attempt to call the events on last_selected_item when it is Voidlast.interface.deselect_actions.call ([])
 --|

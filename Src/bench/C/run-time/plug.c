@@ -322,16 +322,11 @@ int where;		/* Invariant is being checked before or after compound? */
 char *(*dispose_routine(type))()
 uint32 type;
 {
-	/* Dispose routine associated with type `type'.
-	 * Return 0 if does not exist
+	/* Does dynamic type `type' have a dispose_routine ?
 	 */
 
-	uint32 dispose_id;
-
-	dispose_id = esystem[type].dispose_id;
-	
-	if (dispose_id)
-		return wdisp(dispose_id);	/* Has dispose */
+	if (esystem[type].cn_disposed)
+		return wdisp (type); 	/* Has dispose */
 	else
 		return 0;
 }
@@ -353,8 +348,8 @@ uint32 type;							/* Dynamic type */
 	feature_id = exp_desc->cn_creation_id;
 	static_id = exp_desc->static_id;	
 	if (feature_id)
-		callexp(result, feature_id, static_id);	/* Call creation routine */
-
+		wexp(static_id, feature_id, type, result);
+										/* Call creation routine */
 	return result;
 }
 
@@ -404,8 +399,8 @@ char *parent;	/* Parent (enclosing object) */
 			struct cnode *exp_desc;			/* Expanded object description */
 			long offset;					/* Attribute offset */
 			int exp_dtype;					/* Expanded dynamic type */
-			int32 feature_id;				/* Creation procedure feature id */		
-			int32 static_id;				/* Creation procedure feature id */
+			int32 feature_id;				/* Creation procedure feature id */
+			int32 static_id;				/* Static id of expanded object */ 
 
 			CAttrOffs(offset,cn_attr[i],dtype);
 			exp_dtype = (int) (type & SK_DTYPE);
@@ -421,8 +416,10 @@ char *parent;	/* Parent (enclosing object) */
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
 
-			if (feature_id)
-				callexp(l[0] + offset, feature_id, static_id);
+			if (feature_id) {
+					wexp(static_id, feature_id, exp_dtype, l[0] + offset);
+					}
+										/* Call creation routine */
 
 			/* If expanded object is composite also, initialize it. */
 			if (System(exp_dtype).cn_composite)

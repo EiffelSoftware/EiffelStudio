@@ -70,7 +70,6 @@ extern struct item *opop();			/* Remove value from operational stack */
 extern struct item *otop();			/* Top of the stack */
 extern struct item *ivalue();		/* Value request from current routine */
 extern void sync_registers();		/* Resynchronize registers on routine */
-extern void callexp();				/* Call creation routine of expanded */
 
 /* Requesting values via ivalue() */
 #define IV_LOCAL	0				/* Nth local wanted */
@@ -193,5 +192,10 @@ extern struct opstack op_stack;		/* Operational stack */
 #define BC_ADD_STRIP		102
 #define BC_END_STRIP		103
 #define BC_LBIT_ASSIGN		104
+#define BC_RAISE_PREC		105
+#define BC_GOTO_BODY		106
+#define BC_NOT_REC			107
+#define BC_END_PRE			108
+#define BC_END_FST_PRE		109
 
 #endif

@@ -323,6 +323,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	struct stchunk *h_cur;			/* Current hector stack chunk */
 	int assert_type;				/* Assertion type */
 	int is_extern = 0;				/* External flag for featue call */
+	char pre_success;				/* Flag for precondition success */ 
 	long rtype;						/* Result type */
 	char *once_done = (char *) 0;	/* Address of the once mark */
 	char *rvar;						/* Result address for once */
@@ -437,7 +438,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			switch (last->type & SK_HEAD) {
 			case SK_EXP:
 				epush(&loc_stack, &ref);
-				last->it_ref = RTLX(get_short());
+				last->it_ref = RTLN(get_short());
 				epop(&loc_stack, 1);
 				last->type = SK_EXP;
 				ecopy(ref, last->it_ref);
@@ -509,6 +510,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			 * through creation procedure of expanded attributes.
 			 */
 			for (i = 1; i <= locnum; i++) {
+
 				last = loc(i);
 				type = last->type;
 				switch (type & SK_HEAD) {
@@ -517,8 +519,8 @@ int where;			/* Are we checking invariant before or after compound? */
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_ref = RTLX(type & SK_DTYPE);
 					last->type = SK_EXP;	
-					/*if (tagval != stagval) this is done in callexp()
-						sync_registers(scur, stop);*/
+					if (tagval != stagval) 
+						sync_registers(scur, stop);
 					break;
 				case SK_BIT:
 					last->type = SK_POINTER;	/* GC: wait for malloc */
@@ -535,7 +537,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			case SK_EXP:
 				stagval = tagval;
 				last->type = SK_POINTER;		/* For GC */
-				last->it_ref = RTLN(type & SK_DTYPE);	
+				last->it_ref = RTLX(type & SK_DTYPE);	
 				last->type = SK_EXP;
 				if (tagval != stagval)
 					sync_registers(scur, stop);
@@ -621,6 +623,8 @@ end:
 			IC += offset;						/* Skip preconditions */
 		else if (is_nested)
 			icheck_inv(icurrent->it_ref, scur, stop, 0);	/* Invariant */
+
+		pre_success = '\01';
 		break;
 
 	/*
@@ -924,6 +928,7 @@ end:
 			else
 				RTIS(icurrent->it_ref);
 			break;
+		case BC_NOT_REC: break;		/* Do not record assertion */
 		default:
 			panic("invalid tag opcode");
 			/* NOTREADCHED */
@@ -937,12 +942,76 @@ end:
 #ifdef DEBUG
 		dprintf(2)("BC_END_ASSERT\n");
 #endif
-		code = (int) opop()->it_char;	/* Get the assertion boolean result */
+		code = (int) opop()->it_char;	/* Get the assertion 
+										 * boolean result 
+										 */
 		if (code)
 			RTCK;				/* Assertion success */
 		else
 			RTCF;				/* Assertion failure */
 		break;
+
+	/*
+	 * End of precondition in the first block.
+	 */
+	case BC_END_FST_PRE:
+#ifdef DEBUG
+		dprintf(2)("BC_END_FST_PRE\n");
+#endif
+		code = (int) opop()->it_char;	
+									/* Get the assertion boolean result */
+
+		if (pre_success)			/* Was previous precondition a success? */
+			if (!code) 
+				pre_success = '\0';
+			else
+				RTCK;
+		else
+			RTCK;
+		break;
+
+	/*
+	 * Remove precondition exception. 
+	 */
+	case BC_END_PRE:
+#ifdef DEBUG
+		dprintf(2)("BC_END_PRE\n");
+#endif
+		code = (int) opop()->it_char;	
+									/* Get the assertion boolean result */
+		if (pre_success)    		/* Was previous precondition a success? */
+			if (!code)
+				pre_success = '\0';
+		break;
+
+	/*
+	 * Raise exception. 
+	 */
+	case BC_RAISE_PREC:
+#ifdef DEBUG
+		dprintf(2)("BC_RAISE_PREC\n");
+#endif
+		RTCF;
+		break;
+
+	/*
+	 * Go to the body of the routine 
+	 */
+	case BC_GOTO_BODY:
+#ifdef DEBUG
+		dprintf(2)("BC_GOTO_BODY\n");
+#endif
+		{
+			offset = get_long(); 	/* Get offset to skip remaining 
+									 * chained assertions.
+									 */
+			if (pre_success) 
+				IC += offset;		/* Go to the body of routine */
+			else
+				pre_success = '\0';
+									/* Reset success for next block */
+			break;
+		}
 
 	/*
 	 * End of loop variant.
@@ -2523,23 +2592,6 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-public void callexp(object, fid, stype)
-char *object;
-int fid;			/* Feature ID of expanded creation routine */
-int stype;			/* Static type of expanded */
-{
-	/* This calls the creation routine of the expanded class */
-	struct item *stop;              /* To save stack context */
-	struct item *last;              /* To save stack context */
-	struct stochunk *scur;          /* Current chunk (stack context) */
-
-	last = iget();					/* Get last item from stack */
-	last->it_ref = object;				/* Put item in stack */
-	last->type = SK_REF;
-	if (icall(fid, stype, 0))
-		sync_registers(scur, stop);
-}
-
 private void access(fid, stype, type)
 int fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
@@ -4002,6 +4054,9 @@ char *start;
 			case BC_NOTAG:				/* No assertion tag */
 				tag = "";
 				break;
+			case BC_NOT_REC:			/* Do nothing */
+				tag = "TAG NOT RECORDED";
+				break;
 			default:
 				tag = "UNKNOWN";
 				break;
@@ -4009,6 +4064,33 @@ char *start;
 			fprintf(fd, "0x%X %s %s, \"%s\"\n", start,
 				"BC_ASSERT", string, tag);
 		}
+		break;
+
+	/*
+	 * End of precondition in first block.
+	 */
+	case BC_END_FST_PRE:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_FST_PRE");
+
+	/*
+	 * End of precondition.
+	 */
+	case BC_END_PRE:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_PRE");
+		break;
+
+	/*
+	 * Raise precondition violation 
+	 */
+	case BC_RAISE_PREC:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_RAISE_PREC");
+		break;
+
+	/*
+	 * Go to the body of the routine. 
+	 */
+	case BC_GOTO_BODY:
+		fprintf(fd, "0x%X %s\n", IC - 1, "BC_GOTO_BODY");
 		break;
 
 	/*

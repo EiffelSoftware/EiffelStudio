@@ -147,7 +147,9 @@ extern int fcount;
  *  RTCT(t,x) next assertion has tag 't' and is of type 'x'
  *  RTCS(x) new stack frame of type 'x'
  *  RTCK signals successful end of last assertion check
+ *  RTJB goto body 
  *  RTCF signals failure during last assertion check
+ *  RTTE tests assertion 
  *	RTIT(t,x) next invariant assertion has tag 't' and is of type 'x'
  *	RTIS(x) new stack invariant frame of type 'x'
  *  RTVR(x,y) check if call of feature 'y' on 'x' is done on a void reference
@@ -158,6 +160,8 @@ extern int fcount;
 #define RTCF eviol()
 #define RTIT(t,x) exinv(t, x)
 #define RTIS(x) exinv((char *) 0, x)
+#define RTTE(x,y) if (!(x)) goto y 
+#define RTJB goto body
 #ifdef WORKBENCH
 #define RTVR(x,y) if ((x) == (char *) 0) eraise(y, EN_VOID)
 #endif

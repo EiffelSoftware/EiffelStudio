@@ -46,7 +46,7 @@ struct cnode {
 	char cn_composite;			/* is the class type a composite one ? */
 	int32 cn_creation_id;		/* Creation feature id for expanded types */
 	int32 static_id;			/* Static id of class (used for expanded types) */
-	int32 dispose_id;			/* Dispose routine id */
+	int32 cn_disposed;			/* Does class type have a dispose routine? */ 
 	int32 *cn_routids;   		/* Pointer on routine id array */
 	struct ctable cn_cecil;		/* Cecil hash table */
 #else

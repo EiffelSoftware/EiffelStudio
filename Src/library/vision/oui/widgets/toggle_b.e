@@ -62,7 +62,18 @@ feature {NONE} -- Creation
 			set_default
 		end; 
 
-feature -- Calllbacks (adding and removing)
+feature -- Access
+
+	is_parent_menu_pull: BOOLEAN is
+			-- Is `parent' a menu pull?
+		local
+			a_menu_pull: MENU_PULL
+		do
+			a_menu_pull ?= parent;
+			Result := a_menu_pull /= Void
+		end;
+
+feature -- Element change
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when value
@@ -85,6 +96,20 @@ feature -- Calllbacks (adding and removing)
 		do
 			add_value_changed_action (a_command, argument)
 		end;
+
+	set_accelerator_action (a_translation: STRING) is
+            -- Set the accerlator action (modifiers and key to use as a shortcut
+            -- in selecting a button) to `a_translation'.
+            -- `a_translation' must be specified with the X toolkit conventions.
+		require
+			exists: not destroyed;
+			translation_not_void: a_translation /= Void;
+			parent_is_menu_pull: is_parent_menu_pull
+		do
+			implementation.set_accelerator_action (a_translation)
+		end;
+
+feature -- Removal
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' with `argument' from the list of action 

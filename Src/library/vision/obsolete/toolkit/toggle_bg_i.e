@@ -11,7 +11,21 @@ inherit
 
 	TOGGLE_B_I
 
-feature
+feature -- Element change
+
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
+		do
+		end
+
+feature -- Removal
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
+		do
+		end
 
 end --class TOGGLE_BG_I
 

@@ -17,6 +17,7 @@ inherit
 		redefine
 			class_name,
 			default_style,
+			has_selection,
 			set_selection,
 			selection_start,
 			selection_end,
@@ -110,6 +111,12 @@ feature -- Status report
 			!! Result.make_empty
 			cwin_send_message (item, Em_exgetsel, 0,
 				Result.to_integer)
+		end
+
+	has_selection: BOOLEAN is
+			-- Has a current selection?
+		do
+			Result := selection_start /= selection_end
 		end
 
 	default_character_format: WEL_CHARACTER_FORMAT is

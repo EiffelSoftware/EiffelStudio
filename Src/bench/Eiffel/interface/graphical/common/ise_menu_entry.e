@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class MENU_ENTRY feature
+deferred class ISE_MENU_ENTRY feature
 
 feature {NONE} -- Initialization
 
@@ -25,13 +25,12 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	associated_command: ICONED_COMMAND;
+	associated_command: COMMAND;
 			-- The associated command.
 
 	entry_text: STRING is
 			-- Text as displayed on the button.
-		do
-			Result := associated_command.name
+		deferred
 		end;
 
 	insensitive: BOOLEAN is

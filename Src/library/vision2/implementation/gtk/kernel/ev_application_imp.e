@@ -68,23 +68,23 @@ feature {NONE} -- Initialization
 			end
 			gtk_init
 			C.gdk_rgb_init
-			
-			-- Initialize the marshal object.
-			create gtk_marshal
-			
+		
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)
 
 			tooltips := C.gtk_tooltips_new
 			set_tooltip_delay (500)
 			create window_oids.make
+			
+			-- Initialize the marshal object.
+			create gtk_marshal
 		end
 
 	launch is
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-			c_ev_gtk_callback_marshal_delayed_agent_call (
+			gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
 				0,
 				(interface.post_launch_actions)~call ([])
 			)
@@ -365,7 +365,7 @@ feature -- Implementation
 		do
 			if internal_idle_actions_connection_id = 0 then
 				internal_idle_actions_connection_id :=
-					c_ev_gtk_callback_marshal_idle_connect (
+					gtk_marshal.c_ev_gtk_callback_marshal_idle_connect (
 						internal_idle_actions~call ([]) 
 					)
 			end
@@ -393,20 +393,6 @@ feature -- Implementation
 		end
 		
 feature -- External implementation
-
-	c_ev_gtk_callback_marshal_delayed_agent_call
-				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Call `an_agent' after `a_delay'.
-		external
-			"C (gint, EIF_OBJECT) | %"gtk_eiffel.h%""
-		end
-
-	c_ev_gtk_callback_marshal_idle_connect
-				(an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
-			-- Call `an_agent' when idle.
-		external
-			"C (EIF_OBJECT): guint | %"gtk_eiffel.h%""
-		end
 
 	usleep (micro_seconds: INTEGER) is
 		external

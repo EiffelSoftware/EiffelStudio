@@ -11,34 +11,48 @@ class
 
 inherit
 
-	MEL_TEXT
-		redefine
-			make, clean_up
+	MEL_SCROLLED_TEXT_RESOURCES
+		export
+			{NONE} all
 		end;
 
-	MEL_SCROLLED_TEXT_RESOURCES
+	MEL_TEXT
+		rename
+			make as text_make,
+			make_from_existing as text_make_from_existing
+		export
+			{NONE} text_make, text_make_from_existing
+		redefine
+			parent, clean_up
+		end;
 
 creation 
 	make,
 	make_detailed
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif scrolled text.
+		require
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
-			screen_object := xm_create_scrolled_text (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
-			text_widget := Current;
-			!! scrolled_window.make_from_existing (xt_parent (screen_object));
+			screen_object := xm_create_scrolled_text 
+				(a_parent.screen_object, $widget_name, default_pointer, 0);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name);
 		end;
 
 	make_detailed (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN;
@@ -47,36 +61,48 @@ feature {NONE} -- Initialization
 			-- scroll bar at the top or bottom, eventual appearing vertical scroll bar
 			-- at the left or right.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_text_detailed (a_parent.screen_object,
 								$widget_name, scroll_hor, scroll_vert, scroll_top, scroll_left);
-			Mel_widgets.put (Current, screen_object);
-			text_widget := Current;
-			!! scrolled_window.make_from_existing (xt_parent (screen_object));
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default;
 		   	if do_manage then
 				manage
 			end
 		ensure
 			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name);
 			scroll_horizontal_set: is_scroll_horizontal = scroll_hor;
 			scroll_vertical_set: is_scroll_vertical = scroll_vert;
 			scroll_top_side_set: is_scroll_top_side = scroll_top;
 			scroll_left_side_set: is_scroll_left_side = scroll_left
 		end;
 
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+			-- Create a motif widget from an existing widget.
+		require
+			valid_a_screen_object: a_screen_object /= default_pointer;
+			valid_parent: a_parent /= Void
+		do
+			!! parent.make_from_existing (xt_parent (a_screen_object),
+				a_parent);
+			screen_object := a_screen_object;
+			Mel_widgets.add (Current);
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent
+		end
+
 feature -- Access
 
-	text_widget: MEL_TEXT;
-			-- Text widget
-
-	scrolled_window: MEL_SCROLLED_WINDOW;
+	parent: MEL_SCROLLED_WINDOW;
 			-- Scrolled window
 
 feature -- Status report
@@ -113,13 +139,12 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNscrollLeftSide)
 		end;
 
-feature -- Removal
+feature {NONE} -- Implementation
 
 	clean_up is
-			-- Destroy the widget.
+			-- Clean up the object.
 		do
-			object_clean_up;
-			scrolled_window.object_clean_up
+			parent.clean_up;
 		end;
 
 feature {NONE} -- Implementation

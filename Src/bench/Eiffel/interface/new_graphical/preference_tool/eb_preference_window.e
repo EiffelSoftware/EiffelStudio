@@ -28,10 +28,8 @@ feature {NONE} -- Initialization
 			-- Create the widgets and show Current on the screen.
 		do
 			Precursor (par)
-			set_size (500, 550)
-			forbid_resize
-
-			Create tool.make (Current, Current)
+--			forbid_resize
+			Create tool.make (Current)
 
 			initialize_main_menu
 
@@ -44,12 +42,10 @@ feature {NONE} -- Initialization
 			-- used only for debugging
 		do
 			Precursor
-			Create tool.make (Current, Current)
+			Create tool.make (Current)
 
 			initialize_main_menu
 --			forbid_resize
-
-			set_size (500, 550)
 
 		ensure then
 			created: not destroyed
@@ -68,19 +64,19 @@ feature {NONE} -- Initialization
 			Create file_menu.make_with_text (menu_bar, "Commands")
 
 			Create i.make_with_text (file_menu, m_Validate)
-			i.add_activate_command (tool.validate_cmd, Void)
+			i.add_select_command (tool.validate_cmd, Void)
 
 			Create i.make_with_text (file_menu, m_Save)
-			i.add_activate_command (tool.save_cmd, Void)
+			i.add_select_command (tool.save_cmd, Void)
 
 			Create i.make_with_text (file_menu, m_Ok)
-			i.add_activate_command (tool.ok_cmd, Void)
+			i.add_select_command (tool.ok_cmd, Void)
 
 			Create i.make_with_text (file_menu, m_Apply)
-			i.add_activate_command (tool.apply_cmd, Void)
+			i.add_select_command (tool.apply_cmd, Void)
 
 			Create i.make_with_text (file_menu, m_Exit)
-			i.add_activate_command (tool.exit_cmd, Void)
+			i.add_select_command (tool.close_cmd, Void)
 
 			Create panel_menu.make_with_text (menu_bar, "Categories")
 
@@ -103,19 +99,22 @@ feature {NONE} -- Initialization
 
 		end
 
+feature -- Access
+
+	tool: EB_PREFERENCE_TOOL
+			-- the preference tool
 
 feature -- Display
 
 	close is
+		obsolete
+			"use hide or destroy"
 			-- Close Current
 		do
 			hide
 		end
 
 feature {NONE} -- Properties
-
-	tool: EB_PREFERENCE_TOOL
-			-- the preference tool
 
 	file_menu,
 			-- The file menu

@@ -2661,14 +2661,12 @@ rt_public char *eename(long ex)
 {
 	/* Return the english description for exeception `ex' */
 
-	EIF_GET_CONTEXT
 	char *e_string;
 
 	if (eedefined(ex) == (char) 1){
 		e_string = exception_string(ex);
 		return makestr(e_string, strlen(e_string));
 	}
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eecatch(EIF_CONTEXT long ex)		/* %%zmt never called in C dir. */

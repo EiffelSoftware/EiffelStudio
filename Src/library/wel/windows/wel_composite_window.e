@@ -16,10 +16,16 @@ inherit
 			move,
 			process_message,
 			on_wm_destroy,
+			on_wm_notify,
 			destroy
 		end
 
 	WEL_GW_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_WM_CTLCOLOR_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -588,6 +594,20 @@ feature -- Messages
 
 feature {NONE} -- Implementation
 
+	on_wm_notify (wparam, lparam: INTEGER) is
+			-- Wm_notify message
+		local
+			info: WEL_NMHDR
+			tab: WEL_TAB_CONTROL
+		do
+			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_notify (wparam, info)
+			tab ?= info.window_from
+			if tab /= Void and then tab.exists then
+				tab.process_notification (info.code)
+			end
+		end
+
 	on_wm_command (wparam, lparam: INTEGER) is
 			-- Wm_command message.
 			-- Dispatch a Wm_command message to
@@ -786,6 +806,33 @@ feature {NONE} -- Implementation
 			on_window_pos_changing (wp)
 		end
 
+	on_wm_color (wparam, lparam: INTEGER): INTEGER is
+			-- Common routine for Wm_ctlcolor messages.
+		require
+			exists: exists
+		local
+			control: WEL_COLOR_CONTROL
+			hwnd_control: POINTER
+			paint_dc: WEL_PAINT_DC
+			brush: WEL_BRUSH
+		do
+			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
+			if hwnd_control /= default_pointer then
+				control ?= windows.item (hwnd_control)
+				if control /= Void then
+					if control.exists then
+						!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+						paint_dc.set_text_color (control.foreground_color)
+						paint_dc.set_background_color (control.background_color)
+						!! brush.make_solid (control.background_color)
+						Result := brush.to_integer
+						disable_default_processing
+						paint_dc.release
+					end
+				end
+			end
+		end
+
 	on_wm_close is
 			-- Wm_close message.
 			-- If `closeable' is False further processing is halted.
@@ -828,6 +875,16 @@ feature {WEL_DISPATCHER}
 
 			if msg = Wm_paint then
 				on_wm_paint (wparam)
+			elseif msg = Wm_ctlcolorstatic then
+				Result := on_wm_color (wparam, lparam)
+			elseif msg = Wm_ctlcolorbtn then
+				Result := on_wm_color (wparam, lparam)
+			elseif msg = Wm_ctlcoloredit then
+				Result := on_wm_color (wparam, lparam)
+			elseif msg = Wm_ctlcolorlistbox then
+				Result := on_wm_color (wparam, lparam)
+			elseif msg = Wm_ctlcolorscrollbar then
+				Result := on_wm_color (wparam, lparam)
 			elseif msg = Wm_command then
 				on_wm_command (wparam, lparam)
 			elseif msg = Wm_syscommand then

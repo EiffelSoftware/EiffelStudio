@@ -237,6 +237,27 @@ MTidr_opaque.o: idr_opaque.c
 
 MTidr_long.o: idr_long.c
 	$(CC) -c 	$(JMTCFLAGS)  	$? -o $@
+WOBJ = \
+	idr_double.o \
+	idr_float.o \
+	idr_array.o \
+	idr_getpos.o \
+	idr_opaque.o \
+	idr_poly.o \
+	idr_read.o \
+	idr_short.o \
+	idr_size.o \
+	idr_stack.o \
+	idr_string.o \
+	idr_uchar.o \
+	idr_uint.o \
+	idr_union.o \
+	idr_ushort.o \
+	idr_vector.o \
+	idr_void.o \
+	idr_write.o \
+	idrf_dstry.o \
+	idrm_dstry.o 
 
 LOBJ = \
 	idr_double.o \
@@ -268,7 +289,15 @@ LOBJ = \
 	idrm_creat.o \
 	idrm_dstry.o 
 
-all:: libidr.a
+all:: libidr.a libwkidr.a
+local_realclean::
+	$(RM) libwkidr.a
+
+libwkidr.a: $(WOBJ)
+	$(RM) $@
+	$(AR) $@ $(WOBJ)
+	$(RANLIB) $@
+
 
 local_realclean::
 	$(RM) libidr.a

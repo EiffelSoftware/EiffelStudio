@@ -555,7 +555,7 @@ feature -- Basic Operations
 			overload_count_increased: overload_count = old overload_count + 1
 		end
 		
-feature {FEATURES_LISTER} -- Element settings
+feature {COMPLETION_HELPERS} -- Element settings
 
 	set_name (a_name: like internal_name) is
 			-- Set `name' with `a_name'.

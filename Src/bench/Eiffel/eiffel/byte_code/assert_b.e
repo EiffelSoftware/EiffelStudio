@@ -86,10 +86,10 @@ feature
 			-- Generate a success in assertion
 		do
 			generated_file.new_line;
-            generated_file.indent;
-            generated_file.putstring ("RTCK;");
-            generated_file.new_line;
-            generated_file.exdent;
+			generated_file.indent;
+			generated_file.putstring ("RTCK;");
+			generated_file.new_line;
+			generated_file.exdent;
 		end;
 
 	generate_failure is
@@ -142,20 +142,20 @@ feature
 				-- Assertion mark
 			ba.append (Bc_assert);
 			inspect
-                context.assertion_type
-            when In_precondition then
+				context.assertion_type
+			when In_precondition then
 				make_precondition_byte_code (ba);
-            when In_postcondition then
-    			ba.append (Bc_pst);
-            when In_check then
-                ba.append (Bc_chk);
-            when In_loop_invariant then
-                ba.append (Bc_linv);
-            when In_loop_variant then
-                ba.append (Bc_lvar);
-            when In_invariant then
-                ba.append (Bc_inv);
-            end;
+			when In_postcondition then
+				ba.append (Bc_pst);
+			when In_check then
+				ba.append (Bc_chk);
+			when In_loop_invariant then
+				ba.append (Bc_linv);
+			when In_loop_variant then
+				ba.append (Bc_lvar);
+			when In_invariant then
+				ba.append (Bc_inv);
+			end;
 			if context.assertion_type /= In_precondition then
 				if tag = Void then
 					ba.append (Bc_notag);
@@ -170,20 +170,20 @@ feature
 				ba.append (byte_for_end);
 			end;
 		end;
-            
+			
 	make_precondition_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a precondition
 		do
-            ba.append (Bc_pre);
+			ba.append (Bc_pre);
 			if not context.is_prec_first_block then
-                ba.append (Bc_not_rec);
+				ba.append (Bc_not_rec);
 			elseif tag = Void then
 				ba.append (Bc_notag);
 			else
 				ba.append (Bc_tag);
 				ba.append_raw_string (tag);
 			end;
-			-- Assertion byte code
+				-- Assertion byte code
 			expr.make_byte_code (ba);
 			if context.is_prec_first_block then
 				ba.append (Bc_end_first_pre);

@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 				i := 1
 				line_count := 1
 			until
-			i = count
+			i >= count
 			loop
 				if item (i) = '%N' then
 					if item(i+1) = '%R' then

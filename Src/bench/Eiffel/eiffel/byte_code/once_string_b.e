@@ -69,8 +69,12 @@ feature -- Properties
 	is_simple_expr: BOOLEAN is True
 			-- A string is a simple expression
 
-	allocates_memory: BOOLEAN is True
-			-- Current always allocates memory.
+	allocates_memory: BOOLEAN is
+			-- Does the expression allocates memory?
+		do
+				-- Current always allocates memory
+			Result := True
+		end
 
 feature -- Settings
 

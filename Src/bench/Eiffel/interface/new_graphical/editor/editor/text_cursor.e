@@ -311,7 +311,7 @@ feature -- Comparison
 		do
 			Result := (y_in_lines < other.y_in_lines) or else
 				((y_in_lines = other.y_in_lines) and then (x_in_pixels < other.x_in_pixels and then
-												not (token = other.token) and then (pos_in_token = other.pos_in_token)))
+												((token /= other.token) or else (pos_in_token /= other.pos_in_token))))
 				--| We have to verify that Current and `other' are not equal.
 		end
 
@@ -373,6 +373,7 @@ feature -- Transformation
 
 	insert_string (s: STRING) is
 			-- Insert `s' in text, at Current position.
+			-- Leave Current pointing at the first non inserted character.
 		require
 			s_valid: s /= Void and then not s.empty
 		local
@@ -380,6 +381,7 @@ feature -- Transformation
 			t: EDITOR_TOKEN
 			cline, new_line: EDITOR_LINE
 			i,j : INTEGER
+			end_pos: INTEGER
 		do
 			update_x_in_pixels
 			aux := clone (s)
@@ -413,6 +415,7 @@ feature -- Transformation
 			i := aux.index_of ('%N', 1)
 			if i = 0 then
 						-- No eol insertion.
+					end_pos := x_in_characters + aux.count
 					whole_text.lexer.execute (first_image + aux + last_image)
 					line.make_from_lexer (whole_text.lexer)
 			else
@@ -441,14 +444,12 @@ feature -- Transformation
 				end
 				whole_text.lexer.execute (aux.substring (i+1, aux.count) + last_image)
 				create new_line.make_from_lexer (whole_text.lexer)
-				cline.add_right (new_line)	
+				cline.add_right (new_line)
+				end_pos := aux.count - i + 1
+				set_line (cline.next)
 			end
-			update_current_char
+			set_x_in_characters (end_pos)
 		end
---| FIXME
---| Christophe, 3 Fev 2000
---| This feature will be moved to STRUCTURED_TEXT. it should set the string
---| selected, with the cursor at the end of the selection.
 
 	delete_char is
 		local

@@ -52,9 +52,9 @@ rt_public void esys(void)
 #else
 	if (errno == 0)					/* Function did not set errno? */
 #endif
-		xraise(MTC EN_EXT);				/* External event */
+		xraise(EN_EXT);				/* External event */
 
-	xraise(MTC EN_SYS);					/* Operating system error */
+	xraise(EN_SYS);					/* Operating system error */
 }
 
 rt_public void eio(void)
@@ -63,7 +63,7 @@ rt_public void eio(void)
 	 * I/O bound fails.
 	 */
 
-	xraise(MTC EN_IO);					/* I/O error */
+	xraise(EN_IO);					/* I/O error */
 }
 
 rt_public int get_errno(void)

@@ -6,6 +6,7 @@ inherit
 	SHARED_DEBUG;
 	OBJECT_ADDR;
 	SHARED_CONFIGURE_RESOURCES
+	EB_SHARED_DEBUG_TOOLS
 
 creation
 	
@@ -42,7 +43,9 @@ feature
 			status: APPLICATION_STATUS;	
 			e_cmd: E_CMD
 			retry_clause: BOOLEAN
-			
+			cse: CALL_STACK_ELEMENT
+			expr: EB_EXPRESSION
+			need_to_stop: BOOLEAN
 		do
 			if not retry_clause then
 				e_cmd := Application.before_stopped_command;
@@ -111,13 +114,41 @@ feature
 				end
 
 				if reason /= Pg_new_breakpoint then
-					e_cmd := Application.after_stopped_command
-					if e_cmd /= Void then
-						e_cmd.execute
+					need_to_stop := True
+					if reason = Pg_break then
+						status.where.extend (create {CALL_STACK_ELEMENT}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
+						Application.set_current_execution_stack (1)
+							-- Test if the breakpoint is conditional, and if so, its condition.
+						cse := Application.status.where.i_th (1)
+						expr := Application.condition (cse.routine, cse.break_index)
+						if expr /= Void then
+							expr.evaluate
+							if expr.error_message = Void then
+								need_to_stop := (expr.final_result_type.is_basic) and then
+												(expr.final_result_value.output_value.is_equal ("True"))
+							else
+								need_to_stop := False
+							end
+						end
 					end
-				
-					debug ("DEBUGGER_TRACE")
-						io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")
+					if need_to_stop then
+							-- Load the call stack.
+						Application.status.reload_call_stack
+						Application.set_current_execution_stack (Application.status.where.count)
+							-- Inspect the application's current state.
+						e_cmd := Application.after_stopped_command
+						if e_cmd /= Void then
+							e_cmd.execute
+						end
+					
+						debug ("DEBUGGER_TRACE")
+							io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")
+						end
+					else
+							-- Relaunch the application.
+						Cont_request.send_breakpoints
+						Application.status.set_is_stopped (False)
+						cont_request.send_rqst_2 (Rqst_resume, Resume_cont, Application.interrupt_number)
 					end
 				else
 						-- If the reason is Pg_new_breakpoint, the application sends the
@@ -196,4 +227,11 @@ feature {} -- parsing features
 			last_int := last_string.to_integer;
 		end;
 
+feature {NONE} -- Implementation
+
+	cont_request: EWB_REQUEST is
+			-- Request to relaunch the application when needed.
+		once
+			!! Result.make (Rqst_cont)
+		end
 end

@@ -193,6 +193,10 @@ feature
 			is_white_by_default
 		end
 
+invariant
+
+	valid_implementation: implementation /= Void
+
 end
 
 

@@ -102,6 +102,7 @@ enum
     DISPID_key_file_name,
     DISPID_working_directory,
     DISPID_Apply,
+    DISPID_last_exception,
 
     // IEiffelSystemClusters Dispatch ID's
     DISPID_cluster_tree,
@@ -117,16 +118,7 @@ enum
 
     // IEiffelSystemAssemblies Dispatch ID's
     DISPID_add_assembly,
-    DISPID_add_local_assembly,
-    DISPID_remove_assembly,
-    DISPID_assembly_properties,
-    DISPID_is_valid_cluster_name,
-    DISPID_contains_assembly,
-    DISPID_contains_gac_assembly,
-    DISPID_contains_local_assembly,
-    DISPID_cluster_name_from_gac_assembly,
-    DISPID_cluster_name_from_local_assembly,
-    DISPID_is_valid_prefix,
+    DISPID_wipe_out,
 
     // IEiffelClusterProperties Dispatch ID's
     DISPID_name,
@@ -192,19 +184,25 @@ enum
 typedef enum EIF_EXCEPTIONS
 {
     EIF_EXCEPTIONS_Unspecified = 0,
-    EIF_EXCEPTIONS_Successful = 1,
-    EIF_EXCEPTIONS_NoProjectLoaded = 2,
-    EIF_EXCEPTIONS_ProjectIncompatible = 3,
-    EIF_EXCEPTIONS_ProjectFileCorrupted = 4,
-    EIF_EXCEPTIONS_UnableToRemoveProject = 5,
-    EIF_EXCEPTIONS_UnableToCreateProject = 5,
-    EIF_EXCEPTIONS_InvalidAceFile = 7,
-    EIF_EXCEPTIONS_ProjectNotCompiled = 8,
-    EIF_EXCEPTIONS_AceFileDoesNotExists = 9,
-    EIF_EXCEPTIONS_ProjectAlreadyInitialized = 10,
-    EIF_EXCEPTIONS_ProjectIncomplete = 11,
-    EIF_EXCEPTIONS_IOError = 12,
-    EIF_EXCEPTIONS_NonDotnetProject = 13
+    EIF_EXCEPTIONS_Successful,
+    
+    // IEiffelProject Exceptions
+    EIF_EXCEPTIONS_NoProjectLoaded,
+    EIF_EXCEPTIONS_ProjectIncompatible,
+    EIF_EXCEPTIONS_ProjectFileCorrupted,
+    EIF_EXCEPTIONS_UnableToRemoveProject,
+    EIF_EXCEPTIONS_UnableToCreateProject,
+    EIF_EXCEPTIONS_InvalidAceFile,
+    EIF_EXCEPTIONS_ProjectNotCompiled,
+    EIF_EXCEPTIONS_AceFileDoesNotExists,
+    EIF_EXCEPTIONS_ProjectAlreadyInitialized,
+    EIF_EXCEPTIONS_ProjectIncomplete,
+    EIF_EXCEPTIONS_IOError,
+    EIF_EXCEPTIONS_NonDotnetProject,
+    
+    // IEiffelSystemAssemblies Exceptions
+    EIF_EXCEPTIONS_AssemblyAlreadyAdded,
+    EIF_EXCEPTIONS_InvalidAssemblyPrefix
 
 } EIF_EXCEPTIONS;
 //---------------------------------------------------------------------
@@ -1243,44 +1241,17 @@ interface IEiffelSystemClusters: IDispatch
 ]
 interface IEiffelSystemAssemblies: IDispatch
 {
+    [id (DISPID_wipe_out), helpstring ("Wipe out current list of assemblies")]
+    HRESULT wipe_out ();
+
+    [id (DISPID_add_assembly), helpstring ("Add an assembly to the project.")]
+    HRESULT add_assembly ([in] BSTR a_prefix, [in] BSTR a_cluster_name, [in] BSTR a_path, VARIANT_BOOL a_copy);
+
+    [id (DISPID_last_exception), helpstring ("Last execption to occur")]
+    HRESULT last_exception ([out, retval] IEiffelException** pException);
+
     [id (DISPID_store), helpstring ("Save changes.")]
     HRESULT store ();
-
-    [id (DISPID_add_assembly), helpstring ("Add a signed assembly to the project.")]
-    HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
-
-    [id (DISPID_add_local_assembly), helpstring ("Add a local assembly to the project.")]
-    HRESULT add_local_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_path);
-
-    [id (DISPID_remove_assembly), helpstring ("Remove an assembly from the project.")]
-    HRESULT remove_assembly ([in] BSTR assembly_identifier);
-
-    [id (DISPID_assembly_properties), helpstring ("Assembly properties.")]
-    HRESULT assembly_properties ([in] BSTR cluster_name, [out, retval] IEiffelAssemblyProperties ** return_value);
-
-    [id (DISPID_is_valid_cluster_name), helpstring ("Checks to see if a assembly cluster name is valid")]
-    HRESULT is_valid_cluster_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_contains_assembly), helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
-    HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_contains_gac_assembly), helpstring ("Checks to see if a signed assembly has already been added to the project")]
-    HRESULT contains_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_contains_local_assembly), helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
-    HRESULT contains_local_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_cluster_name_from_gac_assembly), helpstring ("Retrieves the cluster name for a signed assembly in the project")]
-    HRESULT cluster_name_from_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
-
-    [id (DISPID_cluster_name_from_local_assembly), helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
-    HRESULT cluster_name_from_local_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
-
-    [id (DISPID_is_valid_prefix), helpstring ("Is 'prefix' a valid assembly prefix")]
-    HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
-
-    [id (DISPID_assemblies), helpstring ("Returns all of the assemblies in an enumerator"), propget]
-    HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
 //---------------------------------------------------------------------
@@ -1383,7 +1354,6 @@ interface IEiffelClusterProperties: IDispatch
 //---------------------------------------------------------------------
 
 [
-    dual,
     object,
     uuid (UUID_IEiffelAssemblyProperties),
     helpstring ("Eiffel Assembly Properties (for Ace file).")

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_TEXT_CONTAINER_I
+	EV_TEXTABLE_I
 
 inherit
 	EV_ANY_I
@@ -47,7 +47,7 @@ feature -- Element change
 			set: text.is_equal (a_text)
 		end
 
-end -- class EV_TEXT_CONTAINER_I
+end -- class EV_TEXTABLE_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

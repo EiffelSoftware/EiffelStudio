@@ -220,16 +220,32 @@ feature -- Access
 
 feature -- Code generation
 
-	minimum_interval_value: INT_VAL_B is
+	minimum_interval_value: INTERVAL_VAL_B is
 			-- Minimum value in inspect interval for current type
 		do
-			create Result.make ((-1) |<< (size - 1))
+			if size = 64 then
+				create {NAT64_VAL_B} Result.make (0)
+			else
+				check
+					valid_size: size = 8 or size = 16 or size = 32
+				end
+				create {NAT_VAL_B} Result.make (0)
+			end
 		end
 
-	maximum_interval_value: INT_VAL_B is
+	maximum_interval_value: INTERVAL_VAL_B is
 			-- Maximum value in inspect interval for current type
 		do
-			create Result.make ((1 |<< (size - 1)) - 1)
+			inspect size
+			when 8 then
+				create {NAT_VAL_B} Result.make ({NATURAL_8}.max_value)
+			when 16 then
+				create {NAT_VAL_B} Result.make ({NATURAL_16}.max_value)
+			when 32 then
+				create {NAT_VAL_B} Result.make ({NATURAL_32}.max_value)
+			when 64 then
+				create {NAT64_VAL_B} Result.make ({NATURAL_64}.max_value)
+			end
 		end
 
 	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is

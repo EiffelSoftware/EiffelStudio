@@ -27,10 +27,7 @@ feature
 			Result := redeclared.conform_to (a_precursor);
 		end;
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN is True
 			-- Is the current class a basic class ?
-		do
-			Result := True;
-		end;
 
 end

@@ -154,12 +154,21 @@ feature -- Measurement
 
 feature -- Element change
 
-	remove_all_elements is
+	clear_items is
 			-- Remove all the elements of the combo-box.
+			-- XX Need to be reimplemented with the set_parent
+			-- XX feature.
 		do
-			check
-				not_yet_implemented: False
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.interface.remove_implementation
+				ev_children.forth
 			end
+			reset_content
+			ev_children.wipe_out
 		end
 
 feature -- Event : command association

@@ -36,6 +36,7 @@ feature -- Execution
 			mp.set_watch_shape
 			generate_interface
 			generate_command
+			generate_instance
 			mp.restore
 			object_tool_generator.close
 		end
@@ -72,6 +73,9 @@ feature -- Execution
 			Result.append (cl_name)
 			Result.append ("_object_cmd")	
 		end
+feature {NONE} -- Interface attribute
+
+	ok_push_b_c: PUSH_B_C
 
 feature -- Tool generation
 
@@ -80,7 +84,6 @@ feature -- Tool generation
 		local
 			height, width: INTEGER
 			a_query_editor_form: QUERY_EDITOR_FORM
-			a_push_b_c: PUSH_B_C
 		do
 			generate_permanent_window
 			form_list := object_tool_generator.form_table.linear_representation
@@ -99,11 +102,11 @@ feature -- Tool generation
 				end
 				form_list.forth
 			end
-			!! a_push_b_c
-			a_push_b_c := a_push_b_c.create_context (perm_wind)
-			a_push_b_c.set_x_y (0, height)
-			a_push_b_c.set_visual_name ("OK")
-			height := height + a_push_b_c.height
+			!! ok_push_b_c
+			ok_push_b_c := ok_push_b_c.create_context (perm_wind)
+			ok_push_b_c.set_x_y (0, height)
+			ok_push_b_c.set_visual_name ("OK")
+			height := height + ok_push_b_c.height
 			perm_wind.set_size (width, height)
 			perm_wind.set_x_y (0, 0)
 		end
@@ -131,6 +134,7 @@ feature -- Tool generation
 		do
 			!! generated_command.make
 			generated_command.set_internal_name ("")
+			generated_command.set_arguments (arguments)
 			generated_command.set_eiffel_text (generated_eiffel_text)
 			generated_command.set_visual_name (visual_command_name)
 			generated_command.overwrite_text
@@ -149,10 +153,58 @@ feature -- Tool generation
 			Result.append (end_class_clause)
 		end
 
+	generate_instance is
+			-- Generate an instance of the generated command.
+		local
+			generated_instance: CMD_INSTANCE
+		do
+			!! generated_instance.special_session_init (generated_command)
+			generated_instance.set_arguments (argument_instances)
+			ok_push_b_c.associate_instance (generated_instance)
+		end	
+
 feature {NONE} -- Code generation
 
 	generated_command: USER_CMD
 			-- Generated command
+
+ 	arguments: EB_LINKED_LIST [ARG] is
+ 			-- Widgets from the interface.
+ 		local
+			a_query_editor_form: QUERY_EDITOR_FORM
+		do
+ 			!! Result.make
+ 			from
+				form_list.start
+			until
+				form_list.after
+			loop
+				a_query_editor_form := form_list.item
+				if a_query_editor_form.managed then
+					Result.append (a_query_editor_form.arguments)
+				end
+				form_list.forth
+			end
+		end
+
+ 	argument_instances: EB_LINKED_LIST [ARG_INSTANCE] is
+ 			-- Widgets from the interface.
+ 		local
+			a_query_editor_form: QUERY_EDITOR_FORM
+		do
+ 			!! Result.make
+ 			from
+				form_list.start
+			until
+				form_list.after
+			loop
+				a_query_editor_form := form_list.item
+				if a_query_editor_form.managed then
+					Result.append (a_query_editor_form.argument_instances)
+				end
+				form_list.forth
+			end
+		end
 
 	indexing_clause: STRING is
 			-- Generate indexing clause.
@@ -160,7 +212,6 @@ feature {NONE} -- Code generation
 			class_name, routine_name: STRING
 		do
 			class_name := clone (application_class.class_name)
--- 			routine_name := clone (application_routine.routine_name)
 			!! Result.make (0)
 			Result.append ("indexing%N")
 			Result.append ("%Tdescription: %" Generated command used to change %%%N%T%T%T%T%% the queries of a ")
@@ -185,7 +236,7 @@ feature {NONE} -- Code generation
 			Result.append (class_name)
 			Result.append ("%N%Ninherit%N%N%TGENERATED_COMMAND [")
 			Result.append (application_class.class_name)
-			Result.append ("]%N%NWINDOWS%N%Ncreation%N%N%Tmake%N%Nfeature%N%N")
+			Result.append ("]%N%Ncreation%N%N%Tmake%N%Nfeature%N%N")
 		end
 
 
@@ -193,7 +244,9 @@ feature {NONE} -- Code generation
 			-- Generate feature `execute'.
 		local
 			a_query_editor_form: QUERY_EDITOR_FORM
+			counter: INT_GENERATOR
 		do
+			!! counter
 			!! Result.make (0)
 			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%T%N")
 			Result.append ("%T%Tlocal%N%T%T%Tprecondition: BOOLEAN%N%T%Tdo%N") 
@@ -202,9 +255,10 @@ feature {NONE} -- Code generation
 			until
 				form_list.after
 			loop
+				counter.next
 				a_query_editor_form := form_list.item
 				if a_query_editor_form.managed then
-					Result.append (a_query_editor_form.generate_eiffel_text (perm_wind.entity_name))
+					Result.append (a_query_editor_form.generate_eiffel_text (counter))
 				end
 				form_list.forth
 			end

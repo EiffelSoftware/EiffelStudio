@@ -87,11 +87,11 @@ feature {NONE} --GUI
 			menu_false_field.set_text ("No")
 			menu_false_field.set_width (115)
 			query_label.set_left_alignment
-			if object_tool_generator.precondition_test.state then
+--			if object_tool_generator.precondition_test.state then
 				test_toggle_b.arm
-			else	
-				test_text_field.set_insensitive
-			end
+--			else	
+--				test_text_field.set_insensitive
+--			end
 		end
 
 	attach_all is
@@ -439,6 +439,14 @@ feature {NONE} -- Attribute
 	default_choice: STRING_SCROLLABLE_ELEMENT
 			-- Default choice in the menu entries
 
+feature {NONE} -- Generated interface attributes
+
+	new_toggle_b_c, true_toggle_b_c, false_toggle_b_c: TOGGLE_B_C
+			-- Toggle buttons holding the value used to set `query'
+
+	new_opt_pull_c: OPT_PULL_C
+			-- Option pull menu holding the value used to set `query'	
+
 feature -- Interface generation
 
 	generate_interface_elements (base_x, base_y: INTEGER; a_perm_wind_c: PERM_WIND_C) is
@@ -447,8 +455,6 @@ feature -- Interface generation
 		local
 			new_label_c: LABEL_C
 			new_radio_box_c: RADIO_BOX_C
-			new_toggle_b_c, true_toggle_b_c, false_toggle_b_c: TOGGLE_B_C
-			new_opt_pull_c: OPT_PULL_C
 		do
  			if check_toggle_b.state then
 				!! new_toggle_b_c
@@ -510,7 +516,43 @@ feature -- Interface generation
 
 feature -- Command generation
 
-	generate_eiffel_text (parent_perm_wind: STRING): STRING is
+	arguments: EB_LINKED_LIST [ARG] is
+		   -- Generated widgets holding the value to set `query'.
+		local
+			arg: ARG
+		do
+			!! Result.make
+			if new_toggle_b_c /= Void then
+				!! arg.session_init (new_toggle_b_c.type)
+				Result.extend (arg)
+			elseif true_toggle_b_c /= Void then
+				!! arg.session_init (true_toggle_b_c.type)
+				Result.extend (arg)
+			else
+				!! arg.session_init (new_opt_pull_c.type)
+				Result.extend (arg)
+			end	
+		end
+
+	argument_instances: EB_LINKED_LIST [ARG_INSTANCE] is
+		   -- Generated widgets holding the value to set `query'.
+		local
+			arg: ARG_INSTANCE
+		do
+			!! Result.make
+			if new_toggle_b_c /= Void then
+				!! arg.storage_init (new_toggle_b_c.type, new_toggle_b_c)
+				Result.extend (arg)
+			elseif true_toggle_b_c /= Void then
+				!! arg.storage_init (true_toggle_b_c.type, true_toggle_b_c)
+				Result.extend (arg)
+			else
+				!! arg.storage_init (new_opt_pull_c.type, new_opt_pull_c)
+				Result.extend (arg)
+			end	
+		end
+
+	generate_eiffel_text (counter: INT_GENERATOR): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		local
@@ -518,40 +560,32 @@ feature -- Command generation
 		do
  			!! Result.make (0)
  			Result.append ("%T%T%T")
-			Result.append ("if ")
-			Result.append (parent_perm_wind)
-			Result.append (".")
-			if check_box_name /= Void then	
- 				Result.append (check_box_name)
+			Result.append ("if argument")
+			Result.append_integer (counter.value)
+			if new_opt_pull_c /= Void then
+				Result.append (".selected_button = argument")
+				Result.append_integer (counter.value)
+				Result.append (".children.first")
+ 			else
  				Result.append (extension_to_add)
- 			elseif radio_box_name /= Void then
- 				Result.append (true_toggle_b_name)
- 				Result.append (extension_to_add)
-			elseif opt_pull_name /= Void then
-				Result.append (opt_pull_name)
-				Result.append (".selected_button = ")
-				Result.append (parent_perm_wind)
-				Result.append (".")
-				Result.append (opt_pull_name)
-				Result.append (".children.fist")
 			end
 			Result.append (" then%N%T%T%T%T")
 			Result.append (eiffel_setting ("True"))
 			if test_toggle_b.state and not procedure.precondition_list.empty then
 				Result.append ("%N%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
 				Result.append (test_text_field.text)
-				Result.append ("%", ")
-				Result.append (parent_perm_wind)
-				Result.append (")%N%T%T%Tend%N")
+				Result.append ("%", argument")
+				Result.append_integer (counter.value)
+				Result.append (".parent)%N%T%T%Tend%N")
 			end	
 			Result.append ("%N%T%T%Telse%N%T%T%T%T")
 			Result.append (eiffel_setting ("False"))
 			if test_toggle_b.state and not procedure.precondition_list.empty then
  				Result.append ("%N%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
  				Result.append (test_text_field.text)
- 				Result.append ("%", ")
- 				Result.append (parent_perm_wind)
- 				Result.append (")%N%T%T%Tend%N")
+				Result.append ("%", argument")
+				Result.append_integer (counter.value)
+				Result.append (".parent)%N%T%T%Tend%N")
 			end
 			Result.append ("%N%T%T%Tend%N")
 		end

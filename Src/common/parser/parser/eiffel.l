@@ -241,6 +241,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (5)
 				last_token := TE_CLASS
 			}
+[cC][oO][nN][vV][eE][rR][tT]	{
+				current_position.go_to (7)
+				last_token := TE_CONVERT
+			}
 [cC][rR][eE][aA][tT][eE]	{
 				current_position.go_to (6)
 				last_token := TE_CREATE

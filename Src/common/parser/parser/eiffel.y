@@ -41,7 +41,7 @@ create
 %token		TE_COLON TE_COMMA TE_CREATE TE_CREATION TE_LARRAY TE_RARRAY TE_RPARAN
 %token		TE_LCURLY TE_RCURLY TE_LSQURE TE_RSQURE TE_CONSTRAIN
 %token		TE_FALSE TE_TRUE TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGN
-%token		TE_CHECK TE_CLASS TE_CURRENT TE_DEBUG TE_DEFERRED TE_DO
+%token		TE_CHECK TE_CLASS TE_CONVERT TE_CURRENT TE_DEBUG TE_DEFERRED TE_DO
 %token		TE_ELSE TE_ELSEIF TE_END TE_ENSURE TE_EXPANDED TE_EXPORT
 %token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
 %token		TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
@@ -76,6 +76,7 @@ create
 %type <CHECK_AS>			Check
 %type <CLIENT_AS>			Clients Feature_client_clause
 %type <CONTENT_AS>			Constant_or_routine Feature_value
+%type <CONVERT_FEAT_AS>		Convert_feature
 %type <CREATE_AS>			Creation_clause
 %type <CREATION_AS>			Creation
 %type <CREATION_EXPR_AS>	Creation_expression
@@ -125,13 +126,15 @@ create
 
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
 %type <EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
+%type <EIFFEL_LIST [CONVERT_FEAT_AS]>	Convert_list Convert_clause
 %type <EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <EIFFEL_LIST [ELSIF_AS]>			Elseif_list_opt Elseif_list
 %type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_exports New_exports_opt New_export_list
 %type <EIFFEL_LIST [EXPR_AS]>			Parameters Parameter_list Expression_list_opt Expression_list
 %type <EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
-%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Undefine Undefine_opt Redefine
+%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Undefine Undefine_opt
+										Redefine
 										Redefine_opt Select Select_opt Creation_constraint
 %type <EIFFEL_LIST [FORMAL_DEC_AS]>		Formal_generics Formal_generic_list_opt Formal_generic_list
 %type <EIFFEL_LIST [ID_AS]>				Client_list Class_list 
@@ -199,24 +202,25 @@ Class_declaration:
 		Obsolete							-- $7
 		Inheritance Position				-- $8 $9
 		Creators							-- $10
-		Features Position					-- $11 $12
-		Class_invariant Position			-- $13 $14
-		Indexing							-- $15
-		Class_end							-- $16
+		Convert_clause						-- $11
+		Features Position					-- $12 $13
+		Class_invariant Position			-- $14 $15
+		Indexing							-- $16
+		Class_end							-- $17
 			{
 				root_node := new_class_description ($4, $6,
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
-					$1, $15, $5, $8, $10, $11, $13, suppliers, $7, click_list
+					$1, $16, $5, $8, $10, $11, $12, $14, suppliers, $7, click_list
 				)
 
 				if real_class_end_position = 0 then
 					root_node.set_text_positions (
 						current_position.start_position,
-						$12.start_position,
+						$13.start_position,
 						$9.start_position,
 						formal_generics_start_position,
 						formal_generics_end_position,
-						$14.start_position
+						$15.start_position
 					)
 				else
 					root_node.set_text_positions (
@@ -758,6 +762,41 @@ Feature_set: TE_ALL
 			{ $$ := new_feature_list_as ($1) }
 	;
 
+Convert_clause: -- Empty
+			  -- { $$ := Void }
+	|	TE_CONVERT Convert_list
+		{
+			$$ := $2
+		}
+	;
+
+Convert_list: Convert_feature
+		{
+			$$ := new_eiffel_list_convert (Initial_convert_list_size)
+			$$.extend ($1)
+		}
+	|	Convert_list TE_COMMA Convert_feature
+		{	
+			$$ := $1
+			$$.extend ($3)
+		}
+	;
+
+
+Convert_feature: Feature_name TE_LPARAN TE_LCURLY Type_list TE_RCURLY TE_RPARAN
+		{
+				-- True because this is a conversion feature used as a creation
+				-- procedure in current class.
+			$$ := new_convert_feat_as (True, $1.first, $4)
+		}
+	|	Feature_name TE_COLON TE_LCURLY Type_list TE_RCURLY
+		{
+				-- False because this is not a conversion feature used as a creation
+				-- procedure.
+			$$ := new_convert_feat_as (False, $1.first, $4)
+		}
+	;
+
 Feature_list: Feature_name
 			{
 				$$ := new_eiffel_list_feature_name (Initial_feature_list_size)
@@ -834,8 +873,8 @@ Entity_declaration_list: Entity_declaration_group
 			}
 	;
 
-Entity_declaration_group: Identifier_list TE_COLON Parameter_passing_type Type ASemi
-			{ $$ := new_type_dec_as ($1, $4) }
+Entity_declaration_group: Identifier_list Position TE_COLON Parameter_passing_type Type ASemi
+			{ $$ := new_type_dec_as ($1, $5, $2) }
 	;
 
 Parameter_passing_type: -- Empty
@@ -866,8 +905,8 @@ Local_entity_declaration_list: Local_entity_declaration_group
 			}
 	;
 
-Local_entity_declaration_group: Identifier_list TE_COLON Type ASemi
-			{ $$ := new_type_dec_as ($1, $3) }
+Local_entity_declaration_group: Identifier_list Position TE_COLON Type ASemi
+			{ $$ := new_type_dec_as ($1, $4, $2) }
 	;
 
 Identifier_list: Identifier

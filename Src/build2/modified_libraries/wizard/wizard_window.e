@@ -12,7 +12,8 @@ inherit
 		rename
 			copy as copy_titled_window
 		redefine
-			destroy
+			destroy,
+			initialize
 		select
 			copy_titled_window
 		end
@@ -42,8 +43,21 @@ feature {NONE} -- Initialization
 			extend (v1)
 
 			load_first_state
-		--	Create wizard_information.make
 		end
+		
+	initialize is
+			-- Initialize `Current'.
+		local
+			button: EV_BUTTON
+		do
+			precursor {EV_DIALOG}
+			create button
+			extend (button)
+			button.select_actions.extend (agent cancel_actions)
+			set_default_cancel_button (button)
+			prune (button)
+		end
+		
 
 	build_navigation_bar (a_box: EV_BOX) is
 			-- Build the navigation bar.

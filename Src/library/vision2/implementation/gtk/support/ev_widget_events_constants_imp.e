@@ -65,117 +65,123 @@ feature -- General events for widgets
 	expose_event_id: INTEGER is 18
 			-- 
 
+	show_id: INTEGER is 19
+			-- The widget has been displayed.
+
+	hide_id: INTEGER is 20
+			-- The widget has been hidden.
+
 feature -- Events for windows
 
-	resize_event_id: INTEGER is 19
+	resize_event_id: INTEGER is 21
 			-- The widget has been resized.
 
-	close_event_id: INTEGER is 20
+	close_event_id: INTEGER is 22
 			-- The widget has been closed.
 
-	move_event_id: INTEGER is 21
+	move_event_id: INTEGER is 23
 			-- The widget has been moved.
 
 feature -- Event for buttons
 
-	clicked_id: INTEGER is 22
+	clicked_id: INTEGER is 24
 			-- The button has been clicked
 
-	toggled_id: INTEGER is 23
+	toggled_id: INTEGER is 25
 			-- The button has been clicked
 
 feature -- Event for items
 
-	select_id: INTEGER is 24
+	select_id: INTEGER is 26
 			-- The item has been selected/activated
 
-	deselect_id: INTEGER is 25
+	deselect_id: INTEGER is 27
 			-- The item has been deselected/deactivated
 
-	collapse_id: INTEGER is 26
+	collapse_id: INTEGER is 28
 			-- The user has collapsed a subtree
 
-	expand_id: INTEGER is 27
+	expand_id: INTEGER is 29
 			-- The user has expanded a subtree
 
 feature -- Event for items, text fields and combo boxes
 
-	activate_id: INTEGER is 28
+	activate_id: INTEGER is 30
 			-- the "Return" button has been pressed
 
 feature -- Event for notebooks
 
-	switch_page_id: INTEGER is 29
+	switch_page_id: INTEGER is 31
 			-- a page is switched in the notebook
  
 feature -- Event for lists and combo boxes
 
-	selection_changed_id: INTEGER is 30
+	selection_changed_id: INTEGER is 32
 			-- the selection has changed
 
-	select_child_id: INTEGER is 31
+	select_child_id: INTEGER is 33
 			-- the selection has changed
 
-	unselect_child_id: INTEGER is 32
+	unselect_child_id: INTEGER is 34
 			-- the selection has changed
 
 feature -- Event for ctrees
 
-	tree_select_row_id: INTEGER is 33
+	tree_select_row_id: INTEGER is 35
 			-- an item has been selected
 
-	tree_unselect_row_id: INTEGER is 34
+	tree_unselect_row_id: INTEGER is 36
 			-- an item has been unselected
 
-	tree_expand_id: INTEGER is 35
+	tree_expand_id: INTEGER is 37
 			-- an item has been expanded
 
-	tree_collapse_id: INTEGER is 36
+	tree_collapse_id: INTEGER is 38
 			-- an item has been collapsed
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 feature -- Event for multi column lists
 
-	select_row_id: INTEGER is 37
+	select_row_id: INTEGER is 39
 			-- a row of the column list has been selected
  
-	unselect_row_id: INTEGER is 38
+	unselect_row_id: INTEGER is 40
 			-- a row of the column list has been unselected
 
-	click_column_id: INTEGER is 39
+	click_column_id: INTEGER is 41
 			-- a column of the column list has been clicked
 
 feature -- Event for text components and combo boxes
-	changed_id: INTEGER is 40
+	changed_id: INTEGER is 42
 			-- the selection has changed
  
 feature -- Event for selection dialog
 
-	ok_clicked_id: INTEGER is 41
+	ok_clicked_id: INTEGER is 43
 			-- `ok' button has been clicked.
  
-	cancel_clicked_id: INTEGER is 42
+	cancel_clicked_id: INTEGER is 44
 			-- `cancel' button has been clicked.
  
-	help_clicked_id: INTEGER is 43
+	help_clicked_id: INTEGER is 45
 			-- `help' button has been clicked.
 			-- Event only for color selection dialog.
  
 feature -- Event for rich texts
 
-	insert_text_id: INTEGER is 44
+	insert_text_id: INTEGER is 46
 			-- Text has been inserted.
 
-	delete_text_id: INTEGER is 45
+	delete_text_id: INTEGER is 47
 			-- Text has been inserted.
 
 feature -- Event for scrollbars, spin buttons and range (GtkScale)
 
-	value_changed_id: INTEGER is 46
+	value_changed_id: INTEGER is 48
 			-- The scrollbar has been moved.
 
 feature -- Upper constants value
 
-	command_count: INTEGER is 46
+	command_count: INTEGER is 48
 			-- Number of different events
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

@@ -113,15 +113,20 @@ feature -- Synchronization
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a 
 			-- classi_stone if the class is not compiled anymore)
+		local
+			new_cluster: CLUSTER_I
 		do
 			if class_c /= Void then
 				if System.id_array.item (class_c.id) = class_c then
 					Result := class_c.stone
-				elseif 
-					Universe.clusters.has (class_c.cluster) and then
-					class_c.cluster.classes.has_item (class_c.lace_class)
-				then
-					Result := class_c.lace_class.stone
+				else
+					new_cluster := Universe.cluster_of_name (class_c.cluster.cluster_name);
+					if 
+						new_cluster /= Void and then
+						new_cluster.classes.has_item (class_c.lace_class)
+					then
+						Result := class_c.lace_class.stone
+					end
 				end
 			end
 		end;

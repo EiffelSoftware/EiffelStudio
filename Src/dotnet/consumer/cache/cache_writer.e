@@ -32,9 +32,13 @@ feature -- Basic Operations
 			i: INTEGER
 			name: ASSEMBLY_NAME
 			assembly: ASSEMBLY
+			retried: BOOLEAN
 		do
-			assembly := feature {ASSEMBLY}.load_assembly_name (aname)
-			if assembly /= Void then
+			if not retried then
+				assembly := feature {ASSEMBLY}.load_assembly_name (aname)
+				check
+					assembly_not_void: assembly /= Void
+				end
 				create cr
 				create dir.make (cr.absolute_assembly_path (aname))
 				if dir.exists then
@@ -70,6 +74,9 @@ feature -- Basic Operations
 			else
 				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
 			end
+		rescue
+			retried := True
+			retry
 		end
 	
 	remove_assembly (aname: ASSEMBLY_NAME) is

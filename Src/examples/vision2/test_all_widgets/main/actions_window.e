@@ -24,9 +24,10 @@ feature -- Access
 	Default_string_length: INTEGER is 5;
 	
 	
-	box: EV_HORIZONTAL_BOX 
-	show_button, hide_button: EV_BUTTON
-	width_entry, height_entry: EV_ENTRY
+	box, tmp: EV_HORIZONTAL_BOX 
+	buttons_box, entries_box: EV_VERTICAL_BOX
+	show_button, hide_button, get_size_b, set_size_b: ACTIONS_WINDOW_BUTTON
+	width_entry, height_entry, min_width_entry, min_height_entry: EV_ENTRY_WITH_LABEL
 	
 	widget: EV_WIDGET
 
@@ -38,52 +39,71 @@ feature -- Initialization
 			widget := main_widget
 			set_widgets
 			set_values
-			set_commands
 		end
 	
 feature -- Status setting
         
 	set_widgets is
 			-- Create the widgets inside the window
+		local
+			hide_c: HIDE_COMMAND
+			show_c: SHOW_COMMAND
+			s_s_c: SET_SIZE_COMMAND			
+			g_s_c: GET_SIZE_COMMAND			
+			s_ms_c: SET_MIN_SIZE_COMMAND			
+			g_ms_c: GET_MIN_SIZE_COMMAND			
+			a: EV_ARGUMENT1 [EV_WIDGET]
+			aaa: EV_ARGUMENT3 [EV_WIDGET, EV_ENTRY, EV_ENTRY]
                 do
-			
 			!!box.make (Current)
-			!!show_button.make (box)
-			!!hide_button.make (box)
-			!!width_entry.make (box)
-			!!height_entry.make (box)
-                end
+			!!buttons_box.make (box)
+			!!entries_box.make (box)
+			
+			!!hide_c
+			!!show_c
+			!!a.make (widget)
+			
+			!!show_button.make_button (buttons_box, "Show", a, show_c)
+			!!hide_button.make_button (buttons_box, "Hide", a, hide_c)
+
+			!!width_entry.make_with_name (entries_box, "Width: ")
+			!!height_entry.make_with_name (entries_box, "Height: ")
+			!!tmp.make (entries_box)
+			
+			!!aaa.make_3 (widget, width_entry, height_entry)
+			
+			!!g_s_c
+			!!get_size_b.make_button (tmp, "Get", aaa, g_s_c)
+			!!s_s_c
+			!!set_size_b.make_button (tmp, "Set", aaa, s_s_c)
+			
+			!!min_width_entry.make_with_name (entries_box, "Minimum width: ")
+			!!min_height_entry.make_with_name (entries_box, "Minimum height: ")
+			!!tmp.make (entries_box)
+			
+			!!aaa.make_3 (widget, min_width_entry, min_height_entry)
+			
+			!!g_ms_c
+			!!get_size_b.make_button (tmp, "Get", aaa, g_ms_c)
+			!!s_ms_c
+			!!set_size_b.make_button (tmp, "Set", aaa, s_ms_c)
+		end
 	
 	set_values is
 		local
 			s: STRING
  		do
 			set_title ("Control widget behavior")
-			show_button.set_text ("Show")
-			hide_button.set_text ("Hide")
+			
 			!!s.make (Default_string_length)
 			s.append_integer (widget.width)
 			width_entry.set_text (s)
 			s.wipe_out
 			s.append_integer (widget.height)
 			height_entry.set_text (s)
+			
  		end
 
- 	set_commands is
-		local
-			hide_c: HIDE_COMMAND
-			show_c: SHOW_COMMAND
-			e: EV_EVENT
-			a: EV_ARGUMENT1 [EV_WIDGET]
- 		do
-			!!hide_c
-			!!show_c
-			!!e.make ("clicked")
-			!!a.make (widget)
-			show_button.add_command (e, show_c, a)
-			hide_button.add_command (e, hide_c, a)
- 		end
-	
 end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

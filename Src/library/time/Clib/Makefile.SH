@@ -27,6 +27,8 @@ MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
 RM = $rm -f
+MKDIR = $mkdir -p
+MV = $mv
 ########################################################################
 # Automatically generated parameters -- do not edit
 
@@ -37,9 +39,13 @@ TIME_LIBS = libdatetime.a libmtdatetime.a libdatetime.so libdatetime.so
 # New suffixes and associated building rules -- edit with care
 
 
-all: \$(TIME_LIBS)
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
+
+all: $(TIME_LIBS)
+	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
+	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	make clobber
 
 SMODE = local.c network.c network_r.c storable.c
 

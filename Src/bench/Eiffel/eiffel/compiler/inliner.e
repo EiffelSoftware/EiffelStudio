@@ -66,7 +66,7 @@ feature  -- Status
 
 feature -- Conversion
 
-	bindex_cid_table: EXTEND_TABLE [INTEGER, INTEGER] is
+	bindex_cid_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- Table with `body_index' as keys and `class_id' as items.
 		once
 			Result := Depend_server.bindex_cid_table

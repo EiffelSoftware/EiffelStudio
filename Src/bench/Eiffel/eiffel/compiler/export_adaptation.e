@@ -2,7 +2,7 @@ class EXPORT_ADAPTATION
 
 inherit
 
-	EXTEND_TABLE [EXPORT_I, STRING];
+	HASH_TABLE [EXPORT_I, STRING];
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal

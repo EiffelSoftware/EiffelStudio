@@ -161,11 +161,11 @@ feature -- Settings
 		require
 			buffer_not_void: buffer /= Void
 		local
-			local_routines: EXTEND_TABLE [TYPE_C, STRING]
+			local_routines: HASH_TABLE [TYPE_C, STRING]
 			local_routine_tables: SEARCH_TABLE [STRING]
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
-			local_onces: EXTEND_TABLE [TYPE_C, STRING]
+			local_onces: HASH_TABLE [TYPE_C, STRING]
 		do
 			if not shared_include_queue.is_empty then
 				buffer.end_c_specific_code
@@ -256,10 +256,10 @@ feature {NONE} -- Attributes
 	type_tables: SEARCH_TABLE [STRING]
 			-- Type table name
 
-	routines: EXTEND_TABLE [TYPE_C, STRING]
+	routines: HASH_TABLE [TYPE_C, STRING]
 			-- Routine names
 
-	onces_table: EXTEND_TABLE [TYPE_C, STRING]
+	onces_table: HASH_TABLE [TYPE_C, STRING]
 			-- Once names
 
 end

@@ -139,11 +139,14 @@ feature -- Status report
 			pango_layout, pango_iter: POINTER
 		do
 			create a_cs.make ("A")
-			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			pango_layout := app_implementation.pango_layout
+			--pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
-			pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			--pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
+			--feature {EV_GTK_EXTERNALS}.g_free (pango_layout)
+			--feature {EV_GTK_EXTERNALS}.g_free (pango_iter)
 		end
 
 	descent: INTEGER is
@@ -155,13 +158,16 @@ feature -- Status report
 			a_width, a_height: INTEGER
 		do
 			create a_cs.make ("A")
-			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			--pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			pango_layout := app_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
-			pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			--pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			pango_iter := app_implementation.pango_iter
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
 			Result := a_height - Result
+			--feature {EV_GTK_EXTERNALS}.g_free (pango_layout)
+			--feature {EV_GTK_EXTERNALS}.g_free (pango_iter)
 		end
 
 	width: INTEGER is

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-		
+
 <TITLE>THREAD Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -24,7 +24,7 @@
 
 <SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../thread/reference/thread.html">THREAD</A><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/thread/reference/thread.html">THREAD</A><BR>
 
 <BR>
 
@@ -32,7 +32,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_thread_id"><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_thread_id">thread_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_thread_id"><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_thread_id">thread_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer to the thread-id of the current thread object.</SPAN><BR>
 
@@ -42,59 +42,59 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_execute">execute</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_execute">execute</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Routine executed by new thread.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_join"><A CLASS="efeature" HREF="../../thread/reference/thread_control.html#f_join">join</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_join"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_control.html#f_join">join</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The calling thread waits for the current child thread to</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> terminate.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_join_all"><A CLASS="efeature" HREF="../../thread/reference/thread_control.html#f_join_all">join_all</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_join_all"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_control.html#f_join_all">join_all</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The calling thread waits for all other threads to terminate.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_launch"><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_launch">launch</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_launch"><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_launch">launch</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize a new thread running </SPAN><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_execute">execute</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_launch_with_attributes"><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_launch_with_attributes">launch_with_attributes</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">attr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../thread/reference/thread_attributes.html">THREAD_ATTRIBUTES</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize a new thread running </SPAN><A CLASS="efeature" HREF="../../thread/reference/thread.html#f_execute">execute</A><SPAN CLASS="ecomment">, using attributes.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize a new thread running </SPAN><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_execute">execute</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_native_join"><A CLASS="efeature" HREF="../../thread/reference/thread_control.html#f_native_join">native_join</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">term</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_launch_with_attributes"><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_launch_with_attributes">launch_with_attributes</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">attr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/thread/reference/thread_attributes.html">THREAD_ATTRIBUTES</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Same as </SPAN><A CLASS="efeature" HREF="../../thread/reference/thread_control.html#f_join">join</A><SPAN CLASS="ecomment"> except that the low-level architecture-dependant</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize a new thread running </SPAN><A CLASS="efeature" HREF="/libraries/thread/reference/thread.html#f_execute">execute</A><SPAN CLASS="ecomment">, using attributes.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_native_join"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_control.html#f_native_join">native_join</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">term</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Same as </SPAN><A CLASS="efeature" HREF="/libraries/thread/reference/thread_control.html#f_join">join</A><SPAN CLASS="ecomment"> except that the low-level architecture-dependant</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> routine is used. The thread must not be created detached.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_yield"><A CLASS="efeature" HREF="../../thread/reference/thread_control.html#f_yield">yield</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_yield"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_control.html#f_yield">yield</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The calling thread yields its execution in favor of another</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> thread.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/thread/reference/thread_control.html">THREAD_CONTROL</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -102,11 +102,11 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 <BR>
 

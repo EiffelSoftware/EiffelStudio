@@ -74,7 +74,7 @@ feature -- Status Setting
 			clear_structures
 		end
 
-	append_text_for_rtf (a_text: STRING; a_format: EV_CHARACTER_FORMAT) is
+	append_text_for_rtf (a_text: STRING; a_format: EV_CHARACTER_FORMAT_I) is
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
 		local
@@ -88,11 +88,11 @@ feature -- Status Setting
 			effects: EV_CHARACTER_FORMAT_EFFECTS
 			font: EV_FONT
 		do
-			hashed_character_format := a_format.hash_value
+			hashed_character_format := a_format.interface.hash_value
 			if not hashed_formats.has (hashed_character_format) then
-				hashed_formats.put (a_format, hashed_character_format)
-				formats.extend (a_format)
-				heights.extend (pixels_to_half_points (a_format.font.height))
+				hashed_formats.put (a_format.interface, hashed_character_format)
+				formats.extend (a_format.interface)
+				heights.extend (pixels_to_half_points (a_format.height))
 				format_offsets.put (hashed_formats.count, hashed_character_format)
 			
 				build_color_from_format (a_format)
@@ -108,11 +108,7 @@ feature -- Status Setting
 			temp_string.append (color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
 			
-				-- Retrieve the effects and font
-			effects := formats.i_th (format_index).effects
-			font := formats.i_th (format_index).font
-			
-			format_underlined := effects.is_underlined
+			format_underlined := a_format.is_underlined
 			if not is_current_format_underlined and format_underlined then
 				temp_string.append (start_underline_string)
 				is_current_format_underlined := True
@@ -120,7 +116,7 @@ feature -- Status Setting
 				temp_string.append (end_underline_string)
 				is_current_format_underlined := False
 			end
-			format_striked := effects.is_striked_out
+			format_striked := a_format.is_striked_out
 			if not is_current_format_striked_through and format_striked then
 				temp_string.append (start_strikeout_string)
 				is_current_format_striked_through := True
@@ -128,7 +124,7 @@ feature -- Status Setting
 				temp_string.append (end_strikeout_string)
 				is_current_format_striked_through := False
 			end
-			format_bold := font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
+			format_bold := a_format.is_bold
 			if not is_current_format_bold and format_bold then
 				temp_string.append (start_bold_string)
 				is_current_format_bold := True
@@ -136,7 +132,7 @@ feature -- Status Setting
 				temp_string.append (end_bold_string)
 				is_current_format_bold := False
 			end
-			format_italic := font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
+			format_italic := a_format.shape = shape_italic
 			if not is_current_format_italic and format_italic then
 				temp_string.append (start_italic_string)
 				is_current_format_italic := True
@@ -144,7 +140,7 @@ feature -- Status Setting
 				temp_string.append (end_italic_string)
 				is_current_format_italic := False
 			end
-			vertical_offset := effects.vertical_offset
+			vertical_offset := a_format.vertical_offset
 			if vertical_offset /= current_vertical_offset then
 				temp_string.append (start_vertical_offset)
 				height_in_half_points := (pixels_to_half_points (vertical_offset))
@@ -300,15 +296,14 @@ feature {NONE} -- Implementation
 		end
 		
 
-	build_font_from_format (a_format: EV_CHARACTER_FORMAT) is
+	build_font_from_format (a_format: EV_CHARACTER_FORMAT_I) is
 			-- Update font text `font_text' for addition of a new format to the buffering.
 		local
 			current_family: INTEGER
 			family: STRING
 			temp_string: STRING
-			a_font: EV_FONT
 		do
-			a_font := a_format.font
+			current_family := a_format.family
 			inspect current_family
 			when family_screen then 
 				family := "ftech"
@@ -326,9 +321,9 @@ feature {NONE} -- Implementation
 			temp_string := "\"
 			temp_string.append (family)
 			temp_string.append ("\fcharset")
-			temp_string.append (rich_text.font_char_set (a_font).out)
+			temp_string.append (a_format.char_set.out)
 			temp_string.append (space_string)
-			temp_string.append (a_font.name)
+			temp_string.append (a_format.name)
 			hashed_fonts.search (temp_string)
 			if not hashed_fonts.found then
 				font_count := font_count + 1
@@ -344,20 +339,24 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	build_color_from_format (a_format: EV_CHARACTER_FORMAT) is
+	build_color_from_format (a_format: EV_CHARACTER_FORMAT_I) is
 			-- Update color text `color_text' for addition of a new format to the buffering.
 		local
-			color, back_color: EV_COLOR
+			l_color: INTEGER
 			hashed_color, hashed_back_color: STRING
+			color_value: INTEGER
 		do
-			color := a_format.color
+			l_color := a_format.fcolor
 			hashed_color := rtf_red.twin
-			hashed_color.append (color.red_8_bit.out)
-			hashed_color.append (rtf_green)
-			hashed_color.append (color.green_8_bit.out)
-			hashed_color.append (rtf_blue)
-			hashed_color.append (color.blue_8_bit.out)
-			hashed_color.append (";")
+			color_value := l_color |>> 16
+			hashed_color.append (color_value.to_integer_8.out)
+			color_value := l_color |>> 8
+			hashed_color.append (rtf_green.twin)
+			hashed_color.append (color_value.to_integer_8.out)
+			hashed_color.append (rtf_blue.twin)
+			hashed_color.append (l_color.to_integer_8.out)
+			hashed_color.append_character (';')
+
 
 			hashed_colors.search (hashed_color)
 				-- If the color does not already exist.
@@ -372,14 +371,16 @@ feature {NONE} -- Implementation
 				color_offset.force (hashed_colors.item (hashed_color))
 			end
 			
-			back_color := a_format.background_color
+			l_color := a_format.bcolor
 			hashed_back_color := rtf_red.twin
-			hashed_back_color.append (back_color.red_8_bit.out)
-			hashed_back_color.append (rtf_green)
-			hashed_back_color.append (back_color.green_8_bit.out)
-			hashed_back_color.append (rtf_blue)
-			hashed_back_color.append (back_color.blue_8_bit.out)
-			hashed_back_color.append (";")
+			color_value := l_color |>> 16
+			hashed_back_color.append (color_value.to_integer_8.out)
+			color_value := l_color |>> 8
+			hashed_back_color.append (rtf_green.twin)
+			hashed_back_color.append (color_value.to_integer_8.out)
+			hashed_back_color.append (rtf_blue.twin)
+			hashed_back_color.append (l_color.to_integer_8.out)
+			hashed_back_color.append_character (';')
 
 			hashed_colors.search (hashed_back_color)
 				-- If the color does not already exist.

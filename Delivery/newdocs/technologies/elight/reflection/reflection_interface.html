@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>Reflection system specification</title>
+		<LINK REL="StyleSheet" HREF="/default.css">
 	</head>
 
 	<body>
@@ -75,7 +76,7 @@
 			<br>
 
 					<a name = assembly_retrieval>
-					<h3>3.2.1 Retrieve an assembly...</h3>
+					<h4>3.2.1 Retrieve an assembly...</h4>
 
 							<p>
 									The first kind of information you may want to retrieve is an assembly. In the same way you had two features to start assembly storage, ISE reflection interface provides two queries to get information about an assembly:
@@ -94,7 +95,7 @@
 					<br>
 
 					<a name = type_retrieval>
-					<h3>3.2.2 Retrieve a type...</h3>
+					<h4>3.2.2 Retrieve a type...</h4>
 
 							<p>
 									ISE reflection interface also provides a query (`type') to get information about a .NET type. Its signature is: `type (a_type: SYSTEM_TYPE): EIFFEL_CLASS'.<br>
@@ -104,7 +105,7 @@
 					<br>
 
 					<a name = assemblies_retrieval>
-					<h3>3.2.3 Retrieve all the assemblies...</h3>
+					<h4>3.2.3 Retrieve all the assemblies...</h4>
 
 							<p>
 									ISE reflection interface also provides a query called `assemblies', which enables you to get all the assemblies stored in the database. The result is an instance of `SYSTEM_COLLECTIONS_ARRAYLIST', which is in fact a list of `EIFFEL_ASSEMBLY' (cf. <a href = "./Eiffel_components.html">2. ISE.EiffelComponents.dll</a>).<br>
@@ -113,7 +114,7 @@
 					<br>
 
 					<a name = concurrence_issue>
-					<h3>3.2.4 Concurrence issue</h3>
+					<h4>3.2.4 Concurrence issue</h4>
 
 							<p>
 									In the same way storage may be impossible because of concurrent processes, data retrieval may also fail. Therefore, ISE reflection interface updates a boolean called `last_read_successful' to let you about this.<br>

@@ -28,7 +28,7 @@ feature -- Basic operations
 		do
 			if 
 				available_key_pool = Void or else
-				available_key_pool.empty
+				available_key_pool.is_empty
 			then
 				counter := counter + 1
 				Result := counter

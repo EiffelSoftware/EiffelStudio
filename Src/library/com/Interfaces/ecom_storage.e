@@ -96,7 +96,7 @@ feature -- Access
 			-- STGM_SHARE_EXCLUSIVE flag must be specified. 
 		require
 			non_void_storage_name: a_name /= Void
-			valid_storage_name: not a_name.empty
+			valid_storage_name: not a_name.is_empty
 			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
@@ -135,7 +135,7 @@ feature -- Access
 			-- nested within Current storage 
 		require
 			non_void_storage_name: a_name /= Void
-			valid_storage_name: not a_name.empty
+			valid_storage_name: not a_name.is_empty
 			valid_mode: is_valid_stgm (a_mode)
 		local
 			wide_string: ECOM_WIDE_STRING
@@ -349,7 +349,7 @@ feature -- Element Change
 			non_void_dest_storage: dest_storage /= Void
 			valid_dest_storage: dest_storage.exists
 			non_void_new_name: new_name /= Void
-			valid_new_name: not new_name.empty
+			valid_new_name: not new_name.is_empty
 			valid_mode: is_valid_stgmove (a_mode)
 		local
 			wide_string1, wide_string2: ECOM_WIDE_STRING

@@ -61,7 +61,7 @@ feature -- Access
 			Result.left_adjust
 			Result.right_adjust
 			
-			if Result.empty then
+			if Result.is_empty then
 				create error_messages
 				Result := error_messages.error_messages.item (error_code)
 			end

@@ -259,13 +259,12 @@ feature {NONE} -- Implementation
 			l_asm: ASSEMBLY
 			l_retried: BOOLEAN
 		do
-			assembly_added := False
 			if not l_retried then
-				if not has_file (a_assembly_path) then
+				if not Referenced_assemblies.has_file (a_assembly_path) then
 					l_asm := feature {ASSEMBLY}.load_from (a_assembly_path)
 					if l_asm /= Void then
-						add_file (a_assembly_path)
-						if assembly_added then
+						Referenced_assemblies.extend_file (a_assembly_path)
+						if Referenced_assemblies.assembly_added then
 							create l_row
 							l_row.extend (l_asm.get_name.full_name)
 							l_row.extend (a_assembly_path)

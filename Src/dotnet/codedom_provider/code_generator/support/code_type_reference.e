@@ -9,7 +9,7 @@ class
 	CODE_TYPE_REFERENCE
 
 inherit
-	CODE_REFERENCED_ASSEMBLIES
+	CODE_SHARED_REFERENCED_ASSEMBLIES
 		export
 			{NONE} all
 		redefine
@@ -124,12 +124,12 @@ feature -- Access
 				Result := feature {TYPE}.get_type (name)
 				if Result = Void then
 					from
-						referenced_assemblies.start
+						Referenced_assemblies.start
 					until
-						referenced_assemblies.after or Result /= Void
+						Referenced_assemblies.after or Result /= Void
 					loop
-						Result := referenced_assemblies.item.assembly.get_type (name)
-						referenced_assemblies.forth
+						Result := Referenced_assemblies.item.assembly.get_type (name)
+						Referenced_assemblies.forth
 					end
 				end
 				
@@ -137,16 +137,16 @@ feature -- Access
 				-- use simple names for basic types (e.g. 'Int32' 'Boolean')
 				if Result = Void then
 					from
-						referenced_assemblies.start
+						Referenced_assemblies.start
 						create l_name.make (name.count + 7)
 						l_name.append ("System.")
 						l_name.append (name)
 						Result := feature {TYPE}.get_type (l_name)
 					until
-						referenced_assemblies.after or Result /= Void
+						Referenced_assemblies.after or Result /= Void
 					loop
-						Result := referenced_assemblies.item.assembly.get_type (l_name)
-						referenced_assemblies.forth
+						Result := Referenced_assemblies.item.assembly.get_type (l_name)
+						Referenced_assemblies.forth
 					end
 				end
 					

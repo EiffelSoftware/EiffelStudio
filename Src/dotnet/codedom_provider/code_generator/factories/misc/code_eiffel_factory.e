@@ -11,7 +11,7 @@ inherit
 
 	CODE_DOM_PATH
 
-	CODE_REFERENCED_ASSEMBLIES
+	CODE_SHARED_REFERENCED_ASSEMBLIES
 		export
 			{NONE} all
 		end
@@ -45,9 +45,9 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			until
 				i = l_count
 			loop
-				if not has_file (l_referenced_assemblies.item (i)) then
-					add_file (l_referenced_assemblies.item (i))
-					if not assembly_added then
+				if not Referenced_assemblies.has_file (l_referenced_assemblies.item (i)) then
+					Referenced_assemblies.extend_file (l_referenced_assemblies.item (i))
+					if not Referenced_assemblies.assembly_added then
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
 					end
 				end

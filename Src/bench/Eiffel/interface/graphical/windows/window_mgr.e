@@ -265,11 +265,13 @@ feature -- Update
 				need_to_update_attributes := False
 			end
 			if need_to_resynchronize then
+				Project_tool.update_graphical_resources
+				if is_system_tool_created then
+					System_tool.update_graphical_resources
+				end
 				if Profile_tool /= Void then	
 					Profile_tool.update_graphical_resources
 				end
-				Project_tool.update_graphical_resources
-				System_tool.update_graphical_resources
 				routine_win_mgr.update_graphical_resources
 				class_win_mgr.update_graphical_resources
 				object_win_mgr.update_graphical_resources

@@ -8,10 +8,12 @@ class EXPLAIN_W
 inherit
 	BAR_AND_TEXT
 		rename
-			Explain_resources as resources
+			Explain_resources as resources,
+			edit_bar as explain_toolbar,
+			Any_type as stone_type
 		redefine
-			build_format_bar,
-			tool_name, hole, stone_type, 
+			build_format_bar, create_toolbar,
+			tool_name, hole, 
 			process_any, build_menus,
 			build_toolbar_menu,
 			close, set_title, help_index, icon_id
@@ -21,12 +23,6 @@ creation
 	make
 
 feature -- Properties
-
-	stone_type: INTEGER is
-			-- Accept any type stone
-		do
-			Result := Any_type
-		end
 
 	help_index: INTEGER is 5
 
@@ -72,6 +68,20 @@ feature -- Status setting
 
 feature -- Graphical Interface
 
+	create_toolbar (a_parent: COMPOSITE) is
+			-- Create a toolbar_parent with parent `a_parent'.
+		local
+			sep: THREE_D_SEPARATOR
+		do
+			!! toolbar_parent.make (new_name, a_parent)
+			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			toolbar_parent.set_column_layout
+			toolbar_parent.set_free_size	
+			toolbar_parent.set_margin_height (0)
+			toolbar_parent.set_spacing (1)
+			!! explain_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+		end
+
 	build_menus is
 			-- Create the menus.
 		do
@@ -87,22 +97,13 @@ feature -- Graphical Interface
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
-			showtext_cmd: SHOW_HTML_TEXT
-			showtext_button: FORMAT_BUTTON
+			showtext_cmd: SHOW_HTML_TEXT;
 		do
 			!! showtext_cmd.make (Current)
-			!! showtext_button.make (showtext_cmd, format_bar)
 			!! showtext_frmt_holder.make_plain (showtext_cmd)
-			showtext_frmt_holder.set_button (showtext_button)
-			format_bar.attach_top (showtext_button, 0)
-			format_bar.attach_left (showtext_button, 0)
-
-			if resources.format_bar.actual_value = False then
-				format_bar.remove
-			end
 
 			if resources.command_bar.actual_value = False then
-				edit_bar.remove
+				explain_toolbar.remove
 			end
 		end
 
@@ -111,10 +112,8 @@ feature -- Graphical Interface
 		local
 			toolbar_t: TOGGLE_B
 		do
-			!! toolbar_t.make (edit_bar.identifier, special_menu)
-			edit_bar.init_toggle (toolbar_t)
-			!! toolbar_t.make (format_bar.identifier, special_menu)
-			format_bar.init_toggle (toolbar_t)
+			!! toolbar_t.make (explain_toolbar.identifier, special_menu)
+			explain_toolbar.init_toggle (toolbar_t)
 		end
 
 	close is

@@ -26,7 +26,8 @@ inherit
 			disable_sensitive,
 			enable_sensitive,
 			wel_set_text,
-			dispose
+			dispose,
+			destroy
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -333,7 +334,17 @@ feature {NONE} -- Implementation
 			Precursor {EV_MENU_ITEM_IMP}
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 		end
-		
+
+	destroy is
+			-- Destroy underlying native toolkit objects.
+			-- Render `Current' unusable.
+			-- Any feature calls after a call to destroy are
+			-- invalid.
+		do
+			interface.wipe_out
+			Precursor {EV_MENU_ITEM_IMP}
+			destroy_item
+		end
 
 feature {EV_ANY_I} -- Implementation
 

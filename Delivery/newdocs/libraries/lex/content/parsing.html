@@ -3,7 +3,7 @@
 <HTML>
 	<HEAD>
 		<TITLE>Parsing: The Parse Library</TITLE>
-		<LINK REL=StyleSheet HREF="../../../default.css">
+		<LINK REL=StyleSheet HREF="/default.css">
 		<META NAME="MS-HKWD" CONTENT="Parsing">
 	</HEAD>
 	</HEAD>
@@ -232,9 +232,7 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_construct_name">construct_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Symbolic name of the construct</SPAN><BR>
 		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
-
 		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="estring">"INSTRUCTION"</SPAN><BR>
-
 		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
 		</CODE>
 
@@ -246,39 +244,44 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<P>The <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for a descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/parse/aggregate_chart.html">AGGREGATE</A> will describe how to build a 	specimen of the corresponding function from a sequence of specimens of each of the constituent constructs. Writing this function from the corresponding production is straightforward.</P>
 
-		<P>As an example, consider the production function of class LINE for the Polynomial example language. The corresponding production is<BR>
+		<P>As an example, consider the production function of class <A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A> for the Polynomial example language. The corresponding production is<BR>
 
 		<CODE>Line [=] Variables ":" Sum</CODE><BR>
 
 		where Variables and Sum are other constructs, and the colon ":" is a terminal. This means that every specimen of Line consists of a specimen of Variables, followed by a colon, followed by a specimen of Sum.</P>
 
-		<P>Here is the corresponding production function as it appears in class LINE:</P>
+		<P>Here is the corresponding production function as it appears in class <A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A>:</P>
 
 		<CODE>
-		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A></A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">VARIABLES</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">SUM</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">":"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/line.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/variables.html">VARIABLES</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/sum.html">SUM</A><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_forth">forth</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">var</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">var</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">":"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sum</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 		</CODE>
 
-		<P>As shown by this example, the <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for an aggregate construct class should declare a local entity (here <SPAN CLASS="elocal">var</SPAN> and <SPAN CLASS="elocal">sum</SPAN>) for each non-keyword component of the right-hand side, the type of each entity being the corresponding construct class (here <SPAN CLASS="eclass">VARIABLES</SPAN> and <SPAN CLASS="eclass">SUM</SPAN>).</P>
+		<P>As shown by this example, the <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_production">production</A> function for an aggregate construct class should declare a local entity (here <SPAN CLASS="elocal">var</SPAN> and <SPAN CLASS="elocal">sum</SPAN>) for each non-keyword component of the right-hand side, the type of each entity being the corresponding construct class (here <A CLASS="eclass" HREF="/libraries/lex/samples/process/variables_chart.html">VARIABLES</A> and <A CLASS="eclass" HREF="/libraries/lex/samples/process/sum_chart.html">SUM</A>).</P>
 
 		<P>The body of the function should begin with<BR>
 
 		<CODE>
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
+		<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_forth">forth</A>
 		</CODE><BR>
 
 		to create the object containing the result. Then for each non-keyword component, represented by the local entity <SPAN CLASS="elocal">component</SPAN> (this applies to <SPAN CLASS="elocal">var</SPAN> and <SPAN CLASS="elocal">sum</SPAN> in the example), there should be a sequence of two instructions, of the form</P>
 
 		<CODE>
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 		</CODE>
 
 		<P>For any keyword of associated string <I>symbol</I>, such as the colon ":" in the example,
@@ -289,18 +292,18 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		</CODE>
 
 		<P>The order of the various calls to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> (for non-keywords) and <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_keyword">keyword</A> (for keywords) must be the order of the components in the production. Also, every
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN> instruction must occur before the corresponding call to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN>.</P>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A> instruction must occur before the corresponding call to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN>.</P>
 
 		<P>All components in the above example are required. In the general case an aggregate production may have optional components. To signal that a component component of the right-hand side is optional, include a call of the form</P>
 
 		<CODE><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_set_optional">set_optional</A>
 		</CODE>
 
-		<P>This call may appear anywhere after the corresponding <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN> instruction. The recommended place is just after the call to put and on the same line, as in</P>
+		<P>This call may appear anywhere after the corresponding <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN> instruction. The recommended place is just after the call to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A>, as in</P>
 
 		<CODE>
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN>
-		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 		<SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_set_optional">set_optional</A>
 		</CODE>
 
@@ -315,17 +318,21 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		where Simple_var, Poly_integer and Nested are other constructs. This means that every specimen of Term consists of one specimen of any one of these three constructs. Here is the corresponding production function as it appears in class <A CLASS="eclass" HREF="/libraries/lex/samples/process/term_chart.html">TERM</A>:
 
 		<CODE>
-		<A CLASS="efeature" HREF="/libraries/lex/samples/process/term.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A></A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var_chart.html">SIMPLE_VAR</A><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer_chart.html">POLY_INTEGER</A><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested_chart.html">NESTED</A><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/term.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct.html">CONSTRUCT</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var.html">SIMPLE_VAR</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer.html">POLY_INTEGER</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested.html">NESTED</A><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_forth">forth</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">id</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">id</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nest</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A>
 		</CODE>
 
 		<P>As shown by this example, the production function for a choice construct class must declare a local entity - here <SPAN CLASS="elocal">id</SPAN>, <SPAN CLASS="elocal">val</SPAN> and <SPAN CLASS="elocal">nest</SPAN> - for each alternative component of the right-hand side. The type of each entity is the corresponding construct class - here <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var_chart.html">SIMPLE_VAR</A>, <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer_chart.html">POLY_INTEGER</A> and <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested_chart.html">NESTED</A>.</P>
@@ -333,14 +340,15 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		<P>The body of the function must begin by</P>
 
 		<CODE>
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
+		<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_forth">forth</A>
 		</CODE>
 
 		<P>Then for each alternative component represented by a local entity component (in the example this applies to <SPAN CLASS="elocal">id</SPAN>, <SPAN CLASS="elocal">val</SPAN> and <SPAN CLASS="elocal">nest</SPAN>) there should be two instructions of the form</P>
 
-
 		<CODE>
-		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">component</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">component</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 		</CODE>
 
 		<P CLASS="note"><B>Caution</B>: the order of the various calls to <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> is irrelevant in principle. When a document is parsed, however, the choices will be tried in the order given; so if you know that certain
@@ -359,18 +367,18 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		<P>Here are the corresponding <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A> function and <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_separator">separator</A> attribute as they appear in class <A CLASS="eclass" HREF="/libraries/lex/samples/process/variables_chart.html">VARIABLES</A>:</P>
 
 		<CODE>
-		<A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/construct_chart.html">CONSTRUCT</A></A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">local</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/var_chart.html">IDENTIFIER</A><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">once</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">;</SPAN> <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ekeyword">end</SPAN></A><BR>
-		<BR>
-		<A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_separator">separator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">";"</SPAN>
+		<A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/lex/samples/process/identifier.html">IDENTIFIER</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/var.html">VAR</A><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/structures/list/linked_list.html#f_forth">forth</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_make">make</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
 		</CODE>
 
-		<P>As shown by this example, function <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A> is built along the same ideas as for aggregates and choices, except that here only one component, <SPAN CLASS="elocal">base</SPAN>, is required; its type must be the class corresponding to the construct serving as the base of the repetition, <A CLASS="eclass" HREF="/libraries/lex/samples/process/var_chart.html">IDENTIFIER</A> in the example.</P>
+		<P>As shown by this example, function <A CLASS="efeature" HREF="/libraries/lex/samples/process/variables.html#f_production">production</A> is built along the same ideas as for aggregates and choices, except that here only one component, <SPAN CLASS="elocal">base</SPAN>, is required; its type must be the class corresponding to the construct serving as the base of the repetition, <A CLASS="eclass" HREF="/libraries/lex/samples/process/var_chart.html">VAR</A> in the example.</P>
 
 		<H2>INTERFACE TO LEXICAL ANALYSIS</H2>
 
@@ -398,7 +406,71 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<H3>A lexical interface class</H3>
 
-		<P>An example of a lexical interface class is <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_lex_chart.html">POLY_LEX</A> for the Polynomial example language. Here is the <A HREF="/libraries/lex/samples/process/poly_lex.html">complete text</A> of that class.</P>
+		<P>An example of a lexical interface class is <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_lex_chart.html">POLY_LEX</A> for the Polynomial example language. Here is the complete text of that class:</P>
+
+		<CODE>
+		<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Lexical interface class for the Polynomial language"</SPAN><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">class</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_lex.html">POLY_LEX</A><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/parse/l_interface.html">L_INTERFACE</A><BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/samples/process/constants.html">CONSTANTS</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">undefine</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_consistent">consistent</A><SPAN CLASS="esymbol">,</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_copy">copy</A><SPAN CLASS="esymbol">,</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_is_equal">is_equal</A><SPAN CLASS="esymbol">,</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_setup">setup</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_obtain_analyzer"><A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_obtain_analyzer">obtain_analyzer</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create lexical analyzer for the Polynomial language</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_ignore_case">ignore_case</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_ignore_case">keywords_ignore_case</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_expressions">build_expressions</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_keywords">build_keywords</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/parse/l_interface.html#f_set_separator_type">set_separator_type</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_blanks">blanks</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_build_expressions"><A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_expressions">build_expressions</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Define regular expressions</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for the Polynomial language</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_special_expression">special_expression</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Special"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"*('a'..'z')"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_simple_identifier">simple_identifier</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Simple_identifier"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"+('0'..'9')"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_integer_constant">integer_constant</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Integer_constant"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"+('\t'|'\n'|' ')"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_blanks">blanks</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="estring">"Blanks"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_special_expression"><A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_special_expression">special_expression</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Regular expression describing </SPAN><SPAN CLASS="equoted">Special</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">80</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"('\050'..'\057')|"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"('\072'..'\076')|"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"'['|']'|'|'|'{'|'}'|%"-&gt;%"|%":=%""</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_build_keywords"><A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_keywords">build_keywords</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Define keywords (special symbols)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for the Polynomial language</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"+"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"-"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">";"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">":"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"("</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">")"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"*"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">special</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<SPAN CLASS="ekeyword">end</SPAN><BR>
+		</CODE>
 
 		<P>This class illustrates the straightforward scheme for writing lexical interface classes. It introduces constants such as <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_special">Special</A> to represent the regular expressions supported, and effects procedure <A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_obtain_analyzer">obtain_analyzer</A>. The role of this procedure is to define lexical conventions (here through calls to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_ignore_case">ignore_case</A> and <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_keywords_ignore_case">keywords_ignore_case</A>), to record the regular expressions (through calls to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/metalex.html#f_put_expression">put_expression</A>, packaged in a procedure <A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_expressions">build_expressions</A> for clarity), and records the keywords (through calls to <A CLASS="efeature" HREF="/libraries/lex/reference/lex/lex_builder.html#f_put_keyword">put_keyword</A>, packaged in <A CLASS="efeature" HREF="/libraries/lex/samples/process/poly_lex.html#f_build_keywords">build_keywords</A>).</P>
 
@@ -408,7 +480,32 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<P>Terminal construct classes are examples of classes that need to interact with the lexical analysis, and should thus inherit from the lexical interface class.</P>
 
-		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html">TERMINAL</A></A> includes a deferred function <A CLASS="efeature" HREF="/libraries/lex/reference/parse/terminal.html#f_token_type">token_type</A> of type <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A>. Every effective descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html">TERMINAL</A></A> should effect this feature as a constant attribute, whose value is the code for the associated regular expression, obtained from the lexical interface class. As every other construct class, such a descendant should also effect construct_name as a Once function. For example, in the Polynomial language, class <A CLASS="eclass" HREF="/libraries/lex/samples/process/int_constant_chart.html">INT_CONSTANT</A> has the <A HREF="/libraries/lex/samples/process/int_constant.html">following text</A>.
+		<P>Class <A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html">TERMINAL</A></A> includes a deferred function <A CLASS="efeature" HREF="/libraries/lex/reference/parse/terminal.html#f_token_type">token_type</A> of type <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A>. Every effective descendant of <A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html"><A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal_chart.html">TERMINAL</A></A> should effect this feature as a constant attribute, whose value is the code for the associated regular expression, obtained from the lexical interface class. As every other construct class, such a descendant should also effect construct_name as a Once function. For example, in the Polynomial language, class <A CLASS="eclass" HREF="/libraries/lex/samples/process/int_constant_chart.html">INT_CONSTANT</A> has the following text:
+
+		<CODE>
+		<SPAN CLASS="ekeyword">class</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/samples/process/int_constant.html">INT_CONSTANT</A><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/parse/terminal.html">TERMINAL</A><BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/samples/process/constants.html">CONSTANTS</A><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">feature</SPAN> <BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_token_type"><A CLASS="efeature" HREF="/libraries/lex/samples/process/int_constant.html#f_token_type">token_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="/libraries/lex/samples/process/constants.html#f_integer_constant">integer_constant</A><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<BR>
+		<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <BR>
+		<BR>
+		&nbsp; &nbsp; &nbsp;<A NAME="f_construct_name"><A CLASS="efeature" HREF="/libraries/lex/samples/process/int_constant.html#f_construct_name">construct_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">once</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="estring">"INT_CONSTANT"</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">end</SPAN></A><BR>
+		<SPAN CLASS="ekeyword">end</SPAN></CODE>
+
 
 		<H2>SPECIFYING THE SEMANTICS</H3>
 
@@ -577,7 +674,7 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<P CLASS="note"><B>Note</B>: some readers will have recognized <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_commit">commit</A> as being close to the Prolog "cut" mechanism.</P>
 
-		<P>In this example, NESTED is used in only one right-hand side production: the choice production for <A CLASS="eclass" HREF="/libraries/lex/samples/process/term_chart.html">TERM</A>, for which the other alternatives are SIMPLE_VAR and POLY_INTEGER, none of whose specimens can include an opening parenthesis.</P>
+		<P>In this example, <A CLASS="eclass" HREF="/libraries/lex/samples/process/nested_chart.html">NESTED</A> is used in only one right-hand side production: the choice production for <A CLASS="eclass" HREF="/libraries/lex/samples/process/term_chart.html">TERM</A>, for which the other alternatives are <A CLASS="eclass" HREF="/libraries/lex/samples/process/simple_var_chart.html">SIMPLE_VAR</A> and <A CLASS="eclass" HREF="/libraries/lex/samples/process/poly_integer_chart.html">POLY_INTEGER</A>, none of whose specimens can include an opening parenthesis.</P>
 
 		<P>The use of <A CLASS="efeature" HREF="/libraries/lex/reference/parse/construct.html#f_commit">commit</A> assumes global knowledge about the grammar and its future extensions, which is somewhat at odds with the evolutionary approach suggested by the Eiffel method. Applied improperly, this mechanism could lead to the rejection of valid texts as invalid. Used with care, however, it helps in obtaining high-performance parsing without impairing too much the simplicity of preparing parsers and other document processors.</P>
 
@@ -596,7 +693,7 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 		<P>A document processor will be a particular system made of construct classes, complemented by semantic classes, and usually by other auxiliary classes. One of the construct classes corresponds to the top construct and is called the <B>top construct class</B>.</P>
 
 		<P CLASS="note"><B>Note</B>: this notion of top construct class has a natural connection to the notion of root class of a system, as needed to get executable software. The top construct class could indeed be used as root of the processor system. In line with the previous discussion, however, it appears preferable to keep the top construct class (which only depends on the syntax and remains independent of any particular processor) separate from the system’s root class. With this approach the root class will often be a descendant of the top construct class.<BR>
-		This policy was adopted for the Polynomial language example as it appears in the delivery: the processor defined for this example uses LINE as the top construct class; the root of the processor system is a class PROCESS, which inherits from LINE.</P>
+		This policy was adopted for the Polynomial language example as it appears in the delivery: the processor defined for this example uses <A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A> as the top construct class; the root of the processor system is a class PROCESS, which inherits from <A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A>.</P>
 
 		<H3>Steps in the execution of a document processor</H3>
 
@@ -668,7 +765,7 @@ Nested     [=] "(" Sum ")"</PRE></CODE>
 
 		<CODE>
 
- 		<A CLASS="efeature" HREF="/libraries/lex/samples/process/process.html#f_root_line">root_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/line.html">LINE</A></A><BR><BR>
+ 		<A CLASS="efeature" HREF="/libraries/lex/samples/process/process.html#f_root_line">root_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/line.html"><A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A></A></A><BR><BR>
 
  		<A CLASS="efeature" HREF="/libraries/lex/samples/process/process.html#f_make">make</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
 
@@ -732,7 +829,7 @@ Product   [=] {Term "*" ...}</PRE></CODE>
 		will yield the class
 
 		<CODE>
-		<SPAN CLASS="ekeyword">class</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/line.html">LINE</A> <SPAN CLASS="ekeyword">inherit</SPAN><BR>
+		<SPAN CLASS="ekeyword">class</SPAN> <A CLASS="eclass" HREF="/libraries/lex/samples/process/line.html"><A CLASS="eclass" HREF="/libraries/lex/samples/process/line_chart.html">LINE</A></A> <SPAN CLASS="ekeyword">inherit</SPAN><BR>
 		&nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/lex/reference/parse/aggregate.html">AGGREGATE</A><BR>
 		<SPAN CLASS="ekeyword">feature</SPAN><BR>
 

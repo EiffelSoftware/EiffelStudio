@@ -59,7 +59,7 @@ feature {EV_ANY_I} -- Implementation
 			void_implementation: implementation = Void
 		end
 
-feature {ANY} -- Implementation
+feature -- Implementation
 
 	implementation: EV_ANY_I
 			-- Platform dependent access

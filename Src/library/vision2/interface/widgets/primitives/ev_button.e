@@ -1,6 +1,11 @@
 indexing
 	description: "EiffelVision button. Basic GUI push button.%
 		% This is also a base class for other buttons classes"
+	note: " On windows, you can only display a text or a pixmap.%
+		% if you set both the pixmap and the text, only the%
+		% pixmap will be displayed. On gtk, everything works%
+		% like it is suppose to be, you have both text and%
+		% pixmap visible."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -39,7 +44,7 @@ feature {NONE} -- Initialization
  	make (par: EV_CONTAINER) is
  		-- Create a button with `par' as parent'.
 		do
- 			!EV_BUTTON_IMP!implementation.make
+ 			!EV_BUTTON_IMP! implementation.make
  			widget_make (par)
  		end
 	

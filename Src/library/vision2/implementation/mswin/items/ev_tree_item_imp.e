@@ -20,8 +20,6 @@ inherit
 	EV_ITEM_IMP
 		rename
 			parent as old_simple_parent
-		undefine
-			set_pointer_style
 		redefine
 			parent_imp,
 			destroy,
@@ -108,15 +106,6 @@ feature -- {EV_TREE_IMP}
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
 			--|FIXME This is redundent
-		end
-
-
-	set_pointer_style (c: EV_CURSOR) is
-			-- Assign `c' to `parent_imp' pointer style.
-		do
-			if top_parent_imp /= Void then
-				top_parent_imp.set_pointer_style (c)
-			end
 		end
 
 	set_pixmap (p: EV_PIXMAP) is
@@ -469,32 +458,7 @@ feature {EV_TREE_IMP} -- Implementation, pick and drop
 		do
 			pnd_original_parent := top_parent_imp
 		end
-
 	
-	set_capture is
-			-- Grab user input.
-		do
-			top_parent_imp.set_capture
-		end
-
-	release_capture is
-			-- Release user input.
-		do
-			top_parent_imp.release_capture
-		end
-
-	set_heavy_capture is
-			-- Grab user input.
-		do
-			top_parent_imp.set_heavy_capture
-		end
-
-	release_heavy_capture is
-			-- Release user input.
-		do
-			top_parent_imp.release_heavy_capture
-		end
-
 feature {EV_TREE_IMP} -- Implementation
 
 	internal_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
@@ -592,6 +556,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/21 21:54:55  rogers
+--| Removed set_capture, release_capture, set_heavy_capture,
+--| release_heavy_capture and set_pointer_style.
+--|
 --| Revision 1.63  2000/04/14 23:24:26  rogers
 --| Removed re-definition of pnd_press as now only
 --| set_pnd_original_parent is redefined.

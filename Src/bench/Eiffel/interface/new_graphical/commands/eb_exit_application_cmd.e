@@ -59,34 +59,38 @@ feature {NONE} -- Implementation
 	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Quit project after saving.
 		local
-			d: EV_WARNING_DIALOG
+			wd: EV_WARNING_DIALOG
 		do
 			if arg = Void then
 				if 
 					Project_tool.initialized and then
 					tool_supervisor.has_modified_editor_tools
 				then
-					create d.make_with_text (project_tool.parent, t_Confirm, "Quit no save?")
-					d.show
---					warner (popup_parent).custom_call (Current,
---						"Some files have not been saved.",
---						"Don't exit", "Exit anyway", Void)
+					create wd.make_with_text (project_tool.parent, t_Confirm, "Some files have not been saved.%NDo you want to save them?")
+					wd.show_yes_no_cancel_buttons
+					wd.add_yes_command(Current, save_and_exit)
+					wd.add_no_command(Current, do_exit)
+					wd.show
 				else
-					create d.make_with_text (project_tool.parent, t_Confirm, "Quit EiffelBench?")
-					d.show_ok_cancel_buttons
-					d.add_ok_command(Current, do_exit)
-					d.show
---					confirmer (popup_parent).call (Current, 
---						"Quit EiffelBench?", "Exit")
+					create wd.make_with_text (project_tool.parent, t_Confirm, "Quit EiffelBench?")
+					wd.show_ok_cancel_buttons
+					wd.add_ok_command(Current, do_exit)
+					wd.show
 				end
+			elseif arg = do_exit then
+				exit_anyway
 			else
-				if arg = do_exit then
-					exit_anyway
-				end
+				tool_supervisor.save_all_editors
+				exit_anyway
 			end
 		end
 
 feature {NONE} -- Attributes
+
+	save_and_exit : EV_ARGUMENT1 [ANY] is
+		once
+			create Result.make (Void)
+		end
 
 	do_exit : EV_ARGUMENT1 [ANY] is
 		once

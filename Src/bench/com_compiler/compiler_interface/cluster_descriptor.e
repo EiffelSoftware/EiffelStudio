@@ -11,11 +11,16 @@ inherit
 		redefine
 			name,
 			description,
+			tool_tip,
 			classes,
 			class_count,
 			clusters,
 			cluster_count,
-			cluster_path
+			cluster_path,
+			relative_path,
+			is_override_cluster,
+			is_library,
+			is_recursive
 		end
 		
 create
@@ -43,11 +48,56 @@ feature -- Access
 
 	description: STRING is
 			-- Cluster description.
+		local
+			indexes: EIFFEL_LIST [INDEX_AS]
+			i: INDEX_AS
+			found: BOOLEAN
+			tag: STRING
+			list: EIFFEL_LIST [ATOMIC_AS]
+			s: STRING_AS
 		do
-				--| FIXME what to put here ?
-			create Result.make_from_string ("")
+			create Result.make (50)
+			indexes := compiler_cluster.indexes
+			if indexes /= Void then
+				from
+					indexes.start
+				until
+					indexes.after or 
+					found
+				loop
+					tag := indexes.item.tag
+					if tag.is_equal ("description") then
+						found := True
+						i := indexes.item
+					end
+					indexes.forth
+				end
+				if i /= Void then
+					list := i.index_list
+					from
+						list.start
+					until
+						list.after
+					loop
+						s ?= list.item
+						if s /= Void then
+							Result.append (s.value)
+						end
+						list.forth
+						if not list.after and s /= Void then
+							Result.append (", ")
+						end
+					end				
+				end			
+			end
 		ensure then
 			result_exists: Result /= Void
+		end
+
+	tool_tip: STRING is
+			-- Cluster Tool Tip.
+		do
+			create Result.make (0)
 		end
 
 	classes: CLASS_ENUMERATOR is
@@ -114,6 +164,32 @@ feature -- Access
 			Result := compiler_cluster.path
 		ensure then
 			result_exists: Result /= Void
+		end
+
+	relative_path: STRING is
+			-- Relative path to cluster.
+		do
+			Result := compiler_cluster.dollar_path
+		ensure then
+			result_exists: Result /= Void
+		end
+
+	is_override_cluster: BOOLEAN is
+			-- Should this cluster classes take priority over other classes with same name?
+		do
+			Result := compiler_cluster.is_override_cluster
+		end
+
+	is_library: BOOLEAN is
+			-- Should this cluster be treated as library?
+		do
+			Result := compiler_cluster.is_library
+		end
+
+	is_recursive: BOOLEAN is
+			-- Should subclusters be included recursively?
+		do
+			Result := compiler_cluster.is_recursive
 		end
 		
 feature {NONE} -- Implementation

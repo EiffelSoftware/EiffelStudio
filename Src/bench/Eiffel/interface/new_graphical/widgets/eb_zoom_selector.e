@@ -21,7 +21,7 @@ feature -- Initialization
 			make_with_strings (Initial_strings)
 			remove_selection
 			set_text ("100%%")
-			set_minimum_width (60) 
+			set_minimum_width_in_characters (5)
 			return_actions.extend (agent on_zoom_level_typed)
 		end
 		

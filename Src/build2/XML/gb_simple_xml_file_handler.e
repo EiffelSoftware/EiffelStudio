@@ -34,6 +34,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	CDATA_HANDLER
+		export
+			{NONE} all
+		end
 	
 feature -- Basic operations
 
@@ -69,7 +74,7 @@ feature -- Basic operations
 				check
 					data_not_void: a_name_string /= Void and a_data_string /= Void
 				end
-				add_element_containing_string (root_element, a_name_string, a_data_string)
+				add_element_containing_string (root_element, a_name_string, enclose_in_cdata (a_data_string))
 				counter := counter + 1
 			end
 			
@@ -158,12 +163,11 @@ feature {NONE} -- Implementation
 					child_names.off
 				loop
 					element_info := full_information @ (child_names.item)
-					Result.extend ([element_info.name, element_info.data])
+					Result.extend ([element_info.name, strip_cdata (element_info.data)])
 					child_names.forth
 				end
 			end
 		end
-		
 				
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is
 			-- Create unique callback pipe.

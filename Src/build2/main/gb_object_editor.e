@@ -511,6 +511,7 @@ feature {NONE} -- Implementation
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN
 			horizontal_box: EV_HORIZONTAL_BOX
+			flatten_button: EV_BUTTON
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -523,7 +524,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
-			create label.make_with_text (object.type.substring (4, object.type.count))
+			create label.make_with_text (object.actual_type)
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
@@ -545,57 +546,72 @@ feature {NONE} -- Implementation
 			name_field.return_actions.extend (agent update_name_when_return_pressed)
 			attribute_editor_box.extend (name_field)
 			attribute_editor_box.disable_item_expand (name_field)
-			
+
 			create separator
 			separator.set_minimum_height (Object_editor_padding_width * 2)
 			attribute_editor_box.extend (separator)
 			attribute_editor_box.disable_item_expand (separator)
 			
-			create handler
-			supported_types := handler.supported_types.twin
-			from
-				supported_types.start
-			until
-				supported_types.off
-			loop
-				current_type := supported_types.item
-				current_type.to_upper
-				if is_instance_of (object.object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
-					gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
-					gb_ev_any.set_parent_editor (Current)
-					gb_ev_any.default_create
-					gb_ev_any.set_object (object)
-					check
-						gb_ev_any_exists: gb_ev_any /= Void
+			if not object.is_instance_of_top_level_object then
+				-- If `object' is representing a top level object, it is locked and must not be modified
+				-- as all modification must be performed directly through the top level object itself.				
+				create handler
+				supported_types := handler.supported_types.twin
+				from
+					supported_types.start
+				until
+					supported_types.off
+				loop
+					current_type := supported_types.item
+					current_type.to_upper
+					if is_instance_of (object.object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
+						gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
+						gb_ev_any.set_parent_editor (Current)
+						gb_ev_any.default_create
+						gb_ev_any.set_object (object)
+						check
+							gb_ev_any_exists: gb_ev_any /= Void
+						end
+						gb_ev_any.add_object (object.object)
+						
+							-- We need to check that the display_object is not of type `GB_DISPLAY_OBJECT'.
+							-- If it is, we must add its child, as this is the object that must be modified.
+						display_object ?= object.display_object
+						if display_object /= Void then
+							gb_ev_any.add_object (display_object.child)	
+						else
+							gb_ev_any.add_object (object.display_object)
+						end
+						
+						item_parent.extend (gb_ev_any.attribute_editor)
 					end
-					gb_ev_any.add_object (object.object)
-					
-						-- We need to check that the display_object is not of type `GB_DISPLAY_OBJECT'.
-						-- If it is, we must add its child, as this is the object that must be modified.
-					display_object ?= object.display_object
-					if display_object /= Void then
-						gb_ev_any.add_object (display_object.child)	
-					else
-						gb_ev_any.add_object (object.display_object)
-					end
-					
-					item_parent.extend (gb_ev_any.attribute_editor)
+					supported_types.forth
 				end
-				supported_types.forth
-			end
-			
-				-- Now we add the button which will bring up the events window.
-				-- We do not display the events button if the type is a tool bar separator
-				-- or a menu separator, as the export status of the events is hidden.
-			if not object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") and
-			not object.type.is_equal ("EV_MENU_SEPARATOR") then
-				create event_selection_button
-				update_event_selection_button_text
+				
+					-- Now we add the button which will bring up the events window.
+					-- We do not display the events button if the type is a tool bar separator
+					-- or a menu separator, as the export status of the events is hidden.
+				if not object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") and
+				not object.type.is_equal ("EV_MENU_SEPARATOR") then
+					create event_selection_button
+					update_event_selection_button_text
+					create horizontal_box
+					horizontal_box.extend (event_selection_button)
+					horizontal_box.disable_item_expand (event_selection_button)
+					attribute_editor_box.extend (horizontal_box)
+					event_selection_button.select_actions.extend (agent show_event_dialog)
+				end
+			else
+					-- We are representing a top level widget so perform some slightly modified building in this case.
+					
+					-- Build and insert a button that may be used to flatten `object'.
+				create flatten_button.make_with_text ("Flatten")
 				create horizontal_box
-				horizontal_box.extend (event_selection_button)
-				horizontal_box.disable_item_expand (event_selection_button)
 				attribute_editor_box.extend (horizontal_box)
-				event_selection_button.select_actions.extend (agent show_event_dialog)
+				flatten_button.select_actions.extend (agent object.flatten)
+				flatten_button.select_actions.extend (agent rebuild_associated_editors (object.object))
+				horizontal_box.extend (flatten_button)
+				horizontal_box.disable_item_expand (flatten_button)
 			end
 
 			if current_window_parent /= Void and locked_in_here then
@@ -620,21 +636,15 @@ feature {NONE} -- Implementation
 			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
 		local
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			current_text: STRING
 		do
 			current_text := name_field.text.as_lower
-			if valid_class_name (current_text) or current_text.is_empty  then
+			if valid_class_name (current_text) or current_text.is_empty then
 				object.set_edited_name (current_text)
 				if name_in_use (current_text) then
 					name_field.set_foreground_color (red)
 				else
 					name_field.set_foreground_color (black)
-				end
-				object.layout_item.set_text (name_and_type_from_object (object))
-				titled_window_object ?= object
-				if titled_window_object /= Void then
-					titled_window_object.window_selector_item.set_text (name_and_type_from_object (titled_window_object))
 				end
 					-- Update title of window.
 				set_title_from_name

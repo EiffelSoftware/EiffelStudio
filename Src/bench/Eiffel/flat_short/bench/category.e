@@ -157,18 +157,6 @@ feature
 			ctxt.commit;
 		end;
 
-	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
-		do
-			!! Result.make;
-			from
-				clauses.start
-			until
-				clauses.after
-			loop
-				Result.append (clauses.item.features_storage_info);
-				clauses.forth
-			end;
-		end;	
 
 	infix "<" (other: like Current): BOOLEAN is
 		do
@@ -181,6 +169,23 @@ feature
 		do
 			clauses.wipe_out;	
 			comment := Void
+		end;	
+
+feature {FLAT_STRUCT}
+
+	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+			-- List of features relevant for EiffelCase.
+		do
+			!! Result.make;
+			from
+				clauses.start
+			until
+				clauses.after
+			loop
+					-- Store feature information
+				Result.append (clauses.item.features_storage_info);
+				clauses.forth
+			end;
 		end;	
 
 end

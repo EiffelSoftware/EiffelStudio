@@ -14,7 +14,6 @@ feature
 
 	execute is
 		local
-			storage: S_STORER;
 			format_storage: FORMAT_CASE_STORAGE
 		do
 			init_project;

@@ -13,29 +13,22 @@ inherit
 			make as button_make
 		end;
 	ISE_MENU_ENTRY
-		rename
-			make as ime_make
+		redefine
+			associated_command
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (cmd: PREFERENCE_CATEGORY; a_parent: MENU) is
-		require
-			cmd_not_void: cmd /= Void;
-			a_parent_not_void: a_parent /= Void;
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+			-- Initialize the button in preference tool.
 		do
 			button_make (menu_entry_name, a_parent);
-			entry_text := cmd.name;
-			set_text (cmd.name);
-			add_activate_action (cmd, cmd.name)
-		end;
-	
-feature -- Properties
-
-	entry_text: STRING;
+			set_text (a_cmd.name);
+			add_activate_action (a_cmd, a_cmd.name)
+		end
 
 feature -- Status setting
 
@@ -49,12 +42,9 @@ feature -- Status setting
 			end
 		end
 
-feature -- Useless
-
-	initialize_button (a_parent: MENU) is
-			-- Useless here
+	associated_command: PREFERENCE_COMMAND is
+			-- Command type that menu entry expects
 		do
-			--| Do nothing
-		end
+		end;
 
 end -- class PREFERENCE_TICKABLE_MENU_ENTRY

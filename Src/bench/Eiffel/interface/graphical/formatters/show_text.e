@@ -105,7 +105,7 @@ feature -- Formatting
 					not stone.same_as (tool.stone))
 				then
 					if stone /= Void and then stone.is_valid then
-						same_stone := stone.same_as (text_window.root_stone);
+						same_stone := stone.same_as (tool.stone);
 						display_temp_header (stone);
 						!! mp.set_watch_cursor;
 						stone_text := stone.origin_text;

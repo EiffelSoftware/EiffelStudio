@@ -13,51 +13,40 @@ inherit
 			make as button_make
 		end;
 	ISE_MENU_ENTRY
-		rename
-			make as ime_make
+		redefine
+			associated_command
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
-
-	make (cmd: PREFERENCE_COMMAND; a_parent: MENU;) is
-		require
-			cmd_not_void: cmd /= Void;
-			a_parent_not_void: a_parent /= Void;
-		do
-			button_make (menu_entry_name, a_parent);
-			entry_text := cmd.name;
-			set_text (cmd.name);
-			add_activate_action (cmd, Void)
-		end
-	
-feature -- Properties
-
-	entry_text: STRING;
-
 feature -- Command Setting
 
-	set_command_argument (cmd: PREFERENCE_COMMAND; arg: ANY) is
+	set_command_argument (a_cmd: like associated_command; arg: ANY) is
 		require
-			cmd_not_void: cmd /= Void
+			cmd_not_void: a_cmd /= Void
 		do
-			add_activate_action (cmd, arg)
+			add_activate_action (a_cmd, arg)
 		end
 
-feature -- Useless
-
-	initialize_button (a_parent: MENU) is
-			-- Useless here
+	associated_command: PREFERENCE_COMMAND is
+			-- Command type that menu entry expects
 		do
-			--| Do nothing
+		end;
+
+feature -- Initialization
+
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
+			-- Initialize button.
+		do
+			button_make (a_cmd.name, a_parent);
+			set_text (a_cmd.name);
+			add_activate_action (a_cmd, Void)
 		end;
 
 	set_selected (b:BOOLEAN) is
-			-- Useless here.
+			-- Set the tick or un set it, according to `b'.
 		do
-			--| Do Nothing
 		end
 
 end -- class PREFERENCE_MENU_ENTRY

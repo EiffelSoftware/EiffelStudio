@@ -87,7 +87,9 @@ feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
 			a_drawing_area_imp: EV_DRAWING_AREA_IMP
 		do
 			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_drawing_area_imp.call_expose_actions (x, y, width, height)
+			if a_drawing_area_imp /= Void then
+				a_drawing_area_imp.call_expose_actions (x, y, width, height)
+			end
 		end
 
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines

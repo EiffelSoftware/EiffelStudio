@@ -10,7 +10,12 @@ class EDITOR_MGR
 inherit
 
 	GRAPHICS;
-	WINDOWS
+	WINDOWS;
+	RESOURCE_USER
+		redefine
+			update_boolean_resource,
+			update_integer_resource
+		end
 
 feature -- Initialization
 
@@ -23,6 +28,44 @@ feature -- Initialization
 			!!active_editors.make;
 			!!free_list.make
 		end;
+
+feature -- Resource Update
+
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+			-- Update all active class tools according to
+			-- `new_res'.
+		local
+			ae: like active_editors
+			aei: like editor_type
+		do
+			ae := active_editors
+			from
+				ae.start
+			until
+				ae.after
+			loop
+				aei := ae.item;
+				aei.update_boolean_resource (old_res, new_res);
+				ae.forth
+			end;
+		end;
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+			-- Update all active class tools according to
+			-- `new_res'.
+		local
+			ae: like active_editors
+		do
+			ae := active_editors;
+			from
+				ae.start
+			until
+				ae.after
+			loop
+				ae.item.update_integer_resource (old_res, new_res);
+				ae.forth
+			end
+		end
 
 feature -- Properties
 

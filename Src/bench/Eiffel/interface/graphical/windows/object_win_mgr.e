@@ -10,13 +10,32 @@ class OBJECT_WIN_MGR
 inherit
 
 	EDITOR_MGR
+		rename
+			make as mgr_make
 		redefine
 			editor_type, synchronize
-		end
+		end;
+	EDITOR_MGR
+		redefine
+			editor_type, synchronize, make
+		select
+			make
+		end;
+	EB_CONSTANTS
 
 creation
 
 	make
+
+feature -- Initialization
+
+	make (a_screen: SCREEN; i: INTEGER) is
+			-- Initialize Current.
+		do
+			mgr_make (a_screen, i);
+			Object_tool_resources.add_user (Current)
+		end
+
 
 feature -- Properties
 

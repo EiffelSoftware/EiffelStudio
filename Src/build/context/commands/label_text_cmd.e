@@ -24,18 +24,33 @@ feature {NONE}
 
 	old_text: STRING;
 
+	old_width, old_height: INTEGER;
+
 	context_work is
 		do
 			old_text := context.text;
+			old_width := context.width;
+			old_height := context.height;
 		end;
 
 	context_undo is
 		local
 			new_text: STRING;
+			tmp_width, tmp_height: INTEGER
 		do
-			if not (old_text = Void) then
+			if old_text /= Void then
 				new_text := context.text;
+				tmp_width := context.width;
+				tmp_height := context.height;
 				context.set_text (old_text);
+				if (old_width /= context.width or else
+                	old_height /= context.height)
+            	then
+                	context.set_size (old_width, old_height);
+            	end;
+
+                old_width := tmp_width;
+                old_height := tmp_height;
 				old_text := new_text;
 			end;
 		end;

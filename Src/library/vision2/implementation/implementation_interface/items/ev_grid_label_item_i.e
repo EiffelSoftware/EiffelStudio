@@ -75,14 +75,27 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		local
 			back_color: EV_COLOR
 		do
+			fixme ("Correctly handle selection colors and inversion")
+			
+			
 			back_color := internal_background_color
 			if back_color = Void then
 				back_color := parent_grid_i.background_color
 			end
 			drawable.set_foreground_color (back_color)
 			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
-			drawable.set_foreground_color (foreground_color)
+			if is_selected then
+				drawable.set_foreground_color (parent_grid_i.selection_color)
+				drawable.set_and_mode
+				drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+				drawable.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			else
+				drawable.set_foreground_color (foreground_color)
+			end
+			
+			drawable.set_copy_mode
 			drawable.draw_ellipsed_text_top_left (an_x, a_y, text, a_width)
+			
 		end
 
 feature {EV_ANY_I} -- Implementation

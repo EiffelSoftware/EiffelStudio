@@ -34,7 +34,7 @@ create
 
 feature -- initialization
 
-	needs_event_box: BOOLEAN is do Result := False end
+	needs_event_box: BOOLEAN is do Result := True end
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.

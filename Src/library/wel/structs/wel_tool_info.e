@@ -126,6 +126,14 @@ feature -- Element change
 			window_set: window = a_window
 		end
 
+	set_id_with_window (a_window: WEL_WINDOW) is
+			-- Set `id' with `a_window'.
+		do
+			cwel_toolinfo_set_uid (item, cwel_pointer_to_integer (a_window.item))
+		ensure
+			id_set: id = cwel_pointer_to_integer (a_window.item)
+		end
+
 	set_id (an_id: INTEGER) is
 			-- Set `id' with `an_id'.
 		do

@@ -134,13 +134,8 @@ feature -- Implementation
 			-- Return `True' if `an_object' is a top level object.
 		require
 			an_object_not_void: an_object /= Void
-		local
-			type: STRING
 		do
-			type := an_object.generating_type
-			Result := type.substring_index ("_ITEM_", 1) = 0
-				and type.substring_index ("MENU", 1) = 0
-				and not an_object.is_instance_of_top_level_object
+			Result := not an_object.is_instance_of_top_level_object
 		ensure
 		-- | FIXME Crashes transport. No idea why.
 		--	Result = (an_object.object /= Void) implies an_object.is_top_level_object

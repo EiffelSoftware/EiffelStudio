@@ -18,10 +18,10 @@
 		<paragraph>The visible exception is disabled by default. </paragraph>
 		<heading>
 			<size>2</size>CONFORMANCE
-		</heading> Eiffel Software  Eiffel 4. 5 and later.  
+		</heading> ISE Eiffel 4.5 and later.  
 		<heading>
 			<size>2</size>COMPATIBILITY
-		</heading>On  Eiffel Software  Eiffel 4. 3 and 4. 4, the visible exception is enabled by default. 
+		</heading>In ISE Eiffel 4.3 and 4.4, the visible exception is enabled by default. 
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>

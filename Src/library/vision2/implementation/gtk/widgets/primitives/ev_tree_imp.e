@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			-- Called when a tree item is selected
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
+		do		
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void then
+			if a_tree_node_imp /= Void and selected_node /= Void then
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (empty_tuple)
 				end

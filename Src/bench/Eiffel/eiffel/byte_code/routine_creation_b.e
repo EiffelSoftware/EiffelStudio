@@ -5,7 +5,8 @@ inherit
 	EXPR_B
 		redefine
 			make_byte_code, enlarged, generate_il,
-			has_gcable_variable, has_call, size
+			has_gcable_variable, has_call, size,
+			allocates_memory
 		end
 
 feature  -- Initialization
@@ -98,7 +99,10 @@ feature -- Address table
 			end
 		end
 
-feature
+feature -- Status report
+
+	allocates_memory: BOOLEAN is True
+			-- Current always allocates memory.
 
 	has_gcable_variable: BOOLEAN is
 			-- Is the expression using a GCable variable ?

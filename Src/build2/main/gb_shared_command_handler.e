@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 
 
 inherit

@@ -421,6 +421,8 @@ feature -- Hack for motif
 			-- the top shell and the returned value is inner
 			-- coordinate.
 		once
+			!! Result
+			Result := 0
 			if toolkit.name.is_equal ("MOTIF") then
 				Result := widget.real_x - old_x
 			end
@@ -429,6 +431,8 @@ feature -- Hack for motif
 	y_offset: INTEGER is	
 			-- See above comments
 		once
+			!! Result
+			Result := 0
 			if toolkit.name.is_equal ("MOTIF") then
 				Result := widget.real_y - old_y
 			end

@@ -527,19 +527,10 @@ feature -- Implementation
 	
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
-
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-			app_imp.on_pick (pebble)
+			App_implementation.on_pick (pebble)
 
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.pick_actions_internal /= Void then

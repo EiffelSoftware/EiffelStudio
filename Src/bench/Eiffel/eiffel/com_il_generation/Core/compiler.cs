@@ -514,8 +514,8 @@ feature -- Generation Structure
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
 
-			entry_point.SetCustomAttribute (FEATURE.debugger_hidden_attr ());
-			entry_point.SetCustomAttribute (FEATURE.debugger_step_through_attr ());
+			entry_point.SetCustomAttribute (CA.debugger_hidden_attr ());
+			entry_point.SetCustomAttribute (CA.debugger_step_through_attr ());
 			
 			Generator = entry_point.GetILGenerator();
 			eiffel_entry_point = ((FEATURE) (Classes [TypeID].

@@ -44,10 +44,8 @@ feature {NONE} -- Initialization
 			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
-			new_item_actions.extend (~widget_parented)
 			create remove_item_actions.make ("remove_item", <<"widget">>)
 			remove_item_actions.extend (~remove_radio_button)
-			remove_item_actions.extend (~widget_orphaned)
 			{EV_WIDGET_IMP} Precursor
 		end
 
@@ -339,28 +337,6 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	widget_parented (w: EV_WIDGET) is
-			-- Called every time a widget is added to the container.
-		require
-			w_not_void: w /= Void
-		local
-			w_imp: EV_WIDGET_IMP
-		do
-			w_imp ?= w.implementation
-			w_imp.on_parented
-		end
-
-	widget_orphaned (w: EV_WIDGET) is
-			-- Called every time a widget is removed from the container.
-		require
-			w_not_void: w /= Void
-		local
-			w_imp: EV_WIDGET_IMP
-		do
-			w_imp ?= w.implementation
-			w_imp.on_orphaned
-		end
-
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP]
@@ -479,6 +455,11 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/04/14 23:34:19  rogers
+--| Removed widget_parent and widget_orphaned as on_parented is no
+--| longer needed in new_item_actions and on_orphaned is no longer
+--| needed in remove_item_actions.
+--|
 --| Revision 1.48  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

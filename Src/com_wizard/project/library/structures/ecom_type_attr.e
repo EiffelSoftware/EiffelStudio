@@ -14,10 +14,15 @@ inherit
 		end
 
 	ECOM_TYPE_KIND
+		undefine
+			copy, is_equal
+		end
 		
 	ECOM_TYPE_FLAGS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 creation

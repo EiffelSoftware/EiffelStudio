@@ -11,6 +11,9 @@ inherit
 	ECOM_STRUCTURE
 
 	ECOM_PARAM_FLAGS
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make, make_from_pointer

@@ -14,12 +14,24 @@ inherit
 		end
 
 	ECOM_FUNC_KIND
+		undefine
+			copy, is_equal
+		end
 
 	ECOM_INVOKE_KIND
+		undefine
+			copy, is_equal
+		end
 
 	ECOM_CALL_CONV
+		undefine
+			copy, is_equal
+		end
 
 	ECOM_FUNC_FLAGS
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make, make_from_pointer

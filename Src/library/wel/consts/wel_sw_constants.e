@@ -9,103 +9,47 @@ class
 
 feature -- Access
 
-	Sw_hide: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_HIDE"
-		end
+	Sw_hide: INTEGER is 0
+			-- Declared in Windows as SW_HIDE
 
-	Sw_minimize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_MINIMIZE"
-		end
+	Sw_minimize: INTEGER is 6
+			-- Declared in Windows as SW_MINIMIZE
 
-	Sw_restore: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_RESTORE"
-		end
+	Sw_restore: INTEGER is 9
+			-- Declared in Windows as SW_RESTORE
 
-	Sw_shownormal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWNORMAL"
-		end
+	Sw_shownormal: INTEGER is 1
+			-- Declared in Windows as SW_SHOWNORMAL
 
-	Sw_show: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOW"
-		end
+	Sw_show: INTEGER is 5
+			-- Declared in Windows as SW_SHOW
 
-	Sw_showmaximized: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWMAXIMIZED"
-		end
+	Sw_showmaximized: INTEGER is 3
+			-- Declared in Windows as SW_SHOWMAXIMIZED
 
-	Sw_showminimized: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWMINIMIZED"
-		end
+	Sw_showminimized: INTEGER is 2
+			-- Declared in Windows as SW_SHOWMINIMIZED
 
-	Sw_showminnoactive: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWMINNOACTIVE"
-		end
+	Sw_showminnoactive: INTEGER is 7
+			-- Declared in Windows as SW_SHOWMINNOACTIVE
 
-	Sw_showna: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWNA"
-		end
+	Sw_showna: INTEGER is 8
+			-- Declared in Windows as SW_SHOWNA
 
-	Sw_shownoactivate: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_SHOWNOACTIVATE"
-		end
+	Sw_shownoactivate: INTEGER is 4
+			-- Declared in Windows as SW_SHOWNOACTIVATE
 
-	Sw_parentclosing: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_PARENTCLOSING"
-		end
+	Sw_parentclosing: INTEGER is 1
+			-- Declared in Windows as SW_PARENTCLOSING
 
-	Sw_parentopening: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_PARENTOPENING"
-		end
+	Sw_parentopening: INTEGER is 3
+			-- Declared in Windows as SW_PARENTOPENING
 
-	Sw_otherzoom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_OTHERZOOM"
-		end
+	Sw_otherzoom: INTEGER is 2
+			-- Declared in Windows as SW_OTHERZOOM
 
-	Sw_otherunzoom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SW_OTHERUNZOOM"
-		end
+	Sw_otherunzoom: INTEGER is 4
+			-- Declared in Windows as SW_OTHERUNZOOM
 
 end -- class WEL_SW_CONSTANTS
 

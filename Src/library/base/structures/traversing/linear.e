@@ -166,37 +166,65 @@ feature -- Cursor movement
 
 feature -- Iteration
 
-		
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead. 
 		local
 			t: TUPLE [G]
+			cs: CURSOR_STRUCTURE [G]
+			c: CURSOR
 		do
+			cs ?= Current
+			if cs /= Void then
+				c := cs.cursor
+			end
+
 			create t.make
-			from start until after loop
+			from
+				start
+			until
+				after
+			loop
 				t.put (item, 1)
 				action.call (t)
 				forth
 			end
+
+			if cs /= Void then
+				cs.go_to (c)
+			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]];
-	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead. 
 		local
 			t: TUPLE [G]
+			cs: CURSOR_STRUCTURE [G]
+			c: CURSOR
 		do
+			cs ?= Current
+			if cs /= Void then
+				c := cs.cursor
+			end
+
 			create t.make
-			from start until after loop
+			from
+				start
+			until
+				after
+			loop
 				t.put (item, 1)
 				if test.item (t) then
 					action.call (t)
 				end
 				forth
+			end
+
+			if cs /= Void then
+				cs.go_to (c)
 			end
 		end
 

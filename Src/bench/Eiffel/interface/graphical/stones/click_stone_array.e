@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Array of click stone computed from CLICK_LIST.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CLICK_STONE_ARRAY
 
 inherit
@@ -11,7 +18,7 @@ creation
 
 	make
 	
-feature  -- Initialization
+feature {NONE} -- Initialization
 
 	make (list: CLICK_LIST; 
 			ref_class: E_CLASS) is

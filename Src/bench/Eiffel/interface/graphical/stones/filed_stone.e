@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Stone that has a file name associated with it.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class FILED_STONE 
 
 inherit
@@ -9,13 +16,13 @@ inherit
 			is_valid
 		end
 	
-feature 
+feature -- Access
 
-	file_name: STRING is deferred end;
-			-- Name of the file which parsing led to the creation of current AST node
-
-	set_file_name (s: STRING) is deferred end;
-			-- Assign `s' to `file_name'.
+	file_name: STRING is 
+			-- Name of the file which parsing led 
+			-- to the creation of current AST node
+		deferred
+		end;
 
 	origin_text: STRING is
 			-- Content of the file named `file_name';
@@ -36,6 +43,11 @@ feature
 			end
 		end
 
+feature -- Setting
+
+	set_file_name (s: STRING) is deferred end;
+			-- Assign `s' to `file_name'.
+
 feature -- Status report
 
 	is_valid: BOOLEAN is
@@ -46,4 +58,4 @@ feature -- Status report
 			Result implies file_name /= Void
 		end;
 
-end
+end -- class FILED_STONE

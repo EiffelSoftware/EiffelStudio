@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Stone representing a syntax error.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 
 class SYNTAX_STONE
 
@@ -16,16 +23,18 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (a_syntax_errori: SYNTAX_ERROR) is
  		do
 			syntax_error_i := a_syntax_errori
 		end;
+
+feature -- Properties
  
 	syntax_error_i: SYNTAX_ERROR;
 
-feature
+feature -- Access
 
 	file_name: STRING is
             -- The one from SYNTAX_ERROR: where it happened
@@ -48,4 +57,4 @@ feature
 	code: STRING is "Syntax error";
 			-- Error code
 
-end
+end -- class SYNTAX_STONE

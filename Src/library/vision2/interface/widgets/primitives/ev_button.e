@@ -62,6 +62,37 @@ feature -- Event handling
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed and then released.
 
+feature {EV_DIALOG} -- Default push button handling
+
+	is_default_push_button: BOOLEAN is
+			-- Is this button currently a default push button 
+			-- for a particular container?
+		do
+			Result := implementation.is_default_push_button
+		end
+
+	enable_default_push_button is
+			-- Set the style of the button corresponding
+			-- to the default push button.
+		require
+			is_not_default_push_button: not is_default_push_button
+		do
+			implementation.enable_default_push_button
+		ensure
+			is_default_push_button: is_default_push_button
+		end
+
+	disable_default_push_button is
+			-- Remove the style of the button corresponding
+			-- to the default push button.
+		require
+			is_default_push_button: is_default_push_button
+		do
+			implementation.disable_default_push_button
+		ensure
+			is_not_default_push_button: not is_default_push_button
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_BUTTON_I
@@ -127,6 +158,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/29 03:42:57  pichery
+--| Added "default_push_button" features.
+--|
 --| Revision 1.31  2000/04/28 00:42:45  brendel
 --| Incorpoated {EV_TEXTABLE}.make_for_test.
 --|

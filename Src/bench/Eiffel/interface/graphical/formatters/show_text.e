@@ -102,7 +102,7 @@ feature -- Formatting
 				if
 					do_format or filtered or modified_class or else
 					(tool.last_format.associated_command /= Current or
-					not stone.same_as (tool.stone))
+					stone /= Void and then not stone.same_as (tool.stone))
 				then
 					if stone /= Void and then stone.is_valid then
 						same_stone := stone.same_as (tool.stone);

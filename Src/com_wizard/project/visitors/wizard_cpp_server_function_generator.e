@@ -19,6 +19,7 @@ feature -- Basic operations
 			non_void_coclass: a_component /= Void
 		do
 			func_desc := a_descriptor
+			component_desc := a_component
 			coclass_name := a_component.name
 
 			create ccom_feature_writer.make
@@ -38,6 +39,9 @@ feature -- Basic operations
 
 feature {NONE} -- Access
 
+	component_desc: WIZARD_COMPONENT_DESCRIPTOR
+			-- Component.
+	
 	coclass_name: STRING
 			-- Coclass name
 
@@ -277,7 +281,7 @@ feature {NONE} -- Implementation
 				
 				if 
 					is_paramflag_fout (an_argument.flags) and
-					not is_array (visitor.vt_type) 
+					(visitor.is_pointed or visitor.is_array_type)
 				then					
 					return_value.append (out_value_set_up (an_argument.name, visitor))
 					return_value.append (New_line_tab)
@@ -433,7 +437,7 @@ feature {NONE} -- Implementation
 				not visitor.is_interface_pointer and
 				not (is_void (visitor.vt_type) and is_byref (visitor.vt_type))
 			then
-				if not is_array (visitor.vt_type) then
+				if (visitor.is_pointed or visitor.is_array_type) then
 					if visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else
@@ -448,7 +452,7 @@ feature {NONE} -- Implementation
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
-				if not is_array (visitor.vt_type) then
+				if (visitor.is_pointed or visitor.is_array_type) then
 					Result.append (Comma_space)
 					Result.append (arg_name)
 					Result.append (Close_parenthesis)
@@ -523,12 +527,8 @@ feature {NONE} -- Implementation
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-
-			if func_desc.coclass_eiffel_names.has (coclass_name) then
-				Result.append (func_desc.coclass_eiffel_names.item (coclass_name))
-			else
-				Result.append (func_desc.interface_eiffel_name)
-			end
+			
+			Result.append (func_desc.eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)
@@ -637,11 +637,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
 			Result.append (Double_quote)
-			if func_desc.coclass_eiffel_names.has (coclass_name) then
-				Result.append (func_desc.coclass_eiffel_names.item (coclass_name))
-			else
-				Result.append (func_desc.interface_eiffel_name)
-			end
+			Result.append (func_desc.eiffel_name (component_desc))
 			Result.append (Double_quote)
 			Result.append (Comma_space)
 			Result.append (return_type)
@@ -671,11 +667,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 
-			if func_desc.coclass_eiffel_names.has (coclass_name) then
-				Result.append (func_desc.coclass_eiffel_names.item (coclass_name))
-			else
-				Result.append (func_desc.interface_eiffel_name)
-			end
+			Result.append (func_desc.eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)
@@ -703,11 +695,8 @@ feature {NONE} -- Implementation
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-			if func_desc.coclass_eiffel_names.has (coclass_name) then
-				Result.append (func_desc.coclass_eiffel_names.item (coclass_name))
-			else
-				Result.append (func_desc.interface_eiffel_name)
-			end
+			
+			Result.append (func_desc.eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)

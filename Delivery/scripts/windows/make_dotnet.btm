@@ -11,13 +11,13 @@ copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace
-finalize emitter.ace
+finalize metadata_consumer.ace
 fff
-iff not exist EIFGEN\F_code\emitter.exe then
-	remtrace Could not compile emitter.exe
+iff not exist EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll then
+	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EIFGEN\F_code\emitter.exe %INSTALL_DIR\dotnet_binaries
+copy EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
 cdd %INSTALL_DIR\dotnet\assemblies
 fullrf build.bat
 fullrf System.Object.xml

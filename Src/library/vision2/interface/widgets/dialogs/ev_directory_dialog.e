@@ -118,7 +118,7 @@ feature -- Event -- removing command association
 			implementation.remove_cancel_commands
 		end
 
-feature {NONE} -- implementation
+feature -- Implementation
 
 	implementation: EV_DIRECTORY_SELECTION_DIALOG_I
 

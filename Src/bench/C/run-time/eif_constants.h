@@ -76,8 +76,8 @@ age */
 	/*---------*/
 /* Make sure NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
 #ifndef NSIG
-#ifdef EIF_WINDOWS
-#define NSIG 16
+#ifdef EIF_WIN32
+#define NSIG 23
 #else
 #define NSIG 32		/* Number of signals (acess from 1 to NSIG-1) */
 #endif

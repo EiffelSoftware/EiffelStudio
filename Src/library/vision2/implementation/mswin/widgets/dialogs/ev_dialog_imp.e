@@ -14,22 +14,19 @@ inherit
 	EV_DIALOG_I
 		rename
 			expandable as never_displayed
-		redefine
-			build
 		end
 
 	EV_WINDOW_IMP
 		redefine
-			build
+			plateform_build
 		end
 
 creation
-
 	make
 
 feature -- Initialization
 
-	build is
+	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Put the component inside the dialog
 		local
 			vbox: EV_VERTICAL_BOX
@@ -39,12 +36,21 @@ feature -- Initialization
 			check
 				container_not_void: container_interface /= Void
 		end
+			{EV_WINDOW_IMP} Precursor (par)
+
 			!! vbox.make (container_interface)
 			vbox.set_homogeneous (False)
 			vbox.set_spacing (10)
+
 			!! display_area.make (vbox)
+			display_area.set_minimum_height (100)
+			display_area.set_minimum_width (100)
+
 			!! action_area.make (vbox)
 			action_area.set_expand (False)
+			action_area.set_minimum_height (20)
+			action_area.set_minimum_width (100)
+
 			show
 		end
 

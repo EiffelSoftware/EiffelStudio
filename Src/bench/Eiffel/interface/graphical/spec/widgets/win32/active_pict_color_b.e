@@ -25,7 +25,7 @@ feature
 			depth := a_parent.depth + 1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			create implementation.make (Current, man, a_parent);
+			create implementation.make (Current, a_parent, man);
 			implementation.set_widget_default;
 			set_active (True)
 			set_default

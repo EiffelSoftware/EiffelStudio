@@ -35,7 +35,7 @@ feature {NONE}-- Initialization
 	initialize is
 			-- initialize `Current'.
 		do
-			C.gtk_container_add (default_gtk_window, clipboard_widget)
+			C.gtk_container_add (default_window_imp.hbox, clipboard_widget)
 			C.gtk_widget_show (clipboard_widget)
 			is_initialized := True
 		end

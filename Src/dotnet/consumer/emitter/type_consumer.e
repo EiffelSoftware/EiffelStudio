@@ -14,6 +14,8 @@ inherit
 	SHARED_ASSEMBLY_MAPPING
 
 	NAME_SOLVER
+	
+	PROCEDURE_RETRIVER
 
 create
 	make
@@ -336,6 +338,7 @@ feature -- Basic Operation
 					non_void_l_propery: l_property /= Void
 				end
 				add_property (l_property)
+				overload_solver.add_property (l_property)
 				i := i + 1
 			end
 
@@ -351,10 +354,11 @@ feature -- Basic Operation
 					non_void_l_event: l_event /= Void
 				end
 				add_event (l_event)
+				overload_solver.add_event (l_event)
 				i := i + 1
 			end				
 
-				-- Add methods (procedures, functions, properties and events) in overload_solver
+				-- Add methods (procedures, functions) in overload_solver
 			from
 				i := 0
 				nb := internal_members.count
@@ -367,8 +371,10 @@ feature -- Basic Operation
 					check
 						is_method: l_meth /= Void
 					end
-					if is_consumed_method (l_meth) then
-						overload_solver.add_method (l_meth)
+					if not is_property_or_event (l_meth) then
+						if is_consumed_method (l_meth) then
+							overload_solver.add_method (l_meth)
+						end
 					end
 				end
 				i := i + 1
@@ -768,32 +774,6 @@ feature {NONE} -- Status Setting.
 			end
 		end
 
-	property_getter (prop: PROPERTY_INFO): METHOD_INFO is
-			-- Get `getter' of `prop' if it exists.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				Result := prop.get_get_method_boolean (True)
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	property_setter (prop: PROPERTY_INFO): METHOD_INFO is
-			-- Get `setter' of `prop' if it exists.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				Result := prop.get_set_method_boolean (True)
-			end
-		rescue
-			retried := True
-			retry
-		end
-
 	add_event (info:EVENT_INFO) is
 			-- Add event.
 		require
@@ -801,9 +781,9 @@ feature {NONE} -- Status Setting.
 		local
 			l_adder, l_remover, l_raiser: METHOD_INFO
 		do
-			l_adder := info.get_add_method
-			l_remover := info.get_remove_method
-			l_raiser := info.get_raise_method
+			l_adder := event_adder (info)
+			l_remover := event_remover (info)
+			l_raiser := event_raiser (info)
 			
 			if l_adder /= Void then
 				add_properties_or_events (l_adder)

@@ -677,7 +677,7 @@ rt_public EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 	if (c == EOF || c == '\n')
 #ifdef EIF_WINDOWS
 		if ((read > 0) && (*(s-1) == '\r'))
-			return read -1;
+			return read - 1;
 		else
 			return read;
 #else

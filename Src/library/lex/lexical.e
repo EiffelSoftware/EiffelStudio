@@ -261,7 +261,7 @@ feature -- Input
 							local_string);
 					debug
 						io.put_string ("Last token:%N");
-						io.put_string (last_token.tagged_out);
+						io.put_string (last_token.out);
 						io.put_string ("Type return:");
 						io.read_character
 					end

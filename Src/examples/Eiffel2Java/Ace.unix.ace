@@ -22,8 +22,8 @@ cluster
 
 external
 	object:
-		"$(ISE_EIFFEL)/library/Eiffel2Java/spec/$ISE_PLATFORM/lib/e2j.obj",
-		"D:/apps/jdk1.1.8/lib/javai.lib"
+		"$(ISE_EIFFEL)/library/Eiffel2Java/spec/$(ISE_PLATFORM)/lib/e2j.obj",
+		"-L$(JDK_HOME)/lib -ljava"
 		
 
 end

@@ -6,7 +6,7 @@ creation
 
 feature
 
-	make(t, p: STRING; must_check: BOOLEAN) is
+	make (t, p: STRING; must_check: BOOLEAN) is
 			-- Set text to t and pattern to p
 		require
 			text_exist: t /= void;

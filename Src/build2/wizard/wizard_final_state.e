@@ -123,6 +123,8 @@ feature {NONE} -- Implementation
 					end
 					window_selector.forth
 				end
+				eiffel_files.add_file (system_status.current_project_settings.project_location + "\" + system_status.current_project_settings.constants_class_name + ".e", True)
+				eiffel_files.add_file (system_status.current_project_settings.project_location + "\" + system_status.current_project_settings.constants_class_name +  Class_implementation_extension + ".e", True)
 			end
 			build_files.add_file ("build_project.bpr", True)
 			eifp_document.save_document (system_status.current_project_settings.project_location + "\" + System_status.current_project_settings.project_name + ".eifp")

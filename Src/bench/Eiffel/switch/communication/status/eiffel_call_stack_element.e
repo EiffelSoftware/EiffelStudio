@@ -14,6 +14,9 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	is_eiffel_call_stack_element: BOOLEAN is True
+		-- Is Current an Eiffel Call Stack Element ?
+
 	body_index: INTEGER is
 			-- body index of the associated routine
 		do
@@ -46,8 +49,11 @@ feature -- Properties
 	has_result: BOOLEAN is
 			-- Does this routine has a Result ?
 			-- ie: function or once
+		local
+			r: like routine
 		do
-			Result := routine /= Void and then routine.is_function
+			r := routine
+			Result := r /= Void and then r.is_function
 		end
 		
 	result_value: ABSTRACT_DEBUG_VALUE is
@@ -57,7 +63,10 @@ feature -- Properties
 				initialize_stack
 			end
 			Result := private_result
-			if routine /= Void and then routine.is_function and then Result = Void then
+			if 
+				Result = Void
+				and then has_result
+			then
 				Result := error_value ("Result", "unable to get the value")
 			end
 		ensure
@@ -66,21 +75,26 @@ feature -- Properties
 
 	locals: LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Value of local variables
+		local
+			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			r: like routine
 		do
 			if not initialized then
 				initialize_stack
 			end
 			Result := private_locals
-			if 
-				Result = Void 
-				and (
-						routine /= Void 
-						and then routine.locals /= Void
-						and then not routine.locals.is_empty 
-					)
-			then
-				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-				Result.extend (error_value ("...", "unable to get the locals"))
+			if Result = Void then
+				r := routine
+				if r /= Void then
+					l_locals := r.locals
+					if 
+						l_locals /= Void
+						and then not l_locals.is_empty
+					then
+						create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+						Result.extend (error_value ("...", "unable to get the locals"))
+					end
+				end
 			end
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
@@ -88,21 +102,26 @@ feature -- Properties
 
 	arguments: LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Value of arguments
+		local
+			l_args: E_FEATURE_ARGUMENTS
+			r: like routine
 		do
 			if not initialized then
 				initialize_stack
 			end
 			Result := private_arguments
-			if 
-				Result = Void 
-				and (
-						routine /= Void 
-						and then routine.arguments /= Void
-						and then not routine.arguments.is_empty 
-					)
-			then
-				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-				Result.extend (error_value ("...", "unable to get the arguments"))
+			if Result = Void then
+				r := routine
+				if r /= Void then
+					l_args := r.arguments
+					if
+						l_args /= Void
+						and then not l_args.is_empty 
+					then
+						create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+						Result.extend (error_value ("...", "unable to get the arguments"))
+					end
+				end
 			end			
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty

@@ -37,6 +37,9 @@ feature -- Change
 
 feature -- Properties
 
+	is_eiffel_call_stack_element: BOOLEAN is False
+		-- Is Current an Eiffel Call Stack Element ?
+
 	object_address: STRING
 
 feature -- Output

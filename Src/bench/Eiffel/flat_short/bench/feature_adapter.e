@@ -128,11 +128,16 @@ feature -- Output
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Format Current feature into `ctxt'.
+		local
+			format_reg: FORMAT_REGISTRATION
 		do
 			if target_feature /= Void then
+				format_reg := ctxt.format_registration;
+				format_reg.assert_server.update_current_assertion (Current);
 				ctxt.init_feature_context (source_feature, 
 							target_feature, ast);
 			else
+				format_reg.assert_server.reset_current_assertion;
 				ctxt.init_uncompiled_feature_context (source_class, ast);
 			end;
 			ctxt.set_feature_comments (comments);
@@ -175,10 +180,10 @@ feature {NONE} -- Implementation
 			rout_id := s_feat.rout_id_set.first;
 			t_feat := select_table.item (rout_id);
 			if s_feat /= Void and then t_feat /= Void then
-				format_reg.assert_server.register (Current);
 				body_index := s_feat.body_index;
 				source_feature := s_feat;
 				target_feature := t_feat;
+				format_reg.assert_server.register_adapter (Current);
 				if equal (t_feat.written_in, s_feat.written_in) and then
 					equal (t_feat.body_index, s_feat.body_index)
 				then
@@ -209,7 +214,7 @@ feature {NONE} -- Implementation
 				body_index := feat.body_index;
 				source_feature := feat;
 				target_feature := feat;
-				format_reg.assert_server.register (Current);
+				format_reg.assert_server.register_adapter (Current);
 				register_feature (feat, False, format_reg);
 			end;
 		end;				

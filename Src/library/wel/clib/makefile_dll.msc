@@ -4,7 +4,7 @@ OBJS = $(PROJ).OBJ
 
 CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W3 -Ox
 LFLAGS = -DLL -SECTION:.shared,RWS \
-		-EXPORT:MouseProc -EXPORT:hook_mouse -EXPORT:unhook_mouse
+		-EXPORT:MouseProc -EXPORT:hook_mouse -EXPORT:unhook_mouse -EXPORT:get_hook_window
 
 LIBS =  -OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 

@@ -1430,6 +1430,24 @@ feature {FILE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		require
+			is_readable: file_readable
+			not_end_of_file: not end_of_file
+			a_string_not_void: a_string /= Void
+			valid_position: a_string.valid_index (pos)
+			nb_large_enough: nb > 0
+			nb_small_enough: nb <= a_string.count - pos + 1
+		deferred
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb
+			character_read: not end_of_file implies Result > 0
+		end
+
 	internal_sread: TEXT_READER
 			-- Stream reader used to read in `Current' (if any).
 

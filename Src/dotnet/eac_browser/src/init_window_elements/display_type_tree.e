@@ -66,9 +66,10 @@ feature -- Basic Operations
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
 			l_entities: ARRAY [CONSUMED_ENTITY]
-			l_feature: CONSUMED_MEMBER
+			l_feature, l_field: CONSUMED_MEMBER
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
+			l_fields: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_features: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_properties: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
 			l_events: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
@@ -93,7 +94,6 @@ feature -- Basic Operations
 			until
 				i > l_entities.count
 			loop
-				
 				if l_entities.item (i).is_method or l_entities.item (i).is_field then
 					l_feature ?= l_entities.item (i)
 					if l_feature /= Void then
@@ -106,6 +106,12 @@ feature -- Basic Operations
 						l_node := initialize_tree_item_property (l_property, a_full_dotnet_type_name)
 						l_properties.extend (l_node)
 					end
+				elseif l_entities.item (i).is_field then
+					l_field ?= l_entities.item (i)
+					if l_feature /= Void then
+						l_node := initialize_tree_item_feature (l_field, a_full_dotnet_type_name)
+						l_features.extend (l_node)
+					end
 				elseif l_entities.item (i).is_event then
 					l_event ?= l_entities.item (i)
 					if l_event /= Void then
@@ -114,23 +120,6 @@ feature -- Basic Operations
 					end
 				end
 
---				l_feature ?= l_entities.item (i)
---				if l_feature /= Void then
---					l_node := initialize_tree_item_feature (l_feature)
---				else
---					l_property ?= l_entities.item (i)
---					if l_property /= Void then
---						l_node := initialize_tree_item_property (l_property)
---					else
---						l_event ?= l_entities.item (i)
---						if l_event /= Void then
---							l_node := initialize_tree_item_event (l_event)
---						end
---					end
---				end
---				if l_node /= Void then
---					l_features.extend (l_node)
---				end
 				i := i + 1
 			end
 			right_tree.append (classify_tree_nodes (l_features))

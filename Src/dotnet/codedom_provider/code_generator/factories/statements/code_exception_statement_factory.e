@@ -24,25 +24,66 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_source_catch_clauses: SYSTEM_DLL_CODE_CATCH_CLAUSE_COLLECTION
 			i, l_count: INTEGER
 			l_catch_clause: SYSTEM_DLL_CODE_CATCH_CLAUSE
+			l_name: STRING
 		do
-			l_source_catch_clauses := a_source.catch_clauses
-			if l_source_catch_clauses /= Void then
-				l_count := l_source_catch_clauses.count
-				from
-					create l_catch_clauses.make (l_count)
-				until
-					i = l_count
-				loop
-					l_catch_clause := l_source_catch_clauses.item (i)
-					l_catch_clauses.extend (create {CODE_CATCH_CLAUSE}.make (create {CODE_VARIABLE_REFERENCE}.make (l_catch_clause.local_name, Type_reference_factory.type_reference_from_reference (l_catch_clause.catch_exception_type), Type_reference_factory.type_reference_from_code (current_type)), statements_from_collection (l_catch_clause.statements)))
-					i := i + 1
+			if current_routine /= Void then
+				l_source_catch_clauses := a_source.catch_clauses
+				if l_source_catch_clauses /= Void then
+					l_count := l_source_catch_clauses.count
+					from
+						create l_catch_clauses.make (l_count)
+					until
+						i = l_count
+					loop
+						l_catch_clause := l_source_catch_clauses.item (i)
+						l_catch_clauses.extend (create {CODE_CATCH_CLAUSE}.make (create {CODE_VARIABLE_REFERENCE}.make (l_catch_clause.local_name, Type_reference_factory.type_reference_from_reference (l_catch_clause.catch_exception_type), Type_reference_factory.type_reference_from_code (current_type)), statements_from_collection (l_catch_clause.statements)))
+						i := i + 1
+					end
 				end
+				l_name := implementation_feature_name
+				current_type.add_implementation_feature (create {CODE_TRY_CATCH_IMPLEMENTATION_FEATURE}.make (l_name, current_routine, l_catch_clauses, statements_from_collection (a_source.try_statements), statements_from_collection (a_source.finally_statements)))
+				set_last_statement (create {CODE_TRY_CATCH_FINALLY_STATEMENT}.make (current_routine, l_name))
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_routine, ["Try/Catch statement generation in " + current_context])
 			end
-			set_last_statement (create {CODE_TRY_CATCH_FINALLY_STATEMENT}.make (statements_from_collection (a_source.try_statements), statements_from_collection (a_source.finally_statements), l_catch_clauses))
 		ensure
 			non_void_last_statement: last_statement /= Void
 		end
-		
+
+feature {NONE} -- Implementation
+
+	implementation_feature_name: STRING is
+			-- Implementation feature name
+		local
+			l_features: HASH_TABLE [CODE_FEATURE, STRING]
+			l_implementation_features: HASH_TABLE [CODE_TRY_CATCH_IMPLEMENTATION_FEATURE, STRING]
+			i: INTEGER
+			l_ok: BOOLEAN
+		do
+			create Result.make (current_feature.eiffel_name.count + 5)
+			Result.append ("safe_")
+			Result.append (current_feature.eiffel_name)
+			l_features := current_type.features
+			l_implementation_features := current_type.implementation_features
+			from
+				l_ok := not l_features.has (Result) and not l_implementation_features.has (Result)
+				if not l_ok then
+					Result.append ("_2")
+					l_ok := not l_features.has (Result) and not l_implementation_features.has (Result)
+				end
+				i := 3
+			until
+				l_ok
+			loop
+				Result.keep_head (Result.last_index_of ('_', Result.count))
+				Result.append (i.out)
+				i := i + 1
+				l_ok := not l_features.has (Result) and not l_implementation_features.has (Result)				
+			end
+		ensure
+			non_void_feature_name: Result /= Void
+		end
+
 end -- class CODE_EXCEPTION_STATEMENT_FACTORY
 
 --+--------------------------------------------------------------------

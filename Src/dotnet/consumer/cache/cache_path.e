@@ -159,12 +159,12 @@ feature {CACHE_READER} -- Access
 							l_obj := l_registry_key.get_value (Ise_key)
 							l_str ?= l_obj
 						else
-							l_str := Void
+							l_str := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 						end
-						
-						if l_str /= Void then
-							Result := l_str
+						check
+							l_str_not_void: l_str /= Void
 						end
+						Result := l_str
 					end
 					check
 						Ise_eiffel_defined: Result /= Void

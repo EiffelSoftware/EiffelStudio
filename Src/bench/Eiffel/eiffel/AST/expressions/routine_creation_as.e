@@ -112,7 +112,6 @@ feature -- Type check, byte code and dead code removal
 			a_feature: FEATURE_I
 			a_table: FEATURE_TABLE
 			depend_unit: DEPEND_UNIT
-			vxxx: VXXX
 			not_supported: NOT_SUPPORTED
 		do
 			-- For type checking we treat the delayed call
@@ -195,15 +194,17 @@ feature -- Type check, byte code and dead code removal
 			a_table := a_class.feature_table
 			a_feature := a_table.item (feature_name)
 
-			if (a_feature = Void) 
-					or else
-				(not (a_feature.is_function or else a_feature.is_procedure)
-					or else
-				a_feature.is_external) then
-				!! vxxx
-				context.init_error (vxxx)
-				vxxx.set_address_name (feature_name)
-				Error_handler.insert_error (vxxx)
+			if
+				(a_feature = Void) or else
+				(not (a_feature.is_function or else a_feature.is_procedure) or else
+				a_feature.is_external)
+			then
+				!! not_supported
+				context.init_error (not_supported)
+				not_supported.set_message ("Agent creation on `" + feature_name + "' is%
+					% not supported because it is either an attribute, a constant or%
+					% an external feature")
+				Error_handler.insert_error (not_supported)
 			else
 					-- Dependance
 				!! depend_unit.make (a_class.class_id, a_feature)
@@ -215,6 +216,7 @@ feature -- Type check, byte code and dead code removal
 			end
 			Error_handler.checksum
 		end
+	
 
 	byte_node: ROUTINE_CREATION_B is
 			-- Associated byte code.

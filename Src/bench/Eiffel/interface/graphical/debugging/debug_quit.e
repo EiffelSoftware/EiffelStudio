@@ -110,6 +110,10 @@ feature {NONE} -- Implementation
 				else
 					Application.kill;
 				end;
+			else
+				debug_window.clear_window;
+				debug_window.put_string ("System not launched");
+				debug_window.display;
 			end;
 		end;
 

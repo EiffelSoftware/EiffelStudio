@@ -32,7 +32,8 @@ feature -- Status setting
 			-- set position of tabs (left, right, top or bottom)
 		require
 			exists: not destroyed		
-			correct_pos: pos <= Pos_left and pos >= Pos_right
+			correct_pos: pos = Pos_left or pos = Pos_right 
+						or pos = Pos_bottom or pos = Pos_top
 		deferred
 		end
 	

@@ -13,10 +13,7 @@ inherit
 
 	GD_FONT_CONSTANTS
 
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 	SINGLE_MATH
 

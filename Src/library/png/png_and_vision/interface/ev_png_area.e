@@ -35,10 +35,7 @@ inherit
 
 	GD_FONTS
 
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make, make_from_file

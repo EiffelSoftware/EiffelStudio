@@ -8,10 +8,7 @@ class
 	GD_IMAGE
 
 inherit
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 	LINKED_LIST[GD_FIGURE]
 		rename

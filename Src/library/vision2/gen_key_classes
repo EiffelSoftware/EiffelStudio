@@ -254,8 +254,7 @@ feature -- Contract support
 	valid_gtk_code (a_gtk_code: INTEGER): BOOLEAN is
 			-- Is ``a_gtk_code'' valid?
 		do
-			Result := True
-			--| FIXME To be implemented
+			Result := gtk_to_v2_table.has (a_gtk_code)
 		end
 
 feature {NONE} -- Implementation
@@ -299,6 +298,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.6  2000/03/18 00:06:06  brendel
+# Implemented valid_gtk_code.
+#
 # Revision 1.5  2000/03/17 18:07:03  brendel
 # Fixed cosmetics in generated code.
 #

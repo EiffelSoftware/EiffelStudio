@@ -28,12 +28,12 @@ their content into Eiffel objects and to work on these Eiffel objects as
 database elements.</p>
 <p align="left">A first solution to implement this is to use some adaptable
 structures that will fit to any database element. This is done in EiffelStore
-through the <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a> class, which contains mainly an
-<a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a> [<a href="../../../base/reference/kernel/string_chart.html">STRING</a>] containing
-element attribute names and an <a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a>
-[<a href="../../../base/reference/kernel/any_chart.html">ANY</a>] containing element attribute values.
+through the <a class="eclass" href="../../reference/interface/db_tuple_chart.html">DB_TUPLE</a> class, which contains mainly an
+<a class="eclass" href="../../../base/reference/kernel/array_chart.html">ARRAY</a> [<a class="eclass" href="../../../base/reference/kernel/string_chart.html">STRING</a>] containing
+element attribute names and an <a class="eclass" href="../../../base/reference/kernel/array_chart.html">ARRAY</a>
+[<a class="eclass" href="../../../base/reference/kernel/any_chart.html">ANY</a>] containing element attribute values.
 This solution has one major drawback: any static checking is impossible: the
-developer cannot be sure at compile time of the nature of a <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a>, i.e. what
+developer cannot be sure at compile time of the nature of a <a class="eclass" href="../../reference/interface/db_tuple_chart.html">DB_TUPLE</a>, i.e. what
 it represents, and cannot know if attributes number, names and types are
 correct. To overcome this problem, a second solution is to use data structures
 that statically fits to the expected database element, as introduced in the <a href="../10_interface_layer/50_data_object_coupling/index.html">Data

@@ -20,7 +20,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (new_id: INTEGER) is
+	make (new_id: INTEGER_ID) is
 		do
 			linked_set_make;
 			compare_objects;
@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 
 feature -- Idable
 
-	type_id: INTEGER;
+	type_id: INTEGER_ID;
 			-- Type id of the object on which the statically
 			-- bound call is applied
 
-	set_type_id (i: INTEGER) is
+	set_type_id (i: INTEGER_ID) is
 			-- Assign `i' to `type_id'.
 		do
 			type_id := i

@@ -26,6 +26,8 @@ inherit
 
 	EV_SIZEABLE_IMP
 
+	EV_ACCELERATOR_HANDLER_IMP
+
 	EV_PND_SOURCE_IMP
 
 	EV_PND_TARGET_IMP
@@ -115,6 +117,31 @@ feature -- Access
 			!! Result.put (ww)
 		ensure
 			valid_parent: Result.item /= Void
+		end
+
+	application: CELL [EV_APPLICATION_IMP] is
+			-- The current application. Needed for the
+			-- accelerators.
+		once
+			!! Result.put (Void)
+		end
+			
+	focus_on_widget: CELL [EV_WIDGET_IMP] is
+			-- Widget that has currently the focus.
+		once
+			!! Result.put (Void)
+		end
+
+	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+			-- This cell contains the widget_imp that currently
+			-- has the pointer of the mouse. As it is a once 
+			-- feature, it is a shared data.
+			-- it is used for the `mouse_enter' and `mouse_leave'
+			-- events.
+		once
+			!! Result.put (Void)
+		ensure
+			result_exists: Result /= Void
 		end
 
 feature -- Status report
@@ -236,6 +263,22 @@ feature -- Element change
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		deferred
+		end
+
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		do
+			add_accel_command (acc, cmd, arg)
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		do
+			remove_accel_commands (acc)
 		end
 
 feature -- Event - command association
@@ -622,18 +665,6 @@ feature {NONE} -- Implementation, mouse button events
 
 feature {NONE} -- Implementation, mouse move, enter and leave events
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP] is
-			-- This cell contains the widget_imp that currently
-			-- has the pointer of the mouse. As it is a once 
-			-- feature, it is a shared data.
-			-- it is used for the `mouse_enter' and `mouse_leave'
-			-- events.
-		once
-			!! Result.put (Void)
-		ensure
-			result_exists: Result /= Void
-		end
-
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
@@ -719,6 +750,7 @@ feature {NONE} -- Implementation, focus event
 	on_set_focus is
 			-- Wm_setfocus message
 		do
+			focus_on_widget.put (Current)
 			execute_command (Cmd_get_focus, Void)
 		end
 

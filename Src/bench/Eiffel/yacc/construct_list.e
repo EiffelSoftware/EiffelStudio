@@ -40,9 +40,9 @@ feature
 		local
 			a_occurrences, pos: INTEGER
 		do
-			start;
-			pos := 1;
 			from
+				start;
+				pos := 1;
 			until
 				off or else (a_occurrences = i)
 			loop

@@ -48,7 +48,7 @@ feature -- Attributes
 	Packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
 
-	System_packet_number: INTEGER is 30
+	System_packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization
@@ -1173,7 +1173,7 @@ feature -- Generation (Linking rules)
 
 			from i := 1 until i > partial_system_objects loop
 				make_file.putstring (System_object_prefix)
-				make_file.putint (1)
+				make_file.putint (i)
 				make_file.putchar ('/')
 				make_file.putstring (System_object_prefix)
 				make_file.putstring ("obj")

@@ -57,11 +57,11 @@ feature  -- Initialization
 			field_name_id_set: field_name_id > 0
 			arguments_set: argument_types /= Void
 			good_arguments_count: argument_types.count = 1 or argument_types.count = 2
-			valid_setting_1: return_type = Void implies argument_types.count = 1
-			valid_setting_2: return_type /= Void implies (argument_types.count = 2
-							and then argument_types.item (2) = return_type)
+			valid_setting_1: type = Void implies argument_types.count = 1
+			valid_setting_2: type /= Void implies (argument_types.count = 2
+							and then argument_types.item (2) = type.value_id)
 			header_files_not_void: header_files /= Void
-			good_header_files_count: header_files.count > 1
+			good_header_files_count: header_files.count >= 1
 		end
 
 feature -- Properties

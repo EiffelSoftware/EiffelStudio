@@ -8,6 +8,19 @@ inherit
 
 feature {NONE}
 
+	Project_read_only: BOOLEAN_REF is
+			-- Is the project only usable for browing and debugging
+			-- (no compilation)?
+		once
+			!! Result
+		end;
+
+	Update_file: RAW_FILE is
+			-- File containing all the byte code to update
+		once
+			!!Result.make (build_path (Workbench_generation_path, Updt))
+		end;
+
 	Project_directory: PROJECT_DIR is
 			-- Shared project directory
 		once

@@ -45,16 +45,22 @@
         <Directory Id="library.net" Name="LIBRAR~1" LongName="library.net">
           <Directory Id="wel" Name="wel">
             <Component Id="wel_enum_window_delegate.e" Guid="A931A94F-9B5D-4353-9414-7E80ADD49233">
+              <File Id="wel_disk_space_callback.e" Name="WEL_DI~3.E" LongName="wel_disk_space_callback.e" />
+              <File Id="wel_disk_space_delegate.e" Name="WEL_DI~4.E" LongName="wel_disk_space_delegate.e" />
+              <File Id="wel_dispatcher.e" Name="WEL_DI~1.E" LongName="wel_dispatcher.e" />
+              <File Id="wel_dispatcher_delegate.e" Name="WEL_DI~2.E" LongName="wel_dispatcher_delegate.e" />
+              <File Id="wel_enum_font_delegate.e" Name="WEL_EN~1.E" LongName="wel_enum_font_delegate.e" />
               <File Id="wel_enum_window_delegate.e" Name="WEL_EN~2.E" LongName="wel_enum_window_delegate.e" KeyPath="yes" />
-              <File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
               <File Id="wel_font_family_enumerator.e" Name="WEL_FO~1.E" LongName="wel_font_family_enumerator.e" />
               <File Id="wel_identified.e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
-              <File Id="wel_dispatcher_delegate.e" Name="WEL_DI~2.E" LongName="wel_dispatcher_delegate.e" />
-              <File Id="wel_window_enumerator.e" Name="WEL_WI~1.E" LongName="wel_window_enumerator.e" />
-              <File Id="wel_enum_font_delegate.e" Name="WEL_EN~1.E" LongName="wel_enum_font_delegate.e" />
-              <File Id="wel_dispatcher.e" Name="WEL_DI~1.E" LongName="wel_dispatcher.e" />
-              <File Id="wel_winform_container.e" Name="WEL_WI~2.E" LongName="wel_winform_container.e" />
               <File Id="wel_main_arguments.e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" />
+              <File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
+              <File Id="wel_rich_edit_stream_in.e" Name="WEL_RI~1.E" LongName="wel_rich_edit_stream_in.e" />
+              <File Id="wel_rich_edit_stream_in_delegate.e" Name="WEL_RI~2.E" LongName="wel_rich_edit_stream_in_delegate.e" />
+              <File Id="wel_rich_edit_stream_out.e" Name="WEL_RI~3.E" LongName="wel_rich_edit_stream_out.e" />
+              <File Id="wel_rich_edit_stream_out_delegate.e" Name="WEL_RI~4.E" LongName="wel_rich_edit_stream_out_delegate.e" />
+              <File Id="wel_window_enumerator.e" Name="WEL_WI~1.E" LongName="wel_window_enumerator.e" />
+              <File Id="wel_winform_container.e" Name="WEL_WI~2.E" LongName="wel_winform_container.e" />
             </Component>
           </Directory>
           <Directory Id="vision25" Name="vision2">

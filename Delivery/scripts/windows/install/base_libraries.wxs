@@ -21,6 +21,7 @@
               <File Id="sample_file.e" Name="SAMPLE~1.E" LongName="sample_file.e" />
               <File Id="eiffel_regular" Name="EIFFEL~1" LongName="eiffel_regular" />
               <File Id="Ace.ace91" Name="Ace.ace" />
+              <File Id="Ace.dotnet.ace7" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               <File Id="Readme92" Name="Readme" />
             </Component>
           </Directory>
@@ -155,6 +156,7 @@
               <File Id="variables.e" Name="VARIAB~1.E" LongName="variables.e" />
               <File Id="process.e" Name="process.e" />
               <File Id="Ace.ace120" Name="Ace.ace" />
+              <File Id="Ace.dotnet.ace8" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               <File Id="var.e" Name="var.e" />
               <File Id="polynom_info.e" Name="POLYNO~1.E" LongName="polynom_info.e" />
               <File Id="line.e" Name="line.e" />
@@ -220,6 +222,7 @@
                 <File Id="Ace.sybase.windows.ace139" Name="ACESYB~8.ACE" LongName="Ace.sybase.windows.ace" />
                 <File Id="Ace.odbc.windows.ace140" Name="ACEODB~2.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="Ace.oracle.windows.ace144" Name="ACEORA~9.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace7" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="Ace.ingres.unix.ace148" Name="ACEING~7.ACE" LongName="Ace.ingres.unix.ace" />
                 <File Id="mapODBC.e" Name="mapODBC.e" />
                 <File Id="Ace.sybase.unix.ace176" Name="ACESYB~D.ACE" LongName="Ace.sybase.unix.ace" />
@@ -235,6 +238,7 @@
                 <File Id="Ace.ingres.unix.ace" Name="ACEING~1.ACE" LongName="Ace.ingres.unix.ace" />
                 <File Id="Ace.sybase.windows.ace133" Name="ACESYB~6.ACE" LongName="Ace.sybase.windows.ace" />
                 <File Id="Ace.oracle.windows.ace134" Name="ACEORA~6.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace6" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="Ace.odbc.windows.ace141" Name="ACEODB~3.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="sample.e" Name="sample.e" />
                 <File Id="Ace.sybase.unix.ace150" Name="ACESYB~9.ACE" LongName="Ace.sybase.unix.ace" />
@@ -255,6 +259,7 @@
               <Component Id="nesting2" Guid="676322C6-B170-4098-89B2-53DF5A070DA8">
                 <File Id="Ace.sybase.windows.ace" Name="ACESYB~2.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
                 <File Id="Ace.oracle.windows.ace" Name="ACEORA~2.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace5" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="test.e128" Name="test.e" />
                 <File Id="Ace.ingres.unix.ace129" Name="ACEING~3.ACE" LongName="Ace.ingres.unix.ace" />
                 <File Id="testODBC.e" Name="testODBC.e" />
@@ -274,6 +279,7 @@
               <Component Id="st_proc" Guid="2BD89CA2-E082-4C02-8AC4-131F41C705DE">
                 <File Id="runner_ora.e" Name="RUNNER~2.E" LongName="runner_ora.e" KeyPath="yes" />
                 <File Id="Ace.oracle.unix.ace" Name="ACEORA~1.ACE" LongName="Ace.oracle.unix.ace" />
+				<File Id="Ace.oracle.dotnet.ace8" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="runODBC.e" Name="runODBC.e" />
                 <File Id="runner_ing.e" Name="RUNNER~1.E" LongName="runner_ing.e" />
                 <File Id="Ace.ingres.windows.ace143" Name="ACEING~5.ACE" LongName="Ace.ingres.windows.ace" />
@@ -292,6 +298,7 @@
                 <File Id="Readme123" Name="Readme" KeyPath="yes" />
                 <File Id="Ace.ingres.windows.ace" Name="ACEING~2.ACE" LongName="Ace.ingres.windows.ace" />
                 <File Id="Ace.oracle.unix.ace135" Name="ACEORA~7.ACE" LongName="Ace.oracle.unix.ace" />
+				<File Id="Ace.oracle.dotnet.ace4" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="testODBC.e145" Name="testODBC.e" />
                 <File Id="Ace.odbc.windows.ace146" Name="ACEODB~4.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="test.e180" Name="test.e" />
@@ -308,6 +315,7 @@
               <Component Id="insert" Guid="22A6BB77-09C2-43CB-8F4D-0C2997ED06A2">
                 <File Id="Ace.sybase.windows.ace124" Name="ACESYB~3.ACE" LongName="Ace.sybase.windows.ace" KeyPath="yes" />
                 <File Id="Ace.oracle.windows.ace125" Name="ACEORA~3.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace3" Name="ACEORA~2.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="Ace.odbc.windows.ace" Name="ACEODB~1.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="Readme130" Name="Readme" />
                 <File Id="inserter.e" Name="inserter.e" />
@@ -329,6 +337,7 @@
                 <File Id="Ace.sybase.unix.ace154" Name="ACESYB~B.ACE" LongName="Ace.sybase.unix.ace" />
                 <File Id="Ace.ingres.windows.ace155" Name="ACEING~A.ACE" LongName="Ace.ingres.windows.ace" />
                 <File Id="Ace.oracle.unix.ace183" Name="ACEORA~E.ACE" LongName="Ace.oracle.unix.ace" />
+				<File Id="Ace.oracle.dotnet.ace2" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="esqlODBC.e" Name="esqlODBC.e" />
                 <File Id="Ace.odbc.windows.ace207" Name="ACEODB~9.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="Ace.odbc.dotnet.ace5" Name="ACEODB~D.ACE" LongName="Ace.odbc.dotnet.ace" />
@@ -339,6 +348,7 @@
                 <File Id="data.sql.sybase" Name="DATASQ~1.SYB" LongName="data.sql.sybase" KeyPath="yes" />
                 <File Id="Ace.sybase.windows.ace131" Name="ACESYB~5.ACE" LongName="Ace.sybase.windows.ace" />
                 <File Id="Ace.oracle.windows.ace132" Name="ACEORA~5.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace9" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="Readme138" Name="Readme" />
                 <File Id="data.sql.odbc" Name="DATASQ~1.ODB" LongName="data.sql.odbc" />
                 <File Id="Ace.ingres.unix.ace147" Name="ACEING~6.ACE" LongName="Ace.ingres.unix.ace" />
@@ -360,6 +370,7 @@
                 <File Id="parser.e" Name="parser.e" />
                 <File Id="example2.dat" Name="example2.dat" />
                 <File Id="Ace.oracle.windows.ace142" Name="ACEORA~8.ACE" LongName="Ace.oracle.windows.ace" />
+				<File Id="Ace.oracle.dotnet.ace1" Name="ACEORA~3.ACE" LongName="Ace.oracle.dotnet.ace" />
                 <File Id="Readme159" Name="Readme" />
                 <File Id="Ace.odbc.windows.ace160" Name="ACEODB~5.ACE" LongName="Ace.odbc.windows.ace" />
                 <File Id="Ace.ingres.unix.ace161" Name="ACEING~B.ACE" LongName="Ace.ingres.unix.ace" />
@@ -374,6 +385,7 @@
             <Directory Id="support2" Name="support">
               <Component Id="support2" Guid="5259A871-BC09-40D4-90E6-557DAE5A1DCE">
                 <File Id="Ace.mswin.ace" Name="ACEMSW~1.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+                <File Id="Ace.dotnet.ace6" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="formatting.e" Name="FORMAT~3.E" LongName="formatting.e" />
                 <File Id="Ace.unix.ace" Name="ACEUNI~1.ACE" LongName="Ace.unix.ace" />
                 <File Id="demo_driver.e" Name="DEMO_D~1.E" LongName="demo_driver.e" />
@@ -386,6 +398,7 @@
                 <File Id="readme.txt" Name="readme.txt" />
                 <File Id="makefile.m41" Name="makefile.m" />
                 <File Id="Ace.ace42" Name="Ace.ace" />
+                <File Id="Ace.dotnet.ace4" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="testdesc.c" Name="testdesc.c" />
                 <File Id="test.e" Name="test.e" />
                 <File Id="test.rc" Name="test.rc" />
@@ -415,6 +428,7 @@
                 <File Id="priority_queue_demo.e" Name="PRIORI~2.E" LongName="priority_queue_demo.e" />
                 <File Id="mls.e" Name="mls.e" />
                 <File Id="Ace.unix.ace49" Name="ACEUNI~3.ACE" LongName="Ace.unix.ace" />
+                <File Id="Ace.dotnet.ace5" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
             <Directory Id="calculator" Name="CALCUL~1" LongName="calculator">
@@ -431,6 +445,7 @@
                 <File Id="question.e" Name="question.e" />
                 <File Id="calculator.e" Name="CALCUL~1.E" LongName="calculator.e" />
                 <File Id="Ace.unix.ace48" Name="ACEUNI~2.ACE" LongName="Ace.unix.ace" />
+                <File Id="Ace.dotnet.ace3" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="multiply.e" Name="multiply.e" />
                 <File Id="Readme50" Name="Readme" />
                 <File Id="plus.e" Name="plus.e" />
@@ -547,6 +562,7 @@
                 <File Id="parent.e" Name="parent.e" />
                 <File Id="Ace.mswin.ace210" Name="ACEMSW~C.ACE" LongName="Ace.mswin.ace" />
                 <File Id="Ace.unix.ace215" Name="ACEUNI~I.ACE" LongName="Ace.unix.ace" />
+                <File Id="Ace.dotnet.ace11" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="testroot.e" Name="testroot.e" />
                 <File Id="heir.e" Name="heir.e" />
               </Component>
@@ -555,6 +571,7 @@
               <Component Id="objtour" Guid="597E8F61-469E-4F9D-BB51-07327D3E5CBF">
                 <File Id="Ace.unix.ace209" Name="ACEUNI~G.ACE" LongName="Ace.unix.ace" KeyPath="yes" />
                 <File Id="Ace.mswin.ace214" Name="ACEMSW~E.ACE" LongName="Ace.mswin.ace" />
+                <File Id="Ace.dotnet.ace10" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="other.e" Name="other.e" />
                 <File Id="starter.e" Name="starter.e" />
               </Component>
@@ -565,6 +582,7 @@
                 <File Id="object.e211" Name="object.e" />
                 <File Id="Ace.mswin.ace212" Name="ACEMSW~D.ACE" LongName="Ace.mswin.ace" />
                 <File Id="Ace.unix.ace213" Name="ACEUNI~H.ACE" LongName="Ace.unix.ace" />
+                <File Id="Ace.dotnet.ace9" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
           </Directory>
@@ -595,7 +613,7 @@
                 <File Id="Readme216" Name="Readme" />
                 <File Id="runner.e218" Name="runner.e" />
                 <File Id="Ace.ace219" Name="Ace.ace" />
-                <File Id="Ace.dotnet.ace9" Name="ACEDOT~2.ACE" LongName="Ace.dotnet.ace" />
+                <File Id="Ace.dotnet.ace1" Name="ACEDOT~2.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
             <Directory Id="producer_consumer" Name="PRODUC~1" LongName="producer_consumer">
@@ -606,7 +624,7 @@
                 <File Id="Ace.ace220" Name="Ace.ace" />
                 <File Id="consumer.e" Name="consumer.e" />
                 <File Id="pc_buffer.e" Name="PC_BUF~1.E" LongName="pc_buffer.e" />
-                <File Id="Ace.dotnet.ace10" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
+                <File Id="Ace.dotnet.ace2" Name="ACEDOT~3.ACE" LongName="Ace.dotnet.ace" />
               </Component>
             </Directory>
           </Directory>
@@ -614,6 +632,7 @@
             <Directory Id="calculator33" Name="CALCUL~2" LongName="calculator">
               <Component Id="calculator33" Guid="778E8B87-BB21-4061-BD56-2A8BD88F737F">
                 <File Id="Ace.mswin.ace221" Name="ACEMSW~F.ACE" LongName="Ace.mswin.ace" KeyPath="yes" />
+                <File Id="Ace.dotnet.ace12" Name="ACEDOT~1.ACE" LongName="Ace.dotnet.ace" />
                 <File Id="readme" Name="readme" />
                 <File Id="set_date.e" Name="set_date.e" />
                 <File Id="command_date.e" Name="COMMAN~1.E" LongName="command_date.e" />

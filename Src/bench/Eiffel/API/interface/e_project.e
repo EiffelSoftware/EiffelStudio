@@ -143,23 +143,6 @@ feature -- Properties
 	system: E_SYSTEM;
 			-- Eiffel system
 
-	lace_file_name: STRING is
-			-- Path to the universe/system description
-		obsolete
-			"Use file_name from E_ACE"
-		do
-			Result := Ace.file_name
-		end;
-
-	lace_text: STRING is
-			-- Text of the Lace file.
-			-- Void if unreadable file
-		obsolete
-			"Use text from E_ACE"
-		do
-			Result := Ace.text
-		end;
-
 	lace_click_list: CLICK_LIST is
 			-- Click list for the lace file
 		obsolete
@@ -220,12 +203,12 @@ feature -- Access
 		do
 			Result := not is_read_only and then
 				initialized and then
-				lace_file_name /= Void and then
+				ace.file_name /= Void and then
 				error_displayer /= Void
 		ensure
 			yes_if_ok: Result implies not is_read_only and then
 					initialized and then 
-					lace_file_name /= Void and then
+					ace.file_name /= Void and then
 					error_displayer /= Void
 		end;
 
@@ -316,14 +299,6 @@ feature -- Error status
 		end;
 
 feature -- Setting
-
-	set_lace_file_name (f_name: STRING) is
-			-- Set lace_file_name to `f_name'.
-		obsolete
-			"Use set_file_name from E_ACE"
-		do
-			Ace.set_file_name (f_name)
-		end;
 
 	set_error_displayer (ed: like error_displayer) is
 			-- Set `error_displayer' to `ed'.
@@ -478,7 +453,7 @@ feature -- Output
 				Comp_system.server_controler.wipe_out;
 				file.open_write;
 				saved_workbench := workbench;
-				independent_store (file);
+				basic_store (file);
 				file.close;
 			else
 				if file /= Void and then not file.is_closed then

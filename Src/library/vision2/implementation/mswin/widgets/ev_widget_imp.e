@@ -911,6 +911,10 @@ feature {EV_ANY_I} -- Implementation, push button
 			-- Put a bold border on the current push button and
 			-- remove any bold border to the other buttons.
 		do
+			-- Do nothing here, as a widget has no children. This
+			-- will be redefined in descendents to either search through
+			-- any children or update if a button.
+			-- See versions from V_CONTAINER_IMP and EV_BUTTON_IMP.
 		end
 
 feature {NONE} -- Implementation, cursor of the widget

@@ -74,48 +74,19 @@ inherit
 		end
 
 create
-	make_and_launch
+	make
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
-		local
-			rescued: INTEGER
-			exception_trace_at_crash: STRING
+	make is
+			-- Make and initialize graphical compiler
 		do
-			if rescued = 0 then
-					-- Normal execution
-				default_create
-				license.check_license
-				if license.is_licensed then
-					post_launch_actions.extend (agent prepare)
-				else
-					post_launch_actions.extend (agent license.check_activation_while_running (agent prepare))
-				end
-				launch
+			default_create
+			license.check_license
+			if license.is_licensed then
+				post_launch_actions.extend (agent prepare)
 			else
-					-- First time rescue
-				if not Eiffel_project.batch_mode then
-					try_to_save_files
-				end
-					-- Display the dialog showing the error
-				clean_exit (exception_trace_at_crash)
-				
-					-- Prevent the display of the starting dialog
-				post_launch_actions.wipe_out
-				
-					-- Re-launch the message pump
-				launch
-			end
-		rescue
-			if not fail_on_rescue then
-				rescued := rescued + 1
-				exception_trace_at_crash := exception_trace
-					-- If the first time rescue has generated an
-					-- exception we don't try it again.
-				if rescued < 2 and exception_trace_at_crash /= Void then
-					retry
-				end
+				post_launch_actions.extend (agent license.check_activation_while_running (agent prepare))
 			end
 		end
 
@@ -224,60 +195,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				-- Compile if needed.
 			if create_project_dialog.success and then create_project_dialog.compile_project then
 				first_window.Melt_project_cmd.execute
-			end
-		end
-		
-feature {NONE} -- Implementation (Failsafe rescue)
-		
-	clean_exit (trace: STRING) is
-			-- Perform clean quit of $EiffelGraphicalCompiler$
-		local
-			error_dlg: EB_EXCEPTION_DIALOG
-		do
-			create error_dlg.make (trace)
-			error_dlg.show_modal_to_window (parent_for_dialog)
-		end
-		
-	try_to_save_files is
-			-- In case of a crash, try to make a backup of all edited files.
-		local
-			wd: EV_WARNING_DIALOG
-			retried: BOOLEAN
-		do
-			if not retried then -- Never retried
-				if Window_manager.has_modified_windows then
-					create wd.make_with_text (Warning_messages.w_Crashed)
-					wd.show_modal_to_window (parent_for_dialog)
-					window_manager.backup_all
-					if window_manager.not_backuped = 0 then
-						create wd.make_with_text (Warning_messages.w_Backup_succeeded)
-						wd.show_modal_to_window (parent_for_dialog)
-					else
-						create wd.make_with_text (Warning_messages.w_Backup_partial (window_manager.not_backuped))
-						wd.show_modal_to_window (parent_for_dialog)
-					end
-				else
-					-- Nothing to do: everything was saved.
-				end
-			else
-				create wd.make_with_text (Warning_messages.w_Backup_failed)
-				wd.show_modal_to_window (parent_for_dialog)
-			end
-		rescue
-			retried := true
-			retry
-		end
-		
-	parent_for_dialog: EV_WINDOW is
-			-- Retrieve or create a parent for `show_modal_to_window'
-		local
-			dev_window: EB_DEVELOPMENT_WINDOW
-		do
-			dev_window := Window_manager.last_focused_development_window
-			if dev_window /= Void then
-				Result := dev_window.window
-			else
-				create Result
 			end
 		end
 		

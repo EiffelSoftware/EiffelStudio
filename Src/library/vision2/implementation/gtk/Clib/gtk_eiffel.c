@@ -225,6 +225,7 @@ void list_selection_child_callback(GtkList *list,
  *
  *********************************/
 
+
 void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data) 
 {
     callback_data_t *pcbd;
@@ -285,8 +286,9 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 	) {
 	/*	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
 		(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
-    }
+	}
 }
+
 
 
 /*********************************
@@ -2261,6 +2263,75 @@ void c_gtk_progress_bar_set_adjustment (GtkProgressBar *progressbar, gfloat valu
   gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
 }
 
+
+void c_gtk_progressbar_set_step ( GtkProgressBar * bar, gfloat value)
+{
+  GtkAdjustment *adj;
+
+  adj = bar->progress.adjustment;
+  adj->step_increment = value;
+  
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+gfloat c_gtk_progressbar_get_step ( GtkProgressBar * bar)
+{
+  GtkAdjustment *adj;
+  gfloat value;
+  adj = bar->progress.adjustment;
+  value = adj->step_increment;
+  return value;
+}
+  
+
+void c_gtk_progressbar_set_minimum ( GtkProgressBar * bar, gfloat value)
+{
+  GtkAdjustment *adj;
+
+  adj = bar->progress.adjustment;
+  adj->lower = value;
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+gfloat c_gtk_progressbar_get_minimum ( GtkProgressBar * bar)
+{
+   GtkAdjustment *adj;
+   gfloat value;
+   adj = bar->progress.adjustment;
+   value = adj->lower;
+   return value;
+}
+
+void c_gtk_progressbar_set_maximum ( GtkProgressBar * bar, gfloat value)
+{
+  GtkAdjustment *adj;
+
+  adj = bar->progress.adjustment;
+  adj->upper = value;
+  
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+gfloat c_gtk_progressbar_get_maximum ( GtkProgressBar * bar)
+{
+   GtkAdjustment *adj;
+   gfloat value;
+   adj = bar->progress.adjustment;
+   value = adj->upper;
+   return value;
+}
+
+
 /*==============================================================================
  File and directory selection functions
 ==============================================================================*/
@@ -2557,6 +2628,7 @@ void c_gtk_scrollbar_set_value ( GtkScrollbar * scroll, gfloat value)
    * are attached to this adjustment */
   gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
 }
+
 
 void c_gtk_scrollbar_set_page_size ( GtkScrollbar * scroll, gfloat value)
 {

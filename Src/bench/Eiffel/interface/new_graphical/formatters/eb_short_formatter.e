@@ -120,11 +120,18 @@ feature -- Status setting
 		do
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
-				create l_reader
 				a_stone ?= new_stone
 				if a_stone /= Void then
 					-- Is compiled .NET type.
-					consumed_type ?= l_reader.new_object_from_file (a_stone.class_i.file_name)
+					if consumed_types.has (a_stone.class_i.name) then
+						consumed_type := consumed_types.item (a_stone.class_i.name)
+					else
+						create l_reader
+						consumed_type ?= l_reader.new_object_from_file (a_stone.class_i.file_name)
+						if consumed_type /= Void then
+							consumed_types.put (consumed_type, a_stone.class_i.name)	
+						end
+					end
 					set_class (a_stone.e_class)
 					class_i := Void
 				else

@@ -144,7 +144,7 @@ feature -- dragging
 			file: UNIX_FILE;
 			start_line_pos: INTEGER;
 		do
-			!!file.make_open_read (file_name);
+			!!file.make_open_binary_read (file_name);
 			from
 			until
 				file.position > start_position or else file.end_of_file

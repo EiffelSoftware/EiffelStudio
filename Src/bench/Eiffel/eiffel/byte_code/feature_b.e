@@ -101,10 +101,10 @@ feature -- Byte code generation
 		end;
 
 	make_special_byte_code (ba: BYTE_ARRAY) is
-            -- Make byte code for special calls.
-        do
+			-- Make byte code for special calls.
+		do
 			ba.append (special_routines.bc_code);
-        end;
+		end;
 
 
 	code_first: CHARACTER is

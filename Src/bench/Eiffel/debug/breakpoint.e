@@ -1,6 +1,13 @@
 
 class BREAKPOINT
 
+inherit
+
+	ANY
+		redefine
+			is_equal
+		end
+
 feature
 
 	offset: INTEGER;
@@ -37,6 +44,19 @@ feature
 			-- Set `real_body_id' to `i'.
 		do
 			real_body_id := i
+		end;
+
+feature -- comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- `other' is equal to `Current' if they represent
+			-- the same physical breakpoint in the byte code, 
+			-- in other words they have the same `real_body_id' 
+			-- and `offset' (`is_continue' is just a status of 
+			-- the breakpoint).
+		do
+			Result := (other.offset = offset) and 
+							(other.real_body_id = real_body_id)
 		end;
 
 end

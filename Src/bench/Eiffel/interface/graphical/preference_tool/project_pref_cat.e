@@ -10,9 +10,13 @@ class PROJECT_PREF_CAT
 inherit
 	EB_CONSTANTS
 		rename
-			Project_resources as associated_category
+			Project_tool_resources as associated_category
 		export
 			{NONE} all
+		end;
+	SHARED_PIXMAPS
+		rename
+			resources as parsed_resources
 		end;
 	PREFERENCE_CATEGORY
 		rename
@@ -37,11 +41,17 @@ feature {NONE} -- Initialization
 			!! bool_command_bar.make (associated_category.command_bar, Current);
 			!! bool_format_bar.make (associated_category.format_bar, Current);
 			!! bool_raise_on_error.make (associated_category.raise_on_error, Current);
+			!! debugger_show_all_callers.make (
+				associated_category.debugger_show_all_callers, Current);
+			!! debugger_do_flat_in_breakpoints.make (
+				associated_category.debugger_do_flat_in_breakpoints, Current);
 
 			resources.extend (int_width);
 			resources.extend (int_height);
 			resources.extend (int_feature_height);
 			resources.extend (int_object_height);
+			resources.extend (debugger_show_all_callers);
+			resources.extend (debugger_do_flat_in_breakpoints);
 			resources.extend (int_bottom_offset);
 			resources.extend (bool_command_bar);
 			resources.extend (bool_format_bar);
@@ -75,19 +85,13 @@ feature -- Properties
 			-- Current's name
 
 	symbol: PIXMAP is
-		local
-			full_path: FILE_NAME
 		once
-			!! full_path.make_from_string ("guusl");
-			Result := read_pixmap (full_path)
+			Result := bm_Case_storage
 		end;
 
 	dark_symbol: PIXMAP is
-		local
-			full_path: FILE_NAME
 		once
-			!! full_path.make_from_string ("guusl");
-			Result := read_pixmap (full_path)
+			Result := bm_Case_storage
 		end
 
 feature -- User Interface
@@ -131,6 +135,8 @@ feature {NONE} -- Resources
 	int_feature_height, int_object_height,
 	int_bottom_offset: INTEGER_PREF_RES;
 	bool_command_bar, bool_format_bar,
-	bool_raise_on_error: BOOLEAN_PREF_RES
+	bool_raise_on_error: BOOLEAN_PREF_RES;
+	debugger_show_all_callers: BOOLEAN_PREF_RES;
+	debugger_do_flat_in_breakpoints: BOOLEAN_PREF_RES;
 
 end -- class PROJECT_PREF_CAT

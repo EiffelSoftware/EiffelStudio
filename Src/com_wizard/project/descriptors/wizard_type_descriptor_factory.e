@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_type_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_TYPE_DESCRIPTOR is
@@ -60,7 +65,7 @@ feature -- Basic operations
 				create Record_creator
 				Result := Record_creator.create_descriptor (a_documentation, a_type_info)
 			elseif type = Tkind_module then
-				message_output.add_warning (Current, message_output.Type_info_module)
+				-- do nothing
 			end
 			if Result /= Void then
 				message_output.add_message (Current, Result.creation_message)

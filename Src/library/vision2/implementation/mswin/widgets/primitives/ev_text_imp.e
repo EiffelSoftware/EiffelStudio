@@ -31,7 +31,8 @@ inherit
 			selection_end,
 			set_caret_position,
 			caret_position,
-			insert_text
+			insert_text,
+			on_key_down
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -471,6 +472,25 @@ feature {NONE} -- WEL Implementation
 			create default_colors
 			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
+		end
+		
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+		local
+			dialog: EV_DIALOG
+		do
+			dialog ?= top_level_window
+			if virtual_key = vk_escape and dialog /= Void then
+					-- There is a bug in Windows where if you hit ESC in a multiline
+					-- edit parented at some level within a dialog, it posts a WM_CLOSE
+					-- to its parent in the mistaken belief that it is part of a dialog box.
+					-- By redefining `on_key_down' here, we can prevent this behaviour. Julian.
+					-- Search comp.os.ms-windows.programmer.controls for "hit ESC in a multiline edit".
+					-- We only perform the disable if `Current' is actually parented in a dialog.
+				disable_default_processing
+			else
+				Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
+			end
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

@@ -107,8 +107,6 @@ feature -- Element change
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
-		require
-			gray_pixmap_not_void: a_gray_pixmap /= Void
 		do
 		end
 
@@ -149,6 +147,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/20 23:42:06  pichery
+--| Fixed bug (contract in deferred class, not in implementation)
+--|
 --| Revision 1.18  2000/03/20 23:40:04  pichery
 --| Added gray pixmap notion (not currently implemented on GTK)
 --|

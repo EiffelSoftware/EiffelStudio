@@ -10,7 +10,9 @@ class MEL_ATOM
 
 creation
 	make,
-	make_from_existing
+	make_from_existing,
+	make_primary,
+	make_string
 
 feature {NONE} -- Initialization
 
@@ -26,7 +28,7 @@ feature {NONE} -- Initialization
 		end;
 
 	make_from_existing (an_id: like identifier) is
-			-- Initialize atom with C pointer `an_id'.
+			-- Initialize atom with C Atom `an_id'.
 		require
 			an_id_not_null: an_id /= default_pointer
 		do
@@ -35,15 +37,38 @@ feature {NONE} -- Initialization
 			set: identifier = an_id
 		end;
 
+	make_primary is
+			-- Create a XA_PRIMARY atom.
+		do
+			identifier := XA_PRIMARY
+		ensure
+			set: identifier = XA_PRIMARY
+		end;
+
+	make_string is
+			-- Create a XA_STRING atom.
+		do
+			identifier := XA_STRING
+		ensure
+			set: identifier = XA_STRING
+		end;
+
 feature -- Access
 
 	identifier: POINTER;
 			-- Identifier of an atom
 
+	is_valid: BOOLEAN is
+			-- Is the atom valid?
+		do
+			Result := identifier /= default_pointer
+		end;
+
 	name (a_display: MEL_DISPLAY): STRING is
 			-- Name of the atom from `a_display'
 		require
-			valid_display: a_display /= Void and then a_display.is_valid
+			valid_display: a_display /= Void and then a_display.is_valid;
+			is_valid: is_valid
 		local
 			p: POINTER
 		do
@@ -78,9 +103,19 @@ feature {NONE} -- External features
 			"XtFree"
 		end;
 
-invariant
+	XA_PRIMARY: POINTER is
+		external
+			"C [macro <X11/Xatom.h>]: EIF_POINTER"
+		alias
+			"XA_PRIMARY"
+		end;
 
-	non_null_identifier: identifier /= default_pointer
+	XA_STRING: POINTER is
+		external
+			"C [macro <X11/Xatom.h>]: EIF_POINTER"
+		alias
+			"XA_STRING"
+		end;
 
 end -- class MEL_ATOM
 

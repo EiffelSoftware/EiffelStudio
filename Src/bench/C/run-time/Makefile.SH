@@ -476,6 +476,7 @@ local_realclean::
 
 eif_size.h: eif_size_h.SH
 	/bin/sh eif_size_h.SH
+	chmod 644 eif_size.h
 
 install:: $(SCRIPTS) $(LSCRIPTS)
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \

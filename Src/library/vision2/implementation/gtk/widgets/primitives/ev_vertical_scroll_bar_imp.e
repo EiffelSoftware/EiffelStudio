@@ -38,9 +38,9 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -52,13 +52,16 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/22 18:39:39  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.6  2000/02/16 04:10:32  brendel
 --| Added redefinition of `make'. Does not call precursor, since
 --| we want to keep the page size the same as leap.

@@ -298,7 +298,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_DRAWABLE_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -312,13 +312,16 @@ end -- class EV_DRAWABLE_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 18:39:41  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.16  2000/02/19 20:24:43  brendel
 --| Updated copyright to 1986-2000.
 --|

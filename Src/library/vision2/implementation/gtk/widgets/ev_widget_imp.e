@@ -799,7 +799,7 @@ end -- class EV_WIDGET_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -818,6 +818,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/02/22 18:39:37  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.58  2000/02/22 16:19:10  brendel
 --| Added features to show popup menu.
 --| Not yet implemented.

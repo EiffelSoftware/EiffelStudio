@@ -274,9 +274,9 @@ feature {NONE} -- Inapplicable
 
 end -- class EV_MULTI_COLUMN_LIST
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision Library: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -295,6 +295,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/22 18:39:51  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.28  2000/02/19 01:21:00  king
 --| Reinstated column_click_actions
 --|

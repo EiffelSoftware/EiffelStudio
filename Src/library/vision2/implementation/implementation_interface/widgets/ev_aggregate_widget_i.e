@@ -28,7 +28,7 @@ end -- class EV_AGGREGATE_WIDGET_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -47,6 +47,9 @@ end -- class EV_AGGREGATE_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/22 18:39:42  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.3  2000/02/21 20:00:19  rogers
 --| Box is now exported to EV_ANY instead of EV_ANY_I.
 --|

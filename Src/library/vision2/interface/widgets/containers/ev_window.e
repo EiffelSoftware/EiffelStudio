@@ -344,7 +344,7 @@ end -- class EV_WINDOW
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
 --! Contact ISE for any other use.
@@ -363,6 +363,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/02/22 18:39:51  oconnor
+--| updated copyright date and formatting
+--|
 --| Revision 1.45  2000/02/19 01:00:54  oconnor
 --| tweaked PC of title for consistency
 --|

@@ -87,8 +87,9 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Not visible or child at creation
 		do
-			Result := Ws_child + Ws_visible + Ws_group
-					+ Ws_tabstop + Bs_autocheckbox + Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_child | Ws_visible | Ws_group
+					| Ws_tabstop | Ws_clipchildren | Ws_clipsiblings
+					| Bs_autocheckbox
 		end
 
 	interface: EV_CHECK_BUTTON

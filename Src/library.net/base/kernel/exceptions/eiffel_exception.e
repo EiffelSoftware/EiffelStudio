@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			code := a_code
 			if a_tag /= default then
 				create tag.make_from_string (a_tag)
-				make_from_message (a_tag.to_cil)
 			end
 		ensure
 			code_set: code = a_code

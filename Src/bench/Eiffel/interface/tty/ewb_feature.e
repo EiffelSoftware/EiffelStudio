@@ -124,8 +124,8 @@ feature {NONE} -- Implementation
 			filter: TEXT_FILTER
 		do
 			!! st.make;
-			cmd := clone (associated_cmd);
-			cmd.set (e_feature, e_class, st);
+			cmd := associated_cmd;
+			cmd.set (e_feature, st);
 			cmd.execute;
 			if filter_name /= Void and then not filter_name.empty then
 				!! filter.make (filter_name);

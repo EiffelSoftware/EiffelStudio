@@ -3422,59 +3422,6 @@ feature -- Process the creation feature
 			Degree_1.insert_class (Current)
 		end
 
-feature -- Merging
-
-	merge (other: like Current) is
-			-- Merge `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-			same_class: class_id = other.class_id
-		local
-			classes, desc: like descendants
-			class_c: CLASS_C
-		do
-			is_used_as_expanded := is_used_as_expanded or other.is_used_as_expanded
-			is_used_as_separate := is_used_as_separate or other.is_used_as_separate
-			filters.append (other.filters)
-
-			from 
-				classes := other.clients
-				classes.start
-				clients.finish
-			until 
-				classes.after 
-			loop
-				class_c := System.class_of_id (classes.item.class_id)
-				if not clients.has (class_c) then
-					clients.extend (class_c)
-					clients.forth
-				end
-				classes.forth
-			end
-
-			from 
-				classes := other.descendants
-				classes.start 
-				desc := descendants
-				desc.finish
-			until 
-				classes.after 
-			loop
-				class_c  := System.class_of_id (classes.item.class_id)
-				if not desc.has (class_c) then
-					desc.extend (class_c)
-					desc.forth
-				end
-				classes.forth
-			end
-
-			types.append (other.types)
-				--| `syntactical_clients' is used when removing classes.
-				--| Since a precompiled class cannot be removed, it
-				--| doesn't matter if `syntactical_clients' is out-of-date.
-		end
-
 feature {NONE} -- Implementation
 
 	add_feature_to_melted_set (f: FEATURE_I) is
@@ -3525,7 +3472,7 @@ feature -- Initialization
 				-- Creation of the client list
 			create clients.make (10)
 				-- Types list creation
-			!! types.make
+			!! types.make (1)
 		end
 
 feature -- Properties

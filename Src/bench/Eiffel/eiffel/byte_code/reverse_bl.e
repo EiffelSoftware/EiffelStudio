@@ -141,17 +141,6 @@ feature
 				end;
 				buf.putstring ("return ");
 			else
-					-- Perform aging tests when necessary
-				if how /= None_assignment and not target.is_predefined then
-				   source_print_register;
-					buf.putstring (" = RTRM(");
-					source_print_register;
-					buf.putstring (gc_comma);
-					context.Current_register.print_register;
-					buf.putchar (')');
-					buf.putchar (';');
-					buf.new_line;
-				end;
 				target.print_register;
 				buf.putstring (" = ");
 			end;
@@ -166,7 +155,17 @@ feature
 
 				buf.putstring (gc_comma);
 				source_print_register;
-				buf.putchar (')');
+				buf.putchar (')')
+					-- Perform aging tests when necessary
+				if not target.is_predefined then
+					buf.putchar (';')
+					buf.new_line
+					buf.putstring ("RTAR(")
+					context.Current_register.print_register
+					buf.putstring (gc_comma)
+					source_print_register
+					buf.putchar (')')
+				end
 			else
 				buf.putstring ("(EIF_REFERENCE) 0");
 			end;

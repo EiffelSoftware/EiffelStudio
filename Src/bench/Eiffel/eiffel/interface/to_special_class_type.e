@@ -306,7 +306,7 @@ feature -- C Code generation
 					buffer.putint (bit_i.size)
 					buffer.putstring (");")
 					buffer.new_line
-					buffer.putstring ("RTAS_OPT(*((EIF_REFERENCE *) loc1 + i), i, loc1);")
+					buffer.putstring ("RTAR(loc1, *((EIF_REFERENCE *) loc1 + i));")
 					buffer.new_line
 					buffer.exdent
 					buffer.putchar ('}')
@@ -317,7 +317,7 @@ feature -- C Code generation
 				end
 			end
 				-- Assignment of result to `area'.
-			buffer.putstring ("RTAR(loc1, Current);")
+			buffer.putstring ("RTAR(Current, loc1);")
 			buffer.new_line
 			generate_area_access (buffer)
 			buffer.putstring (" = loc1;")

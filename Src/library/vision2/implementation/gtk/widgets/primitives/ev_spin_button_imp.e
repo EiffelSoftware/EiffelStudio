@@ -81,10 +81,10 @@ feature -- Access
 			Result := c_gtk_spin_button_maximum (widget)
 		end
 
-	adjustment_widget : POINTER is
+	adjustment_widget: POINTER is
 			-- Pointer to adjustment widget
 		do
-			Result := c_gtk_spin_button_adjustment (widget)
+			Result := gtk_spin_button_get_adjustment (widget)
 		end
 
 feature -- Element change

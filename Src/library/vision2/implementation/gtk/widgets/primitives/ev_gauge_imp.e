@@ -115,7 +115,7 @@ feature -- Implementation - External
 			-- Pointer to the GtkAdjustment of the gauge
 			-- We need it to catch event.
 		do
-			Result := c_gtk_range_adjustment (widget)
+			Result := gtk_range_get_adjustment (widget)
 		end
 
 

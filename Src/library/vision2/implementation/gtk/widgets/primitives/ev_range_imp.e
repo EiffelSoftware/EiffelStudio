@@ -20,7 +20,7 @@ feature -- Access
 	adjustment_widget: POINTER is
 			-- Pointer th the widget adjustment struct
 		do
-			Result := c_gtk_range_adjustment (widget)
+			Result := gtk_range_get_adjustment (widget)
 		end
 
 	value: INTEGER is

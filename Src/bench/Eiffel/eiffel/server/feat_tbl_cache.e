@@ -3,11 +3,9 @@
 class FEAT_TBL_CACHE 
 
 inherit
-
 	CACHE [FEATURE_TABLE, CLASS_ID]
 
 creation
-
 	make
 	
 feature 

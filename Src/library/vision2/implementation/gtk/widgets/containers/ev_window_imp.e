@@ -312,7 +312,10 @@ feature -- Element change
 			C.gtk_window_set_title (c_object, eiffel_to_c (new_title))
 
 			-- Give the gtk window a corresponding gdk window
-			C.gtk_widget_realize (c_object)
+			
+			if not has_struct_flag (C.GTK_REALIZED_ENUM) then
+				C.gtk_widget_realize (c_object)
+			end	
 		end
 
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is

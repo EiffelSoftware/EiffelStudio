@@ -26,11 +26,11 @@ E_IType_Info::E_IType_Info(ITypeInfo * p_i)
 E_IType_Info::~E_IType_Info ()
 {
 	
-	release_var_descs ();
-	release_func_descs ();
+	//release_var_descs ();
+	//release_func_descs ();
 	if (pTypeAttr != NULL)
 	{
-		ccom_release_type_attr ((EIF_POINTER) pTypeAttr);
+		//ccom_release_type_attr ((EIF_POINTER) pTypeAttr);
 	}
 	if (pTypeInfo != NULL)
 		pTypeInfo->Release();

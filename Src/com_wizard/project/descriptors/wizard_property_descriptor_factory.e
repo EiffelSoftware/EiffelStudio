@@ -8,11 +8,6 @@ class
 	WIZARD_PROPERTY_DESCRIPTOR_FACTORY
 
 inherit
-	WIZARD_MESSAGE_OUTPUT
-		export
-			{NONE} all
-		end
-
 	WIZARD_SHARED_DESCRIPTOR_FACTORIES
 		export
 			{NONE} all

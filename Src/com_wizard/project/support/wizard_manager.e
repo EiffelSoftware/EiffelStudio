@@ -33,19 +33,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
-		export
-			{NONE} all
-		end
-
-	WIZARD_PROGRESS_REPORT
-		rename
-			finish as report_finish,
-			parent as report_parent
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -61,37 +48,18 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_parent: like parent) is
-			-- Initialize manager.
-		require
-			non_void_parent: a_parent /= Void
-		do
-			set_output_window (a_parent)
-			parent := a_parent
-		ensure
-			parent_set: parent = a_parent
-		end
-
 feature -- Access
-
-	parent: MAIN_WINDOW
-			-- Parent window used to parent.add_title messages
 
 	Idl_compilation_title: STRING is "IDL Compilation"
 			-- IDL compilation title
 	
-	Iid_compilation_title: STRING is "C Compilation Step 1"
+	Iid_compilation_title: STRING is "C Compilation progress_report.step 1"
 			-- Iid generated C file compilation title
 	
-	Data_compilation_title: STRING is "C Compilation Step 2"
+	Data_compilation_title: STRING is "C Compilation progress_report.step 2"
 			-- Inprocess dll generated C file compilation title
 	
-	Ps_compilation_title: STRING is "C Compilation Step 3"
+	Ps_compilation_title: STRING is "C Compilation progress_report.step 3"
 			-- Proxy/stub generated C file compilation title
 	
 	Link_title: STRING is "Creating Proxy Stub Dll"
@@ -111,53 +79,52 @@ feature -- Basic Operations
 			if shared_wizard_environment.abort then
 				finish
 			else
-				set_parent (parent)
-				initialize_log_file
-				set_title (Idl_compilation_title)
-				start
+				message_output.initialize_log_file
+				progress_report.set_title (Idl_compilation_title)
+				progress_report.start
 				-- Compile IDL
 				if shared_wizard_environment.idl then
 					if shared_wizard_environment.use_universal_marshaller then
-						set_range (1)
+						progress_report.set_range (1)
 					else
-						set_range (5)
+						progress_report.set_range (5)
 					end
-					parent.add_title (Idl_compilation_title)
+					message_output.add_title (Current, Idl_compilation_title)
 					compiler.compile_idl
 					if shared_wizard_environment.abort then
 						finish
 					else
-						step
+						progress_report.step
 						-- Create Proxy/Stub
 						if not shared_wizard_environment.use_universal_marshaller then
 							-- Compile c iid file
-							parent.add_title (Iid_compilation_title)
+							message_output.add_title (Current, Iid_compilation_title)
 							compiler.compile_iid
 							if shared_wizard_environment.abort then
 								finish
 							else
-								step
+								progress_report.step
 								-- Compile c dlldata file
-								parent.add_title (Data_compilation_title)
+								message_output.add_title (Current, Data_compilation_title)
 								compiler.compile_data
 								if shared_wizard_environment.abort then
 									finish
 								else
-									step
+									progress_report.step
 									-- Compile c proxy/stub file
-									parent.add_title (Ps_compilation_title)
+									message_output.add_title (Current, Ps_compilation_title)
 									compiler.compile_ps
 									if shared_wizard_environment.abort then
 										finish
 									else
-										step
+										progress_report.step
 										-- Final link
-										parent.add_title (Link_title)
+										message_output.add_title (Current, Link_title)
 										compiler.link
 										if shared_wizard_environment.abort then
 											finish
 										else
-											step
+											progress_report.step
 											generate
 										end
 									end
@@ -171,12 +138,12 @@ feature -- Basic Operations
 				else
 					generate
 				end
-				close_log_file
+				message_output.close_log_file
 			end
 		rescue
 			if not failed_on_rescue then
 				shared_wizard_environment.set_abort (Standard_abort_value)
-				close_log_file
+				message_output.close_log_file
 				retry
 			end
 		end
@@ -190,10 +157,10 @@ feature {NONE} -- Implementation
 			Clib_folder_name: STRING
 		do
 			-- Initialization
-			parent.add_title (Analysis_title)
+			message_output.add_title (Current, Analysis_title)
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
-			set_range (0)
-			set_progress (0)
+			progress_report.set_range (0)
+			progress_report.set_progress (0)
 			intialize_file_directories
 
 			-- Descriptors generation
@@ -203,7 +170,7 @@ feature {NONE} -- Implementation
 			
 			-- Code generation
 			if directories_initialized and not Shared_wizard_environment.abort then
-				parent.add_title (Generation_title)
+				message_output.add_title (Current, Generation_title)
 				from
 					system_descriptor.start
 				until
@@ -216,11 +183,11 @@ feature {NONE} -- Implementation
 					end
 					system_descriptor.forth
 				end
-				set_range (a_range)
+				progress_report.set_range (a_range)
 				from
 					system_descriptor.start
-					start
-					set_title (Generation_title2)
+					progress_report.start
+					progress_report.set_title (Generation_title2)
 				until
 					system_descriptor.after
 				loop
@@ -243,7 +210,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							i := i + 1
-							step
+							progress_report.step
 						end	
 					end
 					system_descriptor.forth
@@ -251,7 +218,7 @@ feature {NONE} -- Implementation
 
 				-- Generating Implemented Interfaces
 				if Shared_wizard_environment.abort then
-					parent.add_message (Generation_Aborted)
+					message_output.add_message (Current, Generation_Aborted)
 				else
 					from
 						system_descriptor.interfaces.start
@@ -265,9 +232,9 @@ feature {NONE} -- Implementation
 
 					from
 						system_descriptor.interfaces.start
-						start
-						set_title (Interface_generation_title)
-						set_range (a_range)
+						progress_report.start
+						progress_report.set_title (Interface_generation_title)
+						progress_report.set_range (a_range)
 					until
 						system_descriptor.interfaces.after
 						or Shared_wizard_environment.abort
@@ -277,46 +244,46 @@ feature {NONE} -- Implementation
 							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
 						end
 						system_descriptor.interfaces.forth
-						step
+						progress_report.step
 					end
 
 					if Shared_wizard_environment.abort then
-						parent.add_message (Generation_Aborted)
+						message_output.add_message (Current, Generation_Aborted)
 					else
 						
 						-- Generating extra files
 						if not shared_wizard_environment.abort then
-							start
-							set_title (Runtime_functions_generation)
-							set_range (8)
+							progress_report.start
+							progress_report.set_title (Runtime_functions_generation)
+							progress_report.set_range (8)
 							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
-							step
+							progress_report.step
 							Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-							step
+							progress_report.step
 							Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)	
-							step
+							progress_report.step
 							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-							step
+							progress_report.step
 							Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-							step
+							progress_report.step
 							Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-							step
+							progress_report.step
 							Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
-							step
+							progress_report.step
 							Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-							step
-							parent.add_warning (Generation_Successful)
+							progress_report.step
+							message_output.add_warning (Current, Generation_Successful)
 						end
 
 						-- Compiling generated C code
 						if Shared_wizard_environment.compile_c then
-							parent.add_title (Compilation_title)
+							message_output.add_title (Current, Compilation_title)
 							change_working_directory (shared_wizard_environment.destination_folder)
 							if shared_wizard_environment.client and not shared_wizard_environment.abort then
 								Clib_folder_name := clone (Client)
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
-								set_title (C_client_compilation_title)
+								progress_report.set_title (C_client_compilation_title)
 								compiler.compile_folder (Clib_folder_name, Current)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
@@ -324,7 +291,7 @@ feature {NONE} -- Implementation
 								Clib_folder_name := clone (Server)
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
-								set_title (C_server_compilation_title)
+								progress_report.set_title (C_server_compilation_title)
 								compiler.compile_folder (Clib_folder_name, Current)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
@@ -332,28 +299,28 @@ feature {NONE} -- Implementation
 								Clib_folder_name := clone (Common)
 								Clib_folder_name.append_character (Directory_separator)
 								Clib_folder_name.append (Clib)
-								set_title (C_common_compilation_title)
+								progress_report.set_title (C_common_compilation_title)
 								compiler.compile_folder (Clib_folder_name, Current)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
 							if Shared_wizard_environment.compile_eiffel then
 								if not Shared_wizard_environment.abort and Shared_wizard_environment.client then
-									set_title (Eiffel_compilation_title)
+									progress_report.set_title (Eiffel_compilation_title)
 									compiler.compile_eiffel (Client)
 								end
 								if not Shared_wizard_environment.abort and Shared_wizard_environment.server then
-									set_title (Eiffel_compilation_title)
+									progress_report.set_title (Eiffel_compilation_title)
 									compiler.compile_eiffel (Server)
 								end
 							end
 							if not shared_wizard_environment.abort then		
-								parent.add_warning (Compilation_Successful)
+								message_output.add_message (Current, Compilation_Successful)
 							end
 						end
 					end
 				end
 				clean_all
-				report_finish
+				progress_report.finish
 			end
 		end
 		
@@ -370,11 +337,10 @@ feature {NONE} -- Implementation
 				a_string := clone (Failed_message)
 				a_string.append_integer (Shared_wizard_environment.return_code)
 			end
-			parent.add_error (a_string)
-			if running then
-				report_finish
+			message_output.add_error (Current, a_string)
+			if progress_report.running then
+				progress_report.finish
 			end
-			parent.enable
 		end
 
 	compiler: WIZARD_COMPILER is
@@ -456,12 +422,12 @@ feature {NONE} -- Implementation
 			create a_file.make (a_path)
 			if a_file.exists then
 				if not a_file.is_directory then
-					a_string := clone (File_already_exists)
+					a_string := clone (message_output.File_already_exists)
 					a_string.append (Colon)
 					a_string.append (Space)
 					a_string.append (a_path)
-					add_warning (Current, a_string)
-					add_message (Current, File_backed_up)
+					message_output.add_warning (Current, a_string)
+					message_output.add_message (Current, message_output.File_backed_up)
 					a_string := clone (a_path)
 					a_string.append (Backup_file_extension)
 					file_copy (a_path, a_string)

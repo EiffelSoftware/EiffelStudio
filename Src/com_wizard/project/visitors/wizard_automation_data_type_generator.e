@@ -142,7 +142,7 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_u_long_long")
 				is_structure := True
 			else
-				add_warning (Current, not_supported_data_type)
+				message_output.add_warning (Current, message_output.not_supported_data_type)
 
 			end
 

@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 						end
 
 						if visitor.is_basic_type then
-							add_warning (Current, Not_pointer_type)
+							message_output.add_warning (Current, message_output.Not_pointer_type)
 
 						elseif 
 							visitor.is_array_basic_type or 
@@ -375,10 +375,10 @@ feature {NONE} -- Implementation
 			type := visitor.vt_type
 
 			if visitor.is_basic_type then
-				add_warning (Current, Not_pointer_type)
+				message_output.add_warning (Current, message_output.Not_pointer_type)
 
 			elseif visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
+				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
 
 			else
 				Result := clone (New_line_tab)

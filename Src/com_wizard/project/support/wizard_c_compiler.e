@@ -7,9 +7,16 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 	WIZARD_ROUTINES
 
 	WIZARD_PROCESS_LAUNCHER
+		rename
+			message_output as process_launcher_message_output
 		export
 			{NONE} all
 		end
@@ -34,11 +41,9 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
+	WIZARD_RESCUABLE
 		export
 			{NONE} all
-		undefine
-			message_output
 		end
 
 create
@@ -61,10 +66,8 @@ feature -- Basic Operations
 			a_working_directory := clone (current_working_directory)
 			create a_directory.make_open_read (a_folder_name)
 			a_file_list := a_directory.linear_representation
-			if a_progress_report /= Void then
-				a_progress_report.start
-				a_progress_report.set_range (a_file_list.count)
-			end
+			progress_report.start
+			progress_report.set_range (a_file_list.count)
 			change_working_directory (a_folder_name)
 			from
 				a_file_list.start
@@ -74,9 +77,7 @@ feature -- Basic Operations
 				if is_c_file (a_file_list.item) then
 					compile_file (a_file_list.item)
 				end
-				if a_progress_report /= Void then
-					a_progress_report.step
-				end
+					progress_report.step
 				a_file_list.forth
 			end
 			change_working_directory (a_working_directory)
@@ -174,7 +175,7 @@ feature {NONE} -- Implementation
 				last_make_command.append (title)
 				a_file.close
 			else
-				add_error (Current, Could_not_write_makefile)
+				message_output.add_error (Current, message_output.Could_not_write_makefile)
 			end
 		rescue
 			if not failed_on_rescue then
@@ -187,7 +188,7 @@ feature {NONE} -- Implementation
 			-- Cl command line
 		do
 			Result := clone (Common_c_compiler_options)
-			if Shared_wizard_environment.output_level = Output_none then
+			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
 			Result.append (clone (current_working_directory))

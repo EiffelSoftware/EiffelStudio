@@ -10,8 +10,6 @@ class
 inherit
 	ECOM_VAR_TYPE
 
-	WIZARD_MESSAGE_OUTPUT
-
 	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all

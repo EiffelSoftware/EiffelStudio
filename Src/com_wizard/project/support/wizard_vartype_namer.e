@@ -9,12 +9,25 @@ class
 
 inherit
 	WIZARD_WRITER_DICTIONARY
+		export
+			{NONE} all
+		end
 
 	ECOM_VAR_TYPE
-
-	WIZARD_MESSAGE_OUTPUT
+		export
+			{NONE} all
+			{ANY} valid_var_type, is_basic
+		end
 
 	WIZARD_NAMER_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -269,8 +282,8 @@ feature -- Access
 				else
 					tmp_string := clone (a_visitor.c_type)
 					tmp_string.append (Space)
-					tmp_string.append (Not_variant_type)
-					add_warning (Current, tmp_string)
+					tmp_string.append (message_output.Not_variant_type)
+					message_output.add_warning (Current, tmp_string)
 					create Result.make (0)
 				end
 			end

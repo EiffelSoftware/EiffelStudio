@@ -8,11 +8,6 @@ deferred class
 	WIZARD_FUNCTION_GENERATOR
 
 inherit
-	WIZARD_MESSAGE_OUTPUT
-		export
-			{NONE} all
-		end
-
 	ECOM_VAR_TYPE
 		export
 			{NONE} all

@@ -15,8 +15,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
-
 feature -- Access
 
 	generate (a_descriptor: WIZARD_ENUM_DESCRIPTOR) is

@@ -34,13 +34,6 @@ inherit
 			is_equal
 		end
 
-	WIZARD_PROGRESS_REPORT
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 	ECOM_TYPE_KIND
 		export
 			{NONE} all
@@ -168,8 +161,8 @@ feature -- Basic operations
 		do
 			from
 				i := 0
-				set_range (range + type_lib.type_info_count)
-				set_title (Generation_title)
+				progress_report.set_range (progress_report.range + type_lib.type_info_count)
+				progress_report.set_title (Generation_title)
 			until
 				i = type_lib.type_info_count or Shared_wizard_environment.abort
 			loop
@@ -178,7 +171,7 @@ feature -- Basic operations
 									type_lib.documentation (i), type_lib.type_info (i)), i + 1)
 				end
 				i := i + 1
-				step
+				progress_report.step
 			end
 		end
 

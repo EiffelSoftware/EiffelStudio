@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_MESSAGE_OUTPUT
-		export
-			{NONE} all
-		end
-
 	ECOM_PARAM_FLAGS
 		export
 			{NONE} all

@@ -10,9 +10,6 @@ indexing
 
 class MESSAGE 
 
-obsolete
-	"This is only implemented for Motif.  Use MEL_MESSAGE_BOX instead."
-
 inherit
 
 	TERMINAL_OUI
@@ -30,6 +27,8 @@ feature {NONE} -- Creation
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a message box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+		obsolete
+			"This is only implemented for Motif.  Use MEL_MESSAGE_BOX instead."
 		do
 			create_ev_widget (a_name, a_parent, True)
 		end;
@@ -37,6 +36,8 @@ feature {NONE} -- Creation
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged message box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+		obsolete
+			"This is only implemented for Motif.  Use MEL_MESSAGE_BOX instead."
 		do
 			create_ev_widget (a_name, a_parent, False)
 		end;
@@ -44,17 +45,11 @@ feature {NONE} -- Creation
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a message box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
-		local
-			ot: OBSOLETE_TOOLKIT
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			ot ?= toolkit;
-			check
-				obsolete_toolkit_instantiated: ot /= Void
-			end;
-			implementation := ot.message (Current, man, a_parent);
+			implementation := toolkit.message (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

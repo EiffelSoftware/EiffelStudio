@@ -1958,6 +1958,13 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			shown_portions := shown_portions + 1
 			feature_form.manage
 
+			if shown_portions > 2 then
+					-- We need to manage again the object form, mostly when the feature form can
+					-- hide the object form after its re-appearance on the screen.
+					-- This problems occurs only with horizontal splitter in the case of Motif 1.2.
+				object_form.manage
+			end
+
 			menus.item (edit_feature_menu).button.set_sensitive
 			menus.item (special_feature_menu).button.set_sensitive
 			menus.item (format_feature_menu).button.set_sensitive

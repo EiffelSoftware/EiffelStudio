@@ -29,19 +29,19 @@ feature {TTY_RESOURCES} -- Initialization
 			-- Initialize all rsources valid for Current.
 		do
 			!! font.make ("font", rt, "");
-			!! breakable_font.make ("breakable_font", rt, "timi14");
-			!! class_font.make ("class_font", rt, "timi14");
-			!! cluster_font.make ("cluster_font", rt, "timi14");
-			!! comment_font.make ("comment_font", rt, "timr14");
-			!! default_text_font.make ("default_text_font", rt, "timi14");
-			!! error_font.make ("error_font", rt, "timi14");
-			!! feature_font.make ("feature_font", rt, "timi14");
-			!! keyword_font.make ("keyword_font", rt, "timb14");
-			!! object_font.make ("object_font", rt, "timi14");
-			!! text_font.make ("text_font", rt, "");
+			!! breakable_font.make ("breakable_font", rt, "*times-medium-o-*-140-*");
+			!! class_font.make ("class_font", rt, "*times-medium-o-*-140-*");
+			!! cluster_font.make ("cluster_font", rt, "*times-medium-o-*-140-*");
+			!! comment_font.make ("comment_font", rt, "*times-medium-r-*-140-*");
+			!! default_text_font.make ("default_text_font", rt, "*times-medium-o-*-140-*");
+			!! error_font.make ("error_font", rt, "*times-medium-o-*-140-*");
+			!! feature_font.make ("feature_font", rt, "*times-medium-o-*-140-*");
+			!! keyword_font.make ("keyword_font", rt, "*times-bold-r-*-140-*");
+			!! object_font.make ("object_font", rt, "*times-medium-o-*-140-*");
+			!! text_font.make ("text_font", rt, "*times-medium-r-*-140-*");
 			!! string_text_font.make ("string_text_font", rt, "fixed");
-			!! symbol_font.make ("symbol_font", rt, "timr14");
-			!! html_font.make ("html_font", rt, "timr14");
+			!! symbol_font.make ("symbol_font", rt, "*times-medium-r-*-140-*");
+			!! html_font.make ("html_font", rt, "*times-medium-r-*-140-*");
 
 			!! background_color.make ("background_color", rt, "");
 			!! foreground_color.make ("foreground_color", rt, "");

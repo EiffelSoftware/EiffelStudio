@@ -1,0 +1,45 @@
+class OPERATOR_TABLE
+
+creation
+	make
+
+feature {} -- Initialization
+
+	make is
+			-- Names of standard operator, when not immediately
+			-- extracted from internal name
+		do
+			!!operator_table.make (14);
+			operator_table.put ("^", "power");
+			operator_table.put ("^", "shift");
+			operator_table.put ("*", "star");
+			operator_table.put ("/", "slash");
+			operator_table.put ("//", "div");
+			operator_table.put ("\\", "mod");
+			operator_table.put ("+", "plus");
+			operator_table.put ("-", "minus");
+			operator_table.put ("<", "lt");
+			operator_table.put ("<=", "le");
+			operator_table.put (">", "gt");
+			operator_table.put (">=", "ge");
+			operator_table.put ("and then", "and_then");
+			operator_table.put ("or else", "or_else");
+		end;
+
+feature
+
+		name (operator: STRING): STRING is
+				-- What's the name of operator?
+			do
+				Result := operator_table @ operator;
+				if Result = void then
+					Result := operator;
+				end;
+			end;
+
+feature {} -- Implementation
+
+		operator_table: HASH_TABLE [STRING, STRING];
+			-- Internal table to record operators
+
+end -- class OPERATOR_TABLE

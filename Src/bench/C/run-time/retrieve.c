@@ -1616,8 +1616,6 @@ rt_public EIF_REFERENCE rrt_make (void)
 	/* Read the object count in the file header */
 	ridr_multi_int32 (&objectCount, 1);
 
-	mismatches = new_mismatch_table (objectCount / 10);
-
 	return rrt_nmake (objectCount);
 }
 
@@ -1720,6 +1718,8 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 		RTXSC;					/* Restore stack contexts */
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
+
+	mismatches = new_mismatch_table (objectCount / 10);
 
 	/* Initialization of the hash table */
 	nb_recorded = 0;
@@ -1865,6 +1865,10 @@ rt_private void rt_clean(void)
 		independent_retrieve_reset ();
 	}
 	free_sorted_attributes();
+	free_mismatch_table (mismatches);
+	mismatches = NULL;
+	free_type_conversion_table (type_conversions);
+	type_conversions = NULL;
 	rt_reset_retrieve();
 }
 

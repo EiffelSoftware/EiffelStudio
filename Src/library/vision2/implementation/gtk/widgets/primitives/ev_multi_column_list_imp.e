@@ -29,7 +29,6 @@ inherit
 			post_drop_steps,
 			start_transport_filter,
 			initialize,
-			pointer_over_widget,
 			interface,
 			destroy,
 			able_to_transport,
@@ -56,6 +55,8 @@ inherit
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
+	
+	EV_PND_DEFERRED_ITEM_PARENT
 
 create
 	make
@@ -105,7 +106,7 @@ feature {NONE} -- Initialization
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			a_row_number := row_from_y_coord (a_y)
+			a_row_number := row_index_from_y_coord (a_y)
 			if a_row_number > 0 and then a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
 			end
@@ -284,7 +285,7 @@ feature {NONE} -- Initialization
 				pointer_motion_actions_internal.call (t)
 			end
 			if a_y > 0 and a_x <= width then
-				a_row_number := row_from_y_coord (a_y)
+				a_row_number := row_index_from_y_coord (a_y)
 				if a_row_number > 0 and then a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
@@ -357,7 +358,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				column_title_click_actions_internal.call ([temp_int.item + 1])
 			end
 		end
-
 
 	column_resize_callback (int: TUPLE [INTEGER]) is
 		local
@@ -690,34 +690,6 @@ feature -- Element change
 			update_pnd_status
 		end
 
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Is mouse pointer hovering above list.
-		local
-			gdkwin_parent, gdkwin_parent_parent: POINTER
-			clist_parent: POINTER
-		do
-			if is_displayed then
-				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdkwin)
-				if gdkwin_parent /= NULL then
-					gdkwin_parent_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (gdkwin_parent)
-				end
-				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (list_widget)
-				)
-				Result := gdkwin_parent = clist_parent or
-					gdkwin_parent_parent = clist_parent
-
-				if clist_parent = gdkwin_parent then
-					if row_from_y_coord (a_y) /= 0 then
-						Result := False
-					end
-				end
-			end
-		end
-
 feature -- Implementation
 
 	set_to_drag_and_drop: BOOLEAN is
@@ -818,7 +790,7 @@ feature -- Implementation
 		local
 			a_row_index: INTEGER
 		do
-			a_row_index := row_from_y_coord (a_y)
+			a_row_index := row_index_from_y_coord (a_y)
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)
@@ -959,8 +931,8 @@ feature -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
-	row_from_y_coord (a_y: INTEGER): INTEGER is
-			-- Returns the row at relative coordinate `a_y'.
+	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+			-- Returns the row index at relative coordinate `a_y'.
 		local
 			ver_adj: POINTER
 			temp_a_y, ver_offset: INTEGER
@@ -971,6 +943,17 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			Result := temp_a_y // (row_height) + 1
 			if Result > ev_children.count then
 				Result := 0
+			end
+		end
+		
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+			-- Returns the row at relative coordinate `a_y'
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_index_from_y_coord (a_y)
+			if a_row_index > 0 then
+				Result := ev_children @ a_row_index
 			end
 		end
 

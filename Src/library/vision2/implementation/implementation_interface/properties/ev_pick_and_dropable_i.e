@@ -250,7 +250,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := Default_pixmaps.No_cursor
 		end
 	
-execute (
+	execute (
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)

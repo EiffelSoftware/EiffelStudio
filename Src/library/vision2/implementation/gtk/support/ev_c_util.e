@@ -1,5 +1,8 @@
 class EV_C_UTIL
 
+inherit
+	C_GSLIST_STRUCT
+
 feature -- Initialization
 
 	enable_ev_gtk_log is
@@ -83,6 +86,24 @@ feature -- Conversion
 			if a /= Void then
 				Result := p2p($a)
 			end
+		end
+
+	gslist_to_eiffel (gslist: POINTER): LINKED_LIST [POINTER] is
+			-- Convert `gslist' to Eiffel structure.
+		local
+			cur: POINTER
+		do
+			create Result.make
+			from
+				cur := gslist
+			until
+				cur = Default_pointer
+			loop
+				Result.extend (gslist_struct_data (cur))
+				cur := gslist_struct_next (cur)
+			end
+		ensure
+		--	same_size: Result.count = g_slist_length (gslist)
 		end
 
 	boolean_to_c (a_boolean: BOOLEAN): INTEGER is

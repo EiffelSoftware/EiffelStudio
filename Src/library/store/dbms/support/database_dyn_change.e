@@ -53,7 +53,7 @@ feature
 			if not parsed then
 				parsed_s := s
 				if is_ok then
-					handle.status.set (db_spec.init_order (descriptor, parsed_s))
+					db_spec.init_order (descriptor, parsed_s)
 				end
 				if is_ok then
 					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
@@ -72,7 +72,7 @@ feature
 			prepared_statement: is_prepared
 		do
 			setup_parameters
-			db_spec.bind_parameter (parameters_value, parameters, descriptor, handle, "")	
+			db_spec.bind_parameter (parameters_value, parameters, descriptor, "")	
 		end
 
 	execute is
@@ -84,7 +84,7 @@ feature
 				handle.status.set (db_spec.unset_catalog_flag(descriptor))
 			end
 			if is_ok then
-				handle.status.set (db_spec.start_order (descriptor))
+				db_spec.start_order (descriptor)
 			end
 			set_executed (TRUE)
 		ensure
@@ -93,7 +93,7 @@ feature
 
 	terminate is
 		do
-				handle.status.set (db_spec.terminate_order (descriptor))
+				db_spec.terminate_order (descriptor)
 		end
 
 feature -- Status Report

@@ -27,8 +27,8 @@ clusters with different names cannot refer to the same path.</p>
 <p>&nbsp;</p>
 
 <p>In this tab, you will have on the left hand side of the window a tree
-representation of the clusters list. The tree representation enables you to see a cluster being a
-child of an existing one. On the right hand side you can specify the cluster
+representation of the clusters list. The tree representation lets you see the
+cluster hierarchy of the system. On the right hand side you can specify the cluster
 properties.</p>
 
 <p>&nbsp;</p>
@@ -37,18 +37,18 @@ properties.</p>
 <p>The name of the cluster is what you will see displayed in the <a href="../10_browsing_tools/20_cluster_tool/10_cluster_tree.html">Cluster
 Tree</a>. The path name will be used by the compiler to find the classes it
 needs to complete the compilation of your system.</p>
-<p>You can also specify if the cluster is an override one. There can be only one
+<p>You can also specify if the cluster is an &quot;override&quot; one. There can be only one
 override cluster. Each time you select one to be the override cluster, the
-previous override cluster if any will loose this property.</p>
-<p>To make it easy for finding classes you can specify either the `library' or
-`all' option. They will both produce the same effect when looking for classes,
+previous override cluster if any will lose this property.</p>
+<p>To make it easy to find classes you can specify either the `library' or
+`all' option. They will both have the same effect when looking for classes,
 i.e. the compiler will look at all Eiffel classes located in the specified
-directory and its subdirectories. The difference between this two options is
+directory <i> and its subdirectories</i>. The difference between these two options is
 that when you select `library', the classes will not be editable from the
 EiffelStudio environment.</p>
 <p>The idea is that you should use `library' when reusing a library made by
-someone else on which you don't have control over. For example, EiffelBase is a
-such a library. You should use `all' for your own libraries.</p>
+someone else over which you have no control. For example, EiffelBase is a
+such a library. You should use `all' for the libraries you are working on.</p>
 <p>&nbsp;</p>
 <h3>Cluster options</h3>
 <p>This is where you can override some options that have been set for your
@@ -56,11 +56,11 @@ system in either the General tab or the Debug Tab.</p>
 
 <p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_options_tab.png" width="286" height="307"></p>
 
-<p>You can choose to specify for the current selected cluster:</p>
+<p>You can choose to specify for the currently selected cluster:</p>
 
 <ul>
-  <li>a different assertion levels</li>
-  <li>to disable or enable the trace</li>
+  <li>a different assertion level</li>
+  <li>to enable or disable the trace</li>
   <li>to enable or disable the profiler</li>
 </ul>
 <p>If you choose to override all options, here is how it will look like:</p>
@@ -71,7 +71,7 @@ system in either the General tab or the Debug Tab.</p>
 <h3>Visible Classes</h3>
 
 <p>When you need to compile a project that will be used for a CECIL or an
-EiffelCOM application you need to mark some classes visible. You can do it using
+EiffelCOM application you need to mark some classes as visible. You can do it using
 the visible classes tab:</p>
 
 <p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_visible_tab.png" width="284" height="306"></p>
@@ -86,17 +86,18 @@ list.</p>
 <p>&nbsp;</p>
 <h3>Exclude/Include</h3>
 <p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_exclude_include_tab.png" width="285" height="307"></p>
-<p>The exclude part is to exclude certain directories or file names during the
-class lookup performed by the compiler. For example, if you are using CVS as a
-source control, you will notice that a CVS directory is created in each of your
-directory. So adding CVS in the exclude will speed-up the compiler since it
-won't have to look inside the CVS directory.</p>
+<p>The exclude part is there to exclude certain directories or file names during the
+class lookup performed by the compiler. This option is especially useful in
+cunjunction with the 'all' or 'library' options on clusters. For example, if you are using CVS as a
+source control, you will notice that a CVS directory is created in each one of your
+directories. So adding CVS in the exclude list will speed up the compiler since it
+won't have to look inside the CVS directories.</p>
 <p>&nbsp;</p>
-<p>The include part is useful when you have some Eiffel classes that does not
+<p>The include part is useful when you have some Eiffel classes that do not
 follow the standard Eiffel file name pattern, i.e. &quot;class_name.e&quot;. To
-make sure the compile will find those classes, you have to include the file name
-of the every Eiffel classes that do not follow the standard naming pattern for
-Eiffel file name.</p>
+make sure the compiler finds those classes, you have to include the file name
+of every Eiffel class that does not follow the standard naming pattern for
+Eiffel file names.</p>
 
 </body>
 

@@ -54,17 +54,17 @@
         in specifying how to compute a measure for that metric over a particular
         scope, include three different algorithms, as follows.</p>
 
-		<P CLASS="note"><b>How to compute a measure</b>:&nbsp;<br>
+        <P CLASS="note"><b>How to compute a measure</b>:&nbsp;<br>
         The following algorithm determines how to obtain a measure by applying a
         metric to a scope:<br>
-        1 • If the scope’s type is one of the metric’s basic scope types, Feature
-        or Class in the example, the metric’s specification must
+        1 • If the scope's type is one of the basic scope types of the metric, Feature
+        or Class in the example, the metric's specification must
         include a predefined mechanism to compute the measure.<br>
         That mechanism will directly access properties of the software
         —through the development environment (as in ISE Eiffel), or by
         directly analyzing the source code.<br>
-        2 • If the scope’s type is <b>smaller </b>than all of the metric’s
-        basic scope types —referring to the order relation between scopes: Feature
+        2 • If the scope's type is <b>smaller </b>than all basic scope types of
+        the metric —referring to the order relation between scopes: Feature
         less than Class, Class less than Cluster and so
         on — the measure will always be zero. This cannot happen with the Lines
         metric, since the smallest of all scope types, Feature, is
@@ -76,10 +76,9 @@
         unit for which this metric is defined is Class, so the only
         appropriate answer is zero. (This rule is important in connection with
         the next case.)<br>
-        3 • Otherwise (scope’s type not one of the metric’s basic scope
-        types, but <b>bigger </b>than the smallest one), the measure is the sum
+        3 • Otherwise (the scope's type is not one of the basic scope types of the metric, but <b>bigger </b>than the smallest one), the measure is the sum
         of the measures obtained, recursively, by applying the metric to all of
-        the scope’s constituents. For example to compute Lines — the
+        the scope constituents. For example to compute Lines — the
         number of lines — over a cluster is simply to compute it for each of
         its constituent classes and add the results. This rule is recursive: to
         compute Lines over a system, we add the results of applying the
@@ -89,16 +88,16 @@
         we need to know how to determine the basic scope types of any metric.
         Here is the rule: </P>
 
-		<P CLASS="note"><b>Basic scope types of a
+        <P CLASS="note"><b>Basic scope types of a
         metric
 
         </b>:&nbsp;<br>
         Every metric has a set of basic scope
         types, defined as follows:<br>
-        1 •The basic scope types of an elementary metric are part of
-        the metric’s definition; they appear in the table of elementary
+        1 • The basic scope types of an elementary metric are part of
+        the metric's definition; they appear in the table of elementary
         metrics.<br>
-        2 •The basic scope types of a composite metric include (recursively)
+        2 • The basic scope types of a composite metric include (recursively)
         the basic scope types of all its constituent metrics. </P>
 
 		<P>To understand case B,
@@ -129,13 +128,13 @@
 
         </p>
         <p>Assume
-        we want to compute this quantity for a certain <b>featur</b>e:
+        we want to compute this quantity for a certain <b>feature</b>:
 
         </p>
         <ul>
           <li>
             <p>The
-            definition of the metric tells us that we must compute the numbers
+            definition of the metric tells us that we must compute the number
             of precondition, postcondition and assertion clauses for the class,
             and add the results.
 
@@ -144,15 +143,15 @@
             <p>For
             the Precondition_clauses and Postcondition_clauses, the only basic
             scope type is Feature, which is our scope of interest, so clause 1
-            of the rule on “How to compute a measure” tells us to that we
+            of the rule on “How to compute a measure” tells us that we
             must count the precondition and postcondition clauses for all the
             features of the class.
 
             </li>
           <li>
             <p>For
-            the Invariant_clauses metric, our scope of interest, Feature,is
-            smaller than the metric’s only basic type scope, Class, so clause
+            the Invariant_clauses metric, our scope of interest, Feature, is
+            smaller than the only basic type scope of the metric, Class, so clause
             2 of the rule tells us to ignore this metric by returning a zero.
             Without this clause, we would be faced with a logical contradiction.
 
@@ -180,16 +179,12 @@
             </li>
         </ul>
         <p>As
-        this example indicates, we need the rules to make the definition and
+        this example indicates, we need rules to make the definition and
         application of metrics consistent. This enables the environment to
         provide users with a set of metrics which they can trust —even if they
         are not aware of the detail of the rules.
 
         </p>
 
-		<P CLASS="note" align="left"><span style="font-size:9.0pt">
-
-
-         </P>
 	</BODY>
 </HTML>

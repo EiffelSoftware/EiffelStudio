@@ -12,7 +12,7 @@
 
 <body>
 <h1>Select the information you need and Formulate your query</h1>
-<p>The final screen of the wizard enables you to select the information you want
+<p>The final screen of the wizard lets you select the information you want
 to be displayed in the profile query window.&nbsp;</p>
 <h2>Select the information you need</h2>
 <p>Check or uncheck any of the check buttons in <b>Output switches</b> to select
@@ -21,12 +21,13 @@ corresponding column output. You should toggle&nbsp;columns on or off depending
 on what you would like to see in the result of the computation. Here are the
 explanations of each switch:</p>
 <ul>
-  <li><b>Feature name</b>: Display name of the current feature.</li>
-  <li><b>Number of calls</b>: Display the number of times the current feature has been
-    called during the instrumented execution.</li>
+  <li><b>Feature name</b>: Display the name of the current feature.</li>
+  <li><b>Number of calls</b>: Display the number of times the current feature
+    was called during the instrumented execution.</li>
   <li><b>Function time</b>: Display the time spent in the current feature (not counting the
     time spent in features called by the current feature).</li>
-  <li><b>Descendant time</b>: Display the time spent in the features called in the current
+  <li><b>Descendant time</b>: Display the time spent in all features called
+    during the execution of the current
     feature.</li>
   <li><b>Total time</b>: Display the total time spent in the feature. This value is equal to
     <i>Function time + Descendant time</i>.</li>
@@ -39,7 +40,7 @@ language, the query result will not contain any&nbsp;information about routines
 written in the other language. The default is Eiffel only.</p>
 <ul>
   <li>Eiffel features: Display the features written in Eiffel.</li>
-  <li>C functions: Display functions written in C.</li>
+  <li>C functions: Display the functions written in C.</li>
   <li>Recursive functions: Display recursive functions.</li>
 </ul>
 <h2>Formulate your query</h2>

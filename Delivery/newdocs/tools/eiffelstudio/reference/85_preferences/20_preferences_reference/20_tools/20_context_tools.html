@@ -10,7 +10,7 @@
 
 <h1>Context tools</h1>
 This sub-categories gathers the preferences related to context tools.
-<p>There are four of them :
+<p>There are nine of them :
 <table>
 <tr>
 <td>Label in the preferences window</td>
@@ -19,9 +19,9 @@ This sub-categories gathers the preferences related to context tools.
 </tr>
 
 <tr>
-<td>Share addresses between the editor and the context tool?</td>
+<td>Link the context tool with other tools by default?</td>
 
-<td>This boolean preference set whether, by default, the editor and the
+<td>This boolean preference sets whether, by default, the editor and the
 context tools display information about the same element (Class, Feature
 or Cluster). The default value is True.</td>
 </tr>
@@ -31,7 +31,7 @@ or Cluster). The default value is True.</td>
 
 <td>You can choose not to display some classes in the Diagram Tool. If
 you set this property to False, you will be given the opportunity to define
-the list of such classes (see below). The default value is False.</td>
+the list of excluded classes (see below). The default value is False.</td>
 </tr>
 
 <tr>
@@ -45,18 +45,18 @@ if the previous preferences is set to False. By default, this list includes
 <tr>
 <td>Order used to sort feature clauses in class views.</td>
 
-<td>This sets the order of appearance of feature clauses in class text
-when it is displayed in all views but the basic text one (i.e. Clickable,
-Flat, Contract or Flat Contract views).</td>
+<td>This sets the order of appearance of feature clauses in class texts
+when it is displayed in any view but the basic text one (i.e. Clickable,
+Flat, Contract or Interface views).</td>
 </tr>
 
 <tr>
 <td>Show all callers in `callers' view.</td>
 
 <td>When the Feature Tool is centered on a feature, you can see its callers
-by requesting the `callers' view. If this property is set to True, this
-of callers will include calls to descendant versions of the feature. Otherwise,
-it will not. The default value is True.</td>
+by requesting the `callers' view. If this property is set to True, this view will include
+  callers of descendant versions of the feature. Otherwise,
+it will only display callers of the current version. The default value is True.</td>
 </tr>
 
 <tr>
@@ -83,17 +83,17 @@ it includes "revision", "date" and "status".</td>
 <tr>
 <td>Class view that is selected by default.</td>
 
-<td>This is the number of the view that be used by default in the Class
-tool. To find the number associated with a view, refer to <a href="#classnb">the table below.</a>
-The default value is 5.</td>
+<td>This is the index of the view that be used by default in the Class
+tool. To find the index associated with a view, refer to <a href="#classnb">the table below.</a>
+The default value is 5 (which corresponds to the ancestors view).</td>
 </tr>
 
 <tr>
 <td>Feature view that is selected by default.</td>
 
-<td>This is the number of the view that be used by default in the Feature
-tool. To find the number associated with a view, refer to <a href="#featnb">the table below.</a>
-The default value is 2.</td>
+<td>This is the index of the view that be used by default in the Feature
+tool. To find the index associated with a view, refer to <a href="#featnb">the table below.</a>
+The default value is 2 (which corresponds to the flat view).</td>
 </tr>
 </table>
 
@@ -101,10 +101,10 @@ The default value is 2.</td>
 <br>&nbsp;
 <a name="classnb"></a>
 <table>
-<caption>Class views numbers</caption>
+<caption>Class views indices</caption>
 
 <tr>
-<td>Number</td>
+<td>Index</td>
 
 <td>Class view</td>
 </tr>
@@ -130,7 +130,7 @@ The default value is 2.</td>
 <tr>
 <td>4</td>
 
-<td>Flat Contract view</td>
+<td>Interface view</td>
 </tr>
 
 <tr>
@@ -142,7 +142,7 @@ The default value is 2.</td>
 <tr>
 <td>6</td>
 
-<td>Descentants</td>
+<td>Descendants</td>
 </tr>
 
 <tr>
@@ -198,10 +198,10 @@ The default value is 2.</td>
 <br>&nbsp;
 <a name="featnb"></a>
 <table>
-<caption>Feature views numbers</caption>
+<caption>Feature views indices</caption>
 
 <tr>
-<td>Number</td>
+<td>Index</td>
 
 <td>Feature view</td>
 </tr>

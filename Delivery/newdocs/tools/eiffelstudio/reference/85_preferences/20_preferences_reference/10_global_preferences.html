@@ -21,29 +21,29 @@ to a tool in particular. These preferences are :
 </tr>
 
 <tr>
-<td>Command used to launch an external editor.</td>
-
-<td>You may open a class in an external editor by dropping the corresponding
-pebble on the external editor icon. This preference sets which command
-line will be used to launch the external editor. The parameter "$target"
-will be replaced in the command with the file name corresponding to the
-class, "$line" with the line number of the feature if you dropped a feature
-pebble, 1 otherwise.</td>
-</tr>
-
-<tr>
 <td>Text files format.</td>
 
-<td>This boolean preferences sets whether .e files will be saved in DOS
+<td>This boolean preference sets whether .e files will be saved in DOS
 or UNIX format. If it is set to "True", files will be saved in DOS format,
 i.e. line separator will be made of a line feed and a carriage return.
 Otherwise, UNIX format will used, i.e. there will not be carriage returns.</td>
 </tr>
 
 <tr>
+<td>Command used to launch an external editor.</td>
+
+<td>You may open a class in an external editor by dropping the corresponding
+pebble on the external editor icon. This preference sets which command
+line will be used to launch the external editor. The parameter "$target"
+will be replaced in the command with the file name corresponding to the
+class, "$line" with the line number if this information is relevant, with 1
+  otherwise.</td>
+</tr>
+
+<tr>
 <td>Use external command to print ?</td>
 
-<td>This set whether you want to specify which command line will be used
+<td>This sets whether you want to specify which command line will be used
 to print texts.</td>
 </tr>
 
@@ -51,8 +51,9 @@ to print texts.</td>
 <td>Command invoked to print text.</td>
 
 <td>This is the command used to print text if the previous preference,
-"Use external command to print?", is true. The parameter will represent
-"$target" the name of the file given to the external program (see next
+"Use external command to print?", is true. The parameter will replace
+  &quot;$printer&quot; with the printer name on GTK platforms, and "$target"
+  with the name of the file given to the external program (see next
 preference).</td>
 </tr>
 
@@ -61,7 +62,22 @@ preference).</td>
 
 <td>If it is set to False, the command line above will be called on a basic
 text file containing what you want to print. Otherwise, the file will be
-a postscript file with a formatting close to the one on screen.</td>
+a postscript file with a formatting close to the one on the screen.</td>
+</tr>
+
+<tr>
+<td>Number of projects kept in the recent projects list</td>
+
+<td>This integral preference defines the maximum number of entries that should
+  be displayed in the <b>File/Recent projects</b> menu.</td>
+</tr>
+
+<tr>
+<td>Internet browser (GTK platforms only)</td>
+
+<td>This sets the command line that should be used to open an internet browser
+  on a given HTML page. If present, &quot;$url&quot; will be replaced with the
+  URL of the HTML page. This is used to display help files.</td>
 </tr>
 </table>
 

@@ -9,27 +9,30 @@
 	<BODY>
 		<H1>Keyboard shortcuts preferences</H1>
 		<P>Some of the keyboard shortcuts used in the editor can be customized. A subfolder of the
-		&quot;Keyboard Shortcuts&quot; forlder in the editor preferences corresponds to each of these
+		&quot;Keyboard Shortcuts&quot; folder in the editor preferences corresponds to each of these
 		customizable shortcuts. There are four values to set to define a shortcut: which key must be
-		pressed and whether Ctrl, Alt or Shift has to be pressed at the same time. You will find those
-		for values in each shortcut subfolder. The customizable shortcuts are:
+		pressed and whether Ctrl, Alt or Shift have to be pressed at the same time. You will find
+        a combination of all in each shortcut subfolder. The customizable shortcuts are:
 		</P>
 		<UL>
 			<LI><P>Autocomplete: Shortcut to trigger the feature call automatic completion. The
 			default key combination is &quot;Ctrl+Space&quot;.
 			</P>
+			<LI><P>Class name autocomplete: Shortcut to trigger the class name automatic completion. The
+			default key combination is &quot;Ctrl+Shift+Space&quot;.
+			</P>
 			<LI><P>Search selection: Shortcut to launch a search of the currently selected item. If
-			there is no selected item, the editor will look for the next occurence of the last searched pattern. The
+			there is no selected item, the editor will look for the next occurrence of the last searched pattern. The
 			default key combination for this command is &quot;F3&quot;.
 			</P>
 			<LI><P>Search again: Shortcut to move to the next occurrence of the searched
 			pattern. If the shortcut is the same as for Search Selection, the effect of the command
-			will be to search for the next occurence of the currently searched pattern unless
+			will be to search for the next occurrence of the currently searched pattern unless
 			something else is selected in the editor. In that case, the editor will look for the next
 			occurrence of the selected text. The default key combination for this command is
 			&quot;F3&quot;.
 			</P>
-			<LI><P>Search backward: Shortcut to move to the previous occurrence of the searched
+			<LI><P>Search backwards: Shortcut to move to the previous occurrence of the searched
 			pattern. The default key combination for this command is &quot;Shift+F3&quot;.
 			</P>
 			<LI><P>Show search panel: Shortcut to make the search panel appear if it is not displayed
@@ -37,14 +40,23 @@
 			for this command is &quot;Ctrl+F&quot;.
 			</P>
 			<LI><P>Show search and replace panel: Shortcut to make the search panel with the
-			&quot;Replace with&quot; filed appear if it is not displayed.The focus will be given 
+			&quot;Replace with&quot; field appear if it is not displayed. The focus will be given 
 			to the &quot;Search for&quot; field. The default key combination for this command is
 			&quot;Ctrl+H&quot;.
 			</P>
-			<P CLASS="warning">
-			<B>Warning</B><BR>
-						You should not use combinations made of only &quot;Alt&quot; and another key as they are reserved for menu shortcuts.<BR>
-			</P>
 		</UL>
+			<P CLASS="warning">
+            <b>Caution</b>:<BR>
+						You should not use combinations made of only &quot;Alt&quot; and another key as they are reserved for menu shortcuts.
+			</P>
+			<P CLASS="tip">
+            <b>Tips</b>:<BR>
+						On the other hand, you may use combinations made of only a key to create very fast shortcuts,
+						for example with the function keys.
+			<BR>To know what string corresponds to a given key, you can look up in the EV_KEY_CONSTANTS of EiffelVision2.
+			The `key_strings' table links keys with a string representation.
+			</P>
+        <p>There are three other categories in the shortcut preferences. These can be used to automatically insert a user-defined
+        string in the editor. If you find yourself typing some strings very often, these preferences can be handy.</p>
 	</BODY>
 </HTML>

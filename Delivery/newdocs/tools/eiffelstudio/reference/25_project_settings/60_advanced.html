@@ -16,7 +16,7 @@
 <p align="left">&nbsp;</p>
 
 <p align="left">Here you can select the most advanced options of your project.
-Here is how it looks for the calculator example:</p>
+Here is how it looks like for the calculator example:</p>
 
 <p align="left">&nbsp;</p>
 
@@ -25,19 +25,18 @@ Here is how it looks for the calculator example:</p>
 <p align="center">&nbsp;</p>
 <h2>Global Setting</h2>
 <p>As you might have notice, the project settings is a simple facade to the Ace
-file. Every modification that will be done in this window will be saved in the
+file. Every modification that is done in this window is saved in the
 Ace file of your project. Since it is just a facade, it does not provide all the
 <a href="../30_compiler/50_technology/20_lace_syntax.html">available options in
-the Ace file</a>, but just the most commonly.</p>
+the Ace file</a>, but just the most common.</p>
 <p>If you want to edit the current settings, simply click on the Edit button. It
 will edit your Ace file in the <a href="../85_preferences/20_preferences_reference/10_global_preferences.html">external
-editor</a> you have selected in the preferences. Once you are done editing be
-sure to exit the project settings window by clicking on the Cancel button,
-otherwise the current settings will override the one you just modify in the
-external editor.</p>
+editor</a> you have selected in the preferences. The project settings window
+will automatically vanish, to make sure there will not conflicts between its
+contents and the modified Ace file.</p>
 <p>If you decide to change your Ace file, simply click on the `Load from...'
 button, a standard open file selection dialog will popup and you can choose a
-new Ace file. If the Ace file is invalid, the following dialog will appear and
+new Ace file. If the Ace file is invalid, a warning dialog will appear and
 the Ace file change will not be taken into account. If the Ace file is valid,
 the project settings tab will be updated with the new values extracted from the
 Ace file.</p>
@@ -53,30 +52,29 @@ can select:</p>
 <p>&nbsp;</p>
 <ul>
   <li>console application:
-            has no effects on Unix and it was made for Windows users. It enables
-            Windows users to choose between creating a console application or a
+            has no effect on Unix systems. It lets Windows users choose between creating a console application or a
             GUI application (in which case a console will be created if needed,
             instead of using the console the program was launched from).</li>
-  <li>Enforce VAPE validity constraint: enables
-            you to disable type checking for <b>VAPE</b> errors in preconditions,
+  <li>Enforce VAPE validity constraint: lets you disable type checking for <b>VAPE</b> errors in preconditions,
             which correspond to insufficiently exported features used in
             preconditions (ETL 2nd edition page 122).</li>
-  <li>Dynamic runtime:
-            enables the use of a shared library version of the runtime on both
+  <li>Dynamic runtime: makes the generated executable use a shared library version of the runtime on both
             Windows (DLL) and Unix platforms (.so) that supports shared libraries.</li>
-  <li>Multithreaded runtime:
-            enables the generation of a multithreaded application. This option
+</ul>
+<p class="note"><b>Note</b>: On Windows, the dynamic run-time is available only if you
+compile with the Microsoft Visual compiler.</p>
+<ul>
+  <li>Multithreaded runtime: generates a multithreaded application. This option
             cannot be changed during the development of your project and has to
             be set correctly at the first compilation of your system.</li>
-  <li>Address expression:
-            enables you to pass `<b>$(s.to_c)</b>' to a feature instead of
+  <li>Address expression: lets you pass `<b>$(s.to_c)</b>' to a feature instead of
             declaring `a' of type <b>ANY</b>, and then assigning `<b>s.to_c</b>'
             to `a' and passing `<b>$a</b>'. Turn this option on only if you have
             advanced knowledge of the garbage collector insides, since using
             this syntax illegally can lead to bugs very hard to trace.</li>
-  <li>Shared library definition: enables you to specify `file_name.def'
-            as file where the Eiffel compiler will look when trying to generate
-            the exported function of the shared library you are developing. To
+  <li>Shared library definition: lets you specify a `file_name.def'
+            as the file where the Eiffel compiler will look when it tries to generate
+            the exported functions of the shared library you are developing. To
             have more information concerning definition files, see the
             <A HREF="../30_compiler/40_advanced_topics/20_dynamic_library_generation/00_introduction.html">Dynamic library builder reference</A>.</li>
 </ul>
@@ -93,10 +91,10 @@ Here is what you can select:</p>
             enables array optimization which increases performance of array
             computation in loops. It is enabled only if arrays are used as local
             variables or arguments of an Eiffel feature.</li>
-  <li>dead code removal: enables you to not generate the
+  <li>dead code removal: avoids generating the
             C code for Eiffel routines that are not called in your code, and
-            thus reducing the size of the generated application.</li>
-  <li>exception trace: enables you to see a complete
+            thus reduces the size of the generated application.</li>
+  <li>exception trace: makes it possible to see a complete
             exception trace when your finalized application is crashing. Because
             it is adding some code to remember where the application was during
             the crash it can slow down the performance of your application by a

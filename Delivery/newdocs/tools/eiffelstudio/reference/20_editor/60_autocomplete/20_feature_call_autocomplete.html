@@ -13,17 +13,17 @@
         auto-complete, the
 		editor will propose a list of possible feature names correct in this situation.<BR>To be more
 		precise, a window will pop up and display the list of features that can be called on
-		<i>an_identifier</i> and that <i>an_incomplete_feature_name</i>. The user can accept the suggested name, choose another name (in the list or not), or simply
+		<i>an_identifier</i> and that match <i>an_incomplete_feature_name</i>. The user can accept the suggested name, choose another name (in the list or not), or simply
 		cancel the auto-complete.
 		</P>
         <p align="center"><IMG SRC="/images/eiffelstudio/editor_auto_completion_window.png"></P>
 		<P>To trigger the autocomplete, press the key combination &quot;Ctrl+Space&quot; or click on
 		<B>Complete word</B> in the <B>Advanced</B> sub-menu of the <B><a href="../80_edit_menu_commands.html">Edit</a></B> <a href="../80_edit_menu_commands.html">
         menu</a>. If automatic completion is
-		possible, there are two cases : If only one name match, this name will
-        be inserted in the editor. If there are no matching name or several one a window will
+		possible, there are two cases : if only one name matches, this name will
+        be inserted in the editor. If there are no matching names or several ones a window will
         appear. This window will contain a text field and a list. The text field will be
-		filled with the beginning of the feature name you entered. The first item
+		filled with the beginning of the feature name that was entered. The first item
        in the list, if	any, will be selected.<BR>
 		To complete your code with the selected item, press &quot;Enter&quot; or &quot;Ctrl+Space&quot;.<BR>
 		To choose another item, use keyboard Up and Down arrows or the mouse. You can also modify the
@@ -35,10 +35,10 @@
 		<P CLASS="tip">
 		<B>Tips</B>:
 		<UL>
-			<LI>If the selected feature is a function, you can call again the
-              auto-complete right after the
-			previous completion. There is no need to type a period.
-			<LI>You can call the auto-complete when there is no identifier. The
+			<LI>If the selected feature is a query, you can call the
+              auto-complete again right after the
+			previous completion. There is no need to type a dot.
+			<LI>You can call the auto-complete without an identifier. The
               auto-complete window will then
 			show the features of the current class.
 			<LI>The keyboard shortcut for automatic completion can be changed in the
@@ -48,8 +48,8 @@
 		<P CLASS="note">
 		<B>Notes</B>:
 		<UL>
-			<LI>Only identifiers that were already defined as the class was compiled for the last time can be
-			completed. Local entity names are never completed.
+			<LI>Only identifiers that were already defined when the class was compiled for the last time can be
+              completed, except for local entity names that can always be completed.
 			<LI>Only compiled features will appear in the auto-complete window.
 			<LI>By default, features from class ANY will be ignored by the auto-complete window. This can be
 			changed in the <a href="../../85_preferences/20_preferences_reference/20_tools/30_editor/10_general_editor_preferences.html"> editor

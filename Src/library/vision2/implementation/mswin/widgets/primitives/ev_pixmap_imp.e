@@ -191,7 +191,7 @@ feature -- Access
 			-- this feature, call `WEL_BITMAP.decrement_reference'
 		do
 			update_content
-			if private_icon /= Void or private_cursor /= Void and private_bitmap = Void and
+			if (private_icon /= Void or private_cursor /= Void) and private_bitmap = Void and
 				private_palette = Void and private_mask_bitmap = Void then
 				-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
 				-- into WEL_BITMAP/WEL_BITMAP.
@@ -219,7 +219,7 @@ feature -- Access
 			-- this feature, call `WEL_BITMAP.decrement_reference'
 		do
 			update_content
-			if private_icon /= Void or private_cursor /= Void and private_bitmap = Void and
+			if (private_icon /= Void or private_cursor /= Void) and private_bitmap = Void and
 				private_palette = Void and private_mask_bitmap = Void then
 				-- Bitmap stocked as WEL_ICON or WEL_CURSOR, turn that
 				-- into WEL_BITMAP/WEL_BITMAP.

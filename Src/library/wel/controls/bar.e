@@ -66,6 +66,7 @@ feature -- Status setting
 		end
 
 invariant
+	--XXXX
 	--range_ok: exists implies minimum <= maximum
 	--position_ok: exists implies position >= minimum and position <= maximum
 

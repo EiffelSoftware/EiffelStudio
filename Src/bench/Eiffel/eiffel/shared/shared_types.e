@@ -2,6 +2,30 @@ class SHARED_TYPES
 	
 feature {NONE}
 
+	natural_8_type: NATURAL_A is
+			-- Actual integer type of 8 bits
+		once
+			create Result.make (8)
+		end
+
+	natural_16_type: NATURAL_A is
+			-- Actual integer type of 16 bits
+		once
+			create Result.make (16)
+		end
+
+	natural_32_type: NATURAL_A is
+			-- Actual integer type of 32 bits
+		once
+			create Result.make (32)
+		end
+
+	natural_64_type: NATURAL_A is
+			-- Actual integer type of 64 bits
+		once
+			create Result.make (64)
+		end
+
 	Integer_8_type: INTEGER_A is
 			-- Actual integer type of 8 bits
 		once

@@ -1783,7 +1783,7 @@ char *line;
 rt_private void ds_string(line)
 char *line;
 {
-	return (void) extend_trace_string(line);
+	(void) extend_trace_string(line);
 }
 
 rt_private char *extend_trace_string(line)

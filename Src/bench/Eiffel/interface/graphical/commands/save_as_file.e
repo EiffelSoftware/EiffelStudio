@@ -56,32 +56,32 @@ feature -- Callbacks
 					(new_file.exists) and then (not new_file.is_plain)
 				then
 					aok := False;
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_a_plain_file (fn))
 				elseif 
 					argument = last_name_chooser and then 
 					(new_file.exists and then new_file.is_writable)
 				then
 					aok := False;
-					warner (text_window).custom_call (Current, 
+					warner (popup_parent).custom_call (Current, 
 						w_File_exists (fn), 
 						"Overwrite", Void, "Cancel");
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_writable (fn))
 				elseif
 					not new_file.is_creatable
 				then
 					aok := False;
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Not_creatable (fn))
 				end
 			else
 				aok := False;
-				warner (text_window).gotcha_call 
+				warner (popup_parent).gotcha_call 
 					(w_Not_a_plain_file (fn))
 			end;
 			if aok then
@@ -98,12 +98,11 @@ feature -- Callbacks
 				end;
 				new_file.close;
 				if text_window.changed then 
-					text_window.clear_clickable
+					text_window.disable_clicking
 				end;
-				text_window.set_changed (false);
-				if text_window.file_name = Void then
-					text_window.set_file_name (new_file.name);
-					text_window.display_header (new_file.name);
+				if tool.file_name = Void then
+					tool.set_file_name (new_file.name);
+					tool.set_title (new_file.name);
 					update_more;
 				end;
 			end;
@@ -121,12 +120,14 @@ feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
+		local
+			chooser: NAME_CHOOSER_W
 		do
 			if argument /= Void and then argument = last_name_chooser then
 				save_it (argument)
-			elseif argument = text_window then
-				name_chooser (text_window).set_window (text_window);
-				last_name_chooser.call (Current)
+			elseif argument = tool then
+				chooser := name_chooser (popup_parent);
+				chooser.call (Current)
 			end
 		end;
 

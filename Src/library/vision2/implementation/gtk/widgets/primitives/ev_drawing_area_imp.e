@@ -31,7 +31,8 @@ inherit
 			disconnect_all_signals,
 			default_key_processing_blocked,
 			screen_x,
-			screen_y
+			screen_y,
+			set_focus
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -73,7 +74,7 @@ feature {NONE} -- Initialization
 			C.gtk_container_set_focus_child (c_object, NULL)
 			gc := C.gdk_gc_new (default_gdk_window)
 			init_default_values
-			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+		--	gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
 				-- Needed for focus hack
 		end
 
@@ -141,6 +142,14 @@ feature {NONE} -- Implementation
 		do
 			top_level_window_imp.set_focus_widget (Void)
 			has_focus := False
+		end
+		
+	set_focus is
+			-- Grab keyboard focus.
+		do
+			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+			C.gtk_widget_grab_focus (visual_widget)
+			GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_CAN_FOCUS_ENUM)
 		end
 
 	has_focus: BOOLEAN

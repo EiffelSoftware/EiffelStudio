@@ -13,6 +13,11 @@ inherit
 
 feature -- Access
 
+	bm_ISE_Power: PIXMAP is
+		once
+			Result := pixmap_file_content ("isepower")
+		end
+
 	bm_Breakpoint: PIXMAP is
 		once
 			Result := pixmap_file_content ("breakpt")
@@ -56,6 +61,21 @@ feature -- Access
 	bm_Class_icon: PIXMAP is
 		once
 			Result := pixmap_file_content ("classico")
+		end
+
+	bm_Dll: PIXMAP is
+		once
+			Result := pixmap_file_content ("dll")
+		end
+
+	bm_Dll_dot: PIXMAP is
+		once
+			Result := pixmap_file_content ("dlldot")
+		end
+
+	bm_Dll_icon: PIXMAP is
+		once
+			Result := pixmap_file_content ("dllico")
 		end
 
 	bm_Clickable: PIXMAP is

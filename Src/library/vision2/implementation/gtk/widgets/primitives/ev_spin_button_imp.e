@@ -19,7 +19,8 @@ inherit
 			set_default_options,
 			set_default_colors
 		redefine
-			make_with_range
+			make_with_range,
+			adjustment_widget
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -40,8 +41,6 @@ feature {NONE} -- Initialization
 			-- Parameters are:
 			-- value, lower, upper, step_increment, page_increment.
 			widget := c_gtk_spin_button_new (0, 0, 100, 1, 5)
-
-			adjustment_widget := gtk_spin_button_get_adjustment (widget)
 			gtk_object_ref (widget)
 		end
 
@@ -52,8 +51,6 @@ feature {NONE} -- Initialization
 			-- Parameters are:
 			-- value, lower, upper, step_increment, page_increment.
 			widget := c_gtk_spin_button_new (min, min, max, 1, 5)
-
-			adjustment_widget := gtk_spin_button_get_adjustment (widget)
 			gtk_object_ref (widget)
 		end
 
@@ -86,6 +83,12 @@ i := maximum
 			-- Maximum value
 		do
 			Result := c_gtk_spin_button_maximum (widget)
+		end
+
+	adjustment_widget : POINTER is
+			-- Pointer to adjustment widget
+		do
+			Result := c_gtk_spin_button_adjustment (widget)
 		end
 
 feature -- Element change

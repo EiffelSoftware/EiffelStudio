@@ -29,8 +29,6 @@ feature {NONE} -- Initialization
 			-- Parameters are:
 			-- value, lower, upper, step_increment, page_increment, page_size.
 			widget := c_gtk_hscrollbar_new (0, 0, 100, 1, 5, 1)
-
-			adjustment_widget := c_gtk_range_adjustment (widget)
 			gtk_object_ref (widget)
 		end
 

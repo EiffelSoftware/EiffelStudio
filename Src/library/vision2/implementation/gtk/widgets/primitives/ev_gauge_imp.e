@@ -109,11 +109,17 @@ feature -- Event -- removing command association
 			remove_commands (adjustment_widget, value_changed_id)
 		end
 
-feature -- Implementation
+feature -- Implementation - External
 
-	adjustment_widget: POINTER
-			-- Pointer to the GtkAdjustment of the scrollbar.
+	adjustment_widget: POINTER is
+			-- Pointer to the GtkAdjustment of the gauge
 			-- We need it to catch event.
+		do
+			Result := c_gtk_range_adjustment (widget)
+		end
+
+
+
 
 end -- class EV_GAUGE_I
 

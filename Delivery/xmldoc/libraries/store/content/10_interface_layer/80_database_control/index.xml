@@ -1,0 +1,74 @@
+<document output="studio" title="Database control">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Use the DB_CONTROL class to check or change database status and behavior. The main operations you are likely to use are:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#errors</url>
+					<label>Handling</label>
+				</link> database errors.
+			</item>
+			<item>
+				<link>
+					<url>#connection</url>
+					<label>Connecting</label>
+				</link> to the database.
+			</item>
+			<item>
+				<link>
+					<url>#commit</url>
+					<label>Committing</label>
+				</link> changes in the database. 
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Handling database errors
+		</heading>
+		<paragraph>Every EiffelStore interface class has an is_ok feature. This enables to check directly if the last database operation has been successful.</paragraph>
+		<paragraph>When an error is detected, you can access through DB_CONTROL further information about the error:</paragraph>
+		<list ordered="false">
+			<item>error_message provides a description of the error that occurred.</item>
+			<item>error_code returns a code corresponding to the error type. This code enables to handle specific errors within your code without parsing the error_message.</item>
+			<item>warning_message provides a warning message about the last transaction performed. </item>
+		</list>
+		<paragraph>Once you have handled your error, for instance by displaying the error_message on screen, you can call reset to perform new database transactions.</paragraph>
+		<heading>
+			<size>2</size>Managing database connection
+		</heading>
+		<paragraph>DB_CONTROL lets you connect, check connection and disconnect from the database.</paragraph>
+		<paragraph>The following example sum up these capabilities:</paragraph>
+		<code_block>Missing</code_block>
+		<heading>
+			<size>2</size>Committing changes in the database
+		</heading>
+		<paragraph>Every modification you do in the database are usually not directly saved. This enables to limit damage caused by mishandlings. You can then manage database modification through 2 commands:</paragraph>
+		<list ordered="false">
+			<item>
+				<italic>Commit</italic> saves the changes in the database.
+			</item>
+			<item>
+				<italic>Rollback</italic> restores the database content corresponding to last commitment. 
+			</item>
+		</list>
+		<paragraph>The following example illustrates the use of these commands:</paragraph>
+		<code_block>Missing</code_block>
+		<paragraph>The loop performs a multi-step transaction. If transaction is not carried out entirely, the database could stay in an invalid state: this code ensures that database remains in a valid state.</paragraph>
+		<warning>
+			<bold>Caution</bold>: Some databases can be in an auto-commit mode. Furthermore, some special database commands can automatically commit database changes.
+		</warning>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../10_database_connection/index.html</url>
+				<label>Database connection</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../../20_implementation_layer/index.html</url>
+				<label>Implementation</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

@@ -1,0 +1,49 @@
+<document output="studio" title="Query variables">
+	<meta_data/>
+	<paragraph>
+		<paragraph>If you have to execute database queries which only differ in the expression values, you can create a template query and then bind variables into this template for each execution.</paragraph>
+		<paragraph>This mechanism can be applied for requests with a result (DB_SELECTION) or without (DB_CHANGE). Hence both classes inherits from STRING_HDL that actually handle variable binding.</paragraph>
+		<paragraph>To use variable binding:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#create</url>
+					<label>Create</label>
+				</link> a template query.
+			</item>
+			<item>
+				<link>
+					<url>#bind</url>
+					<label>Bind</label>
+				</link> variables to the query. 
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Creating a template query
+		</heading>
+		<paragraph>Template queries are parsed to replace each variable by its bound value. To create a template query, you have hence to put directly variables where the values would take place.</paragraph>
+		<paragraph>Variables syntax is simple: the ':' special character followed by the variable name.</paragraph>
+		<code_block>Missing</code_block>
+		<note>
+			<bold>Note</bold>: The code example shows how to bind variables to a DB_SELECTION object but the mechanism is exactly the same for DB_CHANGE objects.
+		</note>
+		<heading>
+			<size>2</size>Binding variables to a query
+		</heading>
+		<paragraph>Once you have created your query, you can map variable names to values and execute the query:</paragraph>
+		<code_block>Missing</code_block>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../30_database_selection/index.html</url>
+				<label>Performing a database selection.</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../20_data_modification/index.html</url>
+				<label>Modifying database content.</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

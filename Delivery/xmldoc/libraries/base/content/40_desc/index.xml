@@ -1,0 +1,94 @@
+<document title="Dynamic External Shared Call (DESC) Overview">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelBase\EiffelBase</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  The DESC mechanism enables you to construct objects representing external  routines determined at execution time through their name and libraries, and  call these routines with the appropriate arguments.</paragraph>
+		<note>
+			<bold>NOTE</bold>: The libraries containing the routines determined at runtime are unmanaged (non-.NET) libraries. .NET libraries (also known as assemblies) can be accessed directly using project references.
+		</note>
+		<paragraph>  Two classes, 
+			<link>
+				<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+				<label>DLL_32</label>
+			</link> and 
+			<link>
+				<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
+				<label>DLL_32_ROUTINE</label>
+			</link>  , supported by an auxiliary class
+			<link>
+				<url>../../reference/desc/general/shared_library_constants_chart.html</url>
+				<label>  SHARED_LIBRARY_CONSTANTS</label>
+			</link> provide the basis for DESC under Windows:
+		</paragraph>
+		<list ordered="false">
+			<item>An instance of class 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+					<label>DLL_32</label>
+				</link> describes  a 32-bit Dynamically Linked Library. This class is a descendant of the deferred  class
+				<link>
+					<url>../../reference/desc/general/shared_library_chart.html</url>
+					<label>  SHARED_LIBRARY</label>
+				</link>, covering the platform-independent notion of shared  library.
+			</item>
+			<item>An instance of class 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
+					<label>DLL_32_ROUTINE</label>
+				</link>  describes a routine from a 32-bit DLL. Predictably, this class has an attribute of type 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+					<label>DLL_32</label>
+				</link> describing the  library to which the routine belongs. It has a deferred ancestor 
+				<link>
+					<url>../../reference/desc/general/shared_library_routine_chart.html</url>
+					<label>SHARED_LIBRARY_ROUTINE</label>
+				</link> capturing the platform-independent notion of  shared library routine.
+			</item>
+			<item>
+				<link>
+					<url>../../reference/desc/general/shared_library_constants_chart.html</url>
+					<label>  SHARED_LIBRARY_CONSTANTS</label>
+				</link> introduces a few declarations useful for  dealing with shared libraries and routines, in particular a few integer constants  describing error codes and type codes. It is an ancestor to both of the preceding  classes; application classes using DESC can also inherit from it to gain access  to its facilities.
+			</item>
+		</list>
+		<paragraph>  The basic sequence of instructions to use the DESC mechanism is the following:</paragraph>
+		<list ordered="true">
+			<item>
+				<link>
+					<url>library.html</url>
+					<label>Create</label>
+				</link> a library object (an instance of 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_chart.html</url>
+					<label>DLL_32</label>
+				</link>, providing the  library's name as argument to the creation procedure.
+			</item>
+			<item>
+				<link>
+					<url>routine.html</url>
+					<label>Create</label>
+				</link> a routine object (an instance of 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
+					<label>DLL_32_ROUTINE</label>
+				</link>  ), providing the library object, the routine's name or index in the library, and the  routine's signature - number of arguments, types of arguments, type of result  if any - as arguments to the creation procedure.
+			</item>
+			<item>
+				<link>
+					<url>routine_call.html</url>
+					<label>Apply</label>
+				</link> procedure 
+				<link>
+					<url>../../reference/desc/spec/win32/dll_32_routine.html#f_call</url>
+					<label>call</label>
+				</link>  to the routine object, passing an array that contains the actual arguments  required by the external routine.
+			</item>
+		</list>
+		<paragraph>  Each of these steps may be repeated as often as necessary to use multiple libraries,  multiple routines in a library, or multiple calls to a given routine.</paragraph>
+	</paragraph></document>

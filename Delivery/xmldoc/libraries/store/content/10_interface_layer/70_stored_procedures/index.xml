@@ -1,0 +1,77 @@
+<document output="studio" title="Stored Procedures">
+	<meta_data/>
+	<paragraph>
+		<paragraph>When sending requests to the database, the request is first parsed then executed. Instead of parsing many times the same requests, i.e. with only changes in expression values, most of RDBMS enable to 
+			<bold>precompile</bold> requests. These requests can then be executed as routines and are identified by a name and a signature.
+		</paragraph>
+		<paragraph>EiffelStore lets you use stored procedures with DB_PROC class to:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#execute</url>
+					<label>Execute</label>
+				</link> a stored procedure.
+			</item>
+			<item>
+				<link>
+					<url>#create</url>
+					<label>Create</label>
+				</link> a stored procedure. 
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Executing a stored procedure
+		</heading>
+		<paragraph>To execute a stored procedure:</paragraph>
+		<list ordered="false">
+			<item>Create a DB_PROC object and load the stored procedure you want to use:
+				<code_block>Missing</code_block>
+			</item>
+			<item>Execute the procedure through a DB_SELECTION (if a result is expected) or a DB_CHANGE object (otherwise). 
+				<note>
+					<bold>Note</bold>: Requests with a result (DB_SELECTION) or without (DB_CHANGE) are both abstract 
+					<bold>expressions</bold>. DB_PROC executes an abstract expression using an object of DB_EXPRESSION type, which corresponds to an abstract expression. DB_SELECTION and DB_CHANGE inherits from DB_EXPRESSION.
+				</note>You can execute your request mostly like a basic one:
+				<list ordered="false">
+					<item>Create your request.</item>
+					<item>Bind request variables. Variables are stored procedure arguments. 
+						<note>
+							<bold>Note</bold>: Take a look at how to 
+							<link>
+								<url>../60_query_variables/index.html</url>
+								<label>bind variables</label>
+							</link> to a query.
+						</note>
+					</item>
+					<item>Execute the query through the DB_PROC object.
+						<code_block>Missing</code_block>
+					</item>
+					<item>Check for errors and load result if any. </item>
+				</list>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Creating a stored procedure
+		</heading>
+		<paragraph>DB_PROC also enables you to create or drop stored procedures: 
+			<list ordered="false">
+				<item>Use store to create a procedure.</item>
+				<item>Use drop to delete one. </item>
+			</list>The following example shows how to overwrite a procedure in the database:
+		</paragraph> 
+		<code_block>Missing</code_block>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../30_database_selection/index.html</url>
+				<label>Performing a database selection.</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../50_data_object_coupling/index.html</url>
+				<label>Coupling database data and Eiffel objects.</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

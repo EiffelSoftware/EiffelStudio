@@ -1,0 +1,35 @@
+<document title="WEL">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  Type: Library
+			<line_break/>  Platform: Windows
+			<line_break/>  Version: 5.0
+			<line_break/>
+		</paragraph> See: 
+		<list ordered="false">
+			<item>
+				<link>
+					<url>content/index.html</url>
+					<label>Content</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>samples/index.html</url>
+					<label>Samples</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>reference/index.html</url>
+					<label>Reference</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

@@ -1,0 +1,51 @@
+<document output="studio" title="Database Selection">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Use the DB_SELECTION class to select data from the database. Once you have selected the data, you can 
+			<link>
+				<url>../40_selection_access/index.html</url>
+				<label>access</label>
+			</link> it with convenience using adaptative EiffelStore structures. 
+		</paragraph>
+		<note>
+			<bold>Note</bold>: Take a look at the 
+			<link>
+				<url>../50_data_object_coupling/index.html</url>
+				<label>Database/Eiffel objects Coupling</label>
+			</link> if you need information about your database structure.
+		</note>
+		<paragraph>DB_SELECTION enables your application to get database content using SQL 'select' queries:</paragraph>
+		<list ordered="false">
+			<item>You can carry out 'select' queries in an intuitive way using directly the SQL language:
+				<code_block>Missing Code</code_block>
+				<tip>
+					<bold>Tip</bold>: Always check the database status for errors after your 'select' query.
+				</tip>
+			</item>
+			<item>You can also customize your selection using 
+				<link>
+					<url>../60_query_variables/index.html</url>
+					<label>bind variables</label>
+				</link>.
+			</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../60_query_variables/index.html</url>
+				<label>Binding variables in a database query.</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../50_data_object_coupling/index.html</url>
+				<label>Coupling database objects with Eiffel objects.</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../40_selection_access/index.html</url>
+				<label>Accessing selected data from the database.</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

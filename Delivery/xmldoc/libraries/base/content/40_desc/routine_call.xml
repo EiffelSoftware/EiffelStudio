@@ -1,0 +1,30 @@
+<document title="DESC, Calling a Routine">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelBase\EiffelBase\Dynamic External Shared Call (DESC) Overview</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  Having 
+			<link>
+				<url>routine.html</url>
+				<label>created</label>
+			</link> the object  representing the external routine and attachedit to entity
+			<code>
+				<local_variable>your_routine</local_variable>
+			</code>, you may now call the routine with  arbitrary actual arguments through the procedure,  a feature of class 
+			<link>
+				<url>../../reference/desc/spec/win32/dll_32_routine_chart.html</url>
+				<label>DLL_32_ROUTINE</label>
+			</link>.
+		</paragraph>
+		<paragraph>  The procedure takes a single argument, of type 
+			<link>
+				<url>../../reference/kernel/array_chart.html</url>
+				<label>ARRAY [ANY]</label>
+			</link>, containing  the successive actual arguments to be passed to the external routine.  The easiest technique is to use a manifest array, as in:
+		</paragraph>
+		<code_block>your_routine.call (&lt;&lt;-325, 67.2, x, a+b&gt;&gt;) </code_block>
+	</paragraph></document>

@@ -1,0 +1,561 @@
+<document output="studio" title="Data structures creation">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>2</size>1. Overview
+		</heading>
+		<paragraph> EiffelStore enables to create data structures mapped to your own database. This part describes how the EiffelStore wizard generates these structures mapped to your database and how you can map your own classes to your database with EiffelStore.</paragraph>
+		<paragraph>
+			<bold>Tip:</bold> We recommend that you read 
+			<link>
+				<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html</url>
+				<label>what are and how to use</label>
+			</link> these data structures before reading this section.
+		</paragraph>
+		<paragraph>The EiffelStore wizard generates the database-specific classes from an EiffelStore generation system based on template files containing tags.</paragraph>
+		<paragraph>Let us see first 
+			<link>
+				<url>#generation_system</url>
+				<label> how the EiffelStore generation system works</label>
+			</link>.Let us see then 
+			<link>
+				<url>#wizard_generation</url>
+				<label> how the EiffelStore wizard uses this system</label>
+			</link> for the data structures generation.
+		</paragraph>
+		<heading>
+			<size>2</size>2. EiffelStore generationsystem
+		</heading>
+		<paragraph>This part describes the class creation in 4 steps:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#capabilities</url>
+					<label>Mapping system possibilities</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#mapping_system</url>
+					<label>General mapping system</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#tags_descr</url>
+					<label>Tags description</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#gen_impl_overview</url>
+					<label>Implementation overview</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>3</size>2.1. Capabilities
+		</heading>
+		<paragraph>Let us see first what information you can map into your classes.
+			<paragraph>2 kinds of classes can be generated:
+				<list ordered="false">
+					<item>Classes that represents a database table.</item>
+					<item>Classes that represents the whole database.</item>
+				</list>
+				<heading>
+					<size>4</size>2.1.1. Database table classes
+				</heading>
+				<paragraph>You can insert information about a database table:</paragraph>
+				<list ordered="false">
+					<item>The table name</item>
+					<item>The number of attributes of table</item>
+				</list>
+				<paragraph>You can also select a piece of code, map it to a table attribute and repeat the operation for every attribute. Information that can be inserted is:</paragraph>
+				<list ordered="false">
+					<item>The attribute names</item>
+					<item>The attribute types</item>
+					<item>The attribute default creation values</item>
+					<item>The attribute positions in the table</item>
+				</list>
+				<paragraph>Thus you can get for instance class attributes that correspond to database attributes:</paragraph>
+				<paragraph>
+					<code_block>Missing</code_block>
+				</paragraph>
+				<paragraph>You can also modify the piece of code to map for the first and last attributes, for cosmetics reasons. You can also choose to only map a piece of code to attributes of a given type.</paragraph>
+				<heading>
+					<size>4</size>2.1.2. Database content classes
+				</heading>
+				<paragraph>Database content classes can basically store the list of your database tables.</paragraph>
+				<paragraph>You can select a piece of code and map it to database table information:</paragraph>
+				<list ordered="false">
+					<item>Database table name.</item>
+					<item>Database table position in the database.</item>
+				</list>
+				<paragraph>The mapped pieces of code are then concatenated in your file.</paragraph>
+				<heading>
+					<size>3</size>2.2. General mapping system 
+				</heading>
+				<paragraph>EiffelStore follows this sequence of steps to generate a class: </paragraph>
+				<list ordered="true">
+					<item>You provide meta-data about the table or view</item>
+					<item>You provide the template</item>
+					<item>It parses the template to find the tags</item>
+					<item>It replaces each tag by the meta-data value corresponding to  the tag</item>
+				</list>
+				<paragraph>Let us take an example:</paragraph>
+				<table>
+					<row>
+						<cell>template file extract</cell>
+						<cell>corresponding result file extract</cell>
+					</row>
+					<row>
+						<cell>attribute_count: &lt;ACNT&gt;</cell>
+						<cell>attribute_count: 5</cell>
+					</row>
+				</table>
+				<paragraph>This works for meta-data on the class or view. For meta-data on class (or view) attributes, a second tag type enables to specify text areas that are mapped to specific table (or view) attributes. </paragraph>
+				<paragraph>Let us take an example: </paragraph>
+				<table>
+					<row>
+						<cell>template file extract</cell>
+						<cell>corresponding result file extract</cell>
+					</row>
+					<row>
+						<cell>&lt;A:A:A&gt;&lt;AN:L&gt;: &lt;TN:U&gt;
+							<line_break/>
+							<line_break/>   &lt;/A&gt;
+						</cell>
+						<cell>companyid: DOUBLE
+							<line_break/>
+							<line_break/>   companyname: STRING
+							<line_break/>
+							<line_break/>
+						</cell>
+					</row>
+				</table>
+				<paragraph>Text contained in the tag 'A' is mapped to each table (or view) attribute and the resulting texts are concatenated. Let us see now the details about each tag. </paragraph>
+				<heading>
+					<size>3</size>2.3. Tags description 
+				</heading>
+				<heading>
+					<size>4</size>2.3.1. Database table tags description 
+				</heading>
+				<paragraph>The available tags for database table classes generation can be separated into 3 types: </paragraph>
+				<list ordered="false">
+					<item>Tags corresponding to 
+						<link>
+							<url>#table_meta-data</url>
+							<label>table  meta-data</label>
+						</link>
+					</item>
+					<item>Tags corresponding to 
+						<link>
+							<url>#attribute_meta-data</url>
+							<label>attribute  meta-data</label>
+						</link>
+					</item>
+					<item>Tags to 
+						<link>
+							<url>#enclosing_tag</url>
+							<label>enclose attribute meta-data</label>
+						</link>
+					</item>
+				</list>
+				<heading>
+					<size>5</size>2.3.1.1. Table meta-data tags
+				</heading>
+				<table>
+					<row>
+						<cell>
+							<bold>Tag name</bold>
+						</cell>
+						<cell>
+							<bold>Tag description</bold>
+						</cell>
+						<cell>
+							<bold>Options</bold>
+						</cell>
+					</row>
+					<row>
+						<cell>
+							<bold>Option name</bold>
+						</cell>
+						<cell>
+							<bold>Option description</bold>
+						</cell>
+					</row>
+					<row>
+						<cell>&lt;CN:?&gt;</cell>
+						<cell>Table name</cell>
+						<cell>U</cell>
+						<cell>in uppercase</cell>
+					</row>
+					<row>
+						<cell>I</cell>
+						<cell>with initial capital</cell>
+					</row>
+					<row>
+						<cell>L</cell>
+						<cell>in lowercase</cell>
+					</row>
+					<row>
+						<cell>&lt;ACNT&gt;</cell>
+						<cell>Attribute count</cell>
+						<cell>N/A</cell>
+					</row>
+				</table>
+				<heading>
+					<size>5</size>2.3.1.2. Attribute meta-datatags
+				</heading>
+				<table>
+					<row>
+						<cell>
+							<bold>Tag name</bold>
+						</cell>
+						<cell>
+							<bold>Tag description</bold>
+						</cell>
+						<cell>
+							<bold>Options</bold>
+						</cell>
+					</row>
+					<row>
+						<cell>
+							<bold>Option name</bold>
+						</cell>
+						<cell>
+							<bold>Option description</bold>
+						</cell>
+					</row>
+					<row>
+						<cell>&lt;AN:?&gt;</cell>
+						<cell>Attribute name</cell>
+						<cell>U</cell>
+						<cell>in uppercase</cell>
+					</row>
+					<row>
+						<cell>I</cell>
+						<cell>with initial capital</cell>
+					</row>
+					<row>
+						<cell>L</cell>
+						<cell>in lowercase</cell>
+					</row>
+					<row>
+						<cell>&lt;IT&gt;</cell>
+						<cell>Attribute position in the table</cell>
+						<cell>N/A</cell>
+					</row>
+					<row>
+						<cell>&lt;TN:?&gt;</cell>
+						<cell>Attribute type name</cell>
+						<cell>U</cell>
+						<cell>in uppercase</cell>
+					</row>
+					<row>
+						<cell>I</cell>
+						<cell>with initial capital</cell>
+					</row>
+					<row>
+						<cell>L</cell>
+						<cell>in lowercase</cell>
+					</row>
+					<row>
+						<cell>&lt;TDV&gt;</cell>
+						<cell>Attribute type default value</cell>
+						<cell>N/A</cell>
+					</row>
+				</table>
+				<paragraph>
+					<bold>Note</bold>: Attribute tags are only valid within an enclosing tag.
+				</paragraph>
+				<heading>
+					<size>5</size>2.3.1.3. Enclosing tags
+				</heading>
+				<paragraph>The tag &lt;A:?:?&gt; &lt;/A&gt; encloses text that will bemapped to attributes matching criteria. These criteria are specified by the tagoptions:</paragraph>
+				<list ordered="false">
+					<item>First option: attribute type criterion</item>
+				</list>
+				<table>
+					<row>
+						<cell>
+							<bold>Option name</bold>
+						</cell>
+						<cell>
+							<bold>Option description</bold>
+						</cell>
+					</row>
+					<row>
+						<cell>A</cell>
+						<cell>All attributes</cell>
+					</row>
+					<row>
+						<cell>I</cell>
+						<cell>INTEGER attributes</cell>
+					</row>
+					<row>
+						<cell>S</cell>
+						<cell>STRING attributes</cell>
+					</row>
+					<row>
+						<cell>D</cell>
+						<cell>DATE attributes</cell>
+					</row>
+					<row>
+						<cell>B</cell>
+						<cell>BOOLEAN attributes</cell>
+					</row>
+					<row>
+						<cell>C</cell>
+						<cell>CHARACTER attributes</cell>
+					</row>
+					<row>
+						<cell>F</cell>
+						<cell>DOUBLE attributes</cell>
+					</row>
+				</table>
+			</paragraph>
+			<list ordered="false">
+				<item>Second option: attribute position criterion</item>
+			</list>
+			<table>
+				<row>
+					<cell>
+						<bold>Option name</bold>
+					</cell>
+					<cell>
+						<bold>Option description</bold>
+					</cell>
+				</row>
+				<row>
+					<cell>A</cell>
+					<cell>All attributes</cell>
+				</row>
+				<row>
+					<cell>F</cell>
+					<cell>First attribute</cell>
+				</row>
+				<row>
+					<cell>I</cell>
+					<cell>Intermediate attributes</cell>
+				</row>
+				<row>
+					<cell>L</cell>
+					<cell>Last attribute</cell>
+				</row>
+			</table>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Note</bold>: this option is generally used to havea valid and nice layout or indentation.
+			</item>
+		</list>
+		<paragraph>
+			<bold>Note</bold>: several options can be selected forone criterion.
+		</paragraph>
+		<heading>
+			<size>4</size>2.3.2. Database content tagsdescription
+		</heading>
+		<paragraph>The tags described above can be reused for database content:database content class mapping isequivalent to the previous mapping but within a different scope:</paragraph>
+		<list ordered="false">
+			<item>class corresponds to the database rather than tables</item>
+			<item>class content deals with tables rather than table attributes</item>
+		</list>
+		<paragraph>The meaning of available tags is so modified:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#system_meta-data_ext</url>
+					<label>System meta-data tags</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#table_meta-data_ext</url>
+					<label> Table meta-data tags</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#enclosing_tag_ext</url>
+					<label> Enclosing tags</label>
+				</link>
+			</item>
+		</list>
+		<paragraph>
+			<bold>Note</bold>: every tag is not available for this mapping.
+		</paragraph>
+		<heading>
+			<size>5</size>2.3.2.1. System meta-data tags
+		</heading>
+		<table>
+			<row>
+				<cell>
+					<bold>Tag name</bold>
+				</cell>
+				<cell>
+					<bold>Tag description</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>&lt;ACNT&gt;</cell>
+				<cell>Table count</cell>
+			</row>
+		</table>
+		<heading>
+			<size>5</size>2.3.2.2.  Table meta-data tags
+		</heading>
+		<table>
+			<row>
+				<cell>
+					<bold>Tag name</bold>
+				</cell>
+				<cell>
+					<bold>Tag description</bold>
+				</cell>
+				<cell>
+					<bold>Options</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<bold>Option name</bold>
+				</cell>
+				<cell>
+					<bold>Option description</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>&lt;CN:?&gt;</cell>
+				<cell>Table name</cell>
+				<cell>U</cell>
+				<cell>in uppercase</cell>
+			</row>
+			<row>
+				<cell>I</cell>
+				<cell>with initial capital</cell>
+			</row>
+			<row>
+				<cell>L</cell>
+				<cell>in lowercase</cell>
+			</row>
+			<row>
+				<cell>&lt;IT&gt;</cell>
+				<cell>Table position in the database</cell>
+				<cell>N/A</cell>
+			</row>
+		</table>
+		<heading>
+			<size>5</size>2.3.2.3.  Enclosing tags
+		</heading>
+		<paragraph>The tag &lt;A:A:?&gt; &lt;/A&gt; encloses text that will be mapped to tables matching a position criterion. This criterion is specified by the tag options:</paragraph>
+		<table>
+			<row>
+				<cell>
+					<bold>Option name</bold>
+				</cell>
+				<cell>
+					<bold>Option description</bold>
+				</cell>
+			</row>
+			<row>
+				<cell>A</cell>
+				<cell>All tables</cell>
+			</row>
+			<row>
+				<cell>F</cell>
+				<cell>First table</cell>
+			</row>
+			<row>
+				<cell>I</cell>
+				<cell>Intermediate tables</cell>
+			</row>
+			<row>
+				<cell>L</cell>
+				<cell>Last table</cell>
+			</row>
+		</table>
+		<heading>
+			<size>3</size>2.4. Implementation overview
+		</heading>
+		<paragraph>The data structure generation system is implemented with 4EiffelStore classes:</paragraph>
+		<list ordered="false">
+			<item>DB_CLASS_GENERATOR abstractly generates a class mapped to  database meta-data.</item>
+			<item>DB_TABLE_CLASS_GENERATOR generates a class mapped to a  database table.</item>
+			<item>DB_ACCESS_CLASS_GENERATOR generates a class mapped to the  database.</item>
+			<item>DB_TEMPLATE_TAGS defines available tags for mapping and  their meaning.</item>
+		</list>
+		<paragraph>
+			<image> 
+				<url>ESTORE_GENERATION.GENERATOR.png</url>
+			</image>
+		</paragraph>
+		<paragraph>Generation classes BON diagram</paragraph>
+		<heading>
+			<size>2</size>3.EiffelStore wizard 
+		</heading>
+		<paragraph>The EiffelStore wizard uses the 
+			<link>
+				<url>#generation_system</url>
+				<label> EiffelStore generation system</label>
+			</link>described above to generate the data structures mapped to your database. 
+		</paragraph>
+		<paragraph>The wizard generates 3 types of classes: </paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#wiz_table_classes</url>
+					<label>Classes storing database table rows content</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#wiz_descr_classes</url>
+					<label>Classes describing a database table</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>#wiz_access_class</url>
+					<label>A class describing the database and giving access to the  previous types of classes</label>
+				</link>
+			</item>
+		</list>
+		<paragraph>The wizard uses one different template for each class.
+			<heading>
+				<size>3</size>3.1. Table classes
+			</heading>
+			<paragraph>For each selected database table, a class is created from the same template, mapping the database table. This template is:</paragraph>
+			<code_block>Missing</code_block>
+			<paragraph>
+				<bold>Note</bold>: the template content can be adjusted, for instance to add comments or change the indexing. However, the fundamental template structure should not be changed to use data structures as described in the 
+				<link>
+					<url>../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html</url>
+					<label>corresponding section</label>
+				</link>.
+			</paragraph>
+			<heading>
+				<size>3</size>3.2. Description classes
+			</heading>
+			<paragraph>For each selected database table, a class is also created froman unique template, mapping the database table. This template is:</paragraph>
+			<code_block>Missing</code_block>
+			<paragraph>
+				<bold>Note</bold>: As for the table class generation, the template content can be adjusted, for instance to add comments or change the indexing. However, the fundamental template structure should not be changed.
+			</paragraph>
+			<paragraph>Some additional tags are directly replaced by the wizard:</paragraph>
+			<list ordered="false">
+				<item>The &lt;CR&gt; and &lt;DR&gt; tags are replaced with  information on associated tables.</item>
+				<item>The &lt;IC&gt; tag is replaced by information on the primary  key (table ID).</item>
+				<item>The &lt;CI&gt; tag is replaced by the table position in the  database.</item>
+			</list>
+			<heading>
+				<size>3</size>2.3.3. Access class
+			</heading>
+			<paragraph>The 
+				<code>
+					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
+				</code> class is mapped to the database from the following template:
+			</paragraph>
+			<code_block>Missing</code_block>
+		</paragraph>
+	</paragraph></document>

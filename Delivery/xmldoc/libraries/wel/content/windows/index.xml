@@ -1,0 +1,94 @@
+<document title="Windows">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL\WEL Interface Content</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  This cluster contains the different types of windows availabe to a 
+			<link>
+				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<label>WEL_APPLICATION</label>
+			</link>.  Click 
+			<link>
+				<url>/libraries/wel/reference/windows/index.html</url>
+				<label>here</label>
+			</link> to browse the windows cluster. 
+		</paragraph>
+		<paragraph>The following effective window types are available:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_popup_window_chart.html</url>
+					<label>WEL_POPUP_WINDOW</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_modal_dialog_chart.html</url>
+					<label>WEL_MODAL_DIALOG</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_modeless_dialog_chart.html</url>
+					<label>WEL_MODELESS_DIALOG</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_mdi_frame_window_chart.html</url>
+					<label>WEL_MDI_FRAME_WINDOW</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_mdi_client_window_chart.html</url>
+					<label>WEL_MDI_CLIENT_WINDOW</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_mdi_child_window_chart.html</url>
+					<label>WEL_MDI_CHILD_WINDOW</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_main_dialog_chart.html</url>
+					<label>WEL_MAIN_DIALOG</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+					<label>WEL_FRAME_WINDOW</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/wel/reference/windows/wel_control_window_chart.html</url>
+					<label>WEL_CONTROL_WINDOW</label>
+				</link>
+			</item>
+		</list>
+		<note>
+			<bold>Note:</bold> A WEL application must contain at least one window. See the WEL 
+			<link>
+				<url>/libraries/wel/samples/tutorial/index.html</url>
+				<label>Tutorial</label>
+			</link>  for details of how to set up your first window within a 
+			<link>
+				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<label>WEL_APPLICATION</label>
+			</link>. 
+		</note>
+		<paragraph>  Click 
+			<link>
+				<url>/libraries/wel/reference/windows/index.html</url>
+				<label>here</label>
+			</link> to browse the windows cluster. 
+		</paragraph>
+	</paragraph></document>

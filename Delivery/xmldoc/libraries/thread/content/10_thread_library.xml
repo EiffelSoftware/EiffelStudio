@@ -1,0 +1,269 @@
+<document output="studio" title="Thread library overview">
+	<meta_data/>
+	<paragraph>
+		<paragraph>This is only a quick overview of the 
+			<link>
+				<url>/libraries/thread/index.html</url>
+				<label>Thread library</label>
+			</link>. The reference of this library should give all its content.
+		</paragraph>
+		<heading>
+			<size>2</size>
+			<content>Creating and launching threads: the class 
+				<code>
+					<class_name>THREAD</class_name>
+				</code> (deferred)
+			</content>
+		</heading>
+		<paragraph>The class of the thread object you want to create should inherit the 
+			<code>
+				<class_name>THREAD</class_name>
+			</code> class.
+			<line_break/>Your thread is represented by a class which inherits from 
+			<code>
+				<class_name>THREAD</class_name>
+			</code> (deferredclass).
+			<line_break/>
+			<paragraph>
+				<code_block>Missing</code_block>Creating a thread is like creating an Eiffel object:
+				<code_block>Missing</code_block>
+				<note>
+					<bold>Note</bold>: You have created a thread object but have not started the thread itself yet.
+					<line_break/>To run the thread, use the feature 
+					<code>
+						<feature_name>launch</feature_name>
+					</code> from 
+					<code>
+						<class_name>THREAD</class_name>
+					</code>.
+				</note>
+				<code_block>Missing</code_block>On the Eiffel side, the procedure 
+				<code>
+					<feature_name>execute</feature_name>
+				</code> will be launched. This procedureis deferred in class 
+				<code>
+					<class_name>THREAD</class_name>
+				</code>, you have to define it in 
+				<code>
+					<class_name>MY_THREAD</class_name>
+				</code>.
+				<paragraph>On the C side, a C thread will be created and launched.
+					<warning>
+						<bold>Caution</bold>: you may call 
+						<code>
+							<feature_name>join_all</feature_name>
+						</code> and the end of the exceution of the parent thread if you do not want it to die before its child, otherwise they may prematurily terminate.
+						<heading>
+							<size>2</size>
+							<content>The class 
+								<code>
+									<class_name>MUTEX</class_name>
+								</code>
+							</content>
+						</heading>
+						<paragraph>The implementation of the class 
+							<code>
+								<class_name>MUTEX</class_name>
+							</code> is mapped on the C standard thread library. An instance of class 
+							<code>
+								<class_name>MUTEX</class_name>
+							</code> can be shared between different thread.
+							<paragraph>
+								<code_block>Missing</code_block>
+								<list ordered="false">
+									<item>Declaration of the mutex:
+										<code_block>Missing</code_block>
+									</item>
+									<item>Creation of mutex:
+										<code_block>Missing</code_block>
+									</item>
+									<item>Locking the mutex:
+										<code_block>Missing</code_block>
+									</item>
+									<item>Unlocking the mutex:
+										<code_block>Missing</code_block>
+									</item>
+									<item>
+										<code>
+											<feature_name>try_lock</feature_name>
+										</code>: if it is not locked yet, lock the mutex and return True, otherwise it returns False.
+										<code_block>Missing</code_block>
+									</item>
+									<item>Is my mutex initialized?
+										<code_block>Missing</code_block>
+									</item>
+								</list>
+								<note>
+									<bold>Note</bold>: on Windows: The 
+									<code>
+										<class_name>MUTEX</class_name>
+									</code> objects on Windows are recursive while they are not on Unix. Ar ecursive mutex can be locked twice by the same thread.
+								</note>
+								<warning>
+									<bold>Caution</bold>: be sure that a mutex is unlocked when it is disposed.
+								</warning>
+								<heading>
+									<size>2</size>
+									<content>The class 
+										<code>
+											<class_name>SEMAPHORE</class_name>
+										</code>
+									</content>
+								</heading>
+								<paragraph>Like 
+									<code>
+										<class_name>MUTEX</class_name>
+									</code>, the features of this class are mapped on the C thread library. An instance of class 
+									<code>
+										<class_name>SEMAPHORE</class_name>
+									</code> can be shared between thread.
+									<list ordered="false">
+										<item>Declaration of the semaphore :
+											<paragraph>
+												<code>
+													<local_variable>my_sem</local_variable>
+												</code>
+												<code>
+													<symbol>:</symbol>
+												</code>
+												<code>
+													<class_name>SEMAPHORE</class_name>
+												</code>
+											</paragraph>Creation of semaphore: initialize semaphore with nb_tokens, it requires nb_tokens &gt; = 0
+											<code_block>Missing</code_block>
+										</item>
+										<item>Wait for a token:
+											<code_block>Missing</code_block>
+										</item>
+										<item>Give back a token:
+											<code_block>Missing</code_block>
+										</item>
+										<item>
+											<code>
+												<feature_name>try_wait</feature_name>
+											</code>, similar to try_lock from 
+											<code>
+												<class_name>MUTEX</class_name>
+											</code>, if a token is available, take it and return 
+											<code>
+												<symbol>True</symbol>
+											</code>, otherwise return 
+											<code>
+												<symbol>False</symbol>
+											</code>.
+											<code_block>Missing</code_block>
+										</item>
+									</list>
+									<warning>
+										<bold>Caution</bold>: be sure that a semaphore does not wait for a token when it is disposed
+									</warning>
+									<heading>
+										<size>2</size>
+										<content>The class 
+											<code>
+												<class_name>CONDITION_VARIABLE</class_name>
+											</code>
+										</content>
+									</heading>
+									<paragraph>This class allows to use condition variables in Eiffel. An instance of class
+										<code>
+											<class_name>CONDITION_VARIABLE</class_name>
+										</code> can be shared between threads.
+										<list ordered="false">
+											<item>Declaration of the condition variable
+												<code_block>Missing</code_block>
+											</item>
+											<item>Creation:
+												<code_block>Missing</code_block>
+											</item>
+											<item>Wait for a signal (send by 
+												<code>
+													<feature_name>signal</feature_name>
+												</code>). You need to use a mutex.
+												<code_block>Missing</code_block>
+												<paragraph>
+													<code>
+														<local_variable>my_mutex</local_variable>
+													</code> must be locked by the calling thread so as 
+													<code>
+														<feature_name>wait</feature_name>
+													</code> can be called.
+													<code>
+														<feature_name>wait</feature_name>
+													</code> atomically unlocks 
+													<code>
+														<local_variable>my_mutex</local_variable>
+													</code> and waits for the condition variable
+													<code>
+														<local_variable>my_mutex</local_variable>
+													</code> to receive a signal. As soon as it received a signal, 
+													<code>
+														<local_variable>my_cond</local_variable>
+													</code> locks
+													<code>
+														<local_variable>my_mutex</local_variable>
+													</code>;
+													<code_block>Missing</code_block>
+												</paragraph>
+											</item>
+											<item>Send a signal one thread blocked on the condition variable `my_cond'.
+												<code_block>Missing</code_block>
+											</item>
+											<item>Send a signal to all the threads blocked on the condition variable `my_cond'.
+												<code_block>Missing</code_block>
+											</item>
+											<item>
+												<warning>
+													<bold>Caution</bold>: be sure that a condition variable is unblocked when it isdisposed.
+												</warning>
+											</item>
+										</list>
+										<heading>
+											<size>2</size>Miscellaneous classes
+										</heading>
+										<paragraph>class 
+											<code>
+												<class_name>THREAD_ATTRIBUTES</class_name>
+											</code>: defines theattributes of an Eiffel Thread regarding the thread scheduling policy andpriority.
+											<heading>
+												<size>2</size>
+												<content>Controlling execution: 
+													<code>
+														<class_name>THREAD_CONTROL</class_name>
+													</code>
+												</content>
+											</heading>
+											<list ordered="false">
+												<item>
+													<code>
+														<feature_name>yield</feature_name>
+													</code>: the calling thread yields its execution in favor of an otherthread of same priority.
+												</item>
+												<item>
+													<code>
+														<feature_name>join_all</feature_name>
+													</code>: the calling thread waits for all other threads to finished (allits children).
+												</item>
+												<item>A parent thread can wait for the termination of a child process throughthe feature 
+													<code>
+														<feature_name>join</feature_name>
+													</code> of class 
+													<code>
+														<class_name>THREAD_CONTROL</class_name>
+													</code> (inherited by 
+													<code>
+														<class_name>THREAD</class_name>
+													</code>):
+													<code_block>Missing</code_block>
+												</item>
+											</list>
+										</paragraph>
+									</paragraph>
+								</paragraph>
+							</paragraph>
+						</paragraph>
+					</warning>
+				</paragraph>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

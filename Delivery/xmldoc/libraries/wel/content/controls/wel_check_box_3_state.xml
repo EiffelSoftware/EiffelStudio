@@ -1,0 +1,43 @@
+<document title="WEL_CHECK_BOX_3_STATE">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL\WEL Interface Content\Controls</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  A WEL_CHECK_BOX_3_STATE control can take three states,  checked, indeterminate or unchecked.  </paragraph>
+		<heading>
+			<size>2</size>Appearance
+		</heading>A WEL_CHECK_BOX_3_STATE
+		<line_break/>
+		<image> 
+			<url>images/wel_check_box_3_state_unchecked.png</url> 
+			<alt_text>wel_check_box_3_state_unchecked</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>A checked WEL_CHECK_BOX_3_STATE
+		<line_break/>
+		<image> 
+			<url>images/wel_check_box_3_state_checked.png</url> 
+			<alt_text>wel_check_box_3_state_checked</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>A indeterminate WEL_CHECK_BOX_3_STATE
+		<line_break/>
+		<image> 
+			<url>images/wel_check_box_3_state_indeterminate.png</url> 
+			<alt_text>wel_check_box_3_state_indeterminate</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/content/controls/wel_check_box.html</url>
+				<label>WEL_CHECK_BOX</label>
+			</link>
+		</seealso>
+	</paragraph></document>

@@ -1,0 +1,80 @@
+<document output="studio" title="Selection Access">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Once you have 
+			<link>
+				<url>../30_database_selection/index.html</url>
+				<label>selected data</label>
+			</link> from the database, it returns a set of rows containing queried columns values. Each row loaded with DB_SELECTION is stored in a DB_RESULT object. The easiest way to access the data is thus to refer to DB_RESULT objects themselves. 
+		</paragraph>
+		<note>
+			<bold>Note</bold>: Take a look at the 
+			<link>
+				<url>../50_data_object_coupling/index.html</url>
+				<label>Database/Eiffel objects Coupling</label>
+			</link> to learn advanced data handling features.
+		</note>
+		<paragraph>To use DB_RESULT, process in 2 steps:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>#retrieve</url>
+					<label>retrieve</label>
+				</link> DB_RESULT objects.
+			</item>
+			<item>
+				<link>
+					<url>#access</url>
+					<label>access</label>
+				</link> DB_RESULT content. 
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Retrieving DB_RESULT objects
+		</heading>
+		<paragraph>DB_SELECTION class provides different ways to customize result loading:</paragraph>
+		<list ordered="false">
+			<item>You want to access an 
+				<bold>unique</bold> row: DB_RESULT object is accessible via cursor:
+				<code_block>Missing</code_block>
+			</item>
+			<item>You want to load a 
+				<bold>complete list</bold> of rows: DB_SELECTION can store DB_RESULT objects in a list. To do this, you have mainly to provide a LIST object to DB_SELECTION with set_container:
+				<code_block>Missing</code_block>
+				<tip>
+					<bold>Tip</bold>: Provide DB_SELECTION with the LIST structure convenient for what you need to do with the results.
+				</tip>
+			</item>
+			<item>You want to 
+				<bold>select part</bold> of the result set: you can set an action in DB_SELECTION that will be executed each time a row is loaded. This action can for instance manipulate current row and define a stop condition. 
+				<list ordered="false">
+					<item>You need to define a descendant of class ACTION and set it to DB_SELECTION:
+						<code_block>Missing</code_block>
+					</item>
+					<item>Then set action to DB_SELECTION:
+						<code_block>Missing</code_block>
+					</item>
+				</list>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Accessing content of DB_RESULT
+		</heading>
+		<paragraph>A DB_RESULT object merely carries data retrieved from the database. You have to convert it to a DB_TUPLE to access data within the retrieved row conveniently, i.e. mostly the column values:
+			<code_block>Missing</code_block>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break/>
+				<link>
+					<url>../30_database_selection/index.html</url>
+					<label>Performing a database selection.</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>../50_data_object_coupling/index.html</url>
+					<label>Coupling database data and Eiffel objects.</label>
+				</link>
+				<line_break/>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,26 @@
+<document title="WEL_RADIO_BUTTON">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\WEL\WEL Interface Content\Controls</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>  A WEL_RADIO_BUTTON control can take two states,  checked or unchecked. By placing more than one of these in a WEL_GROUP_BOX, they will  become grouped, and only one may be checked at once. </paragraph>
+		<heading>
+			<size>2</size>Appearance
+		</heading>A WEL_RADIO_BUTTON
+		<line_break/>
+		<image> 
+			<url>images/wel_radio_button_unchecked.png</url> 
+			<alt_text>wel_radio_button_unchecked</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>A checkedWEL_RADIO_BUTTON
+		<line_break/>
+		<image> 
+			<url>images/wel_radio_button_checked.png</url> 
+			<alt_text>wel_radio_button_checked</alt_text>
+		</image>
+	</paragraph></document>

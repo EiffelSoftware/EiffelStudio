@@ -1,0 +1,43 @@
+<document output="studio" title="EiffelCOM">
+	<meta_data/>
+	<paragraph>
+		<paragraph> Type: Library
+			<line_break/> Platform: Windows
+			<line_break/> Version: 5.0
+			<line_break/>
+		</paragraph>
+		<paragraph> See:
+			<list ordered="false">
+				<item>
+					<link>
+						<url>01_introduction.html</url>
+						<label>Introduction</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>content/index.html</url>
+						<label>Content</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>reference/index.html</url>
+						<label>Reference</label>
+					</link>
+				</item>
+			</list>
+			<seealso>See Also: 
+				<line_break/>
+				<link>
+					<url>../../technologies/com/index.html</url>
+					<label>The    Component Object Model</label>
+				</link>
+				<line_break/>
+				<link>
+					<url>../../tools/wizards/com/index.html</url>
+					<label>EiffelCOM    wizard</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph></document>

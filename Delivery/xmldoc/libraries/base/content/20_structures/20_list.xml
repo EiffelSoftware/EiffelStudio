@@ -1,0 +1,513 @@
+<document title="EiffelBase Data Structures, Lists">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelBase\EiffelBase\EiffelBase Data Structures Overview</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>Many applications need sequential structures, also called linear structures, in particular lists and circular chains. Apart from three classes describing individual list cells, all the classes involved are descendants of class LINEAR, one of the deferred classes describing general traversal properties and introduced in the chapter that described the general data structure taxonomy. More precisely, all but one of the classes of interest for the present discussion are descendants, direct or indirect, from a class called CHAIN which describes general sequential structures possessing a cursor as well as insertion properties. The exception is class COUNTABLE_SEQUENCE, which describes infinite structures; all the others describe finite structures.
+			<line_break/>CHAIN is an heir of SEQUENCE, which describes a more general notion of sequence. SEQUENCE is a descendant of LINEAR. There are two main categories of sequential structures: some, called circular chains, are cyclic; others, called lists, are not. Another distinction exists between dynamic structures, which may be extended at will, and fixed ones, which have a bounded capacity.
+			<line_break/>  In all of the structures under review you may insert two or more occurrences of a given item in such a way that the occurrences are distinguishable. In other words, the structures are bags rather than just sets, although it is possible to use them to implement sets.
+		</paragraph>
+		<heading>
+			<size>1</size>Higher Level Traversal Classes
+		</heading>
+		<paragraph>The list and chain classes are characterized, for their traversal properties, as being linear and, more precisely, bilinear. In the traversal hierarchy, the relevant deferred classes are LINEAR and BILINEAR, introduced in the
+			<link>
+				<url>10_taxonomy.html</url>
+				<label>discussion</label>
+			</link> of the general taxonomy.
+		</paragraph>
+		<heading>
+			<size>2</size>Linear structures
+		</heading>
+		<paragraph>LINEAR describes sequential structures that may be traversed one way. It introduces in particular the following features, illustrated on the figure below:</paragraph>
+		<list ordered="false">
+			<item>after, a boolean-valued query which determines whether you have moved past the last position (a more precise specification is given below).</item>
+			<item>off, a boolean-valued query which is false if and only if there is no item at the current position; for LINEAR this is the same as:
+				<code_block>is_empty and not after</code_block>
+			</item>
+			<item>item, a query which returns the item at the current position - provided of course there is one, as expressed by the precondition:
+				<code_block>not off</code_block>
+			</item>
+			<item>start, a command to move to the first position if any (if is_empty is true the command has no effect).</item>
+			<item>forth, a command to advance by one position; the precondition is not after.</item>
+			<item>finish, a command to move to the last position; the precondition is:
+				<line_break/>
+				<code_block>not is_empty. </code_block>
+			</item>
+		</list>
+		<image>
+			<url>linear.png</url>
+		</image>
+		<paragraph>fig.1: Linear Structure</paragraph>
+		<paragraph> There is also a procedure search with one argument, which determines whether the value of that argument appears in the structure at or after the current position, and if not makes after become true. This procedure is internally used by the default implementation of the has function (the general membership test) for linear structures. Like has for all containers, search uses object or reference equality depending on the value set for object_comparison.</paragraph>
+		<paragraph> An invariant property of LINEAR structures is that the current position may go off one step past the last item if any, but no further. The precondition of forth - not after - helps ensure this. The first item (if any) being at position 1, the maximum allowable position is count + 1, where count is the number of items.</paragraph>
+		<heading>
+			<size>2</size>Bilinear structures
+		</heading>
+		<paragraph>BILINEAR describes linear structures which may be traversed both ways. It inherits from LINEAR and extends it with two new features which ensure complete symmetry between the two directions of movement:</paragraph>
+		<list ordered="false">
+			<item>before, a boolean-valued query which determines whether you have moved to the left of the first position (a more precise specification is given below).</item>
+			<item>back, a command to move backward by one position; the precondition is not before.</item>
+		</list>
+		<paragraph> For bilinear structures the position can range between 0 (not just 1) and count + 1. Query off is accordingly redefined so as to yield the value of after or before.</paragraph>
+		<image>
+			<url>bilinear.png</url>
+		</image>
+		<paragraph>fig.2: Bilinear Structure</paragraph>
+		<heading>
+			<size>2</size>Invariant properties for after, before and off
+		</heading>
+		<paragraph> The redefinition of off illustrates a general methodological advice about invariants: be careful about not over-constraining the invariant by including properties that may be made more general in descendants. It might have been tempting to include in LINEAR an invariant clause of the form</paragraph>
+		<code_block>off
+			<symbol>=</symbol> is_empty or after
+		</code_block>
+		<paragraph>This property, however, would be too constraining. More precisely, it is always true that the right-hand side implies the left-hand-side: if a linear structure is either empty or after, then it is off. But the converse is not true, since certain kinds of linear structure, for example bilinear ones, may be off but neither empty nor after.
+			<line_break/>  The actual invariant for class BILINEAR is obtained in three stages. In class TRAVERSABLE the feature off is deferred and a basic property of that feature is expressed by the invariant clause
+		</paragraph>
+		<code_block>
+			<indexing_tag>empty_constraint</indexing_tag>
+			<symbol>:</symbol>is_empty implies off
+		</code_block>
+		<paragraph>In LINEAR, feature off is effected through an implementation which returns the value of the expression is_empty or after. The class adds an invariant clause which, however, says less than the implementation to leave some room for variation:</paragraph>
+		<code_block>
+		<indexing_tag>after_constraint</indexing_tag>
+		<symbol>:</symbol>after implies off
+		</code_block>
+		<paragraph>Finally BILINEAR, an heir of LINEAR, redefines off to return the value of the expression</paragraph>
+		<code_block>before or after</code_block>
+		<paragraph> and adds the invariant clause</paragraph>
+		<code_block>
+			<indexing_tag>before_constraint</indexing_tag>
+			<symbol>:</symbol> before implies off
+		</code_block>
+		<paragraph>The new implementation of off </paragraph>
+		<code_block>after or before</code_block>
+		<paragraph> would not guarantee the invariant clause inherited from TRAVERSABLE were it not for another clause introduced in BILINEAR:</paragraph>
+		<code_block>
+			<indexing_tag>empty_property</indexing_tag>
+			<symbol>:</symbol>is_empty implies
+			<symbol>(</symbol>after or before
+			<symbol>)</symbol>
+		</code_block>
+		<paragraph>which indicates that an empty bilinear structure must always be after or before but not both, however, as stated by the last new clause, the reason for which is discussed in detail below:</paragraph>
+		<code_block>
+			<indexing_tag>not_both</indexing_tag>
+			<symbol>:</symbol>not
+			<symbol>(</symbol>after and before
+			<symbol>)</symbol>
+		</code_block>
+		<paragraph> The flat-short form of BILINEAR shows the complete reconstructed invariant:</paragraph>
+		<code_block>
+			Missing
+		</code_block>
+		<heading>
+			<size>2</size> Iteration patterns
+		</heading>
+		<paragraph>For a more general form of this scheme, applicable to circular chains as well as other linear structures, replace off by exhausted. With the features shown above, a typical iteration mechanism on a non-empty linear structure lin is of the form:</paragraph>
+		<code_block>
+			Msiing
+		</code_block>
+		<paragraph>The value of
+			<code>
+				<local_variable>lin</local_variable>
+			</code>
+			<code>
+				<symbol>.</symbol>
+			</code>off is always true for an empty structure, so in this case the loop will, correctly, execute only its initialization actions if present.
+			<line_break/>  This is a very common pattern, which you will find in the library classes themselves (for example has is implemented in this way) and many application clients. The iterator classes corresponding to linear structures (LINEAR_ITERATOR, TWO_WAY_CHAIN_ITERATOR) turn this pattern and several related ones into actual reusable routines.
+			<line_break/>  For bilinear structures there is another traversal mechanism going backward rather than forward; it is the same as above except that finish replaces start and back replaces finish. The exit condition remains off since before, like after, implies off.
+		</paragraph>
+		<heading>
+			<size>2</size>A precise view of after and before
+		</heading>
+		<paragraph> Getting the specification of after and before right, so that it will handle all cases properly, requires some care.
+			<line_break/> For every one of the structures under discussion there is a notion of current position, which we may call the cursor position even though for the moment the cursor is a virtual notion only. (Actual cursor objects will come later when we combine LINEAR, BILINEAR and other classes from the traversal hierarchy with CURSOR_STRUCTURE and other classes from the collection hierarchy.) The informal definition is that after is true if and only if the cursor - in this informal sense of a fictitious marker signaling the current position - is one position after the last item, if any, and that before is true if and only if the cursor is one position before the first item. When the cursor is on any of the items, after and before are false; after holds when the cursor is to the right of the last item, and before when it is to the left of the first item. This leaves open the question of what conventions to take for an empty structure. If iteration schemes of the above type are to work, then after must be true for an empty structure. For a bilinear structure, however, we should have total symmetry between the two pairs of features
+		</paragraph>
+		<list ordered="false">
+			<item>start, forth, after.</item>
+			<item>finish, back, before.</item>
+		</list>
+		<paragraph>So for an empty list both before and after should be true. This scheme was used in early version of the Base libraries. It has some disadvantages, however; in particular it is not compatible with the simple, symmetric properties:</paragraph>
+		<code_block>after
+			Missing
+		</code_block>
+		<paragraph> which express elementary definitions for after and before in terms of index, the current position, and count, the number of items (items being numbered from 1 to count). For an empty structure count is zero, so if we want after and before to be both true in this case we have to sacrifice one of the above properties, since the first would imply index to 1 and the second to 0. But again symmetry reigns supreme: we should either keep both properties or renounce both. The solution was to renounce both and replace them by slightly more complicated ones:</paragraph>
+		<code_block>after
+			Mssing
+		</code_block>
+		<paragraph> When a structure is created, some initializations will have to be made; the default initializations will usually lead to a value of 0 rather than 1 for index, although this dissymetry is not apparent in the assertions. Although acceptable, this solution leads to small but unpleasant complications, in particular frequent conditional instructions of the form</paragraph>
+		<code_block>
+			Missing
+		</code_block>
+		<paragraph> The solution finally retained for the Base libraries uses a different technique, which has turned out to be preferable. The idea is to replace the conceptual picture by one in which there are always two fictitious sentinel items. The two sentinel items are only present conceptually. They are of course not taken into account for the computation of count and, although it is possible to conceive of an implementation which would actually reserve space for them (for example in an array representation), none of the implementations used in Base for the classes of this documentation and other descendants of LINEAR do. The only purpose of the sentinels is to provide two valid theoretical cursor positions, which exist regardless of the number of actual (non-sentinel) items in the structure.
+			<line_break/> The sentinel items always appear at positions 0 and count + 1; this property is true even if the structure is empty of items, in which case count is zero. As a result, the following properties are part of the invariant:
+		</paragraph>
+		<code_block>Missing
+		</code_block>
+		<paragraph> The last property given indicates that a structure can never be both after and before, since even in an empty structure the two sentinels are still present, with the cursor on one of them. For an empty structure, index will be zero by convention, so that before will be true and after false. But this property is not reflected in any of the invariant clauses.</paragraph>
+		<heading>
+			<size>2</size>Some lessons
+		</heading>
+		<paragraph>This discussion has illustrated some of the important patterns of reasoning that are frequently involved in serious object-oriented design. Among the lessons are four ideas which you may find useful in many different cases. First, consistency is once again the central principle. Throughout the design of a class library we must constantly ask ourselves:</paragraph>
+		<list ordered="false">
+			<item>How do I make my next design decision compatible with the previous ones?</item>
+			<item>How do I take my next design decision so that it will be easy - or at least possible - to make future ones compatible with it?</item>
+		</list>
+		<paragraph>Another frequent concern, partly a consequence of consistency, is symmetry. To mathematicians and physicists, symmetry considerations are often important in guiding the search for a solution to a problem; if the problem exhibits a certain symmetry, a candidate solution will be rejected if it does not satisfy that symmetry. Such was the situation here: since the structure's specification is symmetric with respect to the two possible directions of traversal, so too should the feature design be.
+			<line_break/> The third lesson is also well-known in mathematics and physics: the usefulness of looking at limit cases. To check that a design is sound it is often useful to examine what becomes of it when it is applied to extreme situations - in particular, as was done in this example, empty structures.
+			<line_break/> Finally, the only way to make delicate design decisions is to express the issues clearly through assertions, most notably invariants. To analyze the properties under discussion, and weigh the various alternatives, we need the precision of mathematical logic. Once again note that without assertions it would be impossible to build a good library; we would have no way to know precisely what we are talking about.
+		</paragraph>
+		<heading>
+			<size>1</size>Sequences And Chains
+		</heading>
+		<paragraph>Still deferred, classes SEQUENCE and CHAIN provide the basis for all list and chain classes, as well as for many trees and for dispensers.
+			<line_break/>SEQUENCE is constructed with the full extent of the technique described in the discussion of the taxonomy: using multiple inheritance to combine one class each from the access, traversal and storage hierarchy. SEQUENCE indeed has three parents:
+		</paragraph>
+		<list ordered="false">
+			<item>ACTIVE gives the access properties. A sequence is an active structure with a notion of current item. Remember that active structures are a special case of bags.</item>
+			<item>BILINEAR, as studied above, indicates that a sequence may be traversed both ways.</item>
+			<item>FINITE, from the storage hierarchy, indicates that the class describes finite sequences. (A class COUNTABLE_SEQUENCE is also present, as described below.)</item>
+		</list>
+		<paragraph>To the features of BILINEAR, SEQUENCE principally adds features for adding, changing and removing items. A few procedures in particular serve to insert items at the end:</paragraph>
+		<list ordered="false">
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>put
+					<symbol>(</symbol>
+					<local_variable>v</local_variable>
+					<symbol>)</symbol> adds
+					<local_variable>v</local_variable> at the end of a sequence
+					<local_variable>s</local_variable>
+				</code>.
+			</item>
+			<item>extend and force, at the SEQUENCE level, do the same as put.</item>
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>append
+					<symbol>(</symbol>
+					<local_variable>s1</local_variable>
+					<symbol>)</symbol> adds to the end of
+					<local_variable>s</local_variable> the items of
+					<local_variable>s1</local_variable> (another sequence), preserving their
+					<local_variable>s1</local_variable>
+				</code> order.
+			</item>
+		</list>
+		<paragraph>Other procedures work on the current position:</paragraph>
+		<list ordered="false">
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>
+				</code>remove removes the item at current position.
+			</item>
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>replace
+					<symbol>(</symbol>
+					<local_variable>v</local_variable>
+					<symbol>)</symbol> replaces by
+					<local_variable>v</local_variable>
+				</code> the item at current position.
+			</item>
+		</list>
+		<paragraph>SEQUENCE, however, does not provide a procedure to insert an item at the current position, since not all implementations of sequences support this possibility; you will find it in descendants of SEQUENCE seen below.
+			<line_break/>  Yet another group of features are based on the first occurrence of a certain item, or on all occurrences:
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>prune
+					<symbol>(</symbol>
+					<local_variable>v</local_variable>
+					<symbol>)</symbol> removes the first occurrence of
+					<local_variable>v</local_variable> in
+					<local_variable>s</local_variable>
+				</code>, if any.
+			</item>
+			<item>
+				<code>
+					<local_variable>s</local_variable>
+					<symbol>.</symbol>prune_all
+					<symbol>(</symbol>
+					<local_variable>v</local_variable>
+					<symbol>)</symbol> removes all occurrences of
+					<local_variable>v</local_variable>
+				</code>.
+			</item>
+		</list>
+		<paragraph>These procedures have various abstract preconditions:
+			<code>
+				<local_variable>s</local_variable>
+				<symbol>.</symbol>extendible for additions,
+				<local_variable>s</local_variable>
+				<symbol>.</symbol>writable for replacements,
+				<local_variable>s</local_variable>
+				<symbol>.</symbol>
+			</code>prunable for removals. Properties extendible and prunable characterize general categories of container structures rather than individual instances; for example extendible is always true for the ?dynamic? structures seen below. In contrast, writable depends on the current status of each instance. In general writable will be true if there is an item at the current position.
+		</paragraph>
+		<heading>
+			<size>2</size>Chains
+		</heading>
+		<paragraph>Chains are sequences with a few more properties: items may be accessed through their indices, and it is possible to define cursor objects attached to individual items.
+			<line_break/> Class CHAIN is an heir of SEQUENCE. It gets its access properties from CURSOR_STRUCTURE (which adds the notion of cursor to the features of ACTIVE, already present in SEQUENCE) and is also an heir of INDEXABLE. This ancestry implies in particular the presence of the following features:
+		</paragraph>
+		<list ordered="false">
+			<item>cursor, from CURSOR_STRUCTURE, which makes it possible to keep a reference to an item of the structure.</item>
+			<item>i_th and put_i_th from TABLE, via INDEXABLE, which make it possible to access and replace the value of an item given by its integer index.</item>
+		</list>
+		<paragraph>These features were called item and put in TABLE, but are renamed here to remove the conflict with homonymous features from SEQUENCE.
+			<line_break/> Procedure put for chains is the version obtained from CURSOR_STRUCTURE, which has the same effect as replace - replacing the value of the item at cursor position. The put procedure from SEQUENCE is renamed sequence_ put. This feature is not exported by CHAIN, however, since its effect (adding an item at the end) may be obtained through the simpler name extend.
+		</paragraph>
+		<heading>
+			<size>2</size>Dynamic chains
+		</heading>
+		<paragraph>By default, chains can only be extended at the end, through extend and sequence_ put. Of particular interest are those chains where clients can insert and remove items at any position. Such chains are said to be dynamic, and described by CHAIN?s heir DYNAMIC_CHAIN. The new features are predictable:</paragraph>
+		<list ordered="false">
+			<item>Procedure put_front adds an item before the first. (As noted, the procedures to add an item after the last are already available in chains.)</item>
+			<item>Procedures put_left and put_right add an item at the left and right of the cursor position.</item>
+			<item>Procedures remove_left and remove_right remove an item at the left and right or the cursor position.</item>
+			<item>Procedures merge_left and merge_right are similar to put_left and put_right but insert another dynamic chain rather than a single item. As the word 'merge' suggests, the merged structure, passed as argument, does not survive the process; it is emptied of its items. To preserve it, perform a clone or copy before the merge operation.</item>
+		</list>
+		<paragraph>The class also provides implementations of prune, prune_all and wipe_out from
+			<link>
+				<url>../../reference/structures/access/collection_chart.html</url>
+				<label>COLLECTION</label>
+			</link>. To make these implementations useful, it defines queries extendible and prunable so that they return the value true.
+		</paragraph>
+		<heading>
+			<size>1</size>Lists And Circular Structures
+		</heading>
+		<paragraph>A chain is a finite sequential structure. This property means that items are arranged in a linear order and may be traversed from the first to the last. To do this you may use a loop of the form shown above, based on procedures start and forth.
+			<line_break/> This property leaves room for several variants. In particular chains may be straight or circular.
+		</paragraph>
+		<list ordered="false">
+			<item> A straight chain, which from now on will be called a list, has a beginning and an end.</item>
+			<item> A circular chain, as represented by class CIRCULAR and its descendants, has a much more flexible notion of first item. It is organized so that every item has a successor.</item>
+		</list>
+		<paragraph>This representation is conceptual only; in fact the implementations of circular chains found in the Base libraries are based on lists, implemented in one of the ways described below (in particular linked and arrayed).
+			<line_break/>  The major originality of circular chains is that unless the structure is empty procedure forth is always applicable: it will cycle past the last item, coming back to the
+			<line_break/>  first. The symmetric property applies to back. The cyclic nature of forth and back for circular chains is expressed precisely by the assertions. The version of forth for class CHAIN, which comes from LINEAR, has precondition
+		</paragraph>
+		<code_block>notafter</code_block>
+		<paragraph>Similarly, the precondition for back is</paragraph>
+		<code_block>notbefore</code_block>
+		<paragraph>For lists, after becomes true when the cursor moves past the last item. For circular chains, however, after and before are never true except for an empty structure; this is expressed by the invariant clauses of class CIRCULAR:</paragraph>
+		<code_block>
+			Mssing
+		</code_block>
+		<paragraph>For a non-empty circular chain, then, you can circle forever around the items, using forth or back.</paragraph>
+		<heading>
+			<size>2</size>Choosing the first item
+		</heading>
+		<paragraph>For a list, the first and last items are fixed, and correspond to specific places in the physical representation.
+			<line_break/>  A circular chain also needs a notion of first item, if only to enable a client to initiate a traversal through procedure start. Similarly, there is a last item - the one just before the first in a cyclic traversal. (If the chain has just one item, it is both first and last.)
+			<line_break/> For circular chains, however, there is no reason why the first item should always remain the same. One of the benefits that clients may expect from the use of a circular
+			<line_break/> structure is the ability to choose any item as the logical first. Class CIRCULAR offers for that purpose the procedure set_start which designates the current cursor position as the first in the circular chain. Subsequent calls to start will move the cursor to this position; calls to finish will move the cursor to the cyclically preceding position. With most implementations, there will then be two notions of first position: the logical first, which clients may freely choose through calls to set_start; and the physical first, which results from the implementation. In a representation using an array with indices from 1 to capacity, for example, the physical first is position 1, and the logical first may be any index in the permitted range. In a linked representation, there will be a cell first element corresponding to the physical first, but the logical first is any cell in the chain.
+			<line_break/>  In such cases the circular chain classes have features called
+			<code>
+				<feature_name>standard_first</feature_name>
+			</code>,
+			<code>
+				<feature_name>standard_last</feature_name>
+			</code>,
+			<code>
+				<feature_name>standard_start</feature_name>
+			</code> and so on, which are not exported (so that you will not see them in the flat-short forms) but serve to implement visible features such as first, last and forth. For example a possible implementation of forth for circular chains is
+		</paragraph>
+		<code_block>Missing
+		</code_block>
+		<heading>
+			<size>2</size>Traversing a list or circular chain
+		</heading>
+		<paragraph>The properties of forth for circular chains imply that a traversal loop written as</paragraph>
+		<code_block>	Missing
+		</code_block>
+		<paragraph>would not work if
+			<code>
+				<local_variable>lin</local_variable>
+			</code> is a non-empty circular structure: off would never become true, so that the loop would forever cycle over the structure?s items. The same would apply to a loop using finish and back instead of start and forth. This behavior is the natural result of the semantics defined for off , forth and back for circular structures. But it prevents us from using these features to perform a single traversal which will visit every item once.
+			<line_break/> Using exhausted in lieu of off solves this problem. In class CIRCULAR, exhausted is an attribute which is set to false by start and finish, and is set to true by forth when advancing from the last item to the first and by back when backing up from the first item to the last. So you should write the loop as
+		</paragraph>
+		<code_block>	Missing
+		</code_block>
+		<paragraph>This form is applicable to all linear structures, circular or not, since exhausted is introduced in class LINEAR as a function which returns the same value as off .Its redefinition into an attribute, modified by start, finish, forth and back, does not occur until class CIRCULAR.
+			<line_break/> Because exhausted is more general than off , the iteration scheme just given (and its equivalent going backwards) is preferable to the earlier one using off , especially if there is any chance that the iteration might one day be applied to a lin structure that is circular. Classes of the Iteration library, in particular LINEAR_ITERATOR, rely on this scheme for iterating over linear structures.
+		</paragraph>
+		<heading>
+			<size>2</size>Dynamic structures
+		</heading>
+		<paragraph>For both lists and circular chains, the most flexible variants, said to be dynamic, allow insertions and deletions at any position.
+			<line_break/>  The corresponding classes are descendants of DYNAMIC_LIST and DYNAMIC_CIRCULAR, themselves heirs of DYNAMIC_CHAIN studied above.
+			<line_break/>
+		</paragraph>
+		<heading>
+			<size>2</size>Infinite sequences
+		</heading>
+		<paragraph>Class COUNTABLE_SEQUENCES, built by inheritance from COUNTABLE, LINEAR and ACTIVE, is similar to SEQUENCE but describes infinite rather than finite sequences.</paragraph>
+		<heading>
+			<size>1</size>Implementations
+		</heading>
+		<paragraph>We have by now seen the concepts underlying the linear structures of the Base libraries, especially lists and circular chains. Let us look at the techniques used to implement them.</paragraph>
+		<heading>
+			<size>2</size>Linked and arrayed implementations
+		</heading>
+		<paragraph>Most of the implementations belong to one of four general categories, better described
+			<line_break/> as two categories with two subcategories each:
+		</paragraph>
+		<list ordered="false">
+			<item>Linked implementations, which may be one-way or two-way.</item>
+			<item>Arrayed implementations, which may be resizable or fixed.</item>
+		</list>
+		<paragraph>A linked implementation uses linked cells, each containing an item and a reference to the next cell. One-way structures are described by classes whose names begin with LINKED_, for example LINKED_LIST. Two-way structures use cells which, in addition to the reference to the next cell, also include a reference to the previous one. Their names begin with TWO_WAY_.
+			<line_break/> An arrayed implementation uses an array to represent a linear structure. If the array is resizable, the corresponding class name begins with ARRAYED_, for example
+			<line_break/>ARRAYED_LIST; if not, the prefix is FIXED_.
+		</paragraph>
+		<heading>
+			<size>2</size>Linked structures
+		</heading>
+		<paragraph>A linked structure requires two classes: one, such as LINKED_LIST, describes the list proper; the other, such as LINKABLE, describes the individual list cells. The figure should help understand the difference; it describes a linked list, but the implementation of linked circular chains is similar.</paragraph>
+		<image>
+			<url>linked_list.png</url>
+		</image>
+		<paragraph>fig.3: Linked list and linked cells</paragraph>
+		<paragraph> The instance of type LINKED_LIST shown at the top contains general information about the list, such as the number of items (count) and a reference to the first element (first). Because lists are active structures with a notion of current position, there is also a reference active to the cell at the current position. An entity declared as</paragraph>
+		<code_block>
+			Missing
+		</code_block>
+		<paragraph>will have as its run-time value (if not void) a reference to such an object, which is really a list header. The actual list content is given by the LINKABLE instances, each of which contains a value of type
+			<code>
+				<class_name>SOME_TYPE</class_name>
+			</code> and a reference to the next item, called right.
+			<line_break/> Clearly, a header of type LINKED_LIST
+			<code>
+				<symbol>[</symbol>
+			</code>
+			<code>
+				<class_name>SOME_TYPE</class_name>
+			</code>
+			<code>
+				<symbol>]</symbol> will be associated with cells of type LINKABLE
+				<symbol>[</symbol>
+			</code>
+			<code>
+				<class_name>SOME_TYPE</class_name>
+			</code>
+			<code>
+				<class_name>SOME_TYPE</class_name>
+			</code>.
+			<line_break/> Features such as active and first are used only for the implementation; they are not exported, and so you will not find them in the flat-short specifications, although the figures show them to illustrate the representation technique.
+			<line_break/>  A similar implementation is used for two-way-linked structures such as two-way lists and two-way circular chains.
+		</paragraph>
+		<image>
+			<url>two_way_list.png</url>
+		</image>
+		<paragraph>fig.4: Two way linked list</paragraph>
+		<heading>
+			<size>2</size>Linked cells
+		</heading>
+		<paragraph> The classes describing list cells are descendants of a deferred class called CELL, whose features are:</paragraph>
+		<list ordered="false">
+			<item>item, the contents of the cell.</item>
+			<item>put
+				<code>
+					<symbol>(</symbol>
+					<local_variable>v</local_variable>
+					<symbol>:</symbol>
+				</code>
+				<code>
+					<keyword>like</keyword>
+				</code>
+				<code>
+					<feature_name>item</feature_name>
+				</code>
+				<code>
+					<symbol>)</symbol>
+				</code>, which replaces the contents of the cell by a new value.
+			</item>
+		</list>
+		<paragraph> Class LINKABLE is an effective descendant of CELL, used for one-way linked structures. It introduces features right, a reference to another cell to which the current
+			<line_break/> cell will be linked. Two-way linked structures use BI_LINKABLE, an heir of LINKABLE which to the above features adds left, a reference to the preceding cell in the structure.
+		</paragraph>
+		<warning>
+			<bold>Caution</bold>: Do not confuse the item feature of CELL and its descendants, such as LINKABLE, with the item feature of the classes describing linear structures, such as LINKED_LIST. For a linked list, item returns the item at cursor position.
+		</warning>
+		<paragraph>It may be implemented as</paragraph>
+		<code_block>		Missing
+		</code_block>
+		<paragraph>using the item feature of LINKABLE, applied to active.</paragraph>
+		<heading>
+			<size>2</size>One-way and two-way linked chains
+		</heading>
+		<paragraph>If you look at the interfaces of one-way and two-way linked structures, you will notice that they are almost identical. This is because it is possible to implement features such as back for one-way structures such as described by LINKED_LIST and LINKED_CIRCULAR. A simple implementation of back stores away a reference to the current active item, executes start, and then performs forth until the item to the right of the cursor position is the previous active.
+			<line_break/> Although correct, such an implementation is of course rather inefficient since it requires a traversal of the list. In terms of algorithmic complexity, it is in O (count), meaning that its execution time is on the average proportional to the number of items in the structure. In contrast, forth is O (1), that is to say, takes an execution time bounded by a constant.
+		</paragraph>
+		<warning>
+			<bold>Caution</bold>: As a consequence, you should not use one-way linked structures if you need to execute more than occasional back operations (and other operations requiring access to previous items, such as remove_left).
+		</warning>
+		<paragraph>Two-way linked structures, such as those described by TWO_WAY_LIST and TWO_WAY_CIRCULAR, treat the two directions symmetrically, so that back will be just as efficient as forth. Hence the following important advice: If you need to traverse a linked structure both ways, not just left to right, use the
+			<code>
+				<class_name>TWO_WAY_</class_name>
+			</code> classes, not the
+			<code>
+				<class_name>LINKED_</class_name>
+			</code> versions. The
+			<code>
+				<class_name>TWO_WAY_</class_name>
+			</code> structures will take up more space, since they use BI_LINKABLE rather than LINKABLE cells, but for most applications this space penalty is justified by the considerable gains in time that will result if right-to-left operations are frequently needed.
+		</paragraph>
+		<heading>
+			<size>2</size>Arrayed chains
+		</heading>
+		<paragraph> Arrayed structures as described by ARRAYED_LIST, FIXED_LIST and ARRAYED_CIRCULAR use arrays for their implementations. A list or circular chain of count items may be stored in positions 1 to count of an array of capacity items, where capacity &gt;= count.
+			<line_break/>  An instance of FIXED_LIST, as the name suggests, has a fixed number of items. In particular:
+		</paragraph>
+		<list ordered="false">
+			<item>Query extendible has value false for FIXED_LIST: you may replace existing items, but not add any, even at the end. A FIXED_LIST is created with a certain number of items and retains that number.</item>
+			<item>As a result, FIXED_LIST joins the deferred feature count of LIST with the feature count of ARRAY, which satisfies the property count = capacity.</item>
+			<item>Query prunable has value false too: it is not possible to remove an item from a fixed list.</item>
+		</list>
+		<paragraph>In contrast, ARRAYED_LIST has almost the same interface as LINKED_LIST. In particular, it is possible to add items at the end using procedure extend; if the call causes the list to grow beyond the current array's capacity, it will trigger a resizing. This is achieved by using the procedure force of class ARRAY to implement extend. ARRAYED_LIST even has the insertion procedures (put_front, put_left, put_right) and removal procedures (prune, remove, remove_left, remove_right) that apply to arbitrary positions and appear in the linked implementations. These procedures, however, are rather inefficient, since they usually require moving a whole set of array items, an O (count) operation. (Procedure extend does not suffer from this problem, since it is easy to add an item to the end of an array, especially if there is still room so that no resizing is necessary.)</paragraph>
+		<warning>
+			<bold>Caution</bold>: The situation of these features in ARRAYED_LIST is similar to the situation of back in classes describing one-way linked structures: it is convenient to include them because they may be needed once in a while and an implementation exists; but using them more than occasionally may result in serious inefficiencies. If you do need to perform arbitrary insertions and removal, use linked structures, not arrayed ones.
+		</warning>
+		<paragraph>Arrayed structures, however, use up less space than linked representations. So they are appropriate for chains on which, except possibly for insertions at the end, few insertion and removal operations or none at all are expected after creation. FIXED_LIST offers few advantages over ARRAYED_LIST. FIXED_LIST may be useful, however, for cases in which the fixed number of items is part of the specification, and any attempt to add more items must be treated as an error. For circular chains only one variant is available, ARRAYED_CIRCULAR, although writing a
+			<code>
+				<class_name>FIXED_</class_name>
+			</code> version would be a simple exercise.
+		</paragraph>
+		<heading>
+			<size>2</size>Multi-arrayed lists
+		</heading>
+		<paragraph>For lists one more variant is available, combining some of the advantages of arrayed and linked implementations: MULTI_ARRAY_LIST. With this implementation a list is
+			<line_break/> divided into a number of blocks. Each block is an array, but the successive arrays are linked.
+		</paragraph>
+		<heading>
+			<size>1</size>Sorted Linear Structures
+		</heading>
+		<paragraph>The class COMPARABLE_STRUCT, an heir of BILINEAR, is declared as</paragraph>
+		<code_block>Missing
+		</code_block>
+		<paragraph>As indicated by the constrained generic parameter it describes bilinear structures whose items may be compared by a total order relation.</paragraph>
+		<warning>
+			<bold>Caution</bold>: Note that the class name, chosen for brevity?s sake, is slightly misleading: it is not the structures that are comparable but their items.
+		</warning>
+		<paragraph>COMPARABLE_STRUCT introduces the features min and max, giving access to the minimum and maximum elements of a structure; these are always present for a finite
+			<line_break/> structure with a total order relation. SORTED_STRUCT, an heir of COMPARABLE_STRUCT, describes structures that can be sorted; it introduces the query sorted and the command sort.
+			<line_break/> The deferred class PART_SORTED_LIST describes lists whose items are kept ordered in a way that is compatible with a partial order relation defined on them. The class is declared as
+		</paragraph>
+		<code_block>
+			Missing
+		</code_block>
+		<paragraph>An implementation based on two-way linked lists is available through the effective heir SORTED_TWO_WAY_LIST.
+			<line_break/> The deferred class SORTED_LIST, which inherits from PART_SORTED_LIST, assumes that the order relation on G is a total order. As a result, the class is able to introduce features min, max and median. Here too a a two-way linked list implementation is available, through the effective class SORTED_TWO_WAY_LIST
+		</paragraph>
+	</paragraph></document>

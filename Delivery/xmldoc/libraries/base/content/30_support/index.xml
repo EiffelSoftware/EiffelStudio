@@ -1,0 +1,142 @@
+<document title="EiffelBase Support Cluster">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Class Libraries\EiffelBase\EiffelBase</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>The support cluster offers some commonly needed functionality that do not belong to the kernel.</paragraph>
+		<heading>
+			<size>2</size>Conversions, mathematical properties and ASCII characters
+		</heading>
+		<paragraph>A few utility classes complement the 
+			<link>
+				<url>../10_kernel/index.html</url>
+				<label>kernel</label>
+			</link> facilities. PRIMES, RANDOM and FIBONACCI are part of the data structure taxonomy; the others are meant to be used as ancestors by  classes needing their features.
+		</paragraph>
+		<paragraph>Two classes provide basic mathematical functions such as logarithms and trigonometric functions: SINGLE_MATH for single precision and DOUBLE_MATH for the double-precision variants. MATH_CONST contains mathematical constants: 
+			<code>
+				<symbol>p</symbol>
+			</code>, the square root of two, Euler's constant 
+			<code>
+				<symbol>e</symbol>
+			</code>.
+		</paragraph>
+		<paragraph>PRIMES, RANDOM and FIBONACCI are data structure classes - heirs of COUNTABLE_SEQUENCE. In all of these classes function i_th takes an integer argument 
+			<code>
+				<local_variable>i</local_variable>
+			</code> and will return the i-th element of the sequence under consideration - prime numbers, pseudo-random numbers or Fibonacci numbers. These sequences are active structures, on which forth will advance the current position and item will return the value at the current position. A few other features are specific to each case: for example  higher_prime will yield the smallest prime greater than or equal to a certain value, and set_seed will define the seed to be used for starting the pseudo-random sequence.
+		</paragraph>
+		<heading>
+			<size>2</size>Internal object structures
+		</heading>
+		<paragraph>Class INTERNAL provides low-level access to internal object structures. It, too, is meant to be used as ancestor by classes needing its features.
+			<line_break/> Here are some of the most useful calls and what they yield, 
+			<code>
+				<local_variable>obj</local_variable>
+			</code> being an entity attached to an object 
+			<code>
+				<local_variable>O</local_variable>
+			</code> and 
+			<code>
+				<local_variable>i</local_variable>
+			</code> an integer:
+		</paragraph>
+		<list ordered="false">
+			<item>class_name (obj):  the name of the generator class for O.</item>
+			<item>dynamic_type
+				<code>
+					<symbol>(</symbol>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code>:  the integer code for the type of 
+				<code>
+					<local_variable>O</local_variable>
+				</code>,  where each type in a system is identified by a unique code.
+			</item>
+			<item>field_count
+				<code>
+					<symbol>(</symbol>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code>:  the number of fields in 
+				<code>
+					<local_variable>O</local_variable>
+				</code>.
+			</item>
+			<item>physical_size
+				<code>
+					<symbol>(</symbol>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code>: the space occupied by 
+				<code>
+					<local_variable>O</local_variable>
+				</code>, in bytes.
+			</item>
+			<item>
+				<code>
+					<feature_name>field_xx</feature_name>
+				</code>
+				<code>
+					<symbol>(</symbol>
+					<local_variable>i</local_variable>
+				</code>,  
+				<code>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code> where  
+				<code>
+					<feature_name>xx</feature_name>
+				</code> is name or offset: name or offset of the i-th field of  
+				<code>
+					<local_variable>O</local_variable>
+				</code>.
+			</item>
+			<item>field
+				<code>
+					<symbol>(</symbol>
+					<local_variable>i</local_variable>
+				</code>, 
+				<code>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code>:  the value of the i-th field of , if a reference; declared of type  ANY  in the class.
+			</item>
+			<item>
+				<code>
+					<feature_name>yy_field</feature_name>
+				</code>
+				<code>
+					<symbol>(</symbol>
+					<local_variable>i</local_variable>
+				</code>, 
+				<code>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code> where  
+				<code>
+					<feature_name>yy</feature_name>
+				</code> is boolean, character, integer, real or double: the value  of the i-th field of 
+				<code>
+					<local_variable>O</local_variable>
+				</code>, if of the corresponding type; each declared of the  appropriate type in the class.
+			</item>
+			<item>is_special
+				<code>
+					<symbol>(</symbol>
+					<local_variable>obj</local_variable>
+					<symbol>)</symbol>
+				</code>, a boolean query which indicates whether 
+				<code>
+					<local_variable>O</local_variable>
+				</code> is a special object  (the sequence of values representing the elements of an array or the characters of  a string).
+			</item>
+		</list>
+		<warning>
+			<bold>CAUTION:</bold> Only very special cases justify the use of this class. Unless you are writing the lowest level of an interface between an Eiffel application and external tools (such as a database management system), and this requires passing to those tools information about the internals of Eiffel objects, you almost certainly should not use INTERNAL. 
+		</warning>
+	</paragraph></document>

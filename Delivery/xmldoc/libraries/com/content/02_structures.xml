@@ -1,0 +1,39 @@
+<document output="studio" title="Structures">
+	<meta_data/>
+	<paragraph>
+		<paragraph>A 
+			<link>
+				<url>../reference/structures/index.html</url>
+				<label>Structures</label>
+			</link>         cluster includes wrappers for COM structures and additional         data structures.
+		</paragraph>
+		<heading>
+			<size>2</size>ECOM_ARRAY
+		</heading>
+		<paragraph>ECOM_ARRAY is multidimensional, resizable array. It is    converted to SAFEARRAY at the COM runtime level. Most languages support    only SAFEARRAYs of OLE automation types.</paragraph>
+		<heading>
+			<size>2</size>ECOM_EXCEPTION
+		</heading>
+		<paragraph>ECOM_EXCEPTION provides support for triggering and catching    exceptions. According to the COM specification, every feature of a    COM interface should return a status code of type HRESULT. HRESULT    is a 32 bit integer. The COM specification defines possible    exception codes and corresponding human-readable    descriptions.</paragraph>
+		<paragraph>The status code is mapped by the EiffelCOM runtime to Eiffel    exceptions. To raise    COM-specific exceptions, the class ECOM_EXCEPTION provides feature    trigger:</paragraph>
+		<code_block>Missing Code block</code_block>
+		<paragraph>The class also has several features that help to interpret exceptions    and error codes received from the COM runtime. </paragraph>
+		<code_block>Missing Code Block</code_block>
+		<paragraph>Every call to the COM layer should be wrapped    into the
+			<code>
+				<keyword>rescue</keyword>
+			</code>-clause as following:
+		</paragraph>
+		<code_block>Missing Code Block</code_block>
+		<heading>
+			<size>2</size>ECOM_STRUCTURE
+		</heading>
+		<paragraph>ECOM_STRUCTURE is a deferred class, which inherit from WEL_STRUCTURE.    All wrappers of COM structures inherit from ECOM_STRUCTURE. </paragraph>
+		<heading>
+			<size>2</size>ECOM_VARIANT
+		</heading>
+		<paragraph>ECOM_VARIANT is a wrapper of the VARIANT structure. VARIANT is    Visual Basic equivalent of ANY. In Visual Basic variable of any    type conforms to VARIANT. Since semantics and binary layout of Visual Basic    is different from those of Eiffel, there is no simple way to    map VARIANT to ANY. Instead, we created a simple wrapper of the VARIANT    structure. </paragraph>
+		<paragraph>It has the feature </paragraph>
+		<code_block>Missing code block</code_block>
+		<paragraph>which specifies the type of the wrapped variable. The class has    multiple feature for typed access and setting of variables. </paragraph>
+	</paragraph></document>

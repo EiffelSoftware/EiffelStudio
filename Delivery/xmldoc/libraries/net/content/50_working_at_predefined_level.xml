@@ -1,0 +1,121 @@
+<document output="studio" title="Working at predefined level">
+	<meta_data/>
+	<paragraph>
+		<table>
+			<row>
+				<cell>The example classes discussed in this section appear in the        subdirectory 
+					<italic>predef </italic>of the example directory
+				</cell>
+			</row>
+		</table>
+		<paragraph>The first example shows how to use the predefined level classes,    covering many common client-server schemes. The work needed in this case    is minimal: just effect or redefine a few routines describing the    specific processing that your client and your server require.</paragraph>
+		<heading>
+			<size>3</size>The example
+		</heading>
+		<paragraph>The example describes a simple communication protocol. The client    sends to the server a list of strings, which together form the message 
+			<italic>"This    is my test"</italic>; the server receives the corresponding object    structure, appends to it one more element - the string 
+			<italic>"I'm    back"</italic> - and returns the result to the client, which will accept    it and print it. The server increases a counter each time it closes a    connection with a client, and will only accept three connections.
+		</paragraph>
+		<heading>
+			<size>3</size>Object structures
+		</heading>
+		<paragraph>As noted above, it is possible with sockets, as any other IO_MEDIUM,    to send and receive simple objects such as integers. But for this first    example we are already more ambitious and want to exchange entire linked    lists of strings. The structures that we will exchange are described by    the following class:    
+			<code_block>Missing code</code_block>
+			<paragraph>Note that to make use of the storage and retrieval facilities the    objects to be exchanged must be instances of a class which, as here, is    a descendant of STORABLE.</paragraph>
+			<heading>
+				<size>3</size>Application classes and system structure
+			</heading>
+			<paragraph>The client and server mechanisms will be described by instances of    two classes that make up the example, called OUR_CLIENT and OUR_SERVER.</paragraph>
+			<paragraph>We want to have the two communicating systems be two different    systems (compiled separately, with two separate Ace files). OUR_CLIENT
+				<italic/>will be part of one of these systems; OUR_SERVER
+				<italic/>will be part    of the other.
+			</paragraph>
+			<paragraph>There are four predefined classes, corresponding to the client and    server sides with, in each case, the choice between the "Unix"    (single-machine) and "network" (multi-machine) styles of    communication. Note that all these classes support stream communication;    for datagrams, see 
+				<link>
+					<url>70_datagram_sockets.html</url>
+					<label>using datagram sockets</label>
+				</link>.    The server class should inherit from UNIX_SERVER    or 
+				<link>
+					<url>../reference/network/client_server/network_server_chart.html</url>
+					<label>NETWORK_SERVER</label>
+				</link>;    the client class should inherit from UNIX_CLIENT    or NETWORK_CLIENT.    The choice between UNIX_ and NETWORK_ classes must of course be the same    on both sides.
+			</paragraph>
+			<heading>
+				<size>3</size>The client
+			</heading>
+			<paragraph>Here is the client class:    
+				<code_block>Missing code</code_block>&gt;
+				<paragraph>The scheme is very simple:    
+					<list ordered="false">
+						<item>The inherited procedure 
+							<italic>make</italic> takes care of the many details      of creating a socket and setting up the communication; the following      sections will give some insight into what this involves. The      argument to 
+							<italic>make</italic> is the path name that has been selected to      enable communication with the server: 
+							<italic>/tmp/here</italic>.
+						</item>
+						<item>The client has defined a procedure 
+							<italic>build_list</italic> to construct      an object structure.
+						</item>
+						<item>It then uses the inherited procedure 
+							<italic>send</italic> to send this      object structure to the server; 
+							<italic>send</italic> expects an argument of a      type conforming to STORABLE,      so that it can use all the predefined storage and retrieval      facilities.
+						</item>
+						<item>The 
+							<italic>receive</italic> procedure, called next, obtains an object      structure from the server; here, as will be seen from the server's      text below, this is the original list to which the server has      appended a new element. The result of procedure 
+							<italic>receive</italic> is      available through feature 
+							<italic>received</italic>. To avoid the need for an      assignment attempt (as with the result of a 
+							<italic>retrieve</italic>      operation with STORABLE)      the class redefines 
+							<italic>received</italic> to be of type STORABLE.
+						</item>
+						<item>The client has defined a procedure 
+							<italic>process_received</italic> to      print the received string.
+						</item>
+						<item>Finally, a call to 
+							<italic>cleanup </italic>is necessary to close the      sockets that have been opened and free the corresponding resources.
+						</item>
+					</list>
+					<paragraph>Of course, in a typical object-oriented design, the class and those    which appear in the rest of this set of examples may "do" more    than one thing and so may have more routines than the ones shown in this    document.</paragraph>
+					<paragraph>This example shows how to write a client class in the most common    cases: inherit from UNIX_CLIENTor    NETWORK_CLIENT;    use 
+						<italic>make</italic> to specify the socket address, 
+						<italic>send</italic> to send an    object structure, 
+						<italic>receive </italic>to receive an object structure, 
+						<italic>received</italic>    to access it, and 
+						<italic>cleanup </italic>to clean things up.
+					</paragraph>
+					<paragraph>There would be one difference for a NETWORK_CLIENT:    procedure 
+						<italic>make</italic> would need two arguments, the name of a host and a    port on that host. For example, to connect to a server running on a    machine of name 
+						<italic>serverhost </italic>and using port 2000, the call would    be:    
+						<paragraph>make ("serverhost", 2000)</paragraph>
+						<paragraph>As noted earlier, you may identify the machine by an Internet address    such as 
+							<italic>"127.0.0.1"</italic> rather than by a host name.
+						</paragraph>
+						<heading>
+							<size>3</size>The server
+						</heading>
+						<paragraph>Now, the server class:    
+							<code_block>Missing code</code_block>
+							<paragraph>The developer's task is even easier here than on the client side. The    last instruction in the creation procedure is 
+								<italic>execute</italic>, inherited    from the chosen _SERVER
+								<italic/>class, which executes a loop that will    repeatedly call 
+								<italic>receive</italic>, 
+								<italic>process_message</italic>, 
+								<italic>respond</italic>    and 
+								<italic>close</italic>. This loop is actually an infinite one, which will only    terminate if the server is killed (in which case a Rescue clause will    execute procedure 
+								<italic>cleanup</italic>); indeed, a server is not expected to    terminate under normal circumstances.
+							</paragraph>
+							<paragraph>To define a server's behavior as desired for your particular    application, all you are required to do is to effect the procedure 
+								<italic>process_message</italic>,    inherited from the _SERVER class in deferred form. (Remember that to    "effect" a deferred feature is to provide a non-deferred    version, also called an effective version.) Here the effective version    prints the list of strings received from the client.
+							</paragraph>
+							<paragraph>In addition, you may also, as here, redefine procedure 
+								<italic>respond</italic>.    In the _SERVER class this procedure is effective, but it does nothing;    this means that you have nothing special to do for the common case in    which the server does not respond when it has received a message. Here,    however, we do want to respond; the redefined version of 
+								<italic>respond</italic>    extends the 
+								<italic>received</italic> string and returns it. Procedure 
+								<italic>resend</italic>    sends an object structure back to the last connected client. It is also    possible to have more sophisticated versions of 
+								<italic>respond</italic>, for    example to dispatch objects to all active clients; this will be shown in    a later example
+							</paragraph>
+							<paragraph>As in the client case there is a cleanup procedure to free the    sockets, but you do not need to call it explicitly; it is called by    execute. You may redefine this procedure to free some additional    resources of your own.</paragraph>
+						</paragraph>
+					</paragraph>
+				</paragraph>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

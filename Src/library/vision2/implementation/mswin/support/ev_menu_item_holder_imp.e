@@ -43,7 +43,7 @@ feature -- Element change
 			else
 				iid := 1
 			end
-			ev_children.extend (item_imp, iid)
+			ev_children.force (item_imp, iid)
 			submenu.append_string (item_imp.text, ev_children.count)
 			item_imp.set_id (iid)
 			item_imp.set_position (submenu.count - 1)

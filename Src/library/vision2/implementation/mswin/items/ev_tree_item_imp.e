@@ -139,7 +139,7 @@ feature -- Element change
 			tree.insert_item (insert_struct)
 			item_imp.set_h_item (tree.last_item)
 			ev_tree ?= wel_window
-			ev_tree.ev_children.extend (item_imp, tree.last_item)
+			ev_tree.ev_children.force (item_imp, tree.last_item)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is

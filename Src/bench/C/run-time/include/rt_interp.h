@@ -229,6 +229,7 @@ extern "C" {
 
 #define MAX_CODE                201     /* Maximum legal byte code */
 
+extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
 #ifdef __cplusplus
 }

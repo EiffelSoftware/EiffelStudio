@@ -37,7 +37,7 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_eiffel.h"
-#include "eif_interp.h"
+#include "rt_interp.h"
 #include "eif_memory.h"
 #include "eif_debug.h"
 #include "x2c.h"	/* For macro LNGPAD */

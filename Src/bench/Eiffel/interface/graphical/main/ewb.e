@@ -52,7 +52,6 @@ feature
 			temp: STRING
 		do
 			if not retried then
-rescue_status.set_fail_on_rescue (True)
 					-- Check that environment variables
 					-- are properly set.
 				temp := env_variable ("EIFFEL3");

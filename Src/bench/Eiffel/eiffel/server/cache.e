@@ -17,8 +17,8 @@ feature
 			-- Creation
 		do
 			queue_make (Cache_size);
-	--		in_index := 1;
-	--		out_index := 1;
+			in_index := 0;
+			out_index := 0;
 		end;
 
 	Cache_size: INTEGER is
@@ -67,20 +67,14 @@ feature -- Cache manipulations
 					-- a circular list: `out_index' is the index of the 
 					-- out_index id of the queue, `in_index' is the next index
 					-- for insertion
-				size := capacity;
+				size := capacity+1;
 				i := out_index;
 			until
 				i = in_index or else stop
 			loop
 				j := i;
-				if i_th (i) /= Void then
-					stop := i_th (i).id = an_id;
-				end
-				if i = size then
-					i := lower
-				else
-					i := i + 1
-				end
+				stop := i_th (i).id = an_id;
+				i := (i + 1) \\ size
 			end;
 			if stop then
 				Result := j;
@@ -106,16 +100,10 @@ feature -- Cache manipulations
 					size := capacity + 1;
 					i := position;
 					last_index := (in_index - 1 + size) \\ size;
-					if last_index = 0 then
-						last_index := lower
-					end
 				until
 					i = last_index
 				loop
 					j := (i + 1) \\ size;
-					if j = 0 then
-						j := lower
-					end
 					put_i_th (i_th (j),i);
 					i := j;
 				end;

@@ -13,7 +13,10 @@ feature
 		local
 			ewb_cmd: EWB_CMD
 		do
-			!!Result.make (1,6)
+			!!Result.make (1,7)
+
+			!EWB_ARGS! ewb_cmd;
+			Result.add_entry (ewb_cmd)
 
 			!EWB_F_COMPILE! ewb_cmd;
 			Result.add_entry (ewb_cmd)

@@ -67,16 +67,16 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_row: INTEGER; a_column: INTEGER): EV_GRID_ITEM is
+	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
 			-- Cell at `a_row' and `a_column' position
 		require
 			not_destroyed: not is_destroyed
-			a_row_positive: a_row > 0
-			a_row_less_than_row_count: a_row <= row_count
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
+			a_row_positive: a_row > 0
+			a_row_less_than_row_count: a_row <= row_count
 		do
-			Result := implementation.item (a_row, a_column)
+			Result := implementation.item (a_column, a_row)
 		ensure
 			item_not_void: Result /= Void
 		end

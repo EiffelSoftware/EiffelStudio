@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 						Not_implemented)
 			Result.extend (["Not Supported", "general", "Construct is not supported: {1}", Error],
 						Not_supported)
-			Result.extend (["Missing setup key", "general", "Setup keys are missing, installation corrupted", Error],
+			Result.extend (["Missing Setup Key", "general", "Setup keys are missing, installation corrupted", Error],
 						Missing_setup_key)
 			Result.extend (["Missing installation directory", "general", "Installation directory missing from setup keys, installation corrupted", Error],
 						Missing_installation_directory)
@@ -135,6 +135,10 @@ feature {NONE} -- Implementation
 						Cannot_load_type)
 			Result.extend (["Corrupt Installation", "general", "Installation of Codedom Provider is corrupt, please reinstall", Error],
 						Corrupt_installation)
+			Result.extend (["Missing Compiler Key", "general", "Compiler keys are missing, installation corrupted", Error],
+						Missing_compiler_key)
+			Result.extend (["Missing ISE_EIFFEL", "general", "ISE_EIFFEL value is not defined, installation corrupted", Error],
+						Missing_ise_eiffel)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],

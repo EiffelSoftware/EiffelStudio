@@ -38,6 +38,12 @@ feature -- General Errors
 	Corrupt_installation: INTEGER is 10
 			-- Installation is corrupt
 
+	Missing_compiler_key: INTEGER is 11
+			-- Compiler keys in registry are missing
+
+	Missing_ise_eiffel: INTEGER is 12
+			-- ISE_EIFFEL value in registry is missing
+
 feature -- General Warning
 
 	Incorrect_result: INTEGER is 1001

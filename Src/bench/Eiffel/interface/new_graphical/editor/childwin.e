@@ -263,7 +263,7 @@ feature -- Basic operations
 				update
 
 			elseif virtual_key = Vk_Return then
-				cursor.insert_eol (insert_mode)
+				cursor.insert_eol
 				invalidate
 				update
 			else

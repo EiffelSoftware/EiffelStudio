@@ -105,15 +105,13 @@ feature {NONE}
 	showattr_command: SHOW_ATTR_VALUES;
 	showonce_command: SHOW_ONCE_RESULTS;
 	current_target: CURRENT_OBJECT;
-	previous_target: PREVIOUS_TARGET;
-	next_target: NEXT_TARGET;
+	previous_target: PREVIOUS_OBJECT;
+	next_target: NEXT_OBJECT;
 
 	set_default_position is
-		local
-			i: INTEGER;
+			-- Display the window at the cursor position.
 		do
-			i := 10 * window_manager.object_windows_count;
-			set_x_y (500 + i, 40 + i)
+			set_x_y (screen.x, screen.y)
 		end;
 	
 	default_format: FORMATTER is

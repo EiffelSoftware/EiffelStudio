@@ -879,6 +879,25 @@ feature -- Generation Structure
 	public void StartIlGeneration (int TypeID) {
 		CurrentTypeID = TypeID;
 	}
+
+	public void generate_finalize_feature (int feature_id)
+		// Generate `Finalize' feature on Eiffel objects.
+	{
+		MethodBuilder finalize;
+		FEATURE implementation;
+		
+		finalize = ((TypeBuilder) Classes [CurrentTypeID].Builder).DefineMethod ("Finalize",
+				MethodAttributes.Family | MethodAttributes.HideBySig | MethodAttributes.Virtual,
+				VoidType, Type.EmptyTypes);
+
+		implementation = (FEATURE) Classes [CurrentTypeID].StaticFeatureIDTable [feature_id];
+
+		MethodIL = finalize.GetILGenerator();
+		GenerateCurrent();
+		MethodIL.Emit (OpCodes.Call, implementation.method_builder);
+		MethodIL.Emit (OpCodes.Ret);
+	}
+
 	
 	// Generate info about current feature.
 	public void GenerateImplementationFeatureIL (int FeatureID) {
@@ -2077,7 +2096,7 @@ feature -- Private
 	private ModuleBuilder module = null;
 
 	// Number of classes per module
-	private const int Nb_classes_per_module = 20;
+	private const int Nb_classes_per_module = 10000;
 	private int nb_classes_generated = 0;
 	
 	// Current Method IL Generator

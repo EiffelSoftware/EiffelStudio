@@ -354,6 +354,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateImplementationFeatureIL (FeatureID);
 	}
 
+	public void generate_finalize_feature (int feature_id) {
+		core.generate_finalize_feature (feature_id);
+	}
+
 	public void generate_type_feature (int feature_id) {
 		core.generate_type_feature (feature_id);
 	}

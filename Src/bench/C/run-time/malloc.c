@@ -2724,9 +2724,6 @@ rt_shared int full_coalesc(int chunk_type)
 	 */
 	EIF_GET_CONTEXT
 
-#if !defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
-#endif
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
 	register3 int max_coalesced;	/* Size of coalesced block in a chunk */
@@ -2735,18 +2732,6 @@ rt_shared int full_coalesc(int chunk_type)
 	 * If ALL_T is used, then the whole memory is scanned and coalesced.
 	 */
 
-#if !defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
 	switch (chunk_type) {
 	case C_T:						/* Only walk through the C chunks */
 		c = cklst.cck_head;
@@ -2784,16 +2769,6 @@ rt_shared int full_coalesc(int chunk_type)
 	flush;
 #endif
 
-#if !defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	return max_size;		/* Maximum size of coalesced block or 0 */
 
 	EIF_END_GET_CONTEXT

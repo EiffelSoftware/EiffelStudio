@@ -480,21 +480,6 @@ rt_public int acollect(void)
 	int half_tau;					
 	int allocated;					/* Memory used since last full collect */
 #endif	/* EIF_CONDITIONAL_COLLECT */
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;			/* Was this the original entry point? */
-
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
-
 	if (g_data.status & GC_STOP)
 #ifdef DEBUG
 	{
@@ -570,16 +555,6 @@ rt_public int acollect(void)
 
 	nb_calls++;			/* Records the call */
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	return status;		/* Collection done, forward status */
 
 	EIF_END_GET_CONTEXT
@@ -609,20 +584,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
 
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
 	if (g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
 
@@ -765,16 +727,6 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	}
 #endif
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime; 
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	return status;		/* Forward status report */
 
 	EIF_END_GET_CONTEXT
@@ -827,35 +779,12 @@ rt_public void mksp(void)
 	 */
 
 	EIF_GET_CONTEXT
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
 
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
 	if (g_data.status & GC_STOP)
 		return;						/* Garbage collection stopped */
 
 	(void) scollect(mark_and_sweep, GST_PART);
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -2924,35 +2853,11 @@ rt_public void plsc(void)
 	 */
 
 	EIF_GET_CONTEXT
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
-
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -2996,20 +2901,6 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	 */
 
 	EIF_GET_CONTEXT
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
-
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif	
 	if (g_data.status & GC_STOP)
 		return;							/* Garbage collection stopped */
 
@@ -3024,16 +2915,6 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 
 	run_plsc();				/* Normal sequence */
 
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	EIF_END_GET_CONTEXT
 }
 
@@ -3912,32 +3793,7 @@ rt_public int collect(void)
 
 	EIF_GET_CONTEXT
 	int result;
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	int started_here = 0;
-
-	if (prof_recording)
-		if (!gc_running) {
-			double utime, stime;
-
-			gc_running = 1;
-			getcputime(&utime,&stime);
-			last_gc_time = utime + stime;
-			started_here = 1;
-			gc_ran = 1;
-		}
-#endif
 	result = scollect(generational_collect, GST_GEN);
-
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_recording)
-		if (started_here) {			/* Keep track of this run */
-			double utime, stime;
-
-			getcputime(&utime, &stime);
-			last_gc_time = (utime + stime) - last_gc_time;
-			gc_running = 0;
-		}
-#endif
 	return result;
 	EIF_END_GET_CONTEXT
 }

@@ -28,9 +28,8 @@ cluster
 		end
 
 external
-
-	object:
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/libdatetime.a"
+	include_path: "\$(ISE_EIFFEL)/library/time/Clib"
+	object: "$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/libdatetime.a"
 
 end
 

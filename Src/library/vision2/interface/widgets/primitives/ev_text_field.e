@@ -27,17 +27,6 @@ inherit
 create
 	default_create,
 	make_with_text
-	
-feature {NONE} -- Initialization
-
-	make_with_text (a_text: STRING) is
-			-- Create with `a_text'.
-		require
-			a_text_not_void: a_text /= Void
-		do
-			default_create
-			set_text (a_text)
-		end
 
 feature -- Access
 

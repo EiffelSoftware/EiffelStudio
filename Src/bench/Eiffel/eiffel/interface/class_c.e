@@ -436,7 +436,7 @@ feature -- Third pass: byte code production and type check
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
 
-				if	feature_i.to_generate_in (Current) then
+				if feature_i.to_melt_in (Current) then
 
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
@@ -530,18 +530,18 @@ end;
 							new_suppliers.add_occurence (f_suppliers);
 		
 								-- Byte code processing
-							if feature_i.is_deferred then
-									-- No byte code and melted info for
-									-- deferred features
-								feature_changed := False;
-							else
+--							if feature_i.is_deferred then
+--									-- No byte code and melted info for
+--									-- deferred features
+--								feature_changed := False;
+--							else
 debug ("ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
 								feature_i.compute_byte_code;
-							end;
+--							end;
 
 						end;
 					else
@@ -559,6 +559,7 @@ end;
 						not (type_check_error or else feature_i.is_deferred)
 					then
 							-- Remember the melted feature information
+							-- if it is not deferred.
 						!!melted_info.make (feature_i);
 						melt_set.put (melted_info);
 					end;
@@ -620,7 +621,11 @@ end;
 			end;
 
 				-- Update `melted_set'.
-			melted_set := melt_set;
+			if melted_set = Void then
+				melted_set := melt_set;
+			else
+				melted_set.merge (melt_set)
+			end;
 			not_empty := not melt_set.empty;
 			if not_empty then
 					-- If features have been changed, then byte code
@@ -2039,10 +2044,7 @@ feature -- Actual class type
 			new_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [GEN_TYPE_I]
 		do
-io.error.putstring ("Update types ");
-io.error.putstring (class_name);
 			if not types.has_type (data) then
-io.error.putstring ("Creation of a new type%N");
 					-- Found a new type for the class
 				new_class_type := new_type (data);
 					-- If class is TO_SPECIAL or else SPECIAL
@@ -2071,9 +2073,6 @@ io.error.putstring ("Creation of a new type%N");
 				loop
 						-- Instantiation of the filter with `data'
 					filter := local_cursor.item.instantiation_in (data);
-io.error.putstring ("Propagation on filter%N");
-local_cursor.item.dump (io.error);
-io.error.new_line;
 					filter.base_class.update_types (filter);
 					local_cursor := local_cursor.right
 				end;
@@ -2317,6 +2316,8 @@ feature -- Process the creation feature
 			if creators /= Void then
 				creators.start;
 				creation_feature := tbl.item (creators.key_for_iteration);
+			else
+				creation_feature := Void
 			end;
 		end;
 
@@ -2451,6 +2452,20 @@ io.error.putstring ("Clickable signature change dump%N");
 				ast_clicks := Ast_server.item (id).click_list
 			end;
 			Result := ast_clicks.clickable_stones (Current)
+		end;
+
+feature -- Dino stuff
+
+	insert_changed_assertion (a_feature: FEATURE_I) is
+			-- Insert `a_feature' in the melted set
+		local
+			melted_info: FEAT_MELTED_INFO;
+		do
+			if melted_set = Void then
+				!!melted_set.make;
+			end;
+			!!melted_info.make (a_feature);
+			melted_set.put (melted_info);
 		end;
 
 invariant

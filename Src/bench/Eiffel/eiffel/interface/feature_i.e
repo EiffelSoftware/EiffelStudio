@@ -155,8 +155,16 @@ feature
 			rout_id_set := set;
 		end;
 
+	to_melt_in (a_class: CLASS_C): BOOLEAN is
+			-- Has the current feature to be melted in class `a_class' ?
+		require
+			good_argument: a_class /= Void
+		do
+			Result := a_class.id = written_in
+		end;
+
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
-			-- Has the current feature to be generate in class `a_class' ?
+			-- Has the current feature to be generated in class `a_class' ?
 		require
 			good_argument: a_class /= Void
 		do
@@ -279,6 +287,13 @@ feature -- Type id
 		end;
 
 feature -- Conveniences
+
+	assert_id_set: ASSERT_ID_SET is
+			-- Assertions to which the procedure belongs to
+			-- (To be redefined in PROCEDURE_I).
+		do
+			-- Do nothing
+		end;
 
 	is_obsolete: BOOLEAN is
 			-- Is Current feature obsolete?
@@ -425,6 +440,12 @@ feature -- Conveniences
 			-- No argument names
 		end;
 
+	set_assert_id_set (set: like assert_id_set) is
+			-- Assign `set' to assert_id_set.
+		do
+			-- Do nothing	
+		end;
+
 	argument_count: INTEGER is
 			-- Number of arguments of the feature
 		do
@@ -548,7 +569,9 @@ feature -- Byte code computation
 			byte_code := body.byte_node;
 			byte_code.set_byte_id (i);
 				-- Put it in the temporary byte code server
-			byte_code.set_old_expressions (byte_context.old_expressions);
+			if not byte_context.old_expressions.empty then
+				byte_code.set_old_expressions (byte_context.old_expressions);
+			end;
 			byte_context.clear_old_expressions;
 			Tmp_byte_server.put (byte_code);
 		end;
@@ -1551,8 +1574,8 @@ feature -- Debugging
 			fa.find_breakable;
 
 			-- Compute the debuggable byte code.
-			Byte_context.init (class_type.type);
-			Byte_context.set_class_type (class_type);
+			Byte_context.init (class_type);
+			--Byte_context.set_class_type (class_type);
 
 			-- Pass the instruction line generated in
 			-- trhe AST context to the Byte_context.

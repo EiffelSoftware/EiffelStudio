@@ -89,6 +89,24 @@ feature -- Access
 	handle: POINTER;
 			-- Pointer to the font_box_data structure
 
+	apply_command: MEL_COMMAND_EXEC is
+			-- Command set for the apply callback
+		do
+			Result := cancel_b.activate_command
+		end
+
+	ok_command: MEL_COMMAND_EXEC is
+			-- Command set for the ok callback
+		do
+			Result := ok_b.activate_command
+		end
+
+	cancel_command: MEL_COMMAND_EXEC is
+			-- Command set for the cancel callback
+		do
+			Result := cancel_b.activate_command
+		end
+
 feature -- Status report
 
 	current_font_name: STRING is
@@ -170,25 +188,31 @@ feature -- Status setting
 
 feature  -- Element change
 
-	add_apply_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		do
-			apply_b.add_activate_callback (a_command, argument)
+			apply_b.set_activate_callback (a_command, an_argument)
+		ensure
+			command_set: command_set (apply_command, a_command, an_argument)
 		end;
 
-	add_cancel_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
-			cancel_b.add_activate_callback (a_command, argument)
+			cancel_b.set_activate_callback (a_command, an_argument)
+		ensure
+			command_set: command_set (cancel_command, a_command, an_argument)
 		end;
 
-	add_ok_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
-			ok_b.add_activate_callback (a_command, argument)
+			ok_b.set_activate_callback (a_command, an_argument)
+		ensure
+			command_set: command_set (ok_command, a_command, an_argument)
 		end;
 
 feature -- Display
@@ -231,25 +255,25 @@ feature -- Display
 
 feature -- Removal
 
-	remove_apply_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	remove_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
-			apply_b.remove_activate_callback (a_command, argument)
+			apply_b.remove_activate_callback
 		end;
 
-	remove_cancel_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	remove_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
-			cancel_b.remove_activate_callback (a_command, argument)
+			cancel_b.remove_activate_callback
 		end;
 
-	remove_ok_callback (a_command: MEL_CALLBACK; argument: ANY) is
+	remove_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
-			ok_b.remove_activate_callback (a_command, argument)
+			ok_b.remove_activate_callback 
 		end;
 
 	dispose is

@@ -662,6 +662,11 @@ feature -- Once management
 		deferred
 		end
 
+	generate_once_computed is
+			-- Mark current once as being computed.
+		deferred
+		end
+
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		deferred

@@ -56,6 +56,12 @@ feature -- Access
 
 feature -- Status Report
 
+	managed: BOOLEAN is
+			-- Is the widget managed?
+		do
+			Result := is_managed
+		end;
+
 	insensitive: BOOLEAN is
 			-- Is current object sensitive?
 		do
@@ -70,7 +76,9 @@ feature -- Status Report
 			if private_background_color = Void then
 				!! private_background_color.make;
 				bg_color_x ?= private_background_color.implementation;
-				--bg_color_x.set_pixel (xt_pixel (screen_object, "background"));
+				bg_color_x.set_default_pixel (mel_background_color,
+						mel_screen.default_colormap);
+				bg_color_x.increment_users
 			end;
 			Result := private_background_color;
 		ensure
@@ -80,15 +88,13 @@ feature -- Status Report
 	background_pixmap: PIXMAP is
 			-- Pixmap used for the background
 		local
-			bg_pixmap_b: PIXMAP_X;
-			ext_name: ANY
+			bg_pixmap_x: PIXMAP_X
 		do
 			if private_background_pixmap = Void then
 				!! private_background_pixmap.make;
-				bg_pixmap_b ?= private_background_pixmap.implementation;		
-				ext_name := ("backgroundPixmap").to_c;
-				--bg_pixmap_b.set_default_pixmap (c_get_pixmap 
-								--(screen_object, $ext_name))
+				bg_pixmap_x ?= private_background_pixmap.implementation;		
+				bg_pixmap_x.set_default_pixmap (mel_background_pixmap);
+				bg_pixmap_x.increment_users
 			end;
 			Result := private_background_pixmap
 		end;
@@ -124,16 +130,16 @@ feature -- Status Setting
 		do
 			cursor_implementation ?= a_cursor.implementation;
 			if cursor /= Void then
-				cursor_implementation.remove_object (Current)
+				cursor_implementation.decrement_users
 			end;
 			cursor := a_cursor;
 			cursor_implementation ?= cursor.implementation;
-			cursor_implementation.put_object (Current);
-			--display_pointer := xt_display (screen_object);
-			--x_define_cursor (display_pointer, xt_window (screen_object), cursor_implementation.cursor_id (screen));
-			--x_flush (display_pointer)
+			cursor_implementation.increment_users;
+			cursor_implementation.allocate_cursor;
+			define_cursor (cursor_implementation);
+			display.flush
 		ensure
-			cursor = a_cursor
+			set: cursor = a_cursor
 		end;
 
 	set_background_color (a_color: COLOR) is
@@ -144,24 +150,19 @@ feature -- Status Setting
 		require
 			a_color_exists: a_color /= Void
 		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
+			color_implementation: COLOR_X
 		do
-			if private_background_pixmap /= Void then
-				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current);
-				private_background_pixmap := Void
-			end;
 			if private_background_color /= Void then
 				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current)
+				color_implementation.decrement_users
 			end;
 			private_background_color := a_color;
 			color_implementation ?= a_color.implementation;
-			--color_implementation.put_object (Current);
-			--xm_change_bg_color (screen_object, color_implementation.pixel (screen))
+			color_implementation.increment_users;
+			color_implementation.allocate_pixel;
+			set_background_color_from_imp (color_implementation);
 		ensure
-		--	background_set: background_color = a_color;
+			background_set: background_color = a_color;
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
@@ -169,26 +170,16 @@ feature -- Status Setting
 		require
 			a_pixmap_exists: a_pixmap /= Void
 		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
-			ext_name: ANY
+			pixmap_implementation: PIXMAP_X
 		do
-			if private_background_color /= Void then
-				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current);
-				private_background_color := Void
-			end;
 			if private_background_pixmap /= Void then
 				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current)
+				pixmap_implementation.decrement_users
 			end;
 			private_background_pixmap := a_pixmap;
-			pixmap_implementation ?= background_pixmap.implementation;
-			pixmap_implementation.put_object (Current);
-			--ext_name := MbackgroundPixmap.to_c;
-			--c_set_pixmap (screen_object, 
-				--	pixmap_implementation.resource_pixmap (screen), 
-				--	$ext_name)
+			pixmap_implementation ?= a_pixmap.implementation;
+			pixmap_implementation.increment_users;
+			mel_set_background_pixmap (pixmap_implementation)
 		ensure
 			background_pixmap_set: background_pixmap = a_pixmap;
 		end;
@@ -447,24 +438,21 @@ feature -- Update
 		require
 			widget_realized: realized
 		local
-			a_cursor_implementation: SCREEN_CURSOR_X;
-			void_pointer: POINTER
+			cursor_implementation: SCREEN_CURSOR_X;
 		do
-			if (a_cursor = Void) then
-				--c_grab (screen_object, void_pointer)
-			else
-				a_cursor_implementation ?= a_cursor.implementation;
-				--c_grab (screen_object, a_cursor_implementation.cursor_id (screen))
-			end
+			if a_cursor /= Void then
+				cursor_implementation ?= a_cursor.implementation
+				cursor_implementation.allocate_cursor;
+			end;
+			grab_pointer (cursor_implementation)
 		end;
 
 	ungrab is
 			-- Release the mouse and the keyboard from an earlier grab.
 		require
 			widget_realized: realized
-		
 		do
-			--c_ungrab (screen_object)
+			ungrab_pointer
 		end; 
 
 feature {COLOR_X} -- Implementation
@@ -474,11 +462,12 @@ feature {COLOR_X} -- Implementation
 		local
 			color_implementation: COLOR_X;
 		do
-			color_implementation ?= background_color.implementation;
-			--xm_change_bg_color (screen_object, color_implementation.pixel (screen))
+			color_implementation ?= private_background_color.implementation;
+			color_implementation.allocate_pixel;
+			set_background_color_from_imp (color_implementation)
 		end;
 
-feature {NONE} -- Implementation
+feature {RESOURCE_X} -- Implementation
 
 	private_background_pixmap: PIXMAP;
 			-- Pixmap used for background 
@@ -493,12 +482,10 @@ feature {PIXMAP_X} -- Implementation
 	update_background_pixmap is
 			-- Update the X pixmap after a change inside the Eiffel pixmap.
 		local
-			ext_name: ANY;
-			pixmap_implementation: PIXMAP_X;
+			pixmap_implementation: PIXMAP_X
 		do
-			--ext_name := MbackgroundPixmap.to_c;
-		--	pixmap_implementation ?= background_pixmap.implementation;
-			--c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+			pixmap_implementation ?= private_background_pixmap.implementation;
+			mel_set_background_pixmap (pixmap_implementation)
 		end;
 
 feature {SCREEN_CURSOR_X, ALL_CURS_X}
@@ -517,17 +504,13 @@ feature {SCREEN_CURSOR_X, ALL_CURS_X}
 	
 	update_cursor is
 			-- Update the X cursor after a change inside the Eiffel cursor.
-		
 		local
-			display_pointer: POINTER;
 			cursor_implementation: SCREEN_CURSOR_X
 		do
-			--display_pointer := xt_display (screen_object);
-			--cursor_implementation ?= cursor.implementation;
-			--x_define_cursor (display_pointer, 
-			--			window, 
-			--			cursor_implementation.cursor_id (screen));
-			--x_flush (display_pointer)
+			cursor_implementation ?= cursor.implementation;
+			cursor_implementation.allocate_cursor;
+			define_cursor (cursor_implementation);
+			display.flush
 		end;
 
 feature {NONE} -- Implementation
@@ -611,17 +594,15 @@ feature {NONE} -- Implementation
 			widget_index := index
 		end;
 
-feature {NONE} -- External features
+feature {NONE} -- Implementation
 
-	c_ungrab (scr_obj: POINTER) is
-		external
-			"C"
-		end; 
-
-	c_grab (scr_obj, a_cursor: POINTER) is
-		external
-			"C"
-		end; 
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		require
+			valid_color_imp: color_imp /= Void and color_imp.is_valid
+		do
+			mel_set_background_color (color_imp);	
+		end;
 
 end -- class WIDGET_M
 

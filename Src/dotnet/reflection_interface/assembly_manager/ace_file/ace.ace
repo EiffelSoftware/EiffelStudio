@@ -18,6 +18,8 @@ cluster
 	
 	support: "F:\Src\dotnet\reflection_interface\assembly_manager\support"
 	
+	modifications_interface: "F:\Src\dotnet\reflection_interface\assembly_manager\modifications_interface"
+	
 	all generated: "F:\Src\dotnet\reflection_interface\generated"
 
 	all dot_net_base: "F:\Src\dotnet\library.net"
@@ -32,10 +34,10 @@ external
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Data.dll",
 			"F:\Src\dotnet\reflection_interface\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
 			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\NewEmitterMain.exe",
+	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
 	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
 	 		"F:\Src\dotnet\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
-	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\WindowsDirectoryExtractor.dll"
+	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\ISE.AssemblyManager.WindowsDirectoryExtractor.dll"
 end

@@ -40,12 +40,12 @@ feature -- Basic operations
 		deferred
 		end;
 
---	infix "^" (other: NUMERIC): NUMERIC is
---			-- Current object to the power `other'
---		require
---			other_exists: other /= Void
---		deferred
---		end;
+	infix "^" (other: NUMERIC): NUMERIC is
+			-- Current object to the power `other'
+		require
+			other_exists: other /= Void
+		deferred
+		end;
 
 	prefix "+": NUMERIC is
 			-- Unary plus

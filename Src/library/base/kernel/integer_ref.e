@@ -77,7 +77,7 @@ feature -- Basic operations
 			Result.set_item (item * other.item)
 		end;
 
-	infix "/" (other: INTEGER_REF): DOUBLE_REF is
+	infix "/" (other: INTEGER_REF): REAL_REF is
 			-- Division by `other'
 		require else
 			good_divisor: other.item /= 0.0
@@ -121,8 +121,6 @@ feature -- Basic operations
 
 	infix "^" (other: INTEGER_REF): INTEGER_REF is
 			-- Current integer to the power `other'
-		require
-			other_exists: other /= Void
 		do
 			!! Result;
 			Result.set_item (item ^ other.item)

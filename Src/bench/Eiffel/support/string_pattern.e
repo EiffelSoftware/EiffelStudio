@@ -82,7 +82,7 @@ feature -- Comparison
 		do
 			if count = other.count then
 				o_area := other.area;
-				i := str_cmp ($area, $o_area, count, other.count);
+				i := str_cmp ($area, $o_area, count);
 				Result := (i = 0);
 			end;
 		end;

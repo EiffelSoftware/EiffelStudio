@@ -94,15 +94,17 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i, bound: INTEGER
+			local_content: ARRAY [G]
 		do
-			bound := content.upper
+			local_content := content
+			bound := local_content.upper
 			if object_comparison then
 				if v /= Void then
 					from
 					until
 						i > bound or else Result
 					loop
-						Result := content.item (i) /= Void and then v.is_equal (content.item (i))
+						Result := local_content.item (i) /= Void and then v.is_equal (local_content.item (i))
 						i := i + 1
 					end
 				end
@@ -111,7 +113,7 @@ feature -- Access
 				until
 					i > bound or else Result
 				loop
-					Result := content.item (i) = v;
+					Result := local_content.item (i) = v;
 					i := i + 1
 				end
 			end;
@@ -130,14 +132,16 @@ feature -- Access
 		local
 			i, j, table_size: INTEGER;
 			scanned_key: H
+			local_keys: ARRAY [H]
 		do
 			from
-				table_size := keys.upper;
+				local_keys := keys
+				table_size := local_keys.upper;
 				!! Result.make (1, count);
 			until
 				i > table_size
 			loop
-				scanned_key := keys.item (i);
+				scanned_key := local_keys.item (i);
 				if valid_key (scanned_key) then
 					j := j + 1;
 					Result.put (scanned_key, j)
@@ -303,13 +307,15 @@ feature -- Cursor movement
 			not_off: not off
 		local
 			stop: BOOLEAN
+			local_keys: ARRAY [H]
 		do
 			from
+				local_keys := keys
 			until
 				stop
 			loop
 				iteration_position := iteration_position + 1;
-				stop := off or else valid_key (keys.item (iteration_position))
+				stop := off or else valid_key (local_keys.item (iteration_position))
 			end
 		end;
 
@@ -465,15 +471,19 @@ feature -- Conversion
 			-- (order is same as original order of insertion)
 		local
 			i, table_size: INTEGER;
+			local_keys: ARRAY [H]
+			local_content: ARRAY [G]
 		do
 			from
+				local_content := content
+				local_keys := keys
 				!! Result.make (count);
-				table_size := content.upper;
+				table_size := local_content.upper;
 			until
 				i > table_size
 			loop
-				if valid_key (keys.item (i)) then
-					Result.extend (content.item (i));
+				if valid_key (local_keys.item (i)) then
+					Result.extend (local_content.item (i));
 				end;
 				i := i + 1
 			end;
@@ -566,10 +576,14 @@ feature {NONE} -- Implementation
 			first_deleted_position, trace_deleted, visited_count: INTEGER;
 			old_key: H;
 			stop: BOOLEAN
+			local_keys: ARRAY [H]
+			local_deleted_marks: ARRAY [BOOLEAN]
 		do
 			from
+				local_keys := keys
+				local_deleted_marks := deleted_marks
 				first_deleted_position := -1;
-				table_size := keys.count;
+				table_size := local_keys.count;
 				hash_code := search_key.hash_code;
 				-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1);
@@ -579,9 +593,9 @@ feature {NONE} -- Implementation
 			loop
 				position := (position + increment) \\ table_size;
 				visited_count := visited_count + 1;
-				old_key := keys.item (position);
+				old_key := local_keys.item (position);
 				if not valid_key (old_key) then
-					if not deleted_marks.item (position) then
+					if not local_deleted_marks.item (position) then
 						control := Not_found_constant;
 						stop := true;
 						if first_deleted_position >= 0 then
@@ -627,16 +641,20 @@ feature {NONE} -- Implementation
 			i, table_size: INTEGER;
 			current_key: H;
 			other: HASH_TABLE [G, H]
+			local_keys: ARRAY [H]
+			local_content: ARRAY [G]
 		do
 			from
-				table_size := keys.count;
+				local_content := content
+				local_keys := keys
+				table_size := local_keys.count;
 				!! other.make ((High_ratio * table_size) // Low_ratio);
 			until
 				i >= table_size
 			loop
-				current_key := keys.item (i);
+				current_key := local_keys.item (i);
 				if valid_key (current_key) then
-					other.put (content.item (i), current_key)
+					other.put (local_content.item (i), current_key)
 				end;
 				i := i + 1
 			end;

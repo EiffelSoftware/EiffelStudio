@@ -93,13 +93,23 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			Result := "msctls_progress32"
+			!! Result.make (0)
+			Result.from_c (cwin_progress_class)
 		end
 
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+		end
+
+feature {NONE} -- Externals
+
+	cwin_progress_class: POINTER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"PROGRESS_CLASS"
 		end
 
 end -- class WEL_PROGRESS_BAR

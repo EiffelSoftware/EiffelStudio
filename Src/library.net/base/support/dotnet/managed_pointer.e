@@ -97,6 +97,22 @@ feature -- Duplication
 		
 feature -- Format independant
 
+	read_pointer (pos: INTEGER): POINTER is
+			-- Read POINTER at position `pos'.
+		require
+			valid_position: (pos + feature {PLATFORM}.Pointer_bytes) <= count
+		do
+			Result := feature {MARSHAL}.read_int_ptr_pointer_integer (item, pos)
+		end
+
+	read_integer (pos: INTEGER): INTEGER is
+			-- Read INTEGER at position `pos'.
+		require
+			valid_position: (pos + feature {PLATFORM}.Integer_bytes) <= count
+		do
+			Result := feature {MARSHAL}.read_int_32_pointer_integer (item, pos)
+		end		
+
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require

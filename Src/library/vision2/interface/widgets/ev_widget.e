@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 		require
 			valid_parent: parent_needed implies par /= Void
 		deferred
+		ensure
+			parent_set: parent = par
 		end
 
 	widget_make (par: EV_CONTAINER) is
@@ -63,6 +65,27 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.cursor
+		end
+
+	background_color: EV_COLOR is
+			-- Color used for the background of the widget
+		require
+			exists: not destroyed
+		do
+			Result := implementation.background_color
+		ensure
+			valid_result: Result /= Void
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color used for the foreground of the widget
+			-- usually the text.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.foreground_color
+		ensure
+			valid_result: Result /= Void
 		end
 
 feature -- Status report
@@ -132,25 +155,12 @@ feature -- Status report
 			Result := implementation.vertical_resizable	
 		end
 
-	background_color: EV_COLOR is
-			-- Color used for the background of the widget
+	has_focus: BOOLEAN is
+			-- Does the Current widget has the focus.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.background_color
-		ensure
-			valid_result: Result /= Void
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget
-			-- usually the text.
-		require
-			exists: not destroyed
-		do
-			Result := implementation.foreground_color
-		ensure
-			valid_result: Result /= Void
+			Result := implementation.has_focus
 		end
 
 feature -- Status setting
@@ -185,6 +195,8 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_focus
+		ensure
+			has_focus: has_focus
 		end
 
 --	set_sensitive is
@@ -216,7 +228,7 @@ feature -- Status setting
 		do
 			implementation.set_insensitive (flag)
 		ensure
-			insensitive	= flag
+			state_set: insensitive = flag
 		end
 
 	set_default_options is
@@ -250,6 +262,8 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_expand (flag)
+		ensure
+			flag_set: expandable = flag
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
@@ -276,7 +290,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		require
@@ -292,7 +306,7 @@ feature -- Element change
 			parent_set: parent = par
 		end
 
-	set_cursor (cur: EV_CURSOR) is
+	set_cursor (cur: like cursor) is
 			-- Make `value' the new cursor of the widget
 		require
 			exists: not destroyed
@@ -300,7 +314,7 @@ feature -- Element change
 			implementation.set_cursor (cur)
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: like background_color) is
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
@@ -311,7 +325,7 @@ feature -- Element change
 			background_color_set: background_color.equal_color (color)
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: like foreground_color) is
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed

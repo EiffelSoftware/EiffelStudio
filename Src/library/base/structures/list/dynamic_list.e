@@ -83,8 +83,6 @@ feature -- Element change
 				put_left (other.item)
 				other.remove
 			end
-		ensure then
-			other_empty: other.is_empty
 		end
 
 	merge_right (other: like Current) is
@@ -100,8 +98,6 @@ feature -- Element change
 				other.back
 				other.remove_right
 			end
-		ensure then
-			other_empty: other.is_empty
 		end
 
 feature -- Removal

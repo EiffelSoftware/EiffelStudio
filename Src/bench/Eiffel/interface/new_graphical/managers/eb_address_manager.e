@@ -129,8 +129,9 @@ feature {NONE} -- Initialization
 				address_dialog.extend (vb)
 				generate_header_info
 
-				cluster_address.return_actions.extend (~execute_with_cluster)
-				cluster_address.key_release_actions.extend (~type_cluster)
+				cluster_address.key_release_actions.extend (~cluster_key_up)
+				cluster_address.key_press_actions.extend (~cluster_key_down)
+				cluster_address.change_actions.extend (~type_cluster)
 				cluster_address.select_actions.extend (~change_hist_to_cluster)
 
 				cluster_address.focus_out_actions.extend (~one_lost_focus)
@@ -138,15 +139,16 @@ feature {NONE} -- Initialization
 				feature_address.focus_out_actions.extend (~one_lost_focus)
 			end
 
---			class_address.return_actions.extend (~execute_with_class)
 			class_address.key_release_actions.extend (~class_key_up)
 			class_address.key_press_actions.extend (~class_key_down)
 			class_address.change_actions.extend (~type_class)
 			class_address.select_actions.extend (~change_hist_to_class)
 
-			feature_address.return_actions.extend (~execute_with_feature)
-			feature_address.key_release_actions.extend (~type_feature)
+			feature_address.key_release_actions.extend (~feature_key_up)
+			feature_address.key_press_actions.extend (~feature_key_down)
 			feature_address.select_actions.extend (~change_hist_to_feature)
+			feature_address.change_actions.extend (~type_feature)
+			feature_address.focus_in_actions.extend (~update_current_typed_class)
 
 			if not Eiffel_project.manager.is_created then
 					-- Project is not yet loaded, disable controls.
@@ -1180,6 +1182,21 @@ feature {NONE} -- open new class
 			end
 		end
 
+	cluster_key_up (k: EV_KEY) is
+			-- A key was released in the cluster address.
+			-- If it is return, call execute_with_cluster.
+		do
+			if k /= Void then
+				if k.code = Key_csts.key_enter then
+					execute_with_cluster
+				elseif k.code = Key_csts.Key_escape then
+					if mode then
+						address_dialog.hide
+					end
+				end
+			end
+		end
+
 	class_key_up (k: EV_KEY) is
 			-- A key was released in the class address.
 			-- If it is return, call execute_with_class.
@@ -1187,6 +1204,21 @@ feature {NONE} -- open new class
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
 					execute_with_class
+				elseif k.code = Key_csts.Key_escape then
+					if mode then
+						address_dialog.hide
+					end
+				end
+			end
+		end
+
+	feature_key_up (k: EV_KEY) is
+			-- A key was released in the feature address.
+			-- If it is return, call execute_with_feature.
+		do
+			if k /= Void then
+				if k.code = Key_csts.key_enter then
+					execute_with_feature
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1216,18 +1248,104 @@ feature {NONE} -- open new class
 			end
 		end
 
+	cluster_key_down (k: EV_KEY) is
+			-- A key was pressed in the cluster address.
+			-- If it is return, call execute_with_cluster.
+		do
+			if k /= Void then
+				last_key_was_delete := False
+				last_key_was_backspace := False
+				if k.code = Key_csts.Key_delete then
+					last_key_was_delete := True
+				elseif k.code = Key_csts.Key_back_space then
+					last_key_was_backspace := True
+					if cluster_address.has_selection then
+						cluster_had_selection := True
+					else
+						cluster_had_selection := False
+					end
+				end
+				is_typing_cluster := True
+			end
+		end
+
+	feature_key_down (k: EV_KEY) is
+			-- A key was pressed in the feature address.
+			-- If it is return, call execute_with_feature.
+		do
+			if k /= Void then
+				last_key_was_delete := False
+				last_key_was_backspace := False
+				if k.code = Key_csts.Key_delete then
+					last_key_was_delete := True
+				elseif k.code = Key_csts.Key_back_space then
+					last_key_was_backspace := True
+					if feature_address.has_selection then
+						feature_had_selection := True
+					else
+						feature_had_selection := False
+					end
+				end
+				is_typing_feature := True
+			end
+		end
+
 	last_key_was_delete: BOOLEAN
 			-- Was the last pressed key `delete'?
 
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
 
+	is_typing_cluster: BOOLEAN
+			-- Is the user typing in the cluster address combo box (we don't complete otherwise).
+
+	cluster_had_selection: BOOLEAN
+			-- Did the cluster address had a selection when the user hit the key?
+			-- Only meaningful if `last_key_was_backspace'.
+
 	is_typing: BOOLEAN
-			-- Is the user typing in the address combo box (we don't complete otherwise).
+			-- Is the user typing in the class address combo box (we don't complete otherwise).
 
 	had_selection: BOOLEAN
 			-- Did the class address had a selection when the user hit the key?
 			-- Only meaningful if `last_key_was_backspace'.
+
+	is_typing_feature: BOOLEAN
+			-- Is the user typing in the feature address combo box (we don't complete otherwise).
+
+	feature_had_selection: BOOLEAN
+			-- Did the feature address had a selection when the user hit the key?
+			-- Only meaningful if `last_key_was_backspace'.
+
+	current_typed_class: CLASS_C
+			-- May contain the class that corresponds to the name in `class_address'.
+			-- Used in the feature completion.
+
+	update_current_typed_class is
+			-- Try to update `current_typed_class' based on the contents of `class_address'.
+		local
+			clist: CLASS_C_SERVER
+			i: INTEGER
+			ccname: STRING
+		do
+			current_typed_class := Void
+			if enable_feature_complete then
+				clist := system.classes
+				ccname := class_address.text
+				ccname.to_lower
+				from
+					i := 1
+				until
+					i > clist.count or current_typed_class /= Void
+				loop
+					if clist @ i /= Void and then (clist @ i).name.is_equal (ccname) then
+						current_typed_class := clist @ i
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
 
 	type_class is
 			-- Try to complete the class name.
@@ -1243,6 +1361,8 @@ feature {NONE} -- open new class
 			same_st, dif: BOOLEAN
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
+				-- The text in `class_address' has changed => we don't know what's inside.
+			current_typed_class := Void
 			class_address.change_actions.block
 			str := clone (class_address.text)
 			if str /= Void then
@@ -1329,34 +1449,200 @@ feature {NONE} -- open new class
 			class_address.change_actions.resume
 		end
 
-	type_feature (k: EV_KEY) is
-			-- The user typed a new key in the feature combo.
-			-- Try to complete the feature name.
+	type_cluster is
+			-- Try to complete the cluster name.
+		local
+			str: STRING
+			nb, minc: INTEGER
+			index, j: INTEGER
+			list: LINKED_LIST [CLUSTER_I]
+			current_found: STRING
+			cname: STRING
+			array_count: INTEGER
+			do_not_complete: BOOLEAN
+			same_st, dif: BOOLEAN
+			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
-			if
-				mode and then
-				k.code = Key_csts.Key_escape
-			then
-				address_dialog.hide
-			else
---				io.put_string ("2 ")
+			cluster_address.change_actions.block
+			str := clone (cluster_address.text)
+			if str /= Void then
+				str.left_adjust
+				str.right_adjust
+				str.to_lower
+				nb := str.count
+				do_not_complete := (last_key_was_delete or not enable_cluster_complete) or not is_typing_cluster
+				if nb > 0 and last_key_was_backspace and cluster_had_selection then
+					str.head (nb - 1)
+					nb := nb - 1
+				end
 			end
+			is_typing_cluster := False
+			
+			if not do_not_complete and nb > 0 then
+				list := Universe.clusters
+				from
+					str_area := str.area
+					list.start
+				until
+					list.after
+				loop
+					cname := list.item.cluster_name
+					other_area := cname.area
+						-- We first check that other_area and str_area have the same start.
+					if other_area.count >= nb then
+						from
+							j := 0
+							same_st := True
+						until
+							j = nb or not same_st
+						loop
+							same_st := (str_area.item (j)) = (other_area.item (j))
+							j := j + 1
+						end
+						if same_st then
+							if current_found = Void then
+								current_found := cname
+								current_area := other_area
+							else
+								from
+									minc := other_area.count.min (current_area.count)
+									dif := False
+								until
+									dif or j = minc
+								loop
+									if (current_area.item (j)) /= (other_area.item (j)) then
+										dif := True
+										if (current_area.item (j)) > (other_area.item (j)) then
+											current_found := cname
+											current_area := other_area
+										end
+									end
+									j := j + 1
+								end
+								if not dif and other_area.count < current_area.count then
+										-- Other and Current have the same characters.
+										-- Return the shorter one.
+									current_found := cname
+									current_area := other_area
+								end
+							end
+						end
+					end
+					list.forth
+				end
+				if current_found /= Void then
+					cluster_address.set_text (current_found)
+					cluster_address.select_region (nb + 1, current_found.count)
+				elseif not (last_key_was_backspace and cluster_had_selection) then
+					cluster_address.set_text (str)
+					cluster_address.set_caret_position (str.count + 1)
+				end
+			else
+				cluster_address.set_text (str)
+				cluster_address.set_caret_position (str.count + 1)
+			end
+			cluster_address.change_actions.resume
 		end
 
-	type_cluster (k: EV_KEY) is
-			-- The user typed a new key in the cluster combo.
-			-- Try to complete the cluster name.
-		require
-			for_context_tool: mode
+	type_feature is
+			-- The user typed a new key in the feature combo.
+			-- Try to complete the feature name.
+		local
+			str: STRING
+			nb, minc: INTEGER
+			index, j: INTEGER
+			list: FEATURE_TABLE
+			current_found: STRING
+			cname: STRING
+			array_count: INTEGER
+			do_not_complete: BOOLEAN
+			same_st, dif: BOOLEAN
+			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
-			if
-				mode and then
-				k.code = Key_csts.Key_escape
-			then
-				address_dialog.hide
-			else
---				io.put_string ("2 ")
+			feature_address.change_actions.block
+			str := clone (feature_address.text)
+			if str /= Void then
+				str.left_adjust
+				str.right_adjust
+				str.to_lower
+				nb := str.count
+				do_not_complete := (last_key_was_delete or not enable_feature_complete) or not is_typing_feature
+				if nb > 0 and last_key_was_backspace and feature_had_selection then
+					str.head (nb - 1)
+					nb := nb - 1
+				end
 			end
+			is_typing_feature := False
+
+			if
+				current_typed_class /= Void and then
+				current_typed_class.has_feature_table and
+				not do_not_complete and
+				nb > 0
+			then
+				list := current_typed_class.feature_table
+				from
+					list.start
+					str_area := str.area
+				until
+					list.after
+				loop
+					cname := list.item_for_iteration.feature_name
+					other_area := cname.area
+						-- We first check that other_area and str_area have the same start.
+					if other_area.count >= nb then
+						from
+							j := 0
+							same_st := True
+						until
+							j = nb or not same_st
+						loop
+							same_st := (str_area.item (j)) = (other_area.item (j))
+							j := j + 1
+						end
+						if same_st then
+							if current_found = Void then
+								current_found := cname
+								current_area := other_area
+							else
+								from
+									minc := other_area.count.min (current_area.count)
+									dif := False
+								until
+									dif or j = minc
+								loop
+									if (current_area.item (j)) /= (other_area.item (j)) then
+										dif := True
+										if (current_area.item (j)) > (other_area.item (j)) then
+											current_found := cname
+											current_area := other_area
+										end
+									end
+									j := j + 1
+								end
+								if not dif and other_area.count < current_area.count then
+										-- Other and Current have the same characters.
+										-- Return the shorter one.
+									current_found := cname
+									current_area := other_area
+								end
+							end
+						end
+					end
+					list.forth
+				end
+				if current_found /= Void then
+					feature_address.set_text (current_found)
+					feature_address.select_region (nb + 1, current_found.count)
+				elseif not (last_key_was_backspace and feature_had_selection) then
+					feature_address.set_text (str)
+					feature_address.set_caret_position (str.count + 1)
+				end
+			else
+				feature_address.set_text (str)
+				feature_address.set_caret_position (str.count + 1)
+			end
+			feature_address.change_actions.resume
 		end
 
 	current_class: CLASS_C is
@@ -1632,6 +1918,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						end
 					else
 						class_address.remove_text
+						feature_address.remove_text
 					end
 				else
 					conv_f ?= c_stone
@@ -1733,6 +2020,18 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	enable_complete: BOOLEAN is
 			-- Does the user want class names to be completed?
+		do
+			Result := boolean_resource_value ("class_completion", True)
+		end
+
+	enable_feature_complete: BOOLEAN is
+			-- Does the user want feature names to be completed?
+		do
+			Result := boolean_resource_value ("class_completion", True)
+		end
+
+	enable_cluster_complete: BOOLEAN is
+			-- Does the user want cluster names to be completed?
 		do
 			Result := boolean_resource_value ("class_completion", True)
 		end

@@ -445,8 +445,6 @@ feature {NONE} -- Implementation
 				constant_context := object.constants.item (internal_gb_ev_any.type + internal_property)
 				if constant_context /= Void then
 					constant ?= constant_context.constant
-					last_selected_constant.remove_referer (constant_context)
-					object.constants.remove (internal_gb_ev_any.type + internal_property)
 					if not constants_combo_box.is_displayed then
 							-- Now assign the value of `last_selected_item' to the control, but only
 							-- if `constants_combo_box' is not displayed, meaning that a user has just
@@ -457,6 +455,7 @@ feature {NONE} -- Implementation
 							text_field.set_text (constant.value.out)
 						end
 					end
+					constant_context.destroy
 				end
 				last_selected_constant := Void
 			end

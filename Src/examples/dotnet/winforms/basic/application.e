@@ -41,7 +41,7 @@ feature -- Initialization
 			button.add_click (handler)
 			
 			size.make_from_width_and_height (240, 130)
-			main_win.set_size_size_2 (size)
+			main_win.set_size (size)
 			
 			main_win.show
 			
@@ -67,7 +67,7 @@ feature -- Actions
 			res: WINFORMS_DIALOG_RESULT
 		do
 			res := feature {WINFORMS_MESSAGE_BOX}.show_string_string (
-				("You just clicked on the Close button").to_cil, ("An Eiffel Message Box").to_cil)
+				("You just clicked on the %"Message%" button").to_cil, ("An Eiffel Message Box").to_cil)
 		end
 
 invariant

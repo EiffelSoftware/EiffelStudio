@@ -300,7 +300,7 @@ feature -- Project Initialization
 						Eiffel_project.incompatible_version_number)
 					redo_project := True
 					warner (Project_tool).custom_call (Current, 
-							msg, Interface_names.b_ok, Interface_names.b_Exit_now, Void)
+							msg, Interface_names.b_ok, Interface_names.b_cancel, Void)
 				else
 					if Eiffel_project.is_corrupted then
 						msg := Warning_messages.w_Project_corrupted (project_dir.name)
@@ -308,7 +308,7 @@ feature -- Project Initialization
 						msg := Warning_messages.w_Project_interrupted (project_dir.name)
 					end
 					warner (Project_tool).custom_call (Current, 
-							msg, Void, Interface_names.b_Exit_now, Void)
+							msg, Void, Interface_names.b_cancel, Void)
 				end
 			elseif Eiffel_project.incomplete_project then
 				Project_tool.set_title (old_title)
@@ -317,7 +317,7 @@ feature -- Project Initialization
 				mp.restore
 				
 				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
-				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
+				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_cancel, Void)
 			elseif Eiffel_project.read_write_error then
 				Project_tool.set_title (old_title)
 					-- These 2 lines will update effectively the project tool.
@@ -325,7 +325,7 @@ feature -- Project Initialization
 				mp.restore
 				
 				msg := Warning_messages.w_Cannot_open_project
-				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_Exit, Void)
+				warner (Project_tool).custom_call (Current, msg, Void, Interface_names.b_cancel, Void)
 			end
 
 			if not Eiffel_project.error_occurred then

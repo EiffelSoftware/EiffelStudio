@@ -13,6 +13,8 @@ inherit
 
 	ARROW_B_I;
 
+	EXECUTION_ENVIRONMENT;
+
 	PICT_COL_B_O
 		rename
 			make as pict_make
@@ -29,17 +31,14 @@ feature {NONE}
 	Pixmap_Directory: STRING is
 			-- Directory of arrow pixmaps
 		local
-			ext_name: ANY;
 			env_var: STRING;
 		do
---			!!env_var.make (11);
---			env_var.append ("OPEN");
---			!!Result.make (0);
---			ext_name := env_var.to_c;
---			Result.from_c (getenv ($ext_name));
---			Result.append ("/widgets/")
 			!!Result.make (0);
-			Result.append ("/warsaw.dev/Eiffel3_dvp/EiffelVision/implement/openlook/widgets/");
+			env_var := get ("EIFFEL3");
+			if env_var /= Void then
+				Result.append (env_var);
+			end;
+			Result.append ("/library/vision/implement/openlook/widgets/");
 		end;
 
 	symbol_file_content (fn: STRING): PIXMAP is
@@ -160,13 +159,6 @@ feature
 		do
 			direction := arrow_up;
 			set_pixmap (arrow_up)
-		end;
-
-feature {NONE} -- External features
-
-	getenv (arg: ANY): ANY is
-		external
-			"C"
 		end;
 
 end 

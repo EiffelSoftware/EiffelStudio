@@ -48,7 +48,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command = Void
+			Valid_command: a_command /= Void
 		do
 			implementation.add_input_action (a_command, argument)
 		end;
@@ -59,7 +59,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Vali_comman: a_command /= Void
+			Valid_command: a_command /= Void
 		do
 			implementation.add_resize_action (a_command, argument)
 		end;

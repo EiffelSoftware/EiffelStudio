@@ -135,21 +135,21 @@ feature -- Access
 			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...
 
-    item_for_iteration: G is
-            -- Element at current iteration position
-        require
-            not_off: not off
-        do
-            Result := content.item (pos_for_iter)
-        end;
+	item_for_iteration: G is
+			-- Element at current iteration position
+		require
+			not_off: not off
+		do
+			Result := content.item (pos_for_iter)
+		end;
 
-    key_for_iteration: H is
-            -- Key at current iteration position
-        require
-            not_off: not off
-        do
-            Result := keys.item (pos_for_iter)
-        end;
+	key_for_iteration: H is
+			-- Key at current iteration position
+		require
+			not_off: not off
+		do
+			Result := keys.item (pos_for_iter)
+		end;
 
 feature -- Measurement
 
@@ -230,11 +230,11 @@ feature -- Status report
 			Result := (control = Found_constant)
 		end;
 
-    off: BOOLEAN is
-            -- Is cursor past last item?
-        do
-            Result := pos_for_iter > keys.upper
-        end;
+	off: BOOLEAN is
+			-- Is cursor past last item?
+		do
+			Result := pos_for_iter > keys.upper
+		end;
 
 feature -- Cursor movement
 

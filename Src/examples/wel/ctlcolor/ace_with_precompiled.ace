@@ -22,7 +22,7 @@ cluster
 		end
 
 external
-	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include"
-	object: 		"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib"
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- ctlcolor_demo

@@ -229,8 +229,8 @@ feature -- Comparison
 									* information. If it is the case, we simply ignore it. To identify
 									* it we use the name of the attribute as well as its type which needs
 									* to be of type GENERIC_TYPE. */
-								Result = (!attribute.Name.Equals ("$$____type") ||
-									((l_attr == null) || typeof(GENERIC_TYPE).IsInstanceOfType(l_attr)));
+								Result = (attribute.Name.Equals ("$$____type") &&
+									typeof(GENERIC_TYPE).Equals (attribute.FieldType));
 							}
 						}
 						if (!Result) {

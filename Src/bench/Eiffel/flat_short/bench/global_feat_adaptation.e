@@ -284,6 +284,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 			l_name: STRING
 			local_info: LOCAL_INFO
 			formal_type: FORMAL_A
+			l_type_feature: TYPE_FEATURE_I
 		do	
 			if not is_short then
 				old_cluster := Inst_context.cluster;
@@ -345,17 +346,26 @@ feature {FORMAT_CONTEXT} -- Implementation
 								else
 									s_type := s_type.actual_type;
 									if s_type.is_formal then
-										formal_type ?= s_type;
+										formal_type ?= s_type
+										l_type_feature := source_enclosing_class.formal_at_position
+											(formal_type.position)
 				 						s_type := source_enclosing_class.constraint 
 													(formal_type.position)
-									end;
-				 					t_type := t_type.instantiation_in 
-											(target_enclosing_class.actual_type,
-											source_enclosing_class.class_id).actual_type;
-									if t_type.is_formal then
-										formal_type ?= t_type;
-				 						t_type := target_enclosing_class.constraint 
-												(formal_type.position)
+										check
+											target_has_generic_features:
+												target_enclosing_class.generic_features /= Void
+										end
+										t_type := target_enclosing_class.generic_features.item (
+											l_type_feature.rout_id_set.first).type
+										if t_type.is_formal then
+											formal_type ?= t_type
+											t_type := target_enclosing_class.constraint 
+													(formal_type.position)
+										end
+									else
+										t_type := t_type.instantiation_in 
+												(target_enclosing_class.actual_type,
+												target_enclosing_class.class_id).actual_type;
 									end
 								end;
 							end;

@@ -29,8 +29,9 @@ extern "C" {
 	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER);	/* STRING `set_count' feature */
-	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER); /* ARRAY creation feature */
+	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);	/* ARRAY creation feature */
 	RT_LNK void (*egc_tupmake)(EIF_REFERENCE);	/* TUPLE creation feature */
+	RT_LNK void (*egc_routdisp)(char *, char *);	/* ROUTINE `set_rout_disp' feature */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK int egc_tup_dtype;				/* Dynamic type for TUPLE */
@@ -90,7 +91,7 @@ extern "C" {
 	RT_LNK int egc_rcarg;				/* E1/einit.c */
 
 	RT_LNK char *egc_system_name;		/* Name of the generated system */
-	RT_LNK EIF_INTEGER egc_compiler_tag;		/* Tag corresponding to the compiler version */
+	RT_LNK EIF_INTEGER egc_compiler_tag;	/* Tag corresponding to the compiler version */
 
 #ifdef __cplusplus
 }

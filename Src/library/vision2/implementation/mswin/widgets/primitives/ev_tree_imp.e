@@ -84,12 +84,12 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			default_style,
 			on_tvn_selchanged,
-			on_tvn_itemexpanded,
-			on_size
+			on_tvn_itemexpanded
 		end
 
 	WEL_TVHT_CONSTANTS
@@ -438,13 +438,6 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	on_size (size_type, a_height, a_width: INTEGER) is
-			-- List resized.
-		do
-			interface.resize_actions.call ([screen_x, screen_y, a_width,
-				a_height])
-		end
-
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
 		do
@@ -558,6 +551,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/05/03 20:13:28  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.68  2000/04/27 23:14:20  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|

@@ -71,6 +71,7 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_size,
+			on_move,
 			process_notification,
 			wel_set_text,
 			show,
@@ -166,6 +167,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.32  2000/05/02 22:07:31  rogers
 --| Redefined on_default_style to fix the bug due to conflicts with
 --| check buttons. Comments. Formatting.

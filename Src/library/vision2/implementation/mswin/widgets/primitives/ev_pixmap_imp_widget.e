@@ -64,7 +64,7 @@ inherit
 			on_right_button_down, on_right_button_up, 
 			on_left_button_double_click, on_right_button_double_click,
 			on_key_down, on_key_up, on_kill_focus, on_set_focus, 
-			on_set_cursor, show, hide
+			on_set_cursor, show, hide, on_size
 		redefine
 			on_paint, on_erase_background, class_background, default_style,
 			class_style, on_size
@@ -464,17 +464,6 @@ feature {NONE} -- Implementation
 			display_dc := Void
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER)is
-			-- Respond to Wm_size message.
-		do
-			interface.resize_actions.call ([
-				x_position,
-				y_position,
-				a_width,
-				a_height
-				])
-		end
-
 	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Paint the bitmap onto the screen (i.e. the display_dc).
 		local
@@ -797,6 +786,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/03 20:13:29  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.6  2000/05/03 04:36:40  pichery
 --| Removed parameter in feature `set_with_default'.
 --|

@@ -29,7 +29,8 @@ inherit
 			on_key_down,
 			interface,
 			set_default_minimum_size,
-			initialize
+			initialize,
+			on_size
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -883,9 +884,8 @@ feature {NONE} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- List resized.
 		do
-			Precursor (size_type, a_width, a_height)
-			interface.resize_actions.call ([screen_x, screen_y, a_width,
-				a_height])
+			{WEL_LIST_VIEW} Precursor (size_type, a_width, a_height)
+			{EV_PRIMITIVE_IMP} Precursor (size_type, a_width, a_height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -985,6 +985,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.99  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.98  2000/05/03 00:07:07  brendel
 --| Added call to invalidate.
 --|

@@ -36,7 +36,8 @@ inherit
 			on_mouse_move,
 			set_default_minimum_size,
 			initialize,
-			interface
+			interface,
+			on_size
 		end
 
  	WEL_LIST_VIEW
@@ -394,10 +395,8 @@ feature {EV_ANY_I} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- List resized.
 		do
-				-- Resize the first and only column.
-			Precursor (size_type, a_width, a_height)
-			interface.resize_actions.call ([screen_x, screen_y, a_width,
-				height])
+			{WEL_LIST_VIEW} Precursor (size_type, a_width, a_height)
+			{EV_PRIMITIVE_IMP} Precursor (size_type, a_width, a_height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -554,6 +553,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.80  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.79  2000/04/27 23:22:49  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|

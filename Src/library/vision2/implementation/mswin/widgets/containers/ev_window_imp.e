@@ -46,7 +46,8 @@ inherit
 			notebook_parent,
 			interface,
 			notify_change,
-			initialize
+			initialize,
+			on_size
 		end
 
 	WEL_FRAME_WINDOW
@@ -88,7 +89,8 @@ inherit
 			on_color_control,
 			on_wm_vscroll,
 			on_wm_hscroll,
-			on_destroy
+			on_destroy,
+			on_size
 		redefine
 			default_ex_style,
 			default_style,
@@ -856,7 +858,7 @@ feature {NONE} -- Implementation
 					end
 					sb_imp.set_move_and_size (0, client_height, client_width, sb_imp.minimum_height)
 				end
-				interface.resize_actions.call ([x_position, y_position, a_width, a_height])
+				{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (size_type, a_width, a_height)
 			end
 		end
 
@@ -1061,6 +1063,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/05/03 20:13:25  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.46  2000/05/03 00:33:36  pichery
 --| - Changed constants retrieval
 --| - Changed `show' implementation (does not block

@@ -89,7 +89,8 @@ inherit
 			on_set_cursor,
 			window_process_message,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			wel_set_parent,
 			wel_resize,
@@ -736,6 +737,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.64  2000/04/27 23:14:44  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
 --|

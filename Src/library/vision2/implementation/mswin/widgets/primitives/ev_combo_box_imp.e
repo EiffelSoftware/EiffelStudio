@@ -102,7 +102,8 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,
@@ -736,6 +737,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.77  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.76  2000/04/27 23:24:04  rogers
 --| Undefined on_left_button_up from EV_TEXT_COMPONENT_IMP.
 --|

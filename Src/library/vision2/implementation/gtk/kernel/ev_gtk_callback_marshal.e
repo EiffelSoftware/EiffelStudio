@@ -1,6 +1,5 @@
 indexing
 	description: "Callback Marshal to deal with gtk signal emissions"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,5 @@
 indexing
 	description: "Action sequences for EV_DOCKABLE_SOURCE_I."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,14 +1,25 @@
 #include "config.h"
+#ifdef EIF_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <winsock.h>
+#define EWOULDBLOCK WSAEWOULDBLOCK
+#define EINPROGRESS WSAEINPROGRESS
+#include <stdio.h>
+#include "except.h"
+#endif
 
 #include <sys/types.h>
+#ifndef EIF_WIN32
 #include <sys/time.h>
+#endif
 #include <errno.h>
 #ifndef BSD
 #define BSD_COMP
 #endif
+#ifndef EIF_WIN32
 #include <sys/ioctl.h>
+#endif
 #include "cecil.h"
-
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -24,9 +35,46 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
+#ifndef EIF_WIN32
 #include <sys/un.h>
+#endif
 
 #include "bitmask.h"
+
+#ifdef EIF_WIN32
+extern void eio(void);
+void do_init(void);
+EIF_INTEGER int_size(void);
+
+eif_winsock_cleanup()
+{
+	int err;
+	err = WSACleanup ();
+	/* bad luck if this is an error ! */
+}
+
+void do_init()
+{
+	WORD wVersionRequested;
+	WSADATA wsaData;
+	int err;
+	static BOOL done = FALSE;
+
+	if (!done)
+		{
+		wVersionRequested = MAKEWORD (1, 1);
+		err = WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0)
+			{
+			fprintf (stderr, "Communications error %d", err);
+			eraise ("Unable to start WINSOCK", EN_PROG);
+			}
+		eif_register_cleanup (eif_winsock_cleanup);
+		}
+}
+#endif
+
+
 
 /* get size of mask from the 
  * struct fd_mask size 
@@ -137,10 +185,14 @@ EIF_POINTER name;
 {
 	struct hostent *hp;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	hp = gethostbyname ((char *) name);
 
 	if (hp == (struct hostent *) 0)
 		eio();
+
 	((struct in_addr *) addr)->s_addr = ((struct in_addr *)(hp->h_addr))->s_addr;
 }
 
@@ -150,6 +202,9 @@ EIF_POINTER proto;
 {
 	struct servent *sp;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	sp = getservbyname ((char *) name, (char *) proto);
 	if (sp == (struct servent *) 0)
 		eio();
@@ -270,16 +325,28 @@ EIF_INTEGER add_f, typ, prot;
 {
 	int result;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	result = socket ((int) add_f, (int) typ, (int) prot);
+#ifndef EIF_WIN32
 	if (result < 0)
 		eio();
+#else
+	if (result == INVALID_SOCKET)
+		eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
 void c_close_socket (s)
 EIF_INTEGER s;
 {
+#ifndef EIF_WIN32
 	close ((int) s);
+#else
+	closesocket (s);
+#endif
 }
 
 void c_bind (s, add, length)
@@ -287,8 +354,14 @@ EIF_INTEGER s;
 EIF_POINTER add;
 EIF_INTEGER length;
 {
-	if ((bind ((int) s, (struct sockaddr *) add, (int) length)) < 0)
+#ifndef EIF_WIN32
+	if (bind ((int) s, (struct sockaddr *) add, (int) length) < 0)
 		eio();
+#else
+	do_init();
+	if (bind ((int) s, (struct sockaddr *) add, (int) length) == SOCKET_ERROR)
+		eio();
+#endif
 }
 
 EIF_INTEGER c_accept (s, add, length)
@@ -300,11 +373,21 @@ EIF_INTEGER length;
 
 	a_length = (int) length;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
+
 	result = accept ((int) s, (struct sockaddr *) add, &a_length);
 
+#ifndef EIF_WIN32
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 
 	return (EIF_INTEGER) result;
 }
@@ -312,8 +395,14 @@ EIF_INTEGER length;
 void c_listen (s, backlog)
 EIF_INTEGER s, backlog;
 {
+#ifndef EIF_WIN32
 	if ((listen ((int) s, (int) backlog)) < 0)
 		eio();
+#else
+	do_init();
+	if ((listen ((int) s, (int) backlog)) == SOCKET_ERROR)
+		eio();
+#endif
 }
 
 void c_connect (s, add, length)
@@ -321,9 +410,16 @@ EIF_INTEGER s;
 EIF_POINTER add;
 EIF_INTEGER length;
 {
+#ifndef EIF_WIN32
 	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) < 0)
 		if (errno != EINPROGRESS)
 			eio();
+#else
+	do_init();
+	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) == SOCKET_ERROR)
+		if (WSAGetLastError() != EINPROGRESS)
+			eio();
+#endif
 }
 
 EIF_INTEGER c_select (nfds, rmask, wmask, emask, timeout, timeoutm)
@@ -334,17 +430,30 @@ EIF_INTEGER timeout, timeoutm;
 	struct timeval t;
 	int result;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	if (timeout == -1) {
+#ifndef EIF_WIN32
 		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) < 0)
 			eio();
+#else
+		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) == SOCKET_ERROR)
+			eio();
+#endif
 		return (EIF_INTEGER) result;
 	}
 
 	t.tv_sec = timeout;
 	t.tv_usec = timeoutm;
 
+#ifndef EIF_WIN32
 	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) < 0)
 		eio();
+#else
+	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) == SOCKET_ERROR)
+		eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -355,11 +464,18 @@ EIF_INTEGER length;
 {
 	int a_length, result;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	a_length = (int) length;
 
 	result = getsockname((int) s, (struct sockaddr *) addr, &a_length);
 
+#ifndef EIF_WIN32
 	if (result < 0)
+#else
+	if (result == SOCKET_ERROR)
+#endif
 		eio();
 }
 
@@ -370,11 +486,18 @@ EIF_INTEGER length;
 {
 	int a_length, result;
 
+#ifdef EIF_WIN32
+	do_init();
+#endif
 	a_length = (int) length;
 
 	result = getpeername((int) s, (struct sockaddr *) addr, &a_length);
 
+#ifndef EIF_WIN32
 	if (result < 0)
+#else
+	if (result == SOCKET_ERROR)
+#endif
 		eio();
 	return (EIF_INTEGER) a_length;
 }
@@ -384,6 +507,7 @@ void c_put_bool (fd, b)
 EIF_INTEGER fd;
 EIF_BOOLEAN b;
 {
+#ifndef EIF_WIN32
 	if (b) 
 		if (write ((int)fd, "True", 4) < 0)
 			if (errno != EWOULDBLOCK)
@@ -392,24 +516,47 @@ EIF_BOOLEAN b;
 		if (write ((int)fd, "False", 5) < 0)
 			if (errno != EWOULDBLOCK)
 				eio();
+#else
+	int err;
+
+	if (b)
+		err = send (fd, "True", 4, 0);
+	else 
+		err = send (fd, "False", 5, 0);
+
+	if ((err == SOCKET_ERROR) && (WSAGetLastError() != EWOULDBLOCK))
+		eio();
+#endif
 }
 
 void c_put_char (fd, c)
 EIF_INTEGER fd;
 EIF_CHARACTER c;
 {
+#ifndef EIF_WIN32
 	if (write ((int)fd, &c, sizeof (char)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, &c, sizeof(char), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 void c_put_int (fd, i)
 EIF_INTEGER fd;
 EIF_INTEGER i;
 {
+#ifndef EIF_WIN32
 	if (write ((int)fd, (EIF_INTEGER *)&i, sizeof (EIF_INTEGER)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 void c_put_float (fd, f)
@@ -418,27 +565,45 @@ EIF_REAL f;
 {
 	float tf;
 	tf = f;
+#ifndef EIF_WIN32
 	if (write ((int)fd, &tf, sizeof (float)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, (char *) &f, sizeof(f), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 void c_put_double (fd, d)
 EIF_INTEGER fd;
 EIF_DOUBLE d;
 {
+#ifndef EIF_WIN32
 	if (write ((int)fd, (double *) &d, sizeof (double)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, (char *) &d, sizeof(d), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 void c_put_string (fd, s)
 EIF_INTEGER fd;
 EIF_OBJ s;
 {
+#ifndef EIF_WIN32
 	if (write ((int)fd, s, strlen (s)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, s, strlen(s), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 void c_put_stream (fd, s, l)
@@ -446,18 +611,31 @@ EIF_INTEGER fd;
 EIF_OBJ s;
 EIF_INTEGER l;
 {
+#ifndef EIF_WIN32
 	if (write ((int)fd, (char *)s, (int)l) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (send (fd, s, l, 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 }
 
 EIF_REAL c_read_float (fd)
 EIF_INTEGER fd;
 {
 	float f;
+#ifndef EIF_WIN32
 	if (read ((int) fd, &f, sizeof (float)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (recv ((int) fd, (char *) &f, sizeof (float), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+
+#endif
 	return (EIF_REAL) f;
 }
 
@@ -465,9 +643,15 @@ EIF_DOUBLE c_read_double (fd)
 EIF_INTEGER fd;
 {
 	double d;
+#ifndef EIF_WIN32
 	if (read ((int) fd, &d, sizeof (double)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (recv (fd, (char *) &d, sizeof (double), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_DOUBLE) d;
 }
 
@@ -475,9 +659,15 @@ EIF_CHARACTER c_read_char (fd)
 EIF_INTEGER fd;
 {
 	char c;
+#ifndef EIF_WIN32
 	if (read ((int) fd, &c, sizeof (char)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (recv (fd, &c, sizeof (char), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_CHARACTER) c;
 }
 
@@ -486,9 +676,15 @@ EIF_INTEGER fd;
 {
 	EIF_INTEGER i;
 
-	if (read ((int)fd, &i, sizeof (EIF_INTEGER)) < 0)
+#ifndef EIF_WIN32
+	if (read ((int)fd, (char *) &i, sizeof (EIF_INTEGER)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (recv (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) i;
 }
 
@@ -500,22 +696,36 @@ EIF_OBJ buf;
 {
 	int nr;
 
+#ifndef EIF_WIN32
 	if ((nr = read ((int) fd, (char *) buf, (int) len)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if ((nr = recv (fd, (char *) buf, (int) len, 0)) == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) nr;
 }
 
 EIF_INTEGER c_read (fd, l, buf)
 EIF_INTEGER fd;
 EIF_INTEGER l;
+EIF_OBJ buf;
 {
 	int result;
 
+#ifndef EIF_WIN32
 	result = read ((int) fd, buf, (int) l);
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	result = recv ((int) fd, buf, (int) l, 0);
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -528,9 +738,15 @@ EIF_INTEGER flags;
 	int result;
 
 	result = recv ((int)fd, (char *)buf, (int)len, (int) flags);
+#ifndef EIF_WIN32
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -544,10 +760,17 @@ EIF_POINTER addr_len;
 {
 	int result;
 
-	result = recvfrom ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int *)addr_len);
+	result = recvfrom ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int*)addr_len);
+
+#ifndef EIF_WIN32
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -557,10 +780,19 @@ EIF_INTEGER l;
 EIF_OBJ buf;
 {
 	int result;
+#ifndef EIF_WIN32
 	result = write ((int) fd, (char *) buf, (int) l);
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
+
+#else
+	result = send (fd, (char *) buf, (int) l, 0);
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -590,8 +822,13 @@ EIF_INTEGER addr_len;
 	int result;
 
 	if ((result = sendto ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int)addr_len)) < 0)
+#ifndef EIF_WIN32
 		if (errno != EWOULDBLOCK)
 			eio();
+#else
+		if (WSAGetLastError() != EWOULDBLOCK)
+			eio();
+#endif
 	return (EIF_INTEGER) result;
 }
 
@@ -615,7 +852,11 @@ EIF_INTEGER opt;
 	int arg, asize;
 
 	asize = sizeof (arg);
+#ifndef EIF_WIN32
 	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) < 0)
+#else
+	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == SOCKET_ERROR)
+#endif
 		return (EIF_INTEGER) 0;
 	return (EIF_INTEGER) arg;
 }
@@ -628,7 +869,11 @@ EIF_INTEGER fd;
 
 	asize = sizeof (arg);
 
+#ifndef EIF_WIN32
 	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
+#else
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
+#endif
 		return (EIF_BOOLEAN) 0;
 
 	return (EIF_BOOLEAN) (!(arg.l_onoff == 0));
@@ -642,7 +887,11 @@ EIF_INTEGER fd;
 
 	asize = sizeof (arg);
 
+#ifndef EIF_WIN32
 	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
+#else
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
+#endif
 		return (EIF_INTEGER) 0;
 
 	return (EIF_INTEGER) arg.l_linger;
@@ -666,23 +915,38 @@ EIF_INTEGER fd;
 EIF_INTEGER cmd;
 EIF_INTEGER arg;
 {
+#ifndef EIF_WIN32
 	return (EIF_INTEGER) fcntl ((int)fd, (int)cmd, (int)arg);
+#else
+	return 0;
+#endif
 }
 
 void c_set_blocking (fd)
 EIF_INTEGER fd;
 {
+#ifndef EIF_WIN32
 	int arg = 0;
 
 	ioctl ((int)fd, FIONBIO, (char *) &arg);
+#else
+	u_long arg = 0;
+
+	ioctlsocket ((int)fd, FIONBIO, &arg);
+#endif
 }
 
 void c_set_non_blocking (fd)
 EIF_INTEGER fd;
 {
-	int arg = 1;
 
+#ifndef EIF_WIN32
+	int arg = 1;
 	ioctl ((int)fd, FIONBIO, (char *) &arg);
+#else
+	u_long arg = 1;
+	ioctlsocket ((int)fd, FIONBIO, &arg);
+#endif
 }
 
 EIF_INTEGER int_size ()
@@ -718,3 +982,4 @@ EIF_INTEGER count;
 {
 	bcopy (rdata_obj, (pdata_obj + int_size()), count);
 }
+

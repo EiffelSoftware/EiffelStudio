@@ -146,19 +146,25 @@ feature {NONE}
 			a_widget_exists: not (a_widget = Void)
 		local
 			primitive: PRIMITIVE;
-			manager: MANAGER
+			manager: MANAGER;
+			color: COLOR
 		do
-			Result := (a_widget.background_color /= Void) and then 
-						(a_widget.background_color.implementation = Current);
+			color := a_widget.background_color;
+			Result := (color /= Void) and then 
+						(color.implementation = Current);
 			if not Result then
 				primitive ?= a_widget;
-				if not (primitive = Void) then
-					Result := (primitive.foreground_color /= Void) and then 
-								(primitive.foreground_color.implementation = Current)
+				if primitive /= Void then
+					color := primitive.foreground_color;
+					Result := (color /= Void) and then 
+								(color.implementation = Current)
 				else
 					manager ?= a_widget;
-					Result := (manager /= Void) and then ((manager.foreground_color /= Void) and then 
-								(manager.foreground_color.implementation = Current))
+					if manager /= Void then
+						color := manager.foreground_color;
+						Result := (color /= Void) and then 
+								(color.implementation = Current)
+					end
 				end
 			end
 		ensure then
@@ -329,7 +335,7 @@ feature {NONE}
 			widgets_to_update: LINKED_LIST [WIDGET_X];
 			primitive: PRIMITIVE_I;
 			manager: MANAGER_I;
-			i: WIDGET_X;
+			w: WIDGET_X;
 			c: COLOR
 		do
 			from
@@ -338,24 +344,24 @@ feature {NONE}
 			until
 				widgets_to_update.after
 			loop
-				i := widgets_to_update.item;
-				c := i.background_color;	
-				if (not (widgets_to_update.item.background_color = Void)) 
-					and then (widgets_to_update.item.background_color.implementation = Current) 
-				then
-					widgets_to_update.item.update_background_color;
+				w := widgets_to_update.item;
+				c := w.background_color;	
+				if (c /= Void) and then (c.implementation = Current) then
+					w.update_background_color;
 				end;
-				primitive ?= widgets_to_update.item;
-				if not (primitive = Void) then
-					if (not (primitive.foreground_color = Void)) and then (primitive.foreground_color.implementation = Current) then
+				primitive ?= w;
+				if primitive /= Void then
+					c := primitive.foreground_color;
+					if (c /= Void) and then (c.implementation = Current) then
 						primitive.update_foreground_color;
 					end
 				else
-					manager ?= widgets_to_update.item;
-					if (not (manager = Void)) and then ((not (manager.foreground_color = Void)) 
-					and then (manager.foreground_color.implementation = Current)) 
-				then
-						manager.update_foreground_color;
+					manager ?= w;
+					if manager /= Void then 
+						c := manager.foreground_color;
+						if (c /= Void) and then (c.implementation = Current) then
+							manager.update_foreground_color;
+						end
 					end
 				end;
 				widgets_to_update.forth;

@@ -84,7 +84,7 @@ feature -- Access
 			-- ie: immediate and inherited procedures, but also procedures associated
 			-- to a property or an event.
 		local
-			i, j, nb, nb_prop_event_proc: INTEGER
+			i, j, nb, nb_prop_event_proc, l_estimated_count: INTEGER
 			event_or_set_procedures: ARRAY [CONSUMED_PROCEDURE]
 			l_event: CONSUMED_EVENT
 			l_prop: CONSUMED_PROPERTY
@@ -95,8 +95,14 @@ feature -- Access
 			then
 				Result := internal_procedures
 			else
-				
-				create event_or_set_procedures.make (1, 100)
+				if properties /= Void then
+					l_estimated_count := properties.count
+				end
+				if events /= Void then
+						-- 3 because per event there are 3 routines.
+					l_estimated_count := l_estimated_count + 3 * events.count
+				end
+				create event_or_set_procedures.make (1, l_estimated_count)
 				if properties /= Void and then not properties.is_empty then
 					from
 						i := properties.lower
@@ -111,7 +117,6 @@ feature -- Access
 						end
 						i := i + 1
 					end
-					
 				end
 				
 				if events /= Void and then not events.is_empty then

@@ -130,10 +130,6 @@ end;
 
 				!! uf.make (Eiffel_system.application_name (True));
 				!! make_f.make (makefile_sh_name);
---!! FIXME: melt_only (no check for Makefile.SH)
---!! FIXME: ****************************************
---!! FIXME: ****************************************
---!! FIXME: ****************************************
 
 				if uf.exists then
 					if make_f.exists and then make_f.date > uf.date then

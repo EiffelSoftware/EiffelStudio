@@ -8,14 +8,16 @@ indexing
 class BAR_AND_TEXT
 
 inherit
-
 	TOOL_W
 		redefine
 			save_cmd_holder, set_default_format, hole_button,
 			init_modify_action
-		end;
-	COMMAND;
-	WINDOW_ATTRIBUTES;
+		end
+
+	COMMAND
+
+	WINDOW_ATTRIBUTES
+
 	RESOURCE_USER
 
 creation

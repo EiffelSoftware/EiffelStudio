@@ -215,9 +215,11 @@ feature {NONE} -- Implementation
 			if resource_files.user_specific /= Void then
 				!! home_dir_button.make ("Home Directory", box_1)
 			end;
+
 			if resource_files.defaults_general /= Void then
 				!! defaults_button.make ("$EIF_DEFAULTS Directory", box_1);
 			end;
+
 			form.attach_left (label, 1);
 			form.attach_top (label, 1);
 			form.attach_top_widget (label, frame_1, 1);

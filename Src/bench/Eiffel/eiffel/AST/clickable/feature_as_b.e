@@ -175,7 +175,7 @@ feature -- Debugger
 				ctxt.rollback;
 			else
 				body.format (ctxt);
-				if ctxt.is_short then
+				if ctxt.is_feature_short then
 					ctxt.put_text_item_without_tabs (ti_After_feature_declaration)
 				else
 					ctxt.put_text_item_without_tabs (ti_Semi_colon);
@@ -189,7 +189,7 @@ feature -- Debugger
 				if is_const_or_att then
 					ctxt.indent;
 					ctxt.indent;
-					if ctxt.is_short then
+					if ctxt.is_feature_short then
 						ctxt.new_line;
 					end;
 					comments := ctxt.feature_comments;

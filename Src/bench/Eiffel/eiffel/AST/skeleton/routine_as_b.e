@@ -502,7 +502,7 @@ feature -- Context format
 			chained_assert: CHAINED_ASSERTIONS;
 			comments: EIFFEL_COMMENTS
 		do
-			if ctxt.is_short then
+			if ctxt.is_feature_short then
 				ctxt.new_line
 			else
 				ctxt.put_space;
@@ -534,7 +534,7 @@ feature -- Context format
 				precondition.format (ctxt);
 				ctxt.set_not_in_assertion;
 			end;
-			if not ctxt.is_short then
+			if not ctxt.is_feature_short then
 				if locals /= void then
 					ctxt.put_text_item (ti_Local_keyword);
 					ctxt.set_separator (ti_Semi_colon);
@@ -557,7 +557,7 @@ feature -- Context format
 				postcondition.format (ctxt);
 				ctxt.set_not_in_assertion;
 			end;
-			if not ctxt.is_short then
+			if not ctxt.is_feature_short then
 				if rescue_clause /= void then
 					ctxt.put_text_item (ti_Rescue_keyword);
 					ctxt.indent;

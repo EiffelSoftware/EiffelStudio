@@ -35,7 +35,7 @@ feature
 			class_id := associated_class.id;
 			if new_compilation then
 				ast := associated_class.build_ast;
-				if System.is_precompiling then
+				if Compilation_modes.is_precompiling then
 						-- Register the comments for precompiled
 						-- associated_class.
 					!! comment_reg.make (ast, associated_class);

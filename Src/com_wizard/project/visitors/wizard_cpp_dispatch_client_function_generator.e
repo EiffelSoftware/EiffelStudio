@@ -8,13 +8,11 @@ class
 	WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
 
 inherit
-	WIZARD_CPP_FUNCTION_GENERATOR
+	WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 
 	WIZARD_DISPATCH_FUNCTION_HELPER
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
-
-	WIZARD_VARIABLE_NAME_MAPPER
 
 feature -- Basic operations
 
@@ -47,28 +45,10 @@ feature -- Basic operations
 
 			result_type_visitor := a_descriptor.return_type.visitor
 
-			if 
-				result_type_visitor.is_basic_type or 
-				result_type_visitor.is_enumeration or
-				result_type_visitor.vt_type = Vt_bool
-			then
-				if result_type_visitor.cecil_type = Void or result_type_visitor.cecil_type.empty then
-					ccom_feature_writer.set_result_type (Void_c_keyword)
-				else
-					ccom_feature_writer.set_result_type (result_type_visitor.cecil_type)
-				end
-
-			elseif 
-				not does_routine_have_result (a_descriptor) 
-			then
-				ccom_feature_writer.set_result_type (Void_c_keyword)
-
+			if does_routine_have_result (a_descriptor) then
+				set_return_type (result_type_visitor)
 			else
-				ccom_feature_writer.set_result_type (Eif_reference)
-			end
-
-			if result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
-				c_header_files.extend (result_type_visitor.c_header_file)
+				ccom_feature_writer.set_result_type ("void")
 			end
 
 			if func_desc.argument_count > 0 then
@@ -93,132 +73,8 @@ feature {NONE} -- Implementation
 			-- Set ccom client feature signature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
-		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			tmp_string: STRING
-			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create tmp_string.make (1000)
-			arguments := func_desc.arguments
-			if arguments /= Void and not arguments.empty then
-				from
-					arguments.start
-				until
-					arguments.off
-				loop
-					visitor := arguments.item.type.visitor
-					if  visitor.c_header_file /= Void and then not  visitor.c_header_file.empty then
-						c_header_files.extend (visitor.c_header_file)
-					end
-
-					if is_paramflag_fout (arguments.item.flags) then
-						tmp_string.append (Beginning_comment_paramflag)
-						if is_paramflag_fin (arguments.item.flags) then
-							tmp_string.append ("in, ")
-						end
-						tmp_string.append ("out")
-						tmp_string.append (End_comment_paramflag)
-						if  visitor.c_header_file /= Void and then not  visitor.c_header_file.empty then
-							c_header_files.extend (visitor.c_header_file)
-						end
-
-						if 
-							visitor.is_basic_type or 
-							visitor.is_enumeration 
-						then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-
-						elseif
-							visitor.vt_type = Vt_bool
-						then
-							tmp_string.append (visitor.cecil_type)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-
-						elseif 
-							visitor.is_array_basic_type or 
-							visitor.is_interface_pointer or 
-							visitor.is_coclass_pointer or 
-							visitor.is_structure_pointer
-						then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-							tmp_string.append (visitor.c_post_type)
-
-						elseif visitor.is_interface or visitor.is_structure then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (Asterisk)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-							tmp_string.append (visitor.c_post_type)
-
-						else
-							tmp_string.append (Eif_object)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-
-						end
-						if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-							c_header_files.extend (visitor.c_header_file)
-						end
-						tmp_string.append (Comma_space)
-
-					else
-						tmp_string.append (Beginning_comment_paramflag)
-						tmp_string.append ("in")
-						tmp_string.append (End_comment_paramflag)
-						if 
-							visitor.is_basic_type or 
-							visitor.is_enumeration or 
-							visitor.vt_type = Vt_bool
-						then
-							tmp_string.append (visitor.cecil_type)
-
-						elseif 
-							visitor.is_interface_pointer or 
-							visitor.is_coclass_pointer or 
-							visitor.is_structure_pointer
-						then
-							tmp_string.append (visitor.c_type)
-	
-						elseif 
-							visitor.is_array_basic_type or 
-							visitor.is_interface or 
-							visitor.is_structure 
-						then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (Asterisk)
-
-						else
-							tmp_string.append (Eif_object)
-						end
-
-						tmp_string.append (Space)
-						tmp_string.append (arguments.item.name)
-						tmp_string.append (visitor.c_post_type)
-
-						if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-							c_header_files.extend (visitor.c_header_file)
-						end
-
-						tmp_string.append (Comma_space)
-
-					end
-					visitor := Void
-					arguments.forth
-				end
-
-				if tmp_string.count > 0  then
-					tmp_string.remove (tmp_string.count)
-					tmp_string.remove (tmp_string.count)
-				end
-			end
-			ccom_feature_writer.set_signature (tmp_string)
+			ccom_feature_writer.set_signature (cecil_signature (func_desc))
 		end
 
 	feature_body (interface_name, guid: STRING; lcid: INTEGER; result_type_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -375,7 +231,7 @@ feature {NONE} -- Implementation
 				Result.append (return_value)
 			end
 
-			if not free_arguments.empty then
+			if not free_arguments.is_empty then
 				from
 					free_arguments.start
 				until
@@ -403,7 +259,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 			valid_position: position >= 0
 		local
 			type: INTEGER
@@ -451,7 +307,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		local
 			tmp_string: STRING
 			type: INTEGER
@@ -501,7 +357,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		local
 			tmp_value: STRING
 		do
@@ -533,7 +389,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		local
 			tmp_value: STRING
 			type: INTEGER
@@ -696,7 +552,7 @@ feature {NONE} -- Implementation
 		require
 			valid_position: position >= 0
 			non_void_attribute_name: attribute_name /= Void
-			valid_name: not attribute_name.empty
+			valid_name: not attribute_name.is_empty
 		do
 			create Result.make (500)
 			Result.append (Arguments_name)
@@ -727,7 +583,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_argument_type: Result /= Void
-			valid_argument_type: not Result.empty
+			valid_argument_type: not Result.is_empty
 		end
 
 	argument_value_set_up (position: INTEGER; attribute_name, value: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -735,9 +591,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_name: attribute_name /= Void
-			valid_name: not attribute_name.empty
+			valid_name: not attribute_name.is_empty
 			non_void_value: value /= Void
-			valid_value: not value.empty
+			valid_value: not value.is_empty
 		do
 			Result := out_value_set_up (position, attribute_name)
 			Result.append (Space_equal_space)
@@ -783,7 +639,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_argument_value: Result /= Void
-			valid_argument_value: not Result.empty
+			valid_argument_value: not Result.is_empty
 		end
 
 end -- class WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR

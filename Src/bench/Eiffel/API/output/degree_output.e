@@ -277,7 +277,7 @@ feature -- Output on per class
 		do
 			processed := processed + total_nbr
 			io.error.putstring ("Features done: ")
-			io.putint (processed)
+			io.error.putint (processed)
 			io.error.putstring ("%TFeatures to go: ")
 			io.error.putint (nbr_to_go)
 			io.error.new_line

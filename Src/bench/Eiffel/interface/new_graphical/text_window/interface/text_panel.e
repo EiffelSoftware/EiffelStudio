@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			vertical_scrollbar.change_actions.extend (~on_vertical_scroll)
 
 			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
-			horizontal_scrollbar.set_step (1)
+			horizontal_scrollbar.set_step (5)
 			horizontal_scrollbar.change_actions.extend (~on_horizontal_scroll)
 
 			update_scroll_agent := ~update_scrollbars_display

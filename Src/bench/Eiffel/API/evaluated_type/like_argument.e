@@ -101,7 +101,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Like_control.raise_error
 			else
 				argument_type := f.arguments.i_th (position)
-				Result := clone (Current)
+				Result := twin
 					-- Recalculation of the anchor
 				Result.set_actual_type 
 					(argument_type.solved_type (feat_table, f).actual_type)
@@ -115,7 +115,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.set_actual_type (actual_type.instantiation_in (type, written_id))
 		end
 

@@ -77,8 +77,7 @@ feature -- Output
 			if f /= Void then
 				l_class := f.associated_class.ast
 				if l_class.generics.valid_index (position) then
-					s := clone (l_class.generics.i_th (position).formal_name)
-					s.to_upper
+					s := l_class.generics.i_th (position).formal_name.as_upper
 					st.add (create {GENERIC_TEXT}.make (s))
 				else
 						-- We are in case where actual generic position does not match

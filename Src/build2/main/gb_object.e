@@ -848,7 +848,7 @@ feature {NONE} -- Implementation
 			-- with `layout_item' which we used previously.
 		local
 			local_children: ARRAYED_LIST [GB_OBJECT]
-			a_layout_item, a_layout_item2: GB_LAYOUT_CONSTRUCTOR_ITEM
+			a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			local_children := children
 			if layout_item = Void then
@@ -860,8 +860,8 @@ feature {NONE} -- Implementation
 				until
 					local_children.off or not Result
 				loop
-					a_layout_item2 ?= layout_item.i_th (local_children.index)
-					Result := local_children.item = a_layout_item2.object
+					a_layout_item ?= layout_item.i_th (local_children.index)
+					Result := local_children.item = a_layout_item.object
 					local_children.forth
 				end
 			end

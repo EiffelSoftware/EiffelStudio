@@ -362,10 +362,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			has_directory: has (a_directory)
 		local
 			perform_delete: BOOLEAN
-			window_item: GB_WINDOW_SELECTOR_ITEM
 			all_objects: ARRAYED_LIST [GB_OBJECT]
-			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 			warning_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			perform_delete := True

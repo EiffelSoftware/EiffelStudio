@@ -14,15 +14,6 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			eiffel_writer := Void
-		ensure
-			void_writer: eiffel_writer = Void
-		end
 
 
 feature -- Basic operations
@@ -36,12 +27,13 @@ feature -- Basic operations
 			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			create a_visible.make
+			an_interface.set_impl_names (False)
 			a_visible.set_name (an_interface.eiffel_class_name)
 			system_descriptor.add_visible_class_component (a_visible)
 
 			create eiffel_writer.make
 
-			a_class_name := name_for_class (an_interface.name, an_interface.type_kind, False)
+			a_class_name := an_interface.eiffel_class_name
 
 			dispatch_interface := (an_interface.interface_descriptor.dispinterface or 
 					an_interface.interface_descriptor.dual)
@@ -61,8 +53,7 @@ feature -- Basic operations
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
-		ensure then
-			non_void_eiffel_writer: eiffel_writer /= Void
+			eiffel_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

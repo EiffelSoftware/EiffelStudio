@@ -18,17 +18,6 @@ inherit
 			set_default_ancestors
 		end
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			eiffel_writer := Void
-			dispatch_interface := False
-		ensure
-			void_writer: eiffel_writer = Void
-			not_dispatch_interface: dispatch_interface = False
-		end
 
 feature -- Access
 
@@ -49,6 +38,8 @@ feature -- Access
 			end
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+
+			eiffel_writer := Void
 
 			-- Server Implementation
 			create server_impl_generator

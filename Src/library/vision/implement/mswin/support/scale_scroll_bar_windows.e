@@ -19,7 +19,7 @@ inherit
 			on_mouse_move
 		end
 
-creation
+create
 
 	make_vertical, 
 	make_horizontal

@@ -87,7 +87,7 @@ inherit
 			set_x_y, set_height, set_width, set_size
 		end
 
-creation
+create
 
 	make
 
@@ -158,7 +158,7 @@ feature -- Status report
 		do
 			ms := title_string;
 			if ms = Void then
-				!! Result.make (0);
+				create Result.make (0);
 			else
 				Result := ms.to_eiffel_string;
 				ms.destroy
@@ -173,7 +173,7 @@ feature -- Status setting
 		local
 			list: VISION_COMMAND_LIST
 		do
-			!! list.make;
+			create list.make;
 			scroll_bar.set_translation (a_translation, list, Void);
 			list.add_command (a_command, argument)
 		end;
@@ -246,7 +246,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_text);
+			create ms.make_default_l_to_r (a_text);
 			label.unmanage;
 			set_title_string (ms);
 			label.manage;
@@ -272,7 +272,7 @@ feature -- Status setting
 					p_set_size (nw, nh + (2 * label.height));
 				end;
 			else
-				!! vas.make(0);
+				create vas.make(0);
 				if is_value_shown and (text = Void or else text.empty) then
 					vas.append_integer (maximum);
 					tw := font_width_of_string (vas);
@@ -300,7 +300,7 @@ feature -- Status setting
 			elseif is_horizontal then
 				p_set_width (nw);
 			else
-				!!vas.make(0);
+				create vas.make(0);
 				if is_value_shown and (text = Void or else text.empty) then
 					vas.append_integer (maximum);
 					tw := font_width_of_string (vas);
@@ -367,7 +367,7 @@ feature -- Element change
 		do
 			list := vision_command_list (drag_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_drag_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -381,7 +381,7 @@ feature -- Element change
 		do
 			list := vision_command_list (value_changed_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_value_changed_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -395,7 +395,7 @@ feature -- Element change
 		do
 			list := button_command (scroll_bar.event_command (ButtonPressMask));
 			if list = Void then
-				!! list.make;
+				create list.make;
 				scroll_bar.set_event_handler (ButtonPressMask, list, Void)
 			end;
 			list.add_command (number, a_command, argument)
@@ -409,7 +409,7 @@ feature -- Element change
 		do
 			list := button_command (scroll_bar.event_command (ButtonPressMask));
 			if list = Void then
-				!! list.make;
+				create list.make;
 				scroll_bar.set_event_handler (ButtonReleaseMask, list, Void)
 			end;
 			list.add_command (number, a_command, argument)
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 		do
 			list := vision_command_list (scroll_bar.event_command (a_mask));
 			if list = Void then
-				!! list.make;
+				create list.make;
 				scroll_bar.set_event_handler (a_mask, list, an_argument)
 			end;
 			list.add_command (a_command, an_argument)

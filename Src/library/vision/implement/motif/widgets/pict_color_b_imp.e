@@ -22,7 +22,7 @@ inherit
 			set_background_color_from_imp
 		end
 
-creation
+create
 
 	make
 
@@ -49,7 +49,7 @@ feature -- Status report
 			pixmap_x: PIXMAP_IMP
 		do
 			if private_pixmap = Void then
-				!! private_pixmap.make;
+				create private_pixmap.make;
 				pixmap_x ?= private_pixmap.implementation;
 				pixmap_x.increment_users;
 				pixmap_x.set_default_pixmap (mel_pixmap);

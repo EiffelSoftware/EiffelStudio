@@ -22,7 +22,7 @@ inherit
 
 	MEL_COMMAND
 
-creation
+create
 
 	make
 
@@ -70,7 +70,7 @@ feature {NONE} -- implementation
 
 	password: STRING is
 		once
-			!!Result.make(0)
+			create Result.make(0)
 		end
 
 end -- class PASSWORD_IMP

@@ -45,7 +45,7 @@ feature -- Implementation
 	main_windows: LINKED_LIST [TOP_IMP] is
 			-- Storage for the main window
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end

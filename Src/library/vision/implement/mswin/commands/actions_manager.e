@@ -10,7 +10,7 @@ class
 inherit
 	ACTIONS_MANAGER_CONTROLLER_WINDOWS
 
-creation
+create
 
 	make
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the table
 		do
-			!!  widget_actions_table.make (1)
+			create  widget_actions_table.make (1)
 			actions_manager_list.extend (Current)
 		end
 
@@ -34,10 +34,10 @@ feature -- Element change
 			widget.set_hash_code
 			wa := widget_actions (widget)
 			if wa = Void then
-				!! wa.make (widget)
+				create wa.make (widget)
 				widget_actions_table.put (wa, widget)
 			end
-			!! action.make (c, arg)
+			create action.make (c, arg)
 			wa.put (action)
 		end
 

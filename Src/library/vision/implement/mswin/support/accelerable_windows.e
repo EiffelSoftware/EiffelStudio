@@ -95,7 +95,7 @@ feature -- Status setting
 					if key_string.count > 1 or virt_key then
 						flags := set_flag (flags, Fvirtkey)
 					end
-					!! accelerator.make (key, 0, flags)
+					create accelerator.make (key, 0, flags)
 				end
 			end
 		ensure

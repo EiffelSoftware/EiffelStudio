@@ -21,7 +21,7 @@ inherit
 
 	BACKGROUND
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature -- Initialization
 			-- Create an interior.
 		do
 			logical_function_mode := GXcopy;
-			!! foreground_color.make;	
+			create foreground_color.make;	
 		end;
 
 feature {FIGURE} -- Element change

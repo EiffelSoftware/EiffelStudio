@@ -44,7 +44,7 @@ inherit
 			mel_warn_make, mel_warn_make_no_auto
 		end
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 
 	FOREGROUND
 
-creation
+create
 
 	make
 
@@ -33,10 +33,10 @@ feature -- Initialization
 			-- Create a picture.
 		do
 			init_fig (Void);
-			!! foreground_color.make;
-			!! background_color.make;
-			!! upper_left;
-			!! pixmap.make;
+			create foreground_color.make;
+			create background_color.make;
+			create upper_left;
+			create pixmap.make;
 			logical_function_mode := GXcopy;
 		end;
 

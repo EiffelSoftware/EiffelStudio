@@ -27,7 +27,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -36,12 +36,12 @@ feature -- Initialization
 			-- Create the directory selection dialog
 		do
 			make_by_id (a_parent, directory_dialog_id)
-			!! selection_text.make_by_id (Current, selection_text_id)
-			!! combo_box.make_by_id (Current, combo_box_id)
-			!! directory_list.make_by_id (Current, directory_list_id)
-			!! drive_list.make_by_id (Current, drive_list_id)
-			!! ok_button.make_by_id (Current, idok)
-			!! cancel_button.make_by_id (Current, idcancel)
+			create selection_text.make_by_id (Current, selection_text_id)
+			create combo_box.make_by_id (Current, combo_box_id)
+			create directory_list.make_by_id (Current, directory_list_id)
+			create drive_list.make_by_id (Current, drive_list_id)
+			create ok_button.make_by_id (Current, idok)
+			create cancel_button.make_by_id (Current, idcancel)
 			action_widget := a_widget
 		end
 
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 				selection_made := true
 				tmp := combo_box.selected_string
 				if tmp.count > 0 then
-					!! d.make (tmp)
+					create d.make (tmp)
 					if d.exists then
 						directory := tmp
 						update_directories
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			elseif notify_code = cbn_killfocus then
 				tmp := combo_box.text
 				if tmp.count > 0 then
-					!! d.make (tmp)
+					create d.make (tmp)
 					if d.exists then
 						directory := tmp
 						update_directories
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			a_item : STRING
 		do
 			if remembered_list = Void then
-				!! remembered_list.make
+				create remembered_list.make
 				remembered_list.compare_objects
 				remembered_list.extend (s)
 			else
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			from
 				list := directories_list
 				nb := list.occurrences (';')
-				!! remembered_list.make
+				create remembered_list.make
 				remembered_list.compare_objects
 				old_pos := 1
 				i := 0
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			list: STRING
 		do
 			from
-				!! list.make (512)
+				create list.make (512)
 				remembered_list.start
 			until
 				remembered_list.after

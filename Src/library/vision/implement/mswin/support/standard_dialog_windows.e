@@ -580,9 +580,9 @@ feature {NONE} -- Implementation
 	create_buttons is
 			-- Create the buttons and hide them if necessary.
 		do
-			!! ok_button.make (Current, ok_label, 0, 0, 0, 0, ok_id)
-			!! cancel_button.make (Current, cancel_label, 0, 0, 0, 0, cancel_id)
-			!! help_button.make (Current, help_label, 0, 0, 0, 0, help_id)
+			create ok_button.make (Current, ok_label, 0, 0, 0, 0, ok_id)
+			create cancel_button.make (Current, cancel_label, 0, 0, 0, 0, cancel_id)
+			create help_button.make (Current, help_label, 0, 0, 0, 0, help_id)
 			update_visibility
 		end
 

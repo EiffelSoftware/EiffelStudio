@@ -21,7 +21,7 @@ inherit
 
 	BASIC_ROUTINES
 
-creation
+create
 	make,
 	make_for_screen
 
@@ -107,7 +107,7 @@ feature -- Status setting
 					and_mask := mask_from_pixmap_array (xdib.array)
 						-- Mask currently ignored
 						-- Behavior indeterminate otherwise
-					!! xor_mask.make (1, cursor_size)
+					create xor_mask.make (1, cursor_size)
 					from
 						c := charconv (255)
 						i := 1
@@ -129,7 +129,7 @@ feature -- Status setting
 			row, column: INTEGER
 		do
 			from
-				!! Result.make (1, cursor_width // 8 * cursor_height)
+				create Result.make (1, cursor_width // 8 * cursor_height)
 				row := 1
 			until
 				row > cursor_height or row > array.height

@@ -41,7 +41,7 @@ inherit
 			fb_make, fb_make_no_auto_unmanage
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Creation
@@ -61,7 +61,7 @@ feature -- Status report
 	font: FONT is
 			-- Font currently selected by the user
 		do
-			!! Result.make;
+			create Result.make;
 			Result.set_name (current_font_name)
 		end;
 
@@ -88,7 +88,7 @@ feature  -- Element change
         do
             list := vision_command_list (apply_command);
             if list = Void then
-                !! list.make;
+                create list.make;
                 set_apply_callback (list, Void)
             end;
             list.add_command (a_command, argument)
@@ -102,7 +102,7 @@ feature  -- Element change
         do
             list := vision_command_list (cancel_command);
             if list = Void then
-                !! list.make;
+                create list.make;
                 set_cancel_callback (list, Void)
             end;
             list.add_command (a_command, argument)
@@ -116,7 +116,7 @@ feature  -- Element change
         do
             list := vision_command_list (ok_command);
             if list = Void then
-                !! list.make;
+                create list.make;
                 set_ok_callback (list, Void)
             end;
             list.add_command (a_command, argument)
@@ -167,8 +167,8 @@ feature {NONE} -- Implementation
 		do
 			if Label_font_value /= value then
 				if font_implementation.is_valid then
-					!! an_entry.make_default_from_font_struct (font_implementation);
-					!! a_font_list.append_entry (an_entry);
+					create an_entry.make_default_from_font_struct (font_implementation);
+					create a_font_list.append_entry (an_entry);
 					if a_font_list.is_valid then
 						if value = Button_font_value then
 							mel_set_button_font (a_font_list)

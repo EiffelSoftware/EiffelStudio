@@ -7,7 +7,7 @@ indexing
 class
 	ENUMERATED_FONT_DETAILS_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -17,7 +17,7 @@ feature -- Initialization
 		do
 			name := font_name
 			style := font_style	
-			!! sizes.make
+			create sizes.make
 		end
 
 feature -- Access
@@ -75,7 +75,7 @@ feature -- Status setting
 			c: CURSOR
 		do
 			if sizes.is_empty then
-				!! Result.make (size.to_integer * 2, name)
+				create Result.make (size.to_integer * 2, name)
 				Result.set_not_underlined
 				Result.set_not_strike_out
 				Result.set_orientation (0)
@@ -114,7 +114,7 @@ feature -- Status setting
 	scaleable_sizes: ARRAY [INTEGER] is
 			-- Standard sizes for fonts that are scaleable.
 		once
-			!! Result.make (1, 16)
+			create Result.make (1, 16)
 			Result.put (8, 1)
 			Result.put (9, 2)
 			Result.put (10, 3)

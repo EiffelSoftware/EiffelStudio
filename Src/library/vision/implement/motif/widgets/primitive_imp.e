@@ -45,7 +45,7 @@ feature -- Status Report
 			fg_color_x: COLOR_IMP
 		do
 			if private_foreground_color = Void then
-				!! private_foreground_color.make;
+				create private_foreground_color.make;
 				fg_color_x ?= private_foreground_color.implementation;
 				fg_color_x.set_default_pixel (mel_foreground_color, 
 						mel_screen.default_colormap);

@@ -18,7 +18,7 @@ inherit
 			conf_recompute
 		end
 
-creation
+create
 
 	make
 
@@ -30,8 +30,8 @@ feature -- Initialization
 		do
 			init_fig (Void);
 			line_make ;
-			!! p1;
-			!! p2;
+			create p1;
+			create p2;
 			p2.set_x (1);
 			surround_box.set_infinite
 		end;

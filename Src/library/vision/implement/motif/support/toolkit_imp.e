@@ -21,7 +21,7 @@ inherit
 
 	EXCEPTIONS
 
-creation
+create
 	make
 
 feature {NONE} -- Inititalization
@@ -32,7 +32,7 @@ feature {NONE} -- Inititalization
 		local
 			app_context: MEL_APPLICATION_CONTEXT
 		do 
-			!! app_context.make;
+			create app_context.make;
  			application_context_cell.put (app_context)
 			if application_class = Void then
 				application_class_cell.put (clone (app_class))
@@ -108,7 +108,7 @@ feature -- Status setting
 			wr: MEL_WIDGET_RESOURCE;
 			i: INTEGER
 		do
-			!! mel_list.make (a_list.lower, a_list.upper);
+			create mel_list.make (a_list.lower, a_list.upper);
 			from
 				i := a_list.lower
 			until

@@ -19,7 +19,7 @@ inherit
 
     LOGICAL
 
-creation
+create
 
 	make
 
@@ -29,8 +29,8 @@ feature -- Initialization
 			-- Create a pict_color.
 		do
 			init_fig (Void);
-			!! upper_left;
-			!! pixmap.make;
+			create upper_left;
+			create pixmap.make;
 			logical_function_mode := GXcopy;
 		end;
 

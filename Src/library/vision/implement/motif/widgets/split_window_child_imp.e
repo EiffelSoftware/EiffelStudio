@@ -54,7 +54,7 @@ end
 				set_pane_minimum (new_height.abs)
 			end
 
-			{FORM} Precursor (new_width.abs,new_height.abs)
+			Precursor {FORM} (new_width.abs,new_height.abs)
 			set_pane_minimum (1)
 		end
 

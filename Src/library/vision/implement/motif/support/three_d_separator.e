@@ -4,7 +4,7 @@ inherit
 
 	SEPARATOR
 
-creation
+create
 	make
 
 end -- class THREE_D_SEPARATOR

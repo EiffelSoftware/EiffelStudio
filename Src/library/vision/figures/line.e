@@ -39,7 +39,7 @@ feature -- Access
 			when 3 then
 				Result := p2
 			when 4 then
-				!!Result;
+				create Result;
 				Result.set ((p1.x+p2.x) // 2, (p1.y+p2.y) // 2)
 			end
 		end;

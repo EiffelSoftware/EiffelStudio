@@ -39,7 +39,7 @@ inherit
 			shown
 		end
 
-creation
+create
 
 	make
 
@@ -66,7 +66,7 @@ feature -- Element change
 		do
 			list := vision_command_list (activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_activate_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -80,7 +80,7 @@ feature -- Element change
 		do
 			list := vision_command_list (arm_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_arm_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -94,7 +94,7 @@ feature -- Element change
 		do
 			list := vision_command_list (disarm_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_disarm_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

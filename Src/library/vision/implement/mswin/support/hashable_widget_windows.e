@@ -31,7 +31,7 @@ feature {NONE} -- Implemementation
 	hash_code_generator: INTEGER_GENERATOR_WINDOWS is
 			-- Generator for hash code values
 		once
-			!! Result.make (1, 32767 * 32766)
+			create Result.make (1, 32767 * 32766)
 		end
 
 end -- class HASHABLE_WIDGET_WINDOWS

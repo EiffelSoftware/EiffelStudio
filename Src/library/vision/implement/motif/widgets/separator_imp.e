@@ -34,7 +34,7 @@ inherit
 			is_shown as shown
 		end
 
-creation
+create
 
 	make
 

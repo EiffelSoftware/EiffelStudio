@@ -21,7 +21,7 @@ inherit
 
 	CHILD_CLIP
 
-creation
+create
 
 	make
 
@@ -31,15 +31,15 @@ feature -- Initialization
 			-- Create a text.
 		do
 			init_fig (Void);
-			!!text.make (1);
-			!!font.make;
-			!! top_left;
+			create text.make (1);
+			create font.make;
+			create top_left;
 			font.set_name ("fixed");
 			ascent := 1;
 			descent := 1;
 			string_width := 1;
-			!!foreground_color.make;
-			!!background_color.make;
+			create foreground_color.make;
+			create background_color.make;
 		end;
 
 feature -- Output

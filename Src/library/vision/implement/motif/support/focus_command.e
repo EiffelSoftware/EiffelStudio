@@ -11,7 +11,7 @@ inherit
 
 	COMMAND
 
-creation
+create
 
 	make
 
@@ -21,9 +21,9 @@ feature {NONE} -- Initialize
 			-- Set `focus_label' to `a_focus_label'.
 		do
 			focus_label := a_focus_label
-			!! delayed_focus_command.make (Current);
-			!! popup_timer.make;
-			!! popdown_timer.make
+			create delayed_focus_command.make (Current);
+			create popup_timer.make;
+			create popdown_timer.make
 		end;
 
 feature -- Execution

@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -31,9 +31,9 @@ feature -- Initialization
 			-- Create a ellipse.
 		do
 			init_fig (Void);
-			!! center;
-			!! path.make ;
-			!! interior.make ;
+			create center;
+			create path.make ;
+			create interior.make ;
 			interior.set_no_op_mode;
 			radius1 := 1;
 			radius2 := 1;

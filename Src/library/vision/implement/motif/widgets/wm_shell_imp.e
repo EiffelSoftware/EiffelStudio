@@ -45,7 +45,7 @@ feature -- Access
 			pixmap_x: PIXMAP_IMP
 		do
 			if private_icon_pixmap = Void then
-				!! private_icon_pixmap.make;
+				create private_icon_pixmap.make;
 				pixmap_x ?= private_icon_pixmap.implementation;
 				pixmap_x.increment_users;
 				pixmap_x.set_default_pixmap (mel_icon_pixmap);

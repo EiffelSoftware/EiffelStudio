@@ -12,7 +12,7 @@ feature {NONE} -- Implementation
 	left_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for left_button_down
 		once
-			!! Result
+			create Result
 		ensure
 			result_exists: Result /= Void
 		end
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 	middle_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for the middle_button_down
 		once
-			!! Result
+			create Result
 		ensure
 			result_exists: Result /= Void
 		end
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	right_button_down_implementation: BOOLEAN_REF is
 			-- Implementation for right_button_down
 		once
-			!! Result
+			create Result
 		ensure
 			result_exists: Result /= Void
 		end
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	buttons_state, buttons: BUTTONS is
 			-- State of the mouse buttons
 		do
-			!! Result.make (5)
+			create Result.make (5)
 			Result.put (left_button_down, 1)
 			Result.put (middle_button_down, 2)
 			Result.put (right_button_down, 3)

@@ -13,7 +13,7 @@ inherit
 			init_toolkit
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 		do
 			set_toolkit
 			set_default
-			!! screen.make ("")
-			!! base.make (application_name, screen)
+			create screen.make ("")
+			create base.make (application_name, screen)
 			build
 			base.realize
 			iterate
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	set_toolkit  is
 			-- Set MS-Windows as toolkit.
 		do
-			!! init_toolkit.make (application_name)
+			create init_toolkit.make (application_name)
 			if (toolkit = Void ) then end
 		end
 

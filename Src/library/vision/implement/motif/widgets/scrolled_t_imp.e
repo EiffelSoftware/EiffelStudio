@@ -81,7 +81,7 @@ inherit
 			mel_text_make, make_from_existing
 		end
 
-creation
+create
 
 	make, make_word_wrapped
 

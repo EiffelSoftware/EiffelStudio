@@ -7,7 +7,7 @@ inherit
 			implementation, set_default
 		end
 
-creation
+create
 	make
 
 feature -- Access

@@ -27,7 +27,7 @@ feature
 	tasks: LINKED_LIST [TASK_IMP] is
 			-- Tasks executed by `idle_action'
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end

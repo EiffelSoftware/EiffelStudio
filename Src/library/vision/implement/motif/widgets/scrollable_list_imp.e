@@ -69,7 +69,7 @@ inherit
 			copy, setup
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -128,7 +128,7 @@ feature {NONE} -- Private routines
 			loc_string: MEL_STRING
 		do
 			if not is_destroyed then
-				!! loc_string.make_localized (s);
+				create loc_string.make_localized (s);
 				add_item_unselected (loc_string, pos);
 				loc_string.destroy
 			end
@@ -252,7 +252,7 @@ feature  -- Element change
 			loc_string: MEL_STRING
 		do
 			if not is_destroyed then
-				!! loc_string.make_localized (v.value);
+				create loc_string.make_localized (v.value);
 				replace_item_pos (loc_string, index);
 				loc_string.destroy
 			end
@@ -355,7 +355,7 @@ feature  -- Status report
 			loc_selected_positions: like selected_positions
 		do
 			loc_selected_positions := selected_positions;
-			!! Result.make;
+			create Result.make;
 			from
 				loc_selected_positions.start
 			until
@@ -390,7 +390,7 @@ feature  -- Default action callbacks
 			do
 				list := vision_command_list (default_action_command)
 					if list = Void then
-					!! list.make;
+					create list.make;
 					set_default_action_callback (list, Void)
 				end;
 				list.add_command (a_command, argument)
@@ -419,7 +419,7 @@ feature  -- Status setting
 				list := vision_command_list (extended_selection_command)
 			end;
 			if list = Void then
-				!! list.make;
+				create list.make;
 				if is_single_select then
 					set_single_selection_callback (list, Void)
 				else
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			value: STRING
 		do
 			if not other.is_empty then
-				!! Result.make (other.count);
+				create Result.make (other.count);
 				from
 					other.start;
 					i := 1

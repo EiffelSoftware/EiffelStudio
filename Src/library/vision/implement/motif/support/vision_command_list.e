@@ -40,7 +40,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -60,7 +60,7 @@ feature -- Element change
 		local
 			exec: COMMAND_EXEC
 		do
-			!! exec.make (command, argument)
+			create exec.make (command, argument)
 			extend (exec)
 		end
 
@@ -71,7 +71,7 @@ feature -- Element change
 		local
 			exec: COMMAND_EXEC
 		do
-			!! exec.make (command, argument)
+			create exec.make (command, argument)
 			put_front (exec)
 		end
 
@@ -85,7 +85,7 @@ feature -- Removal
 			command_info: COMMAND_EXEC
 		do
 			start;
-			!! command_info.make (command, argument);
+			create command_info.make (command, argument);
 			search (command_info);
 			if not after then
 				remove
@@ -179,13 +179,13 @@ feature {NONE} -- Implementation
 			elseif reason = XmCR_INPUT then
 				Result := create_context_data_from_event (widget_oui, event)
 			elseif reason = XmCR_NONE then
-				!! Result.make (widget_oui)
+				create Result.make (widget_oui)
 			elseif event /= Void then
 					-- No context data specific for a motif callback.
 					-- Create a context data from `event'.
 				Result := create_context_data_from_event (widget_oui, event)
 			else
-				!! Result.make (widget_oui)
+				create Result.make (widget_oui)
 			end
 		ensure
 			has_result: Result /= Void
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			if mel_string /= Void then
 				str := mel_string.to_eiffel_string
 			end;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					c_struct.item_position,
 					str)
 		end;
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			if mel_string /= Void then
 				str := mel_string.to_eiffel_string
 			end;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					c_struct.item_position,
 					str)
 		end;
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			if mel_string /= Void then
 				str := mel_string.to_eiffel_string
 			end;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					c_struct.item_position,
 					str)
 		end;
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT;
 		do
 			c_struct ?= callback_struct;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					c_struct.current_insert,
 					c_struct.new_insert,
 					c_struct.start_pos,
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT
 		do
 			c_struct ?= callback_struct;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					c_struct.current_insert,
 					c_struct.new_insert);
 		end;

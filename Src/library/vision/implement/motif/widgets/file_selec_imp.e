@@ -59,7 +59,7 @@ inherit
 			file_selection_make, make_no_auto_unmanage
 		end
 
-creation
+create
 
 	make
 
@@ -90,7 +90,7 @@ feature -- Access
 			mel_table: MEL_STRING_TABLE;
 			ms: MEL_STRING
 		do
-			!! Result.make;
+			create Result.make;
 			c := file_count;
 			if c > 0 then
 				mel_table := file_list_items
@@ -113,7 +113,7 @@ feature -- Access
 			mel_table: MEL_STRING_TABLE;
 			ms: MEL_STRING
 		do
-			!! Result.make;
+			create Result.make;
 			c := dir_count;
 			if c > 0 then
 				from
@@ -198,7 +198,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_file_list_label_string (ms);
 			ms.destroy
 		end;
@@ -209,7 +209,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_dir_list_label_string (ms);
 			ms.destroy
 		end;
@@ -219,7 +219,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_filter);
+			create ms.make_default_l_to_r (a_filter);
 			set_dir_mask (ms);
 			ms.destroy
 		end;
@@ -230,7 +230,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_directory_name);
+			create ms.make_default_l_to_r (a_directory_name);
 			mel_set_directory (ms);
 			ms.destroy
 		end;
@@ -240,7 +240,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_pattern);
+			create ms.make_default_l_to_r (a_pattern);
 			mel_set_pattern (ms);
 			ms.destroy
 		end;
@@ -258,7 +258,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_filter_label_string (ms);
 			ms.destroy
 		end;
@@ -367,7 +367,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (cancel_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_cancel_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -381,7 +381,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (apply_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_apply_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -395,7 +395,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (help_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_help_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -409,7 +409,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (ok_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_ok_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			color_id: POINTER
 		do
 			old_set_background_color_from_imp (color_imp);
-			!! l.make (6);
+			create l.make (6);
 			l.append (list.parent.children);
 			l.append (mel_dir_list.parent.children);
 			color_id := color_imp.identifier;

@@ -58,7 +58,7 @@ inherit
 			shown
 		end
 
-creation
+create
 
 	make
 
@@ -90,7 +90,7 @@ feature -- Element change
 		do
 			list := vision_command_list (expose_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_expose_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -104,7 +104,7 @@ feature -- Element change
 		do
 			list := vision_command_list (input_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_input_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -118,7 +118,7 @@ feature -- Element change
 		do
 			list := vision_command_list (resize_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_resize_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

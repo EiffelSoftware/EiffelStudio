@@ -17,7 +17,7 @@ feature {NONE} -- Status Setting
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		once
-			!! common_controls_dll.make
+			create common_controls_dll.make
 			common_controls_dll.set_shared
 		end
 
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 	activate_actions: ACTIONS_MANAGER is
 			-- Event handler for activate push button events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 	apply_actions: ACTIONS_MANAGER is
 			-- Event handler for apply events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	arm_actions: ACTIONS_MANAGER is
 			-- Event handler for arm events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 	browse_actions: ACTIONS_MANAGER is
 			-- Event handler for browse events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	character_actions: ACTIONS_MANAGER is
 			-- Event handler for activate actions on Text
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	left_button_motion_actions: ACTIONS_MANAGER is
 			-- Event handler for left button motion events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	right_button_motion_actions: ACTIONS_MANAGER is
 			-- Event handler for right button motion events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	middle_button_motion_actions: ACTIONS_MANAGER is
 			-- Event handler for middle button motion events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	left_button_press_actions: ACTIONS_MANAGER is
 			-- Event handler for left button press events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	right_button_press_actions: ACTIONS_MANAGER is
 			-- Event handler for right button press events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	middle_button_press_actions: ACTIONS_MANAGER is
 			-- Event handler for middle button press events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 	left_button_release_actions: ACTIONS_MANAGER is
 			-- Event handler for left button release events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 	right_button_release_actions: ACTIONS_MANAGER is
 			-- Event handler for right button release events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	middle_button_release_actions: ACTIONS_MANAGER is
 			-- Event handler for middle button release events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	click_actions: ACTIONS_MANAGER is
 			-- Event handler for click events (on a list)
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	combo_box_selection_end_actions: ACTIONS_MANAGER is
 			-- Event handler for combo box selection end
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 	destroy_actions: ACTIONS_MANAGER is
 			-- Event handler for destroy actions 
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 	draw_item_actions: ACTIONS_MANAGER is
 			-- Event handler for draw item events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	enter_actions: ACTIONS_MANAGER is
 			-- Event handler for enter events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	expose_actions: ACTIONS_MANAGER is
 			-- Event handler for expose events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	extended_actions: ACTIONS_MANAGER is
 			-- Event handler for extended events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 	filter_actions: ACTIONS_MANAGER is
 			-- Event handler for filter events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 	focus_out_actions: ACTIONS_MANAGER is
 			-- Event handler for focus out events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 	focus_in_actions: ACTIONS_MANAGER is
 			-- Event handler for focus in events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 	help_actions: ACTIONS_MANAGER is
 			-- Event handler for help events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 	init_d_actions: ACTIONS_MANAGER is
 			-- Event handler for initialise dialog events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	key_press_actions: ACTIONS_MANAGER is
 			-- Event handler for key press events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	key_release_actions: ACTIONS_MANAGER is
 			-- Event handler for key release events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 	leave_actions: ACTIONS_MANAGER is
 			-- Event handler for leave events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 	menu_select_actions: ACTIONS_MANAGER is
 			-- Event handler for menu selection events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 	multiple_actions: ACTIONS_MANAGER is
 			-- Event handler for multiple selection events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 	ok_actions: ACTIONS_MANAGER is
 			-- Event handler for ok events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	pointer_motion_actions: ACTIONS_MANAGER is
 			-- Event handler for pointer events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 	resize_actions: ACTIONS_MANAGER is
 			-- Event handler for resize events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 	selection_change_actions: ACTIONS_MANAGER is
 			-- Event handler for list events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 	default_actions: ACTIONS_MANAGER is
 			-- Event handler for scrollable list default events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 	single_actions: ACTIONS_MANAGER is
 			-- Event handler for single events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 	timer_actions: ACTIONS_MANAGER is
 			-- Event handler for timer events
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 	toggle_value_changed_actions: ACTIONS_MANAGER is
 			-- Event handler for value changed events on toggle buttons
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 	value_changed_actions: ACTIONS_MANAGER is
 			-- Event handler for value changed events on scrollbars
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 	move_actions: ACTIONS_MANAGER is
 			-- Event handler for move events (scrollbars)
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 	vertical_move_actions: ACTIONS_MANAGER is
 			-- Event handler for vertical move
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 	horizontal_move_actions: ACTIONS_MANAGER is
 			-- Event handler for horizontal move
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 	modify_actions: ACTIONS_MANAGER is
 			-- Event handler for modifying text
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 	motion_actions: ACTIONS_MANAGER is
 			-- Event handler for a motion in a text
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 	release_actions: ACTIONS_MANAGER is
 			-- Event handler for a button release
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 	visible_actions: ACTIONS_MANAGER is
 			-- Event handler for a visible event
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 	map_actions: ACTIONS_MANAGER is
 			-- Event handler for a mapping event.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 	unmap_actions: ACTIONS_MANAGER is
 			-- Event handler for an unmapping event.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			-- Event handler for a replace event on
 			-- a serach replace dialog.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			-- Event handler for a find event on
 			-- a search replace dialog.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			-- Event handler for a cancel event on
 			-- a search replace dialog
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			-- Event handler for a replace all event on
 			-- a search replace dialog
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_exists: Result /= Void
 		end
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- All the system metrics
 		once
-			!! Result
+			create Result
 		ensure
 			result_exists: Result /= Void
 		end

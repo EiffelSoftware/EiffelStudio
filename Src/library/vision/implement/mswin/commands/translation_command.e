@@ -17,7 +17,7 @@ inherit
 			execute
 		end
 
-creation
+create
 
 	make
 
@@ -137,7 +137,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 				end
 			end
 			from 
-				!!modifier.make (0)
+				create modifier.make (0)
 			variant
 				s.count + 1 - place
 			until
@@ -164,7 +164,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 			end
 			place := place + 1
 			from
-				!!action.make (0)
+				create action.make (0)
 			variant
 				s.count + 2 - place
 			until
@@ -340,7 +340,7 @@ feature {WIDGET_ACTIONS}
 
 	executing_exact: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 		end
 
 	set_no_execute_now is

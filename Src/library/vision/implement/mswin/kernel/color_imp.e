@@ -27,7 +27,7 @@ inherit
 
 	WEL_COLOR_CONSTANTS
 
-creation
+create
 	make,
 	make_by_wel,
 	make_system,

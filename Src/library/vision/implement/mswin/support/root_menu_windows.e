@@ -15,8 +15,8 @@ feature -- Initialization
 	make_root is
 			-- Create the root menu details
 		do
-			!! menu_id.make (1, 2147483645)
-			!! menu_buttons.make (30)
+			create menu_id.make (1, 2147483645)
+			create menu_buttons.make (30)
 		end
 
 feature -- Access
@@ -70,7 +70,7 @@ feature -- Status setting
 			-- Reset the contents of the menu
 		do
 			menu_id.reset
-			!! menu_buttons.make (17)
+			create menu_buttons.make (17)
 		end
 
 feature -- Basic operations

@@ -42,7 +42,7 @@ inherit
 			mel_error_make, mel_error_make_no_auto
 		end
 
-creation
+create
 
 	make
 

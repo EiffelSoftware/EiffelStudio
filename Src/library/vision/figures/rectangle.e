@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make, make_from_closure
 
@@ -33,9 +33,9 @@ feature -- Initialization
 			-- Create a rectangle.
 		do
 			init_fig (Void);
-			!! upper_left;
-			!! path.make ;
-			!! interior.make ;
+			create upper_left;
+			create path.make ;
+			create interior.make ;
 			interior.set_no_op_mode;
 			width := 1;
 			height := 1;
@@ -69,7 +69,7 @@ feature -- Access
 			v_sin := sin (orientation);
 			half_width := width // 2;
 			half_height := height // 2;
-			!! Result;
+			create Result;
 			Result.set (
 				upper_left.x+(half_width*v_cos+half_height*v_sin).truncated_to_integer,
 				upper_left.y-(half_width*v_sin-half_height*v_cos).truncated_to_integer)

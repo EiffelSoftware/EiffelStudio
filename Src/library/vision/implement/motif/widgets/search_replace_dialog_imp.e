@@ -67,7 +67,7 @@ inherit
 			form_make_no_auto_unmanage, form_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -218,7 +218,7 @@ feature -- Element change
 		do
 			list := vision_command_list (find_b.activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				find_b.set_activate_callback (list, Void);
 				find_tf.set_activate_callback (list, Void)
 			end;
@@ -235,7 +235,7 @@ feature -- Element change
 		do
 			list := vision_command_list (cancel_b.activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				cancel_b.set_activate_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -251,7 +251,7 @@ feature -- Element change
 		do
 			list := vision_command_list (replace_b.activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				replace_b.set_activate_callback (list, Void);
 				replace_tf.set_activate_callback (list, Void)
 			end;
@@ -268,7 +268,7 @@ feature -- Element change
 		do
 			list := vision_command_list (replace_all_b.activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				replace_all_b.set_activate_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -361,25 +361,25 @@ feature {NONE} -- Implementation
 			rc: MEL_ROW_COLUMN;
 			sep: MEL_SEPARATOR
 		do
-			!! rc.make ("searchRowColumn", Current, True);
-			!! sep.make ("searchRowColumn", Current, True);
+			create rc.make ("searchRowColumn", Current, True);
+			create sep.make ("searchRowColumn", Current, True);
 
-			!! find_form.make ("findForm", rc, True);
-			!! find_l.make ("Find: ", find_form, True);
-			!! find_tf.make ("findTextField", find_form, True);
-			!! replace_form.make ("replaceForm", rc, True);
-			!! replace_l.make ("Replace: ", replace_form, True);
-			!! replace_tf.make ("replaceTextField", replace_form, True);
+			create find_form.make ("findForm", rc, True);
+			create find_l.make ("Find: ", find_form, True);
+			create find_tf.make ("findTextField", find_form, True);
+			create replace_form.make ("replaceForm", rc, True);
+			create replace_l.make ("Replace: ", replace_form, True);
+			create replace_tf.make ("replaceTextField", replace_form, True);
 
-			!! toggle_form.make ("toggleForm", rc, True);
-			!! case_sensitive_t.make ("Case sensitive", toggle_form, True);
-			!! find_backwards_t.make ("Find backwards", toggle_form, True);
+			create toggle_form.make ("toggleForm", rc, True);
+			create case_sensitive_t.make ("Case sensitive", toggle_form, True);
+			create find_backwards_t.make ("Find backwards", toggle_form, True);
 
-			!! buttons_form.make ("buttonForm", Current, True);
-			!! find_b.make (" Find ", buttons_form, True);
-			!! replace_b.make (" Replace ", buttons_form, True);
-			!! replace_all_b.make (" Replace all ", buttons_form, True);
-			!! cancel_b.make (" Cancel ", buttons_form, True);
+			create buttons_form.make ("buttonForm", Current, True);
+			create find_b.make (" Find ", buttons_form, True);
+			create replace_b.make (" Replace ", buttons_form, True);
+			create replace_all_b.make (" Replace all ", buttons_form, True);
+			create cancel_b.make (" Cancel ", buttons_form, True);
 
 			rc.attach_top;
 			rc.attach_left;

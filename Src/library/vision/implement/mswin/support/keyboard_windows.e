@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_from_key_state,
 	make_from_mouse_state
 

@@ -34,7 +34,7 @@ feature -- Access
 	top_center: like top_left is
 			-- Top and center point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+(string_width//2), top_left.y);
 		end;
 
@@ -44,49 +44,49 @@ feature -- Access
 	top_right: like top_left is
 			-- Top and right point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
    	Result.set (top_left.x+string_width, top_left.y)
 		end;
 
 	base_center: like top_left is
 			-- Center point of the baseline of the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+(string_width // 2), top_left.y+ascent)
 		end;
 
 	base_left: like top_left is
 			-- Left point of the baseline of the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x, top_left.y+ascent)
 		end;
 
 	base_right: like top_left is
 			-- Right point of the baseline of the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+string_width, top_left.y+ascent)
 		end; 
 
 	bottom_center: like top_left is
 			-- Center and bottom point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+(string_width // 2 ),top_left.y+ascent+descent )
 		end;
 
 	bottom_left: like top_left is
 			-- Left and bottom point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set ( top_left.x, top_left.y+ascent+descent)
 		end; 
 
 	bottom_right: like top_left is
 			-- Right and bottom point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+string_width, top_left.y+ascent+descent)
 		end;
 
@@ -97,21 +97,21 @@ feature -- Access
 	middle_center: like top_left is
 			-- Center and middle point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set ( top_left.x+(string_width // 2), top_left.y+ascent+descent)
 		end;
 
 	middle_left: like top_left is
 			-- Left and middle point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set ( top_left.x, top_left.y+((ascent+descent) // 2))
 		end;
 
 	middle_right: like top_left is
 			-- Right and middle point of the rectangle containing the text
 		do
-			!! Result;
+			create Result;
 			Result.set (top_left.x+string_width, ((top_left.y+ascent+descent)//2))
 		end;
 

@@ -79,7 +79,7 @@ inherit
 			wipe_out
 		end
 
-creation
+create
 
 	make 
 
@@ -92,10 +92,10 @@ feature -- Initialization
 		do
 			init_fig (Void);
 			path_make ;
-			!! changes_box.make;
-			!! surround_box.make;
+			create changes_box.make;
+			create surround_box.make;
 			linked_list_make;
-			!! origin;
+			create origin;
 		ensure
 			is_empty
 		end;

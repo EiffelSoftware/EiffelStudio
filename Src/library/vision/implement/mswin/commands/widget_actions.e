@@ -11,7 +11,7 @@ class
 inherit
 	EVENT_HDL
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 			w_exists: w /= Void
 		do
 			widget := w
-			!! actions.make
+			create actions.make
 		ensure
 			widget_set: widget = w
 		end
@@ -53,7 +53,7 @@ feature -- Element change
 			tr ?= a.command
 			if tr /= Void then
 				if translations = Void then
-					!! translations.make
+					create translations.make
 				end
 				translations.extend (tr)
 				exact_checking := exact_checking or tr.exact

@@ -132,8 +132,8 @@ feature {WORLD, FIGURE} -- Initialization
 				max_plane := Default_max_plane
 			end;
 			notify_make;	
-			!! changes_box.make;
-			!! surround_box.make;
+			create changes_box.make;
+			create surround_box.make;
 			set_figure (f);
 			set_conf_receive;
 			set_conf_notify

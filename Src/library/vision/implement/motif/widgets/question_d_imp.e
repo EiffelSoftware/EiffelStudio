@@ -42,7 +42,7 @@ inherit
 			mel_quest_make, mel_quest_make_no_auto
 		end
 
-creation
+create
 
 	make
 

@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make,
 	make_for_screen,
 	make_by_wel
@@ -28,8 +28,8 @@ feature  -- Initialization
 	make (a_font: FONT) is
 			-- Create a font
 		do
-			!WEL_SYSTEM_FONT! wel_font.make
-			!! wel_log_font.make_by_font (wel_font)
+			create {WEL_SYSTEM_FONT} wel_font.make
+			create wel_log_font.make_by_font (wel_font)
 		end
 
 	make_for_screen (a_font: FONT; a_screen: SCREEN) is
@@ -44,7 +44,7 @@ feature  -- Initialization
 			a_wel_font_exists: a_wel_font /= Void
 		do
 			wel_font := a_wel_font
-			!! wel_log_font.make_by_font (wel_font)
+			create wel_log_font.make_by_font (wel_font)
 		end
 			
 feature -- Access
@@ -147,7 +147,7 @@ feature -- Status report
 	name: STRING is
 			-- String form of font details
 		do
-			!! Result.make (60)
+			create Result.make (60)
 				-- face name
 			Result.append (wel_log_font.face_name)
 			Result.extend (',')
@@ -285,11 +285,11 @@ feature -- Status report
 		do
 			ww ?= a_widget
 			if ww /= Void and then ww.exists then
-				!! client_dc.make (ww)
+				create client_dc.make (ww)
 				client_dc.get
 				dc := client_dc
 			else
-				!! screen_dc
+				create screen_dc
 				screen_dc.get
 				dc := screen_dc
 			end
@@ -323,11 +323,11 @@ feature -- Status report
 			if not a_text.is_empty then
 				ww ?= a_widget
 				if ww /= Void and then ww.exists then
-					!! client_dc.make (ww)
+					create client_dc.make (ww)
 					client_dc.get
 					dc := client_dc
 				else
-					!! screen_dc
+					create screen_dc
 					screen_dc.get
 					dc := screen_dc
 				end
@@ -353,7 +353,7 @@ feature -- Status report
 			number_of_lines: INTEGER
 		do
 			if not a_text.is_empty then
-				!! screen_dc
+				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (wel_font)
 				number_of_lines := a_text.occurrences ('%N') + 1
@@ -387,7 +387,7 @@ feature -- Status setting
 	allocate is
 			-- Allocate the WEL_FONT
 		do
-			!! wel_font.make_indirect (wel_log_font)
+			create wel_font.make_indirect (wel_log_font)
 			allocated := true
 		end
 
@@ -488,7 +488,7 @@ feature -- Status setting
 			parsed: ARRAY [STRING]
 		do
 			from
-				!! parsed.make (1, 13)
+				create parsed.make (1, 13)
 				number :=1
 			until
 				number > 13
@@ -628,10 +628,10 @@ feature {NONE} -- Implementation
 		local
 			sdc: WEL_SCREEN_DC
 		do
-			!! sdc
+			create sdc
 			sdc.get
 			sdc.select_font (wel_font)
-			!! Result.make (sdc)
+			create Result.make (sdc)
 			sdc.unselect_font
 			sdc.release
 		ensure

@@ -21,7 +21,7 @@ inherit
 
 	WEL_APPLICATION_MAIN_WINDOW
 
-creation
+create
 
 	make
 
@@ -30,7 +30,7 @@ feature -- Initialization
 	make  is
 			-- Create a task.
 		do
-			!!actions.make
+			create actions.make
 			actions.compare_objects
 			application.enable_idle_action
 		end 
@@ -57,7 +57,7 @@ feature -- Element change
 			check
 				a_command_not_void: a_command /= Void
 			end
-			!! action.make (a_command, an_argument)
+			create action.make (a_command, an_argument)
 			actions.extend (action)
 		end
 
@@ -70,7 +70,7 @@ feature -- Element change
 			check
 				a_command_not_void: a_command /= Void
 			end
-			!! action.make (a_command, an_argument)
+			create action.make (a_command, an_argument)
 			actions.prune_all (action)
 			if actions.is_empty then
 				application.disable_idle_action

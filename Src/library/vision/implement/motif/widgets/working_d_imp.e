@@ -44,7 +44,7 @@ inherit
 			mel_work_make, mel_work_make_no_auto
 		end
 		
-creation
+create
 
 	make
 

@@ -173,18 +173,18 @@ feature -- Basic operations
 			pen: WEL_PEN
 			color: WEL_COLOR_REF
 		do
-			!! color.make_rgb (255, 255, 255)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_rgb (255, 255, 255)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (width - 1, 0, width - 1, height)
 			a_dc.line (0, height - 1, width, height - 1)
-			!! color.make_rgb (0, 0, 0)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_rgb (0, 0, 0)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (0, 0, width - 1, 0)
 			a_dc.line (0, 0, 0, height - 1)
-			!! color.make_system (Color_btnshadow)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_system (Color_btnshadow)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (1, 1, 1 , height - 2)
 			a_dc.line (1, 1, width - 2, 1)
@@ -199,18 +199,18 @@ feature -- Basic operations
 			pen: WEL_PEN
 			color: WEL_COLOR_REF
 		do
-			!! color.make_rgb (255, 255, 255)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_rgb (255, 255, 255)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (0, 0, width, 0)
 			a_dc.line (0, 0, 0, height)
-			!! color.make_system (Color_btnshadow)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_system (Color_btnshadow)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (1, height - 2, width - 1 , height - 2)
 			a_dc.line (width - 2, 1, width - 2 , height - 1)
-			!! color.make_rgb (0, 0, 0)
-			!! pen.make (Ps_solid, 1, color)
+			create color.make_rgb (0, 0, 0)
+			create pen.make (Ps_solid, 1, color)
 			a_dc.select_pen (pen)
 			a_dc.line (width - 1, 0, width - 1, height)
 			a_dc.line (0, height - 1, width, height - 1)
@@ -226,7 +226,7 @@ feature -- Basic operations
 			brush: WEL_BRUSH
 		do
 			dc := a_draw_item_struct.dc
-			!! brush.make_solid (wel_background_color)
+			create brush.make_solid (wel_background_color)
 			dc.select_brush (brush)
 			dc.rectangle (0, 0, width, height)
 			dc.unselect_brush
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					result_not_void: Result /= Void
 				end
 			else
-				!! Result.make_system (color_btntext)
+				create Result.make_system (color_btntext)
 			end
 		end
 
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 					result_not_void: Result /= Void
 				end
 			else
-				!! Result.make_system (color_btnface)
+				create Result.make_system (color_btnface)
 			end
 		end
 

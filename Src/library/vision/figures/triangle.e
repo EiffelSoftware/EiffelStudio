@@ -19,7 +19,7 @@ inherit
 			is_superimposable
 		end
 
-creation
+create
 
 	make
 
@@ -29,9 +29,9 @@ feature -- Initialization
 			-- Create a triangle
 		do
 			init_fig (Void);
-			!! center;
-			!! path.make ;
-			!! interior.make ;
+			create center;
+			create path.make ;
+			create interior.make ;
 			interior.set_no_op_mode;
 			number_of_sides := 3;
 			radius := 0;

@@ -366,12 +366,12 @@ install.man:: size_h.man
 deinstall.man::
 	$(RM) $(MANSRC)/eif_size.h.$(L)
 
-all:: libruntime.a
+all:: libfinalized.a
 
 local_realclean::
-	$(RM) libruntime.a
+	$(RM) libfinalized.a
 
-libruntime.a: $(LOBJ)
+libfinalized.a: $(LOBJ)
 	$(RM) $@
 	$(AR) $@ $(LOBJ)
 	$(RANLIB) $@
@@ -867,7 +867,7 @@ wbench.o: wbench.c
 
 local_clean:: remove
 
-final: libruntime.a
+final: libfinalized.a
 work: libwkbench.a
 
 .FORCE:

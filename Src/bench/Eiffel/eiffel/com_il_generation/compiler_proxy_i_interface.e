@@ -31,6 +31,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_version_user_precondition (build: INTEGER; major: INTEGER; minor: INTEGER; revision: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_verifiability_user_precondition (v: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_verifiability'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	start_assembly_generation_user_precondition (name: STRING; fname: STRING; location: STRING): BOOLEAN is
 			-- User-defined preconditions for `start_assembly_generation'.
 			-- Redefine in descendants if needed.
@@ -1166,6 +1180,27 @@ feature -- Basic Operations
 			-- No description available.
 		require
 			set_dll_user_precondition: set_dll_user_precondition
+		deferred
+
+		end
+
+	set_version (build: INTEGER; major: INTEGER; minor: INTEGER; revision: INTEGER) is
+			-- No description available.
+			-- `build' [in].  
+			-- `major' [in].  
+			-- `minor' [in].  
+			-- `revision' [in].  
+		require
+			set_version_user_precondition: set_version_user_precondition (build, major, minor, revision)
+		deferred
+
+		end
+
+	set_verifiability (v: BOOLEAN) is
+			-- No description available.
+			-- `v' [in].  
+		require
+			set_verifiability_user_precondition: set_verifiability_user_precondition (v)
 		deferred
 
 		end

@@ -65,6 +65,23 @@ feature -- Basic Operations
 			ccom_set_dll (initializer)
 		end
 
+	set_version (build: INTEGER; major: INTEGER; minor: INTEGER; revision: INTEGER) is
+			-- No description available.
+			-- `build' [in].  
+			-- `major' [in].  
+			-- `minor' [in].  
+			-- `revision' [in].  
+		do
+			ccom_set_version (initializer, build, major, minor, revision)
+		end
+
+	set_verifiability (v: BOOLEAN) is
+			-- No description available.
+			-- `v' [in].  
+		do
+			ccom_set_verifiability (initializer, v)
+		end
+
 	start_assembly_generation (name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -1187,6 +1204,18 @@ feature {NONE}  -- Externals
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
+		end
+
+	ccom_set_version (cpp_obj: POINTER; build: INTEGER; major: INTEGER; minor: INTEGER; revision: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_set_verifiability (cpp_obj: POINTER; v: BOOLEAN) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_BOOLEAN)"
 		end
 
 	ccom_start_assembly_generation (cpp_obj: POINTER; name: STRING; fname: STRING; location: STRING) is

@@ -91,6 +91,23 @@ feature -- Generation type
 		deferred
 		end
 
+feature -- Generation Info
+
+	set_version (build, major, minor, revision: INTEGER) is
+			-- Assign current generated assembly with given version.
+		require
+			valid_build: build >= 0
+			valid_major: major >= 0
+			valid_minor: minor >= 0
+			valid_revision: revision >= 0
+		deferred
+		end
+
+	set_verifiability (verifiable: BOOLEAN) is
+			-- Mark current generation to generate verifiable code.
+		deferred
+		end
+
 feature -- Class info
 
 	start_class_mappings (class_count: INTEGER) is

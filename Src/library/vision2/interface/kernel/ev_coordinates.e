@@ -61,16 +61,6 @@ feature -- Output
 		do
 			Result := "(X: " + x.out + ", Y: " + y.out + ")"
 		end
-		
-feature -- Obsolete
-
-	trace is
-			-- Write string representation to standard output.
-		Obsolete
-			"Please do not use this feature as it will shortly be removed."
-		do
-			io.error.put_string (out)
-		end
 
 end -- class EV_COORDINATES
 

@@ -341,17 +341,6 @@ feature -- Output
 				", Width: " + width.out +
 				", Height: " + height.out + ")"
 		end
-		
-feature -- Obsolete
-
-	trace is
-			-- Write string representation to standard output.
-		Obsolete
-			"Please do not use this feature as it will shortly be removed."
-		do
-			io.error.put_string (out)
-		end
-
 
 invariant
 	width_positive: width >= 0

@@ -34,7 +34,7 @@ feature -- Basic operations
 					Workbench.last_reached_degree <= 5
 				then
 					create dial.make_default (target)
-					dial.call ("New_cluster")
+					dial.call_default
 				else
 					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
 					wd.show_modal_to_window (target.window)

@@ -433,7 +433,7 @@ feature -- Completion-clickable initialization / update
 		end
 
 	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
- 			-- Finish completion process be inserting the completed expression.
+ 			-- Finish completion process by inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
 		local
@@ -455,11 +455,10 @@ feature -- Completion-clickable initialization / update
 			end
  
 			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
-
-			selection_cursor := cursor.twin
-
-			cursor.set_y_in_lines (y)
-			cursor.set_x_in_characters (x)
+				selection_cursor := cursor.twin
+	
+				cursor.set_y_in_lines (y)
+				cursor.set_x_in_characters (x)
 			end
 		end
 

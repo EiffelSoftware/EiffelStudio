@@ -27,12 +27,12 @@ extern "C" {
 
 #include "eif_cecil.h"		/* Needed for EIF_OBJ,... definitions */
 
-extern void eif_thr_panic(char *);
-extern EIF_POINTER eif_thr_freeze(EIF_OBJ object);
-extern void eif_thr_unfreeze(EIF_OBJ object);
-extern EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
-extern EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
-extern void eif_thr_proxy_dispose(EIF_POINTER);
+RT_LNK void eif_thr_panic(char *);
+RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJ object);
+RT_LNK void eif_thr_unfreeze(EIF_OBJ object);
+RT_LNK EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
+RT_LNK EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
+RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 
 #ifdef EIF_THREADS
 
@@ -114,22 +114,22 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 
 
 /* Exported functions */
-extern void eif_thr_init_root(void);
-extern void eif_thr_register(void);
-extern unsigned int eif_thr_is_initialized(void);
-extern EIF_BOOLEAN eif_thr_is_root(void);
-extern void eif_thr_create(EIF_OBJ, EIF_POINTER);
-extern void eif_thr_exit(void);
-extern void eif_thr_yield(void);
-extern void eif_thr_join_all(void);
-extern void eif_thr_join(EIF_POINTER);
-extern void eif_thr_wait(EIF_BOOLEAN *);
-extern void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
-extern EIF_INTEGER eif_thr_default_priority(void);
-extern EIF_INTEGER eif_thr_min_priority(void);
-extern EIF_INTEGER eif_thr_max_priority(void);
-extern EIF_POINTER eif_thr_thread_id(void);
-extern EIF_POINTER eif_thr_last_thread(void);
+RT_LNK void eif_thr_init_root(void);
+RT_LNK void eif_thr_register(void);
+RT_LNK unsigned int eif_thr_is_initialized(void);
+RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
+RT_LNK void eif_thr_create(EIF_OBJ, EIF_POINTER);
+RT_LNK void eif_thr_exit(void);
+RT_LNK void eif_thr_yield(void);
+RT_LNK void eif_thr_join_all(void);
+RT_LNK void eif_thr_join(EIF_POINTER);
+RT_LNK void eif_thr_wait(EIF_BOOLEAN *);
+RT_LNK void eif_thr_create_with_args(EIF_OBJ, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
+RT_LNK EIF_INTEGER eif_thr_default_priority(void);
+RT_LNK EIF_INTEGER eif_thr_min_priority(void);
+RT_LNK EIF_INTEGER eif_thr_max_priority(void);
+RT_LNK EIF_POINTER eif_thr_thread_id(void);
+RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
 /* Mutex functions at end of file */
 /* (need some macros defined below) */
@@ -358,31 +358,31 @@ extern EIF_POINTER eif_thr_last_thread(void);
 /*---  Mutex operations  ---*/
 /*--------------------------*/
 
-extern EIF_POINTER eif_thr_mutex_create(void);
-extern void eif_thr_mutex_lock(EIF_POINTER mutex_pointer);
-extern void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer);
-extern EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer);
-extern void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer);
+RT_LNK EIF_POINTER eif_thr_mutex_create(void);
+RT_LNK void eif_thr_mutex_lock(EIF_POINTER mutex_pointer);
+RT_LNK void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer);
+RT_LNK EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer);
+RT_LNK void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer);
 
 /*------------------------------*/
 /*---  Semaphore operations  ---*/
 /*------------------------------*/
 
-extern EIF_POINTER eif_thr_sem_create (EIF_INTEGER count);
-extern void eif_thr_sem_wait (EIF_POINTER sem);
-extern void eif_thr_sem_post (EIF_POINTER sem);
-extern EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem);
-extern void eif_thr_sem_destroy (EIF_POINTER sem);
+RT_LNK EIF_POINTER eif_thr_sem_create (EIF_INTEGER count);
+RT_LNK void eif_thr_sem_wait (EIF_POINTER sem);
+RT_LNK void eif_thr_sem_post (EIF_POINTER sem);
+RT_LNK EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem);
+RT_LNK void eif_thr_sem_destroy (EIF_POINTER sem);
 
 /*---------------------------------------*/
 /*---  Condition variable operations  ---*/
 /*---------------------------------------*/
 
-extern EIF_POINTER eif_thr_cond_create (void);
-extern void eif_thr_cond_broadcast (EIF_POINTER cond);
-extern void eif_thr_cond_signal (EIF_POINTER cond);
-extern void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
-extern void eif_thr_cond_destroy (EIF_POINTER cond);
+RT_LNK EIF_POINTER eif_thr_cond_create (void);
+RT_LNK void eif_thr_cond_broadcast (EIF_POINTER cond);
+RT_LNK void eif_thr_cond_signal (EIF_POINTER cond);
+RT_LNK void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
+RT_LNK void eif_thr_cond_destroy (EIF_POINTER cond);
 
 typedef struct thr_list_struct {
     EIF_OBJ thread;

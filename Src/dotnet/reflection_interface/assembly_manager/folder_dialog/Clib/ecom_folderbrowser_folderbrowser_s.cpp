@@ -71,6 +71,32 @@ STDMETHODIMP ecom_FolderBrowser::FolderBrowser::FolderName(  /* [out] */ LPWSTR 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_FolderBrowser::FolderBrowser::SetStartingFolder(  /* [in] */ LPWSTR * result1 )
+
+/*-----------------------------------------------------------
+	Set initial folder name.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_result1 = NULL;
+	if (result1 != NULL)
+	{
+		tmp_result1 = eif_protect (grt_ce_folder_browser.ccom_ce_pointed_cell_2 (result1, NULL));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_starting_folder", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_result1 != NULL) ? eif_access (tmp_result1) : NULL));
+	if (tmp_result1 != NULL)
+		eif_wean (tmp_result1);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_FolderBrowser::FolderBrowser::Release()
 
 /*-----------------------------------------------------------

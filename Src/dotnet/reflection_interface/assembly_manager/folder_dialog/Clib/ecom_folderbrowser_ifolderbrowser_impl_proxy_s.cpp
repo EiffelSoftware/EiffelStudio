@@ -81,6 +81,39 @@ void ecom_FolderBrowser::IFolderBrowser_impl_proxy::ccom_folder_name(  /* [out] 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_FolderBrowser::IFolderBrowser_impl_proxy::ccom_set_starting_folder(  /* [in] */ EIF_OBJECT result1 )
+
+/*-----------------------------------------------------------
+	Set initial folder name.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IFolderBrowser == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IFolderBrowser_, (void **)&p_IFolderBrowser);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	LPWSTR * tmp_result1 = 0;
+	tmp_result1 = (LPWSTR *)grt_ec_folder_browser.ccom_ec_pointed_cell_2 (eif_access (result1), NULL);
+	
+	hr = p_IFolderBrowser->SetStartingFolder(tmp_result1);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	grt_ce_folder_browser.ccom_free_memory_pointed_2 (tmp_result1);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_POINTER ecom_FolderBrowser::IFolderBrowser_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------

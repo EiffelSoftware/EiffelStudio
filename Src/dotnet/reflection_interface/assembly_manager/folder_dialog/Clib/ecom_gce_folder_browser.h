@@ -43,6 +43,18 @@ public:
 	void ccom_free_memory_pointed_1( LPWSTR * a_pointer );
 
 
+	/*-----------------------------------------------------------
+	Convert LPWSTR *  to CELL [STRING].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_2( LPWSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of LPWSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_2( LPWSTR * a_pointer );
+
+
 
 protected:
 

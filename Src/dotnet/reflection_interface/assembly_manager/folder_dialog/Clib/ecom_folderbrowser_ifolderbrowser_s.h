@@ -45,6 +45,12 @@ public:
 	virtual STDMETHODIMP FolderName(  /* [out] */ LPWSTR * result1 ) = 0;
 
 
+	/*-----------------------------------------------------------
+	Set initial folder name.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP SetStartingFolder(  /* [in] */ LPWSTR * result1 ) = 0;
+
+
 
 protected:
 

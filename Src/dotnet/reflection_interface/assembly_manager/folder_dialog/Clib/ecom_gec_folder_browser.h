@@ -37,6 +37,12 @@ public:
 	LPWSTR * ccom_ec_pointed_cell_1( EIF_REFERENCE eif_ref, LPWSTR * old );
 
 
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to LPWSTR *.
+	-----------------------------------------------------------*/
+	LPWSTR * ccom_ec_pointed_cell_2( EIF_REFERENCE eif_ref, LPWSTR * old );
+
+
 
 protected:
 

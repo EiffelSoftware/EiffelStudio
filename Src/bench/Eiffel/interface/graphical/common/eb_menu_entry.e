@@ -8,7 +8,10 @@ indexing
 class EB_MENU_ENTRY
 
 inherit
-	MENU_ENTRY;
+	ISE_MENU_ENTRY
+		redefine
+			associated_command
+		end;
 	PUSH_B
 		rename
 			make as button_make
@@ -26,5 +29,16 @@ feature {NONE} -- Initialization
 			set_text (entry_text);
 			add_activate_action (associated_command, associated_command.text_window)
 		end;
+
+feature -- Properties
+
+	associated_command: ICONED_COMMAND;
+			-- The associated_command
+
+	entry_text: STRING is
+			-- Text as displayed on the button
+		do
+			Result := associated_command.name
+		end
 
 end -- class EB_MENU_ENTRY

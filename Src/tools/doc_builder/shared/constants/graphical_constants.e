@@ -9,7 +9,7 @@ class
 inherit
 	APPLICATION_CONSTANTS
 	
-feature -- Access
+feature -- Icon constants
 
 	folder_closed_icon: EV_PIXMAP is
 			-- Icon for Closing
@@ -100,5 +100,37 @@ feature -- Access
 			l_file.extend ("icon_gif_file.ico")
 			Result.set_with_named_file (l_file.string)
 		end
+
+feature -- Color constants
+
+	tag_color: EV_COLOR is
+			-- Color for tags (<,>,=,/,")
+		once
+			create Result.make_with_rgb (0.0, 0.0, 1.0)	
+		end		
+
+	element_color: EV_COLOR is
+			-- Color for elements
+		once
+			create Result.make_with_rgb (1.0, 0.0, 0.0)	
+		end		
+		
+	attribute_color: EV_COLOR is
+			-- Color for attributes
+		once
+			create Result.make_with_rgb (203, 203, 152)	
+		end		
+
+	content_color: EV_COLOR is
+			-- Color for attributes
+		once
+			Result := (create {EV_STOCK_COLORS}).black
+		end	
+
+	white: EV_COLOR is
+			-- Color for attributes
+		once
+			Result := (create {EV_STOCK_COLORS}).white
+		end	
 
 end -- class GRAPHICAL_CONSTANTS

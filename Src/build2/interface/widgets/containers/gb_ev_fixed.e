@@ -50,6 +50,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -318,6 +323,7 @@ feature {NONE} -- Implementation
 			grid_control_holder: EV_FRAME
 			status_bar: EV_FRAME
 			split_area: EV_HORIZONTAL_SPLIT_AREA
+			object: GB_OBJECT
 		do
 			create Result
 			Result.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
@@ -395,14 +401,24 @@ feature {NONE} -- Implementation
 			create h1
 			h1.extend (grid_size_control)
 			h1.disable_item_expand (grid_size_control)
-			vb1.extend (h1)--grid_size_control)
+			vb1.extend (h1)
 			
 			from
 				first.start
 			until
 				first.off
 			loop
-				create list_item.make_with_text (class_name (first.item))
+					-- Note that this is slow, as we have to loop through objects
+					-- to get a match, while inside this loop.
+				object := object_handler.object_from_display_widget (first.item)
+				check
+					object_not_void: object /= Void
+				end
+				if object.name.is_empty then
+					create list_item.make_with_text (class_name (first.item))
+				else
+					create list_item.make_with_text (object.name + " : " + class_name (first.item))
+				end
 					-- We must update all other editors referencing `object'.
 					-- when an item is selected.
 				list_item.select_actions.extend (agent update_editors)

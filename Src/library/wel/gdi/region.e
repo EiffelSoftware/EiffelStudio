@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			a: ANY
 		do
 			a := points.to_c
-			item := cwel_create_polygon_rgn ($a, points.count // 2,
+			item := cwin_create_polygon_rgn ($a, points.count // 2,
 				Alternate)
 		end
 
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			a: ANY
 		do
 			a := points.to_c
-			item := cwel_create_polygon_rgn ($a, points.count // 2,
+			item := cwin_create_polygon_rgn ($a, points.count // 2,
 				Winding)
 		end
 
@@ -178,10 +178,12 @@ feature {NONE} -- Externals
 			"CreateEllipticRgnIndirect"
 		end
 
-	cwel_create_polygon_rgn (points: POINTER; num, mode: INTEGER): POINTER is
+	cwin_create_polygon_rgn (points: POINTER; num, mode: INTEGER): POINTER is
 			-- SDK CreatePolygonRgn
 		external
-			"C"
+			"C [macro <wel.h>] (POINT *, int, int): EIF_POINTER"
+		alias
+			"CreatePolygonRgn"
 		end
 
 	cwin_create_rect_rgn (x1, y1, x2, y2: INTEGER): POINTER is

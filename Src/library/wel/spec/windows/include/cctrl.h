@@ -13,12 +13,6 @@
 #	include <commctrl.h>
 #endif
 
-#ifdef WIN32
-#	define cwel_common_controls_dll_name "comctl32.dll"
-#else
-#	define cwel_common_controls_dll_name "commctrl.dll"
-#endif
-
 #endif /* __WEL_COMMONCONTROLS__ */
 
 /*

@@ -9,8 +9,6 @@
 #	include <wel.h>
 #endif
 
-#ifdef WIN32 // This file is Win32-specific!
-
 #ifndef __WEL_EDITSTREAM__
 #	include <estream.h>
 #endif
@@ -74,8 +72,6 @@ LONG FAR * pcb;
 		return (DWORD) 0;
 	}
 }
-
-#endif
 
 /*
 --|-------------------------------------------------------------------------

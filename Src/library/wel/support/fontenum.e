@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 				!! str.make (family)
 				p := str.item
 			end
-			cwel_enum_font_families (dc.item, p,
+			cwin_enum_font_families (dc.item, p,
 				cwel_enum_font_fam_procedure, default_pointer)
 			finish_action
 		end
@@ -110,10 +110,12 @@ feature {NONE} -- Externals
 			"C [macro <enumfont.h>]"
 		end
 
-	cwel_enum_font_families (hdc, family, enum_proc, data: POINTER) is
+	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
 			-- SDK EnumFontFamilies
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (HDC, LPCSTR, FONTENUMPROC, LPARAM)"
+		alias
+			"EnumFontFamilies"
 		end
 
 end -- class WEL_FONT_FAMILY_ENUMERATOR

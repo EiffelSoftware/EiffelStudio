@@ -17,7 +17,6 @@ cluster
 	wel_structures: 	"$EIFFEL4\library\wel\structs";
 	wel_support:		"$EIFFEL4\library\wel\support";
 	wel_windows:		"$EIFFEL4\library\wel\windows";
-	wel_win32:		"$EIFFEL4\library\wel\win32";
 
 	-- EiffelBase
 	kernel: 		"$EIFFEL4\library\base\kernel";
@@ -34,9 +33,6 @@ cluster
 	table:			"$EIFFEL4\library\base\structures\table";
 	traversing:		"$EIFFEL4\library\base\structures\traversing";
 	tree:			"$EIFFEL4\library\base\structures\tree";
-
-	desc_general:		"$EIFFEL4\library\base\desc\general";
-	desc_win32:		"$EIFFEL4\library\base\desc\spec\win32";
 
 external
 	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";

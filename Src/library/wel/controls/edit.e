@@ -171,8 +171,8 @@ feature -- Status setting
 			consistent_selection: start_position < end_position
 			end_small_enough: end_position <= text_length
 		do
-			cwel_set_selection_edit (item, start_position,
-				end_position, False)
+			cwin_send_message (item, Em_setsel, start_position,
+				end_position)
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = start_position
@@ -186,7 +186,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position <= text_length
 		do
-			cwel_set_selection_edit (item, position, position, False)
+			cwin_send_message (item, Em_setsel, position, position)
 		ensure
 			has_no_selection: not has_selection
 			caret_position_set: caret_position = position
@@ -379,14 +379,6 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		deferred
-		end
-
-feature {NONE} -- Externals
-
-	cwel_set_selection_edit (hwnd: POINTER; start_pos, end_pos: INTEGER;
-			scroll_caret: BOOLEAN) is
-		external
-			"C [macro <wel.h>]"
 		end
 
 invariant

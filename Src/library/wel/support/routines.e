@@ -91,12 +91,6 @@ feature -- Basic operations
 
 feature -- Status report
 
-	is_win32: BOOLEAN is
-			-- Is the current operating system Windows 95/NT?
-		once
-			Result := cwel_is_win32
-		end
-
 	key_state (virtual_key: INTEGER): BOOLEAN is
 			-- Is `virtual_key' down?
 		do
@@ -145,6 +139,15 @@ feature {NONE} -- Implementation
 			!! Result
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature -- Obsolete
+
+	is_win32: BOOLEAN is obsolete
+			"WEL does not support Windows 3.1x anymore. %
+			%This function returns always True."
+		once
+			Result := True
 		end
 
 feature {NONE} -- Externals
@@ -221,11 +224,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (LPSTR, UINT): EIF_INTEGER"
 		alias
 			"GetWindowsDirectory"
-		end
-
-	cwel_is_win32: BOOLEAN is
-		external
-			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_WINDOWS_ROUTINES

@@ -6,13 +6,12 @@ CFLAGS = -c -O2 -X -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\be
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj misc.obj estream.obj
+OBJ = disptchr.obj enumfont.obj estream.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
 	tlib $@ +disptchr.obj
 	tlib $@ +enumfont.obj
-	tlib $@ +misc.obj
 	tlib $@ +estream.obj
 	if not exist $(EIFFEL4)\library\wel\spec\w32bcc mkdir $(EIFFEL4)\library\wel\spec\w32bcc
 	if not exist $(EIFFEL4)\library\wel\spec\w32bcc\lib mkdir $(EIFFEL4)\library\wel\spec\w32bcc\lib
@@ -20,5 +19,4 @@ wel.lib: $(OBJ)
 	del $@
 	del disptchr.obj
 	del enumfont.obj
-	del misc.obj
 	del estream.obj

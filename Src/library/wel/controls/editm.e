@@ -44,10 +44,10 @@ feature -- Status setting
 			-- If `scroll_caret_at_selection' is True, the
 			-- caret will be scrolled to `start_position'.
 		do
-			cwel_set_selection_edit (item, start_position,
-				end_position, scroll_caret_at_selection)
+			cwin_send_message (item, Em_setsel, start_position,
+				end_position)
 			if scroll_caret_at_selection then
-				cwel_scroll_caret (item)
+				cwin_send_message (item, Em_scrollcaret, 0, 0)
 			end
 		end
 
@@ -56,10 +56,9 @@ feature -- Status setting
 			-- If `scroll_caret_at_selection' is True, the
 			-- caret will be scrolled to `position'.
 		do
-			cwel_set_selection_edit (item, position, position,
-				scroll_caret_at_selection)
+			cwin_send_message (item, Em_setsel, position, position)
 			if scroll_caret_at_selection then
-				cwel_scroll_caret (item)
+				cwin_send_message (item, Em_scrollcaret, 0, 0)
 			end
 		end
 
@@ -252,13 +251,6 @@ feature {NONE} -- Implementation
 				Ws_tabstop + Ws_border + Es_left +
 				Es_autohscroll + Es_autovscroll +
 				Ws_vscroll + Ws_hscroll + Es_multiline
-		end
-
-feature {NONE} -- Externals
-
-	cwel_scroll_caret (hwnd: POINTER) is
-		external
-			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_MULTIPLE_LINE_EDIT

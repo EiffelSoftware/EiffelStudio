@@ -259,9 +259,9 @@ feature {NONE} -- Externals
 	cwin_wait_message: BOOLEAN is
 			-- SDK WaitMessage
 		external
-			"C"
+			"C [macro <wel.h>]: EIF_BOOLEAN"
 		alias
-			"cwel_wait_message"
+			"WaitMessage ()"
 		end
 
 	cwel_msg_set_hwnd (ptr: POINTER; value: POINTER) is

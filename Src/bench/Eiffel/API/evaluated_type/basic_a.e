@@ -12,9 +12,9 @@ inherit
 			type_i
 		redefine
 			feature_type, instantiation_in, instantiation_of,
-			meta_type, is_basic, internal_conform_to,
+			meta_type, is_basic,
 			good_generics, is_valid, error_generics,
-			is_equivalent
+			is_equivalent, reference_actual_type
 		end
 
 feature -- Comparison
@@ -33,24 +33,14 @@ feature -- Access
 	is_valid: BOOLEAN is True
 			-- The associated class is still in the system
 
-feature {COMPILER_EXPORTER}
-
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
-		local
-			other_class: CLASS_C
+	reference_actual_type: CL_TYPE_A is
+			-- `actual_type' if not `is_expanded'.
+			-- Otherwise associated reference of `actual type'
 		do
-			if other.is_none then
-				Result := False
-			else
-				other_class := other.actual_type.associated_class
-					-- Note that Void type has no associated class
-				if other_class /= Void then
-					Result :=  (not other.is_true_expanded)
-							and then associated_class.conform_to (other_class)
-				end
-			end
+			create Result.make (class_id)
 		end
+
+feature {COMPILER_EXPORTER}
 
 	feature_type (f: FEATURE_I): TYPE_A is
 			-- Type of the feature `f' in the context of Current
@@ -92,5 +82,9 @@ feature {COMPILER_EXPORTER}
 	error_generics: VTUG is
 		do
 		end
+		
+invariant
+	is_basic: is_basic
+	is_expanded: is_expanded
 
 end -- class BASIC_A

@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Access
 
-	size: INTEGER is 12
+	count: INTEGER is 12
 			-- Size of structure once emitted.
 		
 feature -- Saving

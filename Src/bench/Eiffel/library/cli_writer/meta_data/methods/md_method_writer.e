@@ -40,7 +40,7 @@ feature -- Access
 			result_not_null: Result /= default_pointer
 		end
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of code
 		do
 			Result := current_position
@@ -133,12 +133,12 @@ feature -- Settings
 		do
 			l_meth := internal_method_body
 			l_pos := current_position
-			l_meth_size := l_meth.size
+			l_meth_size := l_meth.count
 			method_locations.put (l_pos, l_meth.method_token)
 
-			if (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Size) > capacity then
+			if (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count) > capacity then
 					-- Resize `internal_item'.
-				internal_item.resize ((l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Size)
+				internal_item.resize ((l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count)
 					.max (capacity + Chunk_size))
 			end
 			
@@ -149,7 +149,7 @@ feature -- Settings
 					-- Valid candidate for tiny header.
 				Tiny_method_header.set_code_size (l_meth_size)
 				Tiny_method_header.write_to_stream (internal_item, l_pos)
-				l_pos := l_pos + Tiny_method_header.size
+				l_pos := l_pos + Tiny_method_header.count
 			else
 					-- Valid candidate for fat header.
 				Fat_method_header.remake (l_meth.max_stack.to_integer_16,
@@ -161,7 +161,7 @@ feature -- Settings
 				end
 				
 				Fat_method_header.write_to_stream (internal_item, l_pos)
-				l_pos := l_pos + Fat_method_header.size
+				l_pos := l_pos + Fat_method_header.count
 			end
 			
 			l_meth.write_to_stream (internal_item, l_pos)
@@ -176,7 +176,7 @@ feature -- Settings
 					l_ex.end_position - l_ex.catch_position,
 					l_ex.type_token)
 				Exception_header.write_to_stream (internal_item, l_pos)
-				l_pos := l_pos + Exception_header.Size
+				l_pos := l_pos + Exception_header.count
 			end
 			
 				-- Find next location that must be 4 bytes aligned.

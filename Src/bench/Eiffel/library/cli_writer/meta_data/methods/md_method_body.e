@@ -66,7 +66,7 @@ feature -- Reset
 
 feature -- Access
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Current size in memory.
 		do
 			Result := current_position
@@ -291,7 +291,7 @@ feature -- Labels manipulation
 	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
 			-- Update code at `branch_inst_pos' with new jump value `jump_offset'.
 		require
-			valid_pos: branch_inst_pos > 0 and branch_inst_pos < size
+			valid_pos: branch_inst_pos > 0 and branch_inst_pos < count
 		local
 			l_old_pos: like current_position
 		do

@@ -22,12 +22,12 @@ feature -- Initialization
 			if a_try_length < 256 and a_handler_length < 256 then
 				is_fat := False
 				internal_data := ((feature {MD_METHOD_CONSTANTS}.Section_ehtable)
-					.to_integer_32 |<< 24) | Size
+					.to_integer_32 |<< 24) | count
 			else
 				is_fat := True
 				internal_data := ((feature {MD_METHOD_CONSTANTS}.Section_ehtable |
 					feature {MD_METHOD_CONSTANTS}.Section_fat_format)
-					.to_integer_32 |<< 24) | Size
+					.to_integer_32 |<< 24) | count
 			end
 			try_offset := a_try_offset
 			try_length := a_try_length
@@ -64,7 +64,7 @@ feature -- Access
 			
 feature -- Access
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of structure once emitted.
 		do
 			if is_fat then
@@ -85,7 +85,7 @@ feature -- Saving
 			m.put_integer_8 (l_byte, pos)
 
 				-- FIXME: Manu 3/29/2002: Should it be big endian?
-			l_byte := size.to_integer_8
+			l_byte := count.to_integer_8
 			m.put_integer_8 (l_byte, pos + 1)
 				-- +3 as size is coded on 3 bytes, but as we only use only
 				-- one exception, we store the first 8 bits and skip the last

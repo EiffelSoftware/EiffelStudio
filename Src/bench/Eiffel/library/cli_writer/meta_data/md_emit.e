@@ -102,7 +102,7 @@ feature -- Definition: access
 			signature_not_void: signature /= Void
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,
-				method_name.item, signature.item.item, signature.size, $Result)
+				method_name.item, signature.item.item, signature.count, $Result)
 
 			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
@@ -170,7 +170,7 @@ feature -- Definition: creation
 			signature_not_void: signature /= Void
 		do
 			last_call_success := c_define_method (item, in_class_token,
-				method_name.item, method_flags, signature.item.item, signature.size,
+				method_name.item, method_flags, signature.item.item, signature.count,
 				0, impl_flags, $Result)
 		ensure
 			success: last_call_success = 0
@@ -228,7 +228,7 @@ feature -- Definition: creation
 			signature_not_void: signature /= Void
 		do
 			last_call_success := c_define_field (item, in_class_token,
-				field_name.item, field_flags, signature.item.item, signature.size,
+				field_name.item, field_flags, signature.item.item, signature.count,
 				0, default_pointer, 0, $Result)
 		ensure
 			success: last_call_success = 0
@@ -242,7 +242,7 @@ feature -- Definition: creation
 			signature_not_void: signature /= Void
 		do
 			last_call_success := c_define_signature (item, signature.item.item,
-				signature.size, $Result)
+				signature.count, $Result)
 			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
@@ -269,7 +269,7 @@ feature -- Definition: creation
 			ca_not_void: ca /= Void
 		do
 			last_call_success := c_define_custom_attribute (item, owner, constructor,
-				ca.item.item, ca.size, $Result)
+				ca.item.item, ca.count, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result > 0

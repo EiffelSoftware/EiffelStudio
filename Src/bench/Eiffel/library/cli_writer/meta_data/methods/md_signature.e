@@ -14,10 +14,10 @@ feature {NONE} -- Initialization
 			create item.make (Default_size)
 			current_position := 0
 		end
-			
+		
 feature -- Access
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of structure once emitted.
 		do
 			Result := current_position

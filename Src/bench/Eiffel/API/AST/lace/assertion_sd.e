@@ -9,6 +9,11 @@ inherit
 
 feature
 
+	option_name: STRING is
+		once
+			Result := "assertion"
+		end;
+
 	is_assertion: BOOLEAN is
 			-- Is the option an assertion one ?
 		do

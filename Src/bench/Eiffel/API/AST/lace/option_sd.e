@@ -1,6 +1,6 @@
 -- Description for option supported by Eiffel compiler 3
 
-class OPTION_SD
+deferred class OPTION_SD
 
 inherit
 
@@ -14,6 +14,11 @@ feature
 		end
 
 feature -- Identfication
+
+	option_name: STRING is
+			-- Name of the option
+		deferred
+		end;
 
 	is_debug: BOOLEAN is
 			-- Is the option a debug one ?

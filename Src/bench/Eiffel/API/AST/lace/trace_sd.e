@@ -9,6 +9,11 @@ inherit
 
 feature
 
+	option_name: STRING is
+		once
+			Result := "trace"
+		end;
+
 	is_trace: BOOLEAN is
 			-- Is the option a trace one ?
 		do

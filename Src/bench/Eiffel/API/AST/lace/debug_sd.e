@@ -9,6 +9,11 @@ inherit
 
 feature
 
+	option_name: STRING is
+		once
+			Result := "debug"
+		end;
+
 	is_debug: BOOLEAN is
 			-- Is the option a debug one ?
 		do

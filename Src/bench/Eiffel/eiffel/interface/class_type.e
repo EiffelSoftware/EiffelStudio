@@ -115,6 +115,14 @@ feature -- Access
 			Result := not is_precompiled
 		end
 
+	is_generated: BOOLEAN is
+			-- Is current type to be generated in IL code generation?
+		require
+			il_generation: System.il_generation
+		do
+			Result := not associated_class.is_external and not is_precompiled
+		end
+
 	is_changed: BOOLEAN
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]

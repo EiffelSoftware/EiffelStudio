@@ -256,9 +256,7 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 					+ Ws_tabstop + Ws_border + Es_left
-					+ Es_autohscroll + Es_autovscroll
-					+ Ws_vscroll + Ws_hscroll + Es_multiline
-					+ Es_wantreturn
+					+ Es_multiline + Es_wantreturn
 		end
 
 	default_ex_style: INTEGER is

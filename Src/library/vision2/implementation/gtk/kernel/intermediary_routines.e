@@ -64,14 +64,14 @@ feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
 			end
 		end
 
-	create_expose_actions_intermediary (a_c_object: POINTER; x, y, width, height: INTEGER) is
+	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
 			-- Area needs to be redrawn
 		local
 			a_drawing_area_imp: EV_DRAWING_AREA_IMP
 		do
 			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			if a_drawing_area_imp /= Void then
-				a_drawing_area_imp.call_expose_actions (x, y, width, height)
+				a_drawing_area_imp.call_expose_actions (a_x, a_y, a_width, a_height)
 			end
 		end
 

@@ -206,85 +206,87 @@ feature {NONE} -- Initialization
 
 										l_il_offset := l_frame_il.get_ip
 										l_stack_object := l_frame_il.get_argument (0)
-										check
-											stack_object_not_void: l_stack_object /= Void
-										end
+										if l_stack_object /= Void then
+											check
+												stack_object_not_void: l_stack_object /= Void
+											end
 	
-										if il_debug_info_recorder.has_info_about_module (l_module_name) then
-											l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
-											l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
-		
-											if l_feature_i = Void then
-												if l_feature_token = Il_debug_info_recorder.entry_point_token then
-													l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+											if il_debug_info_recorder.has_info_about_module (l_module_name) then
+												l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
+												l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
+
+												if l_feature_i = Void then
+													if l_feature_token = Il_debug_info_recorder.entry_point_token then
+														l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+													end
+												end
+												if l_class_type /= Void and then l_feature_i /= Void then
+														--| FIXME jfiat 2004/06/03 : why Current may be Void ?
+														--| If JITdebugging is enabled (badly), this may cause problem
+														--| resulting in Void l_stack_object
+														--| We may require to check this and fix this potential bug
+														--| but this seems to be fixed by doing in the good way
+														--| the JITdebugging settings
+														--| Nota: we leave this comment, just in case this occurs again...
+														
+														--| Here we have a valid Eiffel callstack point
+													
+														--| Compute data to get address and co ...
+													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
+													l_stack_adv := debug_value_from_icdv (l_stack_object)
+													l_hexaddress := l_stack_adv.address
+													l_stack_drv ?= l_stack_adv
+													if l_stack_drv /= Void then
+														l_class_type := l_stack_drv.dynamic_class_type
+													else
+														l_class_type := l_stack_adv.dynamic_class.types.first
+													end
+
+													create eiffel_cse.make (level)
+													eiffel_cse.set_private_current_object (l_stack_adv)
+													eiffel_cse.set_routine (
+														l_chain,
+														l_frame,
+														l_frame_il,
+														False, 			-- is_melted (No since this is a dotnet system)
+														l_hexaddress,
+														l_class_type, 	-- dynmic class type
+														l_feature_i.written_class, 	-- origin class
+														l_feature_i, 	-- routine, routine_name ...
+														l_il_offset,
+														l_line_number 	-- break_index / line number
+														)
+													call := eiffel_cse
+													
+													extend (call)
+													level := level + 1
+
+													eiffel_cse := Void
+													l_stack_adv := Void
+													l_stack_drv := Void
+													
 												end
 											end
-											if l_class_type /= Void and then l_feature_i /= Void then
-													--| FIXME jfiat 2004/06/03 : why Current may be Void ?
-													--| If JITdebugging is enabled (badly), this may cause problem
-													--| resulting in Void l_stack_object
-													--| We may require to check this and fix this potential bug
-													--| but this seems to be fixed by doing in the good way
-													--| the JITdebugging settings
-													--| Nota: we leave this comment, just in case this occurs again...
-													
-													--| Here we have a valid Eiffel callstack point
-												
-													--| Compute data to get address and co ...
-												l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
-	
-												l_stack_adv := debug_value_from_icdv (l_stack_object)
-												l_hexaddress := l_stack_adv.address
-												l_stack_drv ?= l_stack_adv
-												if l_stack_drv /= Void then
-													l_class_type := l_stack_drv.dynamic_class_type
+											if call = Void then
+													-- Here we have an External CallStack
+												create external_cse.make (level)
+												if l_stack_object /= Void then
+													l_hexaddress := "0x" + l_stack_object.get_address.to_integer.to_hex_string
 												else
-													l_class_type := l_stack_adv.dynamic_class.types.first
+													l_hexaddress := "0x0"
 												end
-
-												create eiffel_cse.make (level)
-												eiffel_cse.set_private_current_object (l_stack_adv)
-												eiffel_cse.set_routine (
-													l_chain,
-													l_frame,
-													l_frame_il,
-													False, 			-- is_melted (No since this is a dotnet system)
-													l_hexaddress,
-													l_class_type, 	-- dynmic class type
-													l_feature_i.written_class, 	-- origin class
-													l_feature_i, 	-- routine, routine_name ...
-													l_frame_il.get_ip,
-													l_line_number 	-- break_index / line number
+												external_cse.set_info (
+														l_hexaddress,
+														l_module.md_type_name (l_class_token),
+														l_module.md_member_name (l_feature_token),
+														l_il_offset,
+														"no debug information"
 													)
-												call := eiffel_cse
+												call := external_cse
+												external_cse := Void
 												extend (call)
 												level := level + 1
-
-												eiffel_cse := Void
-												l_stack_adv := Void
-												l_stack_drv := Void
-												
 											end
-										end
-										if call = Void then
-												-- Here we have an External CallStack
-											create external_cse.make (level)
-											if l_stack_object /= Void then
-												l_hexaddress := "0x" + l_stack_object.get_address.to_integer.to_hex_string
-											else
-												l_hexaddress := "0x0"
-											end
-											external_cse.set_info (
-													l_hexaddress,
-													l_module.md_type_name (l_class_token),
-													l_module.md_member_name (l_feature_token),
-													l_il_offset,
-													"no debug information"
-												)
-											call := external_cse
-											external_cse := Void
-											extend (call)
-											level := level + 1
 										end
 										l_module.clean_on_dispose
 										l_class.clean_on_dispose

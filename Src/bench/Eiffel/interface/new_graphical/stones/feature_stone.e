@@ -267,7 +267,7 @@ feature -- dragging
 					new_e_feature := e_feature.updated_version
 					if new_e_feature /= Void then
 						create {FEATURE_STONE} Result.make (new_e_feature)
-						fok := True
+						fok := Result.is_valid
 					end
 				end
 					-- Even if the feature has been removed or is now in a class out of the system,

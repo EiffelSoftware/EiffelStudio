@@ -93,7 +93,7 @@ X   complete but found to have bugs
     support/ev_item_list.e                              o    o    *    .
     
   Support:
-    support/ev_default_colors.e                         *    .    *    .
+    support/ev_default_colors.e                         o    .    *    .
     kernel/ev_accelerator.e                             *    .    *    .
     kernel/keys.def                                     o    -    -    -
     kernel/ev_color.e                                   *    .    *    .

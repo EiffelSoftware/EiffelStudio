@@ -67,10 +67,21 @@ feature -- Setting
 	set_sensitive (sensitivity: BOOLEAN) is
 			-- Set both the `associated_button' and `associated_menu_entry'
 			-- to be sensitive or not, according to `sensitivity'.
-		local
-			b: like associated_button;
-			m: like associated_menu_entry
 		do
+			if associated_button /= Void then
+				if sensitivity then
+					associated_button.show
+				else
+					associated_button.hide
+				end
+			end;
+			if associated_menu_entry /= Void then
+				if sensitivity then
+					associated_menu_entry.set_sensitive
+				else
+					associated_menu_entry.set_insensitive
+				end
+			end;
 		end;
 
 feature -- Properties

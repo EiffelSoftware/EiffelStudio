@@ -144,6 +144,9 @@ cluster
 	all compiler_api:			"$EIFFEL_SRC/Eiffel/API"
 		exclude "CVS" end
 
+	all helpers:				"$EIFFEL_SRC/library/helpers"
+		exclude "CVS" end
+
 		-- Encryption
 	encryption:				"$EIFFEL_SRC/library/encryption"
 		exclude

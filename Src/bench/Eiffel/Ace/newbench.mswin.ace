@@ -207,6 +207,11 @@ cluster
 			"CVS"; 
 		end
 
+	all helpers:			"$EIFFEL_SRC\helpers"
+		exclude
+			"CVS";
+		end
+
 	encryption:		"$EIFFEL_SRC\library\encryption"
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"

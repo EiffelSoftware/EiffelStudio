@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -93,8 +92,8 @@ feature -- Access
 
 	has (v: G): BOOLEAN is
 			-- Does subtree include `v'?
-			-- (According to the currently adopted
-			-- discrimination rule)
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			Result := v = item or else subtree_has (v)
 		end;
@@ -155,13 +154,13 @@ feature -- Status report
 		end;
 
 	child_before: BOOLEAN is
-			-- Is there no valid child position to the left
+			-- Is there no valid child position to the left of cursor?
 		do
 			Result := child_index = 0
 		end;
 
 	child_after: BOOLEAN is
-			-- Is there no valid child position to the right
+			-- Is there no valid child position to the right of cursor?
 		do
 			Result := child_index = arity + 1
 		end;
@@ -216,7 +215,7 @@ feature -- Cursor movement
 		end;
 
 	child_start is
-			-- Move to first child.
+			-- Move cursor to first child.
 		deferred
 		ensure then
 			is_first_child: not is_leaf implies child_isfirst;
@@ -224,7 +223,7 @@ feature -- Cursor movement
 		end;
 
 	child_finish is
-			-- Move to last child.
+			-- Move cursor to last child.
 		deferred
 		ensure then
 			is_last_child: not is_leaf implies child_islast;
@@ -232,6 +231,7 @@ feature -- Cursor movement
 		end; -- child_finish
 
 	child_forth is
+			-- Move cursor to next child.
 		deferred
 		end;
 
@@ -250,11 +250,10 @@ feature -- Cursor movement
 			is_after: (i = arity + 1) implies child_after
 		end;
 
-
 feature -- Element change
 
 	sprout is
-			-- Make `Current' a root
+			-- Make current node a root.
 		do
 			if parent /= void then
 				parent.prune (Current)
@@ -279,7 +278,7 @@ feature -- Element change
 			item_inserted: child_item = v
 		end; -- child_replace
 
-	put_child, replace_child (n: like parent) is
+	replace_child (n: like parent) is
 			-- Put `n' at current child position.
 		require
 			writable_child: writable_child;
@@ -309,8 +308,8 @@ feature -- Element change
 	
 feature -- Conversion
 
-	sequential_representation: SEQUENTIAL [G] is
-			-- Representation as a sequential structure
+	linear_representation: LINEAR [G] is
+			-- Representation as a linear structure
 		local
 			al: ARRAYED_LIST [G]
 		do
@@ -394,8 +393,8 @@ feature {TREE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is
 			-- Do children include `v'?
-			-- (According to the currently adopted
-			-- discrimination rule)
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			from
 				child_start

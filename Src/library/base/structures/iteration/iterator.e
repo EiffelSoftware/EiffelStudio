@@ -20,7 +20,7 @@ feature -- Status report
 			-- The structure to which iteration features will apply
 
 	test: BOOLEAN is
-			-- Test to be applied to item at cursor position in `target'
+			-- Test to be applied to item at current position in `target'
 			-- (default: value of `item_test' on item)
 		require
 			traversable_exists: target /= Void;
@@ -112,8 +112,8 @@ feature -- Cursor movement
 feature -- Element change
 
 	action is
-			-- Action to be applied to item at cursor position in `target'.
-			-- (default: `item_action' on item at cursor position.)
+			-- Action to be applied to item at current position in `target'.
+			-- (default: `item_action' on item at current position.)
 			-- Note: for iterators to work properly, redefined versions of
 			-- this feature should not change the traversable's structure.
 		require

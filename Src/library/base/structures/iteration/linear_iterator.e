@@ -9,7 +9,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LINEAR_ITERATOR [G] inherit
+class LINEAR_ITERATOR [G] inherit
 
 	ITERATOR [G]
 		redefine
@@ -37,7 +37,7 @@ feature -- Cursor movement
 			end
 		ensure then
 			off 
-		end; -- do_all
+		end;
 
 	do_while is
 			-- Apply `action' to every item of `target' up to 
@@ -48,7 +48,7 @@ feature -- Cursor movement
 			continue_while 
 		ensure then
 			not off implies not test 
-		end; -- do_while
+		end;
 
 	continue_while is
 			-- Apply `action' to every item of `target' up to
@@ -69,12 +69,36 @@ feature -- Cursor movement
 			end
 		ensure then
 			not off implies not test 
-		end; -- continue_while
+		end;
 
 	until_do is
+		   -- Apply `action' to every item of `target' up to
+			-- but excluding the first one satisfying `test'.
+			-- (Apply to full list if no item satisfies `test'.)
 		do
 			start;
-			continue_while
+			until_continue
+		end;
+
+	until_continue is
+			-- Apply `action' to every item of `target' from current position
+			-- up to but excluding the first one satisfying `test'.
+		require
+			traversable_exists: target /= Void;
+			invariant_satisfied: invariant_value
+		do  
+			from
+			invariant
+				invariant_value
+			until
+				target.off or else test
+			loop
+				action;
+				target.forth
+			end 
+		ensure
+			achieved: target.off or else test;
+			invariant_satisfied: invariant_value
 		end;
 
 	do_until is
@@ -86,7 +110,7 @@ feature -- Cursor movement
 			continue_until;
 		ensure then
 			not off implies test 
-		end; -- do_until
+		end;
 
 	 continue_until is
 			-- Apply `action' to every item of `target' up to
@@ -110,7 +134,7 @@ feature -- Cursor movement
 			end
 		ensure then
 			not off implies test 
-		end; -- continue_until
+		end;
 
 	search (b: BOOLEAN) is
 			-- Search the first item of `target' 
@@ -121,7 +145,7 @@ feature -- Cursor movement
 		do
 			start ;
 			continue_search (b)
-		end; -- search
+		end;
 
 	continue_search (b: BOOLEAN) is
 			-- Search the first item of `target'
@@ -140,7 +164,7 @@ feature -- Cursor movement
 			end
 		ensure then
 			not off = (b = test )
-		end; -- search
+		end;
 
 	do_if is
 			-- Apply `action' to every item of `target' 
@@ -157,7 +181,7 @@ feature -- Cursor movement
 				if test then action end;
 				forth 
 			end
-		end; -- do_if
+		end;
 
 	do_for (i, n, k: INTEGER) is
 			-- Apply `action' to every `k'-th item,
@@ -181,7 +205,7 @@ feature -- Cursor movement
 				j := j + 1
 			end;
 			continue_for (n, k)
-		end; -- do_for
+		end;
 
 	continue_for (n, k: INTEGER) is
 			-- Every `k'th item, apply `action',
@@ -214,7 +238,7 @@ feature -- Cursor movement
 					j := j + 1
 				end
 			end
-		end; -- continue_for
+		end;
 
 	forall: BOOLEAN is
 			-- Does `test' return true for
@@ -222,7 +246,7 @@ feature -- Cursor movement
 		do
 			search (False);
 			Result := off 
-		end; -- all
+		end;
 
 	exists: BOOLEAN is
 			-- Does `test' return true for
@@ -230,30 +254,31 @@ feature -- Cursor movement
 		do
 			search (True);
 			Result := not off 
-		end; -- exists
+		end;
 
 	start is
-			-- Move cursor of `target' to first position.
+			-- Move to first position of `target'.
 		require
 			traversable_exists: target /= Void
 		do
 			target.start
-		end; -- start
+		end;
 
 	forth is
-			-- Move cursor of `target' to next position.
+			-- Move to next position of `target'.
 		require
 			traversable_exists: target /= Void
-		deferred
-		end; -- forth
+		do
+			target.start
+		end;
 
 	off: BOOLEAN is
-			 -- Is cursor of `target' off?
+			 -- Is position of `target' off?
 		require
 			traversable_exists: target /= Void
 		do
 			Result := target.off
-		end; -- off
+		end;
 
 end
 

@@ -72,7 +72,6 @@ feature -- Basic operations
 		deferred
 		ensure
 			is_subset_other: is_subset (other);
-			--is_subset (old Current)
 		end;
 
 	merge (other: like Current) is
@@ -83,7 +82,6 @@ feature -- Basic operations
 		deferred
 		ensure
 			is_superset (other);
-			--is_superset (old Current)
 		end;
 
 	subtract (other: like Current) is
@@ -93,7 +91,6 @@ feature -- Basic operations
 			same_rule: object_comparison = other.object_comparison
 		deferred
 		ensure
-			--is_subset (old Current);
 			is_disjoint: disjoint (other)
 		end;
 

@@ -157,7 +157,7 @@ feature -- Status report
 feature -- Element change
 
 	put_left_child (n: like parent) is
-			-- Set `left_child' to n
+			-- Set `left_child' to `n'.
 		require
 			no_parent: n.is_root
 		do
@@ -169,7 +169,7 @@ feature -- Element change
 		end;
 		
 	put_right_child (n: like parent) is
-			-- Set `right_child' to n
+			-- Set `right_child' to `n'.
 		require
 			no_parent: n.is_root
 		do
@@ -245,7 +245,7 @@ feature -- Removal
 feature	-- Cursor movement
 
 	child_go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
+			-- Move cursor to child remembered by `p'.
 		do
 			--child_index := p.child_index
 		end;
@@ -257,17 +257,19 @@ feature	-- Cursor movement
 		end;
 		
 	child_finish is
-			-- Move to last child.
+			-- Move cursor to last child.
 		do
 			child_index := 3
 		end;
 		
 	child_forth is
+			-- Move cursor to next child.
 		do
 			child_index := child_index + 1
 		end;
 		
 	child_back is
+			-- Move cursor to previous child.
 		do
 			child_index := child_index - 1
 		end;
@@ -304,6 +306,7 @@ feature -- Duplication
 				Result.put_right_child (right_child.duplicate_all)
 			end;
 		end;
+
 feature {BINARY_TREE} -- Implementation
 
 	fill_list (al: ARRAYED_LIST [G]) is

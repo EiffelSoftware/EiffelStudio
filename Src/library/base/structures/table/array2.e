@@ -6,7 +6,7 @@ indexing
 	copyright: "See notice at end of class";
 	names: array2, matrix, table;
 	representation: array;
-	access: index, row_and_column, cursor, membership;
+	access: index, row_and_column, membership;
 	size: resizable;
 	contents: generic;
 	date: "$Date$";

@@ -17,7 +17,7 @@ class LINKED_QUEUE [G] inherit
 		undefine
 			empty
 		redefine
-			sequential_representation, prune_all, extend
+			linear_representation, prune_all, extend
 		select
 			item
 		end;
@@ -39,7 +39,7 @@ class LINKED_QUEUE [G] inherit
 			readable, writable, prune_all, extend,
 			force
 		redefine
-			duplicate, sequential_representation
+			duplicate, linear_representation
 		select
 			remove
 		end;
@@ -62,8 +62,10 @@ feature -- Access
 		require else
 			not empty
 		do
+				check
+					after and not empty implies (active = last_element)
+				end;
 			Result := active.item	
-			--| after and not empty implies (active = last_element)
 		end;
 
 feature -- Element change
@@ -71,15 +73,15 @@ feature -- Element change
 	put, extend, force (v: G) is
 			-- Add `v' as newest element.
 		do
-			add_front (v)
+			put_front (v)
 		ensure then
-			--(old empty) implies (item = v);
+			(old empty) implies (item = v);
 		end;
 
 feature -- Conversion
 
-	sequential_representation: ARRAYED_LIST [G] is
-			-- Representation as a sequential structure
+	linear_representation: ARRAYED_LIST [G] is
+			-- Representation as a linear structure
 			-- (order is same as original order of insertion)
 		local
 			i: INTEGER;
@@ -126,18 +128,19 @@ feature -- Duplication
 			end;
 			finish
 		end;
-feature {NONE} -- Not avialable
+
+feature {NONE} -- Not applicable
 	
 	prune (v: like item) is
 			-- Remove one occurence of `v'.
-			-- Not avialable.
+			-- Not available.
 		do
 			-- Do nothing
 		end;
 	
 	prune_all (v: like item) is
 			-- Remove all occurences of `v'.
-			-- Not avialable
+			-- Not available
 		do
 			-- Do nothing
 		end;

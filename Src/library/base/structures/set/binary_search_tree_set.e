@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -34,8 +33,8 @@ feature -- Access
 
 	has (v: like item): BOOLEAN is
 			-- Is there a node with item `v' in subtree?
-			-- (According to the currently adopted
-			-- discrimination rule)
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		do
 			if tree /= Void then
 				Result := tree.has (v)
@@ -79,18 +78,16 @@ feature -- Measurement
 feature -- Status report
 
 	extendible: BOOLEAN is true;
-
+		-- Can new items be added? (Answer: yes.)
 
 	prunable: BOOLEAN is true;
+		-- Can items be removed? (Answer: yes.)
 
 	after: BOOLEAN;
+		-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
-
-	off: BOOLEAN is
-		do
-			Result := after or before
-		end;
+		-- Is there no valid cursor position to the left of cursor?
 
 feature -- Cursor movement
 

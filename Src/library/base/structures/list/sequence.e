@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -19,7 +18,7 @@ deferred class SEQUENCE [G] inherit
 				prune_all
 		end;
 
-	SEQUENTIAL [G];
+	BILINEAR [G];
 
 	FINITE [G]
 
@@ -47,7 +46,7 @@ feature -- Element change
 		do
 			extend (v)
 		ensure then
-	 		--new_count: count = old count + 1;
+	 		new_count: count = old count + 1;
 			item_inserted: has (v)
 		end;
 
@@ -65,13 +64,14 @@ feature -- Element change
 				s.forth
 			end
 		ensure
-	 		--new_count: count >= old count
+	 		new_count: count >= old count
 		end;
 
 feature -- Removal
 
 	prune (v: like item) is
-			-- Remove one occurrence of `v' if any.
+			-- Remove the first occurrence of `v' if any.
+			-- If no such occurrence go `off'.
 		do
 			start;
 			search (v);
@@ -81,7 +81,7 @@ feature -- Removal
 		end;
 
 	prune_all (v: like item) is
-			-- Remove all occurrences of `v'.
+			-- Remove all occurrences of `v'; go `off'.
 		do
 			from
 				start

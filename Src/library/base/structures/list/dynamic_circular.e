@@ -20,10 +20,45 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 	DYNAMIC_CHAIN [G]
 		undefine
 			valid_cursor_index,
-			search, 
+			search, first, last, 
 			finish, start, move, go_i_th,
-			exhausted, off
-		end
+			off, exhausted
+		redefine
+			duplicate
+		end;
+
+	BASIC_ROUTINES
+		export
+			{NONE} all
+		redefine
+			copy, is_equal,
+			consistent, setup
+		end;
+
+feature
+
+   duplicate (n: INTEGER): like Current is
+			-- Copy of sub-chain beginning at current position
+			-- and having min (`n', `count') items,
+			-- where `from_here' is the number of items
+			-- at or to the right of current position.
+		local
+			pos: CURSOR;
+			to_be_removed, counter: INTEGER
+		do
+			from
+				Result := new_chain;
+				pos := cursor;
+				to_be_removed := min (count, n)
+			until
+				counter = to_be_removed
+			loop
+				Result.extend (item);
+				forth;
+				counter := counter + 1
+			end;
+			go_to (pos)
+		end;
 
 end -- class DYNAMIC_CIRCULAR
 

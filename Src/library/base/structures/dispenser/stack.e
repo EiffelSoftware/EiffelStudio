@@ -33,7 +33,7 @@ feature -- Element change
 			extend (v)
 		end;
 
-	fill (other: SEQUENTIAL [G]) is
+	fill (other: LINEAR [G]) is
 			-- Fill with as many elements of `other' as possible.
 			-- Fill items with greatest index from `other' first.
 			-- Items inserted with lowest index (from `other') will

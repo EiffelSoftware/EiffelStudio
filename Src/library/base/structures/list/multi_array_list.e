@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -18,8 +17,8 @@ class MULTI_ARRAY_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		redefine
 			start, finish, move, has, first, last, prune_all, search,
-			remove, duplicate, wipe_out, add_left, add_right, 
-			add_front, extend
+			remove, duplicate, wipe_out, put_left, put_right, 
+			put_front, extend
 		end;
 
 feature --Initialization
@@ -58,6 +57,8 @@ feature -- Access
 
 	has (v: like item): BOOLEAN is
 			-- Does list include `v'?
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			pos: CURSOR;
 		do
@@ -134,29 +135,37 @@ feature -- Cursor movement
 		end;
 
 	forth is
-			-- Move cursor to next position.
+			-- Move cursor to next position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
 		do
-			current_array := active.item;
-			current_array.forth;
-			if current_array.after and active /= last_element then
-				active := active.right;
-				active.item.start
+			if not empty then
+				current_array := active.item;
+				current_array.forth;
+				if current_array.after then
+					if active /= last_element then
+						active := active.right;
+						active.item.start
+					end
+				end
 			end;
 			index := index + 1
 		end;
 
 	back is
-			-- Move cursor to previous position.
+			-- Move cursor to previous position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
 		do
-			current_array := active.item;
-			current_array.back;
-			if current_array.before and active /= first_element then
-				active := active.left;
-				active.item.finish
+			if not empty then
+				current_array := active.item;
+				current_array.back;
+				if current_array.before then
+					if active /= first_element then
+						active := active.left;
+						active.item.finish
+					end
+				end
 			end;
 			index := index - 1	
 		end;
@@ -232,6 +241,10 @@ feature -- Cursor movement
 		end;
 
 	search (v: like item) is
+			-- Move cursor to first position (at or after current
+			-- cursor position) where `item' and `v' are equal.
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			current_array: ARRAYED_LIST [G];
 			cell: like active;
@@ -288,8 +301,9 @@ feature -- Element change
 			count := count + 1
 		end;
 
-	add_front (v: like item) is
+	put_front (v: like item) is
 			-- Add `v' at the beginning.
+			-- Do not move cursor.
 		local
 			first_array: ARRAYED_LIST [G];
 			pos: INTEGER;
@@ -301,7 +315,7 @@ feature -- Element change
 				pos := -1
 			end;
 			first_array.start;
-			add_left (v);
+			put_left (v);
 			if pos > 0 then
 				first_array.go_i_th	(pos + 1)
 			elseif pos = 0 then
@@ -311,14 +325,16 @@ feature -- Element change
 			count := count + 1
 		end;
 	
-	add_left (v: like item) is
-			-- Add `v' at the left of cursor.
+	put_left (v: like item) is
+			-- Add `v' to the left of current position.
+			-- Do not move cursor.
 		local
 			cell: like first_element;
 			current_array, previous_array: ARRAYED_LIST [G];
 			pos, cut: INTEGER;
 		do
 			current_array := active_array;
+				check empty implies after end;
 			if after then
 				extend (v)
 			elseif
@@ -327,7 +343,7 @@ feature -- Element change
 			then
 				active.left.item.extend (v)
 			elseif current_array.count <= block_size then
-				current_array.add_left (v)
+				current_array.put_left (v)
 			else
 				pos := current_array.index;
 				current_array.go_i_th (block_size // 2 + 1);
@@ -340,7 +356,7 @@ feature -- Element change
 				end;
 				if pos < cut then
 					current_array.go_i_th (pos);
-					current_array.add_left (v);
+					current_array.put_left (v);
 				elseif pos = cut then
 					current_array.extend (v);
 					active := cell;
@@ -349,17 +365,19 @@ feature -- Element change
 					active := cell;
 					current_array := cell.item;
 					current_array.go_i_th (pos - cut + 1);
-					current_array.add_left (v)
+					current_array.put_left (v)
 				end
 			end;
 			index := index + 1;
 			count := count + 1
 		end;
 
-	add_right (v: like item) is
+	put_right (v: like item) is
+			-- Add `v' to the left of current position.
+			-- Do not move cursor.
 		do
 			forth;
-			add_left (v);
+			put_left (v);
 			back;
 			back;
 		end;
@@ -466,7 +484,7 @@ feature -- Removal
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-chain beginning at cursor position
+			-- Copy of sub-list beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
 		local
 			pos: CURSOR;
@@ -476,7 +494,7 @@ feature -- Duplication
 				pos := cursor;
 				Result := new_chain
 			until
-				(counter = n) or off
+				(counter = n) or exhausted
 			loop
 				Result.extend (item);
 				forth;

@@ -15,7 +15,7 @@ class TWO_WAY_CURSOR_TREE [G] inherit
 
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
-			add_right,
+			put_right,
 			active, cursor_anchor
 		end
 
@@ -46,21 +46,21 @@ feature -- Status report
 
 feature -- Element change
 
-	add_right (v: G) is
+	put_right (v: G) is
 			-- Put `v' to the right of cursor position.
 		do
 			if below then
-				active.child_add_right (v);
+				active.child_put_right (v);
 				active.child_forth;
 				active_parent := active;
 				active := active.child;
 				below := false
 			elseif before then
-				active_parent.child_add_left (v);
+				active_parent.child_put_left (v);
 				active_parent.child_back;
 				active := active_parent.child
 			else
-				active_parent.child_add_right (v)
+				active_parent.child_put_right (v)
 			end
 		end;
 

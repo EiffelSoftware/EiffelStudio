@@ -41,13 +41,13 @@ feature {RECURSIVE_CURSOR_TREE} -- Access
 feature {RECURSIVE_CURSOR_TREE} -- Status report
 
 	after: BOOLEAN;
-			-- Is cursor after the end of the tree?
+			-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
-			-- Is cursor before the start of the tree?
+			-- Is there no valid cursor position to the left of cursor?
 
 	below: BOOLEAN;
-			-- Is cursor below the tree?
+			-- Is there no valid cursor position below cursor?
 
 end -- class RECURSIVE_TREE_CURSOR
 

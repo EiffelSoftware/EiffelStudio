@@ -16,13 +16,19 @@ class LINKED_SET [G] inherit
 	SUBSET [G]
 		undefine
 			prune_all
+		select
+			extend, put
 		end;
 
 	 LINKED_LIST [G]
+		rename
+			extend as ll_extend,
+			put as ll_put
+		export
+			{NONE} all
+			{LINKED_SET} forth, item, off, start
 		undefine
 			changeable_comparison_criterion
-		redefine 
-			extend
 		end;
 
 creation
@@ -50,11 +56,11 @@ feature -- Comparison
 
 feature -- Element change
 
-	extend (v: G) is
+	put, extend (v: G) is
 			-- Ensure that set includes `v'.
 		do
 			if empty or else not has (v) then
-				add_front (v)
+				put_front (v)
 			end
 		end;
 

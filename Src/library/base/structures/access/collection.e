@@ -40,15 +40,15 @@ feature -- Element change
 
 	fill (other: CONTAINER [G]) is
 			-- Fill with as many elements of `other' as possible.
-			-- The representations of `other' and `Current' need not
-			-- be the same.
+			-- The representations of `other' and `Current'
+			-- need not be the same.
 		require
 				  other_not_void: other /= Void;
 				  extendible: extendible
 		local
-			lin_rep: SEQUENTIAL [G]
+			lin_rep: LINEAR [G]
 		do
-			lin_rep := other.sequential_representation;
+			lin_rep := other.linear_representation;
 			from
 				lin_rep.start
 			until
@@ -63,7 +63,8 @@ feature -- Removal
 
 	prune (v: G) is
 			-- Remove one occurrence of `v' if any.
-			-- (Reference or object equality, based on `object_comparison'.)
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		require
 			prunable: prunable
 		deferred
@@ -71,7 +72,8 @@ feature -- Removal
 
 	prune_all (v: G) is
 			-- Remove all occurrences of `v'.
-			-- (Reference or object equality, based on `object_comparison'.)
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 			--|Default implementation, usually inefficient.
 		require
 			prunable: prunable

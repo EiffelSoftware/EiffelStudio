@@ -13,14 +13,14 @@ indexing
 
 deferred class COMPARABLE_STRUCT [G -> PART_COMPARABLE] inherit
 
-	SEQUENTIAL [G]
+	BILINEAR [G]
 
 feature -- Measurement
 
 	min: like item is
 			-- Minimum element
 		require
-			min_max_avialable
+			min_max_available
 
 		do
 			from
@@ -43,7 +43,7 @@ feature -- Measurement
 	max: like item is
 			-- Maximum element
 		require
-			min_max_avialable
+			min_max_available
 
 		do
 			from
@@ -63,15 +63,21 @@ feature -- Measurement
 		--		for all elements: `element <= Result'
 		end;
 
-	min_max_avialable: BOOLEAN is
+	min_max_available: BOOLEAN is
 			-- Can min and max be computed?
 		do
 			Result := not empty
 		end;
 
+feature {NONE} -- Inapplicable
+
+	index: INTEGER is
+		do
+		end
+
 invariant
 	
-	empty_constraint: min_max_avialable implies not empty
+	empty_constraint: min_max_available implies not empty
 
 end -- class COMPARABLE_STRUCT
 

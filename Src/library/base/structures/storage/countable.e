@@ -17,6 +17,8 @@ feature -- Element access
 
 	item (i: INTEGER): G is
 			-- The `i'-th item
+		require
+			positive_argument: i > 0
 		deferred
 		end;
 

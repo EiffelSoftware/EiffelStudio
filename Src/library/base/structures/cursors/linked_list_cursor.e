@@ -33,10 +33,10 @@ feature {LINKED_LIST} -- Implementation
 			-- Current element in linked list
 
 	after: BOOLEAN;
-			-- Is cursor after the end of the list?
+			-- Is there no valid cursor position to the right of cursor?
 
 	before: BOOLEAN;
-			-- Is cursor before the start of the list?
+			-- Is there no valid cursor position to the right of cursor?
 
 end -- class LINKED_LIST_CURSOR
 

@@ -19,7 +19,7 @@ class ARRAYED_QUEUE [G] inherit
 			copy, is_equal, 
 			consistent, setup, prune_all
 		redefine
-			sequential_representation, has, empty
+			linear_representation, has, empty
 		select
 			count, empty, put
 		end;
@@ -38,7 +38,7 @@ class ARRAYED_QUEUE [G] inherit
 				all;
 		redefine
 			wipe_out, extend, prunable,
-			sequential_representation,
+			linear_representation,
 			has, full, extendible
 		end
 
@@ -69,8 +69,10 @@ feature -- Access
 			Result := i_th (out_index)
 		end;
 
-	has (v: like item):BOOLEAN is
-			-- 
+	has (v: like item): BOOLEAN is
+			-- Does queue include `v'?
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			i: INTEGER
 		do
@@ -192,8 +194,8 @@ feature -- Removal
 
 feature -- Conversion
 
-	sequential_representation: ARRAYED_LIST [G] is
-			-- Representation as a sequential structure
+	linear_representation: ARRAYED_LIST [G] is
+			-- Representation as a linear structure
 			-- (in the original insertion order)
 		local
 			i: INTEGER;

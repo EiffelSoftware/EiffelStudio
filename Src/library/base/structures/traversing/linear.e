@@ -1,91 +1,180 @@
 indexing
 
 	description:
-		"One-dimensional non-circular structures";
+		"Structures whose items may be accessed sequentially, one-way";
 
 	copyright: "See notice at end of class";
-	names: linear, traversing;
-	access: cursor, membership;
+	names: sequential, traversing;
+	access: membership;
 	contents: generic;
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class LINEAR [G] inherit
 
-	BIDIRECTIONAL [G]
-		rename
-			search as sequential_search
-		export
-			{NONE}
-				sequential_search
-		end;
-
-	BIDIRECTIONAL [G]
-		redefine
-			search
-		select
-			search
-		end
-
+	TRAVERSABLE [G]
+	
 feature -- Access
 
-	search (v: like item) is
-			-- Move cursor to first position
-			-- (at or after current cursor position)
-			-- where `item' and `v' are equal.
-			--  Set `exhausted' to true if structure does not include `v'.
-			-- (Reference or object equality, based on `object_comparison'.) 
+	has (v: like item): BOOLEAN is
+			-- Does structure include an occurrence of `v'?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
 		do
-			if before then forth end;
-			sequential_search (v)
+			start;
+			if not off then
+				search (v)
+			end;
+			Result := not exhausted
+		end;
+
+	index_of (v: like item; i: INTEGER): INTEGER is
+			-- Index of `i'-th occurrence of `v'.
+			-- 0 if none.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
+		require
+			positive_occurrences: i > 0;
+		local
+			occur, pos: INTEGER;
+		do			
+			if object_comparison and v /= Void then
+				from
+					start; pos := 1
+				until
+					off or else (occur = i)
+				loop
+					if v.is_equal (item) then
+						occur := occur + 1
+					end;
+					forth;
+					pos := pos + 1
+				end
+			else
+				from
+					start; pos := 1
+				until
+					off or else (occur = i)
+				loop
+					if item = v then
+						occur := occur + 1
+					end;
+					forth;
+					pos := pos + 1
+				end
+			end;
+			if occur = i then
+				Result := pos - 1
+			end;
+		ensure
+			Result >= 0
+		end;
+
+	search (v: like item) is
+			-- Move to first position (at or after current
+			-- position) where `item' and `v' are equal.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
+			-- If no such position ensure that `exhausted' will be true.
+		local
+			done: BOOLEAN
+		do
+			if object_comparison then
+				if v = Void then
+					finish;
+					if not after then forth end
+				else
+					from
+					until
+						exhausted or else v.is_equal (item)
+					loop
+						forth
+					end
+				end
+			else
+				from
+				until
+					exhausted or else v = item
+				loop
+					forth
+				end
+			end		
+		ensure
+			(not exhausted and object_comparison and v /= Void)
+				 implies v.is_equal (item);
+			(not exhausted and not object_comparison)
+				 implies v = item
 		end;
 
 	index: INTEGER is
-			-- Index of `item'.
+			-- Index of current position
 		deferred
 		end;
 
+	occurrences (v: G): INTEGER is
+			-- Number of times `v' appears.
+			-- (Reference or object equality,
+			-- based on `object_comparison'.) 
+		do
+			from
+				start; search (v)
+			until
+				exhausted
+			loop
+				Result := Result + 1;
+				forth; search (v)
+			end;
+		end;
+	
 feature -- Status report
 
-	after: BOOLEAN is
-			-- Is there no valid position to the right of current position?
-		deferred
+	exhausted: BOOLEAN is
+			-- Has structure been completely explored?
+		do
+			Result := off
+		ensure
+			off implies Result
 		end;
 
-	before: BOOLEAN is
-			-- Is there no valid position to the left of current position?
+	after: BOOLEAN is
+			-- Is there no valid position to the right of current one?
 		deferred
 		end;
 
 	off: BOOLEAN is
 			-- Is there no current item?
 		do
-			Result := after or before
+			Result := empty or after
 		end;
 
 feature -- Cursor movement
 
-	forth is
-			-- Move to next position.
-		require else
-			not_after: not after
-		deferred
-		ensure then
-			--moved_forth: index = old index + 1
+	finish is
+			-- Move to last position.
+		deferred			
 		end;
 
-	back is
-			-- Move to previous position.
-		require else
-			not_before: not before
+	forth is
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		require
+			not_after: not after
 		deferred
-		ensure then
-			--moved_back: index = old index - 1
+		ensure
+			moved_forth: index = old index + 1
+		end;
+
+feature -- Conversion
+
+	linear_representation: LINEAR [G] is
+			-- Representation as a linear structure
+		do
+			Result := Current
 		end;
 
 invariant
 
-	off_definition: off = (after or before)
+	after_constraint: after implies off
 
 end -- class LINEAR
 

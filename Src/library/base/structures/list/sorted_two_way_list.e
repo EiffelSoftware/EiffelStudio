@@ -36,12 +36,10 @@ feature -- Element change
 
 	extend (v: like item) is
 			-- Put `v' at proper position in list.
-			-- The cursor ends up on the newly inserted
-			-- item.
+			-- Move cursor to newly inserted item.
 		do
 			search_after (v);
-			add_left (v);
-			
+			put_left (v);
 			back
 		end;
 
@@ -49,8 +47,8 @@ feature -- Removal
 
 	prune_all (v: like item) is
 			-- Remove all items identical to `v'.
-			-- (According to the currently adopted
-			-- discrimination rule in `search')
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 			-- Leave cursor `off'.
 		do
 			from
@@ -116,23 +114,27 @@ feature -- Transformation
 feature -- Status report
 
 	sorted: BOOLEAN is
-			-- is the structure sorted
+			-- Is the structure sorted?
 		local
 			c: CURSOR;
 			prev: like item
 		do
-			c := cursor;
-			from
-				start;
-				Result := true;
-				prev := item;
-				forth
-			until
-				after
-			loop
-				Result := prev <= item;
-				prev := item;
-				forth
+			Result := true;
+			if count > 1 then
+				from
+					c := cursor;
+					start;
+						check not off end;
+					prev := item;
+					forth
+				until
+					after
+				loop
+					Result := (prev <= item);
+					prev := item;
+					forth
+				end;
+				go_to (c)
 			end
 		end;
 				

@@ -277,16 +277,6 @@ feature {NONE} -- Custom attributes: access
 			definition: Result implies thread_static_attribute_ctor_token /= 0
 		end
 
-feature {NONE} -- Custom attributes: implementation
-
-	empty_custom_attribute: MD_CUSTOM_ATTRIBUTE is
-			-- An empty custom attribute
-		once
-			create Result.make
-		ensure
-			result_not_void: Result /= Void
-		end
-		
 feature {IL_CODE_GENERATOR} -- Custom attributes: modification
 
 	define_thread_static_attribute (field_token: INTEGER) is
@@ -307,7 +297,7 @@ feature {IL_CODE_GENERATOR} -- Custom attributes: modification
 				l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				thread_static_attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, l_method_sig)
 			end
-			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, empty_custom_attribute).do_nothing
+			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, Void).do_nothing
 		end
 
 feature {IL_CODE_GENERATOR} -- Synchronization tokens

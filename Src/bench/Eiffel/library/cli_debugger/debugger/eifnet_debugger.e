@@ -45,6 +45,7 @@ inherit
 					callback_notification_processing, set_callback_notification_processing,
 					restore_callback_notification_state,
 					notify_debugger
+			{ICOR_DEBUG_MANAGED_CALLBACK} disable_next_estudio_notification
 		end
 
 	SHARED_DEBUG

@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 							l_valid_options.search ("-e")
 							if l_valid_options.found then	
 								l_text := l_valid_options.found_item.first.twin
+								environment.set_is_eiffel_interface
 								environment.set_eiffel_project (l_text)
 								environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
 							end

@@ -47,7 +47,7 @@ feature -- Properties
 feature -- Access
 
 	class_with_name (class_name: STRING): CLASS_I is
-			-- Find class with name `class_name' in the Universe
+			-- First class with name `class_name' found in the Universe
 			-- (Void if not found).
 		local
 			cur: CURSOR;
@@ -288,6 +288,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_real_ref_class (unique_class("real_ref"));
 			system.set_double_ref_class (unique_class("double_ref"));
 			system.set_pointer_ref_class (unique_class("pointer_ref"));
+			system.set_memory_class_i (unique_class ("memory"));
 			if System.is_dynamic then
 				System.set_dynamic_class (unique_class ("dynamic"))
 			elseif System.extendible then
@@ -384,9 +385,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			error_list: LINKED_LIST [VSCN]
 		do
 			last_class := Void;
-
-				-- First look for a renamed class in `cluster'
-			cluster.compute_last_class (class_name);
 
 			from
 				ignore := cluster.ignore;

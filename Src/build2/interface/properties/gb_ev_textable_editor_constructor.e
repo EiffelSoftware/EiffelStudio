@@ -28,11 +28,19 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
+		local
+			line_entry_type: BOOLEAN
 		do
 			create Result
+			
+			if is_instance_of (first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (first, dynamic_type_from_string ("EV_LABEL")) then
+				line_entry_type := multiple_line_entry	
+			else
+				line_entry_type := single_line_entry
+			end
 			initialize_attribute_editor (Result)
 				create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
-				agent set_text (?), agent valid_value (?))
+				agent set_text (?), agent valid_value (?), line_entry_type)
 			update_attribute_editor
 
 			disable_all_items (Result)

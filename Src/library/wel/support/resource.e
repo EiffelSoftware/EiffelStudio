@@ -68,6 +68,7 @@ feature {NONE} -- Externals
 
 	cwin_make_int_resource (id: INTEGER): POINTER is
 			-- Convert `id' to a pointer
+			-- SDK MAKEINTRESOURCE
 		external
 			"C [macro <wel.h>] (WORD): EIF_POINTER"
 		alias

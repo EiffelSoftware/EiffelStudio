@@ -193,6 +193,8 @@ external
 		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
 		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib",
 		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"$(EIFFEL_SRC)/C_library/libpng",
+		"$(EIFFEL_SRC)/C_library/zlib",
 		"\$(EIFFEL_SRC)/library/vision2/spec/include";		
 				
 

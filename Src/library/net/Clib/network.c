@@ -567,20 +567,18 @@ EIF_INTEGER flags;
 
 EIF_INTEGER c_rcv_from (fd, buf, len, flags, addr, addr_len)
 EIF_INTEGER fd;
-EIF_OBJ buf;
+EIF_POINTER buf;
 EIF_INTEGER len;
 EIF_INTEGER flags;
-EIF_OBJ addr;
-EIF_OBJ addr_len;
+EIF_POINTER addr;
+EIF_POINTER addr_len;
 {
-	int result, lena;
+	int result;
 
-
-	result = recvfrom ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, &lena);
+	result = recvfrom ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int *)addr_len);
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
-	eif_field (addr_len, "item", EIF_INTEGER) = (EIF_INTEGER) lena;
 	return (EIF_INTEGER) result;
 }
 

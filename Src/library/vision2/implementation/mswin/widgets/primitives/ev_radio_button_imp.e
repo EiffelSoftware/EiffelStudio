@@ -29,7 +29,8 @@ inherit
 			set_default_minimum_size,
 			next_dlggroupitem,
 			on_getdlgcode,
-			on_key_down
+			on_key_down,
+			set_background_color
 		select
 			wel_make
 		end
@@ -248,6 +249,16 @@ feature {NONE} -- Implementation, focus event
 			top_level_dialog_imp ?= application_imp.window_with_focus
 			if top_level_dialog_imp /= Void then
 				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
+			end
+		end
+		
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+			if is_displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
 			end
 		end
 

@@ -255,30 +255,31 @@ feature -- Plug and Makefile file
 			special_cl.generate_dynamic_types (plug_file)
 			generate_dynamic_ref_type (plug_file)
 
-			Plug_file.putstring ("%N%Tegc_ce_type = egc_ce_type_init ; %N")
-			Plug_file.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init ; %N")
-			Plug_file.putstring ("%Tegc_fsystem = egc_fsystem_init ; %N")
-			Plug_file.putstring ("%Tegc_fco_table = egc_fco_table_init ; %N")
-			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init ; %N")
+			Plug_file.putstring ("%N%Tegc_ce_type = egc_ce_type_init;%N")
+			Plug_file.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init;%N")
+			Plug_file.putstring ("%Tegc_fsystem = egc_fsystem_init;%N")
+			Plug_file.putstring ("%Tegc_fco_table = egc_fco_table_init;%N")
+			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init;%N")
 
 			if not final_mode then
-				Plug_file.putstring ("%Tegc_frozen = egc_frozen_init ; %N")
-				Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init ; %N");
-				Plug_file.putstring ("%Tegc_foption = egc_foption_init ; %N")
-				Plug_file.putstring ("%Tegc_address_table = egc_address_table_init ; %N")
-				Plug_file.putstring ("%Tegc_fdispatch = egc_fdispatch_init ; %N")
-				Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init ; %N")
+				Plug_file.putstring ("%Tegc_frozen = egc_frozen_init;%N")
+				Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init;%N");
+				Plug_file.putstring ("%Tegc_foption = egc_foption_init;%N")
+				Plug_file.putstring ("%Tegc_address_table = egc_address_table_init;%N")
+				Plug_file.putstring ("%Tegc_fdispatch = egc_fdispatch_init;%N")
+				Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init;%N")
 				
-				Plug_file.putstring ("%N%Tegc_einit = egc_einit_init ; %N")
-				Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init ; %N")
+				Plug_file.putstring ("%N%Tegc_einit = egc_einit_init;%N")
+				Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init;%N")
 	
-				Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init ; %N")
-				Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init ; %N")
-				Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init ; %N")
+				Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init;%N")
+				Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init;%N")
+				Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init;%N")
 
 			else
 					-- Initialization routines
 				Plug_file.putstring ("egc_ecreate = ")
+				Plug_file.putstring ("(char *(**)()) ")
 				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (init_name)
 				Plug_file.putstring (";%N")

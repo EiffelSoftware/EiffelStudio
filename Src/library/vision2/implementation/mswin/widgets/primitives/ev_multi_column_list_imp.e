@@ -45,12 +45,15 @@ inherit
 			column_count as columns,
 			selected_items as wel_selected_items,
 			get_item as wel_get_item,
-			insert_item as wel_insert_item
+			insert_item as wel_insert_item,
+			set_column_width as wel_set_column_width,
+			get_column_width as wel_get_column_width
+
 		undefine
-			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
+			window_process_message,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -67,10 +70,10 @@ inherit
 			hide
 		redefine
 			set_column_title,
-			set_column_width,
 			on_lvn_columnclick,
 			on_lvn_itemchanged,
-			default_style
+			default_style,
+			process_message
 		end
 
 	WEL_LVHT_CONSTANTS
@@ -90,6 +93,7 @@ feature {NONE} -- Initialization
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 			i: INTEGER
+			cmd: EV_ROUTINE_COMMAND
 		do
 			!! ev_children.make (0)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
@@ -107,6 +111,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	last_column_width_setting: INTEGER
+		-- The width that the last column was set to by the user.
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected in a single
@@ -184,6 +191,12 @@ feature -- Status report
 			-- False if the title row is not shown.
 		do
 			Result := not flag_set (style, Lvs_nocolumnheader)
+		end
+
+	get_column_width (column: INTEGER): INTEGER is
+			-- Make `value' the new width of the one-based column.
+		do
+			Result := wel_get_column_width (column - 1)
 		end
 
 feature -- Status setting
@@ -296,8 +309,26 @@ feature -- Element change
 
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
+		local
+			counter: INTEGER
+			current_width: INTEGER
 		do
-			{WEL_LIST_VIEW} Precursor (value, column - 1)
+			if column /= columns then
+				wel_set_column_width (value, column - 1)
+			else
+				last_column_width_setting := value
+					-- assign `value' to `last_column_width_setting'
+				from
+					counter := 1
+					current_width := width
+				until
+					counter = columns
+				loop
+					current_width := current_width - get_column_width (counter)
+					counter:= counter + 1
+				end
+				wel_set_column_width (current_width, column - 1)
+			end
 		end
 
 	set_rows_height (value: INTEGER) is
@@ -324,6 +355,33 @@ feature -- Element change
 			end
 			reset_content
 			c.wipe_out
+		end
+
+	compute_column_widths is
+			-- Re-compute column widths to fill parent.
+		local
+			current_width: INTEGER
+				-- Width of multi column list.
+			counter: INTEGER
+		do
+			current_width := width
+				-- assign `width' to `current_width'
+			from
+				counter := 1
+			until
+				counter = columns + 1
+			loop
+				-- For every column in the mc list.
+				if counter = columns then
+					if current_width > last_column_width_setting then
+						wel_set_column_width (current_width, counter - 1)
+					elseif current_width < get_column_width (counter) then 
+						wel_set_column_width (last_column_width_setting, counter - 1)
+					end
+				end
+				current_width := current_width - get_column_width (counter)
+				counter := counter + 1
+			end
 		end
 
 feature -- Event : command association
@@ -480,6 +538,18 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	process_message (hwnd: POINTER; msg,
+			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
+		do
+			if msg = Wm_paint then
+				compute_column_widths
+			else
+				Result := {WEL_LIST_VIEW} Precursor (hwnd, msg, wparam, lparam)
+			end
+		end
+	
 	default_style: INTEGER is
 			-- Style of the current window.
 		do

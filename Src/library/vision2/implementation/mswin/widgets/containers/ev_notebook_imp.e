@@ -668,6 +668,7 @@ feature {NONE} -- WEL Implementation
 			-- Shows the current selected page by default.
 		do
 			show_current_selection
+			notify_change (2 + 1)
 			--| FIXME execute_command (Cmd_switch, Void)			
 		end
 
@@ -960,6 +961,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/04/28 21:42:54  rogers
+--| Fixed child resizing bug when new tab is selected.
+--|
 --| Revision 1.53  2000/04/28 21:13:03  rogers
 --| Removed old command association and a redundent FIXME.
 --|

@@ -30,8 +30,8 @@ inherit
 
 create
 	make,
+	make_with_level,
 	make_expanded_unit,
-	make_emtpy_creation_unit,
 	make_creation_unit,
 	make_no_dead_code
 
@@ -41,6 +41,13 @@ feature {NONE} -- Initialization
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences.
 		do
+			make_with_level (c_id, f, 0)	
+		end
+		
+	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: INTEGER_8) is
+			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
+			-- feature dependences in a given context.
+		do
 			class_id := c_id
 			if f.is_attribute and then f.rout_id_set.count > 1 then
 				rout_id := f.rout_id_set.item (2)
@@ -49,7 +56,11 @@ feature {NONE} -- Initialization
 			end
 			written_in := f.written_in
 			body_index := f.body_index
-			internal_flags := internal_flags.set_bit_with_mask (f.is_external, is_external_mask)
+			if f.is_external then
+				internal_flags := is_external_flag | a_context;
+			else
+				internal_flags := a_context;
+			end
 		end
 
 	make_no_dead_code (c_id: INTEGER; r_id: INTEGER) is
@@ -58,20 +69,14 @@ feature {NONE} -- Initialization
 		do
 			class_id := c_id
 			rout_id := r_id
+			internal_flags := 0
 		end
 
 	make_expanded_unit (c_id: INTEGER) is
 			-- Creation for special depend unit for expanded in local clause.
 		do
 			class_id := c_id
-			set_is_special (True)
-		end
-
-	make_emtpy_creation_unit (c_id: INTEGER; f: FEATURE_I) is
-			-- Creation for special depend unit for creation instruction without creation routine.
-		do
-			make (c_id, f)
-			set_is_special (True)
+			internal_flags := is_special_flag
 		end
 
 	make_creation_unit (c_id: INTEGER) is
@@ -79,7 +84,7 @@ feature {NONE} -- Initialization
 			-- in case of expanded classes.
 		do
 			class_id := c_id
-			set_is_special (True)
+			internal_flags := is_special_flag
 		end
 
 feature -- Access
@@ -99,48 +104,90 @@ feature -- Access
 	is_external: BOOLEAN is
 			-- Is Current an external feature?
 		do
-			Result := internal_flags & is_external_mask = is_external_mask
+			Result := internal_flags & is_external_flag = is_external_flag
 		end
 
 	is_special: BOOLEAN is
 			-- Is `Current' a special depend_unit, i.e. used
 			-- for propagations
 		do
-			Result := internal_flags & is_special_mask = is_special_mask
+			Result := internal_flags & is_special_flag = is_special_flag
+		end
+		
+	is_needed_for_dead_code_removal: BOOLEAN is
+			-- Is `Current' needed for dead code removal?
+			-- True if not used in assertions (and no assertions
+			-- are kept) and not marked as special.
+		local
+			l_flags: like internal_flags
+		do
+			l_flags := internal_flags
+			if not System.keep_assertions then
+					-- Special optimization when no assertions are
+					-- generated, we only traverse code that is reachable
+					-- from outside assertions.
+				Result := ((l_flags & (is_special_flag | is_in_assertion_mask)) = 0)
+			else
+				Result := (l_flags & is_special_flag) = 0
+			end
 		end
 
 feature -- Comparison
 
 	infix "<" (other: DEPEND_UNIT): BOOLEAN is
 			-- Is `other' greater than Current ?
+		local
+			l_id, l_oid: INTEGER
 		do
-			Result := class_id < other.class_id or else
-				(class_id = other.class_id and then rout_id < other.rout_id)
+				-- We use `class_id', `rout_id' and `internal_flags' to perform
+				-- comparison.
+			l_id := class_id
+			l_oid := other.class_id
+			if l_id = l_oid then
+				l_id := rout_id
+				l_oid := other.rout_id
+				if l_id = l_oid then
+					Result := internal_flags < other.internal_flags
+				else
+					Result := l_id < l_oid
+				end
+			else
+				Result := l_id < l_oid
+			end
 		end
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' equal?
 		do
+			Result := class_id = other.class_id and rout_id = other.rout_id and
+				internal_flags = other.internal_flags
+		end
+
+	same_as (other: DEPEND_UNIT): BOOLEAN is
+			-- Does `other' and `Current' correspond to the same routine?
+			-- Used to find callers of a routine.
+		do
 			Result := class_id = other.class_id and rout_id = other.rout_id
 		end
 
-feature {NONE} -- Settings
-
-	set_is_special (b: BOOLEAN) is
-			-- Set `is_special' with `b'.
-		do
-			internal_flags := internal_flags.set_bit_with_mask (True, is_special_mask)
-		ensure
-			is_special_set: is_special = b
-		end
-
-feature {NONE} -- Implementation: flags
+feature {DEPEND_UNIT} -- Access
 
 	internal_flags: INTEGER_8
 			-- Flags to store some info about current unit.
 
-	is_external_mask: INTEGER_8 is 0x01
-	is_special_mask: INTEGER_8 is 0x02
+feature {NONE} -- Implementation: flags
+
+	is_external_flag: INTEGER_8 is 0x01
+	is_special_flag: INTEGER_8 is 0x02
+
+	is_in_assertion_mask: INTEGER_8 is 0x3C
+	
+feature -- Flags
+
+	is_in_require_flag: INTEGER_8 is 0x04
+	is_in_check_flag: INTEGER_8 is 0x08
+	is_in_ensure_flag: INTEGER_8 is 0x10
+	is_in_invariant_flag: INTEGER_8 is 0x20
 			-- Mask used for internal property.
 
 feature -- Debug

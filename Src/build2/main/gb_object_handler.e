@@ -940,7 +940,7 @@ feature -- Basic operation
 						--Add the new name to `names' so that it is not used again.
 					names.extend (an_object.name)
 				end
-				rebuild_associated_editors (an_object.object)
+				rebuild_associated_editors (an_object.id)
 				some_objects.forth
 			end
 				-- Update project so it may be saved.

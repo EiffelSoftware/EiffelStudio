@@ -33,14 +33,14 @@ feature {NONE} -- Implementation
 			pixmap: EV_PIXMAP
 			button: EV_BUTTON
 		do
-			create range.make (-150, 150)
+			create range.make (0, 220)
 			create spin_button_x.make_with_value_range (range)
-			create range.make (-150, 150)
+			create range.make (0, 440)
 			create spin_button_y.make_with_value_range (range)
 			spin_button_x.change_actions.extend (~on_spin_button_x_changed (?))
 			spin_button_y.change_actions.extend (~on_spin_button_y_changed (?))
-			spin_button_x.set_step (5)
-			spin_button_y.set_step (5)
+			spin_button_x.set_step (10)
+			spin_button_y.set_step (10)
 			create vertical_box
 			first_window.extend (vertical_box)
 			create viewport

@@ -1,0 +1,557 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Lexical analysis: the Lex library</TITLE>
+		<LINK REL=StyleSheet HREF="../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Lex Content">
+	</HEAD>
+	</HEAD>
+
+	<BODY>
+		<H1>Lexical analysis: the Lex library</H1>
+
+		<H2>OVERVIEW</H2>
+
+		<P>When analyzing a text by computer, it is usually necessary to split it into individual components or <B>tokens</B>. In human languages, the tokens are the words; in programming languages, tokens are the basic constituents of software texts, such as identifiers, constants and special symbols.</P>
+
+		<P>The process of recognizing the successive tokens of a text is called lexical analysis. This chapter describes the Lex library, a set of classes which make it possible to build and apply lexical analyzers to many different languages.</P>
+
+		<P>Besides recognizing the tokens, it is usually necessary to recognize the deeper syntactic structure of the text. This process is called <B>parsing</B> or <B>syntax analysis</B> and is studied in the next chapter.</P>
+
+		<P>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <A CLASS="eclass" HREF="../reference/l_interface.html">L_INTERFACE</A> has also been included although we will only study it in the next chapter; it belongs to the Parse library, where it takes care of the interface between parsing and lexical analysis.</P>
+
+		<IMG SRC="figure1.png">
+		<P CLASS="figuretitle">Figure 1: Lexical classes</P>
+
+		<H2>AIMS AND SCOPE OF THE LEX LIBRARY</H2>
+
+		<P>To use the Lex library it is necessary to understand the basic concepts and terminology
+		of lexical analysis.</P>
+
+		<H3>Basic terminology</H3>
+
+		<P>The set of tokens accepted by a lexical analyzer is called a <B>lexical grammar</B>. For
+		example, the basic constructs of Eiffel (identifiers, keywords, constants, special
+		symbols) constitute a lexical grammar. For reasons that will be clear below, a lexical
+		grammar is also known as a <B>regular grammar</B>.</P>
+
+		<P>A lexical grammar defines a number of <B>token types</B>, such as Identifier and Integer
+		for Eiffel. A token that conforms to the structure defined for a certain token type is
+		called a <B>specimen</B> of that token type. For example, the token my_identifier, which
+		satisfies the rules for Eiffel tokens, is a specimen of the token type Identifier; 201 is a
+		specimen of the token type Integer.</P>
+
+		<P>To define a lexical grammar is to specify a number of token types by describing
+		precisely, for each token type, the form of the corresponding specimens. For example a
+		lexical grammar for Eiffel will specify that Identifier is the token type whose specimens
+		are sequences of one or more characters, of which the first must be a letter (lower-case
+		or upper-case) and any subsequent one is a letter, a digit (0 to 9) or an underscore.
+		Actual grammar descriptions use a less verbose and more formal approach, studied below: regular expressions.</P>
+
+		<P>A lexical analyzer is an object equipped with operations that enable it to read a text according to a known lexical grammar and to identify the text’s successive tokens.</P>
+
+		<P>The classes of the Lex library make it possible to define lexical grammars for many different applications, and to produce lexical analyzers for these grammars.</P>
+
+		<H3>Overview of the classes</H3>
+
+		<P>For the user of the Lex libraries, the classes of most direct interest are <A CLASS="eclass" HREF="../reference/token.html">TOKEN</A>, <A CLASS="eclass" HREF="../reference/lexical.html">LEXICAL</A>, <A CLASS="eclass" HREF="../reference/metalex.html">METALEX</A> and <A CLASS="eclass" HREF="../reference/scanning.html">SCANNING</A>.</P>
+
+		<P>An instance of TOKEN describes a token read from an input file being analyzed, with such properties as the token type, the corresponding string and the position in the text (line, column) where it was found.</P>
+
+		<P>An instance of LEXICAL is a lexical analyzer for a certain lexical grammar. Given a reference to such an instance, say analyzer, you may analyze an input text through calls to the features of class LEXICAL, for example:</P>
+
+		<CODE><SPAN CLASS="efeature">analyzer</SPAN>.<A CLASS="efeature" HREF="../reference/lexical#f_get_token">get_token</A></CODE>
+
+		<P>Class METALEX defines facilities for building such lexical analyzers. In particular, it provides features for reading the grammar from a file and building the corresponding analyzer. Classes that need to build and use lexical analyzers may be written as descendants of METALEX to benefit from its general-purpose facilities.</P>
+
+		<P>Class SCANNING is one such descendant of METALEX. It contains all the facilities needed to build an ordinary lexical analyzer and apply it to the analysis of input texts. Because these facilities are simpler to use and are in most cases sufficient, SCANNING will be discussed first; the finer-grain facilities of METALEX are described towards the end of this chapter.</P>
+
+		<P>These classes internally rely on others, some of which may be useful for more advanced applications. LEX_BUILDER, one of the supporting classes, will be introduced after METALEX.</P>
+
+		<H3>Library example</H3>
+
+		<P>The ISE Eiffel 3 delivery includes (in the examples/library/lex subdirectory) a simple example using the Lexical Library classes. The example applies Lex library facilities to the analysis of a language which is none other than Eiffel itself.</P>
+
+		<P>The root class of that example, EIFFEL_SCAN, is only a few lines long; it relies on the general mechanism provided by SCANNING (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</P>
+
+		<H3>Dealing with finite automata</H3>
+
+		<P>Lexical analysis relies on the theory of finite automata. The most advanced of the classes discussed in this chapter, LEX_BUILDER, relies on classes describing various forms of automata:</P>
+
+		<UL>
+			<LI>DFA: deterministic finite automata.</LI>
+			<LI>PDFA: partially deterministic finite automata.</LI>
+			<LI>NDFA: non-deterministic finite automata.</LI>
+			<LI>AUTOMATON, the most general: finite automata.</LI>
+			<LI>FIXED_AUTOMATON, LINKED_AUTOMATON.</LI>
+		</UL>
+
+		<P>These classes may also be useful for systems that need to manipulate finite automata for applications other than lexical analysis. The interface of LEX_BUILDER, which includes the features from AUTOMATON, NDFA and PDFA, will provide the essential information.</P>
+
+		<H2>TOKENS</H2>
+
+		<P>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class TOKEN. Here are the most important features of this class:</P>
+
+		<UL>
+			<LI><A CLASS="efeature" HREF="../reference/token.html#f_string_value">string_value</A>: a string giving the token’s contents.</LI>
+			<LI><A CLASS="efeature" HREF="../reference/token.html#f_type">type</A>: an integer giving the code of the token’s type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</LI>
+			<LI><A CLASS="efeature" HREF="../reference/token.html#f_is_keyword">is_keyword</A>: a boolean indicating whether the token is a keyword.</A>
+			<LI><A CLASS="efeature" HREF="../reference/token.html#f_keyword_code">keyword_code</A>: an integer, meaningful only if is_keyword is true, and identifying the keyword by the code that was given to it during the process of building the analyzer.</LI>
+			<LI><A CLASS="efeature" HREF="../reference/token.html#f_line_number">line_number</A>, <A CLASS="efeature" HREF="../reference/token.html#f_column_number">column_number</A>: two integers indicating where the token appeared in the input text.</LI>
+		</UL>
+
+		<H2>BUILDING AND USING LEXICAL ANALYZERS</H2>
+
+		<P>The general method for performing lexical analysis is the following.</P>
+
+		<OL>
+			<LI>Create an instance of LEXICAL, giving a lexical analyzer for the desired grammar.</LI>
+			<LI>Store the analyzer into a file.</LI>
+			<LI>Retrieve the analyzer from the file.</LI>
+			<LI>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class LEXICAL on this object.</LI>
+		</OL>
+
+		<P>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of LEXICAL that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</P>
+
+		<P>The simplest way to store and retrieve the instance of LEXICAL and all related objects is to use the facilities of class STORABLE: procedure store and one of the retrieval procedures. To facilitate this  process, LEXICAL inherits from STORABLE.</P>
+
+		<P>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class SCANNING, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</P>
+
+		<H2>LEXICAL GRAMMAR FILES AND CLASS SCANNING</H2>
+
+		<P>Class SCANNING may be used as an ancestor by classes that need to perform lexical analysis. When using SCANNING you will need a <B>lexical grammar file</B> that contains the description of the lexical grammar. Since it is easy to edit and adapt a file without modifying the software proper, this technique provides flexibility and supports the incremental development and testing of lexical analyzers.</P>
+
+		<H3>The <A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> procedure</H3>
+
+		<P>To obtain a lexical analyzer in a descendant of class SCANNING, use the procedure</P>
+
+		<CODE><A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">store_file_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></CODE>
+
+		<P>If no file of name <SPAN CLASS="elocal">store_file_name</SPAN> exists, then build reads the lexical grammar from the file of name <SPAN CLASS="elocal">grammar_file_name</SPAN>, builds the corresponding lexical analyzer, and stores it into <SPAN CLASS="elocal">store_file_name</SPAN>.</P>
+
+		<P>If there already exists a file of name <SPAN CLASS="elocal">grammar_file_name</SPAN>, build uses it to recreate an analyzer without using the <SPAN CLASS="elocal">grammar_file_name</SPAN>.
+
+		<H3>Lexical grammar files</H3>
+
+		<P>A lexical grammar file (to be used as second argument to build, corresponding to grammar_file_name) should conform to a simple structure, of which the file eiffel_regular in the examples directory provides a good illustration.</P>
+
+		<P>Here is the general form:</P>
+
+		<CODE><I>
+		Token_type_1 Regular_expression_1<BR>
+		Token_type_2 Regular_expression_2<BR>
+		...<BR>
+		Token_type_m Regular_expression_m<BR>
+		<BR>
+		<B>-- Keywords</B><BR>
+		<BR>
+		Keyword_1<BR>
+		Keyword_2<BR>
+		...<BR>
+		Keyword_n<BR>
+		</I></CODE>
+
+		<P>In other words: one or more lines, each containing the name of a token type and a <B>regular expression</B>; a line beginning with two dashes -- (the word <B><I>Keywords</I></B> may follow them to signal that this is the beginning of keywords); and one or more lines containing one keyword each.</P>
+
+		<P>Each <I>Token_type_i</I> is the name of a token type, such as <I>Identifier</I> or <I>Decimal_constant</I>. Each <I>Regular_expression_i</I> is a regular expression, built according to a
+		precisely specified format. That format is defined later in this chapter, but even without
+		having seen that definition it is not hard to understand the following small and typical
+		example of lexical grammar file without keywords:</P>
+
+		<CODE>
+		Decimal &nbsp; '0'..'9'<BR>
+		Natural &nbsp; +('0'..'9')<BR>
+		Integer &nbsp; ['+'|'-'] '1'..'9' *('0'..'9')<BR>
+		</CODE>
+
+		<P>The first expression describes a token type whose specimens are tokens made of a single-letter decimal digit (any character between 0 and 9). In the second, the + sign denotes repetition (one or more); the specimens of the corresponding token type are all non-empty sequences of decimal digits - in other words, natural numbers, with leading zeroes permitted. In the third, the | symbol denotes alternation, and the asterisk denotes repetition (zero or more); the corresponding tokens are possibly signed integer
+		constants, with no leading zeroes.</P>
+
+		<P>As explained below, keywords are regular expressions which are treated separately for convenience and efficiency. If you are using lexical grammar files of the above form, all keywords must be specimens of the last regular expression given (<I>Regular_expression_m</I> above). More details below.</P>
+
+		<H3>Using a lexical analyzer</H3>
+
+		<P>Once <A CLASS="efeature" HREF="../reference/scanning.html#f_build">build</A> has given you an analyzer, you may use it to analyze input texts through calls to the procedure</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">input_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P>This will read in and process successive input tokens. Procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> will apply to each of these tokens the action of procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_do_a_token">do_a_token</A>. As defined in SCANNING, this procedure prints out information on the token: its string value, its type, whether it is a keyword and if so its code. You may redefine it in any descendant class so as to perform specific actions on each token.</P>
+
+		<P>The initial action <A CLASS="efeature" HREF="../reference/scanning.html#f_begin_analysis">begin_analysis</A>, which by default prints a header, and the terminal action <A CLASS="efeature" HREF="../reference/scanning.html#f_begin_analysis">end_analysis</A>, which by default does nothing, may also be redefined.</P>
+
+		<P>To build lexical analyzers which provide a higher degree of flexibility, use METALEX or LEX_BUILDER, as described in the last part of this chapter.</P>
+
+		<H2>ANALYZING INPUT</H2>
+
+		<P>Let us look more precisely at how we can use a lexical analyzer to analyze an input text.</P>
+
+		<H3>Class LEXICAL</H3>
+
+		<P>Procedure <A CLASS="efeature" HREF="../reference/scanning.html#f_analyze">analyze</A> takes care of the most common needs of lexical analysis. But if you need more advanced lexical analysis facilities you will need an instance of class LEXICAL (a direct instance of LEXICAL itself or of one of its proper descendants). If you are using class SCANNING as described above, you will have access to such an
+		instance through the attribute <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A>.</P>
+
+		<P>This discussion will indeed assume that you have an entity attached to an instance of LEXICAL. The name of that entity is assumed to be <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A>, although it does not need to be the attribute from SCANNING. You can apply to that <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A> the various exported features features of class LEXICAL, explained below. All the calls described
+		below should use <A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A> as their target, as in</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="../reference/lexical.html#f_analyzer">analyzer</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/scanning.html#f_set_file">set_file</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"my_file_name"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<H3>Creating, retrieving and storing an analyzer</H3>
+
+		<P>To create a new analyzer, use</P>
+
+		<CODE><SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/lexical.html#f_make_new">make_new</A></CODE>
+
+		<P>You may also retrieve an analyzer from a previous session. LEXICAL is a descendant from STORABLE, so you can use feature retrieved for that purpose. In a descendant of STORABLE, simply write</P>
+
+		<CODE><SPAN CLASS="efeature">analyzer</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <A CLASS="efeature" HREF="../../base/reference/storable.html#f_retreived">retreived</A></CODE>
+
+		<P>If you do not want to make the class a descendant of STORABLE, use the creation procedure make of LEXICAL, not to be confused with make_new above:</P>
+
+		<CODE><SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../reference/lexical.html#f_make">make</A><BR>
+		<SPAN CLASS="efeature">analyzer</SPAN> <SPAN CLASS="esymbol">?=</SPAN> <SPAN CLASS="efeature">analyzer</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../base/reference/storable.html#f_retreived">retreived</A></CODE>
+
+		<H3>Choosing a document</H3>
+
+		<P>To analyze a text, call <A CLASS="efeature">set_file</A> or <A CLASS="efeature">set_string</A> to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</P>
+
+		<P CLASS="note"><B>Note</B>: if you use procedure analyze of SCANNING, you do not need any such call, since analyze calls <A CLASS="efeature">set_file</A> on the file name passed as argument.</P>
+
+		<H3>Obtaining the tokens</H3>
+
+		<P>The basic procedure for analyzing successive tokens in the text is get_token, which reads in one token and sets up various attributes of the analyzer to record properties of that token:</P>
+
+		<UL>
+			<LI>last_token, a function of type TOKEN, which provides all necessary information on the last token read.</LI>
+			<LI>token_line_number and token_column_number, to know where the token is in the text. These queries return results of type INTEGER.</LI>
+			<LI>token_type, giving the regular expression type, identified by its integer number (which is the value No_token if no correct token was recognized).</LI>
+			<LI>other_possible_tokens, an array giving all the other possible token types of the last token. (If token_type is No_token the array is empty.)</LI>
+			<LI>end_of_text, a boolean attribute used to record whether the end of text has been reached. If so, subsequent calls to get_token will have no effect.</LI>
+		</UL>
+
+		<P>Procedure get_token recognizes the longest possible token. So if &lt;, = and &lt;= are all regular expressions in the grammar, the analyzer recognizes &lt;= as one token, rather than	&lt; followed by =. You can use other_possible_tokens to know what shorter tokens were recognized but not retained.</P>
+
+		<P>If it fails to recognize a regular expression, get_token sets token_type to No_token
+		and advances the input cursor by one character.</P>
+
+		<H3>The basic scheme</H3>
+
+		<P>Here is the most common way of using the preceding facilities:</P>
+
+		<CODE><PRE>
+from
+	set_file ("text_directory/text_to_be_parsed")
+		-- Or: set_string ("string to parse")
+	begin_analysis
+until
+	end_of_text
+loop
+	analyzer.get_token
+	if analyzer.token_type = No_token then
+		go_on
+	end
+	do_a_token (lexical.last_token)
+end
+end_analysis</PRE></CODE>
+
+		<P>This scheme is used by procedure analyze of class SCANNING, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from SCANNING, these names simply denote procedures that you must provide.</P>
+
+		<H2>REGULAR EXPRESSIONS</H2>
+
+		<P>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called regular expressions; any regular expression describes a set of possible tokens, called the specimens of the regular expression.</P>
+
+		<P>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class SCANNING and (as seen below) by procedure read_grammar of class METALEX.Theeiffel_regular grammar file in the examples directory provides an extensive example.</P>
+
+		<P>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,<BR>
+		<CODE>'0'..'9'</CODE><BR>
+		denotes a set of ten tokens, each consisting of a single digit.</P>
+
+		<H3>Basic expressions</H3>
+
+		<P>A character expression, written 'character' where character is a single character, describes a set of tokens with just one element: the one-character token character.For example, '0' describes the set containing the single-digit single token 0.</P>
+
+		<P>Cases in which character is not a printable character use the following conventions:
+
+		<TABLE>
+			<TR><TD>'\ooo'</TD><TD>Character given by its three-digit octal code <I>ooo</I>.</TD></TR>
+			<TR><TD>'\xx'</TD><TD>Character given by its two-digit hexadecimal code <I>xx</I>.<BR>(Both lower- and upper-case may be used for letters in <I>xx</I>.)</TD></TR>
+			<TR><TD>'\r'</TD><TD>Carriage return</TD></TR>
+			<TR><TD>'\''</TD><TD>Single quote</TD></TR>
+			<TR><TD>'\\'</TD><TD>Backslash</TD></TR>
+			<TR><TD>'\t'</TD><TD>Tabulation</TD></TR>
+			<TR><TD>'\n'</TD><TD>New line</TD></TR>
+			<TR><TD>'\b'</TD><TD>Backspace</TD></TR>
+			<TR><TD>'\f'</TD><TD>Form feed</TD></TR>
+		</TABLE>
+
+		<H3>Intervals</H3>
+
+		<P>An interval, written <I>lower..upper</I> where <I>lower</I> and <I>upper</I> are character expressions, describes a set of one-character tokens: all the characters whose ASCII code is between the codes for the characters in <I>lower</I> and <I>upper</I>. For example, <I>'0'..'9'</I> contains all tokens made of a single decimal digit.</P>
+
+		<H3>Basic operator expressions</H3>
+
+		<P>A parenthesized expression, written (<I>exp</I>) where <I>exp</I> is a regular expression, describes the same set of tokens as <I>exp</I>. This serves to remove ambiguities in complex regular expressions. For example, the parenthesized expression (<I>'0'..'9'</I>) also describes all single-decimal-digit tokens.</P>
+
+		<P>A difference, written <I>interval - char</I>, where <I>interval</I> is an interval expression and <I>char</I> is a character expression, describes the set of tokens which are in <I>exp</I> but not in <I>char</I>. For example, the difference <I>'0'..'9' - '4'</I> describes all single-decimal-digit tokens except those made of the digit 4.</P>
+
+		<P CLASS="warning"><B>Caution</B>: a difference may only apply to an interval and a single character.</P>
+
+		<H3>Iterations</H3>
+
+		<P>An unbounded iteration, written <I>*exp</I> or <I>+exp</I> where <I>exp</I> is a regular expression, describes the set of tokens made of sequences of zero or more specimens of <I>exp</I> (in the first form, using the asterisk), or of one or more specimens of <I>exp</I> (in the second form, using the plus sign). For example, the iteration <I>+('0'..'9')</I> describes the set of tokens made of one or more consecutive decimal digits.</P>
+
+		<P>A fixed iteration, written <I>n exp</I> where <I>n</I> is a natural integer constant and <I>exp</I> is a regular expression, describes the set of tokens made of sequences of exactly <I>n</I> specimens of <I>exp</I>. For example, <I>3 ('A'..'Z')</I> describes the set of all three-letter upper-case tokens.
+
+		<H3>Other operator expressions</H3>
+
+		<P>A concatenation, written <I>exp<SUB>1</SUB> exp<SUB>2</SUB> ... exp<SUB>n</SUB></I>, describes the set of tokens made of a specimen of exp<SUB>1</SUB> followed by a specimen of exp<SUB>2</SUB> etc. For example, the concatenation <I>'1'..'9' * ('0'..'9')</I> describes the set of tokens made of one or more decimal digits, not beginning with a zero - in other words, integer constants in the usual notation.</P>
+
+		<P>An optional component, written <I>[exp]</I> where <I>exp</I> is a regular expression, describes the set of tokens that includes the empty token and all specimens of <I>exp</I>. Optional components usually appear in concatenations.</P>
+
+		<P>Concatenations may be inconvenient when the concatenated elements are simply characters, as in <I>'A' ' ' 'T' 'e' 'x' 't'</I>. In this case you may use a <B>string</B> in double quotes, as in<BR>
+		<CODE>"A Text"</CODE></P>
+
+		<P>More generally, a string is written <I>"a<SUB>1</SUB> a<SUB>2</SUB> ... a<SUB>n</SUB>"</I> for <I>n >= 0</I>, where the <I>a<SUB>i</SUB></I> are characters, and is an abbreviation for the concatenation 'a<SUB>1</SUB>' 'a<SUB>2</SUB>' ... 'a<SUB>n</SUB>'</I>, representing a set containing a single token. In a string, the double quote character " is written \" and the backslash character \ is written \\. No other special characters are permitted; if you need special characters, use explicit concatenation. As a special case, "" represents the set containing a single empty token.</P>
+
+		<P>A union, written <I>exp<SUB>1</SUB> | exp<SUB>2</SUB> | ... | exp<SUB>n</SUB></I>, describes the set of tokens which are specimens of <I>exp<SUB>1</SUB></I>, or of <I>exp<SUB>2</SUB></I> etc. For example, the union <I>('a'..'z') | ('A'..'Z')</I> describes the set of single-letter tokens (lower-case or upper-case).</P>
+
+		<H3>Predefined expressions</H3>
+
+		<P>A joker, written <I><B>$•</B></I>, describes the set of all tokens made of exactly one character. A joker is considered to be an interval expression, so that it may be the first operand of a difference operation.</P>
+
+		<P>A printable, written <I><B>$P</B></I>, describes the set of all tokens made of exactly one printable character.</P>
+
+		<P>A blank, written <I><B>$B</B></I>, describes the set of all tokens made of one or more specimens of the characters blank, new-line, carriage-return and tabulation.</P>
+
+		<P>The following non-elementary forms are abbreviations for commonly needed regular expressions:</P>
+
+		<TABLE>
+			<TR><TD CLASS="title">Code</TD><TD CLASS="title">Equivalent expression</TD><TD CLASS="title">Role</TD></TR>
+			<TR><TD><I><B>$L</B></I></TD><TD><I>'\n'</I></TD><TD>New-line character</TD></TR>
+			<TR><TD><I><B>$N</B></I></TD><TD><I>+('0'..'9')</I></TD><TD>Natural integer constants</TD></TR>
+			<TR><TD><I><B>$R</B></I></TD><TD><I>['+'|'-'] +('0'..'9') '.' *('0'..'9')<BR>['e'|'E' ['+'|'-'] +('0'..'9')]</I></TD><TD>Floating point constants</TD></TR>
+			<TR><TD><I><B>$W</B></I></TD><TD><I>+(<B>$P</B> - ' ' - '\t' - '\n' - '\r')</I></TD><TD>Words</TD></TR>
+			<TR><TD><I><B>$Z</B></I></TD><TD><I>['+'|'-'] +('0'..'9')</I></TD><TD>Possibly signed integer constants</TD></TR>
+		</TABLE>
+
+		<P>A delimited string, written <I>->string</I>, where <I>string</I> is of the form, <I>"a<SUB>1</SUB> a<SUB>2</SUB> ... a<SUB>n</SUB>"</I>, represents the set of tokens made of any number of printable characters and terminated by <I>string</I>.</P>
+
+		One more form of regular expression, case-sensitive expressions, using the ~ symbol, will be introduced below.</P>
+
+		<H3>Combining expression-building mechanisms</H3>
+
+		<P>You may freely combine the various construction mechanisms to describe complex regular expressions. Below are a few examples.</P>
+
+		<TABLE>
+			<TR><TD><I>'a'..'z' - 'c' - 'e'</I></TD><TD>Single-lower-case-letter tokens, except <I>c</I> and <I>e</I>.</TD></TR>
+			<TR><TD><I>$• - '\007'</I></TD><TD>Any single-character token except ASCII 007.</TD></TR
+			<TR><TD><I>+('a'..'z')</I></TD><TD>One or more lower-case letters.</TD></TR>
+			<TR><TD><I>['+'|'-'] '1'..'9' *('0'..'9')</I></TD><TD>Integer constants, optional sign, no leading zero.</TD></TR>
+			<TR><TD><I>->"*/"</I></TD><TD>Any string up to and including an occurrence of */<BR>(the closing symbol of a PL/I or C comment).</TD></TR>
+			<TR><TD><I>"\"" ->"\""</I></TD><TD>Eiffel strings.</TD></TR>
+		</TABLE>
+
+		<H3>Dealing with keywords</H3>
+
+		<P>Many languages to be analyzed have keywords - or, more generally, "reserved words". Eiffel, for example, has reserved words such as <SPAN CLASS="ekeyword">class</SPAN> and <SPAN CLASS="ereserved">Result</SPAN>.
+
+		<P CLASS="note"><B>Note</B>: in Eiffel terminology reserved words include keywords; a keyword is a marker playing a purely syntactical role, such as <SPAN CLASS="ekeyword">class</SPAN>. Predefined entities and expressions such as <SPAN CLASS="ereserved">Result</SPAN> and <SPAN CLASS="ereserved">Current</SPAN>, which have an associated value, are considered reserved words but not keywords. The present discussion uses the term "keyword" although it can be applied to all reserved words.</P>
+
+		<P>In principle, keywords could be handled just as other token types. In Eiffel, for example, one might treat each reserved words as a token type with only one specimen; these token types would have names such as Class or Then and would be defined in the lexical grammar file:</P>
+
+		<P><I>Class</I> <B>'c' 'l' 'a' 's' 's'</B><BR>
+		<I>Then</I> &nbsp;<B>'t' 'h' 'e' 'n'</B><BR>
+		...</P>
+
+		<P>This would be inconvenient. To simplify the task of language description, and also to improve the efficiency of the lexical analysis process, it is usually preferable to treat keywords as a separate category.</P>
+
+		<P>If you are using class SCANNING and hence a lexical grammar file, the list of keywords, if any, must appear at the end of the file, one per line, preceded by a line that simply reads</P>
+
+		<P><I><B>-- Keywords</B></I></P>
+
+		<P>For example the final part of the example Eiffel lexical grammar file appears as:</P>
+
+		<CODE>
+		... Other token type definitions ...<BR>
+		<I>Identifier &nbsp; &nbsp; ~('a'..'z') *(~('a'..'z') | '_' | ('0'..'9'))<BR>
+		<B>-- Keywords<BR>
+		alias<BR>
+		all<BR>
+		and<BR>
+		as</B><BR>
+		BIT<BR>
+		BOOLEAN<BR></I>
+		... Other reserved words ...
+		</CODE>
+
+		<P CLASS="warning"><B>Caution</B>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the Keywords line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type Identifier, as shown above.</P>
+
+		<P CLASS="note"><B>Note</B>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using SCANNING and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by METALEX or LEX_BUILDER. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.</P>
+
+		<H3>Case sensitivity</H3>
+
+		<P>By default, letter case is not significant for regular expressions and keywords. So if <I>yes</I> matches a token type defined by a regular expression, or is a keyword, the input values <I>Yes</I>, <I>yEs</I> and <I>yES</I> will all yield the same token or keyword. This also means that <I>'a'..'z'</I> and <I>'a'..'z' | 'A'..'Z'</I> describe the same set of tokens.</P>
+
+		<P>The regular expression syntax introduced above offers a special notation to specify that a particular expression is case-sensitive: <I>~exp</I>, where <I>exp</I> is a regular expression. For example, <I>~('A'..'Z')</I> only covers single-upper-case-letter tokens. But for all other kinds of expression letter case is not taken into account.</P>
+
+		<P>You may change this default behavior through a set of procedures introduced in class LEX_BUILDER and hence available in its descendants METALEX and SCANNING.</P>
+
+		<P>To make subsequent regular expressions case-sensitive, call the procedure</P>
+
+		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_ignore_case">ignore_case</A></CODE>
+
+		<P>To revert to the default mode where case is not significant, call the procedure</P>
+
+		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_distinguish_case">distinguish_case</A></CODE>
+
+		<P>Each of these procedures remains in effect until the other one is called, so that you only need one call to define the desired behavior.</P>
+
+		<P>For keywords, the policy is less tolerant. A single rule is applied to the entire grammar: keywords are either all case-sensitive or all case-insensitive. To make all keywords case-sensitive, call</P>
+
+		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_keywords_distinguish_case">keywords_distinguish_case</A></CODE>
+
+		<P>The inverse call, corresponding to the default rule, is</P>
+
+		<CODE><A CLASS="efeature" HREF="../reference/lex_builder.html#f_keywords_ignore_case">keywords_distinguish_case</A></CODE>
+
+		<P>Either of these calls must be executed before you define any keywords; if you are using SCANNING, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</P>
+
+		<H2>USING METALEX TO BUILD A LEXICAL ANALYZER</H2>
+
+		<P>(You may skip the rest of this chapter if you only need simple lexical facilities.)</P>
+
+		<P>Class SCANNING, as studied above, relies on a class METALEX. In some cases, you may prefer to use the features of METALEX directly. Since SCANNING inherits from METALEX, anything you do with METALEX can in fact be done with SCANNING, but you may wish to stay with just METALEX if you do not need the additional features of SCANNING.</P>
+
+		<H3>Steps in using METALEX</H3>
+
+		<P>METALEX has an attribute analyzer which will be attached to a lexical analyzer. This class provides tools for building a lexical analyzer incrementally through explicit feature calls; you can still use a lexical grammar file, but do not have to.</P>
+
+		<P>The following extract from a typical descendant of METALEX illustrates the process of building a lexical analyzer in this way:</P>
+
+		<CODE>
+		Upper_identifier, Lower_identifier, Decimal_constant, Octal_constant, Word: INTEGER is unique<BR>
+		...<BR>
+		distinguish_case<BR>
+		keywords_distinguish_case<BR>
+		put_expression ("+('0'..'7'"), Octal_constant, "Octal")<BR>
+		put_expression ("'a'..'z' *('a'..'z'|'0'..'9'|'_')", Lower_identifier, "Lower")<BR>
+		put_expression ("'A'..'Z' *('A'..'Z'|'0'..'9'|'_' )", Upper_identifier, "Upper")<BR>
+		dollar_w (Word)<BR>
+		...<BR>
+		put_keyword ("begin", Lower_identifier)<BR>
+		put_keyword ("end", Lower_identifier)<BR>
+		put_keyword ("THROUGH", Upper_identifier)<BR>
+		...<BR>
+		make_analyzer<BR>
+		</CODE>
+
+		<P>This example follows the general scheme of building a lexical analyzer with the features of METALEX, in a class that will normally be a descendant of METALEX:</P>
+
+		<OL>
+			<LI>Set options, such as case sensitivity.</LI>
+			<LI>Record regular expressions.</LI>
+			<LI>Record keywords (this may be interleaved with step 2.)</LI>
+			<LI>"Freeze" the analyzer by a call to <A CLASS="efeature">make_analyzer</A>.</LI>
+		</OL>
+
+		<P>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with SCANNING, you may use the procedure</P>
+
+		<CODE>
+		<A CLASS="efeature">read_grammar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">grammar_file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P>In this case all the expressions and keywords are taken from the file of name <SPAN CLASS="elocal">grammar_file_name</SPAN> rather than passed explicitly as arguments to the procedures of the class. You do not need to call <A CLASS="efeature">make_analyzer</A>, since <A CLASS="efeature">read_grammar</A> includes such a call.</P>
+
+		<P>The rest of this discussion assumes that the four steps are executed individually as shown above, rather than as a whole using <A CLASS="efeature">read_grammar</A>.
+
+		<H3>Recording token types and regular expressions</H3>
+
+		<P>As shown by the example, each token type, defined by a regular expression, must be assigned an integer code. Here the developer has chosen to use Unique constant values so as not to worry about selecting values for these codes manually, but you may select any values that are convenient or mnemonic. The values have no effect other than enabling you to keep track of the various lexical categories. Rather than using literal values directly, it is preferable to rely on symbolic constants, Unique or not, which will be more mnemonic.</P>
+
+		<P>Procedure <A CLASS="efeature">put_expression</A> records a regular expression. The first argument is the expression itself, given as a string built according to the rules seen earlier in this chapter. The second argument is the integer code for the expression. The third argument is a string which gives a name identifying the expression. This is useful mostly for debugging purposes; there is also a procedure <A CLASS="efeature">put_nameless_expression</A> which does not have this argument and is otherwise identical to <A CLASS="efeature">put_expression</A>.</P>
+
+		<P>Procedure <A CLASS="efeature">dollar_w</A> corresponds to the <I><B>$W</B></I> syntax for regular expressions. Here an equivalent call would have been</P>
+
+		<CODE>
+		<A CLASS="efeature">put_nameless_expression</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"$W"</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Word</A><SPAN CLASS="esymbol">)</SPAN>
+		</CODE>
+
+		<P>Procedure <A CLASS="efeature">declare_keyword</A> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by SCANNING - not all keywords need be specimens of the same regular expression.</P>
+
+		<P>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</P>
+
+		<CODE>
+		<A CLASS="efeature">make_analyzer</A>
+		</CODE>
+
+		<P>After that call, you may not record any new regular expression or keyword. The analyzer is usable through attribute <A CLASS="efeature">analyzer</A>.
+
+		<P CLASS="note"><B>Note</B>: for readers knowledgeable in the theory of lexical analysis: one of the most important effects of the call to <A CLASS="efeature">make_analyzer</A> is to transform the non-deterministic finite automaton resulting from calls such as the ones above into a deterministic finite automaton.</P>
+
+		<P>Remember that if you use procedure <A CLASS="efeature">read_grammar</A>, you need not worry about <A CLASS="efeature">make_analyzer</A>, as the former procedure calls the latter.
+
+		<P>Another important feature of class METALEX is procedure <A CLASS="efeature">store_analyzer</A>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <A CLASS="efeature">retrieve_analyzer</A>, again with a file name as argument.</P>
+
+		<H2>BUILDING A LEXICAL ANALYZER WITH LEX_BUILDER</H2>
+
+		<P>To have access to the most general set of lexical analysis mechanisms, you may use class LEX_BUILDER, which gives you an even finer grain of control than METALEX. This is not necessary in simple applications.</P>
+
+		<H3>Building a lexical analyzer</H3>
+
+		<P>LEX_BUILDER enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of LEX_BUILDER. For each token type, you call a procedure that builds an object, or <B>tool</B>, representing the associated regular expression.</P>
+
+		<P>For the complete list of available procedures, refer to the flat-short form of the class; there is one procedure for every category of regular expression studied earlier in this chapter. Two typical examples of calls are:</P>
+
+		<CODE>
+		<A CLASS="efeature">interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'a'</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="echar">'z'</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Create an interval tool</SPAN><BR><BR>
+		<A CLASS="efeature">union</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature">Letter</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature">Underlined</A><SPAN CLASS="esymbol">)</SPAN><BR>
+		&nbsp; &nbsp; &nbsp; <SPAN CLASS="ecomment">-- Create a union tool</SPAN>
+		</CODE>
+
+		<P>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <A CLASS="efeature">last_created_tool</A>. You will need to record it into an integer entity, for example <I>Identifier</I> or <I>Letter</I>.
+
+		<H3>An example</H3>
+
+		<P>The following extract from a typical descendant of LEX_BUILDER illustrates how to create a tool representing the identifiers of an Eiffel-like language.</P>
+
+		<CODE><PRE>
+Identifier, Letter, Digit, Underlined, Suffix, Suffix_list: INTEGER
+
+build_identifier is
+	do
+		interval ('a', 'z'); Letter := last_created_tool
+		interval ('0', '9'); Digit := last_created_tool
+		interval ('_', '_'); Underlined := last_created_tool
+
+		union (Digit, Underlined); Suffix := last_created_tool
+
+		iteration (Suffix); Suffix_list := last_created_tool
+		append (Letter, Suffix_list); Identifier := last_created_tool
+	end</PRE></CODE>
+
+		<P>Each token type is characterized by a number in the <A CLASS="efeature">tool_list</A>. Each tool has a name, recorded in <A CLASS="efeature">tool_names</A>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
+
+		<H3>Selecting visible tools</H3>
+
+		<P>In the preceding example, only some of the tools, such as <A CLASS="efeature">Identifier</A>, are of interest to the clients. Others, such as <A CLASS="efeature">Suffix</A> and <A CLASS="efeature">Suffix_list</A>, only play an auxiliary role.</P>
+
+		<P>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <A CLASS="efeature">select_tool</A>. Clients will need a number identifying it; to set this number, use procedure associate. For example the above extract may be followed by:</P>
+
+		<CODE>
+		select_tool (Identifier)<BR>
+		associate (Identifier, 34)<BR>
+		put_keyword ("class", Identifier)<BR>
+		put_keyword ("end", Identifier)<BR>
+		put_keyword ("feature", Identifier)<BR>
+		</CODE>
+
+		<P>If the analysis encounters a token that belongs to two or more different selected regular expressions, the one entered last takes over. Others are recorded in the array <A CLASS="efeature">other_possible_tokens</A>.</P>
+
+		<P>If you do not explicitly give an integer value to a regular expression, its default value is its rank in <A CLASS="efeature">tool_list</A>.
+	</BODY>
+</HTML>

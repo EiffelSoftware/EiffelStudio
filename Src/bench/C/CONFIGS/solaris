@@ -1,4 +1,15 @@
 #!/bin/sh
+#
+# This file was produced by running the Configure script. It holds all the
+# definitions figured out by Configure. Should you modify one of these values,
+# do not forget to propagate your changes by running "Configure -der". You may
+# instead choose to run each of the .SH files by yourself, or "Configure -S".
+#
+
+# Configuration time: Wed Feb 4 19:33:48 PST 1998
+# Configured by: manuelt
+# Target system: sunos lannion 5.4 generic_101945-39 sun4m sparc 
+
 
 sh='sh'
 cc='cc'
@@ -6,7 +17,6 @@ cpp='/usr/ccs/lib/cpp'
 ar='ar'
 ld='ld'
 
-ccflags=''
 mtccflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
 ccflags=''
 cppflags=''
@@ -24,13 +34,16 @@ suffix='.a'
 
 optimize='-O'
 large=''
-mkdep='mkdep'
+mkdep='/lannion3/manuelt/Misc/mkdep'
 mv='/usr/5bin/mv'
 ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
 
-#####################################zz
+#######################################
+# Flags for run-time compilation only #
+#######################################
+
 
 d_bsd='undef'
 d_eunice='undef'
@@ -122,8 +135,8 @@ bitpbyte='8'
 byteorder='4321'
 gccversion=''
 lkflags=''
-cf_by='savraks'
-cf_time='Sun Jun  1 11:58:38 PDT 1997'
+cf_by='manuelt'
+cf_time='Wed Feb  4 19:33:48 PDT 1998'
 charsize='1'
 contains='grep'
 cpp_stuff='42'

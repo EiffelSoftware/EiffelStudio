@@ -7,7 +7,7 @@ class
 	EB_FEATURE_TOOL_LIST
 
 inherit
-	EB_EDIT_TOOL_LIST [EB_FEATURE_TOOL]
+	EB_TEXT_TOOL_LIST [EB_FEATURE_TOOL]
 		redefine
 			make
 		end

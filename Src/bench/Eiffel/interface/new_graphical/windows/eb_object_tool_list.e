@@ -7,7 +7,7 @@ class
 	EB_OBJECT_TOOL_LIST
 
 inherit
-	EB_EDIT_TOOL_LIST [EB_OBJECT_TOOL]
+	EB_TEXT_TOOL_LIST [EB_OBJECT_TOOL]
 		redefine
 			make
 		end

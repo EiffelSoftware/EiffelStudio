@@ -23,7 +23,7 @@ feature -- Status report
 	eiffel_ref: DATE_TIME is
 			-- Shared absolute date reference 
 		once
-			!! Result.make_now
+			create Result.make_now
 		end
 
 end -- class DATABASE_DATETIME

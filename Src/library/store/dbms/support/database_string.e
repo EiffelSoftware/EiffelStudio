@@ -23,7 +23,7 @@ feature -- Status report
 	eiffel_ref: STRING is
 			-- Shared string reference
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end
 
 end -- class DATABASE_STRING

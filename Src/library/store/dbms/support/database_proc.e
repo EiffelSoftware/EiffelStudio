@@ -40,7 +40,7 @@ feature -- Status report
 			if db_spec.support_sql_of_proc then
      				private_selection.set_map_name (name, "name")
 				if db_spec.has_row_number then
-					!! tmp_text.make(1024)
+					create tmp_text.make(1024)
 					from
 						seq := 1
 					until 
@@ -50,7 +50,7 @@ feature -- Status report
      					private_selection.query (Select_text)
      					private_selection.load_result
      					private_selection.unset_map_name ("seq")
-     					!! tuple.copy (private_selection.cursor)
+     					create tuple.copy (private_selection.cursor)
      					row_text ?= tuple.item (1)
      					tmp_text.append(row_text)
 						seq := seq + 1
@@ -59,7 +59,7 @@ feature -- Status report
 				else
 					private_selection.query (Select_text)
 					private_selection.load_result
-					!! tuple.copy (private_selection.cursor)
+					create tuple.copy (private_selection.cursor)
 					tmp_text ?= tuple.item (1)
 				end
 				private_selection.unset_map_name ("name")
@@ -91,8 +91,7 @@ feature -- Basic operations
 		require else
 			argument_not_void: sql /= Void
 		local   
-				c_temp: ANY
-				sql_temp: STRING
+			sql_temp: STRING
 		do
 			if db_spec.support_stored_proc then
 				sql_temp := db_spec.sql_adapt_db (sql)
@@ -241,20 +240,20 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	set_p_exists is
-			-- Set `p_exists'
+			-- Set `p_exists'.
 		local
 			temp_int: INTEGER_REF
 			tuple: DB_TUPLE
 		do
 			if (db_spec.support_proc > 0) then
-				handle.status.set_found (1)
+				-- FIXME fixme --handle.status.set_found (1)
 				private_selection.set_map_name (name, "name")
 				private_selection.query (Select_exists)
 				p_exists := not handle.status.found
 				private_selection.load_result
 				private_selection.unset_map_name ("name")
-				!! tuple.copy (private_selection.cursor)
-				if not tuple.empty then
+				create tuple.copy (private_selection.cursor)
+				if not tuple.is_empty then
 					temp_int ?= tuple.item (1)
 					if temp_int /= Void then
 						p_exists := temp_int.item > 0
@@ -277,7 +276,7 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 			--d_not_void: d /= Void
-			--arguments_mapped: not d.ht.empty
+			--arguments_mapped: not d.ht.is_empty
 		local
 			i: INTEGER
 		do
@@ -359,10 +358,10 @@ feature {NONE} -- Status report
 			quoter: STRING
 			sep: STRING
 		do
-			!! Result.make (100)
+			create Result.make (100)
 			
-			!!quoter.make(1)
-			!!sep.make(1)
+			create quoter.make(1)
+			create sep.make(1)
 			quoter := db_spec.identifier_quoter
 			sep := db_spec.qualifier_seperator
 			if (qualifier /= Void and then qualifier.count > 0) then
@@ -387,7 +386,7 @@ feature {NONE} -- Status report
 	private_selection: DB_SELECTION is
 			-- Shared local object
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -395,7 +394,7 @@ feature {NONE} -- Status report
 	private_change: DB_CHANGE is
 			-- Shared local object
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -403,7 +402,7 @@ feature {NONE} -- Status report
 	private_string: STRING is
 			-- Constant string
 		once
-			!! Result.make (50)
+			create Result.make (50)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -34,7 +34,7 @@ feature -- Status report
 	eiffel_ref: DOUBLE_REF is
 			-- Shared double reference
 		once
-			!! Result
+			create Result
 		end
 
 end -- class DATABASE_DOUBLE

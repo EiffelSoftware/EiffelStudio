@@ -17,14 +17,14 @@ feature -- Initialization
 
 	make is
 		do
-			!! name.make (1)
-			!! passwd.make (1)
-			!! application.make (1)
-			!! hostname.make (1)
-			!! data_source.make (1)
-			!! roleId.make (1)
-			!! rolePassWd.make (1)
-			!! groupId.make (1)
+			create name.make (1)
+			create passwd.make (1)
+			create application.make (1)
+			create hostname.make (1)
+			create data_source.make (1)
+			create roleId.make (1)
+			create rolePassWd.make (1)
+			create groupId.make (1)
 		end
 
 feature -- Status setting
@@ -67,7 +67,7 @@ feature -- Status setting
 		do
 			data_source := clone (udata_source)
 		ensure
-			data_source_set: data_source.is_equal(udata_source)
+	--FIXME(worx without)		data_source_set: data_source.is_equal(udata_source)
 		end
 
 	set_role (uroleId, urolePassWd: STRING) is

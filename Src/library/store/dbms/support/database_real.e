@@ -34,7 +34,7 @@ feature -- Status report
 	eiffel_ref: REAL_REF is
 			-- Shared real reference
 		once
-			!! Result
+			create Result
 		end
 
 end -- class DATABASE_REAL

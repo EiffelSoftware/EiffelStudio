@@ -35,11 +35,11 @@ feature -- Initialization
 	make is
 			-- Create attributes
 		do
-			!! table.make (1)
-			!! tmp_acc_col
-			!! repository_name.make(1)
-			!! rep_qualifier.make(1)
-			!! rep_owner.make(1)
+			create table.make (1)
+			create tmp_acc_col
+			create repository_name.make(1)
+			create rep_qualifier.make(1)
+			create rep_owner.make(1)
 		end
 
 	load is
@@ -182,9 +182,9 @@ feature -- Status setting
 			quoter: STRING
 			sep: STRING
 		do
-			!! r_string.make (512)
-			!!quoter.make(1)
-			!!sep.make(1)
+			create r_string.make (512)
+			create quoter.make(1)
+			create sep.make(1)
 			quoter := db_spec.identifier_quoter
 			sep := db_spec.qualifier_seperator
 			r_string.append ("create table ")
@@ -343,7 +343,7 @@ feature -- Status report
 				loop
 					ft := field_type (i, object)
 					if ft = 0 then
-						!!t_string.make (0)
+						create t_string.make (0)
 						t_string.append (field_name(i,object))
 						t_string.append (" does not exist")
 						raise (t_string)
@@ -391,7 +391,7 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Does current repository exist in database schema?
 		do
-			Result := not table.empty
+			Result := not table.is_empty
 		end
 
 	column_number: INTEGER is
@@ -427,13 +427,13 @@ feature {NONE} -- Status report
 	request_select: DB_SELECTION is
 			-- Selection utility object.
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	request_create: DB_CHANGE is
 			-- Modification utility object.
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	Selection_string: STRING is 

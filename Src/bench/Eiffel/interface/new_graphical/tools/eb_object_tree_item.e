@@ -143,13 +143,16 @@ feature {NONE} -- Implementation
 			-- List of available icons for objects.
 		once
 			create Result.make (Immediate_value, Error_message_value)
+			
+			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
 			Result.put (Pixmaps.Icon_void_object, Void_value)
 			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
-			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
-			Result.put (Pixmaps.Icon_object_symbol, Special_value)
 			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
-			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
-			Result.put (Pixmaps.Icon_exception , Error_message_value)
+			Result.put (Pixmaps.Icon_object_symbol, Special_value)
+			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)			
+			Result.put (Pixmaps.Icon_static_external_symbol, Static_external_reference_value)
+			Result.put (Pixmaps.Icon_static_object_symbol, Static_reference_value)
+			Result.put (Pixmaps.Icon_exception, Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN is

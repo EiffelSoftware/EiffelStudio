@@ -38,12 +38,12 @@ feature -- Initialization
 		do
 			text_box_setup (a_label, a_key, a_path_validator, Void, Void)
 			title := a_title
-			auto_save := True
+			auto_save := False
 		ensure
 			label_set: text_label.text.is_equal (a_label)
 			key_set: key = a_key
 			title_set: title = a_title
-			auto_save: auto_save
+			not_auto_save: not auto_save
 			path_validator_set: path_validator = a_path_validator
 		end
 

@@ -24,6 +24,7 @@ feature -- Adding PROFILE_FILTERs
 			-- Extend filters to be checked with `new_filter'.
 		do
 			filters.extend (new_filter)
+			filters.forth
 		end
 
 feature -- Checking

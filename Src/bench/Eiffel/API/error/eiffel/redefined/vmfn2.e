@@ -76,9 +76,10 @@ feature {COMPILER_EXPORTER}
 			inh_info: INHERIT_INFO;
 			e_feature: E_FEATURE;
 			parent: E_CLASS
+			features_list: like features
 		do
 			from
-				!! features.make;
+				!! features_list.make;
 				fs.start
 			until
 				fs.after
@@ -87,9 +88,11 @@ feature {COMPILER_EXPORTER}
 				parent := inh_info.parent.parent;
 				e_feature := inh_info.a_feature.api_feature (parent.id);
 				!! cell2.make (e_feature, parent);
-				features.extend (cell2);
+				features_list.extend (cell2);
+				features_list.forth
 				fs.forth
 			end
+			features := features_list
 		end;
 
 end -- class VMFN2

@@ -10,7 +10,7 @@ class
 	EV_PND_FINISHED_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_PICK_AND_DROPABLE]]
+	EV_ACTION_SEQUENCE [TUPLE [EV_ABSTRACT_PICK_AND_DROPABLE]]
 	-- EV_ACTION_SEQUENCE [TUPLE [a_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE]]
 	-- (ETL3 TUPLE with named parameters)
 	
@@ -25,7 +25,7 @@ feature -- Access
 			extend (~wrapper (?, action))
 		end
 
-	wrapper (a_pick_and_dropable: EV_PICK_AND_DROPABLE; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

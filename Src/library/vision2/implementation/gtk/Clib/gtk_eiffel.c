@@ -68,7 +68,7 @@ void c_signal_callback (GtkObject *w, gpointer data)
 	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
-/* TEST */
+/* To be placed in another file such as gtk_eiffel_event.c */
 /* The following functions have been created because the callback functions associated
  * to them need to have a specific signature.
  * We shall put them in another file (such as gtk_eiffel_event.c).
@@ -80,6 +80,7 @@ void mclist_click_column_callback(GtkWidget *clist,
                                gpointer data)
 {
     callback_data_t *pcbd;
+	
     pcbd = (callback_data_t *)data;
 
 	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
@@ -100,7 +101,7 @@ void mclist_row_selection_callback(GtkWidget *clist,
     pcbd = (callback_data_t *)data;
 
 	/* The index of the row */
-	row_index = (int) pcbd->mouse_button;
+	row_index = (int)(pcbd->extra_data) - 1;
 
 	if (row == row_index || row_index == -1)
 	{    
@@ -109,7 +110,6 @@ void mclist_row_selection_callback(GtkWidget *clist,
 	  /*printf("c_signal_callback (%d, %d)\n", w, data); */
 	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 	}
-	
 }
 
 /* For CTree .*/
@@ -157,6 +157,61 @@ void ctree_row_subtree_callback(GtkCTree *ctree,
 	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 	}
 	
+}
+
+/* For Text*/
+void text_insert_text_callback(GtkEditable *editable,
+								const gchar *text,
+								gint length,
+								gint *position,
+								gpointer data)
+{
+    callback_data_t *pcbd;
+	
+    pcbd = (callback_data_t *)data;
+
+	if (pcbd->ev_data != NULL)
+    {
+	  /* Call Eiffel routine 'set_event_data' to transfer the event data
+	   to Eiffel */
+	  (pcbd->set_event_data)(eif_access(pcbd->ev_data_imp), position); 
+    }
+
+	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+    /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+    /*printf("c_signal_callback (%d, %d)\n", w, data); */
+    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+}
+
+void text_delete_text_callback(GtkEditable *editable,
+								gint start,
+								gint end,
+								gpointer data)
+{
+    callback_data_t *pcbd;
+	
+    pcbd = (callback_data_t *)data;
+
+	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+    /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+    /*printf("c_signal_callback (%d, %d)\n", w, data); */
+    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
+}
+
+
+/* For List */
+void list_select_child_callback(GtkList *list,
+								GtkWidget *child,
+								gpointer data)
+{
+    callback_data_t *pcbd;
+	
+    pcbd = (callback_data_t *)data;
+
+	/* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
+    /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+    /*printf("c_signal_callback (%d, %d)\n", w, data); */
+    (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
 /*********************************
@@ -389,10 +444,32 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 					GTK_SIGNAL_FUNC(ctree_row_selection_callback), 
 					(gpointer)pcbd));
 			}
+			else
 			if ((strcmp(name, "tree_expand") == 0) || (strcmp(name, "tree_collapse") == 0))
 			{
 				return (gtk_signal_connect (widget, name, 
 					GTK_SIGNAL_FUNC(ctree_row_subtree_callback), 
+					(gpointer)pcbd));
+			}
+			else
+			if (strcmp(name, "insert_text") == 0)
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(text_insert_text_callback), 
+					(gpointer)pcbd));
+			}
+			else
+			if (strcmp(name, "delete_text") == 0)
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(text_delete_text_callback), 
+					(gpointer)pcbd));
+			}
+			else
+			if (strcmp(name, "select_child") == 0)
+			{
+				return (gtk_signal_connect (widget, name, 
+					GTK_SIGNAL_FUNC(list_select_child_callback), 
 					(gpointer)pcbd));
 			}
 			else
@@ -417,7 +494,12 @@ gint c_gtk_signal_connect (GtkObject *widget,
 			   char double_click,
 			   gpointer extra_data)
 {
-	return c_gtk_signal_connect_general (widget, name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0, extra_data);
+	gchar tmp_name[40]; /* The name of the signals must be smaller than 40 characters otherwise
+						   we need to allocate bigger space. */
+	
+	strcpy (tmp_name, name);
+	
+	return c_gtk_signal_connect_general (widget, tmp_name, execute_func, object, argument, ev_data, ev_data_imp, event_data_rtn, mouse_button, double_click, 0, extra_data);
 }
 			
 gint c_gtk_signal_connect_after (GtkObject *widget, 
@@ -553,6 +635,43 @@ EIF_BOOLEAN c_gtk_widget_visible (GtkWidget *w)
 EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w) 
 {
     return (GTK_WIDGET_REALIZED(w));
+}
+
+/*********************************
+ *
+ * Function `c_gtk_widget_displayed'
+ *
+ * Note : Is widget visible visible on the screen?
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_BOOLEAN c_gtk_widget_displayed (GtkWidget *wid) 
+{
+  gint bool;
+	
+  if (GTK_WIDGET_VISIBLE (wid))
+  {
+	  if (GTK_IS_WINDOW (wid->parent))
+	  {
+		if (GTK_WINDOW (wid->parent)->type == GTK_WINDOW_TOPLEVEL)
+		{
+		  if GTK_WIDGET_VISIBLE (wid->parent)
+			  bool = 1;
+		  else
+			  bool = 0;
+		}
+		else
+		  bool = c_gtk_widget_displayed (wid->parent);
+	  }
+	  else
+		bool = c_gtk_widget_displayed (wid->parent);
+  }
+  else
+	bool = 0;	
+  
+  return (EIF_BOOLEAN) bool;
 }
 
 /*********************************
@@ -1885,27 +2004,29 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 /*********************************
  *
  * Function : `c_gtk_file_selection_get_file_name'	(1)
- * 			  `c_gtk_file_selection_get_dir_name'	(2)
- * 			  `c_gtk_directory_selection_new'		(3)
+ * 			  `c_gtk_file_selection_get_dir'		(2)
+ * 			  `c_gtk_file_selection_get_dir_name'	(3)
+ * 			  `c_gtk_directory_selection_new'		(4)
  *
  * Note : (1) Value in the gtk_entry of the gtk_file_selection.
  * 		  (2) Dir name of the gtk_file_selection.
+ * 		  (3) Dir name of the current selected directory (for directory selection dialog).
  * 		  (3) Create a directory selection (based on the GtkFileSelection).
  *
  * Author : Alex
  *
  *********************************/
 
-EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog)
+EIF_POINTER c_gtk_selection_get_selection_entry (GtkWidget *dialog)
 {
   GtkEntry *entry;
 	
-  entry = (GtkEntry *)((GtkFileSelection *) file_dialog)->selection_entry;
+  entry = (GtkEntry *)((GtkFileSelection *) dialog)->selection_entry;
   
   return (EIF_POINTER) gtk_entry_get_text (entry);
 }
 
-EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog)
+EIF_POINTER c_gtk_file_selection_get_dir (GtkWidget *file_dialog)
 {
   GtkLabel *label;
   char *value;
@@ -1938,6 +2059,354 @@ EIF_POINTER c_gtk_directory_selection_new (const gchar *name)
   gtk_widget_hide (GTK_FILE_SELECTION (directory_selection)->fileop_ren_file);
 
   return (EIF_POINTER) directory_selection;	
+}
+
+/*==============================================================================
+ Spin button functions
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : 'c_gtk_spin_button_new'			(1)
+ * 			  'c_gtk_spin_button_set_step'		(2)
+ * 			  'c_gtk_spin_button_set_minimum'	(3)
+ * 			  'c_gtk_spin_button_set_maximum'	(4)
+ *
+ * Note : (1) Create a new spin button with some options.
+ * 		  (2) Set the step for the spin button.
+ * 		  (3) Set the minimum for the spin button.
+ * 		  (4) Set the maximum for the spin button.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_spin_button_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap)
+{
+  GtkAdjustment *adj;
+  
+  /* The page size is only relevant for scrollbars. */
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, 0.0);
+
+  return (EIF_POINTER) gtk_spin_button_new (adj, 0, 0);
+}
+
+void c_gtk_spin_button_set_step (GtkSpinButton *spinButton, gfloat step)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_spin_button_get_adjustment ((GtkSpinButton *) spinButton);
+
+  adj->step_increment = step;
+
+//  gtk_spin_button_set_adjustment ((GtkSpinButton *) spinButton, adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_spin_button_set_minimum (GtkSpinButton *spinButton, gfloat min)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_spin_button_get_adjustment ((GtkSpinButton *) spinButton);
+
+  adj->lower = min;
+//  gtk_spin_button_set_adjustment ((GtkSpinButton *) spinButton, adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_spin_button_set_maximum (GtkSpinButton *spinButton, gfloat max)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_spin_button_get_adjustment ((GtkSpinButton *) spinButton);
+
+  adj->upper = max;
+//  gtk_spin_button_set_adjustment ((GtkSpinButton *) spinButton, adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+/*==============================================================================
+ gtk_range (vertical and horizontal) functions for EV_RANGE and EV_SCROLL_BAR
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : 'c_gtk_range_set_step'	(1)
+ * 			  'c_gtk_range_set_minimum'	(2)
+ * 			  'c_gtk_range_set_maximum'	(3)
+ * 			  'c_gtk_range_set_leap'	(4)
+ *
+ * Note : (1) Set the step for the range.
+ * 		  (2) Set the minimum for the range.
+ * 		  (3) Set the maximum for the range.
+ * 		  (4) Set the leap for the range.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+void c_gtk_range_set_step (GtkRange *range, gfloat step)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (range);
+
+  adj->step_increment = step;
+//  gtk_range_set_adjustment (range, adj); 
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_range_set_minimum (GtkRange *range, gfloat min)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (range);
+
+  adj->lower = min;
+//  gtk_range_set_adjustment (range, adj); 
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_range_set_maximum (GtkRange *range, gfloat max)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (range);
+
+  adj->upper = max;
+//  gtk_range_set_adjustment (range, adj); 
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_range_set_leap (GtkRange *range, gfloat leap)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (range);
+
+  adj->page_increment = leap;
+
+//  gtk_range_set_adjustment (range, adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+/*==============================================================================
+ gtk_scale (vertical and horizontal) functions for EV_RANGE
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : 'c_gtk_vscale_new'		(1)
+ * 			  'c_gtk_hscale_new'		(1)
+ *
+ * Note : (1) Create a new vertical (horizontal) GtkScale.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_vscale_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap)
+{
+  GtkAdjustment *adj;
+  
+  /* The page size is only relevant for scrollbars. */
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, 0.0);
+
+  return (EIF_POINTER) gtk_vscale_new (adj);
+}
+
+EIF_POINTER c_gtk_hscale_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap)
+{
+  GtkAdjustment *adj;
+  
+  /* The page size is only relevant for scrollbars. */
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, 0.0);
+
+  return (EIF_POINTER) gtk_hscale_new (adj);
+}
+
+/*==============================================================================
+ gtk_scroll (vertical and horizontal) functions for EV_SCROLL_BAR
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : 'c_gtk_vsrollbar_new'		(1)
+ * 			  'c_gtk_hscrollbar_new'	(1)
+ *
+ * Note : (1) Create a new vertical (horizontal) GtkScroll.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_vscrollbar_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap, gfloat page)
+{
+    GtkAdjustment *adj;
+  
+  /* The page size is only relevant for scrollbars. */
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, page);
+
+  return (EIF_POINTER) gtk_vscrollbar_new (adj);
+}
+
+EIF_POINTER c_gtk_hscrollbar_new (gfloat value, gfloat min, gfloat max, gfloat step, gfloat leap, gfloat page)
+{
+  GtkAdjustment *adj;
+  
+  adj = (GtkAdjustment *) gtk_adjustment_new (value, min, max, step, leap, page);
+
+  return (EIF_POINTER) gtk_hscrollbar_new (adj);	
+}
+
+void c_gtk_scrollbar_set_value ( GtkScrollbar * scroll, gfloat value)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (GTK_RANGE (scroll));
+  adj->value = value;
+  
+//  gtk_range_set_adjustment (GTK_RANGE (scroll), adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+void c_gtk_scrollbar_set_page_size ( GtkScrollbar * scroll, gfloat value)
+{
+  GtkAdjustment *adj;
+  
+  adj = gtk_range_get_adjustment (GTK_RANGE (scroll));
+  adj->page_size = value;
+  adj->page_increment = value;
+  
+//  gtk_range_set_adjustment (GTK_RANGE (scroll), adj);
+
+  /* Now emit the "changed" signal to reconfigure all the widgets that
+   * are attached to this adjustment */
+  gtk_signal_emit_by_name (GTK_OBJECT (adj), "changed");
+}
+
+/*==============================================================================
+ gtk_tooltips functions
+==============================================================================*/
+
+void c_gtk_tooltips_get_bg_color (GtkTooltips *tooltips, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
+{
+  GdkColor *bg_color;
+
+  bg_color = GTK_TOOLTIPS (tooltips)->background;
+
+  if (bg_color != NULL)
+  {
+    *r = bg_color->red;
+    *g = bg_color->green;
+    *b = bg_color->blue;
+ 
+   	*r /= 257; *g /= 257; *b /= 257;
+  }
+  else
+  {
+    *r = -1; *g = -1; *b = -1;
+  }
+}
+
+void c_gtk_tooltips_get_fg_color (GtkTooltips *tooltips, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
+{
+  GdkColor *fg_color;
+	
+  fg_color = GTK_TOOLTIPS (tooltips)->foreground;
+
+  if (fg_color != NULL)
+  {
+    *r = fg_color->red;
+    *g = fg_color->green;
+    *b = fg_color->blue;
+ 
+   	*r /= 257; *g /= 257; *b /= 257;
+  }
+  else
+  {
+    *r = -1; *g = -1; *b = -1;
+  }
+}
+
+void c_gtk_tooltips_set_bg_color (GtkTooltips* tooltips, int r, int g, int b)
+{
+  GdkColor *bg_color;
+  bg_color = (GdkColor *) malloc (sizeof (GdkColor));
+  
+  r *= 257; g *= 257; b *= 257;
+  
+  if (tooltips->background != NULL) 
+    bg_color->pixel = tooltips->foreground->pixel;
+  else
+    bg_color->pixel = 0;
+
+  bg_color->red = (gushort) r;
+  bg_color->green = (gushort) g;
+  bg_color->blue = (gushort) b;
+  
+  gtk_tooltips_set_colors (tooltips, bg_color, tooltips->foreground);
+}
+
+void c_gtk_tooltips_set_fg_color (GtkTooltips* tooltips, int r, int g, int b)
+{
+  GdkColor *fg_color;
+  
+  fg_color = (GdkColor *) malloc (sizeof (GdkColor));
+ 
+  r *= 257; g *= 257; b *= 257;
+
+  /*
+  if (tooltips->foreground != NULL) 
+    fg_color->pixel = tooltips->foreground->pixel;
+  else
+    fg_color->pixel = 0;
+  
+  fg_color->red = (gushort) r;
+  fg_color->green = (gushort) g;
+  fg_color->blue = (gushort) b;
+  
+  gtk_tooltips_set_colors (tooltips, tooltips->background, fg_color);
+
+  */
+  if (tooltips->foreground != NULL) 
+  {
+	tooltips->foreground->red = r;
+	tooltips->foreground->green = g;
+	tooltips->foreground->blue = b;
+  }
+  else
+  {
+	fg_color->pixel = 0;
+	fg_color->red = r;
+	fg_color->green = g;
+	fg_color->blue = b;
+	tooltips->foreground = fg_color;
+  }
 }
 
 /*==============================================================================

@@ -362,9 +362,9 @@ feature -- Memory management
 				-- This is called polymorphically by EV_WINDOW.
 --			recycle
 --			history_manager.recycle
+			view_menu.destroy
 			Precursor {EB_WINDOW}
 			toolbars_area.destroy
-			view_menu.destroy
 			panel.destroy
 			container.destroy
 		end

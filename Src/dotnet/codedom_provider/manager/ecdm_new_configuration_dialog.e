@@ -94,12 +94,13 @@ feature {NONE} -- Events
 					applications_list.start
 					if not applications_list.after then
 						l_found := applications_list.item.text.is_equal (l_app)
+						applications_list.forth
 					end
 				until
 					applications_list.after or l_found
 				loop
-					applications_list.forth
 					l_found := applications_list.item.text.is_equal (l_app)
+					applications_list.forth
 				end
 				if l_found then
 					display_error ("Application already in list, please choose a different application.")

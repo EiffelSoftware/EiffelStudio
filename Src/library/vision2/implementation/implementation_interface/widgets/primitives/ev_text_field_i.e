@@ -13,6 +13,11 @@ inherit
 		redefine
 			interface
 		end
+	
+	EV_FONTABLE_I	
+		redefine
+			interface
+		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_I
 

@@ -19,6 +19,11 @@ inherit
 			interface,
 			default_alignment
 		end
+	
+	EV_FONTABLE_I
+		redefine
+			interface
+		end
 
 	EV_FRAME_CONSTANTS
 

@@ -348,13 +348,10 @@ feature -- Basic Operations
 		local
 			l_absolute_xml_info_path: STRING
 			serializer: EIFFEL_XML_SERIALIZER
-			bin_serializer: EIFFEL_BINARY_SERIALIZER
 		do
 			l_absolute_xml_info_path := cache_reader.Absolute_info_path
 			create serializer
 			serializer.serialize (a_info, l_absolute_xml_info_path)
-			create bin_serializer
-			bin_serializer.serialize (a_info, l_absolute_xml_info_path)
 		end
 
 feature {NONE} -- Implementation
@@ -434,6 +431,7 @@ feature {NONE} -- Implementation
 			l_name: ASSEMBLY_NAME
 			l_key: STRING
 			l_culture: STRING
+			l_is_in_gac: BOOLEAN
 		do
 			l_assembly := load_from_gac_or_path (a_path)
 			if l_assembly /= Void then
@@ -449,7 +447,12 @@ feature {NONE} -- Implementation
 					l_culture := "neutral"				
 				end
 				
-				create Result.make (a_id, l_name.name, l_name.version.to_string, l_culture, l_key, a_path, l_assembly.location, l_assembly.global_assembly_cache)
+				l_is_in_gac := l_assembly.global_assembly_cache
+				if not l_is_in_gac and then ("mscorlib").is_equal (l_name.name) and then l_key.is_equal ("b77a5c561934e089") then
+					l_is_in_gac := True
+				end
+				
+				create Result.make (a_id, l_name.name, l_name.version.to_string, l_culture, l_key, a_path, l_assembly.location, l_is_in_gac)
 			end
 		ensure
 			non_void_result: Result /= Void

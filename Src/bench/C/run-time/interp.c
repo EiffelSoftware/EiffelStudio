@@ -1758,6 +1758,68 @@ end:
 		code = get_short();				/* Get the static type */
 		address((int32)offset, code);
 		break;
+
+	/*
+	 * Object address operator.
+	 */
+	case BC_OBJECT_ADDR:
+		{
+#ifdef DEBUG
+		dprintf(2)("BC_OBJECT_ADDR\n");
+#endif
+		struct item *pointed_object;
+	 	EIF_BOOLEAN is_attribute = (EIF_BOOLEAN) 0;
+
+		switch(*IC++) {
+			case BC_LOCAL:
+				code = get_short();		/* Get number (from 1 to locnum) */
+				pointed_object = loc(code);
+				break;
+			case BC_ARG:
+				code = get_short();		/* Get number (from 1 to argnum) */
+				pointed_object = arg(code);
+				break;
+			case BC_RESULT:
+				pointed_object = iresult;
+				break;
+			case BC_CURRENT:
+				if (*IC++ != BC_ATTRIBUTE)
+					panic("illegal access to Current");
+
+				is_attribute = (EIF_BOOLEAN) 1;
+
+				offset = get_long();		/* Get feature id */
+				code = get_short();			/* Get static type */
+				type = get_uint32();		/* Get attribute meta-type */
+
+				offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
+
+				last = iget();
+				last->type = SK_POINTER;
+				last->it_ref = (char *) (icurrent->it_ref+offset);
+				break;
+			default:
+				panic("illegal address access");
+			}
+			if (is_attribute == (EIF_BOOLEAN) 0){
+				last = iget();
+				last->type = SK_POINTER;
+
+				switch (pointed_object->type & SK_HEAD) {
+					case SK_BOOL:
+					case SK_CHAR: last->it_ref = (char *) (&(pointed_object->it_char)); break;
+					case SK_INT: last->it_ref = (char *) (&(pointed_object->it_long)); break;
+					case SK_FLOAT: last->it_ref = (char *) (&(pointed_object->it_float)); break;
+					case SK_DOUBLE: last->it_ref = (char *) (&(pointed_object->it_double)); break;
+					case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
+					case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
+					default:
+						panic("illegal type for address access");
+				}
+			}
+		break;
+		}
+
 	/*
 	 * Manifest array
 	 */
@@ -4864,6 +4926,13 @@ char *start;
 		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
 			IC - sizeof(short) - sizeof(long) - 1,
 			"BC_ADDR", offset, code);
+		break;
+
+	/*
+	 * Object address operator.
+	 */
+	case BC_OBJECT_ADDR:
+		fprintf(fd, "0x%lX BC_OBJECT_ADDR\n", IC - 1);
 		break;
 
 	/*

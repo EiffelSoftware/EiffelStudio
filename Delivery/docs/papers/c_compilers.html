@@ -33,9 +33,22 @@ compiler if it is an ANSI C compiler.</p>
 <p>&nbsp;</p>
 <h1><a name="microsoft">Microsoft Visual C++ Users:</a></h1>
 <p>ISE EiffelBench supports only version 5.0 or higher of the Microsoft Visual C++
-environment. You can still use older version of the Microsoft C++ environment (version 4.1 and 4.2), but this won't be supported by ISE.<br>
-<br>
+environment. You can still use older version of the Microsoft C++ environment (version 4.1 and 4.2), but this won't be supported by ISE.
 </p>
+
+<p>Make sure that the Microsoft tools are correctly setup to run from the MS-DOS
+prompt:
+</p>
+
+<ul>
+  <li>On Windows NT, the installation of VC++ should do it automatically.</li>
+  <li>On Windows 95/98, you need to copy the content of the file `vcvars32.bat'
+    from the `bin' directory of the VC installation into your autoexec.bat and
+    to reboot your machine so that changes are taken into consideration.</li>
+</ul>
+<p>By default the installation program will set in the registry keys the
+COMPILER key to `msc'.&nbsp;</p>
+<p>&nbsp;</p>
 
 <h1><a name="borland">Borland C++ Users:</a></h1>
 
@@ -48,8 +61,12 @@ In addition you need to define the environment variable EIF_BORLAND to denote th
 <blockquote>
   <p>
     If you installed Borland C++ at this location: D:\BC5<br>
-    Then  you should set EIF_BORLAND to D:\BC5\LIB&nbsp;</p>
+    Then  you should set EIF_BORLAND to <a href="file:///D:/BC5/LIB"> D:\BC5\LIB</a>&nbsp;</p>
 </blockquote>
+<p>
+
+By default the installation program will set in the registry keys the COMPILER
+key to `bcc'.
 <p>
 
 &nbsp;
@@ -59,14 +76,45 @@ In addition you need to define the environment variable EIF_BORLAND to denote th
 C++ Builder is, however, not a supported environment because of what appears to be a bug in the Borland C++ Builder delivery.
 We are sorry about this issue and awaiting an answer from Borland/Inprise as to how long it will take to fix the problem.
 <p>In the meantime, we recommend that you either upgrade to <a href="#microsoft"> Microsoft Visual C++ 6.0</a> or downgrade to
-<a href="#borland"> Borland C++ 4.52 or higher</a>.
-<p>&nbsp;
+<a href="#borland"> Borland C++ 4.52 or higher</a>.<p>See <a href="#changing">below</a>
+to learn how to change the COMPILER key to use Borland C++ Builder.<p>&nbsp;
 <h1>Cygwin Users:</h1>
 <p>In the delivery of ISE EiffelBench you will find all the needed files to
 support the GNU gcc port for Windows. However, ISE does not support it because
 of what appears to be a bug in the cygwin delivery with the bin utils. We are
 sorry about this issue and awaiting for a fix from the GNU community.
 <p>In the meantime, we recommend that you choose <a href="#microsoft"> Microsoft Visual C++ 6.0</a> or
-<a href="#borland">Borland C++ 4.52 or higher</a>.</td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+<a href="#borland">Borland C++ 4.52 or higher</a>.
+<p>See <a href="#changing">below</a> to learn how to change the COMPILER key to
+use GCC.
+<p>&nbsp;<h1><a name="changing">Changing your C compiler on Windows</a></h1>
+<p>Simply creates a `compiler.reg' file with the following content:&nbsp;
+<p>
+
+<center>
+<table>
+<tr><td bgcolor="#FFFFCC">
+<pre>REGEDIT4
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel45]
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel45\es4]
+&quot;COMPILER&quot;=&quot;msc&quot;
+
+[HKEY_CURRENT_USER\Software\ISE\Eiffel45\finish_freezing]
+&quot;COMPILER&quot;=&quot;msc&quot;</pre>
+</td></tr></table>
+</center>
+<p>Where you replaced &quot;msc&quot; by either:
+<ul>
+  <li>bcc for Borland C++</li>
+  <li>bcb for Borland C++ Builder</li>
+  <li>gnu for GCC</li>
+  <li>msc for Microsoft Visual C++</li>
+</ul>
+<p>Then double click on the file and everything will be ready to use your new C
+compiler.
+</td></tr></table>&nbsp;
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

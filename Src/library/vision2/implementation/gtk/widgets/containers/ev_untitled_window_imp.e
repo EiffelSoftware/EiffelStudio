@@ -47,9 +47,6 @@ feature -- Initialization
 			-- set the events to be handled by the window
 			C.c_gtk_widget_set_all_events (c_object)
 
-			-- Make it appear where the mouse is.
-			-- FIXME Why? This is a decision for the window manager not us!
-			-- gtk_window_set_position (GTK_WINDOW (c_object), WINDOW_POSITION_CENTER)
 			set_title ("")
 			-- set title also realizes the window.
 		end
@@ -462,6 +459,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/04 20:52:28  oconnor
+--| formatting
+--|
 --| Revision 1.18  2000/02/29 02:24:02  brendel
 --| Improved implementation of `block'.
 --| `is_modal' is now directly looked up from GTK.

@@ -35,7 +35,11 @@ feature {NONE} -- Initialization
 			fg: POINTER
 			maskgc: POINTER
 		do
-			Result := C.gdk_pixmap_new (C.gdk_root_parent, a_width, a_height, -1)
+			Result := C.gdk_pixmap_new (
+				C.gdk_root_parent,
+				a_width, a_height,
+				-1
+			)
 			maskgc := C.gdk_gc_new (Result)
 			fg := C.c_gdk_color_struct_allocate
 			C.gdk_gc_set_foreground (maskgc, $fg)
@@ -85,7 +89,10 @@ feature -- Measurement
 		local
 			wid, hgt: INTEGER
 		do
-			C.gdk_window_get_size (C.gtk_pixmap_struct_pixmap (c_object), $wid, $hgt)
+			C.gdk_window_get_size (
+				C.gtk_pixmap_struct_pixmap (c_object),
+				$wid, $hgt
+			)
 			Result := wid
 		end
 
@@ -94,7 +101,10 @@ feature -- Measurement
 		local
 			wid, hgt: INTEGER
 		do
-			C.gdk_window_get_size (C.gtk_pixmap_struct_pixmap (c_object), $wid, $hgt)
+			C.gdk_window_get_size (
+				C.gtk_pixmap_struct_pixmap (c_object),
+				$wid, $hgt
+			)
 			Result := hgt
 		end
 
@@ -246,7 +256,13 @@ feature -- Element change
 		do
 			tempgdkpix := C.gdk_pixmap_new (C.gdk_root_parent,
 								a_x, a_y, -1)
-			C.gdk_draw_pixmap (tempgdkpix, gc, drawable, 0, 0, 0, 0, width, height)
+			C.gdk_draw_pixmap (
+				tempgdkpix,
+				gc,
+				drawable,
+				0, 0, 0, 0,
+				width, height
+			)
 			unref_data
 			--gdkmask := create_mask (a_x, a_y)
 			--| FIXME IEK correctly implement masking function	
@@ -372,6 +388,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/04 20:56:14  oconnor
+--| formatting
+--|
 --| Revision 1.25  2000/03/31 19:50:08  oconnor
 --| connected to platform independant C image loader
 --|
@@ -469,7 +488,6 @@ end -- EV_PIXMAP_IMP
 --|
 --| Revision 1.14.2.2  1999/11/02 17:20:05  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

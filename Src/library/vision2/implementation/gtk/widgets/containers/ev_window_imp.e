@@ -169,7 +169,9 @@ feature -- Element change
 					icon_pixmap_implementation_exists: icon_pixmap_imp /= Void
 				end
 				--| FIXME  No more create_window
-				--c_gtk_window_set_icon (c_object, icon_pixmap_imp.c_object, icon_pixmap_imp.create_window, mask_imp.c_object)
+				--c_gtk_window_set_icon
+				--(c_object, icon_pixmap_imp.c_object,
+				--icon_pixmap_imp.create_window, mask_imp.c_object)
 			end
                 end
 
@@ -193,7 +195,11 @@ feature -- Element change
 			icon_window.extend (an_icon)
 
 			icon_window_imp ?= icon_window.implementation			
-			C.gtk_widget_shape_combine_mask (icon_window_imp.c_object, pixmap_imp.mask, 0, 0)
+			C.gtk_widget_shape_combine_mask (
+				icon_window_imp.c_object,
+				pixmap_imp.mask,
+				0, 0
+			)
 			--icon_window.show
 			if icon_mask /= Void then
 				-- A mask has been set.
@@ -268,6 +274,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/04 20:52:30  oconnor
+--| formatting
+--|
 --| Revision 1.43  2000/03/22 23:54:00  brendel
 --| Removed io.put_string.
 --|
@@ -357,7 +366,6 @@ end -- class EV_TITLED_WINDOW_IMP
 --|
 --| Revision 1.29.2.3  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -36,7 +36,7 @@ indexing
 		"$Revision$"
 
 class
-	ACTION_SEQUENCE [EVENT_DATA -> TUPLE create make end]
+	ACTION_SEQUENCE [EVENT_DATA -> TUPLE create default_create end]
 
 inherit
 	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
@@ -131,7 +131,7 @@ feature -- Access
 		obsolete "Not implemented. To be removed"
 		do
 			if dummy_event_data_internal = Void then
-				create dummy_event_data_internal.make
+				create dummy_event_data_internal
 			end
 			Result := dummy_event_data_internal
 		end

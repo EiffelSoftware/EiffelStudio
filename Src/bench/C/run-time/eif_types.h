@@ -1,15 +1,24 @@
 /*
 
- ######     #    ######           #####   #   #  #####   ######   ####		   #    #
- #          #    #                  #      # #   #    #  #       #			   #    #
- #####      #    #####              #       #    #    #  #####    ####		   ######
- #          #    #                  #       #    #####   #            #   ###  #    #
- #          #    #                  #       #    #       #       #    #   ###  #    #
- ######     #    #      #######     #       #    #       ######   ####    ###  #    #
+ ######     #    ######
+ #          #    #
+ #####      #    #####
+ #          #    #
+ #          #    #
+ ######     #    #      #######
+
+ #####   #   #  #####   ######   ####           #    #
+   #      # #   #    #  #       #               #    #
+   #       #    #    #  #####    ####           ######
+   #       #    #####   #            #   ###    #    #
+   #       #    #       #       #    #   ###    #    #
+   #       #    #       ######   ####    ###    #    #
 
 	Structures and types defining global variables.
+	All type definitions are concentrates here because we need
+	to put them in a context when running multithreaded apps.
 
- */
+*/
 
 #ifndef _eif_types_h_
 #define _eif_types_h_
@@ -21,6 +30,8 @@ extern "C" {
 #include "portable.h"
 #include "eif_constants.h"
 
+/* Organized on a per-file basis - the following
+ * definitions come from the mentioned files */
 
 	/*-----------*/
 	/*  debug.h  */

@@ -81,7 +81,12 @@ feature {NONE} -- Commands
 				include_skipped_sub_dirs_check.enable_select
 			else
 				include_skipped_sub_dirs_check.disable_select
-			end			
+			end
+			if prefs.order_alphabetically then
+				order_alphabetical_check.enable_select
+			else
+				order_alphabetical_check.disable_select
+			end
 		end
 
 	set_settings is

@@ -159,6 +159,7 @@ feature -- Window Implementation
 			-- Display tool.
 		do
 			set_default_position;
+			set_default_size;
 			eb_shell.display;
 			init_text_window;
 		end;
@@ -404,7 +405,10 @@ feature -- Update
 			is_readonly_text: text_window = read_only_text_window;
 			realized: realized
 		do
-			if not read_only_text_window.shown then
+			if 
+				read_only_text_window /= editable_text_window and then
+				not read_only_text_window.shown 
+			then
 				text_window.show;
 				editable_text_window.hide	
 			end
@@ -427,7 +431,9 @@ feature -- Update
 			is_editable_text: text_window = editable_text_window;
 			realized: realized
 		do
-			if not editable_text_window.shown then
+			if read_only_text_window /= editable_text_window and then
+				not editable_text_window.shown 
+			then
 				text_window.show;
 				read_only_text_window.hide	
 			end
@@ -536,7 +542,6 @@ feature -- Pick and Throw Implementation
 			set_title (tool_name);
 			set_font_to_default;
 			set_default_format;
-			set_default_size;
 			text_window.clear_window;
 			update_save_symbol;
 			set_file_name (Void);

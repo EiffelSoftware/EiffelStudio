@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class POLL_COMMAND
+deferred class
+
+	POLL_COMMAND
 
 feature -- Initalization
 
@@ -33,6 +35,7 @@ feature -- Basic operation
 		end
 
 end -- class POLL_COMMAND
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

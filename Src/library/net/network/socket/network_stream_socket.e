@@ -7,11 +7,23 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class NETWORK_STREAM_SOCKET
+class
+
+	NETWORK_STREAM_SOCKET
 
 inherit
 
+	STREAM_SOCKET
+		rename
+			address as old_socket_address,
+			set_peer_address as old_socket_set_peer_address
+		end
+
 	NETWORK_SOCKET
+		select
+			address,
+			set_peer_address
+		end
 
 creation {NETWORK_STREAM_SOCKET}
 
@@ -26,40 +38,40 @@ feature -- Initialization
 	make is
 			-- Create a network stream socket
 		do
-			family := af_inet
-			type := sock_stream
+			family := af_inet;
+			type := sock_stream;
 			make_socket
-		end
+		end;
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
 		require
-			valid_peer_host: a_peer_host /= Void and then not a_peer_host.empty
+			valid_peer_host: a_peer_host /= Void and then not a_peer_host.empty;
 			valid_port: a_peer_port >= 0
 		local
-			h_address: HOST_ADDRESS
-			i, code: INTEGER
+			h_address: HOST_ADDRESS;
+			i, code: INTEGER;
 			is_hostname: BOOLEAN
 		do
-			make
+			make;
 			from
 				i := 1
 			until
 				i > a_peer_host.count or is_hostname
 			loop
-				code := a_peer_host.item_code (i)
-				is_hostname := (code /= 46 and then (code < 48 or else code > 57))
+				code := a_peer_host.item_code (i);
+				is_hostname := (code /= 46 and then (code < 48 or else code > 57));
 				i := i + 1
-			end
-			!!h_address.make
+			end;
+			!!h_address.make;
 			if is_hostname then
 				h_address.set_address_from_name (a_peer_host)
 			else
 				h_address.set_host_address (a_peer_host)
-			end
-			!!peer_address.make
-			peer_address.set_host_address (h_address)
+			end;
+			!!peer_address.make;
+			peer_address.set_host_address (h_address);
 			peer_address.set_port (a_peer_port)
-		end
+		end;
 
 	make_server_by_port (a_port: INTEGER) is
 		require
@@ -67,12 +79,12 @@ feature -- Initialization
 		local
 			h_address: HOST_ADDRESS
 		do
-			make
-			!!h_address.make
-			h_address.set_in_address_any
-			!!address.make
-			address.set_host_address (h_address)
-			address.set_port (a_port)
+			make;
+			!!h_address.make;
+			h_address.set_in_address_any;
+			!!address.make;
+			address.set_host_address (h_address);
+			address.set_port (a_port);
 			bind
 		end
 
@@ -92,28 +104,28 @@ feature -- Status setting
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1)
-		end
+		end;
 
 	set_nodelay is
 		require
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0)
-		end
+		end;
 
 	linger_time: INTEGER is
 		require
 			socket_exists: exists
 		do
 			Result := c_linger_time (descriptor)
-		end
+		end;
 
 	is_linger_on: BOOLEAN is
 		require
 			socket_exists: exists
 		do
 			Result := c_is_linger_on (descriptor)
-		end
+		end;
 
 	set_linger (flag: BOOLEAN; time: INTEGER) is
 		require
@@ -122,21 +134,21 @@ feature -- Status setting
 			valid_return: INTEGER
 		do
 			valid_return := c_set_sock_opt_linger (descriptor, flag, time)
-		end
+		end;
 
 	set_out_of_band_inline is
 		require
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 1)
-		end
+		end;
 
 	set_out_of_band_not_inline is
 		require
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 0)
-		end
+		end;
 
 	is_out_of_band_inline: BOOLEAN is
 		require
@@ -144,7 +156,7 @@ feature -- Status setting
 		local
 			is_inline: INTEGER
 		do
-			is_inline := c_get_sock_opt_int (descriptor, level_sol_socket, so_oob_inline)
+			is_inline := c_get_sock_opt_int (descriptor, level_sol_socket, so_oob_inline);
 			Result := is_inline /= 0
 		end
 
@@ -153,18 +165,19 @@ feature {NONE} -- Externals
 	c_set_sock_opt_linger (fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER is
 		external
 			"C"
-		end
+		end;
 
 	c_is_linger_on (fd: INTEGER): BOOLEAN is
 		external
 			"C"
-		end
+		end;
 
 	c_linger_time (fd: INTEGER): INTEGER is
 		external
 			"C"
 		end
 end -- class NETWORK_STREAM_SOCKET
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

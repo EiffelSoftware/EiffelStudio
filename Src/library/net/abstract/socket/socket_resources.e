@@ -7,12 +7,14 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SOCKET_RESOURCES
+class
+
+	SOCKET_RESOURCES
 
 feature -- Status report
 
 	error is
-			-- output an error message 
+			-- Output a related error message.
 		do
 			if address_not_readable then
 				io.error.put_string ("Address not readable %N")
@@ -57,462 +59,516 @@ feature -- Status report
 			elseif connect_in_progress then
 				io.error.put_string ("Connection in progress")
 			else
-				io.error.put_string( "Unknown error : ")
+				io.error.put_string( "Unknown error : ");
 				io.error.put_integer (c_errorno)
 			end
-		end
+		end;
 
 	error_number: INTEGER is
-			-- returned error number
+			-- Returned error number
 		do
 			Result := c_errorno
-		end
+		end;
 
 	socket_ok: BOOLEAN is
-			-- no error state
+			-- No error
 		do
-			Result :=  (error_number = 0)
-		end
+			Result :=	(error_number = 0)
+		end;
 
 	socket_family_not_supported: BOOLEAN is
-			-- requested family is not supported
+			-- Requested family is not supported.
 		do
 			Result := (error_number = family_no_support)
-		end
+		end;
 
 	address_not_readable: BOOLEAN is
-			-- unreadable address
+			-- Unreadable address
 		do
 			Result := (error_number = unreadable)
-		end
+		end;
 
 	protected_address: BOOLEAN is
-			-- no access to this address allowed
+			-- No access to this address is allowed.
 		do
 			Result := (error_number = no_access)
-		end
+		end;
 
 	already_bound: BOOLEAN is
-			-- socket has already been bound
+			-- Socket has already been bound.
 		do
 			Result := (error_number = bound_address)
-		end
+		end;
 
 	address_in_use: BOOLEAN is
-			-- address in use by another socket
+			-- Address is in use by another socket.
 		do
 			Result := (error_number = busy_address)
-		end
+		end;
 
 	invalid_address: BOOLEAN is
-			-- address not valid
+			-- Address is not valid.
 		do
 			Result := (error_number = error_address)
-		end
+		end;
 
 	invalid_socket_handle: BOOLEAN is
-			-- socket descriptor is not valid
+			-- Socket descriptor is not valid.
 		do
 			Result := (error_number = no_socket)
-		end
+		end;
 
 	bad_socket_handle: BOOLEAN is
-			-- socket descriptor is bad
+			-- Socket descriptor is bad.
 		do
 			Result := (error_number = bad_socket)
-		end
+		end;
 
 	no_permission: BOOLEAN is
-			-- no permission is given to user for this socket
+			-- No permission is given to user for this socket.
 		do
 			Result := (error_number = c_permission)
-		end
+		end;
 
 	no_buffers: BOOLEAN is
-			-- no more buffers available
+			-- No more buffers available
 		do
 			Result := (error_number = no_buffs)
-		end
+		end;
 
 	dtable_full: BOOLEAN is
-			-- descriptor table is full
+			-- Descriptor table is full
 		do
 			Result := (error_number = table_full)
-		end
+		end;
 
 	protocol_not_supported: BOOLEAN is
-			-- protocol not supported on this platform
+			-- Protocol is not supported on this platform.
 		do
 			Result := (error_number = proto_no_support)
-		end
+		end;
 
 	not_connected: BOOLEAN is
-			-- socket is not connect
+			-- Socket is not connect.
 		do
 			Result := (error_number = no_connect)
-		end
+		end;
 
 	socket_would_block: BOOLEAN is
-			-- call to read, write, etc would have blocked
+			-- Call to read, write, etc would have blocked.
 		do
 			Result := (error_number = would_block)
-		end
+		end;
 
 	connect_in_progress: BOOLEAN is
-			-- call to connect has returned on a non blocking socket
+			-- Call to connect returned on a non-blocking socket.
 		do
 			Result := (error_number = c_einprogress)
-		end
+		end;
 
 	socket_in_use: BOOLEAN is
-			-- socket is already in use
+			-- Socket is already in use.
 		do
 			Result := (error_number = in_use)
-		end
+		end;
 
 	expired_socket: BOOLEAN is
-			-- socket connection has expired
+			-- Socket connection has expired.
 		do
 			Result := (error_number = socket_expire)
-		end
+		end;
 
 	connection_refused: BOOLEAN is
-			-- connection is refused (possibly due to security)
+			-- Connection is refused (possibly due to security).
 		do
 			Result := (error_number = connect_refused)
-		end
+		end;
 
 	network: BOOLEAN is
-			-- socket failed due to network problems
+			-- Socket failed due to network problems.
 		do
 			Result := (error_number = no_network)
-		end
+		end;
 
 	zero_option: BOOLEAN is
-			-- no options provided
+			-- No options provided
 		do
 			Result := (error_number = no_option)
 		end
 
 feature -- Externals
-			-- flags for send, sendto recv and recvfrom socket calls
+			-- Flags for send, sendto recv and recvfrom socket calls
 
 	c_oobmsg: INTEGER is
-			-- out of bound message 
+			-- Out of bound message 
 		external
 			"C"
-		end
+		end;
 
 	c_peekmsg: INTEGER is
 			-- Peek message
 		external
 			"C"
-		end
+		end;
 
 	c_msgdontroute: INTEGER is
-			-- do not route message
+			-- Do not route message
 		external
 			"C"
 		end
 
 feature {NONE} -- Externals
-			-- for socket options
+
+				-- Socket option levels
 
 	level_sol_socket: INTEGER is
+			-- SOL_SOCKET level of options
 		external
 			"C"
-		end
+		end;
 
 	level_nsproto_raw: INTEGER is
+			-- NS_PROTO_RAW level of options
 		external
 			"C"
-		end
+		end;
 
 	level_nsproto_pe: INTEGER is
+			-- NS_PROTO_PE level of options
 		external
 			"C"
-		end
+		end;
 
 	level_nsproto_spp: INTEGER is
+			-- NS_PROTO_SPP level of options
 		external
 			"C"
-		end
+		end;
 
 	level_iproto_tcp: INTEGER is
+			-- IP_PROTO_TCP level of options
 		external
 			"C"
-		end
+		end;
 
 	level_iproto_ip: INTEGER is
+			-- IPPROTO_IP level of options	
 		external
 			"C"
-		end
+		end;
+
+				-- Socket option names
 
 	ipoptions: INTEGER is
+			-- IP_OPTIONS option name
 		external
 			"C"
-		end
+		end;
 
 	tcpmax_seg: INTEGER is
+			-- TCP_MAXSEG option name
 		external
 			"C"
-		end
+		end;
 
 	tcpno_delay: INTEGER is
+			-- TCP_NODELAY option name
 		external
 			"C"
-		end
+		end;
 
 	so_headerson_input: INTEGER is
+			-- SO_HEADERS_ON_INPUT option name
 		external
 			"C"
-		end
+		end;
 
 	so_headerson_output: INTEGER is
+			-- SO_HEADERS_ON_OUTPUT option name
 		external
 			"C"
-		end
+		end;
 
 	so_defaultheaders: INTEGER is
+			-- SO_DEFAULT_HEADERS option name
 		external
 			"C"
-		end
+		end;
 
 	so_lastheader: INTEGER is
+			-- SO_LAST_HEADER option name
 		external
 			"C"
-		end
+		end;
 
 	somtu: INTEGER is
+			-- SO_MTU option name
 		external
 			"C"
-		end
+		end;
 
 	soseqno: INTEGER is
+			-- SO_SEQNO option name
 		external
 			"C"
-		end
+		end;
 
 	so_allpackets: INTEGER is
+			-- SO_ALL_PACKETS option name
 		external
 			"C"
-		end
+		end;
 
 	so_nsiproute: INTEGER is
+			-- SO_NSIP_ROUTE option name
 		external
 			"C"
-		end
+		end;
 
 	sobroadcast: INTEGER is
+			-- SO_BROADCAST option name
 		external
 			"C"
-		end
+		end;
 
 	sodebug: INTEGER is
+			-- SO_DEBUG option name
 		external
 			"C"
-		end
+		end;
 
 	so_dont_route: INTEGER is
+			-- SO_DONTROUTE option name
 		external
 			"C"
-		end
+		end;
 
 	soerror: INTEGER is
+			-- SO_ERROR option name
 		external
 			"C"
-		end
+		end;
 
 	so_keep_alive: INTEGER is
+			-- SO_KEEPALIVE option name
 		external
 			"C"
-		end
+		end;
 
 	solinger: INTEGER is
+			-- SO_LINGER option name
 		external
 			"C"
-		end
+		end;
 
 	so_oob_inline: INTEGER is
+			-- SO_OOBINLINE option name
 		external
 			"C"
-		end
+		end;
 
 	so_rcv_buf: INTEGER is
+			-- SO_RCVBUF option name
 		external
 			"C"
-		end
+		end;
 
 	so_snd_buf: INTEGER is
+			-- SO_SNDBUF option name
 		external
 			"C"
-		end
+		end;
 
 	so_rcv_lowat: INTEGER is
+			-- SO_RCVLOWAT option name
 		external
 			"C"
-		end
+		end;
 
 	so_snd_lowat: INTEGER is
+			-- SO_SNDLOWAT option name
 		external
 			"C"
-		end
+		end;
 
 	so_rcv_timeo: INTEGER is
+			-- SO_RCVTIMEO option name
 		external
 			"C"
-		end
+		end;
 
 	so_snd_timeo: INTEGER is
+			-- SO_SNDTIMEO option name
 		external
 			"C"
-		end
+		end;
 
 	so_reuse_addr: INTEGER is
+			-- SO_REUSEADDR option name
 		external
 			"C"
-		end
+		end;
 
 	sotype: INTEGER is
+			-- SO_TYPE option name
 		external
 			"C"
-		end
+		end;
 
 	so_use_loopback: INTEGER is
+			-- SO_USELOOPBACK option name
 		external
 			"C"
 		end
 
 feature {NONE} -- Externals 
-			-- for error messages
+
+			-- Error messages
 
 	c_errorno: INTEGER is
-			-- c error number
+			-- C error number
 		external
 			"C"
-		end
+		end;
 
 	family_no_support: INTEGER is
-			-- family not supported on this machine
+			-- Family is not supported on this machine.
 		external
 			"C"
-		end
+		end;
 
 	proto_no_support: INTEGER is
-			-- Protocol not supported on this machine
+			-- Protocol is not supported on this machine.
 		external
 			"C"
-		end
+		end;
 
 	table_full: INTEGER is
-			-- Descriptor table full
+			-- Descriptor table is full.
 		external
 			"C"
-		end
+		end;
 
 	no_buffs: INTEGER is
-			-- No buffers available
+			-- No buffer is available.
 		external
 			"C"
-		end
+		end;
 
 	c_permission: INTEGER is
+			 -- No permission is given to user for this socket.
 		external
 			"C"
-		end
+		end;
 
 	bad_socket: INTEGER is
+			-- Socket descriptor is bad.
 		external
 			"C"
-		end
+		end;
 
 	no_socket: INTEGER is
+			-- Socket descriptor is not valid.
 		external
 			"C"
-		end
+		end;
 
 	error_address: INTEGER is
+			-- Address is not valid.
 		external
 			"C"
-		end
+		end;
 
 	busy_address: INTEGER is
+			-- Address is in use by another socket.
 		external
 			"C"
-		end
+		end;
 
 	bound_address: INTEGER is
+			-- Socket has already been bound.
 		external
 			"C"
-		end
+		end;
 
 	no_access: INTEGER is
+			-- No access to this address is allowed.
 		external
 			"C"
-		end
+		end;
 
 	unreadable: INTEGER is
+			-- Unreadable address
 		external
 			"C"
-		end
+		end;
 
 	no_connect: INTEGER is
+			-- Socket is not connect.
 		external
 			"C"
-		end
+		end;
 
 	would_block: INTEGER is
+			-- Call to read, write, etc would have blocked.
 		external
 			"C"
-		end
+		end;
 
 	in_use: INTEGER is
+			 -- Socket is already in use.
 		external
 			"C"
-		end
+		end;
 
 	socket_expire: INTEGER is
+			-- Socket connection has expired.
 		external
 			"C"
-		end
+		end;
 
 	connect_refused: INTEGER is
+			-- Connection is refused (possibly due to security).
 		external
 			"C"
-		end
+		end;
 
 	no_network: INTEGER is
+			-- Socket failed due to network problems.
 		external
 			"C"
-		end
+		end;
 
 	no_option: INTEGER is
+			-- No options provided
 		external
 			"C"
-		end
+		end;
 
 	c_einprogress: INTEGER is
+			-- Call to connect returned on a non-blocking socket.
 		external
 			"C"
 		end
 
-feature  {NONE} -- External
-			-- socket types
+feature	{NONE} -- External
+
+			-- Socket types
 
 	sock_raw: INTEGER is
-			-- raw socket
+			-- Raw socket
 		external
 			"C"
-		end
+		end;
 
 	sock_dgrm: INTEGER is
-			-- datagram socket
+			-- Datagram socket
 		external
 			"C"
-		end
+		end;
 
 	sock_stream: INTEGER is
-			-- stream socket
+			-- Stream socket
 		external
 			"C"
 		end
@@ -521,55 +577,56 @@ feature {NONE} -- External
 			-- socket families
 
 	af_ns: INTEGER is
-			-- NS socket
+			-- Xerox Network System socket family.
 		external
 			"C"
-		end
+		end;
 
 	af_inet: INTEGER is
-			-- network socket
+			-- Network (internet) socket family
 		external
 			"C"
-		end
+		end;
 
 	af_unix: INTEGER is
-			-- unix socket
+			-- Unix socket family
 		external
 			"C"
 		end
 
 feature {NONE} -- Externals
-			-- constants for fcnlt calls
+
+			-- Constants for fcnlt calls
 
 	c_fgetown: INTEGER is
 			-- C constant FGETOWN
 		external
 			"C"
-		end
+		end;
 
 	c_fsetown: INTEGER is
 			-- C constant FSETOWN
 		external
 			"C"
-		end
+		end;
 
 	c_fsetfl: INTEGER is
 			-- C constant FSETFL
 		external
 			"C"
-		end
+		end;
 
 	c_fgetfl: INTEGER is
 			-- C constant FGETFL
 		external
 			"C"
-		end
+		end;
 
 	c_fndelay: INTEGER is
 			-- C constant FNDELAY
 		external
 			"C"
-		end
+		end;
 
 	c_fasync: INTEGER is
 			-- C constant FASYNC
@@ -578,6 +635,7 @@ feature {NONE} -- Externals
 		end
 
 end -- class SOCKET_RESOURCES
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

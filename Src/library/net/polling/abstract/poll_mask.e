@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POLL_MASK
+class
+
+	POLL_MASK
 
 inherit
 
@@ -37,7 +39,7 @@ creation
 feature -- Initialization
 
 	make is
-			-- Create a mask
+			-- Create mask.
 		do
 			make_mask (mask_size)
 			clear
@@ -46,7 +48,7 @@ feature -- Initialization
 feature -- Measurement
 
 	count: INTEGER is
-			-- size of mask in bytes
+			-- Size of mask in bytes
 		do
 			Result := mask.count
 		end
@@ -54,6 +56,7 @@ feature -- Measurement
 feature -- Comparison
 
 	is_equal (other: like Current ): BOOLEAN is
+			-- Is current mask equal to `other' ?
 		do
 			Result := mask.is_equal (other.mask)
 		end
@@ -61,15 +64,15 @@ feature -- Comparison
 feature -- Status report
 
 	is_medium_ready (s: IO_MEDIUM): BOOLEAN is
-			-- is the bit identified by the medium handle set
+			-- Is the bit identified by the medium `s' handle set ?
 		require
 			valid_medium: s /= Void and then not s.is_closed
 		do
 			Result := c_is_bit_set ($mask, s.handle)
-		end
+		end;
 
 	is_bit_set (b: INTEGER): BOOLEAN is
-			-- is the bit identified by b set
+			-- Is the bit identified by `b' set ?
 		do
 			Result := c_is_bit_set ($mask, b)
 		end
@@ -77,41 +80,41 @@ feature -- Status report
 feature -- Status setting
 
 	clear is
-			-- Blank out all bits in mask
+			-- Blank out all bits in mask.
 		do
 			c_zero_mask ($mask)
-		end
+		end;
 
 	clear_bit (b: INTEGER) is
-			-- clear bit at position b in mask
+			-- Clear bit at position `b' in mask.
 		do
 			c_mask_clear ($mask, b)
 		ensure
 			has_cleared: not is_bit_set (b)
-		end
+		end;
 
 	clear_medium (s: IO_MEDIUM) is
-			-- clear bit at position, decided by medium handle, in mask
+			-- Clear bit at medium `s' handle position, in mask.
 		require
 			valid_medium: s /= Void and then not s.is_closed
 		do
 			c_mask_clear ($mask, s.handle)
 		ensure
 			has_cleared: not is_bit_set (s.handle)
-		end
+		end;
 
 	set_medium (s: IO_MEDIUM) is
-			-- set bit at position, decided by medium handle, in mask
+			-- Set bit at medium `s' handle position, in mask.
 		require
 			valid_medium: s /= Void and then not s.is_closed
 		do
 			c_set_bit ($mask, s.handle)
 		ensure
 			has_set: is_bit_set (s.handle)
-		end
+		end;
 
 	set_bit (b: INTEGER) is
-			-- set bit at position b in mask
+			-- Set bit at position `b' in mask.
 		do
 			c_set_bit ($mask, b)
 		ensure
@@ -124,8 +127,8 @@ feature -- Duplication
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			old_copy (other)
-			make_mask (other.count)
+			old_copy (other);
+			make_mask (other.count);
 			mask.copy (other.mask)
 		ensure then
 			size_valid: count = other.count or else count = mask_size
@@ -134,36 +137,37 @@ feature -- Duplication
 feature {NONE} -- External
 
 	mask_size: INTEGER is
-			-- get the size of the poll mask in number of characters
+			-- Get size of poll mask in number of characters.
 		external
 			"C"
-		end
+		end;
 
 	c_mask_clear (a_mask: POINTER; pos: INTEGER) is
-			--clear the bit in the mask located at pos
+			-- Clear bit number `pos' in mask pointed by `a_mask'.
 		external
 			"C"
-		end
+		end;
 
 	c_set_bit (a_mask: POINTER; pos: INTEGER) is
-			-- set the bit in the mask located at pos
+			-- Set bit number `pos' in mask pointed by `a_mask'.
 		external
 			"C"
-		end
+		end;
 
 	c_is_bit_set (a_mask: POINTER; pos: INTEGER): BOOLEAN is
-			-- is  the bit  in the mask located at pos set
+			-- Is bit number `pos' set in mask pointed by `a_mask' ?
 		external
 			"C"
-		end
+		end;
 
 	c_zero_mask (a_mask: POINTER) is
-			-- zero total mask area
+			-- Clear all bits in mask `a_mask'.
 		external
 			"C"
 		end
 
 end -- class POLL_MASK
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

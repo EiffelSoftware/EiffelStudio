@@ -7,76 +7,79 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class NETWORK_SOCKET
+deferred class
+
+	NETWORK_SOCKET
 
 inherit
 
 	SOCKET
+		undefine
+			send, put_character, putchar, put_string, putstring,
+			put_integer, putint, put_boolean, putbool,
+			put_real, putreal, put_double, putdouble
 		redefine
 			address, set_peer_address
 	end
 
-creation {NETWORK_SOCKET}
-
-	create_from_descriptor
-
 feature -- Status Report
 
-	address: NETWORK_SOCKET_ADDRESS
-			-- local address of the socket
+	address: NETWORK_SOCKET_ADDRESS;
+			-- Local address of socket
 
 	port: INTEGER is
-			--  port socket is bound to.
+			-- Port socket is bound to.
 		require
 			valid_socket: exists
 		local
-			ext: ANY
+			ext: ANY;
 			temp_addr: like address
 		do
-			!!temp_addr.make
-			ext := temp_addr.socket_address
-			c_sock_name (descriptor, $ext, temp_addr.count)
+			!!temp_addr.make;
+			ext := temp_addr.socket_address;
+			c_sock_name (descriptor, $ext, temp_addr.count);
 			Result := temp_addr.port
 		end
 
 feature -- Status_setting
 
 	set_peer_address (addr: like address) is
-			-- set the peer address to addr
+			-- Set peer address to `addr'.
 		require else
 			same_type: addr.family = family
 		do
 			peer_address := addr
-		end
+		end;
 
 	set_reuse_address is
-			-- set the reuse option
+			-- Set the reuse_address option on.
 		require
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1)
-		end
+		end;
 
 	do_not_reuse_address is
-			-- remove reuse option
+			-- Set reuse_address option off.
 		require
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
-		end
+		end;
 
 	reuse_address: BOOLEAN is
-			-- is reuse option set
+			-- Is reuse_address option set ?
 		require
 			socket_exists: exists
 		local
 			reuse: INTEGER
 		do
-			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr)
+			reuse := c_get_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr);
 			Result := reuse /= 0
 		end
 
 end -- class NETWORK_SOCKET
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

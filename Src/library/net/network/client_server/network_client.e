@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class NETWORK_CLIENT
+class
+
+	NETWORK_CLIENT
 
 inherit
 
@@ -18,22 +20,22 @@ inherit
 
 feature -- Access
 
-	in_out: NETWORK_STREAM_SOCKET
+	in_out: NETWORK_STREAM_SOCKET;
 			-- Receive and send sockets.
 
 	make (a_peer_port: INTEGER; a_peer_name: STRING) is
 		require
-			a_valid_port: a_peer_port > 0
+			a_valid_port: a_peer_port > 0;
 			a_valid_name: a_peer_name /= Void and then not a_peer_name.empty
 		do
-			!!in_out.make_client_by_port (a_peer_port, a_peer_name)
+			!!in_out.make_client_by_port (a_peer_port, a_peer_name);
 			in_out.connect
-		end
+		end;
 
 	cleanup is
 		do
 			in_out.close
-		end
+		end;
 
 	send (msg : STORABLE) is
 		do
@@ -41,6 +43,7 @@ feature -- Access
 		end
 
 end -- class NETWORK_CLIENT
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

@@ -16,7 +16,7 @@ mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lm -lpthread'
 mtsharedlibs='-lm -lpthread'
 
-optimize='-O'
+optimize='-O2 -m486'
 wkoptimize='-O'
 
 start_test='if [ ! -f finished ] ; then'

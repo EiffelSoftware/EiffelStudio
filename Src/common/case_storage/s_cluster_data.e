@@ -52,7 +52,7 @@ feature -- Setting values
 	set_chart (ch: like chart) is
             -- Set chart to `ch'.
         do
-            set_chart (ch);
+            chart := ch;
         end;
  
 end

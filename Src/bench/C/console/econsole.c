@@ -113,7 +113,7 @@ EIF_INTEGER eif_console_readint()
 		;
 	}
 
-	if (0 >= sscanf (eif_console_buffer, "%i", &lastint))
+	if (0 >= sscanf (eif_console_buffer, "%ld", &lastint))
 		eio();
 
 	return lastint;
@@ -336,7 +336,7 @@ void eif_console_putint (long l)
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	t = sprintf (transfer_buffer, "%i", l);
+	t = sprintf (transfer_buffer, "%ld", l);
 	if (windowed_application)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else

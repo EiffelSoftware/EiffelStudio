@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			external_name: "MakeFromInfo"
 		require
 			non_void_name: an_old_name /= Void
-			not_empty_name: an_old_name.length > 0
 		do
 			set_old_name (an_old_name)
 			create features_modifications.make
@@ -66,7 +65,6 @@ feature -- Status Setting
 			external_name: "SetOldName"
 		require
 			non_void_name: an_old_name /= Void
-			not_empty_name: an_old_name.length > 0
 		do
 			old_name := an_old_name
 		ensure

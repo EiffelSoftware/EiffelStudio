@@ -10,26 +10,19 @@ class FONT_PREF_RES
 inherit
 	PREFERENCE_RESOURCE
 		rename
-			make as form_make
+			execute as pref_execute
 		redefine
 			associated_resource, validate
+		end;
+	PREFERENCE_RESOURCE
+		redefine
+			associated_resource, validate, execute
+		select
+			execute
 		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_resource: FONT_RESOURCE; new_parent: COMPOSITE) is
-			-- Initialize Current with `a_resource' as `associated_resource',
-			-- and `new_parent' as `a_parent'.
-		require
-			a_resource_not_void: a_resource /= Void;
-			new_parent_not_void: new_parent /= Void
-		do
-			associated_resource := a_resource;
-			a_parent := new_parent
-		end
 
 feature -- Validation
 
@@ -50,17 +43,40 @@ feature -- Validation
 			end
 		end
 
-feature {PREFERENCE_CATEGORY} -- User Interface
+feature -- Element change
 
-	display is
-			-- Display Current
+	reset is
+			-- Reset the text field.
 		do
-			init;
-			text.enable_resize_width;
-			text.set_single_line_mode;
-			if associated_resource.value /= Void then
+			if associated_resource.value = Void then
+				text.set_text ("")
+			else
 				text.set_text (associated_resource.value)
 			end
+		end;
+
+feature {PREFERENCE_CATEGORY} -- User Interface
+
+	init (a_parent: COMPOSITE) is
+			-- Display Current
+		do
+			form_make ("", a_parent);
+
+			!! name_label.make (associated_resource.visual_name, Current);
+			!! text.make ("", Current);
+			text.add_activate_action (Current, Void);
+			text.add_button_press_action (3, Current, font_action);
+
+			attach_top (name_label, 1);
+			attach_bottom (name_label, 1);
+			attach_left (name_label, 1);
+
+			attach_top (text, 1);
+			attach_bottom (text, 1);
+			attach_left_widget (name_label, text, 5);
+			attach_right (text, 1)
+
+			text.add_activate_action (Current, Void);
 		end
 
 feature {PREFERENCE_CATEGORY} -- Access
@@ -71,10 +87,12 @@ feature {PREFERENCE_CATEGORY} -- Access
 			ar: like associated_resource
 		do
 			ar := associated_resource
-			if text = Void or else ar.value.is_equal (text.text) then
+			if text = Void or else equal (ar.value, text.text) then
 					--| text /= Void means: text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value /= Void then
+				if ar.value = Void or else ar.value.empty then
+					file.putstring ("%"%"")
+				else
 					if ar.value @ 1 /= '%"' then
 						file.putchar ('%"')
 					end
@@ -84,7 +102,9 @@ feature {PREFERENCE_CATEGORY} -- Access
 					end
 				end
 			else
-				if not text.text.empty then
+				if text.text.empty then
+					file.putstring ("%"%"")
+				else
 					if text.text @ 1 /= '%"' then
 						file.putchar ('%"')
 					end
@@ -116,37 +136,81 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make (associated_resource.name, text.text);
+			!! new_res.make_with_values (associated_resource.name, text.text);
 			!! Result.make (associated_resource, new_res)
 		end
 
-feature {NONE} -- Initialization
+feature -- Execution
 
-	init is
-			-- Create and attach widgets to Current
+	execute (arg: ANY) is
+			-- Execute command.
+		local
+			font_name: STRING
 		do
-			form_make ("", a_parent);
+			if arg = font_action then
+				popup_font_box
+			elseif arg = fb_ok_action then
+				font_name := font_box.font.name;
+				if font_name /= Void then	
+					text.set_text (font_name)
+				end;
+				font_box.popdown
+			elseif arg = fb_cancel_action then
+				font_box.popdown
+			else
+				pref_execute (arg)
+			end
+		end;
 
-			!! name_label.make (associated_resource.name, Current);
-			!! text.make ("", Current);
-			text.add_activate_action (Current, Void);
-
-			attach_top (name_label, 1);
-			attach_bottom (name_label, 1);
-			attach_left (name_label, 1);
-
-			attach_top (text, 1);
-			attach_bottom (text, 1);
-			attach_left_widget (name_label, text, 5);
-			attach_right (text, 1)
-		end
-
-feature {NONE} -- Properties
+feature {NONE} -- Implementation
 
 	associated_resource: FONT_RESOURCE;
 			-- Resource Current represnts
 
-	text: TEXT
+	text: TEXT_FIELD
 			-- Edit box to represent Current's value
 
-end -- class STRING_PREF_RES
+	font_action, fb_ok_action, fb_cancel_action: ANY is
+		once
+			!! Result
+		end
+
+	font_box: FONT_BOX_D is
+			-- Font box dialog
+		local
+			mp: MOUSE_PTR
+		once
+			!! mp.set_watch_cursor;
+			!! Result.make ("Font Box", text.top);
+			Result.hide_apply_button;
+			Result.add_ok_action (Current, fb_ok_action);
+			Result.add_cancel_action (Current, fb_cancel_action);
+			Result.set_default_position (False);
+			Result.set_exclusive_grab;
+			mp.restore
+		end;
+
+	popup_font_box is
+			-- Popup the font box.
+		local
+			new_x, new_y: INTEGER;
+			p: COMPOSITE
+		do	
+			p := font_box.parent;
+			new_x := p.x + (p.width - font_box.width) // 2;
+			new_y := p.y + (p.height - font_box.height) // 2;
+			if new_x + font_box.width > font_box.screen.width then
+				new_x := font_box.screen.width - width
+			elseif new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + font_box.height > font_box.screen.height then
+				new_y := font_box.screen.height - font_box.height
+			elseif new_y < 0 then
+				new_y := 0
+			end;
+			font_box.set_x_y (new_x, new_y);
+			font_box.popup
+		end
+
+end -- class FONT_PREF_RES

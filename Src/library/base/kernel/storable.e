@@ -29,7 +29,7 @@ feature -- Access
 			file_is_open_read: file.is_open_read
 			file_is_binary: not file.is_plain_text
 		do
-			Result := c_retrieved (file.handle)
+			Result := c_retrieved (file.handle, file.storage_type)
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -53,7 +53,7 @@ feature -- Access
 			!!file.make (file_name)
 			if file.exists and then file.is_readable then
 				file.open_read
-				Result := c_retrieved (file.descriptor)
+				Result := c_retrieved (file.descriptor, file.storage_type)
 				file.close
 			end
 		end
@@ -70,7 +70,7 @@ feature -- Element change
 			file_is_open_write: file.is_open_write
 			file_is_binary: not file.is_plain_text
 		do
-			c_basic_store (file.handle, $Current)
+			c_basic_store (file.handle, $Current, file.storage_type)
 		end;
 
 	general_store (file: IO_MEDIUM) is
@@ -87,7 +87,7 @@ feature -- Element change
 			file_is_open_write: file.is_open_write
 			file_is_binary: not file.is_plain_text
 		do
-			c_general_store (file.handle, $Current)
+			c_general_store (file.handle, $Current, file.storage_type)
 		end
 
 	independent_store (file: IO_MEDIUM) is
@@ -101,7 +101,7 @@ feature -- Element change
 			file_is_open_write: file.is_open_write
 			file_is_binary: not file.is_plain_text
 		do
-			c_independent_store (file.handle, $Current)
+			c_independent_store (file.handle, $Current, file.storage_type)
 		end
 
 	store_by_name (file_name: STRING) is
@@ -121,7 +121,7 @@ feature -- Element change
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
 				file.open_write
-				c_general_store (file.descriptor, $Current)
+				c_general_store (file.descriptor, $Current, file.storage_type)
 				file.close
 			else
 				a := ("write permission failure").to_c
@@ -131,7 +131,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	c_retrieved (file_handle: INTEGER): STORABLE is
+	c_retrieved (file_handle: INTEGER; file_storage_type: CHARACTER): STORABLE is
 			-- Object structured retrieved from file of pointer
 			-- `file_ptr'
 		external
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			"eretrieve"
 		end;
 
-	c_basic_store (file_handle: INTEGER; object: POINTER) is
+	c_basic_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			"estore"
 		end;
 
-	c_general_store (file_handle: INTEGER; object: POINTER) is
+	c_general_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			"eestore"
 		end;
 
-	c_independent_store (file_handle: INTEGER; object: POINTER) is
+	c_independent_store (file_handle: INTEGER; object: POINTER; file_storag_type: CHARACTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external

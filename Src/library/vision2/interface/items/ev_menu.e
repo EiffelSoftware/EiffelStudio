@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- parent
 		do
 			!EV_MENU_IMP!implementation.make_with_text (par, label)
-			par.add_menu (Current)
+			par.implementation.add_menu (Current)
 		end	
 	
 feature -- Implementation

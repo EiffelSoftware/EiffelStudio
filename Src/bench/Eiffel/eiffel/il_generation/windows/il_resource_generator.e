@@ -182,6 +182,7 @@ feature {NONE} -- Implementation
 			l_token: INTEGER
 			l_resources: CLI_RESOURCES
 			l_data: MANAGED_POINTER
+			l_platform: PLATFORM
 			l_raw_file: RAW_FILE
 		do
 				-- Get resources of `a_module' if already initialized,
@@ -196,8 +197,14 @@ feature {NONE} -- Implementation
 				-- Read content of `a_file' and add it to the list of known resources
 				-- of `a_module'.
 			create l_raw_file.make_open_read (a_file)
-			create l_data.make (l_raw_file.count)
-			l_raw_file.read_data (l_data.item, l_raw_file.count)
+			
+				-- Before putting the resource data in `l_data', we need to insert
+				-- the number of bytes in the first 4 bytes of `l_data' so that
+				-- we know exactly how long is the current resource entry.
+			create l_platform
+			create l_data.make (l_raw_file.count + l_platform.integer_32_bytes)
+			l_data.put_integer_32_le (l_raw_file.count, 0)
+			l_raw_file.read_data (l_data.item + l_platform.integer_32_bytes, l_raw_file.count)
 			l_raw_file.close
 			l_resources.extend (l_data)
 

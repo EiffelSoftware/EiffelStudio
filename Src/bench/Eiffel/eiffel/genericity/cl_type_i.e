@@ -150,7 +150,7 @@ feature -- Access
 
 			ref ?= Result
 			if ref /= Void then
-				ref.set_class_type_i (Current)
+				ref.set_type_i (Current)
 			end
 		end
 

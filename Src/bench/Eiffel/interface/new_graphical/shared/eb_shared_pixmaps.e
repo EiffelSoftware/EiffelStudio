@@ -8,6 +8,8 @@ class
 
 inherit
 	EV_STOCK_PIXMAPS
+	
+	EB_SHARED_PIXMAP_FACTORY
 
 	EIFFEL_ENV
 		export
@@ -1222,45 +1224,6 @@ feature -- Icons
 
 feature -- Reading
 
-	pixmap_file_content (fn: STRING): EV_PIXMAP is
-		local
-			full_path: FILE_NAME
-			retried: BOOLEAN
-			warning_dialog: EV_WARNING_DIALOG
-		do
-				-- Create the pixmap
-			create Result
-
-			if not retried then
-					-- Initialize the pathname & load the file
-				create full_path.make_from_string (pixmap_path)
-				full_path.set_file_name (fn)
-				full_path.add_extension (Pixmap_suffix)
-				Result.set_with_named_file (full_path)
-			else
-				create warning_dialog.make_with_text (
-					"Cannot read pixmap file:%N" + full_path + ".%N%
-					%Please make sure the installation is not corrupted.")
-				warning_dialog.show
-				Result.set_size (16, 16) -- Default pixmap size
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-feature {NONE} -- Update
-
-	Pixmap_suffix: STRING is "png"
-			-- Suffix for pixmaps.
-
-	pixmap_path: DIRECTORY_NAME is
-			-- Path containing all of the Studio pixmaps
-		once
-			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
-			Result.extend (Pixmap_suffix)
-		end
-
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
 			-- Build an array of pixmaps. The first pixmap is the
 			-- colored pixmap, others are for future expansion such as large icons 
@@ -1272,6 +1235,13 @@ feature {NONE} -- Update
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 		ensure
 			result_valid: Result /= Void and then Result.count = 1
+		end
+
+	pixmap_path: DIRECTORY_NAME is
+			-- (export status {NONE})
+		once
+			create Result.make_from_string ((create {EIFFEL_ENV}).bitmaps_path)
+			Result.extend (pixmap_suffix)
 		end
 
 end

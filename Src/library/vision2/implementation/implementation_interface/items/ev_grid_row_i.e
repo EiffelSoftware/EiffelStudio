@@ -271,6 +271,7 @@ feature -- Status setting
 			internal_height := a_height
 			if not parent_i.is_row_height_fixed then
 				parent_i.set_vertical_computation_required
+				parent_i.redraw_client_area
 			end
 		ensure
 			height_set: height = a_height

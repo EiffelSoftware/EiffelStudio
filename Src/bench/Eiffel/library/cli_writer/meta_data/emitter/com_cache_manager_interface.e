@@ -229,90 +229,90 @@ feature {NONE} -- Implementation
 	c_initialize (ap, ver: POINTER): INTEGER is
 			-- initialize COM object 
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"Initialize"
+			"initialize"
 		end
 		
 	c_initialize_with_path (ap:POINTER; ap2, ver: POINTER): INTEGER is
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR, BSTR):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"InitializeWithPath"
+			"initialize_with_path"
 		end
 
 	c_is_initalized (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- was the last operation successful?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"IsInitialized"
+			"is_initialized"
 		end
 
 	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- was the last operation successful?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"IsSuccessful"
+			"is_successful"
 		end
 		
 	c_last_error_message (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- last error message of a failed operation
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"LastErrorMessage"
+			"last_error_message"
 		end
 
 	c_consume_assembly (ap, a_name, a_version, a_culture, a_key: POINTER): INTEGER is
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR, BSTR, BSTR, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"ConsumeAssembly"
+			"consume_assembly"
 		end
 
 	c_consume_assembly_from_path (ap, a_path: POINTER): INTEGER is
 			-- Consume referenced assembly `a_path' an all of its dependacies into EAC
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"ConsumeAssemblyFromPath"
+			"consume_assembly_from_path"
 		end
 
 	c_relative_folder_name (ap, a_name, a_version, a_culture, a_key: POINTER; aret_val:POINTER): INTEGER is
 			-- Retireve the name of the folder for the given assembly using at least `a_name'
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR, BSTR, BSTR, BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"RelativeFolderName"
+			"relative_folder_name"
 		end
 
 	c_relative_folder_name_from_path (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
 			-- Retireve the name of the folder for the given assembly at `a_path'
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"RelativeFolderNameFromPath"
+			"relative_folder_name_from_path"
 		end
 	
 	c_assembly_info_from_assembly (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
 			-- -- retrieve the assembly information from a assembly
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_IComAssemblyInformation**):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"AssemblyInfoFromAssembly"
+			"assembly_info_from_assembly"
 		end
 		
 	c_unload (ap: POINTER): INTEGER is
 			-- -- retrieve the assembly information from a assembly
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_IComCacheManager signature ():EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
 		alias
-			"Unload"
+			"unload"
 		end
 
 		

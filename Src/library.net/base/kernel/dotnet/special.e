@@ -51,7 +51,7 @@ feature -- Access
 			Result := native_array.item (i)
 		end
 
-	index_of (v: T; start_position: INTEGER): INTEGER is
+	frozen index_of (v: T; start_position: INTEGER): INTEGER is
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
 		require
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
 			Result := native_array.count
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := True
 		end
 
-	all_default (upper: INTEGER): BOOLEAN is
+	frozen all_default (upper: INTEGER): BOOLEAN is
 			-- Are all items between index `0' and `upper'
 			-- set to default values?
 		require
@@ -118,7 +118,7 @@ feature -- Status report
 			valid_on_empty_area: upper = -1 implies Result
 		end
 
-	same_items (other: like Current; upper: INTEGER): BOOLEAN is
+	frozen same_items (other: like Current; upper: INTEGER): BOOLEAN is
 			-- Do all items between index `0' and `upper' have
 			-- same value?
 		require
@@ -140,7 +140,13 @@ feature -- Status report
 		ensure
 			valid_on_empty_area: upper = -1 implies Result
 		end
-	
+
+	frozen valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within the bounds of Current?
+		do
+			Result := (0 <= i) and then (i < count)
+		end
+
 feature -- Element change
 
 	frozen put (v: T; i: INTEGER) is
@@ -155,7 +161,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resized_area (n: INTEGER): like Current is
+	frozen resized_area (n: INTEGER): like Current is
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
@@ -180,13 +186,38 @@ feature -- Resizing
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
 		end
+	
+	frozen aliased_resized_area (n: INTEGER): like Current is
+			-- Create a copy of Current with a count of `n'.
+		require
+			valid_new_count: n > count
+		do
+			Result := resized_area (n)
+		ensure
+			Result_not_void: Result /= Void
+			new_count: Result.count = n
+		end
 		
 feature -- Removal
 
-	clear_all is
+	frozen clear_all is
 			-- Reset all items to default values.
+		local
+			v: T
+			i, nb: INTEGER
 		do
-			create native_array.make (native_array.count)
+			from
+				nb := count
+			invariant
+				i >= 0 and i <= nb
+			variant
+				nb - i
+			until
+				i = nb
+			loop
+				put (v, i)
+				i := i + 1
+			end
 		end
 
 indexing

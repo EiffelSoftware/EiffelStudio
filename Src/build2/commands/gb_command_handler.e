@@ -9,9 +9,10 @@ class
 	
 inherit
 	
-	ANY
-	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 
@@ -176,7 +177,6 @@ feature -- Basic operation
 		end
 
 feature {GB_MAIN_WINDOW} -- Implementation
-
 
 	all_standard_commands: ARRAYED_LIST [EB_STANDARD_CMD] is
 			-- All the standard commands accessible through `Current'.

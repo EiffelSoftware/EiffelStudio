@@ -88,17 +88,17 @@ feature -- Element change
 			-- Make `value' the new font.
 		require
 			exists: not destroyed
-			valid_font: is_valid (font)
+			valid_font: is_valid (value)
 		deferred
 		ensure
 --			font_set: font = value
 		end
 
-	set_color (value:EV_COLOR) is
+	set_color (value: EV_COLOR) is
 			-- Make `value' the new color.
 		require
 			exists: not destroyed
-			valid_color: is_valid (color)
+			valid_color: is_valid (value)
 		deferred
 		ensure
 			color_set: color.equal_color (value)

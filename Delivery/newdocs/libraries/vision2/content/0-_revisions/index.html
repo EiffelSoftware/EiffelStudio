@@ -102,6 +102,7 @@
 					<LI><B>EV_CELL</B> - If you removed the item, the minimum size was not updated to reflect this, thereby retaining the minimum size as constrained by the minimum size of the now removed item.</li>
 					<LI><B>EV_TREE_ITEM</B>/<B>EV_TREE</B> - A call to `disable_select' on an EV_TREE_ITEM will now actually remove the selection from the tree. Previously, the style of the item was changed, but a call to `selected_item' on the tree would still return the item.</LI>
 				<LI><B>EV_FILE_DIALOG</B> - Fixed precondition violation when you calling `set_file_name' which was  rejecting directory separators.</LI>
+				<LI><B>EV_DIALOG</B> - Fixed a bug when you had two dialogs displayed modally, with the second modal to the first. If you had a text field within the second dialog whose `return_actions' contained an agent which would destroy the second dialog, the `select_actions' of the `default_push_button' in the lower dialog would be subsequently fired.</LI>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

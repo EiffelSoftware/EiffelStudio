@@ -17,7 +17,7 @@ inherit
 			copy, setup, consistent, is_equal
 		redefine
 			process_after_class, process_address_text, process_error_text,
-			process_feature_name_text, process_class_name_text,
+			process_feature_name_text, process_feature_text, process_class_name_text,
 			put_address, put_feature_name, put_feature,
 			put_error, put_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax, process_quoted_text,
@@ -253,10 +253,19 @@ feature -- Output processing for text_struct
 	process_feature_name_text (t: FEATURE_NAME_TEXT) is
 			-- Process clickable text `t'.
 		local
+			st: FEATURE_NAME_STONE
+		do
+			!! st.make (t.image, t.e_class);
+			put_stone (st, t.image);	
+		end;
+
+	process_feature_text (t: FEATURE_TEXT) is
+			-- Process clickable text `t'.
+		local
 			st: FEATURE_STONE
 		do
 			!! st.make (t.e_feature, t.e_class);
-			put_stone (st, t.image);	
+			put_stone (st, t.image)
 		end;
 
 	process_indentation (t: INDENT_TEXT) is

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Routines applied to different widgets for a particalar toolkit. %
 		%In some instances, it was not worth while to abstract separate %
 		%classes to implement simple routines.";
@@ -11,17 +11,17 @@ class WIDGET_ROUTINES
 
 feature -- Setting
 
-	set_scrolled_text_background_color (a_widget: SCROLLED_T_I; a_color: COLOR) is
+	set_scrolled_text_background_color (a_widget: SCROLLED_T_IMP; a_color: COLOR) is
 			-- Set the scrolled text widget `a_widget' background color
-			-- to `a_color' 
+			-- to `a_color'
 		local
-			text_windows: TEXT_WINDOWS
+			text_windows: TEXT_IMP
 		do
 			text_windows ?= a_widget;
 			text_windows.set_background_color (a_color)
 		end;
 
-	copy_text_from_widget (a_widget: SCROLLED_T_I) is
+	copy_text_from_widget (a_widget: SCROLLED_T_IMP) is
 			-- Copy the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -31,8 +31,8 @@ feature -- Setting
 				wel_edit.clip_copy
 			end
 		end;
- 
-	cut_text_from_widget (a_widget: SCROLLED_T_I) is
+
+	cut_text_from_widget (a_widget: SCROLLED_T_IMP) is
 			-- Cut the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -42,8 +42,8 @@ feature -- Setting
 				wel_edit.clip_cut
 			end
 		end;
- 
-	paste_text_to_widget (a_widget: SCROLLED_T_I) is
+
+	paste_text_to_widget (a_widget: SCROLLED_T_IMP) is
 			-- Paste the text to `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -51,13 +51,13 @@ feature -- Setting
 			wel_edit ?= a_widget;
 			wel_edit.clip_paste
 		end;
- 
-	init_button (a_button: BUTTON_I) is
+
+	init_button (a_button: BUTTON_IMP) is
 			-- Initialize the button.
 		do
 		end;
- 
-	real_project_height (a_widget: WIDGET_I): INTEGER is
+
+	real_project_height (a_widget: WIDGET_IMP): INTEGER is
 		local
 			wel_window: WEL_WINDOW
 		do

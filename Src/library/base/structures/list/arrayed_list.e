@@ -68,7 +68,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			index := 0
-			count := 0
+			set_count (0)
 			array_make (1, n)
 		ensure
 			correct_position: before
@@ -82,7 +82,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			index := 0
-			count := n
+			set_count (n)
 			array_make (1, n)
 		ensure
 			correct_position: before
@@ -94,7 +94,7 @@ feature -- Initialization
 		do
 			Precursor (a)
 			lower := 1
-			count := a.count
+			set_count (a.count)
 			upper := count
 			index := 0
 		end 
@@ -133,7 +133,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER
-		-- Number of items.
+			-- Number of items.
 
 feature -- Status report
 
@@ -261,7 +261,7 @@ feature -- Element change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			count := count + 1
+			set_count (count + 1)
 			force_i_th (v, count)
 		end
 
@@ -318,7 +318,7 @@ feature -- Element change
 						index + other.count + 1) 
 				end
 				subcopy (other, 1, other.count, index + 1) 
-				count := count + other.count
+				set_count (count + other.count)
 				other.wipe_out
 			end
 		end
@@ -362,7 +362,7 @@ feature -- Removal
 			if index < count then
 				subcopy (Current, index + 1, count, index)
 			end
-			count := count - 1
+			set_count (count - 1)
 			area.put (default_value, count)
 		ensure then
 			index: index = old index
@@ -404,7 +404,7 @@ feature -- Removal
 					i := i + 1
 				end
 			end
-			count := count - offset
+			set_count (count - offset)
 			index := count + 1
 		ensure then
 			is_after: after
@@ -430,7 +430,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
-			count := 0
+			set_count (0)
 			index := 0
 			discard_items
 		end
@@ -484,13 +484,19 @@ feature {NONE} -- Implementation
 			if count + 1 > capacity then
 				auto_resize (lower, count + 1)
 			end
-			count := count + 1
+			set_count (count + 1)
 			subcopy (Current, pos , count - 1 , pos + 1)
 			enter (v, pos)
 		ensure
 			new_count: count = old count + 1
 			index_unchanged: index = old index
 			insertion_done: i_th (pos) = v
+		end
+		
+	set_count (new_count: INTEGER) is
+			-- Set `count' to `new_count'
+		do
+			count := new_count			
 		end
 
 invariant

@@ -13,26 +13,20 @@ deferred class
 
 feature -- Element change
 
-	add_menu (an_item: EV_MENU) is
-			-- Add a sub-menu in the container.
-		do
-			implementation.add_menu (an_item)
-		end
-
-	add_menu_item (an_item: EV_MENU_ITEM) is
+	add_item (an_item: EV_MENU_ITEM) is
 			-- Add an item in the container.
 		do
-			implementation.add_menu_item (an_item)
+			implementation.add_item (an_item)
 		end
 
 feature -- Implementation
 
 	implementation: EV_MENU_ITEM_CONTAINER_I
 			
-end 
+end -- class EV_MENU_ITEM_CONTAINER
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

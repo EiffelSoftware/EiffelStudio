@@ -396,6 +396,20 @@ feature {EV_ANY_I} -- Delegated features
 			promote_to_drawable
 			interface.implementation.draw_text_top_left (a_x, a_y, a_text)
 		end
+		
+	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' at (`x', 'y') using `font'.
+		do
+			promote_to_drawable
+			interface.implementation.draw_ellipsed_text (a_x, a_y, a_text, clipping_width)
+		end
+
+	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+		do
+			promote_to_drawable
+			interface.implementation.draw_ellipsed_text_top_left (a_x, a_y, a_text, clipping_width)
+		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').

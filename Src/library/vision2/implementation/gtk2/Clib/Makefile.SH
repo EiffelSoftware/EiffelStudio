@@ -38,8 +38,8 @@ MKDIR = $mkdir -p
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
-MT_OBJECTS = MTgtk_eiffel.o
-OBJECTS = gtk_eiffel.o 
+MT_OBJECTS = MTgtk2_eiffel.o
+OBJECTS = gtk2_eiffel.o 
 
 ALL_OBJECTS = $(OBJECTS) #$(MT_OBJECTS)
 
@@ -48,7 +48,7 @@ all: $(ALL_OBJECTS)
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
 #	make clobber
 
-MTgtk_eiffel.o: gtk_eiffel.c
+MTgtk_eiffel.o: gtk2_eiffel.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 local_realclean::

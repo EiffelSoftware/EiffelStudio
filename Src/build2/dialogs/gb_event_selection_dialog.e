@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 					if (all_check_buttons @ counter).is_selected then
 						create action_info.make_with_details (all_names @ counter,
 							all_class_names @ counter, all_types @ counter,
-							(all_text_fields @ counter).text)
+							(all_text_fields @ counter).text.as_lower)
 						object.events.extend (action_info)	
 
 					end

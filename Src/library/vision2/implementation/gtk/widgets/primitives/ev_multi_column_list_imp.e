@@ -17,7 +17,8 @@ inherit
 			call_pebble_function,
 			update_child,
 			wipe_out,
-			append
+			append,
+			pixmaps_size_changed
 		end
 
 	EV_PRIMITIVE_IMP
@@ -357,6 +358,14 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
+		
+	pixmaps_size_changed is
+			-- 
+		do
+			if pixmaps_height > row_height then
+				set_row_height (pixmaps_height)
+			end
+		end
 
 feature -- Access
 
@@ -646,8 +655,9 @@ feature -- Element change
 				ev_children.forth
 			end
 
-				-- Remove all items (Eiffel part)
+				-- Renew storage containers.
 			ev_children.wipe_out
+			child_array.wipe_out
 			index := 0
 
 			update_pnd_status

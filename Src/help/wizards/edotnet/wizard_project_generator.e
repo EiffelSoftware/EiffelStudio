@@ -70,7 +70,11 @@ feature -- Basic Operations
 				-- Add target clr version
 			create tuple.make
 			tuple.put (clr_version_template, 1)
-			tuple.put (wizard_information.clr_version, 2)
+			if not wizard_information.is_most_recent_clr_version then
+				tuple.put ("msil_clr_version (%"" + wizard_information.clr_version + "%")", 2)
+			else
+				tuple.put ("", 2)
+			end
 			map_list.extend (tuple)
 
 				-- Add framework version
@@ -151,12 +155,6 @@ feature {NONE} -- Constants
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Ace_template_with_root_class_none_filename: STRING is "template_ace_with_root_class_none.ace"
-			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
-
-	Ace_template_filename_recent_clr: STRING is "template_ace_recent_clr.ace"
-			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
-
-	Ace_template_with_root_class_none_filename_recent_clr: STRING is "template_ace_with_root_class_none_recent_clr.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Application_template_filename: STRING is "template_application.e"

@@ -1,5 +1,5 @@
 indexing
-	description: "Cpnvert a table of contents to a DHTML table of contents"
+	description: "Convert a table of contents to a DHTML table of contents.  DHTML is a tree control."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -85,7 +85,11 @@ feature -- Formatting
 					app_stopped := Application.is_running and then Application.is_stopped
 					if app_stopped then
 						stel ?= Application.status.current_call_stack_element
-						app_stopped := stel.routine.body_index = associated_feature.body_index
+						if stel /= Void then
+							app_stopped := stel.routine.body_index = associated_feature.body_index
+						else
+							app_stopped := False
+						end
 					end
 					if editor.current_text /= formatted_text then
 						editor.show_breakpoints

@@ -76,7 +76,7 @@ feature -- Access
 			-- List of access encountered by the type checker: then the
 			-- building of the byte code takes those access.
 
-	array_line: LINE [GEN_TYPE_A]
+	array_line: LINE [MULTI_TYPE_A]
 			-- Line of manifest array types
 
 	tuple_line: LINE [TUPLE_TYPE_A]

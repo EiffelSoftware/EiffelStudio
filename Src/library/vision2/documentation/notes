@@ -80,35 +80,35 @@ X   complete but found to have bugs
     kernel/ev_any.e                                     *    _    *    .
     properties/ev_drawable.e                            *    *    *    .
     properties/ev_drawable_constants.e                  *    *    *    .
-    properties/ev_fontable.e                            *    o    o    .
-    properties/ev_pick_and_dropable.e                   o    o    o    .
-    properties/ev_pixmapable.e                          *    o    *    .
-    properties/ev_textable.e                            *    o    *    .
-    support/ev_dynamic_list.e                           o    o    o    .
-    widgets/ev_widget.e                                 o    o    o    .
-    widgets/primitives/ev_primitive.e                   *    o    *    .
-    items/ev_item.e                                     *    o    *    .
-    items/ev_simple_item.e                              o    o    *    .
-    items/ev_separator_item.e                           o    .    *    .
-    support/ev_item_list.e                              o    o    *    .
+    properties/ev_fontable.e                            *    o .5 o    .
+    properties/ev_pick_and_dropable.e                   o    o .5 o    .
+    properties/ev_pixmapable.e                          *    o .5 *    .
+    properties/ev_textable.e                            *    o .1 *    .
+    support/ev_dynamic_list.e                           o    o 2  o    .
+    widgets/ev_widget.e                                 o    o 3  o    .
+    widgets/primitives/ev_primitive.e                   *    o .1 *    .
+    items/ev_item.e                                     *    o .5 *    .
+    items/ev_simple_item.e                              o    o .1 *    .
+    items/ev_separator_item.e                           o    *    *    .
+    support/ev_item_list.e                              o    o 1  *    .
     
   Support:
-    support/ev_default_colors.e                         o    X    *    .
-    kernel/ev_accelerator.e                             *    o    *    .
+    support/ev_default_colors.e                         o    X .5 *    .
+    kernel/ev_accelerator.e                             *    o 4  *    .
     kernel/keys.def                                     o    -    -    -
     kernel/ev_color.e                                   *    *    *    .
     kernel/ev_coordinates.e                             *    -    -    .
-    kernel/ev_cursor.e                                  o    o    o    .
+    kernel/ev_cursor.e                                  o    o 3  o    .
     kernel/ev_cursor_code.e                             o    *    o    .
-    kernel/ev_font.e                                    o    o    *    .
+    kernel/ev_font.e                                    o    o 1  *    .
     kernel/ev_rectangle.e                               o    -    -    .
     kernel/ev_timeout.e                                 *    *    *    .
     support/ev_default_font.e                           *    -    -    .
     support/ev_radio_peer.e                             *    *    *    .
 
   System:
-    kernel/ev_application.e                             o    o    *    .
-    kernel/ev_environment.e                             *    o    *    .
+    kernel/ev_application.e                             o    o .5 *    .
+    kernel/ev_environment.e                             *    o .1 *    .
     widgets/uncommon_widgets/ev_screen.e                *    o    *    .
 
   Buttons:
@@ -116,23 +116,23 @@ X   complete but found to have bugs
     widgets/primitives/ev_select_button.e               *    *    *    .
     widgets/primitives/ev_check_button.e                *    *    *    .
     widgets/primitives/ev_option_button.e               *    *    *    .
-    widgets/primitives/ev_radio_button.e                *    o    o    .
+    widgets/primitives/ev_radio_button.e                *    o 2  o    .
     widgets/primitives/ev_toggle_button.e               *    *    *    .
 
   Misc widgets:
     widgets/primitives/ev_combo_box.e                   *    o    o    .
-    widgets/primitives/ev_text_component.e              o    .    *    .
+    widgets/primitives/ev_text_component.e              o    *    *    .
     widgets/primitives/ev_text_field.e                  *    *    *    .
     widgets/primitives/ev_label.e                       *    *    *    .
     widgets/primitives/ev_drawing_area.e                *    o    o    .
     widgets/primitives/ev_separator.e                   *    *    *    .
     widgets/primitives/ev_horizontal_separator.e        *    *    *    .
     widgets/primitives/ev_vertical_separator.e          *    *    *    .
-    widgets/uncommon_widgets/ev_pixmap.e                o    o    o    .
+    widgets/uncommon_widgets/ev_pixmap.e                o    o 4  o    .
 
   Gauges:
     widgets/primitives/ev_gauge.e                       *    *    *    .
-    widgets/primitives/ev_spin_button.e                 *    o    *    .
+    widgets/primitives/ev_spin_button.e                 *    o 1  *    .
     widgets/primitives/ev_progress_bar.e                *    *    *    .
     widgets/primitives/ev_horizontal_progress_bar.e     *    *    *    .
     widgets/primitives/ev_vertical_progress_bar.e       *    *    *    .
@@ -157,30 +157,30 @@ X   complete but found to have bugs
     widgets/common_dialogs/ev_confirmation_dialog.e     *    -    -    .
 
   Containers:
-    widgets/containers/ev_container.e                   *    o    o    .
+    widgets/containers/ev_container.e                   *    o .5 o    .
     widgets/containers/ev_cell.e                        *    *    *    .
-    widgets/containers/ev_aggregate_cell.e              o    .    *    .
-    widgets/containers/ev_frame.e                       *    o    *    .
-    widgets/containers/ev_window.e                      *    o    o    .
-    widgets/containers/ev_dialog.e                      o    X    *    .
-    widgets/containers/ev_titled_window.e               o    o    o    .
-    widgets/containers/ev_viewport.e                    *    o    o    .
-    widgets/containers/ev_scrollable_area.e             *    o    o    .
-    widgets/containers/ev_widget_list.e                 *    o    *    .
-    widgets/containers/ev_dynamic_list_cursor.e         *    o    o    .
+    widgets/containers/ev_aggregate_cell.e              o    *    *    .
+    widgets/containers/ev_frame.e                       *    o 1  *    .
+    widgets/containers/ev_window.e                      *    o 2  o    .
+    widgets/containers/ev_dialog.e                      o    X 4  *    .
+    widgets/containers/ev_titled_window.e               o    o 2  o    .
+    widgets/containers/ev_viewport.e                    *    o .5 o    .
+    widgets/containers/ev_scrollable_area.e             *    o .5 o    .
+    widgets/containers/ev_widget_list.e                 *    o .5 *    .
+    widgets/containers/ev_dynamic_list_cursor.e         *    *    *    .
     widgets/containers/ev_notebook.e                    *    *    *    .
     widgets/containers/ev_box.e                         *    *    *    .
     widgets/containers/ev_horizontal_box.e              *    *    *    .
     widgets/containers/ev_vertical_box.e                *    *    *    .
     widgets/containers/ev_aggregate_box.e               *    *    *    .
     widgets/containers/ev_split_area.e                  X    -    -    .
-    widgets/containers/ev_horizontal_split_area.e       o    o    -    .
-    widgets/containers/ev_vertical_split_area.e         o    o    -    .
+    widgets/containers/ev_horizontal_split_area.e       o    -    -    .
+    widgets/containers/ev_vertical_split_area.e         o    -    -    .
 
   Menu:
-    widgets/uncommon_widgets/ev_menu.e                  *    o    o    .
+    widgets/uncommon_widgets/ev_menu.e                  *    o .5 o    .
     widgets/uncommon_widgets/ev_menu_bar.e              *    *    *    .
-    widgets/containers/ev_menu_item_list.e              o    o    o    .
+    widgets/containers/ev_menu_item_list.e              o    o1.5 o    .
     items/ev_menu_item.e                                o    *    *    .
     items/ev_check_menu_item.e                          *    *    *    .
     items/ev_menu_separator.e                           *    *    *    .
@@ -188,12 +188,12 @@ X   complete but found to have bugs
     items/ev_select_menu_item.e                         *    *    *    .
 
   Status bar:
-    items/ev_status_bar_item.e                          *    .    *    .
-    widgets/uncommon_widgets/ev_status_bar.e            *    .    *    .
+    items/ev_status_bar_item.e                          *    o    *    .
+    widgets/uncommon_widgets/ev_status_bar.e            *    o    *    .
 
   Tool bar:
     widgets/primitives/ev_tool_bar.e                    o    *    *    .
-    items/ev_tool_bar_item.e                            *    o    *    .
+    items/ev_tool_bar_item.e                            *    o .5 *    .
     items/ev_tool_bar_button.e                          o    o    *    .
     items/ev_tool_bar_radio_button.e                    *    o    o    .
     items/ev_tool_bar_separator.e                       *    .    *    .
@@ -205,9 +205,9 @@ X   complete but found to have bugs
     items/ev_tree_item.e                                *    o    X    .
 
   List:
-    widgets/primitives/ev_list.e                        *    o    *    .
-    items/ev_list_item.e                                *    o    *    .
+    widgets/primitives/ev_list.e                        *    o 1  *    .
+    items/ev_list_item.e                                *    o .5 *    .
 
   Multi column list:
-    widgets/primitives/ev_multi_column_list.e           *    o    o    .
-    items/ev_multi_column_list_row.e                    *    o    o    .
+    widgets/primitives/ev_multi_column_list.e           *    o 2  o    .
+    items/ev_multi_column_list_row.e                    *    o 1  o    .

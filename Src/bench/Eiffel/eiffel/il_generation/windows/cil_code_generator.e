@@ -3621,6 +3621,7 @@ feature -- Assertions
 		require
 			type_i_not_void: type_i /= Void
 		do
+			put_boolean_constant (System.in_final_mode)
 			method_body.put_call (feature {MD_OPCODES}.Call,
 				current_module.ise_check_invariant_token, 1, False)
 		end

@@ -20,14 +20,14 @@ feature
 			add_user_features (old_tmp, user, new_cl)
 		end;
 
-	merge_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+	merge_result: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]
 
 feature {NONE} -- Internal
 
-	features_in_list (l: EIFFEL_LIST [FEATURE_CLAUSE_AS]): ARRAYED_LIST [FEATURE_AS] is
+	features_in_list (l: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]): ARRAYED_LIST [EXT_FEATURE_AS] is
 	 	   -- Construct an arrayed list of features from clause list `l'.
 		local
-			features: EIFFEL_LIST [FEATURE_AS]
+			features: EIFFEL_LIST [EXT_FEATURE_AS]
 		do
 			!! Result.make_filled (0)
 
@@ -62,33 +62,22 @@ feature {NONE} -- Internal
 
 	merge_keeping_order (user_cl_list, new_cl_list: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]) is
 			-- Merge two lists of feature clauses. Order of features and
-				-- clauses will be the order of `new_cl_list'.
+			-- clauses will be the order of `new_cl_list'.
 		local
 			ordered_result: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]
 			result_features, features: EIFFEL_LIST [EXT_FEATURE_AS]
 			result_clause: EXT_FEATURE_CLAUSE_AS
 			u_feature, old_feature: EXT_FEATURE_AS	
 			feature_as_merger: FEATURE_AS_MERGER
-			clause_ebuild: FEATURE_CLAUSE_AS_EBUILD
-			user_clause: FEATURE_CLAUSE_AS_EBUILD
+			user_clause: EXT_FEATURE_CLAUSE_AS
 		do
 			if not new_cl_list.empty or not user_cl_list.empty then
 				if not new_cl_list.empty then
 					new_cl_list.start
-					clause_ebuild ?= new_cl_list.item
-					if clause_ebuild /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make_filled (new_cl_list.count)
-					else
-						!! ordered_result.make_filled (new_cl_list.count)
-					end
+					!! ordered_result.make_filled (new_cl_list.count)
 				else
 					user_cl_list.start
-					clause_ebuild ?= user_cl_list.item
-					if clause_ebuild /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! ordered_result.make_filled (new_cl_list.count)
-					else
-						!! ordered_result.make_filled (new_cl_list.count)
-					end
+					!! ordered_result.make_filled (user_cl_list.count)
 				end
 			else
 				!! ordered_result.make_filled (new_cl_list.count)
@@ -119,7 +108,7 @@ feature {NONE} -- Internal
 
 						if not has_feature (features.item, new_cl_list) then
 							-- User added feature, get feature clause
-							user_clause ?= feature_clause_of (u_feature, user_cl_list)
+							user_clause := feature_clause_of (u_feature, user_cl_list)
 						end
 					else
 						result_features.replace (features.item)
@@ -127,24 +116,17 @@ feature {NONE} -- Internal
 					result_features.forth
 					features.forth
 				end;
-				clause_ebuild ?= new_cl_list.item
-			--samik	if clause_ebuild /= Void then
-					!FEATURE_CLAUSE_AS_EBUILD! result_clause
-			--samik	else
-			--samik		!! result_clause
-			--samik	end
-				result_clause.set_features (result_features)
-				result_clause.set_clients (new_cl_list.item.clients)
-				
-				-- COMMENTS SHOULD BE MERGED!!!
+				-- Make new clause
+				!! result_clause.make_from_other_and_features (new_cl_list.item, result_features)
+				-- Add comments
 				if user_clause /= Void then
-		--samik			result_clause.set_comment (user_clause.comment)
+					result_clause.set_comments (user_clause.comments)
 				end
 	
 				ordered_result.replace (result_clause);
 				new_cl_list.forth;
 				ordered_result.forth
-				user_clause ?= void
+				user_clause := Void
 			end
 
 			merge_result := ordered_result
@@ -175,14 +157,14 @@ feature {NONE} -- Internal
 			end
 		end;
 
-    feature_clause_of (feat: FEATURE_AS; clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]): FEATURE_CLAUSE_AS is
+    feature_clause_of (feat: EXT_FEATURE_AS; clauses: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]): EXT_FEATURE_CLAUSE_AS is
                 -- Feature clause of feature `feat'.
             require
                 has_feature (feat, clauses)
             local
                 clause_cur, feat_cur, name_cur: CURSOR
 				found: BOOLEAN
-                features: EIFFEL_LIST [FEATURE_AS]
+                features: EIFFEL_LIST [EXT_FEATURE_AS]
                 names: EIFFEL_LIST [FEATURE_NAME]
             do
                 from
@@ -220,21 +202,20 @@ feature {NONE} -- Internal
             end;
 
 
-	add_user_features (old_tmp, user,  new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+	add_user_features (old_tmp, user,  new_cl: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]) is
 		local
-			merged_features: ARRAYED_LIST [FEATURE_AS]
+			merged_features: ARRAYED_LIST [EXT_FEATURE_AS]
 			current_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			current_features: EIFFEL_LIST [FEATURE_AS]
-			temp_features: LINKED_LIST [FEATURE_AS]
-			temp_clauses: LINKED_LIST [FEATURE_CLAUSE_AS]
-			new_features: EIFFEL_LIST [FEATURE_AS]
-			nw_features: EIFFEL_LIST [FEATURE_AS]
+			temp_features: LINKED_LIST [EXT_FEATURE_AS]
+			temp_clauses: LINKED_LIST [EXT_FEATURE_CLAUSE_AS]
+			new_features: EIFFEL_LIST [EXT_FEATURE_AS]
+			nw_features: EIFFEL_LIST [EXT_FEATURE_AS]
 			nr_items: INTEGER
-			new_clause: FEATURE_CLAUSE_AS
+			new_clause: EXT_FEATURE_CLAUSE_AS
 			feature_found: BOOLEAN
-			user_clause, last_user_clause, templ_clause: FEATURE_CLAUSE_AS
-			temp_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			ebuild_clause: FEATURE_CLAUSE_AS_EBUILD
+			user_clause, last_user_clause, templ_clause: EXT_FEATURE_CLAUSE_AS
+			temp_result: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]
 		do
 			merged_features := features_in_list (merge_result)
 			from
@@ -284,42 +265,14 @@ feature {NONE} -- Internal
 						user_clause := feature_clause_of (user_features.item, user)
 
 						if not user_clause.has_equiv_declaration (templ_clause) and then not user_clause.has_equiv_declaration (last_user_clause) then
-							-- Make new clause
-							ebuild_clause ?= user_clause
-							if ebuild_clause /= Void then
-								!FEATURE_CLAUSE_AS_EBUILD! new_clause
-							else
-								!! new_clause
-							end
-							new_clause.set_clients (user_clause.clients)
-							!! nw_features.make_filled (1)
-							nw_features.start
-							nw_features.replace (user_features.item)
-							new_clause.set_features (nw_features)
-
-							-- COMMENTS SHOULD BE MERGED!!!
-				--samik			new_clause.set_comment (user_clause.comment)
-
-							temp_clauses.put_left (new_clause)
+							temp_clauses.put_left (user_clause)
 						else
 							-- Add to current
 							if user_clause.has_equiv_declaration (templ_clause) then
 								merged_features.put_left (user_features.item)
 							else
 								if temp_clauses.empty then
-									ebuild_clause ?= user_clause
-									if ebuild_clause /= Void then
-										!FEATURE_CLAUSE_AS_EBUILD! new_clause
-									else
-										!! new_clause
-									end
-									new_clause.set_clients (user_clause.clients)
-					--samik				new_clause.set_comment (user_clause.comment)
-									!! nw_features.make_filled (1)
-									nw_features.start
-									nw_features.replace (user_features.item)
-									new_clause.set_features (nw_features)
-									temp_clauses.put_left (new_clause)
+									temp_clauses.put_left (user_clause)
 								else
 									temp_clauses.back
 									new_clause := temp_clauses.item
@@ -392,13 +345,11 @@ feature {NONE} -- Internal
 					temp_features.forth
 					new_features.forth
 				end
-				!FEATURE_CLAUSE_AS_EBUILD! new_clause
-				new_clause.set_clients (merge_result.item.clients)
+				!! new_clause.make_from_other_and_features (merge_result.item, new_features)
 
-				-- COMMENTS SHOULD BE MERGED!!!
-			--samik	new_clause.set_comment (merge_result.item.comment)
+				-- Add comments
+				new_clause.set_comments (merge_result.item.comments)
 
-				new_clause.set_features (new_features)
 				merge_result.replace (new_clause)
 				merge_result.forth
 			end
@@ -407,21 +358,11 @@ feature {NONE} -- Internal
 				temp_result := merge_result
 				if not temp_result.empty then
 					temp_result.start
-					ebuild_clause ?= temp_result.item
-					if ebuild_clause /= Void then
-						!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make_filled (temp_result.count + temp_clauses.count)
-					else
-						!! merge_result.make_filled (temp_result.count + temp_clauses.count)
-					end
+					!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 				else
 					if not temp_clauses.empty then
 						temp_clauses.start
-						ebuild_clause ?= temp_clauses.item
-						if ebuild_clause /= Void then
-							!EIFFEL_LIST [FEATURE_CLAUSE_AS_EBUILD]! merge_result.make_filled (temp_result.count + temp_clauses.count)
-						else
-							!! merge_result.make_filled (temp_result.count + temp_clauses.count)
-						end
+						!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 					else
 						!! merge_result.make_filled (temp_result.count + temp_clauses.count)
 					end
@@ -470,6 +411,6 @@ feature {NONE} -- Internal
 	 		   
 	old_template_features: ARRAYED_LIST [FEATURE_AS]
 
-	user_features: ARRAYED_LIST [FEATURE_AS]
+	user_features: ARRAYED_LIST [EXT_FEATURE_AS]
 
 end -- class FEATURE_CLAUSE_MERGER

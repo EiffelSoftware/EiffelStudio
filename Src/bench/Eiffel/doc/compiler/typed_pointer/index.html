@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>TYPED_POINTER</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Typed pointer</h1>
+
+<h2>Introduction</h2>
+<p>We are introducing <span class="eclass">TYPED_POINTER [G]</span>, a generic class whose content is:</p>
+
+<pre><span class="ekeyword">indexing</span>
+	<span class="eitag">description</span><span class="esymbol">:</span> <span class="estring">&quot;Typed pointer. To be used for better interfacing with externals: C, C++, .NET.&quot;</span>
+	<span class="eitag">date</span><span class="esymbol">:</span> <span class="estring">&quot;$Date$&quot;</span>
+	<span class="eitag">revision</span><span class="esymbol">:</span> <span class="estring">&quot;$Revision$&quot;</span>
+
+<span class="ekeyword">class</span> 
+	<span class="eclass">TYPED_POINTER</span> <span class="esymbol">[</span><span class="egeneric">G</span><span class="esymbol">]</span>
+
+<span class="ekeyword">create</span> <span class="esymbol">{</span>NONE<span class="esymbol">}
+</span>
+<span class="ekeyword">convert</span>
+	<span class="ekeyword">frozen</span> <span class="efeature">to_pointer</span><span class="esymbol">:</span> <span class="esymbol">{</span><span class="eclass">POINTER</span><span class="esymbol">}</span>
+
+<span class="ekeyword">feature</span> <span class="ecomment">-- Conversion</span>
+
+	<span class="ekeyword">frozen</span> <span class="efeature">to_pointer</span><span class="esymbol">:</span> <span class="eclass">POINTER</span><span class="ekeyword"> is</span>
+			<span class="ecomment">-- Convert current to </span><span class="eclass">TYPED_POINTER</span><span class="ecomment">.</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+	
+<span class="ekeyword">feature</span> <span class="ecomment">-- Access</span>
+
+	<span class="ekeyword">frozen</span> <span class="efeature">item</span><span class="esymbol">:</span> <span class="egeneric">G</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Content of pointer.</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+	
+<span class="ekeyword">feature</span> <span class="ecomment">-- Settings</span>
+
+	<span class="ekeyword">frozen</span> <span class="efeature">put</span> <span class="esymbol">(</span><span class="elocal">v</span><span class="esymbol">:</span> <span class="egeneric">G</span><span class="esymbol">)</span> <span class="ekeyword">is</span>
+			<span class="ecomment">-- Replace content of pointer by </span><span class="equoted">v</span><span class="ecomment">.</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">ensure</span>
+			<span class="etag">set</span><span class="esymbol">:</span> <span class="efeature">item</span> <span class="esymbol">=</span> <span class="elocal">v</span>
+		<span class="ekeyword">end</span>
+	
+<span class="ekeyword">end</span> -- <span class="ecomment">class </span><span class="eclass">TYPED_POINTER</span>
+</pre>
+
+<p>The sole purpose of this class is to represent the type of the dollar 
+expressions where the expression is not a routine.</p>
+<h2>Implementation</h2>
+<p>It is like pointer, except that at the C level we will generate something of 
+type EIF_XX * where XX is either INTEGER_YY, DOUBLE, REAL, ..... On .NET it is a 
+managed pointer of the given type.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

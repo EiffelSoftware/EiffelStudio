@@ -58,6 +58,8 @@ feature {NONE} -- Implementation
 			-- Process the wizard information
 		local
 			code_generator: GB_CODE_GENERATOR
+			output_file_name: FILE_NAME
+			output_file: RAW_FILE
 		do
 				-- The wizard generated code seems to leave the
 				-- window locked, so we unlock it. We check first,
@@ -71,11 +73,29 @@ feature {NONE} -- Implementation
 			code_generator.generate
 			system_status.current_project_settings.save
 			xml_handler.save
+				-- We must now generate a text file containing information
+				-- about wizard completion. Whichever process launched the
+				-- wizard can then query the contents, to find out
+				-- status.
+			
+			output_file_name := clone (generated_path)
+			output_file_name.extend ("completion_status.txt")
+			create output_file.make_open_write (output_file_name)
+			output_file.start
+			output_file.putstring ("Empty")
+			output_file.close
+			
 			--| Add here the action of your wizard.
 			--|
 			--| Update `progress' and `progress_text' to give a
 			--| a feedback to the user of what you are currently
 			--| doing.
+		end
+		
+	generated_path: FILE_NAME is
+			-- `Result' is generated directory for current project.
+		do
+			create Result.make_from_string (system_status.current_project_settings.project_location)
 		end
 
 	proceed_with_current_info is

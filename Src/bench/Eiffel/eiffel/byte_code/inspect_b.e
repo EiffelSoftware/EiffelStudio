@@ -155,10 +155,11 @@ feature -- IL code generation
 
 			il_generator.mark_label (end_label)
 
-			if case_list /= Void then
-				il_generator.pop
-			end
-
+				-- Either there was nothing in the inspect and therefore we need to
+				-- pop the value on which we were inspecting as it is not used. Or if
+				-- there was some `when' parts we need to remove the duplication made
+				-- for case comparison.
+			il_generator.pop
 		end
 
 feature -- Byte code generation

@@ -25,12 +25,18 @@ feature --Initialization
 		local
 			c_ast: CLASS_AS
 		do
+			create associations.make
 			create generalizations.make
 			create features.make
 			xmi_id := id
 			id_model := id_package
 			compiled_class := c
-			name := compiled_class.name_in_upper
+			if compiled_class.is_basic then
+				name := compiled_class.name
+				name.to_lower
+			else
+				name := compiled_class.name_in_upper
+			end
 			if compiled_class.has_ast and compiled_class.generics /= Void then
 				c_ast := compiled_class.ast
 				name.append (" ")
@@ -130,6 +136,9 @@ feature -- Action
 
 	code: STRING is
 			-- XMI representation of the class.
+		local
+			l_association: XMI_ASSOCIATION
+			l_association_id: INTEGER
 		do	
 			Result := "<Foundation.Core.Class xmi.id = 'S."
 			Result.append (xmi_id.out)
@@ -194,6 +203,25 @@ feature -- Action
 				end
 				Result.append ("</Foundation.Core.GeneralizableElement.specialization>%N")
 			end
+
+			if not associations.is_empty then
+				Result.append ("<Foundation.Core.Classifier.associationEnd>%N")
+				from
+					associations.start
+				until
+					associations.after
+				loop
+					l_association := associations.item
+					if l_association.has_type (xmi_id) then
+						Result.append ("<Foundation.Core.AssociationEnd xmi.idref = 'G.")
+						Result.append (l_association.end_id_from_xmi_type (xmi_id).out)
+						Result.append ("'/> %N")
+					end
+					associations.forth
+				end
+				Result.append ("</Foundation.Core.Classifier.associationEnd>%N")
+			end
+
 			Result.append ("<Foundation.Core.ModelElement.taggedValue>%N%
 				%<Foundation.Extension_Mechanisms.TaggedValue>%N%
 				%<Foundation.Extension_Mechanisms.TaggedValue.tag>persistence</Foundation.Extension_Mechanisms.TaggedValue.tag>%N%

@@ -59,6 +59,11 @@ feature -- Actions
 				Result.append (type.name)
 				Result.append (" -->%N")
 			end
+--			Result.append ("                        <Foundation.Core.Class xmi.idref = 'S.")
+--			Result.append (type.xmi_id.out)
+--			Result.append ("'/> <!-- ")
+--			Result.append (type.name)
+--			Result.append (" -->%N")
 			Result.append ("                  </Foundation.Core.StructuralFeature.type>%N%
 				%                </Foundation.Core.Attribute>%N")
 		end

@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			create xmi_clusters.make
 			create xmi_classes.make
+			create xmi_associations.make
 			create xmi_generalizations.make
 			create xmi_diagrams.make
 			create xmi_types.make
@@ -77,6 +78,7 @@ feature -- Actions
 	
 				classes := doc_universe.classes
 				
+					-- Clusters
 				from
 					clusters.start
 				until
@@ -89,6 +91,7 @@ feature -- Actions
 					current_cluster := clusters.item.classes
 					current_cluster_id := idref_counter
 					idref_counter := idref_counter + 1
+						-- Classes
 					from
 						current_cluster.start
 					until
@@ -202,6 +205,9 @@ feature {NONE} -- Implementation
 
 	xmi_classes: LINKED_LIST [XMI_CLASS]
 			-- Representations of the system classes for XMI.
+
+	xmi_associations: LINKED_LIST [XMI_ASSOCIATION]
+			-- Representations of the system associations between classes for XMI.
 
 	xmi_generalizations: LINKED_LIST [XMI_GENERALIZATION]
 			-- Representations of the system inheritance relations for XMI.
@@ -331,6 +337,8 @@ feature {NONE} -- Implementation
 			current_compiled_class: CLASS_C
 			current_feature: E_FEATURE
 			current_feature_list: LIST [E_FEATURE]
+			current_association_list: LIST [XMI_ASSOCIATION]
+			f_name: STRING
 		do
 			from
 				xmi_classes.start
@@ -347,8 +355,8 @@ feature {NONE} -- Implementation
 					current_feature_list.after
 				loop
 					current_feature := current_feature_list.item
-					if current_feature.is_attribute then
-						add_attribute (current_feature, current_xmi_class)
+					if current_feature.is_attribute then			
+						add_attribute_or_association (current_feature, current_xmi_class)
 					else
 						if not current_feature.is_procedure then
 							add_function (current_feature, current_xmi_class)
@@ -582,7 +590,225 @@ feature {NONE} -- Implementation
 			added_right_number: a_xmi_operation.arguments.count = a_feature.arguments.count
 		end
 
-				
+	add_attribute_or_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'
+			-- once we have determined whether the type of 'a_feature' should be represented
+			-- as an association or as an attribute in the XMI.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_attribute: a_feature.is_attribute
+		do				
+			if a_feature.type.has_associated_class then
+				if a_feature.type.has_generics and not a_feature.type.generics.is_empty then
+					add_generics_association (a_feature, a_xmi_class)
+				else
+					if a_feature.type.is_basic then
+							-- Basic types are considered attributes
+						add_attribute (a_feature, a_xmi_class)
+					else
+							-- Complex types are considered associations
+						add_association (a_feature, a_xmi_class)
+					end	
+				end
+			end
+		end			
+
+	add_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_attribute: a_feature.is_attribute
+		local
+			feature_type: XMI_CLASS
+		do				
+			if a_feature.type.has_associated_class then
+				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
+				if feature_type = Void then
+					add_association_type_unknown (a_feature, a_xmi_class)
+				else
+					add_association_type_known (a_feature, a_xmi_class, feature_type)
+				end
+			end
+		end
+
+	add_association_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+			-- Add XMI representation of `e_feature' in `a_xmi_class'.
+			-- Create, if necessary, a new type.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_xmi_class_not_void: a_xmi_class /= Void
+		local
+			new_xmi_type: XMI_TYPE
+			new_xmi_association: XMI_ASSOCIATION
+			full_type_name: STRING
+			f_name: STRING
+			c: CLASS_C
+		do
+			f_name := feature_name (a_feature)
+			c := a_feature.type.associated_class
+			full_type_name := c.name_in_upper
+			if c.has_ast and c.generics /= Void then
+				full_type_name.append (c.ast.generics_as_string)
+			end
+			create new_xmi_type.make_type (idref_counter, full_type_name)
+			if not xmi_types.has (new_xmi_type) then
+				idref_counter := idref_counter + 1
+				add_type (new_xmi_type)
+			else
+				xmi_types.start
+				xmi_types.search (new_xmi_type)
+				new_xmi_type ?= xmi_types.item
+			end
+			create new_xmi_association.make (idref_counter, f_name, new_xmi_type, a_xmi_class, False, False)
+			idref_counter := idref_counter + 3
+			if a_feature.export_status.is_none then
+				new_xmi_association.set_private
+			elseif a_feature.export_status.is_set then	
+				new_xmi_association.set_protected
+			else
+				new_xmi_association.set_public
+			end
+			a_xmi_class.add_association (new_xmi_association)
+			new_xmi_type.add_association (new_xmi_association)
+			xmi_associations.extend (new_xmi_association)
+		end
+
+	add_association_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+			-- Add XMI representation of `e_feature' in `a_xmi_class'.
+			-- Assign `a_xmi_type' to its type.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_xmi_class_not_void: a_xmi_class /= Void
+			a_xmi_type_not_void: a_xmi_type /= Void
+		local
+			new_xmi_association: XMI_ASSOCIATION
+			f_name: STRING
+		do
+			f_name := feature_name (a_feature)
+			create new_xmi_association.make (idref_counter, f_name, a_xmi_type, a_xmi_class, False, False)
+			idref_counter := idref_counter + 3
+			if a_feature.export_status.is_none then
+				new_xmi_association.set_private
+			elseif a_feature.export_status.is_set then	
+				new_xmi_association.set_protected
+			else	
+				new_xmi_association.set_public
+			end
+			a_xmi_class.add_association (new_xmi_association)
+			a_xmi_type.add_association (new_xmi_association)
+			xmi_associations.extend (new_xmi_association)
+		end
+
+	add_generics_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
+			-- contains generics.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_xmi_class_not_void: a_xmi_class /= Void
+			a_feature_has_generics: a_feature.type.has_generics
+		local
+			feature_type: XMI_CLASS
+		do
+			if a_feature.type.has_associated_class then
+					-- Is first generic known?
+				feature_type := xmi_class_by_class_c (a_feature.type.generics.item (1).associated_class)
+				if feature_type = Void then
+					add_generics_association_unknown (a_feature, a_xmi_class)
+				else
+					add_generics_association_known (a_feature, a_xmi_class, feature_type)
+				end
+			end
+		end
+
+	add_generics_association_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
+			-- contains generics.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_xmi_class_not_void: a_xmi_class /= Void
+			a_feature_has_generics: a_feature.type.has_generics
+		local
+			new_xmi_association: XMI_ASSOCIATION
+			l_container: CONTAINER [ANY]
+			l_list: LIST [ANY]
+			l_ordered,
+			l_multiple: BOOLEAN
+			f_name,
+			full_type_name: STRING
+		do
+			f_name := feature_name (a_feature)
+				-- Take 1st generic
+			full_type_name := full_class_name_from_generic_class (a_feature)
+			if is_parent_of (ordered_type, full_type_name) then
+				l_ordered := True
+			end
+			if is_parent_of (multiple_type, full_type_name) then
+				l_multiple := True
+			end
+			create new_xmi_association.make (idref_counter, f_name, a_xmi_type, a_xmi_class, l_ordered, l_multiple)
+			idref_counter := idref_counter + 3
+			if a_feature.export_status.is_none then
+				new_xmi_association.set_private
+			elseif a_feature.export_status.is_set then
+				new_xmi_association.set_protected
+			else
+				new_xmi_association.set_public
+			end
+			a_xmi_class.add_association (new_xmi_association)
+			a_xmi_type.add_association (new_xmi_association)
+			xmi_associations.extend (new_xmi_association)
+		end
+
+	add_generics_association_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
+			-- contains generics.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_xmi_class_not_void: a_xmi_class /= Void
+			a_feature_has_generics: a_feature.type.has_generics
+		local
+			new_xmi_association: XMI_ASSOCIATION
+			new_xmi_type: XMI_TYPE
+			l_container: CONTAINER [ANY]
+			l_list: LIST [ANY]
+			l_ordered,
+			l_multiple: BOOLEAN
+			f_name,
+			full_type_name: STRING
+			c: CLASS_C
+		do
+			f_name := feature_name (a_feature)
+			c := a_feature.type.associated_class
+				-- Take 1st generic.
+			full_type_name := full_class_name_from_generic_class (a_feature)
+			create new_xmi_type.make_type (idref_counter, full_type_name)
+			if not xmi_types.has (new_xmi_type) then
+				idref_counter := idref_counter + 1
+				add_type (new_xmi_type)
+			else
+				xmi_types.start
+				xmi_types.search (new_xmi_type)
+				new_xmi_type ?= xmi_types.item
+			end
+			if is_parent_of (ordered_type, full_type_name) then
+				l_ordered := True
+			end
+			if is_parent_of (multiple_type, full_type_name) then
+				l_multiple := True
+			end
+			create new_xmi_association.make (idref_counter, f_name, new_xmi_type, a_xmi_class, l_ordered, l_multiple)
+			idref_counter := idref_counter + 3
+			if a_feature.export_status.is_none then
+				new_xmi_association.set_private
+			elseif a_feature.export_status.is_set then
+				new_xmi_association.set_protected
+			else
+				new_xmi_association.set_public
+			end
+			a_xmi_class.add_association (new_xmi_association)
+			new_xmi_type.add_association (new_xmi_association)
+			xmi_associations.extend (new_xmi_association)
+		end
 
 	add_attribute (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
@@ -591,7 +817,7 @@ feature {NONE} -- Implementation
 			a_feature_is_attribute: a_feature.is_attribute
 		local
 			feature_type: XMI_CLASS
-		do
+		do				
 			if a_feature.type.has_associated_class then
 				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
 				if feature_type = Void then
@@ -726,6 +952,15 @@ feature {NONE} -- Implementation
 				xmi_clusters.forth
 			end
 
+			from
+				xmi_associations.start
+			until
+				xmi_associations.after
+			loop
+				src.append (xmi_associations.item.code)
+				xmi_associations.forth
+			end
+
 			from 
 				xmi_generalizations.start
 			until
@@ -789,5 +1024,63 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("<", "&lt;")
 			Result.replace_substring_all (">", "&gt;")
 		end
+
+	is_parent_of (a_parent_name, a_child_name: STRING): BOOLEAN is
+			-- Is class with name 'a_parent_name' an actual parent class with name 'a_child_name'?
+		require
+			a_parent_not_void: a_parent_name /= Void
+			a_child_not_void: a_child_name /= Void
+		local
+			internal: INTERNAL
+			l_child_id,
+			l_parent_id: INTEGER
+		do
+			create internal
+			l_parent_id := internal.dynamic_type_from_string (a_parent_name)
+			l_child_id := internal.dynamic_type_from_string (a_child_name)
+			Result := internal.type_conforms_to (l_child_id, l_parent_id)
+		end
+
+	full_class_name_from_generic_class (a_feature: E_FEATURE): STRING is
+			-- Get the full string representation 'a_feature' including actual generic types.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			full_type_name: STRING
+			l_cnt: INTEGER
+			l_multiple_generics: BOOLEAN
+		do
+			full_type_name := a_feature.type.associated_class.name_in_upper
+			from
+				l_cnt := 1
+				full_type_name.append (" [")
+			until
+				l_cnt > a_feature.type.generics.count
+			loop
+				if l_multiple_generics then
+					if a_feature.type.generics.item (l_cnt).has_associated_class then
+						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
+					else
+						full_type_name.append ("," + a_feature.associated_class.generics.i_th (l_cnt).formal_name)
+					end	
+				else
+					if a_feature.type.generics.item (l_cnt).has_associated_class then
+						full_type_name.append (a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
+					else
+						full_type_name.append (a_feature.associated_class.generics.i_th (l_cnt).formal_name)
+					end	
+					l_multiple_generics := True
+				end
+				l_cnt := l_cnt + 1
+			end
+			full_type_name.append ("]")
+			Result := full_type_name
+		end
+
+	ordered_type: STRING is "CHAIN [ANY]"
+			-- Name of topmost ordered type
+
+	multiple_type: STRING is "CONTAINER [ANY]"
+			-- Name of topmost multiple type
 
 end -- class XMI_EXPORT

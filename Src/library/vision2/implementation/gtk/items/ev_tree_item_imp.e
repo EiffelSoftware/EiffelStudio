@@ -36,13 +36,6 @@ inherit
 			list_widget
 		end
 
-	EV_PICK_AND_DROPABLE_IMP
-		redefine
-			interface
-		end
-
-	EV_C_UTIL
-
 create
 	make
 
@@ -317,6 +310,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/04/12 18:49:55  brendel
+--| Removed inheritance of EV_PICK_AND_DROPABLE_IMP (from EV_ITEM_IMP).
+--| Removed inheritance of EV_C_UTIL (from EV_ANY_IMP).
+--|
 --| Revision 1.52  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

@@ -1,5 +1,5 @@
 indexing
-	description: "Test of scrollable_area."
+	description: "Test of gauges."
 	author: "Vincent Brendel", "brendel@eiffel.com"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,62 +15,111 @@ create
 
 feature -- Initialization
 
-	bar: EV_MENU_BAR
-	file_menu, edit_menu, help_menu: EV_MENU
-	new_menu, save_menu, i1, i2, i3, i4: EV_MENU
-	exit_menu: EV_MENU_ITEM
-
 	prepare is
 		do
-			create bar
-			first_window.set_menu_bar (bar)
-
-			create file_menu.make_with_text ("File")
-			bar.extend (file_menu)
-
-			create new_menu.make_with_text ("New")
-			file_menu.extend (new_menu)
-			file_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Open"))
-			--new_menu.extend (file_menu)
-
-			create save_menu.make_with_text ("Save")
-			file_menu.extend (save_menu)
-			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Really"))
-			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Nah"))
-
-			create exit_menu.make_with_text ("Exit")
-			file_menu.extend (exit_menu)
-			exit_menu.press_actions.extend (~on_exit)
-
-			create edit_menu.make_with_text ("Edit-a-bit-too-longggg")
-			bar.extend (edit_menu)
-
-			create help_menu.make_with_text ("Help")
-			bar.extend (help_menu)
-
-			create i1.make_with_text ("i1")
-			help_menu.extend (i1)
-			create i2.make_with_text ("i2")
-			i1.extend (i2)
-			create i3.make_with_text ("i3")
-			i2.extend (i3)
-			create i4.make_with_text ("i4")
-			i3.extend (i4)
-
-		--	save_menu.go_i_th (1)
-		--	save_menu.remove
-		--	save_menu.remove
+			test_scrollable_area
 		end
 
-	on_exit is
+	test_scrollable_area is
+		local
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
 		do
-			first_window.destroy
+			create vb
+			first_window.extend (vb)
+			create hb
+			vb.extend (hb)
+			create sb
+			vb.extend (sb)
+			create pb
+			--pb.enable_segmentation
+			vb.extend (pb)
+
+			create hr
+			vb.extend (hr)
+
+			create min_field.make_with_range (-1000 |..| 1)
+			min_field.set_value (1)
+			hb.extend (create {EV_LABEL}.make_with_text ("Min: "))
+			hb.extend (min_field)
+			create val_field
+			hb.extend (create {EV_LABEL}.make_with_text ("Val: "))
+			hb.extend (val_field)
+			create max_field.make_with_range (1 |..| 1000)
+			max_field.set_value (100)
+			hb.extend (create {EV_LABEL}.make_with_text ("Max: "))
+			hb.extend (max_field)
+
+			min_field.change_actions.extend (~on_min_change)
+			max_field.change_actions.extend (~on_max_change)
+			sb.change_actions.extend (~on_sb_change)
+			val_field.change_actions.extend (~on_val_change)
+			hr.change_actions.extend (~on_hr_change)
+
+			val_field.set_range (min_field.value, max_field.value)
+			sb.set_range (min_field.value |..| max_field.value)
+			pb.set_range (min_field.value |..| max_field.value)
+			hr.set_range (min_field.value |..| max_field.value)
+		end
+
+	max_field: EV_SPIN_BUTTON
+	min_field: EV_SPIN_BUTTON
+	val_field: EV_SPIN_BUTTON
+
+	sb: EV_HORIZONTAL_SCROLL_BAR
+	pb: EV_HORIZONTAL_PROGRESS_BAR
+	hr: EV_HORIZONTAL_RANGE
+
+	on_min_change is
+		do
+			val_field.set_minimum (min_field.value)
+			sb.set_minimum (min_field.value)
+			pb.set_minimum (min_field.value)
+			hr.set_minimum (min_field.value)
+		end
+
+	on_max_change is
+		do
+			val_field.set_maximum (max_field.value)
+			sb.set_maximum (max_field.value)
+			pb.set_maximum (max_field.value)
+			hr.set_maximum (max_field.value)
+		end
+
+	on_sb_change is
+			-- Scrollbar changes.
+		do
+			max_field.set_minimum (sb.value)
+			min_field.set_maximum (sb.value)
+			val_field.set_value (sb.value)
+			pb.set_value (sb.value)
+			hr.set_value (sb.value)
+		end
+
+	on_hr_change is
+		do
+			max_field.set_minimum (hr.value)
+			min_field.set_maximum (hr.value)
+			val_field.set_value (hr.value)
+			pb.set_value (hr.value)
+			sb.set_value (hr.value)
+		end
+
+	on_val_change is
+		do
+			max_field.set_minimum (val_field.value)
+			min_field.set_maximum (val_field.value)
+			sb.set_value (val_field.value)
+			pb.set_value (val_field.value)
+			hr.set_value (val_field.value)
 		end
 
 	first_window: EV_TITLED_WINDOW is
 		once
 			create Result
 			Result.set_title ("Main window")
+			--Result.show
+			Result.set_size (300, 300)
 		end
 
 end -- class DIALOG_TEST

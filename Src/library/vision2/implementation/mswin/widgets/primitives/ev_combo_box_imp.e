@@ -53,7 +53,8 @@ inherit
 			selected_item as wel_selected_item,
 			height as wel_height,
 			insert_item as wel_insert_item,
-			set_limit_text as set_text_limit
+			set_limit_text as set_text_limit,
+			set_text as wel_set_text
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -82,9 +83,7 @@ inherit
 			on_cbn_selchange,
 			on_cbn_dblclk,
 			move_and_resize,
-			default_style,
-			text_length,
-			text
+			default_style
 		end
 
 	WEL_EM_CONSTANTS
@@ -135,28 +134,6 @@ feature -- Measurement
 
 feature -- Status report
 
-	text_length: INTEGER is
-			-- Text length
-		do
-			if is_editable then
-				Result := {WEL_DROP_DOWN_COMBO_BOX_EX} Precursor
-			else
-				Result := selected_string.count
-			end
-		end
-
-	text: STRING is
-			-- Window text
-		do
-			if is_editable then
-				Result := {WEL_DROP_DOWN_COMBO_BOX_EX} Precursor
-			elseif selected then
-				Result := selected_string
-			else
-				Result := ""
-			end
-		end
-
 	item_height: INTEGER is
 			-- height needed for an item
 		do
@@ -194,6 +171,12 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_text (tex: STRING) is
+			-- Set the text of the combo box.
+		do
+			wel_set_text (tex)	
+		end
 
 	set_default_minimum_size is
 			-- Called after creation. Set the current size and
@@ -242,8 +225,6 @@ feature -- Status setting
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
-		local
-			color: EV_COLOR
 		do
 			if flag then
 				set_read_write
@@ -399,6 +380,7 @@ feature {NONE} -- Implementation
 					a, b, c, 90, 0, default_pointer)
  	 			id := 0
 				create combo.make_from_combo (Current)
+				--set_text (s)
 				internal_copy_list
 			end
 		end

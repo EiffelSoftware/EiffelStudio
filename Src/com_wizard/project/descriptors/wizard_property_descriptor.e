@@ -7,7 +7,10 @@ class
 	WIZARD_PROPERTY_DESCRIPTOR
 
 inherit
-	WIZARD_DESCRIPTOR
+	WIZARD_FEATURE_DESCRIPTOR
+		redefine
+			disambiguate_names
+		end
 
 	ECOM_VAR_KIND
 		export
@@ -40,25 +43,8 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING
-			-- Field name
-
-	interface_eiffel_name: STRING
-			-- Eiffel property name that used in deferrded interface
-
-	coclass_eiffel_names: HASH_TABLE [STRING, STRING]
-			-- Eiffel property name that used in coclass.
-			-- item: property name
-			-- key: Coclass name, `name' in coclass_descriptor.
-
-	description: STRING
-			-- Help string
-
 	data_type: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Field's type
-
-	member_id: INTEGER
-			-- Member ID
 
 	var_kind: INTEGER
 			-- See class ECOM_VAR_KIND for values
@@ -92,39 +78,35 @@ feature -- Status Report
 			symmetric: Result implies other.is_equal_property (Current)
 		end
 
-feature -- Basic operations
+feature -- Transformation
 
-	add_coclass_eiffel_name (an_eiffel_name, a_coclass_name: STRING) is
-			-- Add `an_eiffel_name' to `coclass_eiffel_names' table
-			-- with key `a_coclass_name'
-		require
-			non_void_eiffel_name: an_eiffel_name /= Void
-			valid_eiffel_name: not an_eiffel_name.empty
-			non_void_coclass_name: a_coclass_name /= Void
-			valid_coclass_name: not a_coclass_name.empty
-			not_has: not coclass_eiffel_names.has (a_coclass_name)
+	disambiguate_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR;
+				a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Disambiguate names for coclass.
+		local
+			tmp_name: STRING
 		do
-			coclass_eiffel_names.extend (an_eiffel_name, a_coclass_name)
-		end
-
-	set_interface_eiffel_name (a_name: STRING) is
-			-- Set `eiffel_name' with `a_name'.
-		require
-			valid_name: a_name /= Void and then not a_name.empty
-		do
-			interface_eiffel_name := clone (a_name)
-		ensure
-			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.empty and interface_eiffel_name.is_equal (a_name)
-		end
-
-	set_name (a_name: STRING) is
-			-- Set `name' with `a_name'
-		require
-			valid_name: a_name /= Void and then not a_name.empty
-		do
-			name := clone (a_name)
-		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+		{WIZARD_FEATURE_DESCRIPTOR} Precursor (an_interface_descriptor, a_coclass_descriptor)
+			tmp_name := clone (interface_eiffel_name)
+			tmp_name.prepend ("set_")
+			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
+			tmp_name := clone (interface_eiffel_name)
+			tmp_name.prepend ("set_ref_")
+			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
+			if coclass_eiffel_names.has (a_coclass_descriptor.name) then
+				tmp_name := clone (coclass_eiffel_names.item (a_coclass_descriptor.name))
+				tmp_name.prepend ("set_")
+				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
+				tmp_name := clone (coclass_eiffel_names.item (a_coclass_descriptor.name))
+				tmp_name.prepend ("set_ref_")
+				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
+			end
+			tmp_name := clone (name)
+			tmp_name.prepend ("set_")
+			a_coclass_descriptor.feature_c_names.force (tmp_name)
+			tmp_name := clone (name)
+			tmp_name.prepend ("set_ref_")
+			a_coclass_descriptor.feature_c_names.force (tmp_name)
 		end
 
 feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations

@@ -8,7 +8,7 @@ class
 	WIZARD_FUNCTION_DESCRIPTOR
 
 inherit
-	WIZARD_DESCRIPTOR
+	WIZARD_FEATURE_DESCRIPTOR
 		undefine
 			is_equal
 		end
@@ -71,23 +71,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	name: STRING
-			-- Function name
-
-	interface_eiffel_name: STRING
-			-- Eiffel function name that used in deferrded interface
-
-	coclass_eiffel_names: HASH_TABLE [STRING, STRING]
-			-- Eiffel function name that used in coclass.
-			-- item: function name
-			-- key: Coclass name, `name' in coclass_descriptor.
-
-	description: STRING
-			-- Help String
-
-	member_id: INTEGER
-			-- Member ID of function
 
 	argument_count: INTEGER
 			-- Number of function arguments
@@ -172,43 +155,7 @@ feature -- Status report
 			symmeteric: Result implies other.is_equal_function (Current)
 		end
 
-feature -- Basic operations
-
-	add_coclass_eiffel_name (an_eiffel_name, a_coclass_name: STRING) is
-			-- Add `an_eiffel_name' to `coclass_eiffel_names' table
-			-- with key `a_coclass_name'
-		require
-			non_void_eiffel_name: an_eiffel_name /= Void
-			valid_eiffel_name: not an_eiffel_name.empty
-			non_void_coclass_name: a_coclass_name /= Void
-			valid_coclass_name: not a_coclass_name.empty
-			not_has: not coclass_eiffel_names.has (a_coclass_name)
-		do
-			coclass_eiffel_names.extend (an_eiffel_name, a_coclass_name)
-		end
-
-	set_interface_eiffel_name (a_name: STRING) is
-			-- Set `eiffel_name' with `a_name'.
-		require
-			valid_name: a_name /= Void and then not a_name.empty
-		do
-			interface_eiffel_name := clone (a_name)
-		ensure
-			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.empty and interface_eiffel_name.is_equal (a_name)
-		end
-
-	set_name (a_name: STRING) is
-			-- Set `name' with `a_name'.
-		require
-			valid_name: a_name /= Void and then not a_name.empty
-		do
-			name := clone (a_name)
-		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
-		end
-
 feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
-
 
 	set_description (a_description: STRING) is
 			-- Set `description' with `a_description'.

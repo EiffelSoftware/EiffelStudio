@@ -7,7 +7,8 @@
  revision:    "$Revision$"
  status:      "See notice at end of file"
 ==============================================================================*/
-
+#ifndef _GTK_EIFFEL_H_INCLUDED_
+#define _GTK_EIFFEL_H_INCLUDED_
 
 /*==============================================================================
  Included files
@@ -341,6 +342,8 @@ void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 /*#define c_gtk_style_base_color_blue(p) \
 	((((GtkStyle*)p)->base[GTK_STATE_NORMAL].blue)/257)
 */
+
+#endif /* _GTK_EIFFEL_H_INCLUDED_ */
 
 /*==============================================================================
  End of file

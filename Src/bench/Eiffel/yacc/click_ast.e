@@ -6,33 +6,36 @@ indexing
 	revision: "$Revision$"
 
 class
-	CLICK_AST 
-
+	CLICK_AST
+	
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+		
 create
 	initialize
 
 feature {NONE} -- Initialization
 
-	initialize (n: like node; l, s, e: INTEGER) is
-			-- Create a new clickable element for `n'.
+	initialize (n: AST_EIFFEL; real_node: CLICKABLE_AST) is
+			-- Create a new clickable element for syntaxic element `n' using `real_node'
+			-- as associated clickable.
 		require
 			n_not_void: n /= Void
+			real_node_not_void: real_node /= Void
 		do
-			node := n
-			start_line_number := l
-			start_position := s
-			end_position := e
+			node := real_node
+			start_position := n.start_position
+			end_position := n.end_position
 		ensure
-			node_set: node = n
-			start_line_number_set: start_line_number = l
-			start_position_set: start_position = s
-			end_position_set: end_position = e
+			node_set: node = real_node
+			start_position_set: start_position = n.start_position
+			end_position_set: end_position = n.end_position
 		end
 
 feature -- Access
-
-	start_line_number: INTEGER
-			-- Line number of clickable.
 
 	start_position: INTEGER
 			-- Start position of clickable.
@@ -43,12 +46,18 @@ feature -- Access
 	node: CLICKABLE_AST
 			-- Node AST that has a position.
 
-feature -- Element change
+feature -- Comparison
 
-	set_node (n: like node) is
-			-- Set `node' to `n'.
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
 		do
-			node := n
+			Result := start_position = other.start_position and 
+				end_position = other.end_position and
+				node.is_equivalent (other.node)
 		end
+
+invariant
+	node_not_void: node /= Void
 
 end -- class CLICK_AST

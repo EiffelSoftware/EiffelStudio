@@ -137,6 +137,7 @@ feature {NONE}
 	Bc_object_expr_addr:	CHARACTER is '%/129/';
 	Bc_reserve:			CHARACTER is '%/130/';
 	Bc_pop:				CHARACTER is '%/131/';
+	Bc_ref_to_ptr:		CHARACTER is '%/132/';
 
 		-- Instructions for Concurrent Eiffel
 

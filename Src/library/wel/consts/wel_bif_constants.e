@@ -85,20 +85,20 @@ feature -- Access
 			"BIF_STATUSTEXT"
 		end
 
-	Bif_usenewui: INTEGER is
-			-- Requires MVC Version 5.0 or greater. Use the new
-			-- user-interface. Setting this flag provides the user with
-			-- a larger dialog box that can be resized. It has several
-			-- new capabilities including: drag and drop capability within
-			-- the dialog box, reordering, context menus, new folders,
-			-- delete, and other context menu commands. To use this flag,
-			-- you must call OleInitialize or CoInitialize before
-			-- calling SHBrowseForFolder.
-		external
-			"C[macro %"shlobj.h%"]"
-		alias
-			"BIF_USENEWUI"
-		end
+-- 	Bif_usenewui: INTEGER is
+-- 			-- Requires MVC Version 5.0 or greater. Use the new
+-- 			-- user-interface. Setting this flag provides the user with
+-- 			-- a larger dialog box that can be resized. It has several
+-- 			-- new capabilities including: drag and drop capability within
+-- 			-- the dialog box, reordering, context menus, new folders,
+-- 			-- delete, and other context menu commands. To use this flag,
+-- 			-- you must call OleInitialize or CoInitialize before
+-- 			-- calling SHBrowseForFolder.
+-- 		external
+-- 			"C[macro %"shlobj.h%"]"
+-- 		alias
+-- 			"BIF_USENEWUI"
+-- 		end
 
 	Bif_validate: INTEGER is
 			-- Requires MVC Version 4.71 or greater. If the user types an

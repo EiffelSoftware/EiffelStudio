@@ -513,6 +513,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
+		
 end -- class EV_DIALOG_IMP
 
 --|----------------------------------------------------------------

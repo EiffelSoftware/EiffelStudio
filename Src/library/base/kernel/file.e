@@ -157,19 +157,24 @@ feature -- Status report
 	is_open_read: BOOLEAN is
 			-- Is file open for reading?
 		do
-			Result := mode = Read_file
+			Result := mode = Read_file or else 
+				mode = Read_write_file or else
+				mode = Append_read_file
 		end;
 
 	is_open_write: BOOLEAN is
 			-- Is file open for writing?
 		do
-			Result := mode = Write_file
+			Result := mode = Write_file or else 
+				mode = Read_write_file or else
+				mode = Append_read_file
 		end;
 
 	is_open_append: BOOLEAN is
 			-- Is file open for appending?
 		do
-			Result := mode = Append_file
+			Result := mode = Append_file or else
+				mode = Append_read_file
 		end;
 
 	file_writable: BOOLEAN is

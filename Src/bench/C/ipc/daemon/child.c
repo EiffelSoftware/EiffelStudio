@@ -106,6 +106,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 
 	HANDLE uu_str [2];		/* Field to UUEncode  */
 	char *t_uu;				/* Result of UUEncode */
+	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
 	char *startpath = NULL, *dotplace, *cmdline, *cmd2;	/* Paths for directory to start in */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
@@ -119,6 +120,9 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 #endif
 
 #ifdef EIF_WIN32
+		/* We encode 2 pointers, plus "? and ?" plus a space and a null terminating character. */
+	uu_buffer_size = uuencode_buffer_size(2) + 6;
+
 	cmd2 = strdup(cmd);
 	/* Find the name of the command and place it in cmd2 */
 	/* Find the args and place them in cmdline */
@@ -133,7 +137,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 	}
 	*(dotplace + 4) = '\0';
 	if (strchr (cmd2, ' ') != NULL) {
-		cmdline = malloc (strlen (cmd) + 3 + 18);
+		cmdline = malloc (strlen (cmd) + 3 + uu_buffer_size);
 		memset  (cmdline, 0, strlen(cmd) + 3);
 		strcpy (cmdline , "\"");
 		strcat (cmdline, cmd2);
@@ -141,7 +145,7 @@ rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *
 		if (strlen (cmd2) != strlen (cmd))
 			strcat (cmdline, dotplace + 5);
 	} else {
-		cmdline = malloc (strlen (cmd) + 18);
+		cmdline = malloc (strlen (cmd) + uu_buffer_size);
 		strcpy (cmdline, cmd);
 	}
 #else

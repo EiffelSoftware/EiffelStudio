@@ -1618,14 +1618,19 @@ feature -- Conversion
 
 feature -- Duplication
 
-	substring (n1, n2: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current is
 			-- Copy of substring containing all characters at indices
-			-- between `n1' and `n2'
+			-- between `start_index' and `end_index'
 		do
-			create Result.make_from_cil (internal_string_builder.to_string_integer (n1 - 1, n2 - n1 + 1))
+			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
+				create Result.make_from_cil (internal_string_builder.to_string_integer (
+					start_index - 1, end_index - start_index + 1))
+			else
+				create Result.make (0)
+			end
 		ensure
-			new_result_count: Result.count = n2 - n1 + 1 or Result.count = 0
-			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)
+			new_result_count: Result.count = end_index - start_index + 1 or Result.count = 0
+			-- original_characters: For every `i' in 1..`end_index'-`start_index', `Result'.`item' (`i') = `item' (`start_index'+`i'-1)
 		end
 
 	multiply (n: INTEGER) is

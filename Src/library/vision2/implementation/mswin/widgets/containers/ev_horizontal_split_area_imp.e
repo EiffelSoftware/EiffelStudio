@@ -10,7 +10,7 @@ class
 	
 inherit
 	EV_HORIZONTAL_SPLIT_AREA_I
-		
+
 	EV_SPLIT_AREA_IMP
 		redefine
 			child_minwidth_changed,
@@ -135,14 +135,16 @@ feature {NONE} -- Implementation
 			-- the second feature doesn't use the rop2 status.
 		local
 			old_rop2: INTEGER
+			ldc: WEL_CLIENT_DC
 		do
-			dc.get
-			old_rop2 := dc.rop2
-			dc.set_rop2 (R2_xorpen)
-			dc.select_brush (splitter_brush)
-			dc.rectangle (temp_level, -1, temp_level + size, height+1)
-			dc.set_rop2 (old_rop2)
-			dc.release
+			ldc := dc
+			ldc.get
+			old_rop2 := ldc.rop2
+			ldc.set_rop2 (R2_xorpen)
+			ldc.select_brush (splitter_brush)
+			ldc.rectangle (temp_level, -1, temp_level + size, height+1)
+			ldc.set_rop2 (old_rop2)
+			ldc.release
 		end
 
 feature {NONE} -- WEL Implementation

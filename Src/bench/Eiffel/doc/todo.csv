@@ -52,6 +52,7 @@ Formats,,,,,,
 ,4,Unify names (interface vs flat contracts...),Xavier,FMT0005
 ,2,Add a formatter for the invariant,Arnaud,FMT0006
 ,3,List of class names and class paths in the system,Arnaud,FMT0007
+,3,Let the user print the format,Raphael,FMT0008
 
 
 

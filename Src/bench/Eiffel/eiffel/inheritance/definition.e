@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Status Report
@@ -102,7 +102,7 @@ feature -- Checking
 		is
 			-- Check redeclaration into an attribute.
 		local
-			attribute, old_attribute: ATTRIBUTE_I
+			l_attribute, old_attribute: ATTRIBUTE_I
 			attr_precursor: ATTRIBUTE_I
 			constant: CONSTANT_I
 			rout_id_set: ROUT_ID_SET
@@ -112,37 +112,37 @@ feature -- Checking
 			info: INHERIT_INFO
 		do
 			if new_feature.is_attribute then
-				attribute ?= new_feature
+				l_attribute ?= new_feature
 				if not old_features.all_attributes then
 						-- At least, the attribute is a redeclaration
 						-- of a deferred routine or an implemented function.
 						-- Remember to generate a function
-					if attribute.generate_in = 0 then
-						attribute.set_has_function_origin (True)
-						attribute.set_generate_in (new_tbl.feat_tbl_id)
+					if l_attribute.generate_in = 0 then
+						l_attribute.set_has_function_origin (True)
+						l_attribute.set_generate_in (new_tbl.feat_tbl_id)
 							-- Remember to process a pattern for this
-						pattern_list.extend (attribute.feature_name_id)
+						pattern_list.extend (l_attribute.feature_name_id)
 					end
-					rout_id_set := attribute.rout_id_set
+					rout_id_set := l_attribute.rout_id_set
 					if not rout_id_set.has_attribute_origin then
 							-- We have to give a new routine id to the
 							-- attribute. If possible, take the same given
 							-- during a previous compilation
-						old_attribute ?= old_tbl.item_id (attribute.feature_name_id)
+						old_attribute ?= old_tbl.item_id (l_attribute.feature_name_id)
 						if 	old_attribute /= Void
 							and then
 							old_attribute.has_function_origin
 						then
 							new_rout_id := old_attribute.rout_id_set.first
 						else
-							new_rout_id := attribute.new_rout_id
+							new_rout_id := l_attribute.new_rout_id
 						end
 							-- Insertion into the routine info table.
 						System.rout_info_table.put (new_rout_id, System.current_class)
 						rout_id_set.force (new_rout_id)
 					end
 				else
-					attribute.set_has_function_origin (False)
+					l_attribute.set_has_function_origin (False)
 						-- Case of a redefinition of attributes into
 						-- an attribute: new funciton if one precursor
 						-- is associated to a function
@@ -157,9 +157,9 @@ feature -- Checking
 						attribute_list.forth
 					end
 					if stop then
-						attribute.set_generate_in (new_tbl.feat_tbl_id)
+						l_attribute.set_generate_in (new_tbl.feat_tbl_id)
 							-- Remember to process a pattern for this function
-						pattern_list.extend (attribute.feature_name_id)
+						pattern_list.extend (l_attribute.feature_name_id)
 					end
 				end
 			elseif new_feature.is_constant then

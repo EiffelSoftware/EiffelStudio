@@ -55,7 +55,8 @@ feature -- Access
 				end
 			else
 				from
-					start; pos := 1
+					start;
+					pos := 1
 				until
 					off or else (occur = i)
 				loop

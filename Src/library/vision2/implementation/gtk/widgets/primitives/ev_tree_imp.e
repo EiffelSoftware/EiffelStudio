@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			(App_implementation.gtk_marshal).pointer_tuple.put ((App_implementation.gtk_marshal).gtk_value_pointer (args), 1)
+			(App_implementation.gtk_marshal).pointer_tuple.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
 			Result := (App_implementation.gtk_marshal).pointer_tuple
 			--	Result := [(App_implementation.gtk_marshal).gtk_value_pointer (args)]
 		end

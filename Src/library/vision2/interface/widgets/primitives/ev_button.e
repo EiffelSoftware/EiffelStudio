@@ -33,6 +33,12 @@ inherit
 			is_in_default_state
 		end
 
+	EV_FONTABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
 	EV_BUTTON_ACTION_SEQUENCES
 		redefine
 			implementation

@@ -239,7 +239,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
 		TRUE,				/* Handles are inherited */
-		CREATE_NEW_CONSOLE,	/* Creation flags */
+		DETACHED_PROCESS ,	/* Creation flags */
 		NULL,				/* Use parent's environment */
 		startpath,			/* Use cmd's current directory */
 		&siStartInfo,		/* STARTUPINFO pointer */

@@ -30,39 +30,7 @@ feature -- Access
  	assertions: LINKED_LIST[WIZARD_WRITER_ASSERTION]
 			-- Assertions
 
-
 feature -- Basic operation
-
-	user_precondition_name (a_feature_name: STRING): STRING is
-			-- Name for user defined precondition.
-		require
-			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
-		do
-			Result := clone (a_feature_name)
-			Result.append (Underscore)
-			Result.append (User_precondition)
-		ensure
-			non_void_name: Result /= Void
-			valid_name: not Result.empty
-		end
-
-	user_defined_precondition (a_feature_name: STRING): WIZARD_WRITER_ASSERTION is
-			-- User defined precondition.
-		require
-			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
-		local
-			tmp_tag, tmp_body, a_precondition_name: STRING
-		do
-			a_precondition_name := user_precondition_name (a_feature_name)
-			tmp_tag := clone (a_precondition_name)
-			tmp_body := clone (a_precondition_name)
-
-			create Result.make (tmp_tag, tmp_body)
-		ensure
-			non_void_assertion: Result /= Void
-		end
 
 	generate_precondition (a_name: STRING; type: WIZARD_DATA_TYPE_DESCRIPTOR; 
 					in_param, out_param: BOOLEAN) is
@@ -100,6 +68,23 @@ feature -- Basic operation
 			visitor := Void
 		ensure
 			non_void_assertions: assertions /= Void
+		end
+
+	user_defined_precondition (a_feature_name: STRING): WIZARD_WRITER_ASSERTION is
+			-- User defined precondition.
+		require
+			non_void_name: a_feature_name /= Void
+			valid_name: not a_feature_name.empty
+		local
+			tmp_tag, tmp_body, a_precondition_name: STRING
+		do
+			a_precondition_name := vartype_namer.user_precondition_name (a_feature_name)
+			tmp_tag := clone (a_precondition_name)
+			tmp_body := clone (a_precondition_name)
+
+			create Result.make (tmp_tag, tmp_body)
+		ensure
+			non_void_assertion: Result /= Void
 		end
 
 	generate_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 

@@ -70,7 +70,7 @@ feature -- Basic operations
 			
 			-- Set pre-condition
 			if not visitor.is_basic_type then
-				generate_precondition (An_item_variable, a_descriptor.data_type, True, False)
+				generate_precondition (Argument_name, a_descriptor.data_type, True, False)
 				if not assertions.empty then
 					from 
 						assertions.start
@@ -85,7 +85,12 @@ feature -- Basic operations
 				end
 			end
 			setting_feature.set_deferred
-			setting_feature.add_precondition (user_defined_precondition (a_set_name))
+			tmp_assertion := user_defined_precondition (a_set_name)
+			tmp_string := clone (Space_open_parenthesis)
+			tmp_string.append (Argument_name)
+			tmp_string.append (Close_parenthesis)
+			tmp_assertion.body.append (tmp_string)
+			setting_feature.add_precondition (tmp_assertion)
 			set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
 			precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))
 

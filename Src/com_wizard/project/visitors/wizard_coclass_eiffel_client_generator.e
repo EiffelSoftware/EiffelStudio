@@ -13,8 +13,6 @@ inherit
 			generate
 		end
 
-	WIZARD_VARIABLE_NAME_MAPPER
-
 	WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR
 
 feature -- Initialization

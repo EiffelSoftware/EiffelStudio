@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			eiffel_names.put (Ecom_automation_interface, Vt_dispatch)
 			eiffel_names.put (Ecom_unknown_interface, Vt_unknown)
 			eiffel_names.put (String_type, Vt_bstr)
+			eiffel_names.put (String_type, Vt_lpstr)
 			eiffel_names.put (String_type, Vt_lpwstr)
 			eiffel_names.put (Ecom_large_integer, Vt_i8)
 			eiffel_names.put (Ecom_ularge_integer, Vt_ui8)
@@ -165,6 +166,20 @@ feature -- Access
 		ensure
 			non_void_eiffel_name: Result /= Void
 			valid_eiffel_name: not Result.empty
+		end
+
+	user_precondition_name (a_feature_name: STRING): STRING is
+			-- Name for user defined precondition.
+		require
+			non_void_name: a_feature_name /= Void
+			valid_name: not a_feature_name.empty
+		do
+			Result := clone (a_feature_name)
+			Result.append (Underscore)
+			Result.append (User_precondition)
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
 		end
 
 	variant_field_name (a_var_type: INTEGER): STRING is

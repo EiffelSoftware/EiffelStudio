@@ -408,10 +408,13 @@ feature -- Document
 		require
 			url_not_void: a_url /= Void
 		local
+			l_proj_name: STRING
 			l_name: FILE_NAME
 		do
 			Result := a_url.twin
-			Result.replace_substring_all ((create {SHARED_OBJECTS}).Shared_project.root_directory, "")
+			l_proj_name := (create {SHARED_OBJECTS}).Shared_project.root_directory
+			l_proj_name.replace_substring_all ("\", "/")
+			Result.replace_substring_all (l_proj_name, "")
 			Result.replace_substring_all ((create {APPLICATION_CONSTANTS}).Temporary_help_directory, "")
 			Result.prune_all_leading ('/')
 			Result.prune_all_leading ('\')			

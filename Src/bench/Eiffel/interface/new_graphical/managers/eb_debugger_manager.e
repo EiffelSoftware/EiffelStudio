@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			can_debug := True
 			maximum_stack_depth := default_maximum_stack_depth
 			init_commands
-			object_split_position := 200
+			object_split_position := 300
 			create observers.make (10)
 		end
 
@@ -671,6 +671,7 @@ feature -- Debugging events
 			debug_cmd.enable_sensitive
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
+			out_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.enable_sensitive
 				-- Modify the debugging window display.
 			window_manager.quick_refresh_all

@@ -27,6 +27,9 @@ inherit
 		end
 		
 	GB_DEFAULT_STATE
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
 		export {NONE}
@@ -41,6 +44,9 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 		
 	GB_SHARED_SYSTEM_STATUS
 		export
@@ -50,6 +56,8 @@ inherit
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end

@@ -236,11 +236,6 @@ feature -- Access
 				end
 				n := n + 1
 			end
-			if Result = Void then
-					-- Feature could still be present in `an_ancestor'.
-					-- it might be origin because other feature was selected.
-				Result := written_class.feature_with_body_index (body_index)
-			end
 		end
 
 	precursors: ARRAYED_LIST [CLASS_C] is

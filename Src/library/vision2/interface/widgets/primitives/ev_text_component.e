@@ -145,7 +145,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
-			is_editable: is_editable
+--			is_editable: is_editable
 		do
 			implementation.insert_text (txt)
 		end
@@ -155,7 +155,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
-			is_editable: is_editable
+--			is_editable: is_editable
 		do
 			implementation.append_text (txt)
 		ensure
@@ -167,7 +167,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
-			is_editable: is_editable
+--			is_editable: is_editable
 		do
 			implementation.prepend_text (txt)
 		ensure

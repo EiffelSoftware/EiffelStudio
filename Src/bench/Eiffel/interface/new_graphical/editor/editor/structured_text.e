@@ -274,7 +274,7 @@ feature {NONE} -- Private feature
 			from
 				line := start_selection.line
 			until
-				line = end_selection.line.next or else line = Void
+				line = end_selection.line
 			loop
 					-- Retrieve the string representation of the line
 				line_image := line.image
@@ -286,8 +286,29 @@ feature {NONE} -- Private feature
 				lexer.execute (line_image)
 				line.make_from_lexer (lexer)
 
+				if line = start_selection.line then
+						-- shift the selection cursor
+					start_selection.set_x_in_characters((start_selection.x_in_characters + symbol.count).max(1))
+				end
 					-- Prepare next iteration
 				line := line.next
+			end
+
+				-- handle the last line differently because if the cursor is on the
+				-- first character, we do not want to add the symbol
+			if end_selection.token /= line.first_token or else end_selection.pos_in_token /= 1 then
+					-- Retrieve the string representation of the line
+				line_image := line.image
+
+					-- Add the commentary symbol in front of the line
+				line_image.prepend(symbol)
+
+					-- Rebuild line from the lexer.
+				lexer.execute (line_image)
+				line.make_from_lexer (lexer)
+
+					-- shift the selection cursor
+				end_selection.set_x_in_characters((end_selection.x_in_characters + symbol.count).max(1))
 			end
 		end
 
@@ -310,7 +331,7 @@ feature {NONE} -- Private feature
 			from
 				line := start_selection.line
 			until
-				line = end_selection.line.next or else line = Void
+				line = end_selection.line
 			loop
 					-- Retrieve the string representation of the line
 				line_image := line.image
@@ -322,10 +343,34 @@ feature {NONE} -- Private feature
 						-- Rebuild line from the lexer.
 					lexer.execute (line_image)
 					line.make_from_lexer (lexer)
+
+						-- shift the selection cursor
+					if line = start_selection.line then
+						start_selection.set_x_in_characters((start_selection.x_in_characters - symbol_length).max(1))
+					end
 				end
 
 					-- Prepare next iteration
 				line := line.next
+			end
+
+				-- handle the last line differently because if the cursor is on the
+				-- first character, we do not want to remove the symbol
+			if end_selection.token /= line.first_token or else end_selection.pos_in_token /= 1 then
+					-- Retrieve the string representation of the line
+				line_image := line.image
+
+					-- Remove the commentary symbol in front of the line (if any)
+				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
+					line_image := line_image.substring(symbol_length + 1, line_image.count)
+
+						-- Rebuild line from the lexer.
+					lexer.execute (line_image)
+					line.make_from_lexer (lexer)
+
+						-- shift the selection cursor
+					end_selection.set_x_in_characters((end_selection.x_in_characters - symbol_length).max(1))
+				end
 			end
 		end
 

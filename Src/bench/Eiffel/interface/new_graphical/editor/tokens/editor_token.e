@@ -158,12 +158,12 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 		end
 
 	normal_background_brush: WEL_BRUSH is
-		once
+		do
 			create Result.make_solid(background_color)
 		end
 
 	selected_background_brush: WEL_BRUSH is
-		once
+		do
 			create Result.make_solid(selected_background_color)
 		end
 

@@ -362,6 +362,7 @@ void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int
 void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
+#define c_gtk_box_homogeneous(p)	(GTK_BOX(p)->homogeneous)  /* guint */
 #define c_gtk_container_border_width(p)     (GTK_CONTAINER(p)->border_width)     /*integer*/
 
 
@@ -373,7 +374,7 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
 
-/*Information about the window. */
+/* Information about the window. */
 typedef struct {
 	GdkGeometry    geometry;
 	GdkWindowHints mask;

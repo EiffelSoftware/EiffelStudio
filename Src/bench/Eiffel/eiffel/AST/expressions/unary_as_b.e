@@ -68,7 +68,6 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vwoe);
 				vwoe.set_other_class (last_class);
 				vwoe.set_op_name (prefix_feature_name);
-				vwoe.set_node (Current);
 				Error_handler.insert_error (vwoe);
 					-- Cannot go on here.
 				Error_handler.raise_error;

@@ -79,7 +79,6 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vwoe);
 				vwoe.set_other_class (last_class);
 				vwoe.set_op_name (infix_function_name);
-				vwoe.set_node (Current);
 				Error_handler.insert_error (vwoe);
 					-- Cannot go on here.
 				Error_handler.raise_error;
@@ -136,7 +135,6 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vwoe1);
 				vwoe1.set_other_class (last_class);
 				vwoe1.set_op_name (infix_function_name);
-				vwoe1.set_node (Current);
 				vwoe1.set_formal_type (infix_arg_type);
 				vwoe1.set_actual_type (current_context);
 				Error_handler.insert_error (vwoe1);

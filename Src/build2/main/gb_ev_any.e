@@ -65,7 +65,6 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.

@@ -1,6 +1,6 @@
 AR= lib
 CC = cl
-CFLAGS = -Ox -nologo  -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ox -nologo -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 LIBS = 
 MAKE = nmake
 MV = copy

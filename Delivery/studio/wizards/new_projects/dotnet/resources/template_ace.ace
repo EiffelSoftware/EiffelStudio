@@ -18,7 +18,7 @@ cluster
 	root_cluster: "<FL_LOCATION>"
 
 		-- Eiffel base
-	all base:		"$EIFFEL_SRC\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic";
 		end

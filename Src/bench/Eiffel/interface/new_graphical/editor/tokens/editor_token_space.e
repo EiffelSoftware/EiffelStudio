@@ -24,13 +24,17 @@ feature -- Initialisation
 
 			create alternate_image.make(number)
 			alternate_image.fill_character(space_symbol)
+		ensure
+			image_not_void: image /= Void
+			alternate_image_not_void: alternate_image /= Void
+			length_positive: length > 0
 		end
 
 feature -- Width & Height
 
 	width: INTEGER is
 		do
-			Result := length * font_width
+			Result := length * space_width
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -39,68 +43,56 @@ feature -- Width & Height
 		do
 				-- The result can be easily computed since all
 				-- the spaces have the same size.
-			Result := n * font_width
+			Result := n * space_width
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
-			Result := a_width // font_width + 1
+			Result := a_width // space_width + 1
 		end
 
 feature {NONE} -- Implementation
 
-	display_blanks(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
+	display_blanks(d_x, d_y: INTEGER; device: EV_DRAWING_AREA; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
 		local
-			old_text_color		: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
-			the_text_color		: WEL_COLOR_REF
-			the_background_color: WEL_COLOR_REF
+			old_text_color		: EV_COLOR
+			old_background_color: EV_COLOR
+			the_text_color		: EV_COLOR
+			the_background_color: EV_COLOR
 			the_text			: STRING
 		do
-				-- Select the drawing style we will use.
-			if editor_preferences.view_invisible_symbols then
-				the_text := alternate_image.substring(char_start, char_end)
-			else
-				the_text := image.substring(char_start, char_end)
-			end
+ 				-- Select the drawing style we will use.
+ 			if editor_preferences.view_invisible_symbols then
+ 				the_text := alternate_image.substring(char_start, char_end)
+ 			else
+ 				the_text := image.substring(char_start, char_end)
+ 			end
+ 
+ 			if selected then
+ 				the_text_color := selected_text_color
+ 				the_background_color := selected_background_color
+ 			else
+ 				the_text_color := text_color
+ 				the_background_color := background_color
+ 			end
+ 
+ 				-- Change the drawing style.
+ 			device.set_foreground_color(the_text_color)
+ 			device.set_font(font)
+ 
+ 				-- Display the text.
+ 			device.draw_text (d_x, d_y, the_text)
 
-			if selected then
-				the_text_color := selected_text_color
-				the_background_color := selected_background_color
-			else
-				the_text_color := text_color
-				the_background_color := background_color
-			end
-
-				-- Backup old drawing style and set the new one.
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
-			a_dc.set_text_color(the_text_color)
-			a_dc.set_background_color(the_background_color)
-			a_dc.select_font(font)
-
-				-- Display the text.
-			a_dc.text_out (d_x, d_y, the_text)
-			Result := d_x + a_dc.string_width(the_text)
-
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			a_dc.unselect_font
+ 			Result := d_x + font.string_width(the_text)
 		end
 
 feature {NONE} -- Private Constants
 
-	font_width: INTEGER is
-		local
-			dc: WEL_MEMORY_DC
-		once
-			create dc.make
-			dc.select_font(font)
-			Result := dc.string_width(" ")
-			dc.unselect_font
+	space_width: INTEGER is
+		do
+			Result := font.string_width(" ")
 		end
 
 	space_symbol: CHARACTER is

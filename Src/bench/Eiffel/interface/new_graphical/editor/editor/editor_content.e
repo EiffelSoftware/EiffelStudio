@@ -1,42 +1,37 @@
 indexing
-	description	: "Text Paragraph"
+	description	: "Whole text displayed in the editor window."
 	author		: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
-	STRUCTURED_TEXT
+	EDITOR_CONTENT 
 
 inherit
-	ANY
+	B_345_TREE [EDITOR_LINE]
+		rename
+			first_data as first_line,
+			last_data as last_line
+		end
 
 create
 	make, make_from_file
 
 feature -- Initialization
 
-	make is
-		do
-			create chapter.make
-		end
-
 	make_from_file (fn: STRING) is
 		do
+			make
 			--| FIXME: Not yet implemented.
 		end	
 
 feature -- Access
 
-	first_displayed_line: EDITOR_LINE
+	first_displayed_line: like current_line
 
-	last_displayed_line: like first_displayed_line
+	last_displayed_line: like current_line
 
 	nb_of_lines_displayed: INTEGER
-
-	count: INTEGER is
-		do
-			Result := chapter.count
-		end
 
 	lexer: EIFFEL_SCANNER is
 			-- Eiffel Lexer
@@ -59,61 +54,44 @@ feature -- Search status
 
 feature -- test features
 
-	item: like first_displayed_line
+	current_line: EDITOR_LINE
 
 	after: BOOLEAN is
 		do
-			Result := (item = Void)
+			Result := (current_line = Void)
 		end
 
 	forth is
 		require
 			not after
 		do
-			item := item.next
+			current_line := current_line.next
 		end
 
 	go_i_th (i: INTEGER) is
 		require
 			valid_i: i >= 1 and then i <= count
 		do
-			item := chapter.item (i)
-		end
-
-	last_line: EDITOR_LINE is
-		do
-			Result := chapter.last_line
+			current_line := item (i)
 		end
 
 	start is
 		require
 			count >= 1
 		do
-			go_i_th(1)
-		end
-
-feature -- Element Change
-
-	prepend_line (tl: like first_displayed_line) is
-		do
-			chapter.prepend_line (tl)
-		end
-
-	append_line, extend (tl: like first_displayed_line) is
-		do
-			chapter.append_line (tl)
+			current_line := first_line
 		end
 
 feature -- Basic Operations
 
-	delete_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	delete_selection (start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR) is
 			-- Delete text between `start_selection' until `end_selection'.
 			-- `end_selection' is not included.
 		require
 				right_order: start_selection < end_selection
 		local
 			s: STRING
-			line: EDITOR_LINE
+			line: like current_line
 			t : EDITOR_TOKEN
 		do
 				-- Retrieving line before `start_selection'.
@@ -162,7 +140,7 @@ feature -- Basic Operations
 			line.make_from_lexer (lexer)
 		end
 
-	comment_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	comment_selection(start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR) is
 			-- Comment all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is commented. Same for the last line of the selection.
@@ -170,7 +148,7 @@ feature -- Basic Operations
 			symbol_selection(start_selection, end_selection, "--")
 		end
 
-	uncomment_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	uncomment_selection(start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR) is
 			-- Uncomment all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is uncommented. Same for the last line of the selection.
@@ -178,7 +156,7 @@ feature -- Basic Operations
 			unsymbol_selection(start_selection, end_selection, "--")
 		end
 
-	indent_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	indent_selection(start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR) is
 			-- Tabify all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is commented. Same for the last line of the selection.
@@ -186,7 +164,7 @@ feature -- Basic Operations
 			symbol_selection(start_selection, end_selection, "%T")
 		end
 
-	unindent_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+	unindent_selection(start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR) is
 			-- Tabify all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is commented. Same for the last line of the selection.
@@ -215,7 +193,7 @@ feature -- Basic Operations
 			until
 				found_index /= 0 or else after
 			loop
-				line_string := item.image
+				line_string := current_line.image
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring_index(searched_string, 1)
 				end
@@ -233,11 +211,11 @@ feature -- Basic Operations
 			end
 		end
 
-	string_selected (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR): STRING is
+	string_selected (start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR): STRING is
 		require
 				right_order: start_selection < end_selection
 		local
-			line: EDITOR_LINE
+			line: like current_line
 			t, t2 : EDITOR_TOKEN
 		do
 				-- Retrieving line after `start_selection'.
@@ -292,37 +270,9 @@ feature -- Basic Operations
 		end
 
 
---	list is
---		do
---			chapter.list
---		end
-
 feature {NONE} -- Private feature
 
--- 	prepare_line (line: like first_displayed_line) is
--- 			-- Prepare the line to be added in our
--- 			-- structure.
--- 		local
--- 			current_position: INTEGER
--- 			current_token	: EDITOR_TOKEN
--- 		do
--- 			from
--- 				line.start
--- 				current_position := 0
--- 			until
--- 				line.after
--- 			loop
--- 					-- Compute the position of each token.
--- 				current_token := line.item
--- 				current_token.set_position (current_position)
--- 				current_position := current_position + current_token.length
--- 
--- 					-- prepare next iteration
--- 				line.forth
--- 			end
--- 		end
-
-	symbol_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR; symbol: STRING) is
+	symbol_selection (start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR; symbol: STRING) is
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -331,8 +281,8 @@ feature {NONE} -- Private feature
 				right_order: start_selection < end_selection
 				valid_symbol: symbol /= Void and then not symbol.empty
 		local
-			line_image	: STRING		-- String representation of the current line
-			line		: EDITOR_LINE	-- Current line
+			line_image	: STRING			-- String representation of the current line
+			line		: like current_line	-- Current line
 		do
 			from
 				line := start_selection.line
@@ -375,7 +325,7 @@ feature {NONE} -- Private feature
 			end
 		end
 
-	unsymbol_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR; symbol: STRING) is
+	unsymbol_selection (start_selection: EDITOR_CURSOR; end_selection: EDITOR_CURSOR; symbol: STRING) is
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -385,9 +335,9 @@ feature {NONE} -- Private feature
 				right_order: start_selection < end_selection
 				valid_symbol: symbol /= Void and then not symbol.empty
 		local
-			line_image		: STRING		-- String representation of the current line
-			line			: EDITOR_LINE	-- Current line
-			symbol_length	: INTEGER		-- number of characters in `symbol'
+			line_image		: STRING			-- String representation of the current line
+			line			: like current_line	-- Current line
+			symbol_length	: INTEGER			-- number of characters in `symbol'
 		do
 			symbol_length := symbol.count
 
@@ -437,8 +387,24 @@ feature {NONE} -- Private feature
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Element Change
 
-	chapter: PARAGRAPH
+	prepend_line (a_line: like first_displayed_line) is
+		local
+			first_line_figure	: EV_FIGURE_GROUP
+			curr_line_figure	: EV_FIGURE_GROUP
+			rel_point			: EV_RELATIVE_POINT
+		do
+			prepend_data (a_line)
+		end
 
-end -- class STRUCTURED_TEXT
+	append_line, extend (a_line: like first_displayed_line) is
+		local
+			last_line_figure	: EV_FIGURE_GROUP
+			curr_line_figure	: EV_FIGURE_GROUP
+			rel_point			: EV_RELATIVE_POINT
+		do
+			append_data (a_line)
+		end
+
+end -- class EDITOR_CONTENT

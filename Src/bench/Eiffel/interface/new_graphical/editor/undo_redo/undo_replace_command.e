@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make_from_strings (c: TEXT_CURSOR; s1,s2: STRING; w: CHILD_WINDOW) is
+	make_from_strings (c: EDITOR_CURSOR; s1,s2: STRING; w: EDITOR_WINDOW) is
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
@@ -81,7 +81,7 @@ feature -- Basic operations
 
 	undo is
 		local
-			cur: TEXT_CURSOR
+			cur: EDITOR_CURSOR
 				--| Commodite d'ecriture pour "chwin.cursor".
 		do
 			cur := chwin.cursor
@@ -93,7 +93,7 @@ feature -- Basic operations
 
 	redo is
 		local
-			cur: TEXT_CURSOR
+			cur: EDITOR_CURSOR
 				--| Commodite d'ecriture pour "chwin.cursor".
 		do
 			cur := chwin.cursor
@@ -109,7 +109,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	chwin : CHILD_WINDOW
+	chwin : EDITOR_WINDOW
 
 invariant
 	invariant_clause: -- Your invariant here

@@ -1,5 +1,5 @@
 indexing
-	description	: "Objects that represent a general text token."
+	description	: "Objects that represents a general text token."
 	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -9,6 +9,14 @@ deferred class
 
 inherit
 	SHARED_EDITOR_PREFERENCES
+
+	EV_FONT_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 
 feature -- Access
 
@@ -64,30 +72,30 @@ feature -- Linkable functions
 
 feature -- Display
 
-	display(d_y: INTEGER; dc: WEL_DC) is
+	display(d_y: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		deferred
 		end
 
-	display_selected(d_y: INTEGER; dc: WEL_DC) is
+	display_selected(d_y: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
 		do
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
-			display(d_y, dc)
+			display(d_y, device)
 		end
 
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; dc: WEL_DC) is
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWING_AREA) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beggining to `pivot'
 		do
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
-			display(d_y, dc)
+			display(d_y, device)
 		end
 
 feature -- Width & height
@@ -99,13 +107,8 @@ feature -- Width & height
 	
 	height: INTEGER is
 			-- Height in pixel of the token
-		local
-			a_dc: WEL_MEMORY_DC
-		once
-			create a_dc.make
-			a_dc.select_font(font)
-			Result := a_dc.string_height(" ")
-			a_dc.unselect_font
+		do
+			Result := font.height
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -129,14 +132,16 @@ feature -- Width & height
 
 feature {EDITOR_TOKEN} -- Properties used to display the token
 
-	text_color: WEL_COLOR_REF is
+	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.normal_text_color
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: EV_COLOR is
 		do
-			Result := editor_preferences.normal_background_color
+-- by default, no background...
+--			Result := editor_preferences.normal_background_color
+
 		end
 
 	normal_background_brush: WEL_BRUSH is
@@ -144,12 +149,12 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			Result := editor_preferences.normal_background_brush
 		end
 
-	selected_text_color: WEL_COLOR_REF is
+	selected_text_color: EV_COLOR is
 		do
 			Result := editor_preferences.selected_text_color
 		end
 
-	selected_background_color: WEL_COLOR_REF is
+	selected_background_color: EV_COLOR is
 		do
 			Result := editor_preferences.selected_background_color
 		end
@@ -159,13 +164,11 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			Result := editor_preferences.selected_background_brush
 		end
 
-	font: WEL_FONT is
-		local
-			log_font: WEL_LOG_FONT
+	font: EV_FONT is
+			-- Current text font.
 		once
 				-- create the font
-			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
-			create Result.make_indirect(log_font)
+			create Result.make_with_values (editor_preferences.font_family, Ev_font_weight_regular, Ev_font_shape_regular, 15)
 		end
 
 invariant

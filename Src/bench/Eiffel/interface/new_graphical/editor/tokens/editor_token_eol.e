@@ -33,23 +33,23 @@ feature -- Display
 			Result := 0
 		end
 	
-	display_end_token_normal(d_y: INTEGER; a_dc: WEL_DC; a_width: INTEGER) is
+	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_dc', with a screen width of `a_width'.
 			-- The token is displayed in its normal state.
 		do
-			display_end_token(d_y, a_dc, a_width, False)
+			display_end_token(d_y, a_device, a_width, False)
 		end
 
-	display_end_token_selected(d_y: INTEGER; a_dc: WEL_DC; a_width: INTEGER) is
+	display_end_token_selected(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_dc', with a screen width of `a_width'.
 			-- The token is displayed in its selected state.
 		do
-			display_end_token(d_y, a_dc, a_width, True)
+			display_end_token(d_y, a_device, a_width, True)
 		end
 
-	display(d_y: INTEGER; a_dc: WEL_DC) is
+	display(d_y: INTEGER; a_device: EV_DRAWING_AREA) is
 		do
 			-- Do nothing.
 		end
@@ -79,67 +79,67 @@ feature {NONE} -- Private Constants
 
 feature {NONE} -- Implementation
 
-	display_end_token(d_y: INTEGER; a_dc: WEL_DC; a_width: INTEGER; selected: BOOLEAN) is
+	display_end_token(d_y: INTEGER; a_device: EV_DRAWING_AREA; a_width: INTEGER; selected: BOOLEAN) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_dc', with a screen width of `a_width'.
 			-- If `selected' is set, then the token is displayed in its selected
 			-- state.
 		local
-			old_text_color		: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
-			the_text_color		: WEL_COLOR_REF
-			the_background_color: WEL_COLOR_REF
+			old_text_color		: EV_COLOR
+			old_background_color: EV_COLOR
+			the_text_color		: EV_COLOR
+			the_background_color: EV_COLOR
 			the_background_brush: WEL_BRUSH
 			wel_rect			: WEL_RECT
 			curr_position		: INTEGER
 		do
-			curr_position := position
-
-				-- Select the drawing style we will use.
-			if selected then
-				the_text_color := selected_text_color
-				the_background_color := selected_background_color
-				the_background_brush := selected_background_brush
-			else
-				the_text_color := text_color
-				the_background_color := background_color
-				the_background_brush := normal_background_brush
-			end
-
-				-- Display the ¶ only if the option is set.
-			if editor_preferences.view_invisible_symbols then
-					-- Backup old drawing style and set the new one.
-				old_text_color := a_dc.text_color
-				old_background_color := a_dc.background_color
-				a_dc.set_text_color(the_text_color)
-				a_dc.set_background_color(the_background_color)
-				a_dc.select_font(font)
-
-					-- Display the text.
-				a_dc.text_out (curr_position, d_y, eol_symbol)
-				curr_position := curr_position + a_dc.string_width(eol_symbol)
-				
-					-- Restore drawing style here.
-				a_dc.set_text_color(old_text_color)
-				a_dc.set_background_color(old_background_color)
-				a_dc.unselect_font
-			end
-
-				-- Fill the end of the line with the specified background brush.
-			create wel_rect.make(curr_position, d_y, a_width, d_y+height)
-			a_dc.fill_rect(wel_rect, the_background_brush)
+-- 			curr_position := position
+-- 
+-- 				-- Select the drawing style we will use.
+-- 			if selected then
+-- 				the_text_color := selected_text_color
+-- 				the_background_color := selected_background_color
+-- 				the_background_brush := selected_background_brush
+-- 			else
+-- 				the_text_color := text_color
+-- 				the_background_color := background_color
+-- 				the_background_brush := normal_background_brush
+-- 			end
+-- 
+-- 				-- Display the ¶ only if the option is set.
+-- 			if editor_preferences.view_invisible_symbols then
+-- 					-- Backup old drawing style and set the new one.
+-- 				old_text_color := a_dc.text_color
+-- 				old_background_color := a_dc.background_color
+-- 				a_dc.set_text_color(the_text_color)
+-- 				a_dc.set_background_color(the_background_color)
+-- 				a_dc.select_font(font)
+-- 
+-- 					-- Display the text.
+-- 				a_dc.text_out (curr_position, d_y, eol_symbol)
+-- 				curr_position := curr_position + a_dc.string_width(eol_symbol)
+-- 				
+-- 					-- Restore drawing style here.
+-- 				a_dc.set_text_color(old_text_color)
+-- 				a_dc.set_background_color(old_background_color)
+-- 				a_dc.unselect_font
+-- 			end
+-- 
+-- 				-- Fill the end of the line with the specified background brush.
+-- 			create wel_rect.make(curr_position, d_y, a_width, d_y+height)
+-- 			a_dc.fill_rect(wel_rect, the_background_brush)
 		end
 
 feature {NONE} -- Implementation
 	
-	text_color: WEL_COLOR_REF is
+	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.spaces_text_color
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: EV_COLOR is
 		do
 			Result := editor_preferences.spaces_background_color
 		end
 
-end -- class EDITOR_COMMENT
+end -- class EDITOR_TOKEN_EOL

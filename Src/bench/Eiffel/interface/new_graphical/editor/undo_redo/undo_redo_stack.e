@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (w: CHILD_WINDOW) is
+	make (w: EDITOR_WINDOW) is
 		do
 			create undo_list.make
 			create redo_list.make
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 
 	current_status: INTEGER
 
-	chwin: CHILD_WINDOW
+	chwin: EDITOR_WINDOW
 
 invariant
 	invariant_clause: -- Your invariant here

@@ -20,7 +20,7 @@ feature -- Miscellaneous
 
 	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_MEMORY_DC): INTEGER is
 		local
-			old_color: WEL_COLOR_REF
+			old_color: EV_COLOR
 		do
 				-- Change drawing style here.
 			old_color := dc.text_color
@@ -34,7 +34,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 	
-	text_color: WEL_COLOR_REF is
+	text_color: EV_COLOR is
 		once
 			create Result.make_rgb(196,0,0)
 		end

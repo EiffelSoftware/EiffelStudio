@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	TEXT_CURSOR
+	EDITOR_CURSOR
 
 inherit
 	CURSOR
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make_from_absolute_pos (x, y : INTEGER; a_window: CHILD_WINDOW) is
+	make_from_absolute_pos (x, y : INTEGER; a_window: EDITOR_WINDOW) is
 			-- Create a cursor in `a_window', at position given by
 			-- `x' (in pixels) and `y' (in lines).
 		require
@@ -45,7 +45,7 @@ feature -- Initialization
 		end
 
 	make_from_relative_pos (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN;
-				pos: INTEGER; a_window: CHILD_WINDOW) is
+				pos: INTEGER; a_window: EDITOR_WINDOW) is
 			-- Create a cursor in `a_window', at position given by
 			-- `a_line', `a_token' and `pos'.
 		do
@@ -55,7 +55,7 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
-	make_from_character_pos (ch_num, y: INTEGER; a_window: CHILD_WINDOW) is
+	make_from_character_pos (ch_num, y: INTEGER; a_window: EDITOR_WINDOW) is
 			-- Create a cursor in `a_window', at the `ch_num'th
 			-- character in line `y'.
 		require
@@ -188,8 +188,7 @@ feature -- Element change
 			y_in_lines := y
 
 				-- Update the line attribute.
-			whole_text.go_i_th (y)
-			line := whole_text.item
+			line := whole_text.item(y)
 			update_current_char
 		end
 
@@ -718,12 +717,16 @@ feature {NONE} -- Implementation
 				line := line.next
 				y_in_lines := y_in_lines + 1
 
-					-- Scroll the window if necessary
-				last_line_displayed := associated_window.first_line_displayed
-									 + associated_window.number_of_lines_displayed - 1
-				if y_in_lines >= last_line_displayed then
-					associated_window.on_vertical_scroll (Sb_linedown,0)
-				end
+---------------------------------------
+-- FIXME ARNAUD: To be done in Vision2
+---------------------------------------
+--					-- Scroll the window if necessary
+--				last_line_displayed := associated_window.first_line_displayed
+--									 + associated_window.number_of_lines_displayed - 1
+--				if y_in_lines >= last_line_displayed then
+--					associated_window.on_vertical_scroll (Sb_linedown,0)
+--				end
+---------------------------------------
 			end
 		end
 
@@ -737,10 +740,14 @@ feature {NONE} -- Implementation
 				line := line.previous
 				y_in_lines := y_in_lines - 1
 
-					-- Scroll the window if necessary
-				if y_in_lines <= associated_window.first_line_displayed - 1 then
-					associated_window.on_vertical_scroll (Sb_lineup,0)
-				end
+---------------------------------------
+-- FIXME ARNAUD: To be done in Vision2
+---------------------------------------
+--					-- Scroll the window if necessary
+--				if y_in_lines <= associated_window.first_line_displayed - 1 then
+--					associated_window.on_vertical_scroll (Sb_lineup,0)
+--				end
+---------------------------------------
 			end
 		end
 
@@ -817,10 +824,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private attributes
 
-	whole_text: STRUCTURED_TEXT
+	whole_text: EDITOR_CONTENT
 		-- Whole text displayed.
 
-	associated_window: CHILD_WINDOW
+	associated_window: EDITOR_WINDOW
 
 invariant
 	x_in_pixels_positive_or_null	: x_in_pixels >= 0
@@ -828,4 +835,4 @@ invariant
 	pos_in_token_positive			: pos_in_token > 0
 	whole_text_not_void				: whole_text /= Void
 
-end -- class TEXT_CURSOR
+end -- class EDITOR_CURSOR

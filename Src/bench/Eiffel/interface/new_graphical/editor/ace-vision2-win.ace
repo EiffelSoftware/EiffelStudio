@@ -1,11 +1,15 @@
+--!----------------------------------------------------------------
+--! Editor Test Project Ace-file for Windows platforms.
+--!----------------------------------------------------------------
+
 system
-	app
+	editor
 
 root 
-	APPLICATION (root_cluster): "make"
+	EDITOR_WINDOW (gui): "make_and_launch"
 
 default
-	assertion			(all)
+	assertion			(no)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)
@@ -19,21 +23,33 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster					:	"d:\50dev\Eiffel\interface\new_graphical\editor"
+	root_cluster					:	"f:\50dev\Eiffel\interface\new_graphical\editor"
 	balanced_tree	(root_cluster)	:	"$\struct"
 	lexer			(root_cluster)	:	"$\lexer"
 	editor			(root_cluster)	:	"$\editor"
 	tokens			(root_cluster)	:	"$\tokens"
 	undo_redo		(root_cluster)	:	"$\undo_redo"
+	gui				(root_cluster)	:	"$\gui"
 
 		-- EiffelBase
-	all base: 		"$EIFFEL4\library\base"
+	all base: 			"$EIFFEL4\library\base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- WEL
 	all wel:			"$EIFFEL4\library\wel"
+
+	event:				"$EIFFEL4\library\event"
+
+	all vision2:		"$EIFFEL4\library\vision2"
+		exclude 
+			"gtk"
+			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+		end
 
 		-- Gobo
 	lx_skeleton:		"$GOBO\library\lexical\skeleton"
@@ -46,4 +62,4 @@ external
 					"$(GOBO)\library\kernel\include"
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
 
-end -- system app
+end -- system editor

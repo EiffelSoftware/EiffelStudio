@@ -1953,7 +1953,7 @@ feature {STRING} -- Implementation
 			-- Area which can accomodate
 			-- at least `newsize' characters
 		external
-			"C signature (EIF_REFERENCE, long int): EIF_REFERENCE use %"eif_malloc.h%""
+			"C signature (EIF_REFERENCE, unsigned int): EIF_REFERENCE use %"eif_malloc.h%""
 		alias
 			"sprealloc"
 		end

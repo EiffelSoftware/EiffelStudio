@@ -1,36 +1,53 @@
-class IDENTIFIER
+indexing
+	description: "Perform validation of Eiffel identifiers"
+	date: "$Date$"
+	revision: "$Revision$"
 
-inherit
+class IDENTIFIER_CHECKER
 
-	STRING
+feature -- Validity
 
-create
+	is_valid_first_character (c: CHARACTER): BOOLEAN is
+			-- Is `c' valid for the first character of an Eiffel identifier?
+		do
+			Result := c.is_alpha
+		ensure
+			definition: Result = c.is_alpha
+		end
 
-	make
-
-feature
-
-	is_valid: BOOLEAN is
+	is_valid_character (c: CHARACTER): BOOLEAN is
+			-- Is `c' valid for an Eiffel identifier?
+		do
+			Result := c.is_digit or c.is_alpha or c = '_'
+		ensure
+			definition: c.is_digit or c.is_alpha or c = '_'
+		end
+		
+	is_valid (an_id: STRING): BOOLEAN is
 			-- Is Current a valid Eiffel identifier?
+		require
+			an_id_not_void: an_id /= Void
 		local
-			i, c: INTEGER;
+			i, nb: INTEGER;
 			char: CHARACTER
 		do
-			c := count;
-			if c /= 0 and then item(1).is_alpha then
+			if not an_id.is_empty and then is_valid_first_character (an_id.item(1)) then
 				from
-					Result := True;
-					i := 2;
+					Result := True
+					nb := an_id.count
+					i := 2
 				until
-					i > c or else not Result
+					i > nb or else not Result
 				loop
-					char := item (i);
-					Result := char.is_digit or else 
-								char.is_alpha or else
-								char = '_';
+					char := an_id.item (i)
+					Result := is_valid_character (an_id.item (i))
 					i := i + 1
 				end
 			end
+		ensure
+			definition: not an_id.is_empty implies
+				Result = is_valid_first_character (an_id.item (1))
+					-- and for i in 2..an_id.count is_valid_character (an_id.item (i))
 		end
 
 end

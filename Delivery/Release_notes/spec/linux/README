@@ -1,0 +1,54 @@
+RELEASE NOTES FOR LINUX-ELF VERSION
+
+This note does not apply to any version other than Linux ELF format.
+
+This version of ISE Eiffel was built using the 1.2.13 version of the kernel.
+
+1) XKeysymDB problem
+--------------------
+
+You may experience trouble while trying to use the BackSpace key.
+If so, you have to check that the file /usr/lib/X11/XKeysymDB
+has the definition of the osf symbols, which should be the case
+if you have installed Motif properly.
+When you have this file correct, and if you still cannot use the
+BackSpace key, you will have to try the following command:
+
+xmodmap -e "keysym Delete = BackSpace"
+
+Check with your xmodmap man page.
+
+Note that you may want to add this command to your configuration
+files so that this is done each time you run your X server.
+
+2) `eifid' doesn't return a valid value
+---------------------------------------
+
+Make sure your machine is configured as a "network" machine and not as a
+standalone machine even if no network card is installed.
+
+There should be a valid entry in the "/etc/hosts" file for the local host.
+
+Make sure a command like "ifconfig lo 127.0.0.1" is also executed at
+boot time. If you type /sbin/ifconfig, you should see something like:
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Bcast:127.255.255.255  Mask:255.0.0.0
+          UP BROADCAST LOOPBACK RUNNING  MTU:3584  Metric:1
+          RX packets:1050 errors:0 dropped:0 overruns:0
+          TX packets:1050 errors:0 dropped:0 overruns:0
+
+3) BUG with the backspace key
+-----------------------------
+
+Under certain linux configuration, the BackSpace key has a strange
+behaviour within ebench: it deletes the character before the cursor,
+then moves the cursor to right. This bug hasn't been fixed yet, but
+there is a workaround. Add these two lines into your .Xdefaults file
+(you may have to perform a "xrdb .Xdefaults" if you don't launch X
+again after the modification):
+
+ebench*XmText*Translations:	\
+#override <Key>osfBackSpace: delete-previous-character() backward-character()
+
+

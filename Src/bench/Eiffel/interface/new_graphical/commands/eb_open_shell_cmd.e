@@ -25,7 +25,7 @@ creation
 
 feature -- Properties
 
---	command_line_d: EB_COMMAND_LINE_DIALOG
+--	command_line_d: EB_SHELL_DIALOG
 			-- The command line dialog.
 
 	command_shell_name: STRING is

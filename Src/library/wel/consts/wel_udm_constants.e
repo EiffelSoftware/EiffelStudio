@@ -51,7 +51,7 @@ feature -- Access
 		alias
 			"UDM_GETRANGE"
 		end
-
+		
 	Udm_setaccel: INTEGER is
 			-- Sets the acceleration for an up-down control.
 		external
@@ -87,7 +87,7 @@ feature -- Access
 		alias
 			"UDM_SETPOS"
 		end
-
+		
 	Udm_setrange: INTEGER is
 			-- Sets the minimum and maximum positions (range) for
 			-- an up-down control.

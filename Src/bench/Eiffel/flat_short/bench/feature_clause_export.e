@@ -141,11 +141,11 @@ feature -- Context output
 
 feature -- EiffelCase output
 
-	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+	features_storage_info: ARRAYED_LIST [S_FEATURE_DATA] is
 			-- List of features in case format within
 			-- a feature clause
 		do
-			!! Result.make;
+			!! Result.make (features.count);
 			from
 				features.start
 			until

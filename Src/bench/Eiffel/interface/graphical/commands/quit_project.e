@@ -81,14 +81,14 @@ feature {NONE} -- Implementation
 						"Don't exit", "Exit anyway", Void)
 				else
 					confirmer (popup_parent).call (Current, 
-						"Do you really want to exit?", "Exit");
+						"Quit EiffelBench?", "Exit");
 				end
 			else
 				if do_exit or else (last_confirmer /= Void and then argument = last_confirmer) then
 					exit_anyway
 				else
 					confirmer (popup_parent).call (Current, 
-						"Do you really want to exit?", "Exit");
+						"Quit EiffelBench?", "Exit");
 				end
 			end
 		end;

@@ -67,8 +67,10 @@ feature -- Initialization
 		require
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
-			consistent_horizontal_range: a_minimal_horizontal_position < a_maximal_horizontal_position
-			consistent_vertical_range: a_minimal_vertical_position < a_maximal_vertical_position
+			consistent_horizontal_range:
+				a_minimal_horizontal_position < a_maximal_horizontal_position
+			consistent_vertical_range:
+				a_minimal_vertical_position < a_maximal_vertical_position
 			positive_horizontal_line: a_horizontal_line >= 0
 			positive_vertical_line: a_vertical_line >= 0
 			positive_horizontal_page: a_horizontal_page >= 0
@@ -85,10 +87,14 @@ feature -- Initialization
 			set_vertical_page (a_vertical_page)
 		ensure
 			window_set: window = a_window
-			minimal_horizontal_position_set: minimal_horizontal_position = a_minimal_horizontal_position
-			maximal_horizontal_position_set: maximal_horizontal_position = a_maximal_horizontal_position
-			minimal_vertical_position_set: minimal_vertical_position = a_minimal_vertical_position
-			maximal_vertical_position_set: maximal_vertical_position = a_maximal_vertical_position
+			minimal_horizontal_position_set:
+				minimal_horizontal_position = a_minimal_horizontal_position
+			maximal_horizontal_position_set:
+				maximal_horizontal_position = a_maximal_horizontal_position
+			minimal_vertical_position_set:
+				minimal_vertical_position = a_minimal_vertical_position
+			maximal_vertical_position_set:
+				maximal_vertical_position = a_maximal_vertical_position
 		end
 
 feature -- Access
@@ -162,8 +168,10 @@ feature -- Element change
 			-- Set `horizontal_position' with `position'.
 		require
 			window_exists: window.exists
-			position_small_enough: position <= maximal_horizontal_position
-			position_large_enough: position >= minimal_horizontal_position
+			position_small_enough:
+				position <= maximal_horizontal_position
+			position_large_enough:
+				position >= minimal_horizontal_position
 		do
 			window.set_horizontal_position (position)
 		ensure
@@ -174,8 +182,10 @@ feature -- Element change
 			-- Set `vertical_position' with `position'.
 		require
 			window_exists: window.exists
-			position_small_enough: position <= maximal_vertical_position
-			position_large_enough: position >= minimal_vertical_position
+			position_small_enough:
+				position <= maximal_vertical_position
+			position_large_enough:
+				position >= minimal_vertical_position
 		do
 			window.set_vertical_position (position)
 		ensure
@@ -192,8 +202,10 @@ feature -- Element change
 		do
 			window.set_horizontal_range (minimum, maximum)
 		ensure
-			horizontal_minimum_range_set: minimal_horizontal_position = minimum
-			horizontal_maximal_range_set: maximal_horizontal_position = maximum
+			horizontal_minimum_range_set:
+				minimal_horizontal_position = minimum
+			horizontal_maximal_range_set:
+				maximal_horizontal_position = maximum
 		end
 
 	set_vertical_range (minimum, maximum: INTEGER) is
@@ -206,8 +218,10 @@ feature -- Element change
 		do
 			window.set_vertical_range (minimum, maximum)
 		ensure
-			minimal_vertical_position_set: minimal_vertical_position = minimum
-			maximal_vertical_position_set: maximal_vertical_position = maximum
+			minimal_vertical_position_set:
+				minimal_vertical_position = minimum
+			maximal_vertical_position_set:
+				maximal_vertical_position = maximum
 		end
 
 	set_horizontal_line (unit: INTEGER) is
@@ -341,8 +355,10 @@ feature -- Basic operations
 			-- `inc' and `position'.
 		require
 			window_exists: window.exists
-			position_small_enough: position <= maximal_horizontal_position
-			position_large_enough: position >= minimal_horizontal_position
+			position_small_enough:
+				position <= maximal_horizontal_position
+			position_large_enough:
+				position >= minimal_horizontal_position
 		do
 			window.horizontal_update (inc, position)
 		ensure
@@ -354,8 +370,10 @@ feature -- Basic operations
 			-- `inc' and `position'.
 		require
 			window_exists: window.exists
-			position_small_enough: position <= maximal_vertical_position
-			position_large_enough: position >= minimal_vertical_position
+			position_small_enough:
+				position <= maximal_vertical_position
+			position_large_enough:
+				position >= minimal_vertical_position
 		do
 			window.vertical_update (inc, position)
 		ensure
@@ -365,12 +383,24 @@ feature -- Basic operations
 invariant
 
 	window_not_void: window /= Void
-	horizontal_position_small_enough: window.exists implies horizontal_position <= maximal_horizontal_position
-	horizontal_position_large_enough: window.exists implies horizontal_position >= minimal_horizontal_position
-	vertical_position_small_enough: window.exists implies vertical_position <= maximal_vertical_position
-	vertical_position_large_enough: window.exists implies vertical_position >= minimal_vertical_position
-	consistent_horizontal_range: window.exists implies minimal_horizontal_position < maximal_horizontal_position
-	consistent_vertical_range: window.exists implies minimal_vertical_position < maximal_vertical_position
+	horizontal_position_small_enough:
+		window.exists implies
+		horizontal_position <= maximal_horizontal_position
+	horizontal_position_large_enough:
+		window.exists implies
+		horizontal_position >= minimal_horizontal_position
+	vertical_position_small_enough:
+		window.exists implies
+		vertical_position <= maximal_vertical_position
+	vertical_position_large_enough:
+		window.exists implies
+		vertical_position >= minimal_vertical_position
+	consistent_horizontal_range:
+		window.exists implies
+		minimal_horizontal_position < maximal_horizontal_position
+	consistent_vertical_range:
+		window.exists implies
+		minimal_vertical_position < maximal_vertical_position
 	positive_horizontal_line: horizontal_line >= 0
 	positive_vertical_line: vertical_line >= 0
 	positive_horizontal_page: horizontal_page >= 0

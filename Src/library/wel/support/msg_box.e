@@ -43,7 +43,8 @@ feature -- Status report
 
 	message_box_result: INTEGER
 			-- Last result for the `message_box' and
-			-- `error_message_box' routines
+			-- `error_message_box' routines.
+			-- See class WEL_ID_CONSTANTS for values.
 
 feature {NONE} -- Externals
 

@@ -13,7 +13,7 @@ cluster
 
 	root_cluster:		".";
 	estore_examples_objects:"$EIFFEL3/library/store/examples/Utilities";
-	ingres_handle:		"$EIFFEL3/library/store/examples/Utilities/ingres"
+	ingres_handle:		"$EIFFEL3/library/store/examples/Utilities/ingres";
 
 -- EiffelStore
 

@@ -176,9 +176,11 @@ feature -- Status setting
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'
 		do
-			private_attributes.set_height (new_height)
-			if exists then
-				wel_set_height (new_height + shell_height)
+			if private_attributes.height /= new_height then
+				private_attributes.set_height (new_height)
+				if exists then
+					wel_set_height (new_height + shell_height)
+				end
 			end
 		ensure then
 			correct_client_height: exists implies client_height = new_height
@@ -188,8 +190,15 @@ feature -- Status setting
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
-			set_width (new_width)
-			set_height (new_height)
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
+				private_attributes.set_height (new_height)
+				private_attributes.set_width (new_width)
+				if exists then
+					resize (new_width + shell_width,
+						new_height + shell_height)
+				end
+			end
 			if realized then
 				resize_shell_children (new_width, new_height)
 			end
@@ -202,9 +211,11 @@ feature -- Status setting
 			-- Set the client rect to have a width of
 			-- `new_client_width'
 		do
-			private_attributes.set_width (new_width)
-			if exists then
-				wel_set_width (new_width + shell_width)
+			if private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				if exists then
+					wel_set_width (new_width + shell_width)
+				end
 			end
 		ensure then
 			correct_width: exists implies client_width = new_width

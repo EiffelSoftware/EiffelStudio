@@ -34,10 +34,10 @@ feature -- Basic operations
 
 			-- Import header file
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
-			cpp_class_writer.add_import ("E_wide_string.h")
-			create tmp_string.make (0)
-			tmp_string.append ("RT_LNK HINSTANCE eif_hInstance;")
-			cpp_class_writer.add_other (tmp_string)
+		--	cpp_class_writer.add_import ("E_wide_string.h")
+		--	create tmp_string.make (0)
+		--	tmp_string.append ("RT_LNK HINSTANCE eif_hInstance;")
+		--	cpp_class_writer.add_other (tmp_string)
 
 			if shared_wizard_environment.out_of_process_server then
 				tmp_string := clone (a_descriptor.c_type_name)
@@ -88,6 +88,10 @@ feature -- Basic operations
 			process_interfaces	(a_descriptor)			
 
 			if dispatch_interface then
+				-- Add type library id
+				cpp_class_writer.add_other (libid_declaration (a_descriptor.type_library_descriptor.name))
+				cpp_class_writer.add_other_source (libid_definition (a_descriptor.type_library_descriptor.name, a_descriptor.type_library_descriptor.guid))
+
 
 				-- member (ITypeInfo * pTypeInfo)
 				create member_writer.make
@@ -159,6 +163,9 @@ feature {NONE} -- Implementation
 					interface_names.extend (a_name)
 
 					if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
+						if dispatch_interface_name = Void then
+							dispatch_interface_name := clone (interface_descriptors.item.c_type_name)
+						end
 						dispatch_interface := True
 					end
 
@@ -464,6 +471,32 @@ feature {NONE} -- Implementation
 			tmp_body.append (New_line_tab)
 			tmp_body.append (Else_keyword)
 
+			if dispatch_interface then
+				tmp_body.append (Space)
+				tmp_body.append (If_keyword)
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (Riid)
+				tmp_body.append (C_equal)
+				tmp_body.append (Iid_type)
+				tmp_body.append (Underscore)
+				tmp_body.append (Idispatch_type)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (New_line_tab_tab)
+				tmp_body.append (Star_ppv)
+				tmp_body.append (Space_equal_space)
+				tmp_body.append (Static_cast)
+				tmp_body.append (Less)
+				tmp_body.append (dispatch_interface_name)
+				tmp_body.append (Asterisk)
+				tmp_body.append (More)
+				tmp_body.append (Open_parenthesis)
+				tmp_body.append (This)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (Semicolon)
+				tmp_body.append (New_line_tab)
+				tmp_body.append (Else_keyword)
+			end
+
 			from
 				interface_names.start
 			until
@@ -572,7 +605,9 @@ feature {NONE} -- Implementation
 		local
 			tmp_path: STRING
 			counter: INTEGER
+			type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
+			type_lib := a_coclass_descriptor.type_library_descriptor
 			Result := clone (Tab)
 
 			-- HRESULT tmp_hr = 0;
@@ -601,59 +636,20 @@ feature {NONE} -- Implementation
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
 
-			-- char c_buf[1024];
-		
-			Result.append (Char)
-			Result.append (Space)
-			Result.append ("c_buf ")
-			Result.append (Open_bracket)
-			Result.append ("1024")
-			Result.append (Close_bracket)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- int c_buf_len = 1024;
-
-			Result.append (Int)
-			Result.append (Space)
-			Result.append ("c_buf_len")
-			Result.append (Space_equal_space)
-			Result.append ("1024")
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- if (GetModuleFileName (eif_hInstance, c_buf, c_buf_len) == 0)
-
-			Result.append ("if (GetModuleFileName (eif_hInstance, c_buf, c_buf_len) == 0)")
-			Result.append (New_line_tab_tab_tab)
-
-			-- 	returm 1;
-
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (One)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-
-			-- 	OLECHAR * tmp_value = ccom_create_from_string (c_buf);
-			Result.append (Olechar)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Tmp_variable_name)
-			Result.append (Space_equal_space)
-			Result.append ("ccom_create_from_string (c_buf)")
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			--tmp_hr = LoadTypeLib (tmp_value, pTypeLib)
+			--tmp_hr = LoadRegTypeLib ('guid','major_version_num', 'minor_version_num', 'locale_id', pTypeLib)
 
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (Space_equal_space)
-			Result.append (Load_type_lib)
+			Result.append ("LoadRegTypeLib")
 			Result.append (Space_open_parenthesis)
-			Result.append (Tmp_variable_name)
+			Result.append (libid_name (type_lib.name))
+			Result.append (Comma_space)
+			Result.append_integer (type_lib.major_version_number)
+			Result.append (Comma_space)
+			Result.append_integer (type_lib.minor_version_number)
+			Result.append (Comma_space)
+			Result.append_integer (type_lib.lcid)
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_lib_variable_name)

@@ -26,13 +26,6 @@ feature -- Basic operations
 			function_generator: WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 			property_generator: WIZARD_CPP_SERVER_PROPERTY_GENERATOR
 		do
-
-			if a_desc.dispinterface or a_desc.dual then
-				if dispatch_interface_name = Void then
-					dispatch_interface_name := clone (a_desc.c_type_name)
-				end
-			end
-
 			if not a_desc.properties.empty then
 				from
 					a_desc.properties.start

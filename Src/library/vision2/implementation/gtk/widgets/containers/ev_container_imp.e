@@ -387,10 +387,8 @@ feature -- Command
 			--| the `c_object'. This prevents them from
 			--| being destroyed when the container is destroyed.
 		do
-			if not is_destroyed then
-				interface.wipe_out
-				Precursor {EV_WIDGET_IMP}				
-			end
+			interface.wipe_out
+			Precursor {EV_WIDGET_IMP}
 		end
 
 feature -- Event handling

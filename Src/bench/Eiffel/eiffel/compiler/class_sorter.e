@@ -246,7 +246,7 @@ feature -- Filling
 			-- less precursor and less successors.
 		local
 			a_class: CLASS_C
-			i, j, nb_succ, nb_prec, nb_item: INTEGER
+			i, j, nb_succ, nb_prec, nb_item, nb_clients: INTEGER
 			class_id: INTEGER
 			inserted: BOOLEAN
 			index: ARRAY [INTEGER]
@@ -265,6 +265,7 @@ feature -- Filling
 					class_id := a_class.topological_id
 					nb_succ := successors.item (class_id).count
 					nb_prec := precursor_count.item (class_id)
+					nb_clients := a_class.syntactical_suppliers.count
 					from
 						inserted := False
 						i := 1
@@ -272,9 +273,11 @@ feature -- Filling
 						inserted or else i > nb_item
 					loop
 						if
-							nb_prec < index.item (i) or else
+							nb_prec > index.item (i) or else
 							(nb_prec = index.item (i) and then
-							nb_succ <= successors.item (Result.item (i).topological_id).count)
+							nb_succ >= successors.item (Result.item (i).topological_id).count) or else
+							(nb_prec = index.item (i) and then nb_succ < successors.item (Result.item (i).topological_id).count
+							and then nb_clients > Result.item (i).syntactical_suppliers.count)
 						then
 							inserted := True
 							nb_item := nb_item + 1

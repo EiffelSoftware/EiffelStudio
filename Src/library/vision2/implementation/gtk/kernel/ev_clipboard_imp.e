@@ -57,9 +57,8 @@ feature -- Access
 				C.gdk_atom_intern ($compound_text_string, 0),
 				C.GDK_CURRENT_TIME
 			)
-			create Result.make (0)
 			edit_chars := C.gtk_editable_get_chars (clipboard_widget, 0, -1)
-			Result.from_c (edit_chars)
+			create Result.make_from_c (edit_chars)
 			C.g_free (edit_chars)
 			if Result.is_equal ("") then
 				Result := Void

@@ -99,12 +99,9 @@ feature -- Access
 	                    classes.after
 	                loop
 	                	l_name := classes.item_for_iteration.name_in_upper
-	                	if l_name.count >= l_count then
-							l_name.keep_head (l_count)
-							if l_name.is_equal (target) then
-								class_descs.force (create {CLASS_DESCRIPTOR}.make_with_class_i (classes.item_for_iteration), l_index)
-								l_index := l_index + 1
-							end
+						if l_name.count >= l_count and then l_name.substring (1, l_count).is_equal (target) then
+							class_descs.force (create {CLASS_DESCRIPTOR}.make_with_class_i (classes.item_for_iteration), l_index)
+							l_index := l_index + 1
 						end
 	                    classes.forth
 	                end

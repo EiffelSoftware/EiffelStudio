@@ -12,6 +12,10 @@ inherit
 			trace_warnings,
 			trace_errors
 		end
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
 
 create
 	make_with_coclass
@@ -39,67 +43,19 @@ feature -- Output
 			-- Display warnings messages from `handler'.
 		local
 			warning_list: LINKED_LIST [ERROR]
-			st: STRUCTURED_TEXT
 			warning: WARNING
-			obs_class_warning: OBS_CLASS_WARN
-			obs_feat_warning: OBS_FEAT_WARN
-			unused_local_warning: UNUSED_LOCAL_WARNING
-			line_pos: INTEGER
-			col_pos: INTEGER
-			warning_file: STRING
-			warning_string: STRING
-			short_warning: STRING
 		do
 			if not retried then
 				from
-					create st.make
 					warning_list := handler.warning_list
 					warning_list.start
 				until
 					warning_list.after
 				loop
-					warning_file := Void
-					line_pos := 0
-					col_pos := 0
-					
-					-- Discover type of warning
-					obs_class_warning ?= warning_list.item
-					unused_local_warning ?= warning_list.item
-					warning ?= warning_list.item
-
-					if warning /= Void then
-						-- not a real warning
-						create st.make
-						warning.trace (st)
-						warning_string := st.image						
-					
-						if obs_class_warning /= Void then
-							-- Obsolete class/feature warning
-							warning_file := obs_class_warning.obsolete_class.file_name
-							obs_feat_warning ?= obs_class_warning
-							if obs_feat_warning /= Void then
-								-- Obsolete feature
-								line_pos := obs_feat_warning.a_feature.ast.location.line_number
-								col_pos := obs_feat_warning.a_feature.ast.location.start_column_position
-								short_warning := "Feature '" + obs_feat_warning.obsolete_feature.name + "' from '" +  
-									obs_feat_warning.obsolete_feature.associated_class.name + "' is obsolete: '" + 
-									obs_feat_warning.obsolete_feature.obsolete_message + "'."
-							else
-								-- Obsolete class
-								line_pos := obs_class_warning.associated_class.ast.line_number
-								short_warning := "Class '" + obs_class_warning.obsolete_class.name + "' is obsolete: '" + 
-									obs_class_warning.obsolete_class.obsolete_message + "'."
-							end
-						elseif unused_local_warning /= Void then
-							warning_file := unused_local_warning.associated_feature.associated_class.file_name
-							line_pos := unused_local_warning.associated_feature.ast.location.line_number
-							col_pos := unused_local_warning.associated_feature.ast.location.start_column_position
-							short_warning := "'" + unused_local_warning.associated_local + "' is declared but never used."
-						else
-							short_warning := clone (warning_string)
-						end
-						if display_warnings then
-							compiler_coclass.event_output_warning (warning_string, short_warning, warning.code, warning_file, line_pos, col_pos)							
+					if display_warnings then
+						warning ?= warning_list.item
+						if warning /= Void then
+							trace_warning (warning)
 						end
 					end
 					warning_list.forth
@@ -118,58 +74,16 @@ feature -- Output
 			-- Display error messages from `handler'.
 		local
 			error_list: LINKED_LIST [ERROR]
-			st: STRUCTURED_TEXT
-			syntax_error: SYNTAX_ERROR
-			feature_error: FEATURE_ERROR
-			eiffel_error: EIFFEL_ERROR
-			error: ERROR
-			line_pos: INTEGER
-			col_pos: INTEGER
-			error_file: STRING
-			error_string: STRING
-			short_error: STRING
 		do
 			if not retried then
 				from
-					create st.make
 					error_list := handler.error_list
 					error_list.start
 				until
 					error_list.after
 
 				loop
-					error_file := Void
-					line_pos := 0
-					col_pos := 0
-					
-					syntax_error ?= error_list.item
-					feature_error ?= error_list.item
-					eiffel_error ?= error_list.item
-					error := error_list.item
-
-					if error /= Void then
-						
-						create st.make
-						error.trace (st)
-						error_string := st.image
-						
-						if eiffel_error /= Void then
-							if eiffel_error.class_c /= Void then
-								error_file := eiffel_error.class_c.file_name
-							end
-						end
-						if feature_error /= Void then
-							line_pos := feature_error.line_number
-							short_error := "Feature error: " + feature_error.error_string
-						elseif syntax_error /= Void then
-							line_pos := syntax_error.line_number
-							col_pos := syntax_error.start_position
-							short_error := "Syntax Error: " + syntax_error.syntax_message
-						else
-							short_error := clone (error_string)
-						end
-						compiler_coclass.event_output_error (error_string, short_error, error.code, error_file, line_pos, col_pos)
-					end
+					trace_error (error_list.item)
 					error_list.forth
 				end
 			else
@@ -227,5 +141,194 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	trace_warning (warn: WARNING) is
+			-- sends formatted `warn' to output
+		require
+			non_void_warn: warn /= Void
+			non_void_compiler_coclass: compiler_coclass /= Void
+		local
+			obs_class: OBS_CLASS_WARN
+			obs_feat: OBS_FEAT_WARN
+			syn_warn: SYNTAX_WARNING
+			unused_warn: UNUSED_LOCAL_WARNING
+			full_error: STRING
+			short_error: STRING
+			file_name: STRING
+			line_pos: INTEGER
+			sf: STRING_FORMATTER
+			st: STRUCTURED_TEXT
+		do
+			if warn.error_string.is_empty then
+				create st.make
+				warn.build_explain (st)
+				create sf.make
+				sf.process_text (st)
+				full_error := sf.output
+			else
+				full_error := warn.error_string
+			end
+
+			unused_warn ?= warn
+			if unused_warn /= Void then
+				-- Unused local
+				file_name := unused_warn.associated_feature.associated_class.file_name
+				line_pos := unused_warn.associated_feature.ast.location.line_number
+				short_error := "Warning: '" + unused_warn.associated_local + "' is declared but never used in feature '" + unused_warn.associated_feature.name + "'."
+			else
+				obs_feat ?= warn
+				if obs_feat /= Void then
+					-- Call to obsolete feature 
+					file_name := obs_feat.a_feature.written_class.file_name
+					line_pos := obs_feat.a_feature.ast.location.line_number
+					short_error := "Warning: Feature '" + obs_feat.obsolete_feature.name + "' from '" +  
+						obs_feat.obsolete_feature.written_class.name + "' is obsolete: '" + 
+						obs_feat.obsolete_feature.obsolete_message + "'."
+				else 
+					obs_class ?= warn
+					if obs_class /= Void then
+						-- Using obsolete class
+						file_name := obs_class.associated_class.file_name
+						line_pos := obs_class.associated_class.ast.line_number
+						short_error := "Warning: Class '" + obs_class.obsolete_class.name + "' is obsolete: '" + 
+							obs_class.obsolete_class.obsolete_message + "'."
+					else
+						syn_warn ?= warn
+						if syn_warn /= Void then
+							-- Syntax warning
+							file_name := syn_warn.file_name
+							line_pos := syn_warn.line_number
+							short_error := "Warning: " + syn_warn.warning_message
+						else
+							short_error := clone (full_error)
+						end
+					end
+				end
+			end
+			check
+				non_void_full_error: full_error /= Void
+				non_void_short_error: short_error /= Void
+			end
+			compiler_coclass.event_output_warning (full_error, short_error, warn.code, file_name, line_pos, 0)
+		end
+		
+		
+	trace_error (err: ERROR) is
+			-- Send formatted `err' to output
+		require
+			non_void_err: err /= Void
+			non_void_compiler_coclass: compiler_coclass /= Void
+		local
+			eif_err: EIFFEL_ERROR
+			syn_err: SYNTAX_ERROR
+			feat_err: FEATURE_ERROR
+			interrupt_err: INTERRUPT_ERROR
+			special_err: SPECIAL_ERROR
+			full_error: STRING
+			short_error: STRING
+			file_name: STRING
+			line_pos: INTEGER
+			sf: STRING_FORMATTER
+			st: STRUCTURED_TEXT
+		do
+			if err.error_string.is_empty or err.error_string.is_equal ("Error") then
+				-- load help file and add text to begining of error definition
+				load_error_help_file (err)
+				if last_help_file_text /= Void then
+					full_error := last_help_file_text
+				else
+					create full_error.make_empty
+				end
+				
+				special_err ?= err
+				if special_err /= Void then
+					full_error.append (special_err.error_case)
+				else
+					create st.make
+					err.build_explain (st)
+					create sf.make
+					sf.process_text (st)
+					full_error.append (sf.output)
+				end
+			else
+				full_error := err.error_string
+			end
+			
+			eif_err ?= err
+			if eif_err /= Void then
+				feat_err ?= err
+				if feat_err /= Void then
+					-- Feature error
+					file_name := feat_err.e_feature.written_class.file_name
+					line_pos := feat_Err.line_number
+					if not feat_err.error_string.is_empty then
+						short_error := "Error: " + feat_err.error_string
+					end
+				else
+					file_name := eif_err.class_c.file_name
+					short_error := clone (full_error)
+				end
+			else
+				interrupt_err ?= err
+				if interrupt_err /= Void then
+					short_error := "Compilation interrupted and halted."
+				else
+					syn_err ?= err
+					if syn_err /= Void then
+						-- Syntax error
+						file_name := syn_err.file_name
+						line_pos := syn_err.line_number
+						short_error := "Error: " + syn_err.error_message
+					else
+						short_error := clone (full_error)
+					end
+				end
+			end
+			check
+				non_void_full_error: full_error /= Void
+				non_void_short_error: short_error /= Void
+			end
+			compiler_coclass.event_output_error (full_error, short_error, err.code, file_name, line_pos, 0)
+		end
+		
+	load_error_help_file (err: ERROR) is
+			-- loads error help file assoicated with `err' and sets `last_help_file_text'.
+		require
+			non_void_error: err /= Void
+		local
+			file_name: STRING
+			help_file: PLAIN_TEXT_FILE
+			eiffel_env: EIFFEL_ENV
+		do
+			last_help_file_text := Void
+			
+			check
+				non_void_help_file_name: err.help_file_name /= Void
+				valid_help_file_name: not err.help_file_name.is_empty
+			end
+			
+			create eiffel_env
+			file_name := eiffel_env.help_path.out
+			file_name.append ("\short\" + err.help_file_name)
+			
+			create help_file.make (file_name)
+			if help_file.exists then
+				help_file.open_read
+				from
+					create last_help_file_text.make_empty
+				until
+					help_file.end_of_file
+				loop
+					help_file.read_line
+					if not help_file.end_of_file then
+						last_help_file_text.append (help_file.last_string + "%N")
+					end
+				end
+			end
+		end
+		
+	last_help_file_text: STRING
+			-- text of last read help file
+		
 		
 end -- class VS_ERROR_DISPLAYER

@@ -99,6 +99,9 @@ feature -- Access
 	Maximum_character_code: INTEGER is 255
 			-- Largest supported code for CHARACTER values
 
+	Maximum_bit_constant: INTEGER is 0x7FFF
+			-- Maximum value of Constant in Bit_type declaration
+
 feature -- Osolete
 
 	error_code: INTEGER is 0

@@ -183,6 +183,49 @@ feature -- Status report
 			Result := flag_set (an_item.state, Tvis_drophilited)
 		end
 
+	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Does `an_item' exist in the tree?
+		require
+			exists: exists
+			item_not_void: an_item /= Void
+			item_valid: an_item.exists
+		local
+			mask: INTEGER
+		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_handle)
+			Result := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
+			an_item.set_mask (mask)
+		ensure
+			mask_unchanged: an_item.mask = old an_item.mask
+		end
+
+	selected: BOOLEAN is
+			-- Is an item selected?
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Tvm_getnextitem,
+				Tvgn_caret, 0) /= 0
+		end
+
+	selected_item: WEL_TREE_VIEW_ITEM is
+			-- Return the currently selected item.
+		require
+			exists: exists
+			selected: selected
+		local
+			handle: INTEGER
+		do
+			handle := cwin_send_message_result (item, Tvm_getnextitem,
+				Tvgn_caret, 0)
+			!! Result.make
+			Result.set_h_item (handle)
+			Result := get_item_with_data (Result)
+		ensure
+			item_valid: Result.exists
+		end
+
 feature -- Status setting
 
 	select_item (an_item: WEL_TREE_VIEW_ITEM) is
@@ -223,25 +266,6 @@ feature -- Status setting
 			exists: exists
 		do
 			cwin_send_message (item, Tvm_setindent, an_indent, 0)
-		end
-
-feature -- Status report
-
-	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
-			-- Does `an_item' exist in the tree?
-		require
-			exists: exists
-			item_not_void: an_item /= Void
-			item_valid: an_item.exists
-		local
-			mask: INTEGER
-		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_handle)
-			Result := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
-			an_item.set_mask (mask)
-		ensure
-			mask_unchanged: an_item.mask = old an_item.mask
 		end
 
 feature -- Element change

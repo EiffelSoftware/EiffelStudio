@@ -14,9 +14,12 @@ inherit
 			byte_node, type_check
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	make
 
-	initialize (v: like value) is
+feature {NONE} -- Initialization
+
+	make (v: like value) is
 			-- Create a new CONSTANT AST node.
 		require
 			v_not_void: v /= Void
@@ -36,7 +39,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	value: EXPR_AS
+	value: VALUE_AS
 			-- Constant value
 
 feature -- Properties
@@ -46,13 +49,8 @@ feature -- Properties
 
 	is_unique: BOOLEAN is
 			-- Is the content a unique ?
-		local
-			a_value: VALUE_AS
 		do
-			a_value ?= value
-			if a_value /= Void then
-				Result := a_value.terminal.is_unique
-			end
+			Result := value.terminal.is_unique
 		end
 
 feature -- Comparison
@@ -90,18 +88,14 @@ feature -- Conveniences
 			-- Interface constant value
 		require
 			is_constant and then not is_unique
-		local
-			val: VALUE_AS
 		do
-			val ?= value
-			Result := val.value_i
+			Result := value.value_i
 		end
 
 	type_check is
 		do
-		ensure then
-			False
-		end; -- type_check
+			value.type_check
+		end
 
 	byte_node: BYTE_CODE is
 			-- Associated byte code
@@ -127,5 +121,8 @@ feature {CONSTANT_AS} -- Replication
 		do
 			value := v
 		end
+		
+invariant
+	value_not_void: value /= Void
 
 end -- class CONSTANT_AS

@@ -1071,7 +1071,7 @@ feature {STRING} -- Implementation
 			-- The 'fuzzy' parameter is the maximum allowed number of
 			-- mismatches within the pattern. A 0 means an exact match.
 		external
-			"C | <eiffel.h>"
+			"C | %"eif_eiffel.h%""
 		end;
 
 	c_p_i: INTEGER is

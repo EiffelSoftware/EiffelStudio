@@ -26,7 +26,8 @@ inherit
 			raise, x, y, set_real_x_y, is_window,
 			add_to_window_list, retrieve_set_visual_name, 
 			shown, is_able_to_be_grouped, title_label,
-			show, hide, realize, is_movable
+			show, hide, realize, is_movable,
+			add_common_callbacks
 		end
 
 	UNDO_REDO_ACCELERATOR
@@ -446,6 +447,19 @@ feature {NONE} -- Code generation
 			if size_modified then
 				function_int_int_to_string (Result,"","set_size",width, height)
 			end
+		end
+
+feature {NONE} -- Callbacks
+
+	add_common_callbacks (a_widget: WIDGET) is
+			-- We need to set the cursor to the `arrow_cursor' when leaving
+			-- the window.
+		local
+			set_shape_cmd: SET_DEFAULT_CURSOR_SHAPE_CMD
+		do
+			{COMPOSITE_C} Precursor (a_widget)
+			!! set_shape_cmd
+			a_widget.add_leave_action (set_shape_cmd, Current)
 		end
 
 end

@@ -37,29 +37,39 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
+		local
+			scroll_window: POINTER
+
 		do
 			base_make (an_interface)
 
 			-- `Vision2 list' = gtk_scrolled_window + gtk_list.
 			-- We do this to allow the scrolling.
 
+			set_c_object (C.gtk_event_box_new)
+
 			-- Creating the gtk scrolled window.
-			set_c_object (C.gtk_scrolled_window_new (
+			scroll_window := (C.gtk_scrolled_window_new (
 					Default_pointer,
 					Default_pointer
 					)
 					)
+			C.gtk_widget_show (scroll_window)
+
+			C.gtk_container_add (c_object, scroll_window)
+
 			C.gtk_scrolled_window_set_policy (
-				c_object,
+				scroll_window,
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
 			-- Creating the gtk_list, pointed by `list_widget':
 			list_widget := C.gtk_list_new
+
 			disable_multiple_selection
 			C.gtk_widget_show (list_widget)
-			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
 			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
 		end
 
@@ -224,6 +234,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/21 21:32:45  king
+--| Made c_object an event box
+--|
 --| Revision 1.32  2000/03/13 19:07:04  king
 --| Implemented gtk_reorder_child
 --|

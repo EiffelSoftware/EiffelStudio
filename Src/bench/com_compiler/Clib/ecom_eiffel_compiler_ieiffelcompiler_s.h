@@ -52,6 +52,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Precompile.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP precompile( void ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Was last compilation successful?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;

@@ -64,6 +64,23 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::precompile( void )
+
+/*-----------------------------------------------------------
+	Precompile.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("precompile", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelCompiler_impl_stub::is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------

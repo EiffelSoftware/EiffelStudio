@@ -30,6 +30,8 @@ class IEiffelProject_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelHTMLDocGenerator_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -120,6 +122,12 @@ public:
 	Completion information
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_completion_information(  );
+
+
+	/*-----------------------------------------------------------
+	Help documentation generator
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_html_doc_generator(  );
 
 
 	/*-----------------------------------------------------------

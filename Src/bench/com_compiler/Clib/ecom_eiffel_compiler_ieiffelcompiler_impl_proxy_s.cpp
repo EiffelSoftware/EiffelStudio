@@ -101,6 +101,33 @@ void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_finalize()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_precompile()
+
+/*-----------------------------------------------------------
+	Precompile.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_IEiffelCompiler->precompile ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_is_successful(  )
 
 /*-----------------------------------------------------------

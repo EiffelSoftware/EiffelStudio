@@ -124,6 +124,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Help documentation generator
+	-----------------------------------------------------------*/
+	STDMETHODIMP html_doc_generator(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * return_value );
+
+
+	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

@@ -27,6 +27,8 @@ class ecom_gec_ISE;
 
 #include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
 
+#include "ecom_eiffel_compiler_IEiffelHTMLDocGenerator_s.h"
+
 #include "ecom_eiffel_compiler_IEnumEiffelClass_s.h"
 
 #include "ecom_eiffel_compiler_IEnumCluster_s.h"
@@ -148,21 +150,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
+	Convert IEIFFEL_HTMLDOC_GENERATOR_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocGenerator *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_22( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEiffelHTMLDocGenerator * ccom_ec_pointed_interface_21( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
+	Convert CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE] to ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_23( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_24( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * ccom_ec_pointed_cell_22( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * old );
 
 
 	/*-----------------------------------------------------------
@@ -172,93 +168,93 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_26( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_27( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_28( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
 	Convert IENUM_EIFFEL_CLASS_INTERFACE to ecom_eiffel_compiler::IEnumEiffelClass *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumEiffelClass * ccom_ec_pointed_interface_28( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumEiffelClass * ccom_ec_pointed_interface_31( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_EIFFEL_CLASS_INTERFACE] to ecom_eiffel_compiler::IEnumEiffelClass * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumEiffelClass * * ccom_ec_pointed_cell_29( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumEiffelClass * * old );
+	ecom_eiffel_compiler::IEnumEiffelClass * * ccom_ec_pointed_cell_32( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumEiffelClass * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_CLUSTER_INTERFACE to ecom_eiffel_compiler::IEnumCluster *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCluster * ccom_ec_pointed_interface_32( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumCluster * ccom_ec_pointed_interface_35( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_CLUSTER_INTERFACE] to ecom_eiffel_compiler::IEnumCluster * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCluster * * ccom_ec_pointed_cell_33( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCluster * * old );
+	ecom_eiffel_compiler::IEnumCluster * * ccom_ec_pointed_cell_36( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCluster * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelClusterDescriptor *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterDescriptor * ccom_ec_pointed_interface_36( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelClusterDescriptor * ccom_ec_pointed_interface_39( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterDescriptor * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterDescriptor * * ccom_ec_pointed_cell_37( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterDescriptor * * old );
+	ecom_eiffel_compiler::IEiffelClusterDescriptor * * ccom_ec_pointed_cell_40( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterDescriptor * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_CLASS_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelClassDescriptor *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClassDescriptor * ccom_ec_pointed_interface_39( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelClassDescriptor * ccom_ec_pointed_interface_42( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelClassDescriptor * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClassDescriptor * * ccom_ec_pointed_cell_40( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClassDescriptor * * old );
+	ecom_eiffel_compiler::IEiffelClassDescriptor * * ccom_ec_pointed_cell_43( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClassDescriptor * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelFeatureDescriptor *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelFeatureDescriptor * ccom_ec_pointed_interface_42( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelFeatureDescriptor * ccom_ec_pointed_interface_45( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelFeatureDescriptor * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelFeatureDescriptor * * ccom_ec_pointed_cell_43( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelFeatureDescriptor * * old );
+	ecom_eiffel_compiler::IEiffelFeatureDescriptor * * ccom_ec_pointed_cell_46( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelFeatureDescriptor * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_FEATURE_INTERFACE to ecom_eiffel_compiler::IEnumFeature *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumFeature * ccom_ec_pointed_interface_45( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumFeature * ccom_ec_pointed_interface_48( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_FEATURE_INTERFACE] to ecom_eiffel_compiler::IEnumFeature * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumFeature * * ccom_ec_pointed_cell_46( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumFeature * * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_49( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_50( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_51( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEnumFeature * * ccom_ec_pointed_cell_49( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumFeature * * old );
 
 
 	/*-----------------------------------------------------------
@@ -268,33 +264,33 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_53( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_54( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_55( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
 	Convert CELL [ECOM_ARRAY [STRING]] to SAFEARRAY *  *.
 	-----------------------------------------------------------*/
-	SAFEARRAY *  * ccom_ec_pointed_cell_55( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
+	SAFEARRAY *  * ccom_ec_pointed_cell_58( EIF_REFERENCE eif_ref, SAFEARRAY *  * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_62( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_69( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_70( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_71( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_65( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
@@ -312,31 +308,43 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_96( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_74( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_97( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_75( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_101( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_76( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_102( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_99( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_103( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_100( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_104( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_105( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
@@ -348,7 +356,7 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_107( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_109( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
@@ -360,73 +368,61 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_111( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_113( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_112( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_114( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_115( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_SYSTEM_CLUSTERS_INTERFACE to ecom_eiffel_compiler::IEiffelSystemClusters *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemClusters * ccom_ec_pointed_interface_123( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelSystemClusters * ccom_ec_pointed_interface_126( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemClusters * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemClusters * * ccom_ec_pointed_cell_124( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemClusters * * old );
+	ecom_eiffel_compiler::IEiffelSystemClusters * * ccom_ec_pointed_cell_127( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemClusters * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_SYSTEM_EXTERNALS_INTERFACE to ecom_eiffel_compiler::IEiffelSystemExternals *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemExternals * ccom_ec_pointed_interface_126( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelSystemExternals * ccom_ec_pointed_interface_129( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemExternals * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemExternals * * ccom_ec_pointed_cell_127( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemExternals * * old );
+	ecom_eiffel_compiler::IEiffelSystemExternals * * ccom_ec_pointed_cell_130( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemExternals * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_128( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_131( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE to ecom_eiffel_compiler::IEiffelSystemAssemblies *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemAssemblies * ccom_ec_pointed_interface_130( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelSystemAssemblies * ccom_ec_pointed_interface_133( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemAssemblies * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelSystemAssemblies * * ccom_ec_pointed_cell_131( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemAssemblies * * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_132( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_133( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_134( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEiffelSystemAssemblies * * ccom_ec_pointed_cell_134( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemAssemblies * * old );
 
 
 	/*-----------------------------------------------------------
@@ -466,33 +462,45 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert IENUM_CLUSTER_PROP_INTERFACE to ecom_eiffel_compiler::IEnumClusterProp *.
+	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumClusterProp * ccom_ec_pointed_interface_142( EIF_REFERENCE eif_ref );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [IENUM_CLUSTER_PROP_INTERFACE] to ecom_eiffel_compiler::IEnumClusterProp * *.
-	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumClusterProp * * ccom_ec_pointed_cell_143( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterProp * * old );
-
-
-	/*-----------------------------------------------------------
-	Convert IEIFFEL_CLUSTER_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelClusterProperties *.
-	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterProperties * ccom_ec_pointed_interface_145( EIF_REFERENCE eif_ref );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterProperties * *.
-	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelClusterProperties * * ccom_ec_pointed_cell_146( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterProperties * * old );
+	BSTR * ccom_ec_pointed_cell_141( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_148( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_142( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_143( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert IENUM_CLUSTER_PROP_INTERFACE to ecom_eiffel_compiler::IEnumClusterProp *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEnumClusterProp * ccom_ec_pointed_interface_145( EIF_REFERENCE eif_ref );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [IENUM_CLUSTER_PROP_INTERFACE] to ecom_eiffel_compiler::IEnumClusterProp * *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEnumClusterProp * * ccom_ec_pointed_cell_146( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterProp * * old );
+
+
+	/*-----------------------------------------------------------
+	Convert IEIFFEL_CLUSTER_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelClusterProperties *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEiffelClusterProperties * ccom_ec_pointed_interface_148( EIF_REFERENCE eif_ref );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterProperties * *.
+	-----------------------------------------------------------*/
+	ecom_eiffel_compiler::IEiffelClusterProperties * * ccom_ec_pointed_cell_149( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterProperties * * old );
 
 
 	/*-----------------------------------------------------------
@@ -504,43 +512,37 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_152( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_154( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_155( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_CLUSTER_EXCLUDES_INTERFACE to ecom_eiffel_compiler::IEnumClusterExcludes *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumClusterExcludes * ccom_ec_pointed_interface_163( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumClusterExcludes * ccom_ec_pointed_interface_166( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE] to ecom_eiffel_compiler::IEnumClusterExcludes * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumClusterExcludes * * ccom_ec_pointed_cell_164( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterExcludes * * old );
+	ecom_eiffel_compiler::IEnumClusterExcludes * * ccom_ec_pointed_cell_167( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterExcludes * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_165( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_168( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_170( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_171( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_172( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_173( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
@@ -550,105 +552,99 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_175( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_177( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
 	Convert IENUM_INCLUDE_PATHS_INTERFACE to ecom_eiffel_compiler::IEnumIncludePaths *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumIncludePaths * ccom_ec_pointed_interface_177( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumIncludePaths * ccom_ec_pointed_interface_180( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_INCLUDE_PATHS_INTERFACE] to ecom_eiffel_compiler::IEnumIncludePaths * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumIncludePaths * * ccom_ec_pointed_cell_178( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumIncludePaths * * old );
+	ecom_eiffel_compiler::IEnumIncludePaths * * ccom_ec_pointed_cell_181( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumIncludePaths * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_OBJECT_FILES_INTERFACE to ecom_eiffel_compiler::IEnumObjectFiles *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumObjectFiles * ccom_ec_pointed_interface_180( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumObjectFiles * ccom_ec_pointed_interface_183( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_OBJECT_FILES_INTERFACE] to ecom_eiffel_compiler::IEnumObjectFiles * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumObjectFiles * * ccom_ec_pointed_cell_181( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumObjectFiles * * old );
+	ecom_eiffel_compiler::IEnumObjectFiles * * ccom_ec_pointed_cell_184( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumObjectFiles * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_182( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_185( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_184( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_187( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_186( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_189( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_188( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_191( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelAssemblyProperties *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelAssemblyProperties * ccom_ec_pointed_interface_191( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelAssemblyProperties * ccom_ec_pointed_interface_194( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelAssemblyProperties * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelAssemblyProperties * * ccom_ec_pointed_cell_192( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelAssemblyProperties * * old );
+	ecom_eiffel_compiler::IEiffelAssemblyProperties * * ccom_ec_pointed_cell_195( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelAssemblyProperties * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_197( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_200( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_198( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_201( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_ASSEMBLY_INTERFACE to ecom_eiffel_compiler::IEnumAssembly *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumAssembly * ccom_ec_pointed_interface_202( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumAssembly * ccom_ec_pointed_interface_205( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_ASSEMBLY_INTERFACE] to ecom_eiffel_compiler::IEnumAssembly * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumAssembly * * ccom_ec_pointed_cell_203( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumAssembly * * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_204( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_205( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_206( EIF_REFERENCE eif_ref, BSTR * old );
+	ecom_eiffel_compiler::IEnumAssembly * * ccom_ec_pointed_cell_206( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumAssembly * * old );
 
 
 	/*-----------------------------------------------------------
@@ -660,37 +656,61 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_208( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_209( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
 	BSTR * ccom_ec_pointed_cell_210( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_211( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_213( EIF_REFERENCE eif_ref, BSTR * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_214( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IENUM_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEnumCompletionEntry *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCompletionEntry * ccom_ec_pointed_interface_215( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumCompletionEntry * ccom_ec_pointed_interface_218( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEnumCompletionEntry * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCompletionEntry * * ccom_ec_pointed_cell_216( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old );
+	ecom_eiffel_compiler::IEnumCompletionEntry * * ccom_ec_pointed_cell_219( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEiffelCompletionEntry *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelCompletionEntry * ccom_ec_pointed_interface_218( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelCompletionEntry * ccom_ec_pointed_interface_221( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEiffelCompletionEntry * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelCompletionEntry * * ccom_ec_pointed_cell_219( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old );
+	ecom_eiffel_compiler::IEiffelCompletionEntry * * ccom_ec_pointed_cell_222( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old );
+
+
+	/*-----------------------------------------------------------
+	Convert CELL [STRING] to BSTR *.
+	-----------------------------------------------------------*/
+	BSTR * ccom_ec_pointed_cell_227( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 

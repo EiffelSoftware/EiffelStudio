@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			--| already.
 			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
 				list_widget,
-				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
+				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM
 			)
 			real_signal_connect (entry_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
 			real_signal_connect (entry_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)

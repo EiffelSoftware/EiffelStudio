@@ -445,8 +445,8 @@ feature {COMPOSITE} -- Basic operations
 			valid_result: Result /= Void
 		end;
 
-	descendents_of (w: WIDGET; desc: ARRAYED_LIST [WIDGET]) is
-			-- Add all descendent children of widget `w' into
+	descendants_of (w: WIDGET; desc: ARRAYED_LIST [WIDGET]) is
+			-- Add all descendant children of widget `w' into
 			-- `desc'. 
 		require
 			valid_w: w /= Void;
@@ -604,7 +604,6 @@ invariant
 	Empty_implies_zero_position: empty implies (index = 0)
 
 end -- class W_MANAGER
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -372,21 +372,49 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			semi_width, semi_height: DOUBLE
+			tang_start, tang_end: DOUBLE
+			x_tmp, y_tmp: DOUBLE			
 		do
 			left := x
 			top := y
-			right := a_bounding_width
-			bottom := a_bounding_height
+			right := left + a_bounding_width
+			bottom := top + a_bounding_height
 			
-			x_start_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle)).rounded
-			y_start_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (a_start_angle)).rounded
-			x_end_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
-			y_end_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded				
+			semi_width := a_bounding_width / 2
+			semi_height := a_bounding_height / 2
+			tang_start := tangent (a_start_angle)
+			tang_end := tangent (a_start_angle + an_aperture)
+			x_tmp := semi_height / (sqrt (tang_start ^ 2 + semi_height ^ 2 / semi_width ^ 2))
+			y_tmp := semi_height / (sqrt (1 + semi_height ^ 2 / (semi_width ^ 2 * tang_start ^ 2)))
+			if sine (a_start_angle) > 0 then
+				y_tmp := - y_tmp
+			end
+			if cosine (a_start_angle) < 0 then
+				x_tmp := - x_tmp
+			end
+			x_start_arc := (x_tmp + left + semi_width).rounded
+			y_start_arc := (y_tmp + top + semi_height).rounded
+			x_tmp := semi_height / (sqrt (tang_end ^ 2 + semi_height ^ 2 / semi_width ^ 2))
+			y_tmp := semi_height / (sqrt (1 + semi_height ^ 2 / (semi_width ^ 2 * tang_end ^ 2)))
+			if sine (a_start_angle + an_aperture) > 0 then
+				y_tmp := - y_tmp
+			end
+			if cosine (a_start_angle + an_aperture) < 0 then
+				x_tmp := - x_tmp
+			end
+			x_end_arc := (x_tmp + left + semi_width).rounded
+			y_end_arc := (y_tmp + top + semi_height).rounded
+				
 			if not internal_initialized_pen then
 				reset_pen
 			end
-			dc.arc (left, top, right + left, bottom + top, x_start_arc,
-				y_start_arc, x_end_arc, y_end_arc)
+			if an_aperture /= 0.0 then
+				dc.arc (left, top, right, bottom, x_start_arc,
+					y_start_arc, x_end_arc, y_end_arc)
+			else
+				dc.set_pixel (x_start_arc, y_start_arc, wel_fg_color)
+			end
 			
 			on_drawing_modified
 		end
@@ -620,24 +648,53 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			semi_width, semi_height: DOUBLE
+			tang_start, tang_end: DOUBLE
+			x_tmp, y_tmp: DOUBLE
 		do
 			left := x
 			top := y
-			right := x + a_bounding_width
+			right := left + a_bounding_width
 			bottom := top + a_bounding_height
 			
+			semi_width := a_bounding_width / 2
+			semi_height := a_bounding_height / 2
+			tang_start := tangent (a_start_angle)
+			tang_end := tangent (a_start_angle + an_aperture)
 			
-			x_start_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle)).rounded
-			y_start_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (a_start_angle)).rounded
-			x_end_arc := x + (a_bounding_width / 2 + (a_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
-			y_end_arc := y + (a_bounding_height / 2 + (a_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded	
+			x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
+			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+			if sine (a_start_angle) > 0 then
+				y_tmp := -y_tmp
+			end
+			if cosine (a_start_angle) < 0 then
+				x_tmp := -x_tmp
+			end
+			x_start_arc := (x_tmp + left + semi_width).rounded
+			y_start_arc := (y_tmp + top + semi_height).rounded
+
+			x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
+			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+			if sine (a_start_angle + an_aperture) > 0 then
+				y_tmp := -y_tmp
+			end
+			if cosine (a_start_angle + an_aperture) < 0 then
+				x_tmp := -x_tmp
+			end
+			x_end_arc := (x_tmp + left + semi_width).rounded
+			y_end_arc := (y_tmp + top + semi_height).rounded
 			
 			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
 			end
-			dc.pie (left, top, right, bottom, x_start_arc,
-				y_start_arc, x_end_arc, y_end_arc)
+			if an_aperture /= 0.0 then
+				dc.pie (left, top, right, bottom, x_start_arc,
+					y_start_arc, x_end_arc, y_end_arc)
+			else
+				dc.move_to ((left + semi_width).rounded, (top + semi_height).rounded)
+				dc.line_to (x_start_arc, y_start_arc)
+			end
 			
 			on_drawing_modified
 		end
@@ -718,31 +775,58 @@ feature -- Filling operations
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 			internal_bounding_width, internal_bounding_height: INTEGER
+			semi_width, semi_height: DOUBLE
+			tang_start, tang_end: DOUBLE
+			x_tmp, y_tmp: DOUBLE			
 		do
 			--| We add one to `a_bounding_width' and `a_bounding_height' as
 			--| when we fill on Windows, the filled area seems to be slightly smaller
 			--| than when we simple draw.
 			
-			left := x
-			top := y
-			internal_bounding_width := a_bounding_width + 1
-			internal_bounding_height := a_bounding_height + 1
-			right := x + internal_bounding_width
-			bottom := top + internal_bounding_height
-			
-			x_start_arc := x + (internal_bounding_width / 2 + (internal_bounding_width / 2)* cosine (a_start_angle)).rounded
-			y_start_arc := y + (internal_bounding_height / 2 + (internal_bounding_height / 2)* sine (a_start_angle)).rounded
-			x_end_arc := x + (internal_bounding_width / 2 + (internal_bounding_width / 2)* cosine (a_start_angle + an_aperture)).rounded
-			y_end_arc := y + (internal_bounding_height / 2 + (internal_bounding_height / 2)* sine (-(a_start_angle + an_aperture))).rounded				
-			
-			remove_pen
-			if not internal_initialized_brush then
-				reset_brush
+			if an_aperture /= 0.0 then
+				left := x
+				top := y
+				internal_bounding_width := a_bounding_width + 1
+				internal_bounding_height := a_bounding_height + 1
+				right := x + internal_bounding_width
+				bottom := top + internal_bounding_height
+	
+				semi_width := internal_bounding_width / 2
+				semi_height := internal_bounding_height / 2
+				tang_start := tangent (a_start_angle)
+				tang_end := tangent (a_start_angle + an_aperture)
+				
+				x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
+				y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+				if sine (a_start_angle) > 0 then
+					y_tmp := -y_tmp
+				end
+				if cosine (a_start_angle) < 0 then
+					x_tmp := -x_tmp
+				end
+				x_start_arc := (x_tmp + left + semi_width).rounded
+				y_start_arc := (y_tmp + top + semi_height).rounded
+	
+				x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
+				y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+				if sine (a_start_angle + an_aperture) > 0 then
+					y_tmp := -y_tmp
+				end
+				if cosine (a_start_angle + an_aperture) < 0 then
+					x_tmp := -x_tmp
+				end
+				x_end_arc := (x_tmp + left + semi_width).rounded
+				y_end_arc := (y_tmp + top + semi_height).rounded
+				
+				remove_pen
+				if not internal_initialized_brush then
+					reset_brush
+				end
+				dc.pie (left, top, right, bottom, x_start_arc,
+					y_start_arc, x_end_arc, y_end_arc)
+				
+				on_drawing_modified
 			end
-			dc.pie (left, top, right, bottom, x_start_arc,
-				y_start_arc, x_end_arc, y_end_arc)
-			
-			on_drawing_modified
 		end
 
 feature {NONE} -- Implementation
@@ -1025,6 +1109,10 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2001/06/23 00:37:29  gauthier
+--| Re-implemented `draw_arc' and `draw_pie_slice', so that the angle is no
+--| more stretched with the enclosing ellipse.
+--|
 --| Revision 1.32  2001/06/20 22:17:00  rogers
 --| Replaced Ev_drawing_mode* with drawing_mode*.
 --|

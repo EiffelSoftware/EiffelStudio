@@ -224,7 +224,7 @@ feature {COMPILER_EXPORTER}
 						if i <= 0 then
 							error_found := True
 						else
-							System.server_controler.set_chunk_size (i)
+							System.server_controler.set_block_size (i)
 						end
 					else
 						error_found := True

@@ -35,7 +35,7 @@ feature -- Basic operations
 			function_generator: WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
 		do
-			if interface.dispinterface then
+			if a_function.func_kind = func_dispatch then
 				create disp_func_generator
 				disp_func_generator.generate (component, interface.name, interface.guid.to_string, interface.lcid, a_function)
 				cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)

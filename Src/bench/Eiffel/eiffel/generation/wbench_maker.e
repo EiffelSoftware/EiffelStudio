@@ -3,7 +3,6 @@
 class WBENCH_MAKER
 
 inherit
-
 	MAKEFILE_GENERATOR
 		redefine
 			generate_specific_defines, generate_other_objects
@@ -36,6 +35,7 @@ feature
 	add_specific_objects is
 			-- Add workbench mode specific files to the object list
 		do
+			add_in_system_basket (Econform)
 			add_in_system_basket (Eoption);
 			add_in_system_basket (Epattern);
 			add_in_system_basket (Efrozen);
@@ -214,7 +214,7 @@ feature
 									file_name.append (object_name);
 									file_name.append_character (Descriptor_file_suffix);
 									file_name.append (".o");
-									string_list := descriptor_baskets.item (packet_nb)
+									string_list := object_baskets.item (packet_nb)
 									string_list.extend (file_name)
 									string_list.finish
 								end;
@@ -231,7 +231,7 @@ feature
 							file_name.append_integer (a_class.id.id);
 							file_name.append_character (Feature_table_file_suffix);
 							file_name.append (".o");
-							feat_table_baskets.item (a_class.packet_number).extend (file_name);
+							object_baskets.item (a_class.packet_number).extend (file_name);
 						end;
 					end
 					i := i + 1

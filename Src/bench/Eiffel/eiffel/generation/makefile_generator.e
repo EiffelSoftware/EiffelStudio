@@ -18,15 +18,10 @@ feature -- Attributes
 
 	object_baskets: ARRAY [LINKED_LIST [STRING]]
 			-- The entire set of class object files we have 
-			-- to make
-
-	descriptor_baskets: ARRAY [LINKED_LIST [STRING]]
-			-- The entire set of descriptor files we have
-			-- to make
-
-	feat_table_baskets: ARRAY [LINKED_LIST [STRING]]
-			-- The entire set of feature table files we have
-			-- to make
+			-- to make. It contains:
+			-- * C code for classes
+			-- * C code for descriptors
+			-- * C code for feature tables
 
 	system_basket: LINKED_LIST [STRING]
 			-- The entire set of system object files we have 
@@ -45,7 +40,7 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 100
+	Packet_number: INTEGER is 33
 			-- Maximum number of files in a single linking phase
 
 	System_packet_number: INTEGER is 100
@@ -74,27 +69,12 @@ feature -- Initialization
 				object_baskets.put (basket, i)
 				i := i + 1
 			end
-			!!descriptor_baskets.make (1, basket_nb)
-			from i := 1 until i > basket_nb loop
-				!!basket.make
-				descriptor_baskets.put (basket, i)
-				i := i + 1
-			end
-			basket_nb := 1 + System.class_counter.current_count // Packet_number
-			!!feat_table_baskets.make (1, basket_nb)
-			from i := 1 until i > basket_nb loop
-				!!basket.make
-				feat_table_baskets.put (basket, i)
-				i := i + 1
-			end
 		end
 
 	clear is
 			-- Forget the lists
 		do
 			object_baskets := Void
-			descriptor_baskets := Void
-			feat_table_baskets := Void
 			system_basket := Void
 			cecil_rt_basket := Void
 			empty_class_types := Void
@@ -141,11 +121,6 @@ feature -- Object basket managment
 	add_common_objects is
 			-- Add common objects file
 		do
-			if not system.in_final_mode then
-					-- FIXME: we need to remove this line when we will remove
-					-- the old conformance stuff.
-				add_in_system_basket (Econform)
-			end
 			add_in_system_basket (Eplug)
 			add_in_system_basket (Eskelet)
 			add_in_system_basket (Evisib)
@@ -308,9 +283,7 @@ feature -- Actual generation
 			compute_partial_system_objects
 
 				-- Generate makefile in subdirectories.
-			generate_sub_makefiles (Feature_table_suffix, feat_table_baskets)
-			generate_sub_makefiles (Descriptor_suffix, descriptor_baskets)
-			generate_sub_makefiles (Class_suffix, object_baskets)
+			generate_sub_makefiles (C_prefix, object_baskets)
 			generate_system_makefile
 
 			make_file := make_f (system.in_final_mode)
@@ -345,8 +318,6 @@ feature -- Actual generation
 
 			make_file.close
 			object_baskets := Void
-			descriptor_baskets := Void
-			feat_table_baskets := Void
 			system_basket.wipe_out
 			cecil_rt_basket.wipe_out
 		end
@@ -908,39 +879,15 @@ feature -- Generation (Linking rules)
 	generate_objects_macros is
 			-- Generate the object macros (dependencies for final executable)
 		do
-				-- Feature table object files.
-			generate_F_object_macros
-			make_file.putchar (' ')
-				-- Descriptor object files.
-			generate_D_object_macros
-			make_file.putchar (' ')
 				-- Class object files.
-			generate_C_object_macros
+			generate_basket_objects (object_baskets, C_prefix)
 		end
 
-	generate_C_object_macros is
-			-- Generate the C object macros (dependencies for final executable)
-		do
-			generate_basket_objects (object_baskets, Class_suffix)
-		end
-
-	generate_D_object_macros is
-			-- Generate the D object macros (dependencies for final executable)
-		do
-			generate_basket_objects (descriptor_baskets, Descriptor_suffix)
-		end
-
-	generate_F_object_macros is
-			-- Generate the F object macros (dependencies for final executable)
-		do
-			generate_basket_objects (feat_table_baskets, Feature_table_suffix)
-		end
-
-	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; suffix: STRING) is
+	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: STRING) is
 			-- Generate the object macros in `baskets'.
 		require
 			baskets_not_void: baskets /= Void
-			suffix_not_void: suffix /= Void
+			dir_prefix_not_void: dir_prefix /= Void
 		local
 			i, baskets_count: INTEGER
 			not_first: BOOLEAN
@@ -957,10 +904,10 @@ feature -- Generation (Linking rules)
 					else
 						not_first := true
 					end
-					make_file.putstring (suffix)
+					make_file.putstring (dir_prefix)
 					make_file.putint (i)
 					make_file.putchar ('/')
-					make_file.putstring (suffix)
+					make_file.putstring (dir_prefix)
 					make_file.putstring ("obj")
 					make_file.putint (i)
 					make_file.putstring (".o")
@@ -976,49 +923,6 @@ feature -- Generation (Linking rules)
 			not_first: BOOLEAN
 		do
 			make_file.putstring ("SUBDIRS = ")
-
-				-- Feature table object files.
-			from
-				baskets_count := feat_table_baskets.count
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not feat_table_baskets.item (i).empty then
-					if not_first then
-						make_file.putchar (' ')
-					else
-						not_first := true
-					end
-					make_file.putstring (Feature_table_suffix)
-					make_file.putint (i)
-				end
-				i := i + 1
-			end
-
-			if not_first then
-				make_file.putchar (' ')
-				not_first := false
-			end
-
-				-- Descriptor object files.
-			from
-				baskets_count := descriptor_baskets.count
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not descriptor_baskets.item (i).empty then
-					if not_first then
-						make_file.putchar (' ')
-					else
-						not_first := true
-					end
-					make_file.putstring (Descriptor_suffix)
-					make_file.putint (i)
-				end
-				i := i + 1
-			end
 
 			if not_first then
 				make_file.putchar (' ')
@@ -1038,7 +942,7 @@ feature -- Generation (Linking rules)
 					else
 						not_first := true
 					end
-					make_file.putstring (Class_suffix)
+					make_file.putstring (C_prefix)
 					make_file.putint (i)
 				end
 				i := i + 1
@@ -1052,11 +956,11 @@ feature -- Generation (Linking rules)
 			make_file.new_line
 		end
 
-	generate_partial_objects_linking (suffix: STRING; index: INTEGER) is
+	generate_partial_objects_linking (dir_prefix: STRING; index: INTEGER) is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		do
-			make_file.putstring (suffix)
+			make_file.putstring (dir_prefix)
 			make_file.putstring ("obj")
 			make_file.putint (index)
 			make_file.putstring (".o: $(OBJECTS) Makefile")
@@ -1065,16 +969,12 @@ feature -- Generation (Linking rules)
 				-- their own linker).
 				-- FIXME
 			make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
-			make_file.putstring (suffix)
+			make_file.putstring (dir_prefix)
 			make_file.putstring ("obj")
 			make_file.putint (index)
 			make_file.putstring (".o $(OBJECTS)")
 
 			make_file.putstring ("%N%T$(CREATE_TEST)")
-
-			if remove_after_partial then
-				make_file.putstring ("%N%T$(RM) $(OBJECTS)")
-			end
 
 			make_file.new_line
 			make_file.new_line
@@ -1114,13 +1014,6 @@ feature -- Generation (Linking rules)
 				make_file.putchar (')')
 
 				make_file.putstring ("%N%T$(CREATE_TEST)")
-				if remove_after_partial then
-					make_file.putstring ("%N%T$(RM) $(OBJECTS")
-					if i /= 1 then
-						make_file.putint (i)
-					end
-					make_file.putchar (')')
-				end
 
 				make_file.new_line
 				make_file.new_line
@@ -1206,52 +1099,6 @@ feature -- Generation (Linking rules)
 		local
 			i, baskets_count: INTEGER
 		do
-				-- Feature table object files.
-			from
-				baskets_count := feat_table_baskets.count
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not feat_table_baskets.item (i).empty then
-					make_file.putstring (Feature_table_suffix)
-					make_file.putint (i)
-					make_file.putchar ('/')
-					make_file.putstring (Feature_table_suffix)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o: Makefile%N%Tcd ")
-					make_file.putstring (Feature_table_suffix)
-					make_file.putint (i)
-					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
-					make_file.new_line
-					make_file.new_line
-				end
-				i := i + 1
-			end
-				-- Descriptor object files.
-			from
-				baskets_count := descriptor_baskets.count
-				i := 1
-			until
-				i > baskets_count
-			loop
-				if not descriptor_baskets.item (i).empty then
-					make_file.putstring (Descriptor_suffix)
-					make_file.putint (i)
-					make_file.putchar ('/')
-					make_file.putstring (Descriptor_suffix)
-					make_file.putstring ("obj")
-					make_file.putint (i)
-					make_file.putstring (".o: Makefile%N%Tcd ")
-					make_file.putstring (Descriptor_suffix)
-					make_file.putint (i)
-					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
-					make_file.new_line
-					make_file.new_line
-				end
-				i := i + 1
-			end
 				-- Class object files.
 			from
 				baskets_count := object_baskets.count
@@ -1260,14 +1107,14 @@ feature -- Generation (Linking rules)
 				i > baskets_count
 			loop
 				if not object_baskets.item (i).empty then
-					make_file.putstring (Class_suffix)
+					make_file.putstring (C_prefix)
 					make_file.putint (i)
 					make_file.putchar ('/')
-					make_file.putstring (Class_suffix)
+					make_file.putstring (C_prefix)
 					make_file.putstring ("obj")
 					make_file.putint (i)
 					make_file.putstring (".o: Makefile%N%Tcd ")
-					make_file.putstring (Class_suffix)
+					make_file.putstring (C_prefix)
 					make_file.putint (i)
 					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.new_line
@@ -1275,12 +1122,6 @@ feature -- Generation (Linking rules)
 				end
 				i := i + 1
 			end
-		end
-
-	remove_after_partial: BOOLEAN is
-			-- Should the individual objects be removed
-			-- after a partial linking?
-		do
 		end
 
 feature -- Cleaning rules

@@ -430,7 +430,7 @@ feature -- Generation
 			previous_file_name: STRING
 			previous_file: PLAIN_TEXT_FILE
 		do
-			file_name := full_file_name (Class_suffix)
+			file_name := full_file_name (C_prefix)
 			if byte_context.final_mode then
 					-- In final mode we do not check about status changes
 					-- since we delete the content of the F_code directory.
@@ -470,7 +470,7 @@ feature -- Generation
 		local
 			file_name: STRING
 		do
-			file_name := full_file_name (Descriptor_suffix)
+			file_name := full_file_name (C_prefix)
 			file_name.append_character (Descriptor_file_suffix)
 			file_name.append (Dot_c)
 			!! Result.make_open_write (file_name)
@@ -479,7 +479,7 @@ feature -- Generation
 	extern_declaration_filename: STRING is
 			-- File name for external declarations in final mode
 		do
-			Result := full_file_name (Class_suffix)
+			Result := full_file_name (C_prefix)
 			Result.append (Dot_h)
 		end
 
@@ -515,7 +515,7 @@ feature -- Generation
 			Result := f_name
 
 			!! finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name ("finished")
+			finished_file_name.set_file_name (Finished_file_for_make)
 			!! finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	
@@ -543,7 +543,7 @@ feature -- Generation
 		do
 				-- Subdirectory
 			!! temp.make (10)
-			temp.append (Class_suffix)
+			temp.append (C_prefix)
 			temp.append_integer (packet_number)
 
 			!! f_name.make_from_string (temp)

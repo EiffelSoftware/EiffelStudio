@@ -3444,20 +3444,7 @@ feature -- Pattern table generation
 				static_type_id_counter.generate_offsets (buffer)
 				execution_table.counter.generate_offsets (buffer)
 				dispatch_table.counter.generate_offsets (buffer)
-				buffer.putstring ("int32 egc_rcorigin = ")
-				buffer.putint (rcorigin)
-				buffer.putstring (";%Nint32 egc_rcdt = ")
-				buffer.putint (dtype)
-				buffer.putstring (";%Nint32 egc_rcoffset = ")
-				buffer.putint (rcoffset)
-				buffer.putstring (";%Nint32 egc_rcarg = ")
-				if has_argument then
-					buffer.putstring ("1")
-				else
-					buffer.putstring ("0")
-				end
-				buffer.putstring (";%N%N")
-			end
+			end	
 
 			if has_separate then
 				buffer.putstring ("#include %"eif_curextern.h%"%N%N")
@@ -3483,6 +3470,21 @@ feature -- Pattern table generation
 			buffer.putstring ("#ifndef EIF_THREADS%N%
 											%%Textern char *root_obj;%N%
 											%#endif%N")
+			if not final_mode then
+				buffer.putstring ("%Tegc_rcorigin = ")
+				buffer.putint (rcorigin)
+				buffer.putstring (";%N%Tegc_rcdt = ")
+				buffer.putint (dtype)
+				buffer.putstring (";%N%Tegc_rcoffset = ")
+				buffer.putint (rcoffset)
+				buffer.putstring (";%N%Tegc_rcarg = ")
+				if has_argument then
+					buffer.putstring ("1")
+				else
+					buffer.putstring ("0")
+				end
+				buffer.putstring (";%N%N")
+			end
 
 			if final_mode then
 					-- Set C variable `scount'.
@@ -3517,7 +3519,7 @@ feature -- Pattern table generation
 					-- The last line Only for Workbench Mode
 			end
 
-			buffer.putstring ("%T%Troot_obj = RTLN(")
+			buffer.putstring ("%Troot_obj = RTLN(")
 			if final_mode then
 				buffer.putint (dtype)
 			else
@@ -3636,7 +3638,14 @@ feature -- Pattern table generation
 					-- Set the frozen level
 				buffer.putstring (";%N%Tzeroc = ")
 				buffer.putint (frozen_level)
-				buffer.putstring (";%N}%N")
+
+				if license.demo_mode then
+						-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
+					buffer.putstring (";%N%Tegc_type_of_gc = 123150;%N}%N%N")
+				else
+						-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
+					buffer.putstring (";%N%Tegc_type_of_gc = 123151;%N}%N%N")
+				end
 			end
 
 			-- Module initialization routine 'egc_system_mod_init_init'

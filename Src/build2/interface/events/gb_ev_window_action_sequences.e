@@ -38,7 +38,7 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when window moves.")
 			Result.extend ("-- Actions to be performed when window is shown.")
-			Result.extend ("-- Actions to be performed whan a request to close window has been received.")
+			Result.extend ("-- Actions to be performed when a request to close window has been received.")
 		end
 
 end -- class GB_EV_WINDOW_ACTION_SEQUENCES

@@ -55,11 +55,31 @@ feature -- Code generation
 		do
 		end;
 
-	reg_name (id: INTEGER): STRING is
+	external_reg_name (id: INTEGER): STRING is
+			-- Register name which will be effectively generated at the C level.
 		do
 			!!Result.make (0);
 			if id = 0 then
 				Result.append ("tmp_result");
+			elseif id < 0 then
+					-- local
+				Result.append ("loc");
+				Result.append_integer (-id);
+			else
+					-- Argument
+				Result.append ("arg");
+				Result.append_integer (id);
+			end
+		end
+
+	internal_reg_name (id: INTEGER): STRING is
+			-- Same as `external_reg_name' except that for a function returning a
+			-- result we need to return `Result' and not `tmp_result' because the
+			-- hash_code is based on `Result'.
+		do
+			!!Result.make (0);
+			if id = 0 then
+				Result.append ("Result");
 			elseif id < 0 then
 					-- local
 				Result.append ("loc");
@@ -78,7 +98,7 @@ feature -- Code generation
 			else
 				!!Result.make (0);
 				Result.append ("l[");
-				Result.append_integer (context.local_index (reg_name (id)));
+				Result.append_integer (context.local_index (internal_reg_name (id)));
 				Result.append_character (']');
 			end
 		end
@@ -109,7 +129,7 @@ feature -- Code generation
 			end;
 			type_c (id).generate (generated_file)
 			generated_file.putstring (gc_comma);
-			generated_file.putstring (reg_name (id));
+			generated_file.putstring (external_reg_name (id));
 			generated_file.putstring (gc_comma);
 			if not access_area then
 				generated_file.putstring (register_acces (id));

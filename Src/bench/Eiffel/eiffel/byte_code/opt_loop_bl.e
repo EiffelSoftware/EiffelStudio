@@ -26,11 +26,31 @@ feature
 			already_generated_offsets := l.already_generated_offsets
 		end;
 
-	reg_name (id: INTEGER): STRING is
+	external_reg_name (id: INTEGER): STRING is
+			-- Register name which will be effectively generated at the C level.
 		do
 			!!Result.make (0);
 			if id = 0 then
 				Result.append ("tmp_result");
+			elseif id < 0 then
+					-- local
+				Result.append ("loc");
+				Result.append_integer (-id);
+			else
+					-- Argument
+				Result.append ("arg");
+				Result.append_integer (id);
+			end
+		end;
+
+	internal_reg_name (id: INTEGER): STRING is
+			-- Same as `external_reg_name' except that for a function returning a
+			-- result we need to return `Result' and not `tmp_result' because the
+			-- hash_code is based on `Result'.
+		do
+			!!Result.make (0);
+			if id = 0 then
+				Result.append ("Result");
 			elseif id < 0 then
 					-- local
 				Result.append ("loc");
@@ -47,9 +67,9 @@ feature
 			if context.byte_code.is_once and then id = 0 then
 				Result := "Result"
 			else
-				!!Result.make (0);
+				!!Result.make (5);
 				Result.append ("l[");
-				Result.append_integer (context.local_index (reg_name (id)));
+				Result.append_integer (context.local_index (internal_reg_name (id)));
 				Result.append_character (']');
 			end
 		end
@@ -79,7 +99,7 @@ feature
 				loop
 					generated_file.putstring ("RTAD(");
 					id := array_desc.item;
-					r_name := reg_name (id);
+					r_name := external_reg_name (id);
 					generated_file.putstring (r_name);
 					generated_file.putstring (gc_rparan_comma);
 							-- The Dtype has not been declared before
@@ -107,7 +127,7 @@ feature
 				until
 					generated_offsets.after
 				loop
-					r_name := reg_name (generated_offsets.item);
+					r_name := external_reg_name (generated_offsets.item);
 					generated_file.putstring ("RTADTYPE(");
 					generated_file.putstring (r_name);
 					generated_file.putstring ("); RTADOFFSETS(");
@@ -145,7 +165,7 @@ feature
 					System.remover.array_optimizer.array_item_type (id).
 						generate (generated_file);
 					generated_file.putstring (gc_comma);
-					generated_file.putstring (reg_name (id));
+					generated_file.putstring (external_reg_name (id));
 					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
 					generated_file.putstring (gc_rparan_comma);
@@ -162,7 +182,7 @@ feature
 					generated_offsets.after
 				loop
 					id := generated_offsets.item;
-					r_name := reg_name (id);
+					r_name := external_reg_name (id);
 					generated_file.putstring ("RTAIOFFSETS(");
 					generated_file.putstring (r_name);
 					generated_file.putstring (gc_comma);
@@ -187,7 +207,7 @@ feature
 				loop
 					generated_file.putstring ("RTAF(");
 					id := array_desc.item
-					generated_file.putstring (reg_name (id));
+					generated_file.putstring (external_reg_name (id));
 					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
 					generated_file.putstring (gc_rparan_comma);

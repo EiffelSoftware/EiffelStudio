@@ -95,6 +95,34 @@ rt_public EIF_POINTER new_md_dispenser ()
 	return imdd;
 }
 
+rt_public void c_define_option_for_md_emit (EIF_POINTER md_dispenser, EIF_INTEGER val)
+	/* Call `SetOption' */
+{
+	IMetaDataDispenser *dispenser = (IMetaDataDispenser *) md_dispenser;
+	IMetaDataDispenserEx * iex;
+	HRESULT hr;
+
+	if (!dispenser->QueryInterface(IID_IMetaDataDispenserEx, (void **)&iex)) {
+		VARIANT value;
+		value.vt = VT_UI4;
+
+			/* Check for duplicates of some tokens */
+/*		value.ulVal = MDDupSignature|MDDupMemberRef|MDDupModuleRef|MDDupTypeRef;
+		iex->SetOption(MetaDataCheckDuplicatesFor	, &value);
+		CHECK (hr, "Could not set Option")
+*/
+
+			/* Give error if emitting out of order */
+		value.ulVal = val;
+		hr = iex->SetOption(MetaDataErrorIfEmitOutOfOrder, &value);
+		CHECK (hr, "Could not set Option")
+
+		iex->Release();
+	} else {
+		CHECK (hr, "Could not get IMetaDataDispenserEx")
+	}
+}
+
 rt_public EIF_POINTER c_define_scope_for_md_emit (EIF_POINTER md_dispenser)
 	/* Call `DefineScope (CLSID_CorMetaDataRuntime, 0, IID_IMetaDataEmit, (IUnknown **) &imde)' */
 {

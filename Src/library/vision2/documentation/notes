@@ -34,7 +34,8 @@ To be revised:
 
 To do:
 - Load different file formats in GTK EV_PIXMAP_IMP.
-- Fik key release events on GTK.
+- Fix key release events on GTK.
+- Fix key as string action sequence.
 - Check for things that could inherit textable (frame, menu, simple item)
 - Test circular parenting contracts for items and widgets.
 - Check export of stuff int _I and _IMP, nothing should be exported to all,
@@ -92,7 +93,7 @@ X   complete but found to have bugs
     kernel/ev_color.e									*	.	.	.
     kernel/ev_coordinates.e								*	.	.	.
     kernel/ev_cursor.e									o	.	.	.
-    k -rnel/ev_cursor_code.e								o	.	.	.
+    kernel/ev_cursor_code.e								o	.	.	.
     kernel/ev_font.e									o	.	.	.
     kernel/ev_font_constants.e							o	.	.	.
     kernel/ev_key.e										*	.	.	.

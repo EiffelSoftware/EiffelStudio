@@ -74,8 +74,10 @@ feature {NONE} -- Implementation
 			pointer_var: LINKED_LIST[STRING]
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			tmp_name: STRING
 		do
 			Result := check_interface_pointer (interface_name)
+			create return_value.make (0)
 
 			if func_desc.argument_count > 0 then
 				create pointer_var.make
@@ -88,7 +90,6 @@ feature {NONE} -- Implementation
 				signature := clone (Open_parenthesis)
 				free_memory := clone (New_line_tab)
 				variables := clone (New_line_tab)
-				create return_value.make (0)
 
 				from
 					arguments.start
@@ -147,46 +148,9 @@ feature {NONE} -- Implementation
 							variables.append (Semicolon)
 							variables.append (New_line_tab)
 
-							if visitor.is_basic_type then
-								return_value.append (Space_open_parenthesis)
-								return_value.append (visitor.cecil_type)
-								return_value.append (Close_parenthesis)
-								return_value.append (Tmp_clause)
-								return_value.append (arguments.item.name)
-
-							elseif visitor.is_enumeration then
-								return_value.append (Space_open_parenthesis)
-								return_value.append (Eif_integer)
-								return_value.append (Close_parenthesis)
-								return_value.append (Tmp_clause)
-								return_value.append (arguments.item.name)
-
-							else
-								return_value.append (Space_open_parenthesis)
-								if (visitor.vt_type = Vt_bool) then
-									return_value.append (Eif_boolean)
-								else
-									return_value.append (Eif_reference)
-								end
-								return_value.append (Close_parenthesis)
-								if visitor.need_generate_ce then
-									return_value.append (Generated_ce_mapper)
-								else
-									return_value.append (Ce_mapper)
-								end
-								return_value.append (Dot)
-								return_value.append (visitor.ce_function_name)
-								return_value.append (Space_open_parenthesis)
-								return_value.append (Tmp_clause)
-								return_value.append (arguments.item.name)
-
-								if visitor.writable then
-									return_value.append (Comma_space)
-									return_value.append (Null)
-								end
-								return_value.append (Close_parenthesis)	
-							end
-
+							tmp_name := clone (Tmp_clause)
+							tmp_name.append (arguments.item.name)
+							return_value.append (return_value_setup (visitor, tmp_name))
 						end
 						return_value.append (Semicolon)
 						return_value.append (New_line_tab)
@@ -250,16 +214,29 @@ feature {NONE} -- Implementation
 				-- Set up body
 				Result.append (variables)
 				Result.append (New_line_tab)
-				if not (func_desc.return_type.type = Vt_void) then
+				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (Hresult_variable_name)
 					Result.append (Space_equal_space)
+				elseif not (func_desc.return_type.type = Vt_void) then
+					create visitor
+					visitor.visit (func_desc.return_type)
+					Result.append (visitor.c_type)
+					Result.append (Space)
+					Result.append (C_result)
+					Result.append (Space_equal_space)
+
+					return_value.append (New_line_tab)
+					return_value.append (Return)
+					return_value.append (return_value_setup (visitor, C_result))
+					return_value.append (Semicolon)
+					return_value.append (New_line_tab)
 				end
 				Result.append (Interface_variable_prepend)
 				Result.append (interface_name)
 				Result.append (Struct_selection_operator)
 				Result.append (func_desc.name)
 				Result.append (signature)
-				if not (func_desc.return_type.type = Vt_void) then
+				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult (Hresult_variable_name))
 				end
 				Result.append (out_value)
@@ -269,9 +246,21 @@ feature {NONE} -- Implementation
 				end
 			else
 				Result.append (New_line_tab)
-				if not (func_desc.return_type.type = Vt_void) then
+				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (Hresult_variable_name)
 					Result.append (Space_equal_space)
+				elseif not (func_desc.return_type.type = Vt_void) then
+					create visitor
+					visitor.visit (func_desc.return_type)
+					Result.append (visitor.c_type)
+					Result.append (Space)
+					Result.append (C_result)
+					Result.append (Space_equal_space)
+					return_value.append (New_line_tab)
+					return_value.append (Return)
+					return_value.append (return_value_setup (visitor, C_result))
+					return_value.append (Semicolon)
+					return_value.append (New_line_tab)
 				end
 				Result.append (Interface_variable_prepend)
 				Result.append (interface_name)
@@ -281,15 +270,67 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line)
-				if not (func_desc.return_type.type = Vt_void) then
+				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult (Hresult_variable_name))
 				end
 				Result.append (tab)
+				if not return_value.empty then
+					Result.append (New_line)
+					Result.append (return_value)
+				end
+
 			end
 		ensure
 			non_void_feature_body: Result /= Void
 			valid_feature_body: not Result.empty	
 		end  -- function
+
+	return_value_setup (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING is
+			-- Set up return value.
+		require
+			non_void_visitor: a_visitor /= Void
+		do
+			create Result.make (0)
+			if a_visitor.is_basic_type then
+				Result.append (Space_open_parenthesis)
+				Result.append (a_visitor.cecil_type)
+				Result.append (Close_parenthesis)
+				Result.append (a_name)
+
+			elseif a_visitor.is_enumeration then
+				Result.append (Space_open_parenthesis)
+				Result.append (Eif_integer)
+				Result.append (Close_parenthesis)
+				Result.append (a_name)
+
+			else
+				Result.append (Space_open_parenthesis)
+				if (a_visitor.vt_type = Vt_bool) then
+					Result.append (Eif_boolean)
+				else
+					Result.append (Eif_reference)
+				end
+				Result.append (Close_parenthesis)
+				if a_visitor.need_generate_ce then
+					Result.append (Generated_ce_mapper)
+				else
+					Result.append (Ce_mapper)
+				end
+				Result.append (Dot)
+				Result.append (a_visitor.ce_function_name)
+				Result.append (Space_open_parenthesis)
+				Result.append (a_name)
+
+				if a_visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
+				Result.append (Close_parenthesis)	
+			end
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.empty
+		end
 
 	in_out_parameter_set_up (name: STRING; data_type: WIZARD_DATA_TYPE_DESCRIPTOR; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up "in/out" parameter

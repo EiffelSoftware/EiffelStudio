@@ -116,8 +116,10 @@ feature
 			loop
 				if i = item.type_id then
 					class_type := System.class_type_of_id (item.type_id);
-					class_type.skeleton.generate_offset
-												(file, item.feature_id);
+						--| In this instruction, we put `True' as second
+						--| arguments. This means we will generate something if there is nothing
+						--| to generate (ie `0'). Remember that `False' is used in all other case
+					class_type.skeleton.generate_offset (file, item.feature_id, True);
 					file.putchar (',');
 					file.new_line;
 					forth;

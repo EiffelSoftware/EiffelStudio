@@ -111,7 +111,7 @@ feature
 			reg.print_register
 			f.putstring (")")
 --			if reg.is_predefined or reg.register /= No_register then
-				f.putstring (gc_plus)
+--				f.putstring (gc_plus)
 --			else
 --				f.putstring (" +")
 --				f.new_line
@@ -121,7 +121,7 @@ feature
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := rout_id.table_name
-				f.putchar ('(')
+				f.putstring (" + (")
 				f.putstring (table_name)
 				f.putchar ('-')
 				f.putint (entry.min_type_id - 1)
@@ -143,8 +143,11 @@ feature
 			else
 					-- Hardwire the offset
 				offset_class_type := system.class_type_of_id (typ.type_id)
-				offset_class_type.skeleton.generate_offset
-					(f, attribute_id)
+					--| In this instruction, we put `False' as second
+					--| arguments. This means we won't generate anything if there is nothing
+					--| to generate. Remember that `True' is used in the generation of attributes
+					--| table in Final mode.
+				offset_class_type.skeleton.generate_offset (f, attribute_id, False)
 			end
 			f.putchar (')')
 --			if not (reg.is_predefined or reg.register /= No_register) then

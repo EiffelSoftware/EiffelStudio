@@ -185,13 +185,13 @@ feature
 			file.indent
 			file.putstring ("return *")
 			result_type.c_type.generate_access_cast (file)
-			file.putstring ("(Current + ")
+			file.putstring ("(Current")
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
 				table := Eiffel_table.poly_table (rout_id)
 				if table.is_polymorphic (class_type.type_id) then
 					table_name := rout_id.table_name
-					file.putchar ('(')
+					file.putstring ("+ (")
 					file.putstring (table_name)
 					file.putchar ('-')
 					file.putint (table.min_type_id - 1)
@@ -201,20 +201,24 @@ feature
 						-- Remember external attribute offset declaration
 					Extern_declarations.add_attribute_table (table_name)
 				else
-					skeleton.generate_offset (file, feature_id)
+						--| In this instruction, we put `False' as second
+						--| arguments. This means we won't generate anything if there is nothing
+						--| to generate. Remember that `True' is used in the generation of attributes
+						--| table in Final mode.
+					skeleton.generate_offset (file, feature_id, False)
 				end
 			elseif
 				Compilation_modes.is_precompiling or
 				class_type.associated_class.is_precompiled
 			then
 				rout_info := System.rout_info_table.item (rout_id)
-				file.putstring ("RTWPA(")
+				file.putstring (" + RTWPA(")
 				file.putstring (rout_info.origin.generated_id)
 				file.putchar (',')
 				file.putint (rout_info.offset)
 				file.putstring (", Dtype(Current))")
 			else
-				file.putstring ("RTWA(")
+				file.putstring (" + RTWA(")
 				file.putint (class_type.id.id - 1)
 				file.putchar (',')
 				file.putint (feature_id)

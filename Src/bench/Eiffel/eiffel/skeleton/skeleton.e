@@ -1,4 +1,4 @@
--- List of attribute sorted by category or skeleton of a class type (intance
+-- List of attribute sorted by category or skeleton of a class type (instance
 -- of CLASS_TYPE).
 
 class SKELETON 
@@ -232,32 +232,7 @@ feature
 			end;
 		end;
 
-	generate_ith_offset (file: INDENT_FILE; pos: INTEGER) is
-			-- Generate the i-th attribute offset of the skeleton
-		require
-			pos >= 1;
-			pos <= count;
-			good_argument: file /= Void;
-			good_context: file.is_open_write or else file.is_open_append;
-		do
-			go_i_th (pos);
-			generate (file);
-		end;
-
-	generate_workbench_ith_offset (file: INDENT_FILE; pos: INTEGER) is
-			-- Generate the i-th attribute offset of the skeleton
-			-- in workbench mode.
-		require
-			pos >= 1;
-			pos <= count;
-			good_argument: file /= Void;
-			good_context: file.is_open_write or else file.is_open_append;
-		do
-			go_i_th (pos);
-			file.putint (workbench_offset);
-		end;
-
-	generate_offset (file: INDENT_FILE; feature_id: INTEGER) is
+	generate_offset (file: INDENT_FILE; feature_id: INTEGER; is_in_attr_table: BOOLEAN) is
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in file `file'.
 		require
@@ -266,7 +241,7 @@ feature
 			good_context: file.is_open_write or else file.is_open_append;
 		do
 			search_feature_id (feature_id);
-			generate (file);
+			generate (file, is_in_attr_table);
 		end;
 
 	generate_workbench_offset (file: INDENT_FILE; feature_id: INTEGER) is
@@ -281,7 +256,7 @@ feature
 			file.putint (workbench_offset);
 		end;
 
-	generate (file: INDENT_FILE) is
+	generate (file: INDENT_FILE; is_in_attr_table: BOOLEAN) is
 			-- Generate offset of the attribute at the current position
 		require
 			not_off: not off;
@@ -293,50 +268,69 @@ feature
 			real_nb_ref, nb: INTEGER;
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
+			value: INTEGER
 		do
 			level := item.level;
 			inspect
 				level
 			when Reference_level then
-				file.putstring ("REFACS(");
-				file.putint (index - 1);
-				file.putchar (')');
+				value := index - 1
+				if not is_in_attr_table then
+					if value /= 0 then
+						file.putstring (" + REFACS(");
+						file.putint (value);
+						file.putchar (')');
+					end
+				else
+					file.putstring ("REFACS(");
+					file.putint (value);
+					file.putchar (')');
+				end
 			when Character_level then
 				nb_ref := nb_reference;
-				file.putstring ("@CHROFF(");
+				file.putstring ("+ @CHROFF(");
 				file.putint (nb_ref + nb_expanded);
-				file.putstring (") + CHRACS(");
-				file.putint (index - nb_ref - 1);
+				value := index - nb_ref - 1
+				if value /= 0 then
+					file.putstring (") + CHRACS(");
+					file.putint (value);
+				end
 				file.putchar (')');
 			when Integer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				file.putstring ("@LNGOFF(");
+				file.putstring ("+ @LNGOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_character);
-				file.putstring (") + LNGACS(");
-				file.putint (index - nb_ref - nb_char - 1);
+				value := index - nb_ref - nb_char - 1
+				if value /= 0 then
+					file.putstring (") + LNGACS(");
+					file.putint (value);
+				end
 				file.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
-				file.putstring ("@FLTOFF(");
+				file.putstring ("+ @FLTOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
 				file.putchar (',');
 				file.putint (nb_int);
-				file.putstring (") + FLTACS(");
-				file.putint (index - nb_ref - nb_char - nb_int - 1);
+				value := index - nb_ref - nb_char - nb_int - 1
+				if value /= 0 then
+					file.putstring (") + FLTACS(");
+					file.putint (value);
+				end
 				file.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
-				file.putstring ("@PTROFF(");
+				file.putstring ("+ @PTROFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
@@ -344,8 +338,11 @@ feature
 				file.putint (nb_int);
 				file.putchar (',');
 				file.putint (nb_flt);
-				file.putstring (") + PTRACS(");
-				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1);
+				value := index - nb_ref - nb_char - nb_int - nb_flt - 1
+				if value /= 0 then
+					file.putstring (") + PTRACS(");
+					file.putint (value);
+				end
 				file.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
@@ -353,7 +350,7 @@ feature
 				nb_int := nb_integer;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				file.putstring ("@DBLOFF(");
+				file.putstring ("+ @DBLOFF(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);
@@ -363,8 +360,11 @@ feature
 				file.putint (nb_flt);
 				file.putchar (',');
 				file.putint (nb_ptr);
-				file.putstring (") + DBLACS(");
-				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr -1);
+				value := index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1
+				if value /= 0 then
+					file.putstring (") + DBLACS(");
+					file.putint (value);
+				end
 				file.putchar (')');
 			else
 				nb_ref := nb_reference;
@@ -373,7 +373,7 @@ feature
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_dbl := nb_double;
-				file.putstring ("@OBJSIZ(");
+				file.putstring ("+ @OBJSIZ(");
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_char);

@@ -23,21 +23,21 @@ feature -- Access
 			l_name: SYSTEM_STRING
 			am: like assembly_mapping
 		do
-			if t.get_is_by_ref then
+			if t.is_by_ref then
 				Result := referenced_type_from_type (t.get_element_type)
 			else
-				create name.make_from_cil (t.get_assembly.to_string)
+				create name.make_from_cil (t.assembly.to_string)
 				am := assembly_mapping
 				am.search (name)
 				if am.found then
-					if t.get_is_array then
-						l_name := t.get_full_name
+					if t.is_array then
+						l_name := t.full_name
 						create {CONSUMED_ARRAY_TYPE} Result.make (
-							create {STRING}.make_from_cil (t.get_full_name),
+							create {STRING}.make_from_cil (t.full_name),
 							am.found_item,
 							referenced_type_from_type (t.get_element_type))
 					else
-						create Result.make (create {STRING}.make_from_cil (t.get_full_name),
+						create Result.make (create {STRING}.make_from_cil (t.full_name),
 							am.found_item)
 					end
 				end

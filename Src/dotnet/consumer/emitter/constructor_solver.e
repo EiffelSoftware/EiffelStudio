@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 		do
 			internal_constructor := cons
 			arguments := solved_arguments (cons)
-			is_public := cons.get_is_public
+			is_public := cons.is_public
 		ensure
 			internal_constructor_set: internal_constructor = cons
-			is_public_set: is_public = cons.get_is_public
+			is_public_set: is_public = cons.is_public
 		end
 
 feature -- Access
@@ -56,7 +56,7 @@ feature -- Access
 			name_set: name /= Void
 		do
 			create Result.make (name, arguments, is_public,
-				referenced_type_from_type (internal_constructor.get_declaring_type))
+				referenced_type_from_type (internal_constructor.declaring_type))
 		ensure
 			non_void_constructor: Result /= Void
 		end

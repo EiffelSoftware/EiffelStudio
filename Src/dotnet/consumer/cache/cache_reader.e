@@ -188,7 +188,7 @@ feature -- Status Report
 	is_type_in_cache (t: TYPE): BOOLEAN is
 			-- Is `t' in EAC?
 		do
-			if t.get_assembly.get_name.get_public_key_token /= Void then
+			if t.assembly.get_name.get_public_key_token /= Void then
 				Result := (create {RAW_FILE}.make (absolute_type_path (t))).exists			
 			end
 		end

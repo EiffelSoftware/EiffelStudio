@@ -41,9 +41,9 @@ feature -- Access
 					types_cache.put (ct, i)
 				end
 			end
-			am := assembly_mapping_array (t.get_assembly.get_name)
+			am := assembly_mapping_array (t.assembly.get_name)
 			if ct /= Void and am /= Void then
-				ca := Consumed_assembly_factory.consumed_assembly (t.get_assembly)
+				ca := Consumed_assembly_factory.consumed_assembly (t.assembly)
 				if dotnet_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
 					if constructors /= Void then
@@ -62,8 +62,8 @@ feature -- Access
 									j > cargs.count or not found
 								loop
 									crt := cargs.item (j).type
-									found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-										am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).get_assembly))
+									found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
+										am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
 									j := j + 1
 								end
 							end
@@ -91,8 +91,8 @@ feature -- Access
 										j > cargs.count or not found									
 									loop
 										crt := cargs.item (j).type
-										found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-											am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).get_assembly))
+										found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
+											am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
 										j := j + 1
 									end
 								end
@@ -121,8 +121,8 @@ feature -- Access
 											j > cargs.count or not found
 										loop
 											crt := cargs.item (j).type
-											found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-												am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).get_assembly))
+											found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
+												am.item (crt.assembly_id).is_equal (Consumed_assembly_factory.consumed_assembly (args.item (j - 1).assembly))
 											j := j + 1
 										end
 									end

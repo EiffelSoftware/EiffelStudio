@@ -31,7 +31,7 @@ feature -- Access
 			Result := impl.name.to_cil
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: Result.get_length > 0
+			non_empty_result: Result.length > 0
 		end
 		
 	version: SYSTEM_STRING is
@@ -40,7 +40,7 @@ feature -- Access
 			Result := impl.version.to_cil
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: Result.get_length > 0
+			non_empty_result: Result.length > 0
 		end
 		
 	culture: SYSTEM_STRING is
@@ -49,7 +49,7 @@ feature -- Access
 			Result := impl.culture.to_cil
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: Result.get_length > 0
+			non_empty_result: Result.length > 0
 		end
 		
 	public_key_token: SYSTEM_STRING is

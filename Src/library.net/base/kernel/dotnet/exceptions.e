@@ -93,7 +93,7 @@ feature -- Status report
 				if conv_fl /= Void then
 					Result := conv_fl.tag
 				else
-					create Result.make_from_cil (le.get_message)
+					create Result.make_from_cil (le.message)
 				end
 			else
 				create Result.make (0)
@@ -108,7 +108,7 @@ feature -- Status report
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
 			if le /= Void then
-				create Result.make_from_cil (le.get_target_site.get_name)
+				create Result.make_from_cil (le.target_site.name)
 			else
 				create Result.make (0)
 			end
@@ -122,7 +122,7 @@ feature -- Status report
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
 			if le /= Void then
-				create Result.make_from_cil (le.get_target_site.get_reflected_type.get_full_name)
+				create Result.make_from_cil (le.target_site.reflected_type.full_name)
 			else
 				create Result.make (0)
 			end
@@ -148,7 +148,7 @@ feature -- Status report
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
 			if le /= Void then
-				create Result.make_from_cil (le.get_stack_trace)
+				create Result.make_from_cil (le.stack_trace)
 			else
 				create Result.make (0)
 			end
@@ -162,13 +162,13 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
-			if le /= Void and then le.get_inner_exception /= Void then
-				le := le.get_inner_exception
+			if le /= Void and then le.inner_exception /= Void then
+				le := le.inner_exception
 				conv_fl ?= le
 				if conv_fl /= Void then
 					Result := conv_fl.tag
 				else
-					create Result.make_from_cil (le.get_message)
+					create Result.make_from_cil (le.message)
 				end
 			else
 				create Result.make (0)
@@ -182,8 +182,8 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
-			if le /= Void and then le.get_inner_exception /= Void then
-				Result := exception_to_code (le.get_inner_exception)
+			if le /= Void and then le.inner_exception /= Void then
+				Result := exception_to_code (le.inner_exception)
 			else
 				Result := 0
 			end
@@ -196,9 +196,9 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
-			if le /= Void and then le.get_inner_exception /= Void then
-				le := le.get_inner_exception
-				create Result.make_from_cil (le.get_target_site.get_name)
+			if le /= Void and then le.inner_exception /= Void then
+				le := le.inner_exception
+				create Result.make_from_cil (le.target_site.name)
 			else
 				create Result.make (0)
 			end
@@ -211,9 +211,9 @@ feature -- Status report
 			le: EXCEPTION
 		do
 			le := feature {EXCEPTION_MANAGER}.last_exception
-			if le /= Void and then le.get_inner_exception /= Void then
-				le := le.get_inner_exception
-				create Result.make_from_cil (le.get_target_site.get_reflected_type.get_full_name)
+			if le /= Void and then le.inner_exception /= Void then
+				le := le.inner_exception
+				create Result.make_from_cil (le.target_site.reflected_type.full_name)
 			else
 				create Result.make (0)
 			end

@@ -155,7 +155,7 @@ feature -- Access
 			-- Current cursor position.
 		do
 			if not is_closed then
-				Result := internal_stream.get_position.to_integer
+				Result := internal_stream.position.to_integer
 			end
 		end
 
@@ -192,7 +192,7 @@ feature -- Access
 			-- File pointer as required in C
 		do
 			if not is_closed then
-				Result := internal_stream.get_handle
+				Result := internal_stream.handle
 			end
 		end
 
@@ -265,7 +265,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := eiffel_file_date_time (internal_file.get_last_write_time)
+			Result := eiffel_file_date_time (internal_file.last_write_time)
 		end
 
 	access_date: INTEGER is
@@ -273,7 +273,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := eiffel_file_date_time (internal_file.get_last_access_time)
+			Result := eiffel_file_date_time (internal_file.last_access_time)
 		end
 
 	retrieved: ANY is
@@ -293,9 +293,9 @@ feature -- Measurement
 		do
 			if exists then
 				if not is_open_write then
-					Result := internal_file.get_length.to_integer
+					Result := internal_file.length.to_integer
 				else
-					Result := internal_stream.get_length.to_integer
+					Result := internal_stream.length.to_integer
 				end
 			end
 		end
@@ -334,7 +334,7 @@ feature -- Status report
 		local
 			external_name: ANY
 		do
-			Result := internal_file.get_exists
+			Result := internal_file.exists
 		ensure then
 			unchanged_mode: mode = old mode
 		end
@@ -345,7 +345,7 @@ feature -- Status report
 		local
 			external_name: ANY
 		do
-			Result := internal_file.get_exists
+			Result := internal_file.exists
 		end
 
 	is_readable: BOOLEAN is
@@ -399,7 +399,7 @@ feature -- Status report
 		do
 			if not retried then
 					-- Is the parent directory writable?
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.get_directory_name)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable
 			else
@@ -415,7 +415,7 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			Result := internal_file.get_attributes = feature {FILE_ATTRIBUTES}.normal
+			Result := internal_file.attributes = feature {FILE_ATTRIBUTES}.normal
 		end
 
 	is_device: BOOLEAN is
@@ -957,7 +957,7 @@ feature -- Element change
 		local
 			cpos: INTEGER_64
 		do
-			cpos := internal_stream.get_position
+			cpos := internal_stream.position
 			finish
 			put_character (v)
 			internal_stream.set_position (cpos)
@@ -1162,7 +1162,7 @@ feature -- Element change
 		require
 			file_exists: exists
 		do
-			Result := internal_file.get_last_write_time.to_file_time.to_integer
+			Result := internal_file.last_write_time.to_file_time.to_integer
 		end
 
 	touch is
@@ -1172,7 +1172,7 @@ feature -- Element change
 		local
 			now: SYSTEM_DATE_TIME
 		do
-			now := feature {SYSTEM_DATE_TIME}.get_now
+			now := feature {SYSTEM_DATE_TIME}.now
 			internal_file.set_last_access_time (now)
 			internal_file.set_last_write_time (now)
 		ensure
@@ -1413,7 +1413,7 @@ feature {FILE} -- Implementation
 	reader: TEXT_READER is
 			-- Stream reader used to read in `Current' (if possible).
 		do
-			if internal_sread = Void and internal_stream.get_can_read then
+			if internal_sread = Void and internal_stream.can_read then
 				create {STREAM_READER} internal_sread.make_from_stream (internal_stream)
 			end
 			Result := internal_sread
@@ -1422,7 +1422,7 @@ feature {FILE} -- Implementation
 	writer: TEXT_WRITER is
 			-- Stream writer used to write in `Current' (if possible).
 		do
-			if internal_swrite = Void and internal_stream.get_can_write then
+			if internal_swrite = Void and internal_stream.can_write then
 				create {STREAM_WRITER} internal_swrite.make_from_stream (internal_stream)
 			end
 			Result := internal_swrite
@@ -1544,7 +1544,7 @@ feature {FILE} -- Implementation
 			t: SYSTEM_DATE_TIME
 		once
 			t.make_with_year_and_month_and_day (1601 ,1 ,1 ,0 ,0 ,0 ,0)
-			Result := t.get_ticks
+			Result := t.ticks
 		end
 		
 	eiffel_base_file_time: INTEGER_64 is
@@ -1553,7 +1553,7 @@ feature {FILE} -- Implementation
 			t: SYSTEM_DATE_TIME
 		once
 			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
-			Result := t.get_ticks
+			Result := t.ticks
 		end
 		
 	dot_net_time_offset: INTEGER_64 is
@@ -1580,7 +1580,7 @@ feature {FILE} -- Implementation
 		local
 			i64: INTEGER_64
 		do
-			i64 := ((dot_net_date.get_ticks - eiffel_base_file_time) / 10000000).floor
+			i64 := ((dot_net_date.ticks - eiffel_base_file_time) / 10000000).floor
 			Result := i64.to_integer
 		end
 		

@@ -38,13 +38,13 @@ feature -- Basic Operations
 			else
 				key := encoded_key (aname.get_public_key_token)
 			end
-			if aname.get_culture_info.to_string.get_length = 0 then
+			if aname.culture_info.to_string.length = 0 then
 				culture := "neutral"
 			else
-				create culture.make_from_cil (aname.get_culture_info.to_string)
+				create culture.make_from_cil (aname.culture_info.to_string)
 			end
-			create Result.make (create {STRING}.make_from_cil (aname.get_name),
-								create {STRING}.make_from_cil (aname.get_version.to_string),
+			create Result.make (create {STRING}.make_from_cil (aname.name),
+								create {STRING}.make_from_cil (aname.version.to_string),
 								culture, key)
 		ensure
 			result_not_void: Result /= Void

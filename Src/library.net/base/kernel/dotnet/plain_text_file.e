@@ -40,14 +40,14 @@ feature -- Output
 			-- Write `s' at current position.
 		do
 			if s.count /= 0 then
-				writer.write_string (s.to_cil.replace_string_string (eiffel_newline, writer.get_new_line))
+				writer.write_string (s.to_cil.replace_string_string (eiffel_newline, writer.new_line))
 			end
 		end
 
 	put_integer, putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_integer_32 (i)
+			writer.write_integer (i)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is

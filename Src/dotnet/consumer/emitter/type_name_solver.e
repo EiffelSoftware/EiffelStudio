@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			non_void_type: t /= Void
 		do
 			internal_type := t
-			create simple_name.make_from_cil (internal_type.get_name)
-			weight := t.get_full_name.split (dot_array).count - 1
+			create simple_name.make_from_cil (internal_type.name)
+			weight := t.full_name.split (dot_array).count - 1
 		ensure
 			non_void_internal_type: internal_type /= Void
 			non_void_simple_name: simple_name /= Void

@@ -49,7 +49,7 @@ feature -- Basic Operations
 				create xml_reader.make_from_url (path.to_cil)
 				xml_reader.set_whitespace_handling (feature {XML_WHITESPACE_HANDLING}.none)
 				read_next
-				if successful and xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
+				if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
 					read_next
 					deserialized_object := reference_from_xml
 				else
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			if not retried then
 				last_error := Generic_error
 				if xml_reader /= Void then
-					last_error_context := "At line " + xml_reader.get_line_number.out
+					last_error_context := "At line " + xml_reader.line_number.out
 					xml_reader.close
 				else
 					last_error_context := "Cannot create XML reader"
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_object: obj /= Void
 			non_void_reader: xml_reader /= Void
-			valid_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Reference_node)
+			valid_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.name.equals (Reference_node)
 		local
 			done: BOOLEAN
 			i, ft: INTEGER
@@ -91,9 +91,9 @@ feature {NONE} -- Implementation
 			from
 				read_next
 			until
-				xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
+				xml_reader.node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
 			loop
-				if xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element then
+				if xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element then
 					f_table.search (create {STRING}.make_from_cil (xml_reader.get_attribute (Field_name_xml_attribute)))
 					if f_table.found then
 						i := f_table.found_item
@@ -102,36 +102,36 @@ feature {NONE} -- Implementation
 							ft
 						when Integer_type then
 							read_next
-							set_integer_field (i, obj, feature {CONVERT}.to_int_32_string (xml_reader.get_value))
+							set_integer_field (i, obj, feature {CONVERT}.to_int_32_string (xml_reader.value))
 							read_next
 						when Real_type then
 							read_next
-							set_real_field (i, obj, feature {CONVERT}.to_single_string (xml_reader.get_value))
+							set_real_field (i, obj, feature {CONVERT}.to_single_string (xml_reader.value))
 							read_next
 						when Double_type then
 							read_next
-							set_double_field (i, obj, feature {CONVERT}.to_double_string (xml_reader.get_value))
+							set_double_field (i, obj, feature {CONVERT}.to_double_string (xml_reader.value))
 							read_next
 						when Character_type then
 							read_next
-							set_character_field (i, obj, feature {CONVERT}.to_char_string (xml_reader.get_value))
+							set_character_field (i, obj, feature {CONVERT}.to_char_string (xml_reader.value))
 							read_next
 						when Boolean_type then
 							read_next
-							set_boolean_field (i, obj, feature {CONVERT}.to_boolean_string (xml_reader.get_value))
+							set_boolean_field (i, obj, feature {CONVERT}.to_boolean_string (xml_reader.value))
 							read_next
 						when Pointer_type then
 							read_next
-							set_pointer_field (i, obj, default_pointer + feature {CONVERT}.to_int_32_string (xml_reader.get_value))
+							set_pointer_field (i, obj, default_pointer + feature {CONVERT}.to_int_32_string (xml_reader.value))
 							read_next
 						when Reference_type then
-							if xml_reader.get_name.equals (String_node) then
+							if xml_reader.name.equals (String_node) then
 								read_next
-								set_reference_field (i, obj, create {STRING}.make_from_cil (xml_reader.get_value))
+								set_reference_field (i, obj, create {STRING}.make_from_cil (xml_reader.value))
 								read_next
-							elseif xml_reader.get_name.equals (Array_node) then
+							elseif xml_reader.name.equals (Array_node) then
 								set_reference_field (i, obj, array_from_xml)
-							elseif xml_reader.get_name.equals (None_node) then
+							elseif xml_reader.name.equals (None_node) then
 								read_next
 							else
 								set_reference_field (i, obj, reference_from_xml)
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			-- Instance of array as described in XML
 		require
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.name.equals (Array_node)
 		local
 			lower, count: INTEGER
 			s: SYSTEM_STRING
@@ -209,27 +209,27 @@ feature {NONE} -- Implementation
 						end
 					else
 						last_error := Missing_array_generic_type_error
-						last_error_context := "At line " + xml_reader.get_line_number.out
+						last_error_context := "At line " + xml_reader.line_number.out
 					end
 				else
 					last_error := Missing_array_count_error
-					last_error_context := "At line " + xml_reader.get_line_number.out
+					last_error_context := "At line " + xml_reader.line_number.out
 				end
 			else
 				last_error := Missing_array_lower_bound_error
-				last_error_context := "At line " + xml_reader.get_line_number.out
+				last_error_context := "At line " + xml_reader.line_number.out
 			end
 		ensure
 			array_initialized: successful implies Result /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.name.equals (Array_node)
 		end
 
 	reference_from_xml: ANY is
 			-- Instantiate object described in XML
 		require
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_name.equals (Reference_node)
+			valid_xml_reader: xml_reader.name.equals (Reference_node)
 		local
 			name: STRING
 			name_att: SYSTEM_STRING
@@ -249,12 +249,12 @@ feature {NONE} -- Implementation
 				end
 			else
 				last_error := Missing_reference_type_error
-				last_error_context := "Line " + xml_reader.get_line_number.out
+				last_error_context := "Line " + xml_reader.line_number.out
 			end
 		ensure
 			object_initialized: successful implies Result /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.get_name.equals (Reference_node)
+			valid_xml_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.end_element and xml_reader.name.equals (Reference_node)
 		end
 
 	read_next is
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 		do
 			if not xml_reader.read then
 				last_error := Invalid_xml_file_error
-				last_error_context := "At line " + xml_reader.get_line_number.out
+				last_error_context := "At line " + xml_reader.line_number.out
 			end
 		end
 	
@@ -275,23 +275,23 @@ feature {NONE} -- Implementation
 		require
 			non_void_item_processor: item_processor /= Void
 			non_void_xml_reader: xml_reader /= Void
-			valid_xml_reader: xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.get_name.equals (Array_node)
+			valid_xml_reader: xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element and xml_reader.name.equals (Array_node)
 		local
 			index: INTEGER
 		do
 			from
 				read_next
 			until
-				xml_reader.get_node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
+				xml_reader.node_type = feature {XML_XML_NODE_TYPE}.end_element or not successful
 			loop
 				index := feature {CONVERT}.to_int_32_string (xml_reader.get_attribute (Field_name_xml_attribute))
-				if xml_reader.get_name.equals (Reference_node) then
+				if xml_reader.name.equals (Reference_node) then
 					item_processor.call ([reference_from_xml, index])
-				elseif xml_reader.get_name.equals (Array_node) then
+				elseif xml_reader.name.equals (Array_node) then
 					item_processor.call ([array_from_xml, index])
 				else
 					read_next
-					item_processor.call ([create {STRING}.make_from_cil (xml_reader.get_value), index])
+					item_processor.call ([create {STRING}.make_from_cil (xml_reader.value), index])
 					read_next
 				end
 				read_next

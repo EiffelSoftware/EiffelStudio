@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			parent_type: TYPE
 			l_is_nested: BOOLEAN
 		do
-			create dotnet_name.make_from_cil (t.get_full_name)
-			parent_type := t.get_base_type
+			create dotnet_name.make_from_cil (t.full_name)
+			parent_type := t.base_type
 			if parent_type /= Void and then is_consumed_type (parent_type) then
 				parent := referenced_type_from_type (parent_type)
 			end 
@@ -62,29 +62,29 @@ feature {NONE} -- Initialization
 				interfaces := interfaces.subarray (1, count)
 			end
 
-			if t.get_is_nested_public or t.get_is_nested_family or t.get_is_nested_fam_orassem then
+			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_orassem then
 					-- Let's initialize `l_is_nested' correctly and if it is set to
 					-- true, update `parent_type' so that it contains the nested type
 					-- enclosing type.
-				parent_name := t.get_full_name
-				parent_name := parent_name.substring_integer_32_integer_32 (0,
+				parent_name := t.full_name
+				parent_name := parent_name.substring_integer_integer (0,
 					parent_name.index_of_character ('+'))
-				parent_type := t.get_assembly.get_type_string (parent_name)
-				l_is_nested := parent_type /= Void and then parent_type.get_is_public
+				parent_type := t.assembly.get_type_string (parent_name)
+				l_is_nested := parent_type /= Void and then parent_type.is_public
 			end
 			
 			if l_is_nested then
 					-- `parent_type' contains enclosing type of current nested type.
 				create {CONSUMED_NESTED_TYPE} consumed_type.make (
-					dotnet_name, en, t.get_is_interface, t.get_is_abstract,
-					t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces,
+					dotnet_name, en, t.is_interface, t.is_abstract,
+					t.is_sealed, t.is_value_type, t.is_enum, parent, interfaces,
 					referenced_type_from_type (parent_type))
 			else	
-				create consumed_type.make (dotnet_name, en, t.get_is_interface, t.get_is_abstract,
-					t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces)
+				create consumed_type.make (dotnet_name, en, t.is_interface, t.is_abstract,
+					t.is_sealed, t.is_value_type, t.is_enum, parent, interfaces)
 			end
 
-			if t.get_is_interface then
+			if t.is_interface then
 					-- Lookup members of current interface `t' but also add members coming
 					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
 				update_interface_members (t)
@@ -225,7 +225,7 @@ feature -- Basic Operation
 					i = nb
 				loop
 					l_member := internal_members.item (i)
-					if l_member.get_member_type = feature {MEMBER_TYPES}.method then
+					if l_member.member_type = feature {MEMBER_TYPES}.method then
 						l_meth ?= l_member
 						check
 							is_method: l_meth /= Void
@@ -245,7 +245,7 @@ feature -- Basic Operation
 						else
 							-- The method will be added at the same time than the property or the event.
 						end
-					elseif l_member.get_member_type = feature {MEMBER_TYPES}.field then
+					elseif l_member.member_type = feature {MEMBER_TYPES}.field then
 						l_field ?= l_member
 						check
 							is_field: l_field /= Void
@@ -253,7 +253,7 @@ feature -- Basic Operation
 						if is_consumed_field (l_field) then
 							l_fields.extend (consumed_field (l_field))						
 						end
-					elseif l_member.get_member_type = feature {MEMBER_TYPES}.property then
+					elseif l_member.member_type = feature {MEMBER_TYPES}.property then
 						l_property ?= l_member
 						check
 							is_property: l_property /= Void
@@ -262,7 +262,7 @@ feature -- Basic Operation
 						if cp_property /= Void then
 							l_properties.extend (cp_property)	
 						end
-					elseif l_member.get_member_type = feature {MEMBER_TYPES}.event then
+					elseif l_member.member_type = feature {MEMBER_TYPES}.event then
 						l_event ?= l_member
 						check
 							is_event: l_event /= Void
@@ -362,7 +362,7 @@ feature -- Basic Operation
 				i = nb
 			loop
 				l_member := internal_members.item (i)
-				if l_member.get_member_type = feature {MEMBER_TYPES}.method then
+				if l_member.member_type = feature {MEMBER_TYPES}.method then
 					l_meth ?= l_member
 					check
 						is_method: l_meth /= Void
@@ -387,10 +387,10 @@ feature {NONE} -- Implementation
 			l_type: TYPE
 			l_value: SYSTEM_OBJECT
 		do
-			create dotnet_name.make_from_cil (info.get_name)
-			l_type := info.get_declaring_type
-			if info.get_is_literal then
-				if l_type.get_is_enum then
+			create dotnet_name.make_from_cil (info.name)
+			l_type := info.declaring_type
+			if info.is_literal then
+				if l_type.is_enum then
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.
@@ -401,19 +401,19 @@ feature {NONE} -- Implementation
 				create {CONSUMED_LITERAL_FIELD} Result.make (
 					unique_feature_name (dotnet_name),
 					dotnet_name,
-					referenced_type_from_type (info.get_field_type),
-					info.get_is_static,
-					info.get_is_public,
+					referenced_type_from_type (info.field_type),
+					info.is_static,
+					info.is_public,
 					literal_field_value (l_value),
 					referenced_type_from_type (l_type))
 			else
 				create Result.make (
 					unique_feature_name (dotnet_name),
 					dotnet_name,
-					referenced_type_from_type (info.get_field_type),
-					info.get_is_static,
-					info.get_is_public,
-					info.get_is_init_only,
+					referenced_type_from_type (info.field_type),
+					info.is_static,
+					info.is_public,
+					info.is_init_only,
 					referenced_type_from_type (l_type))
 			end
 		end
@@ -438,15 +438,15 @@ feature {NONE} -- Implementation
 				i >= count
 			loop
 				p := params.item (i)
-				create dn.make_from_cil (p.get_name)
+				create dn.make_from_cil (p.name)
 				en := formatted_argument_name (dn, i + 1)
 				if dn = Void or dn.is_empty then
 					dn := en.clone (en)
 				end
-				t := p.get_parameter_type
+				t := p.parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
 					referenced_type_from_type (t),
-					p.get_is_out or t.get_is_by_ref), i + 1)
+					p.is_out or t.is_by_ref), i + 1)
 				i := i + 1
 			end
 		ensure
@@ -462,20 +462,20 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters, info.get_return_type)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
 				create Result.make (
 					l_unique_eiffel_name,
-					create {STRING}.make_from_cil (info.get_name),
+					create {STRING}.make_from_cil (info.name),
 					consumed_arguments (info),
-					info.get_is_final,
-					info.get_is_static,
-					info.get_is_abstract,
-					info.get_is_public,
+					info.is_final,
+					info.is_static,
+					info.is_abstract,
+					info.is_public,
 					property_or_event,
-					referenced_type_from_type (info.get_declaring_type))
+					referenced_type_from_type (info.declaring_type))
 			end
 		end
 	
@@ -487,23 +487,23 @@ feature {NONE} -- Implementation
 			l_unique_eiffel_name: STRING
 		do
 			if is_consumed_method (info) then
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.get_name, info.get_parameters, info.get_return_type)
+				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
 				create Result.make (
 					l_unique_eiffel_name,
-					create {STRING}.make_from_cil (info.get_name),
+					create {STRING}.make_from_cil (info.name),
 					consumed_arguments (info),
-					referenced_type_from_type (info.get_return_type),
-					info.get_is_final,
-					info.get_is_static,
-					info.get_is_abstract,
+					referenced_type_from_type (info.return_type),
+					info.is_final,
+					info.is_static,
+					info.is_abstract,
 					is_infix (info),
 					is_prefix (info),
-					info.get_is_public,
+					info.is_public,
 					property_or_event,
-					referenced_type_from_type (info.get_declaring_type))
+					referenced_type_from_type (info.declaring_type))
 			end
 		end
 
@@ -518,15 +518,15 @@ feature {NONE} -- Implementation
 			l_info, l_info_setter: METHOD_INFO
 			l_eiffel_getter_property_name, l_eiffel_setter_property_name: STRING
 		do
-			create dotnet_name.make_from_cil (info.get_name)
-			if info.get_can_read then
+			create dotnet_name.make_from_cil (info.name)
+			if info.can_read then
 				l_info := info.get_get_method_boolean (True)
 				check
 					non_void_l_info: l_info /= Void
 				end
 				l_getter := consumed_function (l_info, True)
 			end
-			if info.get_can_write then
+			if info.can_write then
 				l_info := info.get_set_method_boolean (True)
 				check
 					non_void_l_info: l_info /= Void
@@ -539,9 +539,9 @@ feature {NONE} -- Implementation
 			if l_getter /= Void or l_setter /= Void then
 				create Result.make (
 					dotnet_name,
-					l_info.get_is_public,
-					l_info.get_is_static,
-					referenced_type_from_type (info.get_declaring_type),
+					l_info.is_public,
+					l_info.is_static,
+					referenced_type_from_type (info.declaring_type),
 					l_getter,
 					l_setter)
 			end
@@ -573,13 +573,13 @@ feature {NONE} -- Implementation
 				l_remover := consumed_procedure (l_remove_method, True)
 			end
 
-			create dotnet_name.make_from_cil (info.get_name)
+			create dotnet_name.make_from_cil (info.name)
 			if l_raise_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_raise_method.get_parameters.item (0).get_parameter_type)
+				l_parameter_type := referenced_type_from_type (l_raise_method.get_parameters.item (0).parameter_type)
 			elseif l_add_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type)
+				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).parameter_type)
 			elseif l_remove_method /= Void then
-				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
+				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).parameter_type)
 			end
 			if l_remover /= Void or l_raiser /= Void or l_adder /= Void then
 				create Result.make (
@@ -740,7 +740,7 @@ feature {NONE} -- Status Setting.
 			until
 				args = Void or else i = args.count
 			loop
-				l_str.append (create {STRING}.make_from_cil (args.item (i).get_parameter_type.get_name))
+				l_str.append (create {STRING}.make_from_cil (args.item (i).parameter_type.name))
 				i := i + 1
 			end
 			Result := l_str.to_cil
@@ -754,10 +754,10 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		do
-			if info.get_can_read then
+			if info.can_read then
 				add_properties_or_events (info.get_get_method_boolean (True))
 			end
-			if info.get_can_write then
+			if info.can_write then
 				add_properties_or_events (info.get_set_method_boolean (True))
 			end
 		end
@@ -794,7 +794,7 @@ feature {NONE} -- Status Setting.
 			l_dotnet_name: SYSTEM_STRING
 		do
 			if is_consumed_method (info) then
-				l_dotnet_name := info.get_name
+				l_dotnet_name := info.name
 				create l_key.make_from_c_and_count (' ', 0)
 				l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
 				if not properties_and_events.contains_key (l_key) then
@@ -802,7 +802,7 @@ feature {NONE} -- Status Setting.
 				end
 			end
 		ensure
---			info_added: is_consumed_method (info) implies properties_and_events.contains_key (info.get_name + key_args (info.get_parameters))
+--			info_added: is_consumed_method (info) implies properties_and_events.contains_key (info.name + key_args (info.get_parameters))
 		end
 
 	is_property_or_event (info: METHOD_INFO): BOOLEAN is
@@ -817,7 +817,7 @@ feature {NONE} -- Status Setting.
 			l_method_list: NATIVE_ARRAY [METHOD_INFO]
 			l_index: INTEGER
 		do
-			l_dotnet_name := info.get_name
+			l_dotnet_name := info.name
 			l_index := l_dotnet_name.last_index_of_character ('.')
 			if l_index > 0 then
 				l_dotnet_name := l_dotnet_name.substring (l_index + 1)
@@ -836,10 +836,10 @@ feature {NONE} -- Status Setting.
 		require
 			is_function: is_function (info)
 		do
-			Result := info.get_name.get_length > 3 and then
-						info.get_is_special_name and then
-						info.get_name.starts_with (Operator_name_prefix.to_cil) and then
-						info.get_parameters.item (0).get_parameter_type.equals_type (info.get_reflected_type)
+			Result := info.name.length > 3 and then
+						info.is_special_name and then
+						info.name.starts_with (Operator_name_prefix.to_cil) and then
+						info.get_parameters.item (0).parameter_type.equals_type (info.reflected_type)
 		end
 
 	is_prefix (info: METHOD_INFO): BOOLEAN is
@@ -847,16 +847,16 @@ feature {NONE} -- Status Setting.
 		require
 			is_function: is_function (info)
 		do
-			Result := info.get_name.get_length > 3 and then
-						info.get_is_special_name and then
-						info.get_name.starts_with (Operator_name_prefix.to_cil) and then
+			Result := info.name.length > 3 and then
+						info.is_special_name and then
+						info.name.starts_with (Operator_name_prefix.to_cil) and then
 						info.get_parameters.count = 1
 		end
 
 	is_function (info: METHOD_INFO): BOOLEAN is
 			-- Is method a function?
 		do
-			Result := not info.get_return_type.equals_type (Void_type)
+			Result := not info.return_type.equals_type (Void_type)
 		end
 		
 	Void_type: TYPE is
@@ -908,13 +908,13 @@ feature {NONE} -- Added features of System.Object to Interfaces
 
 			create l_members.make (internal_members.count + object_members.count)
 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer_32 (object_members, 0, l_members,
+			feature {SYSTEM_ARRAY}.copy_array_integer (object_members, 0, l_members,
 				internal_members.count, object_members.count)
 			internal_members := l_members
 
 --			create l_methods.make (internal_methods.count + Object_methods.count)
 --			feature {SYSTEM_ARRAY}.copy (internal_methods, l_methods, internal_methods.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer_32 (Object_methods, 0, l_methods,
+--			feature {SYSTEM_ARRAY}.copy_array_integer (Object_methods, 0, l_methods,
 --				internal_methods.count, Object_methods.count)
 --			internal_methods := l_methods
 		end
@@ -952,25 +952,25 @@ feature {NONE} -- Added features of System.Object to Interfaces
 				-- merge members.
 			create l_merged_members.make (internal_members.count + l_members.count)
 			feature {SYSTEM_ARRAY}.copy (internal_members, l_merged_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_members, 0, l_merged_members, internal_members.count, l_members.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer (l_members, 0, l_merged_members, internal_members.count, l_members.count)
 			internal_members := l_merged_members
 
 --				-- merge methods.
 --			create l_merged_methods.make (internal_methods.count + l_methods.count)
 --			feature {SYSTEM_ARRAY}.copy (internal_methods, l_merged_methods, internal_methods.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
+--			feature {SYSTEM_ARRAY}.copy_array_integer (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
 --			internal_methods := l_merged_methods
 
 				-- merge properties.
 			create l_merged_properties.make (internal_properties.count + l_properties.count)
 			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
 			internal_properties := l_merged_properties
 
 				-- merge events.
 			create l_merged_events.make (internal_events.count + l_events.count)
 			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_events, 0, l_merged_events, internal_events.count, l_events.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer (l_events, 0, l_merged_events, internal_events.count, l_events.count)
 			internal_events := l_merged_events
 			from
 				l_interfaces := t.get_interfaces

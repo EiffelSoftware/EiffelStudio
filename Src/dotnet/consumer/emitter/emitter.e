@@ -362,13 +362,13 @@ feature {NONE} -- Implementation
 			if ass/= Void then
 				create writer
 				if not no_output then
-					display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.get_full_name))
+					display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
 					writer.set_status_printer (agent display_status)
 				end
 				writer.set_error_printer (agent process_error)
 				writer.add_assembly (ass.get_name)
 				
-				consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
+				consumed_assemblies.extend (create {STRING}.make_from_cil (ass.full_name))
 			end
 		end
 		
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			output_destination_path.append (relative_assembly_path (ass.get_name))
 		
 			if not no_output then
-				display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.get_full_name))
+				display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
 			end
 			
 			-- only consume the assembly if it needs to be consumed
@@ -431,11 +431,11 @@ feature {NONE} -- Implementation
 				(create {EIFFEL_XML_SERIALIZER}).serialize (local_info, local_info_path)
 			else
 				if not no_output then
-					display_status ("Up-to-date check: '" + create {STRING}.make_from_cil (ass.get_name.get_full_name) + "' has not been modified since last consumption.%N")
+					display_status ("Up-to-date check: '" + create {STRING}.make_from_cil (ass.get_name.full_name) + "' has not been modified since last consumption.%N")
 				end
 			end
 			
-			consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
+			consumed_assemblies.extend (create {STRING}.make_from_cil (ass.full_name))
 			
 			if not no_dependancies then
 				references := ass.get_referenced_assemblies			
@@ -448,18 +448,18 @@ feature {NONE} -- Implementation
 						name := references.item (n)
 						
 						-- do not consume mscorlib, as it isnt loaded from the GAC but from the %SystemRoot%\Microsoft.Net\Framework\<version>\ directory.
-						if not name.get_name.equals (("mscorlib").to_cil) then
+						if not name.name.equals (("mscorlib").to_cil) then
 							assembly := feature {ASSEMBLY}.load_assembly_name (name)
 							if assembly /= Void then
-								if not consumed_assemblies.has (create {STRING}.make_from_cil (assembly.get_full_name)) then
-									if assembly.get_global_assembly_cache and not force_local_generation then
+								if not consumed_assemblies.has (create {STRING}.make_from_cil (assembly.full_name)) then
+									if assembly.global_assembly_cache and not force_local_generation then
 										consume_in_eac (assembly)
 									else
 										consume_into_path (assembly)
 									end
 								end
 							else
-								set_error (Invalid_assembly, create {STRING}.make_from_cil (name.get_full_name))
+								set_error (Invalid_assembly, create {STRING}.make_from_cil (name.full_name))
 							end
 						end
 						n := n + 1
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			if ass/= Void then
 				create writer
 				if not no_output then
-					display_status ("Removing " + create {STRING}.make_from_cil (ass.get_name.get_full_name))
+					display_status ("Removing " + create {STRING}.make_from_cil (ass.get_name.full_name))
 					writer.set_status_printer (agent display_status)
 				end
 				writer.set_error_printer (agent process_error)

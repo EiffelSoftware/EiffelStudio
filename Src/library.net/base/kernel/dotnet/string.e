@@ -161,7 +161,7 @@ feature -- Initialization
 			new_ptr: POINTER
 		do
 			new_ptr := c_string + (start_pos - 1)
-			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_pointer_integer_32 (new_ptr,
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_pointer_integer (new_ptr,
 				end_pos - start_pos + 1))
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -189,7 +189,7 @@ feature -- Access
 	item, infix "@" (i: INTEGER): CHARACTER is
 			-- Character at position `i'
 		do
-			Result := internal_string_builder.get_chars (i - 1)
+			Result := internal_string_builder.chars (i - 1)
 		end
 
 	item_code (i: INTEGER): INTEGER is
@@ -234,7 +234,7 @@ feature -- Access
 					i := start - 1
 					nb := nb - 1
 				until
-					i > nb or else internal_string_builder.get_chars (i) = c
+					i > nb or else internal_string_builder.chars (i) = c
 				loop
 					i := i + 1
 				end
@@ -261,7 +261,7 @@ feature -- Access
 			from
 				i := start_index_from_end - 1
 			until
-				i < 0 or else internal_string_builder.get_chars (i) = c
+				i < 0 or else internal_string_builder.chars (i) = c
 			loop
 				i := i - 1
 			end
@@ -315,7 +315,7 @@ feature -- Access
 			valid_start_index: start_index >= 1 and start_index <= count + 1
 		do
 			if start_index <= count then
-				Result := to_cil.index_of_string_integer_32 (other.to_cil, start_index - 1) + 1
+				Result := to_cil.index_of_string_integer (other.to_cil, start_index - 1) + 1
 			end
 		ensure
 			valid_result: Result = 0 or else
@@ -350,13 +350,13 @@ feature -- Measurement
 	capacity: INTEGER is
 			-- Allocated space
 		do
-			Result := internal_string_builder.get_capacity
+			Result := internal_string_builder.capacity
 		end
 
 	count: INTEGER is
 			-- Actual number of characters making up the string
 		do
-			Result := internal_string_builder.get_length
+			Result := internal_string_builder.length
 		end
 
 	occurrences (c: CHARACTER): INTEGER is
@@ -370,7 +370,7 @@ feature -- Measurement
 			until
 				counter > nb
 			loop
-				if internal_string_builder.get_chars (counter) = c then
+				if internal_string_builder.chars (counter) = c then
 					Result := Result + 1
 				end
 				counter := counter + 1
@@ -566,7 +566,7 @@ feature -- Element change
 			argument_not_void: t /= Void
 		do
 			create internal_string_builder.make_from_value (
-				t.internal_string_builder.to_string_integer_32 (n1 - 1, n2 - n1 + 1))
+				t.internal_string_builder.to_string_integer (n1 - 1, n2 - n1 + 1))
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end
@@ -605,7 +605,7 @@ feature -- Element change
 			until
 				i > end0
 			loop
-				internal_string_builder.set_chars (index0 + i, other_area.get_chars (i))
+				internal_string_builder.set_chars (index0 + i, other_area.chars (i))
 				i := i + 1
 			end
 		ensure
@@ -642,7 +642,7 @@ feature -- Element change
 				until
 					i = count
 				loop
-					internal_string_builder.set_chars (i + diff, internal_string_builder.get_chars (i))
+					internal_string_builder.set_chars (i + diff, internal_string_builder.chars (i))
 					i := i + 1
 				end
 			elseif diff < 0 then
@@ -652,7 +652,7 @@ feature -- Element change
 				until
 					i < end_index
 				loop
-					internal_string_builder.set_chars (i + diff, internal_string_builder.get_chars (i))
+					internal_string_builder.set_chars (i + diff, internal_string_builder.chars (i))
 					i := i - 1
 				end
 			end
@@ -662,7 +662,7 @@ feature -- Element change
 			until
 				i = s_count
 			loop
-				internal_string_builder.set_chars (i + start0, s_area.get_chars (i))
+				internal_string_builder.set_chars (i + start0, s_area.chars (i))
 				i := i + 1
 			end
 		ensure
@@ -808,7 +808,7 @@ feature -- Element change
 				wc := << ' ', '%T', '%R', '%N' >>
 				cnt := count
 			until
-				nbw = cnt or not wc.has (internal_string_builder.get_chars (nbw))
+				nbw = cnt or not wc.has (internal_string_builder.chars (nbw))
 			loop
 				nbw := nbw + 1
 			end
@@ -818,7 +818,7 @@ feature -- Element change
 				until
 					i = cnt
 				loop
-					internal_string_builder.set_chars (i - nbw, internal_string_builder.get_chars (i))
+					internal_string_builder.set_chars (i - nbw, internal_string_builder.chars (i))
 					i := i + 1
 				end
 			end
@@ -841,7 +841,7 @@ feature -- Element change
 				wc := << ' ', '%T', '%R', '%N' >>
 				lnw := count - 1
 			until
-				lnw < 0 or not wc.has (internal_string_builder.get_chars (lnw))
+				lnw < 0 or not wc.has (internal_string_builder.chars (lnw))
 			loop
 				lnw := lnw - 1
 			end
@@ -876,7 +876,7 @@ feature -- Element change
 	precede (c: CHARACTER) is
 			-- Add `c' at front.
 		do
-			internal_string_builder := internal_string_builder.insert_integer_32_character (0, c)
+			internal_string_builder := internal_string_builder.insert_integer_character (0, c)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -886,7 +886,7 @@ feature -- Element change
 		require
 			argument_not_void: s /= Void
 		do
-			internal_string_builder := internal_string_builder.insert_integer_32_string (0, s.to_cil)
+			internal_string_builder := internal_string_builder.insert_integer_string (0, s.to_cil)
 		ensure
 			new_count: count = old count + s.count
 		end
@@ -1020,7 +1020,7 @@ feature -- Element change
 			if i = count + 1 then
 				append (s)
 			else
-				internal_string_builder := internal_string_builder.insert_integer_32_string (i - 1, s.to_cil)
+				internal_string_builder := internal_string_builder.insert_integer_string (i - 1, s.to_cil)
 			end
 		ensure
 			inserted: is_equal (old substring (1, i - 1)
@@ -1036,7 +1036,7 @@ feature -- Element change
 			if i = count + 1 then
 				append_character (c)
 			else
-				internal_string_builder := internal_string_builder.insert_integer_32_character (i - 1, c)
+				internal_string_builder := internal_string_builder.insert_integer_character (i - 1, c)
 			end
 		ensure
 			new_count: count = old count + 1
@@ -1281,7 +1281,7 @@ feature -- Conversion
 			until
 				i = nbw
 			loop
-				internal_string_builder.set_chars (i + nbw, internal_string_builder.get_chars (i))
+				internal_string_builder.set_chars (i + nbw, internal_string_builder.chars (i))
 				internal_string_builder.set_chars (i, ' ')
 				i :=  i + 1
 			end
@@ -1310,7 +1310,7 @@ feature -- Conversion
 			until
 				i = nbw
 			loop
-				internal_string_builder.set_chars (i + nbw, internal_string_builder.get_chars (i))
+				internal_string_builder.set_chars (i + nbw, internal_string_builder.chars (i))
 				internal_string_builder.set_chars (i, ' ')
 				i :=  i + 1
 			end
@@ -1365,7 +1365,7 @@ feature -- Conversion
 			loop
 				internal_string_builder.set_chars (
 					i, 
-					feature {CHARACTER}.to_lower (internal_string_builder.get_chars (i))
+					feature {CHARACTER}.to_lower (internal_string_builder.chars (i))
 				)
 				i := i + 1
 			end
@@ -1383,7 +1383,7 @@ feature -- Conversion
 			loop
 				internal_string_builder.set_chars (
 					i, 
-					feature {CHARACTER}.to_upper (internal_string_builder.get_chars (i))
+					feature {CHARACTER}.to_upper (internal_string_builder.chars (i))
 				)
 				i := i + 1
 			end
@@ -1538,8 +1538,8 @@ feature -- Conversion
 				until
 					i = stp
 				loop
-					c := internal_string_builder.get_chars (i)
-					internal_string_builder.set_chars (i, internal_string_builder.get_chars (cnt - i))
+					c := internal_string_builder.chars (i)
+					internal_string_builder.set_chars (i, internal_string_builder.chars (cnt - i))
 					internal_string_builder.set_chars (cnt - i, c)
 					i := i + 1
 				end
@@ -1555,7 +1555,7 @@ feature -- Duplication
 			-- Copy of substring containing all characters at indices
 			-- between `n1' and `n2'
 		do
-			create Result.make_from_cil (internal_string_builder.to_string_integer_32 (n1 - 1, n2 - n1 + 1))
+			create Result.make_from_cil (internal_string_builder.to_string_integer (n1 - 1, n2 - n1 + 1))
 		ensure
 			new_result_count: Result.count = n2 - n1 + 1 or Result.count = 0
 			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)

@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 	generic_typecode (pos: INTEGER): INTEGER_8 is
 			-- Code for generic parameter `pos' in `obj'.
 		do
-			Result ?= reverse_lookup.get_item (fast_item (pos).get_type)
+			Result ?= reverse_lookup.item (fast_item (pos).get_type)
 		end
 
 	reverse_lookup: HASHTABLE is

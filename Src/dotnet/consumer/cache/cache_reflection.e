@@ -289,16 +289,16 @@ feature -- Access
 			crt: CONSUMED_REFERENCED_TYPE
 			found: BOOLEAN
 			i: INTEGER
---			am: ARRAY [CONSUMED_ASSEMBLY]
 		do
---			am := assembly_mapping_array (consumed_assembly_from_path (t.assembly.location))
 			from
 				entities_list.start
 			until
 				entities_list.after or Result /= Void
 			loop
 				cargs := entities_list.item.arguments
-				if cargs.count = args.count then
+				if (cargs = Void or else cargs.count = 0) and args = Void then
+					Result := entities_list.item
+				elseif cargs /= Void and args /= Void and then cargs.count = args.count then
 					-- compare arguments
 					from
 						i := 1
@@ -308,7 +308,6 @@ feature -- Access
 					loop
 						crt := cargs.item (i).type
 						found := crt.name.to_cil.equals (args.item (i - 1).full_name) 
---							and then am.item (crt.assembly_id).is_equal (consumed_assembly_from_path (args.item (i - 1).assembly.location))
 						i := i + 1
 					end
 					if found then

@@ -322,41 +322,45 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			type := visitor.vt_type
+			create Result.make (0)
 
-			Result := clone (New_line_tab)
-			if visitor.need_generate_ce then
-				Result.append (Generated_ce_mapper)
-			else
-				Result.append (Ce_mapper)
-			end
-			Result.append (Dot)
-			Result.append (visitor.ce_function_name)
-			Result.append (Space_open_parenthesis)
-
-			if visitor.is_basic_type or not is_byref (type) then
-				add_warning (Current, Not_pointer_type)
-			elseif visitor.is_enumeration then
-				add_warning (Current, Invalid_use_of_enumeration)
-			else
-				if visitor.is_basic_type_ref then
-					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
-					Result.append (Comma_space)
-					Result.append (name)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-				elseif is_boolean (type) then
-					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
-					Result.append (Comma_space)
-					Result.append (name)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
+			if not visitor.is_array_basic_type and not visitor.is_structure_pointer and not
+						visitor.is_interface_pointer then
+				Result.append (New_line_tab)
+				if visitor.need_generate_ce then
+					Result.append (Generated_ce_mapper)
 				else
-					Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
-					Result.append (Comma_space)
-					Result.append (name)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-				end	
+					Result.append (Ce_mapper)
+				end
+				Result.append (Dot)
+				Result.append (visitor.ce_function_name)
+				Result.append (Space_open_parenthesis)
+
+				if visitor.is_basic_type or not is_byref (type) then
+					add_warning (Current, Not_pointer_type)
+				elseif visitor.is_enumeration then
+					add_warning (Current, Invalid_use_of_enumeration)
+				else
+					if visitor.is_basic_type_ref then
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (Comma_space)
+						Result.append (name)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+					elseif is_boolean (type) then
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (Comma_space)
+						Result.append (name)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+					else
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (Comma_space)
+						Result.append (name)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+					end	
+				end
 			end
 		end
 
@@ -372,39 +376,53 @@ feature {NONE} -- Implementation
 		do
 			type := visitor.vt_type
 
-			Result := clone (New_line_tab)
-			Result.append (argument_type_set_up (position, type))
+			if visitor.is_basic_type then
+				add_warning (Current, Not_pointer_type)
 
-			Result.append (visitor.c_type)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			elseif visitor.is_enumeration then
+				add_warning (Current, Invalid_use_of_enumeration)
 
-			Result.append (Tmp_clause)
-			Result.append (name)
-			Result.append (Space_equal_space)
-			if visitor.need_generate_ec then
-				Result.append (Generated_ec_mapper)
 			else
-				Result.append (Ec_mapper)
+				Result := clone (New_line_tab)
+				Result.append (argument_type_set_up (position, type))
+
+				Result.append (visitor.c_type)
+				Result.append (Space)
+				Result.append (Tmp_clause)
+				Result.append (name)
+				Result.append (Semicolon)
+				Result.append (New_line_tab)
+
+				Result.append (Tmp_clause)
+				Result.append (name)
+				Result.append (Space_equal_space)
+
+				if visitor.is_array_basic_type or visitor.is_structure_pointer or
+				 		visitor.is_interface_pointer then
+					Result.append (name)
+				else
+					if visitor.need_generate_ec then
+						Result.append (Generated_ec_mapper)
+					else
+						Result.append (Ec_mapper)
+					end
+					Result.append (Dot)
+					Result.append (visitor.ec_function_name)
+					Result.append (Space_open_parenthesis)
+					Result.append (Eif_access)
+					Result.append (Space_open_parenthesis)
+					Result.append (name)
+					Result.append (Close_parenthesis)
+					Result.append (Close_parenthesis)
+				end
+				Result.append (Semicolon)
+				Result.append (New_line_tab)
+
+				tmp_string := clone (Tmp_clause)
+				tmp_string.append (name)
+
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_string, visitor))	
 			end
-			Result.append (Dot)
-			Result.append (visitor.ec_function_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (name)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			tmp_string := clone (Tmp_clause)
-			tmp_string.append (name)
-
-			Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_string, visitor))	
 
 		end
 
@@ -424,20 +442,21 @@ feature {NONE} -- Implementation
 			Result.append (argument_type_set_up (position, type))
 
 			if visitor.is_basic_type or visitor.is_enumeration then
-				create tmp_value.make (0)
-				if is_boolean (type) then
-					tmp_value.append (Open_parenthesis)
-					tmp_value.append (visitor.c_type)
-					tmp_value.append (Close_parenthesis)
-					tmp_value.append (Ce_mapper)
-					tmp_value.append (Dot)
-					tmp_value.append (visitor.ec_function_name)
-					tmp_value.append (Space_open_parenthesis)
-					tmp_value.append (name)
-					tmp_value.append (Close_parenthesis)
-				else
-					tmp_value.append (name)
-				end
+				tmp_value := clone (name)
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+
+			elseif is_boolean (type) then
+
+				tmp_value := clone (Open_parenthesis)
+				tmp_value.append (visitor.c_type)
+				tmp_value.append (Close_parenthesis)
+				tmp_value.append (Ce_mapper)
+				tmp_value.append (Dot)
+				tmp_value.append (visitor.ec_function_name)
+				tmp_value.append (Space_open_parenthesis)
+				tmp_value.append (name)
+				tmp_value.append (Close_parenthesis)
+
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
 				
 			elseif visitor.is_basic_type_ref then
@@ -468,6 +487,10 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+
+			elseif visitor.is_array_basic_type or visitor.is_structure_pointer then
+				Result.append (New_line_tab)
+				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (type), name, visitor))
 
 			else
 				if is_byref (type) then

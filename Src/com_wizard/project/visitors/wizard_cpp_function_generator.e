@@ -113,7 +113,10 @@ feature {NONE} -- Implementation
 
 						tmp_string.append (Space)
 						tmp_string.append (arguments.item.name)
-						tmp_string.append (visitor.c_post_type)
+
+						if visitor.is_array_basic_type then
+							tmp_string.append (visitor.c_post_type)
+						end
 
 						if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
 							c_header_files.extend (visitor.c_header_file)

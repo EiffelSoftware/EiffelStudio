@@ -50,6 +50,7 @@ feature -- Basic operations
 					signature.append (visitor.c_type)
 					signature.append (Space)
 					signature.append (func_desc.arguments.item.name)
+					signature.append (visitor.c_post_type) -- Chee added
 					signature.append (Comma)
 					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
 						c_header_files.force (visitor.c_header_file)

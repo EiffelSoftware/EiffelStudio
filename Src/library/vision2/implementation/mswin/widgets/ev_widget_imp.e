@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			build
 		end
 
-	plateform_build (par: EV_CONTAINER_IMP) is
+	plateform_build (par: EV_CONTAINER_I) is
 			-- Plateform dependant initializations.
 		do
 			!! child_cell
@@ -350,7 +350,6 @@ feature -- Postconditions
 		end
 
 feature -- Implementation
-
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of the widget

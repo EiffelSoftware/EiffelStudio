@@ -11,7 +11,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, is_defined
+			build_explain, is_defined, has_associated_file
 		end;
 
 feature -- Properties
@@ -19,8 +19,11 @@ feature -- Properties
 	client: CLASS_C;
 			-- Unvalid class type
 
-	code: STRING is "VLEC";
+	code: STRING is "VLEC"
 			-- Error code
+
+	has_associated_file: BOOLEAN is False
+			-- No associated file
 
 feature -- Access
 

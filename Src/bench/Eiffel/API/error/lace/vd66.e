@@ -7,7 +7,7 @@ class
 	VD66
 	
 inherit
-	WARNING
+	LACE_WARNING
 
 create
 	make
@@ -40,14 +40,6 @@ feature -- Output
 					missing_assemblies.forth
 				end
 			end
-		end
-
-feature -- Access
-
-	code: STRING is
-			-- Error code
-		do
-			Result := generator
 		end
 
 feature {NONE} -- Access

@@ -11,13 +11,25 @@ inherit
 
 	ERROR
 		redefine
-			trace, is_defined
+			trace, is_defined, has_associated_file
 		end
 
 feature -- Properties
 
 	class_c: CLASS_C;
 			-- Class where the error is encountered
+
+	file_name: STRING is
+			-- File where error is encountered
+		do
+			Result := class_c.file_name
+		end
+		
+	has_associated_file: BOOLEAN is
+			-- Error is relative to a file/class
+		do
+			Result := True
+		end
 
 feature -- Access
 

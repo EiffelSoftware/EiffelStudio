@@ -56,7 +56,12 @@ feature -- Properties
 			
 	is_unreadable_source: BOOLEAN
 			-- indicates that warning to due to an unreadable source file
-	
+
+	file_name: STRING is
+			-- No associated file name
+		do
+		end
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

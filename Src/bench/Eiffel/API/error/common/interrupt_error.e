@@ -48,7 +48,13 @@ feature -- Output
 				Result := "RE_INT"
 			end
 		end
-
+		
+	file_name: STRING is
+			-- No associated file name
+		do
+			
+		end
+		
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

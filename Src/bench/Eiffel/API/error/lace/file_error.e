@@ -10,6 +10,9 @@ class FILE_ERROR
 inherit
 
 	CLUSTER_ERROR
+		redefine
+			file_name
+		end
 
 feature -- Property
 

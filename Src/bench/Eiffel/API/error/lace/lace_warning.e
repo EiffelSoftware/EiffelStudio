@@ -1,15 +1,13 @@
 indexing
-
-	description: 
-		"Error detected when parsing the Ace file specified in LACE.";
+	description: "Warning detected when parsing the Ace file specified in LACE.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class LACE_ERROR
+deferred class LACE_WARNING
 
 inherit
-	ERROR
-
+	WARNING
+	
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -29,4 +27,4 @@ feature -- Property
 			to_implement ("May be we will never implement this when we go away from Lace?")
 		end
 		
-end -- class LACE_ERROR
+end

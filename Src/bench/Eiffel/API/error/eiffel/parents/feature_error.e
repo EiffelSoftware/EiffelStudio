@@ -6,16 +6,12 @@ indexing
 deferred class FEATURE_ERROR 
 
 inherit
-
 	EIFFEL_ERROR
 		redefine
-			trace, is_defined
+			trace, is_defined, file_name
 		end
 
 feature -- Properties
-
-	error_position: INTEGER
-			-- Position in file where error occurred
 
 	e_feature: E_FEATURE
 			-- Feature involved in the error
@@ -25,35 +21,11 @@ feature -- Properties
 			-- (if this is Void then feature occurred in
 			-- the invariant)
 
-feature -- Status report
-
-	line_number: INTEGER is
-			-- Associated line number of `error_position'.
-		local
-			file: PLAIN_TEXT_FILE
-			file_name: STRING
+	file_name: STRING is
 		do
-			file_name := class_c.file_name
-			create file.make (file_name)
-			if file.exists and then file.is_readable then
-				file.open_read
-				from
-				until
-					file.position > error_position or else file.end_of_file
-				loop
-					Result := Result + 1
-					file.read_line
-				end
-				if file.position > error_position then
-						-- It was found
-					if not file.end_of_file then
-						file.read_line
-					end
-				else
-					Result := 0
-				end
-				file.close
-			end
+			Result := class_c.file_name
+		ensure then
+			file_name_not_void: Result /= Void
 		end
 		
 feature -- Access
@@ -87,11 +59,11 @@ feature -- Output
 			class_c.append_signature (st, False)
 			st.add_new_line
 			st.add_string ("Feature: ")
-			if error_position /= 0 then
+			if line > 0 then
 				if e_feature /= Void then
-					st.add_feature_error (e_feature, e_feature.name, error_position)
+					st.add_feature_error (e_feature, e_feature.name, line)
 				elseif feature_name /= Void then
-					st.add_feature_error (e_feature, feature_name, error_position)
+					st.add_feature_error (e_feature, feature_name, line)
 				else
 					st.add_string ("invariant")
 				end
@@ -104,8 +76,8 @@ feature -- Output
 			end
 			st.add_new_line
 			build_explain (st)
-			if error_position /= 0 then
-				print_line_number (st)
+			if line > 0 then
+				print_context_of_error (st)
 			end
 		end
 
@@ -120,69 +92,20 @@ feature {COMPILER_EXPORTER} -- Implementation
 			e_feature := f.api_feature (class_c.class_id)
 		end
 
-feature {ERROR_HANDLER} -- Implementation
-
-	set_error_position (i: like error_position) is
-			-- Set `error_position' to `i'.
-		require
-			non_negative_value: i >= 0
-		do
-			error_position := i
-		ensure
-			set: error_position = i
-		end
-
 feature {NONE} -- Implementation
 
-	print_line_number (st: STRUCTURED_TEXT) is
+	print_context_of_error (st: STRUCTURED_TEXT) is
 			-- Display the line number in `st'.
 		require
-			valid_position: error_position > 0
-		local
-			file: PLAIN_TEXT_FILE
-			previous_line: STRING
-			current_line: STRING
-			next_line: STRING
-			start_line_pos: INTEGER
-			l_line_number: INTEGER
-			file_name: STRING
+			valid_line: line > 0
 		do
-			file_name := class_c.file_name
-			create file.make (file_name)
-			if file.exists and then file.is_readable then
-				file.open_read
-				from
-				until
-					file.position > error_position or else file.end_of_file
-				loop
-					previous_line := current_line
-					start_line_pos := file.position
-					l_line_number := l_line_number + 1
-					file.read_line
-					current_line := file.last_string.twin
-				end
-				if file.position > error_position then
-						-- It was found
-					if not file.end_of_file then
-						file.read_line
-						next_line := file.last_string.twin
-					end
-				else
-					l_line_number := 0
-				end
-				file.close
-			end
-			if l_line_number > 0 then
-				st.add_string ("Line: ")
-				st.add_string (l_line_number.out)
-			else
-				st.add_string ("Character position: ")
-				st.add_string (error_position.out)
-			end
+			initialize_output
+			st.add_string ("Line: ")
+			st.add_string (line.out)
 			if class_c.lace_class.date_has_changed then
 				st.add_string (" (source code has changed)")
 				st.add_new_line
-			elseif l_line_number > 0 then
+			elseif line > 0 then
 				st.add_new_line
 				st.add_string ("  ")
 				if previous_line /= Void then

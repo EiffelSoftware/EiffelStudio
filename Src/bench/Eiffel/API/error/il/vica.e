@@ -7,7 +7,12 @@ class
 	VICA
 
 inherit
-	ERROR
+	EIFFEL_ERROR
+		rename
+			class_c as context_class
+		redefine
+			build_explain
+		end
 
 create
 	make
@@ -30,9 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: CLASS_C
-			-- Class in which custom attribute is in.
-			
 	creation_type: CL_TYPE_A
 			-- Type of custom attribute.
 

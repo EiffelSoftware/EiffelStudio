@@ -69,6 +69,11 @@ feature -- Access
 	resource_file: STRING
 			-- Name of file being processed.
 
+	file_name: STRING is
+			-- No associated file name
+		do
+		end
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

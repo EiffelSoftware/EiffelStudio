@@ -9,16 +9,10 @@ class
 inherit
 	WARNING
 		redefine
-			trace
+			trace, file_name
 		end
 		
 	SYNTAX_MESSAGE
-		rename
-			code as warning_code,
-			message as warning_message
-		redefine
-			make
-		end
 
 	SHARED_WORKBENCH
 		export
@@ -35,14 +29,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; c: INTEGER; m: STRING) is
+	make (s, e: INTEGER; f: like file_name; m: STRING) is
 			-- Create a new SYNTAX_WARNING instance.
+		require
+			f_not_void: f /= Void
+			m_not_void: m /= Void
 		do
-			Precursor {SYNTAX_MESSAGE} (s, e, f, c, m)
+			set_position (s, e)
+			warning_message := m
+			file_name := f
 			associated_class := System.current_class
+		ensure
+			line_set: line = s
+			column_set: column = e
+			warning_message_set: warning_message = m
+			file_name_set: file_name = f
 		end
 
 feature -- Properties
+
+	warning_message: STRING
+			-- Specify syntax issue message.
+
+	file_name: STRING
+			-- Path to file where syntax issue happened
 
 	code: STRING is "Syntax warning"
 			-- Error code
@@ -63,7 +73,7 @@ feature -- Output
 
 			st.add (create {ERROR_TEXT}.make (Current, "Obsolete"))
 			st.add_string (" syntax used at line ")
-			st.add_int (line_number)
+			st.add_int (line)
 				-- Error happened in a class
 			st.add_string (" in class ")
 			st.add_class_syntax (Current, associated_class, associated_class.class_signature)
@@ -75,7 +85,7 @@ feature -- Output
 			st.add_new_line
 			build_explain (st)
 			display_line (st, previous_line)
-			display_syntax_line (st, current_line, start_position - start_line_pos)
+			display_syntax_line (st, current_line)
 			display_line (st, next_line)
 		end
 

@@ -224,7 +224,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
-	C: EV_C_EXTERNALS is
+	C: EV_GTK_EXTERNALS is
 			-- Access to external C functions.
 		once
 			create Result

@@ -422,7 +422,7 @@ feature -- Implementation
 			-- Draw a segment between initial pick point and `destination'.
 		local
 			l_invert_gc, l_root_parent: POINTER
-			l_C: EV_C_EXTERNALS
+			l_C: EV_GTK_EXTERNALS
 		do
 			if
 				C.gtk_events_pending = 0

@@ -32,7 +32,7 @@ inherit
 			default_create
 		end
 		
-	GTK_ENUMS
+	EV_GTK_ENUMS
 		undefine
 			default_create
 		end
@@ -143,7 +143,7 @@ feature {EV_ANY_IMP} -- Access
 			p: POINTER
 			keyval: INTEGER
 			key: EV_KEY
-			local_c: EV_C_EXTERNALS
+			local_c: EV_GTK_EXTERNALS
 		do
 			local_c := C
 			gdk_event := gtk_value_pointer (args)
@@ -275,7 +275,7 @@ feature {EV_ANY_IMP} -- Access
 			-- Convert GtkAllocation to tuple.
 		local
 			gtk_alloc: POINTER
-			local_C: EV_C_EXTERNALS
+			local_C: EV_GTK_EXTERNALS
 		do
 			gtk_alloc := gtk_value_pointer (p)
 			local_C := C

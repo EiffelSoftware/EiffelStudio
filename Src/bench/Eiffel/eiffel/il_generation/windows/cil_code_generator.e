@@ -574,10 +574,6 @@ feature -- Generation Structure
 			l_uni_string: UNI_STRING
 			l_module: IL_MODULE
 			l_token, l_file_token: INTEGER
-			l_hash, l_hash_res: MANAGED_POINTER
-			l_result: INTEGER
-			l_size: INTEGER
-			l_alg_id: INTEGER
 		do
 			current_module := main_module
 
@@ -642,7 +638,6 @@ feature -- Generation Structure
 			a_file_exists: (create {RAW_FILE}.make (a_file)).exists
 			a_name_not_void: a_name /= Void
 		local
-			l_uni_string: UNI_STRING
 			l_token: INTEGER
 			l_resources: CLI_RESOURCES
 			l_data: MANAGED_POINTER

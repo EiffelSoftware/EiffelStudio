@@ -387,8 +387,14 @@ feature {NONE} -- preparing
 					debug ("debugger_icor_data")
 						io.error.put_string ("Not a ICorDebugReferenceValue %N")
 					end
+					if l_icor_ref /= Void then
+						l_icor_ref.clean_on_dispose						
+					end
 					do_break := True
 				else --| IsNULL ?
+					check
+						l_icor_ref /= Void
+					end
 					l_is_null := l_icor_ref.is_null
 					if not l_icor_ref.last_call_succeed then
 						last_strip_references_call_success := l_icor_ref.last_call_success
@@ -455,6 +461,7 @@ feature {NONE} -- preparing
 						--| got a new real value, let's check if no dereferencing is needed anymore
 						l_icor_ref.clean_on_dispose
 						Result := l_new_value
+						l_new_value := Void
 						debug ("debugger_icor_data")
 							io.error.put_string ("Got a sub reference !!%N")
 						end

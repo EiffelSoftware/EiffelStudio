@@ -31,12 +31,10 @@ feature -- Basic operations
 			ci: CLASS_I
 			i: INTEGER
 			fi: FEATURE_I
-			overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
 		do
 			ci := table.associated_class.lace_class
 			if ci /= Void then
 				create Result.make (1, table.count)
-				overloaded_names := table.overloaded_names
 				from
 					i := 1
 					table.start
@@ -45,9 +43,6 @@ feature -- Basic operations
 				loop
 					fi := table.item_for_iteration
 					if is_listed (fi, class_i, ci) then
-						if overloaded_names /= Void then
-							
-						end
 						Result.put (create {FEATURE_DESCRIPTOR}.make_with_class_i_and_feature_i (ci, fi), i)
 						i := i + 1
 					end

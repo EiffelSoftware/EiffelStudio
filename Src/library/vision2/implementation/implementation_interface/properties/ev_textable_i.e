@@ -50,17 +50,16 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		deferred
 		ensure
 			text_assigned: text.is_equal (a_text)
 		end
 
 	remove_text is
-			-- Make `text' `Void'.
+			-- Make `text' empty.
 		deferred
 		ensure
-			text_removed: text = Void
+			text_empty: text.is_empty
 		end
 
 feature {NONE} -- Implementation

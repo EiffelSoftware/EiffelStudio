@@ -115,7 +115,7 @@ feature -- Element change
 			-- Assign `a_text' to text of `Current'.
 		deferred
 		ensure
-			text_set: a_text /= Void implies text.is_equal (a_text)
+			text_set: text.is_equal (a_text)
 		end
 
 	remove_text is
@@ -123,7 +123,7 @@ feature -- Element change
 		do
 			set_text (Void)
 		ensure
-			text_removed: text = Void
+			text_empty: text.is_empty
 		end
 
 	insert_text (txt: STRING) is

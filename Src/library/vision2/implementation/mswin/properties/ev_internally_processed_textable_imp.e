@@ -20,10 +20,8 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in `Current'.
 		do
-			if text_length > 0 then
 				Result := wel_text
 				unescape_ampersands (Result)
-			end
 		end
 
 feature -- Element change

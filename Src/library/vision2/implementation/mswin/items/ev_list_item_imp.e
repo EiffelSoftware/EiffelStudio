@@ -98,9 +98,6 @@ feature -- Access
 	text: STRING is
 		do
 			Result := lv_item.text
-			if Result.is_empty then
-				Result := Void
-			end
 		end
 
 	pixmap: EV_PIXMAP is

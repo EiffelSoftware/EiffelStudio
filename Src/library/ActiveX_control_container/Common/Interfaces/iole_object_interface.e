@@ -256,8 +256,6 @@ feature -- Basic Operations
 			-- `hwnd_parent' [in].  
 			-- `lprc_pos_rect' [in].  
 		require
-			non_void_lpmsg: lpmsg /= Void
-			valid_lpmsg: lpmsg.item /= default_pointer
 			non_void_lprc_pos_rect: lprc_pos_rect /= Void
 			valid_lprc_pos_rect: lprc_pos_rect.item /= default_pointer
 			do_verb_user_precondition: do_verb_user_precondition (i_verb, lpmsg, p_active_site, lindex, hwnd_parent, lprc_pos_rect)

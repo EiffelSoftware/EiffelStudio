@@ -168,8 +168,6 @@ feature -- Basic Operations
 			-- `p_rect' [in].  
 			-- `f_erase' [in].  
 		require
-			non_void_p_rect: p_rect /= Void
-			valid_p_rect: p_rect.item /= default_pointer
 			invalidate_rect_user_precondition: invalidate_rect_user_precondition (p_rect, f_erase)
 		deferred
 

@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 						return_value.append (Semicolon)
 						return_value.append (New_line_tab)
 	
-					elseif is_paramflag_fout (arguments.item.flags) or is_paramflag_fin (arguments.item.flags) then  
+					else 
 						if 
 							visitor.is_interface_pointer or
 							visitor.is_structure_pointer or 
@@ -508,13 +508,12 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make (1000)
-			if visitor.is_basic_type  then
-
-			elseif visitor.is_enumeration then
-
-			elseif visitor.is_structure_pointer then
-
-			else 
+			
+			if 
+				not visitor.is_basic_type and 
+				not visitor.is_enumeration and
+				not visitor.is_structure_pointer
+			then
 				if visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
@@ -524,7 +523,11 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Open_parenthesis)
-				Result.append (visitor.c_type)
+				if is_void (visitor.vt_type) then
+					Result.append ("void **")
+				else
+					Result.append (visitor.c_type)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Tmp_clause)
 				Result.append (name)

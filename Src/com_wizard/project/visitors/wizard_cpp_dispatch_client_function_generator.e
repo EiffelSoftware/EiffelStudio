@@ -402,9 +402,7 @@ feature {NONE} -- Implementation
 			elseif is_unsigned_int (type) then
 				Result.append ("(int *)")
 			elseif is_unsigned_short (type) then
-				Result.append (Open_parenthesis)
-				Result.append ("short *")
-				Result.append (Close_parenthesis)	
+				Result.append ("(short *)")
 			elseif is_unsigned_char (type) then
 				Result.append ("(char *)")
 			else

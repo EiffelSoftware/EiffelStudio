@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			ccode: EV_CURSOR_CODE
 		do
 			base_make (an_interface)
-			create ccode.make
+			create ccode
 			make_by_predefined_id (cwel_integer_to_pointer (ccode.standard))
 		end
 
@@ -115,6 +115,9 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/16 17:13:33  brendel
+--| Fixed creation.
+--|
 --| Revision 1.7  2000/03/15 18:52:00  rogers
 --| Fixed set_code.
 --|

@@ -212,6 +212,8 @@ feature -- Element change
 				Wel_icon_constants.Icon_small,
 				cwel_pointer_to_integer(icon.item)
 				)
+			set_class_icon (icon)
+			set_class_small_icon (icon)
 		end
 
 feature {NONE} -- Implementation
@@ -353,6 +355,10 @@ feature {NONE} -- Constants
 			create Result
 		end
 
+feature {NONE} -- External
+
+	
+
 end -- class EV_TITLED_WINDOW_IMP
 
 --!-----------------------------------------------------------------------------
@@ -376,6 +382,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/05/03 04:35:46  pichery
+--| Fixed bug in feature `set_icon_pixmap'
+--|
 --| Revision 1.69  2000/05/03 00:34:35  pichery
 --| Removed `icon_mask' & related features
 --| Implemented `icon_pixmap' and `set_icon_pixmap'.

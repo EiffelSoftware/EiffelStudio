@@ -160,7 +160,7 @@ long bit_count;
 	return result;
 }
 
-rt_public int b_equal(a, b)
+rt_public EIF_BOOLEAN b_equal(a, b)
 char *a;
 char *b;
 {
@@ -176,7 +176,7 @@ char *b;
 	
 
 	if (a == b)					/* Pointer to the same object */
-		return TRUE;			/* Means objects are identical */
+		return EIF_TRUE;			/* Means objects are identical */
 
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
@@ -197,7 +197,7 @@ char *b;
 		bita = a;
 		bitb = b;
 	}
-		/*return FALSE;			/* They can't be equal */
+		/*return EIF_FALSE;			/* They can't be equal */
 
 	addr_a = ARENA(a);
 	addr_b = ARENA(b);
@@ -205,7 +205,7 @@ char *b;
 
 	for (; addr_a < last; addr_a++, addr_b++)	/* In the main part */
 		if (*addr_a != *addr_b)					/* Return as soon as the */
-			return FALSE;						/* two bit units differ */
+			return EIF_FALSE;						/* two bit units differ */
 
 	/* For the last bit unit, we have to compare only the significant part
 	 * of the bit field. The number of significant bits at the rightmost part
@@ -215,11 +215,11 @@ char *b;
 
 	len_b = len_a % BIT_UNIT;
 	if (len_b == 0)
-		return (*addr_a == *addr_b) ? TRUE : FALSE;
+		return (*addr_a == *addr_b) ? EIF_TRUE : EIF_FALSE;
 	else
 		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
 
-	return ((*addr_a & len_b) == (*addr_b & len_b)) ? TRUE : FALSE;
+	return ((*addr_a & len_b) == (*addr_b & len_b)) ? EIF_TRUE : EIF_FALSE;
 }
 
 rt_public void b_copy(a, b)
@@ -327,11 +327,11 @@ char value;				/* The boolean value to be set */
 		addr[idx] &= ~(1 << mask);
 }
 
-rt_public char b_item(bit, at)
+rt_public EIF_BOOLEAN b_item(bit, at)
 char *bit;
 long at;
 {
-	/* Return the value (0 or 1) of the bit 'at' in the bit field. Index
+	/* Return the value (EIF_FALSE or EIF_TRUE) of the bit 'at' in the bit field. Index
 	 * starts at 1 for the leftmost bit and ends at the length of the bit
 	 * field (this is the usual Eiffel view for an array, here of array of
 	 * bits). No range checking is performed.
@@ -353,7 +353,7 @@ long at;
 	mask = at % BIT_UNIT;				/* Bit position (usual 0 rightmost) */
 	mask = mask ? BIT_UNIT - mask : 0;	/* Correct if multiple of BIT_UNIT */
 
-	return (addr[idx] & (1 << mask)) >> mask;
+	return ((addr[idx] & (1 << mask)) >> mask ? EIF_TRUE : EIF_FALSE);
 }
 
 rt_public char *b_shift(bit, s)

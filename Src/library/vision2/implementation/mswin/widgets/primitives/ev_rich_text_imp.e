@@ -192,11 +192,6 @@ inherit
 			{NONE} all
 		end
 	
-	EV_RICH_TEXT_CONSTANTS_I
-		export
-			{NONE} all
-		end
-	
 create
 	make
 	
@@ -230,7 +225,9 @@ feature {NONE} -- Initialization
 			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_x)
 			screen_dc.release
 			tab_width := logical_pixels // 2
-			initialize_buffering_structures
+			
+				-- Ensure all structures for buffering are set to defaults.
+			clear_structures
 		end
 
 	default_style: INTEGER is
@@ -830,14 +827,10 @@ feature -- Status setting
 			format_out: STRING
 		do
 			if not buffer_locked_in_format_mode then
-				start_formats.clear_all
-				end_formats.clear_all
-				formats.wipe_out
-				formats_index.clear_all
-				heights.wipe_out
-				buffer_locked_in_format_mode := True
-				lowest_buffered_value := start_pos
-				highest_buffered_value := end_pos
+					clear_structures
+					buffer_locked_in_format_mode := True
+					lowest_buffered_value := start_pos
+					highest_buffered_value := end_pos
 			else
 				lowest_buffered_value := lowest_buffered_value.min (start_pos)
 				highest_buffered_value := highest_buffered_value.max (end_pos)
@@ -866,24 +859,11 @@ feature -- Status setting
 			screen_dc: WEL_SCREEN_DC
 		do
 			if not buffer_locked_in_append_mode then
-				start_formats.clear_all
-				end_formats.clear_all
-				formats.wipe_out
-				formats_index.clear_all
-				heights.wipe_out
+					-- If we are not already locked in append mode then
+					-- we must be the first buffer, so we reset the structures
+					-- for a new buffering and lock into append mode.
+				clear_structures
 				buffer_locked_in_append_mode := True
-				internal_text := ""
-				internal_text.resize (default_string_size)
-				hashed_formats.clear_all
-				format_offsets.clear_all
-				is_current_format_underlined := False
-				is_current_format_striked_through := False
-				is_current_format_bold := False
-				is_current_format_italic := False
-				current_vertical_offset := 0
-				initialize_buffering_structures
-				color_text := color_table_start.twin
-				font_text := font_table_start.twin
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -1010,23 +990,6 @@ feature -- Status setting
 			end
 			set_caret_position (original_position)
 		end
-		
-	initialize_buffering_structures is
-			-- Initialize structures used in buffering to default values.
-		do
-			create hashed_colors.make (20)
-			create color_offset.make (20)
-			create back_color_offset.make (20)
-			
-			create hashed_fonts.make (20)
-			create font_offset.make (20)
-			
-			font_count := 0
-			
-				-- Reset the count of found colors back to 0.
-			color_count := 0
-		end
-		
 
 	flush_buffer is
 			-- Flush any buffered operations.
@@ -1044,8 +1007,6 @@ feature -- Status setting
 				-- as there is nothing to flush. A user may call them however, as there
 				-- is no need to restrict against such calls.
 			if buffer_locked_in_format_mode then
-					-- Reset buffering structures
-				initialize_buffering_structures
 					-- Create a screen DC for access to metrics
 				create screen_dc
 				screen_dc.get
@@ -1624,74 +1585,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		-- that the selection has been lost. This is only fired once, hence the need for this boolean.
 
 feature {NONE} -- Implementation
-
-	default_string_size: INTEGER is 50000
-		-- Default size used for all internal strings for buffering.
-		-- This reduces the need to resize the string as the formatting is applied.
-		-- Resizing strings can be slow, so is to be avoided wherever possible.
-
-	-- `hashed_formats', `format_offsets' and `color_offsets' are only used in the
-	-- buffered append operations, while the other once lists and hash tables are used
-	-- in the buffered formatting operations.
-
-	hashed_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING] is
-			-- A list of all character formats to be applied to buffering, accessible
-			-- through `hash_value' of EV_CHARACTER_FORMAT. This ensures that repeated formats
-			-- are not stored multiple times.
-		once
-			create Result.make (10)			
-		end
-		
-	format_offsets: HASH_TABLE [INTEGER, STRING] is
-			-- The index of each format in `hashed_formats' within the RTF document that must be generated.
-			-- For each set of formatting that must be applied, a reference to the format in the document
-			-- must be specified, and this table holds the appropriate offset of that formatting.
-		once
-			create Result.make (10)
-		end
-		
-	internal_text: STRING
-		-- Internal representation of text, built as RTF. This is built and then
-		-- streamed into `Current' when necessary.
-		
-	buffered_text: STRING
-		-- Internal representation of `text' used only when flushing the buffers. Prevents the need
-		-- to stream the contents of `current', every time that the `text' is needed.
-		
-	lowest_buffered_value, highest_buffered_value: INTEGER
-
-	start_formats: HASH_TABLE [STRING, INTEGER] is
-			-- The format type applicable at a paticular character position. The `item' is used to look up the
-			-- character format from `hashed_formats'.
-		once
-			create Result.make (20)
-		end
-
-	end_formats: HASH_TABLE [STRING, INTEGER] is
-			-- The format type applicable at a paticular character position. The integer represents the index of the
-			-- closing caret index.
-		once
-			create Result.make (20)
-		end
-		
-	formats: ARRAYED_LIST [EV_CHARACTER_FORMAT] is
-			-- All character formats used in `Current'.
-		once
-			create Result.make (10)
-		end
-		
-	heights: ARRAYED_LIST [INTEGER] is
-			-- All heights of formats used in `Current', corresponding to contents of `forrmats'.
-		once
-			create Result.make (10)
-		end
-
-	formats_index: HASH_TABLE [INTEGER, INTEGER] is
-			-- The index of each format relative to a paticular character index. This permits the correct
-			-- format to be looked up when the start positions of the formats are traversed.
-		once
-			create Result.make (10)
-		end
 
 	generate_font_heading (a_font: EV_FONT; index: INTEGER): STRING is
 			-- `Result' is a generated font descriptions for `a_font' with index `index'

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Fun</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Fun">
+	</HEAD>
+
+	<BODY>
+		<H1>Fun Sample</H1>
+		<CENTER><IMG SRC="fun.png" ALT="fun" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\fun\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, a window will be displayed as illustrated above. Clicking the push button marked "Maze" will open a new window
+		and draw a maze within this window. Clicking the push button marked "Artist" will open a new window, and display output dependent on the movement of the
+		mouse pointer within the client area of that window. Clicking the push button marked "Fun" will open a new window which contains a fake error
+		message and a close push button which moves when you try to move the mouse pointer over it.
+
+		<H2>Under the Hood</H2>
+		Both <A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/fun_dialog_chart.html">FUN_DIALOG</A> and <A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/artist_chart.html">ARTIST</A> redefine
+		`on_mouse_move' to track the actions of the mouse pointer and respond accordingly.
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/artist_chart.html">ARTIST</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/fun_demo_chart.html">FUN_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/fun_dialog_chart.html">FUN_DIALOG</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/fun/root_cluster/maze_chart.html">MAZE</A>
+			</UL>
+		</P>
+	</BODY>
+</HTML>

@@ -98,7 +98,7 @@ feature -- Command generation
 		deferred
 		end
 		
-	generate_eiffel_text (counter: INT_GENERATOR): STRING is
+	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		deferred

@@ -252,9 +252,9 @@ feature {NONE} -- Code generation
 			-- Generate feature `execute'.
 		local
 			a_query_editor_form: QUERY_EDITOR_FORM
-			counter: INT_GENERATOR
+			argument_namer: LOCAL_NAMER
 		do
-			!! counter
+			!! argument_namer.make ("argument")
 			!! Result.make (0)
 			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%T%N")
 			Result.append ("%T%Tlocal%N%T%T%Tprecondition: BOOLEAN%N%T%Tdo%N") 
@@ -263,10 +263,10 @@ feature {NONE} -- Code generation
 			until
 				form_list.after
 			loop
-				counter.next
 				a_query_editor_form := form_list.item
 				if a_query_editor_form.managed then
-					Result.append (a_query_editor_form.generate_eiffel_text (counter))
+					argument_namer.next
+					Result.append (a_query_editor_form.generate_eiffel_text (argument_namer))
 				end
 				form_list.forth
 			end

@@ -18,12 +18,13 @@ feature -- Access
 			-- Color used for the background of the widget
 		do
 		end
-
+		
 	foreground_color: EV_COLOR is
 			-- Color used for the foreground of the drawable,
 			-- used for the text and the drawings.
 		do
 		end
+
 
 	line_width: INTEGER is
 			-- Width of line for device.
@@ -34,6 +35,7 @@ feature -- Access
 			-- Drawing mode
 		do
 		end
+
 
 feature -- Status report
 
@@ -47,26 +49,31 @@ feature -- Element change
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
+			--| FIXME IEK 19101999 Needs implementing
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
+		
 		end
 
 	set_line_width (value: INTEGER) is
-			-- Set line to be displayed with width of `new_width'.
+			-- Set line to be displayed with width of `value'.
 		do
+
 		end
 
 	set_logical_mode (value: INTEGER) is
 			-- Set drawing logical function to `value'.
 		do
+
 		end
 
 	set_font (ft: EV_FONT) is
 			-- Set a font.
 		do
+			--| FIXME IEK 19101999 Needs implementing
 		end
 
 feature -- Clearing operations

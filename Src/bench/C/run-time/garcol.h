@@ -83,7 +83,7 @@ struct stchunk {
  * Eiffel flags -- edit with care.
  */
 #define EO_MARK		0x80000000		/* Garbage collector's mark */
-#define EO_INV		0x40000000		/* Assertion loop control flag */
+#define EO_CREAT	0x40000000		/* Assertion loop control flag: in creation routine */
 #define EO_STOP		0x20000000		/* Stop on this object */
 #define EO_AGE		0x1e000000		/* Object's age before immortality */
 #define EO_SPEC		0x01000000		/* Object is special (C area) */

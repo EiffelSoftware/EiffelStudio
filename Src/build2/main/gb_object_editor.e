@@ -401,6 +401,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
+
 			
 			create label.make_with_text ("Name:")
 			label.align_text_left
@@ -499,7 +500,6 @@ feature {NONE} -- Implementation
 				else
 					name_field.set_foreground_color (black)
 				end
-				io.putstring ("Name change called")
 				object.layout_item.set_text (name_and_type_from_object (object))
 				titled_window_object ?= object
 				if titled_window_object /= Void then

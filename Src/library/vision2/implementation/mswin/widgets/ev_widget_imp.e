@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 				end
 		
 				on_mouse_enter
-				cursor_on_widget.replace (Current)
+				cursor_on_widget.replace (Current)	
 				track_mouse.dispose
 			end
 			if (is_transport_enabled and mode_is_drag_and_drop) or
@@ -904,7 +904,13 @@ feature {NONE} -- Implementation, cursor of the widget
 			wel_cursor: WEL_CURSOR
 			cursor_imp: EV_PIXMAP_IMP_STATE
 		do
-			if
+				-- We must check that we are not currently executing
+				-- a pick/drag as if we are, we should not do anything.
+				-- This is because the setting of the cursor should only
+				-- be performed by us, not windows when in transport.
+			if application_imp.pick_and_drop_source /= Void then
+				disable_default_processing	
+			elseif
 				(hit_code = Htnowhere or else hit_code = Htclient)
 				and then cursor_pixmap /= Void
 			then

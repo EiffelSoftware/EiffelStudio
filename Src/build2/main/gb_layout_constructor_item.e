@@ -35,11 +35,6 @@ inherit
 	GB_ACCESSIBLE_OBJECT_EDITOR
 		
 	GB_CONSTANTS
-		
-	GB_PICK_AND_DROP_SHIFT_MODIFIER
-		undefine
-			default_create, copy, is_equal
-		end
 
 create
 	{GB_OBJECT_HANDLER, GB_OBJECT} make
@@ -82,9 +77,6 @@ feature {NONE} -- Initialization
 				-- Set the pebble function for
 				-- tansport.
 			set_pebble_function (agent retrieve_pebble)
-			pick_actions.force_extend (agent set_up_drop_actions_for_all_objects)
-			pick_actions.force_extend (agent create_shift_timer)
-			pick_ended_actions.force_extend (agent destroy_shift_timer)
 			select_actions.extend (agent update_docked_object_editor)
 		end
 
@@ -117,25 +109,6 @@ feature {NONE} -- Implementation
 			else
 				type_selector.update_drop_actions_for_all_children (object)
 				Result := object
-			end
-		end
-		
-	set_up_drop_actions_for_all_objects is
-			-- Check state of shift key, and set up drop actions
-			-- to accept `pebble' ready for the transport.
-		local
-			environment: EV_ENVIRONMENT
-			constructor: GB_LAYOUT_CONSTRUCTOR	
-		do
-			create environment
-			constructor ?= parent_tree
-			check
-				constructor_not_void: constructor /= Void
-			end
-			if environment.application.shift_pressed then
-				object_handler.for_all_objects_build_shift_drop_actions_for_new_object
-			else
-				object_handler.for_all_objects_build_drop_actions_for_new_object
 			end
 		end
 		

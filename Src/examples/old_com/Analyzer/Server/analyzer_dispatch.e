@@ -8,7 +8,7 @@ class
 	ANALYZER_DISPATCH
 
 inherit
-	EOLE_DISPATCH
+	EOLE_DISPINTERFACE
 		rename
 			make as disp_make
 		redefine
@@ -20,22 +20,16 @@ inherit
 			{NONE} all
 		end
 		
-	EOLE_METHOD_FLAGS
-		export
-			{NONE} all
-		end
-		
 creation
 	make
 				
 feature -- Initialization
 
-	make (serv: EOLE_AUTOMATION_SERVER) is
+	make (serv: EOLE_LOCAL_AUTOMATION_SERVER) is
 			-- Initialize OLE interface and associated 
 			-- server.
 		do
 			disp_make
-			create_ole_interface_ptr
 			server ?= serv
 		end
 	

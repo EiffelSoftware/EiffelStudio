@@ -1,0 +1,79 @@
+//--------------------------------------------------------------------------
+//
+//  EiffelCOM
+//  Copyright (C) Interactive Software Engineering, 1999.
+//
+//  File: template.idl
+//
+//  Contents: definition of dispinterface, library, and coclass 
+//
+//
+//--------------------------------------------------------------------------
+
+import "oaidl.idl";
+
+[
+	uuid(AEB9F741-B68E-11d2-B961-00403392AC95), // uuid of dispinterface, 
+					// should correspond to `dispinterface_id' of class EOLE_ACTIVEX 
+
+	version(1.0) // version number
+]
+dispinterface disp_analyzer { // the name of your dispinterface
+
+	properties:		// if your component have any attribute of elementary type
+					// that can be set from the outside world then specify it here.
+					// the following syntax is required
+
+					//  [id(id_n)] property_type property_name;
+
+					// where property_type is the type of the atribute,
+					// property_name is the name of the atribute,
+					// and id_n is a positive integer.
+					// for example:
+					// [id(7)] int x;
+					// each attribute should have an unique ID	
+					// which should correspond to DISPID of class COMPONENT_DISPID 
+		[id(1)] BSTR text;
+	methods:
+					// specify routines here
+					// the following syntax is required 
+
+					// [id(id_n)] return_type routine_name (argument_1_type arg1, ...);
+
+					// for example:
+					// [id(1)] int sum (int arg1, int arg2);
+					// IDs should correspond to DISPID of class COMPONENT_DISPID 
+					// each routine should have an unique ID
+		[id(2)] int word_count ();
+		[id(3)] int line_count ();
+		[id(4)] int sentence_count ();
+		[id(5)] int occurences (BSTR  txt);
+		[id(6)] void terminate ();
+		[id(7)] void show ();
+		[id(8)] void hide ();		
+};
+
+[
+	uuid(AEB9F740-B68E-11d2-B961-00403392AC95),	// uuid of typelib
+						// should correspond to `type_id' of class EOLE_ACTIVEX 
+		
+	helpstring ("EiffelCOM Analyser"),	// This string corresponds to the name 
+									// of your component and is used by various automation tools 
+	version (1.0), 		// version number
+	control
+]
+library analyzer_lib	// name of your type library
+{
+	importlib ("stdole32.tlb");
+	
+	[
+		uuid(4E0EE810-891B-11d1-831F-00A02469D020), // clsid of the component
+							// should correspond to `clsid' of class EOLE_ACTIVEX 
+			
+		control
+	]
+	coclass analyzer		// name of coclass 
+	{
+		interface disp_analyzer;	// name of dispinterface
+	}
+}

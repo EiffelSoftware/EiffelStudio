@@ -83,10 +83,8 @@ feature -- Initialization
 			resource: RESOURCE
 			child: RESOURCE_FOLDER_IMP
 			cursor,des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node, category_node: XML_ELEMENT
-			s: STRING
+			node: XML_ELEMENT
 			txt: XML_TEXT
-			att: XML_ATTRIBUTE
 		do
 			create description.make (20)
 			create child_list.make

@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"A resource value for integer resources.";
-	date: "$Date$";
-	revision: "$Revision$"
+	description	: "A resource value for integer resources.";
+	date		: "$Date$";
+	revision	: "$Revision$"
 
 class
 	INTEGER_RESOURCE

@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"A resource as it appears in the resource files."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "A resource as it appears in the resource files."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 deferred class
 	RESOURCE
@@ -27,7 +25,6 @@ feature -- Setting
 			-- Set `value' to `new_value'.
 		require
 			new_value_not_void: new_value /= Void
-			is_valid_value: is_valid (new_value)
 		deferred
 		ensure
 			value_set: value.is_equal (new_value)
@@ -60,11 +57,6 @@ feature -- Access
 	value: STRING is
 			-- Value of the resource as it appears to the right
 			-- of the colon
-		deferred
-		end
-
-	is_valid (a_value: STRING): BOOLEAN is
-			-- Is `a_value' valid for use in Current?
 		deferred
 		end
 

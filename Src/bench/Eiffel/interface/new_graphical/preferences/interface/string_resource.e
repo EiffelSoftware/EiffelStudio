@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"A resource value for string resources."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "A resource value for string resources."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	STRING_RESOURCE
@@ -51,41 +49,21 @@ feature -- Setting
 			default_value := value
 		end
 
-feature -- Access
-
-	is_valid (a_value: STRING): BOOLEAN is
-			-- Is `a_value' valid for use in Current?
-		local
---			lexer: RESOURCE_STRING_LEX
-			str: STRING
-		do
---			if not a_value.empty then
---				if a_value @ 1 /= '%"' then
---					!! str.make (0)
---					str.extend ('%"')
---					str.append (a_value)
---				else
---					str := clone (value)
---				end
---				if str @ str.count /= '%"' then
---					str.extend ('%"')
---				end
---				!! lexer
---				Result := lexer.is_value_valid (str)
---			else
-				Result := True
---			end
-		end
-
 feature -- Output
 
 	xml_trace: STRING is
 			-- XML representation of current
+		local
+			xml_name, xml_value: STRING
 		do
-			Result := "<TEXT>"
-			Result.append (name)
+			xml_name := name
+			xml_value := value
+
+			create Result.make (31 + xml_name.count + xml_value.count)
+			Result.append ("<TEXT>")
+			Result.append (xml_name)
 			Result.append ("<STRING>")
-			Result.append (value)
+			Result.append (xml_value)
 			Result.append ("</STRING></TEXT>")
 		end
 
@@ -94,6 +72,5 @@ feature -- Output
 		do
 			Result := name
 		end
-
 
 end -- class STRING_RESOURCE

@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"A resource value for boolean resources."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "A resource value for boolean resources."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	BOOLEAN_RESOURCE

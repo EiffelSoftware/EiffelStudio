@@ -21,7 +21,7 @@ inherit
 		end;
 	ICONED_COMMAND
 		redefine
-			text_window
+			tool
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	WARNER_CALLBACKS
@@ -32,11 +32,11 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: PROJECT_TEXT) is
+	make (c: COMPOSITE; a_tool: PROJECT_W) is
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			init (a_text_window);
+			init_from_tool (a_tool);
 			!! run_request.make (Rqst_application);
 			!! cont_request.make (Rqst_cont);
 			argument_window.initialize (c, Current);
@@ -55,7 +55,7 @@ feature -- Callbacks
 
 feature -- Properties
 
-	text_window: PROJECT_TEXT;
+	tool: PROJECT_W;
 			-- The text for the project tool.
 
 	symbol: PIXMAP is 
@@ -93,19 +93,19 @@ feature -- Execution
 			mp: MOUSE_PTR
 		do
 			if argument = melt_and_run then
-				project_w ?= text_window.tool;
-				update_command ?= project_w.update_cmd_holder.associated_command;
+				update_command ?= tool.update_cmd_holder.associated_command;
 				update_command.set_run_after_melt (true);
 				update_command.execute (text_window);
 				update_command.set_run_after_melt (false)
 			elseif argument = specify_args then
 				argument_window.call
 			elseif 
-				not project_tool.initialized or else 
+				not tool.initialized or else 
 				Eiffel_System.name = Void 
 			then
 				debug_window.clear_window;
-				debug_window.put_string ("System not compiled%N");
+				debug_window.put_string ("System not compiled");
+				debug_window.new_line;
 				debug_window.display
 			elseif not Application.is_running then
 					-- Application is not running. Start it.
@@ -128,19 +128,21 @@ end;
 					if make_f.exists and then make_f.date > uf.date then
 							-- The Makefile file is more recent than the 
 							-- application
-						warner (text_window).custom_call (Current, 
+						warner (popup_parent).custom_call (Current, 
 							w_Makefile_more_recent (Makefile_SH), 
 							" OK ", Void, "Cancel")
 					else
 						mp.restore;
 						debug_window.clear_window;
-						debug_window.put_string ("Launching system...%N");
+						debug_window.put_string ("Launching system...");
+						debug_window.new_line;
 						debug_window.display;
 						mp.set_watch_cursor;
 						Application.run (argument_window.argument_list);
 						if Application.is_running then
 							debug_window.clear_window;
-							debug_window.put_string ("System is running%N");
+							debug_window.put_string ("System is running");
+							debug_window.new_line;
 							debug_window.display
 						else
 								-- Something went wrong
@@ -152,10 +154,10 @@ end;
 					end
 				elseif make_f.exists then
 						-- There is no application
-					warner (text_window).custom_call (Current, 
+					warner (popup_parent).custom_call (Current, 
 						w_No_system_generated, " OK ", Void, "Cancel");
 				else
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Must_compile_first)
 				end;
 				mp.restore
@@ -178,11 +180,12 @@ end;
 					if status.e_feature /= Void then
 						Window_manager.routine_win_mgr.show_stoppoint 
 							(status.e_feature, status.break_index);
-						Project_tool.show_stoppoint
+						tool.show_stoppoint
 							(status.e_feature, status.break_index)
 					end;
 					debug_window.clear_window;
-					debug_window.put_string ("System is running%N");
+					debug_window.put_string ("System is running");
+					debug_window.new_line;
 					debug_window.display;
 					mp.restore
 				end

@@ -161,10 +161,21 @@ feature -- Element change
 	extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
+		local
+			l_index: like item
 		do
-			Precursor {EIFFEL_LIST} (v)
 			if v.tag /= Void then
-				lookup_table.force (v, v.tag)
+				lookup_table.search (v.tag)
+				if lookup_table.found then
+						-- Merge data from two similar `Index_clause' into one.
+					l_index := lookup_table.found_item
+					l_index.index_list.append (v.index_list)
+				else
+					Precursor {EIFFEL_LIST} (v)
+					lookup_table.put (v, v.tag)
+				end
+			else
+				Precursor {EIFFEL_LIST} (v)
 			end
 		end
 

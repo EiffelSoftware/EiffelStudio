@@ -278,7 +278,7 @@ feature {NONE} -- Contract support
 			from
 				start
 			until
-				off or Result = False
+				after or Result = False
 			loop
 				if item.parent /= Current then
 					Result := False
@@ -301,7 +301,7 @@ feature {NONE} -- Contract support
 			from
 				start
 			until
-				off or Result = False
+				after or Result = False
 			loop
 				if l.has (item) then
 					Result := False
@@ -345,6 +345,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/03 16:51:13  brendel
+--| off -> after
+--|
 --| Revision 1.9  2000/03/02 20:09:05  brendel
 --| Fixed minor bug in contract support features.
 --|

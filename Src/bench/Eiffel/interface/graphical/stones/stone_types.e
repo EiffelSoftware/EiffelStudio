@@ -1,10 +1,15 @@
+indexing
 
--- Transportable entity
+	description: 
+		"Transportable entity.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class STONE_TYPES
 
 feature
 
+	Any_type: INTEGER is 1;
 	System_type: INTEGER is 2;
 	Class_type: INTEGER is 3;
 	Routine_type: INTEGER is 4;
@@ -15,4 +20,4 @@ feature
 	Shell_type: INTEGER is 9;
 	Breakable_type: INTEGER is 10
 
-end
+end -- class STONE_TYPES

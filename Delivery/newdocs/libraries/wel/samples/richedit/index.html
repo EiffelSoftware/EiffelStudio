@@ -1,0 +1,44 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>richedit</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Richedit">
+	</HEAD>
+
+	<BODY>
+		<H1>Rich Edit Sample</H1>
+		<CENTER><IMG SRC="richedit.png" ALT="richedit" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\list_view\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as shown above. The program is a simple text editor which allows you to load and save files;
+		select fonts and colors; and print files. The operations are accessible through the menu bar and/or the tool bar.</P>
+		<H2>Under the Hood</H2>
+		<P>Both the menu items and the tool bar buttons are handled by on_menu_command which has been redefined
+		in <A CLASS="eclass" HREF="/libraries/wel/samples/richedit/root_cluster/main_window_chart.html">MAIN_WINDOW</A>.</P>
+		<P>Four of the <A HREF="/libraries/wel/content/stddlgs/index.html">standard dialogs</A> provided by WEL are used to receive input from the user.
+		
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/richedit/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/richedit/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/richedit/root_cluster/richedit_demo_chart.html">RICHEDIT_DEMO</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/controls/rich_edit.html">WEL_RICH_EDIT</A><BR><A HREF="/libraries/wel/content/stddlgs/wel_print_dialog.html">WEL_PRINT_DIALOG</A><BR><A HREF="/libraries/wel/content/stddlgs/wel_save_file_dialog.html">WEL_SAVE_FILE_DIALOG</A>
+		<BR><A HREF="/libraries/wel/content/stddlgs/wel_open_file_dialog.html">WEL_OPEN_FILE_DIALOG</A><BR><A HREF="/libraries/wel/content/stddlgs/wel_choose_color_dialog.html">WEL_CHOOSE_COLOR_DIALOG</A><BR><A HREF="/libraries/wel/content/stddlgs/wel_choose_font_dialog.html">WEL_CHOOSE_FONT_DIALOG</A></P>
+	</BODY>
+</HTML>

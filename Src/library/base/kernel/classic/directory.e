@@ -308,14 +308,16 @@ feature -- Removal
 			directory_exists: exists
 		do	
 			delete_content
-			delete
+			if not is_empty then
+				delete
+			end
 		end
 
 	delete_content_with_action (
-		action: PROCEDURE [ANY, TUPLE]
-		is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
-		file_number: INTEGER
-) is
+			action: PROCEDURE [ANY, TUPLE]
+			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			file_number: INTEGER)
+		is
 			-- Delete all files located in current directory and its
 			-- subdirectories. 
 			--
@@ -406,10 +408,10 @@ feature -- Removal
 		end
 
 	recursive_delete_with_action (
-		action: PROCEDURE [ANY, TUPLE]
-		is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
-		file_number: INTEGER
-) is
+			action: PROCEDURE [ANY, TUPLE]
+			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			file_number: INTEGER)
+		is
 			-- Delete directory, its files and its subdirectories.
 			--
 			-- `action' is called each time `file_number' files has

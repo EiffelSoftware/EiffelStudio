@@ -256,7 +256,7 @@
 				<SPAN CLASS="ekeyword">class</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">TEXT_PROCESSOR</SPAN><BR><BR>
 				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html_chart">LINEAR_ITERATOR</A>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_item_action">item_action</A>,
@@ -381,7 +381,7 @@
 				Of course the data structure class used in connection with a given iterator class does not need to
 				be the iterator’s exact correspondent as given by the above table; it may be any one of its
 				descendants. For example you may use
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="/libraries/base/reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				to iterate over data structures	described not just by
 				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
 				but also by such descendants as
@@ -412,14 +412,14 @@
 				<SPAN CLASS="eclass">SOME_ITERATOR</SPAN> according to the preceding table
 				(<A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>
 				for
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="/libraries/base/reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				and so on), or one of its proper descendants.<BR>
 				Each of the proper descendants of
 				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				redefines the type of target to the matching proper descendant of
 				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable_chart.html">TRAVERSABLE</A>,
 				to cover more specific variants of the iteration target, For example in
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A> the feature is redefined to be of
+				<A CLASS="eclass" HREF="/libraries/base/reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A> the feature is redefined to be of
 				type <A CLASS="eclass" HREF="../../reference/structures/traversing/linear_chart.html">LINEAR</A>.
 				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>
 				also introduces the procedure for selecting a target:
@@ -580,7 +580,7 @@
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>.
 			<H3>Linear and chain iteration</H3>
 			<P>
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
+				<A CLASS="eclass" HREF="/libraries/base/reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>,
 				an effective class, refines the iteration mechanisms for cases in	which the target is a linear
 				structure, such as a list in any implementation or a circular chain.<BR>
 				The class effects all the deferred features inherited from
@@ -615,7 +615,7 @@
 				This routine text relies on features
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_start">start</A>,
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_forth">forth</A> and
-				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exhausted">exhausted</A>
+				<A CLASS="efeature" HREF="/libraries/base/reference/structures/iteration/linear_iterator.html#f_exhausted">exhausted</A>
 				which, together with
 				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_off">off</A>,
 				have for convenience been carried over to
@@ -641,11 +641,11 @@
 				In addition to effecting the general iteration features from
 				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator_chart.html">ITERATOR</A>,
 				class
-				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
+				<A CLASS="eclass" HREF="/libraries/base/reference/structures/iteration/linear_iterator_chart.html">LINEAR_ITERATOR</A>
 				introduces iteration features that apply to the specific case of linear structures:
 			<UL>
 				<LI>
-				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
+				<A CLASS="efeature" HREF="/libraries/base/reference/structures/iteration/linear_iterator.html#f_search">search</A>
 				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN>
 				<A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A>)
 				moves the iteration to the first position satisfying test if <SPAN CLASS="elocal">b</SPAN>
@@ -654,9 +654,9 @@
 				you will find few if any other examples in the Base libraries. Here, however, it
 				was deemed preferable to the alternative, which would have involved four
 				separate procedures (if together with
-				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
+				<A CLASS="efeature" HREF="/libraries/base/reference/structures/iteration/linear_iterator.html#f_search">search</A>
 				we consider
-				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A>
+				<A CLASS="efeature" HREF="/libraries/base/reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A>
 				discussed next).
 				<LI>With a linear structure we can implement an iteration corresponding to the “for”
 				loop of traditional programming languages, defined by three integers: the starting

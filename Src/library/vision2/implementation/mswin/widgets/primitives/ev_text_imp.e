@@ -378,7 +378,7 @@ feature -- Basic operation
 			if found then
 				Result := index_of_search
 			else
-				Result := -1
+				Result := 0
 			end
 		end
 

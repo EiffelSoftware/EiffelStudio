@@ -12,6 +12,10 @@ feature -- Access
 	generate_names: BOOLEAN
 		-- Should a default name be generated
 		-- for any object that does not have a name?
+		
+	is_saving: BOOLEAN
+		-- Is current generation representing a save
+		-- operation?
 
 feature -- Status setting
 
@@ -26,5 +30,19 @@ feature -- Status setting
 		do
 			generate_names := False
 		end
+		
+	enable_is_saving is
+			-- Assign `True' to `is_saving'.
+		do
+			is_saving := True
+		end
+		
+	disable_is_saving is
+			-- Assign `False' to `is_saving'.
+		do
+			is_saving := False
+		end
+		
+		
 
 end -- class GB_GENERATION_SETTINGS

@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Porting EiffelBase to .NET</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+
+<h1>Porting EiffelBase to .NET</h1>
+
+<h2>Introduction</h2>
+
+<p>To make things simple, we will reference as EiffelBase the version of 
+EiffelBase that does not run on .NET, and we will reference as EiffelBase.NET 
+the version of EiffelBase that targets .NET.</p>
+
+<h2>ANY</h2>
+
+<p>Porting the features of EiffelBase to EiffelBase.NET starts by making sure 
+that ANY from EiffelBase.NET contains all the features of ANY from EiffelBase. 
+Doing so introduces a lot of name conflicts since .NET is using names such as 
+clone, copy, equal, is_equal, default....</p>
+
+<h2>Basic types</h2>
+
+<p>After updating ANY, all basic types have to be updated so that they inherit 
+from the _REF counterpart.</p>
+
+</body>
+
+</html>

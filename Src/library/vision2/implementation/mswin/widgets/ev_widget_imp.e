@@ -1,6 +1,5 @@
 indexing
-	description: "EiffelVision widget, the parent of all EV class. %
-				% Mswindows implementation."
+	description: "EiffelVision widget, mswindows implementation."
 	note: "The parent of a widget cannot be void, except for a  %
 		%  window. Therefore, each feature that call the parent %
 		%  here need to be redefine by EV_WINDOW to check if    %
@@ -29,10 +28,27 @@ inherit
 
 feature {NONE} -- Initialization
 
+	widget_make (par: EV_CONTAINER) is
+			-- This is a general initialization for 
+			-- widgets and has to be called by all the 
+			-- widgets with parents.
+		local
+			par_imp: EV_CONTAINER_IMP
+		do
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
+			par_imp.add_child (Current)
+			plateform_build (par_imp)
+			build
+		end
+
 	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Plateform dependant initializations.
 		do
 			!! child_cell
+			initialize_list (command_count)
 		end
 
 feature -- Access
@@ -59,6 +75,15 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+--	set_parent (par: EV_CONTAINER) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		do
+--			parent_imp.remove_child (Current)
+--			set_parent (par)
+--			interface.widget_make (par)
+--		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
@@ -152,118 +177,139 @@ feature -- Resizing
 
 feature -- Event - command association
 
-	add_button_press_command (mouse_button: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when `button' is pressed.
-			-- Use the `Wm_lbuttondown', `Wm_mbuttondown' and `Wm_rbuttondown'
-			-- windows events.
+	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- button no 'mouse_button' is pressed.
 		do
 			inspect mouse_button 
 				when 1 then
-					add_command (Cmd_button_one_press, a_command, arguments)
+					add_command (Cmd_button_one_press, cmd, arg)
 				when 2 then
-					add_command (Cmd_button_two_press, a_command, arguments)
+					add_command (Cmd_button_two_press, cmd, arg)
 				when 3 then
-					add_command (Cmd_button_three_press, a_command, arguments)
+					add_command (Cmd_button_three_press, cmd, arg)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 	
-	add_button_release_command (mouse_button: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when `button' is release.
-			-- Use the `Wm_lbuttonup', `Wm_mbuttonup' and `Wm_rbuttonup' 
-			-- windows events.
+	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- button no 'mouse_button' is released.
 		do
 			inspect mouse_button
 				when 1 then
-					add_command (Cmd_button_one_release, a_command, arguments)
+					add_command (Cmd_button_one_release, cmd, arg)
 				when 2 then
-					add_command (Cmd_button_two_release, a_command, arguments)
+					add_command (Cmd_button_two_release, cmd, arg)
 				when 3 then
-					add_command (Cmd_button_three_release, a_command, arguments)
+					add_command (Cmd_button_three_release, cmd, arg)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 
-	add_double_click_command (mouse_button: INTEGER;
-				  a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be executed
-			-- when button no 'mouse_button' is double clicked.
+	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- button no `mouse_button' is double clicked.
 		do
 			inspect mouse_button
 				when 1 then
-					add_command (Cmd_button_one_dblclk, a_command, arguments)
+					add_command (Cmd_button_one_dblclk, cmd, arg)
 				when 2 then
-					add_command (Cmd_button_two_dblclk, a_command, arguments)
+					add_command (Cmd_button_two_dblclk, cmd, arg)
 				when 3 then
-					add_command (Cmd_button_three_dblclk, a_command, arguments)
+					add_command (Cmd_button_three_dblclk, cmd, arg)
 				else
 					io.putstring ("This button do not exists")
 			end
 		end
 
-	add_motion_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a motion notify command to the widget.
+	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when mouse move
+			-- in the widget area.
 			-- Be careful, in this motion-notify, windows considers that
 			-- pushing and releasing a button is a move ???
 			-- Need to be fix, it shouldn't be like this.
 			-- Use the `WM_mousemove' windows event
 		do
-			add_command (Cmd_motion_notify, a_command, arguments)
+			add_command (Cmd_motion_notify, cmd, arg)
 		end
 	
-	add_destroy_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
 			-- Add `command' to the list of commands to be executed when 
 			-- the widget is destroyed.
 		do
-			add_command (Cmd_destroy, a_command, arguments)
+			add_command (Cmd_destroy, cmd, arg)
 		end
 
-	add_key_press_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a key press command to the widget.
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when 
+			-- a key is pressed.
 			-- Use the `Wm_keydown' and the `Wm_char' windows event.
 			-- The result will be this givent by `Wm_char', because the 
 			-- other event give only a virtual key number and not
 			-- the character corresponding to the key.
-			-- We do not use add_command, because we have to put two command
-			-- on the same `ev_wel_command'.
 		do
-			add_command (Cmd_key_press, a_command, arguments)
+			add_command (Cmd_key_press, cmd, arg)
 		end
 	
-	add_key_release_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a key release to the widget.
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when a key 
+			-- is released.
 			-- Use the `Wm_keyup' windows event.
 		do
-			add_command (Cmd_key_release, a_command, arguments)
+			add_command (Cmd_key_release, cmd, arg)
 		end
 
-	add_enter_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the mouse enter the widget.
-			-- Use the `' windows event
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when the mouse 
+			-- enters the widget.
 		do
-			add_command (Cmd_enter_notify, a_command, arguments)
+			add_command (Cmd_enter_notify, cmd, arg)
 		end
 	
-	add_leave_notify_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the mouse leave the widget
-			-- Use the `' windows event
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when the mouse 
+			-- leaves the widget.
 		do
-			add_command (Cmd_leave_notify, a_command, arguments)
+			add_command (Cmd_leave_notify, cmd, arg)
 		end
 
-	add_expose_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the widget is 
-			-- exposed after having been hidden by the user or 
-			-- behind a window.
+	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when the widget is 
+			-- exposed.
 		do
-			add_command (Cmd_expose, a_command, arguments)
+			add_command (Cmd_expose, cmd, arg)
 		end
 
 	last_command_id: INTEGER
 			-- Id of the last command added by feature
 			-- 'add_command'
+
+feature -- Postconditions
+
+	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+			-- On gtk, when the widget is not shown, the result is 0
+		do
+			Result := True
+					--	(shown and then new_width = minimum_width and new_height = minimum_height) or else
+					--	(not shown and then (minimum_width = 0 and minimum_height = 0))
+		end		
+
+	position_set (new_x, new_y: INTEGER): BOOLEAN is
+			-- Check if the dimensions of the widget are set to 
+			-- the values given or the minimum values possible 
+			-- for that widget.
+ 			-- On gtk, when the widget is not shown, the result is -1
+		do
+			Result := True
+					--	(shown and then new_x = x and new_y = y) or else
+					--	(not shown and then (x = - 1 and y = - 1))
+		end
 
 feature -- Implementation
 
@@ -311,15 +357,6 @@ feature -- Implementation
 			-- for the first time
 		do
 			parent_ask_resize (minimum_width, minimum_height)
-		end
-
-feature {NONE} -- Implementation for events handling
-
-	initialize_list is
-			-- Create the `command_list' and the `arguments_list'.
-		do
-				!! command_list.make (1, 18)
-				!! argument_list.make (1, 18)
 		end
 
 feature {NONE} -- Implementation, mouse button events

@@ -120,6 +120,7 @@ rt_public void eif_thr_register(void)
 	} else 
 	{
 		once = 1;
+		eif_cecil_init ();				/* Initialize ressources for cecil. */
 		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
 	}
 }

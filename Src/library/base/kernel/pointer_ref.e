@@ -45,11 +45,10 @@ feature -- Status report
 
 feature -- Operations
 
-	infix "+" (offset: INTEGER): like Current is
+	infix "+" (offset: INTEGER): POINTER is
 			-- Pointer moved by an offset of `o' bytes.
 		do
-			create Result
-			Result.set_item (c_offset_pointer (item, offset))
+			Result := c_offset_pointer (item, offset)
 		end
 
 feature -- Memory copy

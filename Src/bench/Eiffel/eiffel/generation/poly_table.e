@@ -153,7 +153,7 @@ feature
 		local
 			entry: T
 			i, nb: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			from
 				local_copy := Current
@@ -178,7 +178,7 @@ feature
 		local
 			entry: T
 			i, nb: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			from
 				local_copy := Current
@@ -200,7 +200,7 @@ feature
 		local
 			i, nb: INTEGER
 			entry: T
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			from
 				local_copy := Current
@@ -257,7 +257,7 @@ feature
 		local
 			stop: BOOLEAN
 			i, nb, index: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			from
 				local_copy := Current
@@ -283,7 +283,7 @@ feature
 			not_empty: not empty
 		local
 			i, nb, first_type: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			from
 				local_copy := Current
@@ -305,7 +305,7 @@ feature
 		local
 			i, j, nb, index: INTEGER
 			entry: T
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 			c_name: STRING
 		do
 			local_copy := Current
@@ -410,7 +410,7 @@ feature
 		local
 			entry: T
 			i, nb: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			make_header_code (ba)
 
@@ -566,7 +566,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 			up, down : INTEGER
 			x: INTEGER
 			temp: T 
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
 			local_copy := Current
 				-- Define the pivot value as the first element of table
@@ -621,15 +621,15 @@ feature {NONE} -- Implementation
 			-- Return position where `type_id' is in POLY_TABLE.
 		local
 			i, j, m: INTEGER
-			local_copy: like Current
+			local_copy: POLY_TABLE [T]
 		do
-			j := upper
+			local_copy := Current
+			j := local_copy.upper
 			if j = 1 then
 				Result := 1
 			else
 				from
-					local_copy := Current
-					i := lower
+					i := local_copy.lower
 				until
 					i = j
 				loop

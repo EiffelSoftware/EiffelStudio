@@ -15,6 +15,7 @@ inherit
 --			license_checked,
 			tool
 		end
+	EB_COMMAND_FEEDBACK
 
 creation
 	make
@@ -84,7 +85,7 @@ feature -- Execution
 					tmp_file.open_write
 					if not to_write.empty then
 						to_write.prune_all ('%R')
-						if general_resources.text_mode.value.is_equal ("UNIX") then
+						if text_mode.is_equal ("UNIX") then
 							tmp_file.putstring (to_write)
 							if to_write.item (to_write.count) /= '%N' then 
 								-- Add a carriage return like `vi' if there's none at the end 

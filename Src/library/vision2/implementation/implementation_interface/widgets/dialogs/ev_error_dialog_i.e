@@ -9,8 +9,19 @@ class
 
 inherit
 	EV_MESSAGE_DIALOG_I
+		redefine
+			set_default
+		end
 
 feature -- Status settings
+
+	set_default (msg, dtitle: STRING) is
+			-- Set default settings
+		do
+			set_message (msg)
+			set_title (dtitle)
+			add_abortretryignore_buttons
+		end
 
 	add_abort_button is
 			-- Add a `Abort' button in the dialog
@@ -32,10 +43,16 @@ feature -- Status settings
 
 	add_ignore_button is
 			-- Add a `Ignore' button in the dialog
+		local
+			cmd: EV_MESSAGE_DIALOG_CLOSE_COMMAND
+			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
 		do
 			if ignore_button = Void then
 				!!ignore_button.make_with_text (action_area, "Ignore")
 				ignore_button.set_expand(True)
+				!!cmd
+				!!arg.make (Current)
+				ignore_button.add_click_command(cmd, arg)
 			end
 		end
 

@@ -16,19 +16,31 @@ inherit
 feature -- Access
 
 	highlight_color: INTEGER
-			-- Highlighting applied to text.
+				-- Highlighting applied to text.
 			
 	highlight_set: BOOLEAN
-		-- Has `highlight_color' been explicitly set and does not correspond to auto?
+			-- Has `highlight_color' been explicitly set and does not correspond to auto?
 
 	text_color: INTEGER
 			-- Text color of format
 			
 	color_set: BOOLEAN
-		-- Has `text_color' been explicitly set and does not correspond to auto?
+			-- Has `text_color' been explicitly set and does not correspond to auto?
 
 	is_bold: BOOLEAN
 			-- Is format bold?
+			
+	is_italic: BOOLEAN
+			-- Is format italic?
+			
+	is_striked_out: BOOLEAN
+			-- Is format striken out?
+			
+	is_underlined: BOOLEAN
+			-- Is format underlined?
+			
+	vertical_offset: INTEGER
+			-- Vertical offset in pixels.
 
 	font_height: INTEGER
 			-- Height of font used by format.
@@ -40,7 +52,10 @@ feature -- Access
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := character_format.out + font_height.out + text_color.out + highlight_color.out + is_bold.out + highlight_set.out + color_set.out
+			Result := character_format.out + font_height.out + text_color.out +
+				highlight_color.out + is_bold.out + is_italic.out + is_striked_out.out +
+				is_underlined.out + vertical_offset.out + 
+				highlight_set.out + color_set.out
 		end
 
 feature -- Element change
@@ -73,6 +88,38 @@ feature -- Element change
 			is_bold := a_is_bold
 		ensure
 			is_bold_assigned: is_bold = a_is_bold
+		end
+		
+	set_italic (an_is_italic: BOOLEAN) is
+			-- Set `is_italic' to `an_is_italic'.
+		do
+			is_italic := an_is_italic
+		ensure
+			is_italic_assigned: is_italic = an_is_italic
+		end
+
+	set_striked_out (an_is_striked_out: BOOLEAN) is
+			-- Set `is_striked_out' to `an_is_striked_out'.
+		do
+			is_striked_out := an_is_striked_out
+		ensure
+			is_striked_out_assigned: is_striked_out = an_is_striked_out
+		end
+		
+	set_underlined (an_is_underlined: BOOLEAN) is
+			-- Set `is_underlined' to `an_is_underlined'.
+		do
+			is_underlined := an_is_underlined
+		ensure
+			is_underlined: is_underlined = an_is_underlined
+		end
+		
+	set_vertical_offset (an_offset: INTEGER) is
+			-- Set `vertical_offset' to `an_offset'.
+		do
+			vertical_offset := an_offset
+		ensure
+			offset_set: vertical_offset = an_offset
 		end
 
 	set_font_height (a_font_height: INTEGER) is

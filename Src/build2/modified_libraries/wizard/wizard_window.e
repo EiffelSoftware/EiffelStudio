@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			disable_user_resize
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1

@@ -34,7 +34,7 @@ feature -- Output
 			l_comment.prune_all ('%"')
 
 			Result.append (l_comment)
-			Result.append ("%")%) HRESULT ")
+			Result.append ("%")%) %N%T%THRESULT ")
 
 			Result.append (name)
 			Result.append (Space_open_parenthesis)

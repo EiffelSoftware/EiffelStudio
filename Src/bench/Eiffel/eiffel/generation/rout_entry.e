@@ -67,10 +67,10 @@ feature -- previously in ROUT_UNIT
 			Result := System.class_of_id (written_in);
 		end;
 
-	new_poly_table: ROUT_TABLE is
+	new_poly_table (routine_id: ROUTINE_ID): ROUT_TABLE is
 			-- New associated polymorhic table
 		do
-			!!Result;
+			!!Result.make (routine_id);
 		end;
 
 	entry (class_type: CLASS_TYPE): ROUT_ENTRY is

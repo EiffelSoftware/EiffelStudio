@@ -417,19 +417,6 @@ void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 */
 
 /*==============================================================================
- gtk_font functions
-==============================================================================*/
-
-/* Set the filter of the font selection. */
-void c_gtk_font_selection_set_filter (GtkFontSelection *fontsel,
-		const char *foundries,
-		const char *weights,
-		const char *slants,
-		const char *setwidths,
-		const char *spacings,
-		const char *charsets);
-
-/*==============================================================================
  End of file
 ==============================================================================*/
 

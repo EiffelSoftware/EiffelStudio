@@ -366,6 +366,7 @@ feature -- Action
 				parser.set_has_syntax_warning (System.has_syntax_warning)
 				parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
 				parser.set_has_old_verbatim_strings_warning (system.has_old_verbatim_strings_warning)
+				Inst_context.set_cluster (cluster)
 				parser.parse (file)
 				Result := parser.root_node
 

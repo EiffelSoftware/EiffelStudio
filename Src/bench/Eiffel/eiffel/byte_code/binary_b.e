@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	init (a: FEATURE_B) is
+	init (a: CALL_ACCESS_B) is
 			-- Initializes node
 		do
 			access := a
@@ -36,7 +36,7 @@ feature -- Access
 	right: EXPR_B
 			-- Right expression operand
 
-	access: FEATURE_B
+	access: CALL_ACCESS_B
 			-- Access when left is not a simple type
 
 	attachment: TYPE_I
@@ -63,7 +63,7 @@ feature -- Settings
 			right := r
 		end
 
-	set_access (a: FEATURE_B) is
+	set_access (a: CALL_ACCESS_B) is
 			-- Set `access' to `a'
 		do
 			access := a

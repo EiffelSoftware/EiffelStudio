@@ -406,7 +406,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i_unset: parent_i = Void
 		end
 
-feature {EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 
 	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I) is
 			-- Set the `parent_row' of `Current'
@@ -635,25 +635,25 @@ feature {NONE} -- Implementation
 			result_non_negative: result >= 0
 		end
 		
-		displayed_in_grid_tree: BOOLEAN is
-				-- Is `Current' displayed in the tree of `grid'?
-				-- If not parented at any level or one of these
-				-- parents is not expanded then `Result' is `False'.
-			local
-				l_parent: EV_GRID_ROW_I
-			do
-				Result := True
-				from
-					l_parent := parent_row_i
-				until
-					l_parent = Void or not Result
-				loop
-					if not l_parent.is_expanded then
-						Result := False
-					end
-					l_parent := l_parent.parent_row_i
+	displayed_in_grid_tree: BOOLEAN is
+			-- Is `Current' displayed in the tree of `grid'?
+			-- If not parented at any level or one of these
+			-- parents is not expanded then `Result' is `False'.
+		local
+			l_parent: EV_GRID_ROW_I
+		do
+			Result := True
+			from
+				l_parent := parent_row_i
+			until
+				l_parent = Void or not Result
+			loop
+				if not l_parent.is_expanded then
+					Result := False
 				end
+				l_parent := l_parent.parent_row_i
 			end
+		end
 		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 

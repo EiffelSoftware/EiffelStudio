@@ -634,7 +634,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.write)
+				feature {FILE_MODE}.create_, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -679,7 +679,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.read_write)
+				feature {FILE_MODE}.create_, feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists

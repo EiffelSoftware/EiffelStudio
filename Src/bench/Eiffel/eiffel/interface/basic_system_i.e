@@ -17,6 +17,9 @@ feature -- Access
 	system_object_class: EXTERNAL_CLASS_I
 			-- Class ANY and System.Object
 
+	system_value_type_class: EXTERNAL_CLASS_I
+			-- Class System.ValueType
+
 	ancestor_class_to_all_classes: CLASS_I is
 		do
 			if il_generation then
@@ -61,28 +64,6 @@ feature -- Access
 
 	bit_class: CLASS_I
 			-- Class BIT_REF
-
-	character_ref_class: CLASS_I
-			-- Class CHARACTER_REF
-
-	wide_char_ref_class: CLASS_I
-			-- Class UNICODE_CHARACTER_REF
-
-	boolean_ref_class: CLASS_I
-			-- Class BOOLEAN_REF
-
-	integer_8_ref_class, integer_16_ref_class,
-	integer_32_ref_class, integer_64_ref_class: CLASS_I
-			-- Class INTEGER_REF 8, 16, 32 and 64 bits
-
-	real_ref_class: CLASS_I
-			-- Class REAL_REF
-
-	double_ref_class: CLASS_I
-			-- Class DOUBLE_REF
-
-	pointer_ref_class: CLASS_I
-			-- Class POINTER_REF
 
 	disposable_class: CLASS_I
 			-- Class DISPOSABLE
@@ -248,94 +229,6 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	pointer_ref_dtype: INTEGER is
-			-- Id of class POINTER_REF
-		require
-			pointer_ref_class_exists: pointer_ref_class /= Void
-			compiled: pointer_ref_class.is_compiled
-		do
-			Result := pointer_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	double_ref_dtype: INTEGER is
-			-- Dynamic type_id of class DOUBLE_REF
-		require
-			double_ref_class_exists: double_ref_class /= Void
-			compiled: double_ref_class.is_compiled
-		do
-			Result := double_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	real_ref_dtype: INTEGER is
-			-- Dynamic type_id of class REAL_REF
-		require
-			real_ref_class_exists: real_ref_class /= Void
-			compiled: real_ref_class.is_compiled
-		do
-			Result := real_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	integer_ref_dtype (n: INTEGER): INTEGER is
-			-- Dynamic type_id of class INTEGER_REF with `n' bits.
-		require
-			int_ref_class_exists: integer_8_ref_class /= Void and then
-						integer_16_ref_class /= Void and then
-						integer_32_ref_class /= Void and then
-						integer_64_ref_class /= Void
-			compiled: integer_8_ref_class.is_compiled and then
-						integer_16_ref_class.is_compiled and then
-						integer_32_ref_class.is_compiled and then
-						integer_64_ref_class.is_compiled
-		do
-			inspect n
-			when 8 then Result := integer_8_ref_class.compiled_class.types.first.type_id
-			when 16 then Result := integer_16_ref_class.compiled_class.types.first.type_id
-			when 32 then Result := integer_32_ref_class.compiled_class.types.first.type_id
-			when 64 then Result := integer_64_ref_class.compiled_class.types.first.type_id
-			end
-		ensure
-			valid_result: Result > 0
-		end
-
-	boolean_ref_dtype: INTEGER is
-			-- Dynamic type_id of class BOOLEAN_REF
-		require
-			bool_ref_class_exists: boolean_ref_class /= Void
-			compiled: boolean_ref_class.is_compiled
-		do
-			Result := boolean_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	character_ref_dtype: INTEGER is
-			-- Dynamic type_id of class CHARACTER_REF
-		require
-			char_ref_class_exists: character_ref_class /= Void
-			compiled: character_ref_class.is_compiled
-		do
-			Result := character_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
-	wide_char_ref_dtype: INTEGER is
-			-- Dynamic type_id of class UNICODE_CHARACTER_REF
-		require
-			unicode_char_ref_class_exists: wide_char_ref_class /= Void
-			compiled: wide_char_ref_class.is_compiled
-		do
-			Result := wide_char_ref_class.compiled_class.types.first.type_id
-		ensure
-			valid_result: Result > 0
-		end
-
 feature -- Settings
 
 	set_any_class (c: CLASS_I) is
@@ -361,6 +254,21 @@ feature -- Settings
 			end
 		ensure
 			system_object_class_set: c.is_external_class implies system_object_class = c
+		end
+
+	set_system_value_type_class (c: CLASS_I) is
+			-- Assign `c' to `system_value_type_class
+		require
+			c_not_void: c /= Void
+		local
+			l_ext: EXTERNAL_CLASS_I
+		do
+			l_ext ?= c
+			if l_ext /= Void then
+				system_value_type_class := l_ext
+			end
+		ensure
+			system_object_class_set: c.is_external_class implies system_value_type_class = c
 		end
 
 	set_boolean_class (c: CLASS_I) is
@@ -514,79 +422,6 @@ feature -- Settings
 			bit_class := c
 		ensure
 			bit_class_set: bit_class = c
-		end
-
-	set_character_ref_class (c: CLASS_I; is_wide: BOOLEAN) is
-			-- Assign `c' to `character_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			if is_wide then
-				wide_char_ref_class := c
-			else
-				character_ref_class := c
-			end
-		ensure
-			wide_char_ref_set: is_wide implies wide_char_ref_class = c
-			char_ref_set: not is_wide implies character_ref_class = c
-		end
-
-	set_boolean_ref_class (c: CLASS_I) is
-			-- Assign `c' to `boolean_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			boolean_ref_class := c
-		ensure
-			boolean_ref_class_set: boolean_ref_class = c
-		end
-
-	set_integer_ref_class (c: CLASS_I; n: INTEGER) is
-			-- Assign `c' to `integer_n_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			inspect n
-			when 8 then integer_8_ref_class := c
-			when 16 then integer_16_ref_class := c
-			when 32 then integer_32_ref_class := c
-			when 64 then integer_64_ref_class := c
-			end
-		ensure
-			integer_8_ref_class_set: n = 8 implies integer_8_ref_class = c
-			integer_16_ref_class_set: n = 16 implies integer_16_ref_class = c
-			integer_32_ref_class_set: n = 32 implies integer_32_ref_class = c
-			integer_64_ref_class_set: n = 64 implies integer_64_ref_class = c
-		end
-
-	set_real_ref_class (c: CLASS_I) is
-			-- Assign `c' to `real_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			real_ref_class := c
-		ensure
-			real_ref_class_set: real_ref_class = c
-		end
-
-	set_double_ref_class (c: CLASS_I) is
-			-- Assign `c' to `double_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			double_ref_class := c
-		ensure
-			double_ref_class_set: double_ref_class = c
-		end
-
-	set_pointer_ref_class (c: CLASS_I) is
-			-- Assign `c' to `pointer_ref_class'.
-		require
-			c_not_void: c /= Void
-		do
-			pointer_ref_class := c
-		ensure
-			pointer_ref_class_set: pointer_ref_class = c
 		end
 
 	set_disposable_class (c: CLASS_I) is

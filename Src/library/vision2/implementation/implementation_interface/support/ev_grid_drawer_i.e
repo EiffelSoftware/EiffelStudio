@@ -165,10 +165,10 @@ feature -- Basic operations
 						row_counter := 1
 						i := 0
 					until
-						last_row_index_set or row_counter > grid.grid_rows.count
+						last_row_index_set or row_counter > grid.rows.count
 					loop
 						i := row_offsets @ (row_counter)
-						current_row := grid.grid_rows.i_th (row_counter)
+						current_row := grid.rows.i_th (row_counter)
 						if grid.is_row_height_fixed then
 							current_height := grid.row_height
 						else
@@ -298,7 +298,7 @@ feature -- Basic operations
 					row_counter := visible_row_indexes.item
 						-- Retrieve information regarding the rows that we must draw.
 					current_row_list := grid.row_list @ (row_counter - 1)
-					current_row := grid.grid_rows @ row_counter
+					current_row := grid.rows @ row_counter
 
 					
 					if grid.is_row_height_fixed and not grid.is_tree_enabled then

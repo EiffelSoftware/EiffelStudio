@@ -138,8 +138,7 @@ feature {NONE} -- Implementation
 			local
 				application_template_file, application_output_file: RAW_FILE
 				application_file_name: FILE_NAME
-				main_window_type, application_class_name: STRING
-				main_window_tag_index: INTEGER
+				application_class_name: STRING
 				change_pos: INTEGER
 			do
 				set_progress (0.2)

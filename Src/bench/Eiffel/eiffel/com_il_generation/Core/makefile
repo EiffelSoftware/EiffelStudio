@@ -1,7 +1,7 @@
 CORE_SRC = eiffel_reflection_emit.cs EiffelClass.cs EiffelMethod.cs core.cs core_assembly_info.cs custom_attribute_factory.cs icore.cs
 RUNTIME_SRC = runtime.cs runtime_assembly_info.cs
-CSFLAGS = -nologo
-#CSFLAGS = -nologo -debug -d:DEBUG
+CSFLAGS = -nologo -w:4
+#CSFLAGS = -nologo -w:4 -debug -d:DEBUG
 GACFLAGS = -nologo
 #COM_WIZARD_FLAGS = -output_all
 COM_WIZARD_FLAGS = -output_none

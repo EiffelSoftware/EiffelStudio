@@ -142,7 +142,7 @@ extern char *file_group();
 	/* FIXME: include the correct header files!!! */
 extern int rename();
 extern int rmdir();
-#end
+#endif
 
 extern EIF_BOOLEAN eif_group_in_list();
 #endif

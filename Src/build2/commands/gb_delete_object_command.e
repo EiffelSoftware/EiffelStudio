@@ -13,14 +13,10 @@ inherit
 			make, execute, executable,
 			new_toolbar_item
 		end
-		
-	GB_ACCESSIBLE_COMMAND_HANDLER
-	
-	GB_ACCESSIBLE_OBJECT_HANDLER
-	
+
 	GB_ACCESSIBLE_SYSTEM_STATUS
-	
-	GB_ACCESSIBLE_OBJECT_EDITOR
+
+	GB_ACCESSIBLE_HISTORY
 	
 	GB_ACCESSIBLE
 
@@ -73,15 +69,13 @@ feature {NONE} -- Implementation
 		require
 			object_not_void: an_object /= Void
 		local
-			old_parent_object: GB_OBJECT
+			command_delete: GB_COMMAND_DELETE_OBJECT
+			delete_position: INTEGER
 		do
-			update_object_editors_for_delete (an_object, all_editors)
-			old_parent_object := an_object.parent_object
-			an_object.unparent
-			check
-				old_parent_object_not_void: old_parent_object /= Void
-			end
-			--old_parent_object.build_drop_action_for_new_object
+			delete_position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
+			create command_delete.make (an_object.parent_object, an_object, delete_position)
+			history.cut_off_at_current_position
+			command_delete.execute
 			--| FIXME we have not really performed the delete, as the object still exists.
 			--| Need to clean up.
 		end
@@ -102,35 +96,6 @@ feature {NONE} -- Implementation
 			-- we should not be deleting the object.
 		do
 			Result := an_object.parent_object /= Void
-		end
-
-	update_object_editors_for_delete (deleted_object: GB_OBJECT editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
-			-- For every item in `editors', update to reflect removal of `deleted_object'.
-		local
-			editor: GB_OBJECT_EDITOR
-			local_parent: GB_OBJECT
-		do
-			local_parent := deleted_object.parent_object
-			from
-				editors.start
-			until
-				editors.off
-			loop
-				editor := editors.item
-					-- Update the editor if `Current' or a child of `Current'
-					-- is contained.
-				if object_handler.object_contained_in_object (deleted_object, editor.object) or
-					deleted_object = editor.object then
-					editor.make_empty
-				end
-			
-					-- If the parent of `an_object' is in the object editor then we must
-					-- update it accordingly.
-				if local_parent /= Void and then local_parent = editor.object then
-					editor.update_current_object
-				end	
-				editors.forth
-			end
 		end
 
 end -- class GB_DELETE_OBJECT

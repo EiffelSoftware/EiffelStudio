@@ -113,7 +113,16 @@
           Added <span class="efeature">correct_mismatch</span> on
           <span class="eclass">ANY</span> used for `recoverable storable'.<li>
           Added <span class="efeature">correct_mismatch</span> on <span class="eclass">HASH_TABLE</span> to enable retrieval of the 
-          5.1 and older version of <span class="eclass">HASH_TABLE</span>.</ul>
+          5.1 and older version of <span class="eclass">HASH_TABLE</span>.<li>
+          Fixed bug in implementation of <span class="efeature">copy</span> and <span class="efeature">is_equal</span>
+          for <span class="eclass">TREE</span> and 
+          descendant classes. Now descendants of <span class="eclass">TREE</span> that would like to compare 
+          additional attributes of their class needs to redefine <span class="efeature">node_is_equal</span> 
+          whose default implementation will always result in a true value.<li>
+          Changed default semantic of <span class="efeature">make</span> and
+          <span class="efeature">put_child</span> from <span class="eclass">FIXED_TREE</span>, to preserve existing 
+          semantic, you should use <span class="efeature">make_filled</span> and
+          <span class="efeature">replace_child </span>instead. </ul>
         <h3>Eiffel2Java</h3>
         <ul>
           <li>Updated library so that it works both in classic and dotnet mode.</li>

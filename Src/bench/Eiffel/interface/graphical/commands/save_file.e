@@ -47,9 +47,13 @@ feature {NONE} -- Implementation
 			to_write: STRING;
 			aok: BOOLEAN;
 			temp: STRING;
-			char: CHARACTER
+			char: CHARACTER;
+			save_as_cmd: SAVE_AS_FILE
 		do
-			if tool.file_name /= Void then
+			if tool.file_name = Void then
+				!! save_as_cmd.make (tool);
+				save_as_cmd.execute (tool)
+			else
 				!!new_file.make (tool.file_name);
 				aok := True;
 				if
@@ -82,7 +86,7 @@ feature {NONE} -- Implementation
 					end;
 					new_file.close;
 					text_window.disable_clicking;
-					if System_resources.parse_class_after_saving.actual_value then
+					if Class_resources.parse_class_after_saving.actual_value then
 						tool.parse_file
 					end;
 					tool.update_save_symbol;

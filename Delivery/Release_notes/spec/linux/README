@@ -5,6 +5,13 @@ This note does not apply to any version other than Linux ELF format.
 This version of ISE Eiffel was built using the 2.0.30 version of the kernel
 using libc5 and elf format.
 
+0) PLATFORM environment variable
+--------------------------------
+
+Please note that the PLATFORM environment variable is now linux instead of
+linux-elf.
+
+
 1) Glibc
 --------
 

@@ -27,7 +27,6 @@ inherit
 		redefine
 			interface,
 			default_key_processing_blocked,
-			--set_focus,
 			dispose,
 			destroy,
 			on_key_event,

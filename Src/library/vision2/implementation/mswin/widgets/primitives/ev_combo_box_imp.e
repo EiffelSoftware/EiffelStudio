@@ -504,10 +504,13 @@ feature {NONE} -- Implementation
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate 
 			-- item event. Called on a pointer button press.
+		local
+			pt: WEL_POINT
 		do
 			--|FIXME Implement
-			--| Pick and drop code not added, and also event propagation to 
-			--| children is not completed.
+			--| Event propagation to children is not completed.
+			pt := client_to_screen (x_pos, y_pos)
+			pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			if button /= 3 then
 				-- If left button pressed the bring `Current'
 				-- to foreground.
@@ -524,10 +527,10 @@ feature {NONE} -- Implementation
 			--| combo box will not recieve double click events.
 		end
 			
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_ITEM_IMP is
-			-- `Result' is menu_item at pixel position `x_pos', `y_pos'.
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
+			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		do
-			--| FIXME to be implemented for pick-and-dropable.
+			--| FIXME to be implemented for pick-and-dropable.	
 		end
 
 	recreate_combo_box (creation_flag: INTEGER) is
@@ -858,7 +861,7 @@ feature {NONE} -- WEL Implementation
 			Result := cwin_hi_word (cwin_send_message_result (edit_item,
 				Em_getsel, 0, 0))
 		end
-
+		
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

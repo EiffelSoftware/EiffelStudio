@@ -66,7 +66,7 @@ feature -- Access
 		do
 			Result := implementation.selected_items
 		ensure
-			bridge_ok: Result = implementation.selected_items
+			bridge_ok: lists_equal (Result, implementation.selected_items)
 		end
 
 feature -- Status report
@@ -127,7 +127,34 @@ feature -- Event handling
 			-- Actions to be performed when an item is selected. 
 
 	deselect_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when an item is deselected. 
+			-- Actions to be performed when an item is deselected.
+
+feature {NONE}-- Assertion
+
+	lists_equal (list1, list2: LINKED_LIST [EV_LIST_ITEM]): BOOLEAN is
+			-- Are elements in `list1' equal to those in `list2'.
+		require
+			list1_not_void: list1 /= Void
+			list2_not_void: list2 /= Void
+		do
+			if list1.count = list1.count and then list1.count > 0 then
+				from
+					list1.start
+					list2.start
+					Result := True
+				until
+					list1.off
+				loop
+					if list1.item /= list2.item then
+						Result := False
+					end
+					list1.forth
+					list2.forth
+				end
+				list1.start
+				list2.start
+			end
+		end
 
 feature {EV_LIST, EV_ANY_I} -- Implementation
 
@@ -151,12 +178,13 @@ feature {EV_LIST, EV_ANY_I} -- Implementation
 
 invariant
 	selected_items_not_void: selected_items /= Void
+
 	selected_items_first_is_selected_item:
 		not selected_items.empty implies selected_items.first = selected_item
 
-	--| FIXME IEK  Selected items needs implementing
-	--selected_items_empty_xor_selected_item_not_void:
-	--	selected_items.empty xor selected_item /= Void
+	selected_items_empty_xor_selected_item_not_void:
+		selected_items.empty xor selected_item /= Void
+
 	selection_size_within_bounds:
 		not multiple_selection_enabled implies selected_items.count <= 1
 
@@ -183,6 +211,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/01 18:10:36  king
+--| Added lists_equal feature, uncommented invariants
+--|
 --| Revision 1.33  2000/03/01 03:28:59  oconnor
 --| added make_for_test
 --|

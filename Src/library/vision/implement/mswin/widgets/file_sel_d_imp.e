@@ -164,7 +164,7 @@ feature -- Status setting
 				wel_file_dialog.add_flag (Ofn_nochangedir)
 				wel_file_dialog.set_title (title)
 				if pattern /= Void then
-					wel_file_dialog.set_filter (<<pattern_name>>, <<pattern>>)
+					wel_file_dialog.set_filter (<<pattern_name,"All files (*.*)">>, <<pattern,"*.*">>)
 				end
 				if directory = Void then
 					wel_file_dialog.set_initial_directory_as_current

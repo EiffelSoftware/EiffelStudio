@@ -1,4 +1,4 @@
 source_path $TESTROOTDIR
 
-test	is-equal			list001 tcf base
-test	put-extend			list002 tcf base
+test	is-equal			list001 tcf regression
+test	put-extend			list002 tcf regression

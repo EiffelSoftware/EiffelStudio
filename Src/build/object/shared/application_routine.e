@@ -28,7 +28,7 @@ feature -- Creation
 			-- whose arguments are `arg_list'.
 		require
 			valid_routine_name: rout_name /= Void and not rout_name.empty
-			valid_arguments: arg_list /= Void and not arg_list.empty
+			valid_arguments: arg_list /= Void 
 		do
 			!! precondition_list.make
 			routine_name := rout_name

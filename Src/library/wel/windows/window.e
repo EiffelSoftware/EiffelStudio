@@ -384,6 +384,35 @@ feature -- Status report
 			Result := commands_enabled_ref.item
 		end
 
+	command_exists (message: INTEGER): BOOLEAN is
+			-- Does a command associated to `message' exist?
+		require
+			positive_message: message >= 0
+		do
+			Result := commands /= Void and then
+				commands.exists (message)
+		end
+
+	command (message: INTEGER): WEL_COMMAND is
+			-- Command associated to `message'
+		require
+			positive_message: message >= 0
+			command_exists: command_exists (message)
+		do
+			Result := commands.item (message).command
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	command_argument (message: INTEGER): ANY is
+			-- Command argument associated to `message'
+		require
+			positive_message: message >= 0
+			command_exists: command_exists (message)
+		do
+			Result := commands.item (message).argument
+		end
+
 feature -- Status setting
 
 	enable_commands is
@@ -504,7 +533,7 @@ feature -- Status setting
 			-- Set the mouse capture to the `Current' window.
 			-- Once the window has captured the mouse, all
 			-- mouse input is directed to this window, regardless
-			-- of wheter the cursor is over that window. Only
+			-- of whether the cursor is over that window. Only
 			-- one window can have the mouse capture at a time.
 		require
 			exists: exists
@@ -595,7 +624,7 @@ feature -- Element change
 		end
 
 	set_timer (timer_id, time_out: INTEGER) is
-			-- Set a timer idenfied by `timer_id' with a
+			-- Set a timer identified by `timer_id' with a
 			-- `time_out' value (in milliseconds).
 			-- See also `on_timer', `kill_timer'.
 		require
@@ -609,10 +638,10 @@ feature -- Element change
 
 feature -- Basic operations
 
-	put_command (command: WEL_COMMAND; message: INTEGER; argument: ANY) is
-			-- Put `command' associated to `message'.
+	put_command (a_command: WEL_COMMAND; message: INTEGER; argument: ANY) is
+			-- Put `a_command' associated to `message'.
 		require
-			command_not_void: command /= Void
+			a_command_not_void: a_command /= Void
 			positive_message: message >= 0
 		local
 			command_exec: WEL_COMMAND_EXEC
@@ -622,22 +651,22 @@ feature -- Basic operations
 			if commands = Void then
 				!! commands.make
 			end
-			!! command_exec.make (command, argument)
-			commands.put (command_exec, message)
+			!! command_exec.make (a_command, argument)
+			commands.force (command_exec, message)
 		ensure
-			commands_exists: commands.exists (message)
+			command_added: command (message) = a_command and
+				command_argument (message) = argument
 		end
 
 	remove_command (message: INTEGER) is
 			-- Remove the command associated to `message'.
 		require
 			positive_message: message >= 0
+			command_exists: command_exists (message)
 		do
-			if commands /= Void then
-				commands.remove (message)
-			end
+			commands.remove (message)
 		ensure
-			commands_not_exists: not commands.exists (message)
+			command_removed: not command_exists (message)
 		end
 
 	show_with_option (cmd_show: INTEGER) is
@@ -700,6 +729,7 @@ feature -- Basic operations
 		require
 			exists: exists
 			a_window_not_void: a_window /= Void
+			a_window_not_current: a_window /= Current
 			a_window_exists: a_window.exists
 		do
 			cwin_set_window_pos (item, a_window.item, 0, 0, 0, 0,
@@ -854,7 +884,7 @@ feature -- Basic operations
 		end
 
 	invalidate_without_background is
-			-- Invalide the entire client area of the window. The
+			-- Invalidate the entire client area of the window. The
 			-- background will not be erased.
 		require
 			exists: exists
@@ -893,7 +923,7 @@ feature -- Basic operations
 			cwin_validate_rect (item, rect.item)
 		end
 
-	validate_region (region: WEL_RECT) is
+	validate_region (region: WEL_REGION) is
 			-- Validate the area `region'.
 		require
 			exists: exists
@@ -924,10 +954,10 @@ feature -- Basic operations
 				default_pointer, default_pointer)
 		end
 
-	win_help (help_file: STRING; command, data: INTEGER) is
+	win_help (help_file: STRING; a_command, data: INTEGER) is
 			-- Start the Windows Help program with `help_file'.
-			-- `command' specifies the type of help requested. See
-			-- class WEL_HELP_CONSTANTS for `command' values.
+			-- `a_command' specifies the type of help requested. See
+			-- class WEL_HELP_CONSTANTS for `a_command' values.
 		require
 			exists: exists
 			help_file_not_void: help_file /= Void
@@ -935,7 +965,7 @@ feature -- Basic operations
 			a: ANY
 		do
 			a := help_file.to_c
-			cwin_win_help (item, $a, command, data)
+			cwin_win_help (item, $a, a_command, data)
 		end
 
 feature -- Removal
@@ -1030,9 +1060,9 @@ feature -- Messages
 		do
 		end
 
-	on_char (virtual_key, key_data: INTEGER) is
+	on_char (character_code, key_data: INTEGER) is
 			-- Wm_char message
-			-- See class WEL_VK_CONSTANTS for `virtual_key' value.
+			-- See class WEL_VK_CONSTANTS for `character_code' value.
 		require
 			exists: exists
 		do
@@ -1683,7 +1713,7 @@ feature {NONE} -- Externals
 			"ScrollWindow"
 		end
 
-	cwin_win_help (hwnd, file: POINTER; command, data: INTEGER) is
+	cwin_win_help (hwnd, file: POINTER; a_command, data: INTEGER) is
 			-- SDK WinHelp
 		external
 			"C [macro <wel.h>] (HWND, LPCSTR, UINT, DWORD)"

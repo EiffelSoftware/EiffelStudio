@@ -11,21 +11,25 @@ inherit
 		rename
 			destroy as wm_shell_destroy
 		redefine
-			realize, 
-			realized,
+			width,
+			height,
+			show,
 			default_style,
 			class_name,
-			unrealize
+			unrealize,
+			set_default_position
 		end
 
 	WM_SHELL_WINDOWS
 		redefine
+			width,
+			height,
+			show,
 			destroy,
-			realize, 
-			realized,
 			default_style,
 			class_name,
-			unrealize
+			unrealize,
+			set_default_position
 		select
 			destroy
 		end
@@ -34,27 +38,10 @@ inherit
 
 	GRABABLE_WINDOWS
 
-feature -- Initialization
-
-	realize is
-			-- Realize current widget
-		do
-			realized := True
-		end
-
-	dialog_realize is
-			-- Really realize current widget
-		do
-			if not exists then
-				realize_current
-				realize_children
-			end
-		end
-
 feature -- Status report
 
-	realized: BOOLEAN
-			-- Is this widget realized?
+	default_position: BOOLEAN
+			-- Use default position?
 
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
@@ -62,23 +49,57 @@ feature -- Status report
 			Result := realized and then shown
 		end
 
+	width: INTEGER is
+			-- Width of dialog
+		do
+			if exists then
+				Result := wel_width
+			else
+				Result := private_attributes.width
+			end
+		end
+ 
+
+	height: INTEGER is
+			-- Height of dialog
+		do
+			if exists then
+				Result := wel_height
+			else
+				Result := private_attributes.height
+			end
+		end
+
 feature -- Status setting
+
+	show is
+			-- Show composite.
+		do
+			if exists then 
+				wel_show
+				show_children
+			end
+			shown := True
+		end
+
+	set_default_position (flag: BOOLEAN) is
+		do
+			default_position := flag
+		end
 
 	destroy (wid_list: LINKED_LIST [WIDGET]) is
 		do
-			if insensitive_list /= Void then
-				set_windows_sensitive
-			end
 			wm_shell_destroy (wid_list)
 		end
 
 	popdown is
 			-- Popdown popup shell.
 		do
-			if insensitive_list /= Void then
-				set_windows_sensitive
-			end
-			if realized then
+
+			if is_popped_up then
+				if insensitive_list /= Void then
+					set_windows_sensitive
+				end
 				hide
 			end
 		end
@@ -86,16 +107,25 @@ feature -- Status setting
 	popup is
 			-- Popup a popup shell.
 		do
-			if exists then
-				show
-			else
-				dialog_realize
+			if not is_popped_up then
+				if realized then
+					show
+				else
+					realize
+					show
+				end
+				if grab_style = modal then
+					set_windows_insensitive
+				end
 			end
 		end
 
 	unrealize is
 		do
-			realized := false
+			if insensitive_list /= Void then
+				set_windows_sensitive
+			end
+			wel_destroy
 		end
 
 	dialog_command_target is
@@ -146,7 +176,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Deafult style for a dialog
 		do
-			Result := Ws_visible + Ws_overlapped + Ws_dlgframe + Ws_thickframe
+			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
 		end
 
 	font: FONT

@@ -39,6 +39,14 @@ inherit
 			default_create
 		end
 		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+		
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT) is
@@ -85,6 +93,8 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info: ELEMENT_INFORMATION
 			linked_groups: ARRAYED_LIST [INTEGER]
 			temp_output: STRING
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			window_access_string: STRING
 		do
 			create Result.make (2)
 			full_information := get_unique_full_info (element)
@@ -101,7 +111,17 @@ feature {GB_CODE_GENERATOR} -- Output
 				until
 					linked_groups.off
 				loop
-					temp_output := info.name + ".merge_radio_button_groups (" + info.Names_by_id.item (linked_groups.item) + ")"
+					titled_window_object ?= object_handler.object_from_id (linked_groups.item)
+					if titled_window_object /= Void then
+						if system_status.current_project_settings.client_of_window then
+							window_access_string := Client_window_string
+						else
+							window_access_String := "Current"
+						end
+						temp_output := info.name + ".merge_radio_button_groups (" + window_access_string + ")"
+					else
+						temp_output := info.name + ".merge_radio_button_groups (" + info.Names_by_id.item (linked_groups.item) + ")"
+					end
 					Result.extend (temp_output)
 					linked_groups.forth
 				end

@@ -30,20 +30,26 @@ for file in `find . -name '*.e'`
 do
 	if grep "^--| FIXME Not for release" $file > /dev/null 2>&1
 	then
+		echo "rm $file"
 		rm -f $file
 	else
 		grep -v "Id:" $file > $file.new
 		mv -f $file.new $file
-		if [ `grep -v \"C $file | fmt -s -w 80 | wc -l` != `grep -v \"C $file | wc -l` ]
-		then
-			 echo "> 80 cols! $file"
-		fi
+		#if [ `grep -v \"C $file | fmt -s -w 80 | wc -l` != `grep -v \"C $file | wc -l` ]
+		#then
+		#	 echo "> 80 cols! $file"
+		#fi
 		grep -v -- "--|" $file > $file.new
 		mv -f $file.new $file
 	fi
 done
 cd ..
-tar czf vision_$1.tgz vision2
-rm -rf vision2
+cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 base
+cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 gel
+cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 event
+grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequence.e
+grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
+tar czf $1.tgz vision2 base gel
+rm -rf base gel event vision2
 echo "Done!"
 exit 0

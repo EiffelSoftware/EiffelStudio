@@ -164,7 +164,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 196
+%expect 198
 
 %%
 
@@ -1445,25 +1445,31 @@ Creation_clause:
 			{
 				inherit_context := False
 				$$ := new_create_as (Void, Void)
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($1.start_position,
-					$1.end_position, filename, 0, "Use keyword `create' instead."))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Use keyword `create' instead."))
+				end
 			}
 	|	Position TE_CREATION Clients Feature_list
 			{
 				inherit_context := False
 				$$ := new_create_as ($3, $4)
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($1.start_position,
-					$1.end_position, filename, 0, "Use keyword `create' instead."))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Use keyword `create' instead."))
+				end
 			}
 	|	Position TE_CREATION Client_list 
 			{
 				inherit_context := False
 				$$ := new_create_as (new_client_as ($3), Void)
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($1.start_position,
-					$1.end_position, filename, 0, "Use keyword `create' instead."))
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Use keyword `create' instead."))
+				end
 			}
 	;
 
@@ -1485,52 +1491,66 @@ Agent_call:
 	|	TE_RESULT TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_as (new_result_operand_as, $4, $5)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($3.start_position,
-				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($3.start_position,
+					$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	|	TE_CURRENT TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($3.start_position,
-				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($3.start_position,
+					$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	|	Identifier TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_as (new_operand_as (Void, $1, Void), $4, $5)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($3.start_position,
-				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($3.start_position,
+					$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 			
 		}
 	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_As (new_operand_as (Void, Void, $2), $6, $7)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($5.start_position,
-				$5.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($5.start_position,
+					$5.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	|	TE_LCURLY Type TE_CURLYTILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_as (new_operand_as ($2, Void, Void), $5, $6)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($4.start_position,
-				$4.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($4.start_position,
+					$4.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	|	TE_QUESTION TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_routine_creation_as (Void, $4, $5)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($3.start_position,
-				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($3.start_position,
+					$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	|	TE_TILDE Position Identifier Delayed_actuals
 		{
 			$$ := new_unqualified_routine_creation_as (new_operand_as (Void, Void, Void), $3, $4)
-			Error_handler.insert_warning (
-				create {SYNTAX_WARNING}.make ($2.start_position,
-				$2.end_position, filename, 0, "Use keyword `agent' instead."))
+			if has_syntax_warning then
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($2.start_position,
+					$2.end_position, filename, 0, "Use keyword `agent' instead."))
+			end
 		}
 	;
 

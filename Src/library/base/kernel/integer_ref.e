@@ -144,7 +144,7 @@ feature -- Status report
 	is_valid_character_code: BOOLEAN is
 			-- Does current object represent a character?
 		do
-			Result := item >= feature {CHARACTER}.Min_value and item <= feature {CHARACTER}.Max_value
+			Result := item >= {CHARACTER}.Min_value and item <= {CHARACTER}.Max_value
 		end
 
 feature -- Basic operations
@@ -263,11 +263,45 @@ feature -- Conversion
 			Result := item /= 0
 		end
 
+	frozen to_natural_8: NATURAL_8 is
+			-- Convert `item' into an NATURAL_8 value.
+		require
+			item_non_negative: item >= 0
+			not_too_big: item <= {NATURAL_8}.Max_value
+		do
+			Result := item.to_natural_8
+		end
+
+	frozen to_natural_16: NATURAL_16 is
+			-- Convert `item' into an NATURAL_16 value.
+		require
+			item_non_negative: item >= 0
+			not_too_big: item <= {NATURAL_16}.Max_value
+		do
+			Result := item.to_natural_16
+		end
+
+	frozen to_natural_32: NATURAL_32 is
+			-- Convert `item' into an NATURAL_32 value.
+		require
+			item_non_negative: item >= 0
+		do
+			Result := item.to_natural_32
+		end
+	
+	frozen to_natural_64: NATURAL_64 is
+			-- Convert `item' into an NATURAL_64 value.
+		require
+			item_non_negative: item >= 0
+		do
+			Result := item.to_natural_64
+		end
+
 	frozen to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= feature {INTEGER_8}.Min_value
-			not_too_big: item <= feature {INTEGER_8}.Max_value
+			not_too_small: item >= {INTEGER_8}.Min_value
+			not_too_big: item <= {INTEGER_8}.Max_value
 		do
 			Result := item.to_integer_8
 		end
@@ -275,8 +309,8 @@ feature -- Conversion
 	frozen to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		require
-			not_too_small: item >= feature {INTEGER_16}.Min_value
-			not_too_big: item <= feature {INTEGER_16}.Max_value
+			not_too_small: item >= {INTEGER_16}.Min_value
+			not_too_big: item <= {INTEGER_16}.Max_value
 		do
 			Result := item.to_integer_16
 		end

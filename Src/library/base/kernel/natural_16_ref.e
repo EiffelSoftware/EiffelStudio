@@ -1,16 +1,17 @@
 indexing
-	description: "References to objects containing an integer value coded on 64 bits"
+	description: "References to objects containing an integer value coded on 16 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	INTEGER_64_REF
-
+	NATURAL_16_REF
+	
 inherit
 	NUMERIC
 		rename
-			infix "/" as infix "//"
+			infix "/" as infix "//",
+			prefix "-" as unapplicable_minus_prefix
 		redefine
 			out, is_equal
 		end
@@ -27,15 +28,13 @@ inherit
 
 feature -- Access
 
-	item: INTEGER_64
+	item: NATURAL_16
 			-- Integer value
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-				-- Get the positive value of `item' and then do
-				-- a modulo on the maximum INTEGER_32 value.
-			Result := (item & 0x000000007FFFFFFF).to_integer_32
+			Result := item
 		end
 
 	sign: INTEGER is
@@ -74,8 +73,8 @@ feature -- Access
 			Result := item.to_character
 		end
 
-	Min_value: INTEGER_64 is -9223372036854775808
-	Max_value: INTEGER_64 is 9223372036854775807
+	Min_value: NATURAL_16 is {NATURAL_16} 0
+	Max_value: NATURAL_16 is {NATURAL_16} 65535
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison
@@ -95,7 +94,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (i: INTEGER_64) is
+	set_item (i: NATURAL_16) is
 			-- Make `i' the `item' value.
 		do
 			item := i
@@ -105,7 +104,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: INTEGER_64_REF): BOOLEAN is
+	divisible (other: NATURAL_16_REF): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0
@@ -145,19 +144,11 @@ feature -- Status report
 	is_valid_character_code: BOOLEAN is
 			-- Does current object represent a character?
 		do
-			Result := item >= {CHARACTER}.Min_value and item <= {CHARACTER}.Max_value
+			Result := item >= {CHARACTER}.Min_value.to_natural_16 and 
+				item <= {CHARACTER}.Max_value.to_natural_16
 		end
 
 feature -- Basic operations
-
-	abs: INTEGER_64 is
-			-- Absolute value
-		do
-			Result := abs_ref.item
-		ensure
-			non_negative: Result >= 0
-			same_absolute_value: (Result = item) or (Result = -item)
-		end
 
 	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
@@ -196,11 +187,11 @@ feature -- Basic operations
 			Result.set_item (+ item)
 		end
 
-	prefix "-": like Current is
+	unapplicable_minus_prefix: like Current is
 			-- Unary minus
 		do
-			create Result
-			Result.set_item (- item)
+		ensure then
+			not_applicable: False
 		end
 
 	infix "//" (other: like Current): like Current is
@@ -228,9 +219,16 @@ feature -- Basic operations
 			Result := item ^ other
 		end
 
-feature {NONE} -- Initialization
+	infix "|..|" (other: INTEGER): INTEGER_INTERVAL is
+			-- Interval from current element to `other'
+			-- (empty if `other' less than current integer)
+		do
+			create Result.make (item, other)
+		end
 
-	make_from_reference (v: INTEGER_64_REF) is
+feature {NONE} -- Conversion
+
+	make_from_reference (v: NATURAL_16_REF) is
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -242,7 +240,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: INTEGER_64_REF is
+	to_reference: NATURAL_16_REF is
 			-- Associated reference of Current
 		do
 			create Result
@@ -258,36 +256,27 @@ feature -- Conversion
 		end
 
 	frozen to_natural_8: NATURAL_8 is
-			-- Convert `item' into an NATURAL_8 value.
+			-- Convert `item' into an INTEGER_8 value.
 		require
-			item_non_negative: item >= 0
 			not_too_big: item <= {NATURAL_8}.Max_value
 		do
 			Result := item.to_natural_8
 		end
 
 	frozen to_natural_16: NATURAL_16 is
-			-- Convert `item' into an NATURAL_16 value.
-		require
-			item_non_negative: item >= 0
-			not_too_big: item <= {NATURAL_16}.Max_value
+			-- Convert `item' into an INTEGER_16 value.
 		do
-			Result := item.to_natural_16
+			Result := item
 		end
 
 	frozen to_natural_32: NATURAL_32 is
 			-- Convert `item' into an NATURAL_32 value.
-		require
-			item_non_negative: item >= 0
-			not_too_big: item <= {NATURAL_32}.Max_value
 		do
 			Result := item.to_natural_32
 		end
-	
+
 	frozen to_natural_64: NATURAL_64 is
 			-- Convert `item' into an NATURAL_64 value.
-		require
-			item_non_negative: item >= 0
 		do
 			Result := item.to_natural_64
 		end
@@ -295,8 +284,7 @@ feature -- Conversion
 	frozen to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= {INTEGER_8}.Min_value
-			not_too_big: item <= {INTEGER_8}.Max_value
+			not_too_big: item <= {INTEGER_8}.Max_value.to_natural_16
 		do
 			Result := item.to_integer_8
 		end
@@ -304,62 +292,57 @@ feature -- Conversion
 	frozen to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		require
-			not_too_small: item >= {INTEGER_16}.Min_value
-			not_too_big: item <= {INTEGER_16}.Max_value
+			not_too_big: item <= {INTEGER_16}.Max_value.to_natural_16
 		do
 			Result := item.to_integer_16
 		end
 
-	frozen to_integer, frozen to_integer_32: INTEGER is
+	frozen to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
-		require
-			not_too_small: item >= {INTEGER}.Min_value
-			not_too_big: item <= {INTEGER}.Max_value
 		do
-			Result := item.to_integer
-		end
-		
-	frozen to_integer_64: INTEGER_64 is
-			-- Return `item'.
-		do
-			Result := item
+			Result := item.to_integer_32
 		end
 
-	frozen to_real: REAL is
+	frozen to_integer_64: INTEGER_64 is
+			-- Convert `item' into an INTEGER_64 value.
+		do
+			Result := item.to_integer_64
+		end
+
+	frozen to_real_32: REAL is
 			-- Convert `item' into a REAL
 		do
-			Result := item.to_real
+			Result := item.to_real_32
 		end
 
-	frozen to_double: DOUBLE is
+	frozen to_real_64: DOUBLE is
 			-- Convert `item' into a DOUBLE
 		do
-			Result := item.to_double
+			Result := item.to_real_64
 		end
 
 	to_hex_string: STRING is
 			-- Convert `item' into an hexadecimal string.
 		local
-			i: INTEGER
-			val: INTEGER_64
+			i, val: INTEGER
 			a_digit: INTEGER
 		do
 			from
-				i := (create {PLATFORM}).Integer_64_bits // 4
+				i := (create {PLATFORM}).Integer_16_bits // 4
 				create Result.make (i)
 				Result.fill_blank
 				val := item
 			until
 				i = 0
 			loop
-				a_digit := (val & 0x0F).to_integer
+				a_digit := (val & 0xF)
 				Result.put (a_digit.to_hex_character, i)
 				val := val |>> 4 
 				i := i - 1
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_valid_count: Result.count = (create {PLATFORM}).Integer_64_bits // 4
+			Result_valid_count: Result.count = (create {PLATFORM}).Integer_16_bits // 4
 		end
 
 	to_hex_character: CHARACTER is
@@ -369,7 +352,7 @@ feature -- Conversion
 		local
 			tmp: INTEGER
 		do
-			tmp := item.to_integer
+			tmp := item.to_integer_32
 			if tmp <= 9 then
 				Result := (tmp + ('0').code).to_character
 			else
@@ -431,12 +414,12 @@ feature -- Bit operations
 			bit_not_not_void: Result /= Void
 		end
 
-	frozen bit_shift (n: INTEGER): INTEGER_64 is
+	frozen bit_shift (n: INTEGER): NATURAL_16 is
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_64: n <= 64
-			n_greater_or_equal_to_minus_64: n >= -64
+			n_less_or_equal_to_16: n <= 16
+			n_greater_or_equal_to_minus_16: n >= -16
 		do
 			if n > 0 then
 				Result := bit_shift_right (n)
@@ -451,7 +434,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_64: n <= 64
+			n_less_or_equal_to_16: n <= 16
 		do
 			create Result
 			Result.set_item (item |<< n)
@@ -463,7 +446,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_64: n <= 64
+			n_less_or_equal_to_16: n <= 16
 		do
 			create Result
 			Result.set_item (item |>> n)
@@ -475,26 +458,26 @@ feature -- Bit operations
 			-- Test `n'-th position of Current.
 		require
 			n_nonnegative: n >= 0
-			n_less_than_64: n < 64
+			n_less_than_16: n < 16
 		do
-			Result := item & ((1).to_integer_64 |<< n) /= 0
+			Result := item & ((1).to_natural_16 |<< n) /= 0
 		end
 
-	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER_64 is
+	frozen set_bit (b: BOOLEAN; n: INTEGER): NATURAL_16 is
 			-- Copy of current with `n'-th position
 			-- set to 1 if `b', 0 otherwise.
 		require
 			n_nonnegative: n >= 0
-			n_less_than_64: n < 64
+			n_less_than_16: n < 16
 		do
 			if b then
-				Result := item | ((1).to_integer_64 |<< n)
+				Result := item | ((1).to_natural_16 |<< n)
 			else
-				Result := item & ((1).to_integer_64 |<< n).bit_not
+				Result := item & ((1).to_natural_16 |<< n).bit_not
 			end
 		end
 
-	frozen set_bit_with_mask (b: BOOLEAN; m: INTEGER_64): INTEGER_64 is
+	frozen set_bit_with_mask (b: BOOLEAN; m: NATURAL_16): NATURAL_16 is
 			-- Copy of current with all 1 bits of m set to 1
 			-- if `b', 0 otherwise.
 		do
@@ -512,25 +495,6 @@ feature -- Output
 		do
 			Result := item.out
 		end
-
-feature {NONE} -- Implementation
-
-	abs_ref: INTEGER_64_REF is
-			-- Absolute value
-		do
-			if item >= 0 then
-				Result := Current
-			else
-				Result := -Current
-			end
-		ensure
-			result_exists: Result /= Void
-			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
-		end
-
-invariant
-
-	sign_times_abs: sign * abs = item
 
 indexing
 
@@ -564,7 +528,7 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class INTEGER_64_REF
+end -- class NATURAL_16_REF
 
 
 

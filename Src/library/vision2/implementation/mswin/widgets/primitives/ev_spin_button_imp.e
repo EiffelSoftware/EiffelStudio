@@ -617,6 +617,7 @@ feature {NONE} -- Implementation
 			val: INTEGER
 		do
 			txt := text
+			txt.prune_all (',')
 			if txt.is_integer then
 				val := txt.to_integer
 				if val < internal_arrows_control.minimum then

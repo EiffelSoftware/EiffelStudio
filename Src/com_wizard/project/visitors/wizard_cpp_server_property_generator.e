@@ -97,7 +97,10 @@ feature {NONE} -- Implementation
 			Result.append (Argument_name)
 			Result.append (Space_equal_space)
 
-			if visitor.is_basic_type then
+			if 
+				visitor.is_basic_type or
+				visitor.is_enumeration
+			then
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)

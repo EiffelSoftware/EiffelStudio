@@ -8,6 +8,8 @@ inherit
 	AGGREGATE
 		export
 			{PROCESS} all
+		undefine
+			copy, is_equal
 		redefine 
 			post_action
 		end;

@@ -7,6 +7,9 @@ inherit
 	TERMINAL;
 
 	CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 create
 

@@ -113,7 +113,7 @@ feature -- Access
 			sep: EV_MENU_SEPARATOR
 		do
 			create Result
-			create item.make_with_text (Interface_names.m_Close)
+			create item.make_with_text (Interface_names.m_Close_short)
 			item.select_actions.extend (~destroy)
 			Result.extend (item)
 			create item.make_with_text (Interface_names.m_Minimize)

@@ -146,7 +146,7 @@ feature -- Accelerator, focus label and menu name
 		end
 	m_About: STRING is
 		once
-			Result := "&About ISE " + Workbench_name
+			Result := "&About ISE " + Workbench_name + "..."
 		end
 	m_Advanced: STRING is				"Ad&vanced"
 	m_Add_to_favorites: STRING is		"&Add to favorites"
@@ -184,7 +184,8 @@ feature -- Accelerator, focus label and menu name
 	m_Copy: STRING is					"&Copy%TCtrl+C"
 	f_Copy: STRING is					"Copy (Ctrl+C)"
 	f_Close: STRING is					"Close"
-	m_Close: STRING is					"&Close window"
+	m_Close: STRING is					"&Close window%TAlt+F4"
+	m_Close_short: STRING is			"&Close"
 	f_Create_new_cluster: STRING is		"Create a new cluster"
 	f_Create_new_class: STRING is		"Create a new class"
 	f_Create_new_feature: STRING is		"Create a new feature"
@@ -770,7 +771,7 @@ feature -- Title part
 
 	t_About: STRING is
 		once
-			Result := "About ISE "+Workbench_name
+			Result := "About ISE " + Workbench_name
 		end
 	t_Ace_builder: STRING is					"Ace builder"
 	t_Project_builder: STRING is				"Project builder"

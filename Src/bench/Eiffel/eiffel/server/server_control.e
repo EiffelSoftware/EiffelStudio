@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Status
 
-	files: EXTEND_TABLE [SERVER_FILE, INTEGER];
+	files: HASH_TABLE [SERVER_FILE, INTEGER];
 			-- Table of all the files under the control of the
 			-- current object
 
@@ -218,7 +218,7 @@ feature -- Status report
 			-- Are the server files readable?
 		local
 			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := true;
@@ -239,7 +239,7 @@ feature -- Status report
 			-- Are the server files readable and writable?
 		local
 			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := True;
@@ -263,7 +263,7 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Do the server files exist?
 		local
-			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := True;
@@ -282,7 +282,7 @@ feature -- Initialization
 	init is
 			-- Update the path names of the various server files.
 		local
-			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				local_files := files
@@ -320,7 +320,7 @@ feature -- Debug
 
 	trace is
 		local
-			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				local_files := files

@@ -23,7 +23,7 @@ creation
 	
 feature 
 
-	index: EXTEND_TABLE [READ_INFO, INTEGER]
+	index: HASH_TABLE [READ_INFO, INTEGER]
 			-- Offsets of objects tracked by the store append: offsets in
 			-- file Tmp_ast_file of instances of FEATURE_AS are put
 			-- in the hash table with keys the object ids of the

@@ -24,16 +24,8 @@ feature
 	feature_table: FEATURE_TABLE
 			-- Feature table of the class where `node' is written in.
 
-	integer_size: INTEGER_8
-			-- Size of integer or 0 if this is a character type
-
-	integer_type: BOOLEAN is
-			-- Type of the inspect expression
-		do
-			Result := integer_size > 0
-		ensure
-			definition: Result = (integer_size > 0)
-		end
+	type: TYPE_A
+			-- Type of inspect expression
 
 	interval: INTERVAL_AS
 			-- Current interval processed
@@ -53,17 +45,13 @@ feature
 	last_class: CLASS_C
 			-- Class for controling uniques
 
-	int_intervals: SORTED_TWO_WAY_LIST [INT_INTER_B]
-			-- Sorted list of integer intervals
-
-	char_intervals: SORTED_TWO_WAY_LIST [CHAR_INTER_B]
-			-- Sorted list of character intervals
+	intervals: SORTED_TWO_WAY_LIST [INTERVAL_B]
+			-- Sorted list of intervals
 
 	make is
 		do
 			create unique_names.make
-			create int_intervals.make
-			create char_intervals.make
+			create intervals.make
 		end
 
 	wipe_out is
@@ -71,12 +59,11 @@ feature
 			unique_names.wipe_out
 			positive_value_found := False
 			unique_found := False
-			integer_size := 0
+			type := Void
 			node := Void
 			feature_table := Void
 			interval := Void
-			int_intervals.wipe_out
-			char_intervals.wipe_out
+			intervals.wipe_out
 			last_class := Void
 		end
 
@@ -88,24 +75,14 @@ feature
 			node_set: node = n
 		end
 
-	set_character_type is
-			-- Set `integer_type' to `False'.
-		do
-			integer_size := 0
-		ensure
-			not_integer__type: not integer_type
-			integer_size_set: integer_size = 0
-		end
-
-	set_integer_type (size: INTEGER_8) is
-			-- Set `inpect_type' to `True' and `integer_size' to `size'.
+	set_type (expression_type: like type) is
+			-- Set `type' to `expression_type'.
 		require
-			valid_size: size = 8 or else size = 16 or else size = 32 or else size = 64
+			valid_type: expression_type.is_integer or else expression_type.is_character
 		do
-			integer_size := size
+			type := expression_type
 		ensure
-			integer_type: integer_type
-			integer_size_set: integer_size = size
+			type_set: type = expression_type
 		end
 
 	set_interval (i: INTERVAL_AS) is
@@ -120,90 +97,73 @@ feature
 			feature_table := t
 		end
 
-	integer_interval: INT_INTER_B is
-			-- Process integer interval.
+	interval_byte_node: INTERVAL_B is
+			-- Calculate a byte node that corresponds to the current interval
 		require
+			non_void_type: type /= Void
 			interval_exists: interval /= Void
-			good_integer_interval: interval.good_integer_interval
+			good_integer_interval: interval.is_good_interval
 		local
-			first_int, second_int: INT_VAL_B
-			lower, upper: ATOMIC_AS
+			upper: ATOMIC_AS
+			lower_bound: INTERVAL_VAL_B
+			upper_bound: INTERVAL_VAL_B
 			vomb3: VOMB3
+			i: like intervals
 		do
-			lower := interval.lower
-			first_int := make_integer (lower)
+			lower_bound := make_bound (interval.lower)
 			upper := interval.upper
-			if (upper = Void) then
-				second_int := first_int
+			if upper = Void then
+				upper_bound := lower_bound
 			else
-				second_int := make_integer (upper)
+				upper_bound := make_bound (upper)
 			end
-			create Result.make (first_int, second_int)
+			Result := lower_bound.make_interval (upper_bound)
 			if Result.is_good_range then
 				from
-					int_intervals.start
-				until	
-					int_intervals.after
+					i := intervals
+					i.start
+				until
+					i.after
 				loop
-					if not Result.disjunction (int_intervals.item) then
+					if not Result.disjunction (i.item) then
 							-- Error
 						create vomb3
 						context.init_error (vomb3)
-						vomb3.set_interval (Result.intersection (int_intervals.item))
+						vomb3.set_interval (Result.intersection (i.item))
 						Error_handler.insert_error (vomb3)
 					end
-					int_intervals.forth
+					i.forth
 				end
-				int_intervals.extend (Result)
+				i.extend (Result)
 			else
 				Result := Void
 			end
 		end
 
-	character_interval: CHAR_INTER_B is
-			-- Process character interval.
+feature {NONE} -- Implementation
+
+	make_bound (bound: ATOMIC_AS): INTERVAL_VAL_B is
+			-- Create bound associated to `bound'.
 		require
-			interval_exists: interval /= Void
-			good_character_interval: interval.good_character_interval
-		local
-			first_char, second_char: CHAR_VAL_B
-			upper: ATOMIC_AS
-			vomb3: VOMB3
+			type_not_void: type /= Void
+			bound_not_void: bound /= Void
+			valid_bound_type: bound.is_inspect_value (type)
 		do
-			first_char := interval.lower.make_character
-			upper := interval.upper
-			if upper = Void then
-				second_char := first_char
+			if type.is_character then
+				Result := bound.make_character
 			else
-				second_char := upper.make_character
+				Result := make_integer (bound)
 			end
-			create Result.make (first_char, second_char)
-			if Result.is_good_range then
-				from
-					char_intervals.start
-				until
-					char_intervals.after
-				loop
-					if not Result.disjunction (char_intervals.item) then
-							-- Error
-						create vomb3
-						context.init_error (vomb3)
-						vomb3.set_interval (Result.intersection (char_intervals.item))
-						Error_handler.insert_error (vomb3)
-					end
-					char_intervals.forth
-				end
-				char_intervals.extend (Result)
-			else
-				Result := Void
-			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	make_integer (bound: ATOMIC_AS): INT_VAL_B is
 			-- Integer bound associated to `bound'.
 		require
-			good_argument: bound /= Void
-			consistency: bound.good_integer
+			type_not_void: type /= Void
+			bound_not_void: bound /= Void
+			valid_bound_type: bound.good_integer
 		local
 			int_bound: INTEGER_CONSTANT
 			id: ID_AS
@@ -276,11 +236,11 @@ feature
 				vomb5.set_positive_value (positive_value)
 				Error_handler.insert_error (vomb5)
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 			
 invariant
-	valid_integer_size: 
-		integer_size = 0 or else
-		integer_size = 8 or else integer_size = 16 or else integer_size = 32 or else integer_size = 64
+	valid_type: type /= Void implies (type.is_integer or type.is_character)
 
 end

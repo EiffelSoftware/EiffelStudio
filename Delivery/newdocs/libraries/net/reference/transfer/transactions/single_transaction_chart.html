@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>SINGLE_TRANSACTION Chart</TITLE>
 		
@@ -10,53 +10,30 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/single_transaction_chart.html">SINGLE_TRANSACTION</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/single_transaction_chart.html">SINGLE_TRANSACTION</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/transactions/index.html">net.transfer.transactions</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Transactions consisting out of a single transfer"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transaction_chart.html">TRANSACTION</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_count">Count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`error' was declared in TRANSACTION"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transaction.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_is_correct">is_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`source' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_source">source</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/resources/data_resource_chart.html">DATA_RESOURCE</A></SPAN>
+	<SPAN TITLE="`succeeded' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_succeeded">succeeded</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`target' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/resources/data_resource_chart.html">DATA_RESOURCE</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/transactions/index.html">net.transfer.transactions</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_execute">execute</A></SPAN>
+	<SPAN TITLE="`reset_error' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_reset_error">reset_error</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Transactions consisting out of a single transfer"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transaction_chart.html">TRANSACTION</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_count">Count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' was declared in TRANSACTION"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transaction.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_is_correct">is_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`source' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_source">source</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/resources/data_resource_chart.html">DATA_RESOURCE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`succeeded' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_succeeded">succeeded</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`target' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/resources/data_resource_chart.html">DATA_RESOURCE</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_execute">execute</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`reset_error' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/single_transaction.html#f_reset_error">reset_error</A></SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

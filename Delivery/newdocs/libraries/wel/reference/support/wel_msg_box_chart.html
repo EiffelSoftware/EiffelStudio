@@ -1,82 +1,49 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_MSG_BOX Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Interface on the MessageBox function."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_language_constants_chart.html">WEL_LANGUAGE_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_mb_constants_chart.html">WEL_MB_CONSTANTS</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`basic_msg_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`clear_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_clear_flag">clear_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`flag_set' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`language' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_language">language</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`message_box_result' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_message_box_result">message_box_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`set_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_set_flag">set_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`sublanguage' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_sublanguage">sublanguage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/reference/support/index.html">wel.support</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`basic_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_basic_message_box">basic_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`error_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_error_message_box">error_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`information_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_information_message_box">information_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`question_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_question_message_box">question_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_language' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_set_language">set_language</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_language_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`user_icon_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_user_icon_message_box">user_icon_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`warning_message_box' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_msg_box.html#f_warning_message_box">warning_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Interface on the MessageBox function."</SPAN><BR>
+</PRE>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_language_constants_chart.html">WEL_LANGUAGE_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_mb_constants_chart.html">WEL_MB_CONSTANTS</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_msg_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_msg_box">basic_msg_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`clear_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_clear_flag">clear_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`flag_set' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`language' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_language">language</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`message_box_result' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_message_box_result">message_box_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_bit_operations.html#f_set_flag">set_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sublanguage' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_sublanguage">sublanguage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_basic_message_box">basic_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_error_message_box">error_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`information_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_information_message_box">information_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_make">make</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`question_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_question_message_box">question_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_language' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_set_language">set_language</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_language_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_sublanguage_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`user_icon_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_user_icon_message_box">user_icon_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`warning_message_box' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_msg_box.html#f_warning_message_box">warning_message_box</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>

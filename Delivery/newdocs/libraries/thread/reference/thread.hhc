@@ -6,8 +6,11 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_full_collector"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_is_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_record_owner"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_memory_statistics"></OBJECT>
@@ -16,6 +19,7 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collecting"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_collecting"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_period"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_collection_period"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="generation_object_limit"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_generation_object_limit"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_in_final_collect"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_is_in_final_collect"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="largest_coalesced_block"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_largest_coalesced_block"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_mem"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_max_mem"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_threshold"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_memory_threshold"></OBJECT>
@@ -45,11 +49,15 @@
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="MUTEX"><param name="Local" value="libraries\thread\reference\mutex_chart.html"></OBJECT>
 		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\thread\reference\mutex.html#f_default_create"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\mutex.html#f_full_collector"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\mutex.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\mutex.html#f_is_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_record_owner"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\mutex.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\mutex.html#f_memory_statistics"></OBJECT>
@@ -58,6 +66,7 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collecting"><param name="Local" value="libraries\thread\reference\mutex.html#f_collecting"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_period"><param name="Local" value="libraries\thread\reference\mutex.html#f_collection_period"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="generation_object_limit"><param name="Local" value="libraries\thread\reference\mutex.html#f_generation_object_limit"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_in_final_collect"><param name="Local" value="libraries\thread\reference\mutex.html#f_is_in_final_collect"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="largest_coalesced_block"><param name="Local" value="libraries\thread\reference\mutex.html#f_largest_coalesced_block"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_mem"><param name="Local" value="libraries\thread\reference\mutex.html#f_max_mem"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_threshold"><param name="Local" value="libraries\thread\reference\mutex.html#f_memory_threshold"></OBJECT>
@@ -88,6 +97,9 @@
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="OBJECT_OWNER"><param name="Local" value="libraries\thread\reference\object_owner_chart.html"></OBJECT>
 		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_has_owner"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_record_owner"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_thread_is_owner"></OBJECT>
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="PROXY"><param name="Local" value="libraries\thread\reference\proxy_chart.html"></OBJECT>
 		<UL>
@@ -99,8 +111,11 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\semaphore.html#f_full_collector"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\semaphore.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\semaphore.html#f_is_set"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_record_owner"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\semaphore.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\semaphore.html#f_memory_statistics"></OBJECT>
@@ -109,6 +124,7 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collecting"><param name="Local" value="libraries\thread\reference\semaphore.html#f_collecting"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_period"><param name="Local" value="libraries\thread\reference\semaphore.html#f_collection_period"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="generation_object_limit"><param name="Local" value="libraries\thread\reference\semaphore.html#f_generation_object_limit"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_in_final_collect"><param name="Local" value="libraries\thread\reference\semaphore.html#f_is_in_final_collect"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="largest_coalesced_block"><param name="Local" value="libraries\thread\reference\semaphore.html#f_largest_coalesced_block"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_mem"><param name="Local" value="libraries\thread\reference\semaphore.html#f_max_mem"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_threshold"><param name="Local" value="libraries\thread\reference\semaphore.html#f_memory_threshold"></OBJECT>

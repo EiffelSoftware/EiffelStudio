@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelNet Reference"><param name="Local" value="libraries\net\reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\net\reference\index.html"></OBJECT>
 	<UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="abstract"><param name="Local" value="libraries\net\reference\abstract\index.html"></OBJECT>
 		<UL>
@@ -2237,9 +2237,16 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="message_information"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_message_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_activate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_activate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_activateapp"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_activateapp"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_afxfirst"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_afxfirst"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_afxlast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_afxlast"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_app"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_app"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_appcommand"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_appcommand"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_askcbformatname"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_askcbformatname"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_canceljournal"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_canceljournal"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_cancelmode"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_cancelmode"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_capturechanged"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_capturechanged"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_changecbchain"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_changecbchain"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_changeuistate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_changeuistate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_char"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_char"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_chartoitem"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_chartoitem"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_childactivate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_childactivate"></OBJECT>
@@ -2249,13 +2256,16 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_commnotify"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_commnotify"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_compacting"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_compacting"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_compareitem"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_compareitem"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_contextmenu"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_contextmenu"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_copy"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_copy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_copydata"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_copydata"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_create"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_create"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_cut"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_cut"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_deadchar"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_deadchar"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_deleteitem"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_deleteitem"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_destroy"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_destroy"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_destroyclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_destroyclipboard"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_devicechange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_devicechange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_devmodechange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_devmodechange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_displaychange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_displaychange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_drawclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_drawclipboard"></OBJECT>
@@ -2264,30 +2274,45 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_enable"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_enable"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_endsession"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_endsession"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_enteridle"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_enteridle"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_entermenuloop"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_entermenuloop"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_entersizemove"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_entersizemove"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_erasebkgnd"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_erasebkgnd"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_exitmenuloop"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_exitmenuloop"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_exitsizemove"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_exitsizemove"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_fontchange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_fontchange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_getdlgcode"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_getdlgcode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_getfont"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_getfont"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_gethotkey"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_gethotkey"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_geticon"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_geticon"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_getminmaxinfo"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_getminmaxinfo"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_getobject"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_getobject"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_gettext"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_gettext"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_gettextlength"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_gettextlength"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_handheldfirst"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_handheldfirst"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_handheldlast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_handheldlast"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_help"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_help"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_hotkey"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_hotkey"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_hscroll"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_hscroll"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_hscrollclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_hscrollclipboard"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_iconerasebkgnd"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_iconerasebkgnd"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_char"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_char"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_composition"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_composition"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_compositionfull"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_compositionfull"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_control"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_control"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_endcomposition"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_endcomposition"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_keydown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_keydown"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_keylast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_keylast"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_keyup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_keyup"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_notify"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_notify"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_request"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_request"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_select"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_select"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_setcontext"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_setcontext"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ime_startcomposition"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ime_startcomposition"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_initdialog"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_initdialog"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_initmenu"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_initmenu"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_initmenupopup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_initmenupopup"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_inputlangchange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_inputlangchange"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_inputlangchangerequest"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_inputlangchangerequest"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_keydown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_keydown"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_keyfirst"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_keyfirst"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_keylast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_keylast"></OBJECT>
@@ -2313,6 +2338,10 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mditile"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mditile"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_measureitem"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_measureitem"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menuchar"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menuchar"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menucommand"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menucommand"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menudrag"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menudrag"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menugetobject"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menugetobject"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menurbuttonup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menurbuttonup"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_menuselect"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_menuselect"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mouseactivate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mouseactivate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mousefirst"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mousefirst"></OBJECT>
@@ -2320,7 +2349,9 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mouselast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mouselast"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mouseleave"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mouseleave"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mousemove"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mousemove"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_mousewheel"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_mousewheel"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_move"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_move"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_moving"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_moving"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncactivate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncactivate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_nccalcsize"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_nccalcsize"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_nccreate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_nccreate"></OBJECT>
@@ -2332,16 +2363,24 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmbuttondblclk"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmbuttondblclk"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmbuttondown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmbuttondown"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmbuttonup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmbuttonup"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmousehover"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmousehover"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmouseleave"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmouseleave"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncmousemove"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncmousemove"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncpaint"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncpaint"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncrbuttondblclk"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncrbuttondblclk"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncrbuttondown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncrbuttondown"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncrbuttonup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncrbuttonup"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncxbuttondblclk"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncxbuttondblclk"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncxbuttondown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncxbuttondown"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_ncxbuttonup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_ncxbuttonup"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_nextdlgctl"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_nextdlgctl"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_nextmenu"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_nextmenu"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_notify"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_notify"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_notifyformat"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_notifyformat"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_null"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_null"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_paint"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_paint"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_paintclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_paintclipboard"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_painticon"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_painticon"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_palettechanged"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_palettechanged"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_paletteischanging"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_paletteischanging"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_parentnotify"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_parentnotify"></OBJECT>
@@ -2349,10 +2388,14 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_penwinfirst"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_penwinfirst"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_penwinlast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_penwinlast"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_power"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_power"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_powerbroadcast"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_powerbroadcast"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_print"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_print"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_printclient"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_printclient"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_querydragicon"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_querydragicon"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_queryendsession"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_queryendsession"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_querynewpalette"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_querynewpalette"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_queryopen"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_queryopen"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_queryuistate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_queryuistate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_queuesync"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_queuesync"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_quit"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_quit"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_rbuttondblclk"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_rbuttondblclk"></OBJECT>
@@ -2363,14 +2406,18 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_setcursor"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_setcursor"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_setfocus"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_setfocus"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_setfont"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_setfont"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_sethotkey"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_sethotkey"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_seticon"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_seticon"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_setredraw"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_setredraw"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_settext"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_settext"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_settingchange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_settingchange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_showwindow"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_showwindow"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_size"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_sizeclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_sizeclipboard"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_sizing"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_sizing"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_spoolerstatus"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_spoolerstatus"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_stylechanged"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_stylechanged"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_stylechanging"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_stylechanging"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_syncpaint"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_syncpaint"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_syschar"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_syschar"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_syscolorchange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_syscolorchange"></OBJECT>
@@ -2378,16 +2425,23 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_sysdeadchar"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_sysdeadchar"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_syskeydown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_syskeydown"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_syskeyup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_syskeyup"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_tcard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_tcard"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_timechange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_timechange"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_timer"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_timer"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_undo"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_undo"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_uninitmenupopup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_uninitmenupopup"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_updateuistate"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_updateuistate"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_user"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_user"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_userchanged"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_userchanged"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_vkeytoitem"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_vkeytoitem"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_vscroll"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_vscroll"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_vscrollclipboard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_vscrollclipboard"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_windowposchanged"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_windowposchanged"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_windowposchanging"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_windowposchanging"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_wininichange"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_wininichange"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_xbuttondblclk"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_xbuttondblclk"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_xbuttondown"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_xbuttondown"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="wm_xbuttonup"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_wm_xbuttonup"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_message_information"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_set_message_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_auto_discard"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_is_auto_discard"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_poll_all"><param name="Local" value="libraries\net\reference\polling\implementation\wel_socket_poller.html#f_is_poll_all"></OBJECT>
@@ -2480,6 +2534,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\addresses\file_url.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\file_url.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\file_url.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\addresses\file_url.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_username"><param name="Local" value="libraries\net\reference\transfer\addresses\file_url.html#f_set_username"></OBJECT>
 				</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="FTP_URL"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url_chart.html"></OBJECT>
@@ -2497,6 +2552,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_equal"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="default_port"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_default_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="has_username"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_has_username"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hashable"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_hashable"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_host_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_host_correct"></OBJECT>
@@ -2504,12 +2560,16 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_path_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_path_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_supported"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_proxy_supported"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_used"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_is_proxy_used"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="proxy_host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_proxy_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_reset_proxy"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_username"><param name="Local" value="libraries\net\reference\transfer\addresses\ftp_url.html#f_set_username"></OBJECT>
+				</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="HOST_VALIDITY_CHECKER"><param name="Local" value="libraries\net\reference\transfer\addresses\host_validity_checker_chart.html"></OBJECT>
+				<UL>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\host_validity_checker.html#f_host_ok"></OBJECT>
 				</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="HTTP_URL"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url_chart.html"></OBJECT>
 				<UL>
@@ -2526,6 +2586,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_equal"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="default_port"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_default_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="has_username"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_has_username"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hashable"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_hashable"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_host_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_host_correct"></OBJECT>
@@ -2533,11 +2594,11 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_path_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_path_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_supported"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_proxy_supported"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_used"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_is_proxy_used"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="proxy_host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_proxy_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_reset_proxy"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_username"><param name="Local" value="libraries\net\reference\transfer\addresses\http_url.html#f_set_username"></OBJECT>
 				</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="NETWORK_RESOURCE_URL"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url_chart.html"></OBJECT>
@@ -2555,6 +2616,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="username"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_username"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_equal"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_equal"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="has_username"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_has_username"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_hashable"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_hashable"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_host_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_host_correct"></OBJECT>
@@ -2562,12 +2624,20 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_path_correct"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_path_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_supported"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_proxy_supported"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_proxy_used"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_is_proxy_used"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="proxy_host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_proxy_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_reset_proxy"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_username"><param name="Local" value="libraries\net\reference\transfer\addresses\network_resource_url.html#f_set_username"></OBJECT>
+				</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="PROXY_INFORMATION"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information_chart.html"></OBJECT>
+				<UL>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information.html#f_host"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="port"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information.html#f_port"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information.html#f_host_ok"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_host"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information.html#f_set_host"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\proxy_information.html#f_set_port"></OBJECT>
 				</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="URL"><param name="Local" value="libraries\net\reference\transfer\addresses\url_chart.html"></OBJECT>
 				<UL>
@@ -2589,6 +2659,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\addresses\url.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\addresses\url.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\addresses\url.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\addresses\url.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_username"><param name="Local" value="libraries\net\reference\transfer\addresses\url.html#f_set_username"></OBJECT>
 				</UL>
 			</UL>
@@ -2654,6 +2725,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_buffer_size"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_read_buffer_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_mode"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_read_mode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_timeout"><param name="Local" value="libraries\net\reference\transfer\resources\data_resource.html#f_set_timeout"></OBJECT>
@@ -2708,6 +2780,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_buffer_size"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_read_buffer_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_mode"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_read_mode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_timeout"><param name="Local" value="libraries\net\reference\transfer\resources\file_protocol.html#f_set_timeout"></OBJECT>
@@ -2810,6 +2883,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_buffer_size"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_read_buffer_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_mode"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_read_mode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_text_mode"><param name="Local" value="libraries\net\reference\transfer\resources\ftp_protocol.html#f_set_text_mode"></OBJECT>
@@ -2907,6 +2981,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_buffer_size"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_read_buffer_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_mode"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_read_mode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_timeout"><param name="Local" value="libraries\net\reference\transfer\resources\http_protocol.html#f_set_timeout"></OBJECT>
@@ -3002,6 +3077,7 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_password"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_password"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_port"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_port"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxy_information"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_proxy_information"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_buffer_size"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_read_buffer_size"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_read_mode"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_read_mode"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_timeout"><param name="Local" value="libraries\net\reference\transfer\resources\network_resource.html#f_set_timeout"></OBJECT>
@@ -3165,21 +3241,27 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="count"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_count"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="error"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_error"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="error_reason"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_error_reason"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="host_ok"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_host_ok"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_address_correct"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_is_address_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_empty"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_is_empty"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_mode_valid"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_is_mode_valid"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="last_added_source_correct"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_last_added_source_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="last_added_target_correct"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_last_added_target_correct"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="manager_built"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_manager_built"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="transfer_finished"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_transfer_finished"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="transfer_succeeded"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_transfer_succeeded"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_proxies"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_reset_proxies"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_source_proxy"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_reset_source_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="reset_target_proxy"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_reset_target_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_proxies"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_set_proxies"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_source_proxy"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_set_source_proxy"></OBJECT>
+				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_target_proxy"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_set_target_proxy"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="set_timeout"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_set_timeout"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="add_transaction"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_add_transaction"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="remove_transaction"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_remove_transaction"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="wipe_out"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_wipe_out"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="build_manager"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_build_manager"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="transfer"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_transfer"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="readable"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_readable"></OBJECT>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="writable"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_builder_impl.html#f_writable"></OBJECT>
 				</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="TRANSFER_MANAGER"><param name="Local" value="libraries\net\reference\transfer\transactions\transfer_manager_chart.html"></OBJECT>
 				<UL>

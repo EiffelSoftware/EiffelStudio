@@ -1,72 +1,44 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>THREAD_ATTRIBUTES Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../thread/reference/thread_attributes_chart.html">THREAD_ATTRIBUTES</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/thread/reference/thread_attributes_chart.html">THREAD_ATTRIBUTES</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../thread/reference/index.html">thread</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Class defining thread attributes."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../base/reference/kernel/any_chart.html">ANY</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`default_policy' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_default_policy">Default_policy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`default_priority' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_default_priority">default_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`detached' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_detached">detached</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`fifo' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_fifo">Fifo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`max_priority' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_max_priority">max_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`min_priority' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_min_priority">min_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`other' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_other">Other</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`priority' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_priority">priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`round_robin' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_round_robin">Round_robin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`scheduling_policy' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_scheduling_policy">scheduling_policy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/thread/reference/index.html">thread</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`set_detached' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_set_detached">set_detached</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bool</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_policy' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_set_policy">set_policy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">policy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_priority' is declared in `Current'"><A CLASS="efeature" HREF="../../thread/reference/thread_attributes.html#f_set_priority">set_priority</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">prio</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Class defining thread attributes."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/base/reference/kernel/any_chart.html">ANY</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_policy' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_default_policy">Default_policy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_priority' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_default_priority">default_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`detached' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_detached">detached</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fifo' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_fifo">Fifo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`max_priority' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_max_priority">max_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`min_priority' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_min_priority">min_priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`other' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_other">Other</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`priority' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_priority">priority</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`round_robin' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_round_robin">Round_robin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`scheduling_policy' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_scheduling_policy">scheduling_policy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_detached' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_set_detached">set_detached</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bool</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_policy' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_set_policy">set_policy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">policy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_priority' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/thread/reference/thread_attributes.html#f_set_priority">set_priority</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">prio</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

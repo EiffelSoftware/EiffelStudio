@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>HEADER Chart</TITLE>
 		
@@ -10,59 +10,33 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../net/reference/mail/index.html">net.mail</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that contains all the information relative to any header. Headers can only have email addresses informations."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make_with_entries">make_with_entries</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_entries">entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`multiple_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_multiple_entries">multiple_entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`unique_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_unique_entry">unique_entry</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../net/reference/mail/index.html">net.mail</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`add_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_add_entries">add_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`add_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_add_entry">add_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`enable_contains_addresses' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_enable_contains_addresses">enable_contains_addresses</A></SPAN>
+	<SPAN TITLE="`enable_multiple_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_enable_multiple_entries">enable_multiple_entries</A></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make_with_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make_with_entries">make_with_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_remove_entry">remove_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">entry</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_i_th_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_remove_i_th_entry">remove_i_th_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that contains all the information relative to any header. Headers can only have email addresses informations."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make_with_entries">make_with_entries</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_entries">entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`multiple_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_multiple_entries">multiple_entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unique_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_unique_entry">unique_entry</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_add_entries">add_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_add_entry">add_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_contains_addresses' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_enable_contains_addresses">enable_contains_addresses</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_multiple_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_enable_multiple_entries">enable_multiple_entries</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_with_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_make_with_entries">make_with_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_remove_entry">remove_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">entry</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_i_th_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/header.html#f_remove_i_th_entry">remove_i_th_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

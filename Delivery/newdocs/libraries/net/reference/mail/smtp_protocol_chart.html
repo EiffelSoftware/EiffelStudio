@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>SMTP_PROTOCOL Chart</TITLE>
 		
@@ -10,149 +10,78 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../net/reference/mail/smtp_protocol_chart.html">SMTP_PROTOCOL</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../net/reference/mail/index.html">net.mail</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that ..."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../net/reference/mail/sending_protocol_chart.html">SENDING_PROTOCOL</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ack_begin_connection' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_begin_connection">Ack_begin_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ack_end_connection' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_end_connection">Ack_end_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_be_received' was declared in PROTOCOL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/protocol_resource.html#f_can_be_received">Can_be_received</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_be_sent' was declared in PROTOCOL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/protocol_resource.html#f_can_be_sent">Can_be_sent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_receive' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_can_receive">Can_receive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`can_send' was declared in SENDING_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/sending_protocol.html#f_can_send">Can_send</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`data' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data">Data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`data_code' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data_code">Data_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_headers' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_default_headers">Default_headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_default_port">Default_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ehlo' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ehlo">Ehlo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_bcc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_bcc">H_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_cc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_cc">H_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_from' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_from">H_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_reply_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_reply_to">H_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_subject' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_subject">H_subject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`h_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_to">H_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`header' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_header">header</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`headers' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_headers">headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`helo' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_helo">Helo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hostname' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_hostname">hostname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_is_connected">is_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_header_valid' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_is_header_valid">is_header_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_is_initiated">is_initiated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mail_bcc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_bcc">Mail_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mail_cc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_cc">Mail_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mail_from' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_from">Mail_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mail_reply_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_reply_to">Mail_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`mail_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_to">Mail_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_resource' was declared in SENDING_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/sending_protocol.html#f_memory_resource">memory_resource</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/memory_resource_chart.html">MEMORY_RESOURCE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_valid_recipient' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_no_valid_recipient">No_valid_recipient</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ok' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ok">Ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_pipelining">pipelining</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`quit' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_quit">Quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remote_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_remote_error">Remote_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`size_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_size_error">Size_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`smtp_code_number' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_smtp_code_number">smtp_code_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`smtp_reply' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_smtp_reply">smtp_reply</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`struct_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_struct_error">Struct_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_transfer_error">Transfer_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/transfer_error_chart.html">TRANSFER_ERROR</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close_protocol' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_close_protocol">close_protocol</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_disable_connected">disable_connected</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_disable_initiated">disable_initiated</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_disable_pipelining">disable_pipelining</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_disable_transfer_error">disable_transfer_error</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_enable_connected">enable_connected</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_enable_initiated">enable_initiated</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_enable_pipelining">enable_pipelining</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_enable_transfer_error">enable_transfer_error</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_initialize">initialize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initiate_protocol' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_initiate_protocol">initiate_protocol</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">user</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_port' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_set_default_port">set_default_port</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_port</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_transfer_error_message' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_set_transfer_error_message">set_transfer_error_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transfer' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_transfer">transfer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">resource</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/memory_resource_chart.html">MEMORY_RESOURCE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../net/reference/mail/smtp_protocol_chart.html">SMTP_PROTOCOL</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../net/reference/mail/index.html">net.mail</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that ..."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../net/reference/mail/sending_protocol_chart.html">SENDING_PROTOCOL</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`ack_begin_connection' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_begin_connection">Ack_begin_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`ack_end_connection' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_end_connection">Ack_end_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`can_be_received' was declared in PROTOCOL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/protocol_resource.html#f_can_be_received">Can_be_received</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`can_be_sent' was declared in PROTOCOL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/protocol_resource.html#f_can_be_sent">Can_be_sent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`can_receive' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_can_receive">Can_receive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`can_send' was declared in SENDING_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/sending_protocol.html#f_can_send">Can_send</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`data' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data">Data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`data_code' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data_code">Data_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`default_headers' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_default_headers">Default_headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`default_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_default_port">Default_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`ehlo' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ehlo">Ehlo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`h_bcc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_bcc">H_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`h_cc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_cc">H_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`h_from' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_from">H_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`h_reply_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_reply_to">H_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`h_subject' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_subject">H_subject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`h_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_to">H_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`header' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_header">header</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A></SPAN>
+	<SPAN TITLE="`headers' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_headers">headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../net/reference/mail/header_chart.html">HEADER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`helo' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_helo">Helo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`hostname' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_hostname">hostname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`is_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_is_connected">is_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_header_valid' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_is_header_valid">is_header_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_is_initiated">is_initiated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`mail_bcc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_bcc">Mail_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`mail_cc' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_cc">Mail_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`mail_from' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_from">Mail_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`mail_reply_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_reply_to">Mail_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`mail_to' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_to">Mail_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`memory_resource' was declared in SENDING_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/sending_protocol.html#f_memory_resource">memory_resource</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/memory_resource_chart.html">MEMORY_RESOURCE</A></SPAN>
+	<SPAN TITLE="`no_valid_recipient' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_no_valid_recipient">No_valid_recipient</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`ok' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ok">Ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_pipelining">pipelining</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`quit' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_quit">Quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`remote_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_remote_error">Remote_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`size_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_size_error">Size_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`smtp_code_number' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_smtp_code_number">smtp_code_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`smtp_reply' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_smtp_reply">smtp_reply</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`struct_error' was declared in EMAIL_CONSTANTS"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_struct_error">Struct_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_transfer_error">Transfer_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/transfer_error_chart.html">TRANSFER_ERROR</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`close_protocol' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_close_protocol">close_protocol</A></SPAN>
+	<SPAN TITLE="`disable_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_disable_connected">disable_connected</A></SPAN>
+	<SPAN TITLE="`disable_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_disable_initiated">disable_initiated</A></SPAN>
+	<SPAN TITLE="`disable_pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_disable_pipelining">disable_pipelining</A></SPAN>
+	<SPAN TITLE="`disable_transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_disable_transfer_error">disable_transfer_error</A></SPAN>
+	<SPAN TITLE="`enable_connected' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_enable_connected">enable_connected</A></SPAN>
+	<SPAN TITLE="`enable_initiated' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_enable_initiated">enable_initiated</A></SPAN>
+	<SPAN TITLE="`enable_pipelining' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_enable_pipelining">enable_pipelining</A></SPAN>
+	<SPAN TITLE="`enable_transfer_error' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_enable_transfer_error">enable_transfer_error</A></SPAN>
+	<SPAN TITLE="`initialize' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_initialize">initialize</A></SPAN>
+	<SPAN TITLE="`initiate_protocol' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_initiate_protocol">initiate_protocol</A></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">user</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_default_port' was declared in EMAIL_PROTOCOL"><A CLASS="efeature" HREF="../../../net/reference/mail/email_protocol.html#f_set_default_port">set_default_port</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_port</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_transfer_error_message' was declared in EMAIL_RESOURCE"><A CLASS="efeature" HREF="../../../net/reference/mail/email_resource.html#f_set_transfer_error_message">set_transfer_error_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`transfer' is declared in `Current'"><A CLASS="efeature" HREF="../../../net/reference/mail/smtp_protocol.html#f_transfer">transfer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">resource</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../net/reference/mail/memory_resource_chart.html">MEMORY_RESOURCE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
 
 </BODY>
 

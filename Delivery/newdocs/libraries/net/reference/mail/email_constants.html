@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>EMAIL_CONSTANTS Flat contracts</TITLE>
 		
@@ -10,144 +10,76 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that ..."</SPAN>
+	<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">""</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that ..."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../net/reference/mail/email_constants.html">EMAIL_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">""</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants for SMTP Protocol</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_ack_begin_connection"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_begin_connection">Ack_begin_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">220</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_ack_end_connection"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_end_connection">Ack_end_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">221</SPAN></A>
 
-<BR>
+	<A NAME="f_data"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data">Data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"DATA"</SPAN></A>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_data_code"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data_code">Data_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">354</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../net/reference/mail/email_constants.html">EMAIL_CONSTANTS</A><BR>
+	<A NAME="f_ehlo"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ehlo">Ehlo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"EHLO "</SPAN></A>
 
-<BR>
+	<A NAME="f_helo"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_helo">Helo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"HELO "</SPAN></A>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants for SMTP Protocol</SPAN><BR>
+	<A NAME="f_mail_bcc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_bcc">Mail_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT BCC:"</SPAN></A>
 
-<BR>
+	<A NAME="f_mail_cc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_cc">Mail_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT CC:"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ack_begin_connection"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_begin_connection">Ack_begin_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">220</SPAN></A><BR>
+	<A NAME="f_mail_from"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_from">Mail_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"MAIL FROM: "</SPAN></A>
 
-<BR>
+	<A NAME="f_mail_reply_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_reply_to">Mail_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT REPLY TO:"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ack_end_connection"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ack_end_connection">Ack_end_connection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">221</SPAN></A><BR>
+	<A NAME="f_mail_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_to">Mail_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT TO: "</SPAN></A>
 
-<BR>
+	<A NAME="f_no_valid_recipient"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_no_valid_recipient">No_valid_recipient</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">554</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_data"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data">Data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"DATA"</SPAN></A><BR>
+	<A NAME="f_ok"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ok">Ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">250</SPAN></A>
 
-<BR>
+	<A NAME="f_quit"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_quit">Quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"QUIT"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_data_code"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_data_code">Data_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">354</SPAN></A><BR>
+	<A NAME="f_remote_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_remote_error">Remote_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">550</SPAN></A>
 
-<BR>
+	<A NAME="f_size_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_size_error">Size_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">500</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ehlo"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ehlo">Ehlo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"EHLO "</SPAN></A><BR>
+	<A NAME="f_struct_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_struct_error">Struct_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">552</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants for email headers (Authorized keys for the Hashtables)</SPAN>
 
-<BR>
+	<A NAME="f_default_headers"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_default_headers">default_headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+</A>
+	<A NAME="f_h_bcc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_bcc">H_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Bcc"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_helo"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_helo">Helo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"HELO "</SPAN></A><BR>
+	<A NAME="f_h_cc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_cc">H_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Cc"</SPAN></A>
 
-<BR>
+	<A NAME="f_h_from"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_from">H_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"From"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_mail_bcc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_bcc">Mail_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT BCC:"</SPAN></A><BR>
+	<A NAME="f_h_reply_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_reply_to">H_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Reply-to"</SPAN></A>
 
-<BR>
+	<A NAME="f_h_subject"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_subject">H_subject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Subject"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_mail_cc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_cc">Mail_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT CC:"</SPAN></A><BR>
+	<A NAME="f_h_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_to">H_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"To"</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
-<BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_mail_from"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_from">Mail_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"MAIL FROM: "</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_mail_reply_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_reply_to">Mail_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT REPLY TO:"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_mail_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_mail_to">Mail_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"RCPT TO: "</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_no_valid_recipient"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_no_valid_recipient">No_valid_recipient</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">554</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ok"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_ok">Ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">250</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_quit"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_quit">Quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"QUIT"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_remote_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_remote_error">Remote_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">550</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_size_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_size_error">Size_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">500</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_struct_error"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_struct_error">Struct_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">552</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants for email headers (Authorized keys for the Hashtables)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_default_headers"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_default_headers">default_headers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_bcc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_bcc">H_bcc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Bcc"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_cc"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_cc">H_cc</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Cc"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_from"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_from">H_from</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"From"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_reply_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_reply_to">H_reply_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Reply-to"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_subject"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_subject">H_subject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"Subject"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_h_to"><A CLASS="efeature" HREF="../../../net/reference/mail/email_constants.html#f_h_to">H_to</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"To"</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EMAIL_CONSTANTS<BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EMAIL_CONSTANTS</PRE>
 
 </BODY>
 
 </HTML>
-<BR>
 

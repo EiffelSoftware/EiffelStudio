@@ -1,520 +1,267 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_TB_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Toolbar message (TB_...) constants."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Toolbar message (TB_...) constants."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_tb_constants.html">WEL_TB_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Arnaud PICHERY [ </SPAN><A CLASS="estring" HREF="mailto:aranud@mail.dotcom.fr">aranud@mail.dotcom.fr</A><SPAN CLASS="estring"> ]"</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+	<A NAME="f_tb_addbitmap"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_addbitmap">Tb_addbitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1043</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds one or more images to the list of button images available</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_tb_addbuttons"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_addbuttons">Tb_addbuttons</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1044</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds one or more buttons to a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_tb_addstring"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_addstring">Tb_addstring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1052</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds a new string to the toolbar's string pool.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (ANSI Version)</SPAN>
 
-<BR>
+	<A NAME="f_tb_autosize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_autosize">Tb_autosize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1057</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Causes a toolbar to be resized.</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_tb_buttoncount"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_buttoncount">Tb_buttoncount</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1048</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves a count of the buttons currently in the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_tb_constants.html">WEL_TB_CONSTANTS</A><BR>
+	<A NAME="f_tb_buttonstructsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_buttonstructsize">Tb_buttonstructsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1054</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the size of the TBBUTTON structure.</SPAN>
 
-<BR>
+	<A NAME="f_tb_changebitmap"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_changebitmap">Tb_changebitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1067</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Changes the bitmap for a button in a toolbar.</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+	<A NAME="f_tb_checkbutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_checkbutton">Tb_checkbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1026</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Checks or unchecks a given button in a toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_commandtoindex"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_commandtoindex">Tb_commandtoindex</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1049</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the zero-based index for the button associated with the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> specified command identifier.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_addbitmap"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_addbitmap">Tb_addbitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1043</SPAN></A><BR>
+	<A NAME="f_tb_customize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_customize">Tb_customize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1051</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Displays the Customize Toolbar dialog box.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds one or more images to the list of button images available</SPAN><BR>
+	<A NAME="f_tb_deletebutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_deletebutton">Tb_deletebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1046</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Deletes a button from the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for a toolbar.</SPAN><BR>
+	<A NAME="f_tb_enablebutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_enablebutton">Tb_enablebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1025</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enables or disables the specified button in a toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getbitmap"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getbitmap">Tb_getbitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1068</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the index of the bitmap associated with a button</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_addbuttons"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_addbuttons">Tb_addbuttons</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1044</SPAN></A><BR>
+	<A NAME="f_tb_getbitmapflags"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getbitmapflags">Tb_getbitmapflags</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1065</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the flags that describe the type of bitmap to be used.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds one or more buttons to a toolbar.</SPAN><BR>
+	<A NAME="f_tb_getbutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getbutton">Tb_getbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1047</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves information about the specified button in a toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getbuttontext"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getbuttontext">Tb_getbuttontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1069</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the display text of a button on a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_addstring"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_addstring">Tb_addstring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1052</SPAN></A><BR>
+	<A NAME="f_tb_getitemrect"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getitemrect">Tb_getitemrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1053</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the bounding rectangle of a button in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Adds a new string to the toolbar's string pool.</SPAN><BR>
+	<A NAME="f_tb_getrows"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getrows">Tb_getrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1064</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the number of rows of buttons in a toolbar with the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> TBSTYLE_WRAPABLE style.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (ANSI Version)</SPAN><BR>
+	<A NAME="f_tb_getstate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getstate">Tb_getstate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1042</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves information about the state of the specified button</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar, such as whether it is enabled, pressed, or checked.</SPAN>
 
-<BR>
+	<A NAME="f_tb_gettooltips"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_gettooltips">Tb_gettooltips</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1059</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the handle to the tooltip control, if any, associated</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_autosize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_autosize">Tb_autosize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1057</SPAN></A><BR>
+	<A NAME="f_tb_hidebutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_hidebutton">Tb_hidebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1028</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hides or shows the specified button in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Causes a toolbar to be resized.</SPAN><BR>
+	<A NAME="f_tb_hittest"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_hittest">Tb_hittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1093</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines where a point lies in a toolbar control.</SPAN>
 
-<BR>
+	<A NAME="f_tb_indeterminate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_indeterminate">Tb_indeterminate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1029</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets or clears the indeterminate state of the specified button</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_buttoncount"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_buttoncount">Tb_buttoncount</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1048</SPAN></A><BR>
+	<A NAME="f_tb_insertbutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_insertbutton">Tb_insertbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1045</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Inserts a button in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves a count of the buttons currently in the toolbar.</SPAN><BR>
+	<A NAME="f_tb_isbuttonchecked"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonchecked">Tb_isbuttonchecked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1034</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is checked.</SPAN>
 
-<BR>
+	<A NAME="f_tb_isbuttonenabled"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonenabled">Tb_isbuttonenabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1033</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is enabled.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_buttonstructsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_buttonstructsize">Tb_buttonstructsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1054</SPAN></A><BR>
+	<A NAME="f_tb_isbuttonhidden"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonhidden">Tb_isbuttonhidden</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1036</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is hidden.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the size of the TBBUTTON structure.</SPAN><BR>
+	<A NAME="f_tb_isbuttonindeterminate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonindeterminate">Tb_isbuttonindeterminate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1037</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is indeterminate.</SPAN>
 
-<BR>
+	<A NAME="f_tb_isbuttonpressed"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonpressed">Tb_isbuttonpressed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1035</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is pressed.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_changebitmap"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_changebitmap">Tb_changebitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1067</SPAN></A><BR>
+	<A NAME="f_tb_pressbutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_pressbutton">Tb_pressbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1027</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Presses or releases the specified button in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Changes the bitmap for a button in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_saverestore"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_saverestore">Tb_saverestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1050</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Send this message to initiate saving or restoring a toolbar state.</SPAN>
 
-<BR>
+	<A NAME="f_tb_setbitmapsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setbitmapsize">Tb_setbitmapsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1056</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the size of the bitmapped images to be added to a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_checkbutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_checkbutton">Tb_checkbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1026</SPAN></A><BR>
+	<A NAME="f_tb_setbuttonsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setbuttonsize">Tb_setbuttonsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1055</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the size of the buttons to be added to a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Checks or unchecks a given button in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_setcmdid"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setcmdid">Tb_setcmdid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1066</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the command identifier of a toolbar button.</SPAN>
 
-<BR>
+	<A NAME="f_tb_setparent"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setparent">Tb_setparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1061</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the window to which the toolbar control sends notification messages.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_commandtoindex"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_commandtoindex">Tb_commandtoindex</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1049</SPAN></A><BR>
+	<A NAME="f_tb_setrows"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setrows">Tb_setrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1063</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the number of rows of buttons in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the zero-based index for the button associated with the</SPAN><BR>
+	<A NAME="f_tb_setstate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setstate">Tb_setstate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1041</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the state for the specified button in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> specified command identifier.</SPAN><BR>
+	<A NAME="f_tb_settooltips"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_settooltips">Tb_settooltips</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1060</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Associates a tooltip control with a toolbar.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access Comctl32.dll &gt;= 4.70 (Windows95 + IE4 and above)</SPAN>
 
-<BR>
+	<A NAME="f_tb_getbuttonsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getbuttonsize">Tb_getbuttonsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1082</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the current width and height of toolbar buttons, in</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pixels.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_customize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_customize">Tb_customize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1051</SPAN></A><BR>
+	<A NAME="f_tb_getdisabledimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getdisabledimagelist">Tb_getdisabledimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1079</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> disabled buttons.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Displays the Customize Toolbar dialog box.</SPAN><BR>
+	<A NAME="f_tb_gethotimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_gethotimagelist">Tb_gethotimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1077</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> hot buttons.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getimagelist">Tb_getimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buttons in their default state. A toolbar control uses this</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> image list to display buttons when they are not hot or disabled</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_deletebutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_deletebutton">Tb_deletebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1046</SPAN></A><BR>
+	<A NAME="f_tb_getrect"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getrect">Tb_getrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1075</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the bounding rectangle for a specified toolbar button</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Deletes a button from the toolbar.</SPAN><BR>
+	<A NAME="f_tb_getstyle"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getstyle">Tb_getstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1081</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the styles currently in use for a toolbar control.</SPAN>
 
-<BR>
+	<A NAME="f_tb_gettextrows"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_gettextrows">Tb_gettextrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1085</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the maximum number of text rows that can be</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> displayed on a toolbar button.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_enablebutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_enablebutton">Tb_enablebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1025</SPAN></A><BR>
+	<A NAME="f_tb_loadimages"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_loadimages">Tb_loadimages</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1074</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Loads bitmaps into a toolbar control's image list.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enables or disables the specified button in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_setbuttonwidth"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setbuttonwidth">Tb_setbuttonwidth</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1083</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the minimum and maximum button widths in the toolbar</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> control.</SPAN>
 
-<BR>
+	<A NAME="f_tb_setdisabledimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setdisabledimagelist">Tb_setdisabledimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1078</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the image list that the toolbar control will use to display</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> disabled buttons.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getbitmap"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getbitmap">Tb_getbitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1068</SPAN></A><BR>
+	<A NAME="f_tb_sethotimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_sethotimagelist">Tb_sethotimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1076</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the image list that the toolbar control will use to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> display hot buttons.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the index of the bitmap associated with a button</SPAN><BR>
+	<A NAME="f_tb_setimagelist"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setimagelist">Tb_setimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1072</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the image list that the toolbar will use</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to display buttons that are in their default state.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_setindent"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setindent">Tb_setindent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1071</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the indentation for the first button in a toolbar control</SPAN>
 
-<BR>
+	<A NAME="f_tb_setmaxtextrows"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setmaxtextrows">Tb_setmaxtextrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1084</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the maximum number of text rows displayed on a toolbar</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> button.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getbitmapflags"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getbitmapflags">Tb_getbitmapflags</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1065</SPAN></A><BR>
+	<A NAME="f_tb_setstyle"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setstyle">Tb_setstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1080</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the style for a toolbar control.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access Comctl32.dll &gt;= 4.71 (Windows95 + IE4 and above)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the flags that describe the type of bitmap to be used.</SPAN><BR>
+	<A NAME="f_tb_getanchorhighlight"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getanchorhighlight">Tb_getanchorhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1098</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the anchor highlight setting for a toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getextendedstyle"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getextendedstyle">Tb_getextendedstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1109</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the extended styles for a toolbar control.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getbutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getbutton">Tb_getbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1047</SPAN></A><BR>
+	<A NAME="f_tb_gethotitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_gethotitem">Tb_gethotitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1095</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the index of the hot item in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves information about the specified button in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_getinsertmark"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getinsertmark">Tb_getinsertmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1103</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the current insertion mark for the toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getinsertmarkcolor"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getinsertmarkcolor">Tb_getinsertmarkcolor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1113</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the color used to draw the insertion mark for the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getbuttontext"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getbuttontext">Tb_getbuttontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1069</SPAN></A><BR>
+	<A NAME="f_tb_getmaxsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getmaxsize">Tb_getmaxsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1107</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the total size of all of the visible buttons and separators in the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the display text of a button on a toolbar.</SPAN><BR>
+	<A NAME="f_tb_getobject"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getobject">Tb_getobject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1086</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the IDropTarget for a toolbar control.</SPAN>
 
-<BR>
+	<A NAME="f_tb_getpadding"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_getpadding">Tb_getpadding</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1110</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the padding for a toolbar control.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getitemrect"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getitemrect">Tb_getitemrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1053</SPAN></A><BR>
+	<A NAME="f_tb_insertmarkhittest"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_insertmarkhittest">Tb_insertmarkhittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1105</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the insertion mark information for a point in a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the bounding rectangle of a button in a toolbar.</SPAN><BR>
+	<A NAME="f_tb_movebutton"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_movebutton">Tb_movebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1106</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Moves a button from one index to another.</SPAN>
 
-<BR>
+	<A NAME="f_tb_setanchorhighlight"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setanchorhighlight">Tb_setanchorhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1097</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the anchor highlight setting for a toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getrows"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getrows">Tb_getrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1064</SPAN></A><BR>
+	<A NAME="f_tb_setextendedstyle"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setextendedstyle">Tb_setextendedstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1108</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the extended styles for a toolbar control.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the number of rows of buttons in a toolbar with the</SPAN><BR>
+	<A NAME="f_tb_sethotitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_sethotitem">Tb_sethotitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1096</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the hot item in a toolbar.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This message is ignored for toolbar controls that do not have the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> TBSTYLE_FLAT style.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> TBSTYLE_WRAPABLE style.</SPAN><BR>
+	<A NAME="f_tb_setinsertmark"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setinsertmark">Tb_setinsertmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1104</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the current insertion mark for the toolbar.</SPAN>
 
-<BR>
+	<A NAME="f_tb_setinsertmarkcolor"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setinsertmarkcolor">Tb_setinsertmarkcolor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1112</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the color used to draw the insertion mark for the toolbar.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getstate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getstate">Tb_getstate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1042</SPAN></A><BR>
+	<A NAME="f_tb_setpadding"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_tb_constants.html#f_tb_setpadding">Tb_setpadding</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1111</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the padding for a toolbar control.</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves information about the state of the specified button</SPAN><BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar, such as whether it is enabled, pressed, or checked.</SPAN><BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_TB_CONSTANTS</PRE>
 
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_gettooltips"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_gettooltips">Tb_gettooltips</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1059</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the handle to the tooltip control, if any, associated</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_hidebutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_hidebutton">Tb_hidebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1028</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hides or shows the specified button in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_hittest"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_hittest">Tb_hittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1093</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines where a point lies in a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_indeterminate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_indeterminate">Tb_indeterminate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1029</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets or clears the indeterminate state of the specified button</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_insertbutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_insertbutton">Tb_insertbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1045</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Inserts a button in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_isbuttonchecked"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonchecked">Tb_isbuttonchecked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1034</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is checked.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_isbuttonenabled"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonenabled">Tb_isbuttonenabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1033</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is enabled.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_isbuttonhidden"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonhidden">Tb_isbuttonhidden</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1036</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is hidden.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_isbuttonindeterminate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonindeterminate">Tb_isbuttonindeterminate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1037</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is indeterminate.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_isbuttonpressed"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_isbuttonpressed">Tb_isbuttonpressed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1035</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Determines whether the specified button in a toolbar is pressed.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_pressbutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_pressbutton">Tb_pressbutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1027</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Presses or releases the specified button in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_saverestore"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_saverestore">Tb_saverestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1050</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Send this message to initiate saving or restoring a toolbar state.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setbitmapsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setbitmapsize">Tb_setbitmapsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1056</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the size of the bitmapped images to be added to a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setbuttonsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setbuttonsize">Tb_setbuttonsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1055</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the size of the buttons to be added to a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setcmdid"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setcmdid">Tb_setcmdid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1066</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the command identifier of a toolbar button.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setparent"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setparent">Tb_setparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1061</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the window to which the toolbar control sends notification messages.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setrows"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setrows">Tb_setrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1063</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the number of rows of buttons in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setstate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setstate">Tb_setstate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1041</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the state for the specified button in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_settooltips"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_settooltips">Tb_settooltips</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1060</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Associates a tooltip control with a toolbar.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access Comctl32.dll &gt;= 4.70 (Windows95 + IE4 and above)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getbuttonsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getbuttonsize">Tb_getbuttonsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1082</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the current width and height of toolbar buttons, in</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pixels.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getdisabledimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getdisabledimagelist">Tb_getdisabledimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1079</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> disabled buttons.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_gethotimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_gethotimagelist">Tb_gethotimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1077</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> hot buttons.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getimagelist">Tb_getimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the image list that a toolbar control uses to display</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buttons in their default state. A toolbar control uses this</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> image list to display buttons when they are not hot or disabled</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getrect"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getrect">Tb_getrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1075</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the bounding rectangle for a specified toolbar button</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getstyle"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getstyle">Tb_getstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1081</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the styles currently in use for a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_gettextrows"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_gettextrows">Tb_gettextrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1085</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the maximum number of text rows that can be</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> displayed on a toolbar button.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_loadimages"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_loadimages">Tb_loadimages</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1074</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Loads bitmaps into a toolbar control's image list.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setbuttonwidth"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setbuttonwidth">Tb_setbuttonwidth</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1083</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the minimum and maximum button widths in the toolbar</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setdisabledimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setdisabledimagelist">Tb_setdisabledimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1078</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the image list that the toolbar control will use to display</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> disabled buttons.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_sethotimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_sethotimagelist">Tb_sethotimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1076</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the image list that the toolbar control will use to</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> display hot buttons.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setimagelist"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setimagelist">Tb_setimagelist</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1072</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the image list that the toolbar will use</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to display buttons that are in their default state.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setindent"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setindent">Tb_setindent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1071</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the indentation for the first button in a toolbar control</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setmaxtextrows"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setmaxtextrows">Tb_setmaxtextrows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1084</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the maximum number of text rows displayed on a toolbar</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> button.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setstyle"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setstyle">Tb_setstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1080</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the style for a toolbar control.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access Comctl32.dll &gt;= 4.71 (Windows95 + IE4 and above)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getanchorhighlight"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getanchorhighlight">Tb_getanchorhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1098</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the anchor highlight setting for a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getextendedstyle"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getextendedstyle">Tb_getextendedstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1109</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the extended styles for a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_gethotitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_gethotitem">Tb_gethotitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1095</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the index of the hot item in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getinsertmark"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getinsertmark">Tb_getinsertmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1103</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the current insertion mark for the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getinsertmarkcolor"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getinsertmarkcolor">Tb_getinsertmarkcolor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1113</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the color used to draw the insertion mark for the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getmaxsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getmaxsize">Tb_getmaxsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1107</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the total size of all of the visible buttons and separators in the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getobject"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getobject">Tb_getobject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1086</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the IDropTarget for a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_getpadding"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_getpadding">Tb_getpadding</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1110</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the padding for a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_insertmarkhittest"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_insertmarkhittest">Tb_insertmarkhittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1105</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the insertion mark information for a point in a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_movebutton"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_movebutton">Tb_movebutton</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1106</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Moves a button from one index to another.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setanchorhighlight"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setanchorhighlight">Tb_setanchorhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1097</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the anchor highlight setting for a toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setextendedstyle"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setextendedstyle">Tb_setextendedstyle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1108</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the extended styles for a toolbar control.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_sethotitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_sethotitem">Tb_sethotitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1096</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the hot item in a toolbar.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This message is ignored for toolbar controls that do not have the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> TBSTYLE_FLAT style.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setinsertmark"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setinsertmark">Tb_setinsertmark</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1104</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the current insertion mark for the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setinsertmarkcolor"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setinsertmarkcolor">Tb_setinsertmarkcolor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1112</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the color used to draw the insertion mark for the toolbar.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_tb_setpadding"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_tb_constants.html#f_tb_setpadding">Tb_setpadding</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1111</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sets the padding for a toolbar control.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_TB_CONSTANTS<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

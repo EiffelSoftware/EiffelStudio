@@ -1,390 +1,203 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_WS_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window style (WS) constants."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window style (WS) constants."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Miscellaneous</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_cw_usedefault"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_cw_usedefault">Cw_usedefault</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2147483648</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CW_USEDEFAULT</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic window types</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_ws_child"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_child">Ws_child</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073741824</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CHILD</SPAN>
 
-<BR>
+	<A NAME="f_ws_overlapped"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_overlapped">Ws_overlapped</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_tiled">ws_tiled</A><SPAN CLASS="ecomment">.</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_ws_popup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_popup">Ws_popup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2147483648</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_POPUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><BR>
+	<A NAME="f_ws_tiled"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_tiled">Ws_tiled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_overlapped">ws_overlapped</A><SPAN CLASS="ecomment">.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clipping styles</SPAN>
 
-<BR>
+	<A NAME="f_ws_clipchildren"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_clipchildren">Ws_clipchildren</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33554432</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CLIPCHILDREN</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Miscellaneous</SPAN><BR>
+	<A NAME="f_ws_clipsiblings"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_clipsiblings">Ws_clipsiblings</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">67108864</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CLIPSIBLINGS</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Common window styles</SPAN>
 
-<BR>
+	<A NAME="f_ws_childwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_childwindow">Ws_childwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073741824</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CHILDWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_cw_usedefault"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_cw_usedefault">Cw_usedefault</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2147483648</SPAN></A><BR>
+	<A NAME="f_ws_overlappedwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_overlappedwindow">Ws_overlappedwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13565952</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPEDWINDOW</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_tiledwindow">ws_tiledwindow</A><SPAN CLASS="ecomment">.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CW_USEDEFAULT</SPAN><BR>
+	<A NAME="f_ws_popupwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_popupwindow">Ws_popupwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2138570752</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_POPUPWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp;<BR>
+	<A NAME="f_ws_tiledwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_tiledwindow">Ws_tiledwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13565952</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPEDWINDOW</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_overlappedwindow">ws_overlappedwindow</A><SPAN CLASS="ecomment">.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Control window styles</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic window types</SPAN><BR>
+	<A NAME="f_ws_group"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_group">Ws_group</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_GROUP</SPAN>
 
-<BR>
+	<A NAME="f_ws_tabstop"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_tabstop">Ws_tabstop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_TABSTOP</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extended window styles</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_child"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_child">Ws_child</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073741824</SPAN></A><BR>
+	<A NAME="f_ws_ex_acceptfiles"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_acceptfiles">Ws_ex_acceptfiles</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_ACCEPTFILES</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CHILD</SPAN><BR>
+	<A NAME="f_ws_ex_clientedge"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_clientedge">Ws_ex_clientedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CLIENTEDGE</SPAN>
 
-<BR>
+	<A NAME="f_ws_ex_contexthelp"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_contexthelp">Ws_ex_contexthelp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CONTEXTHELP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_overlapped"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_overlapped">Ws_overlapped</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+	<A NAME="f_ws_ex_controlparent"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_controlparent">Ws_ex_controlparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CONTROLPARENT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPED</SPAN><BR>
+	<A NAME="f_ws_ex_dlgmodalframe"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_dlgmodalframe">Ws_ex_dlgmodalframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_DLGMODALFRAME</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_tiled">ws_tiled</A><SPAN CLASS="ecomment">.</SPAN><BR>
+	<A NAME="f_ws_ex_left"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_left">Ws_ex_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LEFT</SPAN>
 
-<BR>
+	<A NAME="f_ws_ex_leftscrollbar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_leftscrollbar">Ws_ex_leftscrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16384</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LEFTSCROLLBAR</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_popup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_popup">Ws_popup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2147483648</SPAN></A><BR>
+	<A NAME="f_ws_ex_ltrreading"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_ltrreading">Ws_ex_ltrreading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LTRREADING</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_POPUP</SPAN><BR>
+	<A NAME="f_ws_ex_mdichild"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_mdichild">Ws_ex_mdichild</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_MDICHILD</SPAN>
 
-<BR>
+	<A NAME="f_ws_ex_noparentnotify"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_noparentnotify">Ws_ex_noparentnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_NOPARENTNOTIFY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_tiled"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_tiled">Ws_tiled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+	<A NAME="f_ws_ex_overlappedwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_overlappedwindow">Ws_ex_overlappedwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_OVERLAPPEDWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPED</SPAN><BR>
+	<A NAME="f_ws_ex_palettewindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_palettewindow">Ws_ex_palettewindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">392</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_PALETTEWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_overlapped">ws_overlapped</A><SPAN CLASS="ecomment">.</SPAN><BR>
+	<A NAME="f_ws_ex_right"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_right">Ws_ex_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RIGHT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<BR>
+	<A NAME="f_ws_ex_rightscrollbar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_rightscrollbar">Ws_ex_rightscrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RIGHTSCROLLBAR</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clipping styles</SPAN><BR>
+	<A NAME="f_ws_ex_rtlreading"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_rtlreading">Ws_ex_rtlreading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8192</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RTLREADING</SPAN>
 
-<BR>
+	<A NAME="f_ws_ex_staticedge"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_staticedge">Ws_ex_staticedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_STATICEDGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_clipchildren"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_clipchildren">Ws_clipchildren</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33554432</SPAN></A><BR>
+	<A NAME="f_ws_ex_toolwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_toolwindow">Ws_ex_toolwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TOOLWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CLIPCHILDREN</SPAN><BR>
+	<A NAME="f_ws_ex_topmost"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_topmost">Ws_ex_topmost</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TOPMOST</SPAN>
 
-<BR>
+	<A NAME="f_ws_ex_transparent"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_transparent">Ws_ex_transparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TRANSPARENT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_clipsiblings"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_clipsiblings">Ws_clipsiblings</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">67108864</SPAN></A><BR>
+	<A NAME="f_ws_ex_windowedge"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_ex_windowedge">Ws_ex_windowedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_WINDOWEDGE</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic window states</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CLIPSIBLINGS</SPAN><BR>
+	<A NAME="f_ws_disabled"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_disabled">Ws_disabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">134217728</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_DISABLED</SPAN>
 
- &nbsp; &nbsp; &nbsp;<BR>
+	<A NAME="f_ws_visible"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_visible">Ws_visible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">268435456</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_VISIBLE</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Main window states</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Common window styles</SPAN><BR>
+	<A NAME="f_ws_iconic"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_iconic">Ws_iconic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">536870912</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_minimize">ws_minimize</A><SPAN CLASS="ecomment">.</SPAN>
 
-<BR>
+	<A NAME="f_ws_maximize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_maximize">Ws_maximize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16777216</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MAXIMIZE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_childwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_childwindow">Ws_childwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1073741824</SPAN></A><BR>
+	<A NAME="f_ws_minimize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_minimize">Ws_minimize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">536870912</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_iconic">ws_iconic</A><SPAN CLASS="ecomment">.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Main window styles</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CHILDWINDOW</SPAN><BR>
+	<A NAME="f_ws_border"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_border">Ws_border</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8388608</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_BORDER</SPAN>
 
-<BR>
+	<A NAME="f_ws_caption"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_caption">Ws_caption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12582912</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CAPTION</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_overlappedwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_overlappedwindow">Ws_overlappedwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13565952</SPAN></A><BR>
+	<A NAME="f_ws_dlgframe"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_dlgframe">Ws_dlgframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4194304</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_DLGFRAME</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPEDWINDOW</SPAN><BR>
+	<A NAME="f_ws_hscroll"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_hscroll">Ws_hscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1048576</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_HSCROLL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_tiledwindow">ws_tiledwindow</A><SPAN CLASS="ecomment">.</SPAN><BR>
+	<A NAME="f_ws_maximizebox"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_maximizebox">Ws_maximizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MAXIMIZEBOX</SPAN>
 
-<BR>
+	<A NAME="f_ws_minimizebox"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_minimizebox">Ws_minimizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZEBOX</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_popupwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_popupwindow">Ws_popupwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">-2138570752</SPAN></A><BR>
+	<A NAME="f_ws_sizebox"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_sizebox">Ws_sizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262144</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_THICKFRAME</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_thickframe">ws_thickframe</A><SPAN CLASS="ecomment">.</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_POPUPWINDOW</SPAN><BR>
+	<A NAME="f_ws_sysmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_sysmenu">Ws_sysmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">524288</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_SYSMENU</SPAN>
 
-<BR>
+	<A NAME="f_ws_thickframe"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_thickframe">Ws_thickframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262144</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_THICKFRAME</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_sizebox">ws_sizebox</A><SPAN CLASS="ecomment">.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_tiledwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_tiledwindow">Ws_tiledwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13565952</SPAN></A><BR>
+	<A NAME="f_ws_vscroll"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ws_constants.html#f_ws_vscroll">Ws_vscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2097152</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_VSCROLL</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_OVERLAPPEDWINDOW</SPAN><BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_overlappedwindow">ws_overlappedwindow</A><SPAN CLASS="ecomment">.</SPAN><BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_WS_CONSTANTS</PRE>
 
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Control window styles</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_group"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_group">Ws_group</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_GROUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_tabstop"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_tabstop">Ws_tabstop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_TABSTOP</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Extended window styles</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_acceptfiles"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_acceptfiles">Ws_ex_acceptfiles</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_ACCEPTFILES</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_clientedge"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_clientedge">Ws_ex_clientedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CLIENTEDGE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_contexthelp"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_contexthelp">Ws_ex_contexthelp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CONTEXTHELP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_controlparent"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_controlparent">Ws_ex_controlparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_CONTROLPARENT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_dlgmodalframe"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_dlgmodalframe">Ws_ex_dlgmodalframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_DLGMODALFRAME</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_left"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_left">Ws_ex_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LEFT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_leftscrollbar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_leftscrollbar">Ws_ex_leftscrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16384</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LEFTSCROLLBAR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_ltrreading"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_ltrreading">Ws_ex_ltrreading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_LTRREADING</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_mdichild"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_mdichild">Ws_ex_mdichild</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_MDICHILD</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_noparentnotify"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_noparentnotify">Ws_ex_noparentnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_NOPARENTNOTIFY</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_overlappedwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_overlappedwindow">Ws_ex_overlappedwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">768</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_OVERLAPPEDWINDOW</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_palettewindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_palettewindow">Ws_ex_palettewindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">392</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_PALETTEWINDOW</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_right"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_right">Ws_ex_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RIGHT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_rightscrollbar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_rightscrollbar">Ws_ex_rightscrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RIGHTSCROLLBAR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_rtlreading"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_rtlreading">Ws_ex_rtlreading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8192</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_RTLREADING</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_staticedge"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_staticedge">Ws_ex_staticedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_STATICEDGE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_toolwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_toolwindow">Ws_ex_toolwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TOOLWINDOW</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_topmost"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_topmost">Ws_ex_topmost</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TOPMOST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_transparent"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_transparent">Ws_ex_transparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_TRANSPARENT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_ex_windowedge"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_ex_windowedge">Ws_ex_windowedge</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_EX_WINDOWEDGE</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic window states</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_disabled"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_disabled">Ws_disabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">134217728</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_DISABLED</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_visible"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_visible">Ws_visible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">268435456</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_VISIBLE</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Main window states</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_iconic"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_iconic">Ws_iconic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">536870912</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZE</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_minimize">ws_minimize</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_maximize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_maximize">Ws_maximize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16777216</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MAXIMIZE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_minimize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_minimize">Ws_minimize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">536870912</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZE</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_iconic">ws_iconic</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Main window styles</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_border"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_border">Ws_border</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8388608</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_BORDER</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_caption"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_caption">Ws_caption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12582912</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_CAPTION</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_dlgframe"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_dlgframe">Ws_dlgframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4194304</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_DLGFRAME</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_hscroll"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_hscroll">Ws_hscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1048576</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_HSCROLL</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_maximizebox"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_maximizebox">Ws_maximizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65536</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MAXIMIZEBOX</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_minimizebox"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_minimizebox">Ws_minimizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131072</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_MINIMIZEBOX</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_sizebox"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_sizebox">Ws_sizebox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262144</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_THICKFRAME</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_thickframe">ws_thickframe</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_sysmenu"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_sysmenu">Ws_sysmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">524288</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_SYSMENU</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_thickframe"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_thickframe">Ws_thickframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262144</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_THICKFRAME</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ws_constants.html">WEL_WS_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_sizebox">ws_sizebox</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ws_vscroll"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ws_constants.html#f_ws_vscroll">Ws_vscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2097152</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WS_VSCROLL</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_WS_CONSTANTS<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

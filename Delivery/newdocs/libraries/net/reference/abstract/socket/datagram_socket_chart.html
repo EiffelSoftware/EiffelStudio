@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>DATAGRAM_SOCKET Chart</TITLE>
 		
@@ -10,295 +10,151 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_socket_chart.html">DATAGRAM_SOCKET</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/abstract/socket/index.html">net.abstract.socket</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A datagram socket."</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`address_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`address_not_readable' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`already_bound' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bad_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bound' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_bound">bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_msgdontroute' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_oobmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_peekmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connect_in_progress' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connection_refused' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`debug_enabled' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_debug_enabled">debug_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`descriptor' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_descriptor">descriptor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`descriptor_available' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_descriptor_available">descriptor_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dtable_full' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error_number' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`expired_socket' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`family' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`group_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_group_id">group_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalid_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalid_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_blocking">is_blocking</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_closed' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_executable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_group_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_group_id">is_group_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_open_read' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_open_read">is_open_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_open_write' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_open_write">is_open_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_plain_text' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_is_plain_text">is_plain_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_process_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_process_id">is_process_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_readable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_socket_stream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_socket_stream">is_socket_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_valid_peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_valid_peer_address">is_valid_peer_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_writable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_boolean' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_last_boolean">last_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_character' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_double' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_integer' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_real' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_string' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastchar' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastdouble' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastdouble">lastdouble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastint' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastint">lastint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastreal' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastreal">lastreal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`laststring' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`name' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`network' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_buffers' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_permission' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`not_connected' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_peer_address">peer_address</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`process_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_process_id">process_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`protected_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`protocol' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_protocol">protocol</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`protocol_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read">read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`receive' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_receive">receive</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`receive_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_receive_buf_size">receive_buf_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`received' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_received">received</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`retrieved' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_retrieved">retrieved</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`route_enabled' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_route_enabled">route_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`send_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_send_buf_size">send_buf_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_family_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_ok' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_would_block' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`support_storable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_support_storable">support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`type' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`zero_option' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bind' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_bind">bind</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cleanup' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_cleanup">cleanup</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_close">close</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connect' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_connect">connect</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connect_to_peer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_connect_to_peer">connect_to_peer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_peer_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`create_from_descriptor' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_create_from_descriptor">create_from_descriptor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_debug' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_disable_debug">disable_debug</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`do_not_route' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_do_not_route">do_not_route</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_debug' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_enable_debug">enable_debug</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`general_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_general_store">general_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`independent_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_independent_store">independent_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make">make</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_bound_to_address' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make_bound_to_address">make_bound_to_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_local_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_connected_to_peer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make_connected_to_peer">make_connected_to_peer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_peer_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_socket' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_make_socket">make_socket</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`new_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_new_line">new_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_boolean' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_double' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_new_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_put_new_line">put_new_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_real' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putbool' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putchar' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putchar">putchar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putint' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putreal' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putstring' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putstring">putstring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_boolean' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_boolean">read_boolean</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_character' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_character">read_character</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_double' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_double">read_double</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_integer' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_integer">read_integer</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_line">read_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_real' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_real">read_real</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_stream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_stream">read_stream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readbool' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readbool">readbool</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readchar' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readchar">readchar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readdouble' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readdouble">readdouble</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readint' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readint">readint</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readline' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readline">readline</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readreal' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readreal">readreal</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readstream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readstream">readstream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`route' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_route">route</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`send' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_send">send</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`send_to' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_send_to">send_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">to_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_address">set_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_blocking">set_blocking</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_non_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_non_blocking">set_non_blocking</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_owner' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_owner">set_owner</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">own</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_peer_address">set_peer_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_receive_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_receive_buf_size">set_receive_buf_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_send_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_send_buf_size">set_send_buf_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_bind' was declared in SOCKET as `bind'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_bind">socket_bind</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_close' was declared in SOCKET as `close'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_close">socket_close</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`write' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_write">write</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
+<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_socket_chart.html">DATAGRAM_SOCKET</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/abstract/socket/index.html">net.abstract.socket</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A datagram socket."</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_chart.html">SOCKET</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A></SPAN>
+	<SPAN TITLE="`address_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`address_not_readable' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`already_bound' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`bad_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`bound' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_bound">bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`c_msgdontroute' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`c_oobmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`c_peekmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`connect_in_progress' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`connection_refused' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`debug_enabled' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_debug_enabled">debug_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`descriptor' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_descriptor">descriptor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`descriptor_available' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_descriptor_available">descriptor_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`dtable_full' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`error' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`error_number' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`exists' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`expired_socket' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`extendible' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`family' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`group_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_group_id">group_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`invalid_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`invalid_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_blocking">is_blocking</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_closed' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_executable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_group_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_group_id">is_group_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_open_read' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_open_read">is_open_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_open_write' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_open_write">is_open_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_plain_text' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_is_plain_text">is_plain_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_process_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_process_id">is_process_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_readable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_socket_stream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_socket_stream">is_socket_stream</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_valid_peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_valid_peer_address">is_valid_peer_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_writable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_boolean' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_last_boolean">last_boolean</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_character' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`last_double' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`last_integer' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`last_real' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A></SPAN>
+	<SPAN TITLE="`last_string' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`lastchar' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`lastdouble' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastdouble">lastdouble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`lastint' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastint">lastint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`lastreal' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_lastreal">lastreal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A></SPAN>
+	<SPAN TITLE="`laststring' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`name' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`network' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`no_buffers' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`no_permission' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`not_connected' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_peer_address">peer_address</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A></SPAN>
+	<SPAN TITLE="`process_id' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_process_id">process_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`protected_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`protocol' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_protocol">protocol</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`protocol_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`read' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read">read</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A></SPAN>
+	<SPAN TITLE="`readable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`receive' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_receive">receive</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A></SPAN>
+	<SPAN TITLE="`receive_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_receive_buf_size">receive_buf_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`received' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_received">received</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</A></SPAN>
+	<SPAN TITLE="`retrieved' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_retrieved">retrieved</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`route_enabled' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_route_enabled">route_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`send_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_send_buf_size">send_buf_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`socket_family_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_ok' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_would_block' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`support_storable' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_support_storable">support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`type' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`zero_option' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`basic_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`bind' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_bind">bind</A></SPAN>
+	<SPAN TITLE="`cleanup' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_cleanup">cleanup</A></SPAN>
+	<SPAN TITLE="`close' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_close">close</A></SPAN>
+	<SPAN TITLE="`connect' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_connect">connect</A></SPAN>
+	<SPAN TITLE="`connect_to_peer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_connect_to_peer">connect_to_peer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_peer_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`create_from_descriptor' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_create_from_descriptor">create_from_descriptor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`disable_debug' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_disable_debug">disable_debug</A></SPAN>
+	<SPAN TITLE="`dispose' was declared in IO_MEDIUM"><A CLASS="efeature" HREF="../../../../base/reference/kernel/io_medium.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`do_not_route' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_do_not_route">do_not_route</A></SPAN>
+	<SPAN TITLE="`enable_debug' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_enable_debug">enable_debug</A></SPAN>
+	<SPAN TITLE="`general_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_general_store">general_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`independent_store' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_independent_store">independent_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`make_bound_to_address' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make_bound_to_address">make_bound_to_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_local_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make_connected_to_peer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_make_connected_to_peer">make_connected_to_peer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_peer_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make_socket' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_make_socket">make_socket</A></SPAN>
+	<SPAN TITLE="`new_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_new_line">new_line</A></SPAN>
+	<SPAN TITLE="`put_boolean' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_double' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_new_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_put_new_line">put_new_line</A></SPAN>
+	<SPAN TITLE="`put_real' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putbool' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putchar' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putchar">putchar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putint' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putreal' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putstring' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_putstring">putstring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`read_boolean' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_boolean">read_boolean</A></SPAN>
+	<SPAN TITLE="`read_character' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_character">read_character</A></SPAN>
+	<SPAN TITLE="`read_double' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_double">read_double</A></SPAN>
+	<SPAN TITLE="`read_integer' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_integer">read_integer</A></SPAN>
+	<SPAN TITLE="`read_line' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_line">read_line</A></SPAN>
+	<SPAN TITLE="`read_real' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_real">read_real</A></SPAN>
+	<SPAN TITLE="`read_stream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_read_stream">read_stream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`readbool' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readbool">readbool</A></SPAN>
+	<SPAN TITLE="`readchar' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readchar">readchar</A></SPAN>
+	<SPAN TITLE="`readdouble' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readdouble">readdouble</A></SPAN>
+	<SPAN TITLE="`readint' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readint">readint</A></SPAN>
+	<SPAN TITLE="`readline' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readline">readline</A></SPAN>
+	<SPAN TITLE="`readreal' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readreal">readreal</A></SPAN>
+	<SPAN TITLE="`readstream' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_readstream">readstream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`route' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_route">route</A></SPAN>
+	<SPAN TITLE="`send' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_send">send</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`send_to' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/datagram_socket.html#f_send_to">send_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">to_address</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_address">set_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_blocking">set_blocking</A></SPAN>
+	<SPAN TITLE="`set_non_blocking' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_non_blocking">set_non_blocking</A></SPAN>
+	<SPAN TITLE="`set_owner' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_owner">set_owner</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">own</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_peer_address' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_peer_address">set_peer_address</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_address">address</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_address_chart.html">SOCKET_ADDRESS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_receive_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_receive_buf_size">set_receive_buf_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_send_buf_size' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_set_send_buf_size">set_send_buf_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`socket_bind' was declared in SOCKET as `bind'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_bind">socket_bind</A></SPAN>
+	<SPAN TITLE="`socket_close' was declared in SOCKET as `close'"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_close">socket_close</A></SPAN>
+	<SPAN TITLE="`write' was declared in SOCKET"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket.html#f_write">write</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_packet</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/packet_chart.html">PACKET</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
 
 </BODY>
 

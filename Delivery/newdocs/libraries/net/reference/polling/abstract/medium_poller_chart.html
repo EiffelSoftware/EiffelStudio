@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>MEDIUM_POLLER Chart</TITLE>
 		
@@ -10,163 +10,85 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/polling/abstract/index.html">net.polling.abstract</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A medium poller for asynchronous IO on </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="estring">s"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_write_only">make_write_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_exception_only">make_exception_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_read_only">make_read_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`address_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`address_not_readable' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`already_bound' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bad_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_msgdontroute' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_oobmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_peekmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connect_in_progress' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`connection_refused' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dtable_full' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error_number' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`except_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_except_mask">Except_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exception_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_exception_command_list">Exception_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`expired_socket' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ignore_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_exception">ignore_exception</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ignore_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_read">ignore_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ignore_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_write">ignore_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalid_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalid_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_except_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_except_mask">last_except_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_read_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_read_mask">last_read_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_write_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_write_mask">last_write_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`medium_select' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_medium_select">medium_select</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">number_to_check</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out_msec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`network' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_buffers' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_permission' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`not_connected' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`protected_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`protocol_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_read_command_list">Read_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_read_mask">Read_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_family_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_ok' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`socket_would_block' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_wait">wait</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`write_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_write_command_list">Write_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`write_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_write_mask">Write_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`zero_option' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">max_des</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out_msec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make">make</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_exception_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_exception_only">make_exception_only</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_read_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_read_only">make_read_only</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_write_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_write_only">make_write_only</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`process_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_process_selected">process_selected</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">number_of_selected</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_exception_command">put_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_read_command">put_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_write_command">put_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_associated_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_exception_command">remove_associated_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_associated_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_read_command">remove_associated_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_associated_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_write_command">remove_associated_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_exception_command">remove_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_read_command">remove_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_write_command">remove_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_exception">set_exception</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_ignore_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_exception">set_ignore_exception</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_ignore_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_read">set_ignore_read</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_ignore_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_write">set_ignore_write</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_read">set_read</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_wait">set_wait</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_write">set_write</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unset_wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_unset_wait">unset_wait</A></SPAN><BR>
-
-<BR>
-
-<BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/polling/abstract/index.html">net.polling.abstract</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A medium poller for asynchronous IO on </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="estring">s"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_write_only">make_write_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_exception_only">make_exception_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_read_only">make_read_only</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources_chart.html">SOCKET_RESOURCES</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`address_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`address_not_readable' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`already_bound' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`bad_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`c_msgdontroute' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`c_oobmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`c_peekmsg' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`connect_in_progress' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`connection_refused' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`dtable_full' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`error' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`error_number' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`except_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_except_mask">Except_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`exception_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_exception_command_list">Exception_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`expired_socket' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`ignore_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_exception">ignore_exception</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`ignore_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_read">ignore_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`ignore_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_ignore_write">ignore_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`invalid_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`invalid_socket_handle' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_except_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_except_mask">last_except_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`last_read_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_read_mask">last_read_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`last_write_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_last_write_mask">last_write_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`medium_select' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_medium_select">medium_select</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">number_to_check</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out_msec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`network' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`no_buffers' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`no_permission' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`not_connected' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`protected_address' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`protocol_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`read_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_read_command_list">Read_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`read_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_read_mask">Read_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`socket_family_not_supported' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_in_use' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_ok' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`socket_would_block' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_wait">wait</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`write_command_list' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_write_command_list">Write_command_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`write_mask' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_write_mask">Write_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_mask_chart.html">POLL_MASK</A></SPAN>
+	<SPAN TITLE="`zero_option' was declared in SOCKET_RESOURCES"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">max_des</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out_msec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`make_exception_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_exception_only">make_exception_only</A></SPAN>
+	<SPAN TITLE="`make_read_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_read_only">make_read_only</A></SPAN>
+	<SPAN TITLE="`make_write_only' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_make_write_only">make_write_only</A></SPAN>
+	<SPAN TITLE="`process_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_process_selected">process_selected</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">number_of_selected</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_exception_command">put_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_read_command">put_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_put_write_command">put_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_associated_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_exception_command">remove_associated_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_associated_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_read_command">remove_associated_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_associated_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_associated_write_command">remove_associated_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_exception_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_exception_command">remove_exception_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_read_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_read_command">remove_read_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_write_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_remove_write_command">remove_write_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_exception">set_exception</A></SPAN>
+	<SPAN TITLE="`set_ignore_exception' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_exception">set_ignore_exception</A></SPAN>
+	<SPAN TITLE="`set_ignore_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_read">set_ignore_read</A></SPAN>
+	<SPAN TITLE="`set_ignore_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_ignore_write">set_ignore_write</A></SPAN>
+	<SPAN TITLE="`set_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_read">set_read</A></SPAN>
+	<SPAN TITLE="`set_wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_wait">set_wait</A></SPAN>
+	<SPAN TITLE="`set_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_set_write">set_write</A></SPAN>
+	<SPAN TITLE="`unset_wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/polling/abstract/medium_poller.html#f_unset_wait">unset_wait</A></SPAN>
+
+</PRE>
 
 </BODY>
 

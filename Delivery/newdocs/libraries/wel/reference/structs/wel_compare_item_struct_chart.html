@@ -1,0 +1,81 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
+<TITLE>WEL_COMPARE_ITEM_STRUCT Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_compare_item_struct_chart.html">WEL_COMPARE_ITEM_STRUCT</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Supplies the identifiers and application-supplied data for two </SPAN>
+		<SPAN CLASS="estring">items in a sorted, owner-drawn list box or combo box. </SPAN>
+		<SPAN CLASS="estring">Whenever an application adds a new item to an owner-drawn </SPAN>
+		<SPAN CLASS="estring">list box or combo box created with the CBS_SORT or LBS_SORT </SPAN>
+		<SPAN CLASS="estring">style, the system sends the owner a Wm_compareitem message. </SPAN>
+		<SPAN CLASS="estring">The `</SPAN><SPAN CLASS="equoted">lparam</SPAN><SPAN CLASS="estring">' parameter of the message contains a long pointer </SPAN>
+		<SPAN CLASS="estring">to a COMPAREITEMSTRUCT structure. Upon receiving the message, </SPAN>
+		<SPAN CLASS="estring">the owner compares the two items and returns a value indicating </SPAN>
+		<SPAN CLASS="estring">which item sorts before the other. "</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_windows_routines_chart.html">WEL_WINDOWS_ROUTINES</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`ctl_id' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_ctl_id">ctl_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`ctl_type' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_ctl_type">ctl_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`foreground_window' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_foreground_window">foreground_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN>
+	<SPAN TITLE="`is_window' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_is_window">is_window</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hwnd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`item_data_1' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_item_data_1">item_data_1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`item_data_2' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_item_data_2">item_data_2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`item_id_1' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_item_id_1">item_id_1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`item_id_2' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_item_id_2">item_id_2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`key_down' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_key_down">key_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`key_locked' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_key_locked">key_locked</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`key_to_string' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_key_to_string">key_to_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`locale_id' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_locale_id">locale_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`resource_string_id' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_resource_string_id">resource_string_id</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`system_directory' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_system_directory">system_directory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`tick_count' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_tick_count">tick_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`window_item' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_compare_item_struct.html#f_window_item">window_item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/controls/wel_control_chart.html">WEL_CONTROL</A></SPAN>
+	<SPAN TITLE="`window_of_item' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_window_of_item">window_of_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hwnd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN>
+	<SPAN TITLE="`windows_directory' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_windows_directory">windows_directory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`hide_cursor' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_hide_cursor">hide_cursor</A></SPAN>
+	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
+	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`message_beep_asterisk' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_message_beep_asterisk">message_beep_asterisk</A></SPAN>
+	<SPAN TITLE="`message_beep_exclamation' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_message_beep_exclamation">message_beep_exclamation</A></SPAN>
+	<SPAN TITLE="`message_beep_hand' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_message_beep_hand">message_beep_hand</A></SPAN>
+	<SPAN TITLE="`message_beep_ok' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_message_beep_ok">message_beep_ok</A></SPAN>
+	<SPAN TITLE="`message_beep_question' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_message_beep_question">message_beep_question</A></SPAN>
+	<SPAN TITLE="`output_debug_string' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_output_debug_string">output_debug_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_cursor_position_absolute' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_set_cursor_position_absolute">set_cursor_position_absolute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
+	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
+	<SPAN TITLE="`show_cursor' was declared in WEL_WINDOWS_ROUTINES"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_windows_routines.html#f_show_cursor">show_cursor</A></SPAN>
+
+</PRE>
+
+</BODY>
+
+</HTML>

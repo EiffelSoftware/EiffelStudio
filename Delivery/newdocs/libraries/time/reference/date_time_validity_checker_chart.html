@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>DATE_TIME_VALIDITY_CHECKER Chart</TITLE>
 		
@@ -10,39 +10,23 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../time/reference/date_time_validity_checker_chart.html">DATE_TIME_VALIDITY_CHECKER</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../time/reference/date_time_validity_checker_chart.html">DATE_TIME_VALIDITY_CHECKER</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../time/reference/index.html">time</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Facility routines to check the validity of </SPAN><A CLASS="eclass" HREF="../../time/reference/date_time_chart.html">DATE_TIME</A><SPAN CLASS="estring">s"</SPAN>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../time/reference/date_validity_checker_chart.html">DATE_VALIDITY_CHECKER</A>
+	<A CLASS="eclass" HREF="../../time/reference/time_validity_checker_chart.html">TIME_VALIDITY_CHECKER</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`date_time_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_date_time_valid">date_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`date_time_valid_with_base' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_date_time_valid_with_base">date_time_valid_with_base</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_correct_date_time' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_is_correct_date_time">is_correct_date_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mo</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">twelve_hour_scale</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../time/reference/index.html">time</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Facility routines to check the validity of </SPAN><A CLASS="eclass" HREF="../../time/reference/date_time_chart.html">DATE_TIME</A><SPAN CLASS="estring">s"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../time/reference/date_validity_checker_chart.html">DATE_VALIDITY_CHECKER</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../time/reference/time_validity_checker_chart.html">TIME_VALIDITY_CHECKER</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`date_time_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_date_time_valid">date_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`date_time_valid_with_base' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_date_time_valid_with_base">date_time_valid_with_base</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">base</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_correct_date_time' is declared in `Current'"><A CLASS="efeature" HREF="../../time/reference/date_time_validity_checker.html#f_is_correct_date_time">is_correct_date_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mo</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">twelve_hour_scale</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

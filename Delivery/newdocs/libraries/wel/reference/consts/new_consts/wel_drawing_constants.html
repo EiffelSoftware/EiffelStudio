@@ -1,182 +1,425 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_DRAWING_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window drawing constants (DT_xxxx, DI_xxxx, ...)"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window drawing constants (DT_xxxx, DI_xxxx, ...)"</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html">WEL_DRAWING_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Arnaud PICHERY [ </SPAN><A CLASS="estring" HREF="mailto:aranud@mail.dotcom.fr">aranud@mail.dotcom.fr</A><SPAN CLASS="estring"> ]"</SPAN><BR>
+<SPAN CLASS="ekeyword">create</SPAN> 
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_valid_rop2_constant"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_valid_rop2_constant">valid_rop2_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> a valid rop2 constant?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> BitBlt and MaskBlt constants</SPAN>
 
-<BR>
+	<A NAME="f_blackness"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_blackness">Blackness</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">66</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BLACKNESS</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_dstinvert"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dstinvert">Dstinvert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5570569</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSTINVERT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html">WEL_DRAWING_CONSTANTS</A><BR>
+	<A NAME="f_maskpaint"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_maskpaint">Maskpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2229030</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 0x220326</SPAN>
 
-<BR>
+	<A NAME="f_mergecopy"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_mergecopy">Mergecopy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12583114</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MERGECOPY</SPAN>
 
-<SPAN CLASS="ekeyword">create</SPAN> <BR>
+	<A NAME="f_mergepaint"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_mergepaint">Mergepaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12255782</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MERGEPAINT</SPAN>
 
-<BR>
+	<A NAME="f_notsrccopy"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_notsrccopy">Notsrccopy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3342344</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as NOTSRCCOPY</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawImage constants</SPAN><BR>
+	<A NAME="f_notsrcerase"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_notsrcerase">Notsrcerase</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1114278</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as NOTSRCERASE</SPAN>
 
-<BR>
+	<A NAME="f_patcopy"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_patcopy">Patcopy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15728673</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as PATCOPY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_di_compat"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_compat">Di_compat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+	<A NAME="f_patinvert"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_patinvert">Patinvert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5898313</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as PATINVERT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_COMPAT</SPAN><BR>
+	<A NAME="f_patpaint"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_patpaint">Patpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16452105</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as PATPAINT</SPAN>
 
-<BR>
+	<A NAME="f_r2_black"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_black">R2_black</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_di_defaultsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_defaultsize">Di_defaultsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+	<A NAME="f_r2_copypen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_copypen">R2_copypen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_DEFAULTSIZE</SPAN><BR>
+	<A NAME="f_r2_masknotpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_masknotpen">R2_masknotpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
 
-<BR>
+	<A NAME="f_r2_maskpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_maskpen">R2_maskpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_di_image"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_image">Di_image</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+	<A NAME="f_r2_maskpennot"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_maskpennot">R2_maskpennot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_IMAGE</SPAN><BR>
+	<A NAME="f_r2_mergenotpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_mergenotpen">R2_mergenotpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A>
 
-<BR>
+	<A NAME="f_r2_mergepen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_mergepen">R2_mergepen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_di_mask"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_mask">Di_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+	<A NAME="f_r2_mergepennot"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_mergepennot">R2_mergepennot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">14</SPAN></A>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_MASK</SPAN><BR>
+	<A NAME="f_r2_nop"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_nop">R2_nop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
 
-<BR>
+	<A NAME="f_r2_not"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_not">R2_not</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_di_normal"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_normal">Di_normal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
+	<A NAME="f_r2_notcopypen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_notcopypen">R2_notcopypen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_NORMAL</SPAN><BR>
+	<A NAME="f_r2_notmaskpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_notmaskpen">R2_notmaskpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<BR>
+	<A NAME="f_r2_notmergepen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_notmergepen">R2_notmergepen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawText constants</SPAN><BR>
+	<A NAME="f_r2_notxorpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_notxorpen">R2_notxorpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
 
-<BR>
+	<A NAME="f_r2_white"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_white">R2_white</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_bottom"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_bottom">Dt_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+	<A NAME="f_r2_xorpen"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_r2_xorpen">R2_xorpen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_BOTTOM</SPAN><BR>
+	<A NAME="f_srcand"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_srcand">Srcand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8913094</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as SRCAND</SPAN>
 
-<BR>
+	<A NAME="f_srccopy"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_srccopy">Srccopy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13369376</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as SRCCOPY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_calcrect"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_calcrect">Dt_calcrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A><BR>
+	<A NAME="f_srcerase"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_srcerase">Srcerase</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4457256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as SRCERASE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_CALCRECT</SPAN><BR>
+	<A NAME="f_srcinvert"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_srcinvert">Srcinvert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6684742</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as SRCINVERT</SPAN>
 
-<BR>
+	<A NAME="f_srcpaint"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_srcpaint">Srcpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15597702</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as SRCPAINT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_center"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_center">Dt_center</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+	<A NAME="f_whiteness"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_whiteness">Whiteness</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16711778</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WHITENESS</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawEdge constants (BDR_xxxx, EDGE_xxxx, BF_xxxx)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_CENTER</SPAN><BR>
+	<A NAME="f_bdr_raisedinner"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bdr_raisedinner">Bdr_raisedinner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BDR_RAISEDINNER</SPAN>
 
-<BR>
+	<A NAME="f_bdr_raisedouter"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bdr_raisedouter">Bdr_raisedouter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BDR_RAISEDOUTER</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_expandtabs"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_expandtabs">Dt_expandtabs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A><BR>
+	<A NAME="f_bdr_sunkeninner"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bdr_sunkeninner">Bdr_sunkeninner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BDR_SUNKENINNER</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_EXPANDTABS</SPAN><BR>
+	<A NAME="f_bdr_sunkenouter"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bdr_sunkenouter">Bdr_sunkenouter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BDR_SUNKENOUTER</SPAN>
 
-<BR>
+	<A NAME="f_bf_adjust"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_adjust">Bf_adjust</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8192</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_ADJUST</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_externalleading"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_externalleading">Dt_externalleading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A><BR>
+	<A NAME="f_bf_bottom"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_bottom">Bf_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_BOTTOM</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_EXTERNALLEADING</SPAN><BR>
+	<A NAME="f_bf_bottomleft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_bottomleft">Bf_bottomleft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_BOTTOMLEFT</SPAN>
 
-<BR>
+	<A NAME="f_bf_bottomright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_bottomright">Bf_bottomright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_BOTTOMRIGHT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_internal"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_internal">Dt_internal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A><BR>
+	<A NAME="f_bf_diagonal"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_diagonal">Bf_diagonal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_DIAGONAL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_INTERNAL</SPAN><BR>
+	<A NAME="f_bf_diagonal_endbottomleft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_diagonal_endbottomleft">Bf_diagonal_endbottomleft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">25</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_DIAGONAL_ENDBOTTOMLEFT</SPAN>
 
-<BR>
+	<A NAME="f_bf_diagonal_endbottomright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_diagonal_endbottomright">Bf_diagonal_endbottomright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">28</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_DIAGONAL_ENDBOTTOMRIGHT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_left"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_left">Dt_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+	<A NAME="f_bf_diagonal_endtopleft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_diagonal_endtopleft">Bf_diagonal_endtopleft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_DIAGONAL_ENDTOPLEFT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_LEFT</SPAN><BR>
+	<A NAME="f_bf_diagonal_endtopright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_diagonal_endtopright">Bf_diagonal_endtopright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">22</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_DIAGONAL_ENDTOPRIGHT</SPAN>
 
-<BR>
+	<A NAME="f_bf_flat"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_flat">Bf_flat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16384</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_FLAT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_noclip"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_noclip">Dt_noclip</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A><BR>
+	<A NAME="f_bf_left"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_left">Bf_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_LEFT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_NOCLIP</SPAN><BR>
+	<A NAME="f_bf_middle"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_middle">Bf_middle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2048</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_MIDDLE</SPAN>
 
-<BR>
+	<A NAME="f_bf_mono"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_mono">Bf_mono</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_MONO</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_noprefix"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_noprefix">Dt_noprefix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2048</SPAN></A><BR>
+	<A NAME="f_bf_rect"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_rect">Bf_rect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_RECT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_NOPREFIX</SPAN><BR>
+	<A NAME="f_bf_right"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_right">Bf_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_RIGHT</SPAN>
 
-<BR>
+	<A NAME="f_bf_soft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_soft">Bf_soft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_SOFT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_right"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_right">Dt_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+	<A NAME="f_bf_top"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_top">Bf_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_TOP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_RIGHT</SPAN><BR>
+	<A NAME="f_bf_topleft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_topleft">Bf_topleft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_TOPLEFT</SPAN>
 
-<BR>
+	<A NAME="f_bf_topright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_bf_topright">Bf_topright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as BF_TOPRIGHT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_singleline"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_singleline">Dt_singleline</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
+	<A NAME="f_edge_bump"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_edge_bump">Edge_bump</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as EDGE_BUMP</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Equivalent to </SPAN><SPAN CLASS="equoted">Bdr_sunkeninner</SPAN><SPAN CLASS="ecomment"> | </SPAN><SPAN CLASS="equoted">Bdr_raisedouter</SPAN><SPAN CLASS="ecomment"></SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_SINGLELINE</SPAN><BR>
+	<A NAME="f_edge_etched"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_edge_etched">Edge_etched</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as EDGE_ETCHED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Equivalent to </SPAN><SPAN CLASS="equoted">Bdr_sunkenouter</SPAN><SPAN CLASS="ecomment"> | </SPAN><SPAN CLASS="equoted">Bdr_raisedinner</SPAN><SPAN CLASS="ecomment"></SPAN>
 
-<BR>
+	<A NAME="f_edge_raised"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_edge_raised">Edge_raised</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as EDGE_RAISED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Equivalent to </SPAN><SPAN CLASS="equoted">Bdr_raisedouter</SPAN><SPAN CLASS="ecomment"> | </SPAN><SPAN CLASS="equoted">Bdr_raisedinner</SPAN><SPAN CLASS="ecomment"></SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_tabstop"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_tabstop">Dt_tabstop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A><BR>
+	<A NAME="f_edge_sunken"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_edge_sunken">Edge_sunken</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as EDGE_SUNKEN</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Equivalent to </SPAN><SPAN CLASS="equoted">Bdr_sunkeninner</SPAN><SPAN CLASS="ecomment"> | </SPAN><SPAN CLASS="equoted">Bdr_sunkenouter</SPAN><SPAN CLASS="ecomment"></SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawFrameControl constants (DFC_xxxx, DFCS_xxxx)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_TABSTOP</SPAN><BR>
+	<A NAME="f_dfc_button"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfc_button">Dfc_button</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFC_BUTTON</SPAN>
 
-<BR>
+	<A NAME="f_dfc_caption"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfc_caption">Dfc_caption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFC_CAPTION</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_top"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_top">Dt_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+	<A NAME="f_dfc_menu"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfc_menu">Dfc_menu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFC_MENU</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_TOP</SPAN><BR>
+	<A NAME="f_dfc_popupmenu"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfc_popupmenu">Dfc_popupmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFC_POPUPMENU</SPAN>
 
-<BR>
+	<A NAME="f_dfc_scroll"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfc_scroll">Dfc_scroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFC_SCROLL</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_vcenter"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_vcenter">Dt_vcenter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+	<A NAME="f_dfcs_adjustrect"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_adjustrect">Dfcs_adjustrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8192</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_ADJUSTRECT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_VCENTER</SPAN><BR>
+	<A NAME="f_dfcs_button3state"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_button3state">Dfcs_button3state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTON3STATE</SPAN>
 
-<BR>
+	<A NAME="f_dfcs_buttoncheck"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_buttoncheck">Dfcs_buttoncheck</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTONCHECK</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dt_wordbreak"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_wordbreak">Dt_wordbreak</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
+	<A NAME="f_dfcs_buttonpush"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_buttonpush">Dfcs_buttonpush</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTONPUSH</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_WORDBREAK</SPAN><BR>
+	<A NAME="f_dfcs_buttonradio"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_buttonradio">Dfcs_buttonradio</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTONRADIO</SPAN>
 
- &nbsp; &nbsp; &nbsp;<BR>
+	<A NAME="f_dfcs_buttonradioimage"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_buttonradioimage">Dfcs_buttonradioimage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTONRADIOIMAGE</SPAN>
 
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+	<A NAME="f_dfcs_buttonradiomask"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_buttonradiomask">Dfcs_buttonradiomask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_BUTTONRADIOMASK</SPAN>
 
-<BR>
+	<A NAME="f_dfcs_captionclose"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_captionclose">Dfcs_captionclose</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CAPTIONCLOSE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
+	<A NAME="f_dfcs_captionhelp"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_captionhelp">Dfcs_captionhelp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CAPTIONHELP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+	<A NAME="f_dfcs_captionmax"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_captionmax">Dfcs_captionmax</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CAPTIONMAX</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+	<A NAME="f_dfcs_captionmin"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_captionmin">Dfcs_captionmin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CAPTIONMIN</SPAN>
 
-<BR>
+	<A NAME="f_dfcs_captionrestore"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_captionrestore">Dfcs_captionrestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CAPTIONRESTORE</SPAN>
 
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_DRAWING_CONSTANTS<BR>
+	<A NAME="f_dfcs_checked"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_checked">Dfcs_checked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_CHECKED</SPAN>
 
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
+	<A NAME="f_dfcs_flat"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_flat">Dfcs_flat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16384</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_FLAT</SPAN>
+
+	<A NAME="f_dfcs_hot"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_hot">Dfcs_hot</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_HOT</SPAN>
+
+	<A NAME="f_dfcs_inactive"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_inactive">Dfcs_inactive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_INACTIVE</SPAN>
+
+	<A NAME="f_dfcs_menuarrow"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_menuarrow">Dfcs_menuarrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_MENUARROW</SPAN>
+
+	<A NAME="f_dfcs_menuarrowright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_menuarrowright">Dfcs_menuarrowright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_MENUARROWRIGHT</SPAN>
+
+	<A NAME="f_dfcs_menubullet"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_menubullet">Dfcs_menubullet</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_MENUBULLET</SPAN>
+
+	<A NAME="f_dfcs_menucheck"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_menucheck">Dfcs_menucheck</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_MENUCHECK</SPAN>
+
+	<A NAME="f_dfcs_mono"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_mono">Dfcs_mono</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_MONO</SPAN>
+
+	<A NAME="f_dfcs_pushed"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_pushed">Dfcs_pushed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_PUSHED</SPAN>
+
+	<A NAME="f_dfcs_scrollcombobox"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollcombobox">Dfcs_scrollcombobox</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLCOMBOBOX</SPAN>
+
+	<A NAME="f_dfcs_scrolldown"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrolldown">Dfcs_scrolldown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLDOWN</SPAN>
+
+	<A NAME="f_dfcs_scrollleft"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollleft">Dfcs_scrollleft</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLLEFT</SPAN>
+
+	<A NAME="f_dfcs_scrollright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollright">Dfcs_scrollright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLRIGHT</SPAN>
+
+	<A NAME="f_dfcs_scrollsizegrip"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollsizegrip">Dfcs_scrollsizegrip</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLSIZEGRIP</SPAN>
+
+	<A NAME="f_dfcs_scrollsizegripright"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollsizegripright">Dfcs_scrollsizegripright</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLSIZEGRIPRIGHT</SPAN>
+
+	<A NAME="f_dfcs_scrollup"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_scrollup">Dfcs_scrollup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_SCROLLUP</SPAN>
+
+	<A NAME="f_dfcs_transparent"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dfcs_transparent">Dfcs_transparent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2048</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DFCS_TRANSPARENT</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawImage constants (DI_xxxx)</SPAN>
+
+	<A NAME="f_di_compat"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_compat">Di_compat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_COMPAT</SPAN>
+
+	<A NAME="f_di_defaultsize"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_defaultsize">Di_defaultsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_DEFAULTSIZE</SPAN>
+
+	<A NAME="f_di_image"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_image">Di_image</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_IMAGE</SPAN>
+
+	<A NAME="f_di_mask"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_mask">Di_mask</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_MASK</SPAN>
+
+	<A NAME="f_di_normal"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_di_normal">Di_normal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DI_NORMAL</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawState constants (DSS_xxxx, DST_xxxx)</SPAN>
+
+	<A NAME="f_dss_disabled"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_disabled">Dss_disabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_DISABLED</SPAN>
+
+	<A NAME="f_dss_hideprefix"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_hideprefix">Dss_hideprefix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_HIDEPREFIX</SPAN>
+
+	<A NAME="f_dss_mono"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_mono">Dss_mono</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_MONO</SPAN>
+
+	<A NAME="f_dss_normal"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_normal">Dss_normal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_NORMAL</SPAN>
+
+	<A NAME="f_dss_prefixonly"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_prefixonly">Dss_prefixonly</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_PREFIXONLY</SPAN>
+
+	<A NAME="f_dss_right"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_right">Dss_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_RIGHT</SPAN>
+
+	<A NAME="f_dss_union"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dss_union">Dss_union</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DSS_UNION</SPAN>
+
+	<A NAME="f_dst_bitmap"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dst_bitmap">Dst_bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DST_BITMAP</SPAN>
+
+	<A NAME="f_dst_complex"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dst_complex">Dst_complex</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DST_COMPLEX</SPAN>
+
+	<A NAME="f_dst_icon"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dst_icon">Dst_icon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DST_ICON</SPAN>
+
+	<A NAME="f_dst_prefixtext"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dst_prefixtext">Dst_prefixtext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DST_PREFIXTEXT</SPAN>
+
+	<A NAME="f_dst_text"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dst_text">Dst_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DST_TEXT</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> DrawText constants (DT_xxxx)</SPAN>
+
+	<A NAME="f_dt_bottom"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_bottom">Dt_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_BOTTOM</SPAN>
+
+	<A NAME="f_dt_calcrect"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_calcrect">Dt_calcrect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_CALCRECT</SPAN>
+
+	<A NAME="f_dt_center"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_center">Dt_center</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_CENTER</SPAN>
+
+	<A NAME="f_dt_expandtabs"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_expandtabs">Dt_expandtabs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">64</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_EXPANDTABS</SPAN>
+
+	<A NAME="f_dt_externalleading"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_externalleading">Dt_externalleading</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_EXTERNALLEADING</SPAN>
+
+	<A NAME="f_dt_hideprefix"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_hideprefix">Dt_hideprefix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1048576</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_HIDEPREFIX</SPAN>
+
+	<A NAME="f_dt_internal"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_internal">Dt_internal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4096</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_INTERNAL</SPAN>
+
+	<A NAME="f_dt_left"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_left">Dt_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_LEFT</SPAN>
+
+	<A NAME="f_dt_noclip"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_noclip">Dt_noclip</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_NOCLIP</SPAN>
+
+	<A NAME="f_dt_noprefix"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_noprefix">Dt_noprefix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2048</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_NOPREFIX</SPAN>
+
+	<A NAME="f_dt_right"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_right">Dt_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_RIGHT</SPAN>
+
+	<A NAME="f_dt_singleline"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_singleline">Dt_singleline</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_SINGLELINE</SPAN>
+
+	<A NAME="f_dt_tabstop"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_tabstop">Dt_tabstop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_TABSTOP</SPAN>
+
+	<A NAME="f_dt_top"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_top">Dt_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_TOP</SPAN>
+
+	<A NAME="f_dt_vcenter"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_vcenter">Dt_vcenter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_VCENTER</SPAN>
+
+	<A NAME="f_dt_wordbreak"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_dt_wordbreak">Dt_wordbreak</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as DT_WORDBREAK</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> MaskBlt only constants</SPAN>
+
+	<A NAME="f_maskcopy"><A CLASS="efeature" HREF="../../../../wel/reference/consts/new_consts/wel_drawing_constants.html#f_maskcopy">maskcopy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_DRAWING_CONSTANTS</PRE>
+
 </BODY>
 
 </HTML>
-<BR>
 

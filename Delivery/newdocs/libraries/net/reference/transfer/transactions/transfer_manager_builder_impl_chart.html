@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>TRANSFER_MANAGER_BUILDER_IMPL Chart</TITLE>
 		
@@ -10,91 +10,56 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl_chart.html">TRANSFER_MANAGER_BUILDER_IMPL</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl_chart.html">TRANSFER_MANAGER_BUILDER_IMPL</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/transactions/index.html">net.transfer.transactions</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Implementation of transfer manager builder"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/data_resource_factory_chart.html">DATA_RESOURCE_FACTORY</A>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/addresses/host_validity_checker_chart.html">HOST_VALIDITY_CHECKER</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`error' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`error_reason' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_error_reason">error_reason</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`host_ok' was declared in HOST_VALIDITY_CHECKER"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/host_validity_checker.html#f_host_ok">host_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_address_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_is_address_correct">is_address_correct</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_empty' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_mode_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_is_mode_valid">is_mode_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_added_source_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_last_added_source_correct">last_added_source_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_added_target_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_last_added_target_correct">last_added_target_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`manager' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_manager">manager</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transfer_manager_chart.html">TRANSFER_MANAGER</A></SPAN>
+	<SPAN TITLE="`manager_built' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_manager_built">manager_built</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transaction">transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transaction_chart.html">TRANSACTION</A></SPAN>
+	<SPAN TITLE="`transfer_finished' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer_finished">transfer_finished</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`transfer_succeeded' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer_succeeded">transfer_succeeded</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/transactions/index.html">net.transfer.transactions</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`add_transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_add_transaction">add_transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`build_manager' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_build_manager">build_manager</A></SPAN>
+	<SPAN TITLE="`remove_transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_remove_transaction">remove_transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`reset_proxies' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_reset_proxies">reset_proxies</A></SPAN>
+	<SPAN TITLE="`reset_source_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_reset_source_proxy">reset_source_proxy</A></SPAN>
+	<SPAN TITLE="`reset_target_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_reset_target_proxy">reset_target_proxy</A></SPAN>
+	<SPAN TITLE="`set_proxies' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_set_proxies">set_proxies</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">port</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_source_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_set_source_proxy">set_source_proxy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">port</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_target_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_set_target_proxy">set_target_proxy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">port</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_timeout' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_set_timeout">set_timeout</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`transfer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer">transfer</A></SPAN>
+	<SPAN TITLE="`wipe_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_wipe_out">wipe_out</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Implementation of transfer manager builder"</SPAN><BR>
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">readable set exists</SPAN>
+	<SPAN CLASS="etag">writable set exists</SPAN>
+	<SPAN CLASS="etag">resource hash</SPAN>
+	<SPAN CLASS="etag">success constraint</SPAN>
+	<SPAN CLASS="etag">count equality</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/data_resource_factory_chart.html">DATA_RESOURCE_FACTORY</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error_reason' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_error_reason">error_reason</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_address_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_is_address_correct">is_address_correct</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_added_source_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_last_added_source_correct">last_added_source_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_added_target_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_last_added_target_correct">last_added_target_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`manager' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_manager">manager</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transfer_manager_chart.html">TRANSFER_MANAGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`manager_built' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_manager_built">manager_built</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_readable">Readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transaction">transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/transactions/transaction_chart.html">TRANSACTION</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transfer_finished' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer_finished">transfer_finished</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transfer_succeeded' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer_succeeded">transfer_succeeded</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`writable' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_writable">Writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_add_transaction">add_transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`build_manager' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_build_manager">build_manager</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_transaction' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_remove_transaction">remove_transaction</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_timeout' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_set_timeout">set_timeout</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`transfer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_transfer">transfer</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/transactions/transfer_manager_builder_impl.html#f_wipe_out">wipe_out</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">readable set exists</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">writable set exists</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">resource hash</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">success constraint</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">count equality</SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

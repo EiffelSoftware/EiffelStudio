@@ -1,83 +1,49 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>FILE_NAME Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/file_name_chart.html">FILE_NAME</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/file_name_chart.html">FILE_NAME</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"File name abstraction"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_make_temporary_name">make_temporary_name</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_make_from_string">make_from_string</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/path_name_chart.html">PATH_NAME</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`is_directory_name_valid' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dir_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_empty' was declared in FINITE"><A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_equal' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/file_name_chart.html">FILE_NAME</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_extension_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_is_extension_valid">is_extension_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ext</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_file_name_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_is_file_name_valid">is_file_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_is_valid">is_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_volume_name_valid' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_is_volume_name_valid">is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">vol_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`to_c' was declared in STRING"><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_to_c">to_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`add_extension' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_add_extension">add_extension</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ext</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`extend' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`extend_from_array' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_extend_from_array">extend_from_array</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`make_from_string' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_directory' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_set_directory">set_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_file_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/file_name.html#f_set_file_name">set_file_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_subdirectory' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_set_subdirectory">set_subdirectory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_volume' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../../base/reference/kernel/path_name.html#f_set_volume">set_volume</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">volume_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`wipe_out' was declared in STRING"><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_wipe_out">wipe_out</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"File name abstraction"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_make_from_string">make_from_string</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/path_name_chart.html">PATH_NAME</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_directory_name_valid' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_is_directory_name_valid">is_directory_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dir_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_empty' was declared in FINITE"><A CLASS="efeature" HREF="../../reference/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_equal' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/file_name_chart.html">FILE_NAME</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_extension_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/file_name.html#f_is_extension_valid">is_extension_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ext</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_file_name_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/file_name.html#f_is_file_name_valid">is_file_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_valid' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/file_name.html#f_is_valid">is_valid</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_volume_name_valid' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_is_volume_name_valid">is_volume_name_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">vol_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_c' was declared in STRING"><A CLASS="efeature" HREF="../../reference/kernel/string.html#f_to_c">to_c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`add_extension' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/file_name.html#f_add_extension">add_extension</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ext</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extend' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extend_from_array' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_extend_from_array">extend_from_array</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directories</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_make">make</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_from_string' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_directory' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_set_directory">set_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_file_name' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/file_name.html#f_set_file_name">set_file_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_subdirectory' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_set_subdirectory">set_subdirectory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">directory_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_volume' was declared in PATH_NAME"><A CLASS="efeature" HREF="../../reference/kernel/path_name.html#f_set_volume">set_volume</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">volume_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wipe_out' was declared in STRING"><A CLASS="efeature" HREF="../../reference/kernel/string.html#f_wipe_out">wipe_out</A></SPAN><BR>
-
-<BR>
-
-<BR>
-
+</PRE>
 
 </BODY>
 

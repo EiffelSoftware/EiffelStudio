@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>JNI_ENVIRONMENT Flat contracts</TITLE>
 		
@@ -10,140 +10,74 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Holds information abouy JNI environment. Potentially many JNI environments can exists at once, but more than one was never tested"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../eiffel2java/reference/jni_environment.html">JNI_ENVIRONMENT</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">create</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_destroy_vm"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_destroy_vm">destroy_vm</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> destroy the JVM and reclaim its ressources</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> !! can only be used in the main thread when it is the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last remaining thread</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_find_class"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class">find_class</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Load in the Java class with the given name</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">name_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_find_class_by_pointer"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class_by_pointer">find_class_by_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">classp</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Get a Java class Eiffel proxy given pointer to the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Java class. Create a new one if needed</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="elocal">classp</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_find_class_pointer"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class_pointer">find_class_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> find class pointer only (used during creation in descendants)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception mechanism</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_check_for_exceptions"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_check_for_exceptions">check_for_exceptions</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Check if a Java exception occured, raise Java exception occured</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_throw_custom_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_throw_custom_exception">throw_custom_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">jclass</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constructs an exception object from the specified class 'jclass'</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with the message specified by 'msg' and causes that exception</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to be thrown.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_throw_java_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_throw_java_exception">throw_java_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">jthrowable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_object.html">JAVA_OBJECT</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> throw the exception 'jthrowable' (must be a java.lang.Throwable object)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Java exception mechanism</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_check_for_exceptions"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_check_for_exceptions">c_check_for_exceptions</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_throw_custom_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_throw_custom_exception">c_throw_custom_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">jclass_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_throw_java_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_throw_java_exception">c_throw_java_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">jthrowable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Thread Mechanism</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_attach_current_thread"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_attach_current_thread">attach_current_thread</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_detach_current_thread"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_detach_current_thread">detach_current_thread</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>JNI_ENVIRONMENT<BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Holds information abouy JNI environment. Potentially many JNI environments can exists at once, but more than one was never tested"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../eiffel2java/reference/jni_environment.html">JNI_ENVIRONMENT</A>
+
+<SPAN CLASS="ekeyword">create</SPAN>
+
+<SPAN CLASS="ekeyword">feature</SPAN> 
+
+	<A NAME="f_destroy_vm"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_destroy_vm">destroy_vm</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> destroy the JVM and reclaim its ressources</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> !! can only be used in the main thread when it is the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last remaining thread</SPAN>
+</A>
+	<A NAME="f_find_class"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class">find_class</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Load in the Java class with the given name</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">name_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_find_class_by_pointer"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class_by_pointer">find_class_by_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">classp</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Get a Java class Eiffel proxy given pointer to the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Java class. Create a new one if needed</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="elocal">classp</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
+</A>
+	<A NAME="f_find_class_pointer"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_find_class_pointer">find_class_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> find class pointer only (used during creation in descendants)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception mechanism</SPAN>
+
+	<A NAME="f_check_for_exceptions"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_check_for_exceptions">check_for_exceptions</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Check if a Java exception occurred, raise Java exception occurred</SPAN>
+</A>
+	<A NAME="f_throw_custom_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_throw_custom_exception">throw_custom_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">jclass</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_class.html">JAVA_CLASS</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constructs an exception object from the specified class 'jclass'</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with the message specified by 'msg' and causes that exception</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to be thrown.</SPAN>
+</A>
+	<A NAME="f_throw_java_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_throw_java_exception">throw_java_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">jthrowable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../eiffel2java/reference/java_object.html">JAVA_OBJECT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> throw the exception 'jthrowable' (must be a java.lang.Throwable object)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Java exception mechanism</SPAN>
+
+	<A NAME="f_c_check_for_exceptions"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_check_for_exceptions">c_check_for_exceptions</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_c_throw_custom_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_throw_custom_exception">c_throw_custom_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">jclass_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_c_throw_java_exception"><A CLASS="efeature" HREF="../../eiffel2java/reference/java_externals.html#f_c_throw_java_exception">c_throw_java_exception</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lenv</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">jthrowable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../eiffel2java/reference/java_externals.html">JAVA_EXTERNALS</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Thread Mechanism</SPAN>
+
+	<A NAME="f_attach_current_thread"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_attach_current_thread">attach_current_thread</A>
+</A>
+	<A NAME="f_detach_current_thread"><A CLASS="efeature" HREF="../../eiffel2java/reference/jni_environment.html#f_detach_current_thread">detach_current_thread</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>JNI_ENVIRONMENT</PRE>
 
 </BODY>
 
 </HTML>
-<BR>
 

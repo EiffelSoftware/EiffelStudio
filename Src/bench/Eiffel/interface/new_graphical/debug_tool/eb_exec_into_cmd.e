@@ -14,7 +14,8 @@ inherit
 		rename
 			step_into as execution_mode
 		redefine
-			make
+			make,
+			tooltext
 		end
 
 create
@@ -47,6 +48,12 @@ feature {NONE} -- Attributes
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_into
+		end
+
+	tooltext: STRING is
+			-- Text for toolbar button.
+		do
+			Result := Interface_names.b_Exec_into
 		end
 
 	menu_name: STRING is

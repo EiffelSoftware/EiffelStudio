@@ -10,7 +10,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			tooltext
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -49,9 +50,15 @@ feature -- Status report
 		end
 
 	tooltip: STRING is
-			-- Tooltip for `Current's toolbar buttons.
+			-- Tooltip for `Current's toolbar button.
 		do
 			Result := Interface_names.e_Display_error_help
+		end
+
+	tooltext: STRING is
+			-- Text for `Current's toolbar button.
+		do
+			Result := Interface_names.b_Display_error_help
 		end
 
 	name: STRING is "Open_help_tool"

@@ -14,7 +14,8 @@ inherit
 		rename
 			Out_of_routine as execution_mode
 		redefine
-			make
+			make,
+			tooltext
 		end
 
 create
@@ -47,6 +48,12 @@ feature {NONE} -- Attributes
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_out
+		end
+
+	tooltext: STRING is
+			-- Text displayed on `Current's buttons.
+		do
+			Result := Interface_names.b_Exec_out
 		end
 
 	menu_name: STRING is

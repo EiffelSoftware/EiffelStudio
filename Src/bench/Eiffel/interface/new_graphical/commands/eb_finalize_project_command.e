@@ -14,7 +14,7 @@ inherit
 			menu_name, pixmap, tooltip,
 			finalization_error, perform_compilation,
 			name,
-			make, description
+			make, description, tooltext
 		end
 
 	SHARED_ERROR_HANDLER
@@ -170,6 +170,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Finalize
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Finalize
 		end
 
 	name: STRING is "Finalize_project"

@@ -13,7 +13,7 @@ inherit
 			confirm_and_compile,
 			menu_name, pixmap, tooltip,
 			perform_compilation, name,
-			make, description
+			make, description, tooltext
 		end
  
 create
@@ -102,6 +102,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Freeze
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Freeze
 		end
 
 	name: STRING is "Freeze_project"

@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 				window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
 			default_position := True
+			create_controls
 		end
 
 feature -- Status report

@@ -416,7 +416,7 @@ feature -- Command loop
 						last_request_cmd.set_output_window (yank_window);
 						last_request_cmd.loop_execute;
 					else
-						io.putstring ("You have lost your licence.%N");
+						io.putstring ("You have lost your license.%N");
 					end;
 				end;
 			end;

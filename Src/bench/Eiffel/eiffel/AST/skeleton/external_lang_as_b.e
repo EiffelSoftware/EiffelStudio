@@ -192,10 +192,10 @@ end
 								else
 									!C_EXTENSION_AS_B!extension
 								end
+								special_part := special_part.substring (pos + 1, special_part.count)
 							end
 
 								-- Remove special type from special_part
-							special_part := special_part.substring (pos + 1, special_part.count)
 							special_part.left_adjust
 							extension.set_special_part (special_part)
 						end

@@ -10,6 +10,7 @@ EXPORTS
 	egc_int_ref_dtype
 	egc_char_ref_dtype
 	egc_bool_ref_dtype
+	egc_platform_level
 	egc_sp_pointer
 	egc_sp_double
 	egc_sp_real
@@ -43,6 +44,7 @@ EXPORTS
 	egc_partab_size
 	egc_partab
 	egc_routdisp
+	egc_type_of_gc
 	
 ;NOT IMPORTED
 	c_outb
@@ -226,6 +228,8 @@ EXPORTS
 	eif_nCmdShow
 	eif_object_id
 	eif_object_id_free
+	eif_object_id_stack_size
+	eif_extend_object_id_stack
 	eif_path_name_compare
 	eif_putenv
 	eif_root_dir_supported
@@ -408,6 +412,10 @@ EXPORTS
 	str_tail
 	str_take
 	str_upper
+	stream_sstore
+	stream_eestore
+	stream_estore
+	stream_malloc
 	upintdiv
 	xequal
 

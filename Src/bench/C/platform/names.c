@@ -1,11 +1,13 @@
-#include "eiffel.h"
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
+#include "eiffel.h"
+
 public EIF_REFERENCE eif_dot_e ()
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	return RTMS (".E");
 #else
 	return RTMS (".e");
@@ -14,7 +16,7 @@ public EIF_REFERENCE eif_dot_e ()
 
 public EIF_REFERENCE eif_dot_o ()
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	return RTMS (".obj");
 #else
 	return RTMS (".o");
@@ -23,7 +25,7 @@ public EIF_REFERENCE eif_dot_o ()
 
 public EIF_REFERENCE eif_driver ()
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	return RTMS ("driver.exe");
 #else
 	return RTMS ("driver");
@@ -32,7 +34,7 @@ public EIF_REFERENCE eif_driver ()
 
 public EIF_CHARACTER eif_eiffel_suffix ()
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	return 'E';
 #else
 	return 'e';
@@ -41,7 +43,7 @@ public EIF_CHARACTER eif_eiffel_suffix ()
 
 public EIF_REFERENCE eif_exec_suffix ()
 {
-#if defined __WINDOWS_386__ || __VMS
+#if defined EIF_WINDOWS || __VMS
 	return RTMS (".exe");
 #else
 	return RTMS ("");
@@ -50,7 +52,7 @@ public EIF_REFERENCE eif_exec_suffix ()
 
 public EIF_REFERENCE eif_finish_freezing ()
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return RTMS ("es3sh");
 #else
 	return RTMS ("finish_freezing");
@@ -59,7 +61,7 @@ public EIF_REFERENCE eif_finish_freezing ()
 
 public EIF_REFERENCE eif_preobj ()
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return RTMS ("preobj.obj");
 #elif defined __VMS
 	return RTMS ("preobj.olb");
@@ -70,8 +72,8 @@ public EIF_REFERENCE eif_preobj ()
 
 public EIF_REFERENCE eif_copy_cmd ()
 {
-#ifdef __WINDOWS_386__
-	return RTMS ("\command.com /c copy");
+#ifdef EIF_WINDOWS
+	return RTMS ("\\command.com /c copy");
 #elif defined __VMS
 	return RTMS ("copy");
 #else
@@ -85,7 +87,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 	 * the system (because of a timeout).
 	 */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	extern char *appl_ini_file ();
 	char eif_timeout[10];
 	int l;
@@ -98,7 +100,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 
 	strcpy(s, "Could not launch system in allotted time.\n");
 	strcat(s, "Try restarting ebench after setting ");
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	strcat(s, "variable\n");
 #elif defined __VMS
 	strcat(s, " the logical\n");
@@ -106,7 +108,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 	strcat(s, "environment\nvariable ");
 #endif
 	strcat(s, "EIF_TIMEOUT to a value larger than\n");
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	l = GetPrivateProfileInt ("Environment", "EIF_TIMEOUT", 15, appl_ini_file()) * 1000;
 	sprintf (eif_timeout, "%d", l);
 	strcat(s, eif_timeout);

@@ -243,7 +243,7 @@ feature -- Byte Code generation
 					melted_feature.store (file)
 
 debug
-	io.error.putstring ("Item written%N")
+	io.error.put_string ("Item written%N")
 end
 				else
 					if removed_list = Void then
@@ -284,7 +284,7 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 			l_names_heap: like Names_heap
 		do
-			create frozen_file.make_c_code_file (workbench_file_name (Efrozen));
+			create frozen_file.make_c_code_file (workbench_file_name (Efrozen, dot_c, 1));
 
 			buffer := generation_buffer
 			buffer.clear_all
@@ -305,7 +305,7 @@ feature -- C code generation
 			from
 				create include_set.make
 				i := 1
-				buffer.putstring ("#include %"eif_project.h%"%N%
+				buffer.put_string ("#include %"eif_project.h%"%N%
 								%#include %"eif_macros.h%"%N%
 								%#include %"eif_struct.h%"%N%N")
 				buffer.start_c_specific_code
@@ -331,21 +331,21 @@ feature -- C code generation
 			until
 				include_set.after
 			loop
-				buffer.putstring ("#include ")
-				buffer.putstring (l_names_heap.item (include_set.item))
+				buffer.put_string ("#include ")
+				buffer.put_string (l_names_heap.item (include_set.item))
 
-				buffer.putstring ("%N%N")
+				buffer.put_string ("%N%N")
 				include_set.forth
 			end
 			include_set := Void
 
 			from
-				buffer.new_line
+				buffer.put_new_line
 				buffer.start_c_specific_code
 				i := 1
 				create temp.make (100000)
-				temp.putstring ("%Nint egc_fpatidtab_init[] = {%N")
-				buffer.putstring ("fnptr egc_frozen_init[] = {%N")
+				temp.put_string ("%Nint egc_fpatidtab_init[] = {%N")
+				buffer.put_string ("fnptr egc_frozen_init[] = {%N")
 			until
 				i > nb
 			loop
@@ -353,16 +353,16 @@ feature -- C code generation
 				unit := values.item (i)
 				if unit /= Void then
 					unit.generate (buffer)
-					temp.putint (unit.real_pattern_id)
-					temp.putstring (",%N")
+					temp.put_integer (unit.real_pattern_id)
+					temp.put_string (",%N")
 				else
-					buffer.putstring ("NULL,%N")
-					temp.putstring ("-1,%N")
+					buffer.put_string ("NULL,%N")
+					temp.put_string ("-1,%N")
 				end
 				i := i + 1
 			end
-			buffer.putstring ("};%N")
-			temp.putstring ("};%N")
+			buffer.put_string ("};%N")
+			temp.put_string ("};%N")
 			temp.end_c_specific_code
 
 			buffer.put_in_file (frozen_file)

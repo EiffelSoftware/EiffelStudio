@@ -12,6 +12,7 @@ inherit
 	GRAPHICAL_FIGURES
 		rename
 			workarea_width as width,
+			workarea_height as height,
 			make as list_make,
 			widget as parent,
 			hole_target as source
@@ -104,6 +105,12 @@ feature -- Properties
 	selected_clickable_text: TEXT_FIGURE;
 			-- Clickable text selected
 
+	text_count: INTEGER is
+			-- Number of characters in `text'
+		do
+			Result := text.count
+		end;
+
 	is_editable: BOOLEAN is
 			-- Are we able to edit text? (no)
 		do
@@ -150,7 +157,7 @@ feature -- Properties
 			end
 		end;
 
-feature -- Acess
+feature -- Access
 
 	source: WIDGET is
 			-- Widget representing text window
@@ -164,6 +171,100 @@ feature -- Acess
 		end
 
 feature -- Status setting
+
+	set_cursor_position (c_pos: like cursor_position) is
+			-- Set `cursor_position' to `c_pos'.
+			-- (Make sure that cursor_position is always visible).
+		local
+			a: like area;
+			i, c: INTEGER;
+			line: TEXT_LINE;
+			found: BOOLEAN;
+			y_pos, b_l_y: INTEGER
+		do
+			cursor_position := c_pos;
+			if not empty then
+				from
+					c := count;
+					a := area;
+					i := 0
+				until
+					found or else i >= c
+				loop
+					line := a.item (i);
+					found := line.text_position > c_pos;
+					i := i + 1
+				end;
+				if not found then
+					line := a.item (0);
+				end;
+				b_l_y := line.base_left_y;
+				if ((b_l_y - maximum_height_per_line) < y_offset) then
+					y_pos := b_l_y - height + maximum_height_per_line
+					update_scroll_position (vertical_scrollbar, y_pos);
+					update_text
+				elseif (b_l_y - y_offset > height) then
+					y_pos := b_l_y - height + 4;
+					update_scroll_position (vertical_scrollbar, y_pos);
+					update_text
+				end;
+			end
+		end;
+
+	set_selection (sp, ep: INTEGER) is
+			-- Set the selection from `start_pos' to `end_pos'.
+		local
+			start_coord, end_coord: COORD_XY;
+			w: INTEGER;
+			t: like text;
+			start_pos, end_pos: INTEGER
+		do
+			clear_selection;
+			if sp /= ep then
+				start_pos := sp + 1;
+				end_pos := ep + 1;
+				t := text;
+				if end_pos > t.count then
+					end_pos := t.count - 1
+				end;
+				start_coord := coordinate (sp);
+				end_coord := coordinate (ep);
+				if start_coord.y = end_coord.y then
+					w := end_coord.x - start_coord.x;
+					-- On same line: create 4 points only
+					add_highlight_point (start_coord.x,
+					start_coord.y - height_offset - y_offset);
+					add_highlight_point (w, 0);
+					add_highlight_point (0, maximum_height_per_line);
+					add_highlight_point (-w, 0);
+				else
+					--!		1----------------2
+					--!  7_____|				|
+					--!  |	 8		4_______3
+					--!  |			  |	   
+					--!  |6_____________5
+					check
+						coord_consist: end_coord.y > start_coord.x
+					end
+					add_highlight_point (start_coord.x,
+						start_coord.y - height_offset - y_offset);
+					add_highlight_point (widest_width - start_coord.x, 0);
+					add_highlight_point (0, end_coord.y - start_coord.y);
+					add_highlight_point (-(widest_width-end_coord.x -
+						initial_x_position), 0);
+					add_highlight_point (0, maximum_height_per_line);
+					add_highlight_point (-end_coord.x, 0);
+					add_highlight_point (0, -(end_coord.y -
+							start_coord.y));
+					add_highlight_point (start_coord.x -
+							initial_x_position, 0);
+				end
+				highlight_selection;
+				drawing.display.flush;
+				update_selected_text (t.substring (start_pos, ep));
+				set_cursor_position (sp);
+			end;
+		end;
 
 	set_background_color (a_color: COLOR) is
 			-- Set `background_color' to `a_color'.
@@ -204,6 +305,7 @@ feature -- Status setting
 	set_editable is
 			-- Allow editing of text.
 		do
+			-- No applicable
 		end;
 
 feature -- Element change
@@ -236,7 +338,6 @@ feature -- Output
 	clear_window is
 			-- Reset the content of window.
 		do
-			text_position := 0;
 			current_x := initial_x_position;
 			x_offset := 0;
 			y_offset := 0;
@@ -298,6 +399,8 @@ end
 		do
 			clear_selection;
 			if selected_clickable_text /= Void then
+				selected_clickable_text.unselect_clickable
+					(drawing, Current, x_offset, y_offset)
 				if highlighted_line /= Void and then 
 					highlighted_line.has (selected_clickable_text) 
 				then
@@ -307,25 +410,12 @@ end
 			end
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
-			-- Set `cursor_position' to `a_position' if the new position
-			-- is not out of bounds.
-		do	
-			-- Not called here (only for editable text)
-		end;
-
 	set_top_character_position (a_position: INTEGER) is
 			-- Set top_cursor_position to `a_position' if the new position
 			-- is not out of bounds.
 		do	
 			-- Not called here (only for editable text)
 		end;
-
-	highlight_selected (a, b: INTEGER) is
-			-- Highlight between positions `a' and `b' using reverse video.
-		do
-			-- Not called here (only for editable text)
-		end
 
 	highlight_line (button_data: BUTTON_DATA) is
 			-- Highlight text line text with `button_data' coordinates.
@@ -334,7 +424,7 @@ end
 				highlighted_line.update_highlighted_line 
 					(drawing, Current, False, x_offset, y_offset)
 			end;
-			find_line (button_data);
+			find_line (button_data.relative_y);
 			highlighted_line := current_line;
 			if highlighted_line /= Void then
 				highlighted_line.update_highlighted_line
@@ -357,7 +447,52 @@ feature -- Update
 
 	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
+		local
+			l_t, l_s: STRING;
+			local_text: like text;
+			c_pos: INTEGER;
+			start_position, end_position: INTEGER
 		do
+			local_text := text;
+
+			if is_case_sensitive then
+				l_t := local_text;
+			else
+				l_t := clone (local_text);
+				l_t.to_lower
+			end;
+			matcher.set_text (l_t)
+			if not equal (matcher.pattern, s) then
+				if is_case_sensitive then
+					l_s := s
+				else
+					l_s := clone (s);
+					l_s.to_lower
+				end;
+				matcher.set_pattern (l_s)
+			end;
+
+			c_pos := cursor_position;
+			if
+				c_pos >= 0 and then
+				c_pos + 1 < local_text.count
+			then
+				matcher.start_at (c_pos);
+				matcher.search_for_pattern;
+				if not matcher.found then
+					if (c_pos > 0) then
+						matcher.start_at (0);
+						matcher.search_for_pattern;
+					end
+				end
+				if matcher.found then
+					start_position := matcher.found_at - 1;
+					end_position := start_position + s.count;
+					highlight_selected (start_position, end_position);
+					set_cursor_position (end_position)
+				end
+			end;
+			matcher.set_text ("")
 		end;
 
 	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
@@ -377,10 +512,11 @@ feature -- Update
 			-- before transport using button data `but_data'.
 		do
 			deselect_all;
-			find_clickable (but_data);
+			find_clickable (but_data.relative_x, but_data.relative_y);
 			selected_clickable_text := current_text;
 			if selected_clickable_text /= Void then
-				highlight_text (current_text)
+				selected_clickable_text.select_clickable
+					(drawing, Current, x_offset, y_offset)
 			end;
 		end;
 
@@ -627,33 +763,37 @@ feature {NONE} -- Selection implementation
 			Result := maximum_height_per_line - maximum_descent_per_line
 		end;
 
-	select_word (button_data: BUTTON_DATA) is
+	widest_width: INTEGER is
+			-- Widest width of the line
+		do
+			if maximum_width < width then
+				Result := width
+			else
+				Result := maximum_width
+			end;
+		end;
+
+	select_word (relative_x, relative_y: INTEGER) is
 			-- Select a word.
 		do
-			find_text (button_data);
+			find_text (relative_x, relative_y);
 			if current_text /= Void then
 				highlight_text (current_text)
 			end
 		end;
 
-	select_line (button_data: BUTTON_DATA) is
+	select_line (relative_y: INTEGER) is
 			-- Select a line.
 		local
-			mp: MEL_POINT;	
-			w: INTEGER
+			mp: MEL_POINT
 		do
-			find_line (button_data);
+			find_line (relative_y);
 			if current_line /= Void then
-				if maximum_width < width then
-					w := width
-				else
-					w := maximum_width
-				end;
 				add_highlight_point
 					(0, current_line.base_left_y - height_offset - y_offset);
-				add_highlight_point (w, 0);
+				add_highlight_point (widest_width, 0);
 				add_highlight_point (0, maximum_height_per_line);
-				add_highlight_point (-w, 0);
+				add_highlight_point (-widest_width, 0);
 			
 				highlight_selection;
 				update_selected_text (current_line.text)
@@ -666,15 +806,10 @@ feature {NONE} -- Selection implementation
 			w: INTEGER
 		do
 			is_select_all := True;
-			if maximum_width < width then
-				w := width
-			else
-				w := maximum_width
-			end;
 			add_highlight_point (0, 0);
-			add_highlight_point (w, 0);
+			add_highlight_point (widest_width, 0);
 			add_highlight_point (0, height);
-			add_highlight_point (-w, 0);
+			add_highlight_point (-widest_width, 0);
 
 			highlight_selection;
 			update_selected_text (text)

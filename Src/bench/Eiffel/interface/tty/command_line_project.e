@@ -140,6 +140,16 @@ feature -- Update
 					"No write permissions on project.%N%
 					%Project opened in read-only mode.%N")
 			end
+			if Ace_name /= Void then
+				if Eiffel_project.ace.valid_file_name (Ace_name) then
+					Eiffel_project.ace.set_file_name (Ace_name)
+				else
+					io.error.putstring ("Ace file `");
+					io.error.putstring (Ace_name);
+					io.error.putstring ("' does not exist.%N")
+					error_occurred := True
+				end
+			end
 		end;
 
 	make_new_project (is_loop: BOOLEAN) is

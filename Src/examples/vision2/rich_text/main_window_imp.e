@@ -30,9 +30,11 @@ feature {NONE}-- Initialization
 			l_ev_menu_bar_1: EV_MENU_BAR
 			l_ev_menu_2: EV_MENU
 			l_ev_vertical_box_1: EV_VERTICAL_BOX
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 			l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
-			l_ev_cell_1: EV_CELL
+			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+			l_ev_label_1: EV_LABEL
+			l_ev_cell_1, l_ev_cell_2: EV_CELL
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -56,9 +58,14 @@ feature {NONE}-- Initialization
 			create italic_button
 			create underlined_button
 			create striked_through_button
-			create rich_text
-			create l_ev_cell_1
+			create l_ev_horizontal_separator_1
 			create l_ev_horizontal_box_2
+			create l_ev_label_1
+			create l_ev_cell_1
+			create tab_width_entry
+			create rich_text
+			create l_ev_cell_2
+			create l_ev_horizontal_box_3
 			create l_ev_frame_1
 			create general_label
 			create l_ev_frame_2
@@ -82,12 +89,17 @@ feature {NONE}-- Initialization
 			format_toolbar.extend (italic_button)
 			format_toolbar.extend (underlined_button)
 			format_toolbar.extend (striked_through_button)
-			l_ev_vertical_box_1.extend (rich_text)
-			l_ev_vertical_box_1.extend (l_ev_cell_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_frame_1)
+			l_ev_horizontal_box_2.extend (l_ev_label_1)
+			l_ev_horizontal_box_2.extend (l_ev_cell_1)
+			l_ev_horizontal_box_2.extend (tab_width_entry)
+			l_ev_vertical_box_1.extend (rich_text)
+			l_ev_vertical_box_1.extend (l_ev_cell_2)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (general_label)
-			l_ev_horizontal_box_2.extend (l_ev_frame_2)
+			l_ev_horizontal_box_3.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (caret_position_label)
 			
 			set_title ("Rich Text Example")
@@ -97,8 +109,10 @@ feature {NONE}-- Initialization
 			word_wrapping_menu_item.enable_select
 			word_wrapping_menu_item.set_text ("Word Wrapping")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_1.disable_item_expand (font_selection)
 			l_ev_horizontal_box_1.disable_item_expand (size_selection)
 			l_ev_horizontal_box_1.disable_item_expand (color_toolbar)
@@ -110,10 +124,18 @@ feature {NONE}-- Initialization
 			italic_button.set_text ("I")
 			underlined_button.set_text ("U")
 			striked_through_button.set_text ("S")
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_1)
+			l_ev_horizontal_box_2.disable_item_expand (tab_width_entry)
+			l_ev_label_1.set_text ("Tab Width")
+			l_ev_cell_1.set_minimum_width (tiny_padding)
+			tab_width_entry.set_text ("1")
+			tab_width_entry.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 250))
+			tab_width_entry.set_value (1)
 			rich_text.set_text ("Some sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text.%N%NAnd a little more.%N%NThe end.")
-			l_ev_cell_1.set_minimum_height (tiny_padding)
-			l_ev_horizontal_box_2.set_padding_width (tiny_padding)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_frame_2)
+			l_ev_cell_2.set_minimum_height (tiny_padding)
+			l_ev_horizontal_box_3.set_padding_width (tiny_padding)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_style (1)
 			l_ev_frame_2.set_minimum_width (caret_position_status_bar_width)
 			l_ev_frame_2.set_style (1)
@@ -129,6 +151,7 @@ feature {NONE}-- Initialization
 			italic_button.select_actions.extend (agent italic_selected)
 			underlined_button.select_actions.extend (agent underline_selected)
 			striked_through_button.select_actions.extend (agent strike_through_selected)
+			tab_width_entry.change_actions.extend (agent tab_width_changed (?))
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -145,6 +168,7 @@ feature -- Access
 	color_toolbar, format_toolbar: EV_TOOL_BAR
 	color_button: EV_TOOL_BAR_BUTTON
 	bold_button, italic_button, underlined_button, striked_through_button: EV_TOOL_BAR_TOGGLE_BUTTON
+	tab_width_entry: EV_SPIN_BUTTON
 	rich_text: EV_RICH_TEXT
 	general_label, caret_position_label: EV_LABEL
 
@@ -205,6 +229,11 @@ feature {NONE} -- Implementation
 	
 	strike_through_selected is
 			-- Called by `select_actions' of `striked_through_button'.
+		deferred
+		end
+	
+	tab_width_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `tab_width_entry'.
 		deferred
 		end
 	

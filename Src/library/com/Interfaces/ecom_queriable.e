@@ -23,7 +23,6 @@ feature  {NONE} -- Initialization
 			-- Make from other Queriable.
 		require
 			non_void_other: other /= Void
-			valid_other: other.item /= default_pointer
 		local
 			a_stub: ECOM_STUB
 		do

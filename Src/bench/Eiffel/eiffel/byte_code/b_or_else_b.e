@@ -26,6 +26,7 @@ feature -- Enlarging
 			-- Enlarge node. Try to get rid of useless code if possible.
 		local
 			l_b_or_else_bl: B_OR_ELSE_BL
+			l_attr: ATTRIBUTE_B
 			l_bool_val: VALUE_I
 			l_is_normal: BOOLEAN
 		do
@@ -45,23 +46,29 @@ feature -- Enlarging
 				else
 					l_bool_val := right.evaluate
 					if l_bool_val.is_boolean then
-						if not l_bool_val.boolean_value or not is_or then
+						if l_bool_val.boolean_value then
+								-- case of: XXX or True
+								--       or XXX or else True
+							l_attr ?= left
+							if is_or or left.is_predefined or (l_attr /= Void) then
+									-- No harm by not evaluating XXX if either condition is met:
+									-- 1 - we have a `is_or', therefore compiler is authorized to
+									--     change the evaluation order
+									-- 2 - XXX is predefined (meaning by not evaluating we do not
+									--     change the semantic)
+									-- 3 - XXX is an attribute and therefore behaves as if it was
+									--     a predefined entity
+									-- In this case, we always return a True expression.
+								create {BOOL_CONST_B} Result.make (True)
+							else
+									-- We cannot optimize it away and we need to evaluate XXX.
+								l_is_normal := True
+							end
+						else
 								-- case of: XXX or False_expression
 								--       or XXX or else False_expression
-								--       or XXX or else True_expression
-								-- We always need to return left-hand side, even for third
-								-- case because `or else' implies a certain order of
-								-- evaluation.
+								-- We always need to return left-hand side.
 							Result := left
-						else
-							check
-								valid_simplification: l_bool_val.boolean_value and is_or
-							end
-								-- Expression will always be True.
-								-- case of: XXX or True_expression
-								-- Note: you cannot do such an optimization with a `or else'
-								-- statement as the order matter (see above comments).
-							create {BOOL_CONST_B} Result.make (True)
 						end
 					else
 						l_is_normal := True

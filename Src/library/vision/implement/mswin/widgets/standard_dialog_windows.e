@@ -138,7 +138,7 @@ feature -- Status setting
 	hide_ok_button is
 			-- Hide the `ok_button'.
 		do
-			if exists and then not ok_button_hidden then
+			if exists and then not ok_button_hidden and then shown then
 				ok_button.hide
 				ok_button_hidden := True
 				adjust_dialog
@@ -153,7 +153,7 @@ feature -- Status setting
 	hide_cancel_button is
 			-- Hide the `cancel_button'.
 		do
-			if exists and then not cancel_button_hidden then
+			if exists and then not cancel_button_hidden and then shown then
 				cancel_button.hide
 				cancel_button_hidden := True
 				adjust_dialog
@@ -168,7 +168,7 @@ feature -- Status setting
 	hide_help_button is
 			-- Hide the `help_button'.
 		do
-			if exists and then not help_button_hidden then
+			if exists and then not help_button_hidden and then shown then
 				help_button.hide
 				help_button_hidden:= True
 				adjust_dialog
@@ -183,7 +183,7 @@ feature -- Status setting
 	show_ok_button is
 			-- Show the `ok_button'.
 		do
-			if exists and then ok_button_hidden then
+			if exists and then ok_button_hidden and then shown then
 				ok_button.show
 				ok_button_hidden := False
 				adjust_dialog
@@ -198,7 +198,7 @@ feature -- Status setting
 	show_cancel_button is
 			-- Show the `cancel_button'.
 		do
-			if exists and then cancel_button_hidden then
+			if exists and then cancel_button_hidden and then shown then
 				cancel_button.show
 				cancel_button_hidden := False
 				adjust_dialog
@@ -213,7 +213,7 @@ feature -- Status setting
 	show_help_button is
 			-- Show the `help_button'.
 		do
-			if exists and then help_button_hidden then
+			if exists and then help_button_hidden and then shown then
 				help_button.show
 				help_button_hidden := False
 				adjust_dialog

@@ -62,8 +62,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Sb_getparts,
-				0, 0)
+			Result := cwin_send_message_result_integer (item, Sb_getparts,
+				to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result > 0
 		end
@@ -82,9 +82,8 @@ feature -- Status report
 			create Result.make (text_length_for_part (index))
 			Result.fill_blank
 			create a_wel_string.make (Result)
-			nb := cwin_send_message_result (item,
-				Sb_gettext, index,
-				cwel_pointer_to_integer (a_wel_string.item))
+			nb := cwin_send_message_result_integer (item,
+				Sb_gettext, to_wparam (index), a_wel_string.item)
 			Result := a_wel_string.string
 			Result.keep_head (nb)
 		ensure
@@ -102,7 +101,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 		do
 			Result := cwin_lo_word (cwin_send_message_result (item,
-				Sb_gettextlength, index, 0))
+				Sb_gettextlength, to_wparam (index), to_lparam (0)))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -116,7 +115,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 		do
 			Result := cwin_hi_word (cwin_send_message_result (item,
-				Sb_gettextlength, index, 0))
+				Sb_gettextlength, to_wparam (index), to_lparam (0)))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -130,8 +129,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Sb_getrect, index,
-				Result.to_integer)
+			cwin_send_message (item, Sb_getrect, to_wparam (index), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -146,8 +144,7 @@ feature -- Status report
 		do
 			create Result.make (0, number_of_parts - 1)
 			create a.make (Result)
-			cwin_send_message (item, Sb_getparts, number_of_parts,
-				cwel_pointer_to_integer (a.item))
+			cwin_send_message (item, Sb_getparts, to_wparam (number_of_parts), a.item)
 			Result := a.to_array (0)
 		ensure
 			result_not_void: Result /= Void
@@ -193,7 +190,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_size, 0, 0)
+			cwin_send_message (item, Wm_size, to_wparam (0), to_lparam (0))
 		end
 
 feature -- Element change
@@ -203,7 +200,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Sb_simple, 1, 0)
+			cwin_send_message (item, Sb_simple, to_wparam (1), to_lparam (0))
 		end
 
 	set_multiple_mode is
@@ -211,7 +208,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Sb_simple, 0, 0)
+			cwin_send_message (item, Sb_simple, to_wparam (0), to_lparam (0))
 		end
 
 	set_simple_text (a_text: STRING) is
@@ -223,8 +220,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_text)
-			cwin_send_message (item, Sb_settext, Simple_part,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Sb_settext, to_wparam (Simple_part), a_wel_string.item)
 		end
 
 	set_simple_text_with_style (a_text: STRING; a_style: INTEGER) is
@@ -239,8 +235,7 @@ feature -- Element change
 		do
 			create a_wel_string.make (a_text)
 			cwin_send_message (item, Sb_settext,
-				Simple_part + a_style,
-				cwel_pointer_to_integer (a_wel_string.item))
+				to_wparam (Simple_part + a_style), a_wel_string.item)
 		end
 
 	set_parts (a_edges: ARRAY [INTEGER]) is
@@ -258,8 +253,7 @@ feature -- Element change
 			a: WEL_INTEGER_ARRAY
 		do
 			create a.make (a_edges)
-			cwin_send_message (item, Sb_setparts,
-				a_edges.count, cwel_pointer_to_integer (a.item))
+			cwin_send_message (item, Sb_setparts, to_wparam (a_edges.count), a.item)
 		ensure
 			edges_set: edges.same_items (a_edges)
 		end
@@ -276,8 +270,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_text)
-			cwin_send_message (item, Sb_settext,
-				index, cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Sb_settext, to_wparam (index), a_wel_string.item)
 		ensure
 			text_set: a_text.is_equal (text_for_part (index))
 		end
@@ -296,8 +289,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_text)
-			cwin_send_message (item, Sb_settext, index + a_style,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Sb_settext, to_wparam (index + a_style), a_wel_string.item)
 		ensure
 			text_set: a_text.is_equal (text_for_part (index))
 			style_is_set: a_style = text_style_for_part (index)
@@ -316,7 +308,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 		do
 			cwin_send_message (item, Sb_settext,
-				index + Sbt_ownerdraw + a_style, value)
+				to_wparam (index + Sbt_ownerdraw + a_style), to_lparam (value))
 		ensure
 			style_is_set: text_style_for_part (index) =
 				Sbt_ownerdraw + a_style
@@ -330,7 +322,7 @@ feature -- Element change
 			exists: exists
 			minimum_height: a_height >= 2 * vertical_border_width
 		do
-			cwin_send_message (item, Sb_setminheight, a_height, 0)
+			cwin_send_message (item, Sb_setminheight, to_wparam (a_height), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation
@@ -350,8 +342,7 @@ feature {NONE} -- Implementation
 		do
 			create borders.make (0, 2)
 			create a.make (borders)
-			cwin_send_message (item, Sb_getborders, 0,
-				cwel_pointer_to_integer (a.item))
+			cwin_send_message (item, Sb_getborders, to_wparam (0), a.item)
 			Result := a.to_array (0).item (index)
 		ensure
 			positive_result: Result > 0

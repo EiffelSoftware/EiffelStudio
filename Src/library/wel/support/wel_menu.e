@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_by_id,
@@ -75,7 +80,8 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make(a_string)
-			cwin_append_menu (item, Mf_string + Mf_bycommand, an_id, a_wel_string.item)
+			cwin_append_menu (item, Mf_string + Mf_bycommand,
+				cwel_integer_to_pointer (an_id), a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
@@ -97,7 +103,7 @@ feature -- Element change
 				-- `a_menu' must be shared since Windows will
 				-- destroy it automatically with `Current'.
 			create a_wel_string.make (a_title)
-			cwin_append_menu (item, Mf_popup, a_menu.to_integer, a_wel_string.item)
+			cwin_append_menu (item, Mf_popup, a_menu.item, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -106,10 +112,8 @@ feature -- Element change
 			-- Append a separator to the current menu.
 		require
 			exists: exists
-		local
-			a_default_pointer: POINTER
 		do
-			cwin_append_menu (item, Mf_separator, 0, a_default_pointer)
+			cwin_append_menu (item, Mf_separator, default_pointer, default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -126,12 +130,14 @@ feature -- Element change
 			item_not_exists: not item_exists (an_id)
 		local
 			a_wel_string: WEL_STRING
+			l_menu_id: POINTER
 		do
 			create a_wel_string.make(a_string)
+			l_menu_id := cwel_integer_to_pointer (an_id)
 			if has_separator then
-				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubarbreak, an_id, a_wel_string.item)
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubarbreak, l_menu_id, a_wel_string.item)
 			else
-				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubreak, an_id, a_wel_string.item)
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubreak, l_menu_id, a_wel_string.item)
 			end
 		ensure
 			new_count: count = old count + 1
@@ -149,7 +155,8 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
-			cwin_append_menu (item, Mf_bitmap + Mf_bycommand, an_id, bitmap.item)
+			cwin_append_menu (item, Mf_bitmap + Mf_bycommand,
+				cwel_integer_to_pointer (an_id), bitmap.item)
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
@@ -169,7 +176,8 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_insert_menu (item, a_position, Mf_string + Mf_byposition, an_id, a_wel_string.item)
+			cwin_insert_menu (item, a_position, Mf_string + Mf_byposition,
+				 cwel_integer_to_pointer (an_id), a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			string_set: id_string (an_id).is_equal (a_string)
@@ -189,7 +197,8 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_title)
-			cwin_insert_menu (item, a_position, Mf_popup + Mf_byposition, a_menu.to_integer, a_wel_string.item)
+			cwin_insert_menu (item, a_position, Mf_popup + Mf_byposition,
+				a_menu.item, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			popup_menu_set: popup_menu (a_position).item = a_menu.item
@@ -201,10 +210,9 @@ feature -- Element change
 			exists: exists
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
-		local
-			a_default_pointer: POINTER
 		do
-			cwin_insert_menu (item, a_position, Mf_separator + Mf_byposition, 0, a_default_pointer)
+			cwin_insert_menu (item, a_position, Mf_separator + Mf_byposition,
+				default_pointer, default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -221,7 +229,8 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
-			cwin_insert_menu (item, a_position, Mf_bitmap + Mf_byposition, an_id, bitmap.item)
+			cwin_insert_menu (item, a_position, Mf_bitmap + Mf_byposition,
+				 cwel_integer_to_pointer (an_id), bitmap.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -238,7 +247,8 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_modify_menu (item, an_id, Mf_string + Mf_bycommand, an_id, a_wel_string.item)
+			cwin_modify_menu (item, an_id, Mf_string + Mf_bycommand,
+				cwel_integer_to_pointer (an_id), a_wel_string.item)
 		ensure
 			string_set: id_string (an_id).is_equal (a_string)
 		end
@@ -583,20 +593,18 @@ feature {NONE} -- Externals
 			"CreatePopupMenu()"
 		end
 
-	cwin_append_menu (hmenu: POINTER; flags, new_item: INTEGER;
-			a_item: POINTER) is
+	cwin_append_menu (hmenu: POINTER; flags: INTEGER; new_item, a_item: POINTER) is
 			-- SDK AppendMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT_PTR, LPCSTR)"
 		alias
 			"AppendMenu"
 		end
 
-	cwin_insert_menu (hmenu: POINTER; position, flags, new_item: INTEGER;
-			a_item: POINTER) is
+	cwin_insert_menu (hmenu: POINTER; position, flags: INTEGER; new_item, a_item: POINTER) is
 			-- SDK InsertMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCSTR)"
 		alias
 			"InsertMenu"
 		end
@@ -693,11 +701,10 @@ feature {NONE} -- Externals
 			"TrackPopupMenu"
 		end
 
-	cwin_modify_menu (hmenu: POINTER; id, flags, new_id: INTEGER;
-			new_name: POINTER) is
+	cwin_modify_menu (hmenu: POINTER; id, flags: INTEGER; new_id, new_name: POINTER) is
 			-- SDK ModifyMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCSTR)"
 		alias
 			"ModifyMenu"
 		end

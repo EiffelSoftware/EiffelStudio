@@ -112,7 +112,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			if client_window /= Void and then client_window.exists then
 				Result := cwin_def_frame_proc (hwnd,
@@ -137,12 +137,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_def_frame_proc (hwnd, hwnd_mdi_client: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	cwin_def_frame_proc (hwnd, hwnd_mdi_client: POINTER; msg: INTEGER; wparam,
+			lparam: POINTER): POINTER is
 			-- SDK DefFrameProc
 		external
-			"C [macro <wel.h>] (HWND, HWND, UINT, WPARAM, %
-				%LPARAM): EIF_INTEGER"
+			"C [macro <wel.h>] (HWND, HWND, UINT, WPARAM, LPARAM): LRESULT"
 		alias
 			"DefFrameProc"
 		end

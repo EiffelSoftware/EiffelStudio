@@ -20,23 +20,15 @@ feature -- Access
 	id: INTEGER is
 			-- Identifier of the control sending the message
 		do
-			Result := w_param
+			Result := w_param.to_integer_32
 		end
 
 	nmhdr: WEL_NMHDR is
 			-- Information about the notification
 		do
-			create Result.make_by_pointer (cwel_integer_to_pointer (l_param))
+			create Result.make_by_pointer (l_param)
 		ensure
 			result_not_void: Result /= Void
-		end
-
-feature {NONE} -- Externals
-
-	cwel_integer_to_pointer (i: INTEGER): POINTER is
-			-- Converts an integer `i' to a pointer
-		external
-			"C [macro <wel.h>] (int): EIF_POINTER"
 		end
 
 end -- class WEL_NOTIFY_MESSAGE

@@ -59,14 +59,6 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER) is
-			-- SDK SetWindowLong
-		external
-			"C [macro %"wel.h%"] (HWND, int, LONG)"
-		alias
-			"SetWindowLong"
-		end
-
 end -- class WEL_WINDOW_MANAGER
 
 --|----------------------------------------------------------------

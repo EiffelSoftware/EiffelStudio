@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		require
 			positive_bitmap_id: a_bitmap_id > 0
 		do
-			internal_bitmap_id := a_bitmap_id
+			internal_bitmap_id := cwel_integer_to_pointer (a_bitmap_id)
 			structure_make
 			set_bitmap_id (a_bitmap_id)
 		ensure
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			valid_tool_bar_bitmap_constant:
 				valid_tool_bar_bitmap_constant (a_bitmap_id)
 		do
-			internal_bitmap_id := a_bitmap_id
+			internal_bitmap_id := cwel_integer_to_pointer (a_bitmap_id)
 			predefined_id := True
 			structure_make
 			set_predefined_bitmap_id (a_bitmap_id)
@@ -74,14 +74,21 @@ feature {NONE} -- Initialization
 				a_bitmap.increment_reference
 			end
 			structure_make
-			cwel_tbaddbitmap_set_nid (item, a_bitmap.to_integer)
+			cwel_tbaddbitmap_set_nid (item, a_bitmap.item)
 		ensure
-			bitmap_set: bitmap_id = a_bitmap.to_integer
+			bitmap_set: bitmap_id_as_pointer = a_bitmap.item
 		end
 
 feature -- Access
 
 	bitmap_id: INTEGER is
+			-- Resource identifier of the bitmap resource that
+			-- contains the button images.
+		do
+			Result := cwel_tbaddbitmap_get_nid (item).to_integer_32
+		end
+
+	bitmap_id_as_pointer: POINTER is
 			-- Resource identifier of the bitmap resource that
 			-- contains the button images.
 		do
@@ -106,7 +113,7 @@ feature {WEL_TOOL_BAR} -- Internal State
 	internal_bitmap_object_id: INTEGER
 			-- Object id of `internal_bitmap'
 
-	internal_bitmap_id: INTEGER
+	internal_bitmap_id: POINTER
 			-- Associated bitmap. Void if a predefined bitmap or
 			-- a ressource bitmap is associated.
 
@@ -135,7 +142,7 @@ feature -- Element change
 				-- Set the new bitmap id.
 			cwel_tbaddbitmap_set_hinst (item,
 				main_args.resource_instance.item)
-			cwel_tbaddbitmap_set_nid (item, a_bitmap_id)
+			cwel_tbaddbitmap_set_nid (item, cwel_integer_to_pointer (a_bitmap_id))
 		ensure
 			bitmap_id_set: bitmap_id = a_bitmap_id
 		end
@@ -159,7 +166,7 @@ feature -- Element change
 
 				-- Set the new bitmap id.
 			cwel_tbaddbitmap_set_hinst (item, Hinst_commctrl)
-			cwel_tbaddbitmap_set_nid (item, a_bitmap_id)
+			cwel_tbaddbitmap_set_nid (item, cwel_integer_to_pointer (a_bitmap_id))
 		ensure
 			bitmap_id_set: bitmap_id = a_bitmap_id
 		end
@@ -210,9 +217,9 @@ feature {NONE} -- Externals
 			"C [macro <tbaddbmp.h>] (TBADDBITMAP *, HINSTANCE)"
 		end
 
-	cwel_tbaddbitmap_set_nid (ptr: POINTER; value: INTEGER) is
+	cwel_tbaddbitmap_set_nid (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro <tbaddbmp.h>] (TBADDBITMAP *, UINT)"
+			"C [macro <tbaddbmp.h>] (TBADDBITMAP *, UINT_PTR)"
 		end
 
 	cwel_tbaddbitmap_get_hinst (ptr: POINTER): POINTER is
@@ -220,7 +227,7 @@ feature {NONE} -- Externals
 			"C [macro <tbaddbmp.h>] (TBADDBITMAP *): EIF_POINTER"
 		end
 
-	cwel_tbaddbitmap_get_nid (ptr: POINTER): INTEGER is
+	cwel_tbaddbitmap_get_nid (ptr: POINTER): POINTER is
 		external
 			"C [macro <tbaddbmp.h>] (TBADDBITMAP *): EIF_POINTER"
 		end

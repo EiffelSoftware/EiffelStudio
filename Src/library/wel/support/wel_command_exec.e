@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute (window: WEL_WINDOW; message, wparam, lparam: INTEGER) is
+	execute (window: WEL_WINDOW; message: INTEGER; wparam, lparam: POINTER) is
 			-- Create message information corresponding to `message'
 			-- and execute `command'.
 		require

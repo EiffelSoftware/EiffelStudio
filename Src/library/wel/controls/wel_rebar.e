@@ -96,7 +96,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Rb_getbandcount, 0, 0)
+			Result := cwin_send_message_result_integer (item, Rb_getbandcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -106,7 +106,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Rb_getrowcount, 0, 0)
+			Result := cwin_send_message_result_integer (item, Rb_getrowcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -116,7 +116,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Rb_getrowheight, index, 0)
+			Result := cwin_send_message_result_integer (item, Rb_getrowheight, to_wparam (index), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -129,7 +129,7 @@ feature -- Status report
 		do
 			create Result.make
 			Result.set_mask (Rbim_imagelist)
-			cwin_send_message (item, Rb_getbarinfo, 0, Result.to_integer)
+			cwin_send_message (item, Rb_getbarinfo, to_wparam (0), Result.item)
 		end
 
 	get_band_info (index: INTEGER): WEL_REBARBANDINFO is
@@ -149,7 +149,7 @@ feature -- Status report
 			create buffer.make (buffer_size)
 			buffer.fill_blank
 			Result.set_text (buffer)
-			cwin_send_message (item, Rb_getbandinfo, index, Result.to_integer)
+			cwin_send_message (item, Rb_getbandinfo, to_wparam (index), Result.item)
 		end
 
 feature -- Status setting
@@ -161,7 +161,7 @@ feature -- Status setting
 			info_not_void: info /= Void
 			info_exists: info.exists
 		do
-			cwin_send_message (item, Rb_setbarinfo, 0, info.to_integer)
+			cwin_send_message (item, Rb_setbarinfo, to_wparam (0), info.item)
 		end
 
 	set_band_info (info: WEL_REBARBANDINFO; index: INTEGER) is
@@ -174,7 +174,7 @@ feature -- Status setting
 			info_not_void: info /= Void
 			info_exists: info.exists
 		do
-			cwin_send_message (item, Rb_setbandinfo, index, info.to_integer)
+			cwin_send_message (item, Rb_setbandinfo, to_wparam (index), info.item)
 		end
 
 feature -- Element change
@@ -184,14 +184,14 @@ feature -- Element change
 			-- We need to use both windows methods to reparent
 			-- the rebar otherwise it doesn't work.
    		do
-			if a_parent /= void then
+			if a_parent /= Void then
 				parent := a_parent
 				cwin_set_parent (item, a_parent.item)
-				cwin_send_message (item, Rb_setparent, a_parent.to_integer, 0)
+				cwin_send_message (item, Rb_setparent, a_parent.item, to_lparam (0))
 			else
-				parent := void
+				parent := Void
 				cwin_set_parent (item, default_pointer)
-				cwin_send_message (item, Rb_setparent, 0, 0)
+				cwin_send_message (item, Rb_setparent, to_wparam (0), to_lparam (0))
 			end
 		end
 
@@ -201,7 +201,7 @@ feature -- Element change
 			exists: exists
 			valid_band: band /= Void and then band.exists
 		do
-			cwin_send_message (item, Rb_insertband, 0, band.to_integer)
+			cwin_send_message (item, Rb_insertband, to_wparam (0), band.item)
 		end
 
 	append_band (band: WEL_REBARBANDINFO) is
@@ -210,7 +210,7 @@ feature -- Element change
 			exists: exists
 			valid_band: band /= Void and then band.exists
 		do
-			cwin_send_message (item, Rb_insertband, -1, band.to_integer)
+			cwin_send_message (item, Rb_insertband, to_wparam (-1), band.item)
 		end
 
 	insert_band (band: WEL_REBARBANDINFO; index: INTEGER) is
@@ -222,7 +222,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < band_count
 		do
-			cwin_send_message (item, Rb_insertband, index, band.to_integer)
+			cwin_send_message (item, Rb_insertband, to_wparam (index), band.item)
 		end
 
 	delete_band (index: INTEGER) is
@@ -232,7 +232,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < band_count
 		do
-			cwin_send_message (item, Rb_deleteband, index, 0)
+			cwin_send_message (item, Rb_deleteband, to_wparam (index), to_lparam (0))
 		end
 
 feature -- Notifications
@@ -253,7 +253,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_size, 0, 0)
+			cwin_send_message (item, Wm_size, to_wparam (0), to_lparam (0))
 		end
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 				+ Rbs_bandborders + Rbs_tooltips
 		end
 
-  	on_wm_paint (wparam: INTEGER) is
+  	on_wm_paint (wparam: POINTER) is
    			-- Wm_paint message.
    		do
    			-- Need to do nothing

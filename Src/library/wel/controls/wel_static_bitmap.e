@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create dc
 			dc.get
 			create bitmap.make_by_dib(dc, bitmap_dib, Dib_pal_colors)
-			cwin_send_message(item, Stm_setimage, Image_bitmap, bitmap.to_integer)
+			cwin_send_message(item, Stm_setimage, to_wparam (Image_bitmap), bitmap.item)
 			dc.release
 		end
 
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			create bitmap.make_by_id(bitmap_id)
 
 				-- Convert the bitmap to the current device
-			cwin_send_message(item, Stm_setimage, Image_bitmap, bitmap.to_integer)
+			cwin_send_message(item, Stm_setimage, to_wparam (Image_bitmap), bitmap.item)
 		end
 
 feature -- Access

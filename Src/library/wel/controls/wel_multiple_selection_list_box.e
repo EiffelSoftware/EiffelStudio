@@ -24,7 +24,7 @@ feature -- Status setting
 	select_item (index: INTEGER) is
 			-- Select item at the zero-based `index'.
 		do
-			cwin_send_message (item, Lb_setsel, 1, index)
+			cwin_send_message (item, Lb_setsel, to_wparam (1), to_lparam (index))
 		end
 
 	unselect_item (index: INTEGER) is
@@ -34,7 +34,7 @@ feature -- Status setting
 			index_small_enough: index < count
 			index_large_enough: index >= 0
 		do
-			cwin_send_message (item, Lb_setsel, 0, index)
+			cwin_send_message (item, Lb_setsel, to_wparam (0), to_lparam (index))
 		ensure
 			is_not_selected: not is_selected (index)
 		end
@@ -51,7 +51,7 @@ feature -- Status setting
 			end_index_large_enough: end_index >= 0
 			valid_range: end_index >= start_index
 		do
-			cwin_send_message (item, Lb_selitemrange, 1,
+			cwin_send_message (item, Lb_selitemrange, to_wparam (1),
 				cwin_make_long (start_index, end_index))
 		ensure
 			selected: selected
@@ -71,7 +71,7 @@ feature -- Status setting
 			end_index_large_enough: end_index >= 0
 			valid_range: end_index >= start_index
 		do
-			cwin_send_message (item, Lb_selitemrange, 0,
+			cwin_send_message (item, Lb_selitemrange, to_wparam (0),
 				cwin_make_long (start_index, end_index))
 		ensure
 			no_item_selected: not selected
@@ -112,10 +112,10 @@ feature -- Status setting
 		do
 			if scrolling then
 				cwin_send_message (item, Lb_setcaretindex,
-					index, cwin_make_long (1, 0))
+					to_wparam (index), cwin_make_long (1, 0))
 			else
 				cwin_send_message (item, Lb_setcaretindex,
-					index, cwin_make_long (0, 0))
+					to_wparam (index), cwin_make_long (0, 0))
 			end
 		ensure
 			caret_index_set: caret_index = index
@@ -135,8 +135,8 @@ feature -- Status report
 			exits: exists
 		do
 			
-			Result := cwin_send_message_result (item,
-				Lb_getselcount, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+				Lb_getselcount, to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= count
@@ -158,12 +158,9 @@ feature -- Status report
 				create l_result.make (Result)
 	
 					-- Retrieve the selected items.
-				items_in_buffer := cwin_send_message_result (
-					item, 
-					Lb_getselitems, 
-					local_count_selected_items,
-					cwel_pointer_to_integer(l_result.item)
-					)
+				items_in_buffer := cwin_send_message_result_integer (
+					item, Lb_getselitems, 
+					to_wparam (local_count_selected_items), l_result.item)
 	
 					-- Check that Windows has filled the given buffer.
 				check
@@ -205,8 +202,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Lb_getcaretindex, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+				Lb_getcaretindex, to_wparam (0), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation

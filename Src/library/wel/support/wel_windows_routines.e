@@ -20,6 +20,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -120,7 +125,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_data := cwin_get_window_long (hwnd, gwl_userdata)
+				l_data := cwin_get_window_long (hwnd, gwlp_userdata)
 				if l_data /= null then
 					Result := eif_id_object (feature {WEL_INTERNAL_DATA}.object_id (l_data))
 				end
@@ -352,11 +357,19 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): POINTER is
-			-- SDK GetWindowLong
+			-- SDK GetWindowLongPtr
 		external
-			"C [macro %"wel.h%"] (HWND, int): EIF_POINTER"
+			"C [macro %"wel.h%"] (HWND, int): LONG_PTR"
 		alias
-			"GetWindowLong"
+			"GetWindowLongPtr"
+		end
+
+	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER) is
+			-- SDK SetWindowLongPtr
+		external
+			"C [macro %"wel.h%"] (HWND, int, LONG_PTR)"
+		alias
+			"SetWindowLongPtr"
 		end
 
 	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER) is

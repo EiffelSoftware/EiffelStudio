@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			window.resize (0, 0)
 		end
 
-	on_wm_erase_background (wparam: INTEGER) is
+	on_wm_erase_background (wparam: POINTER) is
 			-- Wm_erasebkgnd message.
 		do
 			disable_default_processing

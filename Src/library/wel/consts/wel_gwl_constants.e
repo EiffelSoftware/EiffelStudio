@@ -1,5 +1,5 @@
 indexing
-	description: "GetWindowLong (GWL) constants."
+	description: "GetWindowLong (GWL), GetWindowLongPtr (GWLP) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,21 +13,63 @@ feature -- Access
 
 	Gwl_style: INTEGER is -16
 
-	Gwl_wndproc: INTEGER is -4
+feature -- For windows
 
-	Gwl_hinstance: INTEGER is -6
+	Gwl_wndproc, Gwlp_wndproc: INTEGER is -4
 
-	Gwl_hwndparent: INTEGER is -8
+	Gwl_hinstance, Gwlp_hinstance: INTEGER is -6
 
-	Gwl_id: INTEGER is -12
+	Gwl_hwndparent, Gwlp_hwndparent: INTEGER is -8
 
-	Gwl_userdata: INTEGER is -21
+	Gwl_id, Gwlp_id: INTEGER is -12
 
-	Dwl_dlgproc: INTEGER is 4
+	Gwl_userdata, Gwlp_userdata: INTEGER is -21
 
-	Dwl_msgresult: INTEGER is 0
+feature -- For dialogs
 
-	Dwl_user: INTEGER is 8
+	frozen dwlp_msgresult: INTEGER is
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DWLP_MSGRESULT"
+		end
+
+	frozen dwlp_dlgproc: INTEGER is
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DWLP_DLGPROC"
+		end
+		
+	frozen Dwlp_user: INTEGER is
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DWLP_USER"
+		end
+
+feature -- Obsolete
+
+	frozen dwl_msgresult: INTEGER is
+		obsolete
+			"Use `dwlp_msgresult' instead"
+		do
+			Result := 0
+		end
+		
+	frozen dwl_dlgproc: INTEGER is
+		obsolete
+			"Use `dwlp_dlgproc' instead"
+		do
+			Result := 4
+		end
+
+	frozen dwl_user: INTEGER is
+		obsolete
+			"Use `dwlp_user' instead"
+		do
+			Result := 8
+		end
 
 end -- class WEL_GWL_CONSTANTS
 

@@ -63,8 +63,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-						Lvm_getitemcount, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+						Lvm_getitemcount, to_wparam (0), to_lparam (0))
 		end
 
 	visible_count: INTEGER is
@@ -72,8 +72,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-						Lvm_getcountperpage, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+						Lvm_getcountperpage, to_wparam (0), to_lparam (0))
 		end
 
 	selected_count: INTEGER is
@@ -81,8 +81,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, 
-						Lvm_getselectedcount, 0, 0)
+			Result := cwin_send_message_result_integer (item, 
+						Lvm_getselectedcount, to_wparam (0), to_lparam (0))
 		end
 
 	top_index: INTEGER is
@@ -90,8 +90,8 @@ feature -- Status report
 		require
 			exists
 		do
-			Result := cwin_send_message_result (item, 
-						Lvm_gettopindex, 0, 0).max(0)
+			Result := cwin_send_message_result_integer (item, 
+						Lvm_gettopindex, to_wparam (0), to_lparam (0)).max(0)
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result <= count
@@ -103,8 +103,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, 
-						Lvm_getnextitem, -1, Lvni_focused)
+			Result := cwin_send_message_result_integer (item, 
+						Lvm_getnextitem, to_wparam (-1), to_lparam (Lvni_focused))
 		ensure
 			result_large_enough: Result >= -1
 			result_small_enough: Result < count
@@ -123,13 +123,14 @@ feature -- Status report
 				create Result.make (0, selected_count - 1)
 				from
 					result_count := 0
-					index := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
+					index := cwin_send_message_result_integer (item, Lvm_getnextitem,
+						to_wparam (-1), to_lparam (Lvni_selected))
 				until
 					index = -1
 				loop
 					Result.put (index, result_count)
-					index := cwin_send_message_result (item, Lvm_getnextitem,
-								index, Lvni_selected)
+					index := cwin_send_message_result_integer (item, Lvm_getnextitem,
+								to_wparam (index), to_lparam (Lvni_selected))
 					result_count := result_count + 1
 				end
 			else
@@ -137,7 +138,7 @@ feature -- Status report
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_valid: result.count = selected_count
+			result_valid: Result.count = selected_count
 		end
 
 	selected_item: INTEGER is
@@ -146,7 +147,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
+			Result := cwin_send_message_result_integer (item, Lvm_getnextitem,
+				to_wparam (-1), to_lparam (Lvni_selected))
 		ensure
 			result_valid: selected_count > 0 implies Result >= 0
 		end
@@ -156,7 +158,8 @@ feature -- Status report
 		local
 			color_int: INTEGER
 		do
-			color_int := cwin_send_message_result (item, Lvm_getbkcolor, 0, 0)
+			color_int := cwin_send_message_result_integer (item, Lvm_getbkcolor,
+				to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
 		
@@ -165,7 +168,8 @@ feature -- Status report
 		local
 			color_int: INTEGER
 		do
-			color_int := cwin_send_message_result (item, Lvm_gettextbkcolor, 0, 0)
+			color_int := cwin_send_message_result_integer (item, Lvm_gettextbkcolor,
+				to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
 		
@@ -174,7 +178,8 @@ feature -- Status report
 		local
 			color_int: INTEGER
 		do
-			color_int := cwin_send_message_result (item, Lvm_gettextcolor, 0, 0)
+			color_int := cwin_send_message_result_integer (item, Lvm_gettextcolor,
+				to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
 
@@ -185,7 +190,8 @@ feature -- Status report
 			index_large_enough: column >= 0
 			index_small_enough: column < column_count
 		do
-			Result := cwin_send_message_result (item, Lvm_getcolumnwidth, column, 0)
+			Result := cwin_send_message_result_integer (item, Lvm_getcolumnwidth,
+				to_wparam (column), to_lparam (0))
 		end
 
 	get_item_state (index, mask: INTEGER): INTEGER is
@@ -197,7 +203,8 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			Result := cwin_send_message_result (item, Lvm_getitemstate, index, mask)
+			Result := cwin_send_message_result_integer (item, Lvm_getitemstate,
+				to_wparam (index), to_lparam (mask))
 		end
 
 	get_item_position (index: INTEGER): WEL_POINT is
@@ -206,13 +213,9 @@ feature -- Status report
 			exists: exists
 			index_large_enough: index >= 0
 			index_small_enough: index < count
-		local
-			a,b: INTEGER
 		do
 			create Result.make (0,0)
-			cwin_send_message (item, Lvm_getitemposition, index, cwel_pointer_to_integer(Result.item))
-			a := Result.x
-			b := Result.y
+			cwin_send_message (item, Lvm_getitemposition, to_wparam (index), Result.item)
 		end
 
 	get_item_rect (index: INTEGER): WEL_RECT is
@@ -223,13 +226,11 @@ feature -- Status report
 			index_small_enough: index <= count
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Lvm_getitemrect, index, cwel_pointer_to_integer(Result.item))
+			cwin_send_message (item, Lvm_getitemrect, to_wparam (index), Result.item)
 		end
 
 	get_cell_text (isub_item, iitem: INTEGER): STRING is
 			-- Get the label of the cell with coordinates `isub_item', `iiitem'.
-		obsolete
-			"Argument positions have been swapped."
 		require
 			exists: exists
 			iitem_large_enough: iitem >= 0
@@ -246,7 +247,7 @@ feature -- Status report
 			an_item.set_isubitem (isub_item)
 			an_item.set_text (buffer)
 			an_item.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Lvm_getitemtext, iitem, an_item.to_integer)
+			cwin_send_message (item, Lvm_getitemtext, to_wparam (iitem), an_item.item)
 			Result := an_item.text			
 		end
 
@@ -271,7 +272,7 @@ feature -- Status report
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
 			Result.set_statemask (Lvis_cut + Lvis_drophilited + Lvis_focused + Lvis_selected)
-			cwin_send_message (item, Lvm_getitem, 0, Result.to_integer)
+			cwin_send_message (item, Lvm_getitem, to_wparam (0), Result.item)
 		end
 
 	get_extended_view_style: INTEGER is
@@ -279,7 +280,8 @@ feature -- Status report
 		require
 			function_supported: comctl32_version >= version_470
 		do
-			Result := cwin_send_message_result (item, Lvm_getextendedlistviewstyle, 0, 0)
+			Result := cwin_send_message_result_integer (item, Lvm_getextendedlistviewstyle,
+				to_wparam (0), to_lparam (0))
 		end
 
 	get_tooltip: WEL_TOOLTIP is
@@ -302,7 +304,7 @@ feature -- Status setting
 			index_large_enough: an_index >= 0
 			index_small_enough: an_index < count
 		do
-			cwin_send_message (item, Lvm_ensurevisible, an_index, 1)
+			cwin_send_message (item, Lvm_ensurevisible, to_wparam (an_index), to_lparam (1))
 		end
 
 	set_extended_view_style (a_new_style: INTEGER) is
@@ -310,7 +312,7 @@ feature -- Status setting
 		require
 			function_supported: comctl32_version >= version_470
 		do
-			cwin_send_message (item, Lvm_setextendedlistviewstyle, 0, a_new_style)
+			cwin_send_message (item, Lvm_setextendedlistviewstyle, to_wparam (0), to_lparam (a_new_style))
 		end
 
 	set_column_width (value, index: INTEGER) is
@@ -320,7 +322,7 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < column_count
 		do
-			cwin_send_message (item, Lvm_setcolumnwidth, index, value)
+			cwin_send_message (item, Lvm_setcolumnwidth, to_wparam (index), to_lparam (value))
 		end
 
 	update_item (index: INTEGER) is
@@ -330,7 +332,7 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Lvm_update, index, 0)
+			cwin_send_message (item, Lvm_update, to_wparam (index), to_lparam (0))
 		end	
 
 	set_item_state (index, state: INTEGER) is
@@ -346,7 +348,7 @@ feature -- Status setting
 			create an_item.make
 			an_item.set_statemask (state)
 			an_item.set_state (state)
-			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
+			cwin_send_message (item, Lvm_setitemstate, to_wparam (index), an_item.item)
 		end
 
 	set_item_count (value: INTEGER) is
@@ -356,7 +358,7 @@ feature -- Status setting
 			exists: exists
 			value_big_enough: value >= 0
 		do
-			cwin_send_message (item, Lvm_setitemcount, value, 0)
+			cwin_send_message (item, Lvm_setitemcount, to_wparam (value), to_lparam (0))
 		end	
 
 	set_cell_text (isub_item, iitem: INTEGER; txt: STRING) is
@@ -372,7 +374,7 @@ feature -- Status setting
 			an_item: WEL_LIST_VIEW_ITEM
 		do
 			create an_item.make_with_attributes (Lvif_text, iitem, isub_item, 0, txt)
-			cwin_send_message (item, Lvm_setitemtext, iitem, an_item.to_integer)
+			cwin_send_message (item, Lvm_setitemtext, to_wparam (iitem), an_item.item)
 		end
 
 	set_column_title (txt: STRING; index: INTEGER) is
@@ -385,7 +387,7 @@ feature -- Status setting
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
 			create a_column.make_with_attributes (Lvcf_text, index, 0, txt)
-			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
+			cwin_send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
 	set_column_format (index: INTEGER; fmt: INTEGER) is
@@ -400,7 +402,7 @@ feature -- Status setting
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
 			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, create {STRING}.make (0))
-			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
+			cwin_send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
 	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
@@ -410,9 +412,9 @@ feature -- Status setting
 		do
 				-- Then, associate the image list to the tree view.
 			if an_imagelist /= Void then
-				cwin_send_message (item, Lvm_setimagelist, Lvsil_normal, cwel_pointer_to_integer (an_imagelist.item))
+				cwin_send_message (item, Lvm_setimagelist, to_wparam (Lvsil_normal), an_imagelist.item)
 			else
-				cwin_send_message (item, Lvm_setimagelist, Lvsil_normal, 0) -- 0 correspond to NULL.
+				cwin_send_message (item, Lvm_setimagelist, to_wparam (Lvsil_normal), to_lparam (0))
 			end
 		end
 
@@ -423,28 +425,28 @@ feature -- Status setting
 		do
 				-- Then, associate the image list to the tree view.
 			if an_imagelist /= Void then
-				cwin_send_message (item, Lvm_setimagelist, Lvsil_small, cwel_pointer_to_integer (an_imagelist.item))
+				cwin_send_message (item, Lvm_setimagelist, to_wparam (Lvsil_small), an_imagelist.item)
 			else
-				cwin_send_message (item, Lvm_setimagelist, Lvsil_small, 0) -- 0 correspond to NULL.
+				cwin_send_message (item, Lvm_setimagelist, to_wparam (Lvsil_small), to_lparam (0))
 			end
 		end
 
 	set_background_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to background of `Current'.
 		do
-			cwin_send_message (item, Lvm_setbkcolor, 0, a_color.item)
+			cwin_send_message (item, Lvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 		
 	set_text_background_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to background color of item text.
 		do
-			cwin_send_message (item, Lvm_settextbkcolor, 0, a_color.item)
+			cwin_send_message (item, Lvm_settextbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 		
 	set_text_foreground_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to foreground color for item text.
 		do
-			cwin_send_message (item, Lvm_settextcolor, 0, a_color.item)
+			cwin_send_message (item, Lvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 feature -- Element change
@@ -454,7 +456,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Lvm_insertcolumn, column_count, column.to_integer)
+			cwin_send_message (item, Lvm_insertcolumn, to_wparam (column_count), column.item)
 			column_count := column_count + 1
 		ensure
 			new_column_count: column_count = old column_count + 1
@@ -467,7 +469,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= column_count
 		do
-			cwin_send_message (item, Lvm_insertcolumn, index, column.to_integer)
+			cwin_send_message (item, Lvm_insertcolumn, to_wparam (index), column.item)
 			column_count := column_count + 1
 		ensure
 			new_column_count: column_count = old column_count + 1
@@ -478,7 +480,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Lvm_insertcolumn, 0, column.to_integer)
+			cwin_send_message (item, Lvm_insertcolumn, to_wparam (0), column.item)
 			column_count := column_count + 1
 		ensure
 			new_column_count: column_count = old column_count + 1
@@ -491,7 +493,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < column_count
 		do
-			cwin_send_message (item, Lvm_deletecolumn, index, 0)
+			cwin_send_message (item, Lvm_deletecolumn, to_wparam (index), to_lparam (0))
 			column_count := column_count - 1
 		ensure
 			new_column_count: column_count = old column_count - 1
@@ -505,7 +507,7 @@ feature -- Element change
 			index_large_enough: an_item.iitem >= 0
 			index_small_enough: an_item.iitem <= count
 		do
-			cwin_send_message (item, Lvm_insertitem, 0, an_item.to_integer)
+			cwin_send_message (item, Lvm_insertitem, to_wparam (0), an_item.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -519,7 +521,7 @@ feature -- Element change
 			index_large_enough: an_item.iitem >= 0
 			index_small_enough: an_item.iitem <= count
 		do
-			cwin_send_message (item, Lvm_setitem, 0, an_item.to_integer)
+			cwin_send_message (item, Lvm_setitem, to_wparam (0), an_item.item)
 		end
 
 	delete_item (index: INTEGER) is
@@ -529,7 +531,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Lvm_deleteitem, index, 0)
+			cwin_send_message (item, Lvm_deleteitem, to_wparam (index), to_lparam (0))
 		ensure
 			new_count: count = old count - 1
 		end
@@ -539,7 +541,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Lvm_deleteallitems, 0, 0)
+			cwin_send_message (item, Lvm_deleteallitems, to_wparam (0), to_lparam (0))
 		ensure
 			new_count: count = 0
 		end
@@ -556,7 +558,8 @@ feature -- Basic Operations
 			valid_search_info: a_search_info.exists
 			valid_starting_index: a_starting_index >= -1 and a_starting_index < count 
 		do
-			Result := cwin_send_message_result (item, Lvm_finditem, a_starting_index, a_search_info.to_integer)
+			Result := cwin_send_message_result_integer (item, Lvm_finditem,
+				to_wparam (a_starting_index), a_search_info.item)
 		end
 
 feature -- Notifications

@@ -110,16 +110,15 @@ feature {NONE} -- Implementation
 			parent := a_parent
 			create mdi_cs.make (class_name, a_name)
 			mdi_cs.set_style (default_style)
-			item := cwel_integer_to_pointer (
-				cwin_send_message_result (a_parent.client_window.item,
-				Wm_mdicreate, 0, cwel_pointer_to_integer (mdi_cs.item)))
+			item := cwin_send_message_result (a_parent.client_window.item,
+				Wm_mdicreate, to_wparam (0), mdi_cs.item)
 			if item /= default_pointer then
 				register_current_window
 				set_default_window_procedure
 			end
 		end
 
-	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			Result := cwin_def_mdi_child_proc (hwnd, msg,
 				 wparam, lparam)
@@ -139,12 +138,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_def_mdi_child_proc (hwnd: POINTER; msg, wparam,
-		lparam: INTEGER): INTEGER is
+	cwin_def_mdi_child_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK DefMDIChildProc
 		external
 			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
-				%LPARAM): EIF_INTEGER"
+				%LPARAM): LRESULT"
 		alias
 			"DefMDIChildProc"
 		end

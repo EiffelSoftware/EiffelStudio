@@ -101,7 +101,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	item_data: INTEGER is
+	item_data: POINTER is
 			-- 32-bit value associated with the menu item.
 		do
 			Result := cwel_drawitemstruct_get_itemdata (item)
@@ -164,7 +164,7 @@ feature {NONE} -- Externals
 			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
-	cwel_drawitemstruct_get_itemdata (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_itemdata (ptr: POINTER): POINTER is
 		external
 			"C [macro <drawitem.h>]"
 		end

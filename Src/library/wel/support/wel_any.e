@@ -80,10 +80,12 @@ feature -- Conversion
 
 	to_integer: INTEGER is
 			-- Converts `item' to an integer.
+		obsolete
+			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
 		do
-			Result := cwel_pointer_to_integer (item)
+			Result := item.to_integer_32
 		ensure
-			Result = cwel_pointer_to_integer (item)
+			Result = item.to_integer_32
 		end
 
 feature -- Removal
@@ -112,15 +114,9 @@ feature {NONE} -- Removal
 		deferred
 		end
 
-feature {NONE} -- Externals
+feature {WEL_ANY} -- Externals
 
-	cwel_pointer_to_integer (p: POINTER): INTEGER is
-			-- Converts a pointer `p' to an integer
-		external
-			"C [macro <wel.h>] (EIF_POINTER): EIF_INTEGER"
-		end
-
-	cwel_integer_to_pointer (i: INTEGER): POINTER is
+	frozen cwel_integer_to_pointer (i: INTEGER): POINTER is
 			-- Converts an integer `i' to a pointer
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"

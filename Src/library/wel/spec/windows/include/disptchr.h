@@ -32,8 +32,8 @@ typedef EIF_INTEGER (__stdcall* EIF_WNDPROC) (
 #endif
 	 EIF_POINTER, /* hwnd */
 	 EIF_INTEGER, /* message */
-	 EIF_INTEGER, /* wparam */
-	 EIF_INTEGER  /* lparam */
+	 EIF_POINTER, /* wparam */
+	 EIF_POINTER  /* lparam */
 	 );
 /* Eiffel routine signature for `window_procedure' */
 
@@ -45,8 +45,8 @@ typedef EIF_INTEGER (__stdcall* EIF_DLGPROC) (
 #endif
 	 EIF_POINTER, /* hwnd */
 	 EIF_INTEGER, /* message */
-	 EIF_INTEGER, /* wparam */
-	 EIF_INTEGER  /* lparam */
+	 EIF_POINTER, /* wparam */
+	 EIF_POINTER  /* lparam */
 	 );
 /* Eiffel routine signature for `dialog_procedure' */
 

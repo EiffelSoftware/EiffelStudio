@@ -21,7 +21,7 @@ extern "C" {
 #define cwel_drawitemstruct_get_hwnditem(_ptr_) ((EIF_POINTER) (((DRAWITEMSTRUCT *) _ptr_)->hwndItem))
 #define cwel_drawitemstruct_get_hdc(_ptr_) ((EIF_POINTER) (((DRAWITEMSTRUCT *) _ptr_)->hDC))
 #define cwel_drawitemstruct_get_rcitem(_ptr_) ((EIF_POINTER) &(((DRAWITEMSTRUCT *) _ptr_)->rcItem))
-#define cwel_drawitemstruct_get_itemdata(_ptr_) ((EIF_INTEGER) (((DRAWITEMSTRUCT *) _ptr_)->itemData))
+#define cwel_drawitemstruct_get_itemdata(_ptr_) ((EIF_POINTER) (((DRAWITEMSTRUCT *) _ptr_)->itemData))
 
 #ifdef __cplusplus
 }

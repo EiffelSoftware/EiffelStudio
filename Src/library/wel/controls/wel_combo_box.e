@@ -56,8 +56,7 @@ feature -- Access
 			create Result.make (i_th_text_length (i))
 			Result.fill_blank
 			create a_wel_string.make (Result)
-			cwin_send_message (item, Cb_getlbtext, i,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Cb_getlbtext, to_wparam (i), a_wel_string.item)
 			Result := a_wel_string.string
 		ensure
 			result_exists: Result /= Void
@@ -70,8 +69,8 @@ feature -- Access
 			i_large_enough: i >= 0
 			i_small_enough: i < count
 		do
-			Result := cwin_send_message_result (item,
-				Cb_getlbtextlen, i, 0)
+			Result := cwin_send_message_result_integer (item, Cb_getlbtextlen,
+				to_wparam (i), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -93,9 +92,8 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			Result := cwin_send_message_result (item,
-				Cb_findstring, index,
-				cwel_pointer_to_integer (a_wel_string.item))
+			Result := cwin_send_message_result_integer (item,
+				Cb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
 	find_string_exact (index: INTEGER; a_string: STRING): INTEGER is
@@ -112,9 +110,8 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			Result := cwin_send_message_result (item,
-				Cb_findstringexact, index,
-				cwel_pointer_to_integer (a_wel_string.item))
+			Result := cwin_send_message_result_integer (item,
+				Cb_findstringexact, to_wparam (index), a_wel_string.item)
 		end
 
 feature -- Element change
@@ -128,8 +125,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_send_message (item, Cb_addstring, 0,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Cb_addstring, to_wparam (0), a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -145,8 +141,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_send_message (item, Cb_insertstring, index,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Cb_insertstring, to_wparam (index), a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -158,7 +153,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Cb_deletestring, index, 0)
+			cwin_send_message (item, Cb_deletestring, to_wparam (index), to_lparam (0))
 		ensure
 			new_count: count = old count - 1
 		end
@@ -174,8 +169,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (files)
-			cwin_send_message (item, Cb_dir, attribut,
-				cwel_pointer_to_integer (a_wel_string.item))
+			cwin_send_message (item, Cb_dir, to_wparam (attribut), a_wel_string.item)
 		end
 
 	reset_content is
@@ -183,7 +177,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_resetcontent, 0, 0)
+			cwin_send_message (item, Cb_resetcontent, to_wparam (0), to_lparam (0))
 		ensure
 			new_count: count = 0
 		end
@@ -197,7 +191,7 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Cb_setcursel, index, 0)
+			cwin_send_message (item, Cb_setcursel, to_wparam (index), to_lparam (0))
 		ensure
 			selected_item: selected and then selected_item = index
 		end
@@ -207,7 +201,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_setcursel, -1, 0)
+			cwin_send_message (item, Cb_setcursel, to_wparam (-1), to_lparam (0))
 		ensure
 			selection_cleared: not selected
 		end
@@ -224,8 +218,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Cb_getcursel, 0, 0) /= Cb_err
+			Result := cwin_send_message_result_integer (item,
+				Cb_getcursel, to_wparam (0), to_lparam (0)) /= Cb_err
 		end
 
 	selected_item: INTEGER is
@@ -234,8 +228,8 @@ feature -- Status report
 			exists: exists
 			selected: selected
 		do
-			Result := cwin_send_message_result (item,
-					Cb_getcursel, 0, 0)
+			Result := cwin_send_message_result_integer (item,
+					Cb_getcursel, to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result < count
@@ -258,9 +252,7 @@ feature -- Status report
 			exists: exists
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item,
-				Cb_getdroppedcontrolrect,
-				0, cwel_pointer_to_integer (Result.item))
+			cwin_send_message (item, Cb_getdroppedcontrolrect, to_wparam (0), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -278,7 +270,7 @@ feature -- Status report
 			-- list box, but if the list box contents have been scrolled, 
 			-- another item may be at the top. 
 		do
-			Result := cwin_send_message_result (item, Cb_gettopindex, 0, 0)
+			Result := cwin_send_message_result_integer (item, Cb_gettopindex, to_wparam (0), to_lparam (0))
 		ensure
 			operation_successful: Result /= Cb_err
 		end
@@ -286,7 +278,7 @@ feature -- Status report
 	list_item_height: INTEGER is
 			-- height of list items in a combo box
 		do
-			Result := cwin_send_message_result (item, Cb_getitemheight, 0, 0)
+			Result := cwin_send_message_result_integer (item, Cb_getitemheight, to_wparam (0), to_lparam (0))
 		ensure
 			operation_successful: Result /= Cb_err
 		end
@@ -294,7 +286,7 @@ feature -- Status report
 	selection_field_height: INTEGER is
 			-- height of the selection field in a combo box
 		do
-			Result := cwin_send_message_result (item, Cb_getitemheight, -1, 0)
+			Result := cwin_send_message_result_integer (item, Cb_getitemheight, to_wparam (-1), to_lparam (0))
 		ensure
 			operation_successful: Result /= Cb_err
 		end
@@ -306,8 +298,7 @@ feature -- Measurement
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Cb_getcount, 0, 0)
+			Result := cwin_send_message_result_integer (item, Cb_getcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end

@@ -13,11 +13,21 @@ inherit
 			destroy_item as gc_destroy_item
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 	WEL_WINDOW_MANAGER
 		export
 			{NONE} all
 		undefine
 			is_equal
+		end
+
+	WEL_DATA_TYPE
+		export
+			{NONE} all
 		end
 
 	WEL_SYSTEM_METRICS
@@ -411,7 +421,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwel_pointer_to_integer (cwin_get_window_long (item, Gwl_style))
+			Result := cwin_get_window_long (item, Gwl_style).to_integer_32
 		end
 
 	ex_style: INTEGER is
@@ -419,7 +429,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwel_pointer_to_integer (cwin_get_window_long (item, Gwl_exstyle))
+			Result := cwin_get_window_long (item, Gwl_exstyle).to_integer_32
 		end
 
 	background_brush: WEL_BRUSH is
@@ -847,7 +857,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, 1, 0)	
+			cwin_send_message (item, wm_setredraw, to_wparam (1), default_pointer)	
 		end
 		
 	disable_redraw is
@@ -855,7 +865,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, 0, 0)			
+			cwin_send_message (item, wm_setredraw, default_pointer, default_pointer)			
 		end
 		
 
@@ -1261,11 +1271,7 @@ feature -- Basic operations
 			-- or the WNDCLASSEX structure for the class to which the 
 			-- specified window belongs. 
 		do
-			cwin_set_class_long (
-				item, 
-				Wel_gcl_constants.Gcl_hicon, 
-				cwel_pointer_to_integer(new_icon.item)
-				)
+			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hicon, new_icon.item)
 		end
 
 	set_class_small_icon (new_icon: WEL_ICON) is
@@ -1277,11 +1283,7 @@ feature -- Basic operations
 			-- or the WNDCLASSEX structure for the class to which the 
 			-- specified window belongs. 
 		do
-			cwin_set_class_long (
-				item, 
-				Wel_gcl_constants.Gcl_hiconsm, 
-				cwel_pointer_to_integer(new_icon.item)
-				)
+			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hiconsm, new_icon.item)
 		end
 
 feature -- Removal
@@ -1529,7 +1531,7 @@ feature {NONE} -- Messages
 					--| Disable the default windows processing and return correct
 					--| value to Windows, i.e. nonzero value.
 				disable_default_processing
-				set_message_return_value (1)
+				set_message_return_value (to_lresult (1))
 			end
 		end
 
@@ -1669,19 +1671,18 @@ feature {WEL_WINDOW} -- Implementation
 			unregistered: not registered (Current)
 		end
 		
-
-	on_wm_notify (wparam, lparam: INTEGER) is
+	on_wm_notify (wparam, lparam: POINTER) is
 			-- Wm_notify message
 		require
 			exists: exists
 		local
 			info: WEL_NMHDR
 		do
-			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
-			on_notify (wparam, info)
+			create info.make_by_pointer (lparam)
+			on_notify (wparam.to_integer_32, info)
 		end
 
-	on_wm_erase_background (wparam: INTEGER) is
+	on_wm_erase_background (wparam: POINTER) is
 			-- Wm_erasebkgnd message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
 			-- `on_erase_background' routine.
@@ -1690,7 +1691,7 @@ feature {WEL_WINDOW} -- Implementation
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			create paint_dc.make_by_pointer (Current, wparam)
 			on_erase_background (paint_dc, client_rect)
 		end
 
@@ -1706,7 +1707,7 @@ feature {WEL_WINDOW} -- Implementation
 			end
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -1714,8 +1715,8 @@ feature {WEL_WINDOW} -- Implementation
 
 feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 
-	window_process_message, process_message (hwnd: POINTER; msg,
-			wparam, lparam: INTEGER): INTEGER is
+	window_process_message, process_message (hwnd: POINTER; msg: INTEGER;
+		wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		require
@@ -1723,78 +1724,78 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 		do
 			inspect msg
 			when Wm_mousemove then
-				on_mouse_move (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_mouse_move (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_setcursor then
 				on_set_cursor (cwin_lo_word (lparam))
 			when Wm_size then
-				on_size (wparam,
+				on_size (wparam.to_integer_32,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
 			when Wm_move then
-					-- This is the same as using the "MAKEPOINTS" macro to
-					-- extract the position.
-				on_move (cwin_lo_word (lparam).to_integer_16,
-					cwin_hi_word (lparam).to_integer_16)
+				on_move (x_position_from_lparam (lparam), y_position_from_lparam (lparam))
 			when Wm_lbuttondown then
-				on_left_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_left_button_down (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_lbuttonup then
-				on_left_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_left_button_up (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_lbuttondblclk then
-				on_left_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_left_button_double_click (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_mbuttondown then
-				on_middle_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_middle_button_down (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_mbuttonup then
-				on_middle_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_middle_button_up (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_mbuttondblclk then
-				on_middle_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_middle_button_double_click (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_rbuttondown then
-				on_right_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_right_button_down (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_rbuttonup then
-				on_right_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_right_button_up (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_rbuttondblclk then
-				on_right_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
+				on_right_button_double_click (wparam.to_integer_32,
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_mousewheel then
-				on_mouse_wheel (wparam |>> 16, cwin_lo_word (wparam), cwin_lo_word (lparam), cwin_hi_word (lparam))
+				on_mouse_wheel (c_mouse_wheel_delta (wparam),
+					cwin_lo_word (wparam),
+					x_position_from_lparam (lparam),
+					y_position_from_lparam (lparam))
 			when Wm_timer then
-				on_timer (wparam)
+				on_timer (wparam.to_integer_32)
 			when Wm_setfocus then
 				on_set_focus
 			when Wm_killfocus then
 				on_kill_focus
 			when Wm_char then
-				on_char (wparam, lparam)
+				on_char (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_keydown then
-				on_key_down (wparam, lparam)
+				on_key_down (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_keyup then
-				on_key_up (wparam, lparam)
+				on_key_up (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_syschar then
-				on_sys_char (wparam, lparam)
+				on_sys_char (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_syskeydown then
-				on_sys_key_down (wparam, lparam)
+				on_sys_key_down (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_syskeyup then
-				on_sys_key_up (wparam, lparam)
+				on_sys_key_up (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_showwindow then
-				on_wm_show_window (wparam, lparam)
+				on_wm_show_window (wparam.to_integer_32, lparam.to_integer_32)
 			when Wm_notify then
 				on_wm_notify (wparam, lparam)
 			when Wm_destroy then
@@ -1804,7 +1805,7 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 			when Wm_erasebkgnd then
 				on_wm_erase_background (wparam)
 			when Wm_activate then
-				on_wm_activate (wparam)
+				on_wm_activate (wparam.to_integer_32)
 			when wm_getdlgcode then
 				on_getdlgcode
 			else
@@ -1818,7 +1819,7 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 			end
 		end
 
-	call_default_window_procedure (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 		end
@@ -1844,7 +1845,7 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 		require
 			exists: exists
 		do
-			Result := cwin_get_window_long (item, Gwl_userdata)
+			Result := cwin_get_window_long (item, Gwlp_userdata)
 		end
 
 	frozen set_internal_data (v: POINTER) is
@@ -1852,7 +1853,7 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 		require
 			exists: exists
 		do
-			cwin_set_window_long (item, Gwl_userdata, v)
+			cwin_set_window_long (item, Gwlp_userdata, v)
 		end
 
 feature {WEL_WINDOW} -- Properties
@@ -1935,7 +1936,7 @@ feature {NONE} -- Removal
 						-- handler will not be called because we will have no more trace
 						-- of the Current object when the WM_CODE message will be received.
 					destroy_item
-					cwin_post_message (hwnd, wm_close, 0, 0)
+					cwin_post_message (hwnd, wm_close, default_pointer, default_pointer)
 				else
 					item := default_pointer
 				end
@@ -2139,11 +2140,10 @@ feature {NONE} -- Externals
 			"MessageBox"
 		end
 
-	cwin_def_window_proc (hwnd: POINTER; msg, wparam,
-			lparam: INTEGER): INTEGER is
+	cwin_def_window_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK DefWindowProc
 		external
-			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
+			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): LRESULT"
 		alias
 			"DefWindowProc"
 		end
@@ -2197,18 +2197,23 @@ feature {NONE} -- Externals
 			"ValidateRgn"
 		end
 
-	cwin_send_message_result (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER): INTEGER is
+	cwin_send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK SendMessage (with the result)
 		external
-			"C [macro %"wel.h%"] (HWND, UINT, %
-				%WPARAM, LPARAM): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"SendMessage"
 		end
 
-	cwin_send_message (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER) is
+	cwin_send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
+			-- SDK SendMessage (with the result)
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
+		alias
+			"SendMessage"
+		end
+
+	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK SendMessage (without the result)
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
@@ -2216,8 +2221,7 @@ feature {NONE} -- Externals
 			"SendMessage"
 		end
 
-	cwin_post_message_result (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER): BOOLEAN is
+	cwin_post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, %
@@ -2226,8 +2230,7 @@ feature {NONE} -- Externals
 			"PostMessage"
 		end
 
-	cwin_post_message (hwnd: POINTER; msg, wparam,
-				lparam: INTEGER) is
+	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK PostMessage (without the result)
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
@@ -2304,14 +2307,25 @@ feature {NONE} -- Externals
 			"WinHelp"
 		end
 
-	c_mouse_message_x (lparam: INTEGER): INTEGER is
+	c_mouse_wheel_delta (wparam: POINTER): INTEGER is
 		external
-			"C [macro %"wel.h%"]"
+			"C inline use <windows.h>"
+		alias
+			"((short)HIWORD($wparam))"
+		end
+		
+	x_position_from_lparam (lparam: POINTER): INTEGER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((int)(short)LOWORD($lparam))"
 		end
 
-	c_mouse_message_y (lparam: INTEGER): INTEGER is
+	y_position_from_lparam (lparam: POINTER): INTEGER is
 		external
-			"C [macro %"wel.h%"]"
+			"C inline use <windows.h>"
+		alias
+			"((int)(short)HIWORD($lparam))"
 		end
 
 	cwel_window_procedure_address: POINTER is
@@ -2341,13 +2355,12 @@ feature {NONE} -- Externals
 			"C (): HWND | %"wel_mousehook.h%""
 		end
 
-	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER;
-			new_value: INTEGER) is
+	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER; new_value: POINTER) is
 			-- SDK SetClassLong
 		external
-			"C [macro %"wel.h%"] (HWND, int, LONG)"
+			"C [macro %"wel.h%"] (HWND, int, ULONG_PTR)"
 		alias
-			"SetClassLong"
+			"SetClassLongPtr"
 		end
 
 	cwel_set_dispatcher_pointer (dispatcher_ptr: POINTER) is

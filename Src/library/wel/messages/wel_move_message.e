@@ -32,12 +32,12 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	c_mouse_message_x (lparam: INTEGER): INTEGER is
+	c_mouse_message_x (lparam: POINTER): INTEGER is
 		external
 			"C [macro <wel.h>]"
 		end
 
-	c_mouse_message_y (lparam: INTEGER): INTEGER is
+	c_mouse_message_y (lparam: POINTER): INTEGER is
 		external
 			"C [macro <wel.h>]"
 		end

@@ -38,7 +38,7 @@ feature -- Status setting
 			exists: exists
 			positive_limit: limit >= 0
 		do
-			cwin_send_message (item, Cb_limittext, limit, 0)
+			cwin_send_message (item, Cb_limittext, to_wparam (limit), to_lparam (0))
 		end
 
 	show_list is
@@ -46,7 +46,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, 1, 0)
+			cwin_send_message (item, Cb_showdropdown, to_wparam (1), to_lparam (0))
 		ensure
 			list_shown: list_shown
 		end
@@ -56,7 +56,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, 0, 0)
+			cwin_send_message (item, Cb_showdropdown, to_wparam (0), to_lparam (0))
 		ensure
 			list_not_shown: not list_shown
 		end
@@ -68,8 +68,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Cb_getdroppedstate, 0, 0) = 1
+			Result := cwin_send_message_result_integer (item,
+				Cb_getdroppedstate, to_wparam (0), to_lparam (0)) = 1
 		end
 
 feature {NONE} -- Implementation

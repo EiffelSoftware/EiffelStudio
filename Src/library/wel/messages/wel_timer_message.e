@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	id: INTEGER is
+	id: POINTER is
 			-- Timer id specified with `set_timer'.
 		do
 			Result := w_param

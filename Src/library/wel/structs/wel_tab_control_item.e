@@ -84,11 +84,9 @@ feature -- Access
 	window: WEL_WINDOW is
 			-- The current window associated to the item.
 		local
-			window_id: INTEGER
 			window_hwmd: POINTER
 		do
-			window_id := cwel_tc_item_get_lparam (item)
-			window_hwmd := cwel_integer_to_pointer (window_id)
+			window_hwmd := cwel_tc_item_get_lparam (item)
 			if window_hwmd /= default_pointer then
 				Result := window_of_item (window_hwmd)
 			end
@@ -130,7 +128,7 @@ feature -- Element change
 			a_window_not_void: a_window /= Void
 			inside_window: a_window.is_inside
 		do
-			cwel_tc_item_set_lparam (item, a_window.to_integer)
+			cwel_tc_item_set_lparam (item, a_window.item)
 		ensure
 			window_set: window = a_window
 		end
@@ -192,7 +190,7 @@ feature {NONE} -- Externals
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_set_lparam (ptr: POINTER; value: INTEGER) is
+	cwel_tc_item_set_lparam (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <tcitem.h>]"
 		end
@@ -217,7 +215,7 @@ feature {NONE} -- Externals
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_lparam (ptr: POINTER): INTEGER is
+	cwel_tc_item_get_lparam (ptr: POINTER): POINTER is
 		external
 			"C [macro <tcitem.h>]"
 		end

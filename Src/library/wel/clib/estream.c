@@ -17,7 +17,7 @@
 
 
 
-DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
+DWORD CALLBACK cwel_editstream_in_callback (DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
 
 	// This function is called by the system to transfere text into a Rich Edit Control.
@@ -45,7 +45,7 @@ DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG 
 }
 
 
-DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
+DWORD CALLBACK cwel_editstream_out_callback (DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
 
 	// This function is called by the system to read text from a Rich Edit Control.

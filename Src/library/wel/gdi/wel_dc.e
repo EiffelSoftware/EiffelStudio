@@ -327,7 +327,7 @@ feature -- Status report
 			create a_wel_string.make (text)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, 0, a_default_pointer)
-			create Result.make (cwin_lo_word (size), cwin_hi_word (size))
+			create Result.make (size & 0x0000FFFF, ((size |>> 16) & 0x0000FFFF))
 		ensure
 			result_not_void: Result /= Void
 			positive_width: Result.width >= 0
@@ -373,7 +373,7 @@ feature -- Status report
 			create a.make (tabulations)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, tabulations.count, a.item)
-			create Result.make (cwin_lo_word (size), cwin_hi_word (size))
+			create Result.make (size & 0x0000FFFF, ((size |>> 16) & 0x0000FFFF))
 		ensure
 			result_not_void: Result /= Void
 			positive_width: Result.width >= 0

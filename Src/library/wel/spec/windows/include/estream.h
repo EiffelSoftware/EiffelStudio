@@ -55,10 +55,10 @@ extern "C" {
 #endif
 
 /* Eiffel routine signature for `internal_callback' (WEL_RICH_EDIT_STREAM_IN)*/
-extern DWORD CALLBACK cwel_editstream_in_callback (DWORD, LPBYTE, LONG, LONG FAR *);
+extern DWORD CALLBACK cwel_editstream_in_callback (DWORD_PTR, LPBYTE, LONG, LONG FAR *);
 
 /* Eiffel routine signature for `internal_callback' (WEL_RICH_EDIT_STREAM_OUT)*/
-extern DWORD CALLBACK cwel_editstream_out_callback (DWORD, LPBYTE, LONG, LONG FAR *);
+extern DWORD CALLBACK cwel_editstream_out_callback (DWORD_PTR, LPBYTE, LONG, LONG FAR *);
 
 /* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_IN) */
 extern EIF_EDITSTREAM_IN_PROCEDURE wel_editstream_in_procedure;
@@ -66,7 +66,7 @@ extern EIF_EDITSTREAM_IN_PROCEDURE wel_editstream_in_procedure;
 /* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_OUT) */
 extern EIF_EDITSTREAM_OUT_PROCEDURE wel_editstream_out_procedure;
 
-#define cwel_editstream_set_dwcookie(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwCookie = (DWORD) (_value_))
+#define cwel_editstream_set_dwcookie(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwCookie = (DWORD_PTR) (_value_))
 #define cwel_editstream_set_dwerror(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwError = (DWORD) (_value_))
 #define cwel_editstream_set_pfncallback_in(_ptr_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (cwel_editstream_in_callback))
 #define cwel_editstream_set_pfncallback_out(_ptr_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (cwel_editstream_out_callback))

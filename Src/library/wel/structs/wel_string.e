@@ -84,8 +84,10 @@ feature -- Status report
 
 	to_integer: INTEGER is
 			-- Converts `item' to an integer.
+		obsolete
+			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
 		do
-			Result := cwel_pointer_to_integer (item)	
+			Result := item.to_integer_32
 		end
 
 	exists: BOOLEAN is True
@@ -132,14 +134,6 @@ feature -- Element change
 			fill_value (a_character.code.to_integer_8)
 		ensure
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'			
-		end
-
-feature {NONE} -- Implementation
-
-	cwel_pointer_to_integer (p: POINTER): INTEGER is
-			-- Converts a pointer `p' to an integer
-		external
-			"C [macro <wel.h>] (EIF_POINTER): EIF_INTEGER"
 		end
 
 end -- class WEL_STRING

@@ -48,7 +48,7 @@ feature -- Access
 			Result := window_manager.window_of_item (cwel_toolinfo_get_hwnd (item))
 		end
 
-	id: INTEGER is
+	id: POINTER is
 			-- Application-defined identifier of the tool
 		do
 			Result := cwel_toolinfo_get_uid (item)
@@ -87,8 +87,7 @@ feature -- Access
 		require
 			text_id_set: text_id_set
 		do
-			Result := cwin_lo_word (cwel_pointer_to_integer (
-				cwel_toolinfo_get_lpsztext (item)))
+			Result := cwin_lo_word (cwel_toolinfo_get_lpsztext (item))
 		end
 
 feature -- Status report
@@ -103,8 +102,7 @@ feature -- Status report
 	text_id_set: BOOLEAN is
 			-- Is `text' equal to a resource string identifer?
 		do
-			Result := cwin_hi_word (cwel_pointer_to_integer (
-				cwel_toolinfo_get_lpsztext (item))) = 0
+			Result := cwin_hi_word (cwel_toolinfo_get_lpsztext (item)) = 0
 		end
 
 feature -- Element change
@@ -131,12 +129,12 @@ feature -- Element change
 	set_id_with_window (a_window: WEL_WINDOW) is
 			-- Set `id' with `a_window'.
 		do
-			cwel_toolinfo_set_uid (item, cwel_pointer_to_integer (a_window.item))
+			cwel_toolinfo_set_uid (item, a_window.item)
 		ensure
-			id_set: id = cwel_pointer_to_integer (a_window.item)
+			id_set: id = a_window.item
 		end
 
-	set_id (an_id: INTEGER) is
+	set_id (an_id: POINTER) is
 			-- Set `id' with `an_id'.
 		do
 			cwel_toolinfo_set_uid (item, an_id)
@@ -245,7 +243,7 @@ feature {NONE} -- Externals
 			"C [macro <toolinfo.h>]"
 		end
 
-	cwel_toolinfo_set_uid (ptr: POINTER; value: INTEGER) is
+	cwel_toolinfo_set_uid (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <toolinfo.h>]"
 		end
@@ -275,7 +273,7 @@ feature {NONE} -- Externals
 			"C [macro <toolinfo.h>] (TOOLINFO*): EIF_POINTER"
 		end
 
-	cwel_toolinfo_get_uid (ptr: POINTER): INTEGER is
+	cwel_toolinfo_get_uid (ptr: POINTER): POINTER is
 		external
 			"C [macro <toolinfo.h>]"
 		end

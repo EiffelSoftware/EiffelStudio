@@ -44,8 +44,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwel_integer_to_pointer (to_integer + (index * item_size)).
-				memory_copy (an_item.item, item_size)
+			(item + (index * item_size)).memory_copy (an_item.item, item_size)
 		end
 
 	i_th_item (index: INTEGER): POINTER is
@@ -54,8 +53,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enpugh: index < count
 		do
-			Result := cwel_integer_to_pointer (to_integer +
-				(index * item_size))
+			Result := item + (index * item_size)
 		end
 
 feature -- Measurement

@@ -9,15 +9,19 @@ indexing
 deferred class TOOL_W 
 
 inherit
+	NAMER
 
-	NAMER;
-	EB_CONSTANTS;
+	EB_CONSTANTS
+
 	HOLE
 		export
 			{ANY} receive
-		end;
-	CLOSEABLE;
-	HELPABLE;
+		end
+
+	CLOSEABLE
+
+	HELPABLE
+
 	SHARED_TABS
 
 feature -- Window Properties
@@ -580,7 +584,7 @@ feature -- Update
 			old_do_format: BOOLEAN
 			f: FORMATTER
 		do
-			history.extend (stone);
+			add_to_history (stone);
 			history.synchronize;
 			if
 				stone /= Void and then
@@ -662,7 +666,7 @@ feature -- Element change
 			history.extend (a_stone)
 		ensure
 			has_history: history.has (a_stone)
-		end;
+		end
 
 feature {NONE} -- Implementation
 

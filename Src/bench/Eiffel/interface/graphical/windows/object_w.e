@@ -251,7 +251,7 @@ feature -- Update
 				warner (eb_shell).gotcha_call (Warning_messages.w_Object_not_inspectable)
 			else
 				last_format.execute (a_stone);
-				history.extend (a_stone)
+				add_to_history (a_stone)
 			end
 		end;
  

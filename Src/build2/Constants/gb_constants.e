@@ -138,6 +138,9 @@ feature -- Generation constants
 			Result.extend ("ace_template.ace")
 		end
 		
+	eiffel_class_extension: STRING is ".e"
+			-- String constant for class file extension to be used.
+		
 	class_name_tag: STRING is
 			-- `Result' is tag used in templates
 			-- for the class name.

@@ -350,24 +350,8 @@ feature -- Element change
 			-- Insert a new row at index `a_index'.
 		require
 			i_positive: a_index > 0
-		local
-			a_grid_row: EV_GRID_ROW
-			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
-			create a_grid_row
-			a_grid_row.implementation.set_grid_i (Current)
-			
-			create a_row_data.make (1)
-			if row_list.count < a_index then
-				enlarge_row_list (a_index)
-			end
-			row_list.put (a_row_data, a_index - 1)
-
-			if a_index > grid_rows.capacity then
-				grid_rows.resize (a_index)
-			end
-			grid_rows.go_i_th (a_index)
-			grid_rows.put_left (a_grid_row.implementation)
+			add_row_at (a_index, False)
 		ensure
 			row_count_set: (a_index < old row_count implies (row_count = old row_count + 1)) or a_index = row_count
 		end
@@ -387,39 +371,11 @@ feature -- Element change
 		end
 
 	insert_new_column (a_index: INTEGER) is
-			-- Insert a new column at index `a_index'.
+			-- Insert a new column at index `a_index'
 		require
 			i_positive: a_index > 0
-		local
-			a_column: EV_GRID_COLUMN
-			column_implementation: EV_GRID_COLUMN_I
 		do
-			create a_column
-			column_implementation := a_column.implementation
-			column_implementation.set_grid_i (Current)
-
-			column_implementation.set_physical_index (physical_column_count)
-			physical_column_count := physical_column_count + 1
-			
-			if a_index > grid_columns.count then
-				grid_columns.resize (a_index)
-			end
-			grid_columns.go_i_th (a_index)
-			grid_columns.put_left (column_implementation)
-
-			show_column (a_index)
-			
-				-- Now add the header for the new item.
-				fixme ("[
-					Needs to use the actual index of the column taking into account those that are hidden before it.
-					Also headers before may be needed to pad it out.
-					]")
-			header.go_i_th (a_index)
-			header.put_left (column_implementation.header_item)
-			recompute_horizontal_scroll_bar
-		ensure
-			column_count_set: (a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index
-			visible_column_count_set: visible_column_count = old visible_column_count + 1
+			add_column_at (a_index, False)
 		end
 
 	move_row (i, j: INTEGER) is
@@ -465,8 +421,8 @@ feature -- Element change
 			a_grid_row_i := row_internal (a_row).implementation
 
 			a_row_data := row_list.item (a_row - 1)
-			if a_row_data.count < a_column then
-				enlarge_row (a_row, a_column)
+			if a_row_data.count < a_grid_col_i.physical_index + 1 then
+				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
 			end
 			row_list.item (a_row - 1).put (a_item.implementation, a_grid_col_i.physical_index)
 			
@@ -528,29 +484,6 @@ feature -- Measurements
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
-	enlarge_row_list (new_count: INTEGER) is
-			-- Enlarge the row list to to count `new_count'
-		require
-			valid_new_count: new_count > row_list.count
-		do
-			row_list := row_list.aliased_resized_area (new_count)
-		ensure
-			count_increased: row_list.count = new_count
-		end
-
-	enlarge_row (a_index, new_count: INTEGER) is
-			-- Enlarge the row at index `a_index' to `new_count'.
-		require
-			row_exists: row_list @ (a_index - 1) /= Void
-			row_can_expand: (row_list @ (a_index - 1)).count < new_count
-		local
-			a_row: SPECIAL [EV_GRID_ITEM_I]
-		do
-			a_row := row_list @ (a_index - 1)
-			a_row := a_row.aliased_resized_area (new_count)
-			row_list.put (a_row, (a_index - 1))
-		end
-
 	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
 		-- The row data returned from `row_list' @ i may be Void for optimization purposes
@@ -560,6 +493,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	visible_physical_column_indexes: SPECIAL [INTEGER] is
 			-- Zero-based physical data indexes of the visible columns needed for `row_data' lookup whilst rendering cells
+			-- A call to insert_new_column (2) on an empty grid will result in a `physical_index' of 0 as this is the first column added (zero-based indexing for `row_list')
+			-- A following call to `insert_new_column (1) will result in a `physical_index' of 1 as this is the second column added
+			-- If both columns were visible this query returns <<0, 1>>, so to draw the data for the appropriate columns to the screen, the indexes 0 and 1 need to be
+			-- used to query the value returned from `row_list' @ i
+			-- (`row_list' @ i) @ (visible_physical_column_indexes @ j) returns the 'j'-th visible column value for the `i'-th row in the grid.
 		local
 			i: INTEGER
 			a_col: EV_GRID_COLUMN
@@ -577,7 +515,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 		end
 
 	previous_visible_column_from_index (a_index: INTEGER): INTEGER is
-			-- Return the index of the previous visible column's index from `a_index'
+			-- Return the index of the previous visible column's logical index from index `a_index'
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count
 		local
@@ -600,10 +538,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 		end
 
 	grid_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
-		-- Arrayed list returning the appropriate EV_GRID_ROW from a given index
+		-- Arrayed list returning the appropriate EV_GRID_ROW from a given logical index
 		
 	grid_columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
-		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given index
+		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given logical index
 
 	physical_column_count: INTEGER
 		-- Number of physical columns stored in `row_list'
@@ -840,7 +778,16 @@ feature {NONE} -- Drawing implementation
 		do
 				-- If the width of the item contained in `viewport' is smaller than the width of the viewport,
 				-- enlarge it to the viewport's width.
-			viewport.set_item_size (viewport.width.max (viewport.item.width), viewport.height)
+			if viewport.item.width < viewport.width then
+				new_width := viewport.width
+			else
+				new_width := viewport.item.width
+			end
+				-- Ensure that the height of the viewport's item always matches that of the viewport.
+			new_height := viewport.height
+
+				-- Now actually perform size setting.
+			viewport.set_item_size (new_width, new_height)
 
 			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
@@ -896,13 +843,114 @@ feature {NONE} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 		
+feature {NONE} -- Implementation
+
+	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
+			-- Add a new column at index `a_index'.
+			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'
+		require
+			i_positive: a_index > 0
+		local
+			a_column: EV_GRID_COLUMN
+			column_implementation: EV_GRID_COLUMN_I
+		do
+			create a_column
+			column_implementation := a_column.implementation
+			column_implementation.set_grid_i (Current)
+
+			column_implementation.set_physical_index (physical_column_count)
+			physical_column_count := physical_column_count + 1
+			
+			if a_index > grid_columns.count then
+				if replace_existing_item then
+					grid_columns.resize (a_index)
+				else
+					grid_columns.resize (a_index - 1)
+				end
+			end
+
+			grid_columns.go_i_th (a_index)
+			if replace_existing_item then
+				grid_columns.replace (column_implementation)
+			else
+				grid_columns.put_left (column_implementation)
+			end
+
+			show_column (a_index)
+			
+				-- Now add the header for the new item.
+				fixme ("[
+					Needs to use the actual index of the column taking into account those that are hidden before it.
+					Also headers before may be needed to pad it out.
+					]")
+			header.go_i_th (a_index)
+			header.put_left (column_implementation.header_item)
+			recompute_horizontal_scroll_bar
+		ensure
+			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
+		end
+
+	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
+			-- Add a new row at index `a_index'.
+			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'
+		require
+			i_positive: a_index > 0
+		local
+			a_grid_row: EV_GRID_ROW
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+		do
+			create a_grid_row
+			a_grid_row.implementation.set_grid_i (Current)
+			
+			create a_row_data.make (1)
+			if row_list.count < a_index then
+				enlarge_row_list (a_index)
+			end
+			row_list.put (a_row_data, a_index - 1)
+
+			if a_index > grid_rows.count then
+				if replace_existing_item then
+					grid_rows.resize (a_index)
+				else
+					grid_rows.resize (a_index - 1)
+				end
+			end
+			grid_rows.go_i_th (a_index)
+			if replace_existing_item then
+				grid_rows.replace (a_grid_row.implementation)
+			else
+				grid_rows.put_left (a_grid_row.implementation)
+			end
+		end
+
+	enlarge_row_list (new_count: INTEGER) is
+			-- Enlarge the row list to to count `new_count'
+		require
+			valid_new_count: new_count > row_list.count
+		do
+			row_list := row_list.aliased_resized_area (new_count)
+		ensure
+			count_increased: row_list.count = new_count
+		end
+		
 	maximum_header_width: INTEGER is 10000
 		-- Maximium width of `header'.
 		
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 
-feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
+	enlarge_row (a_index, new_count: INTEGER) is
+			-- Enlarge the row at index `a_index' to `new_count'.
+		require
+			row_exists: row_list @ (a_index - 1) /= Void
+			row_can_expand: (row_list @ (a_index - 1)).count < new_count
+		local
+			a_row: SPECIAL [EV_GRID_ITEM_I]
+		do
+			a_row := row_list @ (a_index - 1)
+			a_row := a_row.aliased_resized_area (new_count)
+			row_list.put (a_row, (a_index - 1))
+		end
 
 	column_internal (a_column: INTEGER): EV_GRID_COLUMN is
 			-- Column number `a_column', returns a new column if it doesn't exist
@@ -915,7 +963,8 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 				a_col_i := grid_columns @ a_column
 			end
 			if a_col_i = Void then
-				insert_new_column (a_column)
+					-- There is no column object at position `a_column' so we replace the Void reference with a newly created column object
+				add_column_at (a_column, True)
 				a_col_i := grid_columns @ a_column
 			end
 			Result := a_col_i.interface
@@ -934,13 +983,15 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 				a_row_i := grid_rows @ a_row
 			end
 			if a_row_i = Void then
-				insert_new_row (a_row)
+				add_row_at (a_row, True)
 				a_row_i := grid_rows @ a_row
 			end
 			Result := a_row_i.interface
 		ensure
 			row_not_void: Result /= Void
 		end
+
+feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 
 	interface: EV_GRID
 			-- Provides a common user interface to possibly dependent

@@ -37,6 +37,13 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	root_element_type: STRING is
+			--
+		do
+			Result := ((create {GB_SHARED_XML_HANDLER}).xml_handler.component_root_element_type (name))
+		end
+		
 
 feature -- Status Setting
 

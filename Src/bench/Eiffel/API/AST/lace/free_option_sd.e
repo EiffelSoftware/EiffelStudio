@@ -86,23 +86,23 @@ feature {NONE}
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
 			Result.force (inlining_size, "inlining_size");
-			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_trace");
-			Result.force (code_replication, "code_replication");
-			Result.force (server_file_size, "server_file_size");
-			Result.force (hide, "hide");
 			Result.force (profile, "profile");
 			Result.force (override_cluster, "override_cluster");
 			Result.force (address_expression, "address_expression");
 			Result.force (document, "document");
-			Result.force (hide_implementation, "hide_implementation");
-			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
 			Result.force (multithreaded, "multithreaded")
 			Result.force (dynamic_runtime, "dynamic_runtime")
 			Result.force (console_application, "console_application")
 			Result.force (shared_library_definition, "shared_library_definition")
+			Result.force (check_vape, "check_vape");
+			Result.force (hide, "hide");
+			Result.force (hide_implementation, "hide_implementation");
+			Result.force (java_generation, "java_generation")
+			Result.force (server_file_size, "server_file_size");
+			Result.force (code_replication, "code_replication");
 		end;
 
 feature {COMPILER_EXPORTER}

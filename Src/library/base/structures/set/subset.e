@@ -4,7 +4,7 @@ indexing
 		"Subsets with the associated operations, %
 		%without commitment to a particular representation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: subset, set;
 	access: membership;
 	contents: generic;
@@ -95,8 +95,8 @@ feature -- Basic operations
 		end;
 
 	symdif (other: like Current) is
-			-- Remove all elements also in `other', and add all elements
-			-- of `other' not already present.
+			-- Remove all elements also in `other', and add all
+			-- elements of `other' not already present.
 		require
 			set_exists: other /= Void;
 			same_rule: object_comparison = other.object_comparison
@@ -114,7 +114,7 @@ end -- class SUBSET
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

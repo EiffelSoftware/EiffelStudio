@@ -3,7 +3,7 @@ indexing
 	description:
 		"Sequential files, viewed as persistent sequences of characters";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -45,49 +45,49 @@ feature -- Element change
 	new_line is
 			-- Write a new line character at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 
 	putstring (s: STRING) is
 			-- Write `s' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 
 	putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 
 	putreal (r: REAL) is
 			-- Write ASCII value of `r' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 
 	putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 	
 	putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 	
 	putdouble (d: DOUBLE) is
 			-- Write ASCII value of `d' at current position.
 		require
-			extendible
+			extendible: extendible
 		deferred
 		end;
 	
@@ -323,7 +323,7 @@ feature {NONE} -- Inapplicable
 		do
 		end;
 
-	prune	(v: like item) is
+	prune (v: like item) is
 			-- Remove an occurrence of `v' if any.
 		require else
 			prunable: file_prunable
@@ -362,7 +362,7 @@ end -- class FILE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"General finite-state automata, implemented by arrays";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -22,8 +22,8 @@ creation
 feature -- Initialization
 
 	make (i, s: INTEGER) is
-			-- Make an automaton including at most s states,
-			-- with transition 0 to i.
+			-- Make an automaton including at most `s' states,
+			-- with transitions 0 to `i'.
 		require
 			s_large_enough: s > 0;
 			i_large_enough: i >= 0
@@ -62,7 +62,7 @@ end -- class FIXED_AUTOMATON
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

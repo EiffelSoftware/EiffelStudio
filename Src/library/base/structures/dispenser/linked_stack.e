@@ -1,7 +1,7 @@
 indexing
 		"Unbounded stacks implemented as linked lists";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: linked_stack, dispenser, linked_list;
 	representation: linked;
 	access: fixed, lifo, membership;
@@ -65,6 +65,7 @@ feature -- Element change
 		end;
 
 	extend (v: like item) is
+			-- Push `v' onto top.
 		do
 			put_front (v)
 		end
@@ -137,7 +138,7 @@ end -- class LINKED_STACK
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

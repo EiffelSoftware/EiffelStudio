@@ -5,7 +5,7 @@ indexing
 			%as to what item they can access at a given time. %
 			%Examples include stacks and queues."
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dispenser, active;
 	access: fixed, membership;
 	contents: generic;
@@ -56,7 +56,7 @@ end -- class DISPENSER
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

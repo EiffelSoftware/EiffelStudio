@@ -3,7 +3,7 @@ indexing
 	description:
 		"Sorted sets implemented as binary search trees";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: binary_search_tree_set, set, binary_search_tree;
 	representation: recursive, array;
 	access: membership, min, max;
@@ -342,7 +342,7 @@ end -- class BINARY_SEARCH_TREE_SET
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

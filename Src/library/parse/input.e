@@ -3,7 +3,7 @@ indexing
 	description:
 		"Handling of input documents through a lexical analyzer";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -62,7 +62,7 @@ feature  -- Status setting
 
 	set_input_file (filename: STRING) is
 			-- Set the name of the input file to be read
-			-- by the lexical analyser.
+			-- by the lexical analyzer.
 		require
 			lex_not_void: analyzer /= Void;
 			name_not_void: filename /= Void;
@@ -73,7 +73,7 @@ feature  -- Status setting
 
 	set_input_string (stringname: STRING) is
 			-- Set the name of the input string to be read
-			-- by the lexical analyser.
+			-- by the lexical analyzer.
 		do
 			analyzer.set_string (stringname)
 		end;
@@ -141,7 +141,7 @@ feature  -- Output
 
 
 	raise_error (s: STRING) is
-			-- Print error message s.
+			-- Print error message `s'.
 		do  
 			error_message.wipe_out;
 			error_message.append (file_name); 
@@ -163,7 +163,7 @@ feature {NONE}
 		end
 
 	file_name : STRING is
-			-- Name of the file read by the lexical analyser
+			-- Name of the file read by the lexical analyzer
 		do  
 			Result := analyzer.file_name
 		end;
@@ -180,7 +180,7 @@ end -- class INPUT
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

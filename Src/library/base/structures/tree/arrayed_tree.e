@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees where the children of each node are kept in an array";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: tree;
 	representation: recursive, array;
 	access: cursor, membership;
@@ -20,7 +20,7 @@ class ARRAYED_TREE [G] inherit
 
 	DYNAMIC_TREE [G]
 		undefine
-			child_after, readable_child,  
+			child_after, readable_child,
 			writable_child,	child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
@@ -75,10 +75,10 @@ class ARRAYED_TREE [G] inherit
 			object_comparison as al_object_comparison			
 		export
 			{NONE}
-				al_extend,  al_duplicate,
-				al_remove,  al_make, 
+				al_extend, al_duplicate,
+				al_remove, al_make, 
 				al_put, al_replace, al_has,
-				al_fill,  al_full,
+				al_fill, al_full,
 				al_remove_left, al_remove_right, al_lin_rep, 
 				al_seq_rep, al_put_left, al_put_right,
 				al_merge_left, al_merge_right, al_object_comparison;
@@ -341,13 +341,13 @@ feature {NONE} -- Implementation
 	new_tree: like Current is
 			-- A newly created instance of the same type.
 		do
-			!!Result.make (0, item);
+			!! Result.make (0, item);
 		end;
 	
 	new_cell (v: like item): like Current is
 			-- New node with value `v' and no children.
 		do
-			!!Result.make (0, v);
+			!! Result.make (0, v);
 			Result.attach_to_parent (Current)
 		end;
 		
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			-- Position of current node in parent
 		do
 			if parent /= Void then
-				Result := parent.index_of  (Current, 1)
+				Result := parent.index_of (Current, 1)
 			end
 		end;
 
@@ -381,7 +381,7 @@ end -- class ARRAYED_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

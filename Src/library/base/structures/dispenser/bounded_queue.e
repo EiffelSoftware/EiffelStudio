@@ -3,7 +3,7 @@ indexing
 	description:
 		"Queues with a bounded physical size, implemented by arrays"; 
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dispenser, array;
 	representation: array;
 	access: fixed, fifo, membership;
@@ -189,7 +189,7 @@ feature -- Cursor movement
 feature -- Element change
 
 	extend, force, put (v: G) is
-			-- Add `v' as newest element if there is room.
+			-- Add `v' as newest element.
 		do
 			fl.put (v, in_index);
 			in_index := (in_index + 1) \\ fl.capacity;
@@ -294,7 +294,7 @@ end -- class BOUNDED_QUEUE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

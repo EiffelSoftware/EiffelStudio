@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees with a dynamically modifiable structure";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dynamic_tree, tree;
 	representation: recursive;
 	access: cursor, membership;
@@ -135,7 +135,7 @@ feature -- Removal
 
 	remove_child is
 			-- Remove child at cursor position.
-			-- Move cursor to next sibling. or `after' if none
+			-- Move cursor to next sibling, or `after' if none.
 		require
 			child_not_off: not child_off
 		deferred
@@ -152,10 +152,10 @@ feature -- Removal
 feature -- Conversion
 
 	fill_from_binary (b: BINARY_TREE [G]) is
-			-- Fill from a binary representation.
-			-- Left_child becomes first_child.
-			-- Right_child becomes right_sibling.
-			-- The right child of b is ignored.
+			-- Fill from a binary tree representation.
+			-- Left child becomes first child.
+			-- Right child becomes right sibling.
+			-- Any right child of `b' is ignored.
 		local
 			current_node: BINARY_TREE [G]
 		do
@@ -298,7 +298,7 @@ end -- class DYNAMIC_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

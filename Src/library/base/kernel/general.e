@@ -4,7 +4,7 @@ indexing
 		"Platform-independent universal properties. %
 		%This class is an ancestor to all developer-written classes.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -208,13 +208,13 @@ feature -- Output
 
 feature -- Basic operations
 
-	frozen default: like Current is
-			-- Default value of current type.
+	frozen do_nothing is
+			-- Execute a null action.
 		do
 		end;
 
-	frozen do_nothing is
-			-- Execute a null action.
+	frozen default: like Current is
+			-- Default value of current type.
 		do
 		end;
 
@@ -228,6 +228,8 @@ feature -- Basic operations
 		alias
 			"esdie"
 		end;
+
+feature {GENERAL} -- Implementation
 
 	c_standard_clone (other: GENERAL): like other is
 			-- New object of same dynamic type as `other'
@@ -304,7 +306,7 @@ end -- class GENERAL
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Facilities for tuning up the garbage collection mechanism. %
 		%This class may be used as ancestor by classes needing its facilities.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -90,8 +90,8 @@ feature -- Status setting
 		end;
 
 	allocate_fast is
-			-- Enter speed mode: Optimize memory allocation speed
-			-- at the expense of memory usage.
+			-- Enter ``speed'' mode: will optimize speed of memory
+			-- allocation rather than memory usage.
 		external
 			"C"
 		alias
@@ -99,8 +99,8 @@ feature -- Status setting
 		end;
 	
 	allocate_compact is
-			-- Enter slow mode: Try to compact memory before
-			-- requesting more from the operating system.
+			-- Enter ``memory'' mode: will try to compact memory
+			-- before requesting more from the operating system.
 		external
 			"C"
 		alias
@@ -108,8 +108,8 @@ feature -- Status setting
 		end;
 	
 	allocate_tiny is
-			-- Enter tiny mode: Enter slow mode after having freed
-			-- as much memory as possible.
+			-- Enter ``tiny'' mode: will enter ``memory'' mode
+			-- after having freed as much memory as possible.
 		external
 			"C"
 		alias
@@ -157,10 +157,10 @@ feature -- Removal
 			-- Action to be executed just before the garbage collector
 			-- reclaims an object.
 			-- Default version does nothing; redefine in descendants
-			-- to perform specific dispose actions. Those actions should
-			-- only take care of freeing external resources; they should
-			-- not perform remote calls on other objects since these may
-			-- also be dead and reclaimed.
+			-- to perform specific dispose actions. Those actions
+			-- should only take care of freeing external resources;
+			-- they should not perform remote calls on other objects
+			-- since these may also be dead and reclaimed.
 		do
 		end;
 
@@ -220,7 +220,7 @@ end -- class MEMORY
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

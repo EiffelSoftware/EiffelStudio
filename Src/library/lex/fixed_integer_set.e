@@ -3,7 +3,7 @@ indexing
 	description:
 		"Sets of integers with a finite number of elements";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -25,7 +25,7 @@ creation
 feature -- Initialization
 
 	make (n: INTEGER) is
-			-- Make set for at most n integers from 1 to n.
+			-- Make set for at most `n' integers from 1 to `n'.
 		require
 			n_positive: n > 0
 		do
@@ -38,7 +38,7 @@ feature -- Initialization
 feature -- Access
 
 	has (i: INTEGER): BOOLEAN is
-			-- Is i in the set?
+			-- Is `i' in set?
 		require
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
@@ -54,7 +54,7 @@ feature -- Access
 
 	smallest: INTEGER is
 			-- Smallest integer in set;
-			-- count + 1 if set empty
+			-- `count' + 1 if set empty
 		do
 			Result := sma ($area, count)
 		end;
@@ -67,8 +67,8 @@ feature -- Access
 		end;
 
 	next (p: INTEGER): INTEGER is
-			-- Next integer in Current following p;
-			-- count + 1 if p equals to largest.
+			-- Next integer in Current following `p';
+			-- `count' + 1 if `p' equals largest.
 		require
 			p_in_set: p >= 1 and p <= count
 		do
@@ -78,7 +78,7 @@ feature -- Access
 feature -- Element change
 
 	put (i: INTEGER) is
-			-- Insert i in the set.
+			-- Insert `i' into set.
 		require
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
@@ -91,7 +91,7 @@ feature -- Element change
 feature -- Removal
 
 	remove (i: INTEGER) is
-			-- Delete i from the set.
+			-- Delete `i' from set.
 		require
 			index_large_enough: 1 <= i;
 			index_small_enough: i <= count
@@ -112,7 +112,7 @@ feature -- Conversion
 feature -- Output
 
 	print is
-			-- List Current.
+			-- List all items in set.
 		local
 			i: INTEGER;
 		do
@@ -163,7 +163,7 @@ end -- class FIXED_INTEGER_SET
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Objects that are able to iterate over linear structures";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: iterators, iteration, linear_iterators, 
 			linear_iteration;
 	date: "$Date$";
@@ -326,7 +326,7 @@ end
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Special objects: homogeneous sequences of values, %
 		%used to represent arrays and strings";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -19,8 +19,8 @@ class SPECIAL [T] inherit
 feature -- Access
 
 	item (i: INTEGER): T is
-			-- Item at `i' th position
-			-- Index begins at 0
+			-- Item at `i'-th position
+			-- (indices begin at 0)
 		require
 			index_big_enough: i >= 0;
 			index_small_enough: i < count
@@ -29,7 +29,7 @@ feature -- Access
 		end;
 
 	conforms_to (other: SPECIAL [T]): BOOLEAN is
-			-- Does other special object conform to `other' ?
+			-- Does special object conform to `other' ?
 		do
 			Result := other.count = count
 		end;
@@ -45,7 +45,8 @@ feature -- Measurement
 feature -- Element change
 
 	put (v: T; i: INTEGER) is
-			-- Put item `v' at position `i'.
+			-- Replace `i'-th item by `v'.
+			-- (Indices begin at 0.)
 		require
 			index_big_enough: i >= 0;
 			index_small_enough: i < count
@@ -92,7 +93,7 @@ end -- class SPECIAL
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Unbounded queues implemented as linked lists";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: linked_queue, dispenser, linked_list;
 	representation: linked;
 	access: fixed, fifo, membership;
@@ -71,7 +71,7 @@ feature -- Access
 feature -- Element change
 
 	put, extend, force (v: G) is
-			-- Add `v' as newest element.
+			-- Add `v' as newest item.
 		do
 			put_front (v)
 			before := false
@@ -134,14 +134,14 @@ feature -- Duplication
 feature {NONE} -- Not applicable
 	
 	prune (v: like item) is
-			-- Remove one occurence of `v'.
+			-- Remove one occurrence of `v'.
 			-- Not available.
 		do
 			-- Do nothing
 		end;
 	
 	prune_all (v: like item) is
-			-- Remove all occurences of `v'.
+			-- Remove all occurrences of `v'.
 			-- Not available
 		do
 			-- Do nothing
@@ -156,7 +156,7 @@ end -- class LINKED_QUEUE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

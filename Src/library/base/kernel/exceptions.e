@@ -4,7 +4,7 @@ indexing
 		"Facilities for adapting the exception handling mechanism. %
 		%This class may be used as ancestor by classes needing its facilities.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -25,8 +25,8 @@ feature -- Status report
 		end;
 
 	assertion_violation: BOOLEAN is
-			-- Was last exception due to a violated assertion or
-			-- non-decreasing variant?
+			-- Is last exception originally due to a violated
+			-- assertion or non-decreasing variant?
 		do
 			Result := 
 				(original_exception = Check_instruction) or else
@@ -38,14 +38,15 @@ feature -- Status report
 		end;
 
 	is_developer_exception: BOOLEAN is
-			-- Is the last exception a developer exception?
+			-- Is the last exception originally due to
+			-- a developer exception?
 		do
 			Result := (original_exception = Developer_exception)
 		end;
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
-			-- Is the last exception a developer exception
-			-- of name `name' ?
+			-- Is the last exception originally due to a developer
+			-- exception of name `name' ?
 		do
 			Result := is_developer_exception and then
 						equal (name, developer_exception_name)
@@ -58,14 +59,14 @@ feature -- Status report
 		end;
 
 	is_signal: BOOLEAN is
-			-- Is last exception due to an external event (operating
-			-- system signal)?
+			-- Is last exception originally due to an external
+			-- event (operating system signal)?
 		do
 			Result := (original_exception = Signal_exception)
 		end;
 
 	is_system_exception: BOOLEAN is
-			-- Was last exception due to an exception due to
+			-- Is last exception originally due to an
 			-- external event (operating system error)?
 		do
 			Result := 
@@ -117,8 +118,8 @@ feature -- Status report
 		end;
 
 	original_exception: INTEGER is
-			-- Code of last exception that triggered current
-			-- exception
+			-- Original code of last exception that triggered
+			-- current exception
 		external
 			"C"
 		alias
@@ -209,7 +210,7 @@ end -- class EXCEPTIONS
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Compact trees as active structures that may be traversed using a cursor";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: compact_cursor_tree, cursor_tree;
 	representation: array;
 	access: cursor, membership;
@@ -83,6 +83,8 @@ feature -- Access
 				(active, after, before, below, above)
 		end;
 
+feature -- Measurement
+
 	arity: INTEGER is
 			-- Number of children
 		local
@@ -97,8 +99,6 @@ feature -- Access
 				index := next_sibling_table.item (index)
 			end
 		end;
-
-feature -- Measurement
 
 	count: INTEGER is
 			-- Number of elements in subtree
@@ -229,7 +229,7 @@ feature -- Cursor movement
 			index: INTEGER;
 		do
 			if below then
-					check 
+					check
 						before
 					end
 					-- This is because:
@@ -490,7 +490,7 @@ feature -- Removal
 	remove is
 			-- Remove node at cursor position
 			-- (and consequently the corresponding subtree).
-			-- Move cursor to next sibling or `after' if none.
+			-- Move cursor to next sibling, or `after' if none.
 		local
 			removed, index, next: INTEGER;
 		do
@@ -690,7 +690,7 @@ end -- class COMPACT_CURSOR_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

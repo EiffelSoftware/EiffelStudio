@@ -3,7 +3,7 @@ indexing
 	description:
 		"The Fibonacci number sequence";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: fibonacci;
 	date: "$Date$";
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Access
 	Second : INTEGER is 1;
 
 	higher_fibonacci (n: INTEGER): INTEGER is
-			-- Lowest fibonacci number greater than or equal to `n'
+			-- Lowest Fibonacci number greater than or equal to `n'
 		do
 			if n <= First then
 				Result := First
@@ -41,7 +41,7 @@ feature -- Access
 		end;
 
 	lower_fibonacci (n: INTEGER): INTEGER is
-			-- Greatest fibonacci number lower than or equal to `n'
+			-- Greatest Fibonacci number lower than or equal to `n'
 		require
 			argument_big_enough: n >= Second
 		do
@@ -62,7 +62,7 @@ feature -- Access
 	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN] is
 			-- Array of `n' boolean values, where the
 			-- value at index `i' is true if and only if
-			-- `i' is a fibonacci number.
+			-- `i' is a Fibonacci number.
 		local
 			i, j: INTEGER
 		do
@@ -80,7 +80,7 @@ feature -- Access
 		end;
 
 	is_fibonacci (n: INTEGER): BOOLEAN is
-			-- Is `n' a fibonacci number?
+			-- Is `n' a Fibonacci number?
 		local
 			to_test, count : INTEGER
 		do
@@ -103,7 +103,7 @@ feature -- Access
 		end;
 
 	i_th (i: INTEGER): INTEGER is
-			-- The `i'-th fibonacci number
+			-- The `i'-th Fibonacci number
 		local
 			count : INTEGER
 			last, second_last : INTEGER
@@ -133,7 +133,7 @@ end -- class FIBONACCI
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

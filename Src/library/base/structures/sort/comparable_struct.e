@@ -4,7 +4,7 @@ indexing
 		"Data structures whose items may be compared %
 		%according to a partial order relation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: comparable_struct;
 	access: min, max;
 	contents: generic;
@@ -67,6 +67,8 @@ feature -- Measurement
 			-- Can min and max be computed?
 		do
 			Result := not empty
+		ensure
+			Result implies not empty
 		end;
 
 feature {NONE} -- Inapplicable
@@ -84,7 +86,7 @@ end -- class COMPARABLE_STRUCT
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Priority queues implemented as heaps";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sorted_priority_queue, dispenser, heap;
 	representation: heap;
 	access: fixed, membership;
@@ -96,7 +96,7 @@ feature -- Element change
 feature -- Removal
 
 	remove is
-			-- Remove item of 
+			-- Remove item of highest value. 
 		do
 			put_i_th (i_th (count), 1);
 			count := count - 1;
@@ -132,7 +132,7 @@ feature -- Conversion
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-			-- New queue containing the n greatest items
+			-- New priority queue containing the `n' greatest items
 		local
 			temp: ARRAY [G];
 			i, j: INTEGER
@@ -243,7 +243,7 @@ end -- class HEAP_PRIORITY_QUEUE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

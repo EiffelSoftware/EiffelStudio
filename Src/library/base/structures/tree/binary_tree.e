@@ -3,7 +3,7 @@ indexing
 	description:
 		"Binary tree: each node may have a left child and a right child";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: binary_tree, tree, fixed_tree;
 	representation: recursive, array;
 	access: cursor, membership;
@@ -43,19 +43,6 @@ feature -- Initialization
 
 feature -- Access
 
-	arity: INTEGER is
-			-- Number of children
-		do
-			if has_left then
-				Result := Result + 1
-			end;
-			if has_right then
-				Result := Result + 1
-			end;
-		ensure then
-			valid_arity: Result <= 2
-		end;
-		
 	parent: BINARY_TREE [G];
 			-- Parent of current node
 	
@@ -63,13 +50,13 @@ feature -- Access
 			-- Index of cursor position
 	
 	left_child: like parent;
-			-- left child, if any
+			-- Left child, if any
 	
 	right_child: like parent;
-			-- right child, if any
+			-- Right child, if any
 	
 	left_item: like item is
-			-- value of left child
+			-- Value of left child
 		require
 			has_left: left_child /= Void
 		do
@@ -128,6 +115,20 @@ feature -- Access
 			if parent.left_child = Current then
 				Result := parent.right_child
 			end
+		end;
+feature -- Measurement
+
+	arity: INTEGER is
+			-- Number of children
+		do
+			if has_left then
+				Result := Result + 1
+			end;
+			if has_right then
+				Result := Result + 1
+			end;
+		ensure then
+			valid_arity: Result <= 2
 		end;
 
 feature -- Status report
@@ -389,7 +390,7 @@ end -- class BINARY_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

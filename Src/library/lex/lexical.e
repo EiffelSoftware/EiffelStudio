@@ -3,7 +3,7 @@ indexing
 	description:
 		"Lexical analyzers";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -116,6 +116,10 @@ feature -- Access
 
 	token_type: INTEGER;
 			-- Type of last token read
+
+	No_token: INTEGER is 0;
+			-- Token type for no token recognized.
+
 
 	other_possible_tokens: ARRAY [INTEGER];
 			-- Other candidate types for last recognized token
@@ -532,7 +536,7 @@ end -- class LEXICAL
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

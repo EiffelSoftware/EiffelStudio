@@ -3,7 +3,7 @@ indexing
 	description:
 		"References to objects containing an integer value";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -35,7 +35,7 @@ feature -- Access
 			if item > 0 then
 				Result := item
 			else
-				Result := -item 
+				Result := -item
 			end
 		end;
 
@@ -152,7 +152,7 @@ end -- class INTEGER_REF
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

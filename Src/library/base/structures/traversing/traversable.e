@@ -4,7 +4,7 @@ indexing
 		"Structures for which there exists a traversal policy %
 		%that will visit every element exactly once.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: traversable, traversing;
 	access: cursor;
 	contents: generic;
@@ -51,7 +51,7 @@ end -- class TRAVERSABLE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Finite sequences: structures where existing items are arranged%
 		%and accessed sequentially, and new ones can be added at the end.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sequence;
 	access: cursor, membership;
 	contents: generic;
@@ -42,7 +42,7 @@ feature -- Element change
 	force (v: like item) is
 			-- Add `v' to end.
 		require 
-			extendible
+			extendible: extendible
 		do
 			extend (v)
 		ensure then
@@ -108,7 +108,7 @@ end -- class SEQUENCE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

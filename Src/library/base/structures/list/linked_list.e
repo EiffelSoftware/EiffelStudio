@@ -3,7 +3,7 @@ indexing
 	description:
 		"Sequential, one-way linked lists";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: linked_list, sequence;
 	representation: linked;
 	access: index, cursor, membership;
@@ -617,6 +617,7 @@ feature {LINKED_LIST} -- Implementation
 
 invariant
 
+	prunable: prunable;
 	empty_constraint: empty implies ((first_element = Void) and (active = Void));
 	not_void_unless_empty: (active = Void) implies empty;
 	before_constraint: before implies (active = first_element);
@@ -628,7 +629,7 @@ end -- class LINKED_LIST
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

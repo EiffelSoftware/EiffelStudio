@@ -5,7 +5,7 @@ indexing
 		%a possibly undefined ``current item''. %
 		%Basic access and modification operations apply to the current item.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: active, access;
 	access: membership;
 	contents: generic;
@@ -68,7 +68,7 @@ end -- class ACTIVE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

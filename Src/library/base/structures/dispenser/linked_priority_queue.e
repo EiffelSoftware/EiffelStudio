@@ -3,7 +3,7 @@ indexing
 	description:
 		"Priority queues implemented as sorted lists";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: priority_queue, queue;
 	contents: generic;
 	date: "$Date$";
@@ -53,7 +53,7 @@ feature -- Access
 feature -- Removal
 
 	remove is
-			-- Remove item of 
+			-- Remove item of highest value. 
 		do
 			go_i_th (count)
 			sl_remove
@@ -72,7 +72,7 @@ end -- class LINKED_PRIORITY_QUEUE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

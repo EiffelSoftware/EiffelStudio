@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees implemented using a two way linked list representation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: two_way_tree, tree, two_way_list;
 	representation: recursive, linked;
 	access: cursor, membership;
@@ -115,6 +115,7 @@ feature -- Access
 			-- Parent node
 
 	first_child: like parent;
+			-- Leftmost child
 
 	last_child: like parent
 
@@ -275,7 +276,7 @@ end -- class TWO_WAY_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

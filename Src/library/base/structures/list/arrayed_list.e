@@ -3,7 +3,7 @@ indexing
 	description:
 		"Lists implemented by resizable arrays";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sequence;
 	representation: array;
 	access: index, cursor, membership;
@@ -143,14 +143,15 @@ feature -- Measurement
 feature -- Status report
 
 	prunable: BOOLEAN is
+			-- May items be removed? (Answer: yes.)
 		do
 			Result := true
 		end;
 
 	full: BOOLEAN is
-			-- Is structure filled to capacity?
+			-- Is structure filled to capacity? (Answer: no.)
 		do
-			Result := count = capacity
+			Result := False
 		end;
 
 	valid_cursor (p: CURSOR): BOOLEAN is
@@ -335,7 +336,7 @@ feature -- Element change
 feature -- Removal
 
 	prune (v: like item) is
-			-- Remove first occurence of `v', if any,
+			-- Remove first occurrence of `v', if any,
 			-- after cursor position.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor or `v'does not occur)
@@ -387,7 +388,7 @@ feature -- Removal
 		end;
 
 	prune_all (v: like item) is
-			-- Remove all occurences of `v'.
+			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 			-- Leave cursor `after'.
@@ -574,13 +575,18 @@ feature {NONE} --Internal
 			-- unused
 		do
 		end;
+
+invariant
+
+	not_full: not full;
+	prunable: prunable;
 		
 end -- class ARRAYED_LIST
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

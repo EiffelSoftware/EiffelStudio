@@ -5,7 +5,7 @@ indexing
 		%characterized by a grammatical production %
 		%and associated semantic actions";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -15,6 +15,8 @@ deferred class CONSTRUCT inherit
 		rename
 			put as twt_put,
 			make as twt_make
+		export
+			{NONE} twt_put, twt_make
 		redefine 
 			parent, new_cell
 		end
@@ -22,6 +24,7 @@ deferred class CONSTRUCT inherit
 feature -- Initialization
 
 	make is
+			-- Set up construct.
 		do
 			twt_make (Void)
 		end;
@@ -49,8 +52,8 @@ feature -- Status report
 	is_optional: BOOLEAN;
 			-- Is construct optional? 
 
-	no_left_recursion: BOOLEAN is 
-			-- Is the construct's production free of left recursion?
+	left_recursion: BOOLEAN is 
+			-- Is the construct's definition left-recursive?
 		deferred 
 		end;
 
@@ -74,11 +77,13 @@ feature -- Status report
 feature -- Status setting
 
 	set_optional is
-			-- Set the attribute is_optional to true.
+			-- Define this construct as optional.
 			-- If the production does not match the tokens,
 			-- the construct will be parsed anyway.
 		do
 			is_optional := true
+		ensure
+			optional_construct: is_optional
 		end;
 
 feature -- Transformation
@@ -203,11 +208,11 @@ feature {NONE} -- Implementation
 		end;
 
 	keyword (s: STRING) is
-			-- Insert a keyword in the production.
+			-- Insert a keyword into the production.
 		local
 			key: KEYWORD
 		do     
-			!!key.make (s);
+			!! key.make (s);
 			put (key)
 		end;
 
@@ -273,7 +278,7 @@ feature {NONE} -- Implementation
 		local
 			err: STRING
 		do
-			!!err.make (20);
+			!! err.make (20);
 			err.append (child.construct_name);
 			err.append (" expected, ");
 			if document.token.type = -1 then
@@ -289,40 +294,40 @@ feature {NONE} -- Implementation
 			-- List of the structures already examined when
 			-- searching for left recursion
 		once
-			!!Result.make
+			!! Result.make
 		end;
 
 	check_recursion_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]] is
 			-- List of the structures already examined when
 			-- checking for left recursion
 		once
-			!!Result.make
+			!! Result.make
 		end;
 
-	left_recursion: CELL [BOOLEAN] is 
+	global_left_recursion: CELL [BOOLEAN] is 
 			-- Is there any left recursion in the whole program?
 		once 
-			!!Result.put (false)
+			!! Result.put (false)
 		end;
 
 	child_recursion: CELL [BOOLEAN] is 
 			-- Is there any recursion in the whole program?
 		once 
-			!!Result.put (false)
+			!! Result.put (false)
 		end;
 
 	recursion_message: STRING is
 			-- Error message when left recursion has been detected,
 			-- with all productions involved in the recursion chain
 		once
-			!!Result.make (100)
+			!! Result.make (100)
 		end;
 
 	message_construction: BOOLEAN is
 			-- Has the message on left recursion been already printed?
 		do
 			child.expand_all;
-			Result := child.no_left_recursion;
+			Result := not child.left_recursion;
 			if not Result then
 				if not structure_list.has (production) then
 					structure_list.put_right (production);
@@ -337,7 +342,7 @@ feature {NONE} -- Implementation
 					recursion_message.append ("%N")
 				end
 			elseif Result and not structure_list.has (production) then
-				io.putstring ("child.no_left_recursion = true");
+				io.putstring ("child.left_recursion = false");
 				io.putstring ("		and recursion_visited = false%N")
 			end
 		end;
@@ -378,7 +383,7 @@ end -- class CONSTRUCT
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

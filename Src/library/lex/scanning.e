@@ -4,7 +4,7 @@ indexing
 		"Mechanisms for building and using lexical analyzers. %
 		%This class may be used as ancestor by classes needing its facilities.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -94,10 +94,10 @@ feature -- Output
 		do
 			type := read_token.type;
 			if read_token.keyword_code /= -1 then
-				io.putstring ("Code: ");
-				io.putint (read_token.keyword_code);
 				io.putstring ("Keyword:  ");
 				io.putstring (read_token.string_value);
+				io.putstring ("Code: ");
+				io.putint (read_token.keyword_code);
 				io.new_line
 			elseif type /= 0 then
 				io.putstring ("Token type ");
@@ -127,7 +127,7 @@ end -- class SCANNING
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -213,7 +213,7 @@ feature -- Basic Operations
 			Result := Freeze_command_name + " -vs -silent"
 		end
 
-	Freeze_command_relative_path: STRING is "\Studio\spec\windows\bin\"
+	Freeze_command_relative_path: STRING is "\envision\spec\windows\bin\"
 			-- Path to `finish_freezing.exe' in installation
 
 	remove_file_locks is

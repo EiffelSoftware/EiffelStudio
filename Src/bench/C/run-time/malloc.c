@@ -531,9 +531,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	 */
 	zone = HEADER(ptr);
 	old_size = zone->ov_size & B_SIZE;	/* Old size of array */
-	ref = ptr + old_size - LNGPAD_2;
-	count = *(EIF_INTEGER *) ref;		/* Current number of elements */
-	elem_size = *(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER));
+	ref = RT_SPECIAL_INFO_WITH_ZONE(ptr, zone);
+	count = RT_SPECIAL_COUNT_WITH_INFO(ref);		/* Current number of elements */
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 	old_real_size = count * elem_size;	/* Size occupied by items in old special */
 	new_real_size = nbitems * elem_size;	/* Size occupied by items in new special */
 	new_size = new_real_size + LNGPAD_2;		/* New required size */
@@ -655,7 +655,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			  		/* Object has been resized to grow, we need to copy old items. */
 				memcpy (object, ptr, old_real_size);
 			else {
-				CHECK ("New size same as old one", new_size = old_size);
+				CHECK ("New size same as old one", new_size == old_size);
 			  		/* We need to clean area between `old_real_size' and
 					 * `new_real_size'.
 					 */
@@ -680,9 +680,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	RT_GC_WEAN(ptr);	/* Unprotect `ptr'. No more collection is expected. */
 
 		/* Update special attributes count and element size at the end */
-	ref = object + new_size - LNGPAD_2;
-	*(EIF_INTEGER *) ref = nbitems;						/* New count */
-	*(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER)) = elem_size; 	/* New item size */
+	ref = RT_SPECIAL_INFO(object);
+	RT_SPECIAL_COUNT_WITH_INFO(ref) = nbitems;						/* New count */
+	RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = elem_size; 	/* New item size */
 
 	if (need_expanded_initialization) {
 	   		/* case of a special object of expanded structures */
@@ -2109,9 +2109,8 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	dprintf(16)("realloc: reallocing block 0x%lx to be %d bytes\n",
 		zone, nbytes);
 	if (zone->ov_flags & EO_SPEC) {
-		long *pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		dprintf(16)("eif_realloc: special has count = %d, elemsize = %d\n",
-			*pointer, *(pointer + 1));
+			RT_SPECIAL_COUNT(ptr), RT_SPECIAL_ELEM_SIZE(ptr));
 		if (zone->ov_flags & EO_REF)
 			dprintf(16)("realloc: special has object references\n");
 	}
@@ -2199,17 +2198,19 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	
 	if (size_gain != 0 && gc_flag & GC_ON && zone->ov_flags & EO_REF)
 	{
-		long *old;				/* Pointer to the old count/elemsize */
-		long *pointer;			/* Pointer to new start of count/elemsize */
+		EIF_REFERENCE old;				/* Pointer to the old count/elemsize */
+		EIF_REFERENCE o_ref;	/* POinter to new count/elemsize */
 
-		pointer = (long *) (ptr + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		old = (long *) ((EIF_REFERENCE) pointer - size_gain);
-		*pointer++ = *old++;	/* Copy old count to new location */
-		*pointer = *old;		/* And also propagate element size */
+		o_ref = RT_SPECIAL_INFO_WITH_ZONE(ptr, zone);
+		old = ((EIF_REFERENCE) o_ref - size_gain);
+			/* Copy old count to new location */
+		RT_SPECIAL_COUNT_WITH_INFO(o_ref) = RT_SPECIAL_COUNT_WITH_INFO(old);
+			/* And also propagate element size */
+		RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref) = RT_SPECIAL_ELEM_SIZE_WITH_INFO (old);
 
 #ifdef DEBUG
 		dprintf(16)("realloc: progagated count = %d, elemsize = %d\n",
-			*(pointer - 1), *(pointer));
+			RT_SPECIAL_COUNT(ptr), RT_SPECIAL_ELEM_SIZE(ptr));
 		flush;
 #endif
 	}

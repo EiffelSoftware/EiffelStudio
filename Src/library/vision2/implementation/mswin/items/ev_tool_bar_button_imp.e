@@ -176,8 +176,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
-			 -- Enable `Current'.
+	enable_sensitive_internal is
+			 -- Disable `Current'.
+			 -- This is a special version used internally by the code that updates
+			 -- the pick and drop so that `enabled_before' is not updated. In
+			 -- `enable_sensitive' which is called by a user, we must always updated the
+			 -- state of `enabled_before' so that if it is called during a pick and drop,
+			 -- this new state is respected at the end of the transport.
 		do
 			is_sensitive := True
 			if parent_imp /= Void then
@@ -185,10 +190,35 @@ feature -- Status setting
 			end
 		end
 
+	enable_sensitive is
+			 -- Enable `Current'.
+		do
+			is_sensitive := True
+			enabled_before := is_sensitive
+			if parent_imp /= Void then
+				parent_imp.enable_button (id)	
+			end
+		end
+		
+	disable_sensitive_internal is
+			 -- Disable `Current'.
+			 -- This is a special version used internally by the code that updates
+			 -- the pick and drop so that `enabled_before' is not updated. In
+			 -- `disable_sensitive' which is called by a user, we must always updated the
+			 -- state of `enabled_before' so that if it is called during a pick and drop,
+			 -- this new state is respected at the end of the transport.
+		do
+			is_sensitive := False
+			if parent_imp /= Void then
+				parent_imp.disable_button (id)
+			end
+		end
+
 	disable_sensitive is
 			 -- Disable `Current'.
 		do
 			is_sensitive := False
+			enabled_before := is_sensitive
 			if parent_imp /= Void then
 				parent_imp.disable_button (id)
 			end
@@ -410,11 +440,11 @@ feature -- Element change
 			if starting then
 				if not interface.drop_actions.accepts_pebble (app_imp.pick_and_drop_source.pebble) then	
 					enabled_before := is_sensitive
-					disable_sensitive
+					disable_sensitive_internal
 				end
 			else
 				if enabled_before then
-					enable_sensitive	
+					enable_sensitive_internal
 				end
 			end
 		end

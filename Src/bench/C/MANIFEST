@@ -7,7 +7,7 @@ U/End.U
 U/Myinit.U
 U/add_log.U
 U/panic.U
-config_h.SH
+eif_config_h.SH
 hints/
 hints/dgux.sh
 hints/mips.sh
@@ -95,14 +95,14 @@ ipc/notes/status
 ipc/shared
 ipc/shared/Jmakefile
 ipc/shared/Makefile.SH
-ipc/shared/eif_bitmask.h
+ipc/shared/bitmask.h
 ipc/shared/com.c
 ipc/shared/com.h
 ipc/shared/ewbio.h
 ipc/shared/identify.c
 ipc/shared/lock.c
 ipc/shared/logfile.c
-ipc/shared/logfile.h
+ipc/shared/eif_logfile.h
 ipc/shared/network.c
 ipc/shared/request.h
 ipc/shared/rqst_const.h
@@ -129,7 +129,7 @@ liman/shared/array.h
 liman/shared/base.c
 liman/shared/base.h
 liman/shared/base_h.c
-liman/shared/eif_bitmask.h
+liman/shared/bitmask.h
 liman/shared/chksum.c
 liman/shared/com.c
 liman/shared/com.h
@@ -147,7 +147,7 @@ liman/shared/error.c
 liman/shared/getopt.3
 liman/shared/getopt.c
 liman/shared/hash.c
-liman/shared/eif_hash.h
+liman/shared/hash.h
 liman/shared/hex_chars
 liman/shared/hostid.c
 liman/shared/hostid.h
@@ -171,7 +171,7 @@ liman/shared/service.h
 liman/shared/system.c
 liman/shared/timehdr.h
 liman/shared/timer.c
-liman/shared/eif_timer.h
+liman/shared/timer.h
 liman/shared/udpip.c
 liman/shared/udpip.h
 liman/shared/user.c
@@ -270,7 +270,7 @@ platform/Jmakefile
 platform/Makefile.SH
 platform/names.c
 platform/commands.c
-portable.h
+eif_portable.h
 run-time/
 run-time/Jmakefile
 run-time/Makefile.SH
@@ -339,7 +339,7 @@ run-time/search.c
 run-time/eif_search.h
 run-time/sig.c
 run-time/eif_sig.h
-run-time/size_h.SH
+run-time/eif_size_h.SH
 run-time/store.c
 run-time/eif_store.h
 run-time/string.c
@@ -358,4 +358,4 @@ run-time/eif_urgent.h
 run-time/wbench.c
 run-time/eif_wbench.h
 run-time/x2c.c
-confmagic.h                  Magic symbol remapping
+eif_confmagic.h                  Magic symbol remapping

@@ -22,10 +22,8 @@ inherit
 			{NONE} all
 		end
 
-	COMPILER_TESTER
-
 creation
-	make, make_test
+	make
 
 feature {NONE}  -- Initialization
 
@@ -53,20 +51,6 @@ feature {NONE}  -- Initialization
 			end
 		end
 
-	make_test is
-			-- Instantiate compiler and test completion information features.
-		local
-			pm: PROJECT_MANAGER
-		do
-			if argument_count > 0 then
-				create pm.make
-				pm.retrieve_project (argument (1))
-				if pm.valid_project then
-					run_tests (pm)
-				end
-			end
-		end
-		
 feature -- Access
 
 	main_window: WEL_FRAME_WINDOW is

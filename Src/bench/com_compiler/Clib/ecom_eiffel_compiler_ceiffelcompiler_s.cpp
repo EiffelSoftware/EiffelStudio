@@ -208,6 +208,43 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::ise_eiffel(  /* [out, retval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Takes a path and expands it using the env vars.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_a_path = NULL;
+	if (a_path != NULL)
+	{
+		tmp_a_path = eif_protect (rt_ce.ccom_ce_bstr (a_path));
+	}
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("expand_path", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "expand_path", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	if (tmp_a_path != NULL)
+		eif_wean (tmp_a_path);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::generate_msil_keyfile(  /* [in] */ BSTR filename )
 
 /*-----------------------------------------------------------

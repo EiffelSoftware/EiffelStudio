@@ -74,6 +74,13 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	expand_path (a_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+			-- `a_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	generate_msil_keyfile (filename: STRING) is
 			-- Generate a cyrptographic key filename.
 			-- `filename' [in].  

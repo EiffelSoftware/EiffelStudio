@@ -34,6 +34,7 @@ private char *tagged_out;		/* String where the tagged out is written */
 private int tagged_max;			/* Actual maximum size of `tagged_out' */
 private int tagged_len;			/* Actual length of `tagged_out' */
 
+private void write_string();	/* Write a string in `tagged_out' */
 private void write_char();		/* Write a character */
 private void write_out();		/* Write in `tagged_out' */
 private void write_tab();		/* Print tabulations */
@@ -220,7 +221,10 @@ int tab;
 			{		
 				char *str = b_out(o_ref);
 
-				sprintf(buffer, "BIT %ld = %s\n", LENGTH(o_ref), str);
+				sprintf(buffer, "BIT %ld = ", LENGTH(o_ref));
+				write_out();
+				write_string(str);
+				sprintf(buffer, "\n");
 				write_out();
 				xfree(str);	/* Allocated by `b_out' */
 			}
@@ -322,24 +326,35 @@ int tab;
 				write_tab(tab + 1);
 				sprintf(buffer, "%ld: ", old_count - count);
 				write_out();
-				if (dt_type == sp_char)
+				if (dt_type == sp_char) {
 					write_char(*o_ref, buffer);
-				else if (dt_type == sp_int)
+					write_out();
+				} else if (dt_type == sp_int) {
 					sprintf(buffer, "INTEGER = %ld\n", *(long *)o_ref);
-				else if (dt_type == sp_bool)
+					write_out();
+				} else if (dt_type == sp_bool) {
 					sprintf(buffer, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
-				else if (dt_type == sp_real)
+					write_out();
+				} else if (dt_type == sp_real) {
 					sprintf(buffer, "REAL = %g\n", *(float *)o_ref);
-				else if (dt_type == sp_double)
+					write_out();
+				} else if (dt_type == sp_double) {
 					sprintf(buffer, "DOUBLE = %.17g\n", *(double *)o_ref);
-				else if (dt_type == sp_pointer)
+					write_out();
+				} else if (dt_type == sp_pointer) {
 					sprintf(buffer, "POINTER = C pointer 0x%lX\n", *(fnptr *)o_ref);
-				else {
+					write_out();
+				} else {
 					/* Must be bit */
-					sprintf(buffer, "BIT %d = %s\n", 
-							LENGTH(o_ref), b_out(o_ref));
+					char *str = b_out(o_ref);
+
+					sprintf(buffer, "BIT %ld = ", LENGTH(o_ref));
+					write_out();
+					write_string(str);
+					sprintf(buffer, "\n");
+					write_out();
+					xfree(str);	/* Allocated by `b_out' */
 				}
-				write_out();
 			}
 	else 
 		for (o_ref = object; count > 0; count--,
@@ -392,64 +407,73 @@ private void write_out()
 {
 	/* Print private string `buffer' in `tagged_out'. */
 
-	int buffer_len = strlen(buffer);	/* Length of `buffer' */
+	write_string(buffer);
+}
+
+private void write_string(str)
+char *str;
+{
+	/* Print `str' in `tagged_out'. */
+
+	int buffer_len = strlen(str);	/* Length of `str' */
 
 	tagged_len += buffer_len;
 	if (tagged_len >= tagged_max) {
 		/* Reallocation of C string `tagged_out' */
-		tagged_max *= 2;
+		do 
+			tagged_max *= 2;
+		while (tagged_len >= tagged_max);
 		tagged_out = xrealloc(tagged_out, tagged_max, GC_OFF);
 		if (tagged_out == (char *) 0)
 			enomem();
 	}
-	/* Append `buffer' to `tagged_out' */
-	strcat(tagged_out, buffer);
+	/* Append `str' to `tagged_out' */
+	strcat(tagged_out, str);
 }
-
 
 /*
  * Building `out' representation for various data types.
  */
 
 public char *c_outb(b)
-long b;
+EIF_BOOLEAN b;
 {
-	if (b == 1)
+	if (b)
 		return makestr("true", 4);
 	else
 		return makestr("false", 5);
 }
 
 public char *c_outi(i)
-int i;
+EIF_INTEGER i;
 {
-	sprintf(buffer, "%i", i);
+	sprintf(buffer, "%ld", i);
 	return makestr(buffer, strlen(buffer));
 }
 
 public char *c_outr(f)
-float f;
+EIF_REAL f;
 {
 	sprintf(buffer, "%g", f);
 	return makestr(buffer, strlen(buffer));
 }
 
 public char *c_outd(d)
-double d;
+EIF_DOUBLE d;
 {
 	sprintf(buffer, "%.17g", d);
 	return makestr(buffer, strlen(buffer));
 }
 
 public char *c_outc(c)
-char c;
+EIF_CHARACTER c;
 {
 	sprintf(buffer, "%c", c);
 	return makestr(buffer, strlen(buffer));
 }
 
 public char *c_outp(p)
-char *p;
+EIF_POINTER p;
 {
 	sprintf(buffer, "0x%lX", p);
 	return makestr(buffer, strlen(buffer));

@@ -269,17 +269,14 @@ feature -- Status report
 			end
 		end
 
-	option_sign: CHARACTER is
+	option_sign: CHARACTER_REF is
 			-- The character used to signal options on the command line.
 			-- This can be '%U' if no sign is necesary for the argument 
 			-- to be an option
 			-- Default is '-'
-		do
-			if not sign_set then 
-				Result := '-'
-			else
-				Result := internal_option_sign
-			end
+		once
+			!!Result
+			Result.set_item ('-')
 		end
 
 feature -- Status setting
@@ -289,8 +286,7 @@ feature -- Status setting
 			-- Use'%U' if no sign is necesary for the argument to 
 			-- be an option
 		do
-			sign_set := True
-			internal_option_sign := c
+			option_sign.set_item (c)
 		end
 
 feature -- Measurement
@@ -315,12 +311,6 @@ feature {NONE} -- Implementation
 		external
 			"C | %"eif_argv.h%""
 		end;
-
-	internal_option_sign: CHARACTER
-		-- Value set by set_option_sign
-
-	sign_set: BOOLEAN
-		-- Was option_sign set or should default be used?
 
 	option_word_equal (arg, w : STRING): BOOLEAN is
 			-- Is `arg' equal to the word option `w'?

@@ -18,7 +18,8 @@ inherit
 
 	EV_ITEM_IMP
 		undefine
-			parent
+			parent,
+			pixmap_equal_to
 		redefine
 			interface,
 			initialize,

@@ -110,7 +110,6 @@ feature -- Access
 		new_merge (an_object: GB_OBJECT) is
 				-- Merge radio group of `an_object' with `Current'.
 			local
-				list_item: EV_LIST_ITEM
 				container: EV_CONTAINER
 				other_groups: ARRAYED_LIST [EV_CONTAINER]
 				counter: INTEGER
@@ -376,9 +375,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			-- For every item in `editors', updated, to reflect an unmerging of `merged_object'.
 		local
 			editor: GB_OBJECT_EDITOR
-			window_parent: EV_WINDOW
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
-			unmerged_container: EV_CONTAINER
 			editor_container: EV_CONTAINER
 		do
 			editors := all_editors

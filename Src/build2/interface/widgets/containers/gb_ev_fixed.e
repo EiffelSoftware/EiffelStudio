@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 	layout_window: EV_DIALOG is
 			-- Window for laying out children of fixed.
 		local
-			horizontal_box, h1: EV_HORIZONTAL_BOX
+			h1: EV_HORIZONTAL_BOX
 			vertical_box, vb1: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM

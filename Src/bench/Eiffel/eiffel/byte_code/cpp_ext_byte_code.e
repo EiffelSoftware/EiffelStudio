@@ -13,6 +13,7 @@ inherit
 			generate_body,
 			generate_basic_arguments_with_cast
 		end
+
 	SHARED_CPP_CONSTANTS
 
 feature -- Properties
@@ -69,6 +70,11 @@ feature -- Code generation
 			i, count: INTEGER
 			buf: GENERATION_BUFFER
 		do
+				-- Set `has_cpp_externals_calls' of BYTE_CONTEXT to True since
+				-- we are currently generating one.
+			context.set_has_cpp_externals_calls (True)
+
+				-- Initialize buffer.
 			buf := buffer
 				-- Check for null pointer to C++ object in workbench mode
 			if not Context.final_mode then

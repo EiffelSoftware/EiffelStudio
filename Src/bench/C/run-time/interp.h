@@ -70,8 +70,8 @@ struct stochunk {
 
 /* Interpreter interface to outside world */
 extern void call_disp(uint32 dtype, char *object);			/* Function to call dispose routines */ 
-extern void xinterp(char *icval);				/* Compound from a given address */
-extern void xiinv(char *icval, int where);				/* Invariant interpreter */
+extern void xinterp(EIF_CONTEXT char *icval);				/* Compound from a given address */
+extern void xiinv(EIF_CONTEXT char *icval, int where);				/* Invariant interpreter */
 extern void xinitint(void);				/* Initialize the interpreter */
 extern struct item *opush(register struct item *val);		/* Push value on operational stack */
 extern struct item *opop(void);			/* Remove value from operational stack */

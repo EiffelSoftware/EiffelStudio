@@ -42,7 +42,8 @@ feature {NONE} -- Implementation
 			Result.add_argument (clone (Default_pointer_argument))
 			Result.set_effective
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (10000)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Initializer_variable)
 			feature_body.append (Space)
 			feature_body.append (Assignment)
@@ -85,7 +86,8 @@ feature {NONE} -- Implementation
 			Result.add_argument (clone (Pointer_variable))
 			Result.set_external
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (1000)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
@@ -120,7 +122,8 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Delete wrapper")
 			Result.set_effective
 			
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (ccom_delete_feature_name)
 			feature_body.append (Open_parenthesis)
 			feature_body.append (Initializer_variable)
@@ -147,7 +150,8 @@ feature {NONE} -- Implementation
 			Result.add_argument (Pointer_variable)
 			Result.set_external
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (Delete)
@@ -184,7 +188,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Pointer_type)
 			Result.set_external
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
@@ -220,7 +225,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Pointer_type)
 			Result.add_argument (clone (Default_pointer_argument))
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (a_component_descriptor.c_type_name)
@@ -376,7 +382,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Integer_type)
 			Result.add_argument (clone (Default_pointer_argument))
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (a_component_descriptor.c_type_name)
@@ -412,7 +419,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (String_type)
 			Result.add_argument (clone (Default_pointer_argument))
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (a_component_descriptor.c_type_name)
@@ -448,7 +456,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (String_type)
 			Result.add_argument (clone (Default_pointer_argument))
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (a_component_descriptor.c_type_name)
@@ -484,7 +493,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (String_type)
 			Result.add_argument (clone (Default_pointer_argument))
 
-			feature_body := clone (Tab_tab_tab)
+			create feature_body.make (500)
+			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
 			feature_body.append (a_component_descriptor.c_type_name)

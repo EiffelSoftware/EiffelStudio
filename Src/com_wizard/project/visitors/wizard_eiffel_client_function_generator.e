@@ -81,7 +81,8 @@ feature {NONE} -- Implementation
 		do
 			create return_type.make (100)
 			
-			Result := clone(Tab_tab_tab)
+			create Result.make (10000)
+			Result.append (Tab_tab_tab)
 			Result.append (Double_quote)
 			Result.append (Cpp_clause)
 			Result.append (class_name)
@@ -239,7 +240,8 @@ feature {NONE} -- Implementation
 					end
 					external_feature_writer.set_result_type (visitor.eiffel_type)
 				else
-					tmp_string := clone (arguments.item.name)
+					create tmp_string.make (100)
+					tmp_string.append (arguments.item.name)
 					tmp_string.append (Colon)
 					tmp_string.append (Space)
 
@@ -293,12 +295,13 @@ feature {NONE} -- Implementation
 			tmp_string, local_variable: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			
-			Result := clone (Tab_tab_tab)
+			create Result.make (10000)			
+			Result.append (Tab_tab_tab)
 
 			arguments := func_desc.arguments
 
-			tmp_string := clone (func_name)
+			create tmp_string.make (1000)
+			tmp_string.append (func_name)
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Initializer_variable)
 
@@ -316,7 +319,8 @@ feature {NONE} -- Implementation
 						visitor.visit (arguments.item.type)
 
 						if visitor.is_array_basic_type then
-							local_variable := clone (Tmp_clause)
+							create local_variable.make (100)
+							local_variable.append (Tmp_clause)
 							local_variable.append (arguments.item.name)
 							local_variable.append (Colon)
 							local_variable.append (Space)

@@ -115,7 +115,8 @@ feature -- Processing
 				eiffel_writer.add_feature (writer_feature, Initialization)
 
 			else
-				a_warning := clone (message_output.Non_supported_alias)
+				create a_warning.make (500)
+				a_warning.append (message_output.Non_supported_alias)
 				a_warning.append (Space)
 				a_warning.append (a_data_type_visitor.eiffel_type)
 				message_output.add_warning (Current, a_warning)

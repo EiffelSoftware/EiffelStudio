@@ -68,7 +68,8 @@ feature -- Basic operations
 					c_writer.add_import (system_descriptor.coclasses.item.c_header_file_name)
 
 					-- Class factory header file
-					tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
+					create tmp_string.make (100)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
 					tmp_string.append (Underscore)
 					tmp_string.append (Factory)
 					tmp_string.append (Header_file_extension)
@@ -85,7 +86,8 @@ feature -- Basic operations
 
 					c_writer.add_other_source (tmp_string)
 
-					tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
+					create tmp_string.make (100)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
 					tmp_string.append (Underscore)
 					tmp_string.append (Factory)
 					tmp_string.append (Space)
@@ -103,14 +105,16 @@ feature -- Basic operations
 
 			-- (TCHAR file_name[MAX_PATH])
 
-			tmp_string := clone (Tchar_type)
+			create tmp_string.make (100)
+			tmp_string.append (Tchar_type)
 			tmp_string.append (Space)
 			tmp_string.append ("file_name[MAX_PATH];")
 
 			c_writer.add_other_source (tmp_string)
 
 			-- (OLECHAR ws_file_name[MAX_PATH])
-			tmp_string := clone (Olechar)
+			create tmp_string.make (100)
+			tmp_string.append (Olechar)
 			tmp_string.append (Space)
 			tmp_string.append ("ws_file_name[MAX_PATH];")
 			c_writer.add_other_source (tmp_string)
@@ -144,7 +148,8 @@ feature -- Basic operations
 				c_writer.add_function (dll_unlock_module_feature)
 				c_writer.add_function (dll_lock_module_feature)
 
-				tmp_string := clone (Long)
+				create tmp_string.make (100)
+				tmp_string.append (Long)
 				tmp_string.append (Space)
 				tmp_string.append (Locks_variable_name)
 				tmp_string.append (Semicolon)
@@ -263,7 +268,8 @@ feature {NONE} -- Implementation
 
 
 			-- HRESULT hr = CoInitialize (0)
-			tmp_string := clone (Tab)
+			create tmp_string.make (100)
+			tmp_string.append (Tab)
 
 			tmp_string.append (Hresult)
 			tmp_string.append (Space)
@@ -502,7 +508,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Void_c_keyword)
 
 			-- HRESULT hr = CoInitialize (0)
-			tmp_string := clone (Tab)
+			create tmp_string.make (500)
+			tmp_string.append (Tab)
 
 			tmp_string.append (Hresult)
 			tmp_string.append (Space)
@@ -560,10 +567,11 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Ccom_register_server_function)
-	            Result.set_comment ("Register server.")
+			Result.set_comment ("Register server.")
 			Result.set_result_type (Void_c_keyword)
 
-			tmp_string := clone (Tab)
+			create tmp_string.make (10000)
+			tmp_string.append (Tab)
 
 			-- HRESULT hr = CoInitialize (0)
 
@@ -659,7 +667,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Eif_integer)
 			Result.set_signature ("CLSID * rclsid, IID * riid, void **ppv")
 
-			tmp_string := clone (Tab)
+			create tmp_string.make (10000)
+			tmp_string.append (Tab)
 
 			from
 				system_descriptor.coclasses.start
@@ -748,7 +757,8 @@ feature {NONE} -- Implementation
 			-- Code to set up module file name
 		do
 			-- GetModuleFileName (0, file_name, MAX_PATH);
-			Result := "GetModuleFileName (0, "
+			create Result.make (1000)
+			Result.append ("GetModuleFileName (0, ")
 			Result.append (Module_file_name)
 			Result.append (Comma_space)
 			Result.append (Max_path)
@@ -798,7 +808,9 @@ feature {NONE} -- Implementation
 			-- Code to set up module file name
 		do
 			-- GetModuleFileName (eif_hInstance, 'module_file_name', MAX_PATH)
-			Result := "GetModuleFileName"
+			
+			create Result.make (1000)
+			Result.append ("GetModuleFileName")
 			Result.append (Space_open_parenthesis)
 			Result.append ("eif_hInstance")
 			Result.append (Comma_space)
@@ -900,7 +912,8 @@ feature {NONE} -- Implementation
 			Result.set_signature (Void_c_keyword)
 
 			-- Set up module file name
-			tmp_body := clone (Tab)
+			create tmp_body.make (100)
+			tmp_body.append (Tab)
 			tmp_body.append (dll_module_file_name_set_up)
 
 			-- return Register ('Component_entries', 'component_entries_count')
@@ -948,7 +961,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (100)
+			tmp_body.append (Tab)
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append ("Unregister")
@@ -992,7 +1006,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
 
-			tmp_body := clone (Tab)
+			create tmp_body.make (100)
+			tmp_body.append (Tab)
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (Locks_variable_name)
@@ -1048,7 +1063,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Void_c_keyword)
 			Result.set_signature (Void_c_keyword)
 
-			tmp_string := "%Tif (CoReleaseServerProcess () == 0)"
+			create tmp_string.make (1000)
+			tmp_string.append ("%Tif (CoReleaseServerProcess () == 0)")
 			tmp_string.append (New_line_tab_tab)
 			tmp_string.append ("PostThreadMessage (threadID, WM_QUIT, 0, 0);")
 
@@ -1066,7 +1082,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Void_c_keyword)
 			Result.set_signature (Void_c_keyword)
 
-			tmp_string := clone (Tab)
+			create tmp_string.make (100)
+			tmp_string.append (Tab)
 			tmp_string.append (Interlocked_decrement)
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Ampersand)
@@ -1088,7 +1105,8 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Void_c_keyword)
 			Result.set_signature (Void_c_keyword)
 
-			tmp_string := clone (Tab)
+			create tmp_string.make (100)
+			tmp_string.append (Tab)
 			tmp_string.append (Interlocked_increment)
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Ampersand)
@@ -1178,7 +1196,8 @@ feature {NONE} -- Implementation
 			-- BOOL bSuccess = TRUE;
 			-- const REG_DATA *pEntry = rgEntries;
 
-			tmp_string := "%TBOOL bSuccess = TRUE;"
+			create tmp_string.make (1000)
+			tmp_string.append ("%TBOOL bSuccess = TRUE;")
 			tmp_string.append (New_line_tab)
 			tmp_string.append ("const REG_DATA *pEntry = rgEntries;")
 			tmp_string.append (New_line_tab)
@@ -1311,7 +1330,8 @@ feature {NONE} -- Implementation
 	entries_count: STRING is
 			-- Entries count
 		do
-			Result := clone (Const)
+			create Result.make (500)
+			Result.append (Const)
 			Result.append (Space)
 			Result.append (Int)
 			Result.append (Space)
@@ -1328,8 +1348,6 @@ feature {NONE} -- Implementation
 			Result.append (Registry_entries_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-
-
 		end
 
 	dll_specific_registry_entries: STRING is
@@ -1340,7 +1358,8 @@ feature {NONE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			tmp_string := clone (Clsid_type)
+			create tmp_string.make (1000)
+			tmp_string.append (Clsid_type)
 			tmp_string.append (Registry_field_seperator)
 			tmp_string.append (coclass_guid)
 			tmp_string.append (Registry_field_seperator)
@@ -1359,11 +1378,13 @@ feature {NONE} -- Implementation
 		local
 			string_one, string_two: STRING
 		do
-			string_one := clone (Appid)
+			create string_one.make (500)
+			string_one.append (Appid)
 			string_one.append (Registry_field_seperator)
 			string_one.append (coclass_guid)
 
-			string_two := clone (Double_quote)
+			create string_two.make (500)
+			string_two.append (Double_quote)
 			string_two.append (coclass_descriptor.name)
 			string_two.append (Space)
 			string_two.append ("Application")
@@ -1373,7 +1394,8 @@ feature {NONE} -- Implementation
 			Result.append (Comma)
 			Result.append (New_line_tab)
 
-			string_one := clone (Appid)
+			create string_one.make (500)
+			string_one.append (Appid)
 			string_one.append (Registry_field_seperator)
 			string_one.append (Shared_wizard_environment.project_name)
 
@@ -1381,7 +1403,8 @@ feature {NONE} -- Implementation
  			Result.append (Comma)
 			Result.append (New_line_tab)
 
-			string_one := clone (Clsid_type)
+			create string_one.make (500)
+			string_one.append (Clsid_type)
 			string_one.append (Registry_field_seperator)
 			string_one.append (coclass_guid)
 			string_one.append (Registry_field_seperator)
@@ -1391,7 +1414,8 @@ feature {NONE} -- Implementation
 			Result.append (Comma)
 			Result.append (New_line_tab)
 
-			string_one := clone (Clsid_type)
+			create string_one.make (500)
+			string_one.append (Clsid_type)
 			string_one.append (Registry_field_seperator)
 			string_one.append (coclass_guid)
 
@@ -1403,7 +1427,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_string: value /= Void
 		do
-			Result := clone (Tchar_creation_function)
+			create Result.make (500)
+			Result.append (Tchar_creation_function)
 			Result.append (Open_parenthesis)
 			Result.append (Double_quote)
 			Result.append (value)
@@ -1416,7 +1441,8 @@ feature {NONE} -- Implementation
 		local
 			string_one, string_two: STRING
 		do
-			Result := clone (Const)
+			create Result.make (10000)
+			Result.append (Const)
 			Result.append (Space)
 			Result.append (Reg_data)
 			Result.append (Space)
@@ -1439,11 +1465,13 @@ feature {NONE} -- Implementation
 					type_library_name := coclass_descriptor.type_library_descriptor.name
 					type_library_guid := coclass_descriptor.type_library_descriptor.guid.to_string
 
-					string_one := clone (Clsid_type)
+					create string_one.make (500)
+					string_one.append (Clsid_type)
 					string_one.append (Registry_field_seperator)
 					string_one.append (coclass_guid)
 
-					string_two := clone (system_descriptor.coclasses.item.name)
+					create string_two.make (500)
+					string_two.append (system_descriptor.coclasses.item.name)
 					string_two.append (Space)
 					string_two.append ("Class")
 
@@ -1460,13 +1488,15 @@ feature {NONE} -- Implementation
 					Result.append (Comma)
 					Result.append (New_line_tab)
 
-					string_one := clone (Clsid_type)
+					create string_one.make (500)
+					string_one.append (Clsid_type)
 					string_one.append (Registry_field_seperator)
 					string_one.append (coclass_guid)				
 					string_one.append (Registry_field_seperator)
 					string_one.append (Prog_id)
 
-					string_two := clone (type_library_name)
+					create string_two.make (500)
+					string_two.append (type_library_name)
 					string_two.append (Dot)
 					string_two.append (coclass_descriptor.name)
 					string_two.append (Dot)
@@ -1476,13 +1506,15 @@ feature {NONE} -- Implementation
 					Result.append (Comma)
 					Result.append (New_line_tab)
 
-					string_one := clone (Clsid_type)
+					create string_one.make (500)
+					string_one.append (Clsid_type)
 					string_one.append (Registry_field_seperator)
 					string_one.append (coclass_guid)
 					string_one.append (Registry_field_seperator)
 					string_one.append (Version_independent_prog_id)
 
-					string_two := clone (type_library_name)
+					create string_two.make (500)
+					string_two.append (type_library_name)
 					string_two.append (Dot)
 					string_two.append (coclass_descriptor.name)
 
@@ -1504,7 +1536,8 @@ feature {NONE} -- Implementation
 					Result.append (Comma)
 					Result.append (New_line_tab)
 
-					string_one := clone (type_library_name)
+					create string_one.make (500)
+					string_one.append (type_library_name)
 					string_one.append (Dot)
 					string_one.append (coclass_descriptor.name)
 
@@ -1512,7 +1545,8 @@ feature {NONE} -- Implementation
 					Result.append (Comma)
 					Result.append (New_line_tab)
 
-					string_two := clone (string_one)
+					create string_two.make (500)
+					string_two.append (string_one)
 					string_two.append (Registry_field_seperator)
 					string_two.append (Clsid_type)
 
@@ -1520,7 +1554,8 @@ feature {NONE} -- Implementation
 					Result.append (Comma)
 					Result.append (New_line_tab)
 
-					string_two := clone (string_one)
+					create string_two.make (500)
+					string_two.append (string_one)
 					string_one.append (Registry_field_seperator)
 					string_one.append (Current_version)
 
@@ -1568,31 +1603,36 @@ feature {NONE} -- Implementation
 		do
 			tmp_guid := clone (interface_descriptor.guid.to_string)
 
-			string_one := clone (Interface)
+			create string_one.make (500)
+			string_one.append (Interface)
 			string_one.append (Registry_field_seperator)
 			string_one.append (tmp_guid)
 
-			Result := clone (Comma)
+			create Result.make (10000)
+			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (interface_descriptor.c_type_name), C_true))
 
 			string_one.append (Registry_field_seperator)
 
-			string_two := clone (string_one)
+			create string_two.make (500)
+			string_two.append (string_one)
 			string_two.append (Proxy_stub_clsid_32)
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (Automation_marshaler_guid), C_true))
 
-			string_two := clone (string_one)
+			create string_two.make (1000)
+			string_two.append (string_one)
 			string_two.append (Type_library)
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (type_library_guid), C_true))
 
-			string_two := clone (string_one)
+			create string_two.make (1000)
+			string_two.append (string_one)
 			string_two.append (Num_methods)
 
 			Result.append (Comma)
@@ -1630,7 +1670,8 @@ feature {NONE} -- Implementation
 			create new_guid.make
 			new_guid.generate
 
-			string_one := clone (Clsid_type)
+			create string_one.make (1000)
+			string_one.append (Clsid_type)
 			string_one.append (Registry_field_seperator)
 			string_one.append (new_guid.to_string)
 
@@ -1676,31 +1717,36 @@ feature {NONE} -- Implementation
 		do
 			tmp_guid := clone (interface_descriptor.guid.to_string)
 
-			string_one := clone (Interface)
+			create string_one.make (1000)
+			string_one.append (Interface)
 			string_one.append (Registry_field_seperator)
 			string_one.append (tmp_guid)
 
-			Result := clone (Comma)
+			create Result.make (10000)
+			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (interface_descriptor.c_type_name), C_true))
 
 			string_one.append (Registry_field_seperator)
 
-			string_two := clone (string_one)
+			create string_two.make (1000)
+			string_two.append (string_one)
 			string_two.append (Proxy_stub_clsid_32)
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (tmp_guid), C_true))
 
-			string_two := clone (string_one)
+			create string_two.make (1000)
+			string_two.append (string_one)
 			string_two.append (Type_library)
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
 			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (type_library_guid), C_true))
 
-			string_two := clone (string_one)
+			create string_two.make (1000)
+			string_two.append (string_one)
 			string_two.append (Num_methods)
 
 			Result.append (Comma)
@@ -1718,7 +1764,8 @@ feature {NONE} -- Implementation
 	struct_creator (first_field, second_field, third_field, forth_field: STRING): STRING is
 			-- Reg data struct creator
 		do
-			Result := clone (Open_curly_brace)
+			create Result.make (10000)
+			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
 			Result.append (first_field)
 			Result.append (Comma)
@@ -1738,7 +1785,8 @@ feature {NONE} -- Implementation
 			-- Structure code
 			-- Use add_other
 		do
-			Result := clone (Struct)
+			create Result.make (10000)
+			Result.append (Struct)
 			Result.append (Space)
 			Result.append (Reg_data)
 			Result.append (New_line)
@@ -1774,7 +1822,8 @@ feature {NONE} -- Implementation
 	hInstance_set_up: STRING is
 			-- Set up hInstance
 		do
-			Result := "#ifdef __cplusplus"
+			create Result.make (1000)
+			Result.append ("#ifdef __cplusplus")
 			Result.append (New_line)
 			Result.append ("extern %"C%" {")
 			Result.append (New_line)

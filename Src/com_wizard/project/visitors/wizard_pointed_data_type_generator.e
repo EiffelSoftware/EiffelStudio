@@ -43,11 +43,13 @@ feature -- Basic operations
 				vt_type := binary_or (pointed_visitor.vt_type, Vt_byref)
 			end
 
-			c_type := clone (pointed_visitor.c_type)
+			create c_type.make (100)
+			c_type.append (pointed_visitor.c_type)
 			c_type.append (Space)
 			c_type.append (Asterisk)
 
-			c_post_type := clone (pointed_visitor.c_post_type)
+			create c_post_type.make (10)
+			c_post_type.append (pointed_visitor.c_post_type)
 			c_header_file := clone (pointed_visitor.c_header_file)
 
 			create ce_function_name.make (100)

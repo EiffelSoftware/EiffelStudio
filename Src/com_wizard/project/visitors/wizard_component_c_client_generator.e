@@ -46,7 +46,8 @@ feature {NONE} -- Implementation
 			-- if (`interface_variable_prepend'`a_name' == NULL )
 			--	`interface_vaiable_prepend'`a_name'`Release_function'
 
-			Result := clone (If_keyword)
+			create Result.make (500)
+			Result.append (If_keyword)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append (Interface_variable_prepend)

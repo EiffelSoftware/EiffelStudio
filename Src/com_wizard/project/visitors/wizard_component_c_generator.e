@@ -66,7 +66,8 @@ feature -- Basic operations
 			non_void_name: name /= Void
 			valid_name: not name.empty
 		do
-			Result := "LIBID_"
+			create Result.make (100)
+			Result.append ("LIBID_")
 			Result.append (name)
 		end
 
@@ -103,7 +104,8 @@ feature -- Basic operations
 		do
 			-- extern "C" IID LIBID_'name'
 
-			Result := clone (Extern)
+			create Result.make (200)
+			Result.append (Extern)
 			Result.append (Space)
 			Result.append (Double_quote)
 			Result.append ("C")

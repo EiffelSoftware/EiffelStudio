@@ -47,7 +47,8 @@ feature -- Basic operation
 				func_desc.arguments.start
 
 				if not is_paramflag_fretval (func_desc.arguments.item.flags) then
-					tmp_arguments := clone (Space_open_parenthesis)
+					create tmp_arguments.make (100)
+					tmp_arguments.append (Space_open_parenthesis)
 					tmp_arguments.append (func_desc.arguments.item.name)
 
 					from

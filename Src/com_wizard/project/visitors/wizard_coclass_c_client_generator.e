@@ -67,7 +67,9 @@ feature -- Basic operations
 				-- Add memeber "EXCEPINFO * excepinfo"
 				create default_member.make
 				default_member.set_name (clone (Excepinfo_variable_name))
-				tmp_string := clone (Excepinfo)
+				
+				create tmp_string.make (10000)
+				tmp_string.append (Excepinfo)
 				tmp_string.append (Space)
 				tmp_string.append (Asterisk)
 				default_member.set_result_type (tmp_string)
@@ -119,8 +121,8 @@ feature {NONE} -- Implementation
 			non_void_interface_descriptors: a_coclass_descriptor.interface_descriptors /= Void
 			not_empty_interface_descriptors: not a_coclass_descriptor.interface_descriptors.empty
 		do
-
-			Result := clone (Tab)
+			create Result.make (10000)
+			Result.append (Tab)
 			Result.append (Iunknown_variable_name)
 			Result.append (Release_function)
 			Result.append (New_line_tab)
@@ -361,7 +363,8 @@ feature {NONE} -- Implementation
 			-- MULTI_QI
 		do
 			-- p_unknown = NULL;
-			Result := clone(Iunknown_variable_name)
+			create Result.make (500)
+			Result.append (Iunknown_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Null)
 			Result.append (Semicolon)
@@ -390,7 +393,8 @@ feature {NONE} -- Implementation
 	co_initialize_ex_function: STRING is
 			-- CoInitialize function call
 		do
-			Result := clone (Tab)
+			create Result.make (1000)
+			Result.append (Tab)
 			Result.append ("hr = CoInitializeEx (")
 			Result.append (Null)
 			Result.append (Comma_space)

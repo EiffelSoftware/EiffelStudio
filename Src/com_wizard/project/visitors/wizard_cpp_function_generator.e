@@ -190,7 +190,8 @@ feature {NONE} -- Implementation
 
 			-- EIF_TYPE_ID 'arg_name'_tid;
 			-- 'cecil_feature_type' 'feature_name'_feature;
-			Result := clone (Eif_type_id)
+			create Result.make (1000)
+			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append (arg_name)
 			Result.append (Append_tid_clause)

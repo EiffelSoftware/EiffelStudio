@@ -85,12 +85,20 @@ feature  -- Access
 
 feature -- Status report
 
-	is_iconic_state: BOOLEAN is
-			-- Does application start in iconic state?
+	is_minimized: BOOLEAN is
+			-- Is the window minimized (iconic state)?
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_iconic_state
+			Result := implementation.is_minimized
+		end
+
+	is_maximized: BOOLEAN is
+			-- Is the window maximized (take the all screen).
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_maximized
 		end
 
 feature -- Status setting
@@ -113,30 +121,36 @@ feature -- Status setting
 			implementation.lower
 		end
 
-	set_iconic_state is
-			-- Set start state of the application
-			-- to be iconic.
+	minimize is
+			-- Minimize the window.
 		require
 			exists: not destroyed
 		do
-			implementation.set_iconic_state
+			implementation.minimize
+		ensure
+			is_minimized: is_minimized
 		end
 
-	set_normal_state is
-			-- Set start state of the application to be normal.
+	maximize is
+			-- Minimize the window.
 		require
 			exists: not destroyed
 		do
-			implementation.set_normal_state
+			implementation.maximize
+		ensure
+			is_maximized: is_maximized
 		end
 
-	set_maximize_state is
-			-- Set start state of the application to be
-			-- maximized.
+	restore is
+			-- Restore the window when it is minimized or
+			-- maximized. Do nothing otherwise.
 		require
 			exists: not destroyed
 		do
-			implementation.set_maximize_state
+			implementation.restore
+		ensure
+			not_minimized: not is_minimized
+			not_maximized: not is_maximized
 		end
 
 feature -- Element change

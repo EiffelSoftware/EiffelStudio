@@ -7,7 +7,7 @@ indexing
 
 using System;
 
-namespace ISE.Runtime
+namespace ISE.Runtime.CA
 {
 
 [CLSCompliant(false)]

@@ -34,8 +34,13 @@ inherit
 			compute_minimum_size,
 			interface,
 			on_accelerator_command,
-			class_name
+			class_name,
+			is_displayed,
+			restore,
+			execute_resize_actions
 		end
+		
+	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
 
 	EV_ID_IMP
 
@@ -153,6 +158,12 @@ feature -- Status setting
 			-- shows the window.
 		do
 			wel_maximize
+		end
+		
+	restore is
+			-- restore `Current'.
+		do
+			Precursor {EV_WINDOW_IMP}
 		end
 
 feature -- Element change
@@ -418,12 +429,12 @@ feature {NONE} -- WEL Implementation
 			-- it resizes to the size of the child and sends
 			-- a message to the child.
 		do
-			-- We check if there is a menu
+				-- We check if there is a menu
 			if has_menu then
 				draw_menu
 			end
 
-			-- Different behaviors if the window was maximized or not.
+				-- Different behaviors if the window was maximized or not.
 			if is_maximized then
 				wel_maximize
 			elseif is_minimized then
@@ -458,13 +469,63 @@ feature {NONE} -- WEL Implementation
 				else
 					set_text (icon_name)
 				end
-			elseif size_type = Wel_window_constants.Size_restored or
-			       size_type = Wel_window_constants.Size_maximized
-			then
+				if minimize_actions_internal /= Void then
+					minimize_actions_internal.call ([])
+				end
+			elseif size_type = Wel_window_constants.Size_maximized then
+				if maximize_actions_internal /= Void then
+					maximize_actions_internal.call ([])
+				end
+					-- We must now override restore_actions if we are changing state
+					-- from minimimzed to maximized. This is not considered a restore.
+				if fire_restore_actions = True then
+					fire_restore_actions := False
+				end
+			elseif size_type = Wel_window_constants.Size_restored then
 				set_text (internal_title)
 			end
 			Precursor {EV_WINDOW_IMP} (size_type, a_width, a_height)
+
+				 -- We now set our internal flag, as it must be set after we
+				 -- call `execute_resize_actions'.
+					
+			if size_type = Wel_window_constants.Size_minimized or 
+			size_type = Wel_window_constants.Size_maximized then
+					-- If we are now maximized or minimized then we
+					-- must assign True to `fire_restore_actions', so that
+					-- the next time we resize, we know to fire them.
+				fire_restore_actions := True
+			end
 		end
+		
+	execute_resize_actions (a_width, a_height: INTEGER) is
+			-- execute `resize_actions_internal' if not Void.
+		do
+			if resize_actions_internal /= Void then
+				resize_actions_internal.call (
+					[screen_x, screen_y, a_width, a_height])
+			end
+				-- We must only fire restore actions if
+				-- `fire_restore_actions'.
+			if fire_restore_actions then
+				if restore_actions_internal /= Void then
+					restore_actions_internal.call ([])
+				end
+				fire_restore_actions := False
+			end
+		end
+		
+	is_displayed: BOOLEAN is
+			-- Is `Current' visible on screen?
+			-- `Result' is False if `is_minimized'.
+		do
+			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
+		end
+	
+	fire_restore_actions: BOOLEAN	
+		-- If `True' then restore_actions must be fired.
+		-- We have to have this flag, as Windows does not provide a message
+		-- which distinguishes between a normal resize or a restore.
 
 feature {EV_WINDOW_IMP} -- Implementation
 

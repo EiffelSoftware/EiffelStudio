@@ -693,6 +693,9 @@ feature {NONE} -- Implementation
 			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
 			if not Platform_constants.is_windows then
 				!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			else
+				edit_bar.set_height (22)
+				format_bar.set_height (22)
 			end
 		end
 

@@ -45,7 +45,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				l_curr_class_tok := l_current_stack_info.current_class_token
 				l_curr_feature_tok := l_current_stack_info.current_feature_token
 				l_dyn_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_curr_mod_name, l_curr_class_tok)
-				l_feature_i := Il_debug_info_recorder.feature_i_by_module_class_token (l_curr_mod_name, l_curr_class_tok, l_curr_feature_tok)	
+				l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_curr_mod_name, l_curr_feature_tok)	
 
 				if l_feature_i = Void then
 					if l_curr_feature_tok = Il_debug_info_recorder.entry_point_token then

@@ -69,7 +69,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		do
-			debug ("debugger_trace_callback")
+			debug ("debugger_trace_callback_notify")
 				print ("Notify callback: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
 			end
 			callback_notification_processed := False		
@@ -95,7 +95,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 				end
 			end
 			callback_notification_processed := True
-			debug ("debugger_trace_callback")
+			debug ("debugger_trace_callback_notify")
 				print ("End of estudio notification%N")
 			end
 		end
@@ -179,10 +179,12 @@ feature -- Bridge to Debugger
 		do
 			if not retried then
 				l_icd_exception := eifnet_debugger.active_exception_value
-				create l_exception_info.make (l_icd_exception)
-				l_class_details := l_exception_info.value_class_name
-				l_module_details := l_exception_info.value_module_file_name
-				Result := [l_class_details, l_module_details]
+				if l_icd_exception /= Void then
+					create l_exception_info.make (l_icd_exception)
+					l_class_details := l_exception_info.value_class_name
+					l_module_details := l_exception_info.value_module_file_name
+					Result := [l_class_details, l_module_details]					
+				end
 			end
 		rescue
 			retried := True
@@ -223,12 +225,19 @@ feature -- Bridge to Debugger
 		do
 			if not retried then
 				l_icd_exception := eifnet_debugger.active_exception_value
-				create l_exception_info.make (l_icd_exception)
+				if l_icd_exception /= Void then
+					create l_exception_info.make (l_icd_exception)
 
-				Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
-					l_icd_exception,
-					l_exception_info.interface_debug_object_value
-				)
+					Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
+						l_icd_exception,
+						l_exception_info.interface_debug_object_value
+					)
+					if Result = Void then
+						--| This could means the prog did exit_process
+						--| or .. anything else
+						Result := l_exception_info.value_class_name
+					end
+				end
 			end
 		rescue
 			retried := True
@@ -843,6 +852,7 @@ feature {NONE} -- Events on notification
 			--| Already "stopped" but let's be sure ..
 	
 			status.set_is_stopped (True)
+			eifnet_debugger.notify_exit_process_occured
 			eifnet_debugger.on_exit_process
 		end
 		
@@ -1008,9 +1018,9 @@ feature -- Call stack related
 					else
 						l_class_name := "<?"+ l_class_token.out + "?>"
 					end
-					l_feature_i := Il_debug_info_recorder.feature_i_by_module_class_token (l_module_name, l_class_token, l_feature_token)
+					l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
 					if l_feature_i /= Void then
-						l_feature_name := Il_debug_info_recorder.feature_i_by_module_class_token (l_module_name, l_class_token, l_feature_token).feature_name
+						l_feature_name := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token).feature_name
 					else
 						l_feature_name := "<?"+ l_feature_token.out + "?>"
 					end

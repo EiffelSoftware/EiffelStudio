@@ -12,11 +12,6 @@
 
 char* string_pointer_deref (char** pointer) {return *pointer;}
 
-void* pointer_array_i_th (void** pointer_array, int index)
-{
-	return pointer_array [0];
-}
-
 EIF_REAL double_array_i_th (double *double_array, int index)
 {
 	return (EIF_REAL) double_array [index];
@@ -120,6 +115,9 @@ void enable_ev_gtk_log (int a_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2001/08/03 18:41:26  king
+// Removed no longer needed externals
+//
 // Revision 1.7  2001/07/24 19:00:30  king
 // Corrected debugging output, slight optimization of logging
 //

@@ -11,7 +11,6 @@
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
 
-void* pointer_array_i_th (void** pointer_array, int index);
 EIF_REAL double_array_i_th (double* double_array, int index);
 GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
 char* string_pointer_deref (char** pointer);
@@ -975,6 +974,9 @@ static char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2001/08/03 18:41:26  king
+// Removed no longer needed externals
+//
 // Revision 1.6  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.
 //

@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 	make_by_color (color: INTEGER) is
 			-- Set `item' with `color'.
 		do
-			item := color
+			set_color (color)
 		end
 
 	make_by_pointer (color_pointer: POINTER) is
@@ -96,6 +96,14 @@ feature -- Access
 		end
 
 feature -- Element change
+
+	set_color (color: INTEGER) is
+			-- Set `item' with `color'.
+		do
+			item := color
+		ensure
+			color_set: item = color
+		end
 
 	set_rgb (a_red, a_green, a_blue: INTEGER) is
 			-- Set `red', `green', `blue' with

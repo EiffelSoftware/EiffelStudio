@@ -38,9 +38,6 @@
 extern "C" {
 #endif
 
-RT_LNK int is_in_lm (void *ptr);
-RT_LNK void eif_lm_display (void);
-RT_LNK int eif_lm_free (void);
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
 RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes, char *file, int line);
 RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize, char *file, int line) ;

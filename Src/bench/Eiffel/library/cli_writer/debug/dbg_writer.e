@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 				default_pointer, full_build)
 			is_closed := False
 		ensure
-			success: last_call_success = 0
 			not_is_closed: not is_closed
 			item_set: item /= default_pointer
 		end

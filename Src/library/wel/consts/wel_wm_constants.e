@@ -75,7 +75,7 @@ feature -- Access
 	Wm_showwindow: INTEGER is 24
 			-- Declared in Windows as WM_SHOWWINDOW
 
-	Wm_wininichange: INTEGER is 26
+	Wm_wininichange, Wm_settingchange: INTEGER is 26
 			-- Declared in Windows as WM_WININICHANGE
 
 	Wm_devmodechange: INTEGER is 27
@@ -108,6 +108,9 @@ feature -- Access
 	Wm_getminmaxinfo: INTEGER is 36
 			-- Declared in Windows as WM_GETMINMAXINFO
 
+	Wm_painticon: INTEGER is 38
+			-- Declared in Windows as WM_PAINTICON
+
 	Wm_iconerasebkgnd: INTEGER is 39
 			-- Declared in Windows as WM_ICONERASEBKGND
 
@@ -138,12 +141,21 @@ feature -- Access
 	Wm_getfont: INTEGER is 49
 			-- Declared in Windows as WM_GETFONT
 
+	Wm_sethotkey: INTEGER is 50
+			-- Declared in Windows as WM_SETHOTKEY
+
+	Wm_gethotkey: INTEGER is 51
+			-- Declared in Windows as WM_GETHOTKEY
+
 	Wm_querydragicon: INTEGER is 55
 			-- Declared in Windows as WM_QUERYDRAGICON
 
 	Wm_compareitem: INTEGER is 57
 			-- Declared in Windows as WM_COMPAREITEM
 
+	Wm_getobject: INTEGER is 61
+			-- Declared in Windows as WM_GETOBJECT
+			
 	Wm_compacting: INTEGER is 65
 			-- Declared in Windows as WM_COMPACTING
 
@@ -159,9 +171,42 @@ feature -- Access
 	Wm_power: INTEGER is 72
 			-- Declared in Windows as WM_POWER
 
+	Wm_copydata: INTEGER is 74
+			-- Declared in Windows as WM_COPYDATA
+
+	Wm_canceljournal: INTEGER is 75
+			-- Declared in Windows as WM_CANCELJOURNAL
+
 	Wm_notify: INTEGER is 78
 			-- Declared in Windows as WM_NOTIFY
 		
+	Wm_inputlangchangerequest: INTEGER is 80
+			-- Declared in Windows as WM_INPUTLANGCHANGEREQUEST
+
+	Wm_inputlangchange: INTEGER is 81
+			-- Declared in Windows as WM_INPUTLANGCHANGE
+
+	Wm_tcard: INTEGER is 82
+			-- Declared in Windows as WM_TCARD
+
+	Wm_help: INTEGER is 83
+			-- Declared in Windows as WM_HELP
+
+	Wm_userchanged: INTEGER is 84
+			-- Declared in Windows as WM_USERCHANGED
+
+	Wm_notifyformat: INTEGER is 85
+			-- Declared in Windows as WM_NOTIFYFORMAT
+
+	Wm_contextmenu: INTEGER is 123
+			-- Declared in Windows as WM_CONTEXTMENU
+
+	Wm_stylechanging: INTEGER is 124
+			-- Declared in Windows as WM_STYLECHANGING
+
+	Wm_stylechanged: INTEGER is 125
+			-- Declared in Windows as WM_STYLECHANGED
+
 	Wm_displaychange: INTEGER is 126
 			-- Declared in Windows as WM_DISPLAYCHANGE
 
@@ -225,6 +270,15 @@ feature -- Access
 	Wm_ncmbuttondblclk: INTEGER is 169
 			-- Declared in Windows as WM_NCMBUTTONDBLCLK
 
+	Wm_ncxbuttondown: INTEGER is 171
+			-- Declared in Windows as WM_NCXBUTTONDOWN
+
+	Wm_ncxbuttonup: INTEGER is 172
+			-- Declared in Windows as WM_NCXBUTTONUP
+
+	Wm_ncxbuttondblclk: INTEGER is 173
+			-- Declared in Windows as WM_NCXBUTTONDBLCLK
+
 	Wm_keydown: INTEGER is 256
 			-- Declared in Windows as WM_KEYDOWN
 
@@ -252,8 +306,30 @@ feature -- Access
 	Wm_sysdeadchar: INTEGER is 263
 			-- Declared in Windows as WM_SYSDEADCHAR
 
-	Wm_keylast: INTEGER is 264
+	Wm_keylast: INTEGER is 
 			-- Declared in Windows as WM_KEYLAST
+		external
+			"C [macro <winuser.h>]"
+		alias
+			"WM_KEYLAST"
+		end
+
+	Wm_ime_startcomposition: INTEGER is 269
+			-- Declared in Windows as WM_IME_STARTCOMPOSITION
+
+	Wm_ime_endcomposition: INTEGER is 270
+			-- Declared in Windows as WM_IME_ENDCOMPOSITION
+
+	Wm_ime_composition: INTEGER is 271
+			-- Declared in Windows as WM_IME_COMPOSITION
+
+	Wm_ime_keylast: INTEGER is 
+			-- Declared in Windows as WM_IME_KEYLAST
+		external
+			"C [macro <winuser.h>]"
+		alias
+			"WM_IME_KEYLAST"
+		end
 
 	Wm_initdialog: INTEGER is 272
 			-- Declared in Windows as WM_INITDIALOG
@@ -288,6 +364,30 @@ feature -- Access
 	Wm_enteridle: INTEGER is 289
 			-- Declared in Windows as WM_ENTERIDLE
 
+	Wm_menurbuttonup: INTEGER is 290
+			-- Declared in Windows as WM_MENURBUTTONUP
+
+	Wm_menudrag: INTEGER is 291
+			-- Declared in Windows as WM_MENUDRAG
+
+	Wm_menugetobject: INTEGER is 292
+			-- Declared in Windows as WM_MENUGETOBJECT
+
+	Wm_uninitmenupopup: INTEGER is 293
+			-- Declared in Windows as WM_UNINITMENUPOPUP
+
+	Wm_menucommand: INTEGER is 294
+			-- Declared in Windows as WM_MENUCOMMAND
+
+	Wm_changeuistate: INTEGER is 295
+			-- Declared in Windows as WM_CHANGEUISTATE
+
+	Wm_updateuistate: INTEGER is 296
+			-- Declared in Windows as WM_UPDATEUISTATE
+
+	Wm_queryuistate: INTEGER is 297
+			-- Declared in Windows as WM_QUERYUISTATE
+
 	Wm_mousemove: INTEGER is 512
 			-- Declared in Windows as WM_MOUSEMOVE
 
@@ -321,14 +421,52 @@ feature -- Access
 	Wm_mbuttondblclk: INTEGER is 521
 			-- Declared in Windows as WM_MBUTTONDBLCLK
 
-	Wm_mouselast: INTEGER is 521
+	Wm_mousewheel: INTEGER is 522
+			-- Declared in Windows as WM_MOUSEWHEEL
+
+	Wm_xbuttondown: INTEGER is 523
+			-- Declared in Windows as WM_XBUTTONDOWN
+
+	Wm_xbuttonup: INTEGER is 524
+			-- Declared in Windows as WM_XBUTTONUP
+
+	Wm_xbuttondblclk: INTEGER is 525
+			-- Declared in Windows as WM_XBUTTONDBLCLK
+
+	Wm_mouselast: INTEGER is 
 			-- Declared in Windows as WM_MOUSELAST
+		external
+			"C [macro <winuser.h>]"
+		alias
+			"WM_MOUSELAST"
+		end
 
 	Wm_parentnotify: INTEGER is 528
 			-- Declared in Windows as WM_PARENTNOTIFY
 
+	Wm_entermenuloop: INTEGER is 529
+			-- Declared in Windows as WM_ENTERMENULOOP
+
+	Wm_exitmenuloop: INTEGER is 530
+			-- Declared in Windows as WM_EXITMENULOOP
+
+	Wm_nextmenu: INTEGER is 531
+			-- Declared in Windows as WM_NEXTMENU
+
 	Wm_sizing: INTEGER is 532
 			-- Declared in Windows as WM_SIZING
+
+	Wm_capturechanged: INTEGER is 533
+			-- Declared in Windows as WM_CAPTURECHANGED
+
+	Wm_moving: INTEGER is 534
+			-- Declared in Windows as WM_MOVING
+
+	Wm_powerbroadcast: INTEGER is 536
+			-- Declared in Windows as WM_POWERBROADCAST
+
+	Wm_devicechange: INTEGER is 537
+			-- Declared in Windows as WM_DEVICECHANGE
 
 	Wm_mdicreate: INTEGER is 544
 			-- Declared in Windows as WM_MDICREATE
@@ -393,15 +531,26 @@ feature -- Access
 	Wm_ime_char: INTEGER is 646
 			-- Declared in Windows as WM_IME_CHAR
 
+	Wm_ime_request: INTEGER is 648
+			-- Declared in Windows as WM_IME_REQUEST
+
 	Wm_ime_keydown: INTEGER is 656
 			-- Declared in Windows as WM_IME_KEYDOWN
 
 	Wm_ime_keyup: INTEGER is 657
 			-- Declared in Windows as WM_IME_KEYUP
 
+	Wm_ncmousehover: INTEGER is 672
+			-- Require Windows98, Windows NT 5.0 or later
+			-- Declared in Windows as WM_NCMOUSEHOVER
+
 	Wm_mousehover: INTEGER is 673
 			-- Require Windows98, Windows NT 4.0 or later
 			-- Declared in Windows as WM_MOUSEHOVER
+
+	Wm_ncmouseleave: INTEGER is 674
+			-- Require Windows98, Windows NT 5.0 or later
+			-- Declared in Windows as WM_NCMOUSELEAVE
 
 	Wm_mouseleave: INTEGER is 675
 			-- Require Windows98, Windows NT 4.0 or later
@@ -461,11 +610,38 @@ feature -- Access
 	Wm_palettechanged: INTEGER is 785
 			-- Declared in Windows as WM_PALETTECHANGED
 
+	Wm_hotkey: INTEGER is 786
+			-- Declared in Windows as WM_HOTKEY
+
+	Wm_print: INTEGER is 791
+			-- Declared in Windows as WM_PRINT
+
+	Wm_printclient: INTEGER is 792
+			-- Declared in Windows as WM_PRINTCLIENT
+
+	Wm_appcommand: INTEGER is 793
+			-- Declared in Windows as WM_APPCOMMAND
+
+	Wm_handheldfirst: INTEGER is 856
+			-- Declared in Windows as WM_HANDHELDFIRST
+
+	Wm_handheldlast: INTEGER is 863
+			-- Declared in Windows as WM_HANDHELDLAST
+
+	Wm_afxfirst: INTEGER is 864
+			-- Declared in Windows as WM_AFXFIRST
+
+	Wm_afxlast: INTEGER is 895
+			-- Declared in Windows as WM_AFXLAST
+
 	Wm_penwinfirst: INTEGER is 896
 			-- Declared in Windows as WM_PENWINFIRST
 
 	Wm_penwinlast: INTEGER is 911
 			-- Declared in Windows as WM_PENWINLAST
+
+	Wm_app: INTEGER is 32768
+			-- Declared in Windows as WM_APP
 
 	Wm_user: INTEGER is 1024
 			-- Declared in Windows as WM_USER

@@ -371,6 +371,22 @@ feature -- Status setting
 			selection_on_click_disabled: not is_selection_on_click_enabled
 		end
 
+	enable_selection_keyboard_handling is
+			-- Enable selection handling of items via the keyboard.
+		do
+			is_selection_keyboard_handling_enabled := True
+		ensure
+			selection_keyboard_handling_enabled: is_selection_keyboard_handling_enabled
+		end
+
+	disable_selection_keyboard_handling is
+			-- Disable selection handling of items via the keyboard.
+		do
+			is_selection_keyboard_handling_enabled := False
+		ensure
+			selection_keyboard_handling_disabled: not is_selection_keyboard_handling_enabled
+		end
+
 	enable_tree is
 			-- Enable tree functionality for `Current'.
 		do
@@ -908,6 +924,9 @@ feature -- Status report
 	is_selection_on_click_enabled: BOOLEAN
 			-- Will an item be selected if clicked upon by the user?
 
+	is_selection_keyboard_handling_enabled: BOOLEAN
+			-- May an item be selected via the keyboard?
+
 	is_tree_enabled: BOOLEAN
 			-- Is tree functionality enabled?
 		
@@ -1185,37 +1204,32 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			Result := internal_row_data.area
 		end
 
-	visible_physical_column_indexes: SPECIAL [INTEGER] is
-			-- Zero-based physical data indexes of the visible columns needed for `row_data' lookup whilst rendering cells
+	physical_column_indexes: SPECIAL [INTEGER] is
+			-- Zero-based physical data indexes of the columns needed for `row_data' lookup whilst rendering cells
 			-- A call to insert_new_column (2) on an empty grid will result in a `physical_index' of 0 as this is the first column added (zero-based indexing for `row_list')
 			-- A following call to `insert_new_column (1) will result in a `physical_index' of 1 as this is the second column added
 			-- If both columns were visible this query returns <<0, 1>>, so to draw the data for the appropriate columns to the screen, the indexes 0 and 1 need to be
 			-- used to query the value returned from `row_list' @ i
-			-- (`row_list' @ (i - 1)) @ (visible_physical_column_indexes @ (j - 1)) returns the 'j'-th visible column value for the `i'-th row in the grid.
+			-- (`row_list' @ (i - 1)) @ (physical_column_indexes @ (j - 1)) returns the 'j'-th column value for the `i'-th row in the grid.
 		local
-			i, j: INTEGER
 			a_col: EV_GRID_COLUMN_I
+			i, col_count: INTEGER
 		do
-			create Result.make (visible_column_count)
+			col_count := column_count
+			create Result.make (col_count)
 			from
 				i := 1
 			until
-				i > column_count
+				i > col_count
 			loop
 				a_col := column_internal (i)
-				if a_col.is_visible then
-					Result.put (a_col.physical_index, j)
-						-- SPECIAL is zero based so `j' starts at zero
-					j := j + 1
-				end
+				Result.put (a_col.physical_index, i - 1)
+						-- SPECIAL is zero based
 				i := i + 1
-			end
-			check
-				visible_column_count_correct: visible_column_count = j
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_count_equals_visible_column_count: Result.count = visible_column_count
+			result_count_equals_column_count: Result.count = column_count
 		end
 
 	previous_visible_column_from_index (a_index: INTEGER): INTEGER is

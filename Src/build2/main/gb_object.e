@@ -9,21 +9,9 @@ deferred class
 	
 inherit
 	
-	INTERNAL
-		export
-			{NONE} all
-			{GB_OBJECT_HANDLER} dynamic_type_from_string, is_instance_of
-		end
-	
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-			{ANY} object_handler
 		end
 	
 	GB_SHARED_OBJECT_EDITORS
@@ -37,11 +25,6 @@ inherit
 		end
 	
 	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_SYSTEM_STATUS
 		export
 			{NONE} all
 		end

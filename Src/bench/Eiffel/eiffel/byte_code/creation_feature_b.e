@@ -51,10 +51,10 @@ feature -- Code generation
 					info.generate_gen_type_conversion (Current)
 
 					register.print_register
-					buf.putstring (" = RTLN(")
+					buf.putstring (" = ")
 					info.generate
 						-- Generate creation information
-					buf.putstring (");")
+					buf.putchar (';')
 					buf.new_line
 					info.generate_end (Current)
 

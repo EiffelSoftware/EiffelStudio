@@ -105,7 +105,7 @@ feature -- Basic operations
 			until
 				i = count
 			loop
-				field_descriptor := record_field_descriptor_factory.create_descriptor(a_type_info, i, system_descriptor)
+				field_descriptor := record_field_descriptor_factory.create_descriptor (a_type_info, i, system_descriptor)
 				fields.force (field_descriptor)
 				i := i + 1
 			end

@@ -30,10 +30,28 @@ feature -- Properties
 		do
 		end;
 
+	insensitive: BOOLEAN is
+			-- Is current widget insensitive to
+			-- user actions? (If it is, events will
+			-- not be dispatched to Current widget or
+			-- any of its children)
+		deferred
+		end;
+
 feature -- Status setting
 
 	set_text (a_string: STRING) is
 			-- Set the text to `a_string'.
+		deferred
+		end;
+
+	set_insensitive is
+			-- Make Current widget insensitive
+		deferred
+		end;
+
+	set_sensitive is
+			-- Make Current widget sensitive.
 		deferred
 		end;
 

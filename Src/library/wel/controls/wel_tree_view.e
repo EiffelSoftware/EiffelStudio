@@ -162,7 +162,6 @@ feature -- Status report
 			-- Is `an_item' expanded?
 		require
 			exists: exists
-			is_parent: is_parent (an_item)
 			valid_item: has_item (an_item)
 		local
 			mask: INTEGER
@@ -292,6 +291,12 @@ feature -- Status report
 			if handle /= default_pointer then
 				create Result.make_by_pointer(handle)
 			end
+		end
+
+	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
+		do
+			create Result.make (0, 0, 0, 0)
+			cwin_send_message (item, Tvm_getitemrect, 0, Result.to_integer)
 		end
 
 feature -- Status setting

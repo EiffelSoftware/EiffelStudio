@@ -350,16 +350,11 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	drawable: POINTER is
-		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
-		end
+	drawable: POINTER
+		-- Pointer to the GdkPixmap structure
 
-	mask: POINTER is
-			-- Pointer to the GdkBitmap used for masking.
-		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_mask (gtk_pixmap)
-		end
+	mask: POINTER
+		-- Pointer to the GdkBitmap masking structure
 
 feature {EV_ANY_I} -- Implementation
 
@@ -373,6 +368,8 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
 			feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
+			drawable := gdkpix
+			mask := gdkmask
 			if gdkmask /= NULL then
 				feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end

@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	manager: BOOLEAN is 
-		once
+			-- Does the container manage its children?
+		do
 			Result := False
 		end
 	

@@ -42,9 +42,9 @@ feature -- Access
 		end
 	
 	manager: BOOLEAN is
-			-- Manager container manages the geometry of its 
-			-- child(ren). Default True.
-		once
+			-- Does the container managed the size of its
+			-- children?
+		do
 			Result := True
 		end
 

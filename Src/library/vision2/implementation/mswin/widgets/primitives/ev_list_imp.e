@@ -9,8 +9,6 @@ class
 
 inherit
 	EV_LIST_I
-		undefine
-			pixmaps_size_changed
 		redefine	
 			interface, initialize, selected_item, selected_items, wipe_out
 		end

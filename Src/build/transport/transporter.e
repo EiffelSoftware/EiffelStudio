@@ -25,6 +25,7 @@ inherit
 	SHARED_CONTEXT;
 	CONSTANTS
 	TOOLTIP_INITIALIZER
+	UNDO_REDO_ACCELERATOR
 
 creation
 
@@ -211,6 +212,7 @@ feature
 			set_action ("<Unmap>,<Prop>", Current, Fifth);
 			set_action ("<Map>,<Prop>", Current, Sixth);
 			!!holes.make
+			add_undo_redo_accelerator (Current)
 		end;
 
 	realize is

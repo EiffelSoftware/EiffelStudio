@@ -2,18 +2,19 @@
 CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 #CFLAGS = -nologo -Zi -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -DASSERTIONS
 
-all:: cli_writer.lib
-	del *.lib
-	del *.obj
-
 .cpp.obj:
 	$(CC) $(CFLAGS) -c $<
 
 .c.obj:
 	$(CC) $(CFLAGS) -c $<
 
-ise_cache_manager.c: ise_cache_manager.idl
+all:: cli_writer.lib
+	del *.lib
+	del *.obj
+
+cli_writer.obj: cli_writer.cpp ise_cache_manager.idl
 	midl -notlb -header ise_cache_manager.h -iid ise_cache_manager.c ise_cache_manager.idl
+	$(CC) $(CFLAGS) -c cli_writer.cpp
 
 OBJ = cli_writer.obj ise_vs_fusion_support.obj ise_cache_manager.obj
 
@@ -24,3 +25,7 @@ cli_writer.lib: $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib
+	del *.lib
+	del *.obj
+
+

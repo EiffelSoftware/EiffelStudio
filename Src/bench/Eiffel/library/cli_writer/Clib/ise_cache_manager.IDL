@@ -1,5 +1,5 @@
 // Generated .IDL file (by the OLE/COM Object Viewer)
-//
+// 
 // typelib filename: emitter.tlb
 
 [
@@ -24,50 +24,55 @@ library emitter
       uuid(E3526F85-A118-3FBC-B445-417452D1AAA5),
       version(1.0),
       dual,
-      oleautomation,
-        custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.COM_ISE_CACHE_MANAGER")
-
+      oleautomation
     ]
     interface ISE_Cache_COM_ISE_CACHE_MANAGER : IDispatch {
-    [id(0x60020000)]
-    HRESULT make();
-    [id(0x60020001)]
-    HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
-    [id(0x60020002)]
-    HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
-    [id(0x60020004)]
-    HRESULT last_error_message([out, retval] BSTR* pRetVal);
-    [id(0x60020005)]
-    HRESULT initialize();
-    [id(0x60020006)]
-    HRESULT initialize_with_path([in] BSTR a_path);
-    [id(0x60020007)]
-    HRESULT consume_gac_assembly(
-                    [in] BSTR aname,
-                    [in] BSTR aversion,
-                    [in] BSTR aculture,
-                    [in] BSTR akey);
-    [id(0x60020008)]
-    HRESULT consume_local_assembly(
-                    [in] BSTR apath,
-                    [in] BSTR adest);
-    [id(0x60020009)]
-    HRESULT relative_folder_name(
-                    [in] BSTR aname,
-                    [in] BSTR aversion,
-                    [in] BSTR aculture,
-                    [in] BSTR akey,
-                    [out, retval] BSTR* pRetVal);
-    [id(0x6002000a)]
-    HRESULT assembly_info_from_assembly(
-                    [in] BSTR apath,
-                    [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
+        [id(0x60020000)]
+        HRESULT make();
+        [id(0x60020001)]
+        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
+        [id(0x60020002)]
+        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
+        [id(0x60020003)]
+        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
+        [id(0x60020004)]
+        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        [id(0x60020005)]
+        HRESULT initialize();
+        [id(0x60020006)]
+        HRESULT initialize_with_path([in] BSTR a_path);
+        [id(0x60020007)]
+        HRESULT consume_gac_assembly(
+                        [in] BSTR aname, 
+                        [in] BSTR aversion, 
+                        [in] BSTR aculture, 
+                        [in] BSTR akey);
+        [id(0x60020008)]
+        HRESULT consume_local_assembly(
+                        [in] BSTR apath, 
+                        [in] BSTR adest);
+        [id(0x60020009)]
+        HRESULT relative_folder_name(
+                        [in] BSTR aname, 
+                        [in] BSTR aversion, 
+                        [in] BSTR aculture, 
+                        [in] BSTR akey, 
+                        [out, retval] BSTR* pRetVal);
+        [id(0x6002000a)]
+        HRESULT assembly_info_from_assembly(
+                        [in] BSTR apath, 
+                        [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
+        [id(0x6002000b)]
+        HRESULT impl([out, retval] IUnknown** pRetVal);
+        [id(0x6002000c)]
+        HRESULT _set_impl([in] IUnknown* p1);
+        [id(0x6002000d)]
+        HRESULT _emitter_type_1891([out, retval] void** pRetVal);
     };
 
     [
       uuid(01BDF738-3044-3ED6-BA7B-34632D67E145),
-      version(1.0),
-        custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.Impl.COM_ISE_CACHE_MANAGER")
+      version(1.0)
     ]
     coclass ISE_Cache_Impl_COM_ISE_CACHE_MANAGER {
         [default] interface ISE_Cache_COM_ISE_CACHE_MANAGER;
@@ -78,29 +83,23 @@ library emitter
       uuid(FD2F67FF-FF44-3B67-A55D-8EE3086D3970),
       version(1.0),
       dual,
-      oleautomation,
-        custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.COM_ASSEMBLY_INFORMATION")
-
+      oleautomation
     ]
     interface ISE_Cache_COM_ASSEMBLY_INFORMATION : IDispatch {
         [id(0x60020000)]
-        HRESULT make([in] IUnknown* ass);
-        [id(0x60020001)]
-        HRESULT name([out, retval] BSTR* pRetVal);
-        [id(0x60020002)]
-        HRESULT version([out, retval] BSTR* pRetVal);
-        [id(0x60020003)]
-        HRESULT culture([out, retval] BSTR* pRetVal);
-        [id(0x60020004)]
         HRESULT public_key_token([out, retval] BSTR* pRetVal);
-    };
-
-    [
-      uuid(7F6F58E1-29FD-3FB3-B612-72205FE907E3),
-      version(1.0),
-        custom(0F21F359-AB84-41E8-9A78-36D110E6D2F9, "ISE.Cache.Impl.COM_ASSEMBLY_INFORMATION")
-    ]
-    coclass ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION {
-        [default] interface ISE_Cache_COM_ASSEMBLY_INFORMATION;
+        [id(0x60020001)]
+        HRESULT impl([out, retval] IUnknown** pRetVal);
+        [id(0x60020002)]
+        HRESULT _set_impl([in] IUnknown* p1);
+        [id(0x60020003)]
+        HRESULT make([in] IUnknown* ass);
+        [id(0x60020004)]
+        HRESULT name([out, retval] BSTR* pRetVal);
+        [id(0x60020005)]
+        HRESULT version([out, retval] BSTR* pRetVal);
+        [id(0x60020006)]
+        HRESULT culture([out, retval] BSTR* pRetVal);
     };
 };
+

@@ -85,26 +85,22 @@ EIF_OBJ request_dispatch (rqst)
 
 	switch (rqst.rq_type) {
 	/*	case JOB_DONE:  NOT IMPLEMENTED
-			printf ("JOB DONE \n");
 			sprintf(buf, "%d", rqst.rq_opaque.op_first);
 			eif_string = makestr(buf, strlen(buf));
 			(job_done_hldr_set)(eif_access(job_done_handler), eif_string);
 			return eif_access(job_done_handler);
 	*/
 	/*	case FAILURE: NOT IMPLEMENTED 
-			printf("FAILURE \n");
 			eif_string = makestr("Nothing", 7);
 			(failure_hdlr_set)(eif_access(failure_handler), eif_string);
 			return eif_access(failure_handler);
 	*/
 	/*	case MELT:	NOT IMPLEMENTED 
-			printf ("MELT \n");
 			eif_string = makestr("Nothing", 7);
 			(melt_hdlr_set)(eif_access(failure_handler), eif_string);
 			return eif_access(failure_handler);
 	*/
 		case DEAD:
-			printf ("DEAD \n");
 			eif_string = makestr ("Nothing", 7);
 			(dead_hdlr_set) (eif_access (dead_handler), eif_string);
 			return eif_access (dead_handler);
@@ -131,13 +127,10 @@ EIF_OBJ request_dispatch (rqst)
 				strcpy (ptr, stop_info.st_tag);
 				ptr += strlen (ptr); /* terminating null so that (ptr - string) is the length */
 				eif_string = makestr (string, ptr - string);
-				printf ("CALL STOPPED HANDLER \n");
 				(stopped_hdlr_set) (eif_access (stopped_handler), eif_string);
-				printf ("STOPPED HANDLER CALLED \n");
 				return eif_access (stopped_handler);
 			}
 		default: 
-			printf ("DEFAULT %i \n", rqst.rq_type);
 			eif_string = makestr ("Nothing", 7);
 			(failure_hdlr_set) (eif_access (failure_handler), eif_string);
 			return eif_access (failure_handler);

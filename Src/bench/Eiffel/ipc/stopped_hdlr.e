@@ -82,6 +82,11 @@ feature
 			run_info.set_exception (last_int, last_string);
 			run_info.set (name, address, org_type, dyn_type, offset, reason);
 
+			--if (reason /= Pg_viol) then
+			
+				run_info.dump_stack;
+		--	end;
+
 			display_status;
 		end;
 
@@ -145,63 +150,95 @@ feature -- Display
 
 	display_status is
 		local
-			c: CLASS_C;
+			c, oc: CLASS_C;
 			tout_request: TOUT_REQUEST;
 			os: OBJECT_STONE;
 			temp: STRING;
-			ll: LINKED_LIST [STRING]
+			ll: LINKED_LIST [STRING];
+			fi, ofi: FEATURE_I;
+			rid: INTEGER;
+			ft: FEATURE_TABLE
 		do
 			debug_window.clear_window;
+
+				-- Print object address.
 			debug_window.put_string ("Stopped in object [");
 				!! os.make (Run_info.object_address);
 			temp := "0x";
 			temp.append (Run_info.object_address);
 			debug_window.put_clickable_string (os, temp);
-			debug_window.put_string ("]%N%TClass: ");
+			debug_window.put_string ("]%N");
+
+				-- Print class name.
+			debug_window.put_string ("%TClass: ");
 			c := Run_info.class_type.associated_class;
 			c.append_clickable_name (debug_window);
-			debug_window.put_string ("%N%TFeature: `");
-if Run_info.feature_i /= Void then
-			Run_info.feature_i.append_clickable_name (debug_window, c);
-			debug_window.put_string ("' (");
-			Run_info.origin_type.associated_class.append_clickable_name (debug_window);
-			debug_window.put_string (")");
-else
-			debug_window.put_string ("Void'");
-end;
-			debug_window.put_string ("%N%TReason: ");
-				inspect Run_info.reason
-				when Pg_break then
-					debug_window.put_string ("Breakpoint reached%N")
-				when Pg_raise then
-					debug_window.put_string ("Explicit exception pending%N");
-					display_exception
-				when Pg_viol then
-					debug_window.put_string ("Implicit exception pending%N");
-					display_exception
+			debug_window.put_string ("%N");
+
+				-- Print routine name.
+			debug_window.put_string ("%TFeature: ");
+			if Run_info.feature_i /= Void then
+				oc :=  Run_info.origin_type.associated_class;
+				if oc /= c then	
+					ofi := Run_info.feature_i;
+					rid := ofi.rout_id_set.first;
+					if rid < 0 then
+						rid := - rid
+					end;
+					ft := c.feature_table;
+					fi := ft.origin_table.item (rid);
+
+					fi.append_clickable_name (debug_window, c);
+					debug_window.put_string (" (");
+					ofi.append_clickable_name (debug_window, oc);
+					debug_window.put_string (" from ");
+					oc.append_clickable_name (debug_window);
+					debug_window.put_string (")");
 				else
-					debug_window.put_string ("Unknown%N");
-				end;	
-if  Run_info.reason = Pg_break then
-			if not Run_info.where.empty then
-				Run_info.where.first.display_arguments;				
-				debug_window.put_string ("Call stack:%N%N");
-				debug_window.put_string 
-					("Object          Class             Routine%N");
-				debug_window.put_string 
-					("------          -----             -------%N");
-				from
-					Run_info.where.start
-				until
-					Run_info.where.after
-				loop
-					Run_info.where.item.display_feature;
-					debug_window.new_line;
-					Run_info.where.forth
+					Run_info.feature_i.append_clickable_name (debug_window, c);
 				end;
-				debug_window.new_line;
+			else
+				debug_window.put_string ("Void");
 			end;
-end;
+			debug_window.put_string ("%N");
+
+				-- Print the reason for stopping.
+			debug_window.put_string ("%TReason: ");
+			inspect Run_info.reason
+			when Pg_break then
+				debug_window.put_string ("Breakpoint reached%N")
+			when Pg_raise then
+				debug_window.put_string ("Explicit exception pending%N");
+				display_exception
+			when Pg_viol then
+				debug_window.put_string ("Implicit exception pending%N");
+				display_exception
+			else
+				debug_window.put_string ("Unknown%N");
+			end;	
+
+				-- If we stopped on a breakpoint, display 
+				-- the arguments and the calling stack.
+			--if (Run_info.reason /= Pg_viol) then
+				if not Run_info.where.empty then
+					Run_info.where.first.display_arguments;				
+					debug_window.put_string ("%NCall stack:%N%N");
+					debug_window.put_string 
+						("Object        Class             Routine%N");
+					debug_window.put_string 
+						("------        -----             -------%N");
+					from
+						Run_info.where.start
+					until
+						Run_info.where.after
+					loop
+						Run_info.where.item.display_feature;
+						debug_window.new_line;
+						Run_info.where.forth
+					end;
+					debug_window.new_line;
+				end;
+			--end;
 
 			debug_window.display;
 		end;

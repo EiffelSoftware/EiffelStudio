@@ -77,8 +77,6 @@ public c_recv_rout_info (target)
 							eif_rout_name);
 						return;	
 					default:
-						printf ("DUMPED default :unexpected %i\n", 
-							dump.dmp_type);
 						break; /* send error */
 				}			
 			case ACKNLGE:	/* send exhausted */
@@ -88,15 +86,11 @@ public c_recv_rout_info (target)
 					(char *) 0, 0L, (char *) 0);
 				return;
 			default:
-				printf ("DEFAULT request: Unexpected \n");
 				request_dispatch (pack); /* treat asynchronous request */
 				break;	/* send error */	
 		}
 	}
 	else
-		printf ("Reception failure \n");
-	/* unexpected or bad request: send exhausted */
-	printf ("set error \n");
 	(set_error) (eif_access (target));
 	return;
 }
@@ -155,19 +149,14 @@ public c_recv_value (target)
 							/* reference and number of bits */
 						return;
 					default:	
-						printf ("unexpected type flag: %x\n", type_flag);
 						break;
 				}
 			}
-			printf ("NOT AN ITEM \n");
-			printf ("type = %i. Expected DMP_ITEM %i\n", pack.rq_dump.dmp_type, DMP_ITEM);
 		}
 		else{
-			printf ("NOT A DUMPED  \n");
 			request_dispatch (pack);
 		}
 	}
-	printf ("ITEM ERROR \n");
 	(set_error) (eif_access (target)); 
 }
 

@@ -275,7 +275,7 @@ private struct dump *execution()
 	expop (&eif_stack);
 	
 	
-	if (top -> ex_type == EX_OSTK 
+	if (top -> ex_type != EX_CALL 
 			|| (top -> ex_type == EX_CALL && top -> exu.exur.exur_id == 0))
 		return (struct dump *) IGNORE;
 		/* This vector should not be sent */

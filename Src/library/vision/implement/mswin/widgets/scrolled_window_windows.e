@@ -12,7 +12,10 @@ inherit
 
 	MANAGER_WINDOWS
 		redefine
-			child_has_resized
+			child_has_resized,
+			unrealize,
+			realized,
+			on_size
 		end
 
 	SCROLLED_W_I
@@ -53,6 +56,8 @@ inherit
 			set_horizontal_position as wel_set_horizontal_position,
 			set_vertical_position as wel_set_vertical_position
 		undefine
+			on_size,
+			on_move,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,
@@ -75,7 +80,6 @@ inherit
 	SIZEABLE_WINDOWS
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -107,11 +111,15 @@ feature -- Status setting
 				debug ("SCROLLED_W")
 					print ("SCROLLED_WINDOW_WINDOWS.realize")
 				end
+				realized := True
 				set_scroll_range
 			end
 		end
 
 feature -- Status report
+
+	realized: BOOLEAN
+			-- Is current widget realized?
 
 	working_area: WIDGET
 			-- Working area of window which will
@@ -156,18 +164,46 @@ feature -- Element change
 			value_changed_actions.add (Current, a_command, arg)
 		end
 
+feature -- Removal
+
+	unrealize is
+			-- Unrealize current composite and its children.
+		local
+			ww: WIDGET_WINDOWS
+			wp, wi: WIDGET
+			unrealize_list: LIST [WIDGET_WINDOWS]
+		do
+			unrealize_list := children_list
+			from
+				unrealize_list.start
+			until
+				unrealize_list.after
+			loop
+				if unrealize_list.item.realized then
+					unrealize_list.item.unrealize
+				end
+				unrealize_list.forth
+			end
+			if exists then
+				wel_destroy
+			end
+			realized := False
+				-- This will destroy all children as well
+		end
+
 feature {NONE} -- Implementation
 
 	on_size (hit_code, a_width, a_height: INTEGER) is
 			-- Respond to a size message.
 		do
-			set_scroll_range 
+			set_scroll_range
 			if scroller /= Void then
 				scroller.set_horizontal_line (client_rect.width // 4)
 				scroller.set_horizontal_page (client_rect.width)
 				scroller.set_vertical_line (client_rect.height // 4)
 				scroller.set_vertical_page (client_rect.height)
 			end
+			resize_actions.execute (Current, Void)
 		end
 	horizontal_update (inc, position: INTEGER) is
 			-- Respond to an horizontal update of the scroller.
@@ -205,7 +241,7 @@ feature {NONE} -- Implementation
 			local_horizontal_scroll_bar_shown: BOOLEAN
 			local_vertical_scroll_bar_shown: BOOLEAN
 		do
-			if working_area /= Void and then exists then
+			if working_area /= Void and then realized then
 				if working_area.width > width then
 					local_horizontal_scroll_bar_shown := has_horizontal_scroll_bar
 					local_vertical_scroll_bar_shown := has_vertical_scroll_bar

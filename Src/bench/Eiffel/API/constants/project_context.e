@@ -79,6 +79,13 @@ feature {NONE}
 			Result := Project_directory.name
 		end;
 
+	Backup_path: DIRECTORY_NAME is
+			-- Path to the backup directory
+		once
+			!! Result.make_from_string (Project_directory_name);
+			Result.extend_from_array (<<Eiffelgen, Backup>>);
+		end;
+
 	Case_storage_path: STRING is
 		local
 			directory_name: DIRECTORY_NAME

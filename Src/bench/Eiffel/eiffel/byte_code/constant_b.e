@@ -10,9 +10,33 @@ inherit
 			has_gcable_variable, is_single, enlarged, is_constant,
 			propagate, print_register, free_register,
 			unanalyze, analyze, analyze_on, generate, generate_on,
-			make_byte_code, allocates_memory, generate_il, need_target
+			make_byte_code, allocates_memory, generate_il, need_target,
+			evaluate
 		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: like value) is
+			-- Assign `v' to `value'.
+		require
+			v_not_void: v /= Void
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end	
 	
+feature -- Evaluation
+
+	evaluate: VALUE_I is
+			-- Evaluate current.
+		do
+			Result := value
+		end
+		
 feature -- Access
 
 	value: VALUE_I;
@@ -43,12 +67,6 @@ feature -- Status
 
 feature -- Setting
 
-	set_value (v: like value) is
-			-- Assign `v' to `value'.
-		do
-			value := v;
-		end;
-	
 	set_access (a: like access) is
 			-- Assign `a' to `access'.
 		do

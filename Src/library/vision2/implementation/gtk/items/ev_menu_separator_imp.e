@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_menu_item_new)
 			C.gtk_widget_show (c_object)
 			C.gtk_widget_set_sensitive (c_object, False)
+			C.gtk_widget_set_usize (c_object, -1, 8)
 		end
 
 	initialize is

@@ -197,7 +197,7 @@ zone->ov_flags);
 long fpos2(file_desc)
 EIF_INTEGER file_desc;
 {
-	return (long) lseek((int)file_desc, 0, SEEK_CUR) + current_position;
+	return (long) lseek((int)file_desc, 0, SEEK_CUR);
 }
 
 private void partial_store_write()

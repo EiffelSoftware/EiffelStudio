@@ -87,6 +87,8 @@ feature -- Basic operations
 			-- Load file `file_name. `Result' contains the 
 			-- information contained in the file.
 			-- Do nothing if the file is a directory.
+		require
+			file_name_not_void: file_name /= Void
 		local
 			file: RAW_FILE
 			buffer: STRING
@@ -119,6 +121,8 @@ feature -- Basic operations
 			else
 				show_warning_dialog
 			end
+		ensure
+			result_not_void_if_loaded: last_load_successful implies result /= Void
 		end
 		
 	last_load_successful: BOOLEAN
@@ -129,6 +133,8 @@ feature {NONE} -- Implementation
 	load_and_parse_xml_file (a_filename:STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
 			-- Load file `a_filename' and parse.
 			-- `Result' is all information in `a_filename'.
+		require
+			file_name_not_void: a_filename /= Void
 		local
 			root_element: XM_ELEMENT
 			child_names: ARRAYED_LIST [STRING]

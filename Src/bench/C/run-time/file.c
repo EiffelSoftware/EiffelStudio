@@ -1547,8 +1547,18 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 	file_stat(temp, &buf);
 	eif_free (temp);
 
-	if (buf.st_mode & S_IFDIR)
-		return (EIF_BOOLEAN) (access (path, W_OK) == 0);
+	if (buf.st_mode & S_IFDIR)	/* Is parent a directory? */
+		if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
+				/* Check if a non writable file `path' exists */
+			if (file_exists(path)) {
+				file_stat(path, &buf);
+				if (buf.st_mode & S_IFDIR)
+				  	return (EIF_BOOLEAN) '\0';	/* is a directory */
+				return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
+			}
+
+			return (EIF_BOOLEAN) '\01';
+		}
 
 	return (EIF_BOOLEAN) '\0';
 #endif	/* vms */

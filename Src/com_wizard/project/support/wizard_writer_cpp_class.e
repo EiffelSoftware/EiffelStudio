@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create members.make (10)
 			create functions.make (10)
 			create {LINKED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make
-			create {LINKED_LIST [STRING]} parents.make
+			create {LINKED_LIST [WIZARD_PARENT_CPP_CLASS]} parents.make
 			create {LINKED_LIST [STRING]} import_files.make
 			import_files.compare_objects
 			create {LINKED_LIST [STRING]} import_files_after.make
@@ -242,14 +242,18 @@ feature -- Access
 				Result.append (Space)
 				from
 					parents.start
-					Result.append (parents.item)
+					Result.append (cpp_status_keywords.item (parents.item.export_status))
+					Result.append (Space)
+					Result.append (parents.item.name)
 					parents.forth
 				until
 					parents.after
 				loop
 					Result.append (Comma)
 					Result.append (Space)
-					Result.append (parents.item)
+					Result.append (cpp_status_keywords.item (parents.item.export_status))
+					Result.append (Space)
+					Result.append (parents.item.name)
 					parents.forth
 				end
 			end
@@ -362,7 +366,7 @@ feature -- Access
 	header: STRING
 			-- C++ class header comment
 
-	parents: LIST [STRING]
+	parents: LIST [WIZARD_PARENT_CPP_CLASS]
 			-- Parent classes
 
 	constructors: LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]
@@ -462,16 +466,19 @@ feature -- Element Change
 			header_set: header.is_equal (a_header)
 		end
 
-	add_parent (a_parent: STRING) is
+	add_parent (a_name: STRING; an_export_status: INTEGER) is
 			-- Add `a_parent' to `parents'.
 		require
-			non_void_parent: a_parent /= Void
-			valid_parent: not a_parent.empty
-			valid_syntax: a_parent.item (1) /= '%N' and a_parent.item (a_parent.count) /= '%N'
+			non_void_parent: a_name /= Void
+			valid_parent: not a_name.empty
+			valid_syntax: a_name.item (1) /= '%N' and a_name.item (a_name.count) /= '%N'
+		local
+			a_parent: WIZARD_PARENT_CPP_CLASS
 		do
+			create a_parent.make (a_name, an_export_status)
 			parents.extend (a_parent)
 		ensure
-			added: parents.last.is_equal (a_parent)
+			added: parents.last.name.is_equal (a_name)
 		end
 
 	set_abstract is

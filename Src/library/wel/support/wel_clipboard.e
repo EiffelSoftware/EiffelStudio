@@ -70,7 +70,7 @@ feature -- Element Change
 		do
 			b_result := cwel_close_clipboard
 			check
-				clipboard_closed: b_result /= Void
+				clipboard_closed: b_result
 			end
 		end	
 
@@ -81,7 +81,7 @@ feature -- Element Change
 		do
 			b_result := cwel_empty_clipboard
 			check
-				clipboard_emptied: b_Result /= Void	
+				clipboard_emptied: b_result
 			end
 		end
 
@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 
 	cwel_empty_clipboard: BOOLEAN is
 		external
-			"C | %"wel.h%""
+			"C signature (): BOOL use %"wel.h%""
 		alias
 			"EmptyClipboard"
 		end
@@ -99,7 +99,7 @@ feature {NONE} -- Externals
 			-- Opens the clipboard
 			-- hwnd_owner is the handle to the window opening the clipboard
 		external
-			"C | %"wel.h%""
+			"C signature (HWND): BOOL use %"wel.h%""
 		alias
 			"OpenClipboard"
 		end
@@ -107,7 +107,7 @@ feature {NONE} -- Externals
 	cwel_close_clipboard: BOOLEAN is
 			-- Closes the clipboard
 		external
-			"C | %"wel.h%""
+			"C signature (): BOOL use %"wel.h%""
 		alias
 			"CloseClipboard"
 		end
@@ -117,7 +117,7 @@ feature {NONE} -- Externals
 			-- the data currently stored in the clipboard.
 			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
 		external
-			"C | %"wel.h%""
+			"C signature (UINT): HANDLE use %"wel.h%""
 		alias
 			"GetClipboardData"
 		end
@@ -125,7 +125,7 @@ feature {NONE} -- Externals
 	cwel_set_clipboard_data (format: INTEGER; text: POINTER) is
 			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
 		external
-			"C | %"wel.h%""
+			"C signature (UINT, HANDLE) use %"wel.h%""
 		alias
 			"SetClipboardData"
 		end
@@ -133,7 +133,7 @@ feature {NONE} -- Externals
 	cwel_is_clipboard_format_available (format: INTEGER): BOOLEAN is
 			-- Determines whether the clipboard contains data in the specified format. 
 		external
-			"C | %"wel.h%""
+			"C signature (UINT): BOOL use %"wel.h%""
 		alias
 			"IsClipboardFormatAvailable"
 		end

@@ -388,6 +388,12 @@ EIF_INTEGER i, j, k;
 	int dtype;				/* Dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
+/* FIXME: check efficiency
+
+	request from Philippe Stephan CALFP
+
+*/
+
 	zone = HEADER(area);
 	ref = area + (zone->ov_size & B_SIZE) - LNGPAD(2);
 	ref += sizeof(long);

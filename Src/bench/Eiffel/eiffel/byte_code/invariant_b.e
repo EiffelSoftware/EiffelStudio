@@ -127,13 +127,21 @@ feature -- Byte code geenration
 			-- Generate byte code for a class invariant clause.
 		local
 			local_list: LINKED_LIST [TYPE_I];
+			body_id: INTEGER;
 		do
 			Temp_byte_code_array.clear;
 				-- Default precond- and postcondition offsets
 			Temp_byte_code_array.append_integer (0);
 			Temp_byte_code_array.append_integer (0);
 		
-			Temp_byte_code_array.append (Bc_start);
+				-- Header for debuggable invariants
+			if context.debug_mode then
+				Temp_byte_code_array.append (Bc_debuggable);
+				body_id := associated_class.invariant_feature.body_id;
+				Temp_byte_code_array.append_integer (body_id);
+			else
+				Temp_byte_code_array.append (Bc_start);
+			end;
 
 			Temp_byte_code_array.append_integer (0);
 				-- Void result type
@@ -162,7 +170,7 @@ feature -- Byte code geenration
 
 			Temp_byte_code_array.append (Bc_no_clone_arg);
 
-			ba.prepend (Temp_byte_code_array);
+			context.byte_prepend (ba, Temp_byte_code_array);
 
 				-- Clean the context
 			local_list.wipe_out;

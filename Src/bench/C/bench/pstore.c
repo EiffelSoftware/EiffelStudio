@@ -125,6 +125,9 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	gc_stop();		/* Procedure `make_index' may call the GC
 				 * while creating objects. */
 
+		/* Need to hold mutex here since we are using traversal. */
+	EIF_EO_STORE_LOCK;
+
 #ifdef DEBUG
 	(void) nomark(object);
 #endif
@@ -155,6 +158,7 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 
 	flush_st_buffer();				/* Flush the buffer */
 
+	EIF_EO_STORE_UNLOCK;	/* Unlock our mutex. */
 	if (!gc_stopped)
 		gc_run();					/* Restart GC */
 

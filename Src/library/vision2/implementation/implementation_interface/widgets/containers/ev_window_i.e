@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision titled window, Implementation interface."
+	description:
+		"Eiffel Vision titled window. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,71 +26,63 @@ feature {EV_TITLED_WINDOW} -- Accelerators
 		deferred
 		end
 
-feature  -- Access
+feature -- Access
 
 	icon_name: STRING is
-			-- Short form of application name to be
-			-- displayed by the window manager when
-			-- application is iconified.
+			-- Alternative name, displayed when window is minimised.
+		deferred
+		end 
+
+	icon_pixmap: EV_PIXMAP is
+			-- Window icon.
 		deferred
 		end
 	
 	icon_mask: EV_PIXMAP is
-			-- Bitmap that could be used by window manager
-			-- to clip `icon_pixmap' bitmap to make the
-			-- icon nonrectangular.
-		deferred
-		end
-
-	icon_pixmap: EV_PIXMAP is
-			-- Bitmap that could be used by the window manager
-			-- as the application's icon.
+			-- Transparency mask for `icon_pixmap'.
 		deferred
 		end
 
 feature -- Status report
 
- 	is_minimized: BOOLEAN is
-			-- Is the window minimized (iconic state)?
+	is_minimized: BOOLEAN is
+			-- Is displayed iconified/minimised?
 		deferred
 		end
 
 	is_maximized: BOOLEAN is
-			-- Is the window maximized (take the all screen).
+			-- Is displayed at maximum size?
 		deferred
 		end
 
 feature -- Status setting
 
 	raise is
-			-- Raise a window. ie: put the window on the front
-			-- of the screen.
+			-- Request that window be displayed above all other windows.
 		deferred
 		end
 
 	lower is
-			-- Lower a window. ie: put the window on the back
-			-- of the screen.
+			-- Request that window be displayed below all other windows.
 		deferred
 		end
 
 	minimize is
-			-- Minimize the window.
+			-- Display iconified/minimised.
 		deferred
 		ensure
 			is_minimized: is_minimized
 		end
 
 	maximize is
-			-- Minimize the window.
+			-- Display at maximum size.
 		deferred
 		ensure
 			is_maximized: is_maximized
 		end
 
 	restore is
-			-- Restore the window when it is minimized or
-			-- maximized. Do nothing otherwise.
+			-- Restore to original position when minimized or maximized.
 		deferred
 		ensure
 			minimize_restored: old is_minimized implies not is_minimized
@@ -98,25 +91,31 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (txt: STRING) is
-			-- Make `txt' the new icon name.
+	set_icon_name (an_icon_name: STRING) is
+			-- Assign `an_icon_name' to `icon_name'.
 		require
-			valid_name: txt /= Void
+			an_icon_name_not_void: an_icon_name /= Void
 		deferred
+		ensure
+			icon_name_assigned: icon_name.is_equal (an_icon_name)
 		end
 
-	set_icon_mask (pixmap: EV_PIXMAP) is
-			-- Make `pixmap' the new icon mask.
+	set_icon_mask (an_icon_mask: EV_PIXMAP) is
+			-- Assign `an_icon_mask' to `icon_mask'.
 		require
-			pixmap_not_void: pixmap /= Void
+			pixmap_not_void: an_icon_mask /= Void
 		deferred
+		ensure
+			icon_mask_assigned: icon_mask.is_equal (an_icon_mask)
 		end
 
-	set_icon_pixmap (pixmap: EV_PIXMAP) is
-			-- Set `icon_pixmap' to `pixmap'.
+	set_icon_pixmap (an_icon: EV_PIXMAP) is
+			-- Assign `an_icon' to `icon'.
 		require
-			pixmap_not_void: pixmap /= Void
+			pixmap_not_void: an_icon /= void
 		deferred
+		ensure
+			icon_pixmap_assigned: icon_pixmap.is_equal (an_icon)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -146,6 +145,9 @@ end -- class EV_TITLED_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/07 01:36:49  brendel
+--| Changed in compliance with interface.
+--|
 --| Revision 1.36  2000/03/07 00:28:51  brendel
 --| Updated contracts from interface.
 --| Cosmetics.

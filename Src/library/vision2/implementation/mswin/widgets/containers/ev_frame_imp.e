@@ -342,6 +342,7 @@ feature {NONE} -- WEL Implementation
 			drawstate: INTEGER
 			memory_dc: WEL_MEMORY_DC
 			wel_bitmap: WEL_BITMAP
+			color_imp: EV_COLOR_IMP
 		do
 			theme_drawer := application_imp.theme_drawer
 			
@@ -382,7 +383,11 @@ feature {NONE} -- WEL Implementation
 
 			r.set_rect (0, text_height // 2, cur_width, cur_height)
 
-			drawstate := 1
+			if is_sensitive then
+				drawstate := gbs_normal
+			else
+				drawstate := gbs_disabled
+			end
 				-- GBS_normal
 			if wel_style = edge_etched and application_imp.themes_active then
 					-- We only use the theme drawer it `edge_etched' is used which is the default.
@@ -429,7 +434,12 @@ feature {NONE} -- WEL Implementation
 				memory_dc.set_background_color (wel_background_color)
 				
 				create text_rect.make (text_pos, 0, text_pos + text_width, text_height)
-				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_normal, text, dt_center, is_sensitive, text_rect, foreground_color)
+				if foreground_color_imp /= Void then
+					color_imp := foreground_color_imp
+				else
+					color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+				end
+				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_disabled, text, dt_center, is_sensitive, text_rect, color_imp)
 			end
 			paint_dc.bit_blt (invalid_rect.left, invalid_rect.top, invalid_rect.width, invalid_rect.height, memory_dc, invalid_rect.left, invalid_rect.top, feature {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
 			memory_dc.unselect_all

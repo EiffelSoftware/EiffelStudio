@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A socket.";
+		"Generic sockets"
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -52,7 +52,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_valid_peer_address (addr: SOCKET): BOOLEAN is
+	is_valid_peer_address (addr: SOCKET_ADDRESS): BOOLEAN is
 			-- Is `addr' a valid peer address?
 		require
 			address_exists: addr /= Void

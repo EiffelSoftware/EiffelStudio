@@ -23,6 +23,31 @@ feature {EV_PND_SOURCE_I} -- Implementation
 			end
 		end
 
+	remove_pick_and_drop is
+			-- Remove pick and drop command.
+		do
+			check
+				To_implement: False
+			end
+		end
+
+	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
+			-- Terminate the pick and drop mechanim.
+		do
+			check
+				To_implement: False
+			end
+		end
+
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
+		do
+			check
+				To_implement: False
+			end
+		end
+
+
 end -- class EV_PND_SOURCE_I
 
 --|----------------------------------------------------------------

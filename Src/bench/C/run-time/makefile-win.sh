@@ -57,6 +57,7 @@ FINAL_OBJECTS = \
 	$(INDIR)\search.$obj \
 	$(INDIR)\option.$obj \
 	$(INDIR)\console.$obj \
+	$(TOP)\idrs\idrs.$obj \
 	$(INDIR)\run_idr.$obj \
 	$(INDIR)\path_name.$obj \
 	$(INDIR)\object_id.$obj \
@@ -120,6 +121,7 @@ WOBJECTS = \
 	$(INDIR)\update.$obj \
 	$(INDIR)\wbench.$obj \
 	$(INDIR)\wconsole.$obj \
+	$(TOP)\idrs\idrs.$obj \
 	$(INDIR)\wrun_idr.$obj \
 	$(INDIR)\wpath_name.$obj \
 	$(INDIR)\wobject_id.$obj \
@@ -131,7 +133,6 @@ WOBJECTS = \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\weif_type_id.$obj \
 	$(INDIR)\wrout_obj.$obj \
-	$(TOP)\idrs\idrs.$obj \
 	$(TOP)\console\wwinconsole.$lib \
 
 EOBJECTS = \
@@ -175,6 +176,7 @@ EOBJECTS = \
 	$(INDIR)\update.$obj \
 	$(INDIR)\wbench.$obj \
 	$(INDIR)\wconsole.$obj \
+	$(TOP)\idrs\idrs.$obj \
 	$(INDIR)\wrun_idr.$obj \
 	$(INDIR)\wpath_name.$obj \
 	$(INDIR)\wobject_id.$obj \
@@ -225,7 +227,8 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)\MTsearch.$obj \
 	$(INDIR)\MToption.$obj \
 	$(INDIR)\MTconsole.$obj \
-	$(INDIR)\MTrun_idr.$obj \
+	$(TOP)\idrs\mtidrs.$obj \
+	$(INDIR)\MTrun_idrs.$obj \
 	$(INDIR)\MTpath_name.$obj \
 	$(INDIR)\MTobject_id.$obj \
 	$(INDIR)\MTcompress.$obj \
@@ -288,6 +291,7 @@ MT_WOBJECTS = \
 	$(INDIR)\MTupdate.$obj \
 	$(INDIR)\MTwbench.$obj \
 	$(INDIR)\MTwconsole.$obj \
+	$(TOP)\idrs\mtidrs.$obj \
 	$(INDIR)\MTwrun_idr.$obj \
 	$(INDIR)\MTwpath_name.$obj \
 	$(INDIR)\MTwobject_id.$obj \
@@ -299,7 +303,6 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwgen_conf.$obj \
 	$(INDIR)\MTweif_type_id.$obj \
 	$(INDIR)\MTwrout_obj.$obj \
-	$(TOP)\idrs\mtidrs.$obj \
 	$(TOP)\console\mtwwinconsole.$lib \
 
 all:: eif_size.h

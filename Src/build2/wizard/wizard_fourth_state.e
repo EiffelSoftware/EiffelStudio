@@ -250,12 +250,5 @@ feature {NONE} -- Implementation
 		ensure then
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
-		
-	id_compressor: GB_ID_COMPRESSOR is
-			-- Once instance of GB_ID_COMPRESSOR
-			-- for compressing saved Ids.
-		once
-			create Result
-		end
 
 end -- class WIZARD_FOURTH_STATE

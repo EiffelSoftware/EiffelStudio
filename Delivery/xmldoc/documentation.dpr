@@ -1,8 +1,8 @@
 <project>
 	<project_name>docs</project_name>
-	<root_directory>$DOCUMENT_DIR</root_directory>
+	<root_directory>$DOCUMENT_DIR/xmldoc</root_directory>
 	<schema>$EIFFEL_SRC/tools/doc_builder/resources/xml/schema/document.xsd</schema>
-	<html_css>$DOCUMENT_DIR/default.css</html_css>
+	<html_css>$DOCUMENT_DIR/xmldoc/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>

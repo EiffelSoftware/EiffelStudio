@@ -12,7 +12,6 @@ inherit
 
 	MEL_FORM_DIALOG;
 	WINDOWS;
-	INTERFACE_W;
 	WINDOW_ATTRIBUTES;
 	G_ANY;
 	MEL_COMMAND;
@@ -40,17 +39,16 @@ feature -- Start output features
 			-- Put message indicating the start of degree six
 			-- with `total_nbr' passes to be done.
 		local
-			just_created: BOOLEAN;
 			i_name: STRING
 		do
-			icon_name := Project_tool.icon_name;
 			if is_destroyed then	
-				just_created := True;
 				create_window
+			else
+				parent.set_title (Interface_names.d_Compilation_progress);
 			end;
-			parent.set_title (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
 			current_degree := 6;
+			processed := 0;
 
 			degree_l.set_label_as_string (Interface_names.d_Degree);
 			entity_l.set_label_as_string (Interface_names.d_Compilation_cluster);
@@ -87,6 +85,11 @@ feature -- Start output features
 		local
 			i_name: STRING
 		do
+			if is_destroyed then	
+				create_window
+			else
+				parent.set_title (Interface_names.d_Compilation_progress);
+			end;
 			total_number := total_nbr;
 			current_degree := degree_nbr;
 			processed := 0;
@@ -96,6 +99,9 @@ feature -- Start output features
 			current_entity_l.set_label_as_string (Empty_string);
 
 			percentage_l.set_label_as_string (Zero_percent);
+			if not managed then
+				popup_window;
+			end;
 			progress_bar.reset_percentage;
 			i_name := clone (icon_name);
 			i_name.extend (' ');
@@ -128,6 +134,9 @@ feature -- Start output features
 		do
 			set_project_icon_name (freezing_system_message)
 			put_non_degree_message (freezing_system_message);
+			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
+			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
+			degree_l.set_label_as_string (Interface_names.d_Degree);
 		end;
 
 	put_start_dead_code_removal_message  is
@@ -171,7 +180,7 @@ feature -- Start output features
 			current_entity_l.set_label_as_string (Empty_string);
 		end;
 
-	put_start_documentation (total_num: INTEGER) is
+	put_start_documentation (total_num: INTEGER; type: STRING) is
 			-- Initialize the document generation.
 		do
 			total_number := total_num;
@@ -179,19 +188,21 @@ feature -- Start output features
 			if is_destroyed then	
 				create_window
 			end;
-			parent.set_title ("Documentation"); -- *** Fixme
+			parent.set_title (Interface_names.d_Documentation); 
 			icon_name := Project_tool.icon_name;	
 			total_number := total_num;
 			processed := 0;
-			degree_l.set_label_as_string (Interface_names.d_Compilation_cluster);
+			degree_l.set_label_as_string (Interface_names.d_Generating);
+			current_degree_l.set_label_as_string (type);
 			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
 			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
 			current_nbr_to_go_l.set_label_as_string (total_num.out);
 			current_entity_l.set_label_as_string (Empty_string);
 			cancel_b.set_insensitive;
 			if not is_managed then	
-				popup_window
+				popup_window;
 			end;
+			progress_bar.reset_percentage
 		end;
 
 	put_case_message (a_message: STRING) is
@@ -199,6 +210,7 @@ feature -- Start output features
 		do
 			if is_destroyed then	
 				create_window
+				degree_l.set_label_as_string (Empty_string);
 				degree_l.set_label_as_string (Empty_string);
 				entity_l.set_label_as_string (Empty_string);
 				nbr_to_go_l.set_label_as_string (Empty_string);
@@ -254,11 +266,18 @@ feature -- Output on per class
 
 	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during a degree pass with `nbr_to_go' 
+			-- compiled during a degree pass with `nbr_to_go'
 			-- classes to go.
+		local
+			a_per: INTEGER
 		do
 			processed := processed + 1; -- Used when error ocurrs
-			put_degree_2 (a_class, nbr_to_go)
+				-- Could not call put_degree_2 or other degrees even
+				-- though it is doing the same here because of
+				-- the precondition.
+			a_per := percentage_calcuation (nbr_to_go);
+			progress_bar.increase_percentage (a_per);
+			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 		end;
 
 	put_degree_2,
@@ -288,7 +307,7 @@ feature -- Output on per class
 		do
 			processed := features_done + processed;
 			total_number := processed + nbr_to_go;
-			a_per := percentage_calcuation (processed);
+			a_per := percentage_calculation (processed);
 			progress_bar.update_percentage (a_per);
 			update_interface (processed.out, nbr_to_go, a_per);
 		end;
@@ -305,42 +324,20 @@ feature -- Output on per class
 			process_events
 		end;
 
-	put_class_document_message (a_class: E_CLASS) is
+	put_case_class_message, put_class_document_message (a_class: E_CLASS) is
 			-- Put message to indicate that `a_class' is being
 			-- generated for documentation.
 		local
-			a_per: INTEGER
+			to_go, a_per: INTEGER
 		do
-			a_per := percentage_calcuation (processed);
+			to_go := total_number - processed;
+			a_per := percentage_calculation (to_go);
 			processed := processed + 1;
 			progress_bar.increase_percentage (a_per);
-			update_interface (a_class.name_in_upper,
-					total_number - processed, a_per)
-		end;
-
-	put_case_class_message (a_class: E_CLASS) is
-			-- Put message to indicate that `a_class' is being
-			-- analyzed for case.
-		local
-			a_per: INTEGER
-		do
-			a_per := percentage_calcuation (processed);
-			processed := processed + 1;
-			progress_bar.increase_percentage (a_per);
-			update_interface (a_class.name_in_upper,
-					total_number - processed, a_per)
+			update_interface (a_class.name_in_upper, to_go, a_per)
 		end;
 
 feature {NONE} -- Implementation
-
-	percentage_calcuation (to_go: INTEGER): INTEGER is
-			-- Percentage calcuation based on `to_go' and `total_number'
-		do
-			Result := 100 - (100 * to_go) // total_number;
-			if Result = 100 and then to_go /= 0 then
-				Result := 99
-			end	
-		end;
 
 	update_interface (a_name: STRING; nbr_to_go: INTEGER; a_per: INTEGER) is
 			-- Update the interface for entity `a_name' with `nbr_to_go'
@@ -428,8 +425,10 @@ feature {NONE} -- Implementation
 			frame: MEL_FRAME;
 			mel_parent: MEL_COMPOSITE;	
 		do
+			icon_name := Project_tool.icon_name;
 			mel_parent ?= Project_tool.implementation;
-			make (l_Compilation_progress, mel_parent);
+			make (Interface_names.d_Compilation_progress, mel_parent);
+			parent.set_title (Interface_names.d_Compilation_progress);
 			!! degree_l.make ("", Current, True);	
 			!! entity_l.make ("", Current, True);	
 			!! nbr_to_go_l.make ("", Current, True);	
@@ -492,8 +491,7 @@ feature {NONE} -- Implementation
 			update_resources;
 
 			percentage_l.set_bottom_offset (cancel_b.height + 10);
-			--disable_default_positioning;
-			realize;
+			disable_default_positioning;
 		end;
 
 	update_resources is
@@ -554,12 +552,15 @@ feature {NONE} -- Implementation
 		local
 			cursor_imp: SCREEN_CURSOR_X;
 			mp: MOUSE_PTR;
-			new_x, new_y: INTEGER
+			new_x, new_y: INTEGER;
+			p: MEL_COMPOSITE
 		do
 			!! mp.do_nothing;
-			--new_x := parent.x + (parent.width - width) // 2;
-			--new_y := parent.y + (parent.height - height) // 2
-			--set_x_y (new_x, new_y);
+			realize;
+			p := parent.parent;
+			new_x := p.x + (p.width - width) // 2;
+			new_y := p.y + (p.height - height) // 2
+			set_x_y (new_x, new_y);
 			manage;
 			parent.set_max_height (height);
 			parent.set_max_width (width);
@@ -593,6 +594,7 @@ feature {NONE} -- Implementation
 	execute (arg: ANY) is
 			-- Cancel the compilation.
 		do
+			cancel_b.set_insensitive;
 			Eiffel_project.interrupt_compilation
 		end;
 

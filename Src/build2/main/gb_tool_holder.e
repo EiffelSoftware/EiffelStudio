@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			horizontal_box: EV_HORIZONTAL_BOX
 			label: EV_LABEL
 			frame: EV_FRAME
+			tool_bar: EV_TOOL_BAR
+			minimize_button, maximize_button: EV_TOOL_BAR_BUTTON
 		do
 			default_create
 			set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
@@ -39,6 +41,15 @@ feature {NONE} -- Initialization
 			create label.make_with_text (display_name)
 			label.align_text_left
 			horizontal_box.extend (label)
+			create tool_bar
+			create minimize_button
+			minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
+			tool_bar.extend (minimize_button)
+			create maximize_button
+			maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
+			tool_bar.extend (maximize_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			vertical_box.disable_item_expand (frame)
 			vertical_box.extend (tool)
 		end

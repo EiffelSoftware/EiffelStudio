@@ -3,18 +3,8 @@ class NAMER_STORER
 
 inherit
 
-	NAMER_SHARED
-		export
-			{NONE} all
-		end;
-
+	SHARED_NAMER;
 	STORABLE_HDL
-		export
-			{NONE} all
-		end
-	
-
-
 	
 feature {NAMER_STORER}
 
@@ -25,7 +15,7 @@ feature
 
 	store (file_name: STRING) is
 		do
-			stored_data := namer_values;
+			stored_data := Shared_namer_values;
 			store_by_name (file_name);
 			stored_data := Void
 		end;
@@ -37,14 +27,14 @@ feature
 		do
 			retrieve_by_name (file_name);
 			stored_data := retrieved.stored_data;
-			namer_values.clear_all;
+			Shared_namer_values.clear_all;
 			from
 				keys := stored_data.current_keys;
 				i := 1
 			until
 				i > keys.count
 			loop
-				namer_values.force (stored_data.item (keys.item (i)),
+				Shared_namer_values.force (stored_data.item (keys.item (i)),
 								keys.item (i));
 				i := i + 1
 			end;

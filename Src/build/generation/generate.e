@@ -4,31 +4,12 @@ class GENERATE
 
 inherit
 
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_CONTEXT;
+	SHARED_APPLICATION;
 	COMMAND;
-	CALLBACK_GENE
-		export
-			{NONE} all
-		end;
-	UNIX_ENV
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	CALLBACK_GENE;
+	CONSTANTS;
+	WINDOWS;
 	ERROR_POPUPER
 
 feature 
@@ -50,7 +31,7 @@ feature
 				rescued := False;
 				!!msg.make (0);
 				msg.append ("Cannot generate files to directory%N");
-				msg.append (Generated_directory);
+				msg.append (Environment.generated_directory);
 				error_box.popup (Current, msg)
 			end
 		rescue
@@ -61,61 +42,60 @@ feature
 
 	generate_files is
 		local
-			old_pos: INTEGER;
+			current_cursor, old_cursor: CURSOR;
 			temp: STRING;
 			doc: EB_DOCUMENT;
 			cmd: USER_CMD;
 			group: GROUP;
 			user_cmds: LINKED_LIST [LINKED_LIST [USER_CMD]];
 			cmd_list: LINKED_LIST [USER_CMD];
-			current_position: INTEGER;
 		do
 				-- ==========================
 				-- Widget classes generation.
 				-- ==========================
 			callback_generator.update;
 			from
-				old_pos := window_list.index;
-				window_list.start
+				old_cursor := Shared_window_list.cursor;
+				Shared_window_list.start
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				current_position := window_list.index;
+				current_cursor := Shared_window_list.cursor;
 				!!doc;
-				doc.set_directory_name (Context_directory);
-				doc.set_document_name (window_list.item.entity_name);
-					temp := window_list.item.eiffel_text;
+				doc.set_directory_name (Environment.context_directory);
+				doc.set_document_name (Shared_window_list.item.entity_name);
+					temp := Shared_window_list.item.eiffel_text;
 				doc.update (temp);
 				doc := Void;
-				window_list.go_i_th (current_position);
-				window_list.forth
+				Shared_window_list.go_to (current_cursor);
+				Shared_window_list.forth
 			end;
-			window_list.go_i_th (old_pos);
+			Shared_window_list.go_to (old_cursor);
 			callback_generator.clear_all;
 
 				-- ===========================
 				-- Group classes generation.
 				-- ===========================
 			from
-				old_pos := group_list.index;
-				group_list.start
+				old_cursor := Shared_group_list.cursor;
+				Shared_group_list.start
 			until
-				group_list.after
+				Shared_group_list.after
 			loop
-				group := group_list.item;
-				if not (group.eiffel_text = Void) then
-					current_position := group_list.index;
+				group := Shared_group_list.item;
+				if group.eiffel_text /= Void then
+					current_cursor := Shared_group_list.cursor;
 					!!doc;
-					doc.set_directory_name (Group_directory);
+					doc.set_directory_name (Environment.groups_directory);
 					doc.set_document_name (group.entity_name);
 					temp := group.eiffel_text;
 					doc.update (temp);
 					doc := Void;
-					group_list.go_i_th (current_position);
+					Shared_group_list.go_to (current_cursor);
 				end;
-				group_list.forth;
+				Shared_group_list.forth;
 			end;
-			group_list.go_i_th (old_pos);
+			Shared_group_list.go_to (old_cursor);
 				
 				-- ===========================
 				-- Command classes generation.
@@ -156,8 +136,8 @@ feature
 				-- Windows class generation.
 				-- =========================
 			!!doc;
-			doc.set_directory_name (Windows_directory);
-			doc.set_document_name ("windows");
+			doc.set_directory_name (Environment.windows_directory);
+			doc.set_document_name (Environment.windows_file_name);
 			temp := windows_text;
 			doc.update (temp);
 			doc := Void;
@@ -166,8 +146,8 @@ feature
 				-- States class generation.
 				-- =========================
 			!!doc;
-			doc.set_directory_name (States_directory);
-			doc.set_document_name ("states");
+			doc.set_directory_name (Environment.state_directory);
+			doc.set_document_name (Environment.states_file_name);
 			temp := states_text;
 			doc.update (temp);
 			doc := Void;
@@ -176,8 +156,8 @@ feature
 				-- Application class generation
 				-- ============================
 			!!doc;
-			doc.set_directory_name (Application_directory);
-			doc.set_document_name ("application");
+			doc.set_directory_name (Environment.application_directory);
+			doc.set_document_name (Environment.application_file_name);
 			temp := graph.eiffel_text;
 			if temp.item (temp.count) /= '%N' then
 				temp.append ("%N");
@@ -190,8 +170,8 @@ feature
 				-- ===============================
 
 			!!doc;
-			doc.set_directory_name (Application_directory);
-			doc.set_document_name ("shared_control");
+			doc.set_directory_name (Environment.application_directory);
+			doc.set_document_name (Environment.shared_control_file_name);
 			temp := shared_control_text;
 			doc.update (temp);
 			doc := Void;
@@ -235,8 +215,7 @@ feature {NONE}
 	windows_text: STRING is
 		local
 			class_name: STRING;
-			old_pos: INTEGER;
-			temp_w_context: TEMP_WIND_C;
+			old_cursor: CURSOR;
 			window_context: WINDOW_C;
 		do
 			!!Result.make (3000);	
@@ -249,53 +228,58 @@ feature {NONE}
 					%%T%T%Tif (init_toolkit = Void) then end;%N%
 					%%T%T%Tif (toolkit = Void) then end;%N");
 			from
-				old_pos := window_list.index;
-				window_list.start;
+				old_cursor := Shared_window_list.cursor;
+				Shared_window_list.start;
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				window_context ?= window_list.item;
-				if window_context = Void then
+				window_context := Shared_window_list.item;
+				if not window_context.start_hidden then
 					Result.append ("%T%T%T");
-					Result.append (window_list.item.entity_name);
+					Result.append (window_context.entity_name);
 					Result.append (".realize;%N");
-				elseif  not window_context.start_hidden then
+					if not window_context.is_perm_window then
+						Result.append ("%T%T%T");
+						Result.append (window_context.entity_name);
+						Result.append (".popup;%N");
+					end;
+				elseif not window_context.is_perm_window then
 					Result.append ("%T%T%T");
-					Result.append (window_list.item.entity_name);
+					Result.append (window_context.entity_name);
 					Result.append (".realize;%N");
 				end;
-				window_list.forth;
+				Shared_window_list.forth;
 			end;
-			window_list.go_i_th (old_pos);
+			Shared_window_list.go_to (old_cursor);
 			Result.append ("%T%T%Titerate%N%T%Tend;%N%N");
 			Result.append ("%TNothing: ANY is do end;%N%N");
 			from
-				old_pos := window_list.index;
-				window_list.start;
+				old_cursor := Shared_window_list.cursor;
+				Shared_window_list.start;
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
+				window_context := Shared_window_list.item;
 				Result.append ("%T");
-				Result.append (window_list.item.entity_name);
+				Result.append (window_context.entity_name);
 				Result.append (": ");
 					!!class_name.make (10);
-					class_name := window_list.item.entity_name;
+					class_name := window_context.entity_name;
 					class_name := clone (class_name);
 					class_name.to_upper;
 				Result.append (class_name);
 				Result.append (" is%N%T%Tonce%N%T%T%T!!Result.make (%"");
-				Result.append (window_list.item.entity_name);
-				temp_w_context ?= window_list.item;
+				Result.append (window_context.entity_name);
 				Result.append ("%", "); 
-				if temp_w_context = Void then
+				if window_context.is_perm_window then
 					Result.append ("application_screen"); 
 				else
-					Result.append (temp_w_context.parent.entity_name);
+					Result.append (window_context.parent.entity_name);
 				end;
 				Result.append (");%N%T%Tend;%N%N"); 
-				window_list.forth;
+				Shared_window_list.forth;
 			end;
-			window_list.go_i_th (old_pos);
+			Shared_window_list.go_to (old_cursor);
 			Result.append ("end%N")
 		end;	
 

@@ -3,112 +3,48 @@ class ALIGNMENT_FORM
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
-	CONTEXT_CMDS
-		rename
-			alignment_cmd as command
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	COMMAND;
 	EDITOR_OK_FORM
-		export
-			{ANY} all
 		undefine
 			init_toolkit
-		redefine
-			form_name
 		end
-
 
 creation
 
 	make
-
 	
-feature 
-
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := A_lignment_form_name
-		end;
-
+feature -- Interface
 	
-feature {ALIGNMENT_CMD}
-
-	context_list: ALIGNMENT_BOX;
-			-- Contexts to align with reference
-
-	
-feature {NONE}
-
-	reference: REFERENCE_HOLE;
-			-- Reference for the alignment
-
-	
-feature 
-
-	reference_context: CONTEXT is
-		do
-			Result := reference.context
-		end;
-
-	
-feature {NONE}
-
-	align_hole: ALIGNMENT_HOLE;
-			-- Hole for adding new contexts
-
-	vertical, horizontal: TOGGLE_B;
-
-	top_left, center, bottom_right: TOGGLE_B;
-
-	offset: TOGGLE_B;
-
-	offset_value: SCALE;
-
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, alignment_form_number);
-		end;
-
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		local	
 			radio_box_direction: RADIO_BOX;
 			radio_box_point: RADIO_BOX;
 			a_separator: SEPARATOR_G;
 		do	
-			initialize (A_lignment_form_name, a_parent);
+			initialize (Context_const.alignment_form_name, a_parent);
 			create_ok_button;
 			detach_top (separator);
-			!!context_list.make (W_idget_list, Current);
-			!!reference.make (R_eference, Current);
-			!!align_hole.make (C_ontext, Current);
-			!!radio_box_direction.make (R_adio_box, Current);
-			!!radio_box_point.make (R_adio_box, Current);
-			!!a_separator.make (S_eparator, Current);
+			!!context_list.make (Context_const.widget_list_name, Current);
+			!!reference.make (Context_const.reference_name, Current);
+			!!align_hole.make (Context_const.context_name, Current);
+			!!radio_box_direction.make (Widget_names.radio_box, Current);
+			!!radio_box_point.make (Widget_names.radio_box1, Current);
+			!!a_separator.make (Widget_names.separator, Current);
 
-			!!vertical.make (V_ertically, radio_box_direction);
-			!!horizontal.make (H_orizontally, radio_box_direction);
+			!!vertical.make (Context_const.vertically_name, 
+					radio_box_direction);
+			!!horizontal.make (Context_const.horizontally_name, 
+					radio_box_direction);
 			horizontal.arm;
 
-			!!top_left.make (T_op_left, radio_box_point);
-			!!center.make (C_enter, radio_box_point);
-			!!bottom_right.make (B_ottom_right, radio_box_point);
+			!!top_left.make (Context_const.top_left_name, radio_box_point);
+			!!center.make (Context_const.center_name, radio_box_point);
+			!!bottom_right.make (Context_const.bottom_right_name, radio_box_point);
 			top_left.arm;
 
-			!!offset.make (O_ffset, Current);
-			!!offset_value.make (S_cale, Current);
+			!!offset.make (Context_const.offset_name, Current);
+			!!offset_value.make (Widget_names.scale, Current);
 			offset_value.set_maximum_right_bottom (true);
 			offset_value.set_horizontal (true);
 			offset_value.show_value (true);
@@ -143,28 +79,49 @@ feature
 			attach_bottom_widget (separator, offset_value, 5);
 			radio_box_direction.set_always_one (True);
 			radio_box_point.set_always_one (True);
+			show_current
 		end;
-
-	
-feature {NONE}
-
-	reset is
-		do
-			reference.reset;
-			horizontal.arm;
-			top_left.arm;
-			offset.disarm;
-			reset_list
-		end;
-
-	
-feature 
 
 	reset_list is
-			-- reset the context list
+			-- Reset the context list
 		do
 			context_list.wipe_out
 		end;
+
+feature {ALIGNMENT_HOLE}
+
+	reference_context: CONTEXT is
+		do
+			Result := reference.context
+		end;
+
+	add_item (item: CONTEXT) is
+			-- add an item in the list of context
+		local
+			found: BOOLEAN;
+		do
+			from
+				context_list.start
+			until
+				found or else context_list.after
+			loop
+				if context_list.item.original_stone = item then
+					found := true
+				else
+					context_list.forth
+				end;
+			end;
+			if not found then
+				context_list.extend (item);
+			end;
+		end;
+
+feature {ALIGNMENT_CMD}
+
+	context_list: ALIGNMENT_BOX;
+			-- Contexts to align with reference
+	
+feature {NONE}
 
 	apply is
 		local
@@ -174,7 +131,7 @@ feature
 			list_width, list_height: INTEGER;
 			i: INTEGER;
 		do
-			if not (reference.stone = Void) then
+			if reference.stone /= Void then
 				ref_context := reference.context;
 				list_width := ref_context.width;
 				list_height := ref_context.height;
@@ -221,29 +178,40 @@ feature
 			end;
 		end;
 
-	add_item (item: CONTEXT) is
-			-- add an item in the list of context
-		local
-			found: BOOLEAN;
+feature {NONE} 
+
+	reference: REFERENCE_HOLE;
+			-- Reference for the alignment
+
+	align_hole: ALIGNMENT_HOLE;
+			-- Hole for adding new contexts
+
+	vertical, horizontal: TOGGLE_B;
+
+	top_left, center, bottom_right: TOGGLE_B;
+
+	offset: TOGGLE_B;
+
+	offset_value: SCALE;
+
+	form_number: INTEGER is
 		do
-			from
-				context_list.start
-			until
-				found or else context_list.after
-			loop
-				if context_list.item.original_stone = item then
-					found := true
-				else
-					context_list.forth
-				end;
-			end;
-			if not found then
-				context_list.extend (item);
-			end;
+			Result := Context_const.alignment_form_nbr
 		end;
 
-	
-feature {NONE}
+	command: ALIGNMENT_CMD is
+		once
+			!! Result
+		end;
+
+	reset is
+		do
+			reference.reset;
+			horizontal.arm;
+			top_left.arm;
+			offset.disarm;
+			reset_list
+		end;
 
 	execute (argument: ANY) is
 		do

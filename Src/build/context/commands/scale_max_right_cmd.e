@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			S_cale_max_right_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := scale_form_number
+			Result := Context_const.scale_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.scale_max_right_cmd_name
 		end;
 
 	context: SCALE_C;

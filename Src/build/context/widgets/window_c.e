@@ -2,43 +2,62 @@ deferred class WINDOW_C
 
 inherit
 
-	COMMAND
-
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end
-
+	COMMAND;
+	SHARED_CONTEXT;
 	COMPOSITE_C
 		rename
-			reset_modified_flags as composite_reset_modified_flags
+			reset_modified_flags as composite_reset_modified_flags,
+			position_modified as default_position,
+			undo_cut as old_undo_cut,
+			link_to_parent as add_to_window_list
 		redefine
 			create_context, cut, position_initialization,
-			is_in_a_group, link_to_parent, root, set_position,
-			intermediate_name, is_bulletin, full_name,
-			deleted, remove_yourself, group_name,
-			set_x_y, set_size, set_visual_name
-		end
-
-	COMPOSITE_C
-		redefine
-			create_context, cut, position_initialization,
-			is_in_a_group, link_to_parent, root, set_position,
+			is_in_a_group, root, set_position,
 			intermediate_name, is_bulletin, full_name,
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name,
-			reset_modified_flags
+			raise, x, y, set_real_x_y, is_window,
+			add_to_window_list
+		end;
+	COMPOSITE_C
+		rename
+			position_modified as default_position,
+			link_to_parent as add_to_window_list
+		redefine
+			create_context, cut, undo_cut, position_initialization,
+			is_in_a_group, root, set_position,
+			intermediate_name, is_bulletin, full_name,
+			deleted, remove_yourself, group_name,
+			set_x_y, set_size, set_visual_name,
+			reset_modified_flags,
+			raise, x, y, set_real_x_y, is_window,
+			add_to_window_list
 		select
-			reset_modified_flags
+			reset_modified_flags, undo_cut
 		end
 	
-feature 
+feature -- Specification
 
 	group_name: STRING is do end
 
 	title: STRING
 
 	title_modified: BOOLEAN
+
+	resize_policy_modified: BOOLEAN
+
+	resize_policy_disabled: BOOLEAN
+
+	start_hidden: BOOLEAN
+
+	start_hidden_modified: BOOLEAN
+
+feature -- Setting values
+
+	set_default_position (b: BOOLEAN) is
+		do
+			default_position := b
+		end;
 
 	set_title (new_title: STRING) is
 			-- Set`title' to `new_title'
@@ -47,59 +66,27 @@ feature
 			widget_set_title (new_title)
 			visual_name := clone (new_title)
 			update_tree_element
-		end
-
-	resize_policy_disabled: BOOLEAN
-
-	resize_policy_modified: BOOLEAN
+		end;
 
 	disable_resize_policy (flag: BOOLEAN) is
-        do
-            resize_policy_modified := True
-            resize_policy_disabled := flag
-            if flag then
-                widget_forbid_resize
-                    -- The current size must be saved
-                size_modified := True
-            else
-                widget_allow_resize
-            end
-        end
+		do
+			resize_policy_modified := True
+			resize_policy_disabled := flag
+			if flag then
+				widget_forbid_resize
+					-- The current size must be saved
+				size_modified := True
+			else
+				widget_allow_resize
+			end
+		end
 
 	reset_modified_flags is
 		do
 			composite_reset_modified_flags
+			start_hidden := False;
 			title_modified := False
 			resize_policy_modified := False
-		end
-
-	set_grid (pix: PIXMAP) is
-		do
-			if pix = Void then
-				if bg_pixmap_name /= Void then
-					set_bg_pixmap_name (bg_pixmap_name)
-				else
-					if def_pixmap /= Void then
-						widget.set_background_pixmap (def_pixmap)
-					else
-						set_default_pixmap
-						widget.set_background_pixmap (def_pixmap)
-					end
-				end
-			else
-				if pix.is_valid then
-					widget.set_managed (False)
-					widget.set_background_pixmap (pix)
-					widget.set_managed (True)
-				end
-			end
-		end
-
-	def_pixmap: PIXMAP
-
-	set_default_pixmap is
-		do
-			def_pixmap := widget.background_pixmap
 		end
 
 feature {NONE}
@@ -122,12 +109,7 @@ feature
 	set_start_hidden (flag: BOOLEAN) is
 		do
 			start_hidden := flag
-			start_hidden_modified := True
 		end
-
-	start_hidden: BOOLEAN
-
-	start_hidden_modified: BOOLEAN
 
 	set_visual_name (s: STRING) is
 		do
@@ -140,30 +122,29 @@ feature
 			end
 		end
 
-	shown: BOOLEAN is
-			-- is the widget shown
-		require
-			valid_widget: widget /= Void
-		do
-			Result := widget.shown
-		end
-
 	is_bulletin: BOOLEAN is
 		do
 			Result := True
 		end
 
-	is_in_a_group: BOOLEAN is
+	is_perm_window: BOOLEAN is
 		do
-			Result := False
 		end
 
-	link_to_parent is
-		require else
-			True
+	is_window: BOOLEAN is
 		do
-			window_list.finish
-			window_list.put_right (Current)
+			Result := True
+		end;
+
+	is_in_a_group: BOOLEAN is
+		do
+		end;
+
+	add_to_window_list is
+		require else
+			always_true: True
+		do
+			Shared_window_list.extend (Current)
 		end
 
 	root: CONTEXT is
@@ -171,29 +152,45 @@ feature
 			valid_parent: True
 		do
 			Result := Current
-		end
+		end;
 
 	set_position (x_pos, y_pos: INTEGER) is
+		require else
+			no_parent_restrictions: True
 		do
 			set_x_y (x_pos, y_pos)
-		end
+		end;
+
+	set_real_x_y (new_x, new_y: INTEGER) is
+			-- Set new position of widget
+		require else
+			no_parent_restrictions: True
+		do
+			widget.set_x_y (new_x, new_y);
+			set_x_y (new_x - x_offset, new_y - y_offset);
+		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
+		require else
+			no_parent_restrictions: True
 		do
-			old_x := new_x
-			old_y := new_y
-			position_modified := True
-			widget.set_x_y (new_x, new_y)
+			widget.set_x_y (new_x, new_y);
+			old_x := new_x;
+			old_y := new_y;
+			x := old_x;
+			y := old_y
 		end
 
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
+		require else
+			no_parent_restrictions: True
 		do
-			old_width := new_w
-			old_height := new_h
-			size_modified := True
-			widget.set_size (new_w, new_h)
+			size_modified := True;
+			widget.set_size (new_w, new_h);
+			old_width := new_w;
+			old_height := new_h;
 		end
 
 	
@@ -220,22 +217,22 @@ feature
 			create_command: CONTEXT_CREATE_CMD
 		do
 			Result := New
-			Result.link_to_parent
 			Result.generate_internal_name
 			Result.oui_create (void_parent)
-			if not (widget = Void) then
+				-- Void if context created for catalog
+			if widget /= Void then
 				Result.set_size (width, height)
 				copy_attributes (Result)
 			end
 			!!create_command
 			create_command.execute (Result)
+		ensure then
+			in_window_list: Shared_window_list.has (Current)
 		end
 
-	deleted : BOOLEAN is
+	deleted: BOOLEAN is
 		do
-			window_list.start
-			window_list.search (Current)
-			Result := window_list.after
+			Result := not Shared_window_list.has (Current)
 		end
 
 	remove_yourself is
@@ -251,70 +248,124 @@ feature
 		require else
 			no_parent: True
 		do
-			window_list.start
-			window_list.search (Current)
-			if not window_list.exhausted then
-				window_list.remove
-			end
-			widget.set_managed (False)
-			tree.cut (tree_element)
+			hide;
+			Shared_window_list.start;
+			Shared_window_list.prune (Current);
+			tree.cut (tree_element);
 			context_catalog.clear_editors (Current)
+		ensure then
+			not_in_window_list: not Shared_window_list.has (Current)
 		end
 
+	undo_cut is
+		do
+			show;
+			old_undo_cut
+		ensure then
+			in_window_list: Shared_window_list.has (Current)
+		end;
+
 	add_window_geometry_action is 
-		require
+		require 
 			widget_not_void: widget /= Void
-		deferred 
-		end
+		deferred
+		end;
 
 	remove_window_geometry_action is 
 		require 
 			widget_not_void: widget /= Void
-		deferred 
-		end
-	
-	skip_configure_action is
 		deferred
-		end
-	
-	skip_two_configure_action is
-		deferred
-		end
+		end;
 
-	execute (argument: like Current) is
+	remove_popup_action is
+		deferred
+		end;
+
+	shown: BOOLEAN is
 		do
-			if win_cmd = void then
-				old_x := x
-				old_y := y
-				old_width := width
-				old_height := height
-				!!win_cmd.make (Current)
-			elseif argument = Fourth then
-				!!win_cmd.make (Current)
-				old_x := x
-				old_y := y
-				old_width := width
-				old_height := height
-				win_cmd.execute (argument)
-			elseif argument = Fifth then
-				add_window_geometry_action
-			elseif argument = Sixth then
-				skip_configure_action
-			end
+			Result := widget.shown
+		end;
+
+	raise is
+		do
+			if not shown then
+				show
+			end;
+			raise
+		end;
+
+	execute (argument: ANY) is
+		local
+			win_cmd: WIN_CONFIG_CMD
+			top: PERM_WIND_C
+		do
+			if argument = Current then
+				-- This is a hack because there is a bug
+				-- under motif for x and y positions
+				-- (see x_offset and y_offset) but will
+				-- be compatible with other toolkits. If 
+				-- there is not a bug then x_offset and 
+				-- y_offset will be zero.
+				-- This is executed the first time Current
+				-- is popped up.
+					-- Initalize x and y offset
+				if x_offset = Void then end;
+				if y_offset = Void then end;
+				remove_popup_action;
+				add_window_geometry_action;	
+			else
+				x := widget.x - x_offset;
+				y := widget.y - y_offset;
+					-- Configure event
+				if old_x /= x or else old_y /= y or else
+					old_height /= height or else old_width /= width
+				then
+					!! win_cmd.make (Current);
+					old_x := x;
+					old_y := y;
+					old_width := width;
+					old_height := height;
+					win_cmd.execute (argument)
+				end
+			end;
 		end
 
 	old_x, old_y, old_width, old_height: INTEGER
+			-- Previously saved geometry values for configure event
+
+feature -- Hack for motif
+
+	x: INTEGER;
+			-- (See comments for x_offset)
+
+	y: INTEGER;
+			-- (See comments for y_offset)
+
+	x_offset: INTEGER is	
+			-- Setting x for Current correctly sets the value
+			-- for the shell. However, it does not correctly 
+			-- return the x value. Eg. set_x (100) will
+			-- return 111 for x. Apparently set_x is used for
+			-- the top shell and the returned value is inner
+			-- coordinate.
+		once
+			Result := widget.x - old_x
+		end;
+
+	y_offset: INTEGER is	
+			-- See above comments
+		once
+			Result := widget.y - old_y
+		end;
 
 feature {NONE}
-
-	win_cmd: WIN_CONFIG_CMD
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context
 			-- depending on the type of its parent
 		do
 			!!Result.make (0)
-			if position_modified then
+			if not default_position then
 				function_int_int_to_string (Result, "", "set_x_y", x, y)
 			end
 			if size_modified then

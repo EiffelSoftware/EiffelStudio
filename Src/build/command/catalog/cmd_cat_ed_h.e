@@ -23,32 +23,16 @@ inherit
 		select
 			make_visible
 		end;
-
 	STONE
-		export
-			{NONE} all
 		redefine
 			original_stone
 		end;	
-
 	CURSORS
 		rename
 			Command_cursor as stone_cursor
-		export
-			{NONE} all
 		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end;
-
+	COMMAND;
 	PIXMAPS
-		export
-			{NONE} all
-		end
-
-
 
 creation
 
@@ -104,7 +88,7 @@ feature {NONE}
 			cmd.set_internal_name ("");
 			cmd.set_eiffel_text (cmd.template);
 			!!doc;
-			doc.set_directory_name (Command_directory);
+			doc.set_directory_name (Environment.commands_directory);
 			doc.set_document_name (cmd.eiffel_type);
 			doc.update (clone (cmd.template));
 			doc := Void;

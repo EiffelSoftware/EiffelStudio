@@ -24,15 +24,11 @@ feature
 		end;
 
 	set_ratios (parent_width, parent_height ,x, y, w, h: INTEGER) is
-		local
-			width, height: REAL;
 		do
-			width := (parent_width);
-			height :=  (parent_height);
-			x_ratio :=  (x)/ width;
-			y_ratio := (y)/ height;
-			width_ratio :=  (w)/ width;
-			height_ratio :=  (h)/ height;
+			x_ratio := x / parent_width;
+			y_ratio := y / parent_height;
+			width_ratio := w / parent_height;
+			height_ratio := h / parent_height;
 			initialized := True;
 		end;
 
@@ -60,6 +56,8 @@ feature
 		end;
 
 	update_widget (parent_width, parent_height: INTEGER) is
+		require
+			widget_not_destroyed: not widget.destroyed
 		do
 			if widget.managed then
 				widget.set_managed (False);

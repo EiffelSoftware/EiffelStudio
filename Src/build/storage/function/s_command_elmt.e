@@ -3,11 +3,7 @@ class S_COMMAND_ELMT
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
+	SHARED_STORAGE_INFO
 
 creation
 

@@ -3,45 +3,17 @@ class SELECTION_MANAGER
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-	CONTEXT_CURSORS
-		export
-			{NONE} all
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	CURSOR_TYPE
-		export
-			{NONE} all
-		end;
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	COMMAND;
+	COMMAND_ARGS;
+	CONTEXT_CURSORS;
+	CURSOR_TYPE;
+	BASIC_ROUTINES;
+	CONSTANTS;
 	PAINTER
-		export
-			{NONE} all
 		undefine
 			init_toolkit
 		end
-
 
 creation
 
@@ -80,15 +52,6 @@ feature {NONE}
 			Result := context.widget
 		end;
 
-feature {PERM_WIND_C}
-
-	set_context (c: CONTEXT) is
-		do
-			context := c;
-			begin_mvt;
-			cursor_shape := Void
-		end
-	
 feature 
 
 	group: LINKED_LIST [CONTEXT];
@@ -122,17 +85,44 @@ feature {NONE}
 	begin_mvt is
 		local
 			parent: CONTEXT;
+			new_x, new_y: INTEGER
 		do
 			x := context.real_x;
 			y := context.real_y;
 			width := context.width;
 			height := context.height;
-			delta_w := eb_screen.x - x;
-			delta_h := eb_screen.y - y;
+			new_x := eb_screen.x;
+			new_y := eb_screen.y;
+			delta_w := new_x - x;
+			delta_h := new_y - y;
+			if cursor_shape /= Void and then
+				cursor_shape /= cursor_move
+			then
+					-- For resize cursor (for accuracy)
+				inspect
+					cursor_shape.type
+				when Top_left_corner then
+					width := width - new_x + x;
+					height := height - new_y + y;
+					x := new_x;
+					y := new_y;
+				when Top_right_corner then
+					width := new_x - x;
+					height := height - new_y + y;
+					y := new_y;
+				when Bottom_left_corner then
+					width := width - new_x + x;
+					height := new_y - y;
+					x := new_x;
+				when Bottom_right_corner then
+					width := new_x - x;
+					height := new_y - y;
+				end;
+			end;
 			if shift_selected then
-				draw_rectangles;
+				display_shift_selected_rectangles;
 			else
-				display_grouped_rectangles;
+				display_selected_rectangles;
 			end;
 			parent := context.parent;
 			if not (parent = Void) then
@@ -153,40 +143,10 @@ feature {NONE}
 					-- Button release after some change
 				widget.ungrab;
 				grabbed := false;
-				display_grouped_rectangles;
+				display_selected_rectangles;
 				if width >= 0 and height >= 0 then
 					!!cmd;
 					cmd.execute (context);
---					if not context.attachments.Void then
---						cmd.clone (form_sel_mgr_cmd);
---						cmd.execute (context);
---						d_x := x - context.real_x;
---						d_y := y - context.real_y;
---						inspect
---							cursor_shape.type
---						when Top_left_corner then
---							d_t := d_y;
---							d_l := d_x;
---						when Top_right_corner then
---							d_t := d_y;
---							d_r := context.width - width;
---						when Bottom_left_corner then
---							d_l := d_x;
---							d_b := context.height - height;
---						when Bottom_right_corner then
---							d_r := context.width - width;
---							d_b := context.height - height;
---						else
---								-- Move cursor
---							d_t := d_y; d_l := d_x; d_b := -d_y; d_r := -d_x;
---						end;
---						move_form (d_t, d_l, d_b, d_r);
---					else
---						cmd.clone (sel_mgr_cmd);
---						cmd.execute (context);
---						move_context;
---					end;
-
 					if cursor_shape /= cursor_move then
 							-- Resize
 						if width > context.width or else
@@ -196,16 +156,17 @@ feature {NONE}
 								-- widget is outside the bulletin, its
 								-- dimensions are not updated correctly
 							move_context;
-							context.set_size (width, height);
+							context.set_size (width + 2, height + 2);
 						else
-							context.set_size (width, height);
+							context.set_size (width + 2, height + 2);
 							move_context;
 						end;
 					else
 						move_context;
 					end;
 				end;
-				context_catalog.update_editors (context, geometry_form_number);
+				context_catalog.update_editors (context, 
+						Context_const.geometry_form_nbr);
 			end;
 		end;
 
@@ -223,21 +184,14 @@ feature {NONE}
 			if 
 				arity > 0 and then (width > 0) and then (height > 0)
 			then
-				context.set_size (width, height);
+				context.set_size (width + 2, height + 2);
 				context_height := context.first_child.height+3;
 				new_number := height // context_height - arity;
 				delta := new_number * context_height;
---				if not context.attachments.Void then
---					if cursor_shape = cursor_bottom_right_corner or
---						cursor_shape = cursor_bottom_left_corner then
---						delta := 0
---					end;
---					modify_attachments (context, - delta, 0, 0, 0);
---				elsif cursor_shape = cursor_top_right_corner or
 				if cursor_shape = cursor_top_right_corner or
 						cursor_shape = cursor_top_left_corner then
 						-- move y pos
-					context.set_x_y (context.x, context.y - delta);
+					context.set_real_x_y (context.x, context.y - delta);
 				end;
 			end;
 		end;
@@ -250,7 +204,7 @@ feature {NONE}
 				widget.ungrab;
 				grabbed := false;
 				if width > 0 and then height > 0 then
-					draw_rectangles;
+					display_shift_selected_rectangles;
 					create_new_contexts (True);
 				end;
 			end;
@@ -357,10 +311,10 @@ feature {NONE}
 
 	move_rectangle is
 		do
-			display_grouped_rectangles;
+			display_selected_rectangles;
 			x :=  eb_screen.x - delta_w;
 			y :=  eb_screen.y - delta_h;
-			display_grouped_rectangles
+			display_selected_rectangles
 		end;
 
 	resize_rectangle is
@@ -370,7 +324,7 @@ feature {NONE}
 			if context.is_group_composite then
 				draw_grouped_items
 			elseif shift_selected then
-				draw_rectangles;
+				display_shift_selected_rectangles;
 			else
 				display_rectangle;
 			end;
@@ -398,7 +352,7 @@ feature {NONE}
 			if context.is_group_composite then
 				draw_grouped_items
 			elseif shift_selected then
-				draw_rectangles
+				display_shift_selected_rectangles
 			else
 				display_rectangle;
 			end;
@@ -409,12 +363,16 @@ feature {NONE}
 			parent: CONTEXT;
 			new_x, new_y: INTEGER;
 			d_x, d_y: INTEGER;
+			cont: CONTEXT;
+			temp_w: TEMP_WIND_C
 		do
-			parent := context.parent;
-			if (parent = Void) then
-				new_x := x; new_y := y;
+			if context.is_window then
+				new_x := x; 
+				new_y := y;
 			else
-				new_x := x - parent.real_x; new_y := y - parent.real_y;
+				parent := context.parent;
+				new_x := x - parent.real_x; 
+				new_y := y - parent.real_y;
 			end;
 			if context.grouped and then cursor_shape = cursor_move then
 				d_x := new_x - context.x;
@@ -424,111 +382,18 @@ feature {NONE}
 				until
 					group.after
 				loop
-					group.item.set_x_y (group.item.x+d_x, group.item.y+d_y);
-					context_catalog.update_editors (group.item, geometry_form_number);
+					cont := group.item;
+					cont.set_real_x_y (cont.x+d_x, cont.y+d_y);
+					context_catalog.update_editors (cont, 
+						Context_const.geometry_form_nbr);
 					group.forth;
 				end;
 			else
-				context.set_x_y (new_x, new_y);
-				context_catalog.update_editors (context, geometry_form_number);
+				context.set_real_x_y (new_x, new_y);
+				context_catalog.update_editors (context, 
+					Context_const.geometry_form_nbr);
 			end;
 		end;
-
---	move_form (d_top, d_left, d_bottom, d_right: INTEGER) is
---		local
---			d_t, d_l, d_b, d_r: INTEGER;
---			not_valid: BOOLEAN;
---			a_context: CONTEXT;
---		do
---			if context.grouped and then cursor_shape = cursor_move then
---				from
---					group.start
---				until
---					group.offright
---				loop
---					from
---						a_context := group.item.attachments.top_context;
---						not_valid := false;
---					until
---						not_valid or else (a_context = context.parent) or else a_context.Void
---					loop
---						not_valid := a_context.grouped;
---						a_context := a_context.attachments.top_context;
---					end;
---					if not_valid then
---						d_t := 0
---					else
---						d_t := d_top
---					end;
---					from
---						a_context := group.item.attachments.bottom_context;
---						not_valid := false;
---					until
---						not_valid or else (a_context = context.parent) or else a_context.Void
---					loop
---						not_valid := a_context.grouped;
---						a_context := a_context.attachments.bottom_context;
---					end;
---					if not_valid then
---						d_b := 0
---					else
---						d_b := d_bottom
---					end;
---					from
---						a_context := group.item.attachments.right_context;
---						not_valid := false;
---					until
---						not_valid or else (a_context = context.parent) or else a_context.Void
---					loop
---						not_valid := a_context.grouped;
---						a_context := a_context.attachments.right_context;
---					end;
---					if not_valid then
---						d_r := 0
---					else
---						d_r := d_right
---					end;
---					from
---						a_context := group.item.attachments.left_context;
---						not_valid := false;
---					until
---						not_valid or else (a_context = context.parent) or else a_context.Void
---					loop
---						not_valid := a_context.grouped;
---						a_context := a_context.attachments.left_context;
---					end;
---					if not_valid then
---						d_l := 0
---					else
---						d_l := d_left
---					end;
---					modify_attachments (group.item, d_t, d_l, d_b, d_r);
---					group.forth;
---				end;
---			else
---				modify_attachments (context, d_top, d_left, d_bottom, d_right);
---			end;
---		end;
-
---	modify_attachments (a_context: CONTEXT; d_top, d_left, d_bottom, d_right: INTEGER) is
---		local
---			attachments: FORM_ATTACHMENTS;
---		do
---			attachments := a_context.attachments;
---			if not attachments.top_context.Void then
---				attachments.attach_top (attachments.top_context, attachments.top_offset+d_top)
---			end;
---			if not attachments.left_context.Void then
---				attachments.attach_left (attachments.left_context, attachments.left_offset+d_left)
---			end;
---			if not attachments.bottom_context.Void then
---				attachments.attach_bottom (attachments.bottom_context, attachments.bottom_offset+d_bottom)
---			end;
---			if not attachments.right_context.Void then
---				attachments.attach_right (attachments.right_context, attachments.right_offset+d_right)
---			end;
---			context_catalog.update_editors (a_context, geometry_form_number);
---		end;
 
 	create_new_contexts (real_mode: BOOLEAN) is
 		local
@@ -581,7 +446,7 @@ feature {NONE}
 							-- Create new context
 							new_context := context.create_context (parent);
 							new_context.set_position (context.real_x+i*x_inc, context.real_y+j*y_inc);
-							new_context.realize;
+							new_context.widget.manage
 						end;
 					end;
 					j := j + 1
@@ -597,7 +462,9 @@ feature {NONE}
 	-- * Display section *
 	-- *******************
 
-	display_grouped_rectangles is
+	display_selected_rectangles is
+			-- Display rectangles that has been selected.
+			--| (Can be one or grouped widgets)
 		local
 			a_context: CONTEXT;
 			d_x, d_y: INTEGER;
@@ -626,7 +493,7 @@ feature {NONE}
 			end;
 		end;
 
-	draw_rectangles is
+	display_shift_selected_rectangles is
 			-- Draw the rectangles (Shift select)
 		do
 			if width > 0 and then height > 0 then
@@ -677,7 +544,7 @@ feature {NONE}
 
 	cursor_shape: SCREEN_CURSOR;
 
-	corner_side: INTEGER is 10;
+	corner_side: INTEGER is 12;
 			-- Lenght of the sensitive squares
 			-- If the cursor is on the squares, the mode
 			-- is resize, otherwise it is move
@@ -686,21 +553,24 @@ feature {NONE}
 			-- Set the cursor shape
 		local
 			x_pos, y_pos: INTEGER;
+			real_x, real_y: INTEGER
 		do
 			cursor_shape := cursor_move;
 			x_pos := eb_screen.x;
 			y_pos := eb_screen.y;
 
-			if x_pos < context.real_x + corner_side then
-				if y_pos < context.real_y + corner_side then
+			real_x := context.real_x;
+			real_y := context.real_y;
+			if x_pos < real_x + corner_side then
+				if y_pos < real_y + corner_side then
 					cursor_shape := cursor_top_left_corner
-				elseif y_pos > context.real_y + context.height - corner_side then
+				elseif y_pos > real_y + context.height - corner_side then
 					cursor_shape := cursor_bottom_left_corner
 				end
-			elseif x_pos > context.real_x + context.width - corner_side then
-				if y_pos < context.real_y + corner_side then
+			elseif x_pos > real_x + context.width - corner_side then
+				if y_pos < real_y + corner_side then
 					cursor_shape := cursor_top_right_corner
-				elseif y_pos > context.real_y + context.height - corner_side then
+				elseif y_pos > real_y + context.height - corner_side then
 					cursor_shape := cursor_bottom_right_corner
 				end
 			end;
@@ -712,7 +582,8 @@ feature {PERM_WIND_C}
 	execute (argument: ANY) is
 		local
 			bull: BULLETIN_C;
-			a_context: CONTEXT
+			a_context: CONTEXT;
+			arrow_cmd: ARROW_MOVE_CMD
 		do
 			if (argument = First) then
 					-- Pointer motion
@@ -742,7 +613,7 @@ feature {PERM_WIND_C}
 					end_mvt
 				end;
 			elseif (argument = Third) then
-				-- Button press
+					-- Button press
 				if context.is_selectionnable then
 					selected := true
 				end;
@@ -765,6 +636,26 @@ feature {PERM_WIND_C}
 				delta_h := eb_screen.y;
 				display_rectangle;
 				widget.grab (cursor_cross);
+			elseif argument = Sixth then
+					-- Left arrow
+				!! arrow_cmd;
+				arrow_cmd.execute (context);
+				arrow_cmd.move_context (-1, 0);
+			elseif argument = Seventh then
+					-- Right arrow
+				!! arrow_cmd;
+				arrow_cmd.execute (context);
+				arrow_cmd.move_context (1, 0);
+			elseif argument = Eighth then
+					-- Up arrow
+				!! arrow_cmd;
+				arrow_cmd.execute (context);
+				arrow_cmd.move_context (0, -1);
+			elseif argument = Nineth then
+					-- Down arrow
+				!! arrow_cmd;
+				arrow_cmd.execute (context);
+				arrow_cmd.move_context (0, 1);
 			elseif not (grabbed or ctrl_selected) then
 					-- Enter event
 				selected := false;
@@ -773,10 +664,13 @@ feature {PERM_WIND_C}
 					context := a_context;
 					if context.is_bulletin then
 						bull ?= context;
-						if not (bull = Void) and then bull.transformed_in_group then
+						if (bull /= Void) and then 
+							bull.transformed_in_group 
+						then
 							context := bull.group_context
 						end;
 					end;
+					set_cursor;
 				end;
 			end;
 		end;

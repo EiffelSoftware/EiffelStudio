@@ -4,22 +4,10 @@ class S_STORER
 
 inherit
 
-	STORABLE_HDL
-		export
-			{NONE} all
-		end;
-	APP_SHARED
-		export
-			{NONE} all
-		end;
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
+	STORABLE_HDL;
+	SHARED_APPLICATION;
+	SHARED_STORAGE_INFO
 
-
-
-	
 feature {S_STORER}
 
 	stored_data: LINKED_LIST [S_STATE];

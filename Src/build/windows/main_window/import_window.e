@@ -1,5 +1,3 @@
-
-
 class IMPORT_WINDOW 
 
 inherit
@@ -10,32 +8,10 @@ inherit
 		undefine
 			init_toolkit
 		end;
-
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end;
-
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-
+	SHARED_STORAGE_INFO;
+	COMMAND;
+	COMMAND_ARGS;
 	WINDOWS
-		export
-			{NONE} all
-		end
-
 
 creation
 

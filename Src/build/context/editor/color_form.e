@@ -3,50 +3,16 @@ class COLOR_FORM
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	EDITOR_FORM
-		redefine
-			form_name
-		end
 
 creation
 
 	make
 
-feature 
+feature -- Interface
 
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := C_olor_form_name;
-		end;
-	
-feature {NONE}
-
-	backgr_color: EB_BG_COLOR_TF;
-
-	backgr_pixmap: EB_TEXT_FIELD;
-
-	fgr_color: EB_FG_COLOR_TF;
-
-	pixmap_selection_box: PIXMAP_FILE_BOX;
-
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, color_form_number);
-		end;
-
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		local
 			pixmap_open_b: PUSH_BG;
 			color_set: COLOR_SET;
@@ -60,26 +26,30 @@ feature
 			bg_pixmap_stone: BG_PIXMAP_STONE;
 			Nothing: ANY
 		do
-			initialize (C_olor_form_name, a_parent);
+			initialize (Context_const.color_form_name, a_parent);
 
-			!!label_fg_color.make (F_oreground_color, Current);
-			!!fgr_color.make (T_extfield, Current, fg_color_cmd, a_parent);
-			!!label_bg_color.make (B_ackground_color, Current);
-			!!label_colors.make (C_olors, Current);
-			!!backgr_color.make (T_extfield, Current, bg_color_cmd, a_parent);
-			!!label_pixmap.make (B_ackground_pixmap, Current);
-			!!backgr_pixmap.make (T_extfield, Current, bg_pixmap_cmd, a_parent);
-			!!pixmap_open_b.make (P_Cbutton, Current);
-			!!color_set.make ("COLOR_SET", Current);
+			!!label_fg_color.make (Context_const.foreground_color_name, 
+						Current);
+			!!fgr_color.make (Widget_names.textfield, Current, 
+					Fg_color_cmd, editor);
+			!!label_bg_color.make (Context_const.background_color_name, Current);
+			!!label_colors.make (Context_const.colors_name, Current);
+			!!backgr_color.make (Widget_names.textfield, Current, 
+					Bg_color_cmd, editor);
+			!!label_pixmap.make (Context_const.background_pixmap_name, Current);
+			!!backgr_pixmap.make (Widget_names.textfield, Current, 
+					Bg_pixmap_cmd, editor);
+			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
+			!!color_set.make (Context_const.color_form_name, Current);
 
 			!!bg_color_stone;
 			!!fg_color_stone;
 			!!colors_stone;
 			!!bg_pixmap_stone;
-			bg_color_stone.make (Current, a_parent);
-			fg_color_stone.make (Current, a_parent);
-			colors_stone.make (Current, a_parent);
-			bg_pixmap_stone.make (Current, a_parent);
+			bg_color_stone.make (Current, editor);
+			fg_color_stone.make (Current, editor);
+			colors_stone.make (Current, editor);
+			bg_pixmap_stone.make (Current, editor);
 
 			attach_left (colors_stone, 10);
 			attach_left (bg_color_stone, 10);
@@ -111,20 +81,49 @@ feature
 			attach_left (color_set, 2);
 			attach_right (color_set, 2);
 			pixmap_open_b.add_activate_action (Current, Nothing);
-			pixmap_open_b.set_text ("open pixmap");
+			show_current
 		end;
 
-	
 feature {NONE}
+
+	backgr_color: EB_BG_COLOR_TF;
+
+	backgr_pixmap: EB_TEXT_FIELD;
+
+	fgr_color: EB_FG_COLOR_TF;
+
+	pixmap_selection_box: PIXMAP_FILE_BOX;
+
+	form_number: INTEGER is
+		do
+			Result := Context_const.color_form_nbr
+		end;
+
+	Fg_color_cmd: FG_COLOR_CMD is
+		once
+			!!Result
+		end;
+
+	Bg_color_cmd: BG_COLOR_CMD is
+		once
+			!!Result
+		end;
+
+	Bg_pixmap_cmd: BG_PIXMAP_CMD is
+		once
+			!!Result
+		end;
 
 	execute (argument: ANY) is
 		do
 			if (pixmap_selection_box = Void) then
 				!!pixmap_selection_box.make 
-					(backgr_pixmap, Current, bg_pixmap_cmd, editor);
+					(backgr_pixmap, Current, Bg_pixmap_cmd, editor);
 			end;
 			pixmap_selection_box.popup
 		end;
+
+feature {NONE}
 
 	reset is
 		do
@@ -145,18 +144,21 @@ feature {NONE}
 			end;
 		end;
 
-	
-feature 
-
 	apply is
 		do
-			if (not equal (backgr_pixmap.text, context.bg_pixmap_name)) then
+			if (not equal (backgr_pixmap.text, context.bg_pixmap_name) and
+				then not backgr_pixmap.text.empty) 
+			then
 				context.set_bg_pixmap_name (backgr_pixmap.text);
 			end;
-			if (not equal (backgr_color.text, context.bg_color_name)) then
+			if (not equal (backgr_color.text, context.bg_color_name) and 
+				then not backgr_color.text.empty) 
+			then
 				context.set_bg_color_name (backgr_color.text);
 			end;
-			if (not equal (fgr_color.text, context.fg_color_name)) then
+			if (not equal (fgr_color.text, context.fg_color_name) and then
+				not fgr_color.text.empty) 
+			then
 				context.set_fg_color_name (fgr_color.text);
 			end;
 		end;

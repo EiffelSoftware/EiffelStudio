@@ -17,13 +17,14 @@ inherit
 		redefine
 			add_widget_callbacks, remove_widget_callbacks,
 			initialize_transport,
-			stored_node, option_list, is_selectionnable, widget
+			stored_node, is_selectionnable, widget, add_to_option_list
 		end;
 
 	BUTTON_C
 		redefine
 			add_widget_callbacks, remove_widget_callbacks, initialize_transport,
-			stored_node, option_list, is_selectionnable, create_context, widget
+			stored_node, is_selectionnable, create_context, widget,
+			add_to_option_list
 		select
 			create_context
 		end
@@ -56,17 +57,12 @@ feature {NONE}
 			widget.remove_button_release_action (2, show_command, Nothing);
 		end;
 
-	editor_form_cell: CELL [INTEGER] is
-        once
-            !!Result.put (0)
-        end;
-
 	
 feature 
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: PUSH_B;
@@ -99,13 +95,11 @@ feature
 			Result := False
 		end;
 
-	option_list: ARRAY [INTEGER] is
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
-			!!Result.make (1, 1);
-			Result.put (label_text_form_number, 1);
+			opt_list.put (Context_const.label_text_att_form_nbr,
+					Context_const.Attribute_format_nbr);
 		end;
-
-
 
 -- ****************
 -- Storage features

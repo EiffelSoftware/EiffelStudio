@@ -37,7 +37,6 @@ feature
 			end;
 			read_only_modified := node.read_only_modified;
 			is_read_only := node.is_read_only;
-			word_wrap_modified := node.word_wrap_modified;
 			is_word_wrap_enable := node.is_word_wrap_enable;
 			height_resizable_modified := node.height_resizable_modified;
 			is_height_resizable := node.is_height_resizable;
@@ -65,7 +64,7 @@ feature
 			if read_only_modified then
 				a_context.set_read_only (is_read_only);
 			end;
-			if word_wrap_modified then
+			if is_word_wrap_enable then
 				a_context.enable_word_wrap (is_word_wrap_enable);
 			end;
 			if height_resizable_modified then
@@ -93,6 +92,7 @@ feature {NONE}
 	is_word_wrap_enable: BOOLEAN;
 
 	word_wrap_modified: BOOLEAN;
+		-- To be removed
 
 	is_height_resizable: BOOLEAN;
 

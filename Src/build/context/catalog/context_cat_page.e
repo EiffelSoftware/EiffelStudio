@@ -9,33 +9,15 @@ inherit
 		undefine
 			init_toolkit
 		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	CONTEXT_NAMES
-		export
-			{NONE} all
-		end;
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
+	WINDOWS;
+	COMMAND_ARGS;
+	PIXMAPS;
 	FOCUSABLE
 		rename
 			focus_string as page_name,
 			focus_source as button
-		
-		export
-			{NONE} all
 		end
-
-
-
 	
 feature 
 
@@ -55,7 +37,8 @@ feature
 
 			a_form.attach_top (button, 10);
 
-			a_form.attach_top_widget (context_catalog.second_separator, Current, 10);
+			a_form.attach_top_widget (context_catalog.second_separator, 
+					Current, 10);
 			a_form.attach_right (Current, 10);
 			a_form.attach_left (Current, 10);
 			a_form.attach_bottom (Current, 10);

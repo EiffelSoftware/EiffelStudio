@@ -2,7 +2,6 @@ class LABEL_TEXT_FORM
 
 inherit
 
-	CONTEXT_CMDS;
 	EDITOR_FORM
 		redefine
 			context
@@ -12,7 +11,7 @@ creation
 	
 	make
 
-feature
+feature {NONE} -- Interface
 
 	text: EB_TEXT_FIELD;
 
@@ -20,23 +19,49 @@ feature
 
 	center_alignment, left_alignment: EB_TOGGLE_B;
 
-	make (a_parent: CONTEXT_EDITOR) is
+	context: LABEL_TEXT_C is
 		do
-			a_parent.form_list.put (Current, label_text_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.label_text_att_form_nbr
+		end;
+
+	Label_alignment_cmd: LABEL_ALIGNMENT_CMD is
+		once
+			!!Result
+		end;
+
+	Label_resize_cmd: LABEL_RESIZE_CMD is
+		once
+			!!Result
+		end;
+
+	Label_text_cmd: LABEL_TEXT_CMD is
+		once
+			!!Result
+		end;
+
+feature -- Interface
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			label: LABEL_G;
 			radio_box: RADIO_BOX
 		do
-			initialize (Label_text_form_name, a_parent);
-			!!label.make (T_ext_label, Current);
-			!!text.make (T_extfield, Current, label_text_cmd, a_parent);
-			!!forbid_recomp.make (F_orbid_recomp_size, Current, label_resize_cmd, a_parent);
-			!!radio_box.make (R_adio_box, Current);
-			!!left_alignment.make (L_eft_alignment, radio_box, label_alignment_cmd, a_parent);
-			!!center_alignment.make (C_enter_alignment, radio_box, label_alignment_cmd, a_parent);
+			initialize (Context_const.label_text_form_name, a_parent);
+			!!label.make (Context_const.text_label_name, Current);
+			!!text.make (Widget_names.textfield, Current, Label_text_cmd, 
+						editor);
+			!!forbid_recomp.make (Context_const.forbid_recomp_size_name, 
+						Current, Label_resize_cmd, editor);
+			!!radio_box.make (Widget_names.radio_box, Current);
+			!!left_alignment.make (Context_const.left_alignment_name, 
+						radio_box, Label_alignment_cmd, editor);
+			!!center_alignment.make (Context_const.center_alignment_name, 
+						radio_box, Label_alignment_cmd, editor);
 			left_alignment.arm;
 			radio_box.set_always_one (True);
 
@@ -52,9 +77,8 @@ feature
 			attach_top_widget (text, forbid_recomp, 10);
 			attach_top_widget (forbid_recomp, radio_box, 10);
 			detach_bottom (radio_box);
+			show_current
 		end;
-
-	context: LABEL_TEXT_C;
 
 	reset is
 		do

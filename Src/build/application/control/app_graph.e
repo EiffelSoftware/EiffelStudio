@@ -8,9 +8,7 @@ inherit
 			make as extend_table_create
 		end;
 
-	APP_SHARED
-		export
-			{NONE} all
+	SHARED_APPLICATION
 		undefine
 			is_equal, copy
 		end

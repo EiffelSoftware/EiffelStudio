@@ -4,24 +4,13 @@ class CURSORS
 
 inherit
 
-	UNIX_ENV
-		export
-			{NONE} all
-		end
+	CONSTANTS
 
-
-
-	
-feature {NONE}
+feature 
 
 	Application_cursor: SCREEN_CURSOR is
 		once
 			Result := cursor_file_content ("application.curs")
-		end;
-
-	Transition_cursor: SCREEN_CURSOR is
-		once
-			Result := cursor_file_content ("transition.curs")
 		end;
 
 	Behavior_cursor: SCREEN_CURSOR is
@@ -49,9 +38,19 @@ feature {NONE}
 			Result := cursor_file_content ("event.curs")
 		end;
 
+	Label_cursor: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("label.curs")
+		end;
+
 	State_cursor: SCREEN_CURSOR is
 		once
 			Result := cursor_file_content ("state.curs")
+		end;
+
+	Transition_cursor: SCREEN_CURSOR is
+		once
+			Result := cursor_file_content ("transition.curs")
 		end;
 
 	Type_cursor: SCREEN_CURSOR is
@@ -59,23 +58,26 @@ feature {NONE}
 			Result := cursor_file_content ("type.curs")
 		end;
 
-	Label_cursor: SCREEN_CURSOR is
-		once
-			Result := cursor_file_content ("label.curs")
-		end;
+feature {NONE} -- Read from file
 
 	cursor_file_content (fn: STRING): SCREEN_CURSOR is
 		local
-			temp: PIXMAP;
-			full_path: STRING
+			p: PIXMAP;
+			full_name: STRING
 		do
-			full_path := Bitmaps_directory;
-			full_path.append ("/");
-			full_path.append (fn);
-			!!Result.make;
-			!!temp.make;
-			temp.read_from_file (full_path);
-			Result.set_pixmap (temp, temp);
+			full_name := clone (Environment.bitmaps_directory);
+			full_name.extend (Environment.directory_separator);
+			full_name.append (fn);
+			!! p.make;
+			p.read_from_file (full_name);
+			!! Result.make;
+			if p.is_valid then
+				Result.set_pixmap (p, p);
+			else
+				io.error.putstring ("EiffelBuild: Can not read bitmap file%N");
+				io.error.putstring (full_name);
+				io.error.putstring (".%N");
+			end;
 		end
 
 end

@@ -3,42 +3,31 @@ class CONTEXT_CREATE_CMD
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	SHARED_CONTEXT;
 	CONTEXT_CMD
 		redefine
 			work, redo, undo
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			C_reate_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
+		end;
+	
+	c_name: STRING is
+		do
+			Result := Context_const.create_cmd_name
 		end;
 
-	
 feature 
+
+	destroy_widgets is
+		do
+			context.widget.destroy
+		end;
 
 	work (argument: CONTEXT) is
 		do
@@ -82,8 +71,8 @@ feature {NONE}
 					-- work does not put the command in the history list
 				command.work (context);
 				if (a_parent = Void) then
-					if not window_list.empty then
-						tree.display (window_list.first)
+					if not Shared_window_list.empty then
+						tree.display (Shared_window_list.first)
 					else
 						tree.display (context)
 					end;

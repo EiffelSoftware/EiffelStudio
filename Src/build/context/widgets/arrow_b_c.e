@@ -10,7 +10,6 @@ inherit
 		export
 			{NONE} all
 		end;
-
 	BUTTON_C
 		rename
 			copy_attributes as button_copy_attributes,
@@ -18,30 +17,29 @@ inherit
 			reset_modified_flags as button_reset_modified_flags,
 			create_context as button_create_context
 		redefine
-			stored_node, is_fontable, widget, option_list
+			stored_node, is_fontable, widget,
+			add_to_option_list
 		end;
-
 	BUTTON_C
 		redefine
 			create_context, stored_node, reset_modified_flags, 
-			copy_attributes, is_fontable, context_initialization, option_list, widget
+			copy_attributes, is_fontable, context_initialization,
+			add_to_option_list, widget
 		select
 			copy_attributes, context_initialization, reset_modified_flags,
 			create_context
 		end;
-
-	ARROW_B_CONST
 	
 feature 
 
 	context_type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.primitive_page.arrow_b_type
-		end;
+		end
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 		end;
 
 	widget: ARROW_B;
@@ -49,17 +47,19 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Arrow_b");
 		end;
-
 	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+							Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.arrow_b_att_form_nbr,
+							Context_const.Attribute_format_nbr);
+		end;
+
 feature 
 
 	eiffel_type: STRING is "ARROW_B";
@@ -83,22 +83,6 @@ feature
 			Result := false
 		end;
 
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (arrow_b_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1;
-			end
-		end;
-
 	direction: INTEGER;
 
 	direction_modified: BOOLEAN;
@@ -109,13 +93,11 @@ feature
 			direction_modified := True;
 			direction := new_direction;
 			if not (widget = Void) then
-				inspect
-					new_direction
-				when up then
+				if new_direction = Context_const.up_arrow_direction then
 					widget.set_up
-				when down then
+				elseif new_direction = Context_const.down_arrow_direction then
 					widget.set_down
-				when right then
+				elseif new_direction = Context_const.right_arrow_direction then
 					widget.set_right
 				else
 					widget.set_left
@@ -149,13 +131,11 @@ feature {CONTEXT}
 		do
 			Result := old_context_initialization (context_name);
 			if direction_modified then
-				inspect
-					direction
-				when down then
+				if direction = Context_const.down_arrow_direction then
 					func_name := "set_down"
-				when left then
+				elseif direction = Context_const.left_arrow_direction then
 					func_name := "set_left"
-				when right then
+				elseif direction = Context_const.right_arrow_direction then
 					func_name := "set_right"
 				else
 					func_name := "set_up"

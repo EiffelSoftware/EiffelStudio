@@ -2,70 +2,68 @@ deferred class FORMAT_BUTTON
 
 inherit
 
-    EB_PICT_B
-        rename
-            make_visible as button_make_visible
-        undefine
-            init_toolkit
-        end
-
-    EB_PICT_B
-        undefine
-            init_toolkit
-        redefine
-            make_visible
-        select
-            make_visible
-        end
-    PIXMAPS
-    COMMAND
-    FOCUSABLE
-    WINDOWS
-    EDITOR_FORMS
+	EB_PICT_B
+		undefine
+			init_toolkit, symbol
+		end;
+	PIXMAPS
+	COMMAND
+	FOCUSABLE
+	WINDOWS
+	CONSTANTS
 
 feature {NONE} -- focus
 
-    focus_source: WIDGET is
-        do
-            Result := Current
-        end
+	focus_source: WIDGET is
+		do
+			Result := Current
+		end
 
-    focus_string: STRING
+	focus_string: STRING is
+		deferred
+		end;
 
-    focus_label: LABEL is
-        do
-            Result := main_panel.focus_label
-        end
+	focus_label: LABEL is
+		do
+			Result := editor.focus_label
+		end
 
 feature
 
-    this_form: INTEGER
-    owner_form: ROW_COLUMN
-    owner_editor: CONTEXT_EDITOR
+	editor: CONTEXT_EDITOR;
 
-	symb_pixmap: PIXMAP is
+	form_number: INTEGER is
 		deferred
-		end
+		end;
 
-	make (owner: ROW_COLUMN editor: CONTEXT_EDITOR) is
-		deferred
-		end
+	set_form_number (nbr: like form_number) is
+		require
+			valid_form_nbr: valid_form_nbr (nbr)
+		do
+			-- Do nothing
+		end;
 
-    make_visible (a_parent: COMPOSITE) is
-        local
-            Nothing: ANY
-        do
-            button_make_visible (a_parent)
-            set_symbol (symb_pixmap)
-            add_activate_action (Current, Nothing)
-        end
+	make (a_parent: COMPOSITE; ed: like editor) is
+		do
+			editor := ed;
+			make_visible (a_parent);
+			set_symbol (symbol);
+			add_activate_action (Current, Void);
+			initialize_focus
+		end;
+
+	valid_form_nbr (nbr: INTEGER): BOOLEAN is
+		do
+			Result := True
+		end;
 
 feature {NONE} -- command
 
-    execute (argument: ANY) is
-        do
-            if this_form /= owner_editor.current_form_number then
-                owner_editor.update_form (this_form)
-            end
-        end
+	execute (argument: ANY) is
+		do
+			if form_number /= editor.current_form_number then
+				editor.set_form (form_number)
+			end
+		end
+
 end

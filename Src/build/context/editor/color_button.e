@@ -9,16 +9,16 @@ creation
 
 feature 
 
-	symb_pixmap: PIXMAP is
+	symbol: PIXMAP is
 		once
 			Result := symbol_file_content ("color.symb")
 		end
 
-	make (owner: ROW_COLUMN editor: CONTEXT_EDITOR) is
+	form_number: INTEGER is
 		do
-			owner_form := owner
-			owner_editor := editor
-			this_form := color_form_number
-			make_visible (owner)
-		end
+			Result := Context_const.color_form_nbr
+		end;
+
+	focus_string: STRING is "";
+
 end

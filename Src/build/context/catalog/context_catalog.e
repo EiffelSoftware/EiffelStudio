@@ -16,13 +16,12 @@ inherit
 			delete_window_action
 		end;
 	WINDOWS;
-	CONTEXT_NAMES;
 	COMMAND;
-	GROUP_SHARED;
-	CONTEXT_SHARED;
 	COMMAND_ARGS;
-	TRANSL_SHARED;
-	PIXMAPS
+	SHARED_TRANSLATIONS;
+	PIXMAPS;
+	CONSTANTS;
+	SHARED_CONTEXT
 
 creation
 
@@ -63,37 +62,31 @@ feature
 			first_separator: SEPARATOR;
 			edit_hole: CON_CAT_ED_H
 		do
-			top_shell_create (C_ontextcatalog, eb_screen);
+			top_shell_create (Widget_names.context_catalog, eb_screen);
 			set_size (240, 260);
-			!!top_form.make (F_orm, Current);
-			--!!window_page;
-			--!!primitive_page;
-			--!!menu_page;
-			--!!group_page;
-			--!!set_page;
-			--!!scroll_page;
+			!!top_form.make (Widget_names.form, Current);
 
-			!!first_separator.make (S_eparator, top_form);
+			!!first_separator.make (Widget_names.Separator, top_form);
 			first_separator.set_horizontal (true);
 
-			!!second_separator.make (S_eparator, top_form);
+			!!second_separator.make (Widget_names.Separator, top_form);
 			second_separator.set_horizontal (true);
 
-			!!edit_hole.make (P_Cbutton, top_form);
+			!!edit_hole.make (Widget_names.PCbutton, top_form);
 
-			!!window_page.make (W_indows, Windows_pixmap);
-			!!primitive_page.make (P_rimitives, Primitives_pixmap);
-			!!menu_page.make (M_enus, Menus_pixmap);
-			!!group_page.make (G_roups, Groups_pixmap);
-			!!set_page.make (S_ets, Sets_pixmap);
-			!!scroll_page.make (S_crolled_items, Scrolled_w_pixmap);
+			!!window_page.make (Context_const.windows_name, Windows_pixmap);
+			!!primitive_page.make (Context_const.primitives_name, Primitives_pixmap);
+			!!menu_page.make (Context_const.menus_name, Menus_pixmap);
+			!!group_page.make (Context_const.groups_name, Groups_pixmap);
+			!!set_page.make (Context_const.sets_name, Sets_pixmap);
+			!!scroll_page.make (Context_const.scrolled_items_name, Scrolled_w_pixmap);
 
-			!!page_label.make (L_abel, top_form);
+			!!page_label.make (Widget_names.label, top_form);
 
 			page_label.set_left_alignment;
 		
 		
-			!!focus_label.make (L_abel, top_form);
+			!!focus_label.make (Widget_names.label, top_form);
 			page_label.set_text (primitive_page.page_name);
 
 			top_form.attach_top (window_page.button, 10);
@@ -295,20 +288,20 @@ feature
 		do
 			group_page.icon_box.wipe_out;
 			from
-				group_list.start
+				Shared_group_list.start
 			until
-				group_list.after
+				Shared_group_list.after
 			loop
-				add_new_group (group_list.item);
-				group_list.forth
+				add_new_group (Shared_group_list.item);
+				Shared_group_list.forth
 			end;
 		end;
 
 	remove_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
 		do
-			group_list.start;
-			group_list.search (a_context_type.group);
-			group_list.remove;
+			Shared_group_list.start;
+			Shared_group_list.search (a_context_type.group);
+			Shared_group_list.remove;
 			context_group_types.start;
 			context_group_types.search (a_context_type);
 			context_group_types.remove;
@@ -376,28 +369,35 @@ feature
 		do
 			other_editor := editor (a_context, a_form_number);
 			if other_editor /= Void then
-				other_editor.current_form.reset_form
+				other_editor.current_form.reset
 			end
 		end;
 
 	clear is
 			-- Clear the group page (of Current) and 
 			-- the translation page of the Behaviour editor.
+		local
+			cont: WINDOW_C
 		do
 			from
-				window_list.start
+				Shared_window_list.start
 			until	
-				window_list.after
+				Shared_window_list.after
 			loop
-				window_list.item.hide;
-				window_list.item.widget.destroy;
-				window_list.forth
+				cont := Shared_window_list.item;
+				if not cont.widget.destroyed then
+						-- Temp windows may be already destroyed
+						-- if its parent is a perm window.
+					cont.hide;
+					cont.widget.destroy;
+				end;
+				Shared_window_list.forth
 			end;
-			window_list.wipe_out;
+			Shared_window_list.wipe_out;
 			tree.wipe_out;
 			tree.clear;
 			group_page.clear;	
-			translation_list.wipe_out;
+			Shared_translation_list.wipe_out;
 			update_translation_page;
 			perm_wind_type.reset;
 			temp_wind_type.reset;

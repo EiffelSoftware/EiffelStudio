@@ -5,9 +5,6 @@ inherit
 
 	EDITOR_FORM
 
-
-
-	
 feature {NONE}
 
 	separator: SEPARATOR_G;
@@ -16,9 +13,9 @@ feature {NONE}
 		local
 			ok_button: PUSH_BG;
 		do
-			!!ok_button.make (O_k_button, Current);
+			!!ok_button.make (Context_const.ok_button_name, Current);
 			ok_button.add_activate_action (command, editor);
-			!!separator.make (S_eparator, Current);
+			!!separator.make (Widget_names.separator, Current);
 			separator.set_horizontal (true);
 
 			set_fraction_base (16);

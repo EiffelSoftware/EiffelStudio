@@ -4,24 +4,11 @@ class CONTEXT_TYPE
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	COMMAND_ARGS;
 	TYPE_STONE;
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
+	SHARED_STORAGE_INFO;
 	FOCUSABLE
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -85,7 +72,6 @@ feature {NONE}
 	dummy_context: CONTEXT;
 			-- Reference to a context, descendant of current type
 
-	
 feature 
 
 	create_context (a_parent: COMPOSITE_C): CONTEXT is

@@ -7,25 +7,18 @@ inherit
 			context
 		end
 
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end
-
-	COMMAND_NAMES
-		rename
-			F_g_color_cmd_name as c_name
-		export
-			{NONE} all
-		end
-
 feature {NONE}
 
 	context: PRIMITIVE_C
 
 	associated_form: INTEGER is
 		do
-			Result := color_form_number
+			Result := Context_const.color_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.fg_color_cmd_name
 		end;
 
 	old_fg_color: STRING;

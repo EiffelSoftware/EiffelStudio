@@ -14,15 +14,6 @@ inherit
 			Third as release_action,
 			Fourth as set_stone,
 			Fifth as set_state_stone
-		export
-			{NONE} all;
-			{ANY} append, set_offset, offset, 
-				draw, found, off, remove, empty, 
-				has, remove_selected, after, forth, 
-				start, find, previous_point, 
-				prune_all, figure, 
-				disable_drawing, enable_drawing,
-				search, wipe_out
 		redefine
 			execute
 		select
@@ -33,27 +24,17 @@ inherit
 		rename
 			make as box_make,
 			selected_element as selected_figure
-		export
-			{NONE} all
 		redefine
 			select_figure, execute
 		select
 			select_figure
 		end;
 	STATE_STONE
-		export
-			{NONE} all
 		redefine
 			transportable
 		end;
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	REMOVABLE
-		export
-			{NONE} all
-		end;
 
 creation
 

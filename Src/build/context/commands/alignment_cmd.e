@@ -6,29 +6,19 @@ inherit
 	CMD_LIST
 		redefine
 			work
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			A_lignment_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := alignment_form_number
+			Result := Context_const.alignment_form_nbr
 		end;
 
+	c_name: STRING is
+		do
+			Result := Context_const.alignment_cmd_name
+		end;
 	
 feature 
 

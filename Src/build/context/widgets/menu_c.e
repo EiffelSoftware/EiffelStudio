@@ -8,42 +8,37 @@ inherit
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
-			option_list, context_initialization, widget,
+			context_initialization, widget,
 			intermediate_name
 		end;
 
 	COMPOSITE_C
 		redefine
 			context_initialization, reset_modified_flags, copy_attributes, 
-			option_list, widget, intermediate_name
+			widget, intermediate_name
 		select
 			copy_attributes, reset_modified_flags
 		end
 
-
-
-	
 feature 
 
 	widget: MENU;
-
-	option_list: ARRAY [INTEGER] is
-		do
-			!!Result.make (1, 1);
-			Result.put (menu_form_number, 1);
-		end;
 
 	title: STRING is
 		do
 			Result := widget.title
 		end;
 
-	
 feature {NONE}
 
 	title_modified: BOOLEAN;
 
-	
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.menu_sm_form_nbr,
+						Context_const.Submenu_format_nbr);
+		end;
+
 feature 
 
 

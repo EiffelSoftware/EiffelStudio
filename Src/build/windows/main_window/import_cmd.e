@@ -3,20 +3,12 @@ class IMPORT_CMD
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	SHARED_STORAGE_INFO;
+	SHARED_CONTEXT;
+	WINDOWS;
 	UNDOABLE;
 	ERROR_POPUPER;
+	CONSTANTS
 
 feature {NONE}
 
@@ -25,22 +17,16 @@ feature {NONE}
 	retrieved_groups: LINKED_LIST [GROUP];
 	retrieved_translations: LINKED_LIST [TRANSLATION];
 
-	
-feature 
-
-	n_ame: STRING is "Import";
-
-	
-feature {NONE}
-
 	work (argument: IMPORT_WINDOW) is
 		do
-			for_import.set_value (True);
+			for_import.set_item (True);
 			argument.popdown;
 			import_application (argument);
 		end;
 
 feature 
+
+	n_ame: STRING is "Import";
 
 	undo is
 		do
@@ -129,10 +115,12 @@ feature {NONE}
 			!!mp;
 			mp.set_watch_shape;
 			import_directory := clone (import_window.file_selec.selected_file);
-			import_directory.append ("/Storage");
+			import_directory.extend (Environment.directory_separator);
+			import_directory.append (Environment.storage_name);
+			import_directory.extend (Environment.directory_separator);
 			if import_window.groups.state then
 				fn := clone (import_directory);
-				fn.append ("/groups");
+				fn.append (Environment.groups_file_name);
 				!!group_storer;
 				group_storer.retrieve (fn);
 				retrieved_groups := group_storer.retrieved_data;
@@ -161,7 +149,7 @@ feature {NONE}
 			end;
 			if import_window.interface.state then
 				fn := clone (import_directory);
-				fn.append ("/interface");
+				fn.append (Environment.interface_file_name);
 				!!context_storer;
 				context_storer.retrieve (fn);
 				retrieved_contexts := context_storer.retrieved_data;
@@ -175,26 +163,24 @@ feature {NONE}
 						-- group table : association old id new id for groups
 					a_context.import_oui_widget (group_table);
 					a_context.realize;
-					window_list.finish;
-					window_list.put_right (a_context);
 					retrieved_contexts.forth
 				end;
 				tree.enable_drawing;
-				if not window_list.empty then
-					tree.display (window_list.first)
+				if not Shared_window_list.empty then
+					tree.display (Shared_window_list.first)
 				end;
 			end;
 			if import_window.commands.state then
 				fn := clone (import_directory);
-				fn.append ("/commands");
-				!!command_storer;
+				fn.append (Environment.commands_file_name);
+				!! command_storer;
 				command_storer.retrieve (fn);
 				retrieved_commands := command_storer.retrieved_data;
 				command_catalog.merge (retrieved_commands);
 			end;
 			if import_window.translations.state then
 				fn := clone (import_directory);
-				fn.append ("/translations");
+				fn.append (Environment.translations_file_name);
 				!!translation_storer;
 				translation_storer.retrieve (fn);
 				retrieved_translations := translation_storer.retrieved_data;
@@ -209,11 +195,11 @@ feature {NONE}
 			end;
 			if import_window.entire_application.state then
 				fn := clone (import_directory);
-				fn.append ("/states");
+				fn.append (Environment.states_file_name);
 				!!state_storer;
 				state_storer.retrieve (fn);
 				fn := clone (import_directory);
-				fn.append ("/application");
+				fn.append (Environment.application_file_name);
 				!!application_storer;
 				application_storer.retrieve (fn);
 

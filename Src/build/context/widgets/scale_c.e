@@ -13,7 +13,6 @@ inherit
 
 	PRIMITIVE_C
 		rename
-			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
 		redefine
@@ -23,14 +22,11 @@ inherit
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			context_initialization, option_list, widget
+			context_initialization, widget
 		select
-			option_list, copy_attributes, reset_modified_flags
+			copy_attributes, reset_modified_flags
 		end
 
-
-
-	
 feature 
 
 	context_type: CONTEXT_TYPE is
@@ -40,7 +36,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 			widget.set_horizontal (False);
 			set_size (10, 105);
 		end;
@@ -50,16 +46,18 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Scale");
 		end;
 
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.scale_att_form_nbr,
+					Context_const.Attribute_format_nbr);
+		end;
 	
 feature 
 
@@ -68,22 +66,6 @@ feature
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (scale_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
-		end;
 
 	is_vertical: BOOLEAN is
 		do

@@ -9,15 +9,8 @@ inherit
 		undefine
 			init_toolkit
 		end;
-
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-
+	CONSTANTS
 	HOLE
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
@@ -35,7 +28,10 @@ feature {NONE}
 	
 feature 
 
-	make (a_name: STRING; a_parent: COMPOSITE; cmd: COMMAND; an_editor: CONTEXT_EDITOR) is
+	make (a_name: STRING; 
+				a_parent: COMPOSITE; 
+				cmd: COMMAND; 
+				an_editor: CONTEXT_EDITOR) is
 		do
 			editor := an_editor;
 			old_create (a_name, a_parent, cmd, an_editor);
@@ -67,7 +63,8 @@ feature {NONE}
 			!!cmd;
 			cmd.execute (a_context);
 			a_context.set_fg_color_name (stone.color_name);
-			context_catalog.update_editors (a_context, color_form_number);
+			context_catalog.update_editors (a_context, 
+					Context_const.color_form_nbr);
 		end;
 
 end

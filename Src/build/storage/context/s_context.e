@@ -1,16 +1,9 @@
 
 deferred class S_CONTEXT 
---	post_process
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
-
-
+	SHARED_STORAGE_INFO
 	
 feature 
 
@@ -20,7 +13,6 @@ feature
 		deferred
 		end;
 
-	
 feature {NONE}
 
 	create_context (a_context: CONTEXT; a_parent: COMPOSITE_C) is
@@ -32,9 +24,9 @@ feature {NONE}
 			a_context.set_retrieved_node (Current);
 			if context_table.has (identifier) then
 				a_context.set_next_identifier;
-				if for_save.value then
+				if for_save.item then
 					identifier_changed_table.put (a_context.identifier, a_context.full_name);
-				elseif for_import.value then
+				elseif for_import.item then
 					identifier_changed_table.put (a_context.identifier, full_name);
 				end;
 			else

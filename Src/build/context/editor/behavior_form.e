@@ -3,69 +3,34 @@ class BEHAVIOR_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
 		rename
 			show as form_show
 		undefine
 			init_toolkit
-		redefine
-			form_name		
 		end;
-
 	EDITOR_FORM
 		undefine
 			init_toolkit
 		redefine
-			show, form_name
+			show
 		select
 			show
 		end;
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	WINDOWS
-		export
-			{NONE} all
-		end
-
 
 creation
 
 	make
-
     
-feature 
+feature -- Interface
 
-	form_name: STRING is
-        do
-            Result := B_ehavior_form_name
-        end;
-
-	make (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		do
-			a_parent.form_list.put (Current, behavior_form_number);
-		end;
-
-	
-feature {NONE}
-
-	event_catalog: EVENT_CATALOG;
-
-	behavior_editor: BEHAVIOR_EDITOR;
-
-	
-feature 
-
-	make_visible (a_parent: CONTEXT_EDITOR) is
-		do
-			initialize ("Behavior_form", a_parent);
-			!!event_catalog.make ("Event Catalog", Current);
-			!!behavior_editor.make ("Behavior Editor", Current);
+			initialize (Context_const.behavior_form_name, a_parent);
+			!!event_catalog.make (Context_const.event_catalog_name, Current);
+			!!behavior_editor.make (Context_const.behaviour_editor_name, Current);
 
 			set_fraction_base(5);
 			attach_top (event_catalog, 0);
@@ -76,12 +41,7 @@ feature
 			attach_bottom (behavior_editor.form, 0);
 			attach_bottom_position (event_catalog, 2);
 			attach_top_position (behavior_editor.form, 2);
-		end;
-
-	reset_editor is
-			-- Reset the edited_function of Current. 
-		do
-			behavior_editor.clear
+			show_current
 		end;
 
 	update_translation_page is
@@ -91,8 +51,22 @@ feature
 			end;
 		end;
 
-	
+	reset_editor is
+			-- Reset the edited_function of Current. 
+		do
+			behavior_editor.clear
+		end;
+
 feature {NONE}
+
+	event_catalog: EVENT_CATALOG;
+
+	behavior_editor: BEHAVIOR_EDITOR;
+
+	form_number: INTEGER is
+		do
+			Result := Context_const.behavior_form_nbr
+		end;
 
 	reset is
 		local
@@ -119,15 +93,15 @@ feature {NONE}
 			behavior_editor.set_current_state (current_state);
 		end;
 
-	
-feature 
-
 	show is
 		do
 			form_show;
 			behavior_editor.hide_stones
 		end;
 
-	apply is do end;
+	apply is 
+		do 
+			-- Do nothing
+		end;
 
 end

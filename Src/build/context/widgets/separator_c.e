@@ -13,7 +13,6 @@ inherit
 
 	PRIMITIVE_C
 		rename
-			option_list as old_list,
 			create_context as old_create_context,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags
@@ -24,16 +23,11 @@ inherit
 	PRIMITIVE_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			create_context, context_initialization, option_list, widget
+			create_context, context_initialization, widget
 		select
-			option_list, create_context, copy_attributes, 
+			create_context, copy_attributes, 
 			reset_modified_flags
 		end;
-
-	SEPARATOR_CONST
-
-
-
 	
 feature 
 
@@ -44,9 +38,9 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 			set_size (40, 5);
-			line_mode := single_line;
+			line_mode := Context_const.single_line;
 		end;
 
 	widget: SEPARATOR;
@@ -54,16 +48,18 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Separator");
 		end;
 
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.separator_att_form_nbr,
+						Context_const.Attribute_format_nbr);
+		end;
 	
 feature 
 
@@ -84,22 +80,6 @@ feature
 					Result.set_size (5, 40);
 				end;
 			end;
-		end;
-
-	option_list: ARRAY [INTEGER] is
-		local
-			i: INTEGER
-		do
-			Result := old_list;
-			i := Result.upper+2;
-			Result.force (separator_form_number, Result.upper+1);
-			from
-			until
-				i > Result.upper
-			loop
-				Result.put (-1, i);
-				i := i + 1
-			end
 		end;
 
 	is_vertical: BOOLEAN;
@@ -124,16 +104,14 @@ feature
 		do
 			line_mode_modified := True;
 			line_mode := mode;
-			if not (widget = Void) then
-				inspect
-					mode
-				when no_line then
+			if widget /= Void then
+				if mode = Context_const.no_line then
 					widget.set_no_line
-				when double_line then
+				elseif mode = Context_const.double_line then
 					widget.set_double_line
-				when single_dashed_line then
+				elseif mode = Context_const.single_dashed_line then
 					widget.set_single_dashed_line
-				when double_dashed_line then
+				elseif mode = Context_const.double_dashed_line then
 					widget.set_double_dashed_line
 				else
 					widget.set_single_line
@@ -171,18 +149,17 @@ feature {CONTEXT}
 		do
 			!!Result.make (0);
 			if is_vertical_modified then
-				function_bool_to_string (Result, context_name, "set_horizontal", not is_vertical)
+				function_bool_to_string (Result, context_name, 
+						"set_horizontal", not is_vertical)
 			end;
 			if line_mode_modified then
-				inspect
-					line_mode
-				when no_line then
+				if line_mode = Context_const.no_line then
 					func_name := "set_no_line"
-				when double_line then
+				elseif line_mode = Context_const.double_line then
 					func_name := "set_double_line"
-				when single_dashed_line then
+				elseif line_mode = Context_const.single_dashed_line then
 					func_name := "set_single_dashed_line"
-				when double_dashed_line then
+				elseif line_mode = Context_const.double_dashed_line then
 					func_name := "set_double_dashed_line"
 				else
 					func_name := "set_single_line"

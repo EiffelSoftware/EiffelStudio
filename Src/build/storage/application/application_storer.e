@@ -3,29 +3,11 @@ class APPLICATION_STORER
 
 inherit
 
-	STORABLE_HDL
-		export
-			{NONE} all
-		end;
+	STORABLE_HDL;
+	SHARED_STORAGE_INFO;
+	WINDOWS;
+	SHARED_APPLICATION
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	APP_SHARED
-		export
-			{NONE} all
-		end
-
-
-
-	
 feature 
 
 	Return_transition: INTEGER is -1;

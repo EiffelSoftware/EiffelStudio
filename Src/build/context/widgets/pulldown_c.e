@@ -11,13 +11,14 @@ inherit
 			reset_modified_flags as menu_reset_modified_flags,
 			context_initialization as old_context_initialization
 		redefine
-			set_visual_name, option_list, widget
+			set_visual_name, widget, add_to_option_list
 		end;
 
 	MENU_C
 		redefine
 			set_visual_name, context_initialization, copy_attributes, 
-			undo_cut, cut, option_list, widget, reset_modified_flags
+			undo_cut, cut, widget, reset_modified_flags,
+			add_to_option_list
 		select
 			cut, undo_cut, copy_attributes, context_initialization, 
 			reset_modified_flags
@@ -40,10 +41,10 @@ feature
 
 	widget: PULLDOWN;
 
-	option_list: ARRAY [INTEGER] is
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
-			!!Result.make (1, 1);
-			Result.put (pulldown_form_number, 1);
+			opt_list.put (Context_const.pulldown_sm_form_nbr,
+						Context_const.Submenu_format_nbr);
 		end;
 
 	set_text (a_string: STRING) is

@@ -24,20 +24,21 @@ feature
 		do
 			old_make (node);
 			start_hidden := node.start_hidden;
-			start_hidden_modified := node.start_hidden_modified;
 		end;
 
 	set_context_attributes (a_context: TEMP_WIND_C) is
 		do
 			old_set_attributes (a_context);
-			if start_hidden_modified then
-				a_context.set_start_hidden (start_hidden);
-			end;
+			a_context.set_start_hidden (start_hidden);
+				-- Set x and y regardless if position is not modified
+			a_context.set_x_y (x, y);
+			a_context.set_default_position (position_modified)
 		end;
 			
 
 	start_hidden: BOOLEAN;
 
 	start_hidden_modified: BOOLEAN;
+		-- To be removed
 
 end

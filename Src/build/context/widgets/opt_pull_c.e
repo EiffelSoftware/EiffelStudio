@@ -16,15 +16,17 @@ inherit
 			context_initialization as pull_context_initialization
 		redefine
 			stored_node, real_y, real_x,  
-			set_size, set_x_y, height, width, y, x, option_list, widget, 
-			remove_widget_callbacks, initialize_transport, add_widget_callbacks
+			set_size, set_x_y, height, width, y, x, widget, 
+			remove_widget_callbacks, initialize_transport, add_widget_callbacks,
+			add_to_option_list
 		end;
 
 	PULLDOWN_C
 		redefine
 			stored_node, real_y, real_x, context_initialization,
-			set_size, set_x_y, height, width, y, x, option_list, widget, 
-			remove_widget_callbacks, initialize_transport, add_widget_callbacks
+			set_size, set_x_y, height, width, y, x, widget, 
+			remove_widget_callbacks, initialize_transport, add_widget_callbacks,
+			add_to_option_list
 		select
 			context_initialization
 		end;
@@ -85,7 +87,7 @@ feature
 	
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
-			!!widget.make (entity_name, a_parent);
+			!!widget.make_unmanaged (entity_name, a_parent);
 			widget.set_text (label);
 			widget.set_caption ("");
 			if widget.button.realized then
@@ -95,26 +97,20 @@ feature
 
 	widget: OPT_PULL;
 
-	option_list: ARRAY [INTEGER] is
-		do
-			!!Result.make (1, 2);
-			Result.put (geometry_form_number, 1);
-			Result.put (pulldown_form_number, 2);
-		end;
-
-	
 feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
 
 	namer: NAMER is
 		once
 			!!Result.make ("Opt_pull");
 		end;
 
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.pulldown_sm_form_nbr,
+					Context_const.Submenu_format_nbr);
+		end;
 	
 feature 
 

@@ -4,34 +4,22 @@ class ARROW_MOVE_CMD
 inherit
 
 	CMD_LIST
-		export
-			{ANY} all
 		redefine
 			work
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			G_eometry_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
+		end;
+	
+	c_name: STRING is
+		do
+			Result := Context_const.geometry_cmd_name
 		end;
 
-	
 feature 
 
 	work (argument: CONTEXT) is
@@ -65,7 +53,27 @@ feature
 			end;
 		end;
 
-	
+feature {CONTEXT_TREE, SELECTION_MANAGER}
+
+	move_context (d_x, d_y: INTEGER) is
+		local
+			a_group: LINKED_LIST  [CONTEXT]
+		do
+			if context.grouped then
+				a_group := context.group;
+				from
+					a_group.start
+				until
+					a_group.after
+				loop
+					a_group.item.set_x_y (a_group.item.x+d_x, a_group.item.y+d_y);
+					a_group.forth;
+				end;
+			else
+				context.set_x_y (context.x + d_x, context.y + d_y);
+			end;
+		end;
+
 feature {NONE}
 
 	save_context (a_context: CONTEXT) is

@@ -1,11 +1,12 @@
 
 class EDITOR_NAMES
 
-
-
-	
 feature {NONE}
 
+	B_ehaviour_Editor: STRING is "Behaviour Editor";
+	C_ontexttool: STRING is "Context Tool";
+	C_ontexttree: STRING is "Context Tree";
+	C_ontextcatalog: STRING is "Context Catalog";
 	E_vent_catalog: STRING is "Event Catalog";
 
 	-- **********
@@ -16,6 +17,7 @@ feature {NONE}
 	Arrow_b_form_name: STRING is "Arrow_b_form";
 	Bar_form_name: STRING is "Bar_form";
 	B_ehavior_form_name: STRING is "Behaviors";
+	B_ulletin_form_name: STRING is "Bulletin_form";
 	Button_form_name: STRING is "Button_form";
 	C_olor_form_name: STRING is "Color";
 	F_ont_form_name: STRING is "Font";
@@ -57,6 +59,7 @@ feature {NONE}
 	L_eft_alignment: STRING is "Left Alignment";
 	S_ame_size: STRING is "Same size";
 	S_et_shown: STRING is "Start hidden";
+	S_et_default_position: STRING is "Set default position";
 
 	C_olumn: STRING is "Column";
 	R_ow: STRING is "Row";
@@ -136,7 +139,6 @@ feature {NONE}
 
 	W_idget_list: STRING is "Widget List";
 	O_ffset: STRING is "Offset";
-	S_cale: STRING is "Scale";
 	F_ont_box: STRING is "Font Box";
 	L_abel_upper: STRING is "Label";
 	L_abel_position: STRING is "Label position";

@@ -1,20 +1,16 @@
-
-
-    -- Command used for the copy of
-    -- the font_name attribute
-    -- using an attrib_stone from a context editor
+-- Command used for the copy of
+-- the font_name attribute
+-- using an attrib_stone from a context editor
 
 class FONT_STONE_CMD 
 
 inherit
 
 	FONT_CMD
-		redefine work
+		redefine 
+			work
 		end
 
-
-
-	
 feature 
 
 	work (argument: CONTEXT) is

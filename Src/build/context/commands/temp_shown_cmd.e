@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			T_emp_shown_cmd_name as c_name
-		export
-			{NONE} all
 		end
 
-
-
-	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := temp_wind_form_number
+			Result := Context_const.temp_wind_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.temp_shown_cmd_name
 		end;
 
 	context: TEMP_WIND_C;

@@ -3,42 +3,29 @@ class GROUP_BULLETIN_CMD
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	CONTEXT_CMD
 		redefine
 			context,
 			work, undo, redo
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			G_roup_cmd_name as c_name
-		export
-			{NONE} all
-		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.group_cmd_name
 		end;
 
 	context: BULLETIN_C;
 
 	group_c: GROUP_C;
 
-	
 feature 
 
 	group_create (a_context: BULLETIN_C; a_group: GROUP_C) is
@@ -55,14 +42,14 @@ feature
 		do	
 			group_c.cut;
 			context.transform_in_bulletin;
-			tree.display (context);
+			Tree.display (context);
 		end;
 
 	redo is
 		do
 			group_c.undo_cut;
 			context.transform_in_group (group_c);
-			tree.display (group_c);
+			Tree.display (group_c);
 		end;
 
 	

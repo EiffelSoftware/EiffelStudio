@@ -3,16 +3,11 @@ class S_STATE
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
+	SHARED_STORAGE_INFO
 
 creation
 
 	make
-
 	
 feature 
 
@@ -68,7 +63,7 @@ feature
 			c: CONTEXT;
 		do
 			!!Result.make;
-			if for_import.value then
+			if for_import.item then
 				Result.set_internal_name ("");
 			else
 				Result.set_internal_name (internal_name);

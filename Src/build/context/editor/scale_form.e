@@ -3,20 +3,14 @@ class SCALE_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
 		redefine
 			context
 		end
 
-
 creation
 
 	make
-
 	
 feature {NONE}
 
@@ -36,37 +30,90 @@ feature {NONE}
 
 	is_vertical: EB_TOGGLE_B;
 
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	context: SCALE_C is
 		do
-			a_parent.form_list.put (Current, scale_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.scale_att_form_nbr
+		end;
+
+	Scale_dir_cmd: SCALE_DIR_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_gran_cmd: SCALE_GRAN_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_max_cmd: SCALE_MAX_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_max_right_cmd: SCALE_MAX_RIGHT_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_min_cmd: SCALE_MIN_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_output_cmd: SCALE_OUTPUT_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_show_cmd: SCALE_SHOW_CMD is
+		once
+			!!Result
+		end;
+
+	Scale_text_cmd: SCALE_TEXT_CMD is
+		once
+			!!Result
+		end;
+
+feature 
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			text_l, granularity_l, min_l, max_l: LABEL_G;
 		do
-			initialize (Scale_form_name, a_parent);
+			initialize (Context_const.scale_form_name, a_parent);
 
-			!!text.make (T_extfield, Current, scale_text_cmd, a_parent);
-			!!granularity.make (T_extfield, Current, scale_gran_cmd, a_parent);
-			!!maximum.make (T_extfield, Current, scale_max_cmd, a_parent);
-			!!minimum.make (T_extfield, Current, scale_min_cmd, a_parent);
-			!!is_value_shown.make (S_how_value, Current, scale_show_cmd, a_parent);
-			!!is_output_only.make (O_utput_only, Current, scale_output_cmd, a_parent);
-			!!is_maximum_right_bottom.make (M_aximum_right_bottom, Current, scale_max_right_cmd, a_parent);
-			!!is_vertical.make (V_ertical, Current, scale_dir_cmd, a_parent);
+			!!text.make (Widget_names.textfield, Current, 
+					Scale_text_cmd, editor);
+			!!granularity.make (Widget_names.textfield, 
+					Current, Scale_gran_cmd, editor);
+			!!maximum.make (Widget_names.textfield, Current, 
+					Scale_max_cmd, editor);
+			!!minimum.make (Widget_names.textfield, Current, 
+					Scale_min_cmd, editor);
+			!!is_value_shown.make (Context_const.show_value_name, 
+					Current, Scale_show_cmd, editor);
+			!!is_output_only.make (Context_const.output_only_name, Current, 
+					Scale_output_cmd, editor);
+			!!is_maximum_right_bottom.make 
+					(Context_const.maximum_right_bottom_name, 
+					Current, Scale_max_right_cmd, editor);
+			!!is_vertical.make (Context_const.vertical_name, Current, 
+					Scale_dir_cmd, editor);
 
 			granularity.set_width (50);
 			maximum.set_width (50);
 			minimum.set_width (50);
 
-			!!text_l.make (T_ext_label, Current);
-			!!granularity_l.make (G_ranularity, Current);
-			!!min_l.make (M_inimum, Current);
-			!!max_l.make (M_aximum, Current);
+			!!text_l.make (Context_const.text_label_name, Current);
+			!!granularity_l.make (Context_const.granularity_name, Current);
+			!!min_l.make (Context_const.minimum_name, Current);
+			!!max_l.make (Context_const.maximum_name, Current);
 
 			attach_left (is_vertical, 10);
 			attach_left (text_l, 10);
@@ -98,12 +145,11 @@ feature
 			attach_top_widget (is_maximum_right_bottom, is_value_shown, 10);
 			attach_top_widget (is_value_shown, is_output_only, 10);
 			detach_bottom (is_output_only);
+			show_current
 		end;
 
 	
 feature {NONE}
-
-	context: SCALE_C;
 
 	reset is
 			-- reset the content of the form

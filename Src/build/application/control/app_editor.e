@@ -3,7 +3,7 @@ class APP_EDITOR
 
 inherit
 	
-	APP_SHARED;
+	SHARED_APPLICATION;
 	APP_FIND_FIGURE;
 	COMMAND
 		redefine
@@ -29,6 +29,7 @@ inherit
 		end;
 	WIDGET_NAMES;
 	WINDOWS;
+	CONSTANTS
 
 creation
 

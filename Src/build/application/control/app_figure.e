@@ -3,17 +3,9 @@ deferred class APP_FIGURE
 
 inherit
 
-	APP_SHARED
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
+	PIXMAPS;
 	FIGURE
-		export
-			{NONE} all
 		redefine
 			attach_drawing, attach_drawing_imp, 
 			deselect, select_figure, contains

@@ -3,54 +3,26 @@ class BULL_RESIZE_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
-		redefine
-			form_name
-		end
-
 
 creation
 
 	make
-
 	
-feature 
+feature -- Interface
 
-	form_name: STRING is
+	make_visible (a_parent: COMPOSITE) is
 		do
-			Result := "Resizing policy"
-		end;
+			initialize (Context_const.bulletin_form_name, a_parent);
 
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, bulletin_resize_form_number);
-		end;
-
-	
-feature {NONE}
-
-	follow_x, follow_y, width_resizeable, height_resizeable: EB_TOGGLE_B;
-
-	resize_policy_cmd: RESIZE_CMD is
-		once
-			!!Result
-		end;
-
-	
-feature 
-
-	make_visible (a_parent: CONTEXT_EDITOR) is
-		do
-			initialize ("Bulletin Form", a_parent);
-
-			!!follow_x.make ("Follow x", Current, resize_policy_cmd, a_parent);
-			!!follow_y.make ("Follow y", Current, resize_policy_cmd, a_parent);
-			!!width_resizeable.make ("width_resizeable", Current, resize_policy_cmd, a_parent);
-			!!height_resizeable.make ("height_resizeable", Current, resize_policy_cmd, a_parent);
+			!! follow_x.make (Context_const.follow_y_name, Current, 
+						Resize_policy_cmd, editor);
+			!! follow_y.make (Context_const.follow_x_name, Current, 
+						Resize_policy_cmd, editor);
+			!! width_resizeable.make (Context_const.width_resizable_name,
+						Current, Resize_policy_cmd, editor);
+			!! height_resizeable.make (Context_const.height_resizable_name,
+						Current, Resize_policy_cmd, editor);
 	
 			attach_left (follow_x, 10);
 			attach_left (follow_y, 10);
@@ -61,10 +33,22 @@ feature
 			attach_top_widget (follow_x, follow_y, 10);
 			attach_top_widget (follow_y, width_resizeable, 10);
 			attach_top_widget (width_resizeable, height_resizeable, 10);
+			show_current
 		end;
-
 	
 feature {NONE}
+
+	form_number: INTEGER is
+		do
+			Result := Context_const.bulletin_resize_form_nbr
+		end;
+
+	follow_x, follow_y, width_resizeable, height_resizeable: EB_TOGGLE_B;
+
+	Resize_policy_cmd: RESIZE_CMD is
+		once
+			!! Result
+		end;
 
 	resize_policy: RESIZE_POLICY;
 
@@ -78,9 +62,6 @@ feature {NONE}
 			height_resizeable.set_state (resize_policy.is_height_resizeable);
 		end;
  
-	
-feature 
-
 	apply is
 			-- update the context according to the content of the form
 		do

@@ -9,7 +9,7 @@ inherit
 			First as unused
 		end;
 	WINDOWS;
-	TRANSL_SHARED;
+	SHARED_TRANSLATIONS;
 	EVENT_PAGE 
 		rename
 			add_button_callback as page_add_button_callback
@@ -37,13 +37,13 @@ feature
 		do
 			list_wipe_out;
 			from
-				translation_list.start;
+				Shared_translation_list.start;
 				start;
 			until
-				translation_list.after
+				Shared_translation_list.after
 			loop
-				list_extend (translation_list.item);
-				translation_list.forth;
+				list_extend (Shared_translation_list.item);
+				Shared_translation_list.forth;
 			end;
 			parent.unmanage;
 			check_number_of_icons;

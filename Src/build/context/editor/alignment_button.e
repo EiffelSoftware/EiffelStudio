@@ -1,6 +1,7 @@
 class ALIGNMENT_BUTTON
 
 inherit
+
 	FORMAT_BUTTON
 
 creation
@@ -9,16 +10,16 @@ creation
 
 feature 
 
-	symb_pixmap: PIXMAP is
+	symbol: PIXMAP is
 		once
 			Result := symbol_file_content ("align.symb")
 		end
 
-	make (owner: ROW_COLUMN editor: CONTEXT_EDITOR) is
+	form_number: INTEGER is
 		do
-			owner_form := owner
-			owner_editor := editor
-			this_form := alignment_form_number
-			make_visible (owner)
-		end
+			Result := Context_const.alignment_form_nbr
+		end;
+
+	focus_string: STRING is "";
+
 end

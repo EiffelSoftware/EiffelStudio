@@ -3,32 +3,21 @@ class PERM_WIND_FORM
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	EDITOR_FORM
 		redefine
 			context
 		end
 
-
 creation
 
 	make
 
-	
 feature {NONE}
 
 	pixmap_name: EB_TEXT_FIELD;
 
 	pixmap_selection_box: PIXMAP_FILE_BOX;
-
 
 	title: EB_TEXT_FIELD;
 			-- Title of the perm_wind
@@ -37,19 +26,60 @@ feature {NONE}
 									-- bulletins
 	set_hidden: EB_TOGGLE_B;
 
+	set_default_position_t: EB_TOGGLE_B;
+
 	icon_name: EB_TEXT_FIELD;
 
 	iconic_state: EB_TOGGLE_B;
 
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	context: PERM_WIND_C is
 		do
-			a_parent.form_list.put (Current, perm_wind_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.perm_wind_att_form_nbr
+		end;
+
+	Win_set_default_position_cmd: WIN_SET_DEFAULT_POS_CMD is
+		once
+			!! Result
+		end;
+
+	Perm_icon_name_cmd: PERM_ICON_NAME_CMD is
+		once
+			!!Result
+		end;
+
+	Perm_icon_cmd: PERM_ICON_CMD is
+		once
+			!!Result
+		end;
+
+	Perm_iconic_cmd: PERM_ICONIC_CMD is
+		once
+			!!Result
+		end;
+
+	Perm_hidden_cmd: PERM_SHOWN_CMD is
+		once
+			!!Result
+		end;
+
+	Perm_resize_cmd: PERM_RESIZE_CMD is
+		once
+			!!Result
+		end;
+
+    Perm_title_cmd: PERM_TITLE_CMD is
+        once
+            !!Result
+        end;
+
+feature 
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			pixmap_open_b: PUSH_BG;
 			Nothing: ANY
@@ -57,25 +87,33 @@ feature
 			icon_label: LABEL_G;
 			icon_pixmap_label: LABEL_G;
 		do	
-			initialize (Perm_wind_form_name, a_parent);
+			initialize (Context_const.perm_wind_form_name, a_parent);
 
-			!!title_label.make (T_itle, Current);
-			!!title.make (T_extfield, Current, perm_title_cmd, a_parent);
-			--!!forbid_recomp.make (F_orbid_recomp_size, Current, perm_resize_cmd, a_parent);
-			!!set_hidden.make (S_et_shown, Current, perm_hidden_cmd, a_parent);
+			!!title_label.make (Context_const.title_name, Current);
+			!!title.make (Widget_names.textfield, Current, Perm_title_cmd, editor);
+			--!!forbid_recomp.make (Context_const.forbid_recomp_size_name, 
+					--Current, Perm_resize_cmd, editor);
+			!!set_default_position_t.make 
+					(Context_const.set_default_position_name, 	
+					Current, Win_set_default_position_cmd, editor);
+			!!set_hidden.make (Context_const.set_shown_name, 
+					Current, Perm_hidden_cmd, editor);
+			!!icon_label.make (Context_const.label_name, Current);
+			!!icon_name.make (Widget_names.textfield, Current, 
+					Perm_icon_name_cmd, editor);
+			!!iconic_state.make (Context_const.iconic_state_name, 
+					Current, Perm_iconic_cmd, editor);
 
-			!!icon_label.make (I_con_name, Current);
-			!!icon_name.make (T_extfield, Current, perm_icon_name_cmd, a_parent);
-			!!iconic_state.make (I_conic_state, Current, perm_iconic_cmd, a_parent);
-
-			!!icon_pixmap_label.make (I_con_pix_name, Current);
-			!!pixmap_name.make (T_extfield, Current, perm_icon_cmd, a_parent);
-			!!pixmap_open_b.make (P_Cbutton, Current);
+			!!icon_pixmap_label.make (Context_const.icon_pix_name, Current);
+			!!pixmap_name.make (Widget_names.textfield, Current, 
+					Perm_icon_cmd, editor);
+			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
 			attach_left (title_label, 10);
 			attach_left (title, 100);
 			attach_right (title, 10);
 			--attach_left (forbid_recomp, 10);
 			attach_left (set_hidden, 10);
+			attach_left (set_default_position_t, 10);
 			attach_left (icon_label, 10);
 			attach_left (icon_pixmap_label, 10);
 			attach_left (icon_name, 100);
@@ -92,24 +130,22 @@ feature
 			attach_top_widget (icon_name, icon_pixmap_label, 15);
 			attach_top_widget (icon_name, pixmap_name, 10);
 			attach_top_widget (pixmap_name, pixmap_open_b, 10);
-			attach_top_widget (pixmap_open_b, iconic_state, 10);
+			attach_top_widget (pixmap_open_b, set_default_position_t, 10);
+			attach_top_widget (set_default_position_t, iconic_state, 10);
 			attach_top_widget (iconic_state, set_hidden, 10);
 			detach_bottom (iconic_state);
-			iconic_state.set_text ("Iconic state (at start of application)");
 			pixmap_open_b.add_activate_action (Current, Nothing);
-			pixmap_open_b.set_text ("open pixmap");
+			show_current
 		end;
 
 	
 feature {NONE}
 
-	context: PERM_WIND_C;
-
 	execute (argument: ANY) is
 		do
 			if (pixmap_selection_box = Void) then
 				!!pixmap_selection_box.make 
-					(pixmap_name, Current, perm_icon_cmd, editor);
+					(pixmap_name, Current, Perm_icon_cmd, editor);
 			end;
 			pixmap_selection_box.popup
 		end;
@@ -132,6 +168,7 @@ feature {NONE}
 			else
 				pixmap_name.set_text ("")
 			end;
+			set_default_position_t.set_state (context.default_position);
 			set_hidden.set_state (context.start_hidden);
 			iconic_state.set_state (context.is_iconic_state);
 		end;
@@ -171,6 +208,9 @@ feature
 			--if context.resize_policy_disabled /= forbid_recomp.state then
 				--context.disable_resize_policy (forbid_recomp.state);
 			--end;
+			if context.default_position /= set_default_position_t.state then
+				context.set_default_position (set_default_position_t.state);
+			end;
 			if set_hidden.state = context.start_hidden then
 				context.set_start_hidden (set_hidden.state);
 			end;

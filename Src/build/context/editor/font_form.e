@@ -3,62 +3,42 @@ class FONT_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		rename
-			font_cmd as command
-		export
-			{NONE} all
-		end;
-	EDITOR_OK_FORM
-		redefine
-			form_name
-		
-		end;
+	EDITOR_OK_FORM;
 	PIXMAPS
-		export
-			{NONE} all
-		end
-
 
 creation
 
 	make
 
-	
-feature 
-
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := F_ont_form_name;
-		end;
-
-	
-feature {NONE}
+feature {NONE} -- Interface
 
 	font_b: FONT_BOX;
 
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
 		do
-			a_parent.form_list.put (Current, font_form_number);
+			Result := Context_const.font_form_nbr
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	command: FONT_CMD is
+		once
+			!! Result
+		end;
+
+feature -- Interface
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			font_stone: FONT_STONE;
 		do
-			initialize (F_ont_form_name, a_parent);
+			initialize (Context_const.font_form_name, a_parent);
 			create_ok_button;
-			!!font_b.make (F_ont_box, Current);
+			!!font_b.make (Context_const.font_box_name, Current);
 			font_b.hide_ok_button;
 			font_b.hide_cancel_button;
 			font_b.hide_apply_button;
 
 			!!font_stone;
-			font_stone.make (Current, a_parent);
+			font_stone.make (Current, editor);
 			attach_left (font_b, 1);
 			attach_right (font_b, 1);
 			attach_top (font_b, 1);
@@ -70,8 +50,8 @@ feature
 			detach_top (font_stone);
 			detach_top (separator);
 			detach_left (font_stone);
+			show_current
 		end;
-
 	
 feature {NONE}
 
@@ -80,17 +60,16 @@ feature {NONE}
 			font: FONT;
 		do
 			font := context.font;
-			if not (font = Void) then
+			if font /= Void and then font.name /= Void then
 				font_b.set_font (font);
 			end;
 		end;
 
-	
 feature 
 
 	apply is
 		do
-			context.set_font_named (font_b.font.n_ame);
+			context.set_font_named (font_b.font.name);
 		end;
 
 end

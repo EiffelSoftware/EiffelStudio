@@ -48,7 +48,7 @@ feature {NONE}
 		do
 			font_name := editor.edited_context.font_name;
 			new_context.set_font_named (font_name);
-			context_catalog.update_editors (new_context, font_form_number);
+			context_catalog.update_editors (new_context, Context_const.font_form_nbr);
 		end;
 
 end

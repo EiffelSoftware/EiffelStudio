@@ -26,26 +26,29 @@ feature
 				icon_pixmap_name := node.icon_pixmap_name;
 			end;
 			start_hidden := node.start_hidden;
-			start_hidden_modified := node.start_hidden_modified;
 		end;
 
 	set_context_attributes (a_context: PERM_WIND_C) is
 		do
 			old_set_attributes (a_context);
-			if start_hidden_modified then
-				a_context.set_start_hidden (start_hidden);
-			end;
+			a_context.set_start_hidden (start_hidden);
 			if icon_pixmap_name /= Void then
 				a_context.set_icon_pixmap (icon_pixmap_name);
 			end;
+			set_attributes (a_context);
+				-- Set x and y regardless if position was not modified
+			a_context.set_x_y (x, y);
+			a_context.set_default_position (position_modified)
 		end;
 			
 
 	start_hidden: BOOLEAN;
 
 	start_hidden_modified: BOOLEAN;
+		-- To be removed
 
 	icon_pixmap_name: STRING;
+
 
 end
 

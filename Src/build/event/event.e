@@ -4,16 +4,8 @@ deferred class EVENT
 inherit
 
 	EVENT_STONE;
-
-	STORAGE_INFO
-		export
-			{NONE} all
-		end;
-
+	SHARED_STORAGE_INFO;
 	EB_HASHABLE
-		export
-			{NONE} all
-		end
 	
 feature {NONE}
 
@@ -45,10 +37,9 @@ feature
 			Result := internal_name
 		end;
 
+        internal_name: STRING;
 	
 feature {NONE}
-
-	internal_name: STRING;
 
 	set_symbol (s: PIXMAP) is
 		do

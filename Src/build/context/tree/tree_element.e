@@ -29,10 +29,8 @@ creation
 	
 feature 
 
-
 	mfont: FONT is
 		once
-			--Result := tree.font;
 			if Result = Void then
 				Result := font;
 			end;
@@ -48,7 +46,7 @@ feature
 			if draw_circle then
 				drawing.draw_arc (right_ref_point, 3, 3, 0.0, 360.0, 0.0, -1);
 			end;
-			if not (parent_reference = Void) then
+			if parent_reference /= Void then
 				drawing.draw_segment (reference_point, parent_reference);
 			end;
 		end;

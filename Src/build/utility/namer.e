@@ -4,10 +4,7 @@ class NAMER
 
 inherit
 
-	NAMER_SHARED
-		export
-			{NONE} all
-		end
+	SHARED_NAMER
 
 creation
 
@@ -41,8 +38,8 @@ feature
 			seed := clone (a_seed);
 			value := seed;
 			!!integer_generator;
-			if namer_values.has (a_seed) then
-				integer_generator.set (namer_values.item (a_seed));
+			if Shared_namer_values.has (a_seed) then
+				integer_generator.set (Shared_namer_values.item (a_seed));
 			end;
 		end; -- Create
 
@@ -54,7 +51,7 @@ feature
 			!!value.make (10);
 			value.append (seed);
 			value.append_integer (integer_generator.value);
-			namer_values.force (integer_generator.value, seed)
+			Shared_namer_values.force (integer_generator.value, seed)
 		end; -- next
 
 end -- NAMER 

@@ -62,12 +62,12 @@ feature
 	make (ed: BEHAVIOR_EDITOR) is
 		do
 			func_edit_make (ed);
-			set_symbol (Behavior_pixmap)
 		end;
 
 	make_visible (a_parent: COMPOSITE) is
 		do
 			make_icon_visible (a_parent);
+			set_symbol (Behavior_pixmap);
 			initialize_transport
 		end; -- make_visible
 

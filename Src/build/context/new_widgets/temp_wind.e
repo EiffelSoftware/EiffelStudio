@@ -9,7 +9,6 @@ inherit
 creation
 
 	make
-
 	
 feature -- Not to be put in ebuild library in delivery
 	

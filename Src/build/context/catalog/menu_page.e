@@ -28,16 +28,20 @@ feature {NONE}
 			menu_entry_c: MENU_ENTRY_C;
 		do
 			!!menu_entry_c;
-			menu_entry_type := create_type (M_enu_entry_name, menu_entry_c, Cat_menu_entry_pixmap);
+			menu_entry_type := create_type (Context_const.menu_entry_name, 
+					menu_entry_c, Cat_menu_entry_pixmap);
 
 			!!bar_c;
-			bar_type := create_type (B_ar_name, bar_c, Cat_bar_pixmap);
+			bar_type := create_type (Context_const.bar_name, 
+					bar_c, Cat_bar_pixmap);
 
 			!!submenu_c;
-			submenu_type := create_type (S_ubmenu_name, submenu_c, Cat_menu_pull_pixmap);
+			submenu_type := create_type (Context_const.submenu_name, 
+					submenu_c, Cat_menu_pull_pixmap);
 
 			!!option_btn_c;
-			option_btn_type := create_type (O_pt_pull_name, option_btn_c, Cat_opt_pull_pixmap);
+			option_btn_type := create_type (Context_const.opt_pull_name, 
+					option_btn_c, Cat_opt_pull_pixmap);
 
 			attach_left (bar_type.source, 1);
 			attach_left_widget (bar_type.source, option_btn_type.source, 10);

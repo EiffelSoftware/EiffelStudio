@@ -5,19 +5,12 @@ inherit
 	PIXMAPS
 		rename
 			Group_pixmap as symbol
-		export
-			{NONE} all
 		end;
-
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
-
+	SHARED_CONTEXT;
 	COMPOSITE_C
 		rename
 			reset_modified_flags as old_reset_modified_flags,
-			recursive_cut as old_recursive_cut,
+			cut_list as old_cut_list,
 			cut as old_cut,
 			undo_cut as old_undo_cut,
 			eiffel_callback_calls as old_eiffel_callback_calls
@@ -31,7 +24,6 @@ inherit
 			reset_callbacks, remove_callbacks, stored_node, widget,
 			set_modified_flags
 		end;
-
 	COMPOSITE_C
 		redefine
 			retrieved_node, import_oui_widget, retrieve_oui_widget, 
@@ -39,11 +31,11 @@ inherit
 			children_color, children_initialization, eiffel_declaration, 
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
-			recursive_cut, is_bulletin, is_in_a_group, is_a_group, save_widget, 
+			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
 			reset_callbacks, remove_callbacks, stored_node, widget,
 			set_modified_flags
 		select
-			reset_modified_flags, recursive_cut, cut, 
+			reset_modified_flags, cut_list, cut, 
 			undo_cut, eiffel_callback_calls
 		end
 	
@@ -57,12 +49,17 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
 		do
-			!!widget.make (entity_name, a_parent);
-			select_widget;
+			!! widget.make_unmanaged (entity_name, a_parent);
 			group_type.increment_counter;
 		end;
 
-	widget: EB_BULLETIN;
+	widget: EBUILD_BULLETIN;
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+					Context_const.Geometry_format_nbr);
+		end;
 
 	save_widget (new_context: GROUP_C; table: HASH_TABLE [WIDGET, CONTEXT]) is
 		local
@@ -161,11 +158,6 @@ feature
 	
 feature {NONE}
 
-	editor_form_cell: CELL [INTEGER] is
-		once
-			!!Result.put (0)
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make ("Group");
@@ -206,15 +198,15 @@ feature
 			found: BOOLEAN;
 		do
 			from
-				group_list.start
+				Shared_group_list.start
 			until
-				group_list.after or found
+				Shared_group_list.after or found
 			loop
-				if group_list.item.identifier = a_type then
-					set_type (group_list.item);
+				if Shared_group_list.item.identifier = a_type then
+					set_type (Shared_group_list.item);
 					found := true;
 				else
-					group_list.forth
+					Shared_group_list.forth
 				end;
 			end;
 		end;
@@ -235,15 +227,15 @@ feature
 			Result := True
 		end;
 
-	recursive_cut: LINKED_LIST [CONTEXT] is
+	cut_list: LINKED_LIST [CONTEXT] is
 		do
-			Result := old_recursive_cut;
+			Result := old_cut_list;
 			from
 				subtree.start
 			until
 				subtree.after
 			loop
-				Result.merge_right (subtree.item.recursive_cut);
+				Result.merge_right (subtree.item.cut_list);
 				subtree.forth
 			end;
 		end;
@@ -561,6 +553,7 @@ feature
 			group_type.create_oui_group (Current);
 			reset_modified_flags;
 			retrieved_node.set_context_attributes (Current);
+			widget.manage;
 			retrieved_node := Void
 		end;
 

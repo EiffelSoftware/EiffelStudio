@@ -3,78 +3,100 @@ deferred class EDITOR_FORM
 
 inherit
 
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end;
-	EDITOR_NAMES
-		export
-			{NONE} all
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
 	FORM
 		rename
-			make as form_create
+			make as form_create,
+			make_unmanaged as form_create_unmanaged
 		end
 
 feature 
 
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := S_pecific_attributes
-		end;
-
-	
-feature {NONE}
-
 	editor: CONTEXT_EDITOR;
-
-	
-feature 
-
-	make_visible (an_editor: CONTEXT_EDITOR) is
-		deferred
-		end;
+			-- Assocated context editor
 
 	is_initialized: BOOLEAN;
+			-- Is current initialized (i.e
+			-- has the form widget been created?)
 
-	
-feature {NONE}
-
-	initialize (a_name: STRING; a_parent: CONTEXT_EDITOR) is
-			-- Creates the form
-		do
-			editor := a_parent;
-			form_create (a_name, a_parent.top_form);
-			editor.attach_attributes_form (Current);
-			is_initialized := true;
+	make_visible (a_parent: COMPOSITE) is
+			-- Create form.
+		require
+			valid_parent: a_parent /= Void
+		deferred
+		ensure
+			is_shown: shown
 		end;
 
-	context: CONTEXT;
-	
-feature 
-
-	reset_form is
-		do
-			context := editor.edited_context;
-			reset;
+	reset is
+			-- Reset the content of the form
+		require
+			valid_context: context /= Void
+		deferred
 		end;
 
 	apply is
-			-- update the context according to the content of the form
+			-- Update the context according to 
+			-- the content of the form
+		require
+			valid_context: context /= Void
+		deferred
+		end;
+	
+	context: CONTEXT is
+			-- Current context for form.
+		require
+			valid_editor: editor /= Void;
+			valid_edited_context: editor.edited_context /= Void
+		do
+			Result := editor.edited_context
+		ensure
+			valid_context: Result /= Void
+		end;
+
+feature {NONE}
+	
+	form_number: INTEGER is
+			-- Form number associated with Current form
 		deferred
 		end;
 
-	
-feature {NONE}
+	make (ed: CONTEXT_EDITOR) is
+			-- Add Current to the forms_list of context_editor
+		require
+			valid_ed: ed /= Void
+		do
+			editor := ed;
+			ed.form_list.put (Current, form_number);
+		ensure
+			editor_set: editor /= Void;
+			editor_has_current: ed.form_list.has (Current)
+		end;
 
-	reset is
-			-- reset the content of the form
-		deferred
+	initialize (a_name: STRING; a_parent: COMPOSITE) is
+			-- Creates the form
+		require
+			valid_a_name: a_name /= Void;
+			valid_a_parent: a_parent /= Void;
+			editor_already_set: editor /= Void
+		do
+			form_create_unmanaged (a_name, a_parent);
+			editor.attach_attributes_form (Current);
+			is_initialized := true;
+			hide;
+		ensure
+			not_shown: not shown
+		end;
+
+	show_current is
+		require
+			not_shown: not shown
+		do
+			manage;
+			show;
+		ensure
+			shown: shown;
+			managed: managed;
 		end;
 
 end

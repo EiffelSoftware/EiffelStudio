@@ -694,7 +694,7 @@ feature -- Text generation
 					old_template := Void;
 					eiffel_text := temp;
 					!!doc;
-					doc.set_directory_name (Command_directory);
+					doc.set_directory_name (Environment.commands_directory);
 					doc.set_document_name (eiffel_type);
 					temp := clone (eiffel_text);
 					if temp.item (1) /= '-' and label /= Void 
@@ -705,13 +705,13 @@ feature -- Text generation
 					end;
 					doc.update (temp);
 					doc := Void;
-					mp.restore
 				end;
+				mp.restore;
 			else
 				rescued := False;
 				!!msg.make (0);
 				msg.append ("Cannot write to directory%N");
-				msg.append (merger.template_directory);
+				msg.append (Environment.templates_directory);
 				msg.append ("%NCould not update ");
 				msg.append (label);
 				msg.append (" text");
@@ -736,7 +736,7 @@ feature -- Text generation
 			file_name, temp: STRING;
 		do
 			!!file_name.make(50);
-			file_name.append (Command_directory);
+			file_name.append (Environment.commands_directory);
 			file_name.append ("/");
 			temp := clone (eiffel_type);
 			temp.to_lower;
@@ -754,7 +754,7 @@ feature -- Text generation
 			file_name, temp: STRING;
 		do
 			!!file_name.make(50);
-			file_name.append (Command_directory);
+			file_name.append (Environment.commands_directory);
 			file_name.append ("/");
 			temp := clone (eiffel_type);
 			temp.to_lower;

@@ -3,22 +3,15 @@ class SEPARATOR_FORM
 
 inherit
 
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
 	EDITOR_FORM
 		redefine
 			context
 		end;
-	SEPARATOR_CONST
-
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	is_vertical: EB_TOGGLE_B;
@@ -26,29 +19,49 @@ feature {NONE}
 	b_no_line, b_single_line, b_double_line: EB_TOGGLE_B;
 	b_single_dashed_line, b_double_dashed_line: EB_TOGGLE_B;
 
-	
-feature 
-
-	make (a_parent: CONTEXT_EDITOR) is
+	context: SEPARATOR_C is
 		do
-			a_parent.form_list.put (Current, separator_form_number);
+			Result ?= editor.edited_context
 		end;
 
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	form_number: INTEGER is
+		do
+			Result := Context_const.separator_att_form_nbr
+		end;
+
+	sep_dir_cmd: SEP_DIR_CMD is
+		once
+			!!Result
+		end;
+
+	sep_line_cmd: SEP_LINE_CMD is
+		once
+			!!Result
+		end;
+
+feature
+
+	make_visible (a_parent: COMPOSITE) is
 		local
 			line_style: LABEL_G;
 			radio_b: RADIO_BOX
 		do
-			initialize (Separator_form_name, a_parent);
+			initialize (Context_const.separator_form_name, a_parent);
 
-			!!is_vertical.make (V_ertical, Current, sep_dir_cmd, a_parent);
-			!!line_style.make (L_ine_style, Current);
-			!!radio_b.make (R_ow_column, Current);
-			!!b_single_line.make (S_ingle, radio_b, sep_line_cmd, a_parent);
-			!!b_single_dashed_line.make (S_ingle_dashed, radio_b, sep_line_cmd, a_parent);
-			!!b_double_line.make (D_ouble, radio_b, sep_line_cmd, a_parent);
-			!!b_double_dashed_line.make (D_ouble_dashed, radio_b, sep_line_cmd, a_parent);
-			!!b_no_line.make (N_o_line, radio_b, sep_line_cmd, a_parent);
+			!!is_vertical.make (Context_const.vertical_name, 
+					Current, Sep_dir_cmd, editor);
+			!!line_style.make (Context_const.line_style_name, Current);
+			!!radio_b.make (Widget_names.row_column, Current);
+			!!b_single_line.make (Context_const.single_name, 
+					radio_b, Sep_line_cmd, editor);
+			!!b_single_dashed_line.make (Context_const.single_dashed_name, 
+					radio_b, Sep_line_cmd, editor);
+			!!b_double_line.make (Context_const.double_name, radio_b, 
+					Sep_line_cmd, editor);
+			!!b_double_dashed_line.make (Context_const.double_dashed_name, 
+					radio_b, Sep_line_cmd, editor);
+			!!b_no_line.make (Context_const.no_line_name, radio_b, 
+					Sep_line_cmd, editor);
 
 			attach_left (is_vertical, 10);
 			attach_left (line_style, 10);
@@ -59,25 +72,25 @@ feature
 			attach_top_widget (is_vertical, line_style, 10);
 			attach_top_widget (is_vertical, radio_b, 10);
 			attach_bottom (radio_b, 50);
+			show_current
 		end;
 
 	
 feature {NONE}
 
-	context: SEPARATOR_C;
-
 	reset is
+		local
+			l_mode: INTEGER
 		do
 			is_vertical.set_state (context.is_vertical);
-			inspect
-				context.line_mode
-			when no_line then
+			l_mode := context.line_mode;
+			if l_mode = Context_const.no_line then
 				b_no_line.arm
-			when double_line then
+			elseif l_mode = Context_const.double_line then
 				b_double_line.arm
-			when single_dashed_line then
+			elseif l_mode = Context_const.single_dashed_line  then
 				b_single_dashed_line.arm
-			when double_dashed_line then
+			elseif l_mode = Context_const.double_dashed_line then
 				b_double_dashed_line.arm
 			else
 				b_single_line.arm
@@ -104,15 +117,15 @@ feature {NONE}
 	new_mode: INTEGER is
 		do
 			if b_no_line.state then
-				Result := context.no_line
+				Result := Context_const.no_line
 			elseif b_single_line.state then
-				Result := context.single_line
+				Result := Context_const.single_line
 			elseif b_double_line.state then
-				Result := context.double_line
+				Result := Context_const.double_line
 			elseif b_single_dashed_line.state then
-				Result := context.single_dashed_line
+				Result := Context_const.single_dashed_line
 			else
-				Result := context.double_dashed_line
+				Result := Context_const.double_dashed_line
 			end;
 		end;
 

@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			P_ulldown_resize_cmd_name as c_name
-		export
-			{NONE} all
 		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := pulldown_form_number
+			Result := Context_const.pulldown_sm_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.pulldown_resize_cmd_name
 		end;
 
 	context: PULLDOWN_C;

@@ -3,10 +3,7 @@ class APP_MOVE_FIGURE
 
 inherit 
 
-	APP_SHARED
-		export
-			{NONE} all
-		end;
+	SHARED_APPLICATION;
 	APP_COMMAND
 		redefine
 			redo	
@@ -14,8 +11,6 @@ inherit
 	APP_CMD_NAMES
 		rename
 			App_move_figure_cmd_name as c_name
-		export
-			{NONE} all
 		end
 	
 feature 

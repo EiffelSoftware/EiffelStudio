@@ -11,46 +11,23 @@ inherit
 		redefine
 			parent
 		end;
-	TEXT_GENERATION
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
+	TEXT_GENERATION;
+	WINDOWS;
+	CONSTANTS;
 	COMMAND_ARGS
 		rename
 			First as first_arg,
 			Second as second_arg
-		export
-			{NONE} all
 		end;
 	CONTEXT_STONE
 		rename
 			source as widget
-		export
-			{NONE} all;
-			{ANY} symbol, eiffel_type
 		end;
-	EB_HASHABLE
-		export
-			{NONE} all
-		end;
-	CALLBACK_GENE
-		export
-			{NONE} all
-		end;
+	EB_HASHABLE;
+	CALLBACK_GENE;
 	HOLE
 		rename
 			target as widget
-		
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
@@ -63,19 +40,15 @@ feature -- Editable
 
 	create_editor is
 		local
-			ed, other_editor: CONTEXT_EDITOR
+			ed, other_editor: CONTEXT_EDITOR;
+			editor_form: INTEGER
 		do
-			other_editor := context_catalog.editor (Current, editor_form);
+			editor_form := option_list @ 1;
+			other_editor := context_catalog.editor 
+					(Current, editor_form);
 				--! Check to see if there is already an 
-				--! editor for current.
+				--! editor for editor_form.
 			if other_editor = Void then
-				ed := window_mgr.context_editor;
-				window_mgr.display (ed);
-				ed.set_edited_context (Current);	
-			elseif
-				(editor_form /= option_list.item (1))
-			then
-				set_editor_form (option_list.item (1));
 				ed := window_mgr.context_editor;
 				window_mgr.display (ed);
 				ed.set_edited_context (Current);	
@@ -122,7 +95,7 @@ feature -- Removable
 		do
 			a_parent := parent;
 				-- After cut, the parent field is Void
-			!!command;
+			!! command;
 				-- Applied on original stone because of
 				-- the bulletin_c that can be transformed
 				-- in group_c
@@ -230,7 +203,6 @@ feature {NONE}
 		once
 			!!Result
 		end;
-
 	
 feature 
 
@@ -245,8 +217,8 @@ feature
 		require 
 			parent_not_void: parent /= Void;
 		do
-				parent.child_finish;
-				parent.put_child_right (Current);
+			parent.child_finish;
+			parent.put_child_right (Current);
 		end;
 
 	root: CONTEXT is
@@ -258,13 +230,13 @@ feature
 			Result := parent.root
 		end;
 
---	is_form: BOOLEAN is
---			-- is widget a descendant of FORM 
---		do
---		end;
---
 	is_bulletin: BOOLEAN is
 			-- is widget a descendant of BULLETIN
+		do
+		end;
+
+	is_window: BOOLEAN is
+			-- Is Current a window (perm or temp window)?
 		do
 		end;
 
@@ -272,10 +244,8 @@ feature {NONE}
 
 	initialize is
 			-- Define the name and the identifier
-		local
-			void_widget: like widget;
 		do
-			tree_create (void_widget);
+			tree_create (Void);
 			set_next_identifier;
 		end;
 	
@@ -372,6 +342,9 @@ feature
 	set_position (x_pos, y_pos: INTEGER) is
 			-- Set the position of the context to
 			-- the absolute position (x_pos, y_pos)
+		require
+			valid_parent: parent /= Void;
+			parent_is_bulletin: parent.is_bulletin
 		local
 			new_x, new_y: INTEGER;
 		do
@@ -384,15 +357,8 @@ feature
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
---			if parent.is_form then
---				attachments.Create (Current);
---				attachments.attach_top (parent, new_y);
---				attachments.attach_left (parent, new_x);
---			end;
-			if parent.is_bulletin then
-				!!resize_policy.make;
-				resize_policy.set_context (Current)
-			end;
+			!! resize_policy.make;
+			resize_policy.set_context (Current)
 		end;
 
 	
@@ -401,29 +367,32 @@ feature {NONE}
 	add_widget_callbacks is
 			-- Define the general behavior of the widget
 		do
-			add_common_callbacks (widget);
-			initialize_transport;
 			if (parent = Void) or else not parent.is_group_composite then
 					-- In a group, move is applied to the group,
 					-- even if the cursor is on the children
-				widget.add_enter_action (eb_selection_mgr, Current);
+				widget.add_enter_action (Eb_selection_mgr, Current);
 			end;
+			add_common_callbacks (widget);
+			initialize_transport;
 		end;
 
 	add_common_callbacks (a_widget: WIDGET) is
 			-- General callbacks forall types of contexts
 		do
 				-- Move and resize actions
-			a_widget.set_action ("~Shift ~Ctrl<Btn1Down>", eb_selection_mgr, third);
-			a_widget.set_action ("<Btn1Up>", eb_selection_mgr, second_arg);
+			a_widget.set_action ("~Shift ~Ctrl<Btn1Down>", Eb_selection_mgr, third);
+			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg);
 				-- Shift actions
-			a_widget.set_action ("Shift<Btn1Down>", eb_selection_mgr, fourth);
-
+			a_widget.set_action ("Shift<Btn1Down>", Eb_selection_mgr, fourth);
 				-- Ctrl actions (group)
-			a_widget.set_action ("Ctrl<Btn1Down>", eb_selection_mgr, fifth);
-
+			a_widget.set_action ("Ctrl<Btn1Down>", Eb_selection_mgr, fifth);
+				-- Callbacks for arrow keys
+			a_widget.set_action ("<Key>osfLeft", Eb_selection_mgr, Sixth);
+			a_widget.set_action ("<Key>osfRight", Eb_selection_mgr, Seventh);
+			a_widget.set_action ("<Key>osfUp", Eb_selection_mgr, Eighth);
+			a_widget.set_action ("<Key>osfDown", Eb_selection_mgr, Nineth);
 				-- Cursor shape
-			a_widget.add_pointer_motion_action (eb_selection_mgr, first_arg);
+			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg);
 		end;
 
 	remove_widget_callbacks is
@@ -432,7 +401,6 @@ feature {NONE}
 			widget.remove_button_release_action (2, show_command, Nothing);
 			widget.remove_button_press_action (3, transport_command, Current);
 		end;
-
 	
 feature 
 
@@ -483,7 +451,8 @@ feature
 			a_parent.append (Result);
 			Result.generate_internal_name;
 			Result.oui_create (a_parent.widget);
-			if not (widget = Void) then
+				-- Void widget if context created for context catalog
+			if widget /= Void then
 				-- Copy the attributes of the source
 				tree.disable_drawing;
 				copy_attributes (Result);
@@ -502,44 +471,51 @@ feature
 	-- *********************************
 
 	option_list: ARRAY [INTEGER] is
-			-- List of the different forms
+			-- Array of the different forms
 			-- which define the attributes of
 			-- the context
 		do
-			!!Result.make (1, 1);
-			Result.put (geometry_form_number, 1);
+			!! Result.make (1, Context_const.number_of_formats);
+			add_to_option_list (Result);
+			if is_bulletin then
+				Result.put (Context_const.alignment_form_nbr, 
+					Context_const.align_format_nbr);
+				Result.put (Context_const.grid_form_nbr, 
+					Context_const.grid_format_nbr)
+			end;
+			if resize_policy /= Void then
+				Result.put (Context_const.bulletin_resize_form_nbr, 
+				Context_const.resize_format_nbr)
+			end;
+			Result.put (Context_const.color_form_nbr, 
+				Context_const.color_format_nbr)
+			if is_fontable then
+				Result.put (Context_const.font_form_nbr, 
+					Context_const.font_format_nbr)
+			end;
+			Result.put (Context_const.behavior_form_nbr, 
+				Context_const.behaviour_format_nbr)
+		ensure
+			valid_result: Result /= Void;
+			result_not_empty: not Result.empty;
+			valid_result_count: Result.count = 9
 		end;
 
-	
-feature {CONTEXT_EDITOR, CONTEXT_BUTTON}
-
-	editor_form: INTEGER is
-			-- the form that will appear in the
-			-- contexte editor when current context
-			-- will be selected
-		do
-			Result := editor_form_cell.item
-		end;
-
-	set_editor_form (new_form_number: INTEGER) is
-			-- set the form that will appear in the
-			-- context editor when current context
-			-- will be selected
-		do
-			editor_form_cell.put (new_form_number)
-		end;
-
-	
-feature {NONE}
-
-	editor_form_cell: CELL [INTEGER] is
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+			-- List of specific forms for Current
+			-- Context
+		require
+			valid_opt_list: opt_list /= Void;
+			option_list_has_correct_count: 
+					opt_list.count = Context_const.number_of_formats
 		deferred
 		end;
+	
+feature {NONE}
 
 	-- *********************
 	-- * Widget attributes *
 	-- *********************
-
 	
 feature 
 
@@ -567,16 +543,49 @@ feature
 			Result := widget.height
 		end;
 
+	set_real_x_y (x_pos, y_pos: INTEGER) is
+			-- Set the x and y coord from
+			-- selection manager.
+		require
+			valid_parent: parent /= Void;
+			parent_is_bulletin: parent.is_bulletin
+		local
+			new_x, new_y: INTEGER;
+		do
+			new_x := x_pos;
+			new_y := y_pos;
+			if new_x < 0 or else 
+				new_x > parent.width 
+			then
+				new_x := 0
+			end;
+			if new_y < 0 or else 
+				new_y > parent.height 
+			then
+				new_y := 0
+			end;
+			set_x_y (new_x, new_y);
+		end;
+
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
+		require
+			valid_parent: parent /= Void;
+			parent_is_bulletin: parent.is_bulletin
 		local
 			eb_bulletin: SCALABLE;
+			not_managed: BOOLEAN
 		do
 			position_modified := True;
 			if parent.is_bulletin then
-				widget.set_managed (False);
+				if widget.managed then
+					not_managed := True
+					widget.unmanage
+				end;
 				widget.set_x_y (new_x, new_y);
-				widget.set_managed (True);
+				if not_managed then
+					widget.manage
+				end;
 				eb_bulletin ?= parent.widget;
 				eb_bulletin.update_ratios (widget);
 			else
@@ -588,19 +597,24 @@ feature
 
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
+		require
+			valid_parent: parent /= Void;
+			parent_is_bulletin: parent.is_bulletin
 		local
 			eb_bulletin: SCALABLE;
+			not_managed: BOOLEAN
 		do
 			size_modified := True;
-			if parent.is_bulletin then
-				widget.set_managed (False);
-				widget.set_size (new_w, new_h);
-				widget.set_managed (True);
-				eb_bulletin ?= parent.widget;
-				eb_bulletin.update_ratios (widget);
-			else
-				widget.set_size (new_w, new_h);
+			if widget.managed then
+				not_managed := True
+				widget.unmanage
 			end;
+			widget.set_size (new_w, new_h);
+			if not_managed then
+				widget.manage
+			end;
+			eb_bulletin ?= parent.widget;
+			eb_bulletin.update_ratios (widget);
 		end;
 
 	size_modified: BOOLEAN;
@@ -633,26 +647,6 @@ feature
 			end
 		end;
 
-	select_widget is
-		local
-			temp:STRING;
-			temp1: ANY	
-		do
-			temp := "shadowThickness";
-			temp1 := temp.to_c;
-			context_set_int (widget.implementation.screen_object, 1, $temp1);
-		end;
-
-	deselect_widget is
-		local
-			temp:STRING;
-			temp1: ANY	
-		do
-			temp := "shadowThickness";
-			temp1 := temp.to_c;
-			context_set_int (widget.implementation.screen_object, 0, $temp1);
-		end;
-
 	-- ***********************
 	-- EiffelVision attributes
 	-- ***********************
@@ -665,7 +659,9 @@ feature
 		do
 			bg_pixmap_name := a_string;
 			bg_pixmap_modified := False;
-			if (a_string /= Void) then 
+			if (a_string = Void) then 
+				widget.set_background_pixmap (default_bg_pixmap)
+			else
 				!!a_pixmap.make;
 				a_pixmap.read_from_file (a_string);
 				if a_pixmap.is_valid then
@@ -677,20 +673,60 @@ feature
 
 	bg_pixmap_modified: BOOLEAN;
 
+	default_bg_pixmap: PIXMAP is
+		require
+			widget_is_window: is_window
+		once
+			Result := widget.background_pixmap
+		ensure
+			valid_result: Result /= Void and then
+						Result.is_valid
+		end;
+
+	set_default_bg_pixmap is
+			-- Perm window will call this first.
+		require
+			widget_is_window: is_window
+		do
+			if default_bg_pixmap = Void then end
+		end;
+
+	set_grid (pix: PIXMAP) is
+		require
+			is_bulletin: is_bulletin
+		do
+			if pix = Void then
+				if bg_pixmap_name /= Void then
+					set_bg_pixmap_name (bg_pixmap_name)
+				else
+					widget.set_background_pixmap (default_bg_pixmap)
+				end
+			else
+				if pix.is_valid then
+					widget.unmanage;
+					widget.set_background_pixmap (pix)
+					widget.manage
+				end
+			end
+		end;
+
 	bg_color_name: STRING;
 	
 	set_bg_color_name (a_color_name: STRING) is
+		require
+			never_empty_name: a_color_name /= Void implies 
+							not a_color_name.empty
 		local
 			a_color: COLOR;
 		do
 			bg_color_name := a_color_name;
-			if 	(a_color_name /= Void and not a_color_name.empty) then
+			if 	a_color_name = Void then
+				bg_color_modified := False
+			else
 				!!a_color.make;
 				a_color.set_name (a_color_name);
 				widget.set_background_color (a_color);
 				bg_color_modified := True;
-			else
-				bg_color_modified := False
 			end;
 		end;
 
@@ -699,6 +735,9 @@ feature
 	fg_color_name: STRING;
 	
 	set_fg_color_name (a_color_name: STRING) is
+		require
+			never_empty_name: a_color_name /= Void implies 
+							not a_color_name.empty
 		deferred
 		end;
 
@@ -709,32 +748,28 @@ feature
 	font: FONT is
 		local
 			fontable: FONTABLE;
-			any: ANY
 		do
 			if is_fontable then
-				any := widget;
-				fontable ?= any;
+				fontable ?= widget;
 				Result := fontable.font;
 			end;	
 		end;
 
 	set_font_named (s: STRING) is
-		require
-			not_void_argument: not (s = Void)
 		local
 			fontable: FONTABLE;
-			any: ANY
 		do
 			font_name_modified := False;
 			if is_fontable then
 				font_name := s;
-				if s /= Void then
-					font_name_modified := True;
-					any := widget;
-					fontable ?= any;
-					fontable.set_font_name (s)
-				else
+				if s = Void then
 					font_name_modified := False
+				else
+					font_name_modified := True;
+					fontable ?= widget;
+					widget.unmanage;
+					fontable.set_font_name (s);
+					widget.manage;
 				end
 			end;			
 		end;
@@ -745,7 +780,7 @@ feature
 feature {NONE}
 
 	copy_attributes (other_context: like Current) is
-			-- Copy the attributes of `other_context'
+			-- Copy the attributes of Current to `other_context'
 		do
 			if size_modified then
 				other_context.set_size (width, height);
@@ -825,16 +860,14 @@ feature
 			Result := True
 		end;
 
-	
 feature {NONE}
 
-	eb_selection_mgr: SELECTION_MANAGER is
+	Eb_selection_mgr: SELECTION_MANAGER is
 			-- Selection manager
 		once
 			!!Result.make
 		end;
 
-	
 feature 
 
 	grouped: BOOLEAN;
@@ -868,7 +901,7 @@ feature
 
 	group: LINKED_LIST [CONTEXT] is
 		do
-			Result := eb_selection_mgr.group
+			Result := Eb_selection_mgr.group
 		end;
 
 	cut is
@@ -881,21 +914,23 @@ feature
 				parent.search_same_child (Current);
 				parent.remove_child;
 			end;
-			widget.hide;
+			if grouped then
+				set_grouped (False)
+			end;
 			tree.cut (tree_element);
 			context_catalog.clear_editors (Current);
+			widget.set_managed (False);
+		ensure
+			widget_is_hidden: not widget.managed
 		end;
 
-	recursive_cut: LINKED_LIST [CONTEXT] is
-			-- Delete the context and all its children
+	cut_list: LINKED_LIST [CONTEXT] is
+			-- Current Context and all its children 
+			-- that will be destroyed
 		local
 			a_child, new_child: CONTEXT;
 		do
 			!!Result.make;
-			if grouped then
-				set_grouped (False)
-			end;
-			cut;
 			Result.put_right (Current);
 			from
 				a_child := first_child;
@@ -903,14 +938,18 @@ feature
 				(a_child = Void)
 			loop
 				new_child := a_child.right_sibling;
-				Result.merge_right (a_child.recursive_cut);
+				Result.merge_right (a_child.cut_list);
 				a_child := new_child;
 			end;
-			widget.set_managed (False);
+		ensure
+			valid_result: Result /= Void;
+			has_current: Result.has (Current);
 		end;
 
 	undo_cut is
 			-- Undelete the context
+		require
+			widget_unmanaged: not widget.managed
 		do
 				-- If the parent is a group_c, the only link is
 				-- the value of parent, the tree is not updated
@@ -920,7 +959,8 @@ feature
 			end;
 			tree.append (tree_element);
 			widget.set_managed (True);
-			widget.show;
+		ensure
+			widget_shown: widget.managed
 		end;
 
 	hide_tree_elements is
@@ -966,9 +1006,6 @@ feature
 			bg_color_modified := False;
 			bg_pixmap_modified := False;
 			font_name_modified := False;
---			if not attachments.Void then
---				attachments.reset_modified_flags
---			end;
 			if not (resize_policy = Void) then
 				resize_policy.reset_modified_flags
 			end;
@@ -1125,7 +1162,7 @@ feature {CONTEXT}
 			opc ?= parent;
 			bul ?= parent;
 			if mc /= Void or else opc /= Void 
-			    or else bul /= Void then
+				 or else bul /= Void then
 				Result := parent.intermediate_name;
 			else
 				Result := parent.full_name;
@@ -1215,11 +1252,12 @@ feature {NONE}
 			!!Result.make (0);
 			if parent.is_bulletin and then
 					position_modified then
-				function_int_int_to_string (Result, context_name, "set_x_y", x, y);
+				function_int_int_to_string (Result, context_name, 
+					"set_x_y", x, y);
 			end;
---			if (parent.is_bulletin or parent.is_form) and then
 			if parent.is_bulletin and then size_modified then
-				function_int_int_to_string (Result, context_name, "set_size", width, height);
+				function_int_int_to_string (Result, context_name, 
+						"set_size", width, height);
 			end;
 		end;
 
@@ -1308,7 +1346,7 @@ feature {CONTEXT}
 	eiffel_callbacks: STRING is
 		do
 			!!Result.make (0);
-			if callback_generator.has (Current) or else is_root then
+			if is_window or else callback_generator.has (Current) then
 				Result.append (callback_generator.eiffel_text (Current))
 			end;
 			Result.append (children_callbacks)
@@ -1336,7 +1374,7 @@ feature {CLBKS, CONTEXT}
 		do
 			!!Result.make (0);
 			if 
-				(not is_root) and then callback_generator.has (Current)
+				(not is_window) and then callback_generator.has (Current)
 			then
 				if group_name = Void then
 					context_name := clone (entity_name);
@@ -1446,10 +1484,9 @@ feature
 			Result.append ("%N%Tset_values is%N%T%Tdo%N");
 			Result.append (context_initialization (""));
 			Result.append (font_creation (""));
-			Result.append (position_initialization (""));
 			Result.append (children_initialization);
---			Result.append (form_attachments_text (""));
 			Result.append (bulletin_resize_text (""));
+			Result.append (position_initialization (""));
 
 				-- Colors
 
@@ -1489,7 +1526,7 @@ feature
 		local
 			parent_widget: COMPOSITE
 		do
-			if not (parent = Void) then
+			if parent /= Void then
 				parent_widget ?= parent.widget;
 			end;
 			oui_create (parent_widget);
@@ -1501,6 +1538,9 @@ feature
 			loop
 				child.retrieve_oui_widget;
 				child_forth
+			end;
+			if not is_window then
+				widget.manage;
 			end;
 			retrieved_node := Void;
 		end;
@@ -1524,6 +1564,9 @@ feature
 				child.import_oui_widget (group_table);
 				child_forth
 			end;
+			if not is_window then
+				widget.manage;
+			end;
 			retrieved_node := Void
 		end;
 
@@ -1531,14 +1574,5 @@ feature
 		do
 			widget.realize
 		end;
-
-feature {NONE} -- External features
-
-	context_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER) is
-		external
-			"C"
-		alias
-			"set_int"
-		end; -- context_set_int
 
 end

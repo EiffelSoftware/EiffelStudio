@@ -3,20 +3,14 @@ class SAVE_PROJECT
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	CONSTANTS;
+	WINDOWS;
 	LICENCE_COMMAND
 		export
 			{NONE} all;
 			{ANY} execute
 		redefine
 			licence_checked
-		end;
-	UNIX_ENV
-		export
-			{NONE} all
 		end;
 	ERROR_POPUPER
 
@@ -39,9 +33,8 @@ feature
 				if main_panel.project_initialized then
 					!!mp;
 					mp.set_watch_shape;
-					make_backup;
 					!!storer.make;
-					storer.store (Storage_directory);
+					storer.store (Environment.storage_directory);
 					storer := Void;
 					mp.restore;
 					history_window.set_saved_application;
@@ -51,11 +44,11 @@ feature
 				rescued := False;
 				!!msg.make (0);
 				msg.append ("Cannot save project to directory%N");
-				msg.append (Storage_directory);
+				msg.append (Environment.storage_directory);
 				error_box.popup (Current, msg)
 			end
 		rescue
-			-- Check for no more memory
+				-- Check for no more memory
 			rescued := True;
 			mp.restore;
 			retry
@@ -66,41 +59,5 @@ feature
 			Result := True;
 		end;
 
-
-	Backup_directory: STRING is
-		do
-			!!Result.make (0);
-			Result.append (Project_directory);
-			Result.append ("/Backup");
-		end;
-
-	make_backup is
-		do
-			copy_file ("/interface");
-			copy_file ("/application");
-			copy_file ("/groups");
-			copy_file ("/namer");
-			copy_file ("/states");
-			copy_file ("/commands");
-		end;
-
-	copy_file (name: STRING) is
-		local
-			source: UNIX_FILE;
-			destination: UNIX_FILE;
-			file_name: STRING;
-		do
-			!!file_name.make (0);
-			file_name.append (Storage_directory);
-			file_name.append (name);
-			!!source.make_open_read (clone (file_name));
-			file_name.wipe_out;
-			file_name.append (Backup_directory);
-			file_name.append (name);
-			!!destination.make (clone (file_name));
-			destination.wipe_out;
-			source.close;
-			destination.append (source);
-		end;
 
 end

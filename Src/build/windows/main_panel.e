@@ -1,33 +1,17 @@
 class MAIN_PANEL 
 
 inherit
-	PIXMAPS
-		export
-			{NONE} all
-		end
-	WIDGET_NAMES
-		export
-			{NONE} all
-		end
+
+	PIXMAPS;
+	WIDGET_NAMES;
 	WINDOWS
 	LICENCE_COMMAND
-		export
-			{NONE} all
 		redefine
 			cancel_request
 		end
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end
-	UNIX_ENV
-		export
-			{NONE} all
-		end
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end
+	COMMAND_ARGS;
+	SHARED_CONTEXT;
+	CONSTANTS
 
 creation
 	make
@@ -36,23 +20,23 @@ feature
 
 	base: TRANSPORTER
 
-	-- Is ebuild editing a project?
 	project_initialized: BOOLEAN
+			-- Is ebuild editing a project?
 
 	set_title (s: STRING) is 
-		-- Set the title of the main panel.
+			-- Set the title of the main panel.
 		do 
 			base.set_title (s) 
 		end
 
 	set_project_initialized is 
-		-- Set project_initialized to True.
+			-- Set project_initialized to True.
 		do 		
 			project_initialized := True 
 		end
 
 	unset_project_initialized is 
-		-- Set project_initialized to False.
+			-- Set project_initialized to False.
 		do 		
 			project_initialized := False 
 		end
@@ -266,27 +250,29 @@ feature
 		end
 
 feature {INTERFACE_B}
+
 	hide_interface is
 		do
 			from
-				window_list.start
+				Shared_window_list.start
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				window_list.item.hide
-				window_list.forth
+				Shared_window_list.item.hide
+				Shared_window_list.forth
 			end
 		end
 
 	show_interface is
 		do
 			from
-				window_list.start
+				Shared_window_list.start
 			until
-				window_list.after
+				Shared_window_list.after
 			loop
-				window_list.item.show
-				window_list.forth
+				Shared_window_list.item.show
+				Shared_window_list.forth
 			end
 		end
+
 end

@@ -3,38 +3,12 @@ deferred class EDIT_BUTTON
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-	CONTEXT_SHARED
-		export
-			{NONE} all
-		end;
+	PIXMAPS;
 	ICON_HOLE;
-	FOCUSABLE
-		export
-			{NONE} all
-		end;
+	FOCUSABLE;
 	WINDOWS
-		export
-			{NONE} all
-		end
-
---creation
-
-	--make
 
 feature 
-
-	--make (a_name: STRING; a_parent: COMPOSITE) is
-		--local
-			--Nothing: ANY
-		--do
-			--make_visible (a_parent);
-			--set_symbol (Edit_stone_pixmap);
-			--initialize_focus
-		--end;
 
 	focus_source: PICT_COLOR_B is
 		do

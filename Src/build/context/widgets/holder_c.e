@@ -17,9 +17,6 @@ inherit
 			process_stone
 		end
 
-
-
-	
 feature 
 
 	append (a_child: CONTEXT) is
@@ -58,35 +55,33 @@ feature {NONE}
 			dropped_context: CONTEXT;
 			window_c: WINDOW_C;
 			a_temp_wind: TEMP_WIND_C;
-			position_x, position_y: INTEGER;
+			new_x, new_y: INTEGER
 		do
-			position_x := eb_screen.x;
-			position_y := eb_screen.y
 			old_process_stone;
 			if 
 				not original_stone.is_in_a_group 
 			then
 				group_stone ?= stone;
-				if not (group_stone = Void) then
+				if group_stone /= Void then
 					stone := group_stone.original_stone;
 				end;
 				a_type ?= stone;
 				context_stone ?= stone;	
-				if not (a_type = Void) then
+				if a_type /= Void then
 					if 
 						(a_type /= context_catalog.perm_wind_type) then
 						if
 							(a_type = context_catalog.temp_wind_type) and
 							(context_type = context_catalog.perm_wind_type)
-							then
+						then
 							a_context := a_type.create_context (Current);
 						elseif 	
 							(a_type /= context_catalog.temp_wind_type) 
-							then
+						then
 							a_context := a_type.create_context (Current);
 						end;
 					end;
-				elseif not (context_stone = Void) then
+				elseif context_stone /= Void then
 					dropped_context := context_stone.original_stone;
 					window_c ?= dropped_context;
 					if (window_c = Void) then
@@ -96,13 +91,16 @@ feature {NONE}
 						a_context := dropped_context.create_context (Current);
 					end;
 				end;
-				if not (a_context = Void) then
-					a_context.set_position (position_x, position_y);
-					a_context.realize;
+				if a_context /= Void then
 					a_temp_wind ?= a_context;
-					if a_temp_wind /= Void then
+					if a_temp_wind = Void then
+						if a_context.parent /= Void and then a_context.parent.is_bulletin then
+							a_context.set_position (eb_screen.x, eb_screen.y)
+						end
+					else
 						a_temp_wind.popup;
 					end;
+					a_context.widget.manage;
 					tree.display (a_context);
 				end;
 			end

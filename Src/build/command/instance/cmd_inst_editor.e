@@ -162,7 +162,7 @@ feature
 			arguments.set_row_layout;
 			separator.set_single_line;
 			separator.set_horizontal (True);
-			form.set_action("Shift<Btn2Down", Current, raise_arg)
+			form.set_action("Shift<Btn2Down>", Current, raise_arg)
 		end;
 
 	raise_arg: ANY is

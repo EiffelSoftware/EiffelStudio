@@ -4,28 +4,11 @@ class GROUP_CMD
 inherit
 
 	WINDOWS
-		export
-			{NONE} all
-		end;
 	CONTEXT_CMD
 		redefine
 			work, undo, redo, context
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			G_roup_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
-
-
-	
 feature {NONE}
 
 	context: GROUP_C;
@@ -34,15 +17,33 @@ feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := geometry_form_number
+			Result := Context_const.geometry_form_nbr
 		end;
 
 	old_contexts: LINKED_LIST [CONTEXT];
 
 	cut_old_command: CONTEXT_CUT_CMD;
 
-	
+	c_name: STRING is
+		do
+			Result := Context_const.group_cmd_name
+		end;
+
 feature 
+
+	destroy_widgets is
+		do
+			cut_old_command.destroy_widgets;
+			from
+				old_contexts.start
+			until
+				old_contexts.after
+			loop
+				old_contexts.item.widget.destroy
+				old_contexts.forth
+			end;
+			context.widget.destroy
+		end;
 
 	group_create (group_c: GROUP_C; contexts: LINKED_LIST [CONTEXT]) is
 		local
@@ -60,7 +61,7 @@ feature
 			parent ?= group_c.parent;
 
 				-- Cut the grouped elements
-			!!cut_old_command;
+			!! cut_old_command;
 			cut_old_command.work (old_contexts.first);
 
 			from
@@ -132,7 +133,6 @@ feature
 			end;
 				-- Restore previous elements
 			undo_cut_old_contexts;
-			cut_old_command.set_group_uncreated (True);
 			parent.show_tree_elements;
 			tree.display (old_contexts.first);
 			mp.restore
@@ -147,7 +147,6 @@ feature
 			parent.hide_tree_elements;
 				-- cut the contexts
 			cut_old_command.redo;
-			cut_old_command.set_group_uncreated (False);
 				-- undo cut on group_c
 			context.set_parent (parent);
 			context.undo_cut;

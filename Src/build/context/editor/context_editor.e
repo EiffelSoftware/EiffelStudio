@@ -2,10 +2,6 @@ class CONTEXT_EDITOR
 
 inherit
 
-	WIDGET_NAMES
-	EDITOR_NAMES
-	EDITOR_FORMS
-
 	TOP_SHELL
 		rename
 			make as shell_make,
@@ -17,7 +13,6 @@ inherit
 		redefine
 			delete_window_action
 		end
-
 	TOP_SHELL
 		export
 			{NONE} all
@@ -30,8 +25,8 @@ inherit
 		select
 			realize, make, show, hide
 		end
-
 	WINDOWS
+	CONSTANTS
 
 creation
 
@@ -64,7 +59,6 @@ feature {NONE}
 
 	first_separator: SEPARATOR_G
 	second_separator: SEPARATOR_G
-	formats: ROW_COLUMN
 	
 feature 
 
@@ -79,9 +73,13 @@ feature {NONE}
 
 	behavior_form: BEHAVIOR_FORM
 	
+	formats_rc: ROW_COLUMN
+
 feature 
 
-	format: FORMAT
+	format_list: FORMAT_LIST;
+
+	focus_label: FOCUS_LABEL;
 
 	make (a_name: STRING a_screen: SCREEN) is
 		local
@@ -107,38 +105,40 @@ feature
 			bull_resize_form: BULL_RESIZE_FORM
 			grid_form: GRID_FORM
 		do
-			!!form_list.make (1, form_number)
+			!!form_list.make (1, Context_const.total_nbr_of_forms);
 
 			shell_make (a_name, a_screen)
-			!!top_form.make (F_orm, Current)
+			!!top_form.make (Widget_names.form, Current)
 
 			!!context_hole.make (Current)
 			context_hole.make_visible (top_form)
-			!!first_separator.make (S_eparator, top_form)
+			!!first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
-			!!second_separator.make (S_eparator, top_form)
+			!!second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
 			!!close_button.make (Current, Current)
 			close_button.make_visible (top_form)
-			!!formats.make ("formats", top_form) 
-			formats.set_row_layout
-			formats.set_preferred_count (1)
-			formats.set_spacing (5)
-			formats.set_size(50, 100)
+			!!formats_rc.make (Widget_names.row_column, top_form) 
+			formats_rc.set_row_layout
+			formats_rc.set_preferred_count (1)
+			formats_rc.set_spacing (5)
+			!! focus_label.make (top_form);
 
-            top_form.set_fraction_base (20)
+			top_form.set_fraction_base (20)
+			top_form.attach_top (focus_label, 10)
 			top_form.attach_top (close_button, 10)
 			top_form.attach_top (context_hole, 10)
 			top_form.attach_right (close_button, 10)
 			top_form.attach_left (context_hole, 10)
+			top_form.attach_top_widget (focus_label, first_separator, 10)
 
 			top_form.attach_top (first_separator, 60)
 			top_form.attach_left (first_separator, 0)
 			top_form.attach_right (first_separator, 0)
-			top_form.attach_bottom (formats, 1)
-			top_form.attach_left (formats, 1)
-			top_form.attach_right (formats, 1)
-			top_form.attach_bottom_widget (formats, second_separator, 1)
+			top_form.attach_bottom (formats_rc, 1)
+			top_form.attach_left (formats_rc, 1)
+			top_form.attach_right (formats_rc, 1)
+			top_form.attach_bottom_widget (formats_rc, second_separator, 1)
 
 			top_form.attach_left (second_separator, 0)
 			top_form.attach_right (second_separator, 0)
@@ -169,8 +169,9 @@ feature
 			!!bull_resize_form.make (Current)
 			!!grid_form.make (Current)
 
-			!!format.make (formats, Current)
+			!! format_list.make (formats_rc, Current)
 
+			current_form_number := 1;
 			-- set the editor toggle on as an editor is active
 			context_hole.main_panel.t4.set_toggle_on
 		end
@@ -178,18 +179,17 @@ feature
 	realize is
 		do
 			shell_realize
-		end
+		end;
 
 	show is
 		do
 			shell_show
-		end
+		end;
 
 	hide is
 		do
 			shell_hide
-		end
-
+		end;
 
 	attach_attributes_form (a_form: EDITOR_FORM) is
 		do
@@ -202,97 +202,67 @@ feature
 	set_edited_context (new_context: CONTEXT) is
 			-- Set `edited_context' to `new_context'
 		local
-			option_list: ARRAY [INTEGER]
-			list: LINKED_LIST [INTEGER]
-			current_form_found: BOOLEAN
-			context_form_found: BOOLEAN
-			i: INTEGER
-			other_editor: like Current
-			old_edited_context: CONTEXT
-			button_list: BUTTON_LIST
+			option_list: ARRAY [INTEGER];
+			count, i: INTEGER;
+			other_editor: like Current;
 		do
-			if new_context.editor_form /= Void then
-				other_editor :=	context_catalog.editor (new_context, new_context.editor_form)
-			end
+				-- See if editor exists for current_form_number
+			other_editor := context_catalog.editor 
+				(new_context, current_form_number)
 			if other_editor = Void then
 				if new_context /= edited_context then
-					old_edited_context := edited_context
-					edited_context := new_context
-					context_hole.set_context (edited_context)
-					option_list := edited_context.option_list
-					if edited_context.editor_form = 0 then
-						edited_context.set_editor_form (option_list.item (1))
-					end
+					option_list := new_context.option_list
 
-					!!button_list.make (new_context)
-					format.add_button (button_list.menu_string)
-
-					-- Test if the current form is defined for the context
-					-- ie is not a special form not valid for the new context
+						-- Test if the current form is defined for the context
 					from
-						i := 1
+						i := 1;
+						count := option_list.count;
 					until
-						i > option_list.count or 
-						(option_list.item (i) = -1) or
-						current_form_found
+						i > count or else
+						option_list @ i = current_form_number
 					loop
-						if option_list.item (i) = edited_context.editor_form then	
-							context_form_found := True
-						end
-						if option_list.item (i) = current_form_number then	
-							current_form_found := True
-						end
 						i := i + 1
 					end
-					!!list.make
-					from
-					list.start
-					until
-						list.after or current_form_found
-					loop
-						if list.item = edited_context.editor_form then	
-							context_form_found := True
-			
-						end
-						if list.item = current_form_number then	
-							current_form_found := True
-						end
-						list.forth
-					end
-					if current_form_found then
-						edited_context.set_editor_form (current_form_number)
-						set_form (edited_context.editor_form)
-					elseif not context_form_found then
-						other_editor :=	context_catalog.editor (new_context, 1)
+					if i > count then
+							-- Could not find. Check to see if the first
+							-- form number is being used
+						other_editor :=	context_catalog.editor (new_context, 
+											option_list @ 1)
 						if other_editor = Void then
-							edited_context.set_editor_form (edited_context.option_list.item (1))
-							set_form (edited_context.editor_form)
+							if edited_context = Void or else
+								not edited_context.eiffel_type.is_equal 
+									(new_context.eiffel_type)
+							then
+								formats_rc.unmanage;
+								format_list.update_buttons (option_list);
+								formats_rc.manage;
+							end;
+							edited_context := new_context;
+							context_hole.set_context (edited_context);
+							set_form (option_list @ 1)
 						else
 							other_editor.raise
-							set_edited_context (old_edited_context)
 						end
 					else
-						set_form (edited_context.editor_form)
+						if edited_context = Void or else
+							not edited_context.eiffel_type.is_equal 
+								(new_context.eiffel_type)
+						then
+							formats_rc.unmanage;
+							format_list.update_buttons (option_list);
+							formats_rc.manage;
+						end;	
+						edited_context := new_context;
+						context_hole.set_context (edited_context);
+						format_list.update_buttons (option_list);
+						set_form (current_form_number)
 					end
 				end
 			else
 				other_editor.raise
 			end
-		end
+		end;
 	
-	update_form (a_form_number: INTEGER) is
-			-- Update the form according to `a_form_number'.
-		local
-			other_editor: like Current
-		do
-			other_editor :=	context_catalog.editor (edited_context, a_form_number)
-			if other_editor = Void then
-				set_form (a_form_number)
-			else
-				other_editor.raise
-			end
-		end
-
 	set_form (a_form_number: INTEGER) is
 			-- Display 'a_form' in the context editor window
 		local
@@ -300,33 +270,32 @@ feature
 			mp: MOUSE_PTR
 			msg: STRING
 		do
-			unmanage
-			current_form_number := a_form_number
-			edited_context.set_editor_form (a_form_number)
-			new_form := form_list.item (edited_context.editor_form)
+			current_form_number := a_form_number;
+			new_form := form_list @ (current_form_number);
 			if not new_form.is_initialized then
-				!!mp
-				mp.set_watch_shape
-				top_form.set_managed (False)
-				new_form.make_visible (Current)
-				top_form.set_managed (True)
+				if current_form /= void then
+					current_form.hide
+				end;
+				!!mp;
+				mp.set_watch_shape;
+				new_form.make_visible (top_form);
 				mp.restore
-			end
-			if not (current_form = Void) then
-				current_form.hide
-				current_form.set_managed (False)
-			end
-			current_form := new_form
-			current_form.reset_form
-			current_form.show
-			current_form.set_managed (True)
-			manage
+			elseif current_form /= Void and then
+				current_form /= new_form
+			then
+				current_form.hide;
+			end;
+			if not new_form.shown then
+				new_form.show
+			end;
+			current_form := new_form;
+			current_form.reset;
 		end
 
 	behavior_form_shown: BOOLEAN is
 			-- Is current_form a behavior_form?
 		do
-			Result := (current_form_number = behavior_form_number)
+			Result := (current_form_number = Context_const.behavior_form_nbr)
 		end
 
 feature -- Reseting
@@ -351,13 +320,12 @@ feature -- Reseting
 	clear is
 			-- Reset the hole of the context editor
 		do
-			if not (current_form = Void) then
+			if current_form /= Void then
 				reset_behavior_editor
-				edited_context.set_editor_form (current_form_number)
 				edited_context := Void
 				current_form.hide
 				current_form := Void
-				current_form_number := 0
+				current_form_number := 1
 				context_hole.reset
 			end
 		end

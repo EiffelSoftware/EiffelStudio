@@ -4,16 +4,11 @@ class S_LINE
 
 inherit
 
-	STORAGE_INFO
-		export
-			{NONE} all
-		end
-
+	SHARED_STORAGE_INFO
 
 creation
 
 	make
-
 	
 feature 
 

@@ -1,26 +1,20 @@
 class BG_COLOR_CMD 
 
 inherit
-	CONTEXT_CMD
-		
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end
 
-	COMMAND_NAMES
-		rename
-			B_g_color_cmd_name as c_name
-		export
-			{NONE} all
-		end
+	CONTEXT_CMD
 
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := color_form_number
-		end
+			Result := Context_const.color_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.bg_color_cmd_name
+		end;
 
 	old_bg_color_name: STRING
 

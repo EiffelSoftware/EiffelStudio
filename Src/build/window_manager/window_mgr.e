@@ -4,6 +4,8 @@ class WINDOW_MGR
 inherit
 	
 	WIDGET_NAMES;
+	EDITOR_NAMES;
+	CONSTANTS
 
 creation
 

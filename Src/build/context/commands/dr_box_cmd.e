@@ -6,27 +6,18 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
 		end;
-	EDITOR_FORMS
-		export
-			{NONE} all
-		end;
-	COMMAND_NAMES
-		rename
-			D_rawing_box_cmd_name as c_name
-		export
-			{NONE} all
-		end
-
-
-
 	
 feature {NONE}
 
 	associated_form: INTEGER is
 		do
-			Result := drawing_box_form_number
+			Result := Context_const.drawing_box_att_form_nbr
+		end;
+
+	c_name: STRING is
+		do
+			Result := Context_const.drawing_box_cmd_name
 		end;
 
 	context: DR_AREA_C;

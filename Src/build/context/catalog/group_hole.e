@@ -3,27 +3,14 @@ class GROUP_HOLE
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-	GROUP_SHARED
-		export
-			{NONE} all
-		end;
+	COMMAND;
+	WINDOWS;
+	PIXMAPS;
+	SHARED_CONTEXT;
 	ICON_HOLE
 		redefine
 			stone, compatible
 		end
-
 
 creation
 
@@ -78,20 +65,22 @@ feature {NONE}
 			a_name: STRING;
 			mp: MOUSE_PTR
 			a_group_c: GROUP_C;
+			e_name: STRING
 		do
 			a_name := argument.text;
 			a_name.to_lower;
 			if not (a_name.empty) and then
 				not (stone = Void) then
 				from
-					group_list.start
+					Shared_group_list.start
 				until
-					group_list.after or found
+					Shared_group_list.after or found
 				loop
-					if a_name.is_equal (group_list.item.entity_name) then
+					e_name := Shared_group_list.item.entity_name;
+					if a_name.is_equal (e_name) then
 						found := True
 					end;
-					group_list.forth;
+					Shared_group_list.forth;
 				end;
 				if not found then
 					!!mp;

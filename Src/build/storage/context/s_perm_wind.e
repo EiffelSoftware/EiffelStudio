@@ -57,6 +57,9 @@ feature
 				a_context.set_iconic_state (is_iconic_state)
 			end;
 			set_attributes (a_context);
+				-- Set x and y regardless if position is modified
+			a_context.set_x_y (x, y);
+			a_context.set_default_position (position_modified)
 		end;
 
 	

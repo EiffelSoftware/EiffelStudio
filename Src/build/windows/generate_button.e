@@ -19,7 +19,6 @@ inherit
         end
 	WINDOWS
 	PIXMAPS
-	UNIX_ENV
 
 creation
 

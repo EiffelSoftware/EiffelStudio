@@ -3,59 +3,41 @@ class BAR_FORM
 
 inherit
 
-	WINDOWS
-		export
-			{NONE} all
-		end;
-	CONTEXT_CMDS
-		export
-			{NONE} all
-		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
+	WINDOWS;
+	COMMAND;
 	EDITOR_FORM
 		undefine
 			init_toolkit
 		redefine
-			form_name, context
+			context
 		end
-
 
 creation
 
 	make
 
-	
-feature 
+feature -- Interface 
 
-	form_name: STRING is
-			-- Name of the form in the menu
-		do
-			Result := S_ubmenu_form_name
-		end;
-
-	make (a_parent: CONTEXT_EDITOR) is
-		do
-			a_parent.form_list.put (Current, bar_form_number);
-		end;
-
-	make_visible (a_parent: CONTEXT_EDITOR) is
+	make_visible (a_parent: COMPOSITE) is
 		local
 			add_submenu: PUSH_BG;
 		do
-			initialize (Bar_form_name, a_parent);
+			initialize (Context_const.bar_form_name, a_parent);
 
-			!!add_submenu.make (A_dd_submenu, Current);
+			!!add_submenu.make (Context_const.add_submenu_name, Current);
 			add_submenu.add_activate_action (Current, add_submenu);
 
 			attach_left (add_submenu, 10);
 			attach_top (add_submenu, 10);
+			show_current
 		end;
 
-	
 feature {NONE}
+
+	context: MENU_C is
+		do
+			Result ?= editor.edited_context;
+		end;
 
 	execute (argument: ANY) is
 			-- create a submenu
@@ -67,14 +49,14 @@ feature {NONE}
 			tree.display (new_context)
 		end;
 
-	context: MENU_C;
-
 	reset is
 		do
 		end;
 
-	
-feature 
+	form_number: INTEGER is
+		do
+			Result := Context_const.bar_sm_form_nbr
+		end;
 
 	apply is
 		do

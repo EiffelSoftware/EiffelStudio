@@ -24,17 +24,23 @@ feature -- Access
 		do
 		end;
 
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is `other' the same as Current ?
+		do
+			Result := other.is_void
+		end;
+
 feature -- Output
 
 	dump: STRING is "Void";
 			-- Dumped trace
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("Void");
+			ow.put_string ("Void");
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
@@ -58,12 +64,6 @@ feature
 			-- Do nothing
 		ensure then
 			False
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is `other' the same as Current ?
-		do
-			Result := other.is_void
 		end;
 
 feature -- Storage information for EiffelCase

@@ -1,6 +1,5 @@
 indexing
 	description: "Eiffel Vision checkable list. Mswindows implementation."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,8 @@ inherit
 		redefine
 			interface,
 			default_ex_style,
-			on_lvn_itemchanged
+			on_lvn_itemchanged,
+			insert_i_th
 		end
 		
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
@@ -32,7 +32,7 @@ creation
 feature -- Status report
 
 	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
-			--
+			-- is `list_item' checked?
 		local
 			item_imp: EV_LIST_ITEM_IMP
 			i: INTEGER
@@ -70,6 +70,20 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+			-- Redefined from EV_LIST_IMP to prevent `uncheck_actions'
+			-- frombeing fired when an item is inserted to `Current'.
+		do
+			if uncheck_actions_internal /= Void then
+				uncheck_actions_internal.block
+			end
+			Precursor {EV_LIST_IMP} (v, i)
+			if uncheck_actions_internal /= Void then
+				uncheck_actions_internal.resume
+			end
+		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
 			-- An item has changed.
@@ -113,7 +127,7 @@ feature {NONE} -- Implementation
 		end
 
 	default_ex_style: INTEGER is
-			--
+			-- Default extended style for `Current'.
 		once
 			Result := Lvs_ex_infotip + Lvs_ex_checkboxes
 		end
@@ -122,7 +136,4 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST
 	
-invariant
-	invariant_clause: True -- Your invariant here
-
 end -- class EV_CHECKABLE_LIST_IMP

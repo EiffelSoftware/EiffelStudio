@@ -38,6 +38,7 @@ feature {NONE}
 	remove_yourself is
 		do
 			associated_editor.edited_function.remove_element_line (data, True);
+			App_editor.update_transitions_list (Void)
 		end;
  
 end

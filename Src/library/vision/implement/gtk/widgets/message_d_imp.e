@@ -77,20 +77,28 @@ feature -- Status setting (from MESSAGE_D_I)
 	show_cancel_button is
 			-- Make cancel button visible.
 		do
-			cancel_button.manage
+			check
+				not_yet_implemented: False
+			end			cancel_button.manage
 			cancel_button.realize
+			realize
 		end
 
 	show_help_button is
 			-- Make help button visible.
 		do
-			help_button.show
+			check
+				not_yet_implemented: False
+			end			help_button.show
 		end
 
 	show_ok_button is
 			-- Make ok button visible.
 		do
 			ok_button.show
+			check
+				not_yet_implemented: False
+			end		
 		end
 
 	hide_cancel_button is
@@ -175,7 +183,7 @@ feature -- Element change
 			-- XXX change the manifest constant
 			a := ("clicked").to_c			
 			
-			gtk_command_id := c_gtk_signal_connect (c_widget_of_button (cancel_button),
+			gtk_command_id := c_gtk_signal_connect (c_widget_of_push_b (cancel_button),
 								$a,
 								a_command.execute_address,
 								$a_command,
@@ -192,11 +200,12 @@ feature -- Element change
 			-- XXX change the manifest constant
 			a := ("clicked").to_c			
 			
-			gtk_command_id := c_gtk_signal_connect (c_widget_of_button (help_button),
+			gtk_command_id := c_gtk_signal_connect (c_widget_of_push_b (help_button),
 								$a,
 								a_command.execute_address,
 								$a_command,
-								$argument)			end
+								$argument)
+		end
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -209,11 +218,12 @@ feature -- Element change
 			-- XXX change the manifest constant
 			a := ("clicked").to_c			
 			
-			gtk_command_id := c_gtk_signal_connect (c_widget_of_button (ok_button),
+			gtk_command_id := c_gtk_signal_connect (c_widget_of_push_b (ok_button),
 								$a,
 								a_command.execute_address,
 								$a_command,
-								$argument)			end
+								$argument)
+		end
 
 feature -- Removal
 
@@ -289,17 +299,13 @@ feature {NONE} -- Implementation
 			!!help_button.make ("Help", oui_message_d)
 			
 			c_gtk_create_message_d_buttons (widget, 
-							c_widget_of_button (ok_button),
-							c_widget_of_button (cancel_button),
-							c_widget_of_button (help_button))
+							c_widget_of_push_b (ok_button),
+							c_widget_of_push_b (cancel_button),
+							c_widget_of_push_b (help_button))
+			ok_button.set_text ("Ok")
+			cancel_button.set_text ("Cancel")
+			help_button.set_text ("Help")
 							
--- 			ok_button.realize
--- 			cancel_button.realize
--- 			help_button.realize
-			
--- 			ok_button.hide
-		--	cancel_button.show
-	--		help_button.show
 		end
 	
 	create_label is
@@ -308,8 +314,7 @@ feature {NONE} -- Implementation
 			
 			c_gtk_create_message_d_label (widget, 
 						      c_widget_of_label (message))
---			message.realize
---			message.show
+
 		end
 	
 	

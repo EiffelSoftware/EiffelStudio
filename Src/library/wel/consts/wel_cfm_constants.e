@@ -28,6 +28,18 @@ feature -- Access
 	Cfm_protected: INTEGER is 16
 			-- The CFE_PROTECTED value of the dwEffects member is
 			-- valid.
+	
+	Cfm_revauthor: INTEGER is 32768
+			-- The bRevAuthor member is valid.
+			
+	Cfm_spacing: INTEGER is 2097152
+			-- The sSpacing member is valid.
+			
+	Cfm_weight: INTEGER is 4194304
+			-- The wWeight member is valid.
+			
+	Cfm_underlinetype: INTEGER is 8388608
+			-- The bUnderlineType member is valid.
 
 	Cfm_color: INTEGER is 1073741824
 			-- The crTextColor member and the CFE_AUTOCOLOR value
@@ -41,6 +53,9 @@ feature -- Access
 
 	Cfm_size: INTEGER is -2147483648
 			-- The yHeight member is valid.
+			
+	Cfm_backcolor: INTEGER is 67108864
+			-- The crBackColor member is valid
 
 	Cfm_charset: INTEGER is 134217728
 			-- The bCharSet member is valid.

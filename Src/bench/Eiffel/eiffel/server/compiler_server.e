@@ -504,9 +504,9 @@ end
 				live_ids.after
 			loop
 debug ("SERVER")
-	--io.error.putstring ("Rewritting id ")
-	--io.error.putint (live_ids.item.id)
-	--io.error.new_line
+	io.error.putstring ("Rewritting id ")
+	io.error.putint (live_ids.item.id)
+	io.error.new_line
 end
 				write (item (live_ids.item))
 				live_ids.forth

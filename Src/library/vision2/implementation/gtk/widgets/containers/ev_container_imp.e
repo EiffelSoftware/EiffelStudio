@@ -214,25 +214,55 @@ feature -- Status setting
 	set_background_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the container background pixmap to `pixmap'.
 		local
+			a_style: POINTER
 			pix_imp: EV_PIXMAP_IMP
+			mem_ptr, pix_ptr: POINTER
+			i: INTEGER
 		do
 			pix_imp ?= a_pixmap.implementation
-			C.gdk_window_set_back_pixmap (
-				C.gtk_widget_struct_window (c_object),
-				C.gtk_pixmap_struct_pixmap (pix_imp.c_object),
-				False
-			)
+			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (container_widget))
+			pix_ptr := C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap)
+			from
+				i := 0
+			until
+				i = 5
+			loop
+				-- 4 = size of pointer in bytes.
+				mem_ptr := bg_pixmap (a_style) + (i * 4)
+				mem_ptr.memory_copy ($pix_ptr, 4)
+				i := i + 1
+			end
+			C.gtk_widget_set_style (container_widget, a_style)
 			background_pixmap := clone (a_pixmap)
+		end
+		
+	bg_pixmap (p: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
+		alias
+			"&bg_pixmap"
 		end
 
 	remove_background_pixmap is
 			-- Make background pixmap Void.
+		local
+			a_style: POINTER
+			pix_imp: EV_PIXMAP_IMP
+			mem_ptr, pix_ptr: POINTER
+			i: INTEGER
 		do
-			C.gdk_window_set_back_pixmap (
-				C.gtk_widget_struct_window (c_object),
-				NULL,
-				False
-			)
+			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
+			from
+				i := 0
+			until
+				i = 5
+			loop
+				-- 4 = size of pointer in bytes.
+				mem_ptr := bg_pixmap (a_style) + (i * 4)
+				mem_ptr.memory_set (0, 4)
+				i := i + 1
+			end
+			C.gtk_widget_set_style (visual_widget, a_style)
 			background_pixmap := Void
 		end
 

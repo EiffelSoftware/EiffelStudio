@@ -82,7 +82,7 @@ feature -- Status setting
 			widget_not_void: widget /= Void
 			linear_representation.has (widget)
 		local
-			holder: GB_TOOL_HOLDER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			holder := holder_of_widget (widget)
 			holder.enable_close_button
@@ -94,7 +94,7 @@ feature -- Status setting
 			widget_not_void: widget /= Void
 			linear_representation.has (widget)
 		local
-			holder: GB_TOOL_HOLDER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			holder := holder_of_widget (widget)
 			holder.disable_close_button
@@ -141,7 +141,7 @@ feature -- Status setting
 			not_contained: not linear_representation.has (widget)
 			name_not_void: name /= Void
 		local
-			holder: GB_TOOL_HOLDER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			all_splitters: ARRAYED_LIST [INTEGER]
 			split_area: EV_SPLIT_AREA
 		do
@@ -178,7 +178,7 @@ feature -- Status setting
 			a_widget_not_void: a_widget /= Void
 			contained: linear_representation.has (a_widget)
 		local
-			holder: GB_TOOL_HOLDER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			holder := holder_of_widget (a_widget)
 			if maximized_tool /= Void then
@@ -198,10 +198,10 @@ feature -- Status setting
 		end
 		
 		
-feature {GB_TOOL_HOLDER} -- Implementation
+feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 		
-	rebuild_without_holder (a_holder: GB_TOOL_HOLDER) is
+	rebuild_without_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Rebuild `Current' without `a_holder'.
 		require
 			holder_not_void: a_holder /= Void
@@ -226,7 +226,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			split_area: GB_VERTICAL_SPLIT_AREA
 			old_parent: EV_CONTAINER
 			current_split_area: EV_SPLIT_AREA
-			current_holder: GB_TOOL_HOLDER
+			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			wipe_out
 			all_split_areas.wipe_out
@@ -315,11 +315,11 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			end
 		end
 		
-feature {GB_TOOL_HOLDER} -- Implementation
+feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	
 	all_split_areas: ARRAYED_LIST [EV_SPLIT_AREA]
 
-	all_holders: ARRAYED_LIST [GB_TOOL_HOLDER]
+	all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
 
 	maximize_pixmap: EV_PIXMAP
 	
@@ -329,7 +329,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	
 	restore_pixmap: EV_PIXMAP
 	
-	initialize_docking_areas (a_holder: GB_TOOL_HOLDER) is
+	initialize_docking_areas (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			--
 		local
 			index_of_tool: INTEGER
@@ -377,7 +377,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			end
 		end
 	
-	maximize_tool (a_tool: GB_TOOL_HOLDER) is
+	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			--
 		do
 			if maximized_tool /= Void then
@@ -416,7 +416,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			maximized_tool := a_tool
 		end
 		
-	restore_maximized_tool (a_tool: GB_TOOL_HOLDER) is
+	restore_maximized_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			--
 		do
 			from
@@ -493,13 +493,13 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	
 	heights: ARRAYED_LIST [INTEGER]
 	
-	maximized_tool: GB_TOOL_HOLDER
+	maximized_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		
 	
-	minimize_tool (a_tool: GB_TOOL_HOLDER) is
+	minimize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Ensure that `a_tool' is displayed minimized in `Current'.
 		local
-			lower_holder, upper_holder: GB_TOOL_HOLDER
+			lower_holder, upper_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			position_of_tool: INTEGER
 			cursor: CURSOR
 		do
@@ -535,7 +535,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			index_of_holders_not_changed: all_holders.index = old all_holders.index
 		end
 		
-	restore_tool (a_tool: GB_TOOL_HOLDER) is
+	restore_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Ensure that `a_tool' is no longer displayed as minimized.
 		require
 			tool_parented: a_tool.parent /= Void
@@ -543,7 +543,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			index_of_tool: INTEGER
 			parent_split_area: EV_SPLIT_AREA
 			original_parent: EV_BOX
-			current_holder: GB_TOOL_HOLDER
+			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			parent_index: INTEGER
 			value: INTEGER
 		do
@@ -607,7 +607,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 --			end
 		end
 		
---	restore_tool_size (a_tool: GB_TOOL_HOLDER) is
+--	restore_tool_size (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 --			-- Attempt to restore `a_tool' to size `a_tool.restore_height'.
 --		local
 --			restore_height: INTEGER
@@ -702,7 +702,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 		end
 		
 		
-	remove_tool_from_parent (a_tool: GB_TOOL_HOLDER) is
+	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			--
 		local
 			split_area: EV_SPLIT_AREA
@@ -833,7 +833,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			-- be disabled, otherwise, they should all be enabled.
 		local
 			minimized_count: INTEGER
-			non_minimized_holder: GB_TOOL_HOLDER
+			non_minimized_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
 		do
 			cursor := all_holders.cursor
@@ -917,7 +917,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			end
 		end
 		
-	holder_of_widget (a_widget: EV_WIDGET): GB_TOOL_HOLDER is
+	holder_of_widget (a_widget: EV_WIDGET): MULTIPLE_SPLIT_AREA_TOOL_HOLDER is
 			-- `Result' is tool holder containing `a_widget'.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -934,7 +934,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			positions_different: original_position /= new_position
 		local
 			real_new_position: INTEGER
-			holder: GB_TOOL_HOLDER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			widget: EV_WIDGET
 		do
 			if original_position < new_position then

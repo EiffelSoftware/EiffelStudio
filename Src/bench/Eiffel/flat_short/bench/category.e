@@ -1,3 +1,14 @@
+indexing
+
+	description: 
+		"A category is a list of feature_clauses with the%
+		%same comments but with different export policy.%
+		%Feature clauses are sorted from less retrictive%
+		%to most restrictive export policy (if option is%
+		%set - `order_same_as_text' is False).";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CATEGORY 
 
 inherit
@@ -6,26 +17,67 @@ inherit
 		undefine
 			is_equal
 		end;
-	SPECIAL_AST_B
+	SHARED_FORMAT_INFO
 
 creation
 
 	make
 
-feature
+feature -- Initialization
+
+	make is
+			-- Initialize Current.
+		do
+			!! clauses.make
+		end;
+
+feature -- Properties
 
 	comment: EIFFEL_COMMENTS;
+			-- Comments for Current category
 
 	clauses: SORTED_TWO_WAY_LIST [FEATURE_CLAUSE_EXPORT];
 			-- Sorted list of features based on export clauses
-			-- and comments
+			-- with same comments
 
-	make is
+feature -- Access
+
+	empty: BOOLEAN is
+			-- Are the clauses empty?
 		do
-			!!clauses.make
+			Result := true;
+			from
+				clauses.start
+			until
+				clauses.after or else not Result
+			loop
+				Result := clauses.item.empty;
+				clauses.forth
+			end;
 		end;
 
+	same_comment (c: like comment): BOOLEAN is
+			-- Is the comment same as `c'?
+		do
+			Result := comment = void and c = void
+				or else comment /= void and comment.is_equal (c);
+		end;
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is Current less than `other' comment?
+			--| to be fixed-> order should be configurable
+		do
+			Result := comment = void
+			or else (other.comment /= void
+				and then comment < other.comment)
+		end;
+
+feature -- Setting
+
 	set_comment (c: like comment) is
+			-- Set comment to all clauses to `c'.
 		do
 			comment := c;
 			from
@@ -38,24 +90,7 @@ feature
 			end;
 		end;
 
-	same_comment (c: like comment): BOOLEAN is
-		do
-			Result := comment = void and c = void
-				or else comment /= void and comment.is_equal (c);
-		end;
-
-	empty: BOOLEAN is
-		do
-			Result := true;
-			from
-				clauses.start
-			until
-				clauses.after or else not Result
-			loop
-				Result := clauses.item.empty;
-				clauses.forth
-			end;
-		end;
+feature -- Element change
 
 	merge (other: like Current) is
 			-- Import other category clauses. Merge them with
@@ -96,59 +131,58 @@ feature
 			end
 		end;
 
-	add (names_adapter: NAMES_ADAPTER) is
+	add (feat_adapter: FEATURE_ADAPTER) is
+			-- Add `feat_adapter' to a feature_clause.
 		require
-			good_argument:  names_adapter /= void
+			good_argument:  feat_adapter /= void;
+			good_adapter: feat_adapter.target_feature /= Void and then
+							feat_adapter.source_feature /= Void
 		local
-			names: NAMES_LIST;
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do
-			names := names_adapter.names_list;
-			if names /= Void then
-				from
-					clauses.start
-				until
-					clauses.after
-					or else clauses.item.can_include (names)
-				loop
-					clauses.forth;
-				end;
+			from
+				clauses.start
+			until
+				clauses.after
+				or else clauses.item.can_include (feat_adapter.target_feature)
+			loop
+				clauses.forth;
 			end;
-			if names /= Void then 
-				names_adapter.update_ast;
-				if not clauses.off then
-					clauses.item.add (names_adapter.ast);
-				else
-					!!new_clause.make (names_adapter.ast, names.feature_i);
-					clauses.finish;
-					clauses.put_right (new_clause)
-				end
+			if not clauses.off then
+				clauses.item.add (feat_adapter);
+			else
+				!! new_clause.make (feat_adapter);
+				clauses.finish;
+				clauses.put_right (new_clause)
 			end;
 		end;
 
-	add_at_end (names_adapter: NAMES_ADAPTER) is
+	add_at_end (feat_adapter: FEATURE_ADAPTER) is
+			-- Add `feat_adapter' to the end of feature_clause.
 		require
-			good_argument: names_adapter /= void
+			good_argument: feat_adapter /= void
 		local
-			names: NAMES_LIST;
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do
-			names := names_adapter.names_list;
-			names_adapter.update_ast;
 			if clauses.empty then
-				!!new_clause.make (names_adapter.ast, names.feature_i);
+				!! new_clause.make (feat_adapter);
 				clauses.finish;
 				clauses.put_right (new_clause)
 			else
 				clauses.finish;
-				clauses.item.add (names_adapter.ast);
+				clauses.item.add (feat_adapter);
 			end;
 		end
+
+feature -- Context output
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
-			ctxt.begin;
+			if not order_same_as_text then
+					-- Sort features if needed
+				clauses.sort
+			end;
 			from
 				clauses.start
 			until
@@ -157,24 +191,18 @@ feature
 				clauses.item.format (ctxt);
 				clauses.forth
 			end;
-			ctxt.commit;
 		end;
 
-
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := comment = void
-			or else (other.comment /= void
-				and then comment < other.comment)
-		end;
+feature -- Removal
 			
 	wipe_out is
+			-- Wipe out Current structures.
 		do
 			clauses.wipe_out;	
 			comment := Void
 		end;	
 
-feature {FLAT_STRUCT}
+feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
 
 	public_features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
 			-- List of features relevant for EiffelCase.
@@ -189,7 +217,7 @@ feature {FLAT_STRUCT}
 			loop
 				feat_clause := clauses.item;
 					-- Store feature information
-				if feat_clause.reference.storage_info.is_all then
+				if feat_clause.export_status.storage_info.is_all then
 					Result.append (feat_clause.features_storage_info);
 				end;
 				clauses.forth
@@ -208,7 +236,7 @@ feature {FLAT_STRUCT}
 				clauses.after
 			loop
 				feat_clause := clauses.item;
-				if feat_clause.reference.storage_info.is_none then
+				if feat_clause.export_status.storage_info.is_none then
 						-- Store feature information
 					Result.append (clauses.item.features_storage_info);
 				end;
@@ -216,7 +244,4 @@ feature {FLAT_STRUCT}
 			end;
 		end;	
 
-end
-
-					
-				
+end -- class CATEGORY

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			a := a_name.to_c
 			item := cwin_add_atom ($a)
 		ensure
-			name_is_equal: name.is_equal (a_name)
+			name_is_equal: exists implies name.is_equal (a_name)
 		end
 
 feature -- Access
@@ -49,6 +49,9 @@ feature -- Access
 			result_not_empty: not Result.empty
 		end
 
+	Max_name_length: INTEGER is 80
+			-- Maximum atom name length
+
 feature {NONE} -- Removal
 
 	destroy_item is
@@ -57,11 +60,6 @@ feature {NONE} -- Removal
 			cwin_delete_atom (item)
 			item := default_pointer
 		end
-
-feature {NONE} -- Implementation
-
-	Max_name_length: INTEGER is 80
-			-- Maximum atom name length
 
 feature {NONE} -- Externals
 

@@ -159,7 +159,7 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_class (e_class: E_CLASS) is
+	add_before_class (e_class: E_CLASS) is
 			-- Put `e_class' at current position.
 		require
 			valid_e_class: e_class /= Void
@@ -214,7 +214,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!FEATURE_NAME_TEXT! l_item.make (str, feat, e_class);
+			!FEATURE_TEXT! l_item.make (str, feat, e_class);
 			add (l_item)
 		end;
 
@@ -225,7 +225,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!BASIC_TEXT! l_item.make (f_name);
+			!FEATURE_NAME_TEXT! l_item.make (f_name, e_class);
 			add (l_item)
 		end;
 

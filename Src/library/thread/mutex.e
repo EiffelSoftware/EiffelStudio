@@ -22,7 +22,8 @@ inherit
 		end
 
 creation
-	default_create
+	default_create,
+	make
 
 feature -- Initialization
 
@@ -35,6 +36,16 @@ feature -- Initialization
 			valid_mutex: mutex_pointer /= default_pointer
 		end
 
+	make is
+			-- Create mutex
+		obsolete
+			"Use `default_create'"
+		do
+			default_create
+		ensure
+			valid_mutex: mutex_pointer /= default_pointer
+		end
+		
 feature -- Access
 
 	is_set: BOOLEAN is

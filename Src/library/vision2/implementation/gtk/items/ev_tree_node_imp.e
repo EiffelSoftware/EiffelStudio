@@ -544,12 +544,14 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Remove the dummy node used to prevent seg fault on last item removal
 		local
 			a_d_node: POINTER
+			a_parent_tree_imp: EV_TREE_IMP
 		do
 			a_d_node := remove_on_expand_node
 			if remove_on_expand_node /= NULL then
 				remove_on_expand_node := NULL
-				if parent_tree_imp /= Void then
-					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)
+				a_parent_tree_imp := parent_tree_imp
+				if a_parent_tree_imp /= Void then
+					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (a_parent_tree_imp.list_widget, a_d_node)
 				end		
 			end
 		end

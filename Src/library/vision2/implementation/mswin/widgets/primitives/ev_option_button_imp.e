@@ -45,7 +45,9 @@ feature -- Status setting
 			-- `par' can be Void then the parent is the screen.
 		do
 			{EV_BUTTON_IMP} Precursor (par)
-			ev_children := parent_imp.menu_items
+			if parent_imp /= Void then
+				ev_children := parent_imp.menu_items
+			end
 		end
 
 feature -- Event association
@@ -90,11 +92,11 @@ feature {NONE} -- Basic operation
 				-- We draw the rest of the button
 				inrect.set_rect (5, 5, width - 30, height - 6)
 				if pixmap_imp /= Void and text /= "" then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				end
@@ -108,13 +110,13 @@ feature {NONE} -- Basic operation
 				-- We draw the rest
 				if pixmap_imp /= Void and text /= "" then
 					!! inrect.make (5, 5, width - 30, height - 6)
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					tx := inrect.left 
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2) 
 					draw_insensitive_text (dc, text, tx, ty)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					tx := inrect.left
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2)

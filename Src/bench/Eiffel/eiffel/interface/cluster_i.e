@@ -377,6 +377,7 @@ end;
 			else
 				Degree_output.skip_entity;
 				!! Result.make_from_old_cluster (Current)
+				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 			end;
 		end;

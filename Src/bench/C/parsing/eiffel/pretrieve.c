@@ -26,10 +26,11 @@
 #endif
 
 /* Public features */
-/* rt_public char *partial_retrieve (EIF_INTEGER f_desc, long position, long nb_obj);
-rt_public char *retrieve_all(EIF_INTEGER f_desc, long position); */
 rt_public char *partial_retrieve (EIF_INTEGER f_desc, size_t file_size, long position, long nb_obj);
 rt_public char *retrieve_all(EIF_INTEGER f_desc, size_t file_size, long position);
+
+rt_public void parsing_retrieve_initialize (void);
+rt_public void parsing_retrieve_reset (void);
 
 /* Private features */
 rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position);
@@ -43,41 +44,43 @@ rt_private int file_position;
 
 /* Implementation */
 
-/* rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj) */
-rt_public char *partial_retrieve(EIF_INTEGER f_desc, size_t file_size, long position, long nb_obj)
+rt_public void parsing_retrieve_initialize (void)
 {
-	EIF_GET_CONTEXT
+	rt_kind = BASIC_STORE;
+	rt_init_retrieve(
+		retrieve_read_with_compression,
+		parsing_char_read,
+		262144);
+	allocate_gen_buffer();
+}
+
+rt_public void parsing_retrieve_reset (void)
+{
+	rt_reset_retrieve();
+}
+
+rt_public char *partial_retrieve(EIF_INTEGER f_desc, size_t file_size, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
+{
 	char *result;
 
 /*	parsing_stream_position = 0; */
 	file_descriptor = (int) f_desc;
 	if (lseek (f_desc, position, SEEK_SET) == -1)
 		esys ();
-
-	rt_init_retrieve(
-		retrieve_read_with_compression,
-		parsing_char_read,
-		262144);
-
-	rt_kind = '\0';
 /* 	stream_buffer_initialization (f_desc, file_size, position); */
+	current_position = 0;
+	end_of_buffer = 0;
 
-	allocate_gen_buffer();
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
     epop(&hec_stack, nb_recorded);      /* Pop hector records */
 
-	rt_reset_retrieve();
-
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
-/* rt_public char *retrieve_all(EIF_INTEGER f_desc, long position) */
 rt_public char *retrieve_all(EIF_INTEGER f_desc, size_t file_size, long position)
 {
-	EIF_GET_CONTEXT
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */
 	char *result;
@@ -86,24 +89,15 @@ rt_public char *retrieve_all(EIF_INTEGER f_desc, size_t file_size, long position
 	file_descriptor = (int)f_desc;
 	if (lseek(file_descriptor, position, SEEK_SET) == -1)
 		esys();   /* bail out */
-
-	rt_init_retrieve(
-		retrieve_read_with_compression,
-		parsing_char_read,
-		262144L);
-
-	rt_kind = '\0';
 /*	stream_buffer_initialization (f_desc, file_size, position); */
 
-	allocate_gen_buffer();
+	current_position = 0;
+	end_of_buffer = 0;
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 
-	rt_reset_retrieve();
-
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int parsing_char_read (char *pointer, int size)
@@ -118,7 +112,8 @@ int parsing_stream_read(char *pointer, int size)
 	return size;
 }
 
-rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position) {
+rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position)
+{
 	long number_left = file_size - position;
 	long number_read;
 

@@ -27,3 +27,5 @@ external C library
 
 				/* Key */
 #define c_gdk_event_keyval(p) (((GdkEventKey*)p)->keyval)/* integer */
+#define c_gdk_event_length(p) (((GdkEventKey*)p)->length)/* integer */
+#define c_gdk_event_string(p) (((GdkEventKey*)p)->string)/* char* */

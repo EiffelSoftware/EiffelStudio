@@ -407,7 +407,7 @@ end;
 				profile_information.insert_c_profiling_data (c_data);
 
 			elseif is_cycle then
-				!! cy_data.make (number_of_calls, percentage, function_time, descendent_time,cycle_function);
+				!! cy_data.make (number_of_calls, percentage, function_time, descendent_time, cycle_function);
 				profile_information.insert_cycle_profiling_data (cy_data);
 			end;
 
@@ -626,36 +626,52 @@ feature {NONE} -- Commands
 			table_file: PLAIN_TEXT_FILE
 			table_name: STRING
 		do
-			!!file.make (filename);
-			table_name := clone(filename);
-			table_name.append_string (Table_extension);
-			!!table_file.make (table_name);
+--print (config.get_config_name)
+--print("%N")
+			if not config.get_config_name.is_equal ("eiffel") then
 
-				-- Both files should exist. Existence of TRANSLAT
-				-- is already checked in the root class
-			if table_file.exists then
-				if table_file.date < file.date or else retried then
-					file.open_read
-					file.read_stream (file.count);
-					translat_string := file.last_string;
-					file.close;
-					make_function_table (table_name)
-				else
-					functions ?= retrieve_by_name(table_name)
-					if functions = Void then
+						-- Other profile tools use C names, so we need
+						-- Valid translation.
+						-- TRANSLAT should be there, but it might not when
+						-- using precompiled stuff. This desperately needs
+						-- a FIX.
+						-- ***** FIXME *****
+
+				!!file.make (filename);
+				table_name := clone(filename);
+				table_name.append_string (Table_extension);
+				!!table_file.make (table_name);
+
+					-- Both files should exist. Existence of TRANSLAT
+					-- is already checked in the root class
+				if table_file.exists then
+					if table_file.date < file.date or else retried then
 						file.open_read
 						file.read_stream (file.count);
 						translat_string := file.last_string;
 						file.close;
 						make_function_table (table_name)
+					else
+						functions ?= retrieve_by_name(table_name)
+						if functions = Void then
+							file.open_read
+							file.read_stream (file.count);
+							translat_string := file.last_string;
+							file.close;
+							make_function_table (table_name)
+						end
 					end
+				else
+					file.open_read
+					file.read_stream (file.count);
+					translat_string := file.last_string;
+					file.close;
+					make_function_table (table_name)
 				end
 			else
-				file.open_read
-				file.read_stream (file.count);
-				translat_string := file.last_string;
-				file.close;
-				make_function_table (table_name)
+					-- Dummy instance just to make sure the rest of the
+					-- converter keeps working.
+				!! functions.make (0)
 			end
 		rescue
 			retried := true;
@@ -664,57 +680,54 @@ feature {NONE} -- Commands
 
 	make_function_table (filename: STRING) is
 			-- creates the function table
-			-- and stores it on disk in file `filename'
+			-- and stores it on disk in file `filename'.
+			--| This will only be called when needed.
 		local
 			c_name, cluster_name, cl_name, feature_name, translat_line: STRING
 			first_tab, second_tab: INTEGER
 			new_function: EIFFEL_FUNCTION
 			object_file: RAW_FILE
 		do
-			if not config.get_config_name.is_equal ("eiffel") then
-				from
-					!!functions.make (20);
-					io.putstring ("Creating function table. Please wait...%N")
-				until
-					translat_string.count = 0
-				loop
-						-- Initialize function / feature name.
-					!!c_name.make (0);
-					!!cluster_name.make (0);
-					!!cl_name.make (0);
-					!!feature_name.make (0);
-	
-						-- Get a single line from the string.
-					translat_line := get_translat_line;
-	
-						-- Get cludter name for Eiffel feature
-					first_tab := translat_line.index_of ('%T', 1);
-					cluster_name.append_string (translat_line.substring (1, first_tab - 1));
-	
-						-- Get class name (plus actual generics) for Eiffel feature
-					second_tab := translat_line.index_of ('%T', first_tab + 1);
-					cl_name.append_string (translat_line.substring (first_tab + 1, second_tab - 1));
-	
-						-- Get feature name for Eiffel feature
-					first_tab := second_tab + 1;
-					second_tab := translat_line.index_of ('%T', first_tab);
-					feature_name.append_string (translat_line.substring (first_tab, second_tab - 1));
-	
-						-- Get function name for C function
-					first_tab := second_tab + 1;
-					second_tab := translat_line.index_of ('%T', first_tab);
-					c_name.append_string (translat_line.substring (first_tab, second_tab - 1));
-	
-						-- Put function-feature in the hash table.
-					!!new_function.make (cluster_name, cl_name, feature_name)
-					functions.put (new_function, c_name)
-				end
-				!! object_file.make_open_write (filename)
-				functions.independent_store(object_file)
-				object_file.close
-			else
-				!!functions.make (0);
+			from
+				!!functions.make (20);
+				io.putstring ("Creating function table. Please wait...%N")
+			until
+				translat_string.count = 0
+			loop
+					-- Initialize function / feature name.
+				!!c_name.make (0);
+				!!cluster_name.make (0);
+				!!cl_name.make (0);
+				!!feature_name.make (0);
+
+					-- Get a single line from the string.
+				translat_line := get_translat_line;
+
+					-- Get cludter name for Eiffel feature
+				first_tab := translat_line.index_of ('%T', 1);
+				cluster_name.append_string (translat_line.substring (1, first_tab - 1));
+
+					-- Get class name (plus actual generics) for Eiffel feature
+				second_tab := translat_line.index_of ('%T', first_tab + 1);
+				cl_name.append_string (translat_line.substring (first_tab + 1, second_tab - 1));
+
+					-- Get feature name for Eiffel feature
+				first_tab := second_tab + 1;
+				second_tab := translat_line.index_of ('%T', first_tab);
+				feature_name.append_string (translat_line.substring (first_tab, second_tab - 1));
+
+					-- Get function name for C function
+				first_tab := second_tab + 1;
+				second_tab := translat_line.index_of ('%T', first_tab);
+				c_name.append_string (translat_line.substring (first_tab, second_tab - 1));
+
+					-- Put function-feature in the hash table.
+				!!new_function.make (cluster_name, cl_name, feature_name)
+				functions.put (new_function, c_name)
 			end
+			!! object_file.make_open_write (filename)
+			functions.independent_store(object_file)
+			object_file.close
 		end
 
 	get_translat_line : STRING is

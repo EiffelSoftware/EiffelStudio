@@ -13,81 +13,24 @@ cluster
 
 -- ISE Source
 
-	ws:						"$WS";
+	ws:						"$BUILD_WS";
 
+	all base (ws):					"$/base"
+		exclude
+			"table_eiffel3"
+		end
 
--- EiffelBase
-
-	base (ws):					"$/base";
-	kernel(base):					"$/kernel";
-	support(base):					"$/support";
-	structures(base):				"$/structures";
-	access(structures):				"$/access";
-	cursors(structures):				"$/cursors";
-	dispenser(structures):				"$/dispenser";
-	list(structures):				"$/list";
-	set(structures):				"$/set";
-	sort(structures):				"$/sort";
-	storage(structures):				"$/storage";
-	table(structures):				"$/table"
-		default
-			assertion (no);
-		end;
-	traversing(structures):				"$/traversing";
-	tree(structures):				"$/tree";
-	iteration(structures):				"$/iteration";
-	cursor_tree(structures):			"$/cursor_tree";
-
-
--- EiffelVision
-
-  	vision2 (ws):					"$/vision2";
-	vision (vision2):				"$/interface"
-	vision_support (vision):			"$/support";
-	vision_kernel (vision): 	       		"$/kernel";
-	vision_properties (vision):			"$/properties";
-	vision_items (vision):				"$/items";
-	vision_pnd (vision):				"$/pick_and_drop";
-	vision_widgets (vision):        		"$/widgets";
-	vision_primitives (vision_widgets):     	"$/primitives";
-	vision_containers (vision_widgets):     	"$/containers";
-	vision_common_dialog (vision_widgets):		"$/common_dialogs";
-	vision_uncommon_widgets (vision_widgets):	"$/uncommon_widgets";
-	vision_figures (vision):			"$/figures";
-
-	-- Implementation Interface
-	vision_ii (vision2):				"$/implementation/implementation_interface";
-	vision_ii_kernel (vision_ii): 	   		"$/kernel";
-	vision_ii_support (vision_ii):			"$/support";
-	vision_ii_properties (vision_ii):		"$/properties";
-	vision_ii_items (vision_ii):			"$/items";
-	vision_ii_pnd (vision_ii):			"$/pick_and_drop";
-	vision_ii_widgets (vision_ii): 	   		"$/widgets";
-	vision_ii_primitives (vision_ii_widgets):    	"$/primitives";
-	vision_ii_containers (vision_ii_widgets):    	"$/containers";
-	vision_ii_common_dialog (vision_ii_widgets):	"$/common_dialogs";
-	vision_ii_uncommon_widgets (vision_ii_widgets):	"$/uncommon_widgets";
-
-	-- Implementation clusters for MS Windows
-	vision_imp (vision2):				"$/implementation/gtk";
-	vision_imp_kernel (vision_imp): 	      	"$/kernel";
-	vision_imp_support (vision_imp):		"$/support";
-	vision_imp_properties (vision_imp):		"$/properties";
-	vision_imp_items (vision_imp):			"$/items";
-	vision_imp_pnd (vision_imp):			"$/pick_and_drop";
-	vision_imp_widgets (vision_imp):        	"$/widgets";
-	vision_imp_primitives (vision_imp_widgets):     "$/primitives";
-	vision_imp_containers (vision_imp_widgets):     "$/containers";
-	vision_imp_common_dialog (vision_imp_widgets):	"$/common_dialogs";
-	vision_imp_uncommon_widgets (vision_imp_widgets):"$/uncommon_widgets";
-
+  	all vision (ws):				"$/vision2"
+		exclude
+			"mswin"
+		end
 
 -- EiffelBuild clusters
 
 	build (ws):					"$/build";
 	
 
-	root_cluster (build):	 			"$/Main";
+	root_cluster (build):	 			"$/main";
 
 	build_eiffel (build):				"$/eiffel";
 --	build_rescue (build_eiffel): 			"$/rescue";
@@ -98,25 +41,25 @@ cluster
 
 	build_merger (build):				"$/merger";
 
-	build_shared (build):				"$/Shared";
+	build_shared (build):				"$/shared";
 
-	build_catalog (build):				"$/Catalog";
-	build_catalog_commands (build_catalog):		"$/Commands";
+	build_catalog (build):				"$/catalog";
+	build_catalog_commands (build_catalog):		"$/commands";
 
-	build_utility (build):				"$/Utility";
+	build_utility (build):				"$/utility";
 
-	build_constants (build):			"$/Constants";
+	build_constants (build):			"$/constants";
 
-	build_icon (build):				"$/Icon";
+	build_icon (build):				"$/icon";
 
-	build_structures (build):			"$/Structures";
+	build_structures (build):			"$/structures";
 
-	build_windows (build):				"$/Windows";
-	build_windows_common (build_windows):		"$/Common";
-	build_windows_dialogs (build_windows):		"$/Dialogs";
-	build_main_window (build_windows):		"$/Main_window";
+	build_windows (build):				"$/windows";
+	build_windows_common (build_windows):		"$/common";
+	build_windows_dialogs (build_windows):		"$/dialogs";
+	build_main_window (build_windows):		"$/main_window";
 
-	build_window_mgr (build):			"$/WindowMgr";
+	build_window_mgr (build):			"$/window_manager";
 
 	build_liman (build):				"$/liman/build";
 --	build_liman_common (build):			"$/liman/common";

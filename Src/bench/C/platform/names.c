@@ -10,7 +10,7 @@
 
 rt_public EIF_REFERENCE eif_timeout_msg (void)
 {
-	/* Message displayed when ebench is unable to launch
+	/* Message displayed when estudio is unable to launch
 	 * the system (because of a timeout).
 	 */
 
@@ -20,7 +20,7 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 	char s[512];
 
 	strcpy(s, "Could not launch system in alloted time.\n");
-	strcat(s, "Try restarting ebench after setting ");
+	strcat(s, "Try restarting estudio after setting ");
 #ifdef EIF_VMS
 	strcat(s, "the logical name \n");
 #else

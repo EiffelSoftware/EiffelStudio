@@ -139,6 +139,11 @@ feature -- Integer Misc Values
 			-- Base file name
 	default_toolkit: STRING
 			-- Default toolkit for code generation
+	tab_length: INTEGER; 
+			-- Tab length within error message dialog box
+			-- (The error display should be changed to the
+			-- command tool window!
+
 
 feature {NONE} -- Integer Values initialization
 
@@ -158,7 +163,9 @@ feature {NONE} -- Integer Values initialization
 				:= resource.get_string ("temp_window_file_name", "temp_w");
 			temp_window_file_name.to_lower;
 			default_toolkit
-				:= resource.get_string ("default_toolkit", "MOTIF");
+			:= resource.get_string ("default_toolkit", "MOTIF");
+			tab_length 
+			:= resource.get_pos_integer ("tab_length", 1);
 		end;
 
 feature -- Window sizes

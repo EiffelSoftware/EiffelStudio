@@ -1,11 +1,8 @@
 Before using the vision libraries you must compile
 the C libraries in the Clib directory.
-There is a Makefile in each subdirectory.
+There is a Makefile.SH in each subdirectory.
 
-These make files have been set up for the Eiffel structure
-but require you to set compiler option for the appropriate
-platform.
-You will also need to make sure that the parent directory
+You will need to make sure that the parent directory
 for X11/includes is defined or included in the make file.
 
 Then place the archive produced in each subdirectory in the

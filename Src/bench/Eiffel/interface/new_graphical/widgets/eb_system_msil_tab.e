@@ -107,83 +107,87 @@ feature -- Store/Retrieve
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
 		do
-			defaults := root_ast.defaults
-			if defaults = Void then
-					-- No default option, we need to create them.
-				create defaults.make (10)
-				root_ast.set_defaults (defaults)
-			end
-
-			defaults.finish
-
-				-- Save check box options
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.il_verifiable,
-				Void, verifiable_check.is_selected))
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant,
-				Void, cls_compliant_check.is_selected))
-			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.dotnet_naming_convention, Void,
-				dotnet_naming_convention_check.is_selected))
-			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.use_cluster_name_as_namespace, Void,
-				cluster_name_check.is_selected))
-			defaults.extend (new_special_option_sd (
-				feature {FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
-				full_cluster_name_check.is_selected))
+			if msil_widgets_enabled then
+				defaults := root_ast.defaults
+				if defaults = Void then
+						-- No default option, we need to create them.
+					create defaults.make (10)
+					root_ast.set_defaults (defaults)
+				end
+	
+				defaults.finish
+	
+					-- Save check box options
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.il_verifiable,
+					Void, verifiable_check.is_selected))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant,
+					Void, cls_compliant_check.is_selected))
+				defaults.extend (new_special_option_sd (
+					feature {FREE_OPTION_SD}.dotnet_naming_convention, Void,
+					dotnet_naming_convention_check.is_selected))
+				defaults.extend (new_special_option_sd (
+					feature {FREE_OPTION_SD}.use_cluster_name_as_namespace, Void,
+					cluster_name_check.is_selected))
+				defaults.extend (new_special_option_sd (
+					feature {FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
+					full_cluster_name_check.is_selected))
+				
+				if dll_check.is_selected then
+					defaults.extend (new_special_option_sd (
+						feature {FREE_OPTION_SD}.msil_generation_type, "dll", False))
+				else
+					defaults.extend (new_special_option_sd (
+						feature {FREE_OPTION_SD}.msil_generation_type, "exe", False))
+				end
 			
-			if dll_check.is_selected then
-				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.msil_generation_type, "dll", False))
-			else
-				defaults.extend (new_special_option_sd (
-					feature {FREE_OPTION_SD}.msil_generation_type, "exe", False))
-			end
-		
-				-- Save text field values
-			if not full_name_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, 
-					full_name_field.text, False))
-			end
-			if not version_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Version, 
-					version_field.text, False))
-			end
-			if not company_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Company, 
-					company_field.text, False))
-			end
-			if not product_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Product, 
-					product_field.text, False))
-			end
-			if not trademark_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Trademark, 
-					trademark_field.text, False))
-			end
-			if not copyright_field.text.is_empty then
-				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Copyright, 
-					copyright_field.text, False))
-			end
-			if not signing_key_field.text.is_empty then
+					-- Save text field values
+				if not full_name_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, 
+						full_name_field.text, False))
+				end
+				if not version_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Version, 
+						version_field.text, False))
+				end
+				if not company_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Company, 
+						company_field.text, False))
+				end
+				if not product_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Product, 
+						product_field.text, False))
+				end
+				if not trademark_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Trademark, 
+						trademark_field.text, False))
+				end
+				if not copyright_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Copyright, 
+						copyright_field.text, False))
+				end
+				if not signing_key_field.text.is_empty then
+					defaults.extend (new_special_option_sd (feature 
+						{FREE_OPTION_SD}.Msil_key_file_name, signing_key_field.text, False))
+				end
+	
+					-- Save combobox selections
+				if not culture_combo.selected_item.text.substring 
+					(1, culture_combo.selected_item.text.index_of (',', 1) - 1).is_equal ("n/a") then
+						defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
+							culture_combo.selected_item.text.substring 
+							(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
+				end			
 				defaults.extend (new_special_option_sd (feature 
-					{FREE_OPTION_SD}.Msil_key_file_name, signing_key_field.text, False))
+					{FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 			end
-
-				-- Save combobox selections
-			if not culture_combo.selected_item.text.substring 
-				(1, culture_combo.selected_item.text.index_of (',', 1) - 1).is_equal ("n/a") then
-					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
-						culture_combo.selected_item.text.substring 
-						(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
-			end			
-			defaults.extend (new_special_option_sd (feature 
-				{FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 		end
 
 	retrieve (root_ast: ACE_SD) is
 			-- Retrieve content of `root_ast' and update content of widget.
 		do
-			initialize_from_ast (root_ast)
+			if msil_widgets_enabled then
+				initialize_from_ast (root_ast)
+			end
 		end
 
 feature {NONE} -- Filling

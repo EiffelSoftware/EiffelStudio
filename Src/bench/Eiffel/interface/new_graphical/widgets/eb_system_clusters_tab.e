@@ -559,21 +559,23 @@ feature {NONE} -- Cluster display and saving
 				prop.set_default_option (default_options)
 			end
 
-			if not namespace_name.text.is_empty then
-				from
-					default_options.start
-				until
-					default_options.after
-				loop				
-					if default_options.item.option.is_namespace then
-						default_options.remove 
-					else
-						default_options.forth
+			if msil_widgets_enabled then	
+				if not namespace_name.text.is_empty then
+					from
+						default_options.start
+					until
+						default_options.after
+					loop				
+						if default_options.item.option.is_namespace then
+							default_options.remove 
+						else
+							default_options.forth
+						end
 					end
+					create l_d_option.initialize (create {NAMESPACE_SD}.default_create, 
+						create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
+					default_options.extend (l_d_option)
 				end
-				create l_d_option.initialize (create {NAMESPACE_SD}.default_create, 
-					create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
-				default_options.extend (l_d_option)
 			end
 
 			store_cluster_assertions (prop)

@@ -39,7 +39,7 @@ feature -- Access
 		do
 			Result := implementation.checked_items	
 		ensure
-			bridge_ok: lists_equal (Result, implementation.selected_items)
+			bridge_ok: lists_equal (Result, implementation.checked_items)
 		end
 		
 	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is

@@ -120,7 +120,7 @@ feature -- Type check
 			a_feature: FEATURE_I
 			export_status, context_export: EXPORT_I
 			create_type: CREATE_TYPE
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			depend_unit: DEPEND_UNIT
 			feature_name: STRING
 			vgcc1: VGCC1

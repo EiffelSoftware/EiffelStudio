@@ -72,19 +72,23 @@ feature {NONE} -- Initialization
 			-- Build all the tool's widgets.
 		do
 			create displayed_objects.make
+
+			create stack_objects_tree
+			stack_objects_tree.drop_actions.extend (agent drop_stack_element)
+			stack_objects_tree.key_press_actions.extend (agent debug_value_key_action (stack_objects_tree, ?))
+			stack_objects_tree.set_minimum_size (100, 100)
+
+			create objects_tree
+			objects_tree.drop_actions.extend (agent add_object)
+			objects_tree.key_press_actions.extend (agent object_key_action)
+			objects_tree.key_press_actions.extend (agent debug_value_key_action (objects_tree, ?))
+
 			create split
 			split.disable_flat_separator
-			create local_tree
-			local_tree.drop_actions.extend (agent drop_stack_element)
-			local_tree.key_press_actions.extend (agent debug_value_key_action (local_tree, ?))
-			local_tree.set_minimum_size (100, 100)
-			split.set_first (local_tree)
-			create object_tree
-			object_tree.drop_actions.extend (agent add_object)
-			object_tree.key_press_actions.extend (agent object_key_action)
-			object_tree.key_press_actions.extend (agent debug_value_key_action (object_tree, ?))
-			split.set_second (object_tree)
+			split.set_first (stack_objects_tree)
+			split.set_second (objects_tree)
 			split.enable_flat_separator
+
 			expand_result := True
 			expand_args := True
 			expand_locals := True
@@ -182,8 +186,8 @@ feature -- Properties setting
 	set_hexa_mode (v: BOOLEAN) is
 		do
 			hexa_mode_enabled := v
-			local_tree.recursive_do_all (agent propagate_hexa_mode)
-			object_tree.recursive_do_all (agent propagate_hexa_mode)
+			stack_objects_tree.recursive_do_all (agent propagate_hexa_mode)
+			objects_tree.recursive_do_all (agent propagate_hexa_mode)
 		end
 	
 	propagate_hexa_mode (t: EV_TREE_ITEM) is
@@ -195,6 +199,32 @@ feature -- Properties setting
 				l_eb_t.update
 			end
 		end		
+
+--| NOTA jfiat 2004-09-24: Not used for now, but soon
+--feature -- Layout
+--
+--	backup_layout is
+--			-- 
+--		do
+--			if current_object /= Void then
+--				display_first := current_object.display
+--				display_first_attributes := current_object.display_attributes
+--				display_first_onces := current_object.display_onces
+--				display_first_special := current_object.display_special
+--			end
+--		end
+--		
+--	restore_layout is
+--			-- 
+--		do
+--			if current_object /= Void then
+--				current_object.set_display (display_first)
+--				current_object.set_display_attributes (display_first_attributes)
+--				current_object.set_display_onces (display_first_onces)
+--				current_object.set_display_special (display_first_special)
+----				current_object.apply_layout_to_attached_tree_item (curr)
+--			end
+--		end
 
 feature -- Status setting
 
@@ -235,7 +265,7 @@ feature -- Status setting
 					debugger_manager.keep_object (a_stone.object_address)
 					displayed_objects.extend (n_obj)
 					
-					n_obj.to_tree_item (object_tree)
+					n_obj.build_and_attach_to_parent (objects_tree)
 				else
 					if tree_item /= Void then
 						conv_spec ?= tree_item.data
@@ -248,7 +278,7 @@ feature -- Status setting
 					end
 					debugger_manager.keep_object (a_stone.object_address)
 					displayed_objects.extend (n_obj)
-					n_obj.to_tree_item (object_tree)					
+					n_obj.build_and_attach_to_parent (objects_tree)					
 				end
 			end
 		end
@@ -272,22 +302,22 @@ feature -- Status setting
 					--debugger_manager.kept_objects.start
 					--debugger_manager.kept_objects.prune_all (addr)
 					from
-						object_tree.start
+						objects_tree.start
 							--| The first item is the current object. It cannot be removed.
-						if not object_tree.is_empty then
-							object_tree.forth
+						if not objects_tree.is_empty then
+							objects_tree.forth
 						end
 					until
-						object_tree.after
+						objects_tree.after
 					loop
-						taddr ?= object_tree.item.data
+						taddr ?= objects_tree.item.data
 						if
 							taddr /= Void and then
 							taddr.is_equal (addr)
 						then
-							object_tree.remove
+							objects_tree.remove
 						else
-							object_tree.forth
+							objects_tree.forth
 						end
 					end
 				else
@@ -302,7 +332,7 @@ feature -- Status setting
 			str: STRING
 			item: EV_TREE_NODE
 		do
-			item := object_tree.selected_item
+			item := objects_tree.selected_item
 			if
 				item /= Void and then
 				item.parent = item.parent_tree
@@ -319,7 +349,8 @@ feature -- Status setting
 		local
 			conv_stack: CALL_STACK_STONE
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
-			cse: CALL_STACK_ELEMENT
+			cse: EIFFEL_CALL_STACK_ELEMENT
+			item: EV_TREE_ITEM
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.set_stone%N")
@@ -328,13 +359,15 @@ feature -- Status setting
 				conv_stack ?= a_stone
 				if conv_stack /= Void then
 					if Application.status.is_stopped then
-						build_local_tree
-						object_tree.start
-						if not object_tree.is_empty then
-							object_tree.remove
+						stack_objects_tree.wipe_out
+						build_stack_info (stack_objects_tree)
+						build_stack_objects (stack_objects_tree)
+						objects_tree.start
+						if not objects_tree.is_empty then
+							objects_tree.remove
 						end
 
-						cse := current_stack_element
+						cse ?= current_stack_element
 
 						if current_object /= Void then
 							display_first := current_object.display
@@ -353,8 +386,11 @@ feature -- Status setting
 						obj.set_display_attributes (display_first_attributes)
 						obj.set_display_onces (display_first_onces)
 						obj.set_display_special (display_first_special)
-						obj.to_tree_item (object_tree)
-						
+
+						obj.build_and_attach_to_parent (objects_tree)
+						item := obj.object_tree_item
+						item.set_text (Interface_names.l_Current_object + item.text)
+
 						current_object := obj
 					end
 				end
@@ -372,11 +408,14 @@ feature -- Status setting
 		do
 			can_refresh := False
 		end
-
+		
 	refresh is
 			-- Class has changed in `development_window'.
 		do
-			build_local_tree
+			stack_objects_tree.wipe_out
+			build_stack_info (stack_objects_tree)
+			build_stack_objects (stack_objects_tree)
+			objects_tree.wipe_out
 			build_object_tree
 		end
 
@@ -385,8 +424,8 @@ feature -- Status setting
 			--| Deferred implementation for optimization purposes.
 		do
 			ev_application.idle_actions.prune_all (update_agent)
-			local_tree.wipe_out
-			object_tree.wipe_out;
+			stack_objects_tree.wipe_out
+			objects_tree.wipe_out
 			ev_application.idle_actions.extend (update_agent)
 		end
 
@@ -435,7 +474,7 @@ feature -- Status report
 			str: STRING
 			item: EV_TREE_NODE
 		do
-			item := object_tree.selected_item
+			item := objects_tree.selected_item
 			if
 				item /= Void and then
 				item.parent = item.parent_tree
@@ -487,9 +526,9 @@ feature {EB_SET_SLICE_SIZE_CMD, EB_OBJECT_DISPLAY_PARAMETERS}
 feature {NONE} -- Implementation
 
 	current_stack_element: CALL_STACK_ELEMENT is
-			-- Stack element currently displayed in `local_tree'.
+			-- Stack element currently displayed in `stack_objects_tree'.
 		do
-			Result := Application.status.current_stack_element
+			Result := Application.status.current_call_stack_element
 		end
 
 	displayed_objects: LINKED_LIST [EB_OBJECT_DISPLAY_PARAMETERS]
@@ -504,12 +543,14 @@ feature {NONE} -- Implementation
 	expand_locals: BOOLEAN
 			-- Should the "Locals" tree item be expanded?
 
-	local_tree: EV_TREE
+	objects_tree: EV_TREE
+
+	stack_objects_tree: EV_TREE
 			-- Graphical tree displaying local variables, arguments and the result.
-
-	object_tree: EV_TREE
+			
+	current_object_tree_node: EV_TREE_NODE
 			-- Graphical tree displaying an object (or maybe several).
-
+	
 	pretty_print_cmd: EB_PRETTY_PRINT_CMD
 			-- Command that is used to display extended information concerning objects.
 
@@ -520,20 +561,29 @@ feature {NONE} -- Implementation
 			-- Command that is used to switch hex/dec formatting for numerical values
 
 	split: EB_HORIZONTAL_SPLIT_AREA
-			-- Split area that contains both `local_tree' and `object_tree'.
+			-- Split area that contains both `stack_objects_tree' and `objects_tree'.
 
 	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Procedure used to update Current.
 
 	real_update is
 			-- Display current execution status.
+		local
+			status: APPLICATION_STATUS
 		do
 			ev_application.idle_actions.prune_all (update_agent)
-			if Application.status /= Void then
+			status := application.status
+			if status /= Void then
 				pretty_print_cmd.refresh
-				if Application.status.is_stopped then
-					if application.has_valid_call_stack then
-						build_local_tree
+				stack_objects_tree.wipe_out
+				objects_tree.wipe_out
+				if status.is_stopped then
+					if 
+						status.has_valid_call_stack
+						and then status.has_valid_current_eiffel_call_stack_element
+					then
+						build_stack_info (stack_objects_tree)
+						build_stack_objects (stack_objects_tree)
 						build_object_tree
 					end
 				else
@@ -544,29 +594,26 @@ feature {NONE} -- Implementation
 						display_first_special := current_object.display_special
 						display_first_onces := current_object.display_onces
 					end
-					local_tree.wipe_out
-					object_tree.wipe_out
 				end
 			end
 		end
 
-	show_text_in_popup (txt: STRING; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- 
+	show_exception_dialog (a_tag, a_msg: STRING; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 		local
-			w_dlg: EB_INFORMATION_DIALOG
+			dlg: EB_DEBUGGER_EXCEPTION_DIALOG		
 		do
-			create w_dlg.make_with_text (txt)
-			w_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)		
+			create dlg.make (a_tag, a_msg)
+			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
 		end
-		
-	build_exception_info (a_tree: EV_TREE) is
+
+	build_exception_info (a_target_container: EV_TREE) is
 			-- Display exception info
 			-- for now only for Dotnet systems
 		local
 			item: EV_TREE_ITEM
 			l_exception_detail: TUPLE [STRING, STRING]
 			l_exception_module_detail: STRING
-			l_exception_message, l_exception_to_string: STRING
+			l_exception_tag, l_exception_message: STRING
 			exception_item: EV_TREE_ITEM
 		do
 			if Application.is_dotnet and then Application.imp_dotnet.exception_occurred then
@@ -584,12 +631,12 @@ feature {NONE} -- Implementation
 					
 						--| Exception message
 					
-					l_exception_message := Application.imp_dotnet.exception_message
-					if l_exception_message /= Void then
+					l_exception_tag := Application.imp_dotnet.exception_message
+					if l_exception_tag /= Void then
 						create item
-						item.set_data (l_exception_message)
-						item.set_text (l_exception_message)
-						item.set_tooltip (l_exception_message)
+						item.set_data (l_exception_tag)
+						item.set_text (l_exception_tag)
+						item.set_tooltip (l_exception_tag)
 						item.set_pixmap (Pixmaps.Icon_exception)
 						exception_item.extend (item)						
 					end	
@@ -602,145 +649,149 @@ feature {NONE} -- Implementation
 					exception_item.extend (item)
 					
 						--| Exception to_string					
-					l_exception_to_string := Application.imp_dotnet.exception_to_string
-					if l_exception_to_string /= Void then
+					l_exception_message := Application.imp_dotnet.exception_to_string
+					if l_exception_message /= Void then
 						create item
-						item.set_data (l_exception_to_string)
+						item.set_data (l_exception_message)
 						item.set_text ("Double click to see Exception or Ctrl-C to copy to clipboard")-- + l_exception_to_string)
-						item.set_tooltip (l_exception_to_string)
+						item.set_tooltip (l_exception_message)
 						item.set_pixmap (Pixmaps.Icon_exception)
-						item.pointer_double_press_actions.extend (agent show_text_in_popup (l_exception_to_string, ?,?,?,?,?,?,?,?))
+						item.pointer_double_press_actions.extend (agent show_exception_dialog (l_exception_tag, l_exception_message, ?,?,?,?,?,?,?,?))
 						exception_item.extend (item)						
-					end						
-
-					a_tree.extend (exception_item)
+					end
+					a_target_container.extend (exception_item)
 					exception_item.expand
 				end
 			end
 		end
 
-	build_local_tree is
-			-- Create the tree that contains locals and parameters.
+	build_stack_info (a_target_container: EV_TREE) is
+			-- Create the tree that contains call stack info
 		local
-			item: EV_TREE_ITEM
 			module_item: EV_TREE_ITEM
-
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			dv: ABSTRACT_DEBUG_VALUE
-			cse: CALL_STACK_ELEMENT
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
-
-			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
-			i: INTEGER
-			dbg_nb: INTEGER
-
 		do
-			local_tree.wipe_out
-
-			if Application.call_stack_is_empty and then Application.is_dotnet then
-				build_exception_info (local_tree)
+			if Application.call_stack_is_empty then
+				build_exception_info (a_target_container)
 			else
-				cse := current_stack_element
-
 				if Application.is_dotnet then
-					cse_dotnet ?= cse
-
-					create module_item
-					module_item.set_text ("Module = " + cse_dotnet.dotnet_module_name)
-					module_item.set_data (cse_dotnet.dotnet_module_filename)
-					module_item.set_pixmap (Pixmaps.Icon_green_tick)
-					local_tree.extend (module_item)				
-
-					build_exception_info (local_tree)
-				end
-				
-					-- Fill in the arguments, if any.
-				list := cse.arguments
-				if
-					list /= Void and then
-					not list.is_empty
-				then
-					create item
-					item.set_text (Interface_names.l_Arguments)
-					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-					local_tree.extend (item)
-					from
-						list.start
-					until
-						list.after
-					loop
-						item.extend (debug_value_to_tree_item (list.item))
-						list.forth
-					end
-					if expand_args then
-						item.expand
-					end
-				end
-
-					-- Fill in the locals, if any.
-				list := cse.locals
-				if
-					list /= Void and then
-					not list.is_empty
-				then
-					create item
-					item.set_text (Interface_names.l_Locals)
-					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-					local_tree.extend (item)
-					dbg_nb := list.count
-					create tmp.make (1, dbg_nb)
-					from
-						list.start
-						i := 1
-					until
-						list.after
-					loop
-						tmp.put (list.item, i)
-						i := i + 1
-						list.forth
-					end
-					tmp.sort
-					from
-						i := 1
-					until
-						i > dbg_nb
-					loop
-						item.extend (debug_value_to_tree_item (tmp @ i))
-						i := i + 1
-					end
-					if expand_locals then
-						item.expand
-					end
-				end
-
-					-- Display the result, if any.
-				dv := cse.result_value
-				if
-					dv /= Void
-				then
-					create item
-					item.set_text (Interface_names.l_Result)
-					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-					local_tree.extend (item)
-					item.extend (debug_value_to_tree_item (dv))
-					if expand_result then
-						item.expand
+					cse_dotnet ?= current_stack_element
+					if cse_dotnet /= Void then
+						create module_item
+						module_item.set_text ("Module = " + cse_dotnet.dotnet_module_name)
+						module_item.set_data (cse_dotnet.dotnet_module_filename)
+						module_item.set_pixmap (Pixmaps.Icon_green_tick)
+						a_target_container.extend (module_item)
+						build_exception_info (a_target_container)
 					end
 				end
 			end
 		end
 
+	build_stack_objects (a_target_container: EV_TREE) is
+			-- Create the tree that contains locals (Result) and parameters.
+		local
+			item: EV_TREE_ITEM
+			list: LIST [ABSTRACT_DEBUG_VALUE]
+			dv: ABSTRACT_DEBUG_VALUE
+			cse: EIFFEL_CALL_STACK_ELEMENT
+
+			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
+			i: INTEGER
+			dbg_nb: INTEGER
+		do
+			if not Application.call_stack_is_empty then
+				cse ?= current_stack_element
+				if cse /= Void then
+						-- Fill in the arguments, if any.
+					list := cse.arguments
+					if
+						list /= Void and then
+						not list.is_empty
+					then
+						create item
+						item.set_text (Interface_names.l_Arguments)
+						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+						a_target_container.extend (item)
+						from
+							list.start
+						until
+							list.after
+						loop
+							item.extend (debug_value_to_tree_item (list.item))
+							list.forth
+						end
+						if expand_args then
+							item.expand
+						end
+					end
+	
+						-- Fill in the locals, if any.
+					list := cse.locals
+					if
+						list /= Void and then
+						not list.is_empty
+					then
+						create item
+						item.set_text (Interface_names.l_Locals)
+						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+						a_target_container.extend (item)
+						dbg_nb := list.count
+						create tmp.make (1, dbg_nb)
+						from
+							list.start
+							i := 1
+						until
+							list.after
+						loop
+							tmp.put (list.item, i)
+							i := i + 1
+							list.forth
+						end
+						tmp.sort
+						from
+							i := 1
+						until
+							i > dbg_nb
+						loop
+							item.extend (debug_value_to_tree_item (tmp @ i))
+							i := i + 1
+						end
+						if expand_locals then
+							item.expand
+						end
+					end
+	
+						-- Display the result, if any.
+					dv := cse.result_value
+					if
+						dv /= Void
+					then
+						create item
+						item.set_text (Interface_names.l_Result)
+						item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+						a_target_container.extend (item)
+						item.extend (debug_value_to_tree_item (dv))
+						if expand_result then
+							item.expand
+						end
+					end
+				end
+			end
+		end
 	
 	build_object_tree is
 			-- Create the tree that contains object information.
 		local
 			value: ABSTRACT_DEBUG_VALUE
+			cse: EIFFEL_CALL_STACK_ELEMENT
+			item: EV_TREE_ITEM
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_TOOL.build_object_tree%N")
 			end
-			object_tree.wipe_out
 			
+				--| Current object
 			if current_object /= Void then
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
@@ -750,24 +801,27 @@ feature {NONE} -- Implementation
 
 			if Application.is_dotnet then
 				if not Application.call_stack_is_empty then
-					value := application.imp_dotnet.status.current_stack_element_dotnet.current_object
-					check 
+					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
+					check
 						value_not_void: value /= Void
 					end
 					create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (Current, value)
 				end
 			else
-				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (Current, current_stack_element)
+				cse ?= current_stack_element
+				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (Current, cse)
 			end
 			if current_object /= Void then
 				current_object.set_display (display_first)
 				current_object.set_display_attributes (display_first_attributes)
 				current_object.set_display_onces (display_first_onces)
 				current_object.set_display_special (display_first_special)
-				current_object.to_tree_item (object_tree)
+				current_object.build_and_attach_to_parent (objects_tree)
+				item := current_object.object_tree_item
+				item.set_text (Interface_names.l_Current_object + item.text)
 			end
-			
-			add_displayed_objects_to_tree (object_tree)
+				--| Added objects
+			add_displayed_objects_to_tree (objects_tree)
 		end
 		
 	add_displayed_objects_to_tree (a_object_tree: EV_TREE) is
@@ -778,11 +832,10 @@ feature {NONE} -- Implementation
 			until
 				displayed_objects.after
 			loop
-				displayed_objects.item.to_tree_item (a_object_tree)
+				displayed_objects.item.build_and_attach_to_parent (a_object_tree)
 				displayed_objects.forth
 			end
 		end
-
 
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.

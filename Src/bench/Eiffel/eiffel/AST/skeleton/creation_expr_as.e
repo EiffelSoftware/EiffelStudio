@@ -178,7 +178,6 @@ feature -- Type check
 					-- Get the corresponding constraint type of the current class
 				formal_dec := context.current_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
-					new_creation_type := formal_dec.constraint_type
 					is_formal_creation := True
 				else
 						-- An entity of type a formal generic parameter cannot be
@@ -225,7 +224,11 @@ feature -- Type check
 				-- Check for errors
 			Error_handler.checksum
 
-			creation_class := new_creation_type.associated_class
+			if is_formal_creation then
+				creation_class := formal_dec.constraint_type.associated_class
+			else
+				creation_class := new_creation_type.associated_class
+			end
 			if creation_class.is_deferred and then not is_formal_creation then
 					-- Associated class cannot be deferred
 				create vgcc2

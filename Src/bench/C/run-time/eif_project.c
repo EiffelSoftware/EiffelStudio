@@ -24,6 +24,7 @@ extern "C" {
 	void (*egc_strset)(char *, EIF_INTEGER); 
 	void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	
 	void (*egc_tupmake)(char *);
+	void (*egc_routdisp)(char *, char *); 
 
 	int egc_str_dtype;				
 	int egc_arr_dtype;				

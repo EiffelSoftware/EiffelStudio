@@ -1,11 +1,11 @@
 /*
 
-    #    #    #   #####  ######  #####   #####           #    #
-    #    ##   #     #    #       #    #  #    #          #    #
-    #    # #  #     #    #####   #    #  #    #          ######
-    #    #  # #     #    #       #####   #####    ###    #    #
-    #    #   ##     #    #       #   #   #        ###    #    #
-    #    #    #     #    ######  #    #  #        ###    #    #
+	#    #    #   #####  ######  #####   #####           #    #
+	#    ##   #     #    #       #    #  #    #          #    #
+	#    # #  #     #    #####   #    #  #    #          ######
+	#    #  # #     #    #       #####   #####    ###    #    #
+	#    #   ##     #    #       #   #   #        ###    #    #
+	#    #    #     #    ######  #    #  #        ###    #    #
 
 	Interpreter declarations and definitions.
 */
@@ -198,6 +198,7 @@ extern void idump(FILE *fd, char *start);
 #define BC_POP				(char) 131
 
 #define BC_REF_TO_PTR		(char) 132
+#define BC_RCREATE		(char) 133
 
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */

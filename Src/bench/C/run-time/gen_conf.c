@@ -14,7 +14,6 @@
 /*
 #define GEN_CONF_DEBUG
 */
-
 #ifdef GEN_CONF_DEBUG
 rt_public void log_puts (char *);
 rt_public void log_puti (int);
@@ -55,6 +54,7 @@ typedef struct eif_gen_der {
 	int16               id;         /* Run-time generated id */
 	int16               base_id;    /* Compiler generated (base) id */
 	int16               first_id;   /* First matching compiler gen. id */
+	int16               uniformizer;/* Uniformizer id for TUPLE types */
 	char                *name;      /* Full type name */
 	char                is_expanded;/* Is it an expanded type? */
 	char                is_bit;     /* Is it a BIT type? */
@@ -104,6 +104,7 @@ rt_private int  next_gen_id  = 0;
 rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
 rt_private EIF_CONF_TAB **eif_conf_tab = (EIF_CONF_TAB **)0;
 rt_private EIF_ANC_ID_MAP **eif_anc_id_map = (EIF_ANC_ID_MAP **)0;
+rt_private int16 *rtud_inv = (int16 *) 0;
 rt_private int16 cid_array [3];
 rt_private int16 egc_character_dtype = -1;
 rt_private int16 egc_boolean_dtype = -1;
@@ -111,6 +112,7 @@ rt_private int16 egc_integer_dtype = -1;
 rt_private int16 egc_real_dtype = -1;
 rt_private int16 egc_double_dtype = -1;
 rt_private int16 egc_pointer_dtype = -1;
+rt_private int16 tuple_static_type = -1;
 
 /*------------------------------------------------------------------*/
 
@@ -218,6 +220,10 @@ rt_public void eif_gen_conf_init (int max_dtype)
 		{
 			egc_pointer_dtype = dt;
 		}
+		if ((strcmp("TUPLE",cname)==0))
+		{
+			tuple_static_type = dt;
+		}
 	}
 
 	/* Now setup inverse RTUD table. This is used
@@ -298,6 +304,8 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 
 #ifdef GEN_CONF_DEBUG
 		log_puts (eif_typename(gresult));
+		log_puts (" Dftype = ");
+		log_puti ((int) gresult);
 #endif
 
 		if (cachable && (cache != (int16 *) 0))
@@ -429,28 +437,197 @@ rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, lo
 	return result;
 }
 /*------------------------------------------------------------------*/
-/* Number of generic parameters of `obj's type.                     */
+/* Number of generic parameters of `obj's type. Can ONLY be used for*/
+/* TUPLE and its descendants!                                       */
 /*------------------------------------------------------------------*/
 
 rt_public int eif_gen_count (char *obj)
 {
 	int16       dftype;
 	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
 
 	if (obj == (char *)0)
 		return 0;
 
 	dftype = Dftype(obj);
 
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
 
-	gdp = eif_derivations [dftype];    
+	if (tuple_static_type >= 0)
+	{
+		amap = eif_anc_id_map [dftype];
 
-	if ((gdp == (EIF_GEN_DER *)0) || (gdp->is_bit))
+		if (amap == (EIF_ANC_ID_MAP *) 0)
+		{
+			eif_compute_anc_id_map (dftype, 1, 0);
+			amap = eif_anc_id_map [dftype];
+		}
+
+		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	}
+	else
+	{
+		gdp = eif_derivations [dftype];
+	}
+
+	if (gdp == (EIF_GEN_DER *)0)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->is_bit)
 		return 0;
 
 	return gdp->size;
+}
+/*------------------------------------------------------------------*/
+/* Typecode of generic type at position `pos' in `obj'. ONLY for    */
+/* TUPLE and its descendants!                                       */
+/*------------------------------------------------------------------*/
+
+rt_public char eif_gen_typecode (char *obj, int pos)
+{
+	int16       dftype, gtype;
+	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
+
+	if (obj == (char *)0)
+		return 0;
+
+	dftype = Dftype(obj);
+
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
+	if ((dftype < 0) || (dftype >= next_gen_id))
+		eif_panic ("Invalid type");
+
+	if (tuple_static_type >= 0)
+	{
+		amap = eif_anc_id_map [dftype];
+
+		if (amap == (EIF_ANC_ID_MAP *) 0)
+		{
+			eif_compute_anc_id_map (dftype, 1, 0);
+			amap = eif_anc_id_map [dftype];
+		}
+
+		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	}
+	else
+	{
+		gdp = eif_derivations [dftype];
+	}
+
+	if (gdp == (EIF_GEN_DER *)0)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->is_bit)
+		eif_panic ("Not a generic type.");
+
+	if ((pos <= 0) || (pos > gdp->size))
+		eif_panic ("Invalid generic parameter position.");
+
+	gtype = gdp->typearr [pos-1];
+
+	if (gtype <= -256)
+		gtype = -256-gtype;
+
+	switch (gtype)
+	{
+		case -2: return 'c';
+		case -3: return 'b';
+		case -4: return 'i';
+		case -5: return 'f';
+		case -6: return 'd';
+		case -8: return 'p';
+		default: break;
+	}
+
+	/* Reference */
+	return 'r';
+}
+/*------------------------------------------------------------------*/
+/* Is generic type uniform? ONLY for TUPLE and its descendants!     */
+/*------------------------------------------------------------------*/
+
+rt_public char eif_gen_is_uniform (char *obj, char code)
+{
+	int16       i, dftype, utype;
+	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
+
+	if (obj == (char *)0)
+		return 0;
+
+	dftype = Dftype(obj);
+
+	/* Check for expanded */
+
+	if (dftype <= -256)
+		dftype = -256-dftype;
+
+	if ((dftype < 0) || (dftype >= next_gen_id))
+		eif_panic ("Invalid type");
+
+	if (tuple_static_type >= 0)
+	{
+		amap = eif_anc_id_map [dftype];
+
+		if (amap == (EIF_ANC_ID_MAP *) 0)
+		{
+			eif_compute_anc_id_map (dftype, 1, 0);
+			amap = eif_anc_id_map [dftype];
+		}
+
+		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+	}
+	else
+	{
+		gdp = eif_derivations [dftype];
+	}
+
+	if (gdp == (EIF_GEN_DER *)0)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->is_bit)
+		eif_panic ("Not a generic type.");
+
+	if (gdp->size == 0)
+		return EIF_TRUE;
+
+	switch (code)
+	{
+		case 'c': utype = -2;
+				  break;
+		case 'b': utype = -3;
+				  break;
+		case 'i': utype = -4;
+				  break;
+		case 'f': utype = -5;
+				  break;
+		case 'd': utype = -6;
+				  break;
+		case 'p': utype = -8;
+				  break;
+		default : utype = gdp->typearr [0];
+				  break;
+	}
+
+	for (i = 1; i < gdp->size;++i)
+	{
+		if (utype != gdp->typearr[i])
+			return EIF_FALSE;
+	}
+
+	return EIF_TRUE;
 }
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
@@ -950,7 +1127,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 							int16 apply_rtud, char *cachable, char *found)
 
 {
-	int16   dftype, gcount, i, hcode, ltype;
+	int16   dftype, gcount, i, hcode, ltype, uniformizer;
 	int16   *save_otab;
 	int     pos, mcmp;
 	char    is_expanded, is_tuple;
@@ -977,9 +1154,11 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	if (dftype == -15)
 	{
 		(*intab)++;
-		gcount = **intab;   /* Number of generic params */
+		uniformizer = **intab;  /* Uniformizer of TUPLE */
 		(*intab)++;
-		dftype = **intab;   /* Base id for TUPLE */
+		gcount = **intab;       /* Number of generic params */
+		(*intab)++;
+		dftype = **intab;       /* Base id for TUPLE */
 
 		/* May be expanded */
 
@@ -1170,6 +1349,9 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 		gdp = eif_new_gen_der((long)gcount, save_otab, dftype, is_expanded, is_tuple, hcode);
 
+		if (is_tuple)
+			gdp->uniformizer = uniformizer;
+
 		if (prev == (EIF_GEN_DER *)0)
 			eif_derivations [dftype] = gdp;
 		else
@@ -1211,6 +1393,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 		result->id          = ((size > 0) ? next_gen_id++ : base_id);
 		result->base_id     = base_id;
 		result->first_id    = -1;
+		result->uniformizer = -1;
 		result->is_expanded = is_exp;
 		result->is_bit      = ((size > 0) ? '1' : (char) 0);
 		result->is_tuple    = is_tuple;
@@ -1259,6 +1442,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 	result->id          = next_gen_id++;
 	result->base_id     = base_id;
 	result->first_id    = -1;
+	result->uniformizer = -1;
 	result->is_expanded = is_exp;
 	result->is_bit      = (char) 0;
 	result->is_tuple    = is_tuple;
@@ -1959,9 +2143,11 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 
 	if (gdp->is_tuple)
 	{
-		typearr [*idx] = -15;    /* TUPLE type */
+		typearr [*idx] = -15;                   /* TUPLE type */
 		(*idx)++;
-		typearr [*idx] = (int16) (gdp->size); /* Nr of generics */
+		typearr [*idx] = gdp->uniformizer;      /* Uniformizer of TUPLE */
+		(*idx)++;
+		typearr [*idx] = (int16) (gdp->size);   /* Nr of generics */
 		(*idx)++;
 	}
 

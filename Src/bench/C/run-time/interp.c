@@ -164,7 +164,7 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype);	
 rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
-rt_private void address(int32 fid, int stype);					/* Address of a routine */
+rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address of a routine */
 rt_private void assign(long int fid, int stype, uint32 type);					/* Assignment in an attribute */
 rt_private void passign(int32 origin, int32 f_offset, uint32 type);					/* Assignment in a precomp attribute */
 
@@ -292,7 +292,7 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 
 rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 			
-		  		/* Invariant checked after or before ? */
+				/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
 	EIF_GET_CONTEXT
@@ -1446,6 +1446,38 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
+	 * Routine object creation instruction.
+	 */
+	case BC_RCREATE:
+#ifdef DEBUG
+		dprintf(2)("BC_RCREATE\n");
+#endif
+		{
+			char *new_obj;						/* New object */
+			unsigned long stagval;
+			struct item *addr;
+
+			type = get_short();
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+			addr = opop();  /* Address of routine */
+			stagval = tagval;
+			new_obj = RTLNR((int16)type, addr->it_ptr);		/* Create new object */
+			last = iget();				/* Push a new value onto the stack */
+			last->type = SK_REF;
+			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			if (tagval != stagval)		/* If type is expanded we may
+										 * need to sync the registers if it
+										 * called the interpreter for the
+										 * creation routine.
+										 * Also if the creation causes melted
+										 * Dispose to be called then sync_regs
+										 * has to be called. 
+										 */
+				sync_registers(MTC scur, stop);
+		}
+		break;
+
+	/*
 	 * Creation instruction.
 	 */
 	case BC_CREATE:
@@ -1709,6 +1741,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			eraise(string, EN_VOID);		/* Yes, raise exception */
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
+
 		nstcall = 1;					/* Invariant check turned on */
 		if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
 			sync_registers(MTC scur, stop);
@@ -2127,7 +2160,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		offset = get_long();			/* Get the feature id */
 		code = get_short();				/* Get the static type */
-		address((int32)offset, code);
+		address((int32)offset, code, (int) get_short());
 		break;
 
 	/*
@@ -2290,6 +2323,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
+
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
 			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
 
@@ -2300,8 +2334,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			sp_area = *(char **) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
 				/* Fill the special area with the expressions
-			 	* for the manifest array.
-			 	*/
+				* for the manifest array.
+				*/
+
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
@@ -2382,7 +2417,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
  
 			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
-			((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
+			((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
 			if (tagval != stagval)
@@ -4470,9 +4505,10 @@ void call_disp(EIF_CONTEXT uint32 dtype, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void address(int32 fid, int stype)
-		  				/* Feature ID */
-		  				/* Static type (entity where feature is applied) */
+rt_private void address(int32 fid, int stype, int for_rout_obj)
+						/* Feature ID */
+						/* Static type (entity where feature is applied) */
+						/* Do we need it for a routine object? */
 {
 	/* Get the address of a routine identified by 'fid', in the static type
 	 * context 'stype', with Current being place on top of the operational
@@ -4483,7 +4519,11 @@ rt_private void address(int32 fid, int stype)
 
 	last = iget();
 	last->type = SK_POINTER;
-	last->it_ptr = (char *) RTWPP(stype, fid);
+
+	if (for_rout_obj)
+		last->it_ptr = (char *) RTWPPR(stype, fid);
+	else
+		last->it_ptr = (char *) RTWPP(stype, fid);
 }
 
 
@@ -4707,7 +4747,7 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 
 	/* If not generic then return dtype */
 
-	if (cnt == 1)
+	if (cnt <= 2)
 		return dtype;
 	
 	return (short) RTCID((int16 *)0,Current, (int16) dtype, gen_types);

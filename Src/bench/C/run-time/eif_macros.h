@@ -25,6 +25,7 @@
 #include "eif_hector.h"
 #include "eif_size.h"
 #include "eif_gen_conf.h"
+#include "eif_rout_obj.h"
 #if !defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"
 #elif defined EIF_WIN32
@@ -67,6 +68,8 @@ extern "C" {
 
 /* Macro used for allocation:
  *  RTLN(x) allocates a new object of type 'x'
+ *  RTLNR(x,y) allocates a new routine object of type 'x' and
+ *  initializes it with the routine pointer 'y'
  *  RTLB(x) allocated a new bit object of size 'x'
  *  RTUD keep dynamic type  for refreezing
  *  RTCB(x) clones bit `x'
@@ -77,6 +80,7 @@ extern "C" {
  *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x) emalloc(x)
+#define RTLNR(x,y) rout_obj_create((x),(y))
 #define RTLB(x)	bmalloc(x)
 #define RTMB(x,y) makebit(x,y)
 #define RTCB(x) b_clone(x)
@@ -485,7 +489,8 @@ RT_LNK int fcount;
 #define RTWPT(x,y,z) wptype(x,y,z)
 #define RTWCT(x,y,z) wtype_gen(x,y,z)
 #define RTWPCT(st,x,y,z) wptype_gen(st,x,y,z)
-#define RTWPP(x,y) ((egc_address_table[x])[y])
+#define RTWPP(x,y) ((egc_address_table[x])[2*(y)])
+#define RTWPPR(x,y) ((egc_address_table[x])[2*(y)+1])
 #define RTWO(x) onceadd(x)
 
 #define WDBG(x,y)	is_debug(x,y)				/* Debug option */

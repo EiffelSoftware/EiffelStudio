@@ -2307,7 +2307,7 @@ rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 			/* Used for creation (emalloc). Map type */
 			*crflags = (uint32) dtypes [oflags & EO_TYPE];
 	} else
-			*crflags = oflags;
+		*crflags = oflags;
 
 	ridr_norm_int (&count);    
 

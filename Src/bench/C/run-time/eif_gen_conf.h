@@ -42,6 +42,15 @@ extern int eif_gen_conf (int16, int16);
 /* Type of the i-th generic parameter */
 extern int16 eif_gen_param_id (int16 stype, char *obj, int pos);
 
+/* TUPLEs */
+
+/* Typecode for generic parameter */
+extern char eif_gen_typecode (char *obj, int pos);
+
+/* Uniform TUPLE? */
+
+extern char eif_gen_is_uniform (char *obj, char code);
+
 /* Parent tables */
 
 extern struct eif_par_types **eif_par_table;

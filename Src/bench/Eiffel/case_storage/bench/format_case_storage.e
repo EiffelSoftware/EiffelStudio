@@ -13,7 +13,8 @@ inherit
 	STORABLE;
 	COMPILER_EXPORTER;
 	SHARED_COUNTER;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	SHARED_INST_CONTEXT
 
 creation
 
@@ -41,9 +42,13 @@ feature -- Execution
 		local
 			d: DIRECTORY;
 			f: PLAIN_TEXT_FILE;
-			fn: FILE_NAME
+			fn: FILE_NAME;
+			prev_class: CLASS_C;
+			prev_cluster: CLUSTER_I
 		do
 			if not rescued then
+				prev_class := System.current_class;
+				prev_cluster := Inst_context.cluster;
 				output_window.clear_window;
 				if workbench.successfull then
 					Error_handler.wipe_out;
@@ -88,7 +93,9 @@ feature -- Execution
 			else
 				rescued := False;
 				output_window.display
-			end
+			end;
+			System.set_current_class (prev_class);
+			Inst_context.set_cluster (prev_cluster);
 		rescue
 			Case_file_server.remove_tmp_files;
 			clear_shared_case_information;

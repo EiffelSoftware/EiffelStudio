@@ -40,7 +40,7 @@ feature -- Access
 				end
 			end
 		ensure
-			ends_with_directory_separator: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
 	Eiffel_compiler_path: STRING is

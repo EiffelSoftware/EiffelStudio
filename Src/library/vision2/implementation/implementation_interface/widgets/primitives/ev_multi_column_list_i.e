@@ -118,13 +118,14 @@ feature -- Status setting
 
 	set_column_alignment (type: INTEGER; column: INTEGER) is
 			-- Align the text of the column.
-			-- Not allowed for the first column
+			-- Not allowed for the first column that stays
+			-- left aligned.
 			-- 0: Left, 
 			-- 1: Right,
 			-- 2: Center,
 		require
 			exists: not destroyed
-			column_exists: column > 0 and column <= columns
+			column_exists: column > 1 and column <= columns
 		deferred
 		end
 

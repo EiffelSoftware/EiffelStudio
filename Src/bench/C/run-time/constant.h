@@ -123,6 +123,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define constant_max_class_name_len     80
 #define constant_max_feature_name_len   80
 #define constant_max_directory_len		200
+#define constant_max_executable_len		50
 #define constant_max_ref_table_size		200 /* not used any more. Now use list */
 #define constant_max_command_text  		100
 #define constant_errno_text_len    		100
@@ -417,7 +418,7 @@ typedef struct _net_res {
 char host[constant_max_host_name_len+1];
 EIF_INTEGER capability;
 char directory[constant_max_directory_len+1];
-char executable[constant_max_directory_len+1];
+char executable[constant_max_executable_len+1];
 } RESOURCE;
 
 typedef struct _rl {
@@ -616,7 +617,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
         strcpy(_concur_class_name_of_root_obj, argv[4]); \
         send_signal_to_scoop_dog(atoi(argv[6])); \
  \
-        _concur_parent = setup_connection(argv[2], atoi(argv[3])); \
+        _concur_parent = setup_connection(atoi(argv[2]), atoi(argv[3])); \
  \
 		make_server(config); \
  \
@@ -649,7 +650,7 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 #define CURCCI(class,feature) \
 		_concur_is_creating_sep_child = 1; \
 		sprintf(_concur_crash_info, CURERR9, _concur_hosts[_concur_resource_index].host); \
-		_concur_scoop_dog = setup_connection(dispatch_to(), constant_scoop_dog_port); \
+		_concur_scoop_dog = setup_connection(c_get_addr_from_name(dispatch_to()), constant_scoop_dog_port); \
 		_concur_crash_info[0] = '\0'; \
         _concur_command = constant_create_sep_obj; \
         _concur_para_num = 7; \

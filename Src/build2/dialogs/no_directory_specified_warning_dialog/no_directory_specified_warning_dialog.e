@@ -47,6 +47,13 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -85,7 +92,8 @@ feature {NONE} -- Implementation
 			current_text := directory_name_field.text.as_lower
 			if valid_class_name (current_text) and not Reserved_words.has (current_text) and not
 				Build_reserved_words.has (current_text) and not
-				object_handler.string_used_globally_as_object_or_feature_name (current_text) then
+				object_handler.string_used_globally_as_object_or_feature_name (current_text)
+				and not constants.all_constants.has (current_text) then
 				directory_name_field.set_foreground_color (black)
 				ok_button.enable_sensitive
 			else

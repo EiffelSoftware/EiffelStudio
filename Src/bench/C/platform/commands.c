@@ -61,7 +61,6 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 #ifdef EIF_WIN32
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
-	LPVOID					env;
 	char					buf[1000];
 #endif
 
@@ -96,7 +95,6 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 		}
-	FreeEnvironmentStrings (env);
 #else
 	(void) WinExec(cmd, SW_SHOWNORMAL);
 #endif
@@ -241,6 +239,8 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 	fclose (fi);
 	fclose (fo);
+	xfree (src);
+	xfree (system_exe);
 #else
 #ifdef EIF_WINDOWS
 	char *ini_path, *src, *eiffel_dir, *eiffel_plt, *system_exe;
@@ -300,6 +300,8 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 
 	fclose (fi);
 	fclose (fo);
+	xfree (src);
+	xfree (system_exe);
 
 #elif defined __VMS
 	char *cmd;

@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 			Precursor (man)
 		end
 
+feature {EB_TOOL_MANAGER} -- Initialization
+
 	build_interface is
 			-- Build system widget.
 		do

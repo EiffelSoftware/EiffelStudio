@@ -26,17 +26,19 @@ feature {NONE} -- Initialization
 
 feature	-- Access
 	
-	main_window: EV_WINDOW is
+	first_window: EV_UNTITLED_WINDOW is
 			-- Must be defined as a once funtion to create
-			-- the application's main_window.
+			-- the application's first_window.
 		deferred
+		ensure
+			top_level_window: Result.parent = Void
 		end
 
-feature -- Accelerators - Initialization
+feature -- Application initialization
 
-	init_accelerators is
-			-- Redefine this feature to add your global
-			-- accelerators to the application.
+	initialize is
+			-- Redefine this feature to initialize your application,
+			-- set your splash screen pixmap, add your global accelerators.
 		do
 		end
 
@@ -64,6 +66,12 @@ feature -- Basic operation
 			-- Exit the application
 		do
 			implementation.exit
+		end
+
+	splash_pixmap (pix: EV_PIXMAP) is
+			-- Show the splash screen pixmap `pix'.
+		do
+			implementation.splash_pixmap (pix)
 		end
 
 feature {NONE} -- Implementation

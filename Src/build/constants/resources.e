@@ -173,13 +173,13 @@ feature {NONE} -- Color initialization
 
 feature -- Font values
 
-	focus_label_font: FONT
+	focus_label_font: EV_FONT
 			-- Font for focus_labels
 
-	default_font: FONT
+	default_font: EV_FONT
 			-- Font used for text in interface
 
-	check_fonts (widget: WIDGET) is
+	check_fonts (widget: EV_WIDGET) is
 			-- Check fonts used in system
 		do
 			focus_label_font := check_font_validity 
@@ -197,14 +197,14 @@ feature {NONE} -- Initialize font values
 				"MS Sans Serif,-9,400,,default,dontcare,ansi,0,0,0,draft,stroke,default")
 		end
 
-	check_font_validity (font: FONT; widget: WIDGET): FONT is
+	check_font_validity (font: EV_FONT; widget: EV_WIDGET): EV_FONT is
 			-- Check `font' validity for `widget'. If font
-			-- is in valid return VOID
+			-- is invalid return VOID
 		local
 			msg: STRING
 		do
 			if font /= Void then
-				if font.is_font_valid then
+				if font /= Void then
 					Result := Font	
 				else
 --					create msg.make (0)
@@ -218,11 +218,11 @@ feature {NONE} -- Initialize font values
 				end
 			end
 		ensure
-			valid_result: Result /= Void implies Result.is_font_valid
+			valid_result: Result /= Void
 		end
 
 	get_font (resource: RESOURCE_TABLE; 
-			resource_value, default_value: STRING): FONT is
+			resource_value, default_value: STRING): EV_FONT is
 		require
 			valid_resource: resource /= Void
 			valid_resource_value: resource_value /= Void

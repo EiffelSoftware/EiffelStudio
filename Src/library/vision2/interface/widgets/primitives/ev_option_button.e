@@ -26,6 +26,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST
+		undefine
+			create_action_sequences
 		redefine
 			implementation
 		end
@@ -98,6 +100,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/19 03:10:15  oconnor
+--| undefine action seq create from menu item list
+--|
 --| Revision 1.13  2000/02/19 01:08:26  oconnor
 --| removed refs to old EV_MENU_HOLDER class
 --|

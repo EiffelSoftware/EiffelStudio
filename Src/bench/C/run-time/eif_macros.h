@@ -77,9 +77,9 @@ extern "C" {
  */
 #if defined(ISE_GC) && defined(EIF_THREADS)
 RT_LNK int volatile eif_is_gc_collecting;
-RT_LNK void eif_synchronize_for_gc();
-RT_LNK void eif_enter_eiffel_code();
-RT_LNK void eif_exit_eiffel_code();
+RT_LNK void eif_synchronize_for_gc(void);
+RT_LNK void eif_enter_eiffel_code(void);
+RT_LNK void eif_exit_eiffel_code(void);
 #define RTGC	if (eif_is_gc_collecting) eif_synchronize_for_gc()
 #define EIF_ENTER_EIFFEL	eif_enter_eiffel_code()
 #define EIF_EXIT_EIFFEL		eif_exit_eiffel_code()

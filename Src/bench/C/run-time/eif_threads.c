@@ -749,7 +749,7 @@ rt_private void eif_stack_free (void *stack){
 }
 
 #ifdef ISE_GC
-rt_public void eif_synchronize_for_gc ()
+rt_public void eif_synchronize_for_gc (void)
 	/* Synchronize current thread for a GC cycle */
 {
 	RT_GET_CONTEXT

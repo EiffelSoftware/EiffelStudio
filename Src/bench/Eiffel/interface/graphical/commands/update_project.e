@@ -87,12 +87,13 @@ feature {NONE} -- Implementation
 		local
 			rescued: BOOLEAN;
 			temp: STRING;
-			title: STRING
+			title: STRING;
+			mp: MOUSE_PTR
 		do
 			if not rescued then
 				reset_debugger;
 				error_window.clear_window;
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				project_tool.set_changed (true);
 				perform_compilation (argument);
 				if Eiffel_project.successful then
@@ -126,7 +127,7 @@ feature {NONE} -- Implementation
 				warner (text_window).gotcha_call (w_Project_may_be_corrupted);
 			end;
 			error_window.display;
-			restore_cursors
+			mp.restore
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				if original_exception = Io_exception then

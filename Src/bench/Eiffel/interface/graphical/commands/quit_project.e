@@ -37,10 +37,12 @@ feature -- Initialization
 feature -- Callbacks
 
 	exit_anyway is
+		local
+			mp: MOUSE_PTR
 		do
-			set_global_cursor (watch_cursor);
+			!! mp.set_watch_cursor;
 			project_tool.set_changed (false);
-			restore_cursors;
+			mp.restore
 			if Application.is_running then
 				Application.kill;
 			end;

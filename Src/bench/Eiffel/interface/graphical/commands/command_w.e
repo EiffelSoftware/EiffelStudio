@@ -12,7 +12,6 @@ inherit
 	WINDOWS;
 	INTERFACE_W;
 	GRAPHICS;
-	CURSOR_W;
 	COMMAND;
 	WARNING_MESSAGES
 
@@ -20,10 +19,12 @@ feature -- Execution
 
 	execute (argument: ANY) is
 			-- Set cursor to watch shape, call `work' and restore cursor.
+		local
+			mp: MOUSE_PTR
 		do
-			set_global_cursor (watch_cursor);
+			!! mp.set_watch_cursor;
 			work (argument);
-			restore_cursors
+			mp.restore;
 		end;
 
 feature {NONE} -- Implementation

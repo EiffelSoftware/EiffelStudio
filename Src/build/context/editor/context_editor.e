@@ -26,7 +26,7 @@ feature -- Geometry
 
 	set_geometry is
 		do
-			top_form.set_size (Resources.cont_ed_width,
+			set_size (Resources.cont_ed_width,
 					Resources.cont_ed_height)
 		end;
 
@@ -62,6 +62,8 @@ feature {NONE}
 	behavior_form: BEHAVIOR_FORM
 	
 	formats_rc: ROW_COLUMN
+
+	trash_hole: CUT_HOLE
 
 feature 
 
@@ -107,8 +109,9 @@ feature
 			!!top_form.make (Widget_names.form, Current)
 			!!focus_area_form.make (Widget_names.form1, top_form);
 
-			!! context_hole.make (Current, focus_area_form)
+			!! context_hole.make (Current, focus_area_form);
 			!! focus_label.make (focus_area_form);
+			!! trash_hole.make (focus_area_form, focus_label);
 			!! close_button.make (Current, focus_area_form, focus_label)
 			!! first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
@@ -122,12 +125,15 @@ feature
 			focus_area_form.attach_top (focus_label, 0)
 			focus_area_form.attach_top (close_button, 0)
 			focus_area_form.attach_top (context_hole, 0)
+			focus_area_form.attach_top (trash_hole, 0)
 			focus_area_form.attach_right (close_button, 0)
 			focus_area_form.attach_left (context_hole, 0)
-			focus_area_form.attach_left_widget (context_hole, focus_label, 0)
+			focus_area_form.attach_left_widget (context_hole, trash_hole, 0)
+			focus_area_form.attach_left_widget (trash_hole, focus_label, 0)
 			focus_area_form.attach_right_widget (close_button, focus_label, 0)
 			focus_area_form.attach_bottom (focus_label, 0)
 			focus_area_form.attach_bottom (context_hole, 0)
+			focus_area_form.attach_bottom (trash_hole, 0)
 			focus_area_form.attach_bottom (close_button, 0)
 
 			top_form.attach_top (focus_area_form, 0);
@@ -232,9 +238,10 @@ feature
 									formats_rc.show;
 								end;
 							end;
+							context_hole.set_full_symbol;
 							edited_context := new_context;
 							update_title;
-							set_form (default_option_number (option_list))
+							set_form (edited_context.default_option_number)
 						else
 							other_editor.raise
 						end
@@ -247,6 +254,7 @@ feature
 							format_list.update_buttons (option_list);
 							formats_rc.manage;
 						end;	
+						context_hole.set_full_symbol;
 						edited_context := new_context;
 						update_title;
 						format_list.update_buttons (option_list);
@@ -256,22 +264,6 @@ feature
 			else
 				other_editor.raise
 			end
-		end;
-
-	default_option_number (opt_list: ARRAY [INTEGER]): INTEGER is
-			-- Default option list number
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				Result /= 0 or else
-					i > opt_list.count 
-			loop
-				Result := opt_list.item (i);
-				i := i + 1
-			end	
 		end;
 
 	update_title is
@@ -365,22 +357,23 @@ feature -- Reseting
 			alignment_form.unregister_holes;
 			color_form.unregister_holes;
 			context_hole.unregister;
+			trash_hole.unregister;
 			shell_destroy
 		end;
 
 	close is
 			-- Close current editor
 		do
-			clear
+			clear;
 			window_mgr.close (Current)
 		end
 
-	reset_behavior_editor is
+	clear_behavior_editor is
 		do
 			if behavior_form /= Void and then
 				behavior_form.is_initialized 
 			then
-				behavior_form.reset_editor
+				behavior_form.clear_editor
 			end
 		end
 
@@ -390,7 +383,6 @@ feature -- Reseting
 			current_form: EDITOR_FORM
 		do
 			if current_form_number /= 0 then
-				reset_behavior_editor
 				current_form := form_list @ (current_form_number);
 				current_form.hide;
 				current_form.associated_format_button.unselect_symbol
@@ -399,6 +391,8 @@ feature -- Reseting
 			current_form_number := 0;
 			set_title (Widget_names.context_editor);
 			set_icon_name (Widget_names.context_editor);
+			context_hole.set_empty_symbol;
+			clear_behavior_editor;
 		end;
 
 	apply_current_form is
@@ -419,6 +413,15 @@ feature -- Reseting
 		do
 			current_form := form_list @ (current_form_number);
 			current_form.reset;
+		end;
+
+	reset_behavior_editor is
+		do
+			if behavior_form /= Void and then
+				behavior_form.is_initialized 
+			then
+				behavior_form.reset_editor
+			end
 		end;
 
 	reset_geometry_form is

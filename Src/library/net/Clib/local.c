@@ -14,10 +14,6 @@
 #include <netdb.h>
 #endif
 
-#ifdef I_FD_SET_SYS_SELECT
-#include <sys/select.h>
-#endif
-
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
 #endif

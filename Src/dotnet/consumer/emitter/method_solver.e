@@ -38,6 +38,18 @@ feature {NONE} -- Initialization
 		do
 			internal_method := meth
 			is_get_property := get_property
+			if
+				internal_method.is_special_name and
+				(internal_method.name.equals (op_explicit) or
+					internal_method.name.equals (op_implicit))
+			then
+				if
+					internal_method.get_parameters.count = 1 and
+					not internal_method.return_type.equals_type (Void_type)
+				then
+					is_conversion_operator := True
+				end
+			end
 			arguments := solved_arguments (meth)
 		ensure
 			method_set: internal_method = meth
@@ -52,7 +64,28 @@ feature -- Access
 		do
 			create Result.make_from_cil (internal_method.name)
 		end
-	
+		
+	starting_resolution_name: STRING is
+			-- .NET Name used to perform overloading resolution
+		do
+			Result := dotnet_name
+			if is_get_property and then Result.substring_index ("get_", 1) = 1 then
+				Result.remove_head (4)
+			elseif is_conversion_operator then
+				if internal_method.get_parameters.item (0).parameter_type.equals_type (internal_method.reflected_type) then
+					Result := clone (to_conversion_name)
+					Result.append (
+						formatted_variable_type_name (referenced_type_from_type (
+							internal_method.return_type).name))
+				else
+					Result := clone (from_conversion_name)
+					Result.append (
+						formatted_variable_type_name (referenced_type_from_type (
+							internal_method.get_parameters.item (0).parameter_type).name))
+				end
+			end
+		end
+
 	eiffel_name: STRING
 			-- Eiffel name
 
@@ -62,6 +95,9 @@ feature -- Access
 	is_get_property: BOOLEAN
 			-- Is getter method of a property?
 		
+	is_conversion_operator: BOOLEAN
+			-- Is Current a conversion operator?
+
 feature -- Element Settings
 
 	set_eiffel_name (name: like eiffel_name) is
@@ -87,5 +123,20 @@ feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 	internal_method: METHOD_INFO
 			-- Method to be consumed
 
+feature {NONE} -- Constants
+
+	Void_type: TYPE is
+			-- Void .NET type
+		once
+			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
+		end
+
+	op_implicit: SYSTEM_STRING is "op_Explicit"
+	op_explicit: SYSTEM_STRING is "op_Implicit"
+			-- Special routine for conversion.
+
+	from_conversion_name: STRING is "from_"
+	to_conversion_name: STRING is "to_"
+			-- Generated name corresponding to `op_xx'.
 
 end -- class METHOD_SOLVER

@@ -35,7 +35,7 @@ feature {CLICK_AST}
 			node := click_indir_yacc_arg (0)
 		end;
 
-feature {YACC_LACE}
+feature {YACC_LACE, COMPILER_EXPORTER}
 	
 	set is
 			-- Get positions from yacc.

@@ -53,6 +53,8 @@ feature {NONE}
 			supplier_ids.extend (id);
 		end; 
 
+feature {COMPILER_EXPORTER}
+
 	pass_address (n: INTEGER) is
 			-- Yacc/Eiffel interface
 		do

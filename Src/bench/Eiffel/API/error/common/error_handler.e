@@ -120,7 +120,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			warning_list.wipe_out;
 		end;
 
-feature {E_PROJECT} -- Setting
+feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 
 	set_error_displayer (ed: like error_displayer) is
 			-- Set `error_displayer' to `ed'.
@@ -132,7 +132,7 @@ feature {E_PROJECT} -- Setting
 			set: error_displayer = ed
 		end;
 
-feature {WORKBENCH_I} 
+feature {COMPILER_EXPORTER} 
 
 	send_yacc_information is
 			-- Send to C code of Yacc information for making

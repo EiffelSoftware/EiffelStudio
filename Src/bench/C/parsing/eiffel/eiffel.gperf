@@ -21,6 +21,7 @@ as,				TE_AS
 bit,			TE_BIT
 check,			TE_CHECK
 class,			TE_CLASS
+create,			TE_CREATION
 creation,		TE_CREATION
 current,		TE_CURRENT
 debug,			TE_DEBUG

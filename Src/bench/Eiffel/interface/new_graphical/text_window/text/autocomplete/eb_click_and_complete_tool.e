@@ -427,16 +427,17 @@ feature -- Basic Operations
 			insertion.put ("")
 			is_create := False
 			is_static := False
-			create completion_possibilities.make (1, 30)
+			create completion_possibilities.make (1, 30)			
 			cp_index := 1
 			initialize_context				
 			if current_class_i /= Void and then current_class_i.is_compiled then
 				l_current_class_c := current_class_i.compiled_class
 				token := cursor.token
 				if token /= Void then
+					
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c)
 					if exploring_current_class then
-						local_analyzer.build_entities_list (cursor.line, token, False)
+						local_analyzer.build_entities_list (cursor.line, token)
 						add_names_to_completion_list (Local_analyzer.found_names)
 						local_analyzer.reset
 					end
@@ -899,30 +900,28 @@ feature {NONE} -- Completion implementation
 						end
 						is_create := create_before_position (current_line, current_token)
 					end
-					if feat = Void then		
+					if feat = Void then
+							-- Could not find feature, may be a local or argument
 						Result := type_of_local_entity_named (name)
 						if Result = Void then
 							Result := type_of_constants_or_reserved_word (current_token)
 						end						
 					else
+							-- Found feature						
 						error := True
-						if feat.type /= Void then
-							type := feat.type
-							if type.is_formal then
-								formal ?= type
-								if 
-									Result /= Void and then
-									Result.has_generics and then 
-									Result.generics.valid_index (formal.position)
-								then
-									Result := l_current_class_c.constraint (formal.position)
-									error := False
-								end
-							else
-								Result := type
-								error := False
-							end
+						Result := feat.type
+					end
+					
+					if Result /= Void then
+						if Result.is_like and then Result.actual_type.is_formal then
+								-- Get type from like formal
+							Result := Result.actual_type
+						end	
+						if Result.is_formal then
+							formal ?= Result
+							Result := type_from_formal_type (l_current_class_c, formal)	
 						end
+						error := False
 					end
 				end
 				go_to_next_token
@@ -940,7 +939,7 @@ feature {NONE} -- Completion implementation
 				end
 			until
 				error or else after_searched_token
-			loop
+			loop				
 				name := current_token.image.as_lower
 				processed_class := Result.associated_class
 				error := True
@@ -956,9 +955,9 @@ feature {NONE} -- Completion implementation
 									Result.has_generics and then 
 									Result.generics.valid_index (formal.position)
 								then
-									Result := Result.generics @ (formal.position)
+									Result := Result.generics.item (formal.position)
 									error := False
-								end
+								end	
 							else
 								Result := type
 								error := False
@@ -979,6 +978,18 @@ feature {NONE} -- Completion implementation
 				Result := Void
 			end
 		end
+
+	type_from_formal_type (a_class_c: CLASS_C; a_formal: FORMAL_A): TYPE_A is
+			-- For `_a_class_c' get actual type of `a_formal'.
+		do
+			if 
+				a_class_c /= Void and then
+				a_class_c.generics /= Void and then 
+				a_class_c.generics.valid_index (a_formal.position)
+			then
+				Result := a_class_c.constraint (a_formal.position)
+			end			
+		end		
 
 	add_names_to_completion_list (name_list: LIST [STRING]) is
 			-- 

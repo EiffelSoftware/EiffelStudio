@@ -501,8 +501,8 @@ rt_private void st_store(char *object)
 {
 	/* Second pass of the store mecahnism: writing on the disk. */
 
-	char *o_ref;
-	char *o_ptr;
+	EIF_REFERENCE o_ref;
+	EIF_REFERENCE o_ptr;
 	long nb_references;
 	union overhead *zone = HEADER(object);
 	uint32 flags;
@@ -522,20 +522,20 @@ rt_private void st_store(char *object)
 	if (flags & EO_SPEC) {					/* Special object */
 		if (!(flags & EO_REF)) {			/* Special of simple types */
 		} else {
-			long count, elem_size;
-			char *ref;
+			EIF_INTEGER count, elem_size;
+			EIF_REFERENCE ref;
 
-			o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			if (!(flags & EO_COMP)) {		/* Special of references */
 				for (ref = object; count > 0; count--,
-						ref = (char *) ((char **) ref + 1)) {
-					o_ref = *(char **) ref;
-					if (o_ref != (char *) 0)
+						ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
+					o_ref = *(EIF_REFERENCE *) ref;
+					if (o_ref != (EIF_REFERENCE) 0)
 						st_store(o_ref);
 				}
 			} else {						/* Special of composites */
-				elem_size = *(long *) (o_ptr + sizeof(long));
+				elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 				for (ref = object + OVERHEAD; count > 0;
 					count --, ref += elem_size) {
 					st_store(ref);
@@ -549,10 +549,10 @@ rt_private void st_store(char *object)
 		for (
 			o_ptr = object; 
 			nb_references > 0;
-			nb_references--, o_ptr = (char *) (((char **) o_ptr) +1)
+			nb_references--, o_ptr = (EIF_REFERENCE) (((EIF_REFERENCE *) o_ptr) +1)
 		) {
-			o_ref = *(char **)o_ptr;
-			if (o_ref != (char *) 0)
+			o_ref = *(EIF_REFERENCE *)o_ptr;
+			if (o_ref != (EIF_REFERENCE) 0)
 				st_store(o_ref);
 		}
 	}
@@ -642,11 +642,11 @@ rt_public void gst_write(char *object)
 #endif
 
 	if (flags & EO_SPEC) {
-		char * o_ptr;
+		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
-		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		count = (uint32)(*(long *) o_ptr);
-		elm_size = (uint32)(*(long *) (o_ptr + sizeof (long *)));
+		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		count = (uint32) (RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
+		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
 
 		/* We have to save the number of objects in the special object */
 
@@ -690,11 +690,11 @@ rt_public void ist_write(char *object)
 #endif
 
 	if (flags & EO_SPEC) {
-		char * o_ptr;
+		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
-		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
-		count = (uint32)(*(long *) o_ptr);
-		elm_size = (uint32)(*(long *) (o_ptr + sizeof (long *)));
+		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
+		count = (uint32)(RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
+		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
 
 		/* We have to save the number of objects in the special object */
 
@@ -825,8 +825,8 @@ rt_private void gen_object_write(char *object)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			long count, elem_size;
-			char *ref, *o_ptr;
+			EIF_INTEGER count, elem_size;
+			EIF_REFERENCE ref, o_ptr;
 			char *vis_name;
 			uint32 dgen;
 			int16 *gt_type;
@@ -834,8 +834,8 @@ rt_private void gen_object_write(char *object)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO(object);
+			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			vis_name = System(o_type).cn_generator;
 
 
@@ -885,13 +885,13 @@ rt_private void gen_object_write(char *object)
 						buffer_write(object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_BIT:
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 
 /*FIXME: header for each object ????*/
 						buffer_write(object, count*elem_size); /* %%ss arg1 was cast (struct bit *) */
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						hfflags = HEADER(object + OVERHEAD)->ov_flags;
 						hflags = Mapped_flags(hfflags);
 						buffer_write((char *) (&hflags), sizeof(uint32));
@@ -915,7 +915,7 @@ rt_private void gen_object_write(char *object)
 				} else {			/* Special of composites */
 					hfflags = HEADER(object)->ov_flags;
 					hflags = Mapped_flags(hfflags);
-					elem_size = *(long *) (o_ptr + sizeof(long));
+					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 					buffer_write((char *)(&hflags), sizeof(uint32));
 					st_write_cid (hfflags & EO_TYPE);
 					for (ref = object + OVERHEAD; count > 0;
@@ -1012,8 +1012,8 @@ rt_private void object_write(char *object)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			long count, elem_size;
-			char *ref, *o_ptr;
+			EIF_INTEGER count, elem_size;
+			EIF_REFERENCE ref, o_ptr;
 			char *vis_name;
 			uint32 dgen, dgen_typ;
 			int16 *gt_type;
@@ -1021,8 +1021,8 @@ rt_private void object_write(char *object)
 			int nb_gen;
 			struct gt_info *info;
 
-			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2);
-			count = *(long *) o_ptr;
+			o_ptr = RT_SPECIAL_INFO(object);
+			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			vis_name = System(o_type).cn_generator;
 
 
@@ -1132,7 +1132,7 @@ rt_private void object_write(char *object)
 						break;
 					case SK_BIT:
 						dgen_typ = dgen & SK_DTYPE;
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 #if DEBUG &1
 						printf (" %x", dgen_typ);
 						for (ref = object; count > 0; count--, ref += elem_size) {
@@ -1148,7 +1148,7 @@ rt_private void object_write(char *object)
 						widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						hfflags = HEADER(object + OVERHEAD)->ov_flags;
 						hflags = Mapped_flags(hfflags);
 						widr_norm_int (&hflags);		/* %%zs misuse, removed ",1" */
@@ -1180,13 +1180,13 @@ rt_private void object_write(char *object)
 #if DEBUG &1
 					for (ref = object; count > 0; count--,
 							ref = (char *) ((char **) ref + 1)) {
-						printf (" %lx", *(long *)(ref));
+						printf (" %lx", *(EIF_INTEGER *)(ref));
 						if (!(count % 40))
 							printf ("\n");
 					}
 #endif
 				} else {			/* Special of composites */
-					elem_size = *(long *) (o_ptr + sizeof(long));
+					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 					hfflags = HEADER(object)->ov_flags;
 					hflags = Mapped_flags(hfflags);
 					widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */

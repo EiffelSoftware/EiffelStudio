@@ -2,10 +2,12 @@ system
 	<FL_WIZARD_NAME>
 
 root
-	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+	WIZARD_PROJECT_MANAGER (wizard_library): "make_and_launch"
 
 default
+	assertion (require)
 	assertion (ensure)
+	assertion (check)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)
@@ -16,40 +18,41 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-
+	arguments ("<FL_WIZARD_PATH>")
 
 cluster
-	
-	root_cluster: "<FL_WIZARD_PATH>";
-	src(root_cluster): "$\src"
+	root_cluster: "<FL_WIZARD_PATH>"
+
+	src (root_cluster): "$\src"
 
 		-- EiffelBase
-	all base:						"$EIFFEL4\library\base"
+	all base:				"$EIFFEL5\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	all vision2: 			"$EIFFEL4\library\vision2_devel"
+		-- EiffelVision2
+	all vision2: 			"$EIFFEL5\library\vision2"
 		exclude
 			"gtk"
 			"test"
 		end
 
-	all Events:				"$EIFFEL4\library\event"
+		-- WEL library
+	all wel: 				"$EIFFEL5\library\wel"
 
-	all wel: 				"$EIFFEL4\library\wel_devel"
-
-	all wizard_tool:				"$EIFFEL4\tools\wizard"
+		-- Wizard library
+	all wizard_library:		"$EIFFEL5\library\wizard"
 
 
 external
 	include_path:	
-			"$EIFFEL4\library\wel_devel\spec\windows\include",
-			"$EIFFEL4\library\vision2_devel\spec\include"
+			"$EIFFEL5\library\wel\spec\windows\include",
+			"$EIFFEL5\library\vision2\spec\include"
 
 	object:
-			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
+			"$EIFFEL5\library\wel\spec\msc\lib\wel.lib",
+			"$EIFFEL5\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+			"$EIFFEL5\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL5\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
 end

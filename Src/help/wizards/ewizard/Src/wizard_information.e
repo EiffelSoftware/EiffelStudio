@@ -11,11 +11,33 @@ Creation
 	make
 
 feature  -- Initialization
+
 	make is
 		do
-			number_state:= 1
-			location:= " "
-			wizard_name:= " "
+			location := "C:\MyProjects\"
+			compile_project := True
+			number_state := 1
+			wizard_name := "my_wizard"
+		end
+
+feature -- Access
+
+	compile_project: BOOLEAN
+			-- Does the user want to compile the project at the end of the generation
+
+	number_state: INTEGER
+			-- Number of states in the wizard
+
+	location: STRING
+			-- Location of the generated code
+
+	wizard_name: STRING
+
+feature -- Element change
+
+	set_compile_project (b: BOOLEAN) is
+		do
+			compile_project := b
 		end
 
 	set_number_state (i: INTEGER) is
@@ -25,20 +47,12 @@ feature  -- Initialization
 
 	set_location (s: STRING) is
 		do
-			location:= s
+			location := s
 		end
 
 	set_wizard_name (s: STRING) is
 		do
-			wizard_name:= s
+			wizard_name := s
 		end
-
-	number_state: INTEGER
-
-	location, wizard_name: STRING
-
-feature -- Setting
-
-
 
 end -- class WIZARD_INFORMATION

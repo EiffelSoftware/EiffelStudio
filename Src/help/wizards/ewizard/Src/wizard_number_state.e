@@ -8,7 +8,7 @@ class
 	WIZARD_NUMBER_STATE
 
 inherit
-	INTERMEDIARY_STATE_WINDOW
+	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
 			proceed_with_current_info,
@@ -22,65 +22,87 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		local
-			browse_b: EV_BUTTON
-			h1: EV_HORIZONTAL_BOX
+			hbox: EV_HORIZONTAL_BOX
+			vbox: EV_VERTICAL_BOX
+			left_label: EV_LABEL
+			right_label: EV_LABEL
 		do 
-			create h1
-			create wizard_name.make("Name of the wizard",
-							 wizard_information.wizard_name, 10, 30, Current, False)
-			h1.extend (wizard_name)
-			main_box.extend (h1)
-			main_box.disable_item_expand (h1)
-			main_box.extend (create {EV_HORIZONTAL_BOX})
+				-- Label
+			create left_label.make_with_text ("Generate a wizard with ")
+			left_label.align_text_left
 
-			create h1
-			create location.make("Choose a Directory",
-							 wizard_information.location, 10, 30, Current, False)		
-			create browse_b.make_with_text("Browse...")
-			browse_b.select_actions.extend(~Browse)
-			h1.extend (location)
-			h1.extend (browse_b)
-			h1.disable_item_expand (browse_b)
-			main_box.extend (h1)
-			main_box.disable_item_expand(h1)
-			main_box.extend (create {EV_HORIZONTAL_BOX})
+				-- ComboBox
+			create number_state
+			fill_number_state
 
-			create h1
-			create number_state.make("Number of state in the wizard",
-							 wizard_information.number_state.out, 10, 30, Current, False)
-			h1.extend (number_state)
-			main_box.extend(h1)
-			main_box.disable_item_expand(h1)
-			main_box.extend (create {EV_HORIZONTAL_BOX})
+			create right_label.make_with_text (" states.")
+			right_label.align_text_left
 
-			set_updatable_entries(<<wizard_name.change_actions, location.change_actions,
-									number_state.change_actions>>)
+				-- Vision2 architechture
+			create hbox
+			hbox.set_padding (5)
+				create vbox
+				vbox.extend (create {EV_CELL})
+				vbox.extend (left_label)
+				vbox.disable_item_expand (left_label)
+				vbox.extend (create {EV_CELL})
+			hbox.extend (vbox)
+			hbox.disable_item_expand (vbox)
+			hbox.extend (number_state)
+			hbox.disable_item_expand (number_state)
+				create vbox
+				vbox.extend (create {EV_CELL})
+				vbox.extend (right_label)
+				vbox.disable_item_expand (right_label)
+				vbox.extend (create {EV_CELL})
+			hbox.extend (vbox)
+			hbox.disable_item_expand (vbox)
+			hbox.extend (create {EV_CELL})
+			choice_box.extend (hbox)
+
+			set_updatable_entries(<<number_state.change_actions>>)
+		end
+
+	fill_number_state is
+		local
+			i: INTEGER
+			list_item: EV_LIST_ITEM
+		do
+			from
+				i := 1
+			until
+				i > 10
+			loop
+				create list_item
+				list_item.set_text (i.out)
+				number_state.extend (list_item)
+			
+				if i = wizard_information.number_state then
+					list_item.enable_select
+				end
+				i := i + 1
+			end
+
+				-- Select the first item if none is selected.
+			if number_state.selected_item = Void then
+				number_state.start
+				number_state.item.enable_select
+			end
 		end
 
 	proceed_with_current_info is 
-		local
-			dir: DIRECTORY
 		do
 			Precursor
-			if number_state.text.is_integer then
-				proceed_with_new_state(Create {WIZARD_FINAL_STATE}.make(wizard_information))
-			else
-				proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
-			end
+			proceed_with_new_state(Create {WIZARD_SECOND_STATE}.make (wizard_information))
 		end
 
 	update_state_information is
 			-- Check User Entries
 		local
 			num: INTEGER
-			s: STRING
 		do
-			num:= number_state.text.to_integer
+			num := number_state.text.to_integer
 			wizard_information.set_number_state (num)
-			s:= location.text
-			s.replace_substring_all (" ", "")
-			wizard_information.set_location (s)
-			wizard_information.set_wizard_name (wizard_name.text)
 			Precursor
 		end
 
@@ -88,35 +110,12 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("WIZARD SPECIFICATION")
-			message.set_text ("Choose:%N%T+ The name of the wizard.(No space !)%
-								%%N%T+ The location where you want to generate the eiffel classes%
-								%%N%T+ The number of state (10 Max.)")
+			title.set_text ("Number of States")
+			subtitle.set_text ("You can choose the number of states your wizard will have.")
+			message.set_text ("The number of states is limited to 10.")
 		end
 
-	number_state, location, wizard_name: WIZARD_SMART_TEXT_FIELD
-
-
-
-feature -- Process
-
-	browse is
-			-- Launch a computer directory Browser.
-		local
-			dir_selector: EV_DIRECTORY_DIALOG	
-		do
-			create dir_selector
-			dir_selector.ok_actions.extend (~directory_selected (dir_selector))
-			dir_selector.show_modal
-		end
-
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
-			-- The user selected a directory from the browser. 
-			-- It updates the text fields accordingly.
-		require
-			selector_exists: dir_selector /= Void
-		do
-			location.set_text(dir_selector.directory)
-		end
+	number_state: EV_COMBO_BOX
+			-- Text field to enter the number of states
 
 end -- class WIZARD_NUMBER_STATE

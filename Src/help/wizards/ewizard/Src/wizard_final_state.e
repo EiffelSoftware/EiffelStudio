@@ -8,7 +8,7 @@ class
 	WIZARD_FINAL_STATE
 
 inherit
-	WIZARD_FINAL_STATE_WINDOW
+	BENCH_WIZARD_FINAL_STATE_WINDOW
 		redefine
 			proceed_with_current_info
 		end
@@ -18,32 +18,8 @@ creation
 
 feature -- Basic Operations
 
-	build_finish is 
-			-- Build user entries.
-		local
-			h1: EV_HORIZONTAL_BOX
-		do
-			choice_box.wipe_out
-			choice_box.set_border_width (10)
-			create progress 
-			progress.set_minimum_height(20)
-			progress.set_minimum_width(100)
-			create progress_text
-			choice_box.extend(create {EV_CELL})
-			choice_box.extend(progress)
-			choice_box.disable_item_expand(progress)
-			choice_box.extend(progress_text)
-			choice_box.extend(create {EV_CELL})
-
-			choice_box.set_background_color (white_color)
-			progress.set_background_color (white_color)
-			progress_text.set_background_color (white_color)
-
-		end
-
 	proceed_with_current_info is
 		do
-			build_finish
 			process_info
 			Precursor
 		end
@@ -53,12 +29,12 @@ feature -- Process
 	process_info is
 		local
 			dir: DIRECTORY
-			fi: PLAIN_TEXT_FILE
 			l: LINKED_LIST [TUPLE [STRING, STRING]]
 			list_of_name: LINKED_LIST [STRING]
 			tuple1, tuple2: TUPLE [STRING, STRING]
 			class_name: STRING
 			i: INTEGER
+			next_state: STRING
 		do
 			create list_of_name.make
 			list_of_name.make
@@ -99,25 +75,48 @@ feature -- Process
 			from_template_to_project (wizard_resources_path, "Ace.ace", wizard_information.location, "Ace.ace", l)
 
 			from
-				i:= 1
+				i := 1
 				list_of_name.start
 			until
 				i > wizard_information.number_state
 			loop
-					if list_of_name.after then
-						list_of_name.start
-					end
-					create tuple1.make
-					tuple1.put ("<FL_WIZARD_CLASS_NAME>", 1)
-					class_name:= "WIZARD_" + list_of_name.item + "_STATE"
-					tuple1.put (class_name, 2)
-					class_name.to_lower
-					create l.make
-					l.extend (tuple1)
-					from_template_to_project (wizard_resources_path, "template_state.e", wizard_information.location + "/src", class_name + ".e", l)
+				if list_of_name.after then
+					list_of_name.start
+				end
+				class_name := "WIZARD_" + list_of_name.item + "_STATE"
+				class_name.to_lower
 
-					i:= i+1
-					list_of_name.forth
+				create l.make
+				create tuple1.make
+				tuple1.put ("<FL_WIZARD_CLASS_NAME>", 1)
+				tuple1.put (class_name, 2)
+
+				create tuple1.make
+				tuple1.put ("<FL_WIZARD_CLASS_NAME>", 1)
+				tuple1.put (class_name, 2)
+				l.extend (tuple1)
+
+				create tuple1.make
+				tuple1.put ("<FL_STATE_NUMBER>", 1)
+				tuple1.put (i.out, 2)
+				l.extend (tuple1)
+
+					-- Prepare next step
+				list_of_name.forth 
+				i := i + 1
+
+				if i > wizard_information.number_state then
+					next_state := "WIZARD_FINAL_STATE"
+				else
+					next_state := "WIZARD_"+list_of_name.item+"_STATE"
+				end
+
+				create tuple1.make
+				tuple1.put ("<FL_NEXT_STATE>", 1)
+				tuple1.put (next_state, 2)
+				l.extend (tuple1)
+
+				from_template_to_project (wizard_resources_path, "template_wizard_state.e", wizard_information.location + "/src", class_name + ".e", l)
 			end
 
 			create tuple1.make
@@ -125,25 +124,70 @@ feature -- Process
 			tuple1.put (wizard_information.wizard_name, 2)
 			create l.make
 			l.extend (tuple1)
-			from_template_to_project (wizard_resources_path, "initial_template_state.e", wizard_information.location + "/src", "wizard_initial_state.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", wizard_information.location + "/src", "wizard_initial_state.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e", wizard_information.location + "/src", "wizard_final_state.e", l)
 
-			copy_file ("wizard_final_state", "e", wizard_information.location + "/src")
 			copy_file ("wizard_information", "e", wizard_information.location + "/src")
 			copy_file ("project_wizard_shared", "e", wizard_information.location + "/src")
 			copy_file ("eiffel_wizard_icon", "bmp", wizard_information.location + "/pixmaps")
 			copy_file ("eiffel_wizard", "bmp", wizard_information.location + "/pixmaps")
-
-			
 		end
 
+	write_bench_notification_ok is
+			-- Write onto the file given as argument the project ace file, directory, ...
+		local
+			file: PLAIN_TEXT_FILE
+			rescued: BOOLEAN
+			ace_location: FILE_NAME
+		do
+			if not rescued then
+				if callback_content /= Void then
+					create ace_location.make_from_string (wizard_information.location)
+					ace_location.set_file_name ("ace")
+					ace_location.add_extension ("ace")
+
+						-- Modify the fields
+					callback_content.replace_substring_all ("<SUCCESS>", "yes")
+					callback_content.replace_substring_all ("<ACE>", ace_location)
+					callback_content.replace_substring_all ("<DIRECTORY>", wizard_information.location)
+					if wizard_information.compile_project then
+						callback_content.replace_substring_all ("<COMPILATION>", "yes")
+					else
+						callback_content.replace_substring_all ("<COMPILATION>", "no")
+					end
+				end
+
+				if callback_filename /= Void then
+					create file.make_open_write (callback_filename)
+					file.put_string (callback_content)
+					file.close
+				end
+			end
+		rescue
+			rescued := True
+			retry
+		end
 
 feature -- Access
 
 	display_state_text is
+		local
+			word: STRING
 		do
-			title.set_text ("WIZARD GENERATION")
-			message.set_text ("%N%NAll the states will be generated in the directory that you have%
-								%%Nspecified.")
+			title.set_text ("Completing the New Wizard %NApplication Wizard")
+			if wizard_information.compile_project then
+				word :=" and compile "
+			else
+				word := " "
+			end
+			message.set_text (
+				"You have specified the following settings:%N%
+				%%N%
+				%Wizard name: %T" + wizard_information.wizard_name + "%N%
+				%Location:     %T" + wizard_information.location + "%N%
+				%%N%
+				%%N%
+				%Click Finish to generate" + word + "this project")
 		end
 
 	final_message: STRING is

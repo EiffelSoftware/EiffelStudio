@@ -1,10 +1,8 @@
 indexing
-
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
 		]"
-
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

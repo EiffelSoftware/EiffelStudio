@@ -1,5 +1,4 @@
 indexing
-
 	description: "Implementation of TUPLE"
 	status: "See notice at end of class"
 	date: "$Date$"

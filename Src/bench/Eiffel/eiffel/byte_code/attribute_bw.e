@@ -72,13 +72,7 @@ feature
 				generated_file.putstring ("%", ");
 				reg.print_register;
 			else
-				if context.dt_current > 1 then
-					generated_file.putstring (gc_dtype);
-				else
-					generated_file.putstring (gc_upper_dtype_lparan);
-					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-				end;
+				context.generate_current_dtype;
 			end;
 			generated_file.putstring ("))");
 			if not (reg.is_predefined or reg.register /= No_register) then

@@ -56,11 +56,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include "eif_curextern.h"
 #endif
 
-#ifdef WORKBENCH
-#ifndef NOHOOK					/* For debug_mode */
-#include "server.h"				/* ../ipc/app */
-#endif /* !NOHOOK */
-#endif /* WORKBENCH */
+#include "rt_main.h"	/* For debug_mode. */
 
 #include <stdlib.h>				/* For exit(), abort() */
 #include "rt_globals.h"

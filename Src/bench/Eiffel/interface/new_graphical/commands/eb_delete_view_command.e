@@ -82,7 +82,7 @@ feature {NONE} -- Events
 			ew: EIFFEL_WORLD
 		do
 			ew := tool.world
-			if not ew.current_view.is_equal ("DEFAULT") then
+			if not ew.current_view.has_substring ("DEFAULT") then
 				tool.remove_view (ew.current_view)
 			end
 		end

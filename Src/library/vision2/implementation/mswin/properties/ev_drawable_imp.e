@@ -259,8 +259,11 @@ feature -- Element change
 
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
+		local
+			font_imp: EV_FONT_IMP
 		do
 			private_font := a_font
+			font_imp ?= private_font.implementation
 			private_wel_font := Void
 			internal_initialized_font := False
 		end
@@ -301,7 +304,7 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_top_left (x, y - font.ascent, a_text)
+			draw_text_top_left (x, y - internal_font.ascent, a_text)
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is

@@ -45,7 +45,7 @@ create
 %type <INTEGER>					Il_language
 %type <BOOLEAN>					Blocking_opt
 
-%type <EIFFEL_LIST [EXTERNAL_TYPE_AS]>		Arguments_opt Arguments Arguments_list_opt Arguments_list
+%type <ARRAYED_LIST [EXTERNAL_TYPE_AS]>		Arguments_opt Arguments Arguments_list_opt Arguments_list
 
 %%
 
@@ -264,7 +264,7 @@ Arguments_list_opt:	-- Empty
 
 Arguments_list:	Type_identifier
 		{
-			create {EIFFEL_LIST [EXTERNAL_TYPE_AS]} $$.make (Argument_list_initial_size)
+			create {ARRAYED_LIST [EXTERNAL_TYPE_AS]} $$.make (Argument_list_initial_size)
 			$$.extend ($1)
 		} 
 	|	Arguments_list TE_COMMA Type_identifier

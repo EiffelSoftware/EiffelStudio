@@ -71,10 +71,11 @@ feature -- IL Generation
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := class_type_token (current_type_id)
 
-				-- Clean IL recorded information
-			clean_debug_information (class_type)
 
 			if not is_single_class then
+					-- Clean IL recorded information
+				clean_debug_information (class_type)
+
 					-- Define all features used by ISE runtime.
 				define_runtime_features (class_type)
 

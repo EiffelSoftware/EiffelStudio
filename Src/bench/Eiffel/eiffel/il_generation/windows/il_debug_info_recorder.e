@@ -711,6 +711,9 @@ feature {IL_CODE_GENERATOR} -- Recorder for Onces
 
 feature {NONE} -- Record context
 
+	is_single_class : BOOLEAN
+			-- Can current class only be single inherited?
+
 	is_attribute : BOOLEAN
 			-- is current generated feature is attribute ?
 
@@ -722,9 +725,10 @@ feature {NONE} -- Record context
 
 feature {IL_CODE_GENERATOR} -- Recorder feature and attribute
 
-	set_record_context (a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
+	set_record_context (a_is_single_class, a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
 			-- Save generation context in order to determine what to record.
 		do
+			is_single_class := a_is_single_class
 			is_attribute := a_is_attr
 			is_static := a_is_static
 			in_interface := a_in_interface
@@ -734,20 +738,24 @@ feature {IL_CODE_GENERATOR} -- Recorder feature and attribute
 			-- Record feature information : class, feature token, and module name throught the other data.
 		do
 			if is_debug_info_enabled then
-				if not in_interface then		
-					if is_attribute and then is_static then
-						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
-					elseif not is_attribute then
-						if is_static then
+				if is_attribute then
+						if not in_interface and is_static then
 							process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
-							if is_entry_point (a_feat) then
-								record_entry_point_token (
-										module_key (a_module.module_file_name)
-										, a_class_token
-										, a_feature_token
-									)
-							end
+						elseif a_class_type.associated_class.is_single then
+							process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
 						end
+				else -- not is_attribute
+					if not in_interface and is_static then
+						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
+						if is_entry_point (a_feat) then
+							record_entry_point_token (
+									module_key (a_module.module_file_name)
+									, a_class_token
+									, a_feature_token
+								)
+						end
+					else
+						do_nothing
 					end
 				end
 			end
@@ -880,7 +888,9 @@ feature {IL_CODE_GENERATOR} -- Cleaning
 			if last_class_type_info_cleaned /= l_class_type then
 				last_class_type_info_cleaned := l_class_type
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : " + l_class_type.associated_class.name_in_upper + "%N")
+					print ("Cleaning : "+ l_class_type.associated_class.name_in_upper 
+										+ " ID=" + static_type_id.out 
+										+ "%N")
 				end
 				
 				l_info_from_class_type := info_from_class_type (l_class_type, False)

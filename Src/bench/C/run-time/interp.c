@@ -20,7 +20,7 @@
 #include "eif_hashin.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_local.h"
 #include "eif_copy.h"
 #include "eif_debug.h"

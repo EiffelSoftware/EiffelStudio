@@ -22,6 +22,7 @@
 #include "rt_macros.h"
 #include "eif_lmalloc.h"
 #include "eif_project.h"
+#include "rt_except.h"
 #include "rt_threads.h"
 #include "rt_assert.h"
 #include <string.h>

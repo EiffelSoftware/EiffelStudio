@@ -26,7 +26,7 @@
 #include "eif_main.h"
 #include "eif_lmalloc.h"
 #include "eif_types.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_urgent.h"
 #include "rt_garcol.h"
 #include "eif_sig.h"				/* For signal description */

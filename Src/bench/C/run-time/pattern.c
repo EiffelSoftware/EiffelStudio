@@ -18,7 +18,7 @@
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_hector.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_globals.h"
 #include "eif_eiffel.h"
 #include "eif_lmalloc.h"

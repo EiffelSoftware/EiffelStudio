@@ -1,7 +1,5 @@
 <document title="Contexts" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Contexts
@@ -20,8 +18,7 @@
 				<url>../../../../images/eiffelstudio/diagram/bon-subcluster.png</url>
 			</image>
 		</div>
-		<line_break></line_break>
-		<line_break></line_break> 
+		<line_break/>
 		<paragraph>The relations for classes are:</paragraph>
 		<list ordered="false">
 			<item>ancestors</item>
@@ -31,13 +28,12 @@
 		</list>This is an example of the class 
 		<code>
 			<class_name>LIST</class_name>
-		</code>,with ancestor depth 2, descendant depth 2 and both client and supplier depth zero. 
+		</code>, with ancestor depth 2, descendant depth 2 and both client and supplier depth zero. 
 		<div>
 			<image>
 				<url>../../../../images/eiffelstudio/diagram/bon-list-relations.png</url>
 			</image>
 		</div>
-		<line_break></line_break>
-		<line_break></line_break>
+		<line_break/>
 	</paragraph>
 </document>

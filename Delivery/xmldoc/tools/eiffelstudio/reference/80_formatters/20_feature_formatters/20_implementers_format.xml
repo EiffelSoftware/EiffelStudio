@@ -1,7 +1,5 @@
 <document title="Implementers" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Implementers
@@ -31,7 +29,6 @@
 				<url>./30_descendant_format.xml</url>
 				<label>Descendant versions</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

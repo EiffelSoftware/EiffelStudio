@@ -1,7 +1,5 @@
 <document title="Header comment" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Header comment
@@ -15,7 +13,7 @@
 		<paragraph>For example, suppose you have an attribute 
 			<code>
 				<feature_name>count</feature_name>
-			</code>. You can enter the following headercomment:
+			</code>. You can enter the following header comment:
 		</paragraph>
 		<div>
 			<image>
@@ -25,7 +23,9 @@
 		<line_break></line_break> When clicking 
 		<bold>OK</bold> this code is generated: 
 		<line_break></line_break>
-		<code></code>
-		<line_break></line_break>
+<code_block>
+	count: INTEGER
+		-- Number of students in course
+</code_block>
 	</paragraph>
 </document>

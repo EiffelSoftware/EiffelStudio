@@ -1,7 +1,5 @@
 <document title="Breakpoint menu" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Breakpoint menu
@@ -13,7 +11,7 @@
 			</link> and 
 			<link>
 				<url>../../80_formatters/10_class_formatters/15_flat_format.xml</url>
-				<label>classflat view</label>
+				<label>class flat view</label>
 			</link>), a margin is displayed on the left of the editor. 
 			<link>
 				<url>00_introduction.xml</url>

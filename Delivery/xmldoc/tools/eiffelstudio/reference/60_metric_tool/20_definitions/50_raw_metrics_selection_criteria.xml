@@ -28,14 +28,16 @@
 			</item>
 		</list>
 		<paragraph>and so on. Many combinations of these properties may be worth counting on their own: you may ask for the number of secret attributes, of exported inherited features and so on. But if we define all of these metrics independently, we will soon have too many elementary metrics, while still failing to satisfy user needs if we have omitted a particular combination.</paragraph>
-		<paragraph>To avoid this we must identify a subset of elementary metrics as
-			<bold>raw metrics</bold>: metrics whose results are counted directly. "Number of features in a class" is a raw metric. From a raw metric, we may then derive other elementary metrics by applying
+		<paragraph>To avoid this we must identify a subset of elementary metrics as 
+			<bold>raw metrics</bold>: metrics whose results are counted directly. "Number of features in a class" is a raw metric. From a raw metric, we may then derive other elementary metrics by applying 
 			<bold>selection criteria</bold> such as "Is this feature an attribute?" or "Is this feature exported?" Here are the definitions:
 		</paragraph>
 		<note>
-			<bold>Raw metric, selection criterion, derived metric:</bold> An elementary metric is either 
+			<bold>Raw metric, selection criterion, derived metric:</bold> 
+			<line_break/>
+			An elementary metric is either 
 			<bold>raw</bold> or 
-			<bold>derived</bold>. A
+			<bold>derived</bold>. A 
 			<bold>selection criterion</bold> for a raw metric is a property, with a fixed set of possible values (two or more), characterizing the patterns or events being counted by the metric.
 			<line_break></line_break> A 
 			<bold>derived metric</bold> is an elementary metric defined from a raw metric by counting only the patterns satisfying a certain combination of its selection criteria.
@@ -99,9 +101,9 @@
 				<url>40_elementary_composite_metrics.html#Elementary metric</url>
 				<label>Elementary metrics</label>
 			</link>
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.xml</url>
-				<label>defining derived metrics</label>
+			<line_break/>
+			<link>			<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.xml</url>
+				<label>Defining derived metrics</label>
 			</link>
 		</seealso>
 	</paragraph>

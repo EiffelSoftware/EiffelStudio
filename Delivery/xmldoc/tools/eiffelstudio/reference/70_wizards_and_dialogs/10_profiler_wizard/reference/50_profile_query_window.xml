@@ -1,7 +1,5 @@
 <document title="Profile query window" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Profile query window
@@ -17,7 +15,7 @@
 			<italic>calls &lt;20</italic> for example) and click the 
 			<bold>And</bold> or 
 			<bold>Or</bold> button. To display the results of the new query click on the 
-			<bold>Update</bold>button.
+			<bold>Update</bold> button.
 		</paragraph>
 		<paragraph>To remove an existing sub query, select it in the 
 			<bold>Active query</bold> list and click on the 
@@ -43,8 +41,6 @@
 		<image>
 			<url>/images/eiffelstudio/dialogs_and_wizards/profiler_query_window.png</url>
 		</image> 
-		<line_break></line_break>
-		<line_break></line_break>
 		<line_break></line_break>
 		<seealso>
 			<bold>See Also</bold>

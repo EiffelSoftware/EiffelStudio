@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>New function layout
+			<size>1</size>New attribute layout
 		</heading>
 		<div>
 			<image>
@@ -66,6 +66,31 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-attribute-example.png</url>
 			</image>
 		</div>
-		<code></code>
+		<code_block>
+class
+    PRODUCT
+
+feature {NONE} -- Access
+
+    price: DOUBLE
+            -- Cost in dollars.
+
+feature -- Element change
+
+    set_price (a_price: DOUBLE) is
+            -- Assign `a_price' to `price'.
+        require
+            a_price_non_negative: a_price >= 0.0
+        do
+            price := a_price
+        ensure
+            price_assigned: price = a_price
+        end
+
+invariant
+    price_non_negative: price >= 0.0
+
+end -- class PRODUCT
+		</code_block>
 	</paragraph>
 </document>

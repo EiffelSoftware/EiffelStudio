@@ -1,7 +1,5 @@
 <document title="Select the Compilation mode" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Select the Compilation mode
@@ -9,7 +7,7 @@
 		<paragraph>The first screen of the wizard lets you specify the mode in which the profiled system was compiled.</paragraph>
 		<paragraph>If you have run a finalized system under the control of the profiler then select 
 			<bold>Finalized mode</bold> and click 
-			<bold>Next</bold>.On the contrary if you have executed the system in Workbench mode then select 
+			<bold>Next</bold>. On the contrary if you have executed the system in Workbench mode then select 
 			<bold>Workbench mode</bold> and click 
 			<bold>Next</bold>.
 		</paragraph>
@@ -47,7 +45,6 @@
 			<link>
 				<url>../00_introduction.xml</url> 
 			</link>
-			<line_break></line_break>
 			<link>
 				<url>../../../../how_to_s/50_running_and_debugging/70_profiling.xml</url>
 				<label>How to profile a system</label>

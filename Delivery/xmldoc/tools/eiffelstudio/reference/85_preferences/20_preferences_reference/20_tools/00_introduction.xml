@@ -1,12 +1,10 @@
 <document title="Introduction" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Introduction
 		</heading>This section of the help deals with preferences related to a tool in particular. 
-		<line_break></line_break>These preferences are distributed in three categories : 
+		<line_break></line_break>These preferences are distributed in three categories: 
 		<list ordered="false">
 			<item>
 				<link>
@@ -18,13 +16,13 @@
 				<link>
 					<url>20_context_tools.xml</url>
 					<label>Context tools preferences</label>
-				</link> :They will be used to change properties of some of the contexttools.
+				</link>: They will be used to change properties of some of the contexttools.
 			</item>
 			<item>
 				<link>
 					<url>30_editor/index.xml</url>
 					<label>Editor preferences</label>
-				</link> : They will allow you to customize some features of the editor, automatic completion in particular.
+				</link>: They will allow you to customize some features of the editor, automatic completion in particular.
 			</item>
 		</list>
 		<seealso>

@@ -1,7 +1,5 @@
 <document title="Kill a debugged application" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Kill a debugged application

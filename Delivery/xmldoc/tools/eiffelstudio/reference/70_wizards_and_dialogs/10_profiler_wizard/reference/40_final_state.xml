@@ -47,7 +47,7 @@
 			<size>2</size>Formulate your query
 		</heading>
 		<paragraph>When running a query, you are able to type a complete query. After pressing the 
-			<bold>Next</bold>button, a new window will be displayed to show the result of the query. The total query can be either a single one or a set of sub-queries separated by one of the two operators 'or' or 'and'.
+			<bold>Next</bold> button, a new window will be displayed to show the result of the query. The total query can be either a single one or a set of sub-queries separated by one of the two operators 'or' or 'and'.
 			<line_break></line_break>
 			<line_break></line_break>Each sub-query must have the following syntax 'attribute operator value' where:
 		</paragraph>

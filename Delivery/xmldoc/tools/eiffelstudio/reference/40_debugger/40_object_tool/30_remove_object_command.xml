@@ -1,7 +1,5 @@
 <document title="Remove object command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Remove object command
@@ -10,7 +8,7 @@
 			<link>
 				<url>00_introduction.xml</url>
 				<label>object tool</label>
-			</link>toolbar, this command 
+			</link> toolbar, this command 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
 			</image> discards an object from the 

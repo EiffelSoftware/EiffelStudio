@@ -1,7 +1,5 @@
 <document title="Information relative to a stack element" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Information relative to a stack element
@@ -10,7 +8,7 @@
 			<link>
 				<url>10_call_stack_tool.xml</url>
 				<label>call stack tool</label>
-			</link> that provides information concerning the call stack in its globality, some other debug tools give information concerning the
+			</link> that provides information concerning the call stack in its globality, some other debug tools give information concerning the 
 			<link>
 				<url>10_call_stack_tool.xml</url>
 				<label>current call stack element</label>

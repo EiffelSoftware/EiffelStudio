@@ -25,7 +25,12 @@
 					<label>Defining composite metrics</label>
 				</link>
 			</item>
-			<item>Archives</item>
+			<item>
+				<link>
+					<label>Archives</label>
+					<url>30_archives.xml</url>
+				</link>
+			</item>
 		</list>
 	</paragraph>
 </document>

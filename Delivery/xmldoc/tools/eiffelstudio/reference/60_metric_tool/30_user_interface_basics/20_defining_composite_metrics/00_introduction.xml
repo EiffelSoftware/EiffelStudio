@@ -1,14 +1,12 @@
 <document title="Defining, loading, managing new metrics" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Defining, loading, managing new metrics
 		</heading>
 		<paragraph>Users should have the ability to define a new derived or composite metric by applying some of the selection criteria or composition operators to one or more existing metrics.</paragraph>
 		<paragraph>They should also have the ability to save all current metric definitions to a file, producing a 
-			<bold>metric definition record</bold>.This should not be confused with a measurement archive, which records the results of measures resulting from applying certain metrics to certain projects.
+			<bold>metric definition record</bold>. This should not be confused with a measurement archive, which records the results of measures resulting from applying certain metrics to certain projects.
 		</paragraph>
 		<paragraph>Although the concepts are distinct, ISE Eiffel lets you store a measurement archive and the corresponding metric definition record into a single file, so that when you access the archived measures you have an unambiguous definition of the metrics that served to produce them.</paragraph>
 		<paragraph>The environment must also provide a way of adding a set of metrics read from a metric definition record, available from a local file, to the current metric definitions. As a result, users will be able to benefit from each other's metric definitions and improve them over time.</paragraph>

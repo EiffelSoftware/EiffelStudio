@@ -1,5 +1,10 @@
-<document title="Class menu" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >1</size>Class menu</heading><paragraph >The Class command (c or C) in the main menu will only work if the system has been successfully compiled, and will give you information based on the result of the last successful compilation. It produces the following menu:</paragraph>
-<code_block >
+<document title="Class menu" output="studio">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Class menu
+		</heading>
+		<paragraph>The Class command (c or C) in the main menu will only work if the system has been successfully compiled, and will give you information based on the result of the last successful compilation. It produces the following menu:</paragraph><code_block>
 	(B) Attributes   : show the attributes of a class.
 	(C) Clients      : show the clients of a class.
 	(E) Deferred     : show the deferred features of a class.
@@ -20,7 +25,5 @@
 	(Q) Quit         : terminate session.
 	(Y) Yank         : yank (save) output of last command to a file.
 </code_block>
-
-
-
-<paragraph >Each command will prompt you for the name of a class; you can also include the class name after the command, separated by aspace, as in A linked_list to obtain the ancestors of class LINKED_LIST.</paragraph></paragraph></document>
+		<paragraph>Each command will prompt you for the name of a class; you can also include the class name after the command, separated by a space, as in A linked_list to obtain the ancestors of class LINKED_LIST.</paragraph>
+	</paragraph></document>

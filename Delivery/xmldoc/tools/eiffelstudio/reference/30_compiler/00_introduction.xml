@@ -1,7 +1,5 @@
 <document title="Compiler" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Compiler
@@ -25,13 +23,13 @@
 				<label>technologies</label>
 			</link> part of the documentation.
 		</paragraph>        
-		<paragraph>
+		<seealso>
 			<bold>See also</bold>:
 			<line_break></line_break>
 			<link>
 				<url>/general/guided_tour/language/index.xml</url>
 				<label>General        overview of the Eiffel language</label>
 			</link>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

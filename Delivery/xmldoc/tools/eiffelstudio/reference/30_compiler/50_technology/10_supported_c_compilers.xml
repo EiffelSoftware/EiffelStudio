@@ -40,13 +40,22 @@
 		<heading>
 			<size>2</size>Changing your C compiler on Windows
 		</heading>
-		<paragraph> </paragraph>
 		<paragraph>You can do it in two different ways. The first one is using the registry keys of the Windows&amp;trade; operating system, the second one modifies the environment variables.</paragraph>
-		<paragraph> </paragraph>
-		<paragraph>When modifying the registry keys, simply create a `compiler.reg'file with the following content: 
-			<line_break></line_break>
-		</paragraph>
-		<paragraph> </paragraph>
+		<paragraph>When modifying the registry keys, simply create a `compiler.reg'file with the following content: </paragraph>
+<code_block>
+	REGEDIT4
+
+	[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel52]
+
+	[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel52\ec]
+	"ISE_C_COMPILER"="C_COMPILER"
+
+	[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel52\finish_freezing]
+	"ISE_C_COMPILER"="C_COMPILER"
+
+	[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel52\wizard]
+	"ISE_C_COMPILER"="C_COMPILER"
+</code_block>
 		<paragraph>Where you can replace "C_COMPILER" by either:</paragraph>
 		<list ordered="false">
 			<item>msc for Microsoft Visual C++</item>

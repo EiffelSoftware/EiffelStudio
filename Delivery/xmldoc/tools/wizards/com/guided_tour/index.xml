@@ -24,12 +24,11 @@
 			<size>1</size>EiffelCOM Wizard Guided Tour
 		</heading>
 		<link></link>This chapter explains how to use the EiffelCOM wizard to create COM components and to access existing components. 
-		<paragraph>See:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
 					<url>01_new_from_com.xml</url>
-					<label>Creating a new COMcomponent</label>
+					<label>Creating a new COM component</label>
 				</link>.
 			</item>
 			<item>
@@ -46,10 +45,13 @@
 			</item>
 		</list>
 		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
 			<link>
 				<url>../01_introduction.xml</url>
 				<label>Introduction</label>
 			</link>
+			<line_break/>
 			<link>
 				<url>../reference/index.xml</url>
 				<label>EiffelCOM wizard reference</label>

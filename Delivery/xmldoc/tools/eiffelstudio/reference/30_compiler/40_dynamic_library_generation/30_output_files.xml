@@ -11,7 +11,7 @@
 			<italic>EIFGEN/F_code</italic> directory.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: To generate and compile these files, you have to indicate the definition file that should be used in the
+			<bold>Note</bold>: To generate and compile these files, you have to indicate the definition file that should be used in the 
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
 				<label>advanced tab of the project settings</label>
@@ -41,7 +41,7 @@
 			<italic>system.def</italic> is only used on windows, itis the definition file used to generate a DLL when linking.
 		</paragraph>
 		<paragraph>The 
-			<italic>edynlib.c</italic> file is the "interface" between the Eiffel system, and the C code, basically it contains the declaration and the implementation of the function used todirectly call the eiffel feature with its real name.
+			<italic>edynlib.c</italic> file is the "interface" between the Eiffel system, and the C code, basically it contains the declaration and the implementation of the function used to directly call the eiffel feature with its real name.
 		</paragraph>
 		<paragraph>The 
 			<span>

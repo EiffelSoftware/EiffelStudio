@@ -1,10 +1,8 @@
 <document title="Feature clauses" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Feature clausesFeature clauses
+			<size>1</size>Feature clauses
 		</heading>The feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, EiffelStudio adds the feature clause to the class text based on the feature clause order specified in the 
 		<link>
 			<url>../../../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
@@ -44,10 +42,7 @@
 		</heading>The code that is inserted in your class as a result of the selections made for the feature clause, is of the form: 
 		<line_break></line_break>
 		<code>
-			<comment>-- Clause name</comment>
-			<symbol>}</symbol>
-			<class_name>EXPORT</class_name>
-			<symbol>{</symbol>feature
+			feature <class_name>{EXPORT}</class_name><comment> -- Clause name</comment>
 		</code>
 		<line_break></line_break>except if you specified 
 		<code>
@@ -55,7 +50,7 @@
 		</code> as export status, which is similar to having no export status. 
 		<line_break></line_break>
 		<code>
-			<comment>--Clause name</comment>
+			feature <comment> --Clause name</comment>
 		</code>
 		<line_break></line_break>For example, if you specified a the "Initialization" feature clause name, and specified 
 		<code>
@@ -63,10 +58,7 @@
 		</code> as export status, you get: 
 		<line_break></line_break>
 		<code>
-			<comment>--Initialization</comment>
-			<symbol>}</symbol>
-			<class_name>NONE</class_name>
-			<symbol>{</symbol>feature
+			feature <class_name>{NONE}</class_name><comment> --Initialization</comment>
 		</code>
 	</paragraph>
 </document>

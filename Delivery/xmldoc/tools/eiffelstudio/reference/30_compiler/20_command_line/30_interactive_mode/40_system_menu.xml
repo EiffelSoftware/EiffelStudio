@@ -1,6 +1,10 @@
-<document title="System menu" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >1</size>System menu</heading><paragraph >The System Menu gives general information about the system:</paragraph>
-
-<code_block >
+<document title="System menu" output="studio">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>System menu
+		</heading>
+		<paragraph>The System Menu gives general information about the system:</paragraph><code_block>
 	(A) Ace          : show the Ace file.
 	(L) Classes      : show the classes in alphabetic order.
 	(S) Cluster hierarchy: display the cluster hierarchy of the system.
@@ -15,5 +19,5 @@
 	(Q) Quit         : terminate session.
 	(Y) Yank         : yank (save) output of last command to a file.
 </code_block>
-
-<paragraph >The A (Ace) command shows the Ace file; the E (Edit) commandenables you to edit the Ace; the C (Clusters) command is useful todisplay the entire list of classes, cluster by cluster.</paragraph></paragraph></document>
+		<paragraph>The A (Ace) command shows the Ace file; the E (Edit) command enables you to edit the Ace; the C (Clusters) command is useful to display the entire list of classes, cluster by cluster.</paragraph>
+	</paragraph></document>

@@ -1,7 +1,5 @@
 <document title="Metric management" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Metric management
@@ -23,7 +21,6 @@
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
 				<label>Managing metrics</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

@@ -1,7 +1,5 @@
 <document title="Metric framework and theory" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Metric framework and theory
@@ -9,7 +7,7 @@
 		<paragraph>You will want to rely not on a single metric but on a combination of metrics:</paragraph>
 		<note>
 			<bold>Metric framework</bold>: A 
-			<bold>metric framework</bold>is a set of definitions of metrics.
+			<bold>metric framework</bold> is a set of definitions of metrics.
 		</note>
 		<paragraph></paragraph>
 		<paragraph>Any metric work should be backed by a theory:</paragraph>

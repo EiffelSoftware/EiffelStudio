@@ -11,6 +11,11 @@
 				<keyword>local</keyword>
 			</code> field. A local variable clause will be added to the feature:
 		</paragraph>
-		<code></code>
+<code_block>
+	...
+	local
+		n: INTEGER
+	...
+</code_block>
 	</paragraph>
 </document>

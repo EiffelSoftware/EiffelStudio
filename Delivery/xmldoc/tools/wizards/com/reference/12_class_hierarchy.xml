@@ -1,7 +1,5 @@
 <document title="Class Hierarchy" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Class Hierarchy
@@ -48,7 +46,7 @@
 						<class_name>ECOM_STUB</class_name>
 					</code>
 				</label>
-			</link>,which is part of the EiffelCOM library. This class includes the feature 
+			</link>, which is part of the EiffelCOM library. This class includes the feature 
 			<link>
 				<url>../../../../libraries/com/reference/interfaces/ecom_stub.html#f_create_item</url>
 				<label>create_item</label>
@@ -96,60 +94,74 @@
 			</code> class contains no implementation; it only defines the signatures of the functions that are part of the interface. The actual implementation lies in the heir of that class.
 		</paragraph>
 		<paragraph> How you should use the generated classes in your system depends on whether you want to access an existing component (client) or build a new component in Eiffel (server).</paragraph>
-		<seealso>See Also:
-			<line_break></line_break> 
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
 			<link>
 				<url>01_introduction_d.xml</url>
 				<label>Introduction Dialog and Main Window</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>02_generated_code_type_d.xml</url>
 				<label>Generated Code Type Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>03_definition_file_d.xml</url>
 				<label>Definition File Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>04_eiffel_project_file_d.xml</url>
-				<label>EiffelProject File Dialog</label>
-			</link>, 
+				<label>Eiffel Project File Dialog</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>05_destination_folder_d.xml</url>
 				<label>Destination Folder Dialog</label>
-			</link>,
+			</link>
+			<line_break/>
 			<link>
 				<url>06_idl_marshalling_d.xml</url>
 				<label>IDL Marshaling Definition Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>07_type_lybrary_m_d.xml</url>
 				<label>Type Library Marshaling Definition Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>08_final_d.xml</url>
-				<label>FinalDialog</label>
-			</link>, 
+				<label>Final Dialog</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>09_com_definition_file_processing.xml</url>
-				<label>COMDefinition File Processing</label>
-			</link>, 
+				<label>COM Definition File Processing</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>10_eiffel_project_processing.xml</url>
 				<label>Eiffel Project Processing</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>11_generated_files.xml</url>
-				<label>GeneratedFiles</label>
-			</link>, 
+				<label>Generated Files</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>12_class_hierarchy.xml</url>
 				<label>Class Hierarchy</label>
-			</link>,
+			</link>
+			<line_break/>
 			<link>
 				<url>13_accessing_component.xml</url>
 				<label>Accessing a Component</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>14_building_component.xml</url>
 				<label>Building a Component</label>

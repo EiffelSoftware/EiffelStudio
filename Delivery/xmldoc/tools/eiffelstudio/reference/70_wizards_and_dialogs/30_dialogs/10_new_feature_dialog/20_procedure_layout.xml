@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>
+			<size>1</size>New procedure layout
 		</heading>
 		<div>
 			<image>
@@ -17,7 +17,7 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-procedure.png</url>
 			</image>
 		</div>
-		<paragraph>When clicking 
+		<paragraph>When clicking
 			<bold>Procedure</bold>, the window changes to the procedure layout. It has the following components:
 		</paragraph>
 		<list ordered="false">
@@ -78,6 +78,23 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-procedure-example.png</url>
 			</image>
 		</div>
-		<code></code>
+		<code_block>
+class
+    PRODUCT
+
+feature {PERSON} -- Element change
+
+    place_order (person: PERSON; quantity: INTEGER) is
+            -- Mail `quantity' to `person'.
+        require
+            person /= Void and quantity > 0
+        do
+            person.mail_order (Current, quantity)
+        ensure
+            person.has_ordered (Current)
+        end
+
+end -- class PRODUCT
+		</code_block>
 	</paragraph>
 </document>

@@ -84,6 +84,23 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-function-example.png</url>
 			</image>
 		</div>
-		<code></code>
+		<code_block>
+class
+    PRODUCT
+
+feature -- Status report
+
+    order_price (quantity: INTEGER): DOUBLE is
+            -- Total price when ordering `quantity'.
+        require
+            quantity_non_negative: quantity >= 0
+        do
+            Result := quantity * price
+        ensure
+            correct: Result = quantity * price
+        end
+
+end -- class PRODUCT
+		</code_block>
 	</paragraph>
 </document>

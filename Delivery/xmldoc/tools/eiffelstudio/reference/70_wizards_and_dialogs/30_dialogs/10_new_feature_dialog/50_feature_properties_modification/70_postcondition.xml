@@ -1,7 +1,5 @@
 <document title="Postcondition" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Postcondition
@@ -11,6 +9,10 @@
 				<keyword>ensure</keyword>
 			</code> field. A postcondition clause will be added to the feature:
 		</paragraph>
-		<code></code>
+<code_block>
+	...
+	ensure
+		n = count
+</code_block>
 	</paragraph>
 </document>

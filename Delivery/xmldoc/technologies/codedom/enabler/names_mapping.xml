@@ -1,0 +1,18 @@
+<document title="Names Mappings">
+	<meta_data/>
+	<paragraph>
+		Maybe the most striking difference when writing pages in Eiffel is the name of the .NET types and methods. 
+		
+		<heading>
+			<size>2</size>
+			<content>Methods Names Mapping</content>
+		</heading>
+		
+		The rule for methods is simple and the corresponding Eiffel name of a .NET method can be directly inferred from its .NET name:
+		
+		<list ordered="false">
+			<item>
+			</item>
+		</list>
+	</paragraph>
+</document>

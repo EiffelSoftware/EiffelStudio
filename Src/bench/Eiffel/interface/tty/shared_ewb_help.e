@@ -116,6 +116,8 @@ feature {NONE}
 	Percentage_help: STRING is " output of percentage of time spent in a feature"
 
 	precompile_help: STRING is "precompile the system"
+	
+	finalize_precompile_help: STRING is "precompile and finalize the system"
 
 	Profile_help: STRING is "information about a profiled run"
 

@@ -113,6 +113,8 @@ feature {NONE}
 	Percentage_cmd_name: STRING is "percentage"
 
 	precompile_cmd_name: STRING is "precompile"
+	
+	finalized_precompile_cmd_name: STRING is "finalize_precompile"
 
 	Profile_cmd_name: STRING is "profile"
 

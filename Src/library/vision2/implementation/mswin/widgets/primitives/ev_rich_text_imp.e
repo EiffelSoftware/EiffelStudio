@@ -282,6 +282,7 @@ feature -- Status setting
 			format_index: INTEGER
 			font_text: STRING
 			counter: INTEGER
+			character: CHARACTER
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -303,15 +304,28 @@ feature -- Status setting
 				format_offsets.extend (hashed_formats.count, hashed_character_format)
 			end
 			format_index := format_offsets.item (hashed_character_format) 
-			temp_string := "\cf" + format_index.out + "\f" + format_index.out + "\fs" + heights.i_th (format_index).out + " "
+			temp_string := "\cf"
+			temp_string.append (format_index.out)
+			temp_string.append ("\f")
+			temp_string.append (format_index.out)
+			temp_string.append ("\fs")
+			temp_string.append (heights.i_th (format_index).out)
+			temp_string.append (" ")
 			internal_text.append (temp_string)
 			from
 				counter := 1
 			until
 				counter > a_text.count
 			loop
-				if a_text.item (counter).is_equal ('%N') then
+				character := a_text.item (counter)
+				if character = '%N' then
 					internal_text.append ("\par%N")
+				elseif character = '\' then
+					internal_text.append ("\\")
+				elseif character = '{' then
+					internal_text.append ("\{")	
+				elseif character = '}' then
+					internal_text.append ("\}")
 				else
 					internal_text.append_character (a_text.item (counter))
 				end
@@ -372,14 +386,16 @@ feature -- Status setting
 			if buffer_locked_in_format_mode then
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
-				default_font_format := "\cf1\f0\fs" + (font.height * 2).out + " "
+				default_font_format := "\cf1\f0\fs"
+				default_font_format.append ((font.height * 2).out)
+				default_font_format.append (" ")
 				
 					-- Generate FRT Header corresponding to all fonts used in formatting.			
 					--{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 MS Shell Dlg;}{\f1\fswiss\fcharset0 Arial;}}
 				font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
-				
+
 					-- Add the default font of `Current' as the first in the font table.
-				font_text := font_text + generate_font_heading (font, 0)
+				font_text.append (generate_font_heading (font, 0))
 				
 					-- Now add all fonts used in formatting.
 				from
@@ -387,29 +403,45 @@ feature -- Status setting
 				until
 					formats.off
 				loop
-					font_text := font_text + generate_font_heading (formats.item.font, formats.index)
+					font_text.append (generate_font_heading (formats.item.font, formats.index))
 					formats.forth
 				end
-				font_text := font_text + "}"
+				font_text.append ("}")
 					
 					-- Generate RTF Header corresponding to all colors used in formatting.
 					--	{\colortbl ;\red255\green0\blue0;\red0\green255\blue0;}
 				color_text := "{\colortbl ;"
 					-- The foreground color of the control is always the first entry in the color table.
 				a_color := interface.foreground_color
-				color_text := color_text + "\red" + a_color.red_8_bit.out + "\green" + a_color.green_8_bit.out + "\blue" + a_color.blue_8_bit.out + ";"
+				color_text.append ("\red")
+				color_text.append (a_color.red_8_bit.out)
+				color_text.append ("\green")
+				color_text.append (a_color.green_8_bit.out)
+				color_text.append ("\blue")
+				color_text.append (a_color.blue_8_bit.out)
+				color_text.append (";")
 				from
 					formats.start
 				until
 					formats.off
 				loop
 					a_color := formats.item.color
-					color_text := color_text + "\red" + a_color.red_8_bit.out + "\green" + a_color.green_8_bit.out + "\blue" + a_color.blue_8_bit.out + ";"
+					color_text.append ("\red")
+					color_text.append (a_color.red_8_bit.out)
+					color_text.append ("\green")
+					color_text.append (a_color.green_8_bit.out)
+					color_text.append ("\blue")
+					color_text.append (a_color.blue_8_bit.out)
+					color_text.append (";")
 					formats.forth
 				end
 				color_text := color_text + "}"
 				
-				internal_text := font_text.twin + "%R%N" + color_text + "%R%N" + view_texT
+				internal_text := font_text.twin 
+				internal_text.append ("%R%N")
+				internal_text.append (color_text)
+				internal_text.append ("%R%N")
+				internal_text.append (view_text)
 				last_end_value := 1
 				internal_text.resize (default_string_size)
 				from
@@ -420,7 +452,13 @@ feature -- Status setting
 				loop
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
-						temp_string := "\cf" + (format_index + 1).out + "\f" + format_index.out + "\fs" + heights.i_th (format_index).out + " "
+						temp_string := "\cf"
+						temp_string.append ((format_index + 1).out)
+						temp_string.append ("\f")
+						temp_string.append (format_index.out)
+						temp_string.append ("\fs")
+						temp_string.append (heights.i_th (format_index).out)
+						temp_string.append (" ")
 						internal_text.append_string (temp_string)
 					end
 					if buffered_text.item (counter).is_equal ('%N') then
@@ -435,7 +473,7 @@ feature -- Status setting
 					end
 					counter := counter + 1
 				end
-				internal_text := internal_text + "}"
+				internal_text.append ("}")
 				buffered_text := Void
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
@@ -463,6 +501,7 @@ feature -- Status setting
 			a_color: EV_COLOR
 			font_text: STRING
 			color_text: STRING
+			internal_text_twin: STRING
 		do
 				-- Generate the representation of fonts used.
 			font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
@@ -473,10 +512,10 @@ feature -- Status setting
 			until
 				formats.off
 			loop
-				font_text := font_text + generate_font_heading (formats.item.font, formats.index)
+				font_text.append (generate_font_heading (formats.item.font, formats.index))
 				formats.forth
 			end
-			font_text := font_text + "}"
+			font_text.append ("}")
 			
 				-- Now generate text corresponding to all colors.
 			color_text := "{\colortbl ;"
@@ -486,11 +525,23 @@ feature -- Status setting
 				formats.off
 			loop
 				a_color := formats.item.color
-				color_text := color_text + "\red" + a_color.red_8_bit.out + "\green" + a_color.green_8_bit.out + "\blue" + a_color.blue_8_bit.out + ";"
+				color_text.append ("\red")
+				color_text.append (a_color.red_8_bit.out)
+				color_text.append ("\green")
+				color_text.append (a_color.green_8_bit.out)
+				color_text.append ("\blue")
+				color_text.append (a_color.blue_8_bit.out)
+				color_text.append (";")
 				formats.forth
 			end
-			color_text := color_text + "}"
-			internal_text := font_text.twin + "%R%N" + color_text + "%R%N" + internal_text + "}"
+			color_text.append ("}")
+			internal_text_twin := internal_text.twin
+			internal_text := font_text.twin
+			internal_text.append ("%R%N")
+			internal_text.append (color_text)
+			internal_text.append ("%R%N")
+			internal_text.append (internal_text_twin)
+			internal_text.append ("}")
 		end
 
 feature {NONE} -- Implementation

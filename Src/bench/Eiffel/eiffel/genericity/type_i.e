@@ -396,7 +396,7 @@ feature -- Generic conformance
 			valid_file : buffer /= Void
 		do
 			buffer.put_integer (generated_id (final_mode))
-			buffer.put_string (", ")
+			buffer.put_character (',')
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER; 

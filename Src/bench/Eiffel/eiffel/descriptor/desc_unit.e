@@ -236,7 +236,7 @@ feature -- Generation
 		do
 			from
 				static_decl := "static int16 gen_type"
-				start_decl := " [] = {0, "
+				start_decl := " [] = {0,"
 				end_decl := "-1};%N"
 				l_count := count - 1
 			until

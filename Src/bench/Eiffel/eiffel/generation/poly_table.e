@@ -327,7 +327,7 @@ feature
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_pgtype")
 						buffer.put_integer (j)
-						buffer.put_string ("[] = {0, ")
+						buffer.put_string ("[] = {0,")
 						entry.generate_cid (buffer, True);
 						buffer.put_string ("-1};");
 						buffer.put_new_line

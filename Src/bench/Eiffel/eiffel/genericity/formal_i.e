@@ -145,9 +145,9 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN) is
 		do
 			buffer.put_integer (Formal_type)
-			buffer.put_string (", ")
+			buffer.put_character (',')
 			buffer.put_integer (position)
-			buffer.put_string (", ")
+			buffer.put_character (',')
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN) is
@@ -161,9 +161,9 @@ feature -- Generic conformance
 			dummy: INTEGER
 		do
 			buffer.put_integer (Formal_type)
-			buffer.put_string (", ")
+			buffer.put_character (',')
 			buffer.put_integer (position)
-			buffer.put_string (", ")
+			buffer.put_character (',')
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end

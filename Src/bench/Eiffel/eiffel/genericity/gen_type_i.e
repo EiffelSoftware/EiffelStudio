@@ -300,7 +300,7 @@ feature -- Generic conformance
 				cr_info.generate_cid (buffer, final_mode)
 			else
 				buffer.put_integer (generated_id (final_mode))
-				buffer.put_string (", ")
+				buffer.put_character (',')
 	
 				from
 					i  := true_generics.lower
@@ -347,7 +347,7 @@ feature -- Generic conformance
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				buffer.put_integer (generated_id (final_mode))
-				buffer.put_string (", ")
+				buffer.put_character (',')
 	
 					-- Increment counter
 				dummy := idx_cnt.next

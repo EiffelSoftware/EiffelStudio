@@ -22,6 +22,9 @@ feature -- Properties
 	ordered_same_as_text: BOOLEAN;
 			-- Will the format output be in the same order as text file?
 
+	feature_clause_order: ARRAY [STRING]
+			-- Array of orderd feature clause comments
+
 	is_flat: BOOLEAN is
 			-- Is the format doing a flat? 
 		do
@@ -54,14 +57,26 @@ feature -- Setting
 			is_one_class_only := True;
 		ensure
 			is_one_class_only: is_one_class_only
-		end
+		end;
+
+	set_feature_clause_order (fco: like feature_clause_order) is
+			-- Set `feature_clause_order' to `fco'.
+		require
+			not_orded_same_as_text: not ordered_same_as_text
+		do
+			feature_clause_order := fco
+		ensure
+			set: feature_clause_order = fco
+		end;
 
 feature -- Execution
 
 	format (e_class: E_CLASS) is
 			-- Format text for eiffel class `e_class'.
 		require
-			valid_e_class: e_class /= Void
+			valid_e_class: e_class /= Void;
+			consistency: feature_clause_order /= Void implies 
+				not ordered_same_as_text
 		local
 			f: FORMAT_CONTEXT_B
 		do
@@ -77,6 +92,8 @@ feature -- Execution
 			end;
 			if ordered_same_as_text then
 				f.set_order_same_as_text
+			else
+				f.set_feature_clause_order (feature_clause_order)
 			end;
 			f.execute;
 			text := f.text;

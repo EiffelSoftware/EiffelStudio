@@ -12,7 +12,7 @@ inherit
 			string_value as internal_string_value
 		redefine
 			is_string, append_signature,
-			internal_string_value
+			internal_string_value, set_real_type
 		end
 
 	SHARED_WORKBENCH
@@ -55,7 +55,9 @@ feature -- Status Report
 			check
 				class_type /= Void
 			end
-			Result := class_type /= Void and then class_type.class_id = System.string_id
+			Result := class_type /= Void and then
+				(class_type.class_id = System.string_id or
+				class_type.class_id = system_string_id)
 		end
 
 	internal_string_value: STRING is
@@ -88,6 +90,17 @@ feature -- Settings
 			string_value_set: string_value = s
 		end
 
+	set_real_type (t: CL_TYPE_A) is
+			-- Extract type and set `is_dotnet_string' accordingly.
+		local
+			l_cl_type: CL_TYPE_A
+		do
+			l_cl_type ?= t
+			if l_cl_type /= Void then
+				is_dotnet_string := l_cl_type.class_id = system_string_id
+			end
+		end
+		
 feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER) is
@@ -104,7 +117,11 @@ feature -- Code generation
 	generate_il is
 			-- Generate IL code for string constant value.
 		do
-			il_generator.put_manifest_string (string_value)
+			if is_dotnet_string then
+				il_generator.put_system_string (string_value)
+			else
+				il_generator.put_manifest_string (string_value)
+			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -128,6 +145,17 @@ feature -- Code generation
 			st.add_char ('"')
 			st.add_string (eiffel_string (string_value))
 			st.add_char ('"')
+		end
+
+feature {NONE} -- Implementation
+
+	system_string_id: INTEGER is
+			-- ID of SYSTEM_STRING if we are in IL code generation
+			-- Otherwise, 0.
+		once
+			if System.system_string_class /= Void and System.system_string_class.is_compiled then
+				Result := System.system_string_id
+			end
 		end
 
 end

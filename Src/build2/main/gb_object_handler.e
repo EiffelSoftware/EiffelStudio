@@ -939,14 +939,18 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				restore_layout_constructor
 			else
 					-- We must handle windows as a special case. Store the contents.
-				old_contents := titled_window_object.object.item
-				old_window ?= titled_window_object.object				
-				old_builder_contents := titled_window_object.display_object.child.item
+				old_window ?= titled_window_object.object
 				old_builder_window ?= titled_window_object.display_object.child
 				old_window_selector_item ?= titled_window_object.window_selector_item
 				old_window_menu_bar ?= titled_window_object.object.menu_bar
 				new_window ?= titled_window_object.display_object.child
 				old_builder_menu_bar := new_window.menu_bar
+				if titled_window_object.is_full then
+						-- If the window does have an `item' then we store it
+						-- for later restoration.
+					old_contents := titled_window_object.object.item	
+					old_builder_contents := titled_window_object.display_object.child.item
+				end
 
 				create store
 				create load
@@ -963,8 +967,14 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				old_window.wipe_out
 				old_builder_window.wipe_out
 				
-				new_window.extend (old_contents)
-				new_builder_window.extend (old_builder_contents)
+				if old_contents /= Void then
+						-- Restore contents of windows, if not Void.
+					check
+						old_builder_contents_also_not_void: old_builder_contents /= Void
+					end
+					new_window.extend (old_contents)
+					new_builder_window.extend (old_builder_contents)
+				end
 				
 				new_window.set_position (old_window.x_position, old_window.y_position)
 				new_window.set_size (old_window.width.max (new_window.minimum_width), old_window.height.max (new_window.minimum_height))

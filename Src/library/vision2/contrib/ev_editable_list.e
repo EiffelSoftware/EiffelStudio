@@ -27,7 +27,9 @@ feature -- Initialization
 			create edit_dialogs.make (0)
 			create change_widgets.make (0)
 			create editable_columns.make (0)
+			create end_edit_actions.default_create
 			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
+			end_edit_actions.extend (agent on_change_widget_deselected)
 			set_non_empty_column_values (True)
 		end
 
@@ -141,14 +143,36 @@ feature -- Removal
 				forth
 			end
 		end
+		
+feature -- Selection
+
+	select_item (a_string: STRING; i: INTEGER) is
+			-- Select in list the first item with text 'a_string' at index 'i'.
+		local
+			done: BOOLEAN
+		do
+			from
+				start
+			until
+				after or done
+			loop
+				if item.i_th (i).is_equal (a_string) then
+					item.enable_select
+					done := True
+				end
+				forth
+			end
+		end
 
 feature -- Basic operations
 
 	edit_row (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- User has double clicked list row so set up dialogs for in-place editing.
 		do
-			calculate_offsets (x, y)
-			generate_edit_dialog (column_index (x, y))
+			if selected_item /= Void then
+				calculate_offsets (x, y)
+				generate_edit_dialog (column_index (x, y))
+			end	
 		end
 
 feature {NONE} -- Status report
@@ -198,11 +222,20 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Actions
 
+	on_edit_end is
+			-- Action to be performed when row editing has been finished
+		do
+			end_edit_actions.call ([])
+		end
+
 	on_change_widget_deselected is
 			-- Clear any in-place editing dialogs since row has lost focus and also
 			-- set row data to reflect newly entered text.
 		do
-			if is_hideable then
+--			if is_hideable then
+			if not edit_dialogs.is_empty then
+				
+			
 				from 
 					edit_dialogs.start
 				until
@@ -214,13 +247,14 @@ feature {NONE} -- Actions
 				end
 				edit_dialogs.wipe_out
 			end
+--			end
 		end
 	
-	on_key_release (key: EV_KEY) is
-			-- Actions to check if user has press the return key.
+	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG) is
+			-- Actions to check if user has press the return key on 'a_dialog'.
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
-				--update_actions
+			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then				
+--				on_change_widget_deselected
 			end
 		end
 	
@@ -240,11 +274,16 @@ feature {NONE} -- Actions
 					end
 				else
 					selected_item.put_i_th (widget.text, widget_column)
-					generate_edit_dialog (widget_column)
+--					generate_edit_dialog (widget_column)
 				end
 			end
-			on_change_widget_deselected
+			on_edit_end
 		end
+
+feature -- Actions
+				
+	end_edit_actions: ACTION_SEQUENCE [TUPLE[]]
+			-- List of actions to perform when list row has just been edited.
 
 feature {NONE} -- Widget Editing
 
@@ -338,13 +377,13 @@ feature {NONE} -- Implementation
 				
 				if change_widgets.has (a_index) then
 					change_widget ?= change_widgets.item (a_index)
-					change_widget.key_release_actions.extend (agent on_key_release (?))
+					change_widget.key_release_actions.extend (agent on_key_release (?, change_dialog))
 					change_widget.focus_out_actions.extend (agent update_actions)
 					change_dialog.extend (change_widget)
 				else
 					create {EV_TEXT_FIELD} text_change_widget
 					change_widgets.put (text_change_widget, a_index)
-					text_change_widget.key_release_actions.extend (agent on_key_release (?))
+					text_change_widget.key_release_actions.extend (agent  on_key_release (?, change_dialog))
 					text_change_widget.focus_out_actions.extend (agent update_actions)
 					change_dialog.extend (text_change_widget)
 				end

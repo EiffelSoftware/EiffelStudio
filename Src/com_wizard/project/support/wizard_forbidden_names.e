@@ -648,16 +648,32 @@ feature -- Access
 			Result.force ("IFont1", "IFont1")
 			Result.force ("ITypeInfo", "ITypeInfo")
 			Result.force ("ITypeLib", "ITypeLib")
-			Result.force ("GetTypeInfo", "GetTypeInfo")
-			Result.force ("GetTypeInfoCount", "GetTypeInfoCount")
-			Result.force ("GetIDsOfNames", "GetIDsOfNames")
 			Result.force ("LCID", "LCID")
-			Result.force ("Release", "Release")
-			Result.force ("AddRef", "AddRef")
-			Result.force ("QueryInterface", "QueryInterface")
-			Result.force ("Invoke", "Invoke")
+			Result.force ("lcid", "lcid")
+			Result.force ("riid", "riid")
+			Result.force ("dispID", "dispID")
+			Result.force ("wFlags", "wFlags")
+			Result.force ("pDispParams", "pDispParams")
+			Result.force ("pVarResult", "pVarResult")
+			Result.force ("pExcepInfo", "pExcepInfo")
+			Result.force ("puArgErr", "puArgErr")
+			Result.merge (well_known_functions)
 		end
 
+	well_known_functions: HASH_TABLE [STRING, STRING] is
+			-- List of generator words.
+		once
+			create Result.make (100)
+			Result.compare_objects
+			Result.force ("QueryInterface", "QueryInterface")
+			Result.force ("AddRef", "AddRef")
+			Result.force ("Release", "Release")
+			Result.force ("GetTypeInfoCount", "GetTypeInfoCount")
+			Result.force ("GetTypeInfo", "GetTypeInfo")
+			Result.force ("GetIDsOfNames", "GetIDsOfNames")
+			Result.force ("Invoke", "Invoke")
+		end
+	
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel runtime macros.
 		once

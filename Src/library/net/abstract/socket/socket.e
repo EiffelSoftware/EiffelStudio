@@ -732,7 +732,7 @@ feature -- socket options
 			Result := c_fcntl (descriptor, c_fgetown, 0)
 		end
 
-feature -- Implementation
+feature {STORABLE} -- Implementation
 
 	storage_type: CHARACTER is 'S'
 			-- Type for storage mechanism

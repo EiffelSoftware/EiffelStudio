@@ -77,14 +77,19 @@ feature -- Basic operations
 			-- key. If `direction' it goes to the next widget otherwise,
 			-- it goes to the previous one.
 		local
-			hwnd: POINTER
+			l_null, hwnd: POINTER
 			window: WEL_WINDOW
+			l_top: like top_level_window_imp
 		do
-			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
-				wel_item, direction)
-			window := window_of_item (hwnd)
-			if window /= Void then
-				window.set_focus
+			l_top := top_level_window_imp
+			if l_top /= Void then
+				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
+			end
+			if hwnd /= l_null then
+				window := window_of_item (hwnd)
+				if window /= Void then
+					window.set_focus
+				end
 			end
 		end
 
@@ -93,14 +98,19 @@ feature -- Basic operations
 			-- keys. If `direction' it goes to the next widget otherwise,
 			-- it goes to the previous one.
 		local
-			hwnd: POINTER
+			hwnd, l_null: POINTER
 			window: WEL_WINDOW
+			l_top: like top_level_window_imp
 		do
-			hwnd := next_dlggroupitem (top_level_window_imp.wel_item,
-				wel_item, direction)
-			window := window_of_item (hwnd)
-			if window /= Void then
-				window.set_focus
+			l_top := top_level_window_imp
+			if l_top /= Void then
+				hwnd := next_dlggroupitem (l_top.wel_item, wel_item, direction)
+			end
+			if hwnd /= l_null then
+				window := window_of_item (hwnd)
+				if window /= Void then
+					window.set_focus
+				end
 			end
 		end
 

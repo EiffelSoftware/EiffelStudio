@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 	
-	EV_TEXTABLE_I
+	EV_TEXT_ALIGNABLE_I
 		redefine
 			interface
 		end

@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			switch ?= yacc_arg (0);
 			case_list ?= yacc_arg (1);
 			else_part ?= yacc_arg (2);
+			start_position := yacc_position
 		ensure then
 			switch_exists: switch /= Void
 		end;

@@ -16,6 +16,9 @@ inherit
 
 feature -- Access
 
+	start_position: INTEGER;
+			-- Start position of AST
+
 	number_of_stop_points: INTEGER is
 			-- Number of stop points for AST
 		do

@@ -77,6 +77,18 @@ feature -- Access
 
 	Tvm_sortchildrencb: INTEGER is 4373
 			-- Declared in Windows as TVM_SORTCHILDRENCB
+	
+	Tvm_setbkcolor: INTEGER is 4381
+			-- Declared in Windows as TVM_SETBKCOLOR
+	
+	Tvm_settextcolor: INTEGER is 4382
+			-- Declared in Windows as TVM_SETTEXTCOLOR
+	
+	Tvm_getbkcolor: INTEGER is 4383
+			-- Declared in Windows as TVM_GETBKCOLOR
+	
+	Tvm_gettextcolor: INTEGER is 4384
+			-- Declared in Windows as TVM_GETTEXTCOLOR
 
 end -- class WEL_TVM_CONSTANTS
 

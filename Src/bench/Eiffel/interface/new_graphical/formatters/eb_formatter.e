@@ -187,8 +187,9 @@ feature -- Commands
 			if cur_wid = Void then
 				--| Do nothing.
 			else
-				cur_wid.set_pointer_style (old_cur)
-				cur_wid.disable_capture
+				if old_cur /= Void then
+					cur_wid.set_pointer_style (old_cur)
+				end
 				cur_wid := Void
 			end
 		end
@@ -224,12 +225,11 @@ feature {NONE} -- Implementation
 			-- Display a temporary header during the format processing.
 			-- Display a hourglass-shaped cursor.
 		do
---			cur_wid := create {EV_HORIZONTAL_BOX}
+			cur_wid := Window_manager.last_focused_development_window.window
 			if cur_wid = Void then
 				--| Do nothing.
 			else
 				old_cur := cur_wid.pointer_style
-				cur_wid.enable_capture
 				cur_wid.set_pointer_style (Wait_cursor)
 			end
 

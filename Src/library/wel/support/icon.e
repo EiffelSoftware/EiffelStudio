@@ -14,7 +14,23 @@ creation
 	make_by_id,
 	make_by_name,
 	make_by_predefined_id,
+	make_by_file,
 	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make_by_file (file_name: FILE_NAME) is
+			-- Load an icon file named `file_name'.
+			-- Only Windows 95.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			a: ANY
+		do
+			a := file_name.to_c
+			item := cwin_load_image (default_pointer, $a,
+				Image_icon, 0, 0, Lr_loadfromfile)
+		end
 
 feature {NONE} -- Implementation
 
@@ -47,6 +63,30 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HICON)"
 		alias
 			"DestroyIcon"
+		end
+
+	cwin_load_image (hinstance, name: POINTER; type, width, height,
+				load_flags: INTEGER): POINTER is
+			-- SDK LoadImage
+		external
+			"C [macro <wel.h>] (HINSTANCE, LPCSTR, UINT, int, int, %
+				%UINT): EIF_POINTER"
+		alias
+			"LoadImage"
+		end
+
+	Lr_loadfromfile: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"LR_LOADFROMFILE"
+		end
+
+	Image_icon: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"IMAGE_ICON"
 		end
 
 end -- class WEL_ICON

@@ -1,11 +1,6 @@
 indexing
 	description: "EiffelVision push button. Mswindows implementation."
 	status: "See notice at end of class"
-	note: "On windows, you can only display a text or a pixmap.%N%
-	%if you set both the pixmap and the text, only the%N%
-	%pixmap will be displayed. On gtk, everything works%N%
-	%like it is suppose to be, you have both text and%N%
-	%pixmap visible."
 	date: "$Date$"
 	revision: "$Revision$"
 

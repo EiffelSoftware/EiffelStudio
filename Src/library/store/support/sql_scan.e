@@ -113,7 +113,6 @@ feature -- Basic operations
 					r_string ?= obj
 					if not r_string.is_empty then
 						buffer.copy (r_string)
-						buffer.replace_substring_all ("'", "''")
 						str.append (string_format (buffer))
 					else
 						str.append (Null_string)
@@ -123,11 +122,7 @@ feature -- Basic operations
 					str.append (boolean_format (r_bool.item))
 				elseif is_date (obj) then
 					r_date ?= obj
-				--	if r_date = db_default_null_value.datetime_value then
-				--		str.append (Null_string)
-				--	else
-						str.append (date_format (r_date))
-				--	end
+					str.append (date_format (r_date))
 				else
 					get_complex_value (obj, str)
 				end

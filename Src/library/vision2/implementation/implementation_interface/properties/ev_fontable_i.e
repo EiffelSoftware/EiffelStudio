@@ -21,12 +21,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (ft: EV_FONT) is
 			-- Set font label to `font_name'.
 		require
 			exists: not destroyed
-			valid_font: is_valid (a_font)
-			a_font_specified: a_font.is_specified
+			valid_font: is_valid (ft)
 		deferred
 		end
 

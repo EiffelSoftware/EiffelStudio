@@ -77,6 +77,7 @@ feature -- Properties
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
+            Result := "Ctrl Alt<key>Left"
 		end
 
 feature {NONE} -- Implementation

@@ -31,6 +31,11 @@ extern void eif_unsynchronize_gc(rt_global_context_t *);
 extern int eif_is_synchronized (void);
 #endif
 
+#ifndef EIF_WINDOWS
+/* Forking, only support on Unix platform on which `fork' is supported. */
+extern pid_t eif_thread_fork(void);
+#endif
+
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
@@ -648,6 +653,7 @@ WINBASEAPI BOOL WINAPI InitializeCriticalSectionAndSpinCount(
 #define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK(m,msg)
 #define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY(m,msg)
 #endif
+
 
 #endif	/* EIF_THREADS */
 

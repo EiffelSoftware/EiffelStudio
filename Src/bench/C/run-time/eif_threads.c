@@ -145,19 +145,8 @@ rt_private struct stack_list rt_globals_list = {
 #define LAUNCH_MUTEX_UNLOCK \
 	EIF_LW_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
 
-rt_public void eif_thr_init_root(void) 
+rt_public void eif_thr_init_global_mutexes (void)
 {
-	/*
-	 * This function must be called once and only once at the very beginning
-	 * of an Eiffel program (typically from main()) or the first time a thread
-	 * initializes the Eiffel run-time if it is part of a Cecil system.
-	 * The global key for Thread Specific Data is initialized: this variable
-	 * is shared by all the threads, but it allows them to fetch a pointer
-	 * to their own context (eif_globals structure).
-	 */
-
-	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
-	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
 #ifdef ISE_GC
 	EIF_LW_MUTEX_CREATE(eif_gc_mutex, 0, "Couldn't create GC mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, 4000, "Couldn't create GC set mutex");
@@ -173,6 +162,22 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_trace_mutex, -1, "Couldn't create tracemutex");
 	EIF_LW_MUTEX_CREATE(eif_eo_store_mutex, -1, "Couldn't create EO_STORE mutex");
 	EIF_LW_MUTEX_CREATE(eif_global_once_set_mutex, 4000, "Couldn't create global once set mutex");
+}
+
+rt_public void eif_thr_init_root(void) 
+{
+	/*
+	 * This function must be called once and only once at the very beginning
+	 * of an Eiffel program (typically from main()) or the first time a thread
+	 * initializes the Eiffel run-time if it is part of a Cecil system.
+	 * The global key for Thread Specific Data is initialized: this variable
+	 * is shared by all the threads, but it allows them to fetch a pointer
+	 * to their own context (eif_globals structure).
+	 */
+
+	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
+	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
+	eif_thr_init_global_mutexes();
 	eif_thr_register();
 #ifdef ISE_GC
 	create_scavenge_zones();
@@ -596,7 +601,11 @@ rt_public void eif_thr_exit(void)
 		/* Clean GC of non-used data that were used to hold objects */
 		/* gen_conf.c */
 	eif_gen_conf_thread_cleanup ();
-	eif_destroy_gc_stacks(rt_globals);
+#ifdef ISE_GC
+	eif_synchronize_gc (rt_globals);
+	eif_destroy_gc_stacks (rt_globals);
+	eif_unsynchronize_gc (rt_globals);
+#endif
 
 	if (eif_thr_is_root ())	{	/* Is this the root thread */
 		eif_cecil_reclaim ();
@@ -676,7 +685,6 @@ rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
 {
 #ifdef ISE_GC
 	eif_global_context_t *eif_globals = rt_globals->eif_globals;
-	eif_synchronize_gc(rt_globals);
 	remove_stack_from_gc (&rt_globals_list, rt_globals);
 	remove_stack_from_gc (&loc_stack_list, &loc_stack);
 	remove_stack_from_gc (&loc_set_list, &loc_set);	
@@ -689,7 +697,6 @@ rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
 	remove_stack_from_gc (&opstack_list, &op_stack);
 #endif
 	eif_stack_free (&free_stack);
-	eif_unsynchronize_gc(rt_globals);
 #endif
 }
 
@@ -936,6 +943,69 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 #endif
 	}
 }
+#endif
+
+#ifndef EIF_WINDOWS
+/*
+doc:	<routine name="eif_thread_fork" return_type="pid_t" export="shared">
+doc:		<summary>Call system fork and make sure that the GC is correctly updated in newly forked process. Made especially for EMC.</summary>
+doc:		<return>On  success, the PID of the child process is returned in the parent's thread of execution, and a 0 is returned in the child's thread of execution.  On failure, a -1 will be returned in the parent's context, no child process will be created, and errno will be set appropriately.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Global synchronization.</synchronization>
+doc:	</routine>
+*/
+
+extern pid_t waitpid (pid_t pid, int *status, int options);
+
+rt_shared pid_t eif_thread_fork(void) {
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+	pid_t result = (pid_t) 0;
+
+		/* Synchronize GC, so that only current thread is the one allowed to perform a fork. */
+	eif_synchronize_gc (rt_globals);
+
+		/* EMC using as far as we know only Linux and Solaris, that's the two fork we are taking
+		 * care of. Not that for Solaris, we us `fork1()' which only forks the current thread, not
+		 * all thread, so that it matches the Linux behavior of `fork'. */
+#ifdef SOLARIS_THREAD
+	result = fork1();
+#else
+	result = fork();
+#endif
+
+	if (result == 0) {
+		char s[1024];
+		eif_global_context_t * l_old_eif_globals = eif_globals;
+		rt_global_context_t * l_old_rt_globals = rt_globals;
+
+			/* We are now in the child process. */
+			/* First we reinitialize all our global mutexes. */
+		eif_thr_init_global_mutexes();
+		memset (&rt_globals_list, 0, sizeof (struct stack_list));
+
+			/* Rebuild a clean thread local storage. */
+		eif_thr_register();
+
+		{
+				/* We need to get back the new values set in `eif_thr_register'
+				 * for `eif_globals' and `rt_globals'. */
+			RT_GET_CONTEXT
+			EIF_GET_CONTEXT
+
+				/* Copy data from former thread. */
+			memcpy (eif_globals, l_old_eif_globals, sizeof(eif_global_context_t));
+			memcpy (rt_globals, l_old_rt_globals, sizeof(rt_global_context_t));
+		}
+		CHECK("Only one thread", rt_globals_list.count == 1);
+	}
+
+	eif_unsynchronize_gc (rt_globals);
+
+	return result;
+}
+
 #endif
 
 rt_public void eif_thr_yield(void)

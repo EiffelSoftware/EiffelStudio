@@ -97,6 +97,10 @@ RT_LNK void eif_free_dlls(void);
 #endif
 #endif
 
+#ifndef EIF_WINDOWS
+RT_LNK pid_t eiffel_fork(void);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -33,7 +33,7 @@ inherit
 			draw_text, draw_segment, draw_straight_line, draw_arc, 
 			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline, 
 			draw_pie_slice, fill_rectangle, fill_ellipse, fill_polygon, 
-			fill_pie_slice, set_with_default, flush
+			fill_pie_slice, set_with_default, flush, copy_pixmap
 		select
 			width,
 			height,
@@ -395,6 +395,18 @@ feature -- Filling operations
 		end
 
 feature {NONE} -- Implementation
+
+	copy_pixmap (other_interface: EV_PIXMAP) is
+			-- Update `Current' to have same appearence as `other_interface'.
+			-- (So as to satisfy `is_equal'.)
+		local
+			simple_pixmap: EV_PIXMAP_IMP
+		do
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (other_interface)
+				-- As `Current' may be parented, invalidate
+				-- so it is updated on screen.
+			invalidate
+		end
 
 	destroy is
 			-- Destroy the widget and the internal pixmaps

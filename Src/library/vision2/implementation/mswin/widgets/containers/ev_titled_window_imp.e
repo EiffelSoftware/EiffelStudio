@@ -60,6 +60,7 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_menu_command,
 			on_draw_item
 		redefine
 			set_menu,
@@ -69,7 +70,6 @@ inherit
 			on_size,
 			on_get_min_max_info,
 			on_destroy,
-			on_menu_command,
 			on_show,
 			on_move,
 			closeable
@@ -106,6 +106,8 @@ feature {NONE} -- Initialization
 --			set_maximum_width (system_metrics.screen_width)
 --			set_maximum_height (system_metrics.screen_height)
 		end
+
+feature {EV_WINDOW} -- Initialization
 
 	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Initialize few variables
@@ -538,15 +540,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_command (menu_id: INTEGER) is
-			-- The `menu_id' has been choosen from the menu.
-			-- If this feature is called, it means that the 
-			-- child is a menu.
-		do
-			if current_menu /= Void then
-				current_menu.on_menu_command (menu_id)
-			end
-		end
+
 
 feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 
@@ -554,14 +548,11 @@ feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 			-- Set `menu' with `a_menu'.
 		do
 			{WEL_FRAME_WINDOW} Precursor (a_menu)
-			current_menu ?= a_menu
 			if child /= Void then
 				set_minimum_size (child.minimum_width + 2*window_frame_width, child.minimum_height + title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
 			else
 				set_minimum_size (2*window_frame_width, title_bar_height + menu_bar_height + window_border_height + 2 * window_frame_height)
 			end
-		ensure then
-			current_menu_set: current_menu /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -572,9 +563,6 @@ feature {NONE} -- Implementation
 		once
 			!!Result
 		end
-
-	current_menu: EV_MENU_CONTAINER_IMP
-			-- The current menu of the window.
 
 feature {NONE} -- Inapplicable
 

@@ -16,7 +16,6 @@ feature -- Access
 		local
 			class_path: STRING
 			jvm: JAVA_VM
-			ex: EXCEPTIONS
 			exec: EXECUTION_ENVIRONMENT
 		once
 			create exec

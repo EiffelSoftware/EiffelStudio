@@ -44,8 +44,6 @@ feature  -- Status setting
 			-- Perform syntactical analysis on a lexical item list.
 		require
 			token_array_exists: at /= Void
-		local 	
-			o: ANY
 		do
 			ecp_token_array := at;
 			ecp_parsed := True;

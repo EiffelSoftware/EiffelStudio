@@ -37,8 +37,6 @@ feature -- Access
 			-- List all options.
 		require
 			options_set: options_set
-		local
-			i, nb: INTEGER
 		do
 			Result := internal_options
 		ensure

@@ -80,8 +80,6 @@ cluster
 
 	structure (ast):		"$EIFFEL_SRC/Eiffel/eiffel/structures"
 
-	const (ast):		"$EIFFEL_SRC/Eiffel/const"
-
 	eiffel_helper (ast):		"$EIFFEL_SRC/library/helpers/eiffel"
 
 	eiffel_parser (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_parser"

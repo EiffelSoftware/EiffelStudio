@@ -146,6 +146,15 @@ feature -- Access
 			Result := type.is_expanded
 		end
 
+	is_generic: BOOLEAN is
+			-- Is current class a generic class?
+		local
+			l_gen_type: GEN_TYPE_I
+		do
+			l_gen_type ?= type
+			Result := l_gen_type /= Void
+		end
+
 	is_external: BOOLEAN is
 			-- Is current class type external?
 		require
@@ -396,7 +405,7 @@ feature -- Update
 					if l_gen_type /= Void then
 							-- Current class type is generic, we need to evaluate parent
 							-- type in context of current class type.
-						l_parent_type := l_parent_type.instantiation_in (l_gen_type)
+						l_parent_type := l_parent_type.instantiation_in (Current)
 					end
 					a_parent := l_parent_type.associated_class_type
 					a_parent.build_conformance_table_of (cl)
@@ -451,14 +460,16 @@ feature -- Conveniences
 			Result := System.class_of_id (type.class_id)
 		end
 
-	written_type (a_class: CLASS_C): CL_TYPE_I is
+	written_type (a_class: CLASS_C): CLASS_TYPE is
 			-- Class type associated to class `a_class' in the context
 			-- of Current
 		require
 			good_argument: a_class /= Void
 			consistency: associated_class.conform_to (a_class)
 		do
-			Result := a_class.meta_type (type)
+			Result := a_class.meta_type (Current)
+		ensure
+			written_type_not_void: Result /= Void
 		end
 
 	written_type_id (a_class: CLASS_C): INTEGER is
@@ -477,7 +488,6 @@ feature -- Conveniences
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent_type: CL_TYPE_I
 			already_in: BOOLEAN
-			gen_type: GEN_TYPE_I
 		do
 			from
 				create Result.make
@@ -488,8 +498,7 @@ feature -- Conveniences
 			loop
 				parent_type := parents.item.type_i
 				if parent_type.has_formal then
-					gen_type ?= type
-					parent_type := parent_type.instantiation_in (gen_type)
+					parent_type := parent_type.instantiation_in (Current)
 				end
 				from
 						-- Check if the parent type is not already in
@@ -605,6 +614,7 @@ feature -- Generation
 
 				byte_context.set_buffer (buffer)
 				byte_context.set_header_buffer (header_buffer)
+				byte_context.init (Current)
 
 				if final_mode and then has_creation_routine then
 						-- Generate the creation routine in final mode
@@ -613,7 +623,6 @@ feature -- Generation
 
 				from
 					feature_table.start
-					byte_context.init (Current)
 				until
 					feature_table.after
 				loop
@@ -903,6 +912,7 @@ feature -- Generation
 			bits_desc: BITS_DESC
 			value: INTEGER
 			gen_type: GEN_TYPE_I
+			l_formal_type: CREATE_FORMAL_TYPE
 		do
 			c_name := Encoder.feature_name (static_type_id, Initialization_body_index)
 			nb_ref := skeleton.nb_reference
@@ -981,13 +991,18 @@ feature -- Generation
 				gen_type ?= exp_desc.type_i
 
 				if gen_type = Void then
-					-- Not an expanded generic
 					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = ")
-					buffer.put_type_id (exp_desc.type_id)
+					if exp_desc.type_i.is_formal then
+						create l_formal_type.make (exp_desc.type_i)
+						l_formal_type.generate_type_id (buffer, byte_context.final_mode)
+					else
+							-- Not an expanded generic
+						buffer.put_type_id (exp_desc.type_id)
+					end
 					buffer.put_string (" | EO_EXP;")
 					buffer.put_new_line
 				else
-					-- Expanded generic
+						-- Expanded generic
 					generate_ov_flags_start (buffer, gen_type)
 					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = typres | EO_EXP")
 					generate_ov_flags_finish (buffer)
@@ -1193,8 +1208,7 @@ feature -- Parent table generation
 			gen_type ?= type
 			a_class  := associated_class
 
-			if gen_type /= Void and then
-					gen_type.meta_generic /= Void then
+			if gen_type /= Void and then gen_type.meta_generic /= Void then
 				Par_table.init (type.generated_id (final_mode), 
 								gen_type.meta_generic.count,
 								a_class.name, a_class.is_expanded);
@@ -1211,7 +1225,7 @@ feature -- Parent table generation
 			loop
 				parent_type := parents.item.type_i
 				if gen_type /= Void then
-					parent_type := parent_type.instantiation_in (gen_type)
+					parent_type := parent_type.instantiation_in (Current)
 				end
 				Par_table.append_type (parent_type)
 				parents.forth
@@ -1231,8 +1245,7 @@ feature -- Parent table generation
 			gen_type ?= type
 			a_class  := associated_class
 
-			if gen_type /= Void and then
-					gen_type.meta_generic /= Void then
+			if gen_type /= Void and then gen_type.meta_generic /= Void then
 				Par_table.init (type.generated_id (False), 
 								gen_type.meta_generic.count,
 								a_class.name, a_class.is_expanded);
@@ -1250,7 +1263,7 @@ feature -- Parent table generation
 				parent_type := parents.item.type_i
 
 				if gen_type /= Void then
-					parent_type := parent_type.instantiation_in (gen_type)
+					parent_type := parent_type.instantiation_in (Current)
 				end
 
 				Par_table.append_type (parent_type)
@@ -1651,12 +1664,7 @@ feature -- Structure generation
 					(creation_feature.is_external or not creation_feature.is_empty)
 				then
 					l_written_class := System.class_of_id (creation_feature.written_in)
-					if l_written_class.generics = Void then
-						l_written_type := l_written_class.types.first
-					else
-						l_written_type := l_written_class.meta_type
-							(type).associated_class_type
-					end
+					l_written_type := l_written_class.meta_type (Current)
 					c_name := Encoder.feature_name (l_written_type.static_type_id,
 						creation_feature.body_index)					
 					buffer.put_string (c_name)

@@ -40,8 +40,7 @@ feature -- Access
 				end
 				t := p.parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
-					referenced_type_from_type (t),
-					t.is_by_ref), i + 1)
+					referenced_type_from_type (t)), i + 1)
 				i := i + 1
 			end
 		ensure

@@ -1060,7 +1060,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("other", "other", enum_type, False)
+			create l_arg.make ("other", "other", enum_type)
 			l_args := <<l_arg>>
 			create Result.make ("&", "&", "&", l_args, enum_type,
 				True,	-- is_frozen
@@ -1084,7 +1084,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("other", "other", enum_type, False)
+			create l_arg.make ("other", "other", enum_type)
 			l_args := <<l_arg>>
 			create Result.make ("|", "|", "|", l_args, enum_type,
 				True,	-- is_frozen
@@ -1108,7 +1108,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("a_value", "a_value", integer_type, False)
+			create l_arg.make ("a_value", "a_value", integer_type)
 			l_args := <<l_arg>>
 			create Result.make ("from_integer", "from_integer", "from_integer", l_args, enum_type,
 				True,	-- is_frozen
@@ -1157,7 +1157,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_arg: CONSUMED_ARGUMENT
 		do		
 			l_eiffel_name := "set_" + a_field_name
-			create l_arg.make ( "a_value", "a_value", internal_referenced_type, False)
+			create l_arg.make ( "a_value", "a_value", internal_referenced_type)
 			create Result.make_attribute_setter ( l_eiffel_name,
 												l_arg,
 												internal_referenced_type)

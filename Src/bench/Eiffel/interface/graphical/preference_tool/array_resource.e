@@ -11,17 +11,13 @@ inherit
 	STRING_RESOURCE
 		rename
 			make as sr_make,
-			set_actual_value as sr_set_actual_value,
-			actual_value as sr_actual_value,
 			is_valid as string_is_valid
 		redefine
 			set_value
 		end;
 	STRING_RESOURCE
 		rename
-			make as sr_make,
-			set_actual_value as sr_set_actual_value,
-			actual_value as sr_actual_value
+			make as sr_make
 		redefine
 			set_value, is_valid
 		select

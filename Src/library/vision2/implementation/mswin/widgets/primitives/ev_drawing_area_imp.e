@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			-- to have full control on the WM_ERASEBKG event
 			-- (on_erase_background)
 		once
-			create Result.make_by_pointer(Default_pointer)
+			create Result.make_by_pointer (Default_pointer)
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -637,6 +637,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2001/07/08 19:22:58  pichery
+--| Cosmetics
+--|
 --| Revision 1.44  2001/06/14 18:26:16  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

@@ -243,7 +243,7 @@ feature -- Project Initialization
 			project_directory_exist: project_dir /= Void
 		local
 			dir_name: STRING
-			root_class_name: STRING
+	 		root_class_name: STRING
 			root_class_c: CLASS_C
 			project_text:GRAPHICAL_TEXT_WINDOW
 		do
@@ -276,6 +276,7 @@ feature -- Project Initialization
 			title: STRING
 			mp: MOUSE_PTR
 			old_title: STRING
+			project_name: STRING
 		do	
 			old_title := project_tool.title
 			project_tool.set_title ("Retrieving project...")
@@ -335,7 +336,11 @@ feature -- Project Initialization
 				init_project
 				title := clone (Interface_names.t_Project)
 				title.append (": ")
-				title.append (project_dir.name)
+				project_name := project_dir.name
+				if project_name.item (project_name.count) = Directory_separator then
+					project_name.head (project_name.count -1)
+				end
+				title.append (project_name)
 				if Eiffel_system.is_precompiled then
 					title.append ("  (precompiled)")
 				end

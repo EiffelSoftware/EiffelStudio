@@ -121,6 +121,10 @@ feature -- Access
 			
 	is_resizing_divider_enabled: BOOLEAN
 			-- Is a vertical divider displayed during column resizing?
+			
+	is_resizing_divider_solid: BOOLEAN
+			-- Is resizing divider displayed during column resizing drawn as a solid line?
+			-- If `False', a dashed line style is used.
 
 feature -- Status setting
 
@@ -264,6 +268,24 @@ feature -- Status setting
 			is_resizing_divider_enabled := False
 		ensure
 			resizing_divider_disabled: not is_resizing_divider_enabled
+		end
+		
+	enable_solid_resizing_divider is
+			-- Ensure resizing divider displayed during column resizing
+			-- is displayed as a solid line.
+		do
+			is_resizing_divider_solid := True
+		ensure
+			solid_resizing_divider: is_resizing_divider_solid
+		end
+		
+	disable_solid_resizing_divider is
+			-- Ensure resizing divider displayed during column resizing
+			-- is displayed as a dashed line.
+		do
+			is_resizing_divider_solid := False
+		ensure
+			dashed_resizing_divider: not is_resizing_divider_solid
 		end
 
 feature -- Status report
@@ -735,8 +757,12 @@ feature {NONE} -- Drawing implementation
 				(position - viewport.x_offset < 0) then
 				remove_resizing_line
 			else
-					-- Draw dashed line representing position
-				screen.enable_dashed_line_style
+					-- Draw line representing position in current divider style.
+				if is_resizing_divider_solid then
+					screen.disable_dashed_line_style
+				else
+					screen.enable_dashed_line_style
+				end
 				screen.set_invert_mode
 				screen.draw_segment (drawable.screen_x + position, drawable.screen_y + resizing_line_border, drawable.screen_x + position, drawable.screen_y + drawable.height - resizing_line_border)
 				if last_dashed_line_position > 0 then
@@ -749,7 +775,12 @@ feature {NONE} -- Drawing implementation
 	remove_resizing_line is
 			-- Remove resizing line drawn on `drawable'.
 		do
-			screen.enable_dashed_line_style
+				-- Remove line representing position in current divider style.
+			if is_resizing_divider_solid then
+				screen.disable_dashed_line_style
+			else
+				screen.enable_dashed_line_style
+			end
 			screen.set_invert_mode
 			screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + drawable.height - resizing_line_border)
 			last_dashed_line_position := - 1

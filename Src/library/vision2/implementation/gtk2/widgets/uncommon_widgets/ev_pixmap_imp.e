@@ -321,6 +321,7 @@ feature -- Duplication
 			copy_from_gdk_data (other_imp.drawable, other_imp.mask, other_imp.width, other_imp.height)
 			pixmap_filename := other_imp.pixmap_filename
 			filepixbuf := other_imp.filepixbuf
+			internal_xpm_data := other_imp.internal_xpm_data
 		end
 		
 feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
@@ -377,7 +378,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_image: POINTER
 			-- Pointer to the gtk pixmap widget.
 
-feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 	internal_xpm_data: POINTER
 		-- Pointer to the appropriate XPM image used for the default stock cursor if any

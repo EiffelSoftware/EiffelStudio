@@ -424,13 +424,13 @@ char is_feature_as(char *obj)
 {
 	/* Is `obj' an instance of FEATURE_AS ? */
 
-	return (Dftype(obj) == feature_as_dtype) ? '\01' : '\0';
+	return ((int16) Dftype(obj) == feature_as_dtype) ? '\01' : '\0';
 }
 
 char is_invariant_as(char *obj)
 {
 	/* Is `obj' an instance of INVARIANT_AS ? */
 
-    return (Dftype(obj) == invariant_as_dtype) ? '\01' : '\0';
+    return ((int16) Dftype(obj) == invariant_as_dtype) ? '\01' : '\0';
 }
 

@@ -167,7 +167,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_feature_error (text: FEATURE_ERROR_TEXT) is
 			-- Process error feature text.
 		do
-			put_feature_error (text.e_feature, text.image, text.position)
+			put_feature_error (text.e_feature, text.image, text.line)
 		end
 
 feature -- Output

@@ -25,13 +25,13 @@ feature {NONE} -- Access
 			-- The command are sort by event_id. For this ids,
 			-- See the class EV_EVENT_CONSTANTS
 
-	argument_list: ARRAY [LINKED_LIST [EV_ARGUMENTS]]
+	argument_list: ARRAY [LINKED_LIST [EV_ARGUMENT]]
 			-- The list of the arguments asociated with the commands
 			-- The arguments follow the same order than the commands.
 
 feature {NONE} -- status setting
 
-	add_command (event_id: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_command (event_id: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
 			-- Add a command to a widget that means create an ev_wel_command
 			-- and put it to the wel_window of the widget.
 			-- For the meaning of the message, see wel_wm_message.
@@ -43,7 +43,7 @@ feature {NONE} -- status setting
 			valid_lists: command_list /= Void and argument_list /= Void
 		local
 			list_com: LINKED_LIST [EV_COMMAND]
-			list_arg: LINKED_LIST [EV_ARGUMENTS]
+			list_arg: LINKED_LIST [EV_ARGUMENT]
 		do
 			if (command_list @ event_id) = Void then
 				!! list_com.make
@@ -71,20 +71,22 @@ feature {NONE} -- Basic operation
 
 	execute_command (event_id: INTEGER; data: EV_EVENT_DATA) is
 			-- Execute the command that correspond to the event `event_id'.
+			-- Return `True' if the default processing is disabled,
+			-- False otherwise
 		require
 			valid_commands: command_list /= Void
 			valid_arguments: argument_list /= Void
 			valid_id: event_id >= 1 and event_id <= command_list.count
 		local
 			com_list: LINKED_LIST [EV_COMMAND]
-			arg_list: LINKED_LIST [EV_ARGUMENTS]
+			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
 			if (command_list @ event_id) /= Void then
 				com_list := (command_list @ event_id)
 				arg_list := (argument_list @ event_id)
 				from
 					com_list.start
-					arg_list.start				
+					arg_list.start
 				until
 					com_list.after
 				loop

@@ -151,7 +151,7 @@ feature -- Status setting
 
 feature -- Event - command association
 
-	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no 'mouse_button' is pressed.
 		do
@@ -167,7 +167,7 @@ feature -- Event - command association
 			end
 		end
 	
-	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no 'mouse_button' is released.
 		do
@@ -183,7 +183,7 @@ feature -- Event - command association
 			end
 		end
 
-	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- button no `mouse_button' is double clicked.
 		do
@@ -199,7 +199,7 @@ feature -- Event - command association
 			end
 		end
 
-	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when mouse move
 			-- in the widget area.
 			-- Be careful, in this motion-notify, windows considers that
@@ -210,14 +210,14 @@ feature -- Event - command association
 			add_command (Cmd_motion_notify, cmd, arg)
 		end
 	
-	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `command' to the list of commands to be executed when 
 			-- the widget is destroyed.
 		do
 			add_command (Cmd_destroy, cmd, arg)
 		end
 
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when 
 			-- a key is pressed.
 			-- Use the `Wm_keydown' and the `Wm_char' windows event.
@@ -228,7 +228,7 @@ feature -- Event - command association
 			add_command (Cmd_key_press, cmd, arg)
 		end
 	
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when a key 
 			-- is released.
 			-- Use the `Wm_keyup' windows event.
@@ -236,21 +236,21 @@ feature -- Event - command association
 			add_command (Cmd_key_release, cmd, arg)
 		end
 
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when the mouse 
 			-- enters the widget.
 		do
 			add_command (Cmd_enter_notify, cmd, arg)
 		end
 	
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when the mouse 
 			-- leaves the widget.
 		do
 			add_command (Cmd_leave_notify, cmd, arg)
 		end
 
-	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed when the widget is 
 			-- exposed.
 		do
@@ -301,6 +301,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			data := get_button_data (keys, x_pos, y_pos)
 			execute_command (Cmd_button_one_press, data)
+
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is

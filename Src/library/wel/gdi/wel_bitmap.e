@@ -69,7 +69,8 @@ feature {NONE} -- Initialization
 			-- Create a WEL_BITMAP from another WEL_BITMAP. The
 			-- bitmap is copied by value
 		do
-			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)	
+			item := cwin_copy_image(a_bitmap.item, Image_bitmap, a_bitmap.width, a_bitmap.height, 0)
+			shared := False
 		end
 
 	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is

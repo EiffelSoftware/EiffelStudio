@@ -143,15 +143,36 @@ feature {NONE}
 					precomp_name := r.system_name
 					l ?= licenses.item (precomp_name)
 					if l = Void then
+debug ("LIMAN")
+	io.error.putstring ("Creating new license%N")
+end
 						!! l.make
 						l.set_library_name (precomp_name)
 						l.get_license
-						licenses.put (l, precomp_name)
-					end
-					if not l.licensed then
+						if l.licensed then
+debug ("LIMAN")
+	io.error.putstring ("License valid: inserting into hash table%N")
+end
+							licenses.put (l, precomp_name)
+						else
+debug ("LIMAN")
+	io.error.putstring ("Cannot get initial license%N")
+end
+							!! error
+							error.set_application_name (l.library_name)
+							Error_handler.insert_error (error)
+						end
+					elseif not l.alive then
+debug ("LIMAN")
+	io.error.putstring ("Cannot get initial license%N")
+end
 						!! error
 						error.set_application_name (l.library_name)
 						Error_handler.insert_error (error)
+					else
+debug ("LIMAN")
+	io.error.putstring ("License is still valid%N")
+end
 					end
 				end
 				precomp_dirs.forth

@@ -1157,6 +1157,11 @@ feature -- Once management
 		do
 		end
 
+	generate_once_return (has_result: BOOLEAN) is
+			-- Generate return from once routine, including loading of function result if `has_result' is true.
+		do
+		end
+
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do

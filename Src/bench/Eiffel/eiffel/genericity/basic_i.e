@@ -59,11 +59,6 @@ feature -- Status report
 
 feature -- Byte code generation
 
-	generate_byte_code_cast (ba: BYTE_ARRAY) is
-			-- Code for the interpreter cast
-		do
-		end
-
 	metamorphose
 		(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and

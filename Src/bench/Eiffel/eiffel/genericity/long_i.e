@@ -14,7 +14,7 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, hash_code,
-			generate_byte_code_cast, heaviest, tuple_code,
+			heaviest, tuple_code,
 			maximum_interval_value,
 			minimum_interval_value
 		end
@@ -107,13 +107,6 @@ feature -- Access
 			when 32 then Result := C_int32
 			when 64 then Result := C_int64
 			end
-		end
-
-	generate_byte_code_cast (ba: BYTE_ARRAY) is
-			-- Code for interpreter cast
-		do
-			ba.append (Bc_cast_long)
-			ba.append_integer (size)
 		end
 
 	is_long: BOOLEAN is True

@@ -1287,9 +1287,10 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 
 		<Property Id="ARPCONTACT"><![CDATA[info@eiffel.com]]></Property>
 		<Property Id="ARPHELPLINK"><![CDATA[http://docs.eiffel.com]]></Property>
+		<Property Id="ARPURLINFOABOUT"><![CDATA[http://www.eiffel.com]]></Property>
 		<Property Id="ARPHELPTELEPHONE"><![CDATA[(805) 685-1006]]></Property>
 		<Property Id="ARPNOMODIFY"><![CDATA[1]]></Property>
-		<Property Id="ARPURLINFOABOUT"><![CDATA[http://www.eiffel.com]]></Property>
+		<Property Id="ARPNOREPAIR"><![CDATA[1]]></Property>
 
 		<AdminExecuteSequence />
 

@@ -5,29 +5,22 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PREFERENCE_TOOL
+deferred class PREFERENCE_TOOL
 
 inherit
 	TOP_SHELL
 		rename
 			make as top_shell_make
-		end;
+		end
 	COMMAND
-
-creation
-	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make is
 			-- Create Current with `name' `a_name', and
 			-- `screen' `a_screen'.
-		require
-			a_screen_is_valid: a_screen /= Void and then a_screen.is_valid
 		do
 			!! category_list.make;
-			screen := a_screen;
-			identifier := a_name;
 			last_selected := Void
 		end;
 
@@ -51,26 +44,30 @@ feature {NONE} -- Initialization
 
 			!! validate_cmd.make (Current);
 			!! menu_entry.make (validate_cmd, file_menu);
+			menu_entry.set_menu_text (m_Validate, Void);
 
 			!! save_cmd.make (Current);
 			!! menu_entry.make (save_cmd, file_menu);
+			menu_entry.set_menu_text (m_Save, a_Save);
 
 			!! ok_cmd.make (Current);
 			!! menu_entry.make (ok_cmd, file_menu);
+			menu_entry.set_menu_text (m_Ok, Void);
 
 			!! apply_cmd.make (Current);
 			!! menu_entry.make (apply_cmd, file_menu);
+			menu_entry.set_menu_text (m_Apply, Void);
 
-			!! cancel_cmd.make (Current);
-			!! menu_entry.make (cancel_cmd, file_menu);
-			menu_entry.set_text (m_Exit)
-
+			!! exit_cmd.make (Current);
+			!! menu_entry.make (exit_cmd, file_menu);
+			menu_entry.set_menu_text (m_Exit, Void);
 		end;
 
 	initialize_category_button_rc is
 			-- Create and initialize `category_button_rc'.
 		do
 			!! category_button_rc.make (t_Empty, global_form);
+			category_button_rc.set_spacing (0);
 			category_button_rc.set_row_layout;
 		end;
 
@@ -102,22 +99,22 @@ feature {NONE} -- Initialization
 			ok_button.add_activate_action (ok_cmd, Void);
 			!! apply_button.make (b_Apply, button_form);
 			apply_button.add_activate_action (apply_cmd, Void);
-			!! cancel_button.make (b_Cancel, button_form);
-			cancel_button.add_activate_action (cancel_cmd, Current);
+			!! exit_button.make (b_exit, button_form);
+			exit_button.add_activate_action (exit_cmd, Current);
 
 			button_form.attach_top (ok_button, 0);
 			button_form.attach_bottom (ok_button, 0);
 			button_form.attach_top (apply_button, 0);
 			button_form.attach_bottom (apply_button, 0);
-			button_form.attach_top (cancel_button, 0);
-			button_form.attach_bottom (cancel_button, 0);
+			button_form.attach_top (exit_button, 0);
+			button_form.attach_bottom (exit_button, 0);
 
 			button_form.attach_left (ok_button, 0);
 			button_form.attach_right_position (ok_button, 1);
 			button_form.attach_left_position (apply_button, 1);
 			button_form.attach_right_position (apply_button, 2);
-			button_form.attach_left_position (cancel_button, 2);
-			button_form.attach_right (cancel_button, 0)
+			button_form.attach_left_position (exit_button, 2);
+			button_form.attach_right (exit_button, 0)
 		end;
 
 	attach_forms is
@@ -140,16 +137,21 @@ feature {NONE} -- Initialization
 			global_form.attach_right (button_form, 5);
 		end;
 
+	initialize_window is
+			-- Product specific initialization of the top shell
+		deferred
+		end
+
 feature -- Display
 
-	build_interface is
+	build_interface (a_screen: SCREEN) is
 			-- Create the widgets and show Current on the screen.
 		require
+			a_screen_is_valid: a_screen /= Void and then a_screen.is_valid;
 			not_created: destroyed;
 			list_not_empty: not category_list.empty
 		do
-			top_shell_make (identifier, screen);
-
+			top_shell_make (t_Empty, a_screen);
 			!! global_form.make (t_Empty, Current);
 
 			initialize_menu_form;
@@ -173,20 +175,49 @@ feature -- Display
 			category_list.start;
 			category_list.forth;
 			set_delete_command (Current);
+
+			initialize_window;
+
 		ensure
 			created: not destroyed
 		end;
 
+	show_page_number (a_number: INTEGER) is
+			-- Show page number `a_number' of resource category
+		require
+			valid_number: a_number > 0 and then a_number <= category_list.count
+		do
+			category_list.go_i_th (a_number)
+		end;
+
 	display is
 			-- Display the preference tool.
+		local
+			cur: CURSOR
 		do
-			execute (category_list.item.name);
-			realize;
+			cur := category_list.cursor;
+			from
+				category_list.start
+			until
+				category_list.after
+			loop
+				category_list.item.reset_content;
+				category_list.forth
+			end
+			category_list.go_to (cur);
+			display_category (category_list.item);
+			if not realized then
+				realize
+			else
+				show
+			end
 			raise
 		end;
 
 	display_category (a_category: PREFERENCE_CATEGORY) is
 			-- Select `a_category' and display it.
+		require
+			has_category: category_list.has (a_category)
 		local
 			valid: BOOLEAN
 		do
@@ -222,7 +253,6 @@ feature -- Display
 			-- Close Current
 		do
 			hide;
-			destroy
 		end;
 			
 feature -- Adding categories
@@ -233,7 +263,8 @@ feature -- Adding categories
 			a_category_not_void: a_category /= Void;
 			not_created: destroyed
 		do
-			category_list.extend (a_category)
+			category_list.extend (a_category);
+			a_category.associated_category.set_page_number (category_list.count)
 		end
 
 feature -- Access
@@ -296,7 +327,7 @@ feature {NONE} -- Properties
 			-- Form where the category is displayed on
 
 	button_form,
-			-- Form for the `Save', `Apply', and `Cancel' buttons
+			-- Form for the `Save', `Apply', and `exit' buttons
 
 	global_form: FORM;
 			-- Form serving as parents for all te above forms
@@ -322,8 +353,8 @@ feature {NONE} -- Properties
 	apply_button,
 			-- Button fo Apply action
 
-	cancel_button: PUSH_B;
-			-- Button for Cancel action
+	exit_button: PUSH_B;
+			-- Button for exit action
 
 	scrolled_window: SCROLLED_W;
 			-- Window as parent for the category
@@ -339,8 +370,8 @@ feature {PREFERENCE_COMMAND} -- Commands
 	apply_cmd: APPLY_PREF_CMD
 			-- Holder for the Apply command
 
-	cancel_cmd: CANCEL_PREF_CMD
-			-- Holder for the Cancel command
+	exit_cmd: CANCEL_PREF_CMD
+			-- Holder for the Exit/Cancel command
 
 	save_cmd: SAVE_PREF_CMD
 			-- Holder for the Save command
@@ -353,43 +384,41 @@ feature {PREFERENCE_CATEGORY} -- Execution
 	execute (arg: ANY) is
 			-- Execute Current
 		local
-			str: STRING;
-			done: BOOLEAN;
 			cat: PREFERENCE_CATEGORY;
-			cat_list: like category_list
+			mp: MOUSE_PTR
 		do
 			if arg = Void then
 				close
 			else
-				str ?= arg;
-				if str /= Void then
-					from
-						cat_list := category_list;
-							cat_list.start
-					until
-						cat_list.after or done
-					loop
-						cat := cat_list.item
-						if cat.name = str then
-							display_category (cat);
-							done := True
-						else
-							cat_list.forth
-						end
-					end
+				cat ?= arg;
+				if cat /= Void then
+					!! mp.set_watch_cursor;
+					display_category (cat);
+					mp.restore
 				end
 			end
 		end
 
 feature {NONE} -- Implementation (UI Constants)
 
-	b_Apply: STRING is		"Apply";
-	b_Cancel: STRING is		"Cancel";
-	b_Ok: STRING is			" Ok ";
-	m_Category: STRING is	"&Category";
-	m_Exit: STRING is		"&Exit";
-	m_File: STRING is		"&File";
-	m_Help: STRING is		"&Help";
 	t_Empty: STRING is		"";
 	
+	m_File, m_Category, m_Help: STRING is
+			-- Menu names
+		deferred
+		end;
+
+	b_Ok, b_Apply, b_Exit: STRING is		
+			-- Buttons names
+		deferred
+		end;
+
+	f_Exit, m_Exit: STRING is
+		deferred
+		end;
+
+	m_Validate, m_Save, m_Apply, m_Ok, a_Save: STRING is
+		deferred
+		end;
+
 end -- class PREFERENCE_TOOL

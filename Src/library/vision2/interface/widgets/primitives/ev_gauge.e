@@ -227,6 +227,13 @@ invariant
 	leap_positive: is_useable implies leap > 0
 	change_actions_not_void: is_useable implies change_actions /= Void
 
+	--| FIXME VB 02/14/2000
+	--| This should work but it does not for melted code.
+	--range_not_empty: is_useable implies not range.empty
+	--maximum_consistent: is_useable implies range.upper = maximum
+	--minimum_consistent: is_useable implies range.lower = minimum
+	--value_in_range: is_useable implies range.has (value)
+
 end -- class EV_GAUGE
 
 --!-----------------------------------------------------------------------------
@@ -250,6 +257,10 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/15 02:15:39  brendel
+--| Put back invariant in commented out form with message that it only works
+--| in freezed code.
+--|
 --| Revision 1.7  2000/02/15 01:56:50  brendel
 --| Removed commented out part of invariant. There is a bug in INTEGER_INTERVAL
 --| and we cannot wait for it to be fixed.

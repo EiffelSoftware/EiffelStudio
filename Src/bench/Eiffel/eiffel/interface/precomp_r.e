@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						project_dir.set_licensed (info.licensed)
-						--project_dir.set_system_name (info.system_name)
+						project_dir.set_system_name (info.name)
 						from info.start until info.after loop
 							dir_name := info.key_for_iteration;
 							id := info.item_for_iteration;
@@ -317,6 +317,8 @@ feature {NONE} -- Implementation
 					if sys /= Void and then sys.is_precompiled then
 						project_dir.set_has_precompiled_preobj
 							(sys.has_precompiled_preobj);
+						project_dir.set_licensed (sys.licensed_precompilation)
+						project_dir.set_system_name (sys.system_name)
 						Workbench.precompiled_directories.force
 							(project_dir, sys.compilation_id);
 						precompiled_options.item (precomp_name).rename_clusters (project.saved_workbench.universe)

@@ -111,6 +111,21 @@ feature -- Status report
 			Result := cwel_key_locked (virtual_key)
 		end
 
+	key_to_string (key_data: INTEGER): STRING is
+			-- Give the string associated with the key given by
+			-- `virtual_key'.
+		local
+			buffer: WEL_STRING
+			the_result: BOOLEAN
+		do
+			!! buffer.make_empty (11)
+			the_result := cwin_get_key_name_text (key_data, buffer.item, buffer.length)
+			check
+				successfull_call: the_result
+			end
+			Result := buffer.string
+		end
+
 	tick_count: INTEGER is
 			-- Number of milliseconds that have
 			-- elapsed since Windows was started.
@@ -175,7 +190,7 @@ feature {NONE} -- Externals
 	cwin_message_beep (sound_type: INTEGER) is
 			-- SDK MessageBeep
 		external
-			"C [macro <wel.h>] (UINT)"
+			"C [macro %"wel.h%"] (UINT)"
 		alias
 			"MessageBeep"
 		end
@@ -183,7 +198,7 @@ feature {NONE} -- Externals
 	cwin_get_tick_count: INTEGER is
 			-- SDK GetTickCount
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"GetTickCount ()"
 		end
@@ -191,7 +206,7 @@ feature {NONE} -- Externals
 	cwin_show_cursor (show_flag: BOOLEAN) is
 			-- SDK ShowCursor
 		external
-			"C [macro <wel.h>] (BOOL)"
+			"C [macro %"wel.h%"] (BOOL)"
 		alias
 			"ShowCursor"
 		end
@@ -199,7 +214,7 @@ feature {NONE} -- Externals
 	cwin_set_cursor_position (x, y: INTEGER) is
 			-- SDK SetCursorPos
 		external
-			"C [macro <wel.h>] (int, int)"
+			"C [macro %"wel.h%"] (int, int)"
 		alias
 			"SetCursorPos"
 		end
@@ -208,10 +223,18 @@ feature {NONE} -- Externals
 			buffer: POINTER; buffer_size: INTEGER): INTEGER is
 			-- SDK LoadString
 		external
-			"C [macro <wel.h>] (HINSTANCE, UINT, LPSTR, %
+			"C [macro %"wel.h%"] (HINSTANCE, UINT, LPSTR, %
 				%int): EIF_INTEGER"
 		alias
 			"LoadString"
+		end
+
+	cwin_get_key_name_text (virtual_key: INTEGER; lptstr: POINTER; nsize: INTEGER): BOOLEAN is
+			-- Return the string value of the key virtual key.
+		external
+			"C [macro %"wel.h%"] (LONG, LPTSTR, int): BOOLEAN"
+		alias
+			"GetKeyNameText"
 		end
 
 	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN is
@@ -233,7 +256,7 @@ feature {NONE} -- Externals
 	cwin_output_debug_string (s: POINTER) is
 			-- SDK OutputDebugString
 		external
-			"C [macro <wel.h>] (LPCSTR)"
+			"C [macro %"wel.h%"] (LPCSTR)"
 		alias
 			"OutputDebugString"
 		end
@@ -241,7 +264,7 @@ feature {NONE} -- Externals
 	cwin_get_system_directory (buffer: POINTER; size: INTEGER): INTEGER is
 			-- SDK GetSystemDirectory
 		external
-			"C [macro <wel.h>] (LPSTR, UINT): EIF_INTEGER"
+			"C [macro %"wel.h%"] (LPSTR, UINT): EIF_INTEGER"
 		alias
 			"GetSystemDirectory"
 		end
@@ -249,7 +272,7 @@ feature {NONE} -- Externals
 	cwin_get_windows_directory (buffer: POINTER; size: INTEGER): INTEGER is
 			-- SDK GetWindowsDirectory
 		external
-			"C [macro <wel.h>] (LPSTR, UINT): EIF_INTEGER"
+			"C [macro %"wel.h%"] (LPSTR, UINT): EIF_INTEGER"
 		alias
 			"GetWindowsDirectory"
 		end

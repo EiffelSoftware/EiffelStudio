@@ -1,0 +1,32 @@
+/*
+ #####    ####    ####   #        ####    #####  #####           #    #
+ #    #  #    #  #    #  #       #          #    #    #          #    #
+ #####   #    #  #    #  #        ####      #    #    #          ######
+ #    #  #    #  #    #  #            #     #    #####    ###    #    #
+ #    #  #    #  #    #  #       #    #     #    #   #    ###    #    #
+ #####    ####    ####   ######   ####      #    #    #   ###    #    #
+
+	Externals for class BOOL_STRING.
+*/
+
+#ifndef _boolstr_h_
+#define _boolstr_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern char *bl_str_set(char *a1, int s, int n);
+extern char *bl_str_and(char *a1, char *a2, char *a3, int s);
+extern char *bl_str_or(char *a1, char *a2, char *a3, int s);
+extern char *bl_str_xor(char *a1, char *a2, char *a3, int s);
+extern char *bl_str_not(char *a1, char *a2, int s);
+extern char *bl_str_shiftr(char *a1, char *a2, int s, int n);
+extern char *bl_str_shiftl(char *a1, char *a2, int s, int n);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+

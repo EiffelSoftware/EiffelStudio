@@ -13,7 +13,7 @@ inherit
 			encrypt
 		end
 
-creation
+create
 	make, make_with_key
 
 feature -- Encryption
@@ -21,7 +21,7 @@ feature -- Encryption
 	encrypt (s: STRING): STRING is
 			-- Padding done if length not multiple of 8.
 		do
-			Result := {DES_ENCODER} Precursor (s)
+			Result := Precursor {DES_ENCODER} (s)
 			convert_to_ascii (Result)
 		end
 

@@ -3453,6 +3453,12 @@ feature -- Main file generation
 			Main_file.generate_function_signature ("void", "main", True, Main_file,
 						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>);
 
+			Main_file.move (-6) -- ss MT: 5 = len("GTCX%N") in INDENT_FILE
+			Main_file.putstring ("%N#ifdef EIF_THREADS%N")
+
+			Main_file.putstring ("%Teif_thr_init_root();%N")
+			Main_file.putstring ("#endif%N{%N%TGTCX%N")
+
 			Main_file.putstring ("%
 				%%Tstruct ex_vect *exvect;%N%
 				%%Tjmp_buf exenv;%N%N%
@@ -3472,7 +3478,7 @@ feature -- Main file generation
 				%%Tif (prof_enabled) initprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
-				%%Texit(0);%N}%N");
+				%%Texit(0);%N%TEDCX%N}%N}%N"); -- ss MT
 
 			Main_file.close;
 		end;
@@ -3570,8 +3576,11 @@ feature -- Main file generation
 			Initialization_file.generate_function_signature ("void", "emain", True, Initialization_file,
 						<<"argc", "argv">>, <<"int", "char **">>);
 
+			Initialization_file.putstring ("#ifndef EIF_THREADS%N") -- ss MT
+
 			Initialization_file.putstring ("%
 				%%Textern char *root_obj;%N");
+			Initialization_file.putstring ("#endif%N") -- ss MT
 
 			if final_mode then
 					-- Set C variable `scount'.
@@ -3665,7 +3674,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("%Tserver_execute();%N");
 			end
 
-			Initialization_file.putstring ("}%N");
+			Initialization_file.putstring ("%TEDCX%N}%N"); -- ss MT
 
 			-- Generation of einit() and tabinit(). Only for workbench
 			-- mode.
@@ -3729,7 +3738,7 @@ feature -- Main file generation
 					-- Set the dle zeroc
 				Initialization_file.putstring (";%N%Tdle_zeroc = ");
 				Initialization_file.putint (dle_frozen_level);
-				Initialization_file.putstring (";%N}%N");
+				Initialization_file.putstring (";%N%TEDCX%N}%N"); -- MT
 			end;
 
 			Initialization_file.close;

@@ -360,6 +360,20 @@ feature -- Storing
 			Result := disk_content /= Void
 		end
 
+feature -- Reverse engineering details
+
+	is_reversed_engineered: BOOLEAN is
+			-- Is Current class reversed engineered?
+		do
+		end;
+
+	set_reversed_engineered is
+			-- Set `is_reversed_engineered' to True.
+		do
+		ensure
+			is_reversed_engineered: is_reversed_engineered
+		end
+
 feature {CASE_RECORD_INHERIT_INFO}
 
 	add_feature (s_feature_data: S_FEATURE_DATA; exp: EXPORT_I) is

@@ -19,16 +19,13 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		do
 			ise_button_make (button_name, a_parent);
-			focus_string := cmd.name;
+			set_focus_string (cmd.name)
 			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.name);
 			initialize_focus 
 		end
 
 feature -- Access
-
-	focus_string: STRING
-			-- String to display on the focus
 
 	symbol: PIXMAP is
 			-- Not needed

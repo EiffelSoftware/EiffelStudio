@@ -12,10 +12,15 @@ inherit
 	FORM_D
 		rename
 			make as top_shell_make
-		end;
-	EB_CONSTANTS;
-	EIFFEL_ENV;
+		end
+
+	EB_CONSTANTS
+
+	EIFFEL_ENV
+
 	COMMAND
+
+	WINDOW_ATTRIBUTES
 
 creation
 	make
@@ -28,6 +33,7 @@ feature {NONE} -- Initialization
 			top_shell_make (Interface_names.n_X_resource_name, a_parent);
 			set_title (Interface_names.t_Generation_options);
 			build_widgets
+			set_composite_attributes (Current)
 		end
 
 feature -- Basic operations
@@ -222,7 +228,7 @@ feature {NONE} -- Attributes
 	compile_sep,
 			-- Separator for compile and profiler form
 
-	profiler_sep: SEPARATOR;
+	profiler_sep: THREE_D_SEPARATOR;
 			-- Separator for profile and button form
 
 	ok_button,

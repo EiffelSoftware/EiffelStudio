@@ -11,10 +11,15 @@ inherit
 	FORM_D
 		rename
 			make as form_d_make
-		end;
+		end
+
 	EB_CONSTANTS
+
 	SHARED_TABS
+
 	COMMAND
+
+	WINDOW_ATTRIBUTES
 
 creation
 	make
@@ -29,12 +34,12 @@ feature {NONE} -- Initialization
 			tool := a_tool
 			form_d_make (Interface_names.n_X_resource_name, a_tool)
 			set_title (Interface_names.t_Profile_query_window)
-			set_size (30, 30);
 
 			!! all_subqueries.make
 			!! all_operators.make
 
 			build_interface
+			set_composite_attributes (Current)
 		ensure
 			tool_set: tool.is_equal (a_tool)
 		end
@@ -272,26 +277,30 @@ feature {NONE} -- Graphical User Interface
 			attach_left (button_form, 0);
 
 			query_form.attach_left (active_query_form, 1)
-			query_form.attach_top (active_query_form, 1)
-			query_form.attach_bottom (active_query_form, 1)
-			-- query_form.attach_left_widget (active_query_form, query_button_form, 1)
-			query_form.attach_top (query_button_form, 1)
-		 	query_form.attach_bottom (query_button_form, 1)
-			-- query_form.attach_left_widget (query_button_form, inactive_subqueries_form,  1)
-			query_form.attach_bottom (inactive_subqueries_form, 1)
+			query_form.attach_top (active_query_form, 0)
+			query_form.attach_bottom (active_query_form, 0)
+
+			query_form.attach_top (query_button_form, 0)
+		 	query_form.attach_bottom (query_button_form, 0)
+
+			query_form.attach_top (inactive_subqueries_form, 0)
 			query_form.attach_right (inactive_subqueries_form, 1)
+			query_form.attach_bottom (inactive_subqueries_form, 0)
+
 			query_form.attach_right_position (active_query_form, 40)
+
 			query_form.attach_left_position (query_button_form, 40)
 			query_form.attach_right_position (query_button_form, 60)
+
 			query_form.attach_left_position (inactive_subqueries_form, 60)
-			query_form.attach_top (inactive_subqueries_form, 0)
+
 
 			active_query_form.attach_left (active_query_label, 0)
 			active_query_form.attach_top (active_query_label, 5)
 			active_query_form.attach_right (active_query_label, 0)
 			active_query_form.attach_top_widget (active_query_label, active_query_window, 10)
 			active_query_form.attach_left (active_query_window, 0)
-			active_query_form.attach_bottom (active_query_window, 0)
+			active_query_form.attach_bottom (active_query_window, 5)
 			active_query_form.attach_right (active_query_window, 0)
 
 			query_button_form.attach_top (reactivate_label, 0)
@@ -321,7 +330,7 @@ feature {NONE} -- Graphical User Interface
 			inactive_subqueries_form.attach_right ( inactive_subqueries_label, 0 )
 			inactive_subqueries_form.attach_top_widget ( inactive_subqueries_label, inactive_subqueries_window, 10)
 			inactive_subqueries_form.attach_left ( inactive_subqueries_window, 0 )
-			inactive_subqueries_form.attach_bottom ( inactive_subqueries_window, 0 )
+			inactive_subqueries_form.attach_bottom ( inactive_subqueries_window, 5 )
 			inactive_subqueries_form.attach_right ( inactive_subqueries_window, 0 )
 
 			text_form.attach_top (text_label, 0);

@@ -190,6 +190,7 @@ feature -- Drawing area
 				if implementation /= Void then
 					state_list.set_selected (a_circle);
 				end;
+				main_panel.set_current_state (a_circle.data)
 				figures.set_selected (a_circle);
 				selected_figure := a_circle;
 				if selected_figure /= Void then
@@ -593,7 +594,7 @@ feature {NONE}
 			transition_list.set_single_selection;
 			state_list.set_single_selection;
 			drawing_sw.set_working_area (drawing_area);
-			drawing_area.set_background_color (Resources.drawing_area_color);
+			drawing_area.set_background_color (Resources.app_dr_area_color);
 			drawing_area.set_size (Resources.app_dr_area_width,
 							Resources.app_dr_area_height);
 			--add_sub_application_command.Create (Current);

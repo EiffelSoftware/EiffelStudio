@@ -110,7 +110,7 @@ inherit
 		redefine
 			interface
 		end
-	
+		
 create
 	make
 
@@ -244,6 +244,43 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			end
 			ev_children.go_to (l_cursor)
 		end
+		
+	resize_item_to_content (header_item: EV_HEADER_ITEM_IMP) is
+			-- Resize `header_item' width to fully display both `pixmap' and `text'.
+		require
+			header_item_not_void: header_item /= Void
+			header_item_parented_in_current: header_item.parent_imp = Current
+		local
+			desired_width: INTEGER
+			l_text: STRING
+			font_imp: EV_FONT_IMP
+			margin: INTEGER
+		do
+			margin := cwin_send_message_result_integer (wel_item, hdm_get_bitmap_margin, cwel_integer_to_pointer (0), cwel_integer_to_pointer (0))
+			l_text := header_item.text
+			if not l_text.is_empty then
+				if private_font /= Void then
+					font_imp ?= private_font.implementation
+					check
+						font_not_void: font_imp /= Void
+					end
+					desired_width := font_imp.string_width (l_text)
+				else
+					desired_width := private_wel_font.string_width (l_text)
+				end
+			end
+
+			if header_item.pixmap_imp /= Void then
+				if l_text.is_empty then
+					desired_width := desired_width + pixmaps_width
+				else
+					desired_width := desired_width + pixmaps_width + margin * 2
+				end
+			end
+			desired_width := desired_width + 18
+			header_item.set_width (desired_width)
+		end
+		
 	
 feature {NONE} -- Implementation
 

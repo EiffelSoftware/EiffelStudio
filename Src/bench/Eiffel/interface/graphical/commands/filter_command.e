@@ -15,7 +15,6 @@ inherit
 			init as make
 		end;
 	SHARED_FORMAT_TABLES;
-	SHARED_BENCH_RESOURCES;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as modified_warner_ok_press
@@ -50,7 +49,7 @@ feature -- Properties
 			file_name, dir_entry: STRING;
 			found: BOOLEAN
 		once
-			Result := resources.get_string (r_Filter_name, "PostScript");
+			Result := General_resources.filter_name.value;
 				-- Check whether that filter exists or not.
 			!!filter_dir.make (filter_path);
 			if filter_dir.exists and then filter_dir.is_readable then
@@ -74,12 +73,6 @@ feature -- Properties
 			if not found then
 				Result := ""
 			end
-		end;
-
-	shell_command_name: STRING is
-			-- Command name to be executed
-		once
-			Result := resources.get_string (r_Filter_command, "")
 		end;
 
 feature -- Closure
@@ -111,7 +104,7 @@ feature {NONE} -- Implementation
 					!! filter_window.make (Current);
 					mp.restore
 				end;
-				filter_window.call 
+				filter_window.call (Current)
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
@@ -149,7 +142,7 @@ feature {NONE} -- Implementation
 							save_to_file (new_text, filename)
 						end
 					end;
-					cmd_string := clone (shell_command_name);
+					cmd_string := clone (General_resources.filter_command.value);
 					if not cmd_string.empty then
 						cmd_string.replace_substring_all ("$target", filename);
 					end;
@@ -218,6 +211,5 @@ feature -- Access
 invariant
 
 	filter_name_not_void: filter_name /= Void;
-	shell_command_name: shell_command_name /= Void
 
 end -- class FILTER_COMMAND

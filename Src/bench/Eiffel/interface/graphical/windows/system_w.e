@@ -11,8 +11,6 @@ inherit
 
 	PROJECT_CONTEXT;
 	BAR_AND_TEXT
-		rename
-			attach_all as default_attach_all
 		redefine
 			hole, build_format_bar, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
@@ -21,25 +19,8 @@ inherit
 			process_class, process_classi, process_ace_syntax, compatible,
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window
-		end;
-	BAR_AND_TEXT
-		redefine
-			hole, build_format_bar, attach_all, build_widgets,
-			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			tool_name, editable, create_edit_buttons,
-			display, stone, stone_type, synchronise_stone, process_system,
-			process_class, process_classi, process_ace_syntax,
-			compatible, set_mode_for_editing, hide, editable_text_window,
-			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window
-		select
-			attach_all
+			set_read_only_text_window, realized
 		end
-
-creation
-
-	make_shell
 
 feature -- Properties
 
@@ -76,6 +57,19 @@ feature -- Access
 			Result := True
 		end;
 
+	changed: BOOLEAN is
+		do
+			Result := realized and then text_window.changed
+		end;
+
+	realized: BOOLEAN is
+			-- Is Current realized?
+		do
+			if eb_shell /= Void and then is_a_shell then
+				Result := eb_shell.realized
+			end
+		end
+
 feature -- Status setting
 
 	set_in_use (b: BOOLEAN) is
@@ -107,7 +101,7 @@ feature -- Update
 	process_system (s: SYSTEM_STONE) is
 			-- Process system stone.
 		do
-			if text_window.changed then
+			if changed then
 				showtext_frmt_holder.execute (s);
 			else
 				last_format.execute (s);
@@ -188,7 +182,14 @@ feature -- Update
 feature -- Graphical Interface
 
 	display is
+		local
+			ts: EB_TOP_SHELL
 		do
+			if not realized then
+				!! ts.make ("", project_tool.screen);
+				make_shell (ts);
+				ts.set_title (tool_name)
+			end;
 			if not realized then
 				set_default_format;
 				set_default_position;
@@ -206,8 +207,10 @@ feature -- Graphical Interface
 
 	hide is
 		do
-			eb_shell.hide;
-			set_in_use (false)
+			if realized then
+				eb_shell.hide;
+				set_in_use (false)
+			end
 		end;
 	
 feature {NONE} -- Implementation; Graphical Interface
@@ -219,7 +222,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
 			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
@@ -235,6 +237,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			save_as_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR
 		do
+
 			!! open_cmd.make (text_window);
 			!! open_button.make (open_cmd, edit_bar);
 			!! open_menu_entry.make (open_cmd, file_menu);
@@ -256,12 +259,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			!! change_font_cmd_holder.make_plain (change_font_cmd);
+			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
 			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			!! search_menu_entry.make (search_cmd, edit_menu);
@@ -279,50 +279,35 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!! command_bar.make (new_name, global_form);
-			build_command_bar;
+			build_command_menu;
 			fill_menus;
 			set_last_format (default_format);
 			attach_all
-		end;
-
-	attach_all is
-		do
-			default_attach_all;
-			global_form.detach_right (editable_text_window.widget);
-			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
-			if editable_text_window /= read_only_text_window then
-				global_form.detach_right (read_only_text_window.widget);
-				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
-			end;
-			global_form.attach_right (command_bar, 0);
-			global_form.attach_right_widget (command_bar, format_bar, 0);
-			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_bottom (command_bar, 0);
 		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
 			stat_cmd: SHOW_STATISTICS;
-			stat_button: EB_BUTTON;
+			stat_button: FORMAT_BUTTON;
 			stat_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			mod_cmd: SHOW_MODIFIED;
-			mod_button: EB_BUTTON;
+			mod_button: FORMAT_BUTTON;
 			mod_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			list_cmd: SHOW_CLUSTERS;
-			list_button: EB_BUTTON;
+			list_button: FORMAT_BUTTON;
 			list_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showtext_cmd: SHOW_TEXT;
-			showtext_button: EB_BUTTON;
+			showtext_button: FORMAT_BUTTON;
 			showtext_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showclass_cmd: SHOW_CLASS_LIST;
-			showclass_button: EB_BUTTON;
+			showclass_button: FORMAT_BUTTON;
 			showclass_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showindex_cmd: SHOW_INDEXING;
-			showindex_button: EB_BUTTON
+			showindex_button: FORMAT_BUTTON
 			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY;
 		do
+
 				-- First we create all the objects needed for the attachments.
 			!! showtext_cmd.make (text_window);
 			!! showtext_button.make (showtext_cmd, format_bar);
@@ -364,7 +349,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_left_widget (mod_button, showindex_button, 0);
 		end;
 
-	build_command_bar is
+	build_command_menu is
 		local
 			shell_cmd: SHELL_COMMAND;
 			shell_button: EB_BUTTON;
@@ -374,23 +359,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			case_storage_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR
 		do
-			!! shell_cmd.make (command_bar, text_window);
-			!! shell_button.make (shell_cmd, command_bar);
+			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
 			!! case_storage_cmd.make (text_window);
-			!! case_storage_button.make (case_storage_cmd, command_bar);
-			case_storage_button.set_action ("!c<Btn1Down>", case_storage_cmd, case_storage_cmd.control_click);
 			!! sep.make (new_name, special_menu);
 			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-			!! case_storage_cmd_holder.make (case_storage_cmd, case_storage_button, case_storage_menu_entry);
+			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
+			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
 
-			command_bar.attach_right (shell_button, 0);
-			command_bar.attach_left (shell_button, 0);
-			command_bar.attach_bottom (shell_button, 0);
-			command_bar.attach_left (case_storage_button, 0);
-			command_bar.attach_bottom_widget (shell_button, case_storage_button, 10)
+			edit_bar.attach_top (shell_button, 0);
+			edit_bar.attach_left_widget (hole_button, shell_button, 0)
 		end;
 
 feature {WINDOWS} -- Attributes
@@ -408,10 +389,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Attributes; Forms And Holes
 
-	command_bar: FORM;
-			-- Bar with the command buttons
-
-	hole: SYSTEM_cmd;
+	hole: SYSTEM_CMD;
 			-- Hole charaterizing current
 
 feature {NONE} -- Attributes; Commands

@@ -45,20 +45,16 @@ feature -- Access
 			Result := (v /= Void and then item = v)
 		end
 		
-	linear_representation: LINEAR [CLI_CELL [like item]] is
+	linear_representation: LINEAR [like item] is
 			-- Representation as a linear structure
 		local
-			l: LINKED_LIST [CLI_CELL [like item]]
-			l_cell: CLI_CELL [like item]
 			l_item: like item
 		do
-			create l.make
+			create {ARRAYED_LIST} Result.make (1)
 			l_item := item
 			if l_item /= Void then
-				create l_cell.put (l_item)
-				l.extend (l_cell)
+				Result.extend (l_item)
 			end
-			Result := l
 		end
 
 feature -- Status setting

@@ -4,30 +4,24 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_TYPE_SELECTOR_ITEM
 
 inherit
-	
-	EV_TREE_ITEM
-		redefine
-			make_with_text,
-			initialize
-		end
-		
+
 	INTERNAL
-		undefine
-			default_create, is_equal, copy
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
-		undefine
-			default_create, is_equal, copy
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_HISTORY
-		undefine
-			default_create, is_equal, copy
+		export
+			{NONE} all
 		end
 
 		-- We only inherit this to get access to the parent.
@@ -35,47 +29,32 @@ inherit
 		-- and do a reverse assignment onto a GB_TYPE_SELECTOR.
 		-- Which is better?
 	GB_SHARED_TOOLS
-		undefine
-			default_create, is_equal, copy
+		export
+			{NONE} all
 		end
 
 	GB_CONSTANTS
-		undefine
-			default_create, is_equal, copy
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_DIGIT_CHECKER
 		export
 			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
-create
-	make_with_text
-
+		
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
 			-- Create `Current', assign `a_text' to `text'
 			-- and "EV_" + `a_text' to `type'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			Precursor {EV_TREE_ITEM} (a_text)
-			type := a_text
-				-- We must now add the correct pixmap.
-			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (type.as_lower))
-		end
-
-	initialize is
-			-- Initialize `Current' and initialize pick and drop transport.
-		do
-			Precursor {EV_TREE_ITEM}
-			set_pebble_function (agent generate_transportable)
+		deferred
 		end
 
 feature -- Access
+
+	item: EV_ABSTRACT_PICK_AND_DROPABLE
+		-- Graphical representation of `Current' used in the type selector.
 
 	type: STRING
 		-- The real type represented by `Current'.
@@ -99,7 +78,7 @@ feature -- Access
 			--| way, as there are so many other cases that we would allow.
 			
 				-- Reset the drop actions.
-			drop_actions.wipe_out
+			item.drop_actions.wipe_out
 			
 			current_type := dynamic_type_from_string (type)	
 			can_drop := True
@@ -191,7 +170,7 @@ feature -- Access
 			end
 
 			if can_drop then
-				drop_actions.extend (agent replace_layout_item (?))	
+				item.drop_actions.extend (agent replace_layout_item (?))	
 			end
 		end
 
@@ -218,21 +197,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 	process_number_key is
 			-- Begin processing by `digit_checker', so that
 			-- it can be determined if a digit key is held down.
-		local
-			tree: EV_TREE
-			tree_node: EV_TREE_NODE_LIST
-		do
-			from
-				tree_node := Current
-			until
-				tree /= Void
-			loop
-				tree_node ?= tree_node.parent
-				tree ?= tree_node
-			end
-			digit_checker.begin_processing (tree)
+		deferred
 		end
-		
 		
 	replace_layout_item (an_object: GB_OBJECT) is
 			-- Replace `an_object' with a new object of
@@ -243,5 +209,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			create command.make (an_object, an_object.type, type)
 			command.execute
 		end
+
+invariant
+	type_not_void: type /= Void
+	item_not_void: item /= Void
 		
 end -- class GB_TYPE_SELECTOR_ITEM

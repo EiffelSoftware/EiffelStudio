@@ -12,9 +12,9 @@ deferred class FILE inherit
 	UNBOUNDED [CHARACTER];
 
 	SEQUENCE [CHARACTER]
-		redefine
+		undefine
 			prune
-		end;
+		end
 
 feature -- Access
 
@@ -32,75 +32,6 @@ feature -- Access
 			-- Make result available in `lastint'.
 		require
 			is_readable: file_readable;
-		deferred
-		end;
-
-	readreal is
-			-- Read a new real.
-			-- Make result available in `lastreal'.
-		require
-			is_readable: file_readable;
-		deferred
-		end;
-
-	readdouble is
-			-- Read a new double.
-			-- Make result available in `lastdouble'.
-		require
-			is_readable: file_readable;
-		deferred
-		end;
-
-	readchar is
-			-- Read a new character.
-			-- Make result available in `lastchar'.
-		require
-			is_readable: file_readable;
-		deferred
-		end;
-
-	readstream (nb_char: INTEGER) is
-			-- Read a string of at most `nb_char' bound characters
-			-- or until end of file is encountered.
-			-- Make result available in `laststring'.
-		require
-			is_readable: file_readable;
-		deferred
-		end;
-
-	open_read is
-			-- Open in read mode.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_reading: is_open_read;
-		end;
-
-	open_write is
-			-- Open in write mode and create a file of name `name'
-			-- if none exists.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_writing: is_open_write;
-			file_exists: exists;
-		end;
-
-	open_append is
-			-- Open in append mode and create a file of name `name'
-			-- if none exists.
-		require
-			is_closed: is_closed;
-		deferred
-		ensure
-			opened_for_appending: is_open_append;
-			file_exists: exists;
-		end;
-
-	close is
-			-- Close file.
 		deferred
 		end;
 
@@ -189,7 +120,7 @@ feature -- Status report
 			-- Does (physical) file exist?
 		deferred
 		ensure
-			--mode = old mode
+			mode = old mode
 		end;
 
 	is_readable: BOOLEAN is
@@ -263,6 +194,44 @@ feature -- Status report
 	full: BOOLEAN is false;
 			-- Is structure filled to capacity?
 
+feature -- Status setting
+
+	open_read is
+			-- Open in read mode.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_reading: is_open_read;
+		end;
+
+	open_write is
+			-- Open in write mode and create a file of name `name'
+			-- if none exists.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_writing: is_open_write;
+			file_exists: exists;
+		end;
+
+	open_append is
+			-- Open in append mode and create a file of name `name'
+			-- if none exists.
+		require
+			is_closed: is_closed;
+		deferred
+		ensure
+			opened_for_appending: is_open_append;
+			file_exists: exists;
+		end;
+
+	close is
+			-- Close file.
+		deferred
+		end;
+
 feature -- Removal
 
 	delete is
@@ -281,6 +250,41 @@ feature -- Removal
 		ensure
 			file_renamed: name = fn;
 			file_closed: is_closed
+		end;
+
+feature -- Input
+
+	readreal is
+			-- Read a new real.
+			-- Make result available in `lastreal'.
+		require
+			is_readable: file_readable;
+		deferred
+		end;
+
+	readdouble is
+			-- Read a new double.
+			-- Make result available in `lastdouble'.
+		require
+			is_readable: file_readable;
+		deferred
+		end;
+
+	readchar is
+			-- Read a new character.
+			-- Make result available in `lastchar'.
+		require
+			is_readable: file_readable;
+		deferred
+		end;
+
+	readstream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file is encountered.
+			-- Make result available in `laststring'.
+		require
+			is_readable: file_readable;
+		deferred
 		end;
 
 feature {NONE} -- Inapplicable
@@ -302,7 +306,7 @@ feature {NONE} -- Inapplicable
 		do
 		ensure then
 			item = v;
-		  	--count = old count
+		  	count = old count
 		end;
 
 	prunable: BOOLEAN is
@@ -318,12 +322,12 @@ feature {NONE} -- Inapplicable
 		end;
 
 	prune	(v: like item) is
-			-- Remove `v'.
+			-- Remove an occurrence of `v' if any
 		require else
 			prunable: file_prunable
 		do
-		ensure 	then
-		  	--count <= old count
+		ensure then
+		  	count <= old count
 		end;
 
 feature {FILE} -- Implementation

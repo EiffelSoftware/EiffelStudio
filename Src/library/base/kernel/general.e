@@ -32,8 +32,8 @@ feature -- Access
 feature -- Status report
 
 	consistent (other: like Current): BOOLEAN is
-			-- Is object in a consistent state so that others
-			-- can be copied onto it? (Default answer: yes).
+			-- Is object in a consistent state so that `object'
+			-- may be copied onto it? (Default answer: yes).
 		do
 			Result := true
 		end;
@@ -283,8 +283,6 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-
-invariant
 
 end -- class GENERAL
 

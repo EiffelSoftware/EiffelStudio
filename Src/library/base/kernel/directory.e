@@ -135,7 +135,7 @@ feature -- Measurement
 feature -- Conversion
 
 
-	sequential_representation: ARRAYED_LIST [STRING] is
+	linear_representation: ARRAYED_LIST [STRING] is
 			-- The entries, in sequential format.
 		local
 			dir_temp: DIRECTORY;
@@ -174,6 +174,14 @@ feature -- Status report
 			Result := file_exists ($external_name)
 		end;
 
+
+feature -- Obsolete
+
+	sequential_representation: ARRAYED_LIST [STRING] is
+				obsolete "Use ``linear_representation'' instead"
+		do
+			Result := linear_representation
+		end;
 
 feature {DIRECTORY} -- Implementation
 

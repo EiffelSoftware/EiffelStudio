@@ -48,56 +48,6 @@ feature -- Access
 			end;
 		end;
 
-	readint is
-			-- Read a new integer from standard input.
-		do
-			input.readint
-		end;
-
-	readreal is
-			-- Read a new real from standard input.
-		do
-			input.readreal
-		end;
-
-	readdouble is
-			-- Read a new double from standard input.
-		do
-			input.readdouble
-		end;
-
-	readline is
-			-- Read a line from standard input.
-		do
-			input.readline
-		end;
-
-	readstream (nb_char: INTEGER) is
- 			-- Read a string of at most `nb_char' bound characters
-			-- from standard input.
-		do
-			input.readstream (nb_char)
-		end;
-
-	readword is
-			-- Read a new word from standard input.
-		do
-			input.readword
-		end;
-
-	readchar is
-			-- Read a new character from standard input.
-		do
-			input.readchar
-		end;
-
-
-	next_line is
-			-- Move to next input line on standard input.
-		do
-			input.next_line
-		end;
-
 feature -- Status report
 
 	lastchar: CHARACTER is
@@ -191,6 +141,58 @@ feature -- Element change
 			-- Write line feed at end of default output.
 		do
 			file_tnwl (standard_default.file_pointer)
+		end;
+
+feature -- Input
+
+	readint is
+			-- Read a new integer from standard input.
+		do
+			input.readint
+		end;
+
+	readreal is
+			-- Read a new real from standard input.
+		do
+			input.readreal
+		end;
+
+	readdouble is
+			-- Read a new double from standard input.
+		do
+			input.readdouble
+		end;
+
+	readline is
+			-- Read a line from standard input.
+		do
+			input.readline
+		end;
+
+	readstream (nb_char: INTEGER) is
+ 			-- Read a string of at most `nb_char' bound characters
+			-- from standard input.
+		do
+			input.readstream (nb_char)
+		end;
+
+	readword is
+			-- Read a new word from standard input.
+		do
+			input.readword
+		end;
+
+	readchar is
+			-- Read a new character from standard input.
+		do
+			input.readchar
+		end;
+
+
+	next_line is
+			-- Move to next input line on standard input.
+		do
+			input.next_line
 		end;
 
 feature {NONE} -- Implementation

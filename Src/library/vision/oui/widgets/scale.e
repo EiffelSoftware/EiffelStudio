@@ -324,7 +324,7 @@ feature
 		require
 			exists: not destroyed;
 		do 
-			implementation.show_value (flag);
+			implementation.set_value_shown (flag);
 		end;
 
     is_value_shown: BOOLEAN is 

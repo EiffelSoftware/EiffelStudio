@@ -54,6 +54,13 @@ feature
 			Result := False
 		end;
 
+feature -- Default event
+
+	default_event: BUT_ACT_EV is
+		do
+			Result := but_act_ev
+		end
+
 feature {NONE}
 
 	add_widget_callbacks is

@@ -79,6 +79,13 @@ feature
 			Result := menu_c = Void
 		end
 
+feature -- Default event
+
+	default_event: VALUE_CHANGED_EV is
+		do
+			Result := value_changed_ev
+		end
+
 feature {CONTEXT}
 
 	context_initialization (context_name: STRING): STRING is

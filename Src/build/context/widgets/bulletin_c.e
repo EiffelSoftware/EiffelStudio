@@ -30,6 +30,13 @@ feature
 
 	widget: EB_BULLETIN_EXT
 
+feature -- Default event
+
+	default_event: MOUSE_ENTER_EV is 
+		do
+			Result:= mouse_enter_ev
+		end
+
 feature {NONE}
 
 	namer: NAMER is

@@ -62,6 +62,13 @@ feature
 
 	widget: SCROLLABLE_LIST;
 
+feature -- Default event
+
+	default_event: SELECTION_EV is
+		do
+			Result := selection_ev
+		end
+
 feature {NONE}
 
 	namer: NAMER is

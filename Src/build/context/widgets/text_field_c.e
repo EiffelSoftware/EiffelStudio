@@ -40,6 +40,12 @@ feature
 
 	widget: TEXT_FIELD
 
+feature -- Default event
+
+	default_event: KEY_RET_EV is
+		do
+			Result := key_return_ev
+		end
 
 feature {NONE}
 

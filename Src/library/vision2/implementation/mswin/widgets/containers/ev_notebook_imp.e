@@ -302,25 +302,6 @@ feature -- Element change
 			end
 		end
 
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite. In this container, `child' is the
-			-- child of the container whose page is currently selected.
-		do
-			child_imp.hide
-		end
-
-	remove_child (a_child: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of
-			-- the container.
-		local
-			an_index: INTEGER
-		do
-			an_index := get_child_index (a_child)
-			delete_item (an_index - 1)
-			a_child.set_parent (Void)
-			notify_change (2 + 1)
-		end
-
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
@@ -852,6 +833,10 @@ feature {NONE} -- Implementation
 			wel_win: WEL_WINDOW
 			v_imp: EV_WIDGET_IMP
 		do
+				-- Should `v' be a pixmap,
+				-- promote implementation to EV_WIDGET_IMP.
+			v.implementation.on_parented
+
 			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v_imp /= Void
@@ -894,6 +879,25 @@ feature {NONE} -- Implementation
 			delete_item (i - 1)
 			v_imp.wel_set_parent (Default_parent)
 			enable_notebook_assertions
+			notify_change (2 + 1)
+		end
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite. In this container, `child' is the
+			-- child of the container whose page is currently selected.
+		do
+			child_imp.hide
+		end
+
+	remove_child (a_child: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		local
+			an_index: INTEGER
+		do
+			an_index := get_child_index (a_child)
+			delete_item (an_index - 1)
+			a_child.set_parent (Void)
 			notify_change (2 + 1)
 		end
 
@@ -980,6 +984,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/14 21:32:51  brendel
+--| Fixed insert_i_th for PIXMAP's.
+--|
 --| Revision 1.51  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

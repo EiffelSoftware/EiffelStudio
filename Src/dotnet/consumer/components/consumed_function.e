@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; ret: like return_type;
+	make (en, dn, den: STRING; args: like arguments; ret: like return_type;
 			froz, static, defer, inf, pref, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
@@ -29,11 +29,13 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
+			non_void_dotnet_eiffel_name: den /= Void
+			valid_dotnet_eiffel_name: not den.is_empty
 			non_void_arguments: args /= Void
 			non_void_return_type: ret /= Void
 			a_type_not_void: a_type /= Void
 		do
-			method_make (en, dn, args, froz, static, defer, pub, ns, virt, poe, a_type)
+			method_make (en, dn, den, args, froz, static, defer, pub, ns, virt, poe, a_type)
 			r := ret
 			if inf then
 				f := f | feature {FEATURE_ATTRIBUTE}.Is_infix
@@ -44,6 +46,7 @@ feature {NONE} -- Initialization
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
+			dotnet_eiffel_name_set: equal (dotnet_eiffel_name, den)
 			arguments_set: arguments = args
 			return_type_set: return_type = ret
 			is_frozen_set: is_frozen = froz

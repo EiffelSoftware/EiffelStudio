@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_arguments, arguments
+			has_arguments, arguments, q, dotnet_eiffel_name
 		end
 create
 	make,
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; froz, static, defer, pub, ns, virt, poe: BOOLEAN;
+	make (en, dn, den: STRING; args: like arguments; froz, static, defer, pub, ns, virt, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
 			-- Initialize consumed method.
@@ -28,10 +28,15 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
+			non_void_dotnet_eiffel_name: den /= Void
+			valid_dotnet_eiffel_name: not den.is_empty
 			non_void_arguments: args /= Void
 			a_type_not_void: a_type /= Void
 		do
 			member_make (en, dn, pub, a_type)
+			if not den.is_equal (en) then
+				q := den
+			end
 			a := args
 			if froz or not virt then
 				f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
@@ -54,6 +59,7 @@ feature {NONE} -- Initialization
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
+			dotnet_eiffel_name_set: equal (dotnet_eiffel_name, den)
 			arguments_set: arguments = args
 			is_frozen_set: is_frozen = froz
 			is_static_set: is_static = static
@@ -81,6 +87,7 @@ feature {NONE} -- Initialization
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = en
+			donet_eiffel_name_set: equal (dotnet_eiffel_name, en)
 			is_frozen_set: is_frozen = True
 			is_static_set: is_static = True
 			is_deferred_set: is_deferred = False
@@ -100,6 +107,17 @@ feature -- Access
 			Result := a
 		end
 
+	dotnet_eiffel_name: STRING is
+			-- Eiffel entity name without overloading resolved.
+		do
+			if q = Void then
+					-- If `q' is not set then it is identical to the `eiffel_name'.
+				Result := e
+			else
+				Result := q
+			end
+		end
+
 feature -- Status report
 
 	has_arguments: BOOLEAN is
@@ -112,6 +130,9 @@ feature {NONE} -- Access
 
 	a: like arguments
 			-- Internal data for `arguments'.
+
+	q: like dotnet_eiffel_name
+			-- Internal data for `dotnet_eiffel_name'.
 
 invariant
 	non_void_arguments: arguments /= Void

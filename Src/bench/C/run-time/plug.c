@@ -82,8 +82,9 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 	/* 
 	 * Fill the array
 	 */
-	for (i=0;i<argc;i++) {
+	for (i=0; i<argc; i++) {
 		((EIF_REFERENCE *) sp)[i] = makestr(argv[i], strlen(argv[i]));
+		RTAS_OPT (((EIF_REFERENCE *)sp)[i], i, sp);
 	}
 
 	RT_GC_WEAN_N(2);		/* Remove protection for the area and the array */

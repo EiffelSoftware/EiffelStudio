@@ -84,6 +84,7 @@ feature -- Element change
 				!! exception
 				exception.raise ("Server execution failed")
 			else
+				print (status.last_hresult)
 				!! exception
 				exception.raise ("Could not initialize server")
 			end

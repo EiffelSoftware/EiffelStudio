@@ -81,68 +81,87 @@ feature {NONE} -- Implementation
 	build_ace_file is
 			-- Generate the ace file for the project
 			-- dependent in information in `system_status'.
+			-- Note that For Visual Studio, we need to
+			-- generate a debug and a release ace file.
 		local
 			platform_ace_file_name: FILE_NAME
-			project_location, ace_file_name: FILE_NAME
-			ace_template_file, ace_output_file: RAW_FILE
-			temp_string: STRING
-			i, j: INTEGER
+			debug_ace_file, release_ace_file: FILE_NAME
+			project_location: FILE_NAME
 		do
 			set_progress (0.1)
 			if system_status.is_wizard_system then
-				create platform_ace_file_name.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
-				platform_ace_file_name.extend ("templates")
-				platform_ace_file_name.extend ("windows")
-				platform_ace_file_name.extend ("ace_template.ace")
+				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
+				debug_ace_file.extend ("templates")
+				debug_ace_file.extend ("windows")
+				release_ace_file := clone (debug_ace_file)
+				debug_ace_file.extend ("debug.ace")
+				release_ace_file.extend ("release.ace")
+				generate_ace_file (release_ace_file, "release.ace")
+				generate_ace_file (debug_ace_file, "debug.ace")
 			else
 				if Eiffel_platform.is_equal ("windows") then
 					platform_ace_file_name := clone (windows_ace_file_name)
 				else
 					platform_ace_file_name := clone (unix_ace_file_name)
 				end
-			end
-			create project_location.make_from_string (system_status.current_project_settings.project_location)
-			
-			create ace_template_file.make_open_read (platform_ace_file_name)
-			create ace_text.make (ace_template_file.count)
-			ace_template_file.start
-			ace_template_file.read_stream (ace_template_file.count)
-			ace_text := ace_template_file.last_string
-			ace_template_file.close
-			
-				-- | FIXME
-				-- This code only supports two project location tags per ace file.
-				-- This should be made more general.
-			i := ace_text.substring_index (project_location_tag, 1)
-			j := ace_text.substring_index (project_location_tag, i + 1)
-			
-			ace_text.replace_substring_all (project_location_tag, "")			
-			ace_text.insert_string (project_location, i)
-			temp_string := project_location
-			if j >0 then
-				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
+				generate_ace_file (platform_ace_file_name, "build_ace.ace")
 			end
 			
-				-- Now add the project_name. Note that we add double quotes around the name.
-				-- This allows use to use project names that clash with ace file settings,
-				-- for example, library is an invalid project name without double quotes
-				
-			add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
-			
-				-- Now add the application class name.
-			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
-			
-			ace_file_name := clone (generated_path)
-			ace_file_name.extend ("build_ace.ace")
-					-- Store `ace_text'.
-			create ace_output_file.make (ace_file_name)
-			if not ace_output_file.exists or project_settings.rebuild_ace_file then
-				ace_output_file.open_write
-				ace_output_file.start
-				ace_output_file.putstring (ace_text)
-				ace_output_file.close
-			end
 		end
+		
+		generate_ace_file (template_file_name, file_name: STRING) is
+				-- Generate a new ace file from template `template_file_name', and save it
+				-- as `file_name'. `template_file_name' is full path, but `file_name' is
+				-- just name of ace file.
+			local
+				project_location, temp_string: STRING
+				ace_file_name: FILE_NAME
+				ace_template_file, ace_output_file: RAW_FILE
+				i, j: INTEGER
+			do
+				create project_location.make_from_string (system_status.current_project_settings.project_location)
+			
+				create ace_template_file.make_open_read (template_file_name)
+				create ace_text.make (ace_template_file.count)
+				ace_template_file.start
+				ace_template_file.read_stream (ace_template_file.count)
+				ace_text := ace_template_file.last_string
+				ace_template_file.close
+				
+					-- | FIXME
+					-- This code only supports two project location tags per ace file.
+					-- This should be made more general.
+				i := ace_text.substring_index (project_location_tag, 1)
+				j := ace_text.substring_index (project_location_tag, i + 1)
+				
+				ace_text.replace_substring_all (project_location_tag, "")			
+				ace_text.insert_string (project_location, i)
+				temp_string := project_location
+				if j >0 then
+					ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
+				end
+				
+					-- Now add the project_name. Note that we add double quotes around the name.
+					-- This allows use to use project names that clash with ace file settings,
+					-- for example, library is an invalid project name without double quotes
+					
+				add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
+				
+					-- Now add the application class name.
+				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+				
+				ace_file_name := clone (generated_path)
+				ace_file_name.extend (file_name)
+						-- Store `ace_text'.
+				create ace_output_file.make (ace_file_name)
+				if not ace_output_file.exists or project_settings.rebuild_ace_file then
+					ace_output_file.open_write
+					ace_output_file.start
+					ace_output_file.putstring (ace_text)
+					ace_output_file.close
+				end
+			end
+			
 		
 		
 		build_application_file is

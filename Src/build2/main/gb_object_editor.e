@@ -304,9 +304,11 @@ feature {NONE} -- Implementation
 			separator: EV_HORIZONTAL_SEPARATOR
 			label: EV_LABEL
 			current_window_parent: EV_WINDOW
+			locked_in_here: BOOLEAN
 		do
 			current_window_parent := parent_window (Current)
-			if current_window_parent /= Void then
+			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+				locked_in_here := True
 				current_window_parent.lock_update	
 			end
 			attribute_editor_box.wipe_out
@@ -374,7 +376,7 @@ feature {NONE} -- Implementation
 				end
 				supported_types.forth
 			end
-			if current_window_parent /= Void then
+			if current_window_parent /= Void and locked_in_here then
 				current_window_parent.unlock_update	
 			end
 		end

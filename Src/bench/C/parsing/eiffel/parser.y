@@ -126,6 +126,7 @@ extern char token_str[];
 %token		TE_LOOP;
 %token		TE_OBSOLETE;
 %token		TE_ONCE;
+%token		TE_PRECURSOR;
 %token		TE_PREFIX;
 %token		TE_REDEFINE;
 %token		TE_RENAME;
@@ -172,6 +173,7 @@ Call_on_current Call_on_feature Feature_call Remote_call Parameters
 Expression_constant Client_list
 Call_on_feature_access Feature_access Class_invariant Free_operator
 Call_on_expression Inspect_default
+Call_on_precursor A_precursor 
 
 %type <value> Sign Pushing_id Infix_operator Prefix_operator New_feature Feature_name
 Infix Prefix New_feature_list Set_position
@@ -190,8 +192,7 @@ Class_declaration:
 	Formal_generics Obsolete Inheritance Creators Features Class_invariant TE_END
 		{
 			/* node is set at the Eiffel level for root class */
-			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,separate,$1,$6,$7,$8,$9,$10,$11,click_list_new(),
-start_position);
+			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,separate,$1,$6,$7,$8,$9,$10,$11,click_list_new(), start_position);
 		}
 	;
 
@@ -217,24 +218,25 @@ Indexing:				/* empty */
 
 Index_list:				Index_clause
 							{list_push($1);}
-	|					Index_list ASemi Index_clause
-							{list_push($3);}
+	|					Index_list Index_clause
+							{list_push($2);}
 	;
 
-Index_clause:			Index {list_init();} Index_terms
+Index_clause:			Index {list_init();} Index_terms ASemi
 							{$$ = create_node2(INDEX_AS,$1,list_new(CONSTRUCT_LIST_AS));}
 	;
 
-Index:					/* empty */
-							{$$ = NULL;}
-	|					Identifier TE_COLON
+Index:					Identifier TE_COLON
 							{$$ = $1;}
+	|					  
+							{$$ = NULL;}
 	;
 
 Index_terms:			Index_value
 							{list_push($1);}
 	|					Index_terms TE_COMMA Index_value
 							{list_push($3);}
+	|					TE_SEMICOLON
 	;
 
 Index_value:			Identifier
@@ -324,8 +326,8 @@ Feature_declaration_list:	/* empty */
 	|						Feature_declaration_list Feature_declaration
 								{list_push($2);}
 	;
-ASemi:	TE_SEMICOLON
-	|	/* empty */
+ASemi:	/* empty */
+	|	TE_SEMICOLON
 	;
 
 Feature_declaration:
@@ -1099,6 +1101,10 @@ Call:						A_feature
 								{$$ = create_node1(INSTR_CALL_AS,$1);}
 	|						Call_on_expression
 								{$$ = create_node1(INSTR_CALL_AS,$1);}
+	|						A_precursor
+								{$$ = create_node1(INSTR_CALL_AS,$1);}
+	|						Call_on_precursor
+								{$$ = create_node1(INSTR_CALL_AS,$1);}
 	;
 
 Check:						{$<value>$ = start_position; } TE_CHECK Assertion TE_END
@@ -1212,6 +1218,10 @@ Feature_call:				Call_on_current
 								{$$ = $1;}
 	|						Call_on_expression
 								{$$ = $1;}
+	|						A_precursor
+								{$$ = $1;}
+	|						Call_on_precursor
+								{$$ = $1;}
 	;
 
 Call_on_current:			TE_CURRENT TE_DOT Remote_call
@@ -1228,6 +1238,18 @@ Call_on_feature:			A_feature TE_DOT Remote_call
 
 Call_on_expression:			TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
 								{$$ = create_node2(NESTED_EXPR_AS,$2,$5);}
+	;
+
+Call_on_precursor:			A_precursor TE_DOT Remote_call
+								{$$ = create_node2(NESTED_AS,$1,$3);}
+	;
+
+A_precursor:				TE_PRECURSOR Parameters
+								{$$ = create_node2(PRECURSOR_AS,NULL,$2);}
+	|						TE_LCURLY Identifier TE_RCURLY TE_PRECURSOR Parameters
+								{$$ = create_node2(PRECURSOR_AS,$2,$5);}
+	|						TE_LCURLY TE_LCURLY Identifier TE_RCURLY TE_RCURLY TE_PRECURSOR Parameters
+								{$$ = create_node2(PRECURSOR_AS,$3,$7);}
 	;
 
 Remote_call:				Call_on_feature_access

@@ -58,6 +58,7 @@ obsolete,		TE_OBSOLETE
 old,			TE_OLD
 once,			TE_ONCE
 or,				TE_OR
+precursor,		TE_PRECURSOR
 prefix,			TE_PREFIX
 #real,			0
 redefine,		TE_REDEFINE

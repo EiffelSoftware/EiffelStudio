@@ -41,6 +41,7 @@ rt_private struct hash hclone;			/* Cloning hash table */
 rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Recursive cloning */
 rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep);		/* Expanded reference update */
 rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Duplication with aging tests */
+rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for special object */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -52,18 +53,21 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 	/* Clone an of Eiffel object `source'. Assumes that source is not a
 	 * special object.
 	 */
-	
-	return emalloc(HEADER(source)->ov_flags & EO_TYPE);
+	register uint32 flags = HEADER(source)->ov_flags;	
+	if (flags & EO_SPEC) 
+		return spclone (source);
+	else
+		return emalloc(flags & EO_TYPE);
 }
 
-rt_public EIF_REFERENCE spclone(EIF_REFERENCE source)
+rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source
 	 * is a special object.
 	 */
 	
 	EIF_GET_CONTEXT
-	register4 EIF_REFERENCE result;				/* Clone pointer */
+	register4 EIF_REFERENCE result;		/* Clone pointer */
 	register1 union overhead *zone;		/* Pointer on source header */
 	register2 uint32 flags;				/* Source object flags */
 	register3 uint32 size;				/* Source object size */
@@ -79,9 +83,9 @@ rt_public EIF_REFERENCE spclone(EIF_REFERENCE source)
 	size = zone->ov_size & B_SIZE;
 	result = spmalloc(size);			/* Special object */
 
-	/* Keep the reference flag and the composite one and the type */
+		/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
-	/* Keep the count and the element size */
+		/* Keep the count and the element size */
 	r_ref = result + size - LNGPAD_2;
 	s_ref = source + size - LNGPAD_2;
 	*(long *) r_ref = *(long *) s_ref;

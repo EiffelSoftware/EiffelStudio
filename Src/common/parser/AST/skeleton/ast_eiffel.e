@@ -1,16 +1,15 @@
 indexing
-
-	description: 
-		"Abstract syntax tree node.";
+	description: "Abstract syntax tree node.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class AST_EIFFEL
 
 inherit
+	AST_YACC
 
-	AST_YACC;
-	SHARED_ERROR_HANDLER;
+	SHARED_ERROR_HANDLER
+
 	SHARED_TEXT_ITEMS
 
 feature -- Access

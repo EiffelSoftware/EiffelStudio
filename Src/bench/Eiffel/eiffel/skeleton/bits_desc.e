@@ -60,7 +60,6 @@ feature
 			-- Sk value
 		do
 			Result := Sk_bit + value
---			Result := 671088640 + value
 		end;
 
 	trace is

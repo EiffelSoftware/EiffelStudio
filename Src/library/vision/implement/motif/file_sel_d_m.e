@@ -13,10 +13,7 @@ inherit
 
 	FILE_SEL_D_I;
 
-	DIALOG_M
-		redefine
-			screen_object
-		end;
+	DIALOG_M;
 
 	FILE_SELEC_M
 		rename
@@ -26,9 +23,9 @@ inherit
 			lower, raise, 
 			show, hide, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			clean_up, is_stackable, file_selection_make
+			created_dialog_automatically, is_stackable, file_selection_make
 		redefine
-			screen_object
+			parent
 		select
 			file_select_m_make_no_auto_unmanage
 		end;
@@ -49,11 +46,11 @@ inherit
 			pattern as mel_pattern,
 			set_directory as mel_set_directory,
 			directory as mel_directory,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			raise, lower, show, hide
 		redefine
-			screen_object
+			parent
 		end
 
 creation
@@ -64,32 +61,32 @@ feature {NONE} -- Initialization
 
 	make (a_file_select_dialog: FILE_SEL_D; oui_parent: COMPOSITE) is
 			-- Create a motif file selection dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_file_selection_d_make (a_file_select_dialog.identifier,
-					mel_parent (a_file_select_dialog, widget_index))
+			mel_file_selection_d_make (a_file_select_dialog.identifier, mc);
 			a_file_select_dialog.set_dialog_imp (Current);
-			action_target := screen_object;
-			initialize (dialog_shell)
+			initialize (parent)
 		end;
 
 feature -- Access
 
-	screen_object: POINTER
-			-- Associated C widget pointer
+    parent: MEL_DIALOG_SHELL
+            -- Dialog shell of the working dialog
 
 feature -- Status setting
 
 	set_open_file is
-			-- Set dialog to open file dialog 
+			-- Set dialog to open file dialog.
 		do
 		end
 
-
 	set_save_file is
-            -- Set dialog to save file dialog 
-        do
-        end
+			-- Set dialog to save file dialog.
+		do
+		end
 
 end -- class FILE_SEL_D_M
 

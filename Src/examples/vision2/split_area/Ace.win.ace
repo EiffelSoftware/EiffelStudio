@@ -1,0 +1,40 @@
+system
+	test
+
+root
+	SA_TEST: make_and_launch
+
+default
+	assertion (all)
+
+cluster
+
+dev:							"c:\work"
+
+root_cluster:					"."
+
+all wel(dev):					"$\wel"
+
+all event (dev):				"$\event"
+
+all vision2(dev):				"$\vision2"
+	exclude
+		"gtk" "obsolete" "EIFGEN" "tmp"
+	end
+
+all base(dev):					"$EIFFEL4\library\base"
+	exclude
+		"table_eiffel3"
+	end
+
+external
+
+        include_path:
+			"c:\work\wel\spec\windows\include",
+			"c:\work\vision2\spec\include"
+        object:
+			"c:\work\wel\spec\$(COMPILER)\lib\wel.lib",
+			"c:\work\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			"c:\work\vision2\spec\$(COMPILER)\lib\zlib.lib",
+			"c:\work\vision2\spec\$(COMPILER)\lib\vision2.lib"
+end

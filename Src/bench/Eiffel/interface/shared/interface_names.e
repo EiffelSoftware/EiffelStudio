@@ -92,7 +92,7 @@ feature -- Icon ids for Windows
 	i_Explain_id: INTEGER is 4;
 	i_Class_id: INTEGER is 5;
 	i_System_id: INTEGER is 6;
-	i_Dll_id: INTEGER is 7;
+	i_dynamic_lib_id: INTEGER is 7;
 
 feature -- Accelerator, focus label and menu name
 
@@ -184,7 +184,7 @@ feature -- Accelerator, focus label and menu name
 	m_List_targets: STRING is			"&List targets%TCtrl+L";
 	f_New_class: STRING is				"New class tool";
 	m_New_class: STRING is				"New &class tool";
-	m_New_dll: STRING is				"New &dll tool";
+	m_New_dynamic_lib: STRING is		"New &Dynamic library tool";
 	f_New_explain: STRING is			"New explain tool";
 	m_New_explain: STRING is			"New &explain tool";
 	f_New_object: STRING is				"New object tool";
@@ -311,7 +311,7 @@ feature -- Menu mnenomics
 
 	m_Category: STRING is				"&Category";
 	m_Class_tools: STRING is			"&Class tools";
-	m_Dll_tools: STRING is				"&Dll tools";
+	m_Dynamic_lib_tools: STRING is				"&Dynamic library tools";
 	m_Commands: STRING is				"&Commands";
 	m_Compile: STRING is				"&Compile";
 	m_C_Compilation: STRING is			"C Com&pilation";
@@ -361,7 +361,7 @@ feature -- Widget names
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class";
-	s_Dll_stone: STRING is				"Reload_Dll";
+	s_Dynamic_lib_stone: STRING is		"Dynamic Library Specifications";
 	s_Explain_stone: STRING is			"Explanation";
 	s_Object_stone: STRING is			"Object";
 	s_Routine_stone: STRING is			"Feature";
@@ -435,7 +435,7 @@ feature -- Title part
 	t_Shell_w: STRING is				"Shell command";
 	t_Short_form_of: STRING is			"Short form of class ";
 	t_Specify_ace: STRING is			"Specify ace";
-	t_Specify_dll: STRING is			"Specify eiffel_def file";
+	t_Specify_dynamic_lib: STRING is	"Choose your Eiffel Definition file for the Dynamic Library";
 	t_Stoppoints_of: STRING is			"Stop points of ";
 	t_Slice_w: STRING is				"Special object slice";
 	t_Statistics_of: STRING is			"Statistics of system ";

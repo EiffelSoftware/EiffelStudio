@@ -129,9 +129,8 @@ feature {NONE} -- Implementation
 					if Eiffel_project.successful then
 							-- If a freezing already occured (due to a new external
 							-- or new derivation of SPECIAL), no need to freeze again.
-						tool.set_icon_name (Eiffel_system.name)
 						title := clone (Interface_names.t_Project)
-						title.append (": ")
+						title.append (" : ")
 						title.append (Project_directory_name)
 						tool.set_title (title)
 						if Eiffel_project.save_error then
@@ -208,6 +207,16 @@ feature {NONE} -- Implementation
 				system_tool.set_default_format
 				system_tool.synchronize
 			end
+
+			if
+				is_dynamic_lib_tool_created and then
+				dynamic_lib_tool.realized and then
+				dynamic_lib_tool.shown
+			then
+				dynamic_lib_tool.set_default_format
+				dynamic_lib_tool.synchronize
+			end
+
 			messages.wipe_out
 			messages.append (saved_msg)
 

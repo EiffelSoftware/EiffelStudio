@@ -143,7 +143,7 @@ private void interpret();				/* Run the interpreter */
 
 /* Feature call and/or access  */
 private int icall();					/* Interpreter dispatcher (in water) */
-private void access();					/* Access to an attribute */
+private void interp_access();			/* Access to an attribute */
 private void address();					/* Address of a routine */
 private void assign();					/* Assignment in an attribute */
 
@@ -1433,7 +1433,7 @@ end:
 			offset = get_long();				/* Get feature id */
 			code = get_short();					/* Get static type */
 			type = get_uint32();				/* Get attribute meta-type */
-			access((int)offset, code, type);
+			interp_access((int)offset, code, type);
 		}
 		break;
 
@@ -1454,7 +1454,7 @@ end:
 			offset = get_long();			/* Get feature id */
 			code = get_short();				/* Get static type */
 			type = get_uint32();			/* Get attribute meta-type */
-			access((int)offset, code, type);
+			interp_access((int)offset, code, type);
 		}
 		break;
 			
@@ -2859,7 +2859,7 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	return result;
 }
 
-private void access(fid, stype, type)
+private void interp_access(fid, stype, type)
 int fid;				/* Feature ID */
 int stype;				/* Static type (entity where feature is applied) */
 uint32 type;			/* Get attribute meta-type */

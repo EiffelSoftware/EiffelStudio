@@ -13,6 +13,11 @@
 
 #ifndef _store_h_
 #define _store_h_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 #ifndef NULL
@@ -48,7 +53,7 @@ extern long get_alpha_offset();
 extern int fides;			/* File descriptor used by `store_write' */
 
 #ifdef EIF_WINDOWS
-public void buffer_write(char *data, int size);
+rt_public void buffer_write(char *data, int size);
 #else
 extern void buffer_write();
 #endif
@@ -68,5 +73,9 @@ extern long get_offset();          /* get offset of attrib in object*/
 extern unsigned int **sorted_attributes;
 extern void sort_attributes();
 extern void free_sorted_attributes();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

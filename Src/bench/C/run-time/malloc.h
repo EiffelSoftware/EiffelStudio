@@ -13,6 +13,10 @@
 #ifndef _malloc_h_
 #define _malloc_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 
 /*
@@ -182,10 +186,14 @@ extern void memck();
 extern void mem_diagnose();			/* Memory usage dump */
 extern int full_coalesc();			/* Perform free blocks coalescing */
 extern void sc_stop();
-shared char *eif_set();				/* Set Eiffel object prior use */
+rt_shared char *eif_set();				/* Set Eiffel object prior use */
 
 #ifndef TEST
 extern int cc_for_speed;			/* Priority to speed or memory? */
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

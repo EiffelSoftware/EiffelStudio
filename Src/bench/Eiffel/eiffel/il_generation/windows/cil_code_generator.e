@@ -1719,7 +1719,6 @@ feature -- Features info
 					if l_has_arguments then
 						from
 							l_feat_arg := feat.arguments
-							l_feat_arg.start
 							i := 1
 						until
 							i > l_parameter_count
@@ -1727,16 +1726,6 @@ feature -- Features info
 							uni_string.set_string (l_feat_arg.item_name (i))
 							l_param_token := md_emit.define_parameter (l_meth_token, uni_string,
 								i + j, feature {MD_PARAM_ATTRIBUTES}.In)
-							if is_static and l_is_c_external then
-									-- Define marshalling info here.
-								l_type_i := argument_actual_type (
-									l_feat_arg.item.actual_type.type_i)
-								if l_type_i.is_boolean then
-									md_emit.set_field_marshal (l_param_token,
-										boolean_native_signature)
-								end
-							end
-							l_feat_arg.forth
 							i := i + 1
 						end
 					end

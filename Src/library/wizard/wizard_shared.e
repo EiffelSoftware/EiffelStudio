@@ -10,6 +10,8 @@ class
 inherit
 	WIZARD_PROJECT_SHARED
 
+	EV_LAYOUT_CONSTANTS
+
 	ARGUMENTS
 
 feature -- Access
@@ -113,42 +115,6 @@ feature -- Colors
 			create Result.make_with_rgb (0,1,0)
 		end
 
-	Default_button_width: INTEGER is
-			-- Default width for buttons
-		once
-			Result := dialog_unit_to_pixels (74)
-		end
-
-	Default_button_height: INTEGER is
-			-- Default height for buttons
-		once
-			Result := dialog_unit_to_pixels (23)
-		end
-
-	Default_padding_size: INTEGER is
-			-- Default size for padding
-		once
-			Result := dialog_unit_to_pixels (14)
-		end
-
-	Default_border_size: INTEGER is
-			-- Default size for borders
-		once
-			Result := dialog_unit_to_pixels (7)
-		end
-
-	Small_padding_size: INTEGER is
-			-- Default size for padding
-		once
-			Result := dialog_unit_to_pixels (10)
-		end
-
-	Small_border_size: INTEGER is
-			-- Default size for borders
-		once
-			Result := dialog_unit_to_pixels (5)
-		end
-
 	Welcome_title_font: EV_FONT is
 			-- Title for welcome page
 		once
@@ -210,21 +176,6 @@ feature -- Colors
 			-- Border on the left of the text in the core of the wizard.
 		once
 			Result := dialog_unit_to_pixels (42)
-		end
-
-	resolution: INTEGER is
-		once
-			Result := (create {EV_FONT}).horizontal_resolution
-		end
-
-	dialog_unit_to_pixels (a_size: INTEGER): INTEGER is
-			-- Convert a dialog unit into pixel.
-		do
-			if resolution = 96 then
-				Result := a_size
-			else
-				Result := (a_size * resolution) // 96
-			end
 		end
 
 invariant

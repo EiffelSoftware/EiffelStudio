@@ -49,9 +49,6 @@ feature {NONE} -- Initialization
 			Precursor {EB_WINDOW}
 			initialized := False -- Reset the flag since initializion is not yet complete.
 
-				-- Track the changes of size of the window.
-			window.resize_actions.extend (agent on_size)
-
 			initialized := True
 		end
 
@@ -92,13 +89,38 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			create container
 			window.extend (container)
 			create right_panel.make (Current, False, True)
+			right_panel.enable_top_widget_resizing
+			right_panel.set_maximize_pixmap (Pixmaps.Icon_maximize @ 1)
+			right_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
+			right_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
+			right_panel.set_close_pixmap (Pixmaps.Icon_close @ 1)
 			create left_panel.make (Current, left_panel_use_explorer_style, False)
+			left_panel.set_maximize_pixmap (Pixmaps.Icon_maximize @ 1)
+			left_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
+			left_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
+			left_panel.set_close_pixmap (Pixmaps.Icon_close @ 1)
+			left_panel.enable_top_widget_resizing
 			create panel
-			panel.extend (left_panel.widget)
-			panel.extend (right_panel.widget)
-			panel.disable_item_expand (left_panel.widget)
+				-- As the side on which panels are displayed may be swapped,
+				-- this must be taken into account.
+			if editor_left_side_cell.item then
+				panel.extend (right_panel)
+				panel.extend (left_panel)
+				if panel.is_item_expanded (panel.second) then
+					panel.enable_item_expand (panel.first)
+					panel.disable_item_expand (panel.second)
+				end
+			else
+				panel.extend (left_panel)
+				panel.extend (right_panel)
+				if panel.is_item_expanded (panel.first) then	
+					panel.enable_item_expand (panel.second)
+					panel.disable_item_expand (panel.first)
+				end
+				panel.disable_item_expand (panel.first)
+			end
+			
 			panel.enable_flat_separator
-			left_panel.widget.resize_actions.extend (agent on_size)
 
 				-- Create the status bar.
 			create status_bar.make
@@ -337,12 +359,6 @@ feature -- Access
 
 feature -- Status setting
 
-	left_tools_are_visible: BOOLEAN is
-			-- Are tools visible ?
-		do
-			Result := not right_panel.is_maximized
-		end
-
 	hide_tools is
 			-- Hide all tools.
 			--| Used for optimization purposes, to avoid computing a lot
@@ -468,14 +484,22 @@ feature -- Explorer bar handling.
 			-- Switch the current view to `a_bar'.
 		do
 			if
-				(a_bar.widget.parent = Void) and
+				(a_bar.parent = Void) and
 				(not other_bar (a_bar).is_maximized) and 
 				a_bar.is_show_requested
 			then
 				if a_bar = left_panel then
-					panel.set_first (left_panel.widget)
+					if Editor_left_side_cell.item then
+						panel.set_second (left_panel)
+					else
+						panel.set_first (left_panel)
+					end
 				else
-					panel.set_second (right_panel.widget)
+					if Editor_left_side_cell.item then
+						panel.set_first (right_panel)
+					else
+						panel.set_second (right_panel)
+					end
 				end
 				if panel.full then
 					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
@@ -487,26 +511,34 @@ feature -- Explorer bar handling.
 			-- Switch the current view to `a_bar', even if the other bar is maximized.
 		do
 			if
-				(a_bar.widget.parent = Void) and
+				(a_bar.parent = Void) and
 				(other_bar (a_bar).is_maximized)
 			then
 					-- Unmaximize the other bar.
 				other_bar (a_bar).unmaximize
 			end
 			if
-				(a_bar.widget.parent /= Void) and
+				(a_bar.parent /= Void) and
 				(a_bar.is_maximized)
 			then
 				a_bar.unmaximize
 			end
 			if
-				(a_bar.widget.parent = Void) and
+				(a_bar.parent = Void) and
 				a_bar.is_show_requested
 			then
 				if a_bar = left_panel then
-					panel.set_first (left_panel.widget)
+					if Editor_left_side_cell.item then
+						panel.set_second (left_panel)
+					else
+						panel.set_first (left_panel)
+					end
 				else
-					panel.set_second (right_panel.widget)
+					if Editor_left_side_cell.item then
+						panel.set_first (right_panel)	
+					else
+						panel.set_second (right_panel)
+					end
 				end
 				if panel.full then
 					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
@@ -517,11 +549,11 @@ feature -- Explorer bar handling.
 	close_bar (a_bar: EB_EXPLORER_BAR) is
 			-- An explorer bar asks to be closed.
 		do
-			if (a_bar.widget.parent /= Void) then
-				if other_bar (a_bar).widget.parent /= Void then
+			if (a_bar.parent /= Void) then
+				if other_bar (a_bar).parent /= Void then
 					splitter_position := panel.split_position
 				end
-				panel.prune_all (a_bar.widget)
+				panel.prune_all (a_bar)
 			end
 		end
 
@@ -534,10 +566,12 @@ feature -- Explorer bar handling.
 	restore_bars is
 			-- A maximized item has been restored.
 		do
-			if left_panel.widget.parent = Void then
+				-- Do not force the bar to be shown if it is empty, as
+				-- in that state it should be hidden.
+			if left_panel.parent = Void and left_panel.count /= 0 then
 				display_bar (left_panel)
 			end
-			if right_panel.widget.parent = Void then
+			if right_panel.parent = Void then
 				display_bar (right_panel)
 			end
 		end
@@ -576,17 +610,6 @@ feature {NONE} -- Implementation
 					end
 				end
 				a_list.forth
-			end
-		end
-
-	on_size (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Save the size of the window and the main layout.
-		do
-			if initialized then
-				save_left_panel_width (panel.split_position)
-	
-					-- Save width & height.
-				save_size (window.width, window.height, window.is_maximized)
 			end
 		end
 
@@ -659,5 +682,13 @@ feature {NONE} -- Constants
 		once	
 			create Result
 		end
-
+		
+	editor_left_side: STRING is "editor_left_side"
+	
+	editor_left_side_cell: CELL [BOOLEAN] is
+			-- Is Editor and associated tools displayed on left side of window?
+		once
+			create Result.put (boolean_resource_value (editor_left_side, False))
+		end
+		
 end -- class EB_TOOL_MANAGER

@@ -15,6 +15,20 @@ feature -- Access
 			Result := Void
 		end
 
+	Color_read_only: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are in read-only mode
+		do
+			Result := Void
+		end
+
+	Color_read_write: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are in read / write mode
+		do
+			Result := Void
+		end
+
 end -- class EV_DEFAULT_COLORS_IMP
 
 --|----------------------------------------------------------------

@@ -16,6 +16,10 @@ inherit
 		export
 			{NONE} all
 		end;
+	BYTE_CONST
+		export
+			{NONE} all
+		end;
 
 creation
 
@@ -456,6 +460,15 @@ feature {NONE} -- Externals
 	ca_wlong (ptr: like area; val: INTEGER; pos: INTEGER) is
 		external
 			"C"
+		end;
+
+feature -- Debugger
+
+	mark_breakable is
+			-- Write continue mark (where breakpoint may be set by replacing
+			-- code with Bc_break).
+		do
+			append (Bc_cont);
 		end;
 
 invariant

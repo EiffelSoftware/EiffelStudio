@@ -9,6 +9,8 @@
 
 	Some portable declarations.
 
+    $Id$
+
 */
 
 #ifndef _portable_h_
@@ -33,16 +35,82 @@ extern "C" {
 #include "eif_confmagic.h"
 #endif
 
-#ifdef __VMS
+#ifdef EIF_VMS
+/* 
+ *  VMS system specific definitions 
+ */
+#define __NEW_STARLET	/* define prototypes for sys$, lib$ function calls */
+#define _VMS_V6_SOURCE	/* see DECC RTL doc (geteuid) */
+#if !defined(__DECC_VER) || __DECC_VER < 50000000	/* DECC vers < 5.0 */
+#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
+#define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR
+#endif /* pre 5.0 DECC */
+/* handle standard C library symbols that are overriden by Eiffel runtime */
+/* --- symbols in readdir package --- */
+#define opendir eif_rt_opendir
+#define closedir eif_rt_closedir
+#define rmdir	eif_rt_rmdir
+#define seekdir eif_rt_seekdir
+#define telldir eif_rt_telldir
+#define readdir eif_rt_readdir
+/* --- symbols newly defined in VMS V7.0 DECC Runtime library --- */
+#define unlink eif_rt_unlink
+#define putenv eif_rt_putenv
+#define setenv eif_rt_setenv
+#define strdup eif_rt_strdup
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <unixlib.h>
 #include <unixio.h>
-#include <stdlib.h>
+
+typedef unsigned long VMS_STS;		/* VMS status (condition) value */
+typedef struct _generic_64 bintim;	/* VMS binary time (8 bytes) */
+
+#ifdef HAS_TIMES
+#define HZ  100   	/* seconds in units (10 millisecs) for times() */
 #endif
+
+/* This is usually defined in config.h; we redefine it correctly here. */
+#ifdef PAGESIZE_VALUE
+#undef PAGESIZE_VALUE
+#endif
+#ifdef __vax
+#define PAGESIZE_VALUE 512
+#elif defined(__Alpha_AXP)
+/* Actually, this is supposed to be implementation-defined (i.e. different
+ * AXP implementations can have different values), but this will do for now. */
+#define PAGESIZE_VALUE 8192
+#else
+    undefined architecture
+#endif /* __vax */
+
+/* Macros to test for VMS-style (low bit) success/failure. */
+#define  VMS_SUCCESS(x)	(   (x)&1  )
+#define  VMS_FAILURE(x)	( !((x)&1) )
+/* access to descriptor components */
+typedef struct dsc$descriptor DX;	/* prototype descriptor */
+#define DXLEN(d) ( (d).dsc$w_length )
+#define DXPTR(d) ( (d).dsc$a_pointer )
+#define DX_BLD(d,ptr,len) DX d = { len, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)ptr }
+/* itemlist entry for vms system calls */
+typedef struct itemlist3def { 
+    unsigned short buflen, itemcode; 
+    void *bufadr; 
+    unsigned short *retlenadr; 
+    } ITEMLIST3, ITEMLIST[];
+#define ITEM(code,buf,siz,rlen) { siz, code, buf, rlen }
+#define ITEM_A(code,buf,rlen)	ITEM(code, buf, sizeof(buf), rlen )
+#define ITEM_S(code,buf,rlen)	ITEM(code, &buf, sizeof(buf), rlen )
+#define ITEMLIST_END		{0,0,0,0}
+#endif /* EIF_VMS */
 
 /*
  * Standard types
  */
-#if INTSIZE < 4
+#ifdef EIF_VMS
+#include <ints.h>		/* integer sizes are architecture dependent */
+#elif INTSIZE < 4
 typedef int int16;
 typedef long int32;
 typedef unsigned int uint16;

@@ -14,13 +14,15 @@ class
 
 inherit
 	EIFFEL_XML_SERIALIZATION_ERRORS
-	
+
 	EIFFEL_XML_SERIALIZATION_CONSTANTS
 		export
 			{NONE} all
 		end
 
 	INTERNAL
+		rename
+			dynamic_type_from_string as internal_dynamic_type_from_string
 		export
 			{NONE} all
 		end
@@ -97,7 +99,7 @@ feature {NONE} -- Implementation
 			i, ft: INTEGER
 			f_table: HASH_TABLE [INTEGER, STRING]
 		do
-			f_table := field_table (obj)
+			f_table := field_table (dynamic_type (obj))
 			from
 				read_next
 			until
@@ -159,27 +161,6 @@ feature {NONE} -- Implementation
 			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void
 		end
 
-	field_table (obj: ANY): HASH_TABLE [INTEGER, STRING] is
-			-- Table of field indices keyed by field names
-		require
-			non_void_obj: obj /= Void
-		local
-			i: INTEGER
-		do
-			create Result.make (field_count (obj))
-			from
-				i := 1
-			until
-				i > field_count (obj)
-			loop
-				Result.put (i, field_name (i, obj))
-				i := i + 1
-			end
-		ensure
-			non_void_table: Result /= Void
-			valid_table: Result.count = field_count (obj)
-		end
-			
 	array_from_xml: ANY is
 			-- Instance of array as described in XML
 		require
@@ -277,7 +258,7 @@ feature {NONE} -- Implementation
 				last_error_context := "At line " + xml_reader.line_number.out
 			end
 		end
-	
+
 	parse_array (item_processor: ROUTINE [ANY, TUPLE [ANY, INTEGER]]) is
 			-- Parse array in XML and call `item_processor' for each item.
 			-- Arguments or `item_processor' are item value and item index.
@@ -307,7 +288,7 @@ feature {NONE} -- Implementation
 				read_next
 			end
 		end
-		
+
 	integer_array_from_xml (lower, upper: INTEGER): ARRAY [INTEGER] is
 			-- Integer array as described in XML file
 		require
@@ -319,7 +300,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-	
+
 	real_array_from_xml (lower, upper: INTEGER): ARRAY [REAL] is
 			-- Real array as described in XML file
 		require
@@ -331,7 +312,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-	
+
 	double_array_from_xml (lower, upper: INTEGER): ARRAY [DOUBLE] is
 			-- Real array as described in XML file
 		require
@@ -343,7 +324,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-	
+
 	character_array_from_xml (lower, upper: INTEGER): ARRAY [CHARACTER] is
 			-- Character array as described in XML file
 		require
@@ -355,7 +336,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-	
+
 	boolean_array_from_xml (lower, upper: INTEGER): ARRAY [BOOLEAN] is
 			-- Boolean array as described in XML file
 		require
@@ -367,7 +348,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-	
+
 	pointer_array_from_xml (lower, upper: INTEGER): ARRAY [POINTER] is
 			-- Pointer array as described in XML file
 		require
@@ -379,7 +360,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-		
+
 	string_array_from_xml (lower, upper: INTEGER): ARRAY [STRING] is
 			-- Integer array as described in XML file
 		require
@@ -391,7 +372,7 @@ feature {NONE} -- Implementation
 			non_void_array: successful implies Result /= Void
 			valid_array: successful implies Result.lower = lower and Result.upper = upper
 		end
-		
+
 	reference_array_from_xml (lower, upper: INTEGER): ARRAY [ANY] is
 			-- Integer array as described in XML file
 		require
@@ -484,5 +465,62 @@ feature {NONE} -- Implementation
 
 	xml_reader: XML_XML_TEXT_READER
 			-- XML reader
+
+feature {NONE} -- Implementation - internal speedup
+
+	field_table (dtype: INTEGER): HASH_TABLE [INTEGER, STRING] is
+			-- Table of field indices keyed by field names
+		require
+			valid_dtype: dtype > 0
+		local
+			i, nb: INTEGER
+			l_table: like internal_field_table
+		do
+			l_table := internal_field_table
+			Result := l_table.item (dtype)
+			if Result = Void then
+				nb := field_count_of_type (dtype)
+				create Result.make (nb)
+				l_table.put (Result, dtype)
+				
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					Result.put (i, field_name_of_type (i, dtype))
+					i := i + 1
+				end
+			end
+		end
+
+	internal_field_table: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+			-- To quickly find where attributes are located.
+		once
+			create Result.make (10)
+		end
+
+	dynamic_type_from_string (name: STRING): INTEGER is
+			-- Given a type name `name' retrieves its corresponding 
+			-- dynamic type.
+		local
+			l_table: like internal_dynamic_types
+		do
+			l_table := internal_dynamic_types
+			l_table.search (name)
+			if l_table.found then
+				Result := l_table.found_item
+			else
+				Result := internal_dynamic_type_from_string (name)
+				l_table.put (Result, name)
+			end
+		end
+
+	internal_dynamic_types: HASH_TABLE [INTEGER, STRING] is
+			-- List of correspondance between type names and their
+			-- corresponding dynamic types.
+		once
+			create Result.make (10)
+		end
 
 end -- class EIFFEL_XML_DESERIALIZER

@@ -107,12 +107,12 @@ feature -- Recording Operation feature_token
 				list_feature_token.put (a_feature_token , l_feature_name_id)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_feature_token <<%N")
-					print ("  - feature_name          =" + a_feature_i.feature_name + "%N")
-					print ("  - key : feature_name_id =" + l_feature_name_id.out + "%N")
-					print ("  - already               = " + list_feature_token.item (l_feature_name_id).to_hex_string + "%N")
-					print ("  - replace             = " + a_feature_token.to_hex_string + "%N")
-					print ("%N")
+					io.error.put_string (">> CONFLICT record_feature_token <<%N")
+					io.error.put_string ("  - feature_name          =" + a_feature_i.feature_name + "%N")
+					io.error.put_string ("  - key : feature_name_id =" + l_feature_name_id.out + "%N")
+					io.error.put_string ("  - already               = " + list_feature_token.item (l_feature_name_id).to_hex_string + "%N")
+					io.error.put_string ("  - replace             = " + a_feature_token.to_hex_string + "%N")
+					io.error.put_string ("%N")
 				end
 				list_feature_token.force (a_feature_token , l_feature_name_id)
 			end
@@ -260,7 +260,7 @@ feature -- Recording Operation
 			end
 			l_offsets_info.extend (a_il_offset)
 			debug ("debugger_il_info_trace")
-				print (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out  + "["+last_instruction_position.out+"]" +  ": " + l_il_offset_list.count.out + "%N")
+				io.error.put_string (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out  + "["+last_instruction_position.out+"]" +  ": " + l_il_offset_list.count.out + "%N")
 			end
 		end
 

@@ -2,27 +2,27 @@
 <BODY><H1>Code Generation</H1>
 <P>To generate Eiffel code representing your system, select <B>Generate code</B> from the <B>Project</B> menu or click <img SRC="/images/eiffelbuild/icons/icon_code_generation_color.png" > on the <A HREF="/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html">main toolbar</A>.
 <P>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</P>
-<P>The code will be generated according to the options you selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>.</P>
+<P>The code will be generated according to the options you selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project settings</A>.</P>
 <H2>Generated classes</H2>
 <P>The generation of an EiffelBuild project causes the following files to be generated:</P>
 	<UL>
-		<LI>A constants class and its respective implementation class. For example, if the constants class is named as "constants" in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, two classes, CONSTANTS and CONSTANTS_IMP are generated.</li>
+		<LI>A constants class and its respective implementation class. For example, if the constants class is named as "constants" in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project settings</A>, two classes, CONSTANTS and CONSTANTS_IMP are generated.</li>
 		<li>A class and implementation class for each window and dialog in the system, named to correspond with the name attribute of the object. For example, for a window in the project named "main_window", the files MAIN_WINDOW and MAIN_WINDOW_IMP are generated.</li>
-		<LI>An optional file named "constants.txt" which contains definitions of all INTEGER and STRING constants. This is only generated if "Load constants from file" is selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>. The generated code loads the constants from this file, and allows simple modification for localization, i.e. for foreign languages provide a different version of this file with all strings converted.</li>
+		<LI>An optional file named "constants.txt" which contains definitions of all INTEGER and STRING constants. This is only generated if "Load constants from file" is selected in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project settings</A>. The generated code loads the constants from this file, and allows simple modification for localization, i.e. for foreign languages provide a different version of this file with all strings converted.</li>
 	</ul>
-<P>For each window or dialog class in the system, the following heirarchy is generated:</P>
+<P>For each window or dialog class in the system, the following hierarchy is generated:</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram.png"></p>
-<p>If "client of windows" is selected from the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:</p> 
+<p>If "client of windows" is selected from the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project settings</A>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:</p> 
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/class_project_diagram_client.png"></p>
 <P CLASS="note"><B>Note</B>: All other diagrams on this page show only the non client version of the settings, where the generated window inherits from the EiffelVision class.</P>
 <H2>Project build type</H2>
-<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project_settings</A>, then all the classes listed above in "Generated classes" are generated, along with the following:</P>
+<P>If <A HREF="/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type">build type</A> is selected as <B>Project</B> in the <A HREF="/tools/eiffelbuild/reference/80_project_settings/index.html">project settings</A>, then all the classes listed above in "Generated classes" are generated, along with the following:</P>
 	<UL>
 		<LI>Two ace files, "ace.Unix.ace" for unix based platforms, and "ace.Windows.ace" for Windows platforms.</li>
 		<LI>An application class which launches the root window of the project.</LI>
 
 	</UL>
-<p>The generated files comprise a complete project, complete with .ace files, enabling you to compile and execute the generated system as is. The following diagram illustrates the heirarchy of the generated project, showing only the root window of the project:</P>
+<p>The generated files comprise a complete project, complete with .ace files, enabling you to compile and execute the generated system as is. The following diagram illustrates the hierarchy of the generated project, showing only the root window of the project:</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/complete_project_diagram.png"></p>
 </P>
 <H2>Modifying code after generation</H2>

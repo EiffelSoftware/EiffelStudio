@@ -3,10 +3,10 @@
 -- EiffelBuild.                                --
 -------------------------------------------------
 system
-	my_vision2_application
+	<PROJECT_NAME>
 
 root 
-	BUILD_APPLICATION (root_cluster): "make_and_launch"
+	<APPLICATION> (root_cluster): "make_and_launch"
 
 default
 	assertion (require)
@@ -22,10 +22,11 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
+	working_directory ("<PROJECT_LOCATION>")
 
 cluster 
 		-- The application
-	root_cluster: "<PROJECT_LOCATION>"
+	all root_cluster: "<PROJECT_LOCATION>"
 
 		-- EiffelBase
 	all base: "$ISE_EIFFEL/library/base"
@@ -38,9 +39,6 @@ cluster
 
 		-- EiffelVision2
 	all vision2: "$ISE_EIFFEL/library/vision2"
-		exclude
-			"mswin";
-		end
 
 external
 	include_path:

@@ -22,7 +22,7 @@ feature
 
 	make (a_path: STRING; extension_type: STRING; is_root: BOOLEAN) is
 		local
-			l_files: LINEAR[STRING]
+			l_files: ARRAYED_LIST [STRING]
 			l_file_name, tag: STRING
 			l_file: X_FILE
 			l_directory: EIFFEL_F_CODE_DIRECTORY
@@ -70,9 +70,9 @@ feature
 				end
 			end
 
-			create x_files.make
-			create c_files.make
-			create directories.make
+			create x_files.make (100)
+			create c_files.make (100)
+			create directories.make (100)
 			l_files := linear_representation
 			from
 				l_files.start
@@ -130,7 +130,7 @@ feature
 	convert is
 			-- Concatene all the x/c files and modify the Makefile.
 		local
-			l_files: LINKED_LIST [C_FILE]
+			l_files: ARRAYED_LIST [C_FILE]
 			l_file: C_FILE
 			l_directories: LINEAR[EIFFEL_F_CODE_DIRECTORY]
 			l_big_file_name: STRING
@@ -148,9 +148,9 @@ feature
 				end
 				l_directories := directories.linear_representation
 
-	debug ("OUTPUT")
-				print ("x/c files%N")
-	end
+				debug ("OUTPUT")
+					print ("x/c files%N")
+				end
 				if not l_files.is_empty then 
 					l_big_file_name := clone (name)
 					l_big_file_name.append_character (Directory_separator)
@@ -163,18 +163,19 @@ feature
 						l_files.off
 					loop
 						l_file := l_files.item
-	debug ("OUTPUT")
-						print (makefile_sh.last_string)
-						io.new_line
-						print (l_file.name)
-						io.new_line
-	end
+						debug ("OUTPUT")
+							print (makefile_sh.last_string)
+							io.new_line
+							print (l_file.name)
+							io.new_line
+						end
 						if not is_x_file then
 							is_x_file := l_file.name.substring_index (".x",1) > 0
 						end
 
 						if not is_cpp_file then
-							is_cpp_file := l_file.name.substring_index ("pp", 1) = l_file.name.count - 1
+							is_cpp_file := l_file.name.substring_index ("pp", 1) =
+								l_file.name.count - 1
 						end
 						l_file.open_read
 						l_file.read_all (input_string)
@@ -208,34 +209,35 @@ feature
 
 				if makefile_sh.last_string.substring_index ("OLDOBJECTS", 1) = 0 then
 					makefile_sh.last_string.replace_substring_all ("OBJECTS =",
-						"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS = ")
+						"OBJECTS = " + big_file_name + "." + object_extension +
+						"%N%N" + "OLDOBJECTS = ")
 					makefile_sh.open_write
 					makefile_sh.put_string (makefile_sh.last_string)
 					makefile_sh.put_string ("%N")
 					makefile_sh.close
 				end
 
-debug ("OUTPUT")
-				print ("Directories%N")
-end
+				debug ("OUTPUT")
+					print ("Directories%N")
+				end
 				-- Do the work an all subdirectories
 				from
 					l_directories.start
 				until
 					l_directories.off
 				loop
-debug ("OUTPUT")
-					print (l_directories.item.name)
-					io.new_line
-end
+					debug ("OUTPUT")
+						print (l_directories.item.name)
+						io.new_line
+					end
 					l_directories.item.convert
 					l_directories.forth
 				end
-debug ("OUTPUT")
-				print ("Makefile SH%N")
-				print (makefile_sh.name)
-				io.new_line
-end
+				debug ("OUTPUT")
+					print ("Makefile SH%N")
+					print (makefile_sh.name)
+					io.new_line
+				end
 			else -- makefile_sh /= void
 				io.put_string("WARNING: Directory '")
 				io.put_string(name)
@@ -256,18 +258,18 @@ feature -- Access
 	object_extension: STRING
 			-- Extension name of the object files, depends on the platform.
 
-	x_files: LINKED_LIST[X_FILE]
+	x_files: ARRAYED_LIST [X_FILE]
 
-	c_files: LINKED_LIST[C_FILE]
+	c_files: ARRAYED_LIST [C_FILE]
 
 	makefile_sh: PLAIN_TEXT_FILE
 
-	directories: LINKED_LIST[EIFFEL_F_CODE_DIRECTORY]
+	directories: ARRAYED_LIST [EIFFEL_F_CODE_DIRECTORY]
 
 	has_finished_file: BOOLEAN
 			-- Does the directory contain `finished'?
 
-	big_file: PLAIN_TEXT_FILE
+	big_file: RAW_FILE
 
 	big_file_name: STRING
 			-- Real name of the `big_file'.

@@ -8,7 +8,7 @@ class
 	C_FILE
 
 inherit
-	PLAIN_TEXT_FILE
+	RAW_FILE
 
 create
 	make

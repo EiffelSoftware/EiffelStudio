@@ -7,7 +7,7 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL3/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
  
 cluster
 
@@ -17,23 +17,23 @@ cluster
 			visible
 				MAIN end
 			end;      
-	kernel:             "$EIFFEL3/library/base/kernel"
+	kernel:             "$EIFFEL4/library/base/kernel"
 			visible
 				STRING end
 			end;
-        support:            "$EIFFEL3/library/base/support";
-        access:             "$EIFFEL3/library/base/structures/access";
-        cursors:            "$EIFFEL3/library/base/structures/cursors";
-        dispenser:          "$EIFFEL3/library/base/structures/dispenser";
-        list:               "$EIFFEL3/library/base/structures/list"
+        support:            "$EIFFEL4/library/base/support";
+        access:             "$EIFFEL4/library/base/structures/access";
+        cursors:            "$EIFFEL4/library/base/structures/cursors";
+        dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+        list:               "$EIFFEL4/library/base/structures/list"
 			visible
 				LINKED_LIST end
 			end;
-        set:                "$EIFFEL3/library/base/structures/set";
-        sort:               "$EIFFEL3/library/base/structures/sort";
-        storage:            "$EIFFEL3/library/base/structures/storage";
-        table:              "$EIFFEL3/library/base/structures/table";
-        traversing:         "$EIFFEL3/library/base/structures/traversing";
-        tree:               "$EIFFEL3/library/base/structures/tree";
+        set:                "$EIFFEL4/library/base/structures/set";
+        sort:               "$EIFFEL4/library/base/structures/sort";
+        storage:            "$EIFFEL4/library/base/structures/storage";
+        table:              "$EIFFEL4/library/base/structures/table";
+        traversing:         "$EIFFEL4/library/base/structures/traversing";
+        tree:               "$EIFFEL4/library/base/structures/tree";
 
 end

@@ -305,7 +305,7 @@ feature -- Implementation
 			if
 				type_conforms_to (dynamic_type (agent), f_of_tuple_type_id) 
 			then
-				agent.call ([])
+				agent.call ([[]])
 			else
 				agent.call ([n_args, args])
 			end
@@ -408,6 +408,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/20 00:30:10  oconnor
+--| fixed NOTIFY_ACTION_SEQUENCE call in marshaler
+--|
 --| Revision 1.26  2000/04/19 23:30:38  oconnor
 --| removed reliance on c_gtk_init_toolkit
 --|

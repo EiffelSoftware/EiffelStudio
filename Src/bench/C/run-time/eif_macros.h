@@ -280,6 +280,10 @@ RT_LNK int fcount;
 
 #define Deif_bid(x) (eif_cid_map[(x) & EO_TYPE])
 
+/* Header flags with type mapped through `eif_cid_map' */
+
+#define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) eif_cid_map [(x) & EO_TYPE]))
+
 /* Full dynamic type of object - for generic conformance */
 
 #define Dftype(x) (HEADER(x)->ov_flags & EO_TYPE)

@@ -12,30 +12,14 @@ deferred class
 inherit
 	EV_ANY_I
 
-	EV_TEXT_CONTAINER_I
+	EV_TEXTABLE_I
 
 feature -- Access
 
 	interface: EV_ITEM
 			-- Interface of the current item
 
---feature -- Status report
-
---	destroyed: BOOLEAN is
---			-- Is current object destroyed
---		deferred
---		end
-
---feature -- Status setting
---
---	destroy is
---			-- Destroy the current item
---		require
---			exists: not destroyed
---		deferred
---		ensure
---			destroyed: destroyed
---		end
+feature -- Status settings
 
 -- XX to implement
 --	set_parent (par: EV_CONTAINER) is

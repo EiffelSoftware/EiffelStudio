@@ -20,12 +20,12 @@ inherit
 			implementation
 		end
 	
-	EV_TEXT_CONTAINER
+	EV_TEXTABLE
 		redefine
 			implementation, make
 		end
 
-	EV_PIXMAP_CONTAINER
+	EV_PIXMAPABLE
 		redefine
 			implementation
 		end

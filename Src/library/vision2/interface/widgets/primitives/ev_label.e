@@ -20,7 +20,7 @@ inherit
 			implementation
 		end
 	
-	EV_TEXT_CONTAINER
+	EV_TEXTABLE
 		redefine
 			implementation
 		end

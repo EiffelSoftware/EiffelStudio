@@ -14,6 +14,9 @@ inherit
 	EV_MENU_I
 		
 	EV_MENU_ITEM_CONTAINER_IMP
+		redefine
+			parent_imp
+		end
 
 creation
 	make,
@@ -21,27 +24,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_CONTAINER) is
+	make is
 			-- Create a menu
 		do
---			make_with_text (par, "")
 			widget := gtk_menu_new ()
+			gtk_object_ref (widget)
 		end
 	
-        make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
+        make_with_text (txt: STRING) is
                         -- Create a menu with name. 
-		local
-			a: ANY
-			menu: POINTER
 		do
---			a := txt.to_c
---			widget := gtk_menu_item_new_with_label ($a)
---			menu := gtk_menu_new ()
---			gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), menu)
-
 			name := txt
 			widget := gtk_menu_new ()
+			gtk_object_ref (widget)
 		end	
+
+feature -- Access
+
+	parent_imp: EV_MENU_CONTAINER_IMP
+		-- Parent of the current menu.
 
 feature -- Status report
 
@@ -51,38 +52,49 @@ feature -- Status report
 			Result := name
 		end
 
+feature -- Element change
+
+	set_parent (par: EV_MENU_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		local
+			par_imp: EV_MENU_CONTAINER_IMP
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_menu (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				show
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				parent_imp ?= par_imp
+				par_imp.add_menu (Current)
+				gtk_object_unref (widget)
+			end
+		end
+
 feature {EV_MENU_CONTAINER_IMP} -- Implementation
 
 	name: STRING
 
 feature {NONE} -- Implementation	
 
-	add_item (child: EV_MENU_ITEM) is
+	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add menu item into container
-		local
-			item_imp: EV_MENU_ITEM_IMP
 		do
-			item_imp ?= child.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
 			gtk_menu_append (widget, item_imp.widget)
 		end
 
---	add_menu_item_pointer (item_p: POINTER) is
---		do
---			gtk_menu_append (gtk_menu (widget), item_p)
---		end
-	
-	old_make (par: EV_CONTAINER) is
-			-- Cannot be called
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Remove the item from the container.
 		do
-			check
-				do_not_call: False
-			end
+			gtk_container_remove (GTK_CONTAINER (widget), item_imp.widget)
 		end
-
-
+	
 end -- class EV_MENU_IMP
 
 --|----------------------------------------------------------------

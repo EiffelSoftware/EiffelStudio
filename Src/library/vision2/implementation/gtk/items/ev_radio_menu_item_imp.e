@@ -18,16 +18,18 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
+--	make_with_pixmap,
+--	make_with_all
 
 feature {NONE} -- Initialization
 	
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
-			-- Create menu item
+	make_with_text (txt: STRING) is
+			-- Create a radio menu item with`txt' as label.
 		do
 			dummy_item := gtk_radio_menu_item_new (Default_pointer)
 			widget := gtk_radio_menu_item_new (Default_pointer)
-			show
 			gtk_radio_menu_item_set_group (widget,
 				gtk_radio_menu_item_group (dummy_item));
 			set_state (False)

@@ -7,7 +7,7 @@ inherit
 	BUILD_NON_UNDOABLE_CMD;
 	SHARED
 
-creation 
+create 
 	make
 
 feature  -- Initialization

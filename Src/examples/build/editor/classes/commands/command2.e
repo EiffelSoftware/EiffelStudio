@@ -6,7 +6,7 @@ class COMMAND2
 inherit
 	BUILD_NON_UNDOABLE_CMD
 
-creation 
+create 
 	make
 
 feature  -- Initialization

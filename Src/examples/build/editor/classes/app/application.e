@@ -5,7 +5,7 @@ inherit
 	STATES;
 	WINDOWS
 
-creation 
+create 
 	make
 
 feature 

@@ -16,7 +16,7 @@ inherit
 			realize, make
 		end
 
-creation 
+create 
 	make
 
 feature  -- Creation
@@ -24,12 +24,12 @@ feature  -- Creation
 	make (a_name: STRING; a_parent: SCREEN) is
 		do
 			 Precursor (a_name, a_parent)
-			!! scrolled_text1.make ("Scrolled_text1", Current)
-			!! push_b1.make ("push_b1", Current)
-			!! push_b2.make ("push_b2", Current)
-			!! push_b3.make ("push_b3", Current)
-			!! push_b4.make ("push_b4", Current)
-			!! push_b5.make ("push_b5", Current)
+			create scrolled_text1.make ("Scrolled_text1", Current)
+			create push_b1.make ("push_b1", Current)
+			create push_b2.make ("push_b2", Current)
+			create push_b3.make ("push_b3", Current)
+			create push_b4.make ("push_b4", Current)
+			create push_b5.make ("push_b5", Current)
 			set_values
 		end
 
@@ -80,13 +80,13 @@ feature  -- Creation
 			a_color: COLOR
 			a_pixmap: PIXMAP
 		do
-			!! a_pixmap.make
+			create a_pixmap.make
 			a_pixmap.read_from_file ("C:\WINNT\Soap Bubbles.bmp")
 			set_background_pixmap (a_pixmap)
-			!! a_color.make
+			create a_color.make
 			a_color.set_name ("NavyBlue")
 			perm_wind1.scrolled_text1.set_background_color (a_color)
-			!! a_color.make
+			create a_color.make
 			a_color.set_name ("white")
 			perm_wind1.scrolled_text1.set_foreground_color (a_color)
 		end
@@ -133,8 +133,8 @@ feature  -- Realization
 			com1: COMMAND3
 			meta_command: META_COMMAND
 		do
-			!! com1.make
-			!! meta_command.make
+			create com1.make
+			create meta_command.make
 			meta_command.add (basic, com1)
 			perm_wind1.scrolled_text1.add_modify_action (meta_command, void)
 		end
@@ -145,9 +145,9 @@ feature  -- Realization
 			com2: COMMAND1
 			meta_command: META_COMMAND
 		do
-			!! com1.make (perm_wind1.scrolled_text1)
-			!! com2.make (perm_wind1.scrolled_text1)
-			!! meta_command.make
+			create com1.make (perm_wind1.scrolled_text1)
+			create com2.make (perm_wind1.scrolled_text1)
+			create meta_command.make
 			meta_command.add (editing, com1)
 			meta_command.add (basic, com2)
 			perm_wind1.push_b1.add_activate_action (meta_command, void)
@@ -158,8 +158,8 @@ feature  -- Realization
 			com1: COMMAND4
 			meta_command: META_COMMAND
 		do
-			!! com1.make (perm_wind1.scrolled_text1)
-			!! meta_command.make
+			create com1.make (perm_wind1.scrolled_text1)
+			create meta_command.make
 			meta_command.add (viewing, com1)
 			perm_wind1.push_b2.add_activate_action (meta_command, void)
 		end
@@ -170,9 +170,9 @@ feature  -- Realization
 			com2: BUILD_OPEN
 			meta_command: META_COMMAND
 		do
-			!! com1.make (perm_wind1.scrolled_text1)
-			!! com2.make (perm_wind1.scrolled_text1)
-			!! meta_command.make
+			create com1.make (perm_wind1.scrolled_text1)
+			create com2.make (perm_wind1.scrolled_text1)
+			create meta_command.make
 			meta_command.add (editing, com1)
 			meta_command.add (basic, com2)
 			perm_wind1.push_b3.add_activate_action (meta_command, void)
@@ -183,8 +183,8 @@ feature  -- Realization
 			com1: BUILD_SAVE
 			meta_command: META_COMMAND
 		do
-			!! com1.make (perm_wind1.scrolled_text1)
-			!! meta_command.make
+			create com1.make (perm_wind1.scrolled_text1)
+			create meta_command.make
 			meta_command.add (editing, com1)
 			perm_wind1.push_b4.add_activate_action (meta_command, void)
 		end
@@ -196,10 +196,10 @@ feature  -- Realization
 			com3: COMMAND2
 			meta_command: META_COMMAND
 		do
-			!! com1.make
-			!! com2.make
-			!! com3.make
-			!! meta_command.make
+			create com1.make
+			create com2.make
+			create com3.make
+			create meta_command.make
 			meta_command.add (editing, com1)
 			meta_command.add (basic, com2)
 			meta_command.add (viewing, com3)

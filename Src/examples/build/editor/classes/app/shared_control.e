@@ -4,7 +4,7 @@ feature
 
 	control: CONTROL is
 		once
-			!! Result.make (3)
+			create Result.make (3)
 		end
 
 end -- class SHARED_CONTROL

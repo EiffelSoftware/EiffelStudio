@@ -12,7 +12,7 @@ inherit
 		end;
 	SHARED
 
-creation 
+create 
 	make
 
 feature  -- Initialization

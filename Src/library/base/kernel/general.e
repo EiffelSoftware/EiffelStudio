@@ -273,7 +273,7 @@ feature {GENERAL} -- Implementation
 	c_standard_clone (other: POINTER): GENERAL is
 			-- New object of same dynamic type as `other'
 		external
-			"C"
+			"C | <copy.h>"
 		alias
 			"eclone"
 		end;
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
-			"C"
+			"C | <plug.h>"
 		alias
 			"econfg"
 		end;
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
-			"C"
+			"C | <plug.h>"
 		alias
 			"estypeg"
 		end;
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 	c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
-			"C"
+			"C | <equal.h>"
 		alias
 			"eequal"
 		end;
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 	c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
-			"C"
+			"C | <copy.h>"
 		alias
 			"ecopy"
 		end;
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
-			"C"
+			"C | <copy.h>"
 		alias
 			"edclone"
 		end;
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
-			"C"
+			"C | <equal.h>"
 		alias
 			"ediso"
 		end;
@@ -335,18 +335,18 @@ feature {NONE} -- Implementation
 	frozen c_tagged_out (some: GENERAL): STRING is
 			-- Printable representation of current object
 		external
-			"C"
+			"C | <out.h>"
 		end;
 
 	frozen c_generator (some: POINTER): STRING is
 			-- Name of the generating class of current object
 		external
-			"C"
+			"C | <out.h>"
 		end;
 
 	frozen c_check_assert (b: BOOLEAN): BOOLEAN is
 		external
-			"C"
+			"C | <copy.h>"
 		end;
 
 invariant

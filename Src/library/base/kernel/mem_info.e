@@ -65,13 +65,13 @@ feature {NONE} -- Implementation
 			-- Initialize run-time buffer used by mem_info to retrieve the
 			-- statistics frozen at the time of this call.
 		external
-			"C"
+			"C | <memory.h>"
 		end;
 
 	mem_info (field: INTEGER): INTEGER is
 			-- Read memory accounting structure, field by field.
 		external
-			"C"
+			"C | <memory.h>"
 		end
 
 invariant

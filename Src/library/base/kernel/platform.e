@@ -17,7 +17,7 @@ feature -- Access
 	Character_bits: INTEGER is
 			-- Number of bits in a value of type `CHARACTER'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"eschar_size"
 		end;
@@ -25,7 +25,7 @@ feature -- Access
 	Integer_bits: INTEGER is
 			-- Number of bits in a value of type `INTEGER'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"esint_size"
 		end;
@@ -33,7 +33,7 @@ feature -- Access
 	Real_bits: INTEGER is
 			-- Number of bits in a value of type `REAL'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"esreal_size"
 		end;
@@ -41,7 +41,7 @@ feature -- Access
 	Double_bits: INTEGER is
 			-- Number of bits in a value of type `DOUBLE'
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"esdouble_size"
 		end;

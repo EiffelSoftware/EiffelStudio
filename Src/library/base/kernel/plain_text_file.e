@@ -96,43 +96,43 @@ feature {NONE} -- Implementation
 	file_gi (file: POINTER): INTEGER is
 			-- Get an integer from `file'
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_gr (file: POINTER): REAL is
 			-- Read a real from `file'
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_gd (file: POINTER): DOUBLE is
 			-- Read a double from `file'
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_pi (file: POINTER; n: INTEGER) is
 			-- Put `n' to end of `file'.
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_pr (file: POINTER; r: REAL) is
 			-- Put `r' to end of `file'.
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_pd (file: POINTER; d: DOUBLE) is
 			-- Put `d' to end of `file'.
 		external
-			"C"
+			"C | <file.h>"
 		end;
 
 	file_ps (file : POINTER; s : POINTER; length : INTEGER) is
 			-- Print `a_string' to `file'.
 		external
-			"C"
+			"C | <file.h>"
 		alias
 			"file_pt_ps"
 		end;

@@ -11,8 +11,6 @@ inherit
 	GB_CONSTANT
 	
 	GB_SHARED_OBJECT_EDITORS
-		rename
-			Visual_studio_information as old_Visual_studio_information
 		export
 			{NONE} all	
 		end

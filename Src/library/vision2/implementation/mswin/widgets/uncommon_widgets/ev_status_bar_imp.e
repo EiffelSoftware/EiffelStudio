@@ -200,12 +200,14 @@ feature -- Implementation
 						array.put (clist.item.width, clist.index)
 						clist.forth
 					until
-						clist.islast
+						clist.islast or clist.off
 					loop
 						array.put (clist.item.width + array.item (clist.index - 1), clist.index)
 						clist.forth
 					end
-					array.put (clist.item.width, clist.index)
+					if not clist.off then
+						array.put (clist.item.width, clist.index)
+					end
 				end
 				set_parts (array)
 			end

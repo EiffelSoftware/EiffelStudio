@@ -38,7 +38,7 @@ feature -- Creation
 		do
 			make
 			toc := a_toc
-			create filename.make_from_string (a_filename)
+			filename := a_filename
 			create l_root.make_root ("table_of_contents", Void)
 			set_root_element (l_root)
 			build (toc, root_element)
@@ -63,34 +63,39 @@ feature {NONE} -- XML
 			l_node: XM_ELEMENT
 			l_node_attribute: XM_ATTRIBUTE
 		do
-				-- Build element from node details
-			l_id := a_node.id
-			l_title := a_node.title
-			l_url := a_node.url
-			l_icon := a_node.icon
-			l_heading := a_node.has_child
-			if l_heading then
-				l_name := Heading_string
+			if a_node.id > 0 then
+					-- Build element from node details
+				l_id := a_node.id
+				l_title := a_node.title
+				l_url := a_node.url
+				l_icon := a_node.icon
+				l_heading := a_node.has_child
+				if l_heading then
+					l_name := Heading_string
+				else
+					l_name := Topic_string
+				end
+				create l_node.make_child (a_parent, l_name, Void)			
+				create l_node_attribute.make ("id", Void, l_id.out, l_node)
+				l_node.put_last (l_node_attribute)
+				if l_title /= Void then
+					create l_node_attribute.make ("title", Void, l_title, l_node)
+					l_node.put_last (l_node_attribute)
+				end
+				if l_url /= Void then
+					create l_node_attribute.make ("url", Void, l_url, l_node)
+					l_node.put_last (l_node_attribute)
+				end
+				if l_icon /= Void then
+					create l_node_attribute.make ("icon", Void, l_icon, l_node)
+					l_node.put_last (l_node_attribute)
+				end
+				
+				a_parent.put_last (l_node)
 			else
-				l_name := Topic_string
-			end
-			create l_node.make_child (a_parent, l_name, Void)			
-			create l_node_attribute.make ("id", Void, l_id.out, l_node)
-			l_node.put_last (l_node_attribute)
-			if l_title /= Void then
-				create l_node_attribute.make ("title", Void, l_title, l_node)
-				l_node.put_last (l_node_attribute)
-			end
-			if l_url /= Void then
-				create l_node_attribute.make ("url", Void, l_url, l_node)
-				l_node.put_last (l_node_attribute)
-			end
-			if l_icon /= Void then
-				create l_node_attribute.make ("icon", Void, l_icon, l_node)
-				l_node.put_last (l_node_attribute)
+				l_node := a_parent
 			end
 			
-			a_parent.put_last (l_node)
 			
 			if a_node.has_child then
 				from
@@ -109,7 +114,7 @@ feature {NONE} -- Implementation
 	toc: TABLE_OF_CONTENTS
 			-- Toc
 
-	filename: FILE_NAME
+	filename: STRING
 			-- Filename
 
 end -- class XML_TABLE_OF_CONTENTS

@@ -24,6 +24,7 @@ feature -- File
 			create_project_file
 			create_files_file
 			create_collection_file
+			create_stylesheet_file
 		end		
 
 feature {NONE}  -- File
@@ -51,8 +52,8 @@ feature {NONE}  -- File
 			template_file.extend ("HelpProjectTemplate.hwproj")
 			create template.make (template_file)
 			template.add_symbol ("project_name", name)
-			template.add_symbol ("files", retrieve_files (False, True))
-			template.add_symbol ("directories", retrieve_files (True, True))
+			template.add_symbol ("files", retrieve_files (Help_directory, False, True))
+			template.add_symbol ("directories", retrieve_files (Help_directory, True, True))
 			template.save_file (project_file_name)
 			create project_file.make (template.template_filename)
 		end
@@ -66,8 +67,8 @@ feature {NONE}  -- File
 			create template_file.make_from_string (Shared_constants.Application_constants.templates_path)
 			template_file.extend ("HelpFilesTemplate.HxF")
 			create template.make (template_file)
-			template.add_symbol ("files", retrieve_files (False, False))
-			template.save_file (Help_directory.out + "\" + name + ".HxF")
+			template.add_symbol ("files", retrieve_files (help_directory, False, False))
+			template.save_file (Help_directory.name + "\" + name + ".HxF")
 			create files_file.make (template.template_filename)
 		end
 		
@@ -81,8 +82,14 @@ feature {NONE}  -- File
 			template_file.extend ("HelpCollectionTemplate.HxC")
 			create template.make (template_file)
 			template.add_symbol ("project_name", name)
-			template.save_file (Help_directory.out + "\" + name + ".HxC")
+			template.save_file (Help_directory.name + "\" + name + ".HxC")
 			create collection_file.make (template.template_filename)
+		end
+
+	create_stylesheet_file is
+			-- Create the stylesheet
+		do
+			copy_stylesheet (temporary_help_location (Shared_project.root_directory, True))
 		end
 
 	project_file: PLAIN_TEXT_FILE
@@ -110,59 +117,102 @@ feature -- Commands
 
 feature {NONE} -- Project
 
-	retrieve_files (get_dirs, tags: BOOLEAN): STRING is
+	retrieve_files (a_dir: DIRECTORY; get_dirs, tags: BOOLEAN): STRING is
 			-- Retrieve the project files string or directories string if `get_dirs'
 		local
-			l_help_topic: TABLE_OF_CONTENTS_NODE
-			l_help_topics: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
-			l_title, l_url: STRING
+--			l_help_topic: TABLE_OF_CONTENTS_NODE
+--			l_help_topics: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
+--			l_title, l_url: STRING
+--			l_util: UTILITY_FUNCTIONS
+			l_cnt,
+			l_upper_count: INTEGER
+			l_file: RAW_FILE
+			l_folder: DIRECTORY
+			l_name: DIRECTORY_NAME
+			l_url: STRING
 			l_util: UTILITY_FUNCTIONS
 		do		
+--			create l_util
+--			create Result.make_empty
+--			from
+--				l_help_topics := toc.nodes (True)
+--				l_help_topics.start
+--			until
+--				l_help_topics.after
+--			loop				
+--				l_help_topic :=  l_help_topics.item
+--				l_url := l_help_topic.url
+--				l_title := l_help_topic.title
+--				if get_dirs then
+--					if l_help_topic.url_is_directory then
+--						Result.append ("<Dir ")
+--						if l_url /= Void then
+--							l_url := l_util.toc_friendly_url (l_url)
+--							l_url := l_util.directory_no_file_name (l_url)
+--							Result.append ("Url=%"" + l_url + "%"")
+--						end					
+--						if tags and then l_title /= Void then
+--							Result.append (" Title=%"" + l_title + "%"")
+--						end
+--						Result.append ("/>%N")
+--					end
+--				else
+--					if l_help_topic.url_is_file then
+--						Result.append ("%T<File ")
+--						if l_url /= Void then
+--							l_url := l_util.toc_friendly_url (l_url)
+--							l_url := l_util.file_no_extension (l_url)
+--							l_url.append (".html")
+--							Result.append ("Url=%"" + l_url + "%"")
+--						end
+--						
+--						if tags and then l_title /= Void then
+--							Result.append (" Title=%"" + l_title + "%"")
+--						end
+--						Result.append ("/>%N")
+--					end										
+--				end
+--				l_help_topics.forth
+--			end
+--			if not get_dirs then
+--						-- Retrieve images
+--				Result.append (retrieve_images (Shared_constants.Application_constants.Temporary_help_directory))
+--			end			
+			--create l_dir.make (a_path)
 			create l_util
-			create Result.make_empty
 			from
-				l_help_topics := toc.nodes (True)
-				l_help_topics.start
+				l_cnt := 0
+				l_upper_count := a_dir.count
+				a_dir.open_read
+				a_dir.start
+				create Result.make_empty
 			until
-				l_help_topics.after
+				l_cnt = l_upper_count
 			loop
-				l_help_topics.forth
-				l_help_topic :=  l_help_topics.item
-				l_url := l_help_topic.url
-				l_title := l_help_topic.title
-				if get_dirs then
-					if l_help_topic.url_is_directory then
-						Result.append ("<Dir ")
-						if l_url /= Void then
-							l_url := l_util.toc_friendly_url (l_url)
-							l_url := l_util.directory_no_file_name (l_url)
+				a_dir.readentry
+				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal (".."))then
+					create l_name.make_from_string (a_dir.name)
+					l_name.extend (a_dir.lastentry)
+					l_folder ?= create {DIRECTORY}.make (l_name)
+					if l_folder.exists and then not l_folder.is_empty then
+						if get_dirs then
+							l_url := l_util.toc_friendly_url (clone (a_dir.name))			
+							Result.append ("<Dir ")
 							Result.append ("Url=%"" + l_url + "%"")
-						end					
-						if tags and then l_title /= Void then
-							Result.append (" Title=%"" + l_title + "%"")
+							Result.append ("/>%N")
 						end
-						Result.append ("/>%N")
+						Result.append (retrieve_files (l_folder, get_dirs, tags))
+					else
+						if not get_dirs and then (create {RAW_FILE}.make (l_name.string)).exists then
+							l_url := l_util.toc_friendly_url (l_name.string)
+							Result.append ("%T<File Url=%"" + l_url + "%"")
+							Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
+							Result.append ("/>%N")
+						end						
 					end
-				else
-					Result.append ("%T<File ")
-					if l_url /= Void then
-						l_url := l_util.toc_friendly_url (l_url)
-						l_url := l_util.file_no_extension (l_url)
-						l_url.append (".html")
-						Result.append ("Url=%"" + l_url + "%"")
-					end
-					
-					if tags and then l_title /= Void then
-						Result.append (" Title=%"" + l_title + "%"")
-					end
-					Result.append ("/>%N")					
-				end
-				l_help_topics.forth
+				end				
+				l_cnt := l_cnt + 1
 			end
-			if not get_dirs then
-						-- Retrieve images
-				Result.append (retrieve_images (Shared_constants.Application_constants.Temporary_help_directory))
-			end					
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -173,7 +223,8 @@ feature {NONE} -- Project
 			path_not_void: a_path /= Void
 			path_exists: (create {DIRECTORY}.make (a_path)).exists
 		local
-			l_cnt: INTEGER
+			l_cnt,
+			l_upper_count: INTEGER
 			l_file: RAW_FILE
 			l_dir, l_folder: DIRECTORY
 			l_name: DIRECTORY_NAME
@@ -184,27 +235,30 @@ feature {NONE} -- Project
 			create l_util
 			from
 				l_cnt := 0
+				l_upper_count := l_dir.count
 				l_dir.open_read
 				l_dir.start
 				create Result.make_empty
 			until
-				l_cnt = l_dir.count
+				l_cnt = l_upper_count
 			loop
 				l_dir.readentry
-				create l_name.make_from_string (a_path)
-				l_name.extend (l_dir.lastentry)
-				l_folder ?= create {DIRECTORY}.make (l_name)
-				if l_folder.exists and then not l_folder.is_empty then
-					Result.append (retrieve_images (l_name))
-				else
-					l_file ?= create {RAW_FILE}.make (l_name.string)
-					if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then				
-						l_url := l_util.toc_friendly_url (l_file.name)
-						Result.append ("%T<File Url=%"" + l_url + "%"")
-						Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
-						Result.append ("/>%N")
+				if not (l_dir.lastentry.is_equal (".") or l_dir.lastentry.is_equal (".."))then
+					create l_name.make_from_string (a_path)
+					l_name.extend (l_dir.lastentry)
+					l_folder ?= create {DIRECTORY}.make (l_name)
+					if l_folder.exists and then not l_folder.is_empty then
+						Result.append (retrieve_images (l_name))
+					else
+						l_file ?= create {RAW_FILE}.make (l_name.string)
+						if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then				
+							l_url := l_util.toc_friendly_url (l_file.name)
+							Result.append ("%T<File Url=%"" + l_url + "%"")
+							Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
+							Result.append ("/>%N")
+						end
 					end
-				end
+				end				
 				l_cnt := l_cnt + 1
 			end
 		end	

@@ -1,5 +1,5 @@
 indexing
-	description: "Table of contents node in XMl representation."
+	description: "Table of contents node in XML representation."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -18,7 +18,7 @@ feature {NONE} -- Implementation
 		do
 			create symbol_table.make (13)
 			symbol_table.compare_objects
-			template_filename := atemplate_filename.clone (atemplate_filename)
+			template_filename := atemplate_filename.twin
 		end
 	
 feature -- Access
@@ -115,7 +115,7 @@ feature {NONE} -- Basic Operations
 			var_end: INTEGER
 			var: STRING
 		do
-			current_line := in.clone (in)
+			current_line := in.twin
 			if astart_pos < in.count then
 				var_start := in.substring_index (start_token, astart_pos)
 				if var_start > 0 then
@@ -124,8 +124,7 @@ feature {NONE} -- Basic Operations
 						var := in.substring (var_start, var_end)
 						var.to_upper
 						process_token (var, var_start)
-						pre_process_line (current_line, var_end + 1)
-					
+						pre_process_line (current_line, var_end + 1)					
 					end
 				end
 			end
@@ -150,7 +149,7 @@ feature -- Formatting
 	format_symbol (asymbol: STRING): STRING is
 			-- format a symbol name
 		do
-			Result := asymbol.clone (asymbol)
+			Result := asymbol.twin
 			Result.to_upper
 			Result.replace_substring_all (" ", "")
 		end
@@ -163,7 +162,7 @@ feature {NONE} -- Formatting
 			non_void_token: atoken /= Void
 			non_empty_token: not atoken.is_empty
 		do
-			Result := atoken.clone (atoken)
+			Result := atoken.twin
 			Result.prepend (start_token)
 			Result.append (end_token)
 			Result.to_upper

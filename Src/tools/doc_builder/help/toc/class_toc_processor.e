@@ -7,6 +7,8 @@ class
 	CLASS_TOC_PROCESSOR
 
 inherit
+	CODE_HTML_CONSTANTS
+	
 	TABLE_OF_CONTENTS_CONSTANTS
 
 	UTILITY_FUNCTIONS
@@ -48,8 +50,7 @@ feature -- Process
 			-- Process
 		do
 			if class_name /= Void then
-				process_chart
-				process_contract		
+				process_chart			
 			end
 		end	
 		
@@ -57,32 +58,31 @@ feature -- Process
 			-- Process chart
 		require
 			class_name_not_void: class_name /= Void
-		do
-			create chart_node.make (next_id, parent, code_file.name, class_name)
-			chart_node.set_icon (class_icon)
-			parent.add_node (chart_node)			
-		end
-	
-	process_contract is
-			-- Process contract
-		require
-			class_name_not_void: class_name /= Void
 		local
-			l_contract_file: like code_file
-			l_filename: FILE_NAME
-			l_name: STRING
+			l_chart_file: like code_file
 			l_anchors: like generated_anchors
+			l_name,
 			l_anchor_title,
+			l_filename_string,
 			l_anchor_href: STRING
+			l_filename: FILE_NAME
 			l_node: like chart_node
+			l_mem: MEMORY
 		do
-			l_name := directory_no_file_name (code_file.name)
+			create l_mem
+			l_filename_string := code_file.name			
+			create chart_node.make (next_id, parent, l_filename_string, class_name)
+			l_filename_string := clone (l_filename_string.substring (1, l_filename_string.count - 10) + Contract_suffix + ".xml")
+			chart_node.set_icon (class_icon)
+			parent.add_node (chart_node)
+			
+			l_name := directory_no_file_name (code_file.name.string)
 			create l_filename.make_from_string (l_name)
-			l_filename.extend (class_name + Contract_suffix)
+			l_filename.extend (class_name + Chart_suffix)
 			l_filename.add_extension (xml_extension)
-			create l_contract_file.make (l_filename)
-			if l_contract_file.exists then
-				l_anchors := generated_anchors (l_contract_file)
+			create l_chart_file.make (l_filename.string)
+			if l_chart_file.exists then
+				l_anchors := generated_anchors (l_chart_file)
 				if l_anchors /= Void and then not l_anchors.is_empty then
 					from
 						l_anchors.start
@@ -90,16 +90,18 @@ feature -- Process
 						l_anchors.after
 					loop
 						l_anchor_title := l_anchors.item_for_iteration
-						l_anchor_href := l_anchors.key_for_iteration
+						l_anchor_href := l_filename_string + l_anchors.key_for_iteration					
 						create l_node.make (next_id, chart_node, l_anchor_href, l_anchor_title)
 						l_node.set_icon (feature_icon)
-						chart_node.add_node (l_node)
+						chart_node.add_node (l_node)						
 						l_anchors.forth
 					end
+					chart_node.sort
 				end
 			end
+			l_mem.full_collect
 		end
-		
+
 feature -- File
 
 	class_name: STRING is
@@ -107,7 +109,7 @@ feature -- File
 		local
 			l_name: STRING	
 		do		
-			if is_chart or is_contract then
+			if is_chart then
 				l_name := file_no_extension (short_name (code_file.name))
 				Result := l_name.substring (1, l_name.count - 6)
 				Result.to_upper
@@ -120,25 +122,12 @@ feature -- File
 			l_name,
 			l_suffix: STRING	
 		do
-			l_name := file_no_extension (short_name (code_file.name))
+			l_name := file_no_extension (short_name (code_file.name.string))
 			l_suffix := l_name.substring (l_name.count - 5, l_name.count)
 			if l_suffix /= Void then
 				Result := l_suffix.is_equal (Chart_suffix) 
 			end
 		end		
-	
-	is_contract: BOOLEAN is
-			-- Is file a contract view file?
-		local
-			l_name,
-			l_suffix: STRING	
-		do
-			l_name := file_no_extension (short_name (code_file.name))
-			l_suffix := l_name.substring (l_name.count - 5, l_name.count)
-			if l_suffix /= Void then
-				Result := l_suffix.is_equal (Contract_suffix) 
-			end
-		end
 	
 feature {NONE} -- Implementation
 
@@ -165,7 +154,8 @@ feature {NONE} -- Implementation
 					check
 						ok_parsing: l_parser.is_correct
 					end
-					Result := l_xml_reader.anchors
+					Result := clone (l_xml_reader.anchors)
+					l_xml_reader := Void
 				end
 				a_file.close
 			end

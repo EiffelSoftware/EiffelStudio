@@ -37,7 +37,7 @@ feature -- File
 			xml: XM_DOCUMENT
 			element: XM_ELEMENT
 		do
-			xml := settings.deserialize_document
+			xml := settings.xm_document
 			if xml /= Void then
 				create Result.make_create_read_write (Project_file_name)
 				Result.put_string ("[OPTIONS]")

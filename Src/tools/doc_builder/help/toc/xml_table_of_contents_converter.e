@@ -1,5 +1,5 @@
 indexing
-	description: "Converts XML file to table of contents file."
+	description: "Reads XML file to table of contents."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,7 +7,7 @@ class
 	XML_TABLE_OF_CONTENTS_CONVERTER
 
 inherit
-	XML_CONVERTER
+	XM_FORMATTER
 		rename
 			make as make_formatter
 		redefine

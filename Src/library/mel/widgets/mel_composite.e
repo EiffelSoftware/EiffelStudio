@@ -356,7 +356,7 @@ feature {MEL_WIDGET_MANAGER, MEL_SHELL}
 		do
 			mel_popup_children.start;
 			mel_popup_children.prune (a_popup);
-			if mel_popup_children.empty then
+			if mel_popup_children.is_empty then
 				mel_popup_children := Void
 			end;
 		ensure

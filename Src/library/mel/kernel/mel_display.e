@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			end;
 		ensure
 			name_set: (is_valid and then a_display_name /= Void and then
-				not a_display_name.empty) implies 
+				not a_display_name.is_empty) implies 
 					name.is_equal (a_display_name)
 		end;
 

@@ -39,7 +39,7 @@ feature -- Status report
 			-- to form the resource string;
 		do
 			!! Result.make (20);
-			if widget_name.empty then
+			if widget_name.is_empty then
 				Result.append ("*")
 			else
 				Result.append (widget_name);

@@ -823,7 +823,7 @@ feature -- Removal
 		do
 			set_string ("")
 		ensure
-			cleared: string.empty
+			cleared: string.is_empty
 		end;
 
 	clear_selection (time: INTEGER) is

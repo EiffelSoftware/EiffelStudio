@@ -30,7 +30,8 @@ inherit
 
 creation
 	make,
-	make_by_id
+	make_by_id,
+	make_by_pointer
 
 feature {NONE} -- Initialization
 

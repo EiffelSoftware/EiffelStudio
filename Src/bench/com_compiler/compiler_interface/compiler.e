@@ -146,7 +146,7 @@ feature -- Basic Operations
 			Result := Freeze_command_name + " -silent -vs"
 		end
 
-	Freeze_command_relative_path: STRING is "Compiler\"
+	Freeze_command_relative_path: STRING is "\Studio\spec\windows\bin\"
 			-- Path to `finish_freezing.exe' in installation
 
 	remove_file_locks is

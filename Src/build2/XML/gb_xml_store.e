@@ -181,7 +181,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			
 				-- We explicitly add the titled window. When we support more than
 				-- one window, then this will need to be updated.
-			window_element := create_widget_instance (application_element, "EV_TITLED_WINDOW")
+			window_element := create_widget_instance (application_element, Ev_titled_window_string)
 			application_element.force_last (window_element)
 			add_new_object_to_output (window_item.object, window_element, add_names)		
 		end

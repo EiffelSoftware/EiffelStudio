@@ -1011,48 +1011,48 @@ end;
 					classes.forth
 				end
 
---				if not Result then
---					if inc_l = Void then
---						Result := include_list /= Void
---					elseif include_list = Void or else
---						inc_l.count /= include_list.count
---					then
---						Result := True
---					else
---						from
---							i := 1;
---						until
---							i > inc_l.count or else result
---						loop
---							include_list.start;
---							include_list.compare_references
---							include_list.search (inc_l.i_th (i).file__name);
---							Result := include_list.after
---							i := i + 1;
---						end
---					end;
---				end;
---				if not Result then
---					if ex_l = Void then
---						Result := exclude_list /= Void
---					elseif exclude_list = Void or else
---						ex_l.count /= exclude_list.count
---					then
---						Result := True
---					else
---						from
---							i := 1;
---						until
---							i > ex_l.count or else result
---						loop
---							exclude_list.start
---							exclude_list.compare_references
---							exclude_list.search (ex_l.i_th (i).file__name)
---							Result := exclude_list.after
---							i := i + 1
---						end
---					end;
---				end;
+				if not Result then
+					if inc_l = Void then
+						Result := include_list /= Void
+					elseif include_list = Void or else
+						inc_l.count /= include_list.count
+					then
+						Result := True
+					else
+						from
+							i := 1;
+						until
+							i > inc_l.count or else Result
+						loop
+							include_list.start;
+							include_list.compare_references
+							include_list.search (inc_l.i_th (i).file__name);
+							Result := include_list.after
+							i := i + 1;
+						end
+					end;
+				end;
+				if not Result then
+					if ex_l = Void then
+						Result := exclude_list /= Void
+					elseif exclude_list = Void or else
+						ex_l.count /= exclude_list.count
+					then
+						Result := True
+					else
+						from
+							i := 1;
+						until
+							i > ex_l.count or else Result
+						loop
+							exclude_list.start
+							exclude_list.compare_references
+							exclude_list.search (ex_l.i_th (i).file__name)
+							Result := exclude_list.after
+							i := i + 1
+						end
+					end;
+				end;
 			end;
 		end;
 

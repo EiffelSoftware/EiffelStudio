@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
-			!! ev_children.make
+			!! ev_children.make (1)
 			widget := gtk_list_new
 			set_single_selection
 			gtk_object_ref (widget)

@@ -77,7 +77,7 @@ feature -- Access
 			Result.set_true_generics (clone (true_generics))
 		end
 
-	instantiation_in (other: like Current): like Current is
+	instantiation_in (other: GEN_TYPE_I): like Current is
 			-- Instantiation of Current in context of `other'
 		local
 			i		: INTEGER

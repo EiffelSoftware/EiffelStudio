@@ -37,13 +37,18 @@ feature -- Conveniences
 		do
 			normal_feature ?= other;
 			infix_feature ?= other;
-			
+			check
+				void_normal_feature: normal_feature = void implies infix_feature /= Void
+				void_infix_feature: infix_feature = void implies normal_feature /= Void
+			end
+
 			if infix_feature /= void then
 				Result := true
+			elseif feature_name = Void then
+				Result := False
+			elseif normal_feature.feature_name = Void then
+				Result := True
 			else
-				check
-					normal_feature /= void
-				end;
 				Result := feature_name < normal_feature.feature_name
 			end;
 		end;

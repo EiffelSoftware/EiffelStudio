@@ -36,17 +36,24 @@ feature -- Conveniences
 			infix_feature: INFIX_AS_B;
 			normal_feature: FEAT_NAME_ID_AS_B;
 		do
-			normal_feature ?= other;
-			infix_feature ?= other;
-			if infix_feature /= void then
-				Result := fix_operator < infix_feature.fix_operator
+			normal_feature ?= other
+			infix_feature ?= other
+
+			check
+				 void_normal_feature: normal_feature = void implies infix_feature /= Void
+				void_infix_feature: infix_feature = void implies normal_feature /= Void
+			end
+
+			if infix_feature = void then
+				Result := False
+			elseif fix_operator = Void then
+				Result := False
+			elseif infix_feature.fix_operator = Void then
+				Result := True
 			else
-				check
-					normal_feature /= void
-				end;
-				Result := false;
-			end;
-		end;
+				Result := fix_operator < infix_feature.fix_operator
+			end
+		end
 
 feature
 

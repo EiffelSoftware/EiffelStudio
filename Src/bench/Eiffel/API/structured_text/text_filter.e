@@ -53,6 +53,7 @@ feature -- Text processing
 	process_text (text: STRUCTURED_TEXT) is
 		do
 			structured_text := text;
+			indentation := Void;
 			from text.start until text.after loop
 				process_item (text.item);
 				if not text.after then text.forth end
@@ -64,12 +65,19 @@ feature {NONE} -- Text processing
 	structured_text: STRUCTURED_TEXT;
 			-- Text being processed
 
+	indentation: NEW_LINE_TEXT;
+			-- Indentation to be added at the beginning of the line
+
 	process_basic_text (text: BASIC_TEXT) is
 			-- Check first if a format has been specified for `text'.
 		local
 			format: CELL2 [STRING, STRING];
 			text_image: STRING
 		do
+			if indentation /= Void then
+				process_indentation (indentation);
+				indentation := Void
+			end;
 			if text.is_keyword or text.is_special then
 				text_image := text.image;
 				text_image.to_lower;
@@ -96,8 +104,7 @@ feature {NONE} -- Text processing
 
 	process_new_line_text (text: NEW_LINE_TEXT) is
 		local
-			format: CELL2 [STRING, STRING];
-			i: INTEGER
+			format: CELL2 [STRING, STRING]
 		do
 			if format_table.has (f_New_line) then
 				format := format_table.item (f_New_line);
@@ -109,6 +116,14 @@ feature {NONE} -- Text processing
 			else
 				image.append ("%N")
 			end;
+			indentation := text
+		end;
+
+	process_indentation (text: NEW_LINE_TEXT) is
+		local
+			format: CELL2 [STRING, STRING];
+			i: INTEGER
+		do
 			if format_table.has (f_Tab) then
 				format := format_table.item (f_Tab);
 				from 
@@ -136,6 +151,10 @@ feature {NONE} -- Text processing
 			filter_item: FILTER_ITEM;
 			found: BOOLEAN
 		do
+			if indentation /= Void then
+				process_indentation (indentation);
+				indentation := Void
+			end;
 			construct := text.construct;
 			if format_table.has (construct) then
 				format := format_table.item (construct);
@@ -165,6 +184,10 @@ feature {NONE} -- Text processing
 		local
 			item: BASIC_TEXT
 		do
+			if indentation /= Void then
+				process_indentation (indentation);
+				indentation := Void
+			end;
 			image.extend (' ');
 			process_basic_text (ti_Dashdash);
 			image.extend (' ');

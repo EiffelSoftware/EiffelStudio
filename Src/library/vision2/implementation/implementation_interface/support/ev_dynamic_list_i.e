@@ -262,10 +262,13 @@ feature -- Removal
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
 		local
-			old_index: INTEGER
+			old_index, item_index: INTEGER
 		do
 			old_index := index
-			remove_i_th (interface.sequential_index_of (v, 1))
+			item_index := interface.sequential_index_of (v, 1)
+			if item_index > 0 then
+				remove_i_th (item_index)
+			end
 			index := old_index
 		ensure
 			not_has_v: not has (v)
@@ -371,6 +374,9 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/07 18:37:55  brendel
+--| Fixed bug in prune.
+--|
 --| Revision 1.6  2000/04/07 01:32:31  brendel
 --| Added has.
 --| Replaced interface.has with has.

@@ -984,7 +984,7 @@ feature {NONE} -- Implementation
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `default_value'.)
 		do
-			-- No instructions necessary (returns default value of type H)
+			-- No instructions necessary (returns default value of type G)
 		end
 
 	internal_search (key: H) is

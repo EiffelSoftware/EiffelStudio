@@ -1,5 +1,6 @@
 indexing
-	description: "This class represents a wel_log_font.set_WINDOWS font";
+	description: "EiffelVision font, mswindow implementation."
+	note: "This class represents a WEL_LOG_FONT";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -50,6 +51,12 @@ feature -- Access
 			-- WEL_LOG_FONT to hold details
 
 feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			Result := not wel_font.exists
+		end
 
 	allocated: BOOLEAN
 			-- Has a new font been allocated?
@@ -113,12 +120,6 @@ feature -- Status report
 
 	is_standard: BOOLEAN is True
 			-- Is the font standard and information available?
-
-	is_valid: BOOLEAN is
-			-- Is the font valid in `a_widget''s display?
-		do
-			Result := wel_font /= Void and wel_font.exists
-		end
 
 	maximum_line_width (dc: WEL_DC; a_text: STRING; number_of_lines: INTEGER): INTEGER is
 			-- Calculate the width of the longest %N delimited string in
@@ -372,6 +373,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+		do
+			wel_font.delete
+			wel_font := Void
+			wel_log_font := Void
+		end
 
 	allocate is
 			-- Allocate the WEL_FONT

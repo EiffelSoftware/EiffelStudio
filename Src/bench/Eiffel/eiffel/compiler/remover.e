@@ -113,7 +113,7 @@ debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring ("Propagated to ");
 	io.error.putstring (depend_feature.feature_name);
 	io.error.putstring (" from ");
-	io.error.putstring (static_class.class_name);
+	io.error.putstring (static_class.name);
 	io.error.new_line;
 end;
 						!!unit_to_traverse.make (depend_feature, static_class);
@@ -138,8 +138,6 @@ end;
 	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
 		local
-			class_name: STRING;
-			temp: ROUT_ID_SET;
 			deg_output: DEGREE_OUTPUT
 		do
 			old_mark_alive (feat, rout_id_val);

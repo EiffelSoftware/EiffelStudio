@@ -31,7 +31,7 @@ int       eif_nCmdShow;
 
 static char **argv = NULL, *t = NULL;
 
-APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, 
+APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
     LPSTR lpCmdLine, int nCmdShow)
 {
 	int ret = 0;
@@ -57,11 +57,11 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
 
 	argv = shword (t);
 	for (argc = 0; argv[argc] != (char *) 0; argc++)
-		;       
+		;
 	environ = (char **) GetEnvironmentStrings();
 
 	main(argc, argv, environ);
-    
+
 	FreeEnvironmentStrings ((LPTSTR) environ);
 
 	return ret;
@@ -93,7 +93,7 @@ void eif_register_cleanup(EIF_CLEANUP f)
 */
 {
 	if (eif_fn_count == EIF_CLEANUP_TABLE_SIZE)
-		eraise ("Cleanup table overflow");
+		eraise ("Cleanup table overflow",0);	/* %%zs added ',0' - 2 args needed, see run-time/except.c function eraise() */
 
 	eif_fn_table [eif_fn_count] = f;
 	eif_fn_count++;

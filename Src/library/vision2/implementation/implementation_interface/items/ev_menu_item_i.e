@@ -66,6 +66,8 @@ feature -- Assertion
 			-- True if the current item is selected.
 			-- False otherwise.
 			-- We use it only when the grand parent is an option button.
+   		require
+			valid_grand_parent: grand_parent_is_option_button
 		deferred
 		end
 

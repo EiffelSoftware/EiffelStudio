@@ -2089,7 +2089,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				not feature_address.has_focus and then
 				not cluster_address.has_focus and then
 				not address_dialog.has_focus and then
-				not choice.is_show_requested
+				(choice /= Void and then not choice.is_show_requested)
 			then
 				address_dialog.hide
 			end

@@ -866,8 +866,12 @@ feature -- Status setting
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
-			-- Apply a characted format `format' from character positions `start_pos' to `end_pos' to
-			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
+			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
+			-- format buffer. Call `flush_buffer' to apply buffered contents to `Current'.
+			-- `format' is not cloned internally and when buffer is flushed, its reference is
+			-- used. Therefore, you must not modify `format' externally after passing to
+			-- this procedure, otherwise all buffered appends that referenced the same `format' object
+			-- will use its current value.
 		local
 			format_out: STRING
 		do
@@ -891,9 +895,13 @@ feature -- Status setting
 		end
 		
 	buffered_append (a_text: STRING; format: EV_CHARACTER_FORMAT) is
-			-- Apply `a_text' with format `format' to append buffer.
-			-- To apply buffer contents to `Current', call `flush_append_buffer' or
-			-- `flush_append_buffer_to'.
+			-- Append `a_text' with format `format' to append buffer.
+			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
+			-- or `flush_buffer_to' which inserts the formatted text.
+			-- `format' is not cloned internally and when buffer is flushed, its reference is
+			-- used. Therefore, you must not modify `format' externally after passing to
+			-- this procedure, otherwise all buffered appends that referenced the same `format' object
+			-- will use its current value.
 		do
 			if not buffer_locked_in_append_mode then
 					-- If we are not already locked in append mode then

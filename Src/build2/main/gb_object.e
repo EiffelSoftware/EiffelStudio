@@ -732,7 +732,7 @@ feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operatio
 			not_expanded: not expanded_in_box
 		end
 		
-feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Status Setting
+feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT_TO_TOP_LEVEL, GB_COMMAND_FLATTEN_OBJECT} -- Status Setting
 
 	set_parent (a_parent_object: GB_OBJECT) is
 			-- Assign `a_parent_object' to `parent_object'.
@@ -832,7 +832,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 			end
 		end
 
-feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
+feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_COMMAND} -- Status setting
 
 	set_layout_item (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Assign `a_layout_item' to `layout_item'.
@@ -1224,7 +1224,7 @@ feature {GB_ID_COMPRESSOR, GB_OBJECT}
 			-- All instance referers converted also. Not easy to write as a postcondition.
 		end
 
-feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_WINDOW_SELECTOR, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
+feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} -- Basic operation
 
 	set_name (new_name: STRING) is
 			-- Assign `new_name' to `name'.
@@ -1265,7 +1265,7 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 			end
 		end
 
-feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTRUCTOR_ITEM, GB_COMMAND_FLATTEN_OBJECT} -- Implementation
 
 	build_display_object is
 			-- Build `display_object' from type of `Current'
@@ -2035,16 +2035,18 @@ feature {NONE} -- Contract support
 			from
 				list.start
 			until
-				list.off
+				list.off or current_result = False
 			loop
 				if ids.has (list.item) then
 					current_result.set_item (False)
 				else
 					ids.extend (list.item, list.item)
 				end
-				referred_object := object_handler.deep_object_from_id (list.item)
-				if referred_object /= Void then
-					Result := instance_referers_recursively_unique (referred_object, current_result, ids)
+				if current_result.item then
+					referred_object := object_handler.deep_object_from_id (list.item)
+					if referred_object /= Void then
+						Result := instance_referers_recursively_unique (referred_object, current_result, ids)
+					end
 				end
 				list.forth
 			end

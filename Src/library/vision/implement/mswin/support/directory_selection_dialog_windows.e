@@ -49,12 +49,20 @@ feature {NONE} -- Initialization
 
 	setup_dialog is
 			-- Initialize the dialog.
+		local
+			pos: INTEGER
 		do
 			set_title (private_title)
-			fill_recently_used
-			directory := get ("Directory0")
-			if directory = Void then
-				if search_directory /= void then
+			directories_list := get ("DirectoryList")
+			if directories_list /= Void then
+				pos := directories_list.index_of (';', 1) - 1
+			end
+			if pos > 1 then
+				fill_recently_used
+				directory := clone (directories_list)
+				directory.head (directory.index_of (';', 1) - 1)
+			else
+				if search_directory /= Void then
 					directory := search_directory
 				else
 					directory := current_working_directory
@@ -74,6 +82,9 @@ feature -- Access
 
 	directory: STRING
 			-- Current selected directory
+
+	directories_list: STRING
+			-- Current list of remembered directories
 
 	directory_list: WEL_SINGLE_SELECTION_LIST_BOX
 			-- List of directories in underneath `combo_box'
@@ -297,42 +308,26 @@ feature {NONE} -- Implementation
 	fill_recently_used is
 			-- Fill list of most recently used values
 		local
-			mru_max_string, s, mru_dir: STRING
-			mru_count, mru_max: INTEGER
-			i : INTEGER
+			i, nb, pos, old_pos: INTEGER
+			dir: STRING
+			list: STRING
 		do
-			mru_max_string := get ("DirectoryCount")
-			if mru_max_string /= Void and then mru_max_string.is_integer then
-				mru_max := mru_max_string.to_integer 
-				if mru_max < 0 then 
-					mru_max := 0
-				end
-			end
-			if mru_max > 0 then
+			from
+				list := directories_list
+				nb := list.occurrences (';')
 				!! remembered_list.make
 				remembered_list.compare_objects
-				from
-					i := 0
-				until
-					i >= mru_max
-				loop
-					s := "Directory"
-					s.append_integer (i)
-					mru_dir := get (s)
-					if mru_dir /= Void then
-						mru_count := mru_count + 1
-						remembered_list.extend (mru_dir)
-					end
-					i := i + 1
-				end
-			end
-			from
-				remembered_list.start
+				old_pos := 1
+				i := 0
 			until
-				remembered_list.after
+				i >= nb
 			loop
-				combo_box.add_string (remembered_list.item)
-				remembered_list.forth
+				pos := list.index_of (';', old_pos + 1)
+				dir := list.substring (old_pos, pos - 1)
+				old_pos := pos + 1
+				remembered_list.extend (dir)
+				combo_box.add_string (dir)
+				i := i + 1
 			end
 		end
 
@@ -373,33 +368,19 @@ feature {NONE} -- Implementation
 	save_recently_used is
 			-- Save list of most recently used directories
 		local
-			mru_max_string, s, mru_dir: STRING
-			mru_max: INTEGER
-			i : INTEGER
+			list: STRING
 		do
-			mru_max_string := get ("DirectoryCount")
-			if mru_max_string /= Void and then mru_max_string.is_integer then
-				mru_max := mru_max_string.to_integer 
-				if mru_max < 0 then 
-					mru_max := 0
-				end
-			end
 			from
-				i := 0
+				!! list.make (512)
 				remembered_list.start
 			until
-				i >= mru_max or remembered_list.after
+				remembered_list.after
 			loop
-				s := "Directory"
-				s.append_integer (i)
-				if remembered_list.item /= Void then
-					put (remembered_list.item, s)
-				else
-					put ("C:\", s)
-				end
-				i := i + 1
+				list.append (remembered_list.item)
+				list.append (";")
 				remembered_list.forth
 			end
+			put (list, "DirectoryList")
 		end
 
 	update_directories is

@@ -69,7 +69,9 @@ feature -- Executions
 	execute_ok_action (a_cust_tool: like associated_custom_tool) is
 			-- Action performed when save button is activated
 		do
-			execute_apply_action (a_cust_tool)
+			execute_apply_action (a_cust_tool);
+			Feature_resources.show_all_callers.set_actual_value 
+					(to_show_all_callers)
 		end;
 
 	execute (arg: ANY) is

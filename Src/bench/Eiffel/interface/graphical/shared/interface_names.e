@@ -155,7 +155,8 @@ feature -- Accelerator, focus label and menu name
 	f_Generate: STRING is				"Generate";
 	m_Generate: STRING is				"&Generate";
 	f_Help: STRING is					"Help";
-	m_Help: STRING is					"&Help";
+	m_Help: STRING is					"&Help%T<F1>";
+	a_Help: STRING is					"<Key><F1>";
 	f_Hide_feature: STRING is			"Hide feature";
 	m_Hide_feature: STRING is			"Hide &feature";
 	f_Hide_object: STRING is			"Hide object";
@@ -185,6 +186,8 @@ feature -- Accelerator, focus label and menu name
 	a_Precompile: STRING is				"Ctrl Alt<Key>P";
 	f_Precompile: STRING is				"&Precompile...";
 	m_Precompile: STRING is				"Precompile...%TCtrl+Alt+P";
+	f_Print: STRING is					"&Print...";
+	m_Print: STRING is					"Print";
 	f_Preferences: STRING is			"Preferences";
 	m_Preferences: STRING is			"&Preferences";
 	f_Profile_tool: STRING is			"Profile tool";
@@ -194,6 +197,9 @@ feature -- Accelerator, focus label and menu name
 	a_Quick_update: STRING is			"Ctrl Alt<Key>q";
 	f_Quick_update: STRING is			"Quick melt";
 	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Alt+Q";
+	a_Raise_all_tools: STRING is		"Ctrl<Key>b";
+	f_Raise_all_tools: STRING is		"Raise all tools";
+	m_Raise_all_tools: STRING is		"&Raise all tools%TCtrl+B";
 	f_Raise_project: STRING is			"Raise project tool";
 	m_Raise_project: STRING is			"&Raise project tool%TAlt+R";
 	a_Raise_project: STRING is			"Alt<Key>P";
@@ -338,6 +344,7 @@ feature -- Stone names
 
 feature -- Title part
 
+	t_Ace_builder: STRING is			"Ace builder";
 	t_All_callers: STRING is			"All callers of ";
 	t_Argument_w: STRING is				"Execution arguments";
 	t_Ancestors_of: STRING is			"Ancestors of class ";

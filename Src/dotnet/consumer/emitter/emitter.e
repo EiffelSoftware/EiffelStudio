@@ -423,8 +423,7 @@ feature {NONE} -- Implementation
 			cr: CACHE_READER
 			cw: CACHE_WRITER
 			l_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
-			i, j: INTEGER
-			dir: DIRECTORY
+			i: INTEGER
 			l_assembly_name: ASSEMBLY_NAME
 			l_assembly_location: STRING
 			l_same_assembly: BOOLEAN
@@ -432,10 +431,12 @@ feature {NONE} -- Implementation
 			create cr
 			if cr.is_initialized then
 				io.put_string ("%NCleaning Eiffel assembly cache.%N")
+				remove_corrupted_xml
 
 				l_assemblies_info := cr.consumed_assemblies_info
 				from
 					i := 1
+					create cw
 				until
 					i > l_assemblies_info.count
 				loop
@@ -457,7 +458,6 @@ feature {NONE} -- Implementation
 
 						if not l_same_assembly then
 							io.put_string ("Removing assembly: " + l_assembly_location + " because file has been modified.%N")
-							create cw
 							cw.remove_assembly (l_assembly_location)
 						end
 					end
@@ -465,6 +465,35 @@ feature {NONE} -- Implementation
 				end
 				io.put_string ("%N")
 			end
+		end
+
+	remove_corrupted_xml is
+			-- Remove all directories under assemblies\dotnet
+			-- that do not contain a types.xml file.
+		local
+			cr: CACHE_READER
+			l_dir: DIRECTORY_INFO
+			l_sub_directories: NATIVE_ARRAY [SYSTEM_STRING]
+			l_type_file: STRING
+			i: INTEGER
+		do
+			create cr
+
+			l_sub_directories := feature {SYSTEM_DIRECTORY}.get_directories ((Eiffel_path + cr.Eac_path).to_cil)
+			from
+				i := 0
+			until
+				i = l_sub_directories.count
+			loop
+				create l_type_file.make_from_cil (l_sub_directories.item (i))
+				l_type_file := l_type_file + "\types.xml"
+				if not feature {SYSTEM_FILE}.exists (l_type_file.to_cil) then
+					create l_dir.make (l_sub_directories.item (i))
+					l_dir.delete_boolean (True)
+				end
+				i := i + 1
+			end
+			
 		end
 
 end -- class EMITTER

@@ -89,7 +89,8 @@ feature
 			class_text: CLASS_TEXT;
 			modified_class, position_saved: BOOLEAN;
 			last_cursor_position, last_top_position: INTEGER;
-			retried: BOOLEAN
+			retried: BOOLEAN;
+			same_stone: BOOLEAN
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -111,6 +112,7 @@ feature
 					not equal (stone, text_window.root_stone))
 				then
 					if stone /= Void and then stone.is_valid then
+						same_stone := equal (stone, text_window.root_stone);
 						display_temp_header (stone);
 						set_global_cursor (watch_cursor);
 						stone_text := stone.origin_text;
@@ -149,8 +151,8 @@ feature
 						class_text ?= text_window;
 						if 
 							class_text /= Void and then (
-							class_text.last_format = 
-										class_text.tool.showclick_command or
+							(same_stone and class_text.last_format = 
+										class_text.tool.showclick_command) or
 							(do_format and class_text.last_format = Current))
 						then
 							last_cursor_position := class_text.cursor_position;

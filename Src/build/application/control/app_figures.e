@@ -25,7 +25,7 @@ inherit
 creation
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_drawing: APP_DR_AREA) is
 			-- Set `drawing_area' to a_drawing and set 'world' to `a_world' 
@@ -40,11 +40,11 @@ feature {NONE} -- Creation
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
-			drawing_area.add_button_press_command (1, Current, Void)
+			drawing_area.active_area.add_button_press_command (1, Current, Void)
 			create cmd.make (~execute_move)
-			drawing_area.add_motion_notify_command (cmd, Void)
+			drawing_area.active_area.add_motion_notify_command (cmd, Void)
 			create cmd.make (~execute_release)
-			drawing_area.add_button_release_command (1, cmd, Void)
+			drawing_area.active_area.add_button_release_command (1, cmd, Void)
 		end 
 
 feature -- Selecting and moving a figure 
@@ -75,7 +75,7 @@ feature -- Selecting and moving a figure
 			else
 				movable_figure := selected_figure
 			end
-		end 
+		end
 
 
 feature {NONE} -- Movement of a figure 
@@ -98,7 +98,7 @@ feature {NONE} -- Movement of a figure
 			if not moved then
 				moving_figure := movable_figure.moving_figure
 				moving_figure.attach_drawing (drawing_area)
-				moving_figure.draw
+--				moving_figure.draw
 				moved := True
 			end
 			if pt.x < 0 or else pt.y < 0 or else
@@ -133,7 +133,9 @@ feature {APP_FIGURES} -- Commands
 		local
 			pt: EV_POINT
 		do
-			if ev_data.first_button_pressed and then found then
+			if not ev_data.control_key_pressed
+			and then ev_data.first_button_pressed and then found
+			then
 				create pt.set (ev_data.x, ev_data.y)
 				move_figure (pt)
 			end

@@ -141,16 +141,16 @@ feature
 				drawing.set_background_gc_color (background_color);
 			end;
 			drawing.set_drawing_font (font);
-			string_width := font.implementation.string_width (drawing_i_to_widget_i (drawing), text);
-			string_descent := font.implementation.descent (drawing_i_to_widget_i (drawing));
-			string_ascent := font.implementation.ascent (drawing_i_to_widget_i (drawing));
+			string_width := font.implementation.width_of_string (text);
+			string_descent := font.implementation.descent
+			string_ascent := font.implementation.ascent
 		end;
 
 	set_text (s: STRING) is
 		do
 			text := clone (s);
 			if drawing /= Void then
-				string_width := font.implementation.string_width (drawing_i_to_widget_i (drawing), text);
+				string_width := font.implementation.width_of_string (text);
 			end;
 		end;
 

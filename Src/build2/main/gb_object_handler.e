@@ -85,8 +85,6 @@ feature -- Access
 			-- Is `child_object' a child (recursively) of `parent_object'?
 		require
 			parent_not_void: parent_object /= Void
-		local
-			parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			object_contained_in_object_result := False
 			recursive_do_all (parent_object, agent is_child (child_object, ?))
@@ -204,10 +202,7 @@ feature -- Basic operation
 			cell_object: GB_CELL_OBJECT
 			container_object: GB_CONTAINER_OBJECT
 			child_object: GB_OBJECT
-			node: GB_LAYOUT_CONSTRUCTOR_ITEM
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			children: ARRAYED_LIST [GB_OBJECT]
-			old_children: ARRAYED_LIST [GB_OBJECT]
 		do
 			cell_object ?= new_object
 			container_object ?= new_object
@@ -794,7 +789,6 @@ feature -- Basic operation
 			action_not_void: action /= Void
 		local
 			t: TUPLE [GB_OBJECT]
-			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			cursor: CURSOR
 			children: ARRAYED_LIST [GB_OBJECT]
 		do

@@ -57,7 +57,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
     PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
-    GROUPBOX        "Marshaling",Marshaling_Static,110,70,65,47
+    GROUPBOX        "Marshaling",Marshalling3_Static,110,75,70,45
     CONTROL         116,Wizard3_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     EDITTEXT        Proxy_Stub_File_Edit,110,135,175,15,ES_AUTOHSCROLL | 
@@ -66,15 +66,20 @@ BEGIN
     PUSHBUTTON      "Browse",Browse_Button,290,135,50,14,WS_DISABLED
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
     CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
-                    115,86,55,10
+                    115,90,55,10
     CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
-                    115,99,55,10
+                    115,100,55,10
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     LTEXT           "Marshalling",Introduction_Static,110,5,230,10
     LTEXT           "Marshalling defines how data is passed between components. Universal marshalling is built in Windows while Standard marshalling requires a proxy/stub dll.",
                     Marshalling_Static,110,20,230,25
     LTEXT           "Choose between Universal or Standard marshalling and enter the path to the proxy/stub dll if you have chosen Standard marshalling.",
                     Marshalling2_Static,110,50,230,20
+    GROUPBOX        "Server Type",Type_Static,200,75,70,45,WS_GROUP
+    CONTROL         "Automation",Automation_Radio,"Button",
+                    BS_AUTORADIOBUTTON,205,90,54,10
+    CONTROL         "Virtual Table",Virtual_Table_Radio,"Button",
+                    BS_AUTORADIOBUTTON,205,100,54,10
 END
 
 Wizard_IDL_Dialog DIALOG DISCARDABLE  0, 0, 347, 181
@@ -87,15 +92,15 @@ BEGIN
     CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    GROUPBOX        "Marshaling",Marshaling2_Static,145,105,75,45,WS_GROUP
-    CONTROL         "Universal",Universal2_Radio,"Button",BS_AUTORADIOBUTTON,
+    GROUPBOX        "Marshaling",Marshalling3_Static,145,105,75,45,WS_GROUP
+    CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
                     155,121,54,10
-    CONTROL         "Standard",Standard2_Radio,"Button",BS_AUTORADIOBUTTON,
+    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
                     155,135,54,10
-    GROUPBOX        "Server Type",Type2_Static,231,105,74,45,WS_GROUP
-    CONTROL         "Automation",Automation2_Radio,"Button",
+    GROUPBOX        "Server Type",Type_Static,231,105,74,45,WS_GROUP
+    CONTROL         "Automation",Automation_Radio,"Button",
                     BS_AUTORADIOBUTTON,239,121,54,10
-    CONTROL         "Virtual Table",Virtual_Table2_Radio,"Button",
+    CONTROL         "Virtual Table",Virtual_Table_Radio,"Button",
                     BS_AUTORADIOBUTTON,239,135,54,10
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     LTEXT           "Marshalling",Introduction_Static,110,5,230,10
@@ -160,7 +165,7 @@ BEGIN
     LTEXT           "The component can be a dll (in-process) or a standard executable (local or remote).",
                     Introduction3_Static,110,45,230,20
     LTEXT           "Choose whether you want to generate code for a client or a server and the location of the component.",
-                    Introduction4_Static,110,65,230,15
+                    Introduction4_Static,110,65,230,20
 END
 
 Progress_Dialog DIALOG DISCARDABLE  0, 0, 187, 90
@@ -276,7 +281,9 @@ Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
 // Icon
 //
 
-1 ICON "Wizard.ico"
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+1                       ICON    DISCARDABLE     "Wizard.ico"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////

@@ -106,13 +106,13 @@ feature -- GUI Elements
 			tool_bar.set_style (tool_bar.style + Tbstyle_flat)
 			create tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
 			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
-			create new_button.make_button (tool_bar.last_bitmap_index + Std_filenew, New_id)
-			create open_button.make_button (tool_bar.last_bitmap_index + Std_fileopen, Open_id)
-			create save_button.make_button (tool_bar.last_bitmap_index + Std_filesave, Save_id)
+			create new_button.make_button (tool_bar.last_bitmap_index + Std_filenew, New_string_constant)
+			create open_button.make_button (tool_bar.last_bitmap_index + Std_fileopen, Open_string_constant)
+			create save_button.make_button (tool_bar.last_bitmap_index + Std_filesave, Save_string_constant)
 			create separator_button.make_separator
 			create tool_bar_bitmap.make (Toolbar_bitmap_constant)
 			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
-			create launch_button.make_button (tool_bar.last_bitmap_index + 1, Launch_id)
+			create launch_button.make_button (tool_bar.last_bitmap_index + 1, Launch_string_constant)
 			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button>>)
 			create rebar_info.make
 			rebar_info.set_unpositionable_child (tool_bar)
@@ -154,11 +154,11 @@ feature -- GUI Elements
 			-- File menu
 		once
 			create Result.make
-			Result.append_string ("&New", New_id)
-			Result.append_string ("&Open", Open_id)
-			Result.append_string ("&Save", Save_id)
+			Result.append_string ("&New", New_string_constant)
+			Result.append_string ("&Open", Open_string_constant)
+			Result.append_string ("&Save", Save_string_constant)
 			Result.append_separator
-			Result.append_string ("E&xit", Exit_id)
+			Result.append_string ("E&xit", Exit_string_constant)
 		ensure
 			file_menu_not_void: Result /= Void
 		end
@@ -167,7 +167,7 @@ feature -- GUI Elements
 			-- Build menu
 		once
 			create Result.make
-			Result.append_string ("&Launch Wizard", Launch_id)
+			Result.append_string ("&Launch Wizard", Launch_string_constant)
 		ensure
 			buil_menu_not_void: Result /= Void
 		end
@@ -415,13 +415,11 @@ feature {NONE} -- Behavior
 		do
 			inspect
 				menu_id
-			when Launch_id then
+			when Launch_string_constant then
 				start
-			when Exit_id then
+			when Exit_string_constant then
 				destroy			
-			when Clear_id then
-				clear
-			when Open_id then
+			when Open_string_constant then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					open_project (open_file_dialog.file_name)
@@ -429,12 +427,12 @@ feature {NONE} -- Behavior
 						start
 					end
 				end
-			when Save_id then
+			when Save_string_constant then
 				save_file_dialog.activate (Current)
 				if save_file_dialog.selected then
 					save_project (save_file_dialog.file_name)
 				end
-			When New_id then
+			When New_string_constant then
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
 			else
 			end

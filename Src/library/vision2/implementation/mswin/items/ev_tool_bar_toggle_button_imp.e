@@ -52,7 +52,10 @@ feature -- Status setting
 
 	disable_select is
 		do
-			parent_imp.uncheck_button (id)
+			checked := False
+			if parent_imp /= Void then
+				parent_imp.uncheck_button (id)
+			end
 		end
 
 	set_checked is
@@ -64,39 +67,6 @@ feature -- Status setting
 			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
---|FIXME		end
-
---|FIXME	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is toggled.
---|FIXME		do
---|FIXME			add_command (Cmd_item_toggle, cmd, arg)
---|FIXME		end
-	
-
-feature -- Event -- removing command association
-
---|FIXME	remove_unselect_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_deactivate)		
---|FIXME		end
-
---|FIXME	remove_toggle_commands is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is toggled.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_toggle)
---|FIXME		end
-
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	on_parented is
@@ -105,6 +75,8 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		do
 			if checked = True then
 				parent_imp.check_button (id)
+			else
+				parent_imp.uncheck_button (id)
 			end
 		end
 
@@ -142,6 +114,10 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/04 22:47:57  rogers
+--| Removed old command association. Fixed disable_select to work
+--| when there is no current parent.
+--|
 --| Revision 1.10  2000/04/04 17:16:48  rogers
 --| Now inherits EV_TOOL_BAR_SELECT_BUTTON_IMP. Removed is_selected
 --| and set_selected. Implemented on_parented and set_checked.

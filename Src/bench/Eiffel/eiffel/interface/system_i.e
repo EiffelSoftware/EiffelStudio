@@ -93,8 +93,7 @@ feature {NONE} -- Initialization
 			create type_set.make (100)
 
 				-- External table creation
-			create externals.make
-			create il_c_externals.make (10)
+			create externals.make (10)
 
 				-- Pattern table creation
 			create pattern_table.make
@@ -202,10 +201,7 @@ feature -- Properties
 			-- Tool to process the generic derivations
 
 	externals: EXTERNALS
-	il_c_externals: IL_C_EXTERNALS
 			-- Table of external names currently used by the system
-			-- First one in normal generation, second one for IL code
-			-- generation.
 
 	executable_directory: STRING
 			-- Directory for the executable file
@@ -866,8 +862,7 @@ end
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
 				then
-						-- Externals incrementality
-					private_freeze := private_freeze or else not externals.equiv
+					private_freeze := private_freeze or else not externals.is_equivalent
 				end
 
 					-- Process the type system
@@ -1614,18 +1609,18 @@ feature -- IL code generation
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate 
-			if (in_final_mode or freeze) and then il_c_externals.count > 0 then
+			if (in_final_mode or freeze) and then externals.count > 0 then
+				externals.freeze
 				old_remover_off := remover_off
 				remover_off := True
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
 				else
 					create {WBENCH_MAKER} makefile_generator.make
-					externals.freeze
 				end
 				open_log_files
 				freezing_occurred := True
-				il_c_externals.generate_il
+				externals.generate_il
 				close_log_files
 
 				makefile_generator.generate_il
@@ -1835,9 +1830,6 @@ end
 
 	shake is
 		local
-			exec_unit: EXECUTION_UNIT
-			external_unit: EXT_EXECUTION_UNIT
-			info: EXTERNAL_INFO
 			exec_table: EXECUTION_TABLE
 		do
 				-- Compress execution table
@@ -1847,29 +1839,11 @@ end
 				exec_table.shake
 			end
 
-			from
-				exec_table.start
-			until
-				exec_table.after
-			loop
-				exec_unit := exec_table.item_for_iteration
-				if exec_unit.is_external then
-					external_unit ?= exec_unit
-					check
-						externals.has (external_unit.external_name_id)
-					end
-					info := externals.item (external_unit.external_name_id)
-					info.set_execution_unit (external_unit)
-				end
-				exec_table.forth
-			end
-
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
 			nb_frozen_features := exec_table.nb_frozen_features
 
-				-- Freeze the external table: reset the real body ids,
-				-- remove all unused externals and make the duplication
+				-- Freeze the external table.
 			externals.freeze
 		end
 
@@ -2034,11 +2008,8 @@ feature {NONE} -- Implementation
 			supplier_clients: ARRAYED_LIST [CLASS_C]
 			related_classes: LINKED_SET [CLASS_C]
 			finished: BOOLEAN
-			ftable: FEATURE_TABLE
 			id: INTEGER
 			types: TYPE_LIST
-			f: FEATURE_I
-			ext: EXTERNAL_I
 		do
 			if a_class.is_removable then
 					-- Force a recompilation
@@ -2064,32 +2035,8 @@ feature {NONE} -- Implementation
 					a_class.remove_relations
 				end
 
-					-- Remove one occurrence for each external written
-					-- in the class
-				if Feat_tbl_server.has (id) then
-					from
-						ftable := Feat_tbl_server.item (id)
-						ftable.start
-					until
-						ftable.after
-					loop
-						f := ftable.item_for_iteration
-						if f.is_c_external and then f.written_in = id then
-							ext ?= f
-								-- If the external is encapsulated then it was not added to
-								-- the list of new externals in inherit_table. Same thing
-								-- if it has to be removed
-							if not ext.encapsulated then
-								Externals.remove_occurrence (ext.external_name_id)
-							end
-						end
-						ftable.forth
-					end
-				end
-
-				if il_generation then
-					Il_c_externals.remove (id)
-				end
+					-- Remove externals defined in current removed class
+				externals.remove (id)
 
 					-- Remove class `a_class' from the lists of changed classes
 				Degree_5.remove_class (a_class)

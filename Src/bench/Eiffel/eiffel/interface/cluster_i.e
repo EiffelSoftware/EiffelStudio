@@ -1158,8 +1158,10 @@ feature -- Output
 		local
 			c: E_CLASS
 		do
-			st.add (ti_Before_class_declaration);
+			st.add (ti_Before_cluster_declaration);
+			st.add (ti_Before_cluster_header);
 			st.add_cluster (Current, name_in_upper);
+			st.add (ti_After_cluster_header);
 			st.add_new_line
 			st.add_new_line;
 			from
@@ -1175,7 +1177,7 @@ feature -- Output
 				end;
 				classes.forth
 			end
-			st.add (ti_after_class_declaration);
+			st.add (ti_after_cluster_declaration);
 		end;
 
 feature -- Document processing

@@ -209,8 +209,10 @@ invariant
 	selected_item_not_void: not is_empty implies selected_item /= Void
 	selected_item_index_within_range:
 		not is_empty implies
-		(selected_item_index >= index_of (first, 1) and
-		selected_item_index <= index_of (last, 1))
+		(selected_item_index >= 1 and
+		selected_item_index <= count)
+	selected_item_index_zero_when_empty:
+		is_empty implies selected_item_index = 0
 	selected_item_is_i_th_of_selected_item_index:
 		not is_empty implies selected_item = i_th (selected_item_index)
 	selected_item_index_is_index_of_selected_item:

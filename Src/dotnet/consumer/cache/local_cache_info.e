@@ -31,17 +31,17 @@ feature {NONE} -- Initialization
 		do
 			create di.make (apath.substring (1, apath.last_index_of ('\', apath.count)).to_cil)
 			di.create_
-			create assemblies.make (1, 0)
+			create assemblies_info.make (1, 0)
 		ensure
-			non_void_assemblies: assemblies /= Void
+			non_void_assemblies_info: assemblies_info /= Void
 		end
 	
 feature {EMITTER, ISE_CACHE_MANAGER}	
 
-	add_assembly (ass: CONSUMED_ASSEMBLY) is
+	add_assembly (ass_info: CONSUMED_ASSEMBLY_INFO) is
 			-- add an assembly to the info
 		do
-			Precursor (ass)
+			Precursor (ass_info)
 		end
 
 end -- class LOCAL_CACHE_INFO

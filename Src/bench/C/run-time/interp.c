@@ -1672,16 +1672,10 @@ rt_private void interpret(int flag, int where)
 			last->it_bit = new_obj;
 			break;
 		}
+		need_push = *IC++;		/* If there is a creation routine to call
+								   we need to push twice the created object */
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
-			type = get_short();
-/* GENERIC CONFORMANCE */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			break;
-		case BC_CREATE_EXP:			/* Hardcoded creation expression type */
-			need_push = *IC++;		/* If there is a creation routine to call
-									   we need to push twice the created object */
-			*IC++;
 			type = get_short();
 /* GENERIC CONFORMANCE */
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
@@ -1741,8 +1735,10 @@ rt_private void interpret(int flag, int where)
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			opush (last);				/* We need to push object on stack to check invariants */
 			if (need_push == (char) 1)
-				opush (last);
+				opush (last);			/* If there is a creation procedure, we need to push
+										   object on stack to call creation procedure */
 			if (tagval != stagval)		/* If type is expanded we may
 										 * need to sync the registers if it
 										 * called the interpreter for the

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current' and build widget structure.
 		do
-			create local_check_button.make_with_text ("Local declarations grouped?")
+			create local_check_button.make_with_text ("attribute declarations grouped?")
 			extend (local_check_button)
 			create attributes_local_check_button.make_with_text ("attributes declared as locals?")
 			extend (attributes_local_check_button)

@@ -7,13 +7,41 @@ inherit
 			is_all
 		end;
 	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 	
-feature 
+feature -- Properties
 
-	valid_for (client: CLASS_C): BOOLEAN is
-			-- Is the export  clause valid for client `client' ?
+	is_all: BOOLEAN is
+			-- Is the current object an instance of EXPORT_ALL_I ?
 		do
 			Result := True;
+		end;
+
+feature -- Access
+
+	same_as (other: EXPORT_I): BOOLEAN is
+			-- Is `other' the same as Current ?
+		do
+			Result := other.is_all
+		end;
+
+feature -- Comparison
+
+	infix "<" (other: EXPORT_I): BOOLEAN is
+			-- is Current less restrictive than other
+		do
+			Result := not other.is_all;
+		end;
+
+feature {COMPILER_EXPORTER}
+
+	equiv (other: EXPORT_I): BOOLEAN is
+			-- Is `other' equivalent to Current ?
+			-- [Semantic: old_status.equiv (new_status) ]
+		do
+			Result := other.is_all;
 		end;
 
 	is_subset (other: EXPORT_I): BOOLEAN is
@@ -29,8 +57,8 @@ feature
 			end;
 		end;
 
-	is_all: BOOLEAN is
-			-- Is the current object an instance of EXPORT_ALL_I ?
+	valid_for (client: CLASS_C): BOOLEAN is
+			-- Is the export  clause valid for client `client' ?
 		do
 			Result := True;
 		end;
@@ -41,37 +69,17 @@ feature
 			Result := Current;
 		end;
 
-	equiv (other: EXPORT_I): BOOLEAN is
-			-- Is `other' equivalent to Current ?
-			-- [Semantic: old_status.equiv (new_status) ]
-		do
-			Result := other.is_all;
-		end;
-
-	same_as (other: EXPORT_I): BOOLEAN is
-			-- Is `other' the same as Current ?
-		do
-			Result := other.is_all
-		end;
-
-
 	trace is
 			-- Debug purpose
 		do
 			io.error.putstring ("ALL");
 		end;
 
-	infix "<" (other: EXPORT_I): BOOLEAN is
-			-- is Current less restrictive than other
-		do
-			Result := not other.is_all;
-		end;
-
 	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 		end;
 
-feature -- Case storage
+feature {COMPILER_EXPORTER} -- Case storage
 
     storage_info: S_EXPORT_ALL_I is
         do

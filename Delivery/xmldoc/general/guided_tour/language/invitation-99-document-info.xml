@@ -8,7 +8,7 @@
 			<size>2</size>
 			<content>Publication history</content>
 		</heading>First published 1987.  Some revisions (in particular Web versions) have used the title "Eiffel in a Nutshell"
-		<line_break></line_break>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.0 of the  Eiffel Software  Eiffel environment.  
+		<line_break></line_break>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.0 of the EiffelStudio environment.  
 		<heading>
 			<size>2</size>
 			<content>Author</content>
@@ -18,7 +18,7 @@
 			<content>Software Credits</content>
 		</heading>See acknowledgments in book 
 			<link>
-				<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>etl</anchor_name>
+				<url>http://www.eiffel.com/doc/page.html</url><anchor_name>etl</anchor_name>
 				<label>Eiffel: The Language</label>
 			</link>.
 		<heading>
@@ -28,13 +28,13 @@
 		<heading>
 			<size>2</size>
 			<content>Copyright notice and proprietary information</content>
-		</heading>Copyright Interactive Software Engineering Inc.  ( Eiffel Software ), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of  Eiffel Software .  "Eiffel Power" and the Eiffel Power logo are trademarks of  Eiffel Software .  All uses of the product documented here are subject to the terms and conditions of the  Eiffel Software  Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  
+		</heading>Copyright Interactive Software Engineering Inc.  (Eiffel Software), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of  Eiffel Software .  "Eiffel Power" and the Eiffel Power logo are trademarks of  Eiffel Software .  All uses of the product documented here are subject to the terms and conditions of the  Eiffel Software  Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  
 		<heading>
 			<size>2</size>
 			<content>Special duplication permission for educational institutions</content>
 		</heading>Degree-granting educational institutions using  Eiffel Software  Eiffel for teaching purposes as part of the 
 			<link>
-				<url> http://www.eiffel.com/educators/resources.xml</url>
+				<url> http://www.eiffel.com/educators/resources.html</url>
 				<label>Eiffel University Partnership Program</label>
 			</link> 
 		may be permitted under certain conditions to copy specific parts of this book.  Contact  Eiffel Software  for details.  
@@ -70,12 +70,12 @@
 				<label>http://eiffel.com</label>
 			</link>, with more than 1200 Web pages including online documentation, downloadable files, product descriptions, links to  Eiffel Software  partners, University Partnership program, mailing list archives, announcements, press coverage, Frequently Asked Questions, Support pages, and much more.  Visit 
 			<link>
-				<url>http://contact.eiffel.com</url>
-				<label>http://contact.eiffel.com</label>
-			</link>to request information about products and services.  To subscribe to the  Eiffel Software  Eiffel user list, go to 
+				<url>http://www.eiffel.com/general/contact_details.html</url>
+				<label>http://www.eiffel.com/general/contact_details.html</label>
+			</link> to request information about products and services.  To subscribe to the  Eiffel Software  Eiffel user list, go to 
 			<link>
-				<url>http://groups.  yahoo.com/group/ise_users/join</url>
-				<label>http://groups.  yahoo.com/group/ise_users/join</label>
+				<url>http://groups.eiffel.com/join</url>
+				<label>http://groups.eiffel.com/join</label>
 			</link>.  
 			<heading>
 				<size>2</size>

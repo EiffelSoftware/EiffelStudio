@@ -36,13 +36,16 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		do
 			base_make (an_interface)
-			
-			enable_ev_gtk_log (0)
-			-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
-		--	C.gdk_set_show_events (False)
+
+			--put ("display_ip_address:0", "DISPLAY")
+			-- This line may be uncommented to allow for display redirection to another machine.
 				
 			gtk_init
 			C.gdk_rgb_init
+			
+			enable_ev_gtk_log (0)
+			-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
+			C.gdk_set_show_events (False)
 		
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)

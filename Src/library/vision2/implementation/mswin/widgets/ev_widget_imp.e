@@ -832,10 +832,16 @@ feature {NONE} -- Implementation, focus event
 				-- We now store `Current' in `top_level_window_imp' so
 				-- we can restore the focus to it when required.
 				--| See window_process_message in EV_WINDOW_IMP.
-			top_level_window_imp.set_last_focused_widget (wel_item)	
-			top_level_titled_window ?= top_level_window_imp.interface
-			if top_level_titled_window /= Void then
-				application_imp.set_window_with_focus (top_level_titled_window)
+				-- Note that we do nothing if `top_level_window_imp' is Void.
+				-- It appears that this may occur during destruction, although
+				-- why `on_set_focus' gets called is another issue, as we are
+				-- not really sure why at the moment.
+			if top_level_window_imp /= Void then
+				top_level_window_imp.set_last_focused_widget (wel_item)	
+				top_level_titled_window ?= top_level_window_imp.interface
+				if top_level_titled_window /= Void then
+					application_imp.set_window_with_focus (top_level_titled_window)
+				end
 			end
 			update_current_push_button
 			Focus_on_widget.put (Current)

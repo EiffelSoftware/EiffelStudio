@@ -221,6 +221,11 @@
 					<xs:documentation>Formatting tab</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="compiler_error" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Compiler error formatting</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="helpType">

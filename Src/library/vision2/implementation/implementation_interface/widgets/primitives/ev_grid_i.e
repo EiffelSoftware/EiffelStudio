@@ -188,6 +188,7 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 		do
 			is_tree_enabled := True
+			recompute_row_offsets (1)
 			redraw_client_area
 		ensure
 			tree_enabled: is_tree_enabled
@@ -489,7 +490,7 @@ feature -- Status setting
 		do
 			is_row_height_fixed := True
 			recompute_vertical_scroll_bar
-			row_offsets := Void
+			recompute_row_offsets (1)
 			redraw_client_area
 		end
 		
@@ -497,7 +498,7 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		do
 			is_row_height_fixed := False
-			recompute_row_offsets (0)
+			recompute_row_offsets (1)
 			recompute_vertical_scroll_bar
 			redraw_client_area
 		end
@@ -884,13 +885,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			an_index_valid: an_index >= 0 and an_index <= row_count
 			pop: grid_rows.count >= an_index
 		local
-			i: INTEGER
+			i, j, k: INTEGER
+			current_item: EV_GRID_ROW_I
+			old_i: INTEGER
 		do
-			if not is_row_height_fixed then
-					-- Only perform recomputation if the rows do not all have the same height.
-					-- If they do, we do not need to use `row_offsets'.
+			if not is_row_height_fixed or is_tree_enabled then
+					-- Only perform recomputation if the rows do not all have the same height
+					-- or there is tree functionality enabled. Otherwise, we do not need to
+					-- use `row_offsets' and we can perform a shortcut.
 				if row_offsets = Void then
-					create row_offsets.make (row_count)
+					create row_offsets.make
 					row_offsets.extend (0)
 					grid_rows.start
 				else
@@ -898,22 +902,41 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					grid_rows.go_i_th (an_index)
 				end
 				
+				if row_offsets.count < grid_rows.count then
+					row_offsets.resize (grid_rows.count + 1)
+				end
+				
 				from
 				until
 					grid_rows.off
 				loop
-					if grid_rows.item /= Void then
-						i := i + grid_rows.item.height
+					current_item := grid_rows.item
+					old_i := i
+					if current_item /= Void and not is_row_height_fixed then
+						i := i + current_item.height
 					else
+							-- Use the default height here.
 						i := i + 16
 					end
-					if grid_rows.index < row_offsets.count then
-						row_offsets.put_i_th (i, grid_rows.index + 1)
+					if current_item.subrow_count > 0 and not current_item.is_expanded then
+						from
+							j := grid_rows.index + 1
+							k := j + current_item.subnode_count_recursive
+						until
+							j = k
+						loop
+							row_offsets.put_i_th (old_i, j)
+							j := j + 1
+						end
+						grid_rows.go_i_th (k - 1)
+						i := old_i
 					else
-						row_offsets.extend (i)
+						row_offsets.put_i_th (i, grid_rows.index + 1)
+						grid_rows.forth
 					end
-					grid_rows.forth
 				end
+			else
+				row_offsets := Void
 			end
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = grid_rows.count + 1
@@ -922,7 +945,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	total_row_height: INTEGER is
 			-- `Result' is total height of all rows contained in `Current'.
 		do
-			if is_row_height_fixed then
+			if is_row_height_fixed and not is_tree_enabled then
 				Result := row_count * row_height
 			else
 				Result := row_offsets.last
@@ -944,7 +967,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 		-- For example, if there are 5 columns, each with a width of 80 pixels,
 		-- `column_offsets' contains 0, 80, 160, 240, 320, 400 (Note this is 6 items)
 		
-	row_offsets: ARRAYED_LIST [INTEGER]
+	row_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
 		-- Cumulative offset of each row in pixels.
 		-- For example, if there are 5 rows, each with a height of 16 pixels,
 		-- `row_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
@@ -979,6 +1002,151 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			-- Color used for selected items.
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 128)
+		end
+		
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
+	
+	recompute_vertical_scroll_bar is
+			-- Recompute dimensions of `vertical_scroll_bar'.
+		local
+			l_total_row_height: INTEGER
+			l_client_height: INTEGER
+			average_row_height: INTEGER
+			previous_scroll_bar_value: INTEGER
+		do
+				-- Retrieve the final row offset as this is the virtual height required for all rows.
+			if row_offsets = Void and not is_row_height_fixed then
+				fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
+				l_total_row_height := 0
+			else
+				l_total_row_height := total_row_height
+			end
+			if l_total_row_height /= last_computed_row_height or has_vertical_scrolling_per_item_just_changed then
+				l_client_height := viewport.height
+					-- Note that `height' was not used as we want it to represent only the height of
+					-- the "client area" which is `viewport'.
+				
+					
+				if l_total_row_height > l_client_height then
+						-- The rows are higher than the visible client area.
+					if not vertical_scroll_bar.is_show_requested then
+							-- Show `vertical_scroll_bar' if not already shown.
+						vertical_scroll_bar.show
+						update_scroll_bar_spacer
+					end
+						-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
+						-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
+						-- `is_vertical_scrolling_per_item'.
+					if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
+						previous_scroll_bar_value := vertical_scroll_bar.value
+					end
+					if is_vertical_scrolling_per_item then					
+						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count - 1))
+						average_row_height := (l_total_row_height // row_count)
+						vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
+						if has_vertical_scrolling_per_item_just_changed then
+								-- If we are just switching from per pixel to per item vertical
+								-- scrolling, we must approximate the previous position of the scroll bar.
+							vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
+						end
+						if is_item_height_changing then
+								-- The `value' of the scroll bar should not have changed.
+							check
+								scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
+							end
+								-- We call the change actions explicitly, so that it behaves as if the value had just
+								-- changed, which ensures that the currently scrolled to item is still displayed at the top.
+							vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
+						end
+					else
+						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_row_height - l_client_height))
+						vertical_scroll_bar.set_leap (height)
+						if has_vertical_scrolling_per_item_just_changed then
+								-- If we are just switching from per item to per pixel vertical
+								-- scrolling, we can set the position of the scroll bar exactly to match it's
+								-- previous position.
+							vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
+						end
+					end
+				else
+						-- The rows are not as high as the visible client area.
+					if vertical_scroll_bar.is_show_requested then
+							-- Hide `vertical_scroll_bar' as it is not required.
+						vertical_scroll_bar.hide
+						update_scroll_bar_spacer
+					end
+				end
+			end
+			last_computed_row_height := l_total_row_height
+		end
+		
+	recompute_horizontal_scroll_bar is
+			-- Recompute horizontal scroll bar positioning.
+		local
+			l_total_header_width: INTEGER
+			l_client_width: INTEGER
+			average_column_width: INTEGER
+			previous_scroll_bar_value: INTEGER
+		do
+				-- Retrieve the 
+			l_total_header_width := total_header_width
+			
+			l_client_width := internal_client_width
+				-- Note that `width' was not used as we want it to represent only the width of
+				-- the "client area" which is `viewport'.
+			
+				
+			if l_total_header_width > l_client_width then
+					-- The headers are wider than the visible client area.
+				if not horizontal_scroll_bar.is_show_requested then
+						-- Show `horizontal_scroll_bar' if not already shown.
+					horizontal_scroll_bar.show
+					update_scroll_bar_spacer
+				end
+					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
+					-- `l_total_header_width' and `l_client_width'. Note that the behavior depends on the state of
+					-- `is_horizontal_scrolling_per_item'.
+				if has_horizontal_scrolling_per_item_just_changed then
+					previous_scroll_bar_value := horizontal_scroll_bar.value
+				end
+				if is_horizontal_scrolling_per_item then					
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
+					average_column_width := (l_total_header_width // column_count)
+					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
+					if has_horizontal_scrolling_per_item_just_changed then
+							-- If we are just switching from per pixel to per item horizontal
+							-- scrolling, we must approximate the previous position of the scroll bar.
+						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
+					end
+				else
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
+					horizontal_scroll_bar.set_leap (width)
+					if has_horizontal_scrolling_per_item_just_changed then
+							-- If we are just switching from per item to per pixel horizontal
+							-- scrolling, we can set the position of the scroll bar exactly to match it's
+							-- previous position.
+						horizontal_scroll_bar.set_value (column_offsets @ (previous_scroll_bar_value + 1))
+					end
+				end
+			else
+					-- The headers are not as wide as the visible client area.
+				if horizontal_scroll_bar.is_show_requested then
+						-- Hide `horizontal_scroll_bar' as it is not required.
+					horizontal_scroll_bar.hide
+					update_scroll_bar_spacer
+				end
+			end
+			
+			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < internal_client_width) then
+					-- If `header' and `drawable' currently have a position that starts before the client area of
+					-- `viewport' and the total header width is small enough so that at the current position, `header' and
+					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
+					-- so that they do reach the very left-hand edge of `viewport'
+				viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
+				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
+				
+--				horizontal_scroll_bar.change_actions.resume
+			end
 		end
 	
 feature {NONE} -- Drawing implementation
@@ -1163,152 +1331,8 @@ feature {NONE} -- Drawing implementation
 		
 	last_dashed_line_position: INTEGER
 		-- Last horizontal coordinate of dashed line drawn when slider is moved.
-
-	recompute_horizontal_scroll_bar is
-			-- Recompute horizontal scroll bar positioning.
-		local
-			l_total_header_width: INTEGER
-			l_client_width: INTEGER
-			average_column_width: INTEGER
-			previous_scroll_bar_value: INTEGER
-		do
-				-- Retrieve the 
-			l_total_header_width := total_header_width
-			
-			l_client_width := internal_client_width
-				-- Note that `width' was not used as we want it to represent only the width of
-				-- the "client area" which is `viewport'.
-			
-				
-			if l_total_header_width > l_client_width then
-					-- The headers are wider than the visible client area.
-				if not horizontal_scroll_bar.is_show_requested then
-						-- Show `horizontal_scroll_bar' if not already shown.
-					horizontal_scroll_bar.show
-					update_scroll_bar_spacer
-				end
-					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
-					-- `l_total_header_width' and `l_client_width'. Note that the behavior depends on the state of
-					-- `is_horizontal_scrolling_per_item'.
-				if has_horizontal_scrolling_per_item_just_changed then
-					previous_scroll_bar_value := horizontal_scroll_bar.value
-				end
-				if is_horizontal_scrolling_per_item then					
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
-					average_column_width := (l_total_header_width // column_count)
-					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
-					if has_horizontal_scrolling_per_item_just_changed then
-							-- If we are just switching from per pixel to per item horizontal
-							-- scrolling, we must approximate the previous position of the scroll bar.
-						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
-					end
-				else
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
-					horizontal_scroll_bar.set_leap (width)
-					if has_horizontal_scrolling_per_item_just_changed then
-							-- If we are just switching from per item to per pixel horizontal
-							-- scrolling, we can set the position of the scroll bar exactly to match it's
-							-- previous position.
-						horizontal_scroll_bar.set_value (column_offsets @ (previous_scroll_bar_value + 1))
-					end
-				end
-			else
-					-- The headers are not as wide as the visible client area.
-				if horizontal_scroll_bar.is_show_requested then
-						-- Hide `horizontal_scroll_bar' as it is not required.
-					horizontal_scroll_bar.hide
-					update_scroll_bar_spacer
-				end
-			end
-			
-			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < internal_client_width) then
-					-- If `header' and `drawable' currently have a position that starts before the client area of
-					-- `viewport' and the total header width is small enough so that at the current position, `header' and
-					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
-					-- so that they do reach the very left-hand edge of `viewport'
-				horizontal_scroll_bar.change_actions.block
-				viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
-				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
-				
-				horizontal_scroll_bar.change_actions.resume
-			end
-		end
-		
+	
 	last_computed_row_height: INTEGER
-		
-	recompute_vertical_scroll_bar is
-			-- Recompute dimensions of `vertical_scroll_bar'.
-		local
-			l_total_row_height: INTEGER
-			l_client_height: INTEGER
-			average_row_height: INTEGER
-			previous_scroll_bar_value: INTEGER
-		do
-				-- Retrieve the final row offset as this is the virtual height required for all rows.
-			if row_offsets = Void and not is_row_height_fixed then
-				fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
-				l_total_row_height := 0
-			else
-				l_total_row_height := total_row_height
-			end
-			if l_total_row_height /= last_computed_row_height or has_vertical_scrolling_per_item_just_changed then
-				l_client_height := viewport.height
-					-- Note that `height' was not used as we want it to represent only the height of
-					-- the "client area" which is `viewport'.
-				
-					
-				if l_total_row_height > l_client_height then
-						-- The rows are higher than the visible client area.
-					if not vertical_scroll_bar.is_show_requested then
-							-- Show `vertical_scroll_bar' if not already shown.
-						vertical_scroll_bar.show
-						update_scroll_bar_spacer
-					end
-						-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
-						-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
-						-- `is_vertical_scrolling_per_item'.
-					if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
-						previous_scroll_bar_value := vertical_scroll_bar.value
-					end
-					if is_vertical_scrolling_per_item then					
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count - 1))
-						average_row_height := (l_total_row_height // row_count)
-						vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per pixel to per item vertical
-								-- scrolling, we must approximate the previous position of the scroll bar.
-							vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
-						end
-						if is_item_height_changing then
-								-- The `value' of the scroll bar should not have changed.
-							check
-								scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
-							end
-								-- We call the change actions explicitly, so that it behaves as if the value had just
-								-- changed, which ensures that the currently scrolled to item is still displayed at the top.
-							vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
-						end
-					else
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_row_height - l_client_height))
-						vertical_scroll_bar.set_leap (height)
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per item to per pixel vertical
-								-- scrolling, we can set the position of the scroll bar exactly to match it's
-								-- previous position.
-							vertical_scroll_bar.set_value (row_offsets @ (previous_scroll_bar_value + 1))
-						end
-					end
-				else
-						-- The rows are not as high as the visible client area.
-					if vertical_scroll_bar.is_show_requested then
-							-- Hide `vertical_scroll_bar' as it is not required.
-						vertical_scroll_bar.hide
-						update_scroll_bar_spacer
-					end
-				end
-			end
-			last_computed_row_height := l_total_row_height
-		end
 		
 	vertical_scroll_bar_changed (a_value: INTEGER) is
 			-- Respond to a change in value from `vertical_scroll_bar'.

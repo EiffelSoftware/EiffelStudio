@@ -100,7 +100,7 @@ rt_private int16 egc_pointer_dtype = -1;
 
 /*------------------------------------------------------------------*/
 
-rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16, char *);
+rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16, char *, char *);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
 rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
@@ -239,7 +239,8 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 {
 	int16   result, gresult;
 	int16   outtab [256], *outtable, *intable;
-	char    cachable;
+	char    cachable, found;
+
 	result = base_id;
 
 	if ((types != (int16 *)0) && (*(types+1) != -1))
@@ -254,12 +255,13 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 		intable  = types+1;
 		outtable = outtab;
 		cachable = (char) 1;
+		found    = (char) 0;
 
 		if (Current != (char *) 0)
 			gresult = eif_id_of (*types, &intable, &outtable,
-								 (int16)Dftype(Current),1, &cachable);
+								 (int16)Dftype(Current),1, &cachable, &found);
 		else
-			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable);
+			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable, &found);
 
 		if (cachable && (cache != (int16 *) 0))
 		{
@@ -337,7 +339,6 @@ rt_public int16 eif_gen_param (char *obj, int pos, char *is_exp, long *nr_bits)
 	*nr_bits = 0;
 
 	result = gdp->typearr [pos-1];
-
 
 	if (result <= -256)
 	{
@@ -592,14 +593,39 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 			{
 				/* expanded */
 
-				dtype = -256 - (int16) (dtype_map [-256-dtype]);
-				dtype = RTUD_INV(dtype);
+				dtype = dtype_map [-256-dtype];
+				dtype = -256 - RTUD_INV(dtype);
 			}
 			else
 			{
 				if (dtype >= 0)
 				{
 					dtype = (int16) dtype_map [dtype];
+					dtype = RTUD_INV(dtype);
+				}
+			}
+
+			cidarr [i] = dtype;
+		}
+	}
+	else
+	{
+		/* We only need to undo the effect of RTUD */
+
+		for (i = count; i; --i)
+		{
+			dtype = cidarr [i];
+
+			if (dtype <= -256)
+			{
+				/* expanded */
+
+				dtype = -256 - RTUD_INV((-256-dtype));
+			}
+			else
+			{
+				if (dtype >= 0)
+				{
 					dtype = RTUD_INV(dtype);
 				}
 			}
@@ -811,7 +837,7 @@ done:
 
 rt_private int16 eif_id_of (int16 stype, int16 **intab, 
 							int16 **outtab, int16 obj_type, 
-							int16 apply_rtud, char *cachable)
+							int16 apply_rtud, char *cachable, char *found)
 
 {
 	int16   dftype, gcount, i, hcode, ltype;
@@ -876,7 +902,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
+		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -906,7 +932,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
+		dftype = eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -939,7 +965,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 				eif_compute_anc_id_map (obj_type, 1, 0);
 				amap = eif_anc_id_map [obj_type];
 			}
-			gdp = eif_derivations [(amap->map)[stype]];
+
+			gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
 		}
 		else
 		{
@@ -996,7 +1023,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	for (hcode = 0, i = gcount; i; --i)
 	{
-		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
+		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable, (char *) 0);
 	}
 
 	/* Search */
@@ -1017,6 +1044,9 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 			if (mcmp == 0)
 			{
+				if (found != (char *) 0)
+					*found = (char) 1;
+
 				break; /* Found */
 			}
 		}
@@ -1451,8 +1481,10 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map(int16 min_id, int16 max_id)
 	return result;
 }
 /*------------------------------------------------------------------*/
-/* Expand `eif_cid_map', `eif_conf_tab' and `eif_derivations' to `new_size'
-*/
+/* Expand `eif_cid_map', `eif_conf_tab' , `eif_derivations' and     */
+/* `eif_anc_id_map' to `new_size'                                   */
+/*------------------------------------------------------------------*/
+
 rt_private void eif_expand_tables(int new_size)
 {
 	EIF_GEN_DER **new;
@@ -1500,6 +1532,8 @@ rt_private void eif_expand_tables(int new_size)
 	eif_cid_size = new_size;
 }
 /*------------------------------------------------------------------*/
+/* Full type name for type `dftype' as C string.                    */
+/*------------------------------------------------------------------*/
 
 rt_private char *eif_typename (int16 dftype)
 {
@@ -1534,6 +1568,8 @@ rt_private char *eif_typename (int16 dftype)
 
 	return result;
 }
+/*------------------------------------------------------------------*/
+/* Produce full type name of `dftype' in `result'.                  */
 /*------------------------------------------------------------------*/
 
 rt_private void eif_create_typename (int16 dftype, char *result)
@@ -1649,6 +1685,8 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	}
 }
 /*------------------------------------------------------------------*/
+/* Compute length of string needed for full type name of `dftype'   */
+/*------------------------------------------------------------------*/
 
 rt_private int eif_typename_len (int16 dftype)
 {
@@ -1724,6 +1762,8 @@ rt_private int eif_typename_len (int16 dftype)
 	return len;
 }
 /*------------------------------------------------------------------*/
+/* Compute length of generating id sequence for `dftype'            */
+/*------------------------------------------------------------------*/
 
 rt_private int16 eif_gen_seq_len (int16 dftype)
 {
@@ -1759,12 +1799,13 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 	return len + 1; /* Base id plus generics */
 }
 /*------------------------------------------------------------------*/
+/* Produce generating id sequence for `dftype' in `typearr'.        */
+/*------------------------------------------------------------------*/
 
 rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 {
 	EIF_GEN_DER *gdp;
-	int16 i, dtype;
-	long len;
+	int16 i, len, dtype;
 	char is_expanded = (char) 0;
 
 	dtype = dftype;
@@ -1772,7 +1813,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 	if (dtype <= -256)
 	{
 		/* expanded */
-		dtype = -256 - dtype;
+		dtype = -256-dtype;
 		is_expanded = '1';
 	}
 
@@ -1784,6 +1825,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 			typearr [*idx] = dtype;
 		else
 			typearr [*idx] = RTUD(dtype);
+
 		(*idx)++;
 		return;
 	}
@@ -1816,12 +1858,13 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 	/* It's a generic type */
 
 	if (is_expanded)
-		typearr [*idx] = -256 - RTUD(gdp->base_id);
+		typearr [*idx] = -256-RTUD(gdp->base_id);
 	else
 		typearr [*idx] = RTUD(gdp->base_id);
+
 	(*idx)++;
 
-	len = gdp->size;
+	len = (int16) gdp->size;
 
 	for (i = 0; i < len; ++i)
 	{
@@ -1829,8 +1872,9 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 	}
 }
 /*------------------------------------------------------------------*/
-/* Compute conformance table for `dftype'
-*/
+/* Compute conformance table for `dftype'                           */
+/*------------------------------------------------------------------*/
+
 rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 {
@@ -1879,7 +1923,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
 		++pcount;
 
 		ctab = eif_conf_tab [ptype];
@@ -1946,7 +1990,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		ptype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
 		pctab = eif_conf_tab [ptype];
 
 		/* Register parent type */
@@ -2033,6 +2077,8 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 	}
 }
 /*------------------------------------------------------------------*/
+/* Compute ancestor id map for `dftype'.                            */
+/*------------------------------------------------------------------*/
 
 rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int indent)
 
@@ -2063,7 +2109,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	while (*intable != -1)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
 		ptype = Deif_bid(pftype);
 
 		map = eif_anc_id_map [pftype];
@@ -2096,7 +2142,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 
 	while (*intable != -1)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable, (char *) 0);
 		ptype = Deif_bid(pftype);
 		pamap = eif_anc_id_map [pftype];
 
@@ -2110,13 +2156,21 @@ rt_private void eif_compute_anc_id_map (int16 dftype, int invert_rtud, int inden
 			dest   = map->map + offset;
 
 			for (i = count; i; --i)
-				*(dest++) = *(src++);
+			{
+				if (*src)
+				{
+					*dest = *src;
+				}
+
+				++dest;
+				++src;
+			}
 		}
 	}
 
 	/* Put own type in table */
 
-	(map->map)[RTUD_INV(dtype)] = dftype;
+	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
 /*------------------------------------------------------------------*/
 

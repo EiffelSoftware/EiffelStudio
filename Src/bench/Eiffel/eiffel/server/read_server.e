@@ -8,7 +8,7 @@ inherit
 
 feature -- Access
 
-	item, server_item (an_id: H): T is
+	item, frozen server_item (an_id: H): T is
 			-- Object of id `an_id'
 		local
 			info: READ_INFO

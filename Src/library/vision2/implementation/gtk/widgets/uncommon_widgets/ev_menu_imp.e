@@ -29,14 +29,22 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_menu_new ()
 			gtk_object_ref (widget)
+
+			-- Create the array where the items will be listed.
+			!! ev_children.make (1)
 		end
 	
         make_with_text (txt: STRING) is
                         -- Create a menu with name. 
 		do
+			-- Create the gtk menu.
 			name := txt
 			widget := gtk_menu_new ()
+
 			gtk_object_ref (widget)
+
+			-- Create the array where the items will be listed.
+			!! ev_children.make (1)
 		end	
 
 feature -- Access
@@ -102,12 +110,12 @@ feature {NONE} -- Implementation
 			option_button_par: EV_OPTION_BUTTON_IMP
 		do
 			-- If the parent is an option button:
-			if parent_is_option_button then
+			if ((parent_imp /= Void) and then (parent_is_option_button)) then
 
-				-- 1) We need to update the parent (the option button)
-				-- `menu_items_array' by adding the new menu_item:
-				option_button_par ?= parent_imp
-				option_button_par.menu_items_array.force (item_imp)
+--				-- 1) We need to update the parent (the option button)
+--				-- `menu_items_array' by adding the new menu_item:
+--				option_button_par ?= parent_imp
+--				option_button_par.menu_items_array.force (item_imp)
 
 				-- 2) We do the following to resize the option button when adding
 				-- new menu items with a longer length: 
@@ -127,6 +135,9 @@ feature {NONE} -- Implementation
 			else
 				gtk_menu_append (widget, item_imp.widget)
 			end
+
+			-- Update the array `ev_children'.
+			ev_children.extend (item_imp)			
 		end
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
@@ -136,14 +147,17 @@ feature {NONE} -- Implementation
 		do
 			gtk_container_remove (GTK_CONTAINER (widget), item_imp.widget)
 
-			-- If the parent is an option button,
-			-- we also remove the item from its array of
-			-- items, `menu_items_array'.
-			if parent_is_option_button then
-				option_button_par ?= parent_imp
-				option_button_par.menu_items_array.search (item_imp)
-				option_button_par.menu_items_array.remove
-			end
+--			-- If the parent is an option button,
+--			-- we also remove the item from its array of
+--			-- items, `menu_items_array'.
+--			if parent_is_option_button then
+--				option_button_par ?= parent_imp
+--				option_button_par.menu_items_array.search (item_imp)
+--				option_button_par.menu_items_array.remove
+--			end
+
+			-- Update the array `ev_children'.
+			ev_children.prune_all (item_imp)
 		end
 	
 end -- class EV_MENU_IMP

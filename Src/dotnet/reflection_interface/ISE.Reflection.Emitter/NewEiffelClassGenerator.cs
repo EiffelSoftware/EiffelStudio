@@ -363,8 +363,11 @@ public class EiffelClassGenerator: Globals
 		GeneratedEiffelClass.SetEiffelName( ClassFactory.Name );
 		GeneratedEiffelClass.SetExternalNames( ClassFactory.TypeName );
 		if( ClassFactory.UnderlyingType.IsEnum )
+		{
 			GeneratedEiffelClass.SetEnumType( NameFormatter.FormatArgumentTypeName( Enum.GetUnderlyingType( ClassFactory.UnderlyingType) ) );
-			
+				// Remove non-needed feature for enum types 
+			ClassFactory.AccessFeatures.Remove( EiffelClassFactory.EnumValueName );	
+		}
 			// Add parents
 		if( ClassFactory.Parents.Count > 1 || ClassFactory.Renames.HasClause( "ANY" ) || ClassFactory.Redefines.HasClause( "ANY" ) || ClassFactory.Undefines.HasClause( "ANY") || (( ClassFactory.Parents.Count == 1 )&&( !(( EiffelClassFactory )ClassTable [ClassFactory.Parents [0]]).Name.Equals( "ANY" ))))
 		{
@@ -448,7 +451,7 @@ public class EiffelClassGenerator: Globals
 
 		
 			// Do not generate creation clause for deferred classes or expanded classes.
-		if(( ClassFactory.CreationRoutines.Count > 0 )&&( !ClassFactory.IsDeferred )&&( Array.IndexOf( EiffelClassFactory.SpecialClasses, ClassFactory.Name ) == -1))
+		if(( ClassFactory.CreationRoutines.Count > 0 )&&( !ClassFactory.IsDeferred )&&( !EiffelClassFactory.SpecialClasses.ContainsKey( ClassFactory.Name ) ) )
 		{
 			if (!ClassFactory.IsExpanded) 
 			{
@@ -485,6 +488,14 @@ public class EiffelClassGenerator: Globals
 		{
 			foreach( String BasicOperation in ClassFactory.BasicOperations.Keys )
 				GeneratedEiffelClass.AddBasicOperation( GeneratedFeature( ClassFactory, BasicOperation, ClassFactory.BasicOperations ) );
+		}
+		else
+		{
+			if (
+				( ClassFactory.UnderlyingType.IsEnum )&&
+				( ClassFactory.UnderlyingType.GetCustomAttributes( typeof( FlagsAttribute ), false ).Length > 0 )
+			)
+				GeneratedEiffelClass.SetBitOrInfix();			
 		}
 
 		if( ClassFactory.UnaryOperatorsFeatures.Count > 0 )
@@ -536,6 +547,7 @@ public class EiffelClassGenerator: Globals
 		bool IsUnaryOperator = false;
 		bool IsBinaryOperator = false;
 		bool IsEnumLiteral = false;
+		bool IsLiteral = false;
 		String PrefixName, Prefix, InfixName, Infix;
 		int PrefixIndex, InfixIndex;
 		int i;
@@ -563,7 +575,10 @@ public class EiffelClassGenerator: Globals
 		if( IsField )
 		{
 			FieldDescriptor =(( FieldInfo )FeatureTable [FeatureName]);
-			IsEnumLiteral = FieldDescriptor.IsLiteral  && ClassFactory.UnderlyingType.IsEnum;
+			IsLiteral = FieldDescriptor.IsLiteral;
+			if( IsLiteral )
+				GeneratedEiffelFeature.SetLiteral();
+			IsEnumLiteral = IsLiteral  && ClassFactory.UnderlyingType.IsEnum;
 			if( IsEnumLiteral )
 				GeneratedEiffelFeature.SetEnumLiteral();
 			if( FieldDescriptor.DeclaringType.AssemblyQualifiedName.ToLower().Equals( ClassFactory.UnderlyingType.AssemblyQualifiedName.ToLower() ) )
@@ -728,7 +743,79 @@ public class EiffelClassGenerator: Globals
 					GeneratedEiffelFeature.SetExternalName( FieldDescriptor.Name );
 			}
 		}
-			
+
+		if( IsField )
+		{
+			if( FieldDescriptor.IsStatic )
+			{
+				if( !IsEnumLiteral && IsLiteral ) 
+				{
+					Object value;
+						/* We cannot just simply print out the value
+						 * of the literal constants for System.Double
+						 * and System.Single because of the Infinity(s)
+						 * and NaN(s) values which do not express themselves
+						 * as constants. Instead we don't generate them
+						 *
+						 * For character constants, we have to generate
+						 * an escape sequence, but we cannot print the
+						 * `MaxValue' and `MinValue' constants.
+						 */
+					value = FieldDescriptor.GetValue( ClassFactory.UnderlyingType );
+					if( value is double ) 
+					{
+						double d = ( double )value;
+						if( double.IsInfinity (d) || double.IsNaN (d) )
+							GeneratedEiffelFeature.SetLiteralValue( "" );
+						else
+							GeneratedEiffelFeature.SetLiteralValue( " " + value );
+					} 
+					else if( value is float ) 
+					{
+						float s = ( float )value;
+						if( float.IsInfinity (s) || float.IsNaN (s) )
+							GeneratedEiffelFeature.SetLiteralValue( "" );
+						else
+							GeneratedEiffelFeature.SetLiteralValue( " " + value );
+					} 
+					else if( value is char ) 
+					{
+						char c = ( char )value;
+						if( ( c == char.MaxValue )||( c == char.MinValue ) )
+							GeneratedEiffelFeature.SetLiteralValue( "" );
+						else
+							GeneratedEiffelFeature.SetLiteralValue( " '" + value + "'" );
+					} 
+					else if( value is int ) 
+					{
+						int a_i = ( int )value;
+						GeneratedEiffelFeature.SetLiteralValue( " 0x" + a_i.ToString ("x") );
+					} 
+					else if( value is byte ) 
+					{
+						byte b = ( byte )value;
+						GeneratedEiffelFeature.SetLiteralValue( " 0x" + b.ToString ("x") );
+					} 
+					else if( value is short ) 
+					{
+						short s = ( short )value;
+						GeneratedEiffelFeature.SetLiteralValue( " 0x" + s.ToString ("x") );
+					} 
+					else if( value is long ) 
+					{
+						long l = ( long )value;
+						GeneratedEiffelFeature.SetLiteralValue( " 0x" + l.ToString ("x") );
+					} 
+					else if( value is string ) 
+					{
+						GeneratedEiffelFeature.SetLiteralValue( " \"" + value + "\"" );
+					}
+					else
+						GeneratedEiffelFeature.SetLiteralValue( " " + value );
+				}
+			}
+		}
+							
 		return GeneratedEiffelFeature;	
 	}
 

@@ -329,7 +329,7 @@ feature -- IL Generation
 							-- made below to find in which parent's type.
 						generate_feature_il (feat, dup_feat,
 							implemented_type (feat.written_in,
-								current_class_type.type).associated_class_type.implementation_id,
+							current_class_type.type).associated_class_type.implementation_id,
 							feat.written_feature_id)
 					end
 				else
@@ -337,6 +337,13 @@ feature -- IL Generation
 						generate_feature (feat, False, False, False)
 						if is_method_impl_needed (feat, inh_feat) then
  							generate_method_impl (feat, class_type, inh_feat)
+						else
+							if
+								not signatures (current_type_id, feat.feature_id).is_equal (
+									signatures (class_type.static_type_id, inh_feat.feature_id))
+							then
+ 								generate_method_impl (feat, class_type, inh_feat)
+							end
 						end
  					end
 					generate_feature_code (feat)

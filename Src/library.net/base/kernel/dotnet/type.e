@@ -14,7 +14,8 @@ feature -- Conversion
 	to_cil: SYSTEM_TYPE is
 			-- Extract associated .NET type from Current
 		do
-			Result := {ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type
+			Result := {ISE_RUNTIME}.interface_type (
+				{ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type)
 		end
 
 end

@@ -48,6 +48,13 @@ feature -- Access
 		deferred
 		end 
 
+	text_length: INTEGER is
+			-- Length of the text in the widget
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Status setting
 	
 	set_text (txt: STRING) is
@@ -84,7 +91,7 @@ feature -- Status setting
 			-- set current insertion position
 		require
 			exist: not destroyed			
-			valid_pos: pos > 0 and pos <= text.count
+			valid_pos: pos >= 0 and pos <= text.count
 		deferred
 		end
 	

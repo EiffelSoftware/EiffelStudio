@@ -32,7 +32,7 @@ feature -- Initialization
 			if destroyed then
 				make_top_level
 				set_minimum_width(400)
-				set_minimum_height(300)
+				set_minimum_height(400)
 				set_title ("Actions")
 				set_x_y(200,200)
 				create n1.make(Current)

@@ -51,8 +51,8 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EG_FIGURE} (node)
-			Xml_routines.add_attribute ("SOURCE", xml_namespace, model.source.name, Result)
-			xml_routines.add_attribute ("TARGET", xml_namespace, model.target.name, Result)
+			Result.add_attribute ("SOURCE", xml_namespace, model.source.name)
+			Result.add_attribute ("TARGET", xml_namespace, model.target.name)
 			Result.put_last (Xml_routines.xml_node (Result, "IS_DIRECTED", model.is_directed.out))
 		end
 		

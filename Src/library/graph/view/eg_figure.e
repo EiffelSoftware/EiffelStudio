@@ -59,7 +59,7 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			if model.name /= Void then
-				Xml_routines.add_attribute ("NAME", xml_namespace, model.name, node)
+				node.add_attribute ("NAME", xml_namespace, model.name)
 			end
 			node.put_last (Xml_routines.xml_node (node, "IS_SELECTED", is_selected.out))
 			node.put_last (Xml_routines.xml_node (node, "IS_LABEL_SHOWN", is_label_shown.out))

@@ -4,10 +4,9 @@ class OPTIMIZE_UNIT
 
 inherit
 	COMPARABLE
-		undefine
+		redefine
 			is_equal
 		end;
-	ANY
 
 creation
 	make
@@ -42,5 +41,13 @@ feature -- Comparable
 			Result := class_id < other.class_id or else
 			(equal (class_id, other.class_id) and then body_index < other.body_index);
 		end;
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are `other' and `Current' equal?
+		do
+			Result := body_index = other.body_index and
+					equal (class_id, other.class_id)
+		end
+
 
 end

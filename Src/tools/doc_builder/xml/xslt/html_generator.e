@@ -47,12 +47,18 @@ feature -- Generation
 	generate is
 			-- Transform `files'
 		local
-			src: DIRECTORY
+			l_src,
+			l_target: DIRECTORY
 		do
-			create src.make (Shared_project.root_directory)
+			create l_src.make (Shared_project.root_directory)
+			create l_target.make (location)
+			if not l_target.exists then
+				l_target.create_dir
+			end
+			l_target.delete_content
 			if should_generate then
 				progress_generator.set_title ("HTML Generation")
-				progress_generator.set_procedure (agent generate_directory (src, create {DIRECTORY}.make (location)))
+				progress_generator.set_procedure (agent generate_directory (l_src, l_target))
 				progress_generator.set_upper_range (files.count)
 				progress_generator.set_heading_text ("Generating HTML Files...")
 				progress_generator.generate

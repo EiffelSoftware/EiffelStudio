@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 				loop
 					if headers.item.count >= 5 and then
 						equal (headers.item.substring (1, 5), "HTTP/") and then
-						headers.item.substring_index ("404", 6) > 0 then
+						headers.item.substring_index ("OK", 6) = 0 then
 						error_code := File_not_found
 					end
 					headers.forth

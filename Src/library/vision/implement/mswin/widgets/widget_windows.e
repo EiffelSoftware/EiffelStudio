@@ -780,11 +780,11 @@ feature -- Removal
 			end
 		end;
 
-	remove_resize_action (command: COMMAND; arg: ANY) is
+	remove_resize_action (a_command: COMMAND; arg: ANY) is
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current area is resized.
 		do
-			resize_actions.remove (Current, command, arg)
+			resize_actions.remove (Current, a_command, arg)
 		end
 
 	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is

@@ -30,6 +30,9 @@
 #define c_clear_flag(_flags_, _mask_) ((((EIF_INTEGER) _flags_) & ((EIF_INTEGER) ~_mask_)))
 #define c_flag_set(_flags_, _mask_) (((((EIF_INTEGER) _flags_) & ((EIF_INTEGER) _mask_)) ? 1 : 0))
 
+#define c_mouse_message_x(_lparam_) ((short) LOWORD(_lparam_))
+#define c_mouse_message_y(_lparam_) ((short) HIWORD(_lparam_))
+
 #ifdef WIN32
 #	define cwel_is_win32 TRUE
 #	define cwel_menu_item_not_found 0xFFFFFFFF

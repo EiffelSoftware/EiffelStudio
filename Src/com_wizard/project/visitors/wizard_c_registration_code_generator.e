@@ -76,7 +76,7 @@ feature -- Basic operations
 					create l_body.make (100)
 					l_body.append ("DWORD dwRegister_")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append (";%R%N")
+					l_body.append (";%N")
 
 					c_writer.add_other_source (l_body)
 
@@ -197,9 +197,9 @@ feature {NONE} -- Implementation
 
 			-- HRESULT hr = CoInitialize (0)
 			create l_body.make (100)
-			l_body.append ("%THRESULT hr = CoInitialize (0);%R%N%T")
+			l_body.append ("%THRESULT hr = CoInitialize (0);%N%T")
 			l_body.append (examine_hresult (Hresult_variable_name))
-			l_body.append ("%R%N%T")
+			l_body.append ("%N%T")
 
 			l_coclasses := system_descriptor.coclasses
 			from
@@ -214,10 +214,10 @@ feature {NONE} -- Implementation
 
 					l_body.append ("if (!(")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append ("_cls_object.IsInitialized))%R%N%T%T%T")
+					l_body.append ("_cls_object.IsInitialized))%N%T%T%T")
 
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append ("_cls_object.Initialize();%R%N%T%T")
+					l_body.append ("_cls_object.Initialize();%N%T%T")
 
 					l_body.append ("hr = CoRegisterClassObject (")
 					l_body.append (clsid_name(l_coclasses.item.c_type_name))
@@ -225,9 +225,9 @@ feature {NONE} -- Implementation
 					l_body.append (l_coclasses.item.c_type_name)
 					l_body.append ("_cls_object), CLSCTX_LOCAL_SERVER, REGCLS_MULTIPLEUSE, &dwRegister_")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append (");%R%N%T")
+					l_body.append (");%N%T")
 
-					l_body.append ("if (FAILED (hr))%R%N%T{%R%N%T%Tcom_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T}%R%N%T")
+					l_body.append ("if (FAILED (hr))%N%T{%N%T%Tcom_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T}%N%T")
 				end
 				
 				l_coclasses.forth
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 				if not Non_generated_type_libraries.has (l_coclasses.item.type_library_descriptor.guid) then
 					l_body.append ("CoRevokeClassObject (dwRegister_")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append (");%R%N%R%N%T")
+					l_body.append (");%N%N%T")
 				end
 				l_coclasses.forth
 			end
@@ -284,9 +284,9 @@ feature {NONE} -- Implementation
            	Result.set_comment ("Unregister server.")
 			Result.set_result_type (Void_c_keyword)
 			create l_body.make (100)
-			l_body.append ("%THRESULT hr = CoInitialize (0);%R%N%R%N%T")
-			l_body.append ("Unregister (reg_entries, com_entries_count);%R%N%T")
-			l_body.append ("CoUninitialize ();%R%N%T")
+			l_body.append ("%THRESULT hr = CoInitialize (0);%N%N%T")
+			l_body.append ("Unregister (reg_entries, com_entries_count);%N%T")
+			l_body.append ("CoUninitialize ();%N%T")
 			l_body.append ("return;")
 			Result.set_body (l_body)
 		end
@@ -305,13 +305,13 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Register server.")
 			Result.set_result_type ("void")
 			create l_body.make (500)
-			l_body.append ("%THRESULT hr = CoInitialize (0);%R%N%T")
-			l_body.append ("if (FAILED (hr))%R%N%T")
-			l_body.append ("{%R%N%T%T")
-			l_body.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%R%N%T")
-			l_body.append ("}%R%N%T")
+			l_body.append ("%THRESULT hr = CoInitialize (0);%N%T")
+			l_body.append ("if (FAILED (hr))%N%T")
+			l_body.append ("{%N%T%T")
+			l_body.append ("com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T")
+			l_body.append ("}%N%T")
 			l_body.append (exe_module_file_name_set_up)
-			l_body.append ("%R%N%TRegister (reg_entries, com_entries_count);%R%N%TCoUninitialize ();")
+			l_body.append ("%N%TRegister (reg_entries, com_entries_count);%N%TCoUninitialize ();")
 			Result.set_body (l_body)
 		end
 
@@ -345,17 +345,17 @@ feature {NONE} -- Implementation
 				if not Non_generated_type_libraries.has (l_coclass.type_library_descriptor.guid) then
 					l_body.append ("if (IsEqualGUID (* rclsid, ")
 					l_body.append (clsid_name (l_coclasses.item.c_type_name))
-					l_body.append ("))%R%N%T{%R%N%T%Tif (!(")
+					l_body.append ("))%N%T{%N%T%Tif (!(")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append ("_cls_object.IsInitialized))%R%N%T%T%T")
+					l_body.append ("_cls_object.IsInitialized))%N%T%T%T")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append ("_cls_object.Initialize();%R%N%T%Treturn ")
+					l_body.append ("_cls_object.Initialize();%N%T%Treturn ")
 					l_body.append (l_coclasses.item.c_type_name)
-					l_body.append ("_cls_object.QueryInterface (* riid, ppv);%R%N%T}%R%N%Telse ")
+					l_body.append ("_cls_object.QueryInterface (* riid, ppv);%N%T}%N%Telse ")
 				end
 				l_coclasses.forth
 			end
-			l_body.append ("%R%N%T%Treturn (*ppv = 0), CLASS_E_CLASSNOTAVAILABLE;")
+			l_body.append ("%N%T%Treturn (*ppv = 0), CLASS_E_CLASSNOTAVAILABLE;")
 			Result.set_body (l_body)
 		end
 
@@ -363,11 +363,11 @@ feature {NONE} -- Implementation
 			-- Code to set up module file name
 		once
 			create Result.make (200)
-			Result.append ("%TGetModuleFileName (0, file_name, MAX_PATH);%R%N")
-			Result.append ("#ifdef UNICODE%R%N%T")
-			Result.append ("lstrcpy (ws_file_name, file_name);%R%N")
-			Result.append ("#else%R%N%T")
-			Result.append ("mbstowcs (ws_file_name, file_name, MAX_PATH);%R%N")
+			Result.append ("%TGetModuleFileName (0, file_name, MAX_PATH);%N")
+			Result.append ("#ifdef UNICODE%N%T")
+			Result.append ("lstrcpy (ws_file_name, file_name);%N")
+			Result.append ("#else%N%T")
+			Result.append ("mbstowcs (ws_file_name, file_name, MAX_PATH);%N")
 			Result.append ("#endif")
 		end
 
@@ -375,11 +375,11 @@ feature {NONE} -- Implementation
 			-- Code to set up module file name
 		once
 			create Result.make (200)
-			Result.append ("%TGetModuleFileName (eif_hInstance, file_name, MAX_PATH);%R%N")
-			Result.append ("#ifdef UNICODE%R%N%T")
-			Result.append ("lstrcpy (ws_file_name, file_name);%R%N")
-			Result.append ("#else%R%N%T")
-			Result.append ("mbstowcs (ws_file_name, file_name, MAX_PATH);%R%N")
+			Result.append ("%TGetModuleFileName (eif_hInstance, file_name, MAX_PATH);%N")
+			Result.append ("#ifdef UNICODE%N%T")
+			Result.append ("lstrcpy (ws_file_name, file_name);%N")
+			Result.append ("#else%N%T")
+			Result.append ("mbstowcs (ws_file_name, file_name, MAX_PATH);%N")
 			Result.append ("#endif")
 		end
 		
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			create l_body.make (1000)
 			l_body.append ("%T")
 			l_body.append (dll_module_file_name_set_up)
-			l_body.append ("%R%N%Treturn Register (reg_entries, com_entries_count);")
+			l_body.append ("%N%Treturn Register (reg_entries, com_entries_count);")
 
 			Result.set_body (l_body)
 		end
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Unlock module.")
 			Result.set_result_type ("void")
 			Result.set_signature ("void")
-			Result.set_body ("%Tif (CoReleaseServerProcess () == 0)%R%N%T%TPostThreadMessage (threadID, WM_QUIT, 0, 0);")
+			Result.set_body ("%Tif (CoReleaseServerProcess () == 0)%N%T%TPostThreadMessage (threadID, WM_QUIT, 0, 0);")
 		end
 
 	dll_unlock_module_feature: WIZARD_WRITER_C_FUNCTION is
@@ -505,14 +505,14 @@ feature {NONE} -- Implementation
 			create l_body.make (10000)
 			l_body.append ("%T")
 			l_body.append (libid_definition (system_descriptor.name, system_descriptor.type_lib_guid))
-			l_body.append ("%R%N%THRESULT hr = UnRegisterTypeLib (")
+			l_body.append ("%N%THRESULT hr = UnRegisterTypeLib (")
 			l_body.append (libid_name (system_descriptor.name))
 			l_body.append (", 1, 0, 0, SYS_WIN32);")
-			l_body.append ("%R%N%TBOOL bSuccess = SUCCEEDED (hr);")
-			l_body.append ("%R%N%Tfor (int i= cEntries -1; i >= 0; i--)")
-			l_body.append ("%R%N%Tif (rgEntries[i].pDelOnUnregister)")
-			l_body.append ("%R%N%T%TbSuccess = (RegDeleteKey (HKEY_CLASSES_ROOT, rgEntries[i].pKeyName) == ERROR_SUCCESS);")
-			l_body.append ("%R%N%Treturn bSuccess ? S_OK : S_FALSE;")
+			l_body.append ("%N%TBOOL bSuccess = SUCCEEDED (hr);")
+			l_body.append ("%N%Tfor (int i= cEntries -1; i >= 0; i--)")
+			l_body.append ("%N%Tif (rgEntries[i].pDelOnUnregister)")
+			l_body.append ("%N%T%TbSuccess = (RegDeleteKey (HKEY_CLASSES_ROOT, rgEntries[i].pKeyName) == ERROR_SUCCESS);")
+			l_body.append ("%N%Treturn bSuccess ? S_OK : S_FALSE;")
 			Result.set_body (l_body)
 		end
 
@@ -527,30 +527,30 @@ feature {NONE} -- Implementation
 			Result.set_result_type ("EIF_INTEGER")
 			Result.set_signature ("const REG_DATA *rgEntries, int cEntries")
 			create l_body.make (900)
-			l_body.append ("%TBOOL bSuccess = TRUE;%R%N%T")
-			l_body.append ("const REG_DATA *pEntry = rgEntries;%R%N%T")
-			l_body.append ("while (pEntry < rgEntries + cEntries)%R%N%T{%R%N%T%T")
-			l_body.append ("HKEY hkey;%R%N%T%T")
-			l_body.append ("LONG err = RegCreateKey (HKEY_CLASSES_ROOT, pEntry->pKeyName, &hkey);%R%N%T%T")
-			l_body.append ("if (err == ERROR_SUCCESS)%R%N%T%T{%R%N%T%T%T")
-			l_body.append ("if (pEntry->pValue)%R%N%T%T%T%T")
-			l_body.append ("err = RegSetValueEx (hkey, pEntry->pValueName, 0, REG_SZ, (const BYTE*)pEntry->pValue, (lstrlen (pEntry->pValue) + 1) * sizeof (TCHAR));%R%N%T%T%T%T")
-			l_body.append ("if (err != ERROR_SUCCESS)%R%N%T%T%T%T{%R%N%T%T%T%T%T")
-			l_body.append ("bSuccess = FALSE;%R%N%T%T%T%T%T")
-			l_body.append ("Unregister (rgEntries, 1 + pEntry - rgEntries);%R%N%T%T%T%T}%R%N%T%T%T%T")
-			l_body.append ("RegCloseKey (hkey);%R%N%T%T%T}%R%N%T%T%T")
-			l_body.append ("if (err != ERROR_SUCCESS)%R%N%T%T%T{%R%N%T%T%T%T")
-			l_body.append ("bSuccess = FALSE;%R%N%T%T%T%T")
-			l_body.append ("if (pEntry != rgEntries)%R%N%T%T%T%T%T")
-			l_body.append ("Unregister (rgEntries, pEntry - rgEntries);%R%N%T%T%T}%R%N%T%T")
-			l_body.append ("pEntry++;%R%N%T}%R%N%T")
-			l_body.append ("if (!bSuccess)%R%N%T")
-			l_body.append ("return E_FAIL;%R%N%R%N%T")
-			l_body.append ("ITypeLib *ptl = 0;%R%N%T")
-			l_body.append ("HRESULT hr = LoadTypeLib (ws_file_name, &ptl);%R%N%T")
-			l_body.append ("if (SUCCEEDED (hr))%R%N%T{%R%N%T%T")
-			l_body.append ("hr = RegisterTypeLib (ptl, ws_file_name, 0);%R%N%T%T")
-			l_body.append ("ptl->Release ();%R%N%T}%R%N%T")
+			l_body.append ("%TBOOL bSuccess = TRUE;%N%T")
+			l_body.append ("const REG_DATA *pEntry = rgEntries;%N%T")
+			l_body.append ("while (pEntry < rgEntries + cEntries)%N%T{%N%T%T")
+			l_body.append ("HKEY hkey;%N%T%T")
+			l_body.append ("LONG err = RegCreateKey (HKEY_CLASSES_ROOT, pEntry->pKeyName, &hkey);%N%T%T")
+			l_body.append ("if (err == ERROR_SUCCESS)%N%T%T{%N%T%T%T")
+			l_body.append ("if (pEntry->pValue)%N%T%T%T%T")
+			l_body.append ("err = RegSetValueEx (hkey, pEntry->pValueName, 0, REG_SZ, (const BYTE*)pEntry->pValue, (lstrlen (pEntry->pValue) + 1) * sizeof (TCHAR));%N%T%T%T%T")
+			l_body.append ("if (err != ERROR_SUCCESS)%N%T%T%T%T{%N%T%T%T%T%T")
+			l_body.append ("bSuccess = FALSE;%N%T%T%T%T%T")
+			l_body.append ("Unregister (rgEntries, 1 + pEntry - rgEntries);%N%T%T%T%T}%N%T%T%T%T")
+			l_body.append ("RegCloseKey (hkey);%N%T%T%T}%N%T%T%T")
+			l_body.append ("if (err != ERROR_SUCCESS)%N%T%T%T{%N%T%T%T%T")
+			l_body.append ("bSuccess = FALSE;%N%T%T%T%T")
+			l_body.append ("if (pEntry != rgEntries)%N%T%T%T%T%T")
+			l_body.append ("Unregister (rgEntries, pEntry - rgEntries);%N%T%T%T}%N%T%T")
+			l_body.append ("pEntry++;%N%T}%N%T")
+			l_body.append ("if (!bSuccess)%N%T")
+			l_body.append ("return E_FAIL;%N%N%T")
+			l_body.append ("ITypeLib *ptl = 0;%N%T")
+			l_body.append ("HRESULT hr = LoadTypeLib (ws_file_name, &ptl);%N%T")
+			l_body.append ("if (SUCCEEDED (hr))%N%T{%N%T%T")
+			l_body.append ("hr = RegisterTypeLib (ptl, ws_file_name, 0);%N%T%T")
+			l_body.append ("ptl->Release ();%N%T}%N%T")
 			l_body.append ("return hr;")
 			Result.set_body (l_body)
 		end
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			l_entry.append ("\\InprocServer32")
 			create Result.make (1000)
 			Result.append (struct_creator (tchar_creator (l_entry), "0", Module_file_name, "TRUE"))
-			Result.append (", %R%N%T")
+			Result.append (", %N%T")
 			Result.append (struct_creator (tchar_creator (l_entry), tchar_creator ("ThreadingModel"), tchar_creator ("Apartment"), "TRUE"))
 		end
 
@@ -596,14 +596,14 @@ feature {NONE} -- Implementation
 			l_string_two.append (" Application%"")
 
 			Result := struct_creator (tchar_creator (l_string_one), "0", l_string_two, "TRUE")
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 
 			create l_string_one.make (500)
 			l_string_one.append ("AppID\\")
 			l_string_one.append (environment.project_name)
 
 			Result.append (struct_creator (tchar_creator (l_string_one), tchar_creator ("AppID"), tchar_creator (coclass_guid), "TRUE"))
- 			Result.append (",%R%N%T")
+ 			Result.append (",%N%T")
 
 			create l_string_one.make (500)
 			l_string_one.append ("CLSID\\")
@@ -611,10 +611,10 @@ feature {NONE} -- Implementation
 			l_string_one.append ("\\LocalServer32")
 
 			Result.append (struct_creator (tchar_creator (l_string_one), "0", "file_name", "TRUE"))
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 
 			Result.append (struct_creator (tchar_creator (l_string_one), tchar_creator ("ThreadingModel"), tchar_creator ("Apartment"), "TRUE"))
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 
 			create l_string_one.make (500)
 			l_string_one.append ("CLSID\\")
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			l_coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
 		do
 			create Result.make (10000)
-			Result.append ("const REG_DATA reg_entries[] = %R%N{%R%N%T")
+			Result.append ("const REG_DATA reg_entries[] = %N{%N%T")
 			l_coclasses := system_descriptor.coclasses
 			from
 				l_coclasses.start
@@ -662,16 +662,16 @@ feature {NONE} -- Implementation
 					l_string_two.append (system_descriptor.coclasses.item.name)
 					l_string_two.append (" Class")
 
-					Result.append ("%R%N%T")
+					Result.append ("%N%T")
 					Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (l_string_two), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					if environment.is_in_process then
 						Result.append (dll_specific_registry_entries)
 					else
 						Result.append (application_specific_registry_entries)
 					end
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					create l_string_one.make (500)
 					l_string_one.append ("CLSID\\")
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 					l_string_two.append (".1")
 
 					Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (l_string_two), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					create l_string_one.make (500)
 					l_string_one.append ("CLSID\\")
@@ -698,17 +698,17 @@ feature {NONE} -- Implementation
 					l_string_two.append (coclass_descriptor.name)
 
 					Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (l_string_two), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					l_string_two.append (".1")
 
 					Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (coclass_descriptor.name), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					l_string_two.append ("\\CLSID")
 
 					Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (coclass_guid), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					create l_string_one.make (500)
 					l_string_one.append (type_library_name)
@@ -716,14 +716,14 @@ feature {NONE} -- Implementation
 					l_string_one.append (coclass_descriptor.name)
 
 					Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (coclass_descriptor.name), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					create l_string_two.make (500)
 					l_string_two.append (l_string_one)
 					l_string_two.append ("\\CLSID")
 
 					Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (coclass_guid), "TRUE"))
-					Result.append (",%R%N%T")
+					Result.append (",%N%T")
 
 					create l_string_two.make (500)
 					l_string_two.append (l_string_one)
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 			end
 
 			Result.remove (Result.count)
-			Result.append ("%R%N};")
+			Result.append ("%N};")
 		end
 
 	universal_marshaling_registration_code: STRING is
@@ -771,7 +771,7 @@ feature {NONE} -- Implementation
 			l_string_one.append (l_guid)
 
 			create Result.make (10000)
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_string_one), "0", tchar_creator (interface_descriptor.c_type_name), "TRUE"))
 
 			l_string_one.append (Registry_field_seperator)
@@ -780,21 +780,21 @@ feature {NONE} -- Implementation
 			l_string_two.append (l_string_one)
 			l_string_two.append ("ProxyStubClsid32")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (Automation_marshaler_guid), "TRUE"))
 
 			create l_string_two.make (1000)
 			l_string_two.append (l_string_one)
 			l_string_two.append ("TypeLib")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (type_library_guid), "TRUE"))
 
 			create l_string_two.make (1000)
 			l_string_two.append (l_string_one)
 			l_string_two.append ("NumMethods")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (interface_descriptor.functions_count.out), "TRUE"))
 
 			l_interface := interface_descriptor.inherited_interface
@@ -834,7 +834,7 @@ feature {NONE} -- Implementation
 			l_one.append ("CLSID\\")
 			l_one.append (l_new_guid.to_string)
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator ("Proxy/Stub "), "TRUE"))
 
 			l_one.append ("\\InprocServer32")
@@ -855,9 +855,9 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator (l_two), "TRUE"))
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_one), tchar_creator ("ThreadingModel"), tchar_creator ("Both"), "TRUE"))
 		end
 
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			l_one.append (l_guid)
 
 			create Result.make (10000)
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_one), "0", tchar_creator (interface_descriptor.c_type_name), "TRUE"))
 
 			l_one.append ("\\")
@@ -884,21 +884,21 @@ feature {NONE} -- Implementation
 			l_two.append (l_one)
 			l_two.append ("ProxyStubClsid32")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (l_guid), "TRUE"))
 
 			create l_two.make (1000)
 			l_two.append (l_one)
 			l_two.append ("TypeLib")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (type_library_guid), "TRUE"))
 
 			create l_two.make (1000)
 			l_two.append (l_one)
 			l_two.append ("NumMethods")
 
-			Result.append (",%R%N%T")
+			Result.append (",%N%T")
 			Result.append (struct_creator (tchar_creator (l_two), "0", tchar_creator (interface_descriptor.functions_count.out), "TRUE"))
 
 			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
@@ -911,15 +911,15 @@ feature {NONE} -- Implementation
 			-- Reg data struct creator
 		do
 			create Result.make (10000)
-			Result.append ("{%R%N%T%T")
+			Result.append ("{%N%T%T")
 			Result.append (first_field)
-			Result.append (",%R%N%T%T")
+			Result.append (",%N%T%T")
 			Result.append (second_field)
-			Result.append (",%R%N%T%T")
+			Result.append (",%N%T%T")
 			Result.append (third_field)
-			Result.append (",%R%N%T%T")
+			Result.append (",%N%T%T")
 			Result.append (forth_field)
-			Result.append ("%R%N%T}")
+			Result.append ("%N%T}")
 		end
 
 	reg_data_struct: STRING is
@@ -927,24 +927,17 @@ feature {NONE} -- Implementation
 			-- Use add_other
 		once
 			create Result.make (110)
-			Result.append ("struct REG_DATA%R%N{%R%N%T")
-			Result.append ("const TCHAR *pKeyName;%R%N%T")
-			Result.append ("const TCHAR *pValueName;%R%N%T")
-			Result.append ("const TCHAR *pValue;%R%N%T")
-			Result.append ("BOOL pDelOnUnregister;%R%N};")
+			Result.append ("struct REG_DATA%N{%N%T")
+			Result.append ("const TCHAR *pKeyName;%N%T")
+			Result.append ("const TCHAR *pValueName;%N%T")
+			Result.append ("const TCHAR *pValue;%N%T")
+			Result.append ("BOOL pDelOnUnregister;%N};")
 		end
 
 	hInstance_set_up: STRING is
 			-- Set up hInstance
 		once
-			create Result.make (100)
-			Result.append ("#ifdef __cplusplus%R%N%T")
-			Result.append ("extern %"C%" {%R%N")
-			Result.append ("#endif%R%N%R%N")
-			Result.append ("RT_LNK HINSTANCE eif_hInstance;%R%N")
-			Result.append ("#ifdef __cplusplus%R%N%T")
-			Result.append ("}%R%N")
-			Result.append ("#endif")
+			create Result := "RT_LNK HINSTANCE eif_hInstance;%N"
 		end
 
 end -- class WIZARD_C_REGISTRATION_CODE_GENERATOR

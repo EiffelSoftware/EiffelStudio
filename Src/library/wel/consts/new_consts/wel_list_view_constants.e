@@ -575,6 +575,9 @@ feature -- Notifications
 			--
 			-- Declared in Windows as LVN_GETINFOTIP
 
+	Lvn_marqueebegin: INTEGER is -156
+			-- Declared in Windows as LVN_MARQUEEBEGIN
+
 feature -- Header Notifications.
 
 	Hdn_itemchanging, Hdn_itemchanginga: INTEGER is -300

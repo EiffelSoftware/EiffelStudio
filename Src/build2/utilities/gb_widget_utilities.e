@@ -507,11 +507,11 @@ feature {NONE} -- Implementation
 				-- out that it needs to be the final node. This will optimize the loading in Build as it should
 				-- be saved in order.
 
-			l_text := tree_node.text
+			l_text := tree_node.text.as_lower
 			from
 				tree_node_list.go_i_th (tree_node_list.count)
 			until
-				tree_node_list.off or else  tree_node_list.item.text < l_text 
+				tree_node_list.off or else tree_node_list.item.text.as_lower < l_text 
 			loop
 				tree_node_list.back
 			end
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			until
 				tree_node_list.off
 			loop
-				current_item_text := tree_node_list.item.text
+				current_item_text := tree_node_list.item.text.as_lower
 				if last_item_text /= Void then
 					if last_item_text > current_item_text then
 						Result := False

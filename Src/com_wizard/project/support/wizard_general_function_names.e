@@ -1,5 +1,5 @@
 indexing
-	description: "Feature nameS of class GENERAL and MEMORY"
+	description: "Feature names of class GENERAL and MEMORY"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"

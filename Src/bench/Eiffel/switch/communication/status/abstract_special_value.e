@@ -19,7 +19,18 @@ inherit
 			{NONE} all	
 		undefine
 			is_equal
-		end;
+		end
+		
+feature -- Items
+
+	reset_items is
+		do
+			if items /= Void then
+				items.wipe_out
+			else
+				create items.make (0)
+			end
+		end
 
 feature -- Properties
 

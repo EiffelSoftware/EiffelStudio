@@ -423,7 +423,8 @@ feature {NONE} -- Implementation
 					slice_min := slice_min.min (abs_spec_dv.capacity)
 					slice_max := slice_max.min (abs_spec_dv.capacity)
 
-					abs_spec_dv.items.wipe_out
+						--| wipe_out or create an empty list for `abs_spec_dv.items'
+					abs_spec_dv.reset_items
 					abs_spec_dv.set_sp_bounds (slice_min, slice_max)
 
 					spec_dv ?= abs_spec_dv

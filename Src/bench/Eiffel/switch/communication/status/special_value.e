@@ -48,17 +48,10 @@ feature {NONE} -- Initialization
 			address := addr;
 			is_null := (address = Void)
 			capacity := cap;
-			create_empty_items
-		end
-		
-	create_empty_items is
-			-- allocate area for `items' attribute.
-		local
-			l_slice_max, l_slice_min: INTEGER
-		do
-			l_slice_min := (capacity - 1).min (Min_slice_ref.item)
-			l_slice_max := (capacity - 1).min (Max_slice_ref.item)
-			create items.make (l_slice_max - l_slice_min + 1)			
+			reset_items
+				--| No need to preallocate area, since the fill_items or similar
+				--| will change the capacity if needed
+				--| We require only to get a non Void list
 		end
 
 feature -- Access
@@ -91,6 +84,37 @@ feature -- Access
 			end
 		end
 
+	truncated_raw_string_value (a_size: INTEGER): STRING is
+			-- If `Current' represents a string then return its value truncated to `a_size'.
+			-- Else return Void.
+			-- Do not convert special characters to an Eiffel representation.
+		local
+			char_value: CHARACTER_VALUE
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+		do
+			if items.count /= 0 then
+				char_value ?= items.first
+				if char_value /= Void then
+					create Result.make (a_size.min (items.count + 1))
+					from
+						l_cursor := items.new_cursor
+						l_cursor.start
+					until
+						l_cursor.after or Result.count = a_size
+					loop
+						char_value ?= l_cursor.item
+						Result.append_character (char_value.value)
+						l_cursor.forth
+					end;
+				end
+			end
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			raw_string_value_not_void: Result /= Void
+		end
+		
 	raw_string_value: STRING is
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.

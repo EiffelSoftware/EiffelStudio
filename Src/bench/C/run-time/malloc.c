@@ -43,13 +43,13 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "eif_except.h"			/* For exception raising */
-#include "eif_plug.h"
 #include "x2c.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "rt_sig.h"
 #include "rt_err_msg.h"
 #include "rt_bits.h"
 #include "rt_globals.h"
+#include "rt_struct.h"
 #ifdef ISE_GC
 #endif
 #ifdef VXWORKS
@@ -650,7 +650,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 	
 #ifdef WORKBENCH
-	if (System(type).cn_deferred) {	/* Cannot create deferred */
+	if (EIF_IS_DEFERRED_TYPE(System(type))) {	/* Cannot create deferred */
 		eraise(System(type).cn_generator, EN_CDEF);
 		return (EIF_REFERENCE) 0;			/* In case they chose to ignore EN_CDEF */
 	}

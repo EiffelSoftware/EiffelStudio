@@ -35,7 +35,8 @@ inherit
 			on_draw_item,
 			background_brush,
 			on_menu_command,
-			on_accelerator_command
+			on_accelerator_command,
+			on_color_control
 		redefine
 			default_style,
 			default_ex_style

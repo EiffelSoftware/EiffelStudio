@@ -15,8 +15,8 @@ inherit
 	INTERACTIVE_LIST [G]
 		redefine
 			default_create,
-			on_item_added,
-			on_item_removed
+			on_item_added_at,
+			on_item_removed_at
 		end
 
 create
@@ -42,16 +42,24 @@ feature -- Access
 
 feature -- Miscellaneous
 
-	on_item_added (an_item: G) is
-			-- `an_item' has just been added.
+	on_item_added_at (an_item: G; item_index: INTEGER) is
+			-- `an_item' has just been added at index `item_index'.
+		local
+			a_cursor: CURSOR
 		do
+			a_cursor := cursor
 			add_actions.call ([an_item])
+			go_to (a_cursor)
 		end
 
-	on_item_removed (an_item: G) is
-			-- `an_item' has just been removed.
+	on_item_removed_at (an_item: G; item_index: INTEGER) is
+			-- `an_item' has just been removed at index `item_index'.
+		local
+			a_cursor: CURSOR
 		do
+			a_cursor := cursor
 			remove_actions.call ([an_item])
+			go_to (a_cursor)
 		end
 
 invariant

@@ -1,12 +1,20 @@
 /*
-
- #       #    #    ##    #       #        ####    ####           #    #
- #       ##  ##   #  #   #       #       #    #  #    #          #    #
- #       # ## #  #    #  #       #       #    #  #               ######
- #       #    #  ######  #       #       #    #  #        ###    #    #
- #       #    #  #    #  #       #       #    #  #    #   ###    #    #
- ######  #    #  #    #  ######  ######   ####    ####    ###    #    #
-
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
 */
 
 #ifndef _eif_lmalloc_h_
@@ -39,14 +47,14 @@ extern "C" {
 #endif
 
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
-RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes, char *file, int line);
-RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize, char *file, int line) ;
-RT_LNK Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes, char *file, int line);
+RT_LNK Malloc_t eiffel_malloc (register size_t nbytes, char *file, int line);
+RT_LNK Malloc_t eiffel_calloc (size_t nelem, size_t elsize, char *file, int line) ;
+RT_LNK Malloc_t eiffel_realloc (void *ptr, size_t nbytes, char *file, int line);
 RT_LNK void eiffel_free (void *ptr, char *s, int l);
 #else
-RT_LNK Malloc_t eiffel_malloc (register unsigned int nbytes);
-RT_LNK Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize) ;
-RT_LNK Malloc_t eiffel_realloc (void *ptr, unsigned int nbytes);
+RT_LNK Malloc_t eiffel_malloc (register size_t nbytes);
+RT_LNK Malloc_t eiffel_calloc (size_t nelem, size_t elsize) ;
+RT_LNK Malloc_t eiffel_realloc (void *ptr, size_t nbytes);
 RT_LNK void eiffel_free (void *ptr);
 #endif
 

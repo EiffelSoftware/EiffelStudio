@@ -23,10 +23,10 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showflat 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showflat 
+		end
  
 feature {NONE} -- Properties
 

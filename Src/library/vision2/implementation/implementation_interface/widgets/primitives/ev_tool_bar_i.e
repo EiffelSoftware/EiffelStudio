@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	make_with_bitmap_size (w, h: INTEGER) is
+	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
 		require
 			valid_width: w >= 0

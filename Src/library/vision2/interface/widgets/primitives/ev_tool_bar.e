@@ -16,7 +16,7 @@ inherit
 
 creation
 	make,
-	make_with_bitmap_size
+	make_with_size
 
 feature -- Initialization
 
@@ -27,17 +27,17 @@ feature -- Initialization
  			widget_make (par)
 		end
 
-	make_with_bitmap_size (par: EV_CONTAINER; w, h: INTEGER) is
+	make_with_size (par: EV_CONTAINER; w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent, `w' and `h' as size of
 			-- the buttons.
-			-- On windows comparing to the bitmap inside the button, count 8 more
+			-- On windows comparing to the pixmap inside the button, count 8 more
 			-- pixels for the width, and 7 for the height. By default, the size is
 			-- 24 on 22.
 		require
 			valid_width: w >= 0
 			valid_height: h >= 0
 		do
-			!EV_TOOL_BAR_IMP! implementation.make_with_bitmap_size (w, h)
+			!EV_TOOL_BAR_IMP! implementation.make_with_size (w, h)
  			widget_make (par)
 		end
 

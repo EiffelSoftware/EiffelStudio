@@ -1639,9 +1639,12 @@ feature -- Pattern
 
 	process_pattern is
 			-- Process pattern of Current feature
+		local
+			p: PATTERN_TABLE
 		do
-			Pattern_table.insert (generation_class_id, pattern)
-			pattern_id := Pattern_table.last_pattern_id
+			p := Pattern_table
+			p.insert (generation_class_id, pattern)
+			pattern_id := p.last_pattern_id
 		end
 			
 feature -- Dead code removal
@@ -2229,7 +2232,7 @@ feature -- Inlining
 			end
 			if Result then
 				wc := written_class
-				Result := not (wc.is_special or else wc.is_basic)
+				Result := not (wc.is_basic or else (wc.is_special and then feature_name.is_equal ("make_area")))
 			end
 		end
 
@@ -2270,9 +2273,12 @@ feature -- Concurrent Eiffel
 
 	sep_process_pattern: BOOLEAN is
 			-- Process pattern of Current feature
+		local
+			p: PATTERN_TABLE
 		do
-			Result := Pattern_table.sep_insert (generation_class_id, pattern)
-			pattern_id := Pattern_table.last_pattern_id
+			p := Pattern_table
+			Result := p.sep_insert (generation_class_id, pattern)
+			pattern_id := p.last_pattern_id
 debug ("SEP_DEBUG")
 if Result then
 io.putstring ("* Inserted a new pattern whose id is: ")

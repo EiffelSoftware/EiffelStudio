@@ -14,4 +14,11 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
+
+	call_selection_action_sequences is
+			-- Call appropriate selection action sequences 
+		deferred
+		end
+
 end -- class EV_PND_DEFERRED_ITEM_PARENT

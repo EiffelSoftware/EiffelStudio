@@ -2,7 +2,7 @@ indexing
 	description: "This class is used by EV_WIDGET_IMP. It gives%
 				% the identifications of the different events%
 				% that can occur. It is a class of constants"
-	author: ""
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,13 +68,24 @@ feature -- Events for buttons
 	Cmd_toggle: INTEGER is 18
 			-- The 2 state button change its state
 
-feature -- Events for list
+feature -- Events for list and mc-list
 
 	Cmd_selection: INTEGER is 17
 			-- The selection of the list has changed
 
-	Cmd_dblclk: INTEGER is 18
+	Cmd_column_click: INTEGER is 18
 			-- The user double clicked on an item
+
+feature -- Events for windows
+
+	Cmd_close: INTEGER is 17
+			-- The window has been closed
+
+	Cmd_size: INTEGER is 18
+			-- The window has been resized
+
+	Cmd_move: INTEGER is 19
+			-- The window has moved
 
 feature -- Event for text_components
 
@@ -85,6 +96,10 @@ feature -- Event for text_components
 	Cmd_activate: INTEGER is 18
 			-- The text inside the componant is going to be
 			-- update after a change of the user.
+
+feature -- Upper constants value
+
+	command_count: INTEGER is 19
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP
 

@@ -67,10 +67,11 @@ feature -- C code generation
 	print_register is
 			-- Print expression value
 		local
-			buf			: GENERATION_BUFFER
-			power_nb	: REAL_CONST_B
-			power_value	: DOUBLE
-			done		: BOOLEAN
+			buf: GENERATION_BUFFER
+			power_nb: REAL_CONST_B
+			power_value: DOUBLE
+			done: BOOLEAN
+			l_type: TYPE_I
 		do
 			buf := buffer
 			power_nb ?= right
@@ -81,20 +82,22 @@ feature -- C code generation
 					buf.put_string ("(EIF_REAL_64) 1")
 				elseif power_value = 1.0 then
 					done := True
-					left.type.c_type.generate_conversion_to_real_64 (buf)
+					l_type := context.real_type (left.type)
+					l_type.c_type.generate_conversion_to_real_64 (buf)
 					left.print_register
 					buf.put_character (')')
 				elseif power_value = 2.0 or power_value = 3.0 then
 					done := True
 					buf.put_string ("(EIF_REAL_64) (")
-					left.type.c_type.generate_conversion_to_real_64 (buf)
+					l_type := context.real_type (left.type)
+					l_type.c_type.generate_conversion_to_real_64 (buf)
 					left.print_register
 					buf.put_string (") * ")
-					left.type.c_type.generate_conversion_to_real_64 (buf)
+					l_type.c_type.generate_conversion_to_real_64 (buf)
 					left.print_register
 					if power_value = 3.0 then
 						buf.put_string (") * ")
-						left.type.c_type.generate_conversion_to_real_64 (buf)
+						l_type.c_type.generate_conversion_to_real_64 (buf)
 						left.print_register
 						buf.put_character (')')
 					else
@@ -109,10 +112,12 @@ feature -- C code generation
 					-- call to `pow'.
 				shared_include_queue.put (Names_heap.math_header_name_id)
 				buf.put_string ("(EIF_REAL_64) pow (")
-				left.type.c_type.generate_conversion_to_real_64 (buf)
+				l_type := context.real_type (left.type)
+				l_type.c_type.generate_conversion_to_real_64 (buf)
 				left.print_register;
 				buf.put_string ("), ");
-				right.type.c_type.generate_conversion_to_real_64 (buf)
+				l_type := context.real_type (right.type)
+				l_type.c_type.generate_conversion_to_real_64 (buf)
 				right.print_register;
 				buf.put_character (')');
 				buf.put_character (')');

@@ -1071,6 +1071,7 @@ feature -- Persistence
 			relationships: ARRAY [MT_RELATIONSHIP]
 			a_rs: MT_MULTI_RELATIONSHIP
 			i: INTEGER
+			a_rs_containable: MT_RS_CONTAINABLE
 		do
 			relationships := a_class.relationships
 			from
@@ -1082,6 +1083,13 @@ feature -- Persistence
 				if a_rs /= Void and then field (a_rs.eif_field_index, Current) = Void then
 					set_reference_field (a_rs.eif_field_index, Current, 
 							a_rs.empty_container_for (Current))
+				elseif a_rs /= Void then
+					-- Added by SM, 04/15/99
+					-- Without that, a list which is created in `Current'
+					-- is not considered as persistent.
+					a_rs_containable ?= field (a_rs.eif_field_index, Current)
+					a_rs_containable.set_relationship (a_rs)
+ 					a_rs_containable.set_predecessor (Current)
 				end
 				i := i + 1
 			end

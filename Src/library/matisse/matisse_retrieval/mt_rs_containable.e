@@ -36,7 +36,7 @@ feature -- Primitive successor accessing
 			Result := relationship.first_successor (predecessor)
 		end
 		
-feature {MT_RELATIONSHIP} -- Access
+feature -- {MT_RELATIONSHIP} -- Access
 
 	set_relationship (a_rel: like relationship) is
 		do

@@ -99,12 +99,7 @@ feature -- Properties
 	type: TYPE_I is
 			-- Integer type
 		do
-			inspect size
-			when 8 then Result := int8_c_type
-			when 16 then Result := int16_c_type
-			when 32 then Result := Long_c_type
-			when 64 then Result := int64_c_type
-			end
+			create {LONG_I} Result.make (size)
 		end
 
 feature -- Comparison

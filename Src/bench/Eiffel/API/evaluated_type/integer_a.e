@@ -102,12 +102,7 @@ feature {COMPILER_EXPORTER}
 	type_i: LONG_I is
 			-- C type
 		do
-			inspect size
-			when 8 then Result := Int8_c_type
-			when 16 then Result := Int16_c_type
-			when 32 then Result := Long_c_type
-			when 64 then Result := Int64_c_type
-			end
+			create Result.make (size)
 		end
 
 invariant

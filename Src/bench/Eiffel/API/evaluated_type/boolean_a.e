@@ -45,8 +45,8 @@ feature {COMPILER_EXPORTER}
 
 	type_i: BOOLEAN_I is
 			-- C type
-		once
-			Result := Boolean_c_type
+		do
+			create Result
 		end
 
 end -- class BOOLEAN_A

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	BUILD_APPLICATION
+	<APPLICATION>
 
 inherit
 	EV_APPLICATION
@@ -29,5 +29,6 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	main_window: <MAIN_WINDOW>
+		-- Main window of `Current'.
 
-end -- class BUILD_APPLICATION
+end -- class <APPLICATION>

@@ -177,7 +177,7 @@ feature -- Cecil
 			make_file.putstring (".a%N")
 
 			make_file.putstring ("cecil: $(STATIC_CECIL)%N")
-			make_file.putstring ("%"$(STATIC_CECIL)%": ")
+			make_file.putstring ("$(STATIC_CECIL): ")
 --			generate_objects_macros
 --			make_file.putchar (' ')
 --			generate_system_objects_macros
@@ -212,10 +212,10 @@ feature -- Cecil
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
-			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/emain.o%" $precompilelibs %N")
+			make_file.putstring ("SHARED_CECIL_OBJECT= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) E1/emain.o $precompilelibs %N")
 			make_file.putstring ("SHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("%"$(SHARED_CECIL)%" : $(SHARED_CECIL_OBJECT) %N")
-			make_file.putstring ("%T$(RM) %"$(SHARED_CECIL)%" %N")
+			make_file.putstring ("$(SHARED_CECIL) : $(SHARED_CECIL_OBJECT) %N")
+			make_file.putstring ("%T$(RM) $(SHARED_CECIL) %N")
 			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
@@ -273,10 +273,10 @@ feature -- Generate Dynamic Library
 			make_file.putstring ("%N%T cd ..")
 
 			-- Continue the declaration for the SYSTEM_IN_DYNAMIC_LIB
-			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/edynlib.o%" %"E1/egc_dynlib.o%" $precompilelibs %N")
+			make_file.putstring ("%NSYSTEM_IN_DYNAMIC_LIB_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) E1/edynlib.o E1/egc_dynlib.o $precompilelibs %N")
 			make_file.putstring ("DYNLIBSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
-			make_file.putstring ("%"$(SYSTEM_IN_DYNAMIC_LIB)%" : $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
-			make_file.putstring ("%T$(RM) %"$(SYSTEM_IN_DYNAMIC_LIB)%" %N")
+			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB) : $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
+			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
 			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
 			make_file.new_line

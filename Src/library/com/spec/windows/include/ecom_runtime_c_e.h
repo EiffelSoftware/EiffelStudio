@@ -66,6 +66,7 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_interface (void * a_interface_pointer, char * a_class_name);
 	EIF_REFERENCE ccom_ce_pointed_dispatch (IDispatch * a_dispatch);
 	EIF_REFERENCE ccom_ce_pointed_unknown (IUnknown * a_unknown);
+	EIF_REFERENCE ccom_ce_pointed_pointer (void ** a_pointer);
 
 	// Safearray
 

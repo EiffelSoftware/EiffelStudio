@@ -273,7 +273,7 @@ feature {NONE} -- Initialization
 	build_from_tree (a_tree: EV_TREE_NODE_LIST; a_parent: TABLE_OF_CONTENTS_NODE) is
 				-- Initialize based on structure of `a_tree'
 			local
-				l_item: EV_TREE_ITEM
+				l_item: TABLE_OF_CONTENTS_WIDGET_NODE
 				l_node: TABLE_OF_CONTENTS_NODE				
 				l_widget_node: TABLE_OF_CONTENTS_WIDGET_NODE
 				l_url, l_title: STRING
@@ -400,7 +400,6 @@ feature {NONE} -- Initialization
 									-- Set parent node with index details
 								a_parent.set_title (short_name (l_path))
 								a_parent.set_url (l_dir_name.string)
-								a_parent.set_icon (cluster_icon)
 								create l_class_processor.make (a_parent.parent, l_file)
 							end
 							l_is_index := l_curr_name.is_equal (Default_url)
@@ -419,8 +418,7 @@ feature {NONE} -- Initialization
 						else
 							create l_sub_dir.make (l_dir_name.string)
 							if l_sub_dir.exists and then not l_sub_dir.is_empty then
-								create l_node.make (next_id, a_parent, Void, l_curr_name)
-								l_node.set_icon (cluster_icon)
+								create l_node.make (next_id, a_parent, Void, l_curr_name)								
 								a_parent.add_node (l_node)
 								insert_code_toc (l_node, l_sub_dir)
 							end
@@ -562,6 +560,7 @@ feature {NONE} -- Sorting
 					
 						-- First determine if node needs filterng out
 					l_url := a_node.url
+					
 					l_doc := manager.shared_document_manager.document_by_name (l_url)
 					if l_doc = Void then
 						create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_url))

@@ -312,8 +312,9 @@ feature -- Status Setting
 		require
 			url_not_void: a_url /= Void
 		do
+			a_url.replace_substring_all ("\", "/")
 			if not names_heap.has (a_url) then		
-				names_heap.put (a_url.string)
+				names_heap.put (a_url)
 			end
 			url_id := names_heap.found_item
 		ensure

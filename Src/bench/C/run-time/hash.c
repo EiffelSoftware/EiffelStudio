@@ -23,7 +23,7 @@
 rt_shared char **hash_search(struct hash *hp, register char *object);	/* Search in the hash table */
 rt_shared void hash_free(struct hash *hp);		/* Free the tables */
 rt_shared void hash_malloc(struct hash *hp, register long int size);	/* Hash table creation */
-rt_private void free_entries();	/* Free all the hector entries */ /* %%ss undefined not used in run-time */
+/*rt_private void free_entries();*/	/* Free all the hector entries */ /* %%ss undefined not used in run-time */
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";

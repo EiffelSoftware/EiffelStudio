@@ -6,7 +6,7 @@ system
 	paintbrush
 
 root 
-	EV_PAINTBRUSH (root_cluster): "make_and_launch"
+	PAINTBRUSH (root_cluster): "make_and_launch"
 
 default
 	assertion			(all)
@@ -32,7 +32,7 @@ cluster
 		end
 
 		-- GEL
-	all gel:			"$EIFFEL4/library/gel_remote"
+	all gel:			"$EIFFEL4/library/gel"
 
 		-- Vision2
 	event:				"$EIFFEL4/library/event"
@@ -47,9 +47,7 @@ cluster
 		end
 
 external
-	include_path:		"$EIFFEL4/libary/vision2/implementation/gtk/Clib",
-						"`gtk-config --cflags`"
-	object:				"$EIFFEL4/libary/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-						"`gtk-config --libs`"
+	include_path:		"$EIFFEL4/libary/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:			"$EIFFEL4/libary/vision2/implementation/gtk/Clib/gtk_eiffel.o `gtk-config --libs`"
 
 end -- paintbrush

@@ -38,8 +38,16 @@ feature {NONE} -- Initialization
 			-- Set up action sequence connection and `Precursor' initialization.
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor
-			connect_signal_to_actions ("activate", interface.return_actions)
-			connect_signal_to_actions ("changed", interface.change_actions)
+			real_connect_signal_to_actions (
+				entry_widget,
+				"activate",
+				interface.return_actions
+			)
+			real_connect_signal_to_actions (
+				entry_widget,
+				"changed",
+				interface.change_actions
+			)
 		end
 
 feature -- Access
@@ -70,7 +78,12 @@ feature -- Status setting
 			pos: INTEGER
 		do
 			pos := caret_position
-			C.gtk_editable_insert_text (entry_widget, eiffel_to_c (txt), txt.count, $pos)
+			C.gtk_editable_insert_text (
+				entry_widget,
+				eiffel_to_c (txt),
+				txt.count,
+				$pos
+			)
 		end
 
 	append_text (txt: STRING) is
@@ -141,6 +154,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/08 21:42:44  king
+--| Indented to fit within 80 cols
+--|
 --| Revision 1.15  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

@@ -255,6 +255,14 @@ feature -- Access
 			all_children_of_current, all_children_of_associated: ARRAYED_LIST [GB_OBJECT]
 		do
 			associated_object := object_handler.deep_object_from_id (associated_top_level_object)
+			
+--			recursive_flatten (Current, associated_object)
+--			
+--			
+			associated_top_level_object := 0
+			associated_object.instance_referers.remove (id)
+			
+			
 			create all_children_of_associated.make (50)
 			associated_object.all_children_recursive (all_children_of_associated)
 			create all_children_of_current.make (50)
@@ -262,8 +270,6 @@ feature -- Access
 			check
 				recursive_children_count_consistent: all_children_of_associated.count = all_children_of_current.count
 			end
-			associated_top_level_object := 0
-			associated_object.instance_referers.remove (id)
 			from
 				all_children_of_associated.start
 				all_children_of_current.start
@@ -271,6 +277,7 @@ feature -- Access
 				all_children_of_associated.off
 			loop
 				
+		
 				all_children_of_associated.item.instance_referers.remove (all_children_of_current.item.id)
 				
 					-- Reconnect the events for all objects comprising `Current' recursively as they may be
@@ -291,6 +298,50 @@ feature -- Access
 		ensure
 			not_is_instance_of_top_level_object: not is_instance_of_top_level_object
 		end
+		
+	recursive_flatten (current_object, associated_object: GB_OBJECT) is
+			--
+		require
+			current_object_not_void: current_object /= Void
+			associated_object_not_void: associated_object /= Void
+			current_object.children.count = associated_object.children.count
+		local
+			current_object_children: ARRAYED_LIST [GB_OBJECT]
+			associated_object_children: ARRAYED_LIST [GB_OBJECT]
+			current_item, current_associated_item: GB_OBJECT
+			top_object: GB_OBJECT
+		do
+			current_object_children := current_object.children
+			associated_object_children := associated_object.children
+			from
+				current_object_children.start
+				associated_object_children.start
+			until
+				current_object_children.off
+			loop
+				current_item := current_object_children.item
+				current_associated_item := associated_object_children.item				
+				check
+					not current_associated_item.is_instance_of_top_level_object implies current_associated_item.instance_referers.has (current_item.id)
+				end
+--				if current_a.instance_referers.has (current_associated_item.id) then
+--					current_item.instance_referers.remove (current_associated_item.id)
+--				end
+				
+--				if current_associated_item.is_instance_of_top_level_object then
+--					top_object ?= object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
+--					current_associated_item.remove_associated_top_level_object
+--					top_object.instance_referers.remove (current_associated_item.id)
+--					--current_associated_item.represent_as_non_locked_instance
+--				end
+				
+				recursive_flatten (current_item, current_associated_item)
+				
+				associated_object_children.forth
+				current_object_children.forth
+			end
+		end
+		
 
 	new_top_level_representation: GB_OBJECT is
 			-- `Result' is a copy of `Current' with a new set of id's, representing
@@ -378,51 +429,35 @@ feature -- Access
 			layout_item_children_set: layout_item.count = children.count
 			laytou_item_has_not_data: layout_item.data = Void
 		end
-
+		
 	connect_instance_referers (original_object, instance_object:GB_OBJECT) is
 			-- Recursively add a similar referring link from evey child in `Current'
 			-- to every child of `instance_object' that is not part of a nested structure.
 		require
 			objects_differ: original_object /= instance_object
 			objects_not_void: original_object /= Void and instance_object /= Void
-		do
-			internal_connect_instance_referers_recursive (original_object, instance_object)
-		end
-		
-	internal_connect_instance_referers_recursive (original_object, instance_object: GB_OBJECT) is
-			-- Recursively connect evey child of `instance_object' to the corresponding child of `original_object'
-			-- by inserting it into the `instance_referers'. For any subtree of `original_object' that is a reference
-			-- to another object, do not connect the items of this subtree as they will already be reachable indirectly
-			-- through the nested structure of `instance_referers'.
-			-- If we do not prevent the conection of the reference subtrees, loading widgets structures that have nested
-			-- widgets two or more levels deep cause `instance_referers_recursively_unique' class invariant to fail as the
-			-- same object is contained in the `instance_referers' chain more than once. This does not crash EiffelBuild,
-			-- but leads to property changes occuring on the object repeated in the nested chain multiple times for each duplicate entry.
-		require
-			instance_object_not_void: instance_object /= Void
-			objects_differ: instance_object /= original_object
-			original_object_not_void: original_object /= Void
-			objects_count_consistent: instance_object.children.count = original_object.children.count
 		local
-			original_object_children, instance_object_children: ARRAYED_LIST [GB_OBJECT]
-			current_original_object, current_instance_object: GB_OBJECT
+			original_linear_representation, new_linear_representation: ARRAYED_LIST [GB_OBJECT]
 		do
-			original_object_children := original_object.children
-			instance_object_children := instance_object.children
+			create new_linear_representation.make (20)
+			create original_linear_representation.make (20)
+			instance_object.all_children_recursive (new_linear_representation)
+			original_object.all_children_recursive (original_linear_representation)
+			check
+				same_object_count: new_linear_representation.count = original_linear_representation.count
+			end
 			from
-				instance_object_children.start
-				original_object_children.start
+				new_linear_representation.start
+				original_linear_representation.start
 			until
-				instance_object_children.off
+				new_linear_representation.off
 			loop
-				current_original_object := original_object_children.item
-				current_instance_object := instance_object_children.item
-				if (current_original_object.associated_top_level_object_on_loading = 0 and current_original_object.associated_top_level_object = 0) then
-					current_original_object.instance_referers.extend (current_instance_object.id, current_instance_object.id)
-					internal_connect_instance_referers_recursive (current_instance_object, current_original_object)
+				original_linear_representation.item.instance_referers.extend (new_linear_representation.item.id, new_linear_representation.item.id)
+				if is_top_level_object then
+					original_linear_representation.item.layout_item.set_data ("pop")
 				end
-				instance_object_children.forth
-				original_object_children.forth
+				original_linear_representation.forth
+				new_linear_representation.forth
 			end
 		end
 
@@ -1560,6 +1595,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		local
 			l_object: GB_OBJECT
 			all_children: ARRAYED_LIST [GB_OBJECT]
+			current_parent: GB_OBJECT
+			inside_nested: BOOLEAN
 		do
 			if associated_top_level_object_on_loading > 0 then
 					-- Retrieve the object which `Current' represents.
@@ -1569,14 +1606,33 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				check
 					object_not_void: object /= Void
 				end
-					-- Add `Current' as an instance referer of `l_object'.
-				l_object.instance_referers.extend (Current.id, Current.id)
+					
+				from
+					current_parent := parent_object	
+				until
+					current_parent = Void or inside_nested
+				loop
+					if current_parent.associated_top_level_object > 0 or
+					current_parent.associated_top_level_object_on_loading > 0 then
+						inside_nested := True
+					end
+					current_parent ?= current_parent.parent_object
+				end
+					-- Check that we only perform the connection if we are not a nested within
+					-- another top level object. This is because when we add the referers of a top level nested object
+					-- it includes all internal referers, and this connection (if inside a top level object) is performed
+					-- when the top level object has its referers connected.
+				if not inside_nested then
+						-- Add `Current' as an instance referer of `l_object'.
+					l_object.instance_referers.extend (Current.id, Current.id)
+					connect_instance_referers (l_object, Current)
+				end
 
 					-- Set `l_object' as the top object `Current' represents.
 				set_associated_top_level_object (l_object)
 				represent_as_locked_instance
 				update_representations_for_name_or_type_change
-				connect_instance_referers (l_object, Current)
+				
 				
 					-- Now update the builder window representations of all children recursively so that
 					-- a user may not build directly within them as they should be locked.
@@ -1655,5 +1711,6 @@ invariant
 
 -- Not True, any object within the structure may have instance referers, as properties must be updated.
 --	only_top_level_objects_have_instance_referers: not is_top_level_object implies instance_referers.is_empty
+
 
 end -- class GB_OBJECT

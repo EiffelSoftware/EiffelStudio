@@ -41,7 +41,8 @@ feature -- Initialization
 		do
 			!! page_sw.make (Widget_names.scroll, Current)
 			!! button_rc.make (Widget_names.row_column, Current)
-			!! separator.make ("", Current)
+			!! first_separator.make ("", Current)
+			!! second_separator.make ("", Current)
 			!! pages.make
 			!! command_catalog_label.make (Widget_names.command_catalog, Current)
 			set_values
@@ -55,22 +56,29 @@ feature -- Initialization
 		do
 			button_rc.set_preferred_count (1)
 			button_rc.set_row_layout
-			separator.set_horizontal (True)
+			first_separator.set_horizontal (True)
+			second_separator.set_horizontal (True)
 		end
 
 	attach_all is
 			-- Perform attachments
 		do
 			attach_top (command_catalog_label, 3)
-			attach_top (button_rc, 0)
-			attach_left (command_catalog_label, 0)
-			attach_left_widget (command_catalog_label, button_rc, 10)
+			attach_left (command_catalog_label, 3)
+
+			attach_top_widget (command_catalog_label, first_separator, 0)
+			attach_left (first_separator, 0)
+			attach_right (first_separator, 0)
+
+			attach_top_widget (first_separator, button_rc, 0)
+			attach_left (button_rc, 0)
 			attach_right (button_rc, 0)
-			attach_top_widget (command_catalog_label, separator, 0)
-			attach_top_widget (button_rc, separator, 0)
-			attach_left (separator, 0)
-			attach_right (separator, 0)
-			attach_top_widget (separator, page_sw, 0)
+
+			attach_top_widget (button_rc, second_separator, 0)
+			attach_left (second_separator, 0)
+			attach_right (second_separator, 0)
+
+			attach_top_widget (second_separator, page_sw, 0)
 			attach_left (page_sw, 0)
 			attach_right (page_sw, 0)
 			attach_bottom (page_sw, 0)
@@ -81,19 +89,20 @@ feature {NONE}
 	define_command_pages is
 			-- Define pages for the catalog.
 		local
+			reset_commands: RESET_CMDS
 			file_commands: FILE_CMDS
 			window_commands: WINDOW_CMDS
 			command_templates: TEMPL_CMDS
 		do
 			!! generated_commands.make (1, Current)
 			!! user_defined_commands1.make (2, Current)
-			!! user_defined_commands2.make (3, Current)
 			!! command_templates.make (Current)
 			!! window_commands.make (Current)
 			!! file_commands.make (Current)
+			!! reset_commands.make (Current)
 			add_page (generated_commands)
 			add_page (user_defined_commands1)
-			add_page (user_defined_commands2)
+			add_page (reset_commands)
 			add_page (file_commands)
 			add_page (window_commands)
 			add_page (command_templates)
@@ -107,7 +116,11 @@ feature {CMD_CAT_BUTTON} -- Attributes
 
 feature {NONE} -- Attributes
 
-	separator: THREE_D_SEPARATOR
+	first_separator,
+				-- Separator between the Context catalog label 
+				-- and the list of commands
+
+	second_separator: THREE_D_SEPARATOR
 			-- Separator between the column row and the list of commands
 
 	command_catalog_label: LABEL
@@ -117,7 +130,6 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT,
 			GENERATE_OBJECT_TOOL_CMD, GENERATE_OBJECT_COMMAND_CMD}
 
 	user_defined_commands1: USER_DEF_CMDS
-	user_defined_commands2: USER_DEF_CMDS
 	generated_commands: GENERATED_CMDS
 
 feature -- Implementation
@@ -305,7 +317,7 @@ feature
 			p: like current_page
 			finished: BOOLEAN
 		do
-			from 
+			from	
 				pages.start
 			until
 				pages.after or finished

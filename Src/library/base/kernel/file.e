@@ -816,7 +816,7 @@ feature -- Status setting
 	close is
 			-- Close file.
 		do
-			file_close ($file_pointer);
+			file_close (file_pointer);
 			mode := Closed_file;
 			descriptor_available := False;
 		ensure then
@@ -908,7 +908,7 @@ feature -- Element change
 		require
 			is_open: not is_closed;
 		do
-			file_flush ($file_pointer);
+			file_flush (file_pointer);
 		end;
 
 	link (fn: STRING) is

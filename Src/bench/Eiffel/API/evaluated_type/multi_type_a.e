@@ -17,10 +17,18 @@ inherit
 			make as array_make
 		end
 
-creation
+creation {COMPILER_EXPORTER}
 
 	make
 	
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Initialization
+		do
+			array_make (1, n);
+		end;
+
 feature -- Property
 
 	last_type: GEN_TYPE_A;
@@ -34,9 +42,7 @@ feature -- Property
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := associated_class.e_class;
-				--- **** TO BE FIXED System should not
-				-- have COMPILED class but E_CLASS
+			Result := System.array_class.compiled_eclass;
 		end;
 
 feature -- Output
@@ -62,32 +68,26 @@ feature -- Output
 			Result.append (">>");
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		local
 			i: INTEGER
 		do
-			a_clickable.put_string ("<<");
+			ow.put_string ("<<");
 			from
 				i := 1;
 			until
 				i > count
 			loop
-				item (i).append_clickable_signature (a_clickable);
+				item (i).append_to (ow);
 				if i /= count then
-					a_clickable.put_string (", ");
+					ow.put_string (", ");
 				end;
 				i := i + 1;
 			end;
-			a_clickable.put_string (">>");
+			ow.put_string (">>");
 		end;
 
-feature 
-
-	make (n: INTEGER) is
-			-- Initialization
-		do
-			array_make (1, n);
-		end;
+feature {COMPILER_EXPORTER}
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
@@ -154,7 +154,7 @@ feature
 			False
 		end;
 	
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

@@ -122,5 +122,6 @@ feature {NONE}
 	Bc_create_inv:		CHARACTER is '%/114/';
 	Bc_end_eval_old:	CHARACTER is '%/115/';
 	Bc_start_eval_old:	CHARACTER is '%/116/';
+	Bc_object_addr:		CHARACTER is '%/117/';
 
 end

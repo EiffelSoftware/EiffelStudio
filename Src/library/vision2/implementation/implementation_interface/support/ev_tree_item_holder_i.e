@@ -9,7 +9,7 @@ deferred class
 
 feature {EV_TREE_ITEM} -- Implementation
 
-	add_item (item: EV_TREE_ITEM) is
+	add_item (an_item: EV_TREE_ITEM) is
 			-- Add `item' to the list
 		deferred
 		end

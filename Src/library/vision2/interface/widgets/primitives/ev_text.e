@@ -7,27 +7,24 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_TEXT_AREA
+class
+	EV_TEXT_AREA
 
 inherit
-
 	EV_TEXT_COMPONENT
 		redefine
 			make, implementation
 		end
 	
-	
-	
 creation
-	
+
 	make
-	
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create an entry with, `par' as
-                        -- parent
+	make (par: EV_CONTAINER) is
+			-- Create an entry with, `par' as
+			-- parent
 		do
 			!EV_TEXT_AREA_IMP!implementation.make (par)
 			widget_make (par)

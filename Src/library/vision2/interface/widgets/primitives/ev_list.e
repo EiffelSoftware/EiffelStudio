@@ -135,13 +135,14 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when the selection has
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Make `cmd' the executed command when the selection has
 			-- changed.
 		require
 			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			implementation.add_selection_command (a_command, arguments)
+			implementation.add_selection_command (cmd, arg)
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_LIST_ITEM} -- Implementation

@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"EiffelVision tree item, implementation interface.";
 	date: "$Date$";
@@ -32,11 +31,12 @@ feature -- Status report
 
 feature -- Event : command association
 
-	add_subtree_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
+	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make 'cmd' the executed command when the subtree expand
+			-- or collapse.
 		require
 			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 

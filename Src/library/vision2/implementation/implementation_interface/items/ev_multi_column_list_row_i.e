@@ -76,7 +76,20 @@ feature -- Element Change
 --			exists: not destroyed
 			text_not_void: a_text /= Void
 			text_length_ok: a_text.count <= columns
-		deferred
+		local
+			i: INTEGER
+			list_i: INTEGER
+		do
+			from
+				i := a_text.lower
+				list_i := 1
+			until
+				i = a_text.upper + 1
+			loop
+				set_cell_text (list_i, a_text @ i)
+				i := i + 1
+				list_i := list_i + 1
+			end
 		end
 
 	set_interface (list: EV_MULTI_COLUMN_LIST_ROW) is

@@ -36,18 +36,9 @@ rt_private EIF_REAL_32 eif_uint64_to_real32 (EIF_NATURAL_64 v) {
 #ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
 	return (EIF_REAL_32) v;
 #else
-	EIF_INTEGER_64 l_val = (EIF_INTEGER_64) v;
-
-	if (l_val >= 0) {
-		return (EIF_REAL_32) l_val;
-	} else {
-		EIF_INTEGER_64 l_val = (EIF_INTEGER_64) (v >> 2);
-		if ((v % 2) == 0) {
-			return ((EIF_REAL_32) l_val) + ((EIF_REAL_32) l_val);
-		} else {
-			return ((EIF_REAL_32) l_val) + ((EIF_REAL_32) l_val) + (EIF_REAL_32) 1.0;
-		}
-	}
+	return
+	(EIF_REAL_32) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) 0x7FFFFFFFFFFFFFFF) -
+	(EIF_REAL_32) ((EIF_INTEGER_64) v & (EIF_INTEGER_64) 0x8000000000000000);
 #endif
 }
 

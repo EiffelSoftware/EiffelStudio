@@ -52,7 +52,8 @@ feature -- Initialization
 			setp: EV_HORIZONTAL_SEPARATOR
 		do
 			{EV_WINDOW} Precursor
-			set_minimum_size (500, 310)
+			set_minimum_size (640, 480)
+			
 			set_title ("EiffelVision Tutorial")
 			create split.make (Current)
 
@@ -286,7 +287,7 @@ feature -- Tree features
 			create drawing.make_with_title (primitive, "ev_drawing_area", "drawing_window")
 			create rich.make_with_title (primitive, "ev_rich_text", "rich_window")
 			create toolbar.make_with_title (primitive, "ev_tool_bar", "toolbar_window")
-			create progress.make_with_title (primitive, "ev_progress_bar", "progress_window")
+			create progress.make_with_title (gauge, "ev_progress_bar", "progress_window")
 
 				-- Containers demos
 			create window.make_with_title (container, "ev_window", "window_window")

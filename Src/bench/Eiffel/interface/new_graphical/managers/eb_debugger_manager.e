@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (bkpt_info_cmd)
 
 			if display_dotnet_cmd then
-				create eac_browser_cmd.make
+				create eac_browser_cmd
 				eac_browser_cmd.disable_sensitive
 				toolbarable_commands.extend (eac_browser_cmd)
 			end

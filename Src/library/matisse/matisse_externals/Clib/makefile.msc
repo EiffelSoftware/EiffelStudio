@@ -20,7 +20,7 @@ mt_support.lib: $(OBJ)
 
 wmt_support.lib: $(WOBJ)
 	if exist $@ del $@
-	lib /DEBUGTYPE:BOTH /OUT:$@ $(OBJ)
+	lib /DEBUGTYPE:BOTH /OUT:$@ $(WOBJ)
 
 wmt_support.obj: mt_support.c
 	$(CC) $(CFLAGS) -DWORKBENCH -Fo$@ -c $?

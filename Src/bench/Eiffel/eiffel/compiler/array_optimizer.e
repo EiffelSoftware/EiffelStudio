@@ -21,11 +21,16 @@ creation
 feature
 
 	make is
+		local
+			nb: INTEGER
 		do
 			array_optimization_on := System.array_optimization_on
 
 			!! optimized_features.make
 			optimized_features.compare_objects
+
+			nb := System.body_id_counter.total_count
+			!!unsafe_body_ids.make (1, nb)
 
 			{FEAT_ITERATOR} Precursor
 
@@ -107,8 +112,6 @@ feature {NONE} -- Array optimization
 		do
 				-- Callers of area, lower with assignment
 			from
-				!!unsafe_body_ids.make
-				unsafe_body_ids.compare_objects
 				array_descendants.start
 			until
 				array_descendants.after
@@ -146,7 +149,7 @@ feature {NONE} -- Array optimization
 							or else
 								byte_code.assigns_to (area.feature_id)
 							then
-								unsafe_body_ids.extend (b_id)
+								unsafe_body_ids.put (True, b_id.id)
 							end
 						end
 					end
@@ -172,7 +175,7 @@ feature {NONE} -- Array optimization
 					ftable.after
 				loop
 					a_feature := ftable.item_for_iteration
-					if unsafe_body_ids.has (a_feature.body_id) then
+					if unsafe_body_ids.item (a_feature.body_id.id) then
 debug ("OPTIMIZATION")
 	io.error.putstring ("Inserting ")
 	io.error.putstring (a_feature.feature_name)
@@ -195,7 +198,7 @@ end
 			a_feature := a_class.feature_table.item ("clone")
 			!!dep.make (a_class.id, a_feature)
 			unsafe_features.extend (dep)
-			unsafe_body_ids.extend (a_feature.body_id)
+			unsafe_body_ids.put (True, a_feature.body_id.id)
 			mark_alive (a_feature.body_id.id)
 		end
 
@@ -415,7 +418,7 @@ feature -- Detection of safe/unsafe features
 			-- Set of all the features that cannot be called
 			-- within a loop
 
-	unsafe_body_ids: TWO_WAY_SORTED_SET [BODY_ID]
+	unsafe_body_ids: ARRAY [BOOLEAN]
 
 	test_safety (a_feature: FEATURE_I; a_class: CLASS_C) is
 			-- Insert the feature in the safe or unsafe set
@@ -461,12 +464,12 @@ feature -- Detection of safe/unsafe features
 						descendant_class := unit.id.associated_class
 						if descendant_class.simple_conform_to (written_class) then
 							other_body_id := body_table.item (unit.body_index)
-							Result := not unsafe_body_ids.has (other_body_id)
+							Result := not unsafe_body_ids.item (other_body_id.id)
 						end
 						table.forth
 					end
 				else
-					Result := not unsafe_body_ids.has (body_index_table.item (dep.body_index))
+					Result := not unsafe_body_ids.item (body_index_table.item (dep.body_index).id)
 				end
 			end
 		end
@@ -498,7 +501,7 @@ feature {NONE} -- Detection of safe/unsafe features
 						-- get the status ...
 					if not is_safe (depend_unit) then
 						unsafe := True
-						unsafe_body_ids.extend (body_id)
+						unsafe_body_ids.put (True, body_id.id)
 					end
 				end
 				depend_list.forth

@@ -196,6 +196,62 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
+	system_color_menuhilight: WEL_COLOR_REF is
+			-- The color used to highlight menu items when the menu appears as a flat menu (see SystemParametersInfo). 
+			-- The highlighted menu item is outlined with `system_color_highlight'.
+		require
+			windows_xp_required: (create {WEL_WINDOWS_VERSION}).is_windows_xp_compatible
+		do
+			Result := get_color (system_color_menuhilight_cell, Wel_color_constants.Color_menuhilight)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+	system_color_menubar: WEL_COLOR_REF is
+			-- The background color for the menu bar when menus appear as flat menus (see SystemParametersInfo).
+			-- However, `system_color_menu' continues to specify the background color of the menu popup.
+		require
+			windows_xp_required: (create {WEL_WINDOWS_VERSION}).is_windows_xp_compatible
+		do
+			Result := get_color (system_color_menubar_cell, Wel_color_constants.Color_menubar)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+	system_color_hotlight: WEL_COLOR_REF is
+			-- Color for a hot-tracked item. Single clicking a hot-tracked item executes the item.
+			-- (Windows 98/Me, Windows 2000 or later)
+		require
+			windows_98_required: (create {WEL_WINDOWS_VERSION}).is_windows_98_compatible
+		do
+			Result := get_color (system_color_hotlight_cell, Wel_color_constants.Color_hotlight)
+		ensure
+			Result_exists: Result /= Void
+		end
+		
+	system_color_gradientactivecaption: WEL_COLOR_REF is
+			-- Right side color in the color gradient of an active window's
+			-- title bar. `System_color_activecaption' specifies the left side color.
+		require
+			windows_98_required: (create {WEL_WINDOWS_VERSION}).is_windows_98_compatible
+		do
+			Result := get_color (system_color_gradientactivecaption_cell, Wel_color_constants.Color_gradientactivecaption)
+		ensure
+			Result_exists: Result /= Void
+		end
+	
+	system_color_gradientinactivecaption: WEL_COLOR_REF is
+			-- Right side color in the color gradient of an inactive window's
+			-- title bar. `system_color_inactivecaption' specifies the left side color.
+		require
+			windows_98_required: (create {WEL_WINDOWS_VERSION}).is_windows_98_compatible
+		do
+			Result := get_color (system_color_gradientinactivecaption_cell, Wel_color_constants.Color_gradientinactivecaption)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+
 feature {WEL_COMPOSITE_WINDOW}
 
 	system_color_scrollbar_cell: CELL [WEL_COLOR_REF] is
@@ -320,6 +376,36 @@ feature {WEL_COMPOSITE_WINDOW}
 
 	system_color_btnhighlight_cell: CELL [WEL_COLOR_REF] is
 			-- Container for `system_color_btnhighlight'
+		once
+			create Result.put (Void)
+		end
+		
+	system_color_menuhilight_cell: CELL [WEL_COLOR_REF] is
+			-- Container for `system_color_menuhilight'
+		once
+			create Result.put (Void)
+		end
+
+	system_color_menubar_cell: CELL [WEL_COLOR_REF] is
+			-- Container for `system_color_menubar'
+		once
+			create Result.put (Void)
+		end
+
+	system_color_hotlight_cell: CELL [WEL_COLOR_REF] is
+			-- Container for `system_color_hotlight'
+		once
+			create Result.put (Void)
+		end
+		
+	system_color_gradientactivecaption_cell: CELL [WEL_COLOR_REF] is
+			-- Container for `system_color_gradientactivecaption'
+		once
+			create Result.put (Void)
+		end
+
+	system_color_gradientinactivecaption_cell: CELL [WEL_COLOR_REF] is
+			-- Container for `system_color_gradientinactivecaption'
 		once
 			create Result.put (Void)
 		end

@@ -92,7 +92,7 @@ feature
 					local_b.set_position (local_info.position)
 					context.access_line.insert (local_b)
 		
-					if context.level1 or else context.level4 then
+					if context.is_checking_postcondition or else context.is_checking_precondition then
 							-- Local in post- or precondition
 							--|Note: this should not happen since
 							--|in the context of assertions we would have

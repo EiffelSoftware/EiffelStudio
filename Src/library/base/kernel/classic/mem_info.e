@@ -102,14 +102,6 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- C externals
 
-	c_ml_chunk (a_ptr: POINTER): INTEGER is
-			-- Access `ml_chunk' data member of `a_ptr' struct.
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"((struct emallinfo *) $a_ptr)->ml_chunk"
-		end
-
 	c_ml_total (a_ptr: POINTER): INTEGER is
 			-- Access `ml_total' data member of `a_ptr' struct.
 		external

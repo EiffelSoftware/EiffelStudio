@@ -290,6 +290,43 @@ RT_LNK void eif_thr_rwl_wrlock (EIF_POINTER rwlp);
 RT_LNK void eif_thr_rwl_unlock (EIF_POINTER rwlp);
 RT_LNK void eif_thr_rwl_destroy (EIF_POINTER rwlp);
 
+/*------------------------*/
+/*---  Memory barriers ---*/
+/*------------------------*/
+
+#if defined(_WIN32) && defined(_MSC_VER)
+#	if (_MSC_VER >= 1400)
+		void _ReadBarrier(void);
+		void _ReadWriteBarrier();
+		void _WriteBarrier(void);
+#		pragma intrinsic(_ReadBarrier)
+#		pragma intrinsic(_ReadWriteBarrier)
+#		pragma intrinsic(_WriteBarrier)
+#		define EIF_MEMORY_READ_BARRIER _ReadBarrier
+#		define EIF_MEMORY_BARRIER _ReadWriteBarrier
+#		define EIF_MEMORY_WRITE_BARRIER _WriteBarrier
+#	elif (_MSC_VER >= 1300)
+		void _ReadWriteBarrier();
+#		pragma intrinsic(_ReadWriteBarrier)
+#		define EIF_MEMORY_BARRIER _ReadWriteBarrier
+#	elif defined(MemoryBarrier)
+#		define EIF_MEMORY_BARRIER MemoryBarrier
+#	endif
+#endif
+
+#ifdef EIF_MEMORY_BARRIER
+#	define EIF_HAS_MEMORY_BARRIER
+#endif
+
+#ifdef EIF_HAS_MEMORY_BARRIER
+#	ifndef EIF_MEMORY_READ_BARRIER
+#		define EIF_MEMORY_READ_BARRIER EIF_MEMORY_BARRIER
+#	endif // EIF_MEMORY_READ_BARRIER
+#	ifndef EIF_MEMORY_WRITE_BARRIER
+#		define EIF_MEMORY_WRITE_BARRIER EIF_MEMORY_BARRIER
+#	endif // EIF_MEMORY_WRITE_BARRIER
+#endif
+
 #ifdef __cplusplus
 }
 #endif

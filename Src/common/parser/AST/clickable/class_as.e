@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			class_name ?= yacc_arg (0);
 			is_deferred := yacc_bool_arg (0);
 			is_expanded := yacc_bool_arg (1);
+			is_separate := yacc_bool_arg (2);
 			indexes ?= yacc_arg (1);
 			generics ?= yacc_arg (2);
 			parents ?= yacc_arg (3);
@@ -65,6 +66,9 @@ feature -- Properties
 
 	is_expanded: BOOLEAN;
 			-- Is the class expanded ?
+
+	is_separate: BOOLEAN;
+			-- Is the class separate ?
 
 	indexes: EIFFEL_LIST [INDEX_AS];
 			-- Index clause
@@ -149,7 +153,8 @@ feature -- Comparison
 				deep_equal (parents, other.parents) and then
 				features_deep_equal (other.features) and then
 				is_deferred = other.is_deferred and then
-				is_expanded = other.is_expanded 
+				is_expanded = other.is_expanded and then
+				is_separate = other.is_separate 
 		end;
 
 	features_deep_equal (other: like features): BOOLEAN is
@@ -197,6 +202,9 @@ feature {COMPILER_EXPORTER} -- Output
 
 			if is_expanded then
 				ctxt.put_text_item (ti_Expanded_keyword);
+				ctxt.put_space
+			elseif is_separate then
+				ctxt.put_text_item (ti_Separate_keyword);
 				ctxt.put_space
 			elseif is_deferred then
 				ctxt.put_text_item (ti_Deferred_keyword);

@@ -39,37 +39,34 @@ feature {NONE} -- Recording information for eiffelcase
 			inherit_data: S_INHERIT_DATA;
 			parent_id: INTEGER
 		do
-			if parents.count > 1 then
-					-- Skip inherit class any
-				!! no_repeated_parents.make;
-				from
-					parents.start
-				until
-					parents.after
-				loop
-					parent_id := parents.item.parent_id;
-					no_repeated_parents.extend (parent_id)
-					parents.forth
-				end;
-				!! p_l.make (no_repeated_parents.count);
-				from
-					no_repeated_parents.start;
-				until
-					no_repeated_parents.after
-				loop
-					!! inherit_data;
-					inherit_data.set_class_links (classc.id,
-							no_repeated_parents.item);
+			!! no_repeated_parents.make;
+			from
+				parents.start
+			until
+				parents.after
+			loop
+				parent_id := parents.item.parent_id;
+				no_repeated_parents.extend (parent_id)
+				parents.forth
+			end;
+			!! p_l.make (no_repeated_parents.count);
+			from
+				no_repeated_parents.start;
+			until
+				no_repeated_parents.after
+			loop
+				!! inherit_data;
+				inherit_data.set_class_links (classc.id,
+						no_repeated_parents.item);
 debug ("CASE")
 	io.error.putstring ("%T%T%TParent: ");
 	io.error.putstring (System.class_of_id (no_repeated_parents.item).class_name);
 	io.error.new_line;
 end
-					p_l.extend (inherit_data);
-					no_repeated_parents.forth
-				end;
-				s_class_data.set_heir_links (p_l);
-			end
+				p_l.extend (inherit_data);
+				no_repeated_parents.forth
+			end;
+			s_class_data.set_heir_links (p_l);
 		end;
 
 	record_renamings (parents: PARENT_LIST) is

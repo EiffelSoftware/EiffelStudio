@@ -16,7 +16,7 @@ feature -- ScrollInfo
 	valid_sif_constant (i: INTEGER): BOOLEAN is
 			-- Is `i' a valid Sif constant?
 		do
-			Result := (i = Sif_all) or else
+			Result := (i = 0) or else (i = Sif_all) or else
 				(i = Sif_range) or else
 				(i = Sif_page) or else
 				(i = Sif_pos) or else

@@ -97,10 +97,10 @@ feature -- Initialization
 		require
 			string_exists: s /= Void
 		do
-			area := s.area
+			area := clone (s.area)
 			count := s.count
 		ensure
-			shared_implementation: shared_with (s)
+			shared_implementation: not shared_with (s)
 		end
 
 	make_from_c (c_string: POINTER) is
@@ -1536,7 +1536,7 @@ feature -- Duplication
 
 feature -- Output
 
-	out: like Current is
+	out: STRING is
 			-- Printable representation
 		do
 			Result := clone (Current)

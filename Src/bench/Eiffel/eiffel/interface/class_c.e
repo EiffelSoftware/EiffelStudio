@@ -2215,7 +2215,9 @@ feature -- PS
 	feature_named (n: STRING): FEATURE_I is
 			-- Feature whose internal name is `n'
 		do
-			if Error_handler.has_error then
+			if 
+				Tmp_feat_tbl_server.has (id)
+			then
 				Result := Tmp_feat_tbl_server.item (id).item (n)
 			else
 				Result := Feat_tbl_server.item (id).item (n)

@@ -77,4 +77,14 @@ set_name
 set_width
 set_height
 set_weight
+==========================================================================
+CLASS: ev_progress_bar_imp
+DATE:	19990909
+WHO:	king
+step
+minimum
+maximum
+set_step
+set_minimum
+set_maximum
 

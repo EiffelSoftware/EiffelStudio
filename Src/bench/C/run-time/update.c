@@ -177,7 +177,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	dprintf(1)("New class type count: %ld\n", count);
 #endif
 		/* Get the Eiffel profiler status */
-	eif_profiler_level = wlong();
+	prof_enabled = wlong();
 
 	dle_level = wlong();		/* DLE: Read the new value of DLE level */
 	dle_zeroc = dle_level;		/* DLE: New value of DLE frozen level */

@@ -362,7 +362,7 @@ feature -- Generation constants
 				indent + "window_empty: a_window.is_empty" + indent + "no_menu_bar: a_window.menu_bar = Void" +
 				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + indent_less_one + "end%N" +
 				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
-				"create window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_not_void: window /= Void" + indent_less_one + "end"
+				"create window" + indent + "initialize" + indent_less_one + "ensure then" + indent + "window_not_void: window /= Void" + indent_less_one + "end"
 		end
 	
 	default_create_redefinition: STRING is

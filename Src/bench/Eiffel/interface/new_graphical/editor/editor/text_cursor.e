@@ -628,22 +628,26 @@ feature -- Transformation
 
 	insert_eol is
 		local
-			t_image, s: STRING
+			aux, s: STRING
 			i_t: EDITOR_TOKEN
 			new_line : EDITOR_LINE
+			new_pos: INTEGER
 		do
 			if token = line.eol_token then
 				update_x_in_pixels
 				if associated_window.editor_preferences.smart_identation then
-					whole_text.lexer.execute (line.identation)
+					aux := line.identation
+					new_pos := aux.count + 1
+					whole_text.lexer.execute (aux)
 					create new_line.make_from_lexer (whole_text.lexer)
 				else
 					create new_line.make_empty_line
+					new_pos := 1
 				end
 				line.add_right (new_line)
 			else
-				t_image := token.image
-				s := t_image.substring (pos_in_token, t_image.count)
+				aux := token.image
+				s := aux.substring (pos_in_token, aux.count)
 				from
 					i_t := token.next
 				until
@@ -656,14 +660,19 @@ feature -- Transformation
 					s_non_empty: not (s.empty)
 				end
 				if associated_window.editor_preferences.smart_identation then
-					s.prepend (line.identation)
+					aux := line.identation
+					new_pos := aux.count + 1
+					s.prepend (aux)
+				else
+					new_pos := 1
 				end
 				delete_after_cursor
 				whole_text.lexer.execute (s)
 				create new_line.make_from_lexer (whole_text.lexer)
 				line.add_right (new_line)
 			end
-			go_right_char
+			set_line_to_next
+			set_x_in_characters (new_pos)
 		end
 
 	delete_after_cursor is

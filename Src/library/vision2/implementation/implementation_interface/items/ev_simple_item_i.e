@@ -14,6 +14,11 @@ inherit
 
 	EV_TEXT_CONTAINER_I
 
+feature -- Access
+
+	interface: EV_ITEM
+			-- Interface of the current item
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -25,9 +30,21 @@ feature -- Status setting
 
 	destroy is
 			-- Destroy the current item
+		require
+			exists: not destroyed
 		deferred
 		ensure
 			destroyed: destroyed
+		end
+
+	set_interface (an_interface: EV_ITEM) is
+			-- Make `an_interface' the new interface of the item.
+		require
+			an_interface /= Void
+		do
+			interface := an_interface
+		ensure
+			interface = an_interface
 		end
 
 feature -- Event : command association

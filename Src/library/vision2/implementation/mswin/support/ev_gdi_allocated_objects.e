@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			allocated_objects.put (new_object, index_new_item)
 
 			debug("VISION2_WINDOWS_GDI")
-				io.putstring("created ")
+				io.put_string ("created ")
 			end
 		end
 
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 			debug("VISION2_WINDOWS_GDI")
 				successful_cache := successful_cache + 1
-				io.putstring("retrieved cached version ")
+				io.put_string ("retrieved cached version ")
 			end
 		end
 

@@ -36,7 +36,7 @@ feature -- Access
 			fake_object: EV_GDI_PEN
 		do
 			debug("VISION2_WINDOWS_GDI")
-				io.putstring("getting a pen...")
+				io.put_string ("getting a pen...")
 			end
 			cache_time := cache_time + 1
 
@@ -56,7 +56,7 @@ feature -- Access
 				add_to_allocated_objects (fake_object)
 			end
 			debug("VISION2_WINDOWS_GDI")
-				io.putstring(" / Cache Stat: "
+				io.put_string (" / Cache Stat: "
 					+(100.0*successful_cache/cache_time).out+"%% %N")
 			end
 		ensure

@@ -58,7 +58,7 @@ feature -- Status Setting
 				-- Give a unique number to current object, to follow it.
 			internal_number_id := internal_number_id_cell.item
 			debug ("WEL_GDI_REFERENCES")
-				io.putstring ("references are enabled for object #" + internal_number_id.out + "%N")
+				io.put_string ("references are enabled for object #" + internal_number_id.out + "%N")
 				internal_id_list.extend (internal_number_id)
 			end
 			internal_number_id_cell.put (internal_number_id + 1)
@@ -78,25 +78,25 @@ feature -- Status Setting
 					destroy_item
 					debug ("WEL_GDI_REFERENCES")
 						internal_id_list.prune_all (internal_number_id)
-						io.putstring ("Object #" + internal_number_id.out + " destroyed%N")
-						io.putstring ("Objects currently tracked: ")
+						io.put_string ("Object #" + internal_number_id.out + " destroyed%N")
+						io.put_string ("Objects currently tracked: ")
 						from
 							internal_id_list.start
 						until
 							internal_id_list.after
 						loop
-							io.putstring (internal_id_list.item.out + " ")
+							io.put_string (internal_id_list.item.out + " ")
 							internal_id_list.forth
 						end
-						io.putstring ("%N%N")
+						io.put_string ("%N%N")
 					end
 				end
 			else
 				debug ("WEL_GDI_REFERENCES")
 					if references_count = 0 then
-						io.putstring (
+						io.put_string (
 							"Error: `decrement_reference' was called with an invalid object%N")
-						io.putstring ("Object: %N")
+						io.put_string ("Object: %N")
 						print (Current)
 					end
 				end

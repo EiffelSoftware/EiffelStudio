@@ -386,11 +386,10 @@ rt_private int dangerous(int sig)
 	 * that `SIGTRAP' was also dangerous since it is used to catch division by zero and will
 	 * also do an infinite loop.
 	 *
-	 * Note: we do not handle SIGBUS here because already done above for non-SGI case.
+	 * Note: we do not handle SIGBUS, SIGSEGV, SIGILL here because already done above for non-SGI case.
 	 */
 	} else if (
-		(sig == SIGFPE) || (sig == SIGILL) || (sig == SIGEMT) ||
-		(sig == SIGSEGV) || (sig == SIGTRAP)
+		(sig == SIGFPE) || (sig == SIGEMT) || (sig == SIGTRAP)
 	) {
 		return 1;
 #endif

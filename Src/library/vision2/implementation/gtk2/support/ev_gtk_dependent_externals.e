@@ -154,10 +154,27 @@ feature -- Externals
 			"C (GtkTextBuffer*, GtkTextIter*, GtkTextIter*, gboolean ): gchar* | <gtk/gtk.h>"
 		end
 		
+	gtk_text_buffer_get_line_count (a_text_buffer: POINTER): INTEGER is
+		external
+			"C (GtkTextBuffer*): gint | <gtk/gtk.h>"
+		end	
+		
 	gtk_text_iter_get_text (a_start_iter: POINTER; a_end_iter: POINTER): POINTER is
 		external
 			"C (const GtkTextIter*, const GtkTextIter*): gchar* | <gtk/gtk.h>"
 		end
+		
+	gtk_text_view_set_editable (a_text_view: POINTER; a_setting: BOOLEAN) is
+		external
+			"C (GtkTextView*, gboolean) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_view_get_editable (a_text_view: POINTER): BOOLEAN is
+		external
+			"C (GtkTextView*): gboolean | <gtk/gtk.h>"
+		end
+		
+		
 
 end
 

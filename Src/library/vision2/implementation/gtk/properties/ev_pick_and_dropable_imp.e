@@ -162,6 +162,10 @@ feature -- Implementation
 		local
 			app_imp: EV_APPLICATION_IMP
 		do
+			if not has_focus and then (a_button = 1 or a_button = 3) then
+					-- We explicitly set the focus for both left and right mouse buttons if not set already
+				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+			end
 			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			if able_to_transport (a_button) or else ready_for_pnd_menu (a_button) then
 				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
@@ -557,6 +561,7 @@ feature {NONE} -- Implementation
 
 	width: INTEGER is deferred end
 	height: INTEGER is deferred end
+	has_focus: BOOLEAN is deferred end
 
 	x_origin, y_origin: INTEGER
 		-- Temp coordinate values for origin of Pick and Drop.

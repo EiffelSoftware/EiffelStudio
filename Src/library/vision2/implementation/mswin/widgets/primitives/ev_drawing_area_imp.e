@@ -155,6 +155,9 @@ feature {NONE} -- Implementation
 			if internal_paint_dc.exists then
 				internal_paint_dc.release
 			end
+
+			internal_initialized_font := False
+			internal_initialized_text_color := False
 		end
 
 	get_dc is
@@ -163,6 +166,17 @@ feature {NONE} -- Implementation
 			if not internal_paint_dc.exists then
 				internal_paint_dc.get
 				internal_paint_dc.set_background_transparent
+				if internal_pen /= Void then
+					internal_paint_dc.select_pen(internal_pen)
+				else
+					internal_paint_dc.select_pen(empty_pen)
+				end
+
+				if internal_brush /= Void then
+					internal_paint_dc.select_brush(internal_brush)
+				else
+					internal_paint_dc.select_brush(empty_brush)
+				end
 			end
 		end
 
@@ -652,6 +666,10 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/13 23:37:00  pichery
+--| Fixed a small bug. The brush and the pen were not correctly
+--| initialized after a `get_dc' or a `release_dc'
+--|
 --| Revision 1.40  2000/04/13 00:22:30  pichery
 --| - Changed the get and release of the dc.
 --| - Fixed bug that reseted the drawing area when

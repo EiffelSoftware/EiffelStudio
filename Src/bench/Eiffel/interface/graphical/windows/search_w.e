@@ -118,14 +118,16 @@ feature {NONE} -- Implementation
 			if last_warner /= Void then
 				last_warner.popdown
 			end;
-			if argument = find_it then
-				tool.text_window.search (search_text)
-			elseif argument = cancel_it then
-				popdown
-			elseif argument = replace_it then
-				tool.text_window.replace_text (search_text, replace_text, False)
-			elseif argument = replace_it_all then
-				tool.text_window.replace_text (search_text, replace_text, True)
+			if not search_text.empty then 
+				if argument = find_it then
+					tool.text_window.search (search_text)
+				elseif argument = cancel_it then
+					popdown
+				elseif argument = replace_it then
+					tool.text_window.replace_text (search_text, replace_text, False)
+				elseif argument = replace_it_all then
+					tool.text_window.replace_text (search_text, replace_text, True)
+				end
 			end
 		end;
 

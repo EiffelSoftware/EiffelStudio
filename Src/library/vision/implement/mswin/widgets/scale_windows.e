@@ -51,6 +51,8 @@ inherit
 				on_right_button_up,
 				on_mouse_move
 		undefine
+			on_hide,
+			on_show,
 			on_size,
 			on_move,
 			on_destroy,
@@ -195,7 +197,7 @@ feature -- Status setting
 			-- Show or hide the value.
 		do
 			is_value_shown := f
-			if exists then
+			if exists and shown then
 				if f then
 					value_static.show
 				else
@@ -307,7 +309,10 @@ feature {NONE} -- Implementation
 
 	on_size (a_type, a_width, a_height: INTEGER) is
 			-- Respond to a resize of current window.
+		local
+			resize_data: RESIZE_CONTEXT_DATA
 		do
+			!! resize_data.make (owner, a_width, a_height, a_type)
 			if is_horizontal then
 				scroll_bar.resize (width, scroll_height)
 				scroll_bar.move (0, text_height)
@@ -322,7 +327,7 @@ feature {NONE} -- Implementation
 			update_value_static
 			private_attributes.set_width (a_width)
 			private_attributes.set_height (a_height)
-			resize_actions.execute (Current, Void)
+			resize_actions.execute (Current, resize_data)
 		end
 
 	on_vertical_scroll_control (scroll_code, a_position: INTEGER;

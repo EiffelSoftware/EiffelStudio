@@ -60,8 +60,8 @@ feature -- Directories
 
 	gb_ev_directory: FILE_NAME is
 		do
-			create Result.make_from_string ("D:\work")
-			Result.extend ("build2")
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			Result.extend ("build")
 			Result.extend ("interface")
 		end
 	

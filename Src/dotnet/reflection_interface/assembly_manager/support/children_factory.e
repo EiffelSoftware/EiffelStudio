@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 						if a_parent.tolower.equals_string (a_class.eiffelname.tolower) and not Result.contains (a_type) then
 							added := Result.add (a_type)
 						end
-						moved := parents_enumerator.movenext
+						--moved := parents_enumerator.movenext
 					end
 				end
 				i := i + 1

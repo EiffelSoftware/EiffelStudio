@@ -13,6 +13,10 @@ class
 inherit
 	EOLE_UNKNOWN
 
+	EOLE_GUID
+
+	EOLE_TYPE_KIND
+
 creation
 	make
 	
@@ -24,100 +28,172 @@ feature -- Element change
 			valid_filename: filename /= Void
 		local
 			wel_string: WEL_STRING
+			ptr: POINTER
 		do
 			!! wel_string.make (filename)
-			attach_ole_interface_ptr (ole2_typelib_load_type_lib (wel_string.item))
+			ptr := ole2_typelib_load_type_lib (wel_string.item)
+			if ptr /= default_pointer then
+				attach_ole_interface_ptr (ptr)
+			else
+				detach_ole_interface_ptr
+			end
 		end
 
 feature -- Message Transmission
 
-	find_name (name: EOLE_BSTR; count: INTEGER): EOLE_TYPE_LIB_RESULT is
+	find_name (name: STRING; count: INTEGER): EOLE_TYPE_LIB_RESULT is
 			-- Try to find `count' occurences of type descriptions 
 			-- containing `name' in type library.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
-			valid_name: name /= Void and then name.ole_ptr /= default_pointer
+			valid_interface: is_valid_interface
+			valid_name: name /= Void and then name /= Void
 			valid_count: count > 0
 		local
-			i: INTEGER
+			wel_string: WEL_STRING
 		do
-			!! Result.make (ole2_typelib_find_name (ole_interface_ptr, name.ole_ptr, count))
-			from
-			until
-				i = Result.count
-			loop
-				i := i + 1
-				Result.type_info.put (ole2_typelib_get_result_type_info (i), i)
-				Result.member_ids.put (ole2_typelib_get_result_member_ids (i),i)
-			end
+			!! wel_string.make (name)
+			Result := ole2_typelib_find_name (ole_interface_ptr, wel_string.item, count)
 		end
 		
 	get_type_info_count: INTEGER is
 			-- Number of type descriptions in type library
-			-- Not meant to be redefined; redefine `on_get_type_info_count' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_typelib_get_typeinfo_count (ole_interface_ptr)
 		end
 
 	get_type_info (index: INTEGER): EOLE_TYPE_INFO is
 			-- Type description in the library at `index' 
-			-- Not meant to be redefined; redefine `on_get_type_info' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		local
 			ptypeinfo: POINTER
 		do
-			ptypeinfo := ole2_typelib_get_type_info (ole_interface_ptr, index);
+			ptypeinfo := ole2_typelib_get_type_info (ole_interface_ptr, index)
 			if ptypeinfo /= default_pointer then
 				!! Result.make
 				Result.attach_ole_interface_ptr (ptypeinfo)
 			end
 		end
 
+	get_type_info_of_guid (guid: STRING): EOLE_TYPE_INFO is
+			-- Type description corresponding to GUID `guid'.
+		require
+			valid_interface: is_valid_interface
+			valid_guid: is_valid_guid (guid)
+		local
+			ptypeinfo: POINTER
+			wel_string: WEL_STRING
+		do
+			!! wel_string.make (guid)
+			ptypeinfo := ole2_typelib_get_type_info_of_guid (ole_interface_ptr, wel_string.item)
+			if ptypeinfo /= default_pointer then
+				!! Result.make
+				Result.attach_ole_interface_ptr (ptypeinfo)
+			end
+		end
+
+	get_type_info_type (index: INTEGER): INTEGER is
+			-- Type of type description with index `index'.
+			-- See class EOLE_TYPE_KIND for Result value.
+		require
+			valid_interface: is_valid_interface
+		do
+			Result := ole2_typelib_get_type_info_type (ole_interface_ptr, index)
+		ensure
+			valid_type_kind: status.succeeded implies is_valid_type_kind (Result)
+		end
+
+	is_name (name: STRING; lcid: INTEGER): BOOLEAN is
+			-- does `name' describe a type or member of library?
+			-- `lcid' is the locale identifier of `name'.
+		require
+			valid_interface: is_valid_interface
+		local
+			wel_string: WEL_STRING
+		do	
+			!! wel_string.make (name)
+			Result := ole2_typelib_is_name (ole_interface_ptr, wel_string.item, lcid)
+		end
+
+	get_type_comp: EOLE_TYPE_COMP is
+			-- Retrieve associated ITypeComp.
+		require
+			valid_interface: is_valid_interface
+		do
+			!! Result.make
+			Result.attach_ole_interface_ptr (ole2_typelib_get_type_comp (ole_interface_ptr))
+		end
+		
+	get_lib_attr is
+			-- Read type library attributes in `lib_attr'.
+		require
+			valid_interface: is_valid_interface
+		do
+			lib_attr.attach (ole2_typelib_get_lib_attr (ole_interface_ptr))
+		end
+
+	release_lib_attr is
+			-- Release library attribute structure previously
+			-- obtained with `get_lib_attr'
+		require
+			attributes_read: lib_attr /= Void and then lib_attr.ole_ptr /= default_pointer
+		do
+			ole2_typelib_release_lib_attr (ole_interface_ptr, lib_attr.ole_ptr)
+			lib_attr.detach
+		end
+
 	get_documentation (index: INTEGER): EOLE_DOCUMENTATION is
 			-- Library's documentation string, complete Help file name and path at `index' 
-			-- Not meant to be redefined; redefine `on_get_documentation' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		local
 			ptr_1, ptr_2, ptr_3: POINTER
 			name, doc_string, help_file: EOLE_BSTR
 		do
 			!! Result
 			ole2_typelib_get_documentation (ole_interface_ptr, index, $ptr_1, $ptr_2, $ptr_3)
-			name.make_from_ptr (ptr_1)
-			doc_string.make_from_ptr (ptr_2)
-			help_file.make_from_ptr (ptr_3)
-			Result.set_name (name)
-			Result.set_doc_string (doc_string)
-			Result.set_help_file (help_file)
+			if status.succeeded then
+				if ptr_1 /= default_pointer then
+					!! name.make_from_ptr (ptr_1)
+				end
+				if ptr_2 /= default_pointer then
+					!! doc_string.make_from_ptr (ptr_2)
+				end
+				if ptr_3 /= default_pointer then
+					!! help_file.make_from_ptr (ptr_3)
+				end
+				Result.set_name (name)
+				Result.set_doc_string (doc_string)
+				Result.set_help_file (help_file)
+			end
+		end
+
+feature -- Access
+
+	lib_attr: EOLE_LIB_ATTR is
+			-- Library attributes
+		once
+			!! Result
 		end
 		
 feature {NONE} -- Externals
-
-	ole2_typelib_get_result_type_info (i: INTEGER): POINTER is
-		external
-			"C"
-		alias
-			"eole2_typelib_get_result_type_info"
-		end
-		
-	ole2_typelib_get_result_member_ids (i: INTEGER): INTEGER is
-		external
-			"C"
-		alias
-			"eole2_typelib_get_result_member_ids"
-		end
 	
-	ole2_typelib_find_name (ptr, bstr_ptr: POINTER; cnt: INTEGER): INTEGER is
+	ole2_typelib_find_name (ptr, bstr_ptr: POINTER; cnt: INTEGER): EOLE_TYPE_LIB_RESULT is
 		external
 			"C"
 		alias
 			"eole2_typelib_find_name"
 		end
 	
+	ole2_typelib_is_name (ptr, name: POINTER; lcid: INTEGER): BOOLEAN is
+		external
+			"C"
+		alias
+			"eole2_typelib_is_name"
+		end
+
 	ole2_typelib_get_typeinfo_count (this: POINTER): INTEGER is
 		external
 			"C"
@@ -130,6 +206,41 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"eole2_typelib_get_type_info"
+		end
+
+	ole2_typelib_get_type_info_of_guid (this: POINTER; guid: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_typelib_get_type_info_of_guid"
+		end
+
+	ole2_typelib_get_type_info_type (this: POINTER; index: INTEGER): INTEGER is
+		external
+			"C"
+		alias
+			"eole2_typelib_get_type_info_type"
+		end
+
+	ole2_typelib_get_type_comp (this: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_typelib_get_type_comp"
+		end
+		
+	ole2_typelib_get_lib_attr (this: POINTER): POINTER is
+		external
+			"C"
+		alias
+			"eole2_typelib_get_lib_attr"
+		end
+
+	ole2_typelib_release_lib_attr (this: POINTER; libattr: POINTER) is
+		external
+			"C"
+		alias
+			"eole2_typelib_release_lib_attr"
 		end
 
 	ole2_typelib_get_documentation (this: POINTER; index: INTEGER; name, doc_string, help_file: POINTER) is

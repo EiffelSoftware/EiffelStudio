@@ -73,3 +73,4 @@ end -- class EOLE_AUTOMATION_SERVER_CLASS_FACTORY
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

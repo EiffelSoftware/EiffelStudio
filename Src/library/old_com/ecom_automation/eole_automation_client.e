@@ -138,3 +138,4 @@ end -- class EOLE_AUTOMATION_CLIENT
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+

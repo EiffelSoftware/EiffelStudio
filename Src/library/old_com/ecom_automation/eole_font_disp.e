@@ -32,7 +32,7 @@ inherit
 			{NONE} all
 		end
 	
-	EOLE_VARTYPE
+	EOLE_VAR_TYPE
 		export
 			{NONE} all
 		end

@@ -41,7 +41,7 @@ feature -- Message Transmission
 			-- See class EOLE_METHODFLAGS for `flags' value.
 			-- Not meant to be redefined; redefine `on_invoke' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_method_flags: is_valid_method_flag (flags)
 			valid_params: params /= Void and then params.ole_ptr /= default_pointer
 			valid_exception: exception /= Void and then exception.ole_ptr /= default_pointer
@@ -61,7 +61,7 @@ feature -- Message Transmission
 			-- to parameter names.
 			-- Not meant to be redefined; redefine `on_get_ids_of_names' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 			valid_names: names /= Void
 		local
 			i, count: INTEGER;
@@ -96,7 +96,7 @@ feature -- Message Transmission
 			-- Type information
 			-- Not meant to be redefined; redefine `on_get_type_info' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_dispatch_get_type_info (ole_interface_ptr)
 		end
@@ -106,7 +106,7 @@ feature -- Message Transmission
 			-- May be only 0 or 1 - nothing else.
 			-- Not meant to be redefined; redefine `on_get_type_info_count' instead.
 		require
-			valid_interface: ole_interface_ptr /= default_pointer
+			valid_interface: is_valid_interface
 		do
 			Result := ole2_dispatch_get_type_info_count (ole_interface_ptr)
 		end
@@ -230,4 +230,5 @@ end -- class EOLE_DISPATCH
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

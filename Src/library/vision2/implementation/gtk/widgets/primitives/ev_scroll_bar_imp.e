@@ -13,6 +13,9 @@ inherit
 	EV_SCROLL_BAR_I
 
 	EV_GAUGE_IMP
+		redefine
+			adjustment_widget
+		end
 
 feature -- Access
 
@@ -46,6 +49,12 @@ feature -- Access
 			-- ie : the user clicks on the scrollbar bar
 		do
 			Result := c_gtk_range_leap (widget)
+		end
+
+	adjustment_widget: POINTER is
+			-- Pointer to the widgets asjustment struct
+		do
+			Result := c_gtk_range_adjustment (widget)
 		end
 
 feature -- Status setting

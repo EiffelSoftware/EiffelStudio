@@ -11,8 +11,17 @@ inherit
 	EV_RANGE_I
 
 	EV_GAUGE_IMP
+		redefine
+			adjustment_widget
+		end
 
 feature -- Access
+
+	adjustment_widget: POINTER is
+			-- Pointer th the widget adjustment struct
+		do
+			Result := c_gtk_range_adjustment (widget)
+		end
 
 	value: INTEGER is
 			-- Current value of the gauge

@@ -31,10 +31,10 @@ inherit
 		redefine
 			put_address, put_feature_name, put_feature,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
-		   	process_breakpoint, process_padded, 
-			put_quoted_comment, put_operator, put_symbol, 
+		   	process_breakpoint, process_padded, put_class_syntax,
+			put_quoted_comment, put_operator, put_symbol, put_ace_syntax,
 			put_keyword, put_indent, process_quoted_text, put_comment,
-			process_basic_text
+			process_basic_text, process_column_text, process_call_stack_item
 		end;
 	TEXT_WINDOW
 		rename
@@ -42,12 +42,13 @@ inherit
 		undefine
 			copy, setup
 		redefine
-			put_address, put_feature_name, put_feature,
+			put_address, put_feature_name, put_feature, put_ace_syntax,
 			put_error, put_class, put_after_class, put_classi, put_cluster,
-			process_breakpoint, process_padded, 
+			process_breakpoint, process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, is_editable,
 			process_text, put_symbol, put_keyword, 
-			put_indent, process_quoted_text, put_comment, process_basic_text
+			put_indent, process_quoted_text, put_comment, process_basic_text, 
+			process_column_text, process_call_stack_item
 		select
 			process_text
 		end;
@@ -77,13 +78,20 @@ feature -- Properties
 	maximum_width: INTEGER;
 			-- Max width of workarea
 
-	drawing: DRAWING_X;
+	drawing: DRAWING_X is
 			-- Drawing implementation
+		deferred
+		end;
 
 	workarea_width: INTEGER is
 			-- Width of workarea
 		deferred
 		end;
+
+	x_offset, y_offset: INTEGER is
+			-- X and Y offset
+		deferred
+		end
 
 feature -- Update
 
@@ -100,7 +108,7 @@ feature -- Update
 			rel_y: INTEGER;
 			desc: INTEGER
 		do
-			rel_y := button_data.relative_y;
+			rel_y := button_data.relative_y + y_offset;
 			desc := maximum_descent_per_line;
 			from
 				c := count;
@@ -163,7 +171,7 @@ feature -- Update
 			line: like highlighted_line
 		do
 			!! p;
-			p.set (button_data.relative_x, button_data.relative_y);
+			p.set (button_data.relative_x + x_offset, button_data.relative_y + y_offset);
 			old_line := highlighted_line;
 			find_line (button_data);
 			if highlighted_line /= Void then
@@ -301,6 +309,30 @@ end
 			add_text_figure (fig, str)
 		end;
 
+    put_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
+            -- Put `address' for `e_class'.
+		local
+			fig: CLASS_TEXT_IMAGE;
+            stone: CL_SYNTAX_STONE
+        do
+            !! stone.make (syn, e_class);
+			!! fig;
+			fig.set_stone (stone);
+			add_text_figure (fig, str)
+        end;
+
+    put_ace_syntax (syn: SYNTAX_ERROR; str: STRING) is
+            -- Put `address' for `e_class'.
+        local
+			fig: DEFAULT_TEXT_IMAGE;
+            stone: ACE_SYNTAX_STONE
+        do
+            !! stone.make (syn);
+			!! fig;
+			fig.set_stone (stone);
+			add_text_figure (fig, str)
+        end;
+
 	put_error (error: ERROR; str: STRING) is
 			-- Put `error' with string representation
 			-- `str' at current position.
@@ -399,14 +431,14 @@ end
 
 feature -- Text formatting
 
-    process_basic_text (s: STRING_TEXT) is
-            -- Process string text `t'.
+	process_basic_text (s: STRING_TEXT) is
+			-- Process string text `t'.
 		local
 			fig: DEFAULT_TEXT_IMAGE
 		do
 			!! fig;
 			add_text_figure (fig, s.image);
-        end;
+		end;
 
 	process_text (t: STRUCTURED_TEXT) is
 			-- Process structured text `text' to be
@@ -441,6 +473,45 @@ feature -- Text formatting
 			-- Process the quoted `text' within a comment.
 		do
 			put_quoted_comment (t.image_without_quotes);
+		end;
+
+	process_column_text (t: COLUMN_TEXT) is
+			-- Process `text'.
+		local
+			column_pos: INTEGER;
+			one_space_size: INTEGER
+		do
+			one_space_size := g_String_text_font.width_of_string (" ");
+			column_pos := (one_space_size * t.column_number) + 
+					2*one_space_size;
+			if current_x > column_pos then
+				current_x := current_x + one_space_size
+			else		
+				current_x := column_pos
+			end;
+		end;
+
+	process_call_stack_item (t: CALL_STACK_ITEM) is
+			-- Process the current callstack text.
+		local
+			fig: STRING_TEXT_IMAGE;
+			stone: CALL_STACK_STONE;
+			ln: INTEGER
+		do
+			!! fig;
+			ln := t.level_number;
+			if ln > 0 then
+				!! stone.make (ln);
+				fig.set_stone (stone)
+			end;
+			add_text_figure (fig, t.image);
+			check
+				highlighted_line_is_void: highlighted_line = Void
+			end;
+			if t.displayed_callstack then
+				highlighted_line := current_line;
+				highlighted_line.set_is_in_highlighted_line (True);
+			end;
 		end;
 
 feature -- Removal
@@ -540,7 +611,7 @@ feature {NONE} -- Implementation
 					highlighted_line_is_void: highlighted_line = Void;
 				end
 				highlighted_line := current_line;
-				highlighted_line.set_is_in_debug_line (True);
+				highlighted_line.set_is_in_highlighted_line (True);
 					-- Execution stopped at that point.
 				if Application.is_breakpoint_set (stone.routine, stone.index) then
 					fig.set_pixmap (bm_graphical_Stoppoint);

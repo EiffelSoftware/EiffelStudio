@@ -119,6 +119,20 @@ void c_gtk_signal_disconnect (GtkObject *widget,
 			      EIF_OBJ object,
 			      EIF_OBJ argument);
 
+/*------------------------------------------------------------------------------
+ Add an accelerator to the widget with the given name.
+------------------------------------------------------------------------------*/
+		
+void c_gtk_widget_add_accelerator (GtkWidget * widget, const gchar *signal_name,
+				guint keycode,
+				gboolean shift_mask, gboolean control_mask, gboolean alt_mask);
+
+/*------------------------------------------------------------------------------
+ Register a new signal for the given GtkObject.
+------------------------------------------------------------------------------*/
+
+EIF_INTEGER c_gtk_object_class_user_signal_new (GtkObject *object, const gchar *name);
+
 /*==============================================================================
  Key Event function
 ==============================================================================*/
@@ -308,6 +322,8 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button);
 
 EIF_POINTER c_gtk_option_button_selected_menu_item (GtkWidget *widget);
 EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkWidget *menu_item);
+void c_gtk_option_button_set_fg_color (GtkOptionMenu *option_menu, gint r, gint g, gint b);
+void c_gtk_option_button_set_bg_color (GtkOptionMenu *option_menu, gint r, gint g, gint b);
 
 /*==============================================================================
  Menu functions
@@ -406,7 +422,7 @@ gint c_gtk_notebook_count (GtkWidget *notebook);
 #define c_gtk_notebook_tab_position(p)     ((EIF_INTEGER) GTK_NOTEBOOK(p)->tab_pos)     /*integer*/
 
 /*==============================================================================
- gtk_list functions
+ gtk_clist functions
 ==============================================================================*/
 
 gint c_gtk_clist_append_row (GtkWidget* list);
@@ -419,6 +435,8 @@ void c_gtk_clist_get_fg_color (GtkWidget* list_row, int row, EIF_INTEGER *r, EIF
 void c_gtk_clist_get_bg_color (GtkWidget* list_row, int row, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b);
 void c_gtk_clist_set_pixtext (GtkWidget* clist, int row, int column, GtkWidget *pixmap, gchar *text);
 void c_gtk_clist_unset_pixmap (GtkWidget* clist, int row, int column);
+EIF_BOOLEAN c_gtk_clist_title_shown (GtkCList *clist);
+EIF_INTEGER c_gtk_clist_column_width (GtkCList *clist, gint column);
 
 /* CList */
 #define c_gtk_clist_rows(p)     (GTK_CLIST(p)->rows)     /*integer*/

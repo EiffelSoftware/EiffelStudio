@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.EiffelAssembly"
 
 external class
@@ -17,104 +17,62 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen assemblyculture: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
-		alias
-			"AssemblyCulture"
-		end
-
-	frozen types: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssembly"
-		alias
-			"Types"
-		end
-
-	frozen emitterversionnumber: STRING is
+	frozen EmitterVersionNumber: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
 			"EmitterVersionNumber"
 		end
 
-	frozen assemblyname: STRING is
+	frozen AssemblyName: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
 			"AssemblyName"
 		end
 
-	frozen assemblyversion: STRING is
+	frozen AssemblyCulture: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"AssemblyCulture"
+		end
+
+	frozen AssemblyVersion: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
 			"AssemblyVersion"
 		end
 
-	frozen eiffelclusterpath: STRING is
+	frozen Types: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.EiffelAssembly"
 		alias
-			"EiffelClusterPath"
+			"Types"
 		end
 
-	frozen assemblypublickey: STRING is
+	frozen AssemblyPublicKey: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
 			"AssemblyPublicKey"
 		end
 
+	frozen EiffelClusterPath: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"EiffelClusterPath"
+		end
+
 feature -- Basic Operations
 
-	setassemblyversion (a_version: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"SetAssemblyVersion"
-		end
-
-	addtype (a_type: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"AddType"
-		end
-
-	make is
+	Make is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelAssembly"
 		alias
 			"Make"
-		end
-
-	seteiffelclusterpath (a_path: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"SetEiffelClusterPath"
-		end
-
-	setassemblyculture (a_culture: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"SetAssemblyCulture"
-		end
-
-	setemitterversionnumber (a_value: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"SetEmitterVersionNumber"
-		end
-
-	setassemblyname (a_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
-		alias
-			"SetAssemblyName"
 		end
 
 	a_invariant is
@@ -124,11 +82,53 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	setassemblypublickey (a_public_key: STRING) is
+	SetAssemblyPublicKey (a_public_key: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
 		alias
 			"SetAssemblyPublicKey"
+		end
+
+	SetAssemblyName (a_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"SetAssemblyName"
+		end
+
+	SetEmitterVersionNumber (a_value: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"SetEmitterVersionNumber"
+		end
+
+	AddType (a_type: ISE_REFLECTION_EIFFELCLASS) is
+		external
+			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"AddType"
+		end
+
+	SetAssemblyVersion (a_version: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"SetAssemblyVersion"
+		end
+
+	SetAssemblyCulture (a_culture: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"SetAssemblyCulture"
+		end
+
+	SetEiffelClusterPath (a_path: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelAssembly"
+		alias
+			"SetEiffelClusterPath"
 		end
 
 end -- class ISE_REFLECTION_EIFFELASSEMBLY

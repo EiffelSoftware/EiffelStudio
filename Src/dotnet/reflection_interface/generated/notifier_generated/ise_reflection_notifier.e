@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.Notifier"
 
 external class
@@ -17,14 +17,35 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen agents: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen RemoveObservers: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
 		alias
-			"Agents"
+			"RemoveObservers"
+		end
+
+	frozen AddObservers: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
+		alias
+			"AddObservers"
 		end
 
 feature -- Basic Operations
+
+	AddAdditionObserver (an_observer: SYSTEM_DELEGATE) is
+		external
+			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
+		alias
+			"AddAdditionObserver"
+		end
+
+	Make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.Notifier"
+		alias
+			"Make"
+		end
 
 	a_invariant is
 		external
@@ -33,11 +54,25 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	make is
+	NotifyRemove (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.Notifier"
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.Notifier"
 		alias
-			"Make"
+			"NotifyRemove"
+		end
+
+	NotifyAdd (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.Notifier"
+		alias
+			"NotifyAdd"
+		end
+
+	AddRemoveObserver (an_observer: SYSTEM_DELEGATE) is
+		external
+			"IL signature (System.Delegate): System.Void use ISE.Reflection.Notifier"
+		alias
+			"AddRemoveObserver"
 		end
 
 end -- class ISE_REFLECTION_NOTIFIER

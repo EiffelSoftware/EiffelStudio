@@ -1,22 +1,9 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorFromXml"
 
 external class
 	ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
-
-inherit
-	ANY
-		redefine
-			equals,
-			tostring,
-			finalize,
-			gethashcode
-		end
-	ISE_REFLECTION_CODEGENERATOR
-		rename
-			generatecode as a__generatecode
-		end
 
 create
 	make1
@@ -30,78 +17,41 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen assemblydescriptionfilename: STRING is
+	frozen AssemblyDescriptionFilename: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
 			"AssemblyDescriptionFilename"
 		end
 
-	frozen typedescriptionfilename: STRING is
+	frozen EiffelAssembly: ISE_REFLECTION_EIFFELASSEMBLY is
 		external
-			"IL field signature :System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
+			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
-			"TypeDescriptionFilename"
+			"EiffelAssembly"
 		end
 
 feature -- Basic Operations
 
-	makefrominfo (an_assembly_description_filename: STRING; a_type_description_filename: STRING) is
-		external
-			"IL signature (System.String, System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"MakeFromInfo"
-		end
-
-	generateeiffelcodefromxml is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"GenerateEiffelCodeFromXml"
-		end
-
-	gethashcode: INTEGER is
-		external
-			"IL signature (): System.Int32 use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"GetHashCode"
-		end
-
-	make is
+	Make is
 		external
 			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
 			"Make"
 		end
 
-	tostring: STRING is
+	MakeFromInfo (an_assembly_description_filename: STRING) is
 		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
-			"ToString"
+			"MakeFromInfo"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	GenerateEiffelCodeFromXml (type_description_filename: STRING) is
 		external
-			"IL signature (System.Object): System.Boolean use ISE.Reflection.EiffelCodeGeneratorFromXml"
+			"IL signature (System.String): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
-			"Equals"
-		end
-
-feature {NONE} -- Implementation
-
-	frozen a__generatecode is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"__GenerateCode"
-		end
-
-	finalize is
-		external
-			"IL signature (): System.Void use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"Finalize"
+			"GenerateEiffelCodeFromXml"
 		end
 
 end -- class ISE_REFLECTION_EIFFELCODEGENERATORFROMXML

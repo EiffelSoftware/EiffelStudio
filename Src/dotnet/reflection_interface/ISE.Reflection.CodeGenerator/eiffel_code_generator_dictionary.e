@@ -113,6 +113,11 @@ feature -- Access
 		indexing
 			external_name: "EnsureKeyword"
 		end
+
+	Enum_keyword: STRING is "enum"
+		indexing
+			external_name: "EnumKeyword"
+		end
 		
 	Expanded_keyword: STRING is "expanded"
 		indexing
@@ -252,6 +257,11 @@ feature -- Access
 	Require_keyword: STRING is "require"
 		indexing
 			external_name: "RequireKeyword"
+		end
+	
+	Select_keyword: STRING is "select"
+		indexing
+			external_name: "SelectKeyword"
 		end
 		
 	Semi_colon: STRING is ";"

@@ -33,32 +33,25 @@ feature -- Access
 			external_name: "EiffelName"
 		end
 		
-	dot_net_name: STRING
-			-- .NET name
+	external_name: STRING
+			-- External name
 		indexing
-			external_name: "DotNetName"
+			external_name: "ExternalName"
 		end
 		
 	arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Feature Arguments
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]
-			-- | Array with argument Eiffel name, .NET name, type (Eiffel name of type) and type full name
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [NAMED_SIGNATURE_TYPE]
 		indexing
 			external_name: "Arguments"
 		end
 		
-	return_type: STRING	
+	return_type: SIGNATURE_TYPE	
 			-- Eiffel name of feature return type
 		indexing
 			external_name: "ReturnType"
 		end
-		
-	return_type_full_name: STRING 
-			-- Full name of feature return type
-		indexing
-			external_name: "ReturnTypeFullName"
-		end
-		
+				
 	preconditions: SYSTEM_COLLECTIONS_ARRAYLIST
 			-- Feature preconditions
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]
@@ -92,30 +85,36 @@ feature -- Eiffel names from .NET information
 			non_void_info: info /= Void
 		local
 			i: INTEGER
-			an_argument: ARRAY [STRING]
+			an_argument: NAMED_SIGNATURE_TYPE
+			retried: BOOLEAN
 		do
-			from
-			until
-				i = arguments.Count 
-			loop
-				an_argument ?= arguments.Item (i)
-				if an_argument /= Void then
-					if an_argument.count = 4 then
-						if info.Name.Equals_String (an_argument.item (1)) and then info.ParameterType.FullName.Equals_String (an_argument.item (3)) then
+			if not retried then
+				from
+				until
+					i = arguments.Count 
+				loop
+					an_argument ?= arguments.Item (i)
+					if an_argument /= Void then
+						if info.Name.Equals_String (an_argument.external_name) and then info.ParameterType.FullName.Equals_String (an_argument.type_full_external_name) then
 							create Result.make (2)
-							Result.put (0, an_argument.item (0))
-							Result.put (1, an_argument.item (2))							
+							Result.put (0, an_argument.eiffel_name)
+							Result.put (1, an_argument.type_eiffel_name)							
 						end
 					end
+					i := i + 1
 				end
-				i := i + 1
-			end
-			if Result = Void then
+				if Result = Void then
+					create Result.make (2)
+				end
+			else
 				create Result.make (2)
 			end
 		ensure
 			non_void_argument: Result /= Void	
 			valid_argument: Result.count = 2
+		rescue
+			retried := True
+			retry
 		end	
 			
 feature -- Status Report
@@ -267,17 +266,17 @@ feature -- Status Setting
 			eiffel_name_set: eiffel_name.Equals_String (a_name)
 		end	
 
-	set_dot_net_name (a_name: like dot_net_name) is
-			-- Set `eiffel_name' with `a_name'.
+	set_external_name (a_name: like external_name) is
+			-- Set `external_name' with `a_name'.
 		indexing
-			external_name: "SetDotNetName"
+			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
 			not_empty_name: a_name.Length > 0
 		do
-			dot_net_name := a_name
+			external_name := a_name
 		ensure
-			dot_net_name_set: dot_net_name.Equals_String (a_name)
+			external_name_set: external_name.Equals_String (a_name)
 		end		
 	
 	set_return_type (a_type: like return_type) is
@@ -286,26 +285,12 @@ feature -- Status Setting
 			external_name: "SetReturnType"
 		require
 			non_void_type: a_type /= Void
-			not_empty_type: a_type.Length > 0
 		do
 			return_type := a_type
 		ensure
-			return_type_set: return_type.Equals_String (a_type)
+			return_type_set: return_type = a_type
 		end
 	
-	set_return_type_full_name (a_name: like return_type_full_name) is
-			-- Set `return_type_full_name' with `a_name'.
-		indexing
-			external_name: "SetReturnTypeFullName"
-		require
-			non_void_name: a_name /= Void
-			not_empty_name: a_name.Length > 0
-		do
-			return_type_full_name := a_name
-		ensure
-			return_type_full_name_set: return_type_full_name.Equals_String (a_name)
-		end	
-
 --##TEMPORARY
 	set_postcondition (a_postcondition: like postcondition) is
 			-- Set `postcondition' with `a_postcondition'.
@@ -318,29 +303,15 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	add_argument (an_eiffel_name, a_dot_net_name, a_type, a_type_full_name: STRING) is
-			-- Add a new argument to `arguments'.
-			-- New argument is built from `an_eiffel_name', `a_dot_net_name', `a_type' and `a_type_full_name'.
+	add_argument (an_argument: NAMED_SIGNATURE_TYPE) is
+			-- Add `an_argument to `arguments'.
 		indexing
 			external_name: "AddArgument"
 		require
-			non_void_eiffel_name: an_eiffel_name /= Void
-			non_void_dot_net_name: a_dot_net_name /= Void
-			non_void_type: a_type /= Void
-			non_void_type_full_name: a_type_full_name /= Void
-			not_empty_eiffel_name: an_eiffel_name.Length > 0
-			not_empty_dot_net_name: a_dot_net_name.Length > 0
-			not_empty_type: a_type.Length > 0
-			not_empty_type_full_name: a_type_full_name.Length > 01
+			non_void_argument: an_argument /= Void
 		local
-			an_argument: ARRAY [STRING]
 			argument_added: INTEGER
 		do
-			create an_argument.make (4)
-			an_argument.put (0, an_eiffel_name)
-			an_argument.put (1, a_dot_net_name)
-			an_argument.put (2, a_type)
-			an_argument.put (3, a_type_full_name)
 			argument_added := arguments.Add (an_argument)
 		end
 			

@@ -10,17 +10,27 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_code: like code) is
+	make (a_code: like code; a_name: like name; a_description: like description) is
 			-- Set `code' with `a_code'.
+			-- Set `name' with `a_name'.
+			-- Set `description' with `a_description'.
 		indexing
 			external_name: "Make"
 		require
-			valid_code: a_code > 0
+			valid_code: a_code >= 0
+			non_void_name: a_name /= Void
+			not_empty_name: a_name.length > 0
+			non_void_description: a_description /= Void
+			not_empty_description: a_description.length > 0
 		do
 			code := a_code
+			name := a_name
+			description := a_description
 		ensure
 			code_set: code = a_code
-		end
+			name_set: name.equals_string (a_name)
+			description_set: description.equals_string (a_description)
+		end			
 
 feature -- Access
 
@@ -30,43 +40,23 @@ feature -- Access
 			external_name: "Code"
 		end
 
-	name: STRING is
+	name: STRING 
 			-- Error name
 		indexing
 			external_name: "Name"
-		require
-			code_exists: errors_table.errors_table.ContainsKey (code)
-		do
-			Result := errors_table.error_name (code)
-		ensure
-			name_found: Result /= Void
-			not_empty_name: Result.Length > 0
 		end			
 			
-	description: STRING is
+	description: STRING 
 			-- Error description
 		indexing
 			external_name: "Description"
-		require
-			code_exists: errors_table.errors_table.ContainsKey (code)		
-		do
-			Result := errors_table.error_description (code)
-		ensure
-			description_found: Result /= Void
-			not_empty_description: Result.Length > 0
 		end	
 
-	errors_table: ERRORS_TABLE is
-			-- Errors table
-		indexing
-			external_name: "ErrorsTable"
-		once
-			create Result.make
-		ensure
-			table_created: Result /= Void
-		end
-		
 invariant
-	valid_code: code > 0
+	valid_code: code >= 0
+	non_void_name: name /= Void
+	not_empty_name: name.length > 0
+	non_void_description: description /= Void
+	not_empty_description: description.length > 0
 			
 end -- class ERROR_INFO

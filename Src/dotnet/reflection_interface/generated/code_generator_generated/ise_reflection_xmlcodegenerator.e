@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.XmlCodeGenerator"
 
 external class
@@ -20,14 +20,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen cachehandler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER is
+	frozen CacheHandler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER is
 		external
 			"IL field signature :ISE.Reflection.EiffelAssemblyCacheHandler use ISE.Reflection.XmlCodeGenerator"
 		alias
 			"CacheHandler"
 		end
 
-	frozen typestorer: ISE_REFLECTION_TYPESTORER is
+	frozen TypeStorer: ISE_REFLECTION_TYPESTORER is
 		external
 			"IL field signature :ISE.Reflection.TypeStorer use ISE.Reflection.XmlCodeGenerator"
 		alias
@@ -36,28 +36,35 @@ feature -- Access
 
 feature -- Basic Operations
 
-	endassemblygeneration is
-		external
-			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
-		alias
-			"EndAssemblyGeneration"
-		end
-
-	startassemblygeneration (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	StartAssemblyGeneration (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
 			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
 			"StartAssemblyGeneration"
 		end
 
-	make is
+	EndAssemblyGeneration is
 		external
 			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"Make"
+			"EndAssemblyGeneration"
 		end
 
-	generatetype (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+	ReplaceType (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
+		alias
+			"ReplaceType"
+		end
+
+	MakeXmlCodeGenerator is
+		external
+			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
+		alias
+			"MakeXmlCodeGenerator"
+		end
+
+	GenerateType (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		external
 			"IL signature (ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias

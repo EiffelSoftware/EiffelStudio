@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.ReflectionInterface"
 
 external class
@@ -20,111 +20,118 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen lasterror: ISE_REFLECTION_ERRORINFO is
-		external
-			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
-		alias
-			"LastError"
-		end
-
-	frozen lastreadsuccessful: BOOLEAN is
+	frozen LastReadSuccessful: BOOLEAN is
 		external
 			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
 		alias
 			"LastReadSuccessful"
 		end
 
+	frozen LastError: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
+		alias
+			"LastError"
+		end
+
+	frozen ErrorMessages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is
+		external
+			"IL field signature :ISE.Reflection.ReflectionInterfaceErrorMessages use ISE.Reflection.ReflectionInterface"
+		alias
+			"ErrorMessages"
+		end
+
 feature -- Basic Operations
 
-	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
+	MakeReflectionInterface is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"MakeReflectionInterface"
+		end
+
+	Type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL signature (System.Type): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
 		alias
 			"Type"
 		end
 
-	assemblyfromtype (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELASSEMBLY is
+	ReadLockCreationFailedCode: INTEGER is
 		external
-			"IL signature (System.Type): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
 		alias
-			"AssemblyFromType"
+			"ReadLockCreationFailedCode"
 		end
 
-	setlasterror (error_info: ISE_REFLECTION_ERRORINFO) is
+	HasReadLockCode: INTEGER is
 		external
-			"IL signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
 		alias
-			"SetLastError"
+			"HasReadLockCode"
 		end
 
-	make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.ReflectionInterface"
-		alias
-			"Make"
-		end
-
-	removeassemblyfrominfo (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
-		alias
-			"RemoveAssemblyFromInfo"
-		end
-
-	assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ReflectionInterface"
-		alias
-			"Assemblies"
-		end
-
-	existsfromtype (a_type: SYSTEM_TYPE): BOOLEAN is
-		external
-			"IL signature (System.Type): System.Boolean use ISE.Reflection.ReflectionInterface"
-		alias
-			"ExistsFromType"
-		end
-
-	eiffeltype (xml_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
-		external
-			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
-		alias
-			"EiffelType"
-		end
-
-	existsfrominfo (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.ReflectionInterface"
-		alias
-			"ExistsFromInfo"
-		end
-
-	assemblyfrominfo (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
-		alias
-			"AssemblyFromInfo"
-		end
-
-	eiffelassembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
+	EiffelAssembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
 		external
 			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
 		alias
 			"EiffelAssembly"
 		end
 
-	assemblyinfofromtype (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+	Support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.ReflectionInterface"
+		alias
+			"Support"
+		end
+
+	HasWriteLockCode: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
+		alias
+			"HasWriteLockCode"
+		end
+
+	Exists (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.ReflectionInterface"
+		alias
+			"Exists"
+		end
+
+	EiffelType (xml_filename: STRING): ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
+		alias
+			"EiffelType"
+		end
+
+	RemoveAssembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Void use ISE.Reflection.ReflectionInterface"
+		alias
+			"RemoveAssembly"
+		end
+
+	Assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ReflectionInterface"
+		alias
+			"Assemblies"
+		end
+
+	Assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"Assembly"
+		end
+
+	AssemblyDescriptorFromType (a_type: SYSTEM_TYPE): ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
 		external
 			"IL signature (System.Type): ISE.Reflection.AssemblyDescriptor use ISE.Reflection.ReflectionInterface"
 		alias
-			"AssemblyInfoFromType"
-		end
-
-	removeassemblyfromtype (a_type: SYSTEM_TYPE) is
-		external
-			"IL signature (System.Type): System.Void use ISE.Reflection.ReflectionInterface"
-		alias
-			"RemoveAssemblyFromType"
+			"AssemblyDescriptorFromType"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONINTERFACE

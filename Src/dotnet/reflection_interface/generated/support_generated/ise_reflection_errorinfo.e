@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.ErrorInfo"
 
 external class
@@ -17,7 +17,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen Name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.ErrorInfo"
+		alias
+			"Name"
+		end
+
+	frozen Description: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.ErrorInfo"
+		alias
+			"Description"
+		end
+
+	frozen Code: INTEGER is
 		external
 			"IL field signature :System.Int32 use ISE.Reflection.ErrorInfo"
 		alias
@@ -26,11 +40,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	description: STRING is
+	Make (a_code: INTEGER; a_name: STRING; a_description: STRING) is
 		external
-			"IL signature (): System.String use ISE.Reflection.ErrorInfo"
+			"IL signature (System.Int32, System.String, System.String): System.Void use ISE.Reflection.ErrorInfo"
 		alias
-			"Description"
+			"Make"
 		end
 
 	a_invariant is
@@ -38,27 +52,6 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.ErrorInfo"
 		alias
 			"_invariant"
-		end
-
-	errorstable: ISE_REFLECTION_ERRORSTABLE is
-		external
-			"IL signature (): ISE.Reflection.ErrorsTable use ISE.Reflection.ErrorInfo"
-		alias
-			"ErrorsTable"
-		end
-
-	name: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ErrorInfo"
-		alias
-			"Name"
-		end
-
-	make (a_code: INTEGER) is
-		external
-			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorInfo"
-		alias
-			"Make"
 		end
 
 end -- class ISE_REFLECTION_ERRORINFO

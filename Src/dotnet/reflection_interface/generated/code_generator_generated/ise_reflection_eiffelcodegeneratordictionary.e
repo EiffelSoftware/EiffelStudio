@@ -1,5 +1,5 @@
 indexing
-	Generator: "Eiffel Emitter beta 2"
+	Generator: "Eiffel Emitter 2.3b"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorDictionary"
 
 external class
@@ -20,403 +20,417 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	staticfield: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"StaticField"
-		end
-
-	creator: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Creator"
-		end
-
-	accessfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"AccessFeatureClause"
-		end
-
-	externalnamekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ExternalNameKeyword"
-		end
-
-	endkeyword: STRING is
+	EndKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"EndKeyword"
 		end
 
-	aliaskeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"AliasKeyword"
-		end
-
-	ensurekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"EnsureKeyword"
-		end
-
-	integer16class: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Integer16Class"
-		end
-
-	undefinekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"UndefineKeyword"
-		end
-
-	operator: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Operator"
-		end
-
-	semicolon: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"SemiColon"
-		end
-
-	requirekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"RequireKeyword"
-		end
-
-	closingroundbracket: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ClosingRoundBracket"
-		end
-
-	doubleclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"DoubleClass"
-		end
-
-	implementationfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ImplementationFeatureClause"
-		end
-
-	unaryoperatorsfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"UnaryOperatorsFeatureClause"
-		end
-
-	initializationfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"InitializationFeatureClause"
-		end
-
-	createnone: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"CreateNone"
-		end
-
-	inheritkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"InheritKeyword"
-		end
-
-	binaryoperatorsfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"BinaryOperatorsFeatureClause"
-		end
-
-	prefixkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"PrefixKeyword"
-		end
-
-	dashes: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Dashes"
-		end
-
-	frozenkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"FrozenKeyword"
-		end
-
-	redefinekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"RedefineKeyword"
-		end
-
-	characterclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"CharacterClass"
-		end
-
-	invertedcomma: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"InvertedComma"
-		end
-
-	infixkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"InfixKeyword"
-		end
-
-	elementchangefeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ElementChangeFeatureClause"
-		end
-
-	signaturekeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"SignatureKeyword"
-		end
-
-	basicoperationsfeatureclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"BasicOperationsFeatureClause"
-		end
-
-	colon: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Colon"
-		end
-
-	generatorname: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"GeneratorName"
-		end
-
-	indexingkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"IndexingKeyword"
-		end
-
-	generatorindexingclause: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"GeneratorIndexingClause"
-		end
-
-	externalkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ExternalKeyword"
-		end
-
-	integerclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"IntegerClass"
-		end
-
-	tab: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Tab"
-		end
-
-	use: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Use"
-		end
-
-	integer64class: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Integer64Class"
-		end
-
-	iskeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"IsKeyword"
-		end
-
-	propertysetprefix: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"PropertySetPrefix"
-		end
-
-	eiffelclassextension: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"EiffelClassExtension"
-		end
-
-	realclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"RealClass"
-		end
-
-	field: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Field"
-		end
-
-	static: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"Static"
-		end
-
-	renamekeyword: STRING is
+	RenameKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"RenameKeyword"
 		end
 
-	specialsfeatureclause: STRING is
+	ImplementationFeatureClause: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"SpecialsFeatureClause"
+			"ImplementationFeatureClause"
 		end
 
-	newline: STRING is
+	AccessFeatureClause: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"NewLine"
+			"AccessFeatureClause"
 		end
 
-	openingroundbracket: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"OpeningRoundBracket"
-		end
-
-	classkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"ClassKeyword"
-		end
-
-	anyclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"AnyClass"
-		end
-
-	createkeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"CreateKeyword"
-		end
-
-	deferredkeyword: STRING is
+	DeferredKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"DeferredKeyword"
 		end
 
-	booleanclass: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"BooleanClass"
-		end
-
-	integer8class: STRING is
+	Integer8Class: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"Integer8Class"
 		end
 
-	il: STRING is
+	InfixKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"InfixKeyword"
+		end
+
+	ExternalNameKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ExternalNameKeyword"
+		end
+
+	SemiColon: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"SemiColon"
+		end
+
+	IsKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"IsKeyword"
+		end
+
+	SelectKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"SelectKeyword"
+		end
+
+	ExternalKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ExternalKeyword"
+		end
+
+	BasicOperationsFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"BasicOperationsFeatureClause"
+		end
+
+	UndefineKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"UndefineKeyword"
+		end
+
+	Dashes: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Dashes"
+		end
+
+	ClassKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ClassKeyword"
+		end
+
+	IL: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"IL"
 		end
 
-	expandedkeyword: STRING is
+	SignatureKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"SignatureKeyword"
+		end
+
+	IndexingKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"IndexingKeyword"
+		end
+
+	CharacterClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"CharacterClass"
+		end
+
+	CreateKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"CreateKeyword"
+		end
+
+	AliasKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"AliasKeyword"
+		end
+
+	Operator: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Operator"
+		end
+
+	PropertySetPrefix: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"PropertySetPrefix"
+		end
+
+	Tab: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Tab"
+		end
+
+	ClosingRoundBracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ClosingRoundBracket"
+		end
+
+	InvertedComma: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"InvertedComma"
+		end
+
+	InitializationFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"InitializationFeatureClause"
+		end
+
+	EnumKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"EnumKeyword"
+		end
+
+	ExpandedKeyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"ExpandedKeyword"
+		end
+
+	Field: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Field"
+		end
+
+	BooleanClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"BooleanClass"
+		end
+
+	Use: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Use"
+		end
+
+	EiffelClassExtension: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"EiffelClassExtension"
+		end
+
+	InheritKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"InheritKeyword"
+		end
+
+	BinaryOperatorsFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"BinaryOperatorsFeatureClause"
+		end
+
+	EnsureKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"EnsureKeyword"
+		end
+
+	Creator: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Creator"
+		end
+
+	AnyClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"AnyClass"
+		end
+
+	SpecialsFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"SpecialsFeatureClause"
+		end
+
+	RedefineKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"RedefineKeyword"
+		end
+
+	OpeningRoundBracket: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"OpeningRoundBracket"
+		end
+
+	Integer16Class: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Integer16Class"
+		end
+
+	PrefixKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"PrefixKeyword"
+		end
+
+	CreateNone: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"CreateNone"
+		end
+
+	GeneratorIndexingClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"GeneratorIndexingClause"
+		end
+
+	DoubleClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"DoubleClass"
+		end
+
+	GeneratorName: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"GeneratorName"
+		end
+
+	Integer64Class: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Integer64Class"
+		end
+
+	IntegerClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"IntegerClass"
+		end
+
+	RequireKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"RequireKeyword"
+		end
+
+	UnaryOperatorsFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"UnaryOperatorsFeatureClause"
+		end
+
+	NewLine: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"NewLine"
+		end
+
+	RealClass: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"RealClass"
+		end
+
+	FrozenKeyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"FrozenKeyword"
+		end
+
+	Static: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Static"
+		end
+
+	ElementChangeFeatureClause: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"ElementChangeFeatureClause"
+		end
+
+	Colon: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"Colon"
+		end
+
+	StaticField: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"StaticField"
 		end
 
 end -- class ISE_REFLECTION_EIFFELCODEGENERATORDICTIONARY

@@ -6,7 +6,8 @@ class
 	ASSEMBLY_DESCRIPTOR
 
 create 
-	make
+	make,
+	make_from_assembly
 
 feature {NONE} -- Initialization
 
@@ -38,6 +39,31 @@ feature {NONE} -- Initialization
 			public_key_set: public_key.Equals_String (a_public_key)
 		end
 
+	make_from_assembly (a_dot_net_assembly: SYSTEM_REFLECTION_ASSEMBLY) is
+			-- Create an instance of `ASSEMBLY_DESCRIPTOR' from `a_dot_net_assembly'.
+		indexing
+			external_name: "MakeFromAssembly"
+		require
+			non_void_assembly: a_dot_net_assembly /= Void
+		local
+			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			convert: CONVERT
+			assembly_info: ARRAY [STRING]
+			retried: BOOLEAN
+		do
+			an_assembly_name := a_dot_net_assembly.getname 
+			create convert
+			if not retried then
+				assembly_info := convert.assembly_info_from_name (an_assembly_name)
+				if assembly_info /= Void and then assembly_info.count = 4 then
+					make (assembly_info.item (0), assembly_info.item (1), assembly_info.item (2), assembly_info.item (3))
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 feature -- Access
 
 	name: STRING 
@@ -63,7 +89,7 @@ feature -- Access
 		indexing
 			external_name: "PublicKey"
 		end
-
+		
 invariant
 	non_void_name: name /= Void
 	not_empty_name: name.Length > 0

@@ -30,6 +30,12 @@ cd vision2/implementation
 rm -rf mswin
 sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
 cp new_index.xml index.xml
+rm -rf new_index.xml
+cd ../contrib
+rm -rf implementation
+sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
+cp new_index.xml index.xml
+rm -rf new_index.xml
 
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml/Documentation
 

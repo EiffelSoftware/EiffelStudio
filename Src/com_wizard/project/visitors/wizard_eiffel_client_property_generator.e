@@ -12,6 +12,11 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
+	ECOM_VAR_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
@@ -32,14 +37,17 @@ feature -- Basic operations
 
 			define_feature_names (a_component_descriptor, a_descriptor)
 			generate_access_feature (visitor, a_descriptor)
-			generate_setting_feature (visitor)
 			generate_external_access_feature (visitor, a_component_descriptor, a_descriptor)
-			generate_external_setting_feature (visitor, a_component_descriptor)
+
+			if not is_varflag_freadonly (a_descriptor.var_flags) then
+				generate_setting_feature (visitor)
+				generate_external_setting_feature (visitor, a_component_descriptor)
+			end
 		ensure
 			access_feature_exist: access_feature /= Void
-			setting_feature_exist: setting_feature /= Void
-			external_setting_feature_exist: external_setting_feature /= Void
 			external_access_feature_exist: external_access_feature /= Void
+			setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (setting_feature /= Void)
+			external_setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (external_setting_feature /= Void)
 		end
 
 feature {NONE} -- Implementation

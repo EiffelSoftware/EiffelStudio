@@ -10,6 +10,11 @@ deferred class
 inherit
 	WIZARD_EIFFEL_WRITER_GENERATOR
 
+	ECOM_VAR_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -89,9 +94,12 @@ feature {NONE} -- Implementation
 
 				prop_generator.generate (properties.item)
 				eiffel_writer.add_feature (prop_generator.access_feature, Access)
-				eiffel_writer.add_feature (prop_generator.setting_feature, Element_change)
 				eiffel_writer.add_feature (prop_generator.precondition_access_feature_writer, Status_report)
-				eiffel_writer.add_feature (prop_generator.precondition_set_feature_writer, Status_report)
+
+				if (prop_generator.setting_feature /= Void) then
+					eiffel_writer.add_feature (prop_generator.setting_feature, Element_change)
+					eiffel_writer.add_feature (prop_generator.precondition_set_feature_writer, Status_report)
+				end
 
 				properties.forth
 			end

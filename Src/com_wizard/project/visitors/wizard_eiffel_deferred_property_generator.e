@@ -14,6 +14,11 @@ inherit
 
 	WIZARD_EIFFEL_DEFERRED_FEATURE_GENERATOR
 
+	ECOM_VAR_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	precondition_access_feature_writer: WIZARD_WRITER_FEATURE
@@ -34,9 +39,7 @@ feature -- Basic operations
 			an_access_name, a_set_name: STRING
 		do
 			create access_feature.make
-			create setting_feature.make
 			create precondition_access_feature_writer.make
-			create precondition_set_feature_writer.make
 
 			create visitor
 
@@ -51,49 +54,53 @@ feature -- Basic operations
 			set_precondition_feature_writer (precondition_access_feature_writer, an_access_name)
 
 			-- Setting feature name
-			a_set_name := clone (Set_clause)
-			a_set_name.append (a_descriptor.interface_eiffel_name)
-			setting_feature.set_name (a_set_name)
+			if not is_varflag_freadonly (a_descriptor.var_flags) then
+				create setting_feature.make
+				create precondition_set_feature_writer.make
 
-			-- Set arguments
-			tmp_string := clone (Argument_name)
-			tmp_string.append (Colon)
-			tmp_string.append (Space)
-			tmp_string.append (visitor.eiffel_type)
-			setting_feature.add_argument (tmp_string)
+				a_set_name := clone (Set_clause)
+				a_set_name.append (a_descriptor.interface_eiffel_name)
+				setting_feature.set_name (a_set_name)
 
-			-- Set description
-			tmp_string := "Set %'"
-			tmp_string.append (an_access_name)
-			tmp_string.append ("%' with %'an_item%'")
-			setting_feature.set_comment (tmp_string)
-			
-			-- Set pre-condition
-			if not visitor.is_basic_type then
-				generate_precondition (Argument_name, a_descriptor.data_type, True, False)
-				if not assertions.empty then
-					from 
-						assertions.start
-					until
-						assertions.off
-					loop
-						setting_feature.add_precondition (assertions.item)
-						assertions.forth
+				-- Set arguments
+				tmp_string := clone (Argument_name)
+				tmp_string.append (Colon)
+				tmp_string.append (Space)
+				tmp_string.append (visitor.eiffel_type)
+				setting_feature.add_argument (tmp_string)
+
+				-- Set description
+				tmp_string := "Set %'"
+				tmp_string.append (an_access_name)
+				tmp_string.append ("%' with %'an_item%'")
+				setting_feature.set_comment (tmp_string)
+
+				-- Set pre-condition
+				if not visitor.is_basic_type then
+					generate_precondition (Argument_name, a_descriptor.data_type, True, False)
+					if not assertions.empty then
+						from 
+							assertions.start
+						until
+							assertions.off
+						loop
+							setting_feature.add_precondition (assertions.item)
+							assertions.forth
+						end
+					else
+						message_output.add_warning (Current, message_output.cannot_generate_precondition);
 					end
-				else
-					message_output.add_warning (Current, message_output.cannot_generate_precondition);
 				end
+				setting_feature.set_deferred
+				tmp_assertion := user_defined_precondition (a_set_name)
+				tmp_string := clone (Space_open_parenthesis)
+				tmp_string.append (Argument_name)
+				tmp_string.append (Close_parenthesis)
+				tmp_assertion.body.append (tmp_string)
+				setting_feature.add_precondition (tmp_assertion)
+				set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
+				precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))
 			end
-			setting_feature.set_deferred
-			tmp_assertion := user_defined_precondition (a_set_name)
-			tmp_string := clone (Space_open_parenthesis)
-			tmp_string.append (Argument_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_assertion.body.append (tmp_string)
-			setting_feature.add_precondition (tmp_assertion)
-			set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
-			precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))
-
 		ensure
 			access_feature_exist: access_feature /= Void
 			setting_feature_exist: setting_feature /= Void			

@@ -1,3 +1,7 @@
+Indexing
+	authors: "Emmanuel STAPF & Jerome BOUAZIZ"
+	date: "$date $"
+	version: "$version: $"
 
 A Standard Eiffel Compilation:
 ------------------------------

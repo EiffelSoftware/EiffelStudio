@@ -2211,6 +2211,16 @@ feature -- Variables access
 			end
 		end
 
+	generate_attribute_access (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate direct access to attribute of `a_feature_id' in implementation `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
+				feature_token (type_i.implementation_id, a_feature_id))
+		end
+
 	generate_attribute (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
@@ -2465,6 +2475,17 @@ feature -- Assignments
 			if is_verifiable and not target_type.is_expanded then
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
 					class_mapping.item (target_type.static_type_id))
+			end
+		end
+
+	generate_cast_to_implementation (target_type: TYPE_I) is
+			-- Generate `cast' to implementation of `target_type'.
+		require
+			target_type_not_void: target_type /= Void
+		do
+			if is_verifiable and not target_type.is_expanded then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Castclass,
+					class_mapping.item (target_type.implementation_id))
 			end
 		end
 

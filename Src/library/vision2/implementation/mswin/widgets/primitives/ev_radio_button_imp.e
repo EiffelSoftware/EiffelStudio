@@ -22,7 +22,7 @@ inherit
 	WEL_RADIO_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
 			set_text as wel_set_text,

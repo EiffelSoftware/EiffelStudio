@@ -17,10 +17,6 @@ inherit
 		end
        
 	EV_BAR_ITEM_IMP
-		redefine
---			set_insensitive,
---			build
-		end
         
 	EV_TEXT_CONTAINER_IMP
 		redefine
@@ -44,7 +40,7 @@ inherit
 	WEL_OWNER_DRAW_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
 			set_text as wel_set_text,
@@ -70,8 +66,8 @@ inherit
 		end
 
 creation
-        make,
-		make_with_text
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -171,7 +167,7 @@ feature {NONE} -- Implementation
 
 	background_brush: WEL_BRUSH is
 		do
-			!! Result.make_solid (background_color)
+			!! Result.make_solid (background_color_imp)
 		end
 
 	current_state: INTEGER

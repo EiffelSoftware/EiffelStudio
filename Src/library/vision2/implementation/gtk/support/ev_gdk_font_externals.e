@@ -38,17 +38,17 @@ feature {NONE} -- Gtk externals for the fonts
 			"C | <gtk/gtk.h>"
 		end
 
-	gtk_font_selection_get_font_name (sel: POINTER): POINTER is
+	gtk_font_selection_get_font_name (fontsel: POINTER): POINTER is
 		external
 			"C | <gtk/gtk.h>"
 		end
 
-	gtk_font_selection_get_font (sel:POINTER):POINTER is
+	gtk_font_selection_get_font (fontsel:POINTER):POINTER is
 		external
 			"C | <gtk/gtk.h>"
 		end
 
-	gtk_font_selection_set_font_name (sel, name: POINTER) is
+	gtk_font_selection_set_font_name (fontsel, name: POINTER) is
 		external
 			"C | <gtk/gtk.h>"
 		end

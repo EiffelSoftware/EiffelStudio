@@ -127,10 +127,9 @@ rt_public void send_stack_variables(eif_stream s, int where)
 				send_dump(s, dp);
 			dp = get_next_variable (start);
 		}
-		send_ack(s, AK_OK);			/* End of list -- you got everything */
 	}
-
 	restore_stacks(); /* restore stacks */
+	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
 /************************************************************************** 
@@ -326,8 +325,16 @@ rt_private uint32 go_ith_stack_level(int level)
 	   	* not associated with a melted feature. So go on and grab next one, unless
    		* the end of the stack has been reached.
    		*/
-		if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
-			return EIF_NO_ITEM;	/* Error...Reached end of stack */
+		if (eif_stack.st_cur->sk_arena == eif_stack.st_top) {
+				/* Reached end of chunck, go to previous chunck if any */
+			if (eif_stack.st_cur->sk_prev == NULL)
+				return EIF_NO_ITEM; /* no previous chunck ==> end of stack */
+
+				/* There is a previous chunck, switch to it */
+			eif_stack.st_cur = eif_stack.st_cur->sk_prev;
+			eif_stack.st_top = eif_stack.st_cur->sk_end;
+			eif_stack.st_end = eif_stack.st_cur->sk_end;
+		}
 
 		top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 		expop (&eif_stack);

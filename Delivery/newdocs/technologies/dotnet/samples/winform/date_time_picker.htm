@@ -25,8 +25,8 @@
 <!--
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\control_reference\\date_time_picker\\";
 var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\examples\\winforms\\control_references\\date_time_picker\\"
-var eifp_name = "Eiffel project.eifp";
+var path_eifp_file = "..\\..\\samples\\date_time_picker\\"
+var eifp_name = "date_time_picker.eifp";
 
 if (eiffel_studio) {
 	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
@@ -40,8 +40,8 @@ else {
 <p>To see compiling instructions, you have to enable javascript.</p></noscript>
 
 <h2>Running</h2>
-<p>After launching the application, you will see a window displayed with a 
-similar appearance to the one above. On the left side of the main window a date 
+<p>After launching the application, you will see a window displayed with a
+similar appearance to the one above. On the left side of the main window a date
 is displayed in a
   <span class="eClass">
   COMBO_BOX</span>. Clicking on this
@@ -50,34 +50,34 @@ is displayed in a
   <span class="eClass">
   CALENDAR </span>control will appear showing the same date than in the
   <span class="eClass">
-  COMBO_BOX</span>. On the the right side of the main window are the commands to 
+  COMBO_BOX</span>. On the the right side of the main window are the commands to
 control the format of the displayed date and the style of the
   <span class="eClass">
   CALENDAR </span>control.</p>
 <p>Clicking on the &quot;Change font&quot; button and a
-<a href="../../images/date_time_picker/font_dialog.jpg">change font dialog box</a> 
+<a href="../../images/date_time_picker/font_dialog.jpg">change font dialog box</a>
 will appear.</p>
 <p>Clicking on the &quot;Change color&quot; button and a
-<a href="../../images/date_time_picker/change_color_dialog.jpg">dialog box</a> 
-will appear that will permit you to customize the color appearance of the 
+<a href="../../images/date_time_picker/change_color_dialog.jpg">dialog box</a>
+will appear that will permit you to customize the color appearance of the
 calendar thought a <a href="../../images/date_time_picker/color_dialog.jpg">
 color dialog box</a>.</p>
 <p>&nbsp;</p>
 <h2>Under the Hood</h2>
-<p>This application uses several different controls, but tend to show how to 
+<p>This application uses several different controls, but tend to show how to
 parameter the
   <span class="eClass">
   CALENDAR </span>control using the
 <span class="eClass">FONT_DIALOG</span>
-  
+
   and
 <span class="eClass">
 COLOR_DIALOG</span>.</p>
-<p>When one of the buttons &quot;Change font&quot; or &quot;Change color&quot; is pressed, an event is 
+<p>When one of the buttons &quot;Change font&quot; or &quot;Change color&quot; is pressed, an event is
 launched and open the corresponding dialog box.</p>
 <p>When the entry in the
   <span class="eClass">
-  COMBO_BOX</span> format change, an event is launched and modify the format of the 
+  COMBO_BOX</span> format change, an event is launched and modify the format of the
 displayed date.</p>
 <p>This sample contains the following class: </p>
 <ul>

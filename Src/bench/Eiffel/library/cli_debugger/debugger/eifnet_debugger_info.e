@@ -591,14 +591,6 @@ feature -- JIT notification
 
 feature -- JIT info
 
-	icor_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
-			-- ICorDebugModule interface related to `a_mod_name'.
-		require
-			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
-		do
-			Result := loaded_modules.item (module_key (a_mod_name))
-		end
-
 	create_jit_info is
 			-- Create JustInTime information.
 		do
@@ -723,7 +715,9 @@ feature {NONE} -- JIT info implementation
 feature -- JIT Info access
 
 	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
-			-- ICorDebugModule for `a_mod_name'
+			-- ICorDebugModule interface related to `a_mod_name'.
+		require
+			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
 		do
 			Result := loaded_modules.item (module_key (a_mod_name))
 		end

@@ -37,7 +37,7 @@ feature -- Access
 		local
 			word: STRING
 		do
-			title.set_text ("Completing the New WEL%NApplication Wizard")
+			title.set_text ("Completing the New Vision2%NApplication Wizard")
 			if wizard_information.compile_project then
 				word :=" and compile "
 			else

@@ -63,7 +63,7 @@ feature -- Status settings
 			-- it otherwise.
 		do
 			{EV_SPLIT_AREA_IMP} Precursor (flag)
-			notify_change (1)
+			notify_change (Nc_minwidth)
 		end
 
 	set_second_area_shrinkable (flag: BOOLEAN) is
@@ -71,7 +71,7 @@ feature -- Status settings
 			-- it otherwise.
 		do
 			{EV_SPLIT_AREA_IMP} Precursor (flag)
-			notify_change (1)
+			notify_change (Nc_minwidth)
 		end
 
 feature -- Element change

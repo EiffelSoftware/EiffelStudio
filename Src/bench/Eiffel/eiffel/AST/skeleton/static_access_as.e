@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} feat_initialize
 		redefine
-			type_check, is_equivalent, simple_format,
+			type_check, is_equivalent, simple_format, format,
 			valid_feature, report_error_for_feature,
 			assoc_class, byte_node, context_last_type
 		end
@@ -109,22 +109,23 @@ feature -- Type check, byte code and dead code removal
 		do
 				-- Check validity of class specification
 			class_type_as ?= class_type
-			if class_type_as = void then
+			if class_type_as = Void then
 				formal_as ?= class_type
 				check
-					formal_as_not_void: formal_as /= void
+					formal_as_not_void: formal_as /= Void
 				end
 				create vsta1.make (formal_as.dump, feature_name)
 				vsta1.set_class (system.current_class)
 				error_handler.insert_error (vsta1)
 				error_handler.raise_error
 			else
-				if class_type_as.actual_type.has_generics then
-					create vsta1.make (class_type_as.class_name, feature_name)
-					vsta1.set_class (system.current_class)
-					error_handler.insert_error (vsta1)
-					error_handler.raise_error
-				end
+-- FIXME: Manu 10/29/2001: Do we really need to prevent static access on generic class?
+-- 				if class_type_as.actual_type.has_generics then
+-- 					create vsta1.make (class_type_as.class_name, feature_name)
+-- 					vsta1.set_class (system.current_class)
+-- 					error_handler.insert_error (vsta1)
+-- 					error_handler.raise_error
+-- 				end
 			end
 
 				-- Check validity of call.
@@ -165,17 +166,28 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte code.
 		local
 			ext: EXTERNAL_B
+			const_b: CONSTANT_B
+			feat_b: FEATURE_B
 			cl_type_i: CL_TYPE_I
 		do
 			Result := Precursor {ACCESS_FEAT_AS}
 			ext ?= Result
-			check
-				ext_not_void: ext /= Void
-			end
-			ext.enable_static_call
-			ext.set_written_in (associated_class.class_id)
 			cl_type_i ?= class_type.actual_type.type_i
-			ext.set_static_class_type (cl_type_i)
+			if ext /= Void then
+				ext.enable_static_call
+				ext.set_written_in (associated_class.class_id)
+				ext.set_static_class_type (cl_type_i)
+			else
+				const_b ?= Result
+				check
+					is_constant: const_b /= Void
+				end
+				feat_b ?= const_b.access
+				check
+					is_feature: feat_b /= Void
+				end
+				feat_b.set_precursor_type (cl_type_i)
+			end
 		end
 		
 feature -- Conveniences
@@ -202,11 +214,11 @@ feature -- Conveniences
 			-- Integer value
 		local
 			constant_i: CONSTANT_I
-			integer_value: INT_VALUE_I
+			integer_value: INTEGER_CONSTANT
 		do
 			constant_i := associated_constant
 			integer_value ?= constant_i.value
-			create Result.make (integer_value.int_val, constant_i)
+			create Result.make (associated_class, integer_value.value, constant_i)
 		end
 
 	make_character: CHAR_CONST_VAL_B is
@@ -217,7 +229,7 @@ feature -- Conveniences
 		do
 			constant_i := associated_constant
 			char_value ?= constant_i.value
-			create Result.make (char_value.char_val, constant_i)
+			create Result.make (associated_class, char_value.char_val, constant_i)
 		end
 		
 feature {AST_EIFFEL} -- Output
@@ -233,12 +245,30 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_L_curly)
-			ctxt.put_class_name (associated_class.name)
-			ctxt.put_text_item (ti_R_curly)
-			ctxt.put_text_item (ti_space)
+			ctxt.begin
 
-			Precursor {ACCESS_FEAT_AS} (ctxt)
+			ctxt.put_text_item (Ti_feature_keyword)
+			ctxt.put_space
+			
+			ctxt.put_text_item (ti_L_curly)
+			ctxt.format_ast (class_type)
+			ctxt.put_text_item (ti_R_curly)
+
+			ctxt.set_type_creation (class_type)
+			ctxt.need_dot
+			ctxt.prepare_for_feature (feature_name, parameters)
+			ctxt.put_current_feature
+			if ctxt.last_was_printed then
+				ctxt.commit
+			else
+				ctxt.rollback
+			end
+		end
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			simple_format (ctxt)
 		end
 
 feature {NONE} -- Implementation

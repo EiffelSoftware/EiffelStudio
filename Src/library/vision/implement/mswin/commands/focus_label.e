@@ -77,10 +77,7 @@ feature -- Initialization
 					tooltip.add_tool (wti);
 					fs_list.forth
 				end
-				fs_list.wipe_out
 			end
-		ensure then
-			fs_list_empty: fs_list.empty
 		end;
 
 	fs_list: ARRAYED_LIST [FOCUSABLE]

@@ -450,10 +450,8 @@ feature -- Implementation
 			if wid /= Void then
 				wid_imp ?= wid.implementation
 				if wid_imp /= Void and not wid_imp.is_destroyed then
-					if wid_imp.pointer_button_press_actions_internal /= Void then
-						if (a_x >= 0 and a_x <= wid_imp.width) and (a_y >= 0 and a_y <= wid_imp.height) then
-							wid_imp.button_press_switch (feature {EV_GTK_ENUMS}.gdk_button_press_enum, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						end
+					if (a_x >= 0 and a_x <= wid_imp.width) and (a_y >= 0 and a_y <= wid_imp.height) then
+						wid_imp.button_press_switch (feature {EV_GTK_ENUMS}.gdk_button_press_enum, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
 			end

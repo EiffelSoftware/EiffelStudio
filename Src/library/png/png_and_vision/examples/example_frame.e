@@ -39,7 +39,7 @@ feature -- drawing
 
 feature -- Access
 
-	drawable: EV_PNG_DRAWABLE
+	drawable: EV_PNG_AREA
 		-- Drawable area.
 
 	suffix: STRING is deferred end

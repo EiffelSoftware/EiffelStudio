@@ -1,22 +1,25 @@
+indexing
+	description: "Interval byte node for an interval of character values in inspect statement."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class CHAR_INTER_B 
 
 inherit
-
 	INTERVAL_B	
 		redefine
 			lower, upper, generate
 		end
 
 create
-
 	make
 	
-feature 
+feature -- Access
 
-	lower: CHAR_VAL_B;
+	lower: CHAR_VAL_B
 			-- Lower bound
 
-	upper: CHAR_VAL_B;
+	upper: CHAR_VAL_B
 			-- Upper bound
 
 feature -- C generation
@@ -24,7 +27,7 @@ feature -- C generation
 	generate is
 			-- Generate then interval
 		local
-			low, up: CHARACTER;
+			low, up: CHARACTER
 			buf: GENERATION_BUFFER
 		do
 				-- Do not use "lower > up" as exit test since `low'
@@ -32,22 +35,22 @@ feature -- C generation
 				-- allowed character.
 			from
 				buf := buffer
-				low := lower.generation_value;
-				up := upper.generation_value;
-				buf.putstring ("case (EIF_CHARACTER) '");
-				buf.escape_char (low);
-				buf.putstring ("':");
-				buf.new_line;
+				low := lower.generation_value
+				up := upper.generation_value
+				buf.putstring ("case (EIF_CHARACTER) '")
+				buf.escape_char (low)
+				buf.putstring ("':")
+				buf.new_line
 			until
 				low = up
 			loop
-				low := low + 1;
-				buf.putstring ("case (EIF_CHARACTER) '");
-				buf.escape_char (low);
-				buf.putstring ("':");
-				buf.new_line;
-			end;
-		end;
+				low := low + 1
+				buf.putstring ("case (EIF_CHARACTER) '")
+				buf.escape_char (low)
+				buf.putstring ("':")
+				buf.new_line
+			end
+		end
 
 feature -- IL generation
 
@@ -82,23 +85,19 @@ feature -- Checking
 	intersection (other: CHAR_INTER_B): CHAR_INTER_B is
 			-- Intersection of Current and `other'.
 		local
-			new_lower, new_upper: CHAR_VAL_B;
+			new_lower, new_upper: CHAR_VAL_B
 		do
 			if lower < other.lower then
-				new_lower := other.lower;
+				new_lower := other.lower
 			else
-				new_lower := lower;
-			end;
+				new_lower := lower
+			end
 			if upper < other.upper then
-				new_upper := upper;
+				new_upper := upper
 			else
-				new_upper := other.upper;
-			end;
-			create Result.make (new_lower, new_upper);
-		end;
-
-invariant
-
-	lower <= upper
+				new_upper := other.upper
+			end
+			create Result.make (new_lower, new_upper)
+		end
 
 end

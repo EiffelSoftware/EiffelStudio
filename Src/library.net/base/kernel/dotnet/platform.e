@@ -107,10 +107,28 @@ feature -- Access bits size
 			Result := Character_bytes * 8
 		end
 
-	Integer_bits: INTEGER is
+	Integer_8_bits: INTEGER is
+			-- Number of bits in a value of type `INTEGER'
+		do
+			Result := Integer_8_bytes * 8
+		end
+
+	Integer_16_bits: INTEGER is
+			-- Number of bits in a value of type `INTEGER'
+		do
+			Result := Integer_16_bytes * 8
+		end
+
+	Integer_32_bits, Integer_bits: INTEGER is
 			-- Number of bits in a value of type `INTEGER'
 		do
 			Result := Integer_bytes * 8
+		end
+
+	Integer_64_bits: INTEGER is
+			-- Number of bits in a value of type `INTEGER'
+		do
+			Result := Integer_64_bytes * 8
 		end
 
 	Real_bits: INTEGER is

@@ -14,7 +14,9 @@ inherit
 	TWO_WAY_LIST [CALL_STACK_ELEMENT]
 		rename
 			make as list_make
-		end;
+		export
+			{NONE} list_make			
+		end
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -52,9 +54,6 @@ inherit
 
 create {RUN_INFO, APPLICATION_STATUS_DOTNET}
 	make
-	
-create {EIFFEL_CALL_STACK_DOTNET}
-	list_make, make_sublist
 
 feature -- Properties
 
@@ -64,7 +63,6 @@ feature -- Properties
 			-- FIXME jfiat: this is count for now ... but fix this !
 			Result := count
 		end
-		
 
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?
@@ -137,7 +135,7 @@ feature {NONE} -- Initialization
 			level	: INTEGER
 
 			l_active_thread: ICOR_DEBUG_THREAD
-			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM			
+			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM
 			l_chain: ICOR_DEBUG_CHAIN
 			l_enum_frames: ICOR_DEBUG_FRAME_ENUM
 			l_chains: ARRAY [ICOR_DEBUG_CHAIN]

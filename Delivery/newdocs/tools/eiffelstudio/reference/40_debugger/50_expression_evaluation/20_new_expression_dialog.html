@@ -1,0 +1,33 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<TITLE>New expression dialog</TITLE>
+<META NAME="MS-HKWD" CONTENT="expression, definition">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>New expression dialog</h1>
+<p>Adding new expressions to the <A HREF="10_expression_list.html">list of expressions</a> that should be dynamically
+evaluated is performed via a dialog.</p>
+<p align="center"><img src="/images/eiffelstudio/dialogs_and_wizards/new_expression_definition_dlg.png"></p>
+<p align="left">The first part in the dialog makes it possible to select the
+context of the expression. The default context is the context of the 
+<a href="../30_call_stack_tool/20_current_level_information.html">currently
+selected call stack element</a>. This context gives access to the locals, the
+arguments, the result and the englobing object features. The object context,
+that requires a valid object address, gives access to the features of the
+selected object. The last context, the class-related context, gives access to
+the once and constants features of that class. It requires a valid class name.<p align="left">The
+second part prompts for the expression itself. This field supports arguments,
+dot calls and operators (to a certain extent), but does not support creation
+expressions, agents or static calls (as in &quot;feature {MY_CLASS}.my_feature&quot;).
+Genericity is partially supported. Despite these limitations, we believe the
+expression evaluation tool should provide you with a lot of useful
+functionality.
+
+</body>
+
+</html>

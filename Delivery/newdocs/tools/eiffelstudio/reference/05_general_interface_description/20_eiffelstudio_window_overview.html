@@ -19,7 +19,7 @@
 		<P align="center"><IMG SRC="/images/eiffelstudio/general_edition_mode.png"></P>
 
 		<P>As you can see, it is divided in several parts: a top section, a left
-        panel and a right panel.</P>
+        panel, a right panel and a status bar.</P>
 
         <P>The top part is rather not surprising. It first contains a menu bar,
         which adapts itself to the context of the current project. It also
@@ -32,13 +32,45 @@
 		<P>The right panel contains two major tools: the editor and the context
         tool.</P>
 
+        <p>The status bar supplies various information:</p>
+        <ul>
+          <li>Its first field gives punctual information concerning a recent
+            operation (such as loading a project, syntax errors in a class text,
+            etc.).</li>
+          <li>The second field contains the name of the current project, which
+            can come quite handy if you work on several projects simultaneously.</li>
+          <li>The next field contains the current line and column in the main
+            editor of the window (lines and columns start at position 1).</li>
+          <li>The last three fields contain icons representing the state of the
+            project, according to several points of view.
+            <ul>
+              <li>The first icon indicates whether some class files have been
+                edited since the last compilation. This makes it easy to know
+                whether you have changes to take into account
+                ( <img src="/images/eiffelstudio/icons/icon_editing.gif"></img> or 
+                <img src="/images/eiffelstudio/icons/icon_exe_up_to_date.gif"></img> ) 
+                and whether you should recompile.</li>
+              <li>The second icon gives the compilation state of the project. It
+                may indicate either that the last compilation was successful
+                <img src="/images/eiffelstudio/icons/icon_compiled.gif"></img>, or
+                that it failed <img src="/images/eiffelstudio/icons/icon_compilation_error.gif"></img>
+                or that the project is being compiled <img src="/images/eiffelstudio/icons/icon_compiling_2.gif"></img>.</li>
+              <li>The last icon gives the state of the debugger. It may indicate
+                that the application is running <img src="/images/eiffelstudio/icons/icon_running_2.gif"></img>,
+                paused <img src="/images/eiffelstudio/icons/icon_stopped.gif"></img>
+                or dead (no icon).</li>
+            </ul>
+          </li>
+        </ul>
+
         <P>In debug mode, a window looks like this:</P>
 
         <P align="center"><IMG SRC="/images/eiffelstudio/general_debug_mode.png"></P>
 
-        <P>In debug mode, the same tools are present, but there are two extra
-        tools, one in the left panel that can display the current call stack and
-        one for viewing the state of objects while debugging.</P>
+        <P>In debug mode, the same tools are present, but there are three extra
+        tools. Two are located in the left panel, which display respectively the
+        call stack and the dynamic value of expressions. The other is in the
+        right panel and can be use to view the state of objects while debugging.</P>
 
         <h2>Layout configuration</h2>
 
@@ -64,7 +96,7 @@ of the displayed tools, in order to make room for the new tool.</p>
         Bar</b> menu. They also have a corresponding button in the main toolbar.</P>
 
         <P>The only tools that cannot be closed are the editor, and when in
-        debug mode the two debug tools.</P>
+        debug mode the debug tools.</P>
 
         <h3>Toolbar configuration</h3>
 
@@ -91,12 +123,14 @@ of the displayed tools, in order to make room for the new tool.</p>
               concerning a system or some of its components
 		</UL>
 
-        <P>By default, all tools refer to the same object. This object can for
-        example be a class, a feature or a cluster. However, it is possible to
-        separate the context tool from the rest of the window. In this case, all
+        <P>By default, the context tool is unlinked from the rest of the window,
+        which means all
         left tools refer to the object that is in the editor and the main
-        toolbar, while the context tool displays information concerning a
-        different object.</P>
+        toolbar, while the context tool (and the debug tools if they are
+        present) displays information concerning a
+        different object. It is possible to link the context tool, so that the
+        whole development window displays information relative to the same
+        development object.</P>
 
         <P CLASS="seealso">
 		<B>See Also</B><BR>

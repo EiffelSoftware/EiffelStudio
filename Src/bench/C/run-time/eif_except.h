@@ -113,15 +113,15 @@ extern "C" {
  */
 
 /* Exported routines (used by the generated C code or run-time) */
-extern void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
-extern void eraise(EIF_CONTEXT char *tag, long num);			/* Raise an Eiffel exception */
+RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
+RT_LNK void eraise(EIF_CONTEXT char *tag, long num);			/* Raise an Eiffel exception */
 extern void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
-extern void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
-extern void enomem(EIF_CONTEXT_NOARG);			/* Raises an "Out of memory" exception */
+RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
+RT_LNK void enomem(EIF_CONTEXT_NOARG);			/* Raises an "Out of memory" exception */
 extern struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
 extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
-extern void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
-extern void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
+RT_LNK void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
+RT_LNK void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
 extern void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
 extern void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
 extern void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal errors */
@@ -135,7 +135,7 @@ extern void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signal
 #ifndef WORKBENCH
 extern struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
-extern struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
 extern struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */

@@ -106,7 +106,7 @@ struct conform {
 	char *co_tab;		/* Conformance table (mapped on eight bits packs) */
 };
 
-extern int scount;				/* Numner of dynamic types */
+RT_LNK int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
@@ -165,8 +165,8 @@ struct p_interface {
 	fnptr toi;			/* Pattern from C code to interpreter */
 };
 
-extern int ccount;				/* Number of classes */
-extern long dcount;				/* Size of `dispatch' */
+RT_LNK int ccount;				/* Number of classes */
+RT_LNK long dcount;				/* Size of `dispatch' */
 extern long melt_count;			/* Size of `melt' table */
 extern long dle_melt_count;		/* Size of `dle_melt' table */
 
@@ -181,9 +181,9 @@ extern uint32 *dispatch;		/* Updated dispatch table */
 extern char **melt;				/* Byte code array of melted eiffel features */
 extern fnptr *dle_frozen;		/* DLE C routine array (frozen routines) */
 extern char **dle_melt;			/* Byte code array of DLE melted features */
-extern uint32 zeroc;			/* Frozen level */
-extern uint32 dle_level;		/* DLE level */
-extern uint32 dle_zeroc;		/* DLE frozen level */
+RT_LNK uint32 zeroc;			/* Frozen level */
+RT_LNK uint32 dle_level;		/* DLE level */
+RT_LNK uint32 dle_zeroc;		/* DLE frozen level */
 
 extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
 extern int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */

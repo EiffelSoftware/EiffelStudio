@@ -21,30 +21,30 @@ extern "C" {
 #include "eif_cecil.h"
 #include "eif_portable.h"
 
-extern EIF_CHARACTER chconv(EIF_INTEGER i);
-extern EIF_INTEGER chcode(EIF_CHARACTER c);
-extern EIF_POINTER conv_pp(EIF_POINTER p);
-extern EIF_INTEGER conv_pi(EIF_POINTER p);
-extern EIF_REAL conv_ir(EIF_INTEGER v);
-extern EIF_INTEGER conv_ri(EIF_REAL v);
-extern EIF_REAL conv_dr (EIF_DOUBLE d);
-extern EIF_INTEGER conv_di(EIF_DOUBLE d);
-extern EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2);
-extern EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
-extern EIF_CHARACTER chupper(EIF_CHARACTER c);
-extern EIF_CHARACTER chlower(EIF_CHARACTER c);
-extern EIF_BOOLEAN chis_upper(EIF_CHARACTER c);
-extern EIF_BOOLEAN chis_lower(EIF_CHARACTER c);
-extern EIF_BOOLEAN chis_digit(EIF_CHARACTER c);
-extern EIF_BOOLEAN chis_alpha(EIF_CHARACTER c);
-extern EIF_INTEGER eschar_size(void);
-extern EIF_INTEGER esreal_size(void);
-extern EIF_INTEGER esint_size(void);
-extern EIF_INTEGER esdouble_size(void);
+RT_LNK EIF_CHARACTER chconv(EIF_INTEGER i);
+RT_LNK EIF_INTEGER chcode(EIF_CHARACTER c);
+RT_LNK EIF_POINTER conv_pp(EIF_POINTER p);
+RT_LNK EIF_INTEGER conv_pi(EIF_POINTER p);
+RT_LNK EIF_REAL conv_ir(EIF_INTEGER v);
+RT_LNK EIF_INTEGER conv_ri(EIF_REAL v);
+RT_LNK EIF_REAL conv_dr (EIF_DOUBLE d);
+RT_LNK EIF_INTEGER conv_di(EIF_DOUBLE d);
+RT_LNK EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2);
+RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
+RT_LNK EIF_CHARACTER chupper(EIF_CHARACTER c);
+RT_LNK EIF_CHARACTER chlower(EIF_CHARACTER c);
+RT_LNK EIF_BOOLEAN chis_upper(EIF_CHARACTER c);
+RT_LNK EIF_BOOLEAN chis_lower(EIF_CHARACTER c);
+RT_LNK EIF_BOOLEAN chis_digit(EIF_CHARACTER c);
+RT_LNK EIF_BOOLEAN chis_alpha(EIF_CHARACTER c);
+RT_LNK EIF_INTEGER eschar_size(void);
+RT_LNK EIF_INTEGER esreal_size(void);
+RT_LNK EIF_INTEGER esint_size(void);
+RT_LNK EIF_INTEGER esdouble_size(void);
 extern EIF_INTEGER eif_system (char *s);
 extern EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k);
 extern EIF_OBJ eif_getenv(EIF_OBJ k);
-extern char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k);
+RT_LNK char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k);
 
 #ifdef EIF_WINDOWS
 

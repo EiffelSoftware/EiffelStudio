@@ -405,9 +405,9 @@ extern struct pgcontext d_cxt;	/* Program context */
 
 	/* except.h */
 /* Exported data structures (used by the generated C code) */
-extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
+RT_LNK struct xstack eif_stack;	/* Stack of all the Eiffel calls */
 extern struct xstack eif_trace;	/* Unsolved exception trace */
-extern struct eif_exception exdata;	/* Exception handling global flags */
+RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 
 
 	/* garcol.h */
@@ -415,7 +415,7 @@ extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
 /* Exported data-structure declarations */
 extern struct stack loc_stack;			/* Local indirection stack */
-extern struct stack loc_set;	/* Local variable stack */
+RT_LNK struct stack loc_set;	/* Local variable stack */
 extern struct stack moved_set;	/* Describes the new generation */
 extern struct stack once_set;	/* Once functions */
 extern uint32 tenure;			/* Tenure value for next generation cycle */
@@ -430,15 +430,15 @@ extern struct sc_zone ps_to;	/* Partial scavenging 'to' zone */
 extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
 extern long th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
-extern char *root_obj;			/* Address of the 'root' object */
+RT_LNK char *root_obj;			/* Address of the 'root' object */
 
 	/* hector.c */
-extern struct stack hec_stack;		/* Indirection table "hector" */
+RT_LNK struct stack hec_stack;		/* Indirection table "hector" */
 extern struct stack hec_saved;		/* Saved indirection pointers */
 
 	/* interp.h */
 extern struct opstack op_stack;	/* Operational stack */
-extern char *IC;				/* Interpreter Counter (like PC on a CPU) */
+RT_LNK char *IC;				/* Interpreter Counter (like PC on a CPU) */
 
 
 	/* eif_malloc.h */
@@ -455,7 +455,7 @@ extern int eif_scavenge_size;		/* Size of scavenge zones */
 extern int eif_max_mem;				/* Maximum memory that can be allocated */
 
 	/* plug.c */
-extern int nstcall;	/* Nested call global variable: signals a nested call and
+RT_LNK int nstcall;	/* Nested call global variable: signals a nested call and
 					 * trigger an invariant check in generated C routines  */
 
 	/* sig.h */
@@ -463,7 +463,7 @@ extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
 
 	/* main.c */
-extern char **EIF_once_values;	/* Once values for a thread */
+RT_LNK char **EIF_once_values;	/* Once values for a thread */
 
 	/* special */
 /* These variables are defined only if

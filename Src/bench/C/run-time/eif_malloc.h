@@ -95,9 +95,9 @@ extern "C" {
 /*
  * Functions return type.
  */
-extern char *emalloc(uint32 type);				/* Allocate an Eiffel object */
-extern char *spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
-extern char *cmalloc(unsigned int nbytes);				/* Allocate a C object */
+RT_LNK char *emalloc(uint32 type);				/* Allocate an Eiffel object */
+RT_LNK char *spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
+RT_LNK char *cmalloc(unsigned int nbytes);				/* Allocate a C object */
 extern char *gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
 extern char *xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
 extern char *xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */

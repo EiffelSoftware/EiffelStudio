@@ -32,11 +32,11 @@ extern "C" {
  */
 
 extern int xequal(char *ref1, char *ref2);			/* Equality with no conformance constraint */
-extern int eequal(register char *target, register char *source);			/* Standard equality on standard objects */
-extern int spequal(register char *target, register char *source);			/* Standard equality on special objects */
+RT_LNK int eequal(register char *target, register char *source);			/* Standard equality on standard objects */
+RT_LNK int spequal(register char *target, register char *source);			/* Standard equality on special objects */
 extern int eiso(char *target, char *source);				/* Standard isomorphism on normal objects */
 extern int spiso(register char *target, register char *source);				/* Standard isomorphism on special objects */
-extern int ediso(char *target, char *source);				/* Standard recursive isomorphism */
+RT_LNK int ediso(char *target, char *source);				/* Standard recursive isomorphism */
 
 #ifdef __cplusplus
 }

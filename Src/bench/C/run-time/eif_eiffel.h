@@ -53,7 +53,7 @@ extern float math_rlog10(float v);
 extern float math_rfloor(float v);
 extern float math_rceil(float v);
 extern float math_rfabs(float v);
-extern double math_power (double v1, double v2);
+RT_LNK double math_power (double v1, double v2);
 
 /* defined in pattern.c */
 

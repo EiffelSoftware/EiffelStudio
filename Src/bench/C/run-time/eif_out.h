@@ -25,7 +25,7 @@ extern "C" {
  * Function declarations 
  */
 
-extern char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
+RT_LNK char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
 extern char *c_tagged_out(EIF_OBJ object);	/* Eiffel feature `tagged_out' (GENERAL) */
 extern char *build_out(EIF_OBJ object);		/* Build tagged out in C buffer */
 

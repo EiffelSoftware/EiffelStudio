@@ -72,9 +72,9 @@ struct eif_opt {
 #define OPT_NO				0		 /* No option */
 #define OPT_ALL				1		 /* Yes/all option */
 
-extern struct eif_opt *eoption;		/* Melted option table */
+RT_LNK struct eif_opt *eoption;		/* Melted option table */
 
-extern int is_debug(int st_type, char *key);		/* Debug level query */
+RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
 
 /*
  * Options for E-PROFILE && E-TRACE
@@ -100,13 +100,13 @@ extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
 extern struct stack *prof_stack;		/* Stack that maintains profile information */
 
-extern void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
-extern void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
+RT_LNK void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
+RT_LNK void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
 
 extern void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
 extern void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
 
-extern void initprf(void);				/* Generates table for profiling */
+RT_LNK void initprf(void);				/* Generates table for profiling */
 extern void exitprf(void);				/* Saves table as textfile */
 
 extern void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */

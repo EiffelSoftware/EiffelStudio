@@ -33,27 +33,27 @@ extern "C" {
 /* 
  * Functions declarations
  */
-extern EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
-extern char *b_eout(char *bit);					/* Eiffel string for out representation of a bit */
-extern char *b_clone(char *bit);				/* Clones bit */
-extern void b_copy(char *a, char *b);			/* Copies bit */
-extern char *bmalloc(long int size);			/* Bit object creation */
-extern void b_put(char *bit, char value, int at);
-extern EIF_BOOLEAN b_item(char *bit, long int at);
-extern char *b_shift(char *bit, long int s);
-extern char *b_rotate(char *bit, long int s);
-extern char *b_and(char *a, char *b);
-extern char *b_implies(char *a, char *b);
-extern char *b_or(char *a, char *b);
-extern char *b_xor(char *a, char *b);
-extern char *b_not(char *a);
-extern char *b_out(char *bit);
-extern char *b_mirror(char *a);
+RT_LNK EIF_BOOLEAN b_equal(char *a, char *b);	/* needed in interp.c */
+RT_LNK char *b_eout(char *bit);					/* Eiffel string for out representation of a bit */
+RT_LNK char *b_clone(char *bit);				/* Clones bit */
+RT_LNK void b_copy(char *a, char *b);			/* Copies bit */
+RT_LNK char *bmalloc(long int size);			/* Bit object creation */
+RT_LNK void b_put(char *bit, char value, int at);
+RT_LNK EIF_BOOLEAN b_item(char *bit, long int at);
+RT_LNK char *b_shift(char *bit, long int s);
+RT_LNK char *b_rotate(char *bit, long int s);
+RT_LNK char *b_and(char *a, char *b);
+RT_LNK char *b_implies(char *a, char *b);
+RT_LNK char *b_or(char *a, char *b);
+RT_LNK char *b_xor(char *a, char *b);
+RT_LNK char *b_not(char *a);
+RT_LNK char *b_out(char *bit);
+RT_LNK char *b_mirror(char *a);
 
 #ifdef __cplusplus
 }
 #endif
 
-extern long b_count(char *bit);
+RT_LNK long b_count(char *bit);
 
 #endif

@@ -17,10 +17,10 @@
 extern "C" {
 #endif
 
-extern void epop(register struct stack *stk, register int nb_items);			/* Pops values off the local stack */
-extern char **eget(register int num);		/* Get another chunk for local variables */
-extern void eback(register char **top);		/* Get back to the previous stack chunk */
-extern void initstk(void);		/* Initialize local stacks */
+RT_LNK void epop(register struct stack *stk, register int nb_items);			/* Pops values off the local stack */
+RT_LNK char **eget(register int num);		/* Get another chunk for local variables */
+RT_LNK void eback(register char **top);		/* Get back to the previous stack chunk */
+RT_LNK void initstk(void);		/* Initialize local stacks */
 
 #ifdef __cplusplus
 }

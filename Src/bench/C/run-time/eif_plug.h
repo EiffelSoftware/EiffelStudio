@@ -37,11 +37,11 @@ struct bit {
  * Run time functions used by generated C code.
  */
 
-extern char *makestr(register char *s, register int len);				/* Build an Eiffel string object */
+RT_LNK char *makestr(register char *s, register int len);				/* Build an Eiffel string object */
 extern char *makebit(char *bit, long int bit_count);				/* Build an Eiffel bit object */
 extern char *striparr(register char *curr, register int dtype, register char **items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
-extern char *argarr(int argc, char **argv);				/* ARRAY[STRING] creation from command line arguments */
+RT_LNK char *argarr(int argc, char **argv);				/* ARRAY[STRING] creation from command line arguments */
 
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
@@ -95,18 +95,18 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
  * Miscellaneous routines.
  */
 
-extern EIF_BOOLEAN econfg(char *obj1, char *obj2);	/* Conformance query in class GENERAL */
-extern int econfm(int ancestor, int heir);			/* Conformance query for assignment attempt */
-extern long sp_count(char *spobject);			/* Count of a special object */
-extern void chkinv(char *obj, int where);			/* Invariant control call */
-extern char estypeg(char *obj1, char *obj2);
+RT_LNK EIF_BOOLEAN econfg(char *obj1, char *obj2);	/* Conformance query in class GENERAL */
+RT_LNK int econfm(int ancestor, int heir);			/* Conformance query for assignment attempt */
+RT_LNK long sp_count(char *spobject);			/* Count of a special object */
+RT_LNK void chkinv(char *obj, int where);			/* Invariant control call */
+RT_LNK char estypeg(char *obj1, char *obj2);
 
 #ifdef WORKBENCH
-extern void chkcinv(char *obj);			/* Creation invariant call */	
+RT_LNK void chkcinv(char *obj);			/* Creation invariant call */	
 #endif
 
 #ifndef WORKBENCH
-extern void rt_norout(void);		/* No function pointer */
+RT_LNK void rt_norout(void);		/* No function pointer */
 #endif
 
 #ifdef __cplusplus

@@ -37,12 +37,12 @@ extern "C" {
 /* %%ss moved to eif_types.h : struct opstack, struct stochunk */
 
 /* Interpreter interface to outside world */
-extern void call_disp(uint32 dtype, char *object);			/* Function to call dispose routines */ 
-extern void xinterp(EIF_CONTEXT char *icval);				/* Compound from a given address */
+RT_LNK void call_disp(uint32 dtype, char *object);			/* Function to call dispose routines */ 
+RT_LNK void xinterp(EIF_CONTEXT char *icval);				/* Compound from a given address */
 extern void xiinv(EIF_CONTEXT char *icval, int where);				/* Invariant interpreter */
 extern void xinitint(void);				/* Initialize the interpreter */
-extern struct item *opush(register struct item *val);		/* Push value on operational stack */
-extern struct item *opop(void);			/* Remove value from operational stack */
+RT_LNK struct item *opush(register struct item *val);		/* Push value on operational stack */
+RT_LNK struct item *opop(void);			/* Remove value from operational stack */
 extern struct item *otop(void);			/* Top of the stack */
 extern struct item *ivalue(EIF_CONTEXT int code, int num);		/* Value request from current routine */
 extern void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */

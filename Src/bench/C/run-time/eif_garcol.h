@@ -81,11 +81,11 @@ extern "C" {
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
 /* General-purpose exported functions */
-extern void plsc(void);					/* Partial scavenging */
+RT_LNK void plsc(void);					/* Partial scavenging */
 extern void urgent_plsc(char **object);			/* Partial scavenge with given local root */
 extern void mksp(void);					/* Mark and sweep algorithm */
-extern void reclaim(void);				/* Reclaim all the objects */
-extern int collect(void);				/* Generation-based collector */
+RT_LNK void reclaim(void);				/* Reclaim all the objects */
+RT_LNK int collect(void);				/* Generation-based collector */
 extern int epush(register struct stack *stk, register char *value);					/* Push an addess on a run-time stack */
 extern char **st_alloc(register struct stack *stk, register int size);			/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);         
@@ -94,12 +94,12 @@ extern int acollect(void);				/* Automatic garbage collection */
 extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
 extern void st_truncate(register struct stack *stk);			/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
-extern void eremb(char *obj);				/* Remembers old object */
-extern void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
-extern char *onceset(register char **ptr);				/* Recording of once function result */
+RT_LNK void eremb(char *obj);				/* Remembers old object */
+RT_LNK void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
+RT_LNK char *onceset(register char **ptr);				/* Recording of once function result */
 extern int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
-extern void gc_stop(void);				/* Stop the garbage collector */
-extern void gc_run(void);				/* Restart the garbage collector */
+RT_LNK void gc_stop(void);				/* Stop the garbage collector */
+RT_LNK void gc_run(void);				/* Restart the garbage collector */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
 

@@ -6,8 +6,9 @@ indexing
 		%symbols, see $GOBO\doc\geyacc\symbols.html"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -68,9 +69,10 @@ feature -- Status report
 			from cursor.start until cursor.after loop
 				if cursor.item.source = a_state then
 					Result := True
-					cursor.finish -- Jump out of the loop.
+					cursor.go_after -- Jump out of the loop.
+				else
+					cursor.forth
 				end
-				cursor.forth
 			end
 		end
 
@@ -112,9 +114,10 @@ feature -- Access
 			from cursor.start until cursor.after loop
 				Result := cursor.item
 				if Result.source = a_state then
-					cursor.finish -- Jump out of the loop.
+					cursor.go_after -- Jump out of the loop.
+				else
+					cursor.forth
 				end
-				cursor.forth
 			end
 		ensure
 			transition_not_void: Result /= Void

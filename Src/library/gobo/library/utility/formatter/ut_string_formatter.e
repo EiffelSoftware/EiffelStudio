@@ -5,8 +5,9 @@ indexing
 		"String formatters"
 
 	library:    "Gobo Eiffel Utility Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -115,7 +116,7 @@ feature -- String handling
 					a_target.append_string ("%%%"")
 				else
 					a_target.append_string ("%%/")
-					INTEGER_FORMATTER_.append_decimal_integer (a_string, c.code)
+					INTEGER_FORMATTER_.append_decimal_integer (a_target, c.code)
 					a_target.append_character ('/')
 				end
 				i := i + 1

@@ -2,11 +2,12 @@ indexing
 
 	description:
 
-		"Indexable structure sorters"
+		"Indexable data structure sorters"
 
 	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -30,9 +31,9 @@ feature -- Status report
 			-- within bounds `lower'..`upper'?
 		require
 			a_container_not_void: a_container /= Void
-			valid_lower: a_container.valid_entry (lower)
-			valid_upper: a_container.valid_entry (upper)
-			constraint: lower <= upper
+			valid_lower: 1 <= lower and lower <= a_container.count
+			valid_upper: 1 <= upper and upper <= a_container.count
+			valid_bounds: lower <= upper
 		local
 			i: INTEGER
 		do
@@ -45,8 +46,8 @@ feature -- Status report
 				Result := a_container.item (i) <= a_container.item (i + 1)
 				i := i + 1
 			end
-		end	
-			
+		end
+
 feature -- Sort
 
 	sort (a_container: DS_INDEXABLE [G]) is
@@ -62,9 +63,9 @@ feature -- Sort
 			-- within bounds `lower'..`upper'?
 		require
 			a_container_not_void: a_container /= Void
-			valid_lower: a_container.valid_entry (lower)
-			valid_upper: a_container.valid_entry (upper)
-			constraint: lower <= upper
+			valid_lower: 1 <= lower and lower <= a_container.count
+			valid_upper: 1 <= upper and upper <= a_container.count
+			valid_bounds: lower <= upper
 		deferred
 		ensure
 			subsorted: subsorted (a_container, lower, upper)

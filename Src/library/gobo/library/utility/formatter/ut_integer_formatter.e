@@ -5,8 +5,9 @@ indexing
 		"Integer formatters"
 
 	library:    "Gobo Eiffel Utility Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -22,7 +23,7 @@ feature -- Access
 	decimal_integer_out (an_int: INTEGER): STRING is
 			-- Decimal representation of `an_int';
 			-- Return a new string at each call.
-			-- Regexp: -?(0|[1-9][0-9]*)
+			-- Regexp: 0|(-?[1-9][0-9]*)
 		do
 			Result := STRING_.make (10)
 			append_decimal_integer (Result, an_int)

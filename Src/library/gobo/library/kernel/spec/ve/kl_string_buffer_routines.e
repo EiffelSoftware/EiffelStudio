@@ -7,8 +7,9 @@ indexing
 		%with features `put', `item' and `count'."
 
 	library:    "Gobo Eiffel Kernel Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1999, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -118,7 +119,7 @@ feature -- Element change
 			end
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
-			charaters_set: s <= e implies equal (a_string.substring (old (a_string.count), a_string.count), substring (a_buffer, s, e))
+			characters_set: s <= e implies equal (a_string.substring (old (a_string.count) + 1, a_string.count), substring (a_buffer, s, e))
 		end
 
 	copy_from_string (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER; a_string: STRING) is

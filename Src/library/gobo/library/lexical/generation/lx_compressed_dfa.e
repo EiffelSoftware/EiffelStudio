@@ -5,8 +5,9 @@ indexing
 		"DFA which can generate scanners implemented with compressed tables"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -40,7 +41,7 @@ inherit
 
 	LX_COMPRESSED_TABLES
 		export
-			{LX_COMPRESSED_TABLES} all
+			{LX_COMPRESSED_TABLES} all;
 			{ANY} to_tables
 		undefine
 			is_equal, copy
@@ -214,15 +215,15 @@ feature {NONE} -- Generation
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
 				%%N%N%TyyReject_used: BOOLEAN is ")
-			a_file.put_boolean (yyReject_used)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called?%N%N%
 				%%TyyVariable_trail_context: BOOLEAN is ")
-			a_file.put_boolean (yyVariable_trail_context)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is there a regular expression with%N%
 				%%T%T%T-- both leading and trailing parts having%N%
 				%%T%T%T-- variable length?%N%N%
 				%%TyyReject_or_variable_trail_context: BOOLEAN is ")
-			a_file.put_boolean (yyReject_used or yyVariable_trail_context)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used or yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called or is there a%N%
 				%%T%T%T-- regular expression with both leading%N%
 				%%T%T%T-- and trailing parts having variable length?%N%N")
@@ -504,6 +505,7 @@ feature {NONE} -- Compression
 					end
 					i := i + 1
 				end
+				st_cursor.go_after -- Release cursor to GC.
 				nb := states.count
 				from i := 1 until i > nb loop
 					if common_freq < frequencies.item (i) then
@@ -512,9 +514,9 @@ feature {NONE} -- Compression
 					end
 					i := i + 1
 				end
+				proto_cursor := protos.new_cursor
 				if not protos.is_empty then
 					proto := protos.first
-					proto_cursor := protos.new_cursor
 					proto_cursor.start
 				end
 				min_diff := trans_nb
@@ -530,7 +532,7 @@ feature {NONE} -- Compression
 					end
 					if not cursor.after then
 						proto := cursor.item
-						proto_cursor := clone (cursor)
+						proto_cursor.go_to (cursor)
 						difference := transitions.difference
 							(proto.transitions, null_state)
 						min_diff := difference.count
@@ -545,7 +547,7 @@ feature {NONE} -- Compression
 					common_state := null_state
 					if not protos.is_empty then
 						proto := protos.first
-						proto_cursor := clone (cursor)
+						proto_cursor.go_to (cursor)
 						difference := transitions.difference
 							(proto.transitions, null_state)
 						min_diff := difference.count
@@ -564,12 +566,14 @@ feature {NONE} -- Compression
 							(new_proto.transitions, null_state)
 						if new_diff.count < min_diff then
 							proto := new_proto
-							proto_cursor := clone (cursor)
+							proto_cursor.go_to (cursor)
 							difference := new_diff
 							min_diff := difference.count
 						end
 						cursor.forth
 					end
+				else
+					cursor.go_after -- Release cursor to GC.
 				end
 					-- Check if the proto we've decided on as our best bet
 					-- is close enough to the state we want to match to
@@ -600,6 +604,7 @@ feature {NONE} -- Compression
 						protos.put (state.id, clone (transitions), common_state)
 					end
 				end
+				proto_cursor.go_after -- Release cursor to GC.
 			end
 		end
 

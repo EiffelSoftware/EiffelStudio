@@ -579,6 +579,48 @@ int length;
 }
 
 /*
+ * Test for numeric values.
+ */
+
+public EIF_BOOLEAN str_isi(str, length)
+char *str;
+EIF_INTEGER length;
+{
+	/* Is it an integer? */
+
+	char *s = make_string(str, length);
+	long val;
+	char c;
+	return (sscanf(s, "%ld %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
+}
+
+public EIF_BOOLEAN str_isr(str, length)
+char *str;
+EIF_INTEGER length;
+{
+	/* Is it a real? */
+
+	char *s = make_string(str, length);
+	float val;
+	char c;
+
+    return (sscanf(s, "%f %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
+}
+
+public EIF_BOOLEAN str_isd(str, length)
+char *str;
+EIF_INTEGER length;
+{
+	/* Is is a double? */
+
+	char *s = make_string(str, length);
+	double val;
+	char c;
+
+	return (sscanf(s, "%lf %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
+}
+
+/*
  * To avoid redeclaration conflicts...
  */
 

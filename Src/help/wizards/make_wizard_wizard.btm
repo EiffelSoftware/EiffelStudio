@@ -5,7 +5,6 @@ echo -----------------------------------------------------------------
 pushd
 mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec
 mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec\windows
-mkdir %DELIVERY%\studio\wizards\new_projects\wizard\spec\windows\bin
 echo Y > y.txt
 rd /S %TEMP%\wizard_wizard < y.txt
 del y.txt

@@ -27,11 +27,12 @@ feature {NONE} -- Initialization
 					-- No more memory
 				c_enomem
 			else
-				set_xpm_attributes_valuemask (handle, 0)
+				set_xpm_attributes_valuemask (handle,0)
 			end	
 		end;
 
 feature -- Access
+
 
 	colormap: MEL_COLORMAP is
 			-- Colormap used for allocation of color pixels
@@ -45,6 +46,30 @@ feature -- Access
 			is_valid: is_valid
 		do
 			Result := xpm_attributes_ncolors (handle)
+		end;
+
+	alloc_close_colors: BOOLEAN is
+			-- Search for closest color to alloc
+		do
+			Result := xpm_attributes_alloc_close_colors (handle)
+		end;
+
+	red_closeness: INTEGER is
+			-- authorized red difference from wanted color while allocation
+		do
+			Result := xpm_attributes_red_closeness (handle)
+		end;
+
+	green_closeness: INTEGER is
+			-- authorized green difference from wanted color while allocation
+		do
+			Result := xpm_attributes_green_closeness (handle)
+		end;
+
+	blue_closeness: INTEGER is
+			-- authorized blue difference from wanted color while allocation
+		do
+			Result := xpm_attributes_blue_closeness (handle)
 		end;
 
 	x_hotspot: INTEGER is
@@ -99,6 +124,39 @@ feature -- Status setting
 			set_xpm_attributes_valuemask (handle, masks)
 		ensure
 			set: valuemask = masks
+		end;
+
+	set_red_closeness (closeness : INTEGER) is
+		-- Set red_closeness to closeness
+		-- Don't forget to put XpmRGBCloseness flag in valuemask
+		require
+			is_valid: is_valid
+		do
+			set_xpm_attributes_red_closeness (handle, closeness)
+		ensure
+			set: red_closeness = closeness
+		end;
+
+	set_green_closeness (closeness : INTEGER) is
+		-- Set green_closeness to closeness
+		-- Don't forget to put XpmRGBCloseness flag in valuemask
+		require
+			is_valid: is_valid
+		do
+			set_xpm_attributes_green_closeness (handle, closeness)
+		ensure
+			set: green_closeness = closeness
+		end;
+
+	set_blue_closeness (closeness : INTEGER) is
+		-- Set blue_closeness to closeness
+		-- Don't forget to put XpmRGBCloseness flag in valuemask
+		require
+			is_valid: is_valid
+		do
+			set_xpm_attributes_blue_closeness (handle, closeness)
+		ensure
+			set: blue_closeness = closeness
 		end;
 
 feature -- Removal
@@ -175,6 +233,36 @@ feature {NONE} -- Externals
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 
+	set_xpm_attributes_alloc_close_colors (ptr: POINTER; c_mode: BOOLEAN) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, EIF_BOOLEAN)"
+		end;
+
+	set_xpm_attributes_colors_closeness (ptr: POINTER; degree: INTEGER) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
+		end;
+	
+	set_xpm_attributes_red_closeness (ptr: POINTER; degree: INTEGER) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
+		end;
+		
+	set_xpm_attributes_green_closeness (ptr: POINTER; degree: INTEGER) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
+		end;
+		
+	set_xpm_attributes_blue_closeness (ptr: POINTER; degree: INTEGER) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
+		end;
+	
+	set_xpm_attributes_exactcolors (ptr: POINTER; c_mode: BOOLEAN) is
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *, EIF_BOOLEAN)"
+		end;
+
 	xpm_attributes_size: INTEGER is
 		external
 			"C (): int | %"xpm.h%""
@@ -194,6 +282,30 @@ feature {NONE} -- Externals
 			-- Number of colors
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
+		end;
+
+	xpm_attributes_red_closeness (h: POINTER): INTEGER is
+			-- RGB closeness authorized while allocating colors
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
+		end;
+
+	xpm_attributes_blue_closeness (h: POINTER): INTEGER is
+			-- RGB closeness authorized while allocating colors
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
+		end;
+
+	xpm_attributes_green_closeness (h: POINTER): INTEGER is
+			-- RGB closeness authorized while allocating colors
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
+		end;
+
+	xpm_attributes_alloc_close_colors (h: POINTER): BOOLEAN is
+			-- Search for closest color while colormapping if no cell is available
+		external
+			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_BOOLEAN"
 		end;
 
 	xpm_attributes_x_hotspot (h: POINTER): INTEGER is

@@ -10,6 +10,14 @@ class
 inherit
 	FONT_I
 
+	WEL_CAPABILITIES_CONSTANTS
+		rename
+			vertical_resolution as screen_vertical_resolution,
+			horizontal_resolution as screen_horizontal_resolution
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_for_screen,
@@ -138,13 +146,23 @@ feature -- Status report
 
 	name: STRING is
 			-- String form of font details
+		local
+			size_in_point: INTEGER
+			screen_dc: WEL_SCREEN_DC
 		do
 			!! Result.make (60)
 				-- face name
 			Result.append (wel_log_font.face_name)
 			Result.extend (',')
 				-- point size
-			Result.append_integer (wel_log_font.height)
+			size_in_point := -wel_log_font.height
+			create screen_dc
+			screen_dc.get
+			size_in_point := mul_div (size_in_point, 72,
+								get_device_caps (screen_dc.item, logical_pixels_y))
+			screen_dc.release
+
+			Result.append_integer (size_in_point)
 			Result.extend (',')
 				-- weight
 			Result.append_integer (wel_log_font.weight)
@@ -431,11 +449,32 @@ feature -- Status setting
 		end
 
 	set_height (a_height: STRING) is
-			-- Set the height to `a_height'
+			-- Set the height in points to `a_height'
+		local
+			screen_dc: WEL_SCREEN_DC
+			size_in_points, real_size: INTEGER
 		do
-			if a_height /= Void and a_height.is_integer then
-				wel_log_font.set_height (a_height.to_integer)
+			if a_height /= Void and then a_height.is_integer then
+				size_in_points := a_height.to_integer
+				if size_in_points > 0 then
+						-- Compute the real size of the font which depends of
+						-- the specified size `a_height' and from the screen resolution:
+						-- (height in point * Number of pixels per logical
+						-- inch along the display height) / 72 pixels per inch
+					create screen_dc
+					screen_dc.get
+					real_size := - mul_div (size_in_points,
+									get_device_caps (screen_dc.item, logical_pixels_y), 72)
+					screen_dc.release
+	
+						-- Set the computed font height.
+					wel_log_font.set_height (real_size)
+				else
+						-- Set the default height to the current font.
+					wel_log_font.set_height (0)
+				end
 			else
+					-- Set the default height to the current font.
 				wel_log_font.set_height (0)
 			end
 		end
@@ -598,6 +637,23 @@ feature {NONE} -- Implementation
 			sdc.release
 		ensure
 			result_exists: Result /= Void
+		end
+
+	mul_div (i,j,k: INTEGER): INTEGER is
+			-- Does `i * j / k' but in a safe manner where the 64 bits integer
+			-- obtained by `i * j' is not truncated.
+		external
+			"C [macro <windows.h>] (int, int, int): EIF_INTEGER"
+		alias
+			"MulDiv"
+		end
+
+	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
+			-- Retrieves device-specific information about a specified device.
+		external
+			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
+		alias
+			"GetDeviceCaps"
 		end
 
 invariant

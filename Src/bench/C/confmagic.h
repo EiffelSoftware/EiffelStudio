@@ -12,6 +12,15 @@
 #ifndef _confmagic_h_
 #define _confmagic_h_
 
+/* Specific setup for VXWORKS port */
+#ifdef VXWORKS
+#include <types/vxCpu.h>
+#include <types/vxTypesOld.h>
+#define CUSTOM
+#define NEED_HASH_H
+#define NEED_TIMER_H
+#endif
+
 #ifndef HAS_BCMP
 #ifndef bcmp
 #define bcmp(s,d,l) memcmp((s),(d),(l))

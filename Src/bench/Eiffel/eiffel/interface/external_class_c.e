@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		
 feature -- Initialization
 
-	initialize_from_xml_data is
+	process_degree_5 is
 			-- Read XML data and analyzes syntactical suppliers.
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER

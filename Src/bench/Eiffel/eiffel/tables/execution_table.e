@@ -103,6 +103,8 @@ end;
 
 				-- Generation
 			from
+				!! include_set.make;
+				include_set.compare_objects;
 				i := 1;
 				file.putstring ("#include %"struct.h%"%N%N");
 			until
@@ -114,6 +116,23 @@ end;
 				end;
 				i := i + 1;
 			end;
+
+				-- Generate the include files associated with
+				-- external features not encapsulated but with a list
+				-- of include files (assuming the definition of the feature
+				-- is in one of the include files)
+			from
+				include_set.start
+			until
+				include_set.after
+			loop
+				file.putstring ("#include ");
+				file.putstring (include_set.item);
+				file.putstring ("%N%N");
+				include_set.forth
+			end
+			include_set := Void;
+
 			from
 				i := 1;
 				file.new_line;
@@ -140,6 +159,10 @@ end;
 			temp.append (";%N");
 			file.putstring (temp);
 		end;
+
+feature {EXT_INCL_EXEC_UNIT} -- Include set
+
+	include_set: LINKED_SET[STRING];
 
 feature -- Debugging
 

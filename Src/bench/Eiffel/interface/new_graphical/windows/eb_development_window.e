@@ -1692,7 +1692,7 @@ feature -- Stone process
 			cv_cst ?= a_stone
 			if cv_cst /= Void then
 				l := Window_manager.development_windows_with_class (cv_cst.class_i.name)
-				if l.is_empty or else l.count = 1 and then l.first = Current then
+				 if l.is_empty or else l.has (Current) then
 						-- We're not editing the class in another window.
 					set_stone_after_first_check (a_stone)
 				else
@@ -3282,6 +3282,9 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR} -- Floating tool handling
 					all_tool_windows.off
 				loop
 					tool_window := all_tool_windows.item
+					check
+						not_destroyed: not tool_window.window.is_destroyed
+					end
 					if boolean_resource_value ("dock_tracking", True) then
 						tool_window.window.move_actions.block
 						tool_window.window.set_x_position (x_pos + tool_window.x_position)

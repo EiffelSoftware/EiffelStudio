@@ -128,13 +128,14 @@ feature -- Basic operation
 			-- Fake key `a_key' press.
 		local
 			a_success_flag: BOOLEAN
-			a_gtk_key_code: INTEGER
+			a_key_code: INTEGER
 		do
 			check
 				x_test_capable: x_test_capable
 			end
-			a_gtk_key_code := key_constants.key_code_to_gtk (a_key.code)
-			a_success_flag := C.x_test_fake_key_event (C.gdk_display, a_gtk_key_code, True, 0)
+			a_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_key_code := C.x_keysym_to_keycode (C.gdk_display, a_key_code)
+			a_success_flag := C.x_test_fake_key_event (C.gdk_display, a_key_code, True, 0)
 			check
 				fake_key_press_success: a_success_flag
 			end		
@@ -144,15 +145,16 @@ feature -- Basic operation
 			-- Fake key `a_key' release.
 		local
 			a_success_flag: BOOLEAN
-			a_gtk_key_code: INTEGER
+			a_key_code: INTEGER
 		do
 			check
 				x_test_capable: x_test_capable
 			end
-			a_gtk_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_key_code := C.x_keysym_to_keycode (C.gdk_display, a_key_code)
 			a_success_flag := C.x_test_fake_key_event (
 								C.gdk_display,
-								a_gtk_key_code,
+								a_key_code,
 								False,
 								0
 					)
@@ -163,7 +165,7 @@ feature -- Basic operation
 
 	key_constants: EV_GTK_KEY_CONVERSION is
 			-- Utilities for converting X key codes.
-		do
+		once
 			create Result
 		end
 
@@ -214,6 +216,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/18 19:55:37  king
+--| Correctly implemented fake key event features
+--|
 --| Revision 1.12  2000/04/17 23:41:53  king
 --| Correcly implemented all XTest features
 --|

@@ -123,7 +123,11 @@ feature -- Basic operations
 					str.append (boolean_format (r_bool.item))
 				elseif is_date (obj) then
 					r_date ?= obj
-					str.append (date_format (r_date))
+					if r_date = db_default_null_value.datetime_value then
+						str.append (Null_string)
+					else
+						str.append (date_format (r_date))
+					end
 				else
 					get_complex_value (obj, str)
 				end
@@ -216,6 +220,8 @@ feature -- Basic operations
 					elseif index < count then
 						index := index_of (c, index + 1)
 						if index = 0 then index := count end
+						index := index + 1
+					else
 						index := index + 1
 					end
 				end	

@@ -22,6 +22,8 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
+		undefine
+			pnd_press
 		redefine
 			on_left_button_down,
 			on_middle_button_down,
@@ -29,7 +31,6 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			interface,
-			pnd_press,
 			initialize
 		end
 
@@ -39,6 +40,11 @@ inherit
 		redefine
 			interface,
 			initialize
+		end
+
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		redefine
+			interface
 		end
 
 	WEL_TREE_VIEW
@@ -125,42 +131,6 @@ feature {NONE} -- Initialization
 			create current_image_list_info.make (4)
 			is_initialized := True
 		end
-
-
-feature {EV_TREE_ITEM_IMP} -- implementation
-
-		tree_is_pnd_source : BOOLEAN
-
-		pnd_child_source: EV_TREE_ITEM_IMP
-				-- If the pnd started in an item, then this is the item.
-
-		set_pnd_child_source (c: EV_TREE_ITEM_IMP) is
-			do
-				pnd_child_source := c
-			end
-
-		set_source_true is
-			do
-				tree_is_pnd_source := True
-			end
-		
-
-		set_source_false is
-			do
-				tree_is_pnd_source := False
-			end
-
-		transport_started_in_item: BOOLEAN
-
-		set_t_item_true is
-			do
-				transport_started_in_item := True
-			end
-
-		set_t_item_false is
-			do
-				transport_started_in_item := False
-			end
 
 feature -- Access
 
@@ -341,27 +311,27 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		do
-			inspect
-				press_action
-			when
-				Ev_pnd_start_transport
-			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5,
-						a_screen_x, a_screen_y)
-					set_source_true
-			when
-				Ev_pnd_end_transport
-			then
-				end_transport (a_x, a_y, a_button)
-				set_source_false
-			else
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
+--	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+--		do
+--			inspect
+--				press_action
+--			when
+--				Ev_pnd_start_transport
+--			then
+--					start_transport (a_x, a_y, a_button, 0, 0, 0.5,
+--						a_screen_x, a_screen_y)
+--					set_source_true
+--			when
+--				Ev_pnd_end_transport
+--			then
+--				end_transport (a_x, a_y, a_button)
+--				set_source_false
+--			else
+--				check
+--					disabled: press_action = Ev_pnd_disabled
+--				end
+--			end
+--		end
 
 feature {EV_ANY_I} -- WEL Implementation
 
@@ -415,10 +385,10 @@ feature {EV_ANY_I} -- WEL Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void and it.is_transport_enabled and
-				not tree_is_pnd_source then
+				not parent_is_pnd_source then
 				it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-			elseif pnd_child_source /= Void then 
-				pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			elseif pnd_item_source /= Void then 
+				pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 
 			if it /= Void then
@@ -510,13 +480,13 @@ feature {EV_ANY_I} -- WEL Implementation
 			it: EV_TREE_ITEM_IMP
 			a: BOOLEAN
 		do
-			a:= transport_started_in_item
+			a:= item_is_pnd_source
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
 			it := find_item_at_position (x_pos, y_pos)
 
-			if transport_started_in_item = a then
+			if item_is_pnd_source = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 			interface.pointer_button_press_actions.call (
@@ -556,8 +526,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x,
 					pt.y])
 			end
-			if pnd_child_source /= Void then
-				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if pnd_item_source /= Void then
+				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
@@ -636,6 +606,11 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/03/30 19:56:03  rogers
+--| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--| Removed features and attributes associated with source of PND as
+--| these are now inherited, and fixed references to these.
+--|
 --| Revision 1.57  2000/03/28 01:33:32  rogers
 --| Formatting.
 --|

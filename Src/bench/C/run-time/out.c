@@ -143,7 +143,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 	register3 long nb_attr;				 /* Attribute number */
 	register4 uint32 *types;                /* Attribute types */
 #ifndef WORKBENCH
-	register6 long **offsets;			   /* Attribute offsets table */
+	register6 long *offsets;			   /* Attribute offsets table */
 #else
 	register4 int32 *cn_attr;			   /* Attribute keys */
 	long offset;
@@ -178,7 +178,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 		/* Print attribute value */
 		type = types[i];
 #ifndef WORKBENCH
-		o_ref = object + (offsets[i])[dyn_type];
+		o_ref = object + offsets[i];
 #else
 		CAttrOffs(offset,cn_attr[i],dyn_type);
 		o_ref = object + offset;

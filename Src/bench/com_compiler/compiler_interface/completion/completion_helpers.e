@@ -369,7 +369,6 @@ feature {NONE} -- Implementation
 		local
 			a_formal: FORMAL_A
 			l_type: TYPE_A
-			l_gen_type: GEN_TYPE_A
 		do
 			l_type := a_type.actual_type
 			if a_parent_type = Void then

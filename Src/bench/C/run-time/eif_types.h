@@ -87,5 +87,39 @@ typedef struct _smart_string {
 } SMART_STRING;
 
 
+	/* ----------------------------------------------------------------- */
+	/*	interp.h */
+	/* ----------------------------------------------------------------- */
+
+	/* Stack data structures */
+struct item {
+	uint32 type;				/* Union's discriminent */
+	union {
+		char itu_char;			/* A character value */
+		long itu_long;			/* An integer value */
+		float itu_float;		/* A real value */
+		double itu_double;		/* A double value */
+		char *itu_ref;			/* A reference value */
+		char *itu_bit;			/* A bit reference value */
+		char *itu_ptr;			/* A routine pointer */
+	} itu;
+};
+
+	/* Stack used by the interpreter (operational stack) */
+struct opstack {
+	struct stochunk *st_hd;		/* Head of chunk list */
+	struct stochunk *st_tl;		/* Tail of chunk list */
+	struct stochunk *st_cur;	/* Current chunk in use (where top is) */
+	struct item *st_top;		/* Top (pointer to next free location) */
+	struct item *st_end;		/* First element beyond current chunk */
+};
+
+struct stochunk {
+	struct stochunk *sk_next;	/* Next chunk in stack */
+	struct stochunk *sk_prev;	/* Previous chunk in stack */
+	struct item *sk_arena;		/* Arena where objects are stored */
+	struct item *sk_end;		/* Pointer to first element beyond the chunk */
+};
+
 
 #endif	 /* _eif_types_h */

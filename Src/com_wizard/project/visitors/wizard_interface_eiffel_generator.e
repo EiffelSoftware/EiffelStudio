@@ -20,6 +20,7 @@ feature -- Access
 			create eiffel_writer.make
 			eiffel_writer.set_deferred
 			eiffel_writer.set_class_name (a_descriptor.eiffel_class_name)
+			eiffel_writer.set_description (a_descriptor.description)
 
 			create inherit_clause_writer.make
 			if a_descriptor.inherited_interface /= Void and then 

@@ -23,19 +23,14 @@ feature  -- Initialization
 			icon_location := icon_location + Icon_relative_filename
 			generate_dll := False
 			root_class_name := Default_root_class_name
-			root_class_external_name := Default_root_class_external_name
 			creation_routine_name := Default_creation_routine_name
-			creation_routine_external_name := Default_creation_routine_external_name
 			dotnet_assembly_filename := Empty_string
-			emit_directory := Default_directory
-			eiffel_formatting := True
 			
 			create available_assemblies.make
 			create selected_assemblies.make
-			retrieve_available_assemblies
 			remove_kernel_assembly
 			remove_system_assembly
-			create local_assemblies.make (1)
+			create local_assemblies.make 
 		end
 
 feature -- Setting
@@ -54,22 +49,14 @@ feature -- Setting
 
 	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' with `a_name'.
+		local
+			upper_case_name: STRING
 		do
 			upper_case_name := clone (a_name)
 			upper_case_name.to_upper
 			root_class_name := upper_case_name
-		ensure
-			root_class_name_set: root_class_name = upper_case_name
 		end
 
-	set_root_class_external_name (a_name: like root_class_external_name) is
-			-- Set `root_class_external_name' with `a_name'.
-		do
-			root_class_external_name := a_name
-		ensure
-			root_class_external_name_set: root_class_external_name = a_name
-		end
-		
 	set_creation_routine_name (a_name: like creation_routine_name) is
 			-- Set `creation_routine_name' with `a_name'.
 		do
@@ -78,14 +65,6 @@ feature -- Setting
 			creation_routine_name_set: creation_routine_name = a_name
 		end
 
-	set_creation_routine_external_name (a_name: like creation_routine_external_name) is
-			-- Set `creation_routine_external_name' with `a_name'.
-		do
-			creation_routine_external_name := a_name
-		ensure
-			creation_routine_external_name_set: creation_routine_external_name = a_name
-		end
-	
 	set_dotnet_assembly_filename (a_filename: like dotnet_assembly_filename) is
 			-- Set `dotnet_assembly_filename' with `a_filename'.
 		do
@@ -93,23 +72,7 @@ feature -- Setting
 		ensure
 			dotnet_assembly_filename_set: dotnet_assembly_filename = a_filename
 		end
-
-	set_emit_directory (a_filename: like emit_directory) is
-			-- Set `emit_directory' with `a_filename'.
-		do
-			emit_directory := a_filename
-		ensure
-			emit_directory_set: emit_directory = a_filename
-		end	
 	
-	set_eiffel_formatting (a_value: like eiffel_formatting) is
-			-- Set `eiffel_formatting' with `a_value'.
-		do
-			eiffel_formatting := a_value
-		ensure
-			eiffel_formatting_set: eiffel_formatting = a_value
-		end
-
 feature -- Access
 
 	icon_location: STRING
@@ -122,34 +85,20 @@ feature -- Access
 	root_class_name: STRING
 			-- Name of the root class of the Eiffel.NET project
 
-	root_class_external_name: STRING
-			-- External name of the root class of the Eiffel.NET project
-
 	creation_routine_name: STRING
 			-- Name of the creation routine of the root class
 
-	creation_routine_external_name: STRING
-			-- External name of the creation routine of the root class
-	
 	dotnet_assembly_filename: STRING
 			-- Filename of .NET assembly to emit
 	
-	emit_directory: STRING
-			-- Path to folder where assembly corresponding to `dotnet_assembly_filename' should be generated
-	
-	eiffel_formatting: BOOLEAN
-			-- Should the emitter generate Eiffel-friendly names?
-			
 	available_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Available (and not selected) Assemblies
 	
 	selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Selected Assemblies
-	
-	local_assemblies: HASH_TABLE [STRING, STRING]
+
+	local_assemblies: LINKED_LIST [STRING]
 			-- Local assemblies
-			-- | Key: Assembly filename
-			-- | Value: Path to folder where assembly was emitted
 		
 	application_type: STRING is
 			-- "dll" if `generate_dll' is set, "exe" otherwise
@@ -159,103 +108,6 @@ feature -- Access
 			else
 				Result := Exe_type
 			end
-		end
-	
-	proxy: ASSEMBLY_MANAGER_INTERFACE_PROXY is
-			-- Assembly manager proxy
-		once
-			create Result.make
-		ensure
-			non_void_proxy: Result /= Void
-		end
-		
-	dependencies: LINKED_LIST [ASSEMBLY_INFORMATION] is
-			-- Dependencies corresponding to `selected_assemblies'
-		require
-			non_void_selected_assemblies: selected_assemblies /= Void
-			not_empty_selected_assemblies: not selected_assemblies.is_empty
-		local
-			an_assembly: ASSEMBLY_INFORMATION
-			an_assembly_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			a_dependency: ASSEMBLY_INFORMATION
-			tmp_list: LINKED_LIST [ASSEMBLY_INFORMATION]
-		once
-			from
-				create tmp_list.make
-				selected_assemblies.start
-			until
-				selected_assemblies.after
-			loop
-				an_assembly := selected_assemblies.item
-				an_assembly_dependencies := assembly_dependencies (an_assembly)
-				from
-					an_assembly_dependencies.start
-				until
-					an_assembly_dependencies.after
-				loop
-					a_dependency := an_assembly_dependencies.item					
-					if not a_dependency.name.is_equal (Mscorlib_name) and not has_assembly (tmp_list, a_dependency) then
-						tmp_list.extend (a_dependency)
-					end
-					an_assembly_dependencies.forth
-				end
-				selected_assemblies.forth
-			end	
-			from
-				create Result.make
-				tmp_list.start
-			until
-				tmp_list.after
-			loop
-				an_assembly := tmp_list.item
-				if not has_assembly (selected_assemblies, an_assembly) then
-					Result.extend (an_assembly)
-				end
-				tmp_list.forth
-			end
-		end
-
-	local_dependencies: LINKED_LIST [STRING] is
-			-- Dependencies corresponding to `local_assemblies'
-		require
-			non_void_local_assemblies: local_assemblies /= Void
-			not_empty_local_assemblies: not local_assemblies.is_empty
-		local
-			an_assembly_dependencies: LINKED_LIST [STRING]
-			a_dependency: STRING
-			a_key: STRING
-			an_item: STRING
-			a_name: STRING
-		once
-			from
-				create Result.make
-				local_assemblies.start
-			until
-				local_assemblies.off
-			loop
-				a_key := local_assemblies.key_for_iteration
-				an_item := local_assemblies.item_for_iteration
-				an_assembly_dependencies := local_assembly_dependencies (local_assemblies.key_for_iteration, local_assemblies.item_for_iteration)
-				if an_assembly_dependencies /= Void then
-					from
-						an_assembly_dependencies.start
-					until
-						an_assembly_dependencies.after
-					loop
-						a_name := an_assembly_dependencies.item
-						an_assembly_dependencies.forth
-						if not an_assembly_dependencies.after then
-							a_dependency := an_assembly_dependencies.item
-							if a_name /= Void and then not a_name.is_empty and a_dependency.substring_index ("mscorlib", 1) < 1 and not Result.has (a_dependency) then
-								Result.extend (a_name)
-								Result.extend (a_dependency)
-							end
-							an_assembly_dependencies.forth
-						end
-					end
-				end
-				local_assemblies.forth
-			end	
 		end
 
 	eiffel_path_from_info (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): STRING is
@@ -367,14 +219,14 @@ feature -- Status Report
 			from
 				local_assemblies.start
 			until
-				local_assemblies.off or Result
+				local_assemblies.after or Result
 			loop
-				a_key := clone (local_assemblies.key_for_iteration)
-				a_key.to_lower
-				Result := a_key.is_equal (lower_filename)
+				if lower_filename.is_equal (local_assemblies.item) then
+					Result := True
+				end
 				local_assemblies.forth
 			end
-			
+
 		end
 feature -- Basic operation
 
@@ -388,18 +240,6 @@ feature -- Basic operation
 			retried: BOOLEAN
 		do
 			if not retried then
-				imported_assemblies := proxy.imported_assemblies
-				if proxy.last_importation_successful then
-					intern_retrieve_available_assemblies (imported_assemblies)
-				else
-					if confirmation_dialog = Void then
-						display_confirmation_dialog
-					end
-				end
-			else
-				if confirmation_dialog = Void then
-					display_confirmation_dialog
-				end
 			end
 		rescue
 			retried := True
@@ -492,116 +332,12 @@ feature -- Basic operation
 		
 feature {NONE} -- Implementation
 
-	upper_case_name: STRING
-			-- Upper case root class name
-			
 	Default_project_name: STRING is
 			-- Default project name
 		do
 			Result := "my_dotnet_application"
 		end
 
-	assembly_dependencies (info: ASSEMBLY_INFORMATION): LINKED_LIST [ASSEMBLY_INFORMATION] is
-			-- Dependencies from assembly corresponding to `info'.
-		require
-			non_void_info: info /= Void
-		local
-			retrieved_dependencies: ECOM_ARRAY [STRING]
-			a_name: STRING
-			a_version: STRING
-			a_culture: STRING
-			a_public_key: STRING
-			a_path: STRING
-			i: INTEGER
-			a_dependency: ASSEMBLY_INFORMATION
-		do
-			retrieved_dependencies := proxy.assembly_dependencies (info.name, info.version, info.culture, info.public_key)
-			check
-				unidimensional_array: retrieved_dependencies.dimension_count = 1
-			end
-			from
-				create Result.make
-			until
-				i = retrieved_dependencies.count
-			loop
-				a_name := retrieved_dependencies.array_item (i)
-				a_version := retrieved_dependencies.array_item (i + 1)
-				a_culture := retrieved_dependencies.array_item (i + 2)
-				a_public_key := retrieved_dependencies.array_item (i + 3)
-				a_path := retrieved_dependencies.array_item (i + 4)
-				if (a_name /= Void and then not a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and (a_culture /= Void and then not a_culture.is_empty)
-					and (a_public_key /= Void and then not a_public_key.is_empty) and (a_path /= Void and then not a_path.is_empty) then
-					create a_dependency.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
-					Result.extend (a_dependency)
-				end
-				i := i + 5
-			end
-		end
-	
-	intern_retrieve_available_assemblies (imported_assemblies: ECOM_ARRAY [STRING]) is
-			-- Retrieve imported assemblies from the Eiffel Assembly Cache.
-		require
-			unidimensional_assemblies: imported_assemblies.dimension_count = 1
-		local
-			i: INTEGER
-			a_name: STRING
-			a_version: STRING
-			a_culture: STRING
-			a_public_key: STRING
-			a_path: STRING
-			an_assembly_info: ASSEMBLY_INFORMATION		
-		do
-			from
-			until
-				i = imported_assemblies.count
-			loop
-				a_name := imported_assemblies.array_item (i)
-				a_version := imported_assemblies.array_item (i + 1)
-				a_culture := imported_assemblies.array_item (i + 2)
-				a_public_key := imported_assemblies.array_item (i + 3)
-				a_path := imported_assemblies.array_item (i + 4)
-				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index (Eiffel_key, 1) > 0 then
-					a_path.replace_substring_all (Eiffel_key, Eiffel_installation_dir_name)
-				end
-				create an_assembly_info.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)
-				available_assemblies.extend (an_assembly_info)
-				i := i + 5
-			end
-		end
-
-	local_assembly_dependencies (a_filename, a_path: STRING): LINKED_LIST [STRING] is
-			-- Dependencies location of local assembly corresponding to `a_filename', which was imported in `a_path'
-		require
-			non_void_filename: a_filename /= Void
-			not_empty_filename: not a_filename.is_empty
-			non_void_path: a_path /= Void
-			not_empty_path: not a_path.is_empty
-		local
-			locals: ECOM_ARRAY [STRING]
-			i: INTEGER
-			a_location: STRING
-			a_name: STRING
-		do
-			locals := proxy.local_assembly_dependencies (a_filename)
-			check
-				unidimensional_array: locals.dimension_count = 1
-			end
-		
-			from
-				create Result.make
-			until
-				i = locals.count
-			loop
-				a_name := locals.array_item (i)
-				a_location := locals.array_item (i + 1)
-				if a_name /= Void and then not a_name.is_empty and (a_location /= Void and then not a_location.is_empty) then 
-					Result.extend (a_name)
-					Result.extend (a_location)
-				end
-				i := i + 2
-			end
-		end
-		
 	display_confirmation_dialog is
 			-- Display confirmation dialog
 		local
@@ -643,43 +379,34 @@ feature {NONE} -- Implementation
 		local
 			imported_assemblies: ECOM_ARRAY [STRING]
 		do
-			proxy.clean_assemblies
-			imported_assemblies := proxy.imported_assemblies
-			intern_retrieve_available_assemblies (imported_assemblies)	
-			remove_kernel_assembly
-			remove_system_assembly
-			create local_assemblies.make (1)
+--			proxy.clean_assemblies
+--			imported_assemblies := proxy.imported_assemblies
+--			intern_retrieve_available_assemblies (imported_assemblies)	
+--			remove_kernel_assembly
+--			remove_system_assembly
+--			create local_assemblies.make (1)
 		end
 	
-	Default_directory: STRING is 
-			-- Default emit directory ($ISE_EIFFEL\library.net\)
-		once
-			Result := clone (Eiffel_installation_dir_name)
-			Result.append (Dotnet_library_relative_path)
-		ensure
-			non_void_directory: Result /= Void
-			not_empty_directory: not Result.is_empty
-		end
+--	Default_directory: STRING is 
+--			-- Default emit directory ($ISE_EIFFEL\library.net\)
+--		once
+--			Result := clone (Eiffel_installation_dir_name)
+--			Result.append (Dotnet_library_relative_path)
+--		ensure
+--			non_void_directory: Result /= Void
+--			not_empty_directory: not Result.is_empty
+--		end
 
 feature {NONE} -- Constants
 
-	Dotnet_library_relative_path: STRING is "\library.net\"
-			-- Path to `library.net' folder relatively to the Eiffel delivery
-	
 	Icon_relative_filename: STRING is "\eiffel.ico"
 			-- Filename of `eiffel.ico' relatively to `icon_location'
 	
 	Default_root_class_name: STRING is "APPLICATION"
 			-- Default root class name
 
-	Default_root_class_external_name: STRING is "Application"
-			-- Default root class external name
-			
 	Default_creation_routine_name: STRING is "make"
 			-- Default creation routine name
-
-	Default_creation_routine_external_name: STRING is "Make"
-			-- Default creation routine external name
 			
 	Dll_type: STRING is "dll"
 			-- DLL type

@@ -124,6 +124,7 @@ end;
 			out_file_name: FILE_NAME;
 			file: RAW_FILE;
 			a: ANY
+			c_init: INIT_SERVER
 		do
 			redo_cyclics;
 
@@ -140,8 +141,15 @@ end;
 			!! out_file_name.make_from_string (profilename);
 			out_file_name.add_extension (Dot_profile_information);
 			!! file.make (out_file_name);
-			if (file.exists and then file.is_writable) or else
-					file.is_creatable then
+			if
+				(file.exists and then file.is_writable)
+				or else file.is_creatable
+			then	
+					--| Reset the information in order to do a correct
+					--| store.n
+				!! c_init
+				c_init.server_reset
+			
 				file.open_write;
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Calling `spit_info' on `profile_information'.");
@@ -157,6 +165,9 @@ debug("PROFILE_CONVERT")
 	io.error.new_line
 end;
 				file.close
+
+					--| Re-initialize the storing for the SERVERs
+				c_init.server_init
 			else
 				a := ("write permission failure").to_c;
 				eraise ($a, Io_exception)

@@ -27,6 +27,13 @@ inherit
 			is_equal
 		end		
 
+	EIFNET_EXPORTER
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end			
+
 	DEBUG_VALUE_EXPORTER
 		export
 			{NONE} all
@@ -213,8 +220,12 @@ feature -- Output
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
 			create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-			if dynamic_class /= Void then
-				l_icd_class := object_value.get_class
+			l_icd_class := object_value.get_class
+			if 
+				dynamic_class /= Void 
+				and l_icd_class /= Void
+				and object_value /= Void
+			then
 				l_feature_table := dynamic_class.feature_table
 				from
 					l_feature_table.start
@@ -223,20 +234,33 @@ feature -- Output
 				loop
 					l_feature_i := l_feature_table.item_for_iteration
 					debug ("DEBUGGER_TRACE_CHILDREN")
-						print (">>> CHILDREN :: "+ l_feature_i.feature_name +"<<<%N")
-						print ("%T - from feature_i     => "+l_feature_i.written_class.name_in_upper+"."+l_feature_i.feature_name+ " :: " + l_feature_i.written_class.class_id.out + "%N")
-						print ("%T - from dynamic_class => "+dynamic_class.name_in_upper+"."+l_feature_i.feature_name+ " :: " + dynamic_class.class_id.out + "%N")
+						print (">>> CHILDREN :: " + l_feature_i.feature_name + "<<<%N")
+						print ("%T - from feature_i     => "
+								+ l_feature_i.written_class.name_in_upper + "." + l_feature_i.feature_name
+								+ " :: " + l_feature_i.written_class.class_id.out + "%N")
+						print ("%T - from dynamic_class => " + dynamic_class.name_in_upper
+								+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
 					end
 
 					if l_feature_i.is_attribute then
-						--| FIXME: JFIAT : which class_type to use ?
 						l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feature_i, dynamic_class_type) 
 						if l_att_token /= 0 then
 							l_att_icd_debug_value := object_value.get_field_value (l_icd_class, l_att_token)
 							if l_att_icd_debug_value /= Void then
 								l_att_debug_value := Eifnet_debug_value_factory.debug_value_from (l_att_icd_debug_value, icd_frame)
-								l_att_debug_value.set_name (l_feature_i.feature_name)
-								Result.extend (l_att_debug_value)
+								if l_att_debug_value /= Void then
+									l_att_debug_value.set_name (l_feature_i.feature_name)
+									Result.extend (l_att_debug_value)
+								else
+										--| FIXME: JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
+										--| we had problem to get its value ...
+									debug ("DEBUGGER_TRACE_CHILDREN")
+										print ("Unable to build debug value for : " 
+												+ dynamic_class.name_in_upper + "." + l_feature_i.feature_name 
+												+ "%N"				
+											)
+									end
+								end
 							end
 						end
 					end

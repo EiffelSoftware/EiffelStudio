@@ -304,14 +304,14 @@ rt_private void read_header(char rt_type);
 		/* Read general header */
 rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count);
 rt_private EIF_REFERENCE object_rread_special (EIF_REFERENCE object, uint32 flags, uint32 count);
-rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint32 flags, long expanded_offset);
-rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent);		/* read the individual attributes of the object*/
-rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent);	/* read the individual attributes of the object*/
+rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint32 new_flags, uint32 old_flags, long expanded_offset);
+rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags);		/* read the individual attributes of the object*/
+rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags);	/* read the individual attributes of the object*/
 
 rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
-rt_private void rt_read_cid (uint32 *, uint32 *, uint32);
-rt_private void rt_id_read_cid (uint32 *, uint32 *, uint32);
+rt_private uint32 rt_read_cid (uint32);
+rt_private uint32 rt_id_read_cid (uint32);
 rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name);
 
 /* Initialization and Resetting for retrieving an independent store */
@@ -441,7 +441,7 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:		<fixme>Fixed size is not good. It should be a resizable array.</fixme>
 doc:	</attribute>
 */
-rt_private int16 cidarr [256];
+rt_private int16 cidarr [CIDARR_SIZE];
 
 #endif
 
@@ -938,11 +938,13 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
+			rt_kind_version = 0x0;
 			break;
 		case GENERAL_STORE_4_0:			/* New General store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
+			rt_kind_version = 0x0;
 			break;
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:
@@ -1368,7 +1370,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	EIF_REFERENCE oldadd;
 	volatile EIF_REFERENCE newadd = (EIF_REFERENCE) 0;
 	EIF_OBJECT new_hector;
-	uint32 crflags, fflags, flags;
+	uint32 crflags, flags;
 	uint32 spec_size = 0;
 	volatile size_t n = objectCount;
 #ifdef ISE_GC
@@ -1392,7 +1394,6 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 
 	for (;n > 0; n--) {
 		/* Read object address */
-
 		buffer_read((char *) &oldadd, sizeof(EIF_REFERENCE));
 
 #if DEBUG & 2
@@ -1400,8 +1401,8 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 #endif
 
 		/* Read object flags (dynamic type) */
-		buffer_read((char *) &flags, (sizeof(uint32)));
-		rt_read_cid (&crflags, &fflags, flags);
+		buffer_read((char *) &flags, sizeof(uint32));
+		crflags = rt_read_cid (flags);
 
 #if DEBUG & 2
 		printf (" %x", flags);
@@ -1489,7 +1490,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	char *oldadd;
 	char * volatile newadd = (char *) 0;
 	EIF_OBJECT new_hector;
-	uint32 crflags, fflags, flags;
+	uint32 crflags, flags;
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
 #ifdef ISE_GC
@@ -1521,7 +1522,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		buffer_read((char *) &flags, sizeof(uint32));
-		rt_read_cid (&crflags, &fflags, flags);
+		crflags = rt_read_cid (flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -1560,7 +1561,14 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 								eise_io("General retrieve: not an Eiffel object.");
 					}
 				} else {
+#ifdef WORKBENCH
 					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+#else
+					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE));
+					if (References(dgen & SK_DTYPE) > 0) {
+						spec_size = spec_size + OVERHEAD;
+					}
+#endif
 				}
 			}
 			buffer_read((char *) &count, sizeof(uint32));
@@ -1613,7 +1621,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 		rt_update1 (oldadd, new_hector);
 
 			/* Read the object's body */
-		gen_object_read (newadd, newadd);
+		gen_object_read (newadd, newadd, crflags);
 
 			/* Update fileds: the garbage collector should not be called
 			 * during `rt_update2' because the object is in a very unstable
@@ -1657,7 +1665,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	char *oldadd;
 	char * volatile newadd = NULL;
 	EIF_OBJECT new_hector;
-	uint32 crflags, fflags, flags;
+	uint32 crflags, flags;
 	volatile uint32 spec_size = 0;
 	volatile long int n = objectCount;
 #ifdef ISE_GC
@@ -1689,7 +1697,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		ridr_norm_int (&flags);
-		rt_id_read_cid (&crflags, &fflags, flags);
+		crflags = rt_id_read_cid (flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -1779,7 +1787,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 		rt_update1 (oldadd, new_hector);
 
 			/* Read the object's body */
-		object_read (newadd, newadd);
+		object_read (newadd, newadd, crflags);
 
 			/* Update fileds: the garbage collector should not be called
 			 * during `rt_update2' because the object is in a very unstable
@@ -1853,9 +1861,17 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 	uint32 spec_size = 0;
 	uint32 dgen = special_generic_type (new_type);
 
-	if ((dgen & SK_HEAD) == SK_EXP)
-		spec_size = EIF_Size ((uint16) (dgen & SK_DTYPE)) + OVERHEAD;
-	else switch (dgen) {
+	if ((dgen & SK_HEAD) == SK_EXP) {
+#ifdef WORKBENCH
+		spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+#else
+		spec_size = EIF_Size((uint16)(dgen & SK_DTYPE));
+		if (References(dgen & SK_DTYPE) > 0) {
+			spec_size = spec_size + OVERHEAD;
+		}
+#endif
+	} else {
+		switch (dgen) {
 		case SK_INT8:    spec_size = sizeof (EIF_INTEGER_8);  break;
 		case SK_INT16:   spec_size = sizeof (EIF_INTEGER_16); break;
 		case SK_INT32:   spec_size = sizeof (EIF_INTEGER_32); break;
@@ -1874,6 +1890,7 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 				spec_size = BITOFF (dgen & SK_DTYPE);
 			else
 				eise_io ("Independent retrieve: not an Eiffel object.");
+		}
 	}
 	nb_byte = CHRPAD (count * spec_size) + LNGPAD_2;
 	result = spmalloc (nb_byte, EIF_TEST(!(crflags & EO_REF)));
@@ -1920,7 +1937,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	printf ("-- Retrieving %ld objects:\n", objectCount);
 #endif
 	for (i=1; i<=objectCount; i++) {
-		uint32 crflags, fflags, flags;
+		uint32 crflags, flags;
 		uint32 count;
 		int16 old_type;
 		EIF_REFERENCE oldadd;
@@ -1929,7 +1946,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 		/* Read address in storing system and object flags (w/dynamic type) */
 		ridr_multi_any ((char *) &oldadd, 1);
 		ridr_norm_int (&flags);
-		rt_id_read_cid (&crflags, &fflags, flags);
+		crflags = rt_id_read_cid (flags);
 
 		old_type = (int16) (flags & EO_TYPE);
 		if (! type_defined (old_type))
@@ -1996,7 +2013,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 					object_rread_special (NULL, flags, count);
 				}
 			} else {
-				object_rread_attributes (NULL, flags, 0L);
+				object_rread_attributes (NULL, crflags, flags, 0L);
 			}
 		} else {
 			EIF_REFERENCE old_values;
@@ -2020,7 +2037,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 						eif_access (new_hector), flags, count);
 				}
 			} else {
-				old_values = object_rread_attributes (eif_access (new_hector), flags, 0L);
+				old_values = object_rread_attributes (eif_access (new_hector), crflags, flags, 0L);
 			}
 
 			if (old_values != NULL)
@@ -2175,7 +2192,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 
 	RT_GET_CONTEXT
 	long nb_references = 0;
-	uint32 flags, fflags;
+	uint32 flags;
 	EIF_REFERENCE reference, addr;
 	union overhead *zone = HEADER(new_obj);
 	int nb_attr = 0;
@@ -2185,8 +2202,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 #ifndef NDEBUG
 	nb_references = -1;
 #endif
-	fflags = zone->ov_flags;
-	flags = Mapped_flags(fflags);
+	flags = Mapped_flags(zone->ov_flags);
 
 	if (flags & EO_SPEC) {				/* Special object */
 		EIF_REFERENCE o_ref;
@@ -3090,12 +3106,31 @@ rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 	if (type_defined (atype) &&
 			type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		int16 dftype;
-		int i;
-		for (i=0; gtypes[i] != TERMINATOR; i++)
-			cidarr[i+1] = gtypes[i];
-		cidarr[0] = i;
-		cidarr [i+1] = -1;
-		dftype = eif_compound_id (NULL, 0, cidarr[1], cidarr);
+		int i, l_count = CIDARR_SIZE;
+		int16 *l_cid = cidarr;
+		for (i = 0; gtypes[i] != TERMINATOR; i++) {
+				/* Make sure we don't go outside the bounds of `l_cid'. */
+			if ((i + 1) >= l_count) {
+					/* Reallocate array to allow ranges between `0' and `(i + 1) + 1'. */
+				if (l_count >= CIDARR_SIZE) {
+						/* Let's resize our existing allocated `l_cid' array by 1.5 times. */
+					l_count = (2 * (i + 3)) / 2; 
+					l_cid = (int16 *) realloc (l_cid, l_count * sizeof(int16));
+				} else {
+						/* Create a new memory block and copy content of `cidarr' in it. */
+					l_cid = (int16 *) malloc ((i + 3) * sizeof(int16));
+					l_count = i + 3;
+					memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(int16));
+				}
+			}
+			l_cid [i + 1] = gtypes[i];
+		}
+		l_cid [0] = i;
+		l_cid [i + 1] = TERMINATOR;
+		dftype = eif_compound_id (NULL, 0, l_cid[1], l_cid);
+		if (l_cid != cidarr) {
+			free(l_cid);
+		}
 		result = (dftype == type_description (atype)->new_dftype);
 	}
 	else {
@@ -3921,18 +3956,26 @@ rt_public int retrieve_read_with_compression (void)
 	return (end_of_buffer);
 }
 
-rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
+/*
+doc:	<routine name="gen_object_read" export="private">
+doc:		<summary>Retrieve content of `object' whose flags are `nflags'. The reason why we don't query the header of `object' is that in some cases `object' may have no header (e.g. an expanded without references in a special object). Version for general store.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrieving data.</param>
+doc:		<param name="parent" type="EIF_REFERENCE">If `object' is expanded, then `parent' correspond to the object containing `object'. Otherwise `parent' is identical to `object'.</param>
+doc:		<param name="nflags" type="uint32">Flags of `object'.</param>
+doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+
+rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags)
 {
 	RT_GET_CONTEXT
 	long attrib_offset;
-	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 fflags = HEADER(object)->ov_flags;
 	uint32 flags;
-	/* int *attrib_order;*/ /* %%ss removed */
 
-	flags = Mapped_flags(fflags);
+	flags = Mapped_flags(nflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 
@@ -3964,7 +4007,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							buffer_read((char *)&old_flags, sizeof(uint32));
-							rt_read_cid ((uint32 *) 0, &hflags, old_flags);
+							hflags = rt_read_cid (old_flags);
 							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							buffer_read((char *) bptr, bptr->b_length);
@@ -3979,11 +4022,11 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 					buffer_read((char *) l_buffer, sizeof(EIF_REFERENCE));
 					buffer_read((char *) &old_flags, sizeof(uint32));
-					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
+					hflags = rt_read_cid (old_flags);
 
 						/* No need to set `ov_size' or `ov_flags' as it is done while creating
 						 * the object */
-					gen_object_read (object + attrib_offset, parent);						
+					gen_object_read (object + attrib_offset, parent, hflags);
 
 					}
 					break;
@@ -4030,14 +4073,19 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						buffer_read((char *) &old_flags, sizeof(uint32));
-						rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-						for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
-	
+						hflags = rt_read_cid (old_flags);
+#ifdef WORKBENCH
+						ref = object + OVERHEAD;
+#else
+						ref = object;
+#endif
+						for (; count > 0; count --, ref += elem_size) {
+#ifdef WORKBENCH
 							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
-							gen_object_read (ref, parent);						
-							}
+#endif
+							gen_object_read (ref, parent, hflags);						
+						}
 						}
 						break;
 					case SK_BIT: {
@@ -4064,13 +4112,12 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					uint32  old_flags, hflags;
 
 					buffer_read((char *) &old_flags, sizeof(uint32));
-					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
+					hflags = rt_read_cid (old_flags);
 					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-					for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
+					for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 						HEADER(ref)->ov_size = (uint32)(ref - parent);
-						gen_object_read (ref, parent);						
+						gen_object_read (ref, parent, hflags);
 					}
 				}
 			}
@@ -4078,8 +4125,18 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	}
 }
 
+/*
+doc:	<routine name="object_read" export="private">
+doc:		<summary>Retrieve content of `object' whose flags are `nflags'. The reason why we don't query the header of `object' is that in some cases `object' may have no header (e.g. an expanded without references in a special object). Version for independent store.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrieving data.</param>
+doc:		<param name="parent" type="EIF_REFERENCE">If `object' is expanded, then `parent' correspond to the object containing `object'. Otherwise `parent' is identical to `object'.</param>
+doc:		<param name="nflags" type="uint32">Flags of `object'.</param>
+doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
 
-rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
+rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags)
 {
 	RT_GET_CONTEXT
 #if DEBUG & 1
@@ -4088,11 +4145,10 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	long attrib_offset;
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 fflags = HEADER(object)->ov_flags;
 	uint32 flags;
 	int *attrib_order;
 
-	flags = Mapped_flags(fflags);
+	flags = Mapped_flags(nflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 	attrib_order = dattrib[o_type];
@@ -4142,7 +4198,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							ridr_norm_int (&old_flags);
-							rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
+							hflags = rt_id_read_cid (old_flags);
 							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							ridr_multi_bit (bptr, 1, 0);
@@ -4166,7 +4222,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 					ridr_multi_any ((char *) l_buffer, 1);
 					ridr_norm_int (&old_flags);
-					rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
+					hflags = rt_id_read_cid (old_flags);
 
 #if DEBUG & 1
 					printf ("\n %lx", *((EIF_REFERENCE *)(object + attrib_offset)));
@@ -4174,7 +4230,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 #endif
 						/* No need to set `ov_size' or `ov_flags' as it is done while creating
 						 * the object */
-					object_read (object + attrib_offset, parent);						
+					object_read (object + attrib_offset, parent, hflags);
 
 					}
 					break;
@@ -4223,13 +4279,18 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						ridr_norm_int (&old_flags);
-						rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
-						for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
+						hflags = rt_id_read_cid (old_flags);
+#ifdef WORKBENCH
+						ref = object + OVERHEAD;
+#else
+						ref = object;
+#endif
+						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
+#ifdef WORKBENCH
 							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
-							object_read (ref, parent);						
-	
+#endif
+							object_read (ref, parent, hflags);
 						}
 					}
 						break;
@@ -4256,13 +4317,12 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					uint32  old_flags, hflags;
 
 					ridr_norm_int (&old_flags);
-					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
+					hflags = rt_read_cid (old_flags);
 					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-					for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
+					for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 						HEADER(ref)->ov_size = (uint32)(ref - parent);
-						object_read (ref, parent);						
+						object_read (ref, parent, hflags);
 					}
 				}
 			}
@@ -4270,18 +4330,27 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	}
 }
 
-/* Read a non-special object, of type in storing system described by
- * `flags', into `object (possibly offset by `expanded_offset' if object is
- * expanded).
- */
+/*
+doc:	<routine name="object_rread_attributes" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Read a non-special object, of type in storing system described by `old_flags', into `object' (possibly offset by `expanded_offset' if object is expanded) of type `new_flags'. Version for recoverable storable. If a mismatch occur, then return type contains a SPECIAL instances with the attributes that were not put into `object'.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrieving data.</param>
+doc:		<param name="new_flags" type="uint32">New flags of `object' in retrieving system.</param>
+doc:		<param name="old_flags" type="uint32">Flags of `object' in storing system.</param>
+doc:		<param name="expanded_offset" type="long">Offset in `object' from where data should be retrieved.</param>
+doc:		<return>NULL when there is no mismatch, otherwise a SPECIAL containing the old data for the `object' in the storing system.<return>
+doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE object_rread_attributes (
-		EIF_REFERENCE object, uint32 flags, long expanded_offset)
+		EIF_REFERENCE object, uint32 new_flags, uint32 old_flags, long expanded_offset)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	EIF_REFERENCE old_values = NULL;
 	EIF_REFERENCE comp_values = NULL;
-	type_descriptor *conv = type_description (flags & EO_TYPE);
+	type_descriptor *conv = type_description (old_flags & EO_TYPE);
 	attribute_detail *attributes = conv->attributes;
 	uint32 num_attrib = conv->attribute_count;
 	uint32 new_type = conv->new_type;
@@ -4297,11 +4366,11 @@ rt_private EIF_REFERENCE object_rread_attributes (
 #endif
 	REQUIRE ("Attribute order exists", attributes != NULL);
 	REQUIRE ("Offset only for expanded", object == NULL  ||
-			(HEADER (object)->ov_flags & EO_COMP) || expanded_offset == 0);
+			(new_flags & EO_COMP) || expanded_offset == 0);
 
 #ifdef RECOVERABLE_DEBUG
 	if (expanded_offset > 0)
-		print_object_summary ("      ", object, expanded_offset, flags);
+		print_object_summary ("      ", object, expanded_offset, old_flags);
 #endif
 
 	if (mismatched)
@@ -4310,7 +4379,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		if (old_values == NULL)
 			xraise (EN_MEM);
 
-		if (HEADER (object)->ov_flags & EO_COMP) {
+		if (new_flags & EO_COMP) {
 			comp_values = new_spref (new_num_attrib + 1);
 			if (comp_values == NULL)
 				xraise (EN_MEM);
@@ -4436,28 +4505,27 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				}
 				break;
 			case SK_EXP: {
-				uint32  old_flags, hflags;
+				uint32  o_flags, hflags;
 				EIF_REFERENCE old_vals = NULL;
 				EIF_REFERENCE l_buffer;
 				ridr_multi_any ((char *) &l_buffer, 1);
-				ridr_norm_int (&old_flags);
-				rt_id_read_cid (NULL, &hflags, old_flags);
+				ridr_norm_int (&o_flags);
+				hflags = rt_id_read_cid (o_flags);
 				if (object == NULL) {
-					old_vals = object_rread_attributes (NULL, old_flags, 0L);
+					old_vals = object_rread_attributes (NULL, hflags, o_flags, 0L);
 					CHECK ("No mismatches", old_vals == NULL);
 				}
 				else {
 					if (mismatched) {
 						old_value =
-							emalloc (type_description (old_flags & EO_TYPE)->new_type);
+							emalloc (type_description (o_flags & EO_TYPE)->new_type);
 					}
 					if (attr_address == NULL)
-						old_vals = object_rread_attributes (old_value, old_flags, 0L);
+						old_vals = object_rread_attributes (old_value, hflags, o_flags, 0L);
 					else {
-						attr_address = (char *) object +
-								expanded_offset + attrib_offset;
+						attr_address = (char *) object + expanded_offset + attrib_offset;
 						old_vals = object_rread_attributes (
-								object, old_flags, expanded_offset + attrib_offset);
+								object, hflags, o_flags, expanded_offset + attrib_offset);
 						if (mismatched)
 							ecopy (attr_address, old_value);
 					}
@@ -4497,8 +4565,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 
 /* Read `count' expanded values, each of size `elem_size', into special `object'.
  */
-rt_private EIF_REFERENCE object_rread_special_expanded (
-		EIF_REFERENCE object, EIF_INTEGER count)
+rt_private EIF_REFERENCE object_rread_special_expanded (EIF_REFERENCE object, EIF_INTEGER count)
 {
 	EIF_REFERENCE result = NULL;
 	EIF_INTEGER spec_size = RT_SPECIAL_ELEM_SIZE (object);
@@ -4506,24 +4573,38 @@ rt_private EIF_REFERENCE object_rread_special_expanded (
 	uint32 new_type;
 	uint32 old_flags, hflags, new_flags;
 	int i;
+#ifndef WORKBENCH
+	int l_has_references;
+#endif
 
 	ridr_norm_int (&old_flags);
-	rt_id_read_cid (NULL, &hflags, old_flags);
+	hflags = rt_id_read_cid (old_flags);
 	conv = type_description (old_flags & EO_TYPE);
 	new_type = conv->new_type;
 	new_flags = new_type | (old_flags & EO_UPPER);
 	if (conv->mismatched)
 		result = new_spref (count);
+#ifndef WORKBENCH
+	l_has_references = References (Deif_bid(new_type)) > 0;
+#endif
 	for (i=0; i<count; i++) {
 		EIF_REFERENCE old_values, ref = NULL;
 		long offset = 0;
 		if (object != NULL) {
-			offset = OVERHEAD + (i * spec_size);
-			ref = (EIF_REFERENCE)((char *) object + offset);
-			HEADER (ref)->ov_flags = (new_flags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
-			HEADER (ref)->ov_size = (uint32) offset;
+#ifndef WORKBENCH
+			if (l_has_references) {
+#endif
+				offset = OVERHEAD + (i * spec_size);
+				ref = (EIF_REFERENCE)((char *) object + offset);
+				HEADER (ref)->ov_flags = (new_flags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
+				HEADER (ref)->ov_size = (uint32) offset;
+#ifndef WORKBENCH
+			} else {
+				offset = i * spec_size;
+			}
+#endif
 		}
-		old_values = object_rread_attributes (object, old_flags, offset);
+		old_values = object_rread_attributes (object, hflags, old_flags, offset);
 		if (old_values != NULL) {
 			CHECK ("Mismatch consistency", old_values != NULL);
 			((EIF_REFERENCE *) result)[i] = old_values;
@@ -4700,7 +4781,7 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 			result = (struct cecil_info *) ct_value (&egc_ce_type, name);
 		}
 	} else {
-			/* Heuristic for old storable. We look in the non-expanded classes first. */
+			/* Heuristic for storable. We look in the non-expanded classes first. */
 		result = (struct cecil_info *) ct_value (&egc_ce_type, name);
 		if (result == NULL) {
 				/* Not found in non-expanded classes table,
@@ -4711,8 +4792,14 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 				 * it is not declared as an expanded class in the retrieval system. Because
 				 * if it is we assume that we are retrieving the expanded class and not
 				 * the reference. */
-			if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
-				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+			if (result->nb_param == 0) {
+				if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
+					result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+				}
+			} else {
+				if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_types[0]))) {
+					result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
+				}
 			}
 		}
 	}
@@ -4720,138 +4807,185 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 	return result;
 }
 
-rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
+/*
+doc:	<routine name="rt_read_cid" return_type="uint32" export="private">
+doc:		<summary>Given `oflags', flags of the stored object, let's find the new flags in the retrieving system. This routine only works for basic and general store. For independent store, one has to use `rt_id_read_cid'.</summary>
+doc:		<param name="oflags" type="uint32">Flags of the stored object.</param>
+doc:		<return>New flags for the retrieving system.</return>
+doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+
+rt_private uint32 rt_read_cid (uint32 oflags)
 {
 	RT_GET_CONTEXT
 	int16 count, dftype;
+	int16 *l_cid;
 
-	*nflags = oflags;   /* default */
-
+	dftype = oflags & EO_TYPE;
 	if (rt_kind) {
-		if (crflags != (uint32 *) 0)
-			/* Used for creation (emalloc). Map type */
-			*crflags = (uint32) dtypes [oflags & EO_TYPE];
-	} else
-		*crflags = oflags;
+		dftype = dtypes [dftype];
+	}
 
 	buffer_read ((char *) &count, sizeof (int16));
 
-	if (count < 2)  /* Nothing to read */
-		return;
-
-	*cidarr = count;
-	buffer_read ((char *) (cidarr+1), count * sizeof (int16));
-	cidarr [count+1] = -1;
-
-	if (rt_kind)
-		dftype = eif_gen_id_from_cid (cidarr, dtypes);
-	else
-		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
-
-	*nflags = (oflags & EO_UPPER) | dftype;
-
-	if (crflags != (uint32 *) 0)
-		/* Used for creation (emalloc). Map type */
-		*crflags = *nflags;
-}
-
-rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
-{
-	RT_GET_CONTEXT
-	uint32 l_real_count, count, val;
-	int16 dftype, *ip;
-	int i;
-
-	*nflags = oflags;   /* default */
-
-	if (rt_kind) {
-		if (crflags != (uint32 *) 0)
-			/* Used for creation (emalloc). Map type */
-			*crflags = (uint32) dtypes [oflags & EO_TYPE];
-	} else
-		*crflags = oflags;
-
-	ridr_norm_int (&count);    
-
-	if (count < 2)  /* Nothing to read */
-		return;
-
-
-	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
-		l_real_count = count;
-		ip = cidarr + 1;
-		for (i = count; i; --i, ++ip) {
-			ridr_norm_int (&val);
-			*ip = (int16) val;
+	if (count >= 2) {
+			/* We now read the generic parameters' type. */
+		if (count >= CIDARR_SIZE) {
+				/* In case it is more than the allocated memory for `cidarr'.
+				 * `count + 2' because `l_cid' array has indices between the
+				 * range of `0' to `count + 1'*/
+			l_cid = (int16 *) malloc ((count + 2) * sizeof(int16));
+		} else {
+			l_cid = cidarr;
 		}
-	} else {
-			/* Read old format of `cid' array corresponding to storable versions strictly less
-			 * than INDEPENDENT_STORE_5_5 and convert as we go to new format. */
-		ip = cidarr + 1;
-		l_real_count = 0;
-		for (i = count; i; --i) {
-			ridr_norm_int (&val);
-			dftype = (int16) val;
-			if (dftype <= OLD_EXPANDED_LEVEL) {
-				ip[l_real_count] = OLD_EXPANDED_LEVEL - dftype;
-				l_real_count++;
-			} else if (dftype == OLD_TUPLE_TYPE) {
-				ip[l_real_count] = TUPLE_TYPE;
-				l_real_count++;
-				ridr_norm_int (&val);	/* Uniformizer, not used. */
-				ridr_norm_int (&val);	/* Nb of generics. */
-				ip[l_real_count] = (int16) val;
-				l_real_count++;
-				ridr_norm_int (&val);	/* Base id for TUPLE */
-				ip[l_real_count] = (int16) val;
-				l_real_count++;
-					/* We skip the already treated elements */
-				i -= 3;
-			} else if (dftype <= OLD_FORMAL_TYPE) {
-				ip[l_real_count] = FORMAL_TYPE;
-				l_real_count++;
-				ip[l_real_count] = OLD_FORMAL_TYPE - dftype;	/* Insert position of formal */
-				l_real_count++;
-			} else {
-				switch (dftype) {
-					case OLD_CHARACTER_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
-					case OLD_BOOLEAN_TYPE: ip[l_real_count] = egc_bool_dtype; l_real_count++; break;
-					case OLD_INTEGER_8_TYPE: ip[l_real_count] = egc_int8_dtype; l_real_count++; break;
-					case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
-					case OLD_INTEGER_32_TYPE: ip[l_real_count] = egc_int32_dtype; l_real_count++; break;
-					case OLD_INTEGER_64_TYPE: ip[l_real_count] = egc_int64_dtype; l_real_count++; break;
-					case OLD_REAL_TYPE: ip[l_real_count] = egc_real_dtype; l_real_count++; break;
-					case OLD_DOUBLE_TYPE: ip[l_real_count] = egc_doub_dtype; l_real_count++; break;
-					case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
-					case OLD_WIDE_CHAR_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
-					case OLD_BIT_TYPE:
-						ip[l_real_count] = egc_bit_dtype;
-						l_real_count++;
-						ridr_norm_int (&val);	/* Number of bits. */
-						ip[l_real_count] = (int16) val;
-						i--;
-						break;
-					default:
-						ip[l_real_count] = dftype;
-						l_real_count++;
-				}
-			}
+		l_cid [0] = count;
+		buffer_read ((char *) (l_cid + 1), count * sizeof (int16));
+		l_cid [count + 1] = TERMINATOR;
+
+		if (rt_kind) {
+			dftype = eif_gen_id_from_cid (l_cid, dtypes);
+		} else {
+			dftype = eif_gen_id_from_cid (l_cid, (int *)0);
+		}
+
+		if (count >= CIDARR_SIZE) {
+				/* Let's free the allocated array. */
+			free (l_cid);
 		}
 	}
 
-	cidarr [0] = (int16) l_real_count;
-	cidarr [l_real_count+1] = TERMINATOR;
+	return (uint32) ((oflags & EO_UPPER) | dftype);
+}
 
-	if (rt_kind)
-		dftype = eif_gen_id_from_cid (cidarr, dtypes);
-	else
-		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
+/*
+doc:	<routine name="rt_id_read_cid" return_type="uint32" export="private">
+doc:		<summary>Given `oflags', flags of the stored object, let's find the new flags in the retrieving system. This routine only works for independent store, for basic and general store one has to use `rt_read_cid'.</summary>
+doc:		<param name="oflags" type="uint32">Flags of the stored object.</param>
+doc:		<return>New flags for the retrieving system.</return>
+doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
 
-	*nflags = (oflags & EO_UPPER) | dftype;
+rt_private uint32 rt_id_read_cid (uint32 oflags)
+{
+	RT_GET_CONTEXT
+	uint32 l_real_count, count, val;
+	int16 dftype, *ip, *l_cid;
+	int i;
 
-	if (crflags != (uint32 *) 0)
-		/* Used for creation (emalloc). Map type */
-		*crflags = *nflags;
+	dftype = oflags & EO_TYPE;
+	if (rt_kind) {
+		dftype = dtypes [dftype];
+	}
+
+	ridr_norm_int (&count);    
+
+	if (count >= 2) {
+			/* We now read the generic parameters' type. */
+		if (count >= CIDARR_SIZE) {
+				/* In case it is more than the allocated memory for `cidarr'.
+				 * `count + 2' because `l_cid' array has indices between the
+				 * range of `0' to `count + 1'*/
+			l_cid = (int16 *) malloc ((count + 2) * sizeof(int16));
+		} else {
+			l_cid = cidarr;
+		}
+
+		if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+			l_real_count = count;
+			ip = l_cid + 1;
+			for (i = count; i; --i, ++ip) {
+				ridr_norm_int (&val);
+				*ip = (int16) val;
+			}
+		} else {
+				/* Read old format of `cid' array corresponding to storable versions strictly less
+				 * than INDEPENDENT_STORE_5_5 and convert as we go to new format. */
+			ip = l_cid + 1;
+			l_real_count = 0;
+			for (i = count; i; --i) {
+				ridr_norm_int (&val);
+				dftype = (int16) val;
+				if (dftype <= OLD_EXPANDED_LEVEL) {
+					ip[l_real_count] = OLD_EXPANDED_LEVEL - dftype;
+					l_real_count++;
+				} else if (dftype == OLD_TUPLE_TYPE) {
+					ip[l_real_count] = TUPLE_TYPE;
+					l_real_count++;
+					ridr_norm_int (&val);	/* Uniformizer, not used. */
+					ridr_norm_int (&val);	/* Nb of generics. */
+					ip[l_real_count] = (int16) val;
+					l_real_count++;
+					ridr_norm_int (&val);	/* Base id for TUPLE */
+					ip[l_real_count] = (int16) val;
+					l_real_count++;
+						/* We skip the already treated elements */
+					i -= 3;
+				} else if (dftype <= OLD_FORMAL_TYPE) {
+					ip[l_real_count] = FORMAL_TYPE;
+					l_real_count++;
+						/* This is the only place where the new encoding is bigger than the old one.
+						 * So we need to make sure that we are in the proper bounds of the `l_cid' array. */
+					if ((l_real_count + 1) >= count) {
+							/* Reallocate array to allow ranges between `0' and `(l_real_count + 1) + 1'. */
+						if (count >= CIDARR_SIZE) {
+								/* Let's resize our existing allocated `l_cid' array. */
+							l_cid = (int16 *) realloc (l_cid, (l_real_count + 3) * sizeof(int16));
+						} else {
+								/* Create a new memory block and copy content of `cidarr' in it. */
+							l_cid = (int16 *) malloc ((l_real_count + 3) * sizeof(int16));
+							memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(int16));
+						}
+						ip = l_cid + 1;
+					}
+					ip[l_real_count] = OLD_FORMAL_TYPE - dftype;	/* Insert position of formal */
+					l_real_count++;
+				} else {
+					switch (dftype) {
+						case OLD_CHARACTER_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
+						case OLD_BOOLEAN_TYPE: ip[l_real_count] = egc_bool_dtype; l_real_count++; break;
+						case OLD_INTEGER_8_TYPE: ip[l_real_count] = egc_int8_dtype; l_real_count++; break;
+						case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
+						case OLD_INTEGER_32_TYPE: ip[l_real_count] = egc_int32_dtype; l_real_count++; break;
+						case OLD_INTEGER_64_TYPE: ip[l_real_count] = egc_int64_dtype; l_real_count++; break;
+						case OLD_REAL_TYPE: ip[l_real_count] = egc_real_dtype; l_real_count++; break;
+						case OLD_DOUBLE_TYPE: ip[l_real_count] = egc_doub_dtype; l_real_count++; break;
+						case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
+						case OLD_WIDE_CHAR_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
+						case OLD_BIT_TYPE:
+							ip[l_real_count] = egc_bit_dtype;
+							l_real_count++;
+							ridr_norm_int (&val);	/* Number of bits. */
+							ip[l_real_count] = (int16) val;
+							i--;
+							break;
+						default:
+							ip[l_real_count] = dftype;
+							l_real_count++;
+					}
+				}
+			}
+		}
+
+		l_cid [0] = (int16) l_real_count;
+		l_cid [l_real_count + 1] = TERMINATOR;
+
+		if (rt_kind) {
+			dftype = eif_gen_id_from_cid (l_cid, dtypes);
+		} else {
+			dftype = eif_gen_id_from_cid (l_cid, NULL);
+		}
+
+		if (count >= CIDARR_SIZE) {
+				/* Let's free the allocated array. */
+			free (l_cid);
+		}
+	}
+
+	return (uint32) ((oflags & EO_UPPER) | dftype);
 }
 
 /*

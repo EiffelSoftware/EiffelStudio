@@ -173,7 +173,23 @@ feature -- Interface
 					int := date.day_of_the_week
 					Result.append (days.item (int))
 				when 4 then
-					Result.append (date.year.out)
+					-- Test if the year has four digits, if not put 0 to fill it
+					if date.year.out.count = 4 then
+						Result.append(date.year.out)
+					else
+						if date.year.out.count = 1 then
+							Result.append ("000")
+							Result.append(date.year.out)
+						end
+						if date.year.out.count = 2 then
+							Result.append ("00")
+							Result.append(date.year.out)
+						end
+						if date.year.out.count =3 then
+							Result.append("0")
+							Result.append(date.year.out)
+						end
+					end
 				when 5 then 
 					int := date.year - 1900
 					Result.append (int.out)

@@ -51,6 +51,7 @@ feature -- Initialization
 				-- set title also realizes the window.
 			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
 			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
+			
 			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
@@ -77,44 +78,44 @@ feature  -- Access
 	x_position: INTEGER is
 			-- Horizontal position relative to parent.
 		local
-			a_x: INTEGER
+		--	a_x: INTEGER
 			a_aux_info: POINTER
 		do
-			if is_show_requested then
-				C.gdk_window_get_position (
-					C.gtk_widget_struct_window (c_object),
-					$a_x,
-					NULL
-				)
-				Result := a_x
-			else
+		--	if is_displayed then
+		--		C.gdk_window_get_position (
+		--			C.gtk_widget_struct_window (c_object),
+		--			$a_x,
+		--			NULL
+		--		)
+		--		Result := a_x
+		--	else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
 					Result := C.gtk_widget_aux_info_struct_x (a_aux_info)
 				end
-			end
+		--	end
 			
 		end
 
 	y_position: INTEGER is
 			-- Vertical position relative to parent.
 		local
-			a_y: INTEGER
+		--	a_y: INTEGER
 			a_aux_info: POINTER
 		do
-			if is_show_requested then
-				C.gdk_window_get_position (
-					C.gtk_widget_struct_window (c_object),
-					NULL,
-					$a_y
-				)
-				Result := a_y
-			else
+		--	if is_displayed then
+		--		C.gdk_window_get_position (
+		--			C.gtk_widget_struct_window (c_object),
+		--			NULL,
+		--			$a_y
+		--		)
+		--		Result := a_y
+		--	else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
 					Result := C.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
-			end
+	--		end
 			
 		end
 
@@ -336,6 +337,7 @@ feature -- Element change
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
+			mb_imp.set_parent_window (interface)
 			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
 			from
@@ -378,6 +380,7 @@ feature -- Element change
 					menu_bar.forth
 				end
 				mb_imp ?= menu_bar.implementation
+				mb_imp.remove_parent_window
 				C.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
 			menu_bar := Void
@@ -436,17 +439,24 @@ feature {NONE} -- Implementation
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
+		do
+			Precursor
+
+			create upper_bar
+			create lower_bar
+			
+			signal_connect_true ("delete_event", agent call_close_request_actions)
+			initialize_client_area
+		end
+		
+	initialize_client_area is
+				--
 		local
 			scr: EV_SCREEN
 			bar_imp: EV_VERTICAL_BOX_IMP
 			app: EV_APPLICATION
 			app_imp: EV_APPLICATION_IMP
 		do
-			Precursor
-
-			create upper_bar
-			create lower_bar
-
 			vbox := C.gtk_vbox_new (False, 0)
 			C.gtk_widget_show (vbox)
 			C.gtk_container_add (c_object, vbox)
@@ -480,10 +490,8 @@ feature {NONE} -- Implementation
 				application_created: app_imp /= Void
 			end
 			app_imp.window_oids.extend (object_id)
-			signal_connect_true ("delete_event", agent call_close_request_actions)
-			enable_user_resize
 		end
-		
+
 	call_close_request_actions is
 			-- Call the close request actions.
 		do
@@ -529,6 +537,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2001/06/21 23:39:32  king
+--| Removed incorrect policy setting, abstracted initialize_client_area
+--|
 --| Revision 1.51  2001/06/19 16:53:04  king
 --| Further restricted chances of user movement
 --|

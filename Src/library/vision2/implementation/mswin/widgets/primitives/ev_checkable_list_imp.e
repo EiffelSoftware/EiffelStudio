@@ -49,9 +49,7 @@ feature -- Status setting
 			-- checked.
 		local
 			i: INTEGER
-			litem: WEL_LIST_VIEW_ITEM
 			item_imp: EV_LIST_ITEM_IMP
-			temp: INTEGER
 		do
 			item_imp ?= list_item.implementation
 			i := ev_children.index_of (item_imp, 1) - 1
@@ -64,9 +62,7 @@ feature -- Status setting
 			-- checked.
 		local
 			i: INTEGER
-			litem: WEL_LIST_VIEW_ITEM
 			item_imp: EV_LIST_ITEM_IMP
-			temp: INTEGER
 		do
 			item_imp ?= list_item.implementation
 			i := ev_children.index_of (item_imp, 1) - 1

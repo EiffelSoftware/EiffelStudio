@@ -15,7 +15,6 @@ inherit
 create
 	make,
 	make_by_code,
-	make_by_pixmap,
 	make_by_filename
 
 feature {NONE} -- Initialization
@@ -36,21 +35,17 @@ feature {NONE} -- Initialization
 			destroyed := False
 		end
 
-	make_by_pixmap (pix: EV_PIXMAP) is
-			-- Create a cursor with `pix' as appearance
-		do
-			check
-				to_be_implemented: False
-			end
-			destroyed := False
-		end
-
 	make_by_filename (filename: STRING) is
 			-- Create a cursor from the given file path
+		local
+			fname: ANY
 		do
 			check
 				to_be_implemented: False
 			end
+			fname := filename.to_c
+			-- Place hotspot on half width half height of pixmap
+			cursor := c_gtk_create_cursor_with_pixmap ($fname, 8, 8)
 			destroyed := False
 		end
 
@@ -84,6 +79,11 @@ feature -- External
 	gdk_cursor_destroy (cursor_pointer: POINTER) is
 		external
 			"C (GdkCursor *) | <gdk/gdk.h>"
+		end
+
+	c_gtk_create_cursor_with_pixmap (filename: POINTER; xcoord, ycoord: INTEGER): POINTER is
+		external
+			"C (char *, gint, gint): EIF_POINTER | %"gtk_eiffel.h%""
 		end
 
 

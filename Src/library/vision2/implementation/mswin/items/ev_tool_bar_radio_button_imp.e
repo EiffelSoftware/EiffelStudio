@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision tool-bar radio button, mswindows implementation."
+	description: "EiffelVision tool-bar radio button, mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -74,7 +72,7 @@ feature -- Status report
 				until
 					radio_group.off
 				loop
-					radio_group.item.disable_select	
+					radio_group.item.disable_select
 					radio_group.forth
 				end
 				radio_group.go_to (cur)
@@ -109,6 +107,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/25 22:40:08  rogers
+--| Removed FIXME NOT_REVIEWED.
+--|
 --| Revision 1.10  2000/04/07 00:48:00  rogers
 --| Formatting and comments.
 --|

@@ -711,13 +711,13 @@ end;
 					item.function.append_to (structured_text);
 					structured_text.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("calls") then
-					structured_text.add_string (item.number_of_calls.out)
+					structured_text.add_string (item.calls.out)
 				elseif prof_options.output_names.item (i).is_equal ("self") then
-					structured_text.add_string (item.self_sec.out)
+					structured_text.add_string (item.self.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendants") then
-					structured_text.add_string (item.descendants_sec.out);
+					structured_text.add_string (item.descendants.out);
 				elseif prof_options.output_names.item (i).is_equal ("total") then
-					structured_text.add_string (item.total_sec.out)
+					structured_text.add_string (item.total.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then
 					structured_text.add_string (item.percentage.out);
 				end

@@ -11,6 +11,7 @@ inherit
 	WEL_MB_CONSTANTS
 		export
 			{NONE} all
+			{ANY} default_pointer
 		end
 
 	WEL_GWL_CONSTANTS
@@ -110,12 +111,18 @@ feature -- Status report
 	window_of_item (hwnd: POINTER): WEL_WINDOW is
 			-- Retrieve Eiffel object associated with `hwnd' pointer.
 		require
+			hwnd_not_null: hwnd /= default_pointer
 			is_window_pointer: is_window (hwnd)
 		local
 			object_id: INTEGER
 		do
 			object_id := cwin_get_window_long (hwnd, gwl_userdata)
 			Result := eif_id_object (object_id)
+		ensure
+			is_wel_window: Result /= Void implies 
+				(create {INTERNAL}).type_conforms_to (
+					(create {INTERNAL}).dynamic_type (Result),
+					(create {INTERNAL}).dynamic_type_from_string ("WEL_WINDOW"))
 		end
 		
 	key_state (virtual_key: INTEGER): BOOLEAN is

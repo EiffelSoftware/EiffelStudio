@@ -277,7 +277,7 @@ feature -- Status setting
 			-- `inc' and `position'.
 		require
 			exists: exists
-                        position_small_enough: position <= maximal_horizontal_position
+			position_small_enough: position <= maximal_horizontal_position
 			position_large_enough: position >= minimal_horizontal_position
 		do
 			scroll (inc, 0)
@@ -616,8 +616,12 @@ feature {NONE} -- Implementation
 						control_exists: control.exists
 					end
 					on_control_command (control)
-					notify (control, notify_code)
-					control.process_notification (notify_code)
+					if control.exists then
+						notify (control, notify_code)
+					end
+					if control.exists then
+						control.process_notification (notify_code)
+					end
 				end
 			elseif notify_code = 0 then
 				-- Message comes from a menu
@@ -791,7 +795,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := not closeable
+			set_default_processing (closeable)
 		end
 
 	on_wm_destroy is
@@ -855,9 +859,7 @@ feature {WEL_DISPATCHER}
 			elseif msg = Wm_querynewpalette then
 				on_query_new_palette
 			elseif msg = Wm_close then
-				if on_wm_close then
-					Result := -1
-				end
+				if on_wm_close then end
 			end
 		end
 

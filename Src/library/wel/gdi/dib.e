@@ -187,6 +187,8 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0
 		end
 
+feature {WEL_BITMAP}
+
 	info_header: WEL_BITMAP_INFO_HEADER
 
 end -- class WEL_DIB

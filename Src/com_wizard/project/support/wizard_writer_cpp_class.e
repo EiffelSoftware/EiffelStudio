@@ -60,6 +60,10 @@ feature -- Access
 			Result.append ("%N")
 			Result.append (header)
 			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
+			if not abstract then
+				Result.append (Ecom_generated_rt_globals_header_file_name)
+				Result.append ("%"%N#include %"")
+			end
 			Result.append (definition_header_file_name)
 			Result.append ("%"%N")
 			from
@@ -175,9 +179,6 @@ feature -- Access
 		local
 			l_protector: STRING
 		do
-			if not abstract then
-				conversion_include
-			end
 			create Result.make (4096)
 			Result.append ("/*-----------------------------------------------------------%N")
 			Result.append (header)
@@ -560,12 +561,6 @@ feature -- Basic Operations
    		do
 			save_content (a_header_file, generated_definition_header_file)
 	 	end
-
-	conversion_include is
-			-- Standart include files.
-		do
-			add_import_after (Ecom_generated_rt_globals_header_file_name)
-		end
 
 feature {NONE} -- Implementation
 

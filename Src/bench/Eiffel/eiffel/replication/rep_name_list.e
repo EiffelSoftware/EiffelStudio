@@ -150,7 +150,7 @@ debug ("REPLICATION")
 	--io.error.putstring ("%Tcreating rep depend unit for: ");
 	--io.error.putstring (old_feat.feature_name);
 	--io.error.putstring ("%N in class: ");
-	--io.error.putstring (System.class_of_id (orig_written_in).class_name);
+	--io.error.putstring (System.class_of_id (orig_written_in).name);
 	--io.error.new_line;
 end;
 					old_name := old_feat.feature_name;
@@ -191,7 +191,7 @@ debug ("REPLICATION")
 	io.error.putstring (item.rep_feature.feature_name);
 	io.error.putstring (item.rep_feature.generator);
 	io.error.putstring ("written in: ");
-	io.error.putstring (item.rep_feature.written_class.class_name);
+	io.error.putstring (item.rep_feature.written_class.name);
 	io.error.new_line;
 end;
 			from

@@ -497,7 +497,7 @@ feature -- Debug
 			if source_class = Void then
 				io.error.putstring ("VOID");
 			else
-				io.error.putstring (source_class.class_name);
+				io.error.putstring (source_class.name);
 			end;
 			io.error.putstring (")");
 			io.error.putstring (" target: ");
@@ -512,7 +512,7 @@ feature -- Debug
 			if target_class = Void then
 				io.error.putstring ("VOID");
 			else
-				io.error.putstring (target_class.class_name);
+				io.error.putstring (target_class.name);
 			end
 			io.error.putstring (")");
 			io.error.new_line;

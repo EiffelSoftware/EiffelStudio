@@ -878,7 +878,7 @@ debug ("SERVER")
 	io.putstring ("Change body id of feature: ");
 	io.putstring (feature_name);
 	io.putstring (" of class ");
-	io.putstring (written_class.class_name);
+	io.putstring (written_class.name);
 	io.putstring (" old: ");
 	io.putstring (old_body_id.dump);
 	io.putstring (" new: ");
@@ -1765,7 +1765,7 @@ feature -- Debug purpose
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("written in = ");
-			io.error.putstring (written_class.class_name);
+			io.error.putstring (written_class.name);
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("body_id = ");

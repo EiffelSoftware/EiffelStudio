@@ -60,10 +60,10 @@ feature
 			Result.set_body_index (body_index);
 debug
 io.error.putstring ("arg = ");
-io.error.putstring (class_type.type.base_class.class_name);
+io.error.putstring (class_type.type.base_class.name);
 io.error.putstring ("   ");
 io.error.putstring ("cur = ");
-io.error.putstring (written_class.class_name);
+io.error.putstring (written_class.name);
 io.error.new_line;
 end;
 			written_type := written_class.meta_type (class_type.type);

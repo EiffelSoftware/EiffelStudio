@@ -227,7 +227,7 @@ feature
 --						(postcondition /= Void and then postcondition.is_then)
 --					then
 --io.error.putstring ("Error VE05: require else or ensure then%NClass: ");
---io.error.putstring (System.current_class.class_name);
+--io.error.putstring (System.current_class.name);
 --io.error.putstring ("%NFeature: ");
 --io.error.putstring (feature_name);
 --io.error.new_line;

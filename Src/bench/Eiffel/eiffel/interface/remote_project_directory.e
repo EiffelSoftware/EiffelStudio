@@ -352,7 +352,6 @@ feature {NONE} -- Implementation
 			fn: FILE_NAME;
 			vd43: VD43;
 			ok: BOOLEAN
-			i: INTEGER;
 		do
 			if is_valid and not il_generation then
 				create fn.make_from_string (rn)

@@ -14,7 +14,7 @@ inherit
 --			compatible, process_breakable,
 --			process_feature, process_class
 --		end
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 		redefine
 			tool
 		end
@@ -93,7 +93,7 @@ feature -- Update
 			if Eiffel_project.successful then
 				f := fs.e_feature
 				if f /= Void and then f.is_debuggable and then Application.has_feature (f) then
---					!! mp.set_watch_cursor
+--					create mp.set_watch_cursor
 					Application.remove_feature (f)
 					create disp_bp
 					disp_bp.execute (Void, Void)	
@@ -111,7 +111,7 @@ feature -- Update
 --			mp: MOUSE_PTR
 		do
 			if Eiffel_project.successful and then cs.e_class /= Void then
---				!! mp.set_watch_cursor
+--				create mp.set_watch_cursor
 				Application.remove_class (cs.e_class)
 				create disp_bp
 				disp_bp.execute (Void, Void)	

@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_EDITOR_COMMAND
+	EB_TEXT_TOOL_CMD
 		redefine
 			tool, make
 		end

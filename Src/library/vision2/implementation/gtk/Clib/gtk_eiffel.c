@@ -1083,9 +1083,9 @@ void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int
 	
 	/* We create the background color */
 	style = GTK_WIDGET(widget)->style;
-	back->red = 1 /*style->text[GTK_STATE_NORMAL].red;*/
-	back->green = 1 /*style->text[GTK_STATE_NORMAL].green;*/
-	back->blue = 1 /*style->text[GTK_STATE_NORMAL].blue;*/
+	back->red = style->base[GTK_STATE_NORMAL].red;
+	back->green = style->base[GTK_STATE_NORMAL].green;
+	back->blue = style->base[GTK_STATE_NORMAL].blue;
 
 	gtk_text_insert (GTK_TEXT (widget), font, fore, back, txt, length);
 }
@@ -1223,5 +1223,40 @@ void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* 
 		*b = style->text[GTK_STATE_NORMAL].blue;
 
 		*r /= 257; *g /= 257; *b /= 257;
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_font_selection_set_filter'
+ *
+ * Note : Set the filter on th given font selection.
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+void c_gtk_font_selection_set_filter (GtkFontSelection *fontsel,
+		const char *foundries,
+		const char *weights,
+		const char *slants,
+		const char *setwidths,
+		const char *spacings,
+		const char *charsets)
+{
+		gchar **f;
+		gchar **w;
+		gchar **sl;
+		gchar **sw;
+		gchar **sp;
+		gchar **c;
+	
+		f = (gchar **) &foundries;
+		w = (gchar **) &weights;
+		sl = (gchar **) &slants;
+		sw = (gchar **) &setwidths;
+		sp = (gchar **) &spacings;
+		c = (gchar **) &charsets;
+			
+		gtk_font_selection_set_filter (fontsel,GTK_FONT_FILTER_USER,GTK_FONT_ALL,f, w, sl, sw, sp, c);
 }
 

@@ -53,9 +53,11 @@ feature {NONE}
 	launch_c_compilation (argument: ANY) is
 		do
 			error_window.put_string ("System recompiled%N");
-			error_window.put_string
-				("Launching C compilation in background...%N");
-			finish_freezing;
+			if start_c_compilation then
+				error_window.put_string
+					("Launching C compilation in background...%N");
+				finish_freezing;
+			end
 		end;
 
 feature 
@@ -65,7 +67,6 @@ feature
 			Result := bm_Freeze 
 		end; 
 
-	
 feature {NONE}
 
 	compilation_allowed: BOOLEAN is

@@ -14,12 +14,39 @@ inherit
 			make as wel_make,
 			main_args as menu_main_args,
 			popup_menu as wel_submenu
+		export
+			{MENU_WINDOWS} destroy_item
 		end;
 
 	MANAGER_WINDOWS
+		rename
+			unrealize as composite_unrealize
 		redefine
+			set_managed,
 			realized
 		end
+
+	MANAGER_WINDOWS
+		redefine
+			set_managed,
+			unrealize,
+			realized
+		select
+			unrealize
+		end
+
+feature {NONE} -- Initialization
+
+	realize_current is
+			-- Realize current widget.
+		do
+			realized := True
+		end
+
+feature -- Access
+
+	associated_root: ROOT_MENU_WINDOWS
+			-- The root of the menu
 
 feature -- Status report
 
@@ -35,8 +62,33 @@ feature -- Status report
 
 	realized: BOOLEAN
 			-- Is current menu realized
-	
+
 feature -- Status setting
+
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		local
+			m: MENU_PULL_WINDOWS
+		do
+			if realized then
+				if parent /= Void and parent.realized and then parent.exists then
+					if not managed and then flag then
+						managed := flag
+						m ?= parent
+						m.manage_item (Current)
+					elseif managed and then not flag then
+						m ?= parent
+						m.unmanage_item (Current)
+					end
+				end
+			else
+				managed := flag
+				realize
+			end
+		end
+
 
 	check_widget (widget: TOGGLE_B_WINDOWS) is
 		local
@@ -83,6 +135,7 @@ feature -- Status setting
 		local
 			c: ARRAYED_LIST [WIDGET_WINDOWS]
 		do
+			associated_root := root
 			!! id_children.make (5)
 			c := children_list
 			from
@@ -92,6 +145,53 @@ feature -- Status setting
 			loop
 				put_child_in_menu (c.item, root)
 				c.back
+			end
+		end
+
+	add_a_child (widget: WIDGET_WINDOWS) is
+			-- Add `widget' to the menu.
+		require
+			menu_realized: realized
+		local
+			button: BUTTON_WINDOWS
+			toggle_b: TOGGLE_B_WINDOWS
+			separator: SEPARATOR_WINDOWS
+			pulldown: MENU_PULL_WINDOWS
+		do
+			button ?= widget
+			if button /= Void then
+				associated_root.add (button)
+				if button.managed then
+					append_string (button.text, associated_root.value)
+				end
+				button.set_hash_code
+				id_children.put (associated_root.value, button)
+				toggle_b ?= widget
+				if toggle_b /= Void and then toggle_b.managed then
+					if toggle_b.state then
+						check_item (associated_root.value)
+					else
+						uncheck_item (associated_root.value)
+					end
+				end
+			else
+				separator ?= widget
+				if separator /= Void and then separator.managed then
+					append_separator
+				else
+					pulldown ?= widget
+					if pulldown /= Void then
+						pulldown.create
+						pulldown.put_children_in_menu (associated_root)
+						if pulldown.managed then
+							append_popup (pulldown, pulldown.menu_button.text)
+						end
+					else
+						io.error.putstring ("Unknown type in menu ")
+						io.error.putstring (widget.generator)
+						io.error.new_line
+					end
+				end
 			end
 		end
 
@@ -111,11 +211,13 @@ feature -- Status setting
 				menu_b ?= widget
 				if menu_b = Void or menu_b.associated_menu = Void then
 					root.add (button)
-					append_string (button.text, root.value)
+					if button.managed then
+						append_string (button.text, root.value)
+					end
 					button.set_hash_code
 					id_children.put (root.value, button)
 					toggle_b ?= widget
-					if toggle_b /= Void then
+					if toggle_b /= Void and then toggle_b.managed then
 						if toggle_b.state then
 							check_item (root.value)
 						else
@@ -125,14 +227,16 @@ feature -- Status setting
 				end
 			else
 				separator ?= widget
-				if separator /= Void then
+				if separator /= Void and then separator.managed then
 					append_separator
 				else
 					pulldown ?= widget
 					if pulldown /= Void then
 						pulldown.create
 						pulldown.put_children_in_menu (root)
-						append_popup (pulldown, pulldown.menu_button.text)
+						if pulldown.managed then
+							append_popup (pulldown, pulldown.menu_button.text)
+						end
 					else
 						io.error.putstring ("Unknown type in menu ")
 						io.error.putstring (widget.generator)
@@ -142,8 +246,117 @@ feature -- Status setting
 			end
 		end
 
-	realize_current is
+feature -- Element change
+
+	manage_item (w: WIDGET_WINDOWS) is
+			-- Manage a item in the menu.
+		require
+			root_present: associated_root /= Void
+		local
+			ba: BAR_WINDOWS
+			mp: MENU_PULL_WINDOWS
+			b: BUTTON_WINDOWS
+			s: SEPARATOR_WINDOWS
 		do
+			b ?= w
+			if b /= Void then
+				mp ?= b.parent
+				check
+					parent_not_void: mp /= Void
+				end
+				associated_root.new_id
+				mp.insert_button (b, associated_root.value)
+				b.set_hash_code
+				id_children.put (associated_root.value, b)
+			else
+				s ?= w
+				if s /= Void then
+					mp ?= s.parent
+					check
+						parent_not_void: mp /= Void
+					end
+					mp.manage_separator (s)
+				else
+					mp ?= w
+					if mp /= Void then
+						mp.create
+						--ba ?= mp.parent
+						--if ba /= Void then
+							mp.put_children_in_menu (associated_root)
+							append_popup (mp, mp.menu_button.text)
+						--else
+						--	-- Add popup to menupull XXX
+						--end
+					end
+				end
+			end
+		end
+
+	unmanage_item (w: WIDGET_WINDOWS) is
+			-- Unmanage a item in the menu
+		require
+			root_present: associated_root /= Void
+		local
+			ba: BAR_WINDOWS
+			s: SEPARATOR_WINDOWS
+			b: BUTTON_WINDOWS
+			mp: MENU_PULL_WINDOWS
+		do
+			b ?= w
+			if b /= Void then
+				mp ?= b.parent
+				check
+					parent_not_void: mp /= Void
+				end
+				delete_item (id_children.item (b))
+				id_children.remove (b)
+			else
+				s ?= w
+				if s /= Void then
+					-- Delete separator from menu XXX
+				else
+					mp ?= w
+					if mp /= Void then
+						mp.destroy_item
+						--ba ?= mp.parent
+						--if ba /= Void then
+						--	ba.remove_popup (mp)
+						--else
+						--	cwin_delete_menu (wel_item, index_of (mp) - unmanaged_count (mp) - 1, Mf_byposition)
+						--	delete_item (id_children.item (mp))
+						--	id_children.remove (mp)
+						--end
+					end
+				end
+			end
+		end
+
+feature -- Removal
+
+	unrealize is
+			-- Unrealize current widget.
+		do
+			composite_unrealize
+			realized := False
+		end
+
+feature {NONE} -- Implementation
+
+	associated_shell: WM_SHELL_WINDOWS is
+		local
+			p : COMPOSITE_WINDOWS
+		do
+			from
+				p := parent
+				Result ?= p
+			until
+				Result /= Void or p = Void
+			loop
+				p := p.parent
+				Result ?= p
+			end
+		ensure
+			Result_exists: Result /= Void
 		end
 
 	id_children: HASH_TABLE [INTEGER, WIDGET_WINDOWS]
@@ -194,7 +407,7 @@ feature -- Inapplicable
 		do 
 		end
 
-	wel_set_menu (wel_menu: WEL_MENU) is
+	wel_set_menu (a_menu: WEL_MENU) is
 		do
 		end
 

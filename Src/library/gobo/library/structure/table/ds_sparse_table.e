@@ -237,7 +237,6 @@ feature -- Search
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `k'.
 		local
-			default_item: G
 			a_cell: like dead_cell
 		do
 			search_position (k)

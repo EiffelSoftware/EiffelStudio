@@ -73,23 +73,15 @@ feature {NONE}
 		do
 			if argument = apply_it then
 				arg_list := argument_list;
-				if not selection_text.empty then
-					arg_list.wipe_out;
-					arg_list.append (clone (selection_text));
-				else
-					set_selection_text (arg_list);
-				end;
+				arg_list.wipe_out;
+				arg_list.append (clone (selection_text));
 				popdown
 			elseif argument = cancel_it then
 				popdown
 			elseif argument = Void then
 				arg_list := argument_list;
-				if not selection_text.empty then
-					arg_list.wipe_out;
-					arg_list.append (clone (selection_text));
-				else
-					set_selection_text (arg_list);
-				end;
+				arg_list.wipe_out;
+				arg_list.append (clone (selection_text));
 				run.execute (Void)
 			end
 		end;

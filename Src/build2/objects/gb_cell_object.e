@@ -15,8 +15,6 @@ inherit
 		end
 		
 	GB_PARENT_OBJECT
-
-	GB_SHARED_TOOLS
 	
 create
 	make_with_type,

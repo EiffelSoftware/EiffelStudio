@@ -52,10 +52,10 @@ feature -- Access
 	is_valid_method_flag (flag: INTEGER): BOOLEAN is
 			-- Is `flag' a valid method flag?
 		do
-			Result := flag = Dispatch_method or
-						flag = Dispatch_propertyget or
-						flag = Dispatch_propertyput or
-						flag = Dispatch_propertyputref
+			Result := is_dispatch_method (flag) or
+						is_dispatch_propertyget (flag) or
+						is_dispatch_propertyput (flag) or
+						is_dispatch_propertyputref (flag)
 		end
 	
 	is_dispatch_method (flag: INTEGER): BOOLEAN is

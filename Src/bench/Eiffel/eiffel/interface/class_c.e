@@ -1871,9 +1871,10 @@ feature -- Class initialization
 					Current /= System.integer_32_class.compiled_class and then
 					Current /= System.integer_64_class.compiled_class and then
 					Current /= System.real_class.compiled_class and then
+					Current /= System.pointer_class.compiled_class and then
+					Current /= System.typed_pointer_class.compiled_class and then
 					(not System.il_generation and then
-					Current /= System.wide_char_class.compiled_class and then
-					Current /= System.pointer_class.compiled_class)
+					Current /= System.wide_char_class.compiled_class)
 				then
 					System.set_has_expanded
 				end

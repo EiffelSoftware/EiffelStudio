@@ -38,8 +38,8 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			if not objects.first.tooltip.is_empty then
-				add_element_containing_string (element, Tooltip_string, enclose_in_cdata (objects.first.tooltip))	
+			if not objects.first.tooltip.is_empty or uses_constant (Tooltip_string) then
+				add_string_element (element, Tooltip_string, enclose_in_cdata (objects.first.tooltip))	
 			end
 		end
 		
@@ -53,7 +53,7 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
 				stripped_text := strip_cdata (element_info.data)
-				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (stripped_text))
+				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (retrieve_and_set_string_value (Tooltip_string)))
 			end
 		end
 

@@ -18,7 +18,6 @@ inherit
 		undefine
 			default_ex_style,
 			default_style,
-			destroy,
 			class_name,
 			internal_caret_position,
 			internal_set_caret_position,
@@ -29,7 +28,8 @@ inherit
 			set_default_tab_stops,
 			set_tab_stops,
 			set_text,
-			wel_set_text
+			wel_set_text,
+			destroy
 		redefine
 			interface,
 			initialize,
@@ -43,7 +43,8 @@ inherit
 			select_region,
 			selection_start,
 			selection_end,
-			on_erase_background
+			on_erase_background,
+			line_number_from_position
 		select
 			wel_line_index,
 			wel_item,
@@ -83,7 +84,8 @@ inherit
 			text as wel_text,
 			text_length as wel_text_length,
 			set_text as wel_set_text,
-			line as wel_line
+			line as wel_line,
+			line_number_from_position as wel_line_number_from_position
 		undefine
 			hide,
 			line_count,
@@ -373,6 +375,22 @@ feature -- Status report
 			end
 		end
 		
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		do
+			Result := wel_line_number_from_position (i) + 1
+				-- Windows returns the next line if the final line selected
+				-- is a new line character of the final character before word wrapping.
+				-- In this case, we subtract one from the line to find the previous line and check our
+				-- index is not the final character of this line. If it is, we subtract one from the result.
+				-- If the result is already correct, then the match never succeeds, and the values are correct.
+			if (Result - 1) > 0 then
+				if last_position_from_line_number (Result - 1) = i then
+					Result := Result - 1
+				end
+			end
+		end
+		
 	caret_position: INTEGER is
 			-- Current position of caret.
 		do
@@ -428,6 +446,12 @@ feature -- Status setting
 				wel_character_format_not_void: wel_character_format /= Void
 			end
 			set_character_format_selection (wel_character_format)
+		end
+		
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		do
+			
 		end
 		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
@@ -1211,7 +1235,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			destroy_item
+			wel_destroy
 		end
 
 	class_name: STRING is

@@ -74,6 +74,15 @@ feature -- Status report
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end
+		
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		require
+			valid_caret_position: valid_caret_position (i)
+		deferred
+		ensure
+			valid_line_number: Result >= 1 and Result <= line_count
+		end
 
 feature -- Basic operation
 

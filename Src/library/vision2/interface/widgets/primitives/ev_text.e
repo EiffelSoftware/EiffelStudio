@@ -99,6 +99,17 @@ feature -- Status report
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end
+		
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		require
+			not_destroyed: not is_destroyed
+			valid_caret_position: valid_caret_position (i)
+		do
+			Result := implementation.line_number_from_position (i)
+		ensure
+			valid_line_number: Result >= 1 and Result <= line_count
+		end
 
 feature -- Basic operation
 

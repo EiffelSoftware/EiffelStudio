@@ -16,7 +16,7 @@
 <h1>Calculator application sample</h1>
 <center>
 <p>
-<img alt="Hello world form" src="/images/dotnet_samples/calculator.png" width="258" height="257"></p>
+<img alt="Calculator" src="/images/dotnet_samples/calculator.png" width="258" height="257"></p>
 </center>
 <p><br>
 <br>
@@ -48,8 +48,13 @@ operator, then the second operand. Click the &quot;Calculate&quot; button to gen
 result.</p>
 <p>&nbsp;</p>
 <h2>Under the Hood</h2>
-<p>The application uses a local external assembly (my_parser) to parse the
-command line. </p>
+<p>The application uses two local external assemblies, math.dll and 
+parserutils.dll. </p>
+<p>paserutils parses the command line entered, and checks if it is of the form 
+operand1 operator operand2. math.dll calculates the actual result of the command 
+line.</p>
+<p>For the parserutils.dll, we have been obliged to introduce the prefix 
+&quot;parser_&quot; to avoid conflicts between name classes.</p>
 <p>This sample contains the following class: </p>
 <ul>
   <li>

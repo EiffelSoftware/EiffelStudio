@@ -21,10 +21,10 @@ create
 
 feature -- Initialization
 
-	make (a_tool: like tool) is
+	make (a_callback: like command_call_back) is
 			-- Initialize `Current' and associate it with `tool'.
 		do
-			tool := a_tool
+			command_call_back := a_callback
 		end
 
 feature -- Access
@@ -53,8 +53,8 @@ feature -- Measurement
 
 feature -- Status report
 
-	tool: EB_OBJECT_TOOL
-			-- Object tool `Current' is associated with.
+	command_call_back: PROCEDURE [ANY, TUPLE [BOOLEAN]]
+			-- Call back procedure to execute current
 
 	name: STRING is
 			-- Name of the command.
@@ -73,7 +73,9 @@ feature -- Execution
 	execute is
 			-- Remove an object from `tool'.
 		do
-			tool.set_hexa_mode (toggle_button.is_selected)
+			if command_call_back /= Void then
+				command_call_back.call ([toggle_button.is_selected])
+			end
 			if toggle_button.is_selected then
 				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_dec)
 			else

@@ -92,10 +92,6 @@ feature -- Basic Operations
 		local
 			a_string: STRING
 		do
-			a_string := clone (C_compiler)
-			a_string.append (Space)
-			a_string.append (C_compiler_command_line (Generated_iid_file_name))
-			add_message (Current, a_string)
 			generate_make_file (C_compiler_command_line (Generated_iid_file_name), Temporary_input_file_name)
 			a_string := clone (C_compiler)
 			a_string.append (Space)
@@ -109,10 +105,6 @@ feature -- Basic Operations
 		local
 			a_string: STRING
 		do
-			a_string := clone (C_compiler)
-			a_string.append (Space)
-			a_string.append (C_compiler_command_line (Generated_ps_file_name))
-			add_message (Current, a_string)
 			generate_make_file (C_compiler_command_line (Generated_ps_file_name), Temporary_input_file_name)
 			a_string := clone (C_compiler)
 			a_string.append (Space)
@@ -126,10 +118,6 @@ feature -- Basic Operations
 		local
 			a_string: STRING
 		do
-			a_string := clone (C_compiler)
-			a_string.append (Space)
-			a_string.append (C_compiler_command_line (Generated_dlldata_file_name))
-			add_message (Current, a_string)
 			generate_make_file (C_compiler_command_line (Generated_dlldata_file_name), Temporary_input_file_name)
 			a_string := clone (C_compiler)
 			a_string.append (Space)
@@ -149,7 +137,7 @@ feature -- Basic Operations
 			a_string.append (Linker_command_line)
 			add_message (Current, a_string)
 			generate_make_file (Linker_command_line, Temporary_input_file_name)
-			a_string := clone (C_compiler)
+			a_string := clone (Linker)
 			a_string.append (Space)
 			a_string.append (last_make_command)
 			launch (a_string, shared_wizard_environment.destination_folder)
@@ -196,8 +184,6 @@ feature {NONE} -- Implementation
 			else
 				add_error (Current, Could_not_write_makefile)
 			end
-		ensure
-	--		last_command_set: last_command /= Void and then not last_command.empty
 		rescue
 			retried := True
 			retry
@@ -240,6 +226,7 @@ feature {NONE} -- Implementation
 			Result := clone (Common_idl_compiler_options)
 			Result.append ("  /out %"")
 			Result.append (clone (shared_wizard_environment.destination_folder))
+			Result.append_character (Directory_separator)
 			Result.append ("%" /h %"")
 			Result.append (Generated_header_file_name)
 			Result.append ("%" /dlldata %"")

@@ -503,13 +503,16 @@ feature {NONE} -- Implementation
 				if an_environment /= Void then
 					set_shared_wizard_environment (an_environment)
 					add_message (Open_message)
+					project_retrieved := True
 					new_line
 				else
 					add_message (Open_error_message)
+					project_retrieved := False
 					new_line
 				end
 			else
 				add_message (Open_error_message)
+				project_retrieved := False
 				new_line
 			end
 		rescue
@@ -553,8 +556,11 @@ feature {NONE} -- Implementation
 	Output_edit_name: STRING is "Output"
 			-- Output edit name
 
-	Initial_text: STRING is "Ready.%R%N%R%N"
+	Initial_text: STRING is ""
 			-- Output edit initial text
+
+	project_retrieved: BOOLEAN	
+			-- Was project correctly retrieved?
 
 feature {NONE} -- Behavior
 
@@ -573,6 +579,9 @@ feature {NONE} -- Behavior
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					open_project (open_file_dialog.file_name)
+					if project_retrieved then
+						start
+					end
 				end
 			when Save_id then
 				save_file_dialog.activate (Current)

@@ -269,6 +269,7 @@ feature -- Status report
 			if a_tree_path_list /= NULL then
 					a_tree_path := feature {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_tree_node_imp := node_from_tree_path (a_tree_path)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
 					feature {EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 					Result := a_tree_node_imp.interface
 			end

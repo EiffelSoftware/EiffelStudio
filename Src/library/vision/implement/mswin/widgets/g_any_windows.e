@@ -401,6 +401,24 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
+	visible_actions: ACTIONS_MANAGER is
+			-- Event handler for a visible event
+		once
+			!! Result.make
+		end
+
+	map_actions: ACTIONS_MANAGER is
+			-- Event handler for a mapping event.
+		once
+			!! Result.make
+		end
+
+	unmap_actions: ACTIONS_MANAGER is
+			-- Event handler for a unmapping event.
+		once
+			!! Result.make
+		end
+
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- All the system metrics
 		once

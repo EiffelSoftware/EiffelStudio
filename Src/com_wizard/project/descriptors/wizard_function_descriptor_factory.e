@@ -18,11 +18,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	ECOM_FUNC_KIND
 		export
 			{NONE} all

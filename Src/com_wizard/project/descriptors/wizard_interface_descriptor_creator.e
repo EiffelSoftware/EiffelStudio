@@ -64,7 +64,6 @@ feature -- Basic operations
 			tmp_type_attr := a_type_info.type_attr
 			create guid.make_from_guid (tmp_type_attr.guid)
 
-
 			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			add_type_lib_description (type_library_descriptor)
 

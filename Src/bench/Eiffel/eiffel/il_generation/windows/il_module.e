@@ -991,12 +991,7 @@ feature -- Local saving
 				loop
 					l_sig.reset
 					l_type := l_locals.item.first
-					if l_type.is_basic then
-						l_sig.set_type (l_type.element_type, 0)
-					else
-						l_sig.set_type (l_type.element_type,
-							class_type_token (l_type.static_type_id))
-					end
+					set_signature_type (l_sig, l_type)
 					uni_string.set_string (l_locals.item.second)
 					dbg_writer.define_local_variable (uni_string, i, l_sig)
 					l_locals.forth

@@ -65,7 +65,7 @@ feature {NONE} -- Convenience
 			same_capacity: a_keys.capacity = a_values.capacity
 		local
 			i, nb, nb_entries: INTEGER
-			a_class: CLASS_C
+			l_class: CLASS_C
 			l_has_entry: BOOLEAN
 			l_types: TYPE_LIST
 			l_values: like values
@@ -83,10 +83,10 @@ feature {NONE} -- Convenience
 			until
 				i > nb
 			loop
-				a_class := l_values.item (i)
-				if a_class /= Void then
+				l_class := l_values.item (i)
+				if l_class /= Void then
 					from
-						l_types := a_class.types
+						l_types := l_class.types
 						l_has_entry := False
 						l_types.start
 					until
@@ -154,7 +154,7 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 		local
-			a_class: CLASS_C
+			l_class: CLASS_C
 			i, nb: INTEGER
 			gen_type: GEN_TYPE_I
 			l_types: TYPE_LIST
@@ -197,19 +197,19 @@ feature {NONE} -- C code generation
 			until
 				i > nb
 			loop
-				a_class := l_values.item (i)
-				if a_class /= Void then
-					l_is_generic := a_class.is_generic
+				l_class := l_values.item (i)
+				if l_class /= Void then
+					l_is_generic := l_class.is_generic
 					if l_is_generic then
 						if for_expanded then
 							buffer.putstring ("static int32 exp_patterns")
 						else
 							buffer.putstring ("static int32 patterns")
 						end
-						buffer.putint (a_class.class_id)
+						buffer.putint (l_class.class_id)
 						buffer.putstring (" [] = {%N")
 						from
-							l_types := a_class.types
+							l_types := l_class.types
 							l_types.start
 						until
 							l_types.after
@@ -238,7 +238,7 @@ feature {NONE} -- C code generation
 						else
 							buffer.putstring ("static int16 dyn_types")
 						end
-						buffer.putint (a_class.class_id)
+						buffer.putint (l_class.class_id)
 						buffer.putstring (" [] = {%N")
 						from
 							l_types.start
@@ -271,27 +271,43 @@ feature {NONE} -- C code generation
 			until
 				i > nb
 			loop
-				a_class := l_values.item (i)
-				if a_class = Void then
+				l_class := l_values.item (i)
+				if l_class = Void then
 					buffer.putstring ("{(int) 0, (int16) 0, NULL, NULL}")
 				else
 					buffer.putstring ("{(int) ")
-					if a_class.is_generic then
-						buffer.putint (a_class.generics.count)
+					if l_class.is_generic then
+						buffer.putint (l_class.generics.count)
 						if for_expanded then
 							buffer.putstring (", (int16) 0, exp_patterns")
-							buffer.putint (a_class.class_id)
+							buffer.putint (l_class.class_id)
 							buffer.putstring (", exp_dyn_types")
-							buffer.putint (a_class.class_id)
+							buffer.putint (l_class.class_id)
 						else
 							buffer.putstring (", (int16) 0, patterns")
-							buffer.putint (a_class.class_id)
+							buffer.putint (l_class.class_id)
 							buffer.putstring (", dyn_types")
-							buffer.putint (a_class.class_id)
+							buffer.putint (l_class.class_id)
 						end
 					else
 						buffer.putstring ("0, (int16) ")
-						buffer.putint (a_class.types.first.type_id - 1)
+							-- Although it is a loop, only one iteration of it will produce
+							-- an ID because we are in a non generic class and it can only
+							-- have at most 2 types: a non-expanded one and an expanded one.
+						from
+							l_types := l_class.types
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								buffer.putint (l_types.item.type_id - 1)
+							end
+							l_types.forth
+						end
 						buffer.putstring (", NULL, NULL")
 					end
 					buffer.putchar ('}')
@@ -323,7 +339,7 @@ feature {NONE} -- Byte code generation
 		local
 			i, nb, nb_types: INTEGER
 			cl_name: STRING
-			a_class: CLASS_C
+			l_class: CLASS_C
 			l_types: TYPE_LIST
 			gen_type: GEN_TYPE_I
 			l_keys: like keys
@@ -355,25 +371,42 @@ feature {NONE} -- Byte code generation
 			until
 				i > nb
 			loop
-				a_class := l_values.item (i)
-				if a_class = Void then
+				l_class := l_values.item (i)
+				if l_class = Void then
 						-- No generics
 					ba.append_short_integer (0)
 						-- No dynamic type
 					ba.append_short_integer (0)
 				else
-					l_is_generic := a_class.is_generic
+					l_is_generic := l_class.is_generic
 						-- Number of generics
 					if not l_is_generic then
+							-- No generics
 						ba.append_short_integer (0)
-						ba.append_short_integer (a_class.types.first.type_id - 1)
+							-- Although it is a loop, only one iteration of it will produce
+							-- an ID because we are in a non generic class and it can only
+							-- have at most 2 types: a non-expanded one and an expanded one.
+						from
+							l_types := l_class.types
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								ba.append_short_integer (l_types.item.type_id - 1)
+							end
+							l_types.forth
+						end
 					else
-						ba.append_short_integer (a_class.generics.count)
+						ba.append_short_integer (l_class.generics.count)
 						ba.append_short_integer (0)
 	
 							-- Compute number of types that needs to be generated.
 						from
-							l_types := a_class.types
+							l_types := l_class.types
 							nb_types := 0
 							l_types.start
 						until

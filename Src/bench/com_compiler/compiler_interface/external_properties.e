@@ -91,7 +91,7 @@ feature {NONE} -- Access
 						until
 							file_names.after
 						loop
-							Result.extend (file_names.item)
+							Result.extend (file_names.item.out)
 							file_names.forth
 						end
 					end
@@ -104,6 +104,50 @@ feature {NONE} -- Access
 		
 feature -- Status report
 
+	is_external_equal(first, other: STRING): BOOLEAN is
+			-- are the two externals the same
+			-- case and quote insesitive
+		require
+			first_exists: first /= Void
+			valid_first: not first.is_empty
+			other_exists: other /= Void
+			valid_other: not other.is_empty
+		local
+			first_copy: STRING
+			other_copy: STRING
+		do
+			Result := false
+			first_copy := format_external(first)
+			other_copy := format_external(other)
+			
+			first_copy.to_lower
+			other_copy.to_lower
+			
+			if first_copy.is_equal(other_copy) then
+				Result := true
+			end
+			
+		end
+		
+	format_external(extern: STRING): STRING is
+			-- format the external 'extern' to a ace compatible format
+		require
+			external_exists: extern /= Void
+			valid_external: not extern.is_empty
+		do
+			Result := extern.clone(extern)
+			if Result.index_of(' ', 1) > 0 then
+				if not (Result.item (1) = '"') then
+					Result.prepend_character('"')
+				end
+				if not (Result.item (Result.count) = '"') then
+					Result.append_character('"')
+				end
+			end
+			Result.replace_substring_all ("/", "\")
+		end
+		
+		
 feature -- Status setting
 
 feature -- Element change
@@ -117,11 +161,10 @@ feature -- Element change
 			path: STRING
 			object_file_copy: STRING
 			eiffel_dir: STRING
+			addable: BOOLEAN
 		do
-			path := object_file.clone (object_file)
+			path := format_external (object_file)
 			
-			-- ensure that only \ are used in the path
-			path.replace_substring_all ("/", "\")
 			object_file_copy := object_file.clone (object_file)
 			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
 			
@@ -133,14 +176,26 @@ feature -- Element change
 				path.prepend (ace_accesser.Ise_eiffel_envvar)
 			end
 			
-			if not object_files_list.has (path) then
+			from
+				addable := true
+				object_files_list.start
+			until
+				object_files_list.after or not addable
+			loop
+				if is_external_equal(path, object_files_list.item) then
+					addable := false
+				end
+				object_files_list.forth
+			end
+			
+			if addable then
 				object_files_list.extend (path)
 			end
 		end
 		
 	remove_object_file (object_file: STRING) is
 			-- removes and object file from the list of object files
-		require
+		require else
 			valid_name: object_file /= Void
 			non_empty_name: object_file.count > 0
 		do
@@ -149,16 +204,13 @@ feature -- Element change
 			until
 				object_files_list.after
 			loop
-				
-				if object_files_list.item.is_equal (object_file) then
+				if is_external_equal (object_files_list.item, object_file) then
 					object_files_list.remove
 				end
 				if not object_files_list.after then
 					object_files_list.forth
 				end
 			end
-		ensure
-			removed: not object_files_list.has (object_file)
 		end
 		
 	replace_object_file (new_oject_file, old_object_file: STRING) is
@@ -174,8 +226,8 @@ feature -- Element change
 			until
 				object_files_list.after
 			loop
-				if object_files_list.item.is_equal(old_object_file) then
-					object_files_list.replace (new_oject_file)
+				if is_external_equal(object_files_list.item, old_object_file) then
+					object_files_list.replace (format_external(new_oject_file))
 				end
 				object_files_list.forth
 			end
@@ -188,17 +240,16 @@ feature -- Element change
 			valid_name: include_path /= Void
 			non_empty_name: include_path.count > 0
 		local
+			addable: BOOLEAN
 			path: STRING
 			include_path_copy: STRING
 			eiffel_dir: STRING
 		do
-			path := include_path.clone (include_path)
+			path := format_external (include_path)
 			
-			-- ensure that only \ are used in the path
-			path.replace_substring_all ("/", "\")
 			include_path_copy := include_path.clone (include_path)
 			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
-	
+
 			include_path_copy.to_lower
 			eiffel_dir.to_lower
 	
@@ -206,8 +257,21 @@ feature -- Element change
 				path := path.substring (eiffel_dir.count + 1,  path.count)
 				path.prepend (ace_accesser.Ise_eiffel_envvar)
 			end
-			if not include_paths_list.has (path) then
-				include_paths_list.extend (path)	
+			
+			from
+				addable := true
+				include_paths_list.start
+			until
+				include_paths_list.after or not addable
+			loop
+				if is_external_equal(path, include_paths_list.item) then
+					addable := false
+				end
+				include_paths_list.forth
+			end
+			
+			if addable then
+				include_paths_list.extend (path)
 			end
 		end
 		
@@ -222,7 +286,7 @@ feature -- Element change
 			until
 				include_paths_list.after
 			loop
-				if include_paths_list.item.is_equal (include_path) then
+				if is_external_equal(include_paths_list.item, include_path) then
 					include_paths_list.remove
 				end
 				if not include_paths_list.after then
@@ -246,8 +310,8 @@ feature -- Element change
 			until
 				include_paths_list.after
 			loop
-				if include_paths_list.item.is_equal(old_include_path) then
-					include_paths_list.replace (new_include_path)
+				if is_external_equal(include_paths_list.item, old_include_path) then
+					include_paths_list.replace (format_external(new_include_path))
 				end
 				include_paths_list.forth
 			end
@@ -262,7 +326,7 @@ feature -- Basic operations
 			external_item: LANG_TRIB_SD
 			file_names: LACE_LIST [ID_SD]
 			file_name: ID_SD
-			condition: BOOLEAN
+			string: STRING
 		do
 			create externals_list.make (0)
 			ace_accesser.root_ast.set_externals (externals_list)
@@ -277,7 +341,10 @@ feature -- Basic operations
 				until
 					include_paths_list.after
 				loop
-					file_names.extend (new_id_sd (include_paths_list.item, True))
+					-- replace all " in string with %"
+					string := include_paths_list.item.clone(include_paths_list.item)
+					string.replace_substring_all ("%"", "%%%"")
+					file_names.extend (new_id_sd (string, True))
 					include_paths_list.forth
 				end
 				
@@ -295,7 +362,10 @@ feature -- Basic operations
 				until
 					object_files_list.after
 				loop
-					file_names.extend (new_id_sd (object_files_list.item, True))
+					-- replace all " in string with %"
+					string := object_files_list.item.clone(object_files_list.item)
+					string.replace_substring_all ("%"", "%%%"")
+					file_names.extend (new_id_sd (string, True))
 					object_files_list.forth
 				end
 				

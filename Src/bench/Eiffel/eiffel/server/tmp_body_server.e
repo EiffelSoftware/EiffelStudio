@@ -91,6 +91,7 @@ feature
 			Body_server.merge (Current);
 				-- Update cache
 			Body_server.cache.copy (cache);
+			cache.make;
 
 			clear;
 		end;

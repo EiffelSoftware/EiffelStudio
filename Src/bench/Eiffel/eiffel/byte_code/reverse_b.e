@@ -30,6 +30,7 @@ feature
 
 			source_type ?= context.real_type (source.type);
 			target.make_reverse_code (ba, source_type);
+			make_breakable (ba)
 		end;
 		
 end

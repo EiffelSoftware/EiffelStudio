@@ -63,31 +63,33 @@ feature
 	generate (file: UNIX_FILE) is
 			-- Generate C type in file `file'.
 		do
-			file.putstring ("/* bit type: FIXME */");
+			file.putstring ("char *");
 		end;
 
 	generate_cast (file: UNIX_FILE) is
 			-- Generate C cast in file `file'.
 		do
-			-- FIXME
+			file.putstring ("(char *) ");
 		end;
 
 	generate_access_cast (file: UNIX_FILE) is
 			-- Generate access C cast in file `file'.
 		do
-			-- FIXME
+			file.putstring ("(char **) ");
 		end;
 
 	generate_function_cast (file: UNIX_FILE) is
 			-- Generate C function cast in file `file'.
 		do
-			-- FIXME
+			file.putstring ("(char *(*)()) ");
 		end;
 
 	generate_size (file: UNIX_FILE) is
 			-- Generate size of C type
 		do
-			-- FIXME
+			file.putstring ("BITOFF(");
+			file.putint (size);
+			file.new_line;
 		end;
 
 	hash_code: INTEGER is
@@ -105,14 +107,15 @@ feature
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
-			Result := Sk_bit + size;
+--			Result := Sk_bit + size;
+			Result := 671088640 + size;
 		end;
 
 	generate_union (file: UNIX_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
 		do
-			-- FIXME
+			 file.putstring ("it_bit")
 		end;
 
 	generate_sk_value (file: UNIX_FILE) is

@@ -22,7 +22,7 @@ feature {NONE}
 	Sk_double: INTEGER is 536870912;
 			-- Hexa value 0x20000000
 
-	Sk_bit: INTEGER is 41943040;
+	Sk_bit: INTEGER is 671088640;
 			-- Hexa value 0x28000000
 
 	Sk_pointer: INTEGER is 1073741824;

@@ -6,12 +6,12 @@ inherit
 
 	BOOL_BINARY_B
 		redefine
-			enlarged, print_register, make_standard_byte_code
+			built_in_enlarged, print_register, make_standard_byte_code
 		end
 	
 feature 
 
-	enlarged: B_IMPLIES_BL is
+	built_in_enlarged: B_IMPLIES_BL is
 			-- Enlarge node
 		do
 			!!Result;

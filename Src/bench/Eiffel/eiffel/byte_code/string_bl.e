@@ -9,7 +9,7 @@ inherit
 			register, set_register,
 			analyze, generate,
 			propagate, print_register,
-			is_simple_expr
+			is_simple_expr, unanalyze
 		end;
 	
 feature 
@@ -32,6 +32,12 @@ feature
 					context.set_propagated;
 				end;
 			end;
+		end;
+
+	unanalyze is
+			-- Undo analysis work.
+		do
+			register := Void
 		end;
 
 	analyze is

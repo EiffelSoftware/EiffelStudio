@@ -71,7 +71,7 @@ feature {NONE}
 	Bc_power:			CHARACTER is '%/063/';
 	Bc_le:				CHARACTER is '%/064/';
 	Bc_div:				CHARACTER is '%/065/';
-	Bc_implies:			CHARACTER is '%/066/';
+	Bc_break:			CHARACTER is '%/066/';
 	Bc_and:				CHARACTER is '%/067/';
 	Bc_slash:			CHARACTER is '%/068/';
 	Bc_mod:				CHARACTER is '%/069/';
@@ -101,7 +101,7 @@ feature {NONE}
 	Bc_true_compar:		CHARACTER is '%/093/';
 	Bc_standard_equal:	CHARACTER is '%/094/';
 	Bc_not_standard_equal:	CHARACTER is '%/095/';
-	Bc_break:			CHARACTER is '%/096/';
-	Bc_cont:			CHARACTER is '%/097/';
+	Bc_cont:			CHARACTER is '%/096/';
+	Bc_bit:				CHARACTER is '%/097/';
 
 end

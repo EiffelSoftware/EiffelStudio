@@ -56,7 +56,7 @@ feature -- Byte code generation
 				-- of the target (local, attribute or result).
 			source_type ?= context.real_type (source.type);
 			target.make_assignment_code (ba, source_type);
-
+			make_breakable (ba)
 		end;
 
 end

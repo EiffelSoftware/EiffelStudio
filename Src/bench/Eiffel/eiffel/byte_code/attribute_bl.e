@@ -76,10 +76,16 @@ feature
 	analyze is
 			-- Analyze attribute
 		do
+debug
+io.error.putstring ("In attribute_bl%N");
+end;
 			if not type.is_none then
 				analyze_on (Current_register);
 				get_register;
 			end;
+debug
+io.error.putstring ("Out attribute_bl%N");
+end;
 		end;
 	
 	analyze_on (reg: REGISTRABLE) is
@@ -87,6 +93,11 @@ feature
 		local
 			tmp_register: REGISTER;
 		do
+debug
+io.error.putstring ("In attribute_bl [analyze_on]: ");
+io.error.putstring (attribute_name);
+io.error.new_line;
+end;
 			if reg.is_current then
 				context.mark_current_used;
 			end;
@@ -101,6 +112,11 @@ feature
 				!!tmp_register.make (Ref_type);
 				basic_register := tmp_register;
 			end;
+debug
+io.error.putstring ("Out attribute_bl [analyze_on]: ");
+io.error.putstring (attribute_name);
+io.error.new_line;
+end;
 		end;
 
 	generate is

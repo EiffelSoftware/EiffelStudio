@@ -82,70 +82,95 @@ feature {NONE}
 			redef_unit: TRAVERSAL_UNIT;
 		do
 			f := traversal_unit.a_feature;
-			mark_and_record (f);
+			static_class := traversal_unit.static_class;
+			mark_and_record (f, static_class);
 
 			rout_id_val := f.rout_id_set.first;
-			table ?= Poly_server.item (rout_id_val);
+
 			check
-				table_exists: table /= Void;
+				(not Poly_server.has (rout_id_val)) implies f.is_deferred;
+					-- Case for an non existing routine table: a deferred
+					-- feature without any implementation in descendant classes
+					-- leads to NO routine table.
 			end;
-			from
-				static_class := traversal_unit.static_class;
-				body_table := System.body_index_table;
-				c := table.first_element;
-			until
-				c = Void
-			loop
-				unit := c.item;
-				if System.class_of_id (unit.id).conform_to (static_class) then
-					other_body_id := body_table.item (unit.body_index);
-					if not used_table.has (other_body_id) then
-						descendant_class := System.class_of_id (unit.id);
-						des_feat_table := descendant_class.feature_table;
-						des_orig_table := des_feat_table.origin_table;
-						descendant_feature := des_orig_table.item (rout_id_val);
-						if not  (descendant_feature.is_none_attribute
-								or else
-								descendant_class.is_basic)
-						then
-							if descendant_feature.is_attribute then
-								mark_alive (descendant_feature);
-							else
-								mark_and_record (descendant_feature);
+			if Poly_server.has (rout_id_val) then
+					-- If routine id available: this is not a deferred feature
+					-- without any implementation
+				table ?= Poly_server.item (rout_id_val);
+				check
+					table_exists: table /= Void;
+				end;
+				from
+					body_table := System.body_index_table;
+					c := table.first_element;
+				until
+					c = Void
+				loop
+					unit := c.item;
+					if System.class_of_id (unit.id).conform_to (static_class) then
+						other_body_id := body_table.item (unit.body_index);
+						if not used_table.has (other_body_id) then
+							descendant_class := System.class_of_id (unit.id);
+							des_feat_table := descendant_class.feature_table;
+							des_orig_table := des_feat_table.origin_table;
+							descendant_feature := des_orig_table.item(rout_id_val);
+							if not  (descendant_feature.is_none_attribute
+									or else
+									descendant_class.is_basic)
+							then
+								if descendant_feature.is_attribute then
+									mark_alive (descendant_feature);
+								else
+									mark_and_record
+										(descendant_feature, descendant_class);
+								end;
 							end;
 						end;
 					end;
+					c := c.right;
 				end;
-				c := c.right;
 			end;
 		end;
 
-	mark_and_record (feat: FEATURE_I) is
+	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C) is
 			-- Mark feature `feat' alive.
 		require
-			good_argument: feat /= Void
+			feat_exists: feat /= Void;
+			actual_class_exists: actual_class /= Void;
+			consistency: actual_class.conform_to (feat.written_class);
 		local
 			class_depend: CLASS_DEPENDANCE;
 			depend_list: SORTED_TWO_WAY_LIST [DEPEND_UNIT];
 			feature_table: FEATURE_TABLE;
 			depend_unit: DEPEND_UNIT;
-			depend_feature: FEATURE_I;
+			depend_feature, original_feature: FEATURE_I;
 			unit_to_traverse: TRAVERSAL_UNIT;
-			static_class: CLASS_C;
+			static_class, written_class: CLASS_C;
 			feature_name: STRING;
 		do
 				-- Mark feature alive
 			mark_alive (feat);
-debug ("DEAD_CODE_REMOVAL")
-	io.error.putstring (feat.feature_name);
-	io.error.putstring (" from ");
-	io.error.putstring (feat.written_class.class_name);
-	io.error.new_line;
-end;
 
 				-- Take care of dependances
-			class_depend := Depend_server.item (feat.written_in);
-			feature_name := feat.feature_name;
+			written_class := feat.written_class;
+			if actual_class = written_class then
+				original_feature := feat;
+			else
+				original_feature :=
+					written_class.feature_table.feature_of_body_id
+															(feat.body_id);
+				check
+					original_feature_exists: original_feature /= Void
+				end;
+			end;
+			feature_name := original_feature.feature_name;
+			class_depend := Depend_server.item (written_class.id);
+--debug ("DEAD_CODE_REMOVAL")
+    io.error.putstring (feature_name);
+    io.error.putstring (" from ");
+    io.error.putstring (written_class.class_name);
+    io.error.new_line;
+--end;
 			if class_depend.has (feature_name) then
 				from
 					depend_list := class_depend.item (feature_name);
@@ -156,7 +181,7 @@ end;
 					depend_unit := depend_list.item;
 					static_class := System.class_of_id (depend_unit.id);
 					feature_table := static_class.feature_table;
-					depend_feature := feature_table.feature_of_body_id
+					depend_feature := feature_table.feature_of_feature_id
 													(depend_unit.feature_id);
 					if not is_alive (depend_feature) then
 						!!unit_to_traverse.make (depend_feature, static_class);

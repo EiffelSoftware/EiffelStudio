@@ -269,8 +269,10 @@ feature -- Byte code generation
 			not_external: not is_external
 		local
 			i, nb: INTEGER;
-			r_type: TYPE_I;	
+			r_type, formal_type: TYPE_I;	
 			local_list: LINKED_LIST [TYPE_I];
+			bit_i: BIT_I;
+			expanded_type: CL_TYPE_I;
 		do
 			Temp_byte_code_array.clear;
 			
@@ -363,10 +365,21 @@ feature -- Byte code generation
 				until
 					i > nb
 				loop
-					if context.real_type (arguments.item (i)).is_expanded
+					formal_type := context.real_type (arguments.item (i));
+					
+					if formal_type.is_expanded or else formal_type.is_bit
 					then
 						Temp_byte_code_array.append (Bc_clone_arg);
 						Temp_byte_code_array.append_short_integer (i);
+						if formal_type.is_bit then
+							bit_i ?= formal_type;
+							Temp_byte_code_array.append_short_integer
+															(bit_i.size);
+						else
+							expanded_type ?= formal_type;
+							Temp_byte_code_array.append_short_integer
+										(expanded_type.expanded_type_id - 1);
+						end;
 					end;
 					i := i + 1;
 				end;

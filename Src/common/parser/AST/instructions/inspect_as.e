@@ -102,6 +102,7 @@ feature -- Debugger
 			if else_part /= Void then
 				else_part.find_breakable;
 			end;
+			record_break_node
 		end;
 
 end

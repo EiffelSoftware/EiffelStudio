@@ -513,9 +513,7 @@ feature
 			non_gc_reg_vars := 0;
 			non_gc_tmp_vars := 0;
 			local_list.wipe_out;
-			if breakable_points /= Void then
-				breakable_points.wipe_out;
-			end;
+			breakable_points := Void;
 			debug_mode := false;
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
@@ -911,7 +909,13 @@ feature -- Debugger
 				ba.mark_breakable;
 				ast_node := instruction_line.item;
 				instruction_line.forth;
-				!! ast_pos.make (ba.position, ast_node);
+					-- N.B. The way byte array is implemented
+					-- the position in the byte array is incremented after 
+					-- insertion of a new byte code.
+					-- Therefore the offset of the breakable byte code
+					-- is equal to the position in the byte array 
+					-- minus 1.
+				!! ast_pos.make (ba.position - 1, ast_node);
 				breakable_points.add (ast_pos);
 			end;
 		end;
@@ -924,7 +928,9 @@ feature -- Debugger
 		do
 			ba.prepend (array);
 			if debug_mode then
-				amount := array.position;
+					-- N.B. The number of elements in
+					-- `array' is `array.position - 1'.
+				amount := array.position - 1;
 				from
 					breakable_points.start;
 				until

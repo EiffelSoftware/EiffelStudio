@@ -235,6 +235,9 @@ feature
 			msg_target: ACCESS_B;
 			reg: REGISTER;		-- For debug
 		do
+debug
+io.error.putstring ("In nested_bl%N");
+end;
 			msg_target := message.target;
 			if parent = Void then
 					-- If we are at the top of the tree hierarchy, then
@@ -272,6 +275,26 @@ feature
 					-- get overwritten if re-used now).
 				get_register;
 			end;
+debug
+io.error.putstring ("TARGET REGISTER%N");
+if target.register /= Void then
+	io.error.putstring (target.register.out);
+else
+	io.error.putstring ("%TVOID%N");
+end;
+io.error.putstring ("MESSAGE TARGET REGISTER%N");
+if msg_target.register /= Void then
+	io.error.putstring (msg_target.register.out);
+else
+	io.error.putstring ("%TVOID%N");
+end;
+io.error.putstring ("CURRENT REGISTER%N");
+if register /= Void then
+	io.error.putstring (register.out);
+else
+	io.error.putstring ("%TVOID%N");
+end;
+end;
 			if register /= No_register then
 				if (parent = Void) then
 						-- First call. Otherwise, target is freed by parent.
@@ -293,6 +316,9 @@ feature
 					-- We are not the last call on the chain.
 				message.analyze;
 			end;
+debug
+io.error.putstring ("Out nested_bl%N");
+end;
 		end;
 
 	generate is

@@ -90,6 +90,7 @@ feature -- Byte code generation
 					-- Jump offset evaluation
 				ba.write_forward;
 			end;
+			make_breakable (ba)
 		end;
 
 end

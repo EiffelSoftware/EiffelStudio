@@ -193,8 +193,15 @@ feature
 
 	append_real (r: DOUBLE) is
 			-- Append real value `r'.
+		local
+			new_position: INTEGER
 		do
-			-- FIXME
+			new_position := position + Double_size;
+            if new_position > size then
+                resize (size + Chunk);
+            end;
+            ca_wdouble ($area, r, position - 1);
+            position := new_position;
 		end;
 
 	append_string (s: STRING) is
@@ -215,6 +222,30 @@ feature
 				append (s.item (i));
 				i := i + 1;
 			end;
+		end;
+
+	append_bit (s: STRING) is
+			-- Append bit which string value is `s'.
+		local
+			nb_uint32, new_position, bcount: INTEGER;
+			ptr: ANY;
+		do
+				-- Append number of uint32 integers needed
+				-- for representing the bit value `s'
+			bcount := s.count;
+			append_uint32_integer (bcount);
+
+				-- Resize if necessary
+			nb_uint32 := ca_bsize(bcount);
+			new_position := position + nb_uint32 * Uint32_size;
+			if new_position > size then
+				resize ((new_position \\ Chunk + 1) * Chunk)
+			end;
+				
+				-- Write bit representation in `area'
+			ptr := s.to_c;
+			ca_wbit ($area, $ptr, position - 1, s.count);
+			position := new_position;
 		end;
 
 	append_raw_string (s: STRING) is
@@ -458,6 +489,23 @@ feature {NONE} -- Externals
 		end;
 
 	ca_wlong (ptr: like area; val: INTEGER; pos: INTEGER) is
+		external
+			"C"
+		end;
+
+	ca_wdouble (ptr: like area; val: DOUBLE; pos: INTEGER) is
+		external
+			"C"
+		end;
+
+	ca_bsize (bit_count: INTEGER): INTEGER is
+			-- Numer of uint32 fields for encoding a bit of length `bit_count'
+		external
+			"C"
+		end;
+
+	ca_wbit(ptr: like area; val: ANY; pos: INTEGER; bit_count: INTEGER) is
+			-- Write in `ptr' at position `pos' a bit value `val'
 		external
 			"C"
 		end;

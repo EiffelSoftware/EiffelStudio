@@ -383,12 +383,13 @@ end;
 			types: TYPE_LIST;
 			Void_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
+			c: CURSOR;
 		do
-debug ("ACTIVITY");
+--debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
-end;
+--end;
 				-- Update control flags of the topological sort
 			moved := True;
 
@@ -396,13 +397,13 @@ end;
 			a_class.remove_relations;
 
 				-- Remove class `a_class' from the list of changed classes
-			pos := changed_classes.position;
+			c := changed_classes.cursor;
 			changed_classes.start;
 			changed_classes.search_same (a_class);
 			if not changed_classes.offright then
 				changed_classes.remove;
 			end;
-			changed_classes.go (pos);
+			changed_classes.go_to (c);
 
 				-- Mark the class to remove uncompiled
 			a_class.lace_class.set_compiled_class (void_class);
@@ -543,6 +544,9 @@ feature -- Recompilation
 				-- the system
 			pass1;
 
+				-- Remove useless classes i.e classes without syntactical clients
+			remove_useless_classes;
+
 				-- Topological sort and building of the conformance
 				-- table (if new classes have been added by first pass
 debug ("ACTIVITY")
@@ -658,6 +662,32 @@ end;
 					-- Take next changed class from `changed_classes'.
 				changed_classes.forth;
 			end;
+		end;
+
+	remove_useless_classes is
+			-- Remove useless classes
+		local
+			i, nb: INTEGER;
+			a_class: CLASS_C;
+		do
+			from
+				i := 1;
+				nb := id_array.count;
+			until
+				i > nb
+			loop
+				a_class := id_array.item (i);
+				if	a_class /= Void -- Classes could be removed
+					and then
+					a_class.syntactical_clients.empty
+					and then
+					a_class.id > 12	-- Class of id less than 12 is protected
+									-- See feature `init'
+				then
+					remove_old_class (a_class)
+				end;
+				i := i + 1
+			end
 		end;
 
 	build_conformance_table is
@@ -1380,7 +1410,7 @@ feature -- Fianl mode generation
 			io.error.putstring ("Pass 5 on system%N");
 
 				-- Dead code removal
-			remove_dead_code;
+--			remove_dead_code;
 
 			process_dynamic_types;
 
@@ -1418,6 +1448,7 @@ feature -- Fianl mode generation
 				-- Generate main file
 			generate_main_file;
 
+			remover := Void;
 		end;
 
 feature -- Dead code removal
@@ -1469,7 +1500,7 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING
 			string_class.compiled_class.mark_all_used (remover);
-			
+		
 		end;
 
 	is_used (f: FEATURE_I): BOOLEAN is
@@ -2264,8 +2295,8 @@ feature -- Main file generation
 			Main_file.open_write;
 
 			Main_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%N");
+				%#include <macros.h>%N%
+				%#include <struct.h>%N%N");
 			
 			Main_file.putstring ("%
 				%void emain(args)%N%
@@ -2290,24 +2321,12 @@ feature -- Main file generation
 			end;
 
 			-- Set C variable `scount'.
-            Main_file.putstring ("%Tscount = ");
-            Main_file.putint (type_id_counter.value);
-			Main_file.putstring (";%N");
-
-			if not final_mode then
-					-- Set C variable `dcount'.
-				Main_file.putstring ("%Tdcount = ");
-				Main_file.putint (dispatch_table.count);
-					-- Set the frozen level
-				Main_file.putstring (";%N%Tzeroc = ");
-				Main_file.putint (frozen_level);
-					-- Set the history table size
-				Main_file.putstring (";%N%Ttbcount = ");
-				Main_file.putint (routine_id_counter.value);
-					-- Update call
-				Main_file.putstring (";%N%Tupdate();%N");
+			if final_mode then
+            	Main_file.putstring ("%Tscount = ");
+            	Main_file.putint (type_id_counter.value);
+				Main_file.putstring (";%N");
 			end;
-	
+
 			Main_file.putstring ("%Troot_obj = RTLN(");
 			if final_mode then
 	            Main_file.putint (dtype);
@@ -2341,6 +2360,28 @@ feature -- Main file generation
 			end;
 
 			Main_file.putstring ("}%N");
+
+			-- Generation of einit(). Only for workbench
+			-- mode.
+
+			if not final_mode then
+				Main_file.putstring ("%Nvoid einit()%N{%N");
+
+					-- Set C variable `scount'.
+				Main_file.putstring ("%Tscount = ");
+				Main_file.putint (type_id_counter.value);
+					-- Set C variable `dcount'.
+				Main_file.putstring (";%N%Tdcount = ");
+				Main_file.putint (dispatch_table.count);
+					-- Set the frozen level
+				Main_file.putstring (";%N%Tzeroc = ");
+				Main_file.putint (frozen_level);
+					-- Set the history table size
+				Main_file.putstring (";%N%Ttbcount = ");
+				Main_file.putint (routine_id_counter.value);	
+
+				Main_file.putstring (";%N}");
+			end;
 
 			Main_file.close;
 		end;

@@ -141,6 +141,7 @@ feature -- Byte code generation
 				end;
 			end;
 			ba.append (Bc_inspect);
+			make_breakable (ba)
 		end;
 
 end

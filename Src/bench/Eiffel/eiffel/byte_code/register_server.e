@@ -95,11 +95,25 @@ feature
 			-- First free register of type `ctype'
 		do
 			Result := registers.item (ctype.level).get_register;
+debug
+io.error.putstring ("get register #");
+io.error.putint (Result);
+io.error.putstring (" of type ");
+io.error.putstring (ctype.generator);
+io.error.new_line;
+end;
 		end;
 
 	free_register (ctype: TYPE_C; n: INTEGER) is
 			-- Free register number `n' of type `ctype'
 		do
+debug
+io.error.putstring ("free register #");
+io.error.putint (n);
+io.error.putstring (" of type ");
+io.error.putstring (ctype.generator);
+io.error.new_line;
+end;
 			registers.item (ctype.level).free_register (n);
 		end;
 

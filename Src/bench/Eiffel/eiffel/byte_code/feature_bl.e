@@ -65,9 +65,15 @@ feature
 	analyze is
 			-- Build a proper context for code generation.
 		do
+debug
+io.error.putstring ("In feature_bl%N");
+end;
 			analyze_on (Current_register);
 				-- Get a register if none were already propagated
 			get_register;
+debug
+io.error.putstring ("Out feature_bl%N");
+end;
 		end;
 	
 	analyze_on (reg: REGISTRABLE) is
@@ -76,6 +82,11 @@ feature
 			tmp_register: REGISTER;
 			access_b: ACCESS_B;
 		do
+debug
+io.error.putstring ("In feature_bl [analyze_on]: ");
+io.error.putstring (feature_name);
+io.error.new_line;
+end;
 			if context_type.is_basic then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
@@ -109,6 +120,11 @@ feature
 			if reg.is_current then
 				context.mark_current_used;
 			end;
+debug
+io.error.putstring ("Out feature_bl [analyze_on]: ");
+io.error.putstring (feature_name);
+io.error.new_line;
+end;
 		end;
 
 	generate_access is
@@ -134,6 +150,7 @@ feature
 			entry := Eiffel_table.item_id (rout_id);
 			is_polymorphic_access := not type_i.is_basic and then
 					class_type /= Void and then
+					entry /= Void and then
 					entry.is_polymorphic (class_type.type_id);
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
@@ -160,7 +177,7 @@ feature
 		do
 			entry := Eiffel_table.item_id (rout_id);
 			type_i := context_type;
-			if not type_i.is_basic then
+			if not (type_i.is_basic or entry = Void) then
 				class_type ?= type_i;	-- Cannot fail
 				Result := entry.is_polymorphic (class_type.type_id);
 			end;
@@ -180,7 +197,12 @@ feature
 			rout_table: ROUT_TABLE;
 		do
 			entry := Eiffel_table.item_id (rout_id);
-			if entry.is_polymorphic (typ.type_id) then
+			if entry = Void then
+					-- Call to a deferred feature without implementation
+				generated_file.putchar ('(');
+				real_type (type).c_type.generate_function_cast (generated_file);
+				generated_file.putstring (" RTNR)");
+			elseif entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.

@@ -6,13 +6,13 @@ inherit
 
 	BOOL_BINARY_B
 		redefine
-			enlarged, generate_operator, make_standard_byte_code,
+			built_in_enlarged, generate_operator, make_standard_byte_code,
 			is_commutative
 		end;
 	
 feature 
 
-	enlarged: B_OR_ELSE_BL is
+	built_in_enlarged: B_OR_ELSE_BL is
 			-- Enlarge node
 		do
 			!!Result;

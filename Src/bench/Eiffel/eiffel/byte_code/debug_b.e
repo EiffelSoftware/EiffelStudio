@@ -147,8 +147,8 @@ feature -- Byte code generation
 				ba.mark_forward;
 				compound.make_byte_code (ba);
 				ba.write_forward;
-				make_breakable (ba);
 			end;
+			make_breakable (ba);
 		end;
 
 end

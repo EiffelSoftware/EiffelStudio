@@ -109,7 +109,8 @@ feature {NONE} -- Implementation
 						is_function := True
 						return_value.append (return_value_set_up (func_desc.arguments.item.name, func_desc.arguments.item.type))
 						return_value.append (New_line_tab)
-						cecil_call.append (cecil_function_set_up (visitor))
+
+						cecil_call.append (cecil_function_set_up (visitor, FALSE))
 
 						if not visitor.is_basic_type then
 							protect_object := clone (Eif_object)
@@ -165,16 +166,16 @@ feature {NONE} -- Implementation
 								arguments.append (func_desc.arguments.item.name)
 								arguments.append (Close_parenthesis)
 							end
+							if not visitor.is_basic_type then
+								free_object.append (Eif_wean)
+								free_object.append (Space_open_parenthesis)
+								free_object.append (Tmp_clause)
+								free_object.append (func_desc.arguments.item.name)
+								free_object.append (Close_parenthesis)
+								free_object.append (Semicolon)
+								free_object.append (New_line_tab)
+							end
 						end
-					end
-					if not visitor.is_basic_type then
-						free_object.append (Eif_wean)
-						free_object.append (Space_open_parenthesis)
-						free_object.append (Tmp_clause)
-						free_object.append (func_desc.arguments.item.name)
-						free_object.append (Close_parenthesis)
-						free_object.append (Semicolon)
-						free_object.append (New_line_tab)
 					end
 
 					func_desc.arguments.forth
@@ -355,8 +356,11 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
+				Result.append (Eif_wean)
+				Result.append (Space_open_parenthesis)
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
+				Result.append (Close_parenthesis)
 				Result.append (Comma_space)
 
 				if is_unsigned_int (visitor.vt_type) or is_unsigned_long (visitor.vt_type) or is_int (visitor.vt_type) then
@@ -472,7 +476,7 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_procedure_variable_name)
 		end
 
-	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR; pointed_type: BOOLEAN): STRING is
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: visitor /= Void
@@ -497,7 +501,7 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab)
 					Result.append (Eif_double)
 				end
-			elseif is_boolean (visitor.vt_type) then
+			elseif is_boolean (visitor.vt_type) and not pointed_type then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_boolean)

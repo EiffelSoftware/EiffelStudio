@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 
 						arguments.append (Comma_space)
 
-						if is_boolean (visitor.vt_type) or visitor.is_basic_type or else visitor.is_basic_type_ref then
+						if is_boolean (visitor.vt_type) or visitor.is_basic_type then
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)
 						else
@@ -182,16 +182,16 @@ feature {NONE} -- Implementation
 							arguments.append (func_desc.arguments.item.name)
 							arguments.append (Close_parenthesis)
 						end
-					end
 	
-					if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
-						free_object.append (Eif_wean)
-						free_object.append (Space_open_parenthesis)
-						free_object.append (Tmp_clause)
-						free_object.append (func_desc.arguments.item.name)
-						free_object.append (Close_parenthesis)
-						free_object.append (Semicolon)
-						free_object.append (New_line_tab)
+						if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
+							free_object.append (Eif_wean)
+							free_object.append (Space_open_parenthesis)
+							free_object.append (Tmp_clause)
+							free_object.append (func_desc.arguments.item.name)
+							free_object.append (Close_parenthesis)
+							free_object.append (Semicolon)
+							free_object.append (New_line_tab)
+						end
 					end
 
 					func_desc.arguments.forth
@@ -202,7 +202,8 @@ feature {NONE} -- Implementation
 				if visitor.c_type.is_equal (Void_c_keyword) then
 					cecil_call := cecil_procedure_set_up
 				else
-					cecil_call := cecil_function_set_up (visitor)
+					pointed_data_type_descriptor ?= func_desc.return_type
+					cecil_call := cecil_function_set_up (visitor, pointed_data_type_descriptor /= Void)
 				end
 	
 				arguments.append (Close_parenthesis)
@@ -239,6 +240,10 @@ feature {NONE} -- Implementation
 						Result.append (visitor.ec_function_name)
 						Result.append (Space_open_parenthesis)
 						Result.append (Tmp_variable_name)
+						if visitor.writable then
+							Result.append (Comma_space)
+							Result.append (Null)
+						end
 						Result.append (Close_parenthesis)
 						Result.append (Semicolon)
 					end

@@ -9,7 +9,7 @@ inherit
 
 	ASSERT_LIST_AS_B
 		undefine
-			reset, simple_put_clause_keywords
+			simple_put_clause_keywords
 		redefine 
 			assertions, put_clause_keywords
 		end

@@ -39,7 +39,7 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: LINEAR [STRING]
+			l_runtimes: DS_LINEAR [STRING]
 			l_item: EV_LIST_ITEM
 		do 
 			create rb_project_type_exe.make_with_text (Exe_type)
@@ -100,13 +100,7 @@ feature -- Basic Operation
 			
 			create l_il_env
 			l_runtimes := l_il_env.installed_runtimes
-			if l_runtimes.has (l_il_env.v2_0) then
-				most_recent_clr_version := l_il_env.v2_0.twin
-			elseif l_runtimes.has (l_il_env.v1_1) then
-				most_recent_clr_version := l_il_env.v1_1.twin
-			else
-				most_recent_clr_version := l_il_env.v1_0.twin
-			end
+			most_recent_clr_version := l_il_env.default_version
 			
 			create clr_version_cb
 			clr_version_cb.set_minimum_width (130)
@@ -116,7 +110,7 @@ feature -- Basic Operation
 			until
 				l_runtimes.after
 			loop
-				create l_item.make_with_text (l_runtimes.item)
+				create l_item.make_with_text (l_runtimes.item_for_iteration)
 				clr_version_cb.extend (l_item)
 				l_runtimes.forth
 			end

@@ -101,9 +101,10 @@ feature -- Access
 		do
 			if parent_i /= Void then
 					-- If there is no parent, then return 0
-					
 				Result := parent_i.column_offsets @ (column_i.index)
 			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 		
 	virtual_y_position: INTEGER is
@@ -125,6 +126,8 @@ feature -- Access
 					Result := (row_i.index - 1) * parent_i.row_height
 				end
 			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
 feature -- Status setting
@@ -159,8 +162,7 @@ feature -- Status setting
 					parent_i.update_row_selection_status (row_i)
 				end
 				parent_i.update_item_selection_status (Current)
-				parent_i.redraw_client_area
-				fixme ("Perform a more optimal redraw when available")
+				parent_i.redraw_item (Current)
 			end
 		end
 
@@ -169,8 +171,7 @@ feature -- Status setting
 		do
 			if is_selected then
 				disable_select_internal
-				parent_i.redraw_client_area
-				fixme ("Perform a more optimal redraw when available")				
+				parent_i.redraw_item (Current)
 			end
 		end
 

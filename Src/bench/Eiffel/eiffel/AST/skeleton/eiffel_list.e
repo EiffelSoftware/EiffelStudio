@@ -215,7 +215,7 @@ feature -- Formatter
 			end
 		end
 
-feature {AST_EIFFEL, FORMAT_CONTEXT} -- Output
+feature {AST_EIFFEL, FORMAT_CONTEXT, DOTNET_CLASS_AS} -- Output
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.

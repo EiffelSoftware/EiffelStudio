@@ -49,6 +49,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			on_draw_item,
 			on_menu_command
 		redefine
@@ -193,9 +195,18 @@ feature -- Event - command association
 	
 	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
-			-- the a page is switch in the notebook.
+			-- when a page is switch in the notebook.
 		do
 			add_command (Cmd_switch, cmd, arg)
+		end	
+
+feature -- Event -- removing command association
+
+	remove_switch_commands is
+			-- Empty the list of commands to be executed
+			-- when a page is switch in the notebook.
+		do
+			remove_command (Cmd_switch)
 		end	
 
 feature -- Implementation

@@ -52,6 +52,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_set_focus,
+			on_kill_focus,
 			on_key_down,
 			on_key_up
 		redefine
@@ -161,11 +163,49 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.
+			-- XX. To check
 		do
 			check
 				not_yet_implemented: False
 			end
 			add_command (Cmd_activate, cmd, arg)
+		end
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+			-- XX. To check
+		do
+			add_command (Cmd_change, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			remove_command (Cmd_selection)
+		end
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the text in the field is activated, i.e. the
+			-- user press the enter key.
+			-- XX. To check
+		do
+			check
+				not_yet_implemented: False
+			end
+			remove_command (Cmd_activate)
+		end
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+			-- XX. To check
+		do
+			remove_command (Cmd_change)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation

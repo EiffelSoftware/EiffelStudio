@@ -37,6 +37,8 @@ inherit
 			on_right_button_double_click,
 			on_char,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			on_paint
 		redefine
 			background_brush

@@ -43,10 +43,13 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_set_focus,
+			on_kill_focus,
 			wel_background_color,
 			wel_foreground_color
 		redefine
 			on_key_down,
+			on_en_change,
 			default_style
 		end
 
@@ -84,6 +87,30 @@ feature -- Event - command association
 			add_command (Cmd_activate, cmd, arg)
 		end
 
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		do
+			add_command (Cmd_change, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		do
+			remove_command (Cmd_activate)
+		end
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		do
+			remove_command (Cmd_change)
+		end
+
 feature {NONE} -- Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -96,6 +123,13 @@ feature {NONE} -- Implementation
 				set_caret_position (0)
 			end
 		end	
+
+	on_en_change is
+			-- The user has taken an action
+			-- that may have altered the text.
+		do
+			execute_command (Cmd_change, Void)
+		end
 
 	default_style: INTEGER is
 			-- We specified the Es_autovscroll style otherwise

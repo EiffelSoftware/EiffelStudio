@@ -397,6 +397,7 @@ feature {NONE} -- Implementation
 			f: FEATURE_I;
 			enclosing_class: CLASS_C;
 			formal_type: FORMAL_A
+			l_type_feature: TYPE_FEATURE_I
 		do
 			!! Result;
 			if already_evaluated_type then
@@ -420,12 +421,34 @@ feature {NONE} -- Implementation
 					Result.set_source_type (type);
 					type := evaluate_type (target_type, target_feature.type);
 					if type.is_formal then
-							-- If result is format then get the
-							-- the constraint type from last_class.
-						formal_type ?= type;
-						enclosing_class := global_type.target_enclosing_class;
-						type := enclosing_class.constraint (formal_type.position)
-					end;
+						formal_type ?= type
+							-- Find type feature associated to formal in parent `enclosing_class',
+						l_type_feature := enclosing_class.formal_at_position (formal_type.position)
+
+							-- Then find current class.						
+						enclosing_class := global_type.target_enclosing_class
+						
+							-- Finally search for definition of `l_type_feature'
+							-- in `enclosing_class'.
+						check
+							target_has_generic_features:
+								enclosing_class.generic_features /= Void
+						end
+						type := enclosing_class.generic_features.item
+							(l_type_feature.rout_id_set.first).type
+
+							-- It is still a formal, therefore `enclosing_class' has some generics
+							-- and we can safely call `constraint' on it.
+						if type.is_formal then
+							formal_type ?= type
+							check
+								has_generics: enclosing_class.generics /= Void
+								has_valid_position:
+									enclosing_class.generics.valid_index (formal_type.position)
+							end
+							type := enclosing_class.constraint (formal_type.position)
+						end
+					end
 					check
 						is_not_formal: not type.is_formal
 					end;

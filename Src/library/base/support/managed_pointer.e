@@ -15,13 +15,16 @@ inherit
 		export
 			{NONE} all
 		redefine
-			dispose
+			dispose, is_equal, copy
 		end
 		
 	ANY
+		redefine
+			is_equal, copy
+		end
 	
 create
-	make, make_from_array
+	make, make_from_array, make_from_pointer
 	
 feature {NONE} -- Initialization
 
@@ -51,6 +54,20 @@ feature {NONE} -- Initialization
 			item_set: item /= default_pointer
 			count_set: count = data.count
 		end
+
+	make_from_pointer (a_ptr: POINTER; n: INTEGER) is
+			-- Copy `a_count' bytes from `a_ptr' into current.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			n_positive: n > 0
+		do
+			item := item.memory_alloc (n)
+			item.memory_copy (a_ptr, n)
+			count := n
+		ensure
+			item_set: item /= default_pointer
+			count_set: count = n
+		end
 		
 feature -- Access
 
@@ -60,6 +77,24 @@ feature -- Access
 	count: INTEGER
 			-- Number of elements that Current can hold.
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered equal to current object?
+		do
+			Result := count = other.count and then item.memory_compare (other.item, count)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		do
+			resize (other.count)
+			item.memory_copy (other.item, other.count)
+		end
+		
 feature -- Format independant
 
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
@@ -161,7 +196,22 @@ feature -- Update in big-endian format
 			put_integer_32_be (((i & 0xFFFFFFFF00000000) |>> 32).to_integer_32, pos)
 			put_integer_32_be (((i & 0x00000000FFFFFFFF) |>> 32).to_integer_32, pos + 4)		
 		end
-		
+
+feature -- Concatenation
+
+	append (other: like Current) is
+			-- Append `other' at the end of Current.
+		require
+			other_not_void: other /= Void
+		local
+			new_count: INTEGER
+		do
+			new_count := count + other.count
+			item := item.memory_realloc (new_count)
+			(item + count).memory_copy (other.item, other.count)
+			count := new_count
+		end
+
 feature -- Resizing
 
 	resize (n: INTEGER) is

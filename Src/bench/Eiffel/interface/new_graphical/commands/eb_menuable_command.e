@@ -86,7 +86,7 @@ feature -- Basic operations
 				mname.append (accelerator.out)
 			end
 			Result.set_text (mname)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 			if is_sensitive then
 				Result.enable_sensitive
 			else

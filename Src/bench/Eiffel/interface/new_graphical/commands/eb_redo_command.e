@@ -12,7 +12,7 @@ inherit
 			executable
 		end
 
-creation
+create
 	make
 
 feature -- Status report

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 				create accelerator.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Key_constants.Key_n),
 					True, False, False)
-				accelerator.actions.extend (~execute)
+				accelerator.actions.extend (agent execute)
 			end
 		end
 
@@ -72,8 +72,8 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text, use_gray_icons)
-			Result.drop_actions.extend (~execute_with_stone (?))
-			Result.drop_actions.set_veto_pebble_function (~is_storable)
+			Result.drop_actions.extend (agent execute_with_stone (?))
+			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
 
 feature -- Access

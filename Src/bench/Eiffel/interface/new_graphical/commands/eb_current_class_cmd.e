@@ -17,7 +17,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Properties
@@ -50,6 +50,6 @@ feature {NONE} -- Implementation
 --				create st.make (status.e_feature)
 --				tool.process_feature (st)
 --			end
---		end
+		end
 
 end -- class EB_CURRENT_CLASS_CMD

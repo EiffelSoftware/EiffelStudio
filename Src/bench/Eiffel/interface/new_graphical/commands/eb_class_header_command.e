@@ -101,8 +101,8 @@ feature -- Basic operations
 										else
 											history.do_named_undoable (
 												Interface_names.t_Diagram_rename_class_locally_cmd,
-												~change_name_locally (src, s, g),
-												~change_name_locally (src, old_name, old_generics))
+												agent change_name_locally (src, s, g),
+												agent change_name_locally (src, old_name, old_generics))
 											invalid_name := False
 										end
 									else
@@ -117,22 +117,22 @@ feature -- Basic operations
 											if change_name_dialog.global_replace_universe then
 												history.do_named_undoable (
 													Interface_names.t_Diagram_rename_class_globally_cmd,
-													[<<~tool_disable_sensitive, 
-														~change_name_universe_classes (src, cnr, old_name, s, g),
-														~tool_enable_sensitive>>],
-													[<<~tool_disable_sensitive,
-														~change_name_universe_classes (src, cnr, s, old_name, old_generics),
-														~tool_enable_sensitive>>])
+													[<<agent tool_disable_sensitive, 
+														agent change_name_universe_classes (src, cnr, old_name, s, g),
+														agent tool_enable_sensitive>>],
+													[<<agent tool_disable_sensitive,
+														agent change_name_universe_classes (src, cnr, s, old_name, old_generics),
+														agent tool_enable_sensitive>>])
 												invalid_name := False
 											else
 												history.do_named_undoable (
 													Interface_names.t_Diagram_rename_class_globally_cmd,
-													[<<~tool_disable_sensitive,
-														~change_name_compiled_classes (src, cnr, old_name, s, g),
-														~tool_enable_sensitive>>],
-													[<<~tool_disable_sensitive,
-														~change_name_compiled_classes (src, cnr, s, old_name, old_generics),
-														~tool_enable_sensitive>>])
+													[<<agent tool_disable_sensitive,
+														agent change_name_compiled_classes (src, cnr, old_name, s, g),
+														agent tool_enable_sensitive>>],
+													[<<agent tool_disable_sensitive,
+														agent change_name_compiled_classes (src, cnr, s, old_name, old_generics),
+														agent tool_enable_sensitive>>])
 												invalid_name := False
 											end
 										end
@@ -159,8 +159,8 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
-			Result.drop_actions.extend (~execute_with_stone)
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_stone)
 		end
 
 feature {NONE} -- Implementation

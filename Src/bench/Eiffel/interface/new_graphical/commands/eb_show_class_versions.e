@@ -20,7 +20,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Properties
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
-			create choice.make_default (~process_ith (?))
+			create choice.make_default (agent process_ith (?))
 			stone := tool.stone
 			choice.set_title (Interface_names.t_Select_class_version)
 			choice.set_list (output_list)

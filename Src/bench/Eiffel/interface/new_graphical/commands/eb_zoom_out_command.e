@@ -28,10 +28,10 @@ feature -- Basic operations
 			if world /= Void and world.scale_x >= 0.5 then
 				history.do_named_undoable (
 					Interface_names.t_Diagram_zoom_out_cmd,
-					[<<~change_scale (world, world.scale_x - 0.1),
-						~project>>],
-					[<<~change_scale (world, world.scale_x),
-						~project>>])
+					[<<agent change_scale (world, world.scale_x - 0.1),
+						agent project>>],
+					[<<agent change_scale (world, world.scale_x),
+						agent project>>])
 			end
 		end
 

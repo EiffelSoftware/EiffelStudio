@@ -18,7 +18,7 @@ inherit
 
 	EB_SYSTEM_TOOL_DATA
 
-creation
+create
 	make
 
 feature -- Properties

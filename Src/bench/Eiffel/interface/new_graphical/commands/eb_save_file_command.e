@@ -49,7 +49,7 @@ feature -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_s),
 				True, False, False)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 			disable_sensitive
 		end
 

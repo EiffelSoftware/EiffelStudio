@@ -79,7 +79,7 @@ feature -- Initialization
 
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Browse...", ~browse_archive)
+							create button.make_with_text_and_action ("Browse...", agent browse_archive)
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
 							hb.disable_item_expand (button)
@@ -112,7 +112,7 @@ feature -- Initialization
 							
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Set", ~validate_url ("default"))
+							create button.make_with_text_and_action ("Set", agent validate_url ("default"))
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
 							hb.disable_item_expand (button)
@@ -128,7 +128,7 @@ feature -- Initialization
 									
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Set", ~validate_url ("difference"))
+							create button.make_with_text_and_action ("Set", agent validate_url ("difference"))
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
 							hb.disable_item_expand (button)
@@ -143,7 +143,7 @@ feature -- Initialization
 									
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Set", ~validate_url ("value"))
+							create button.make_with_text_and_action ("Set", agent validate_url ("value"))
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
 							hb.disable_item_expand (button)
@@ -168,7 +168,7 @@ feature -- Initialization
 
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Browse...", ~new_archive)
+							create button.make_with_text_and_action ("Browse...", agent new_archive)
 							button.set_minimum_size (50, 22)
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
@@ -207,7 +207,7 @@ feature -- Initialization
 
 							hb.extend (create {EV_CELL})
 
-							create button.make_with_text_and_action ("Browse...", ~update_archive)
+							create button.make_with_text_and_action ("Browse...", agent update_archive)
 							button.set_minimum_size (50, 22)
 							layout_constants.set_default_size_for_button (button)
 							hb.extend (button)
@@ -233,7 +233,7 @@ feature -- Initialization
 				vb1.disable_item_expand (frame)
 
 			create hb
-				create ok_button.make_with_text_and_action ("Close", ~ok_action)
+				create ok_button.make_with_text_and_action ("Close", agent ok_action)
 				ok_button.set_minimum_width (60)
 				layout_constants.set_default_size_for_button (ok_button)
 				hb.extend (create {EV_CELL})
@@ -296,7 +296,7 @@ feature -- Action
 			save_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			save_dialog.save_actions.extend (~confirm_new_archive (current_directory))
+			save_dialog.save_actions.extend (agent confirm_new_archive (current_directory))
 			save_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -308,8 +308,8 @@ feature -- Action
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 2)
-			array.put (~on_new_archive (current_directory), 1)
-			array.put (~do_nothing, 2)
+			array.put (agent on_new_archive (current_directory), 1)
+			array.put (agent do_nothing, 2)
 			create confirm_dialog.make_with_text_and_actions ("Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
@@ -367,7 +367,7 @@ feature -- Action
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.open_actions.extend (~confirm_update_archive (current_directory))
+			open_dialog.open_actions.extend (agent confirm_update_archive (current_directory))
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -379,8 +379,8 @@ feature -- Action
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create array.make (1, 2)
-			array.put (~on_update_archive (current_directory), 1)
-			array.put (~do_nothing, 2)
+			array.put (agent on_update_archive (current_directory), 1)
+			array.put (agent do_nothing, 2)
 			create confirm_dialog.make_with_text_and_actions ("Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
@@ -463,7 +463,7 @@ feature -- Action
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.open_actions.extend (~on_browse_archive (current_directory))
+			open_dialog.open_actions.extend (agent on_browse_archive (current_directory))
 			open_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -798,8 +798,8 @@ feature -- Overwritting
 			-- Actions to be performed for `confirm_dialog'.
 		do
 			create Result.make (1, 2)
-			Result.put (~overwrite_action, 1)
-			Result.put (~abort_overwrite_action, 2)
+			Result.put (agent overwrite_action, 1)
+			Result.put (agent abort_overwrite_action, 2)
 		ensure
 			filled_array: Result @ 1 /= Void and Result @ 2 /= Void
 		end

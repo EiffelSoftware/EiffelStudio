@@ -38,9 +38,9 @@ feature {NONE} -- Execution
 					dialog.set_buttons (<<Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel>>)
 
 					i := dialog.button (Interface_names.b_Browse)
-					i.select_actions.extend (~load_chosen)
+					i.select_actions.extend (agent load_chosen)
 					i := dialog.button (Interface_names.b_Build)
-					i.select_actions.extend (~load_default_ace)
+					i.select_actions.extend (agent load_default_ace)
 					dialog.show_modal
 				else
 					show_tool
@@ -81,7 +81,7 @@ feature {EB_CHOOSE_ACE_DIALOG} -- Implementation
 			create fod
 --			fod.set_filter (<<"System File (*.ace)">>,<<"*.ace">>)
 --			fod.set_filter ("System File (*.ace)")
-			fod.ok_actions.extend (~load_ace_with_file (fod))
+			fod.ok_actions.extend (agent load_ace_with_file (fod))
 			fod.show_modal
 		end
 
@@ -104,16 +104,16 @@ feature {EB_CHOOSE_ACE_DIALOG} -- Implementation
 					show_tool
 				elseif f.exists and then not f.is_plain then
 					create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-					cd.button ("Ok").select_actions.extend (~execute)
+					cd.button ("Ok").select_actions.extend (agent execute)
 					cd.show_modal
 				else
 					create cd.make_with_text (Warning_messages.w_Cannot_read_file_retry (fn))
-					cd.button ("Ok").select_actions.extend (~execute)
+					cd.button ("Ok").select_actions.extend (agent execute)
 					cd.show_modal
 				end
 			else
 				create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-				cd.button ("Ok").select_actions.extend (~execute)
+				cd.button ("Ok").select_actions.extend (agent execute)
 				cd.show_modal
 			end
 		end

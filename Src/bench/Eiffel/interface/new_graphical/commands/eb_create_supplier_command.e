@@ -54,7 +54,7 @@ feature -- Basic operations
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 feature {NONE} -- Implementation

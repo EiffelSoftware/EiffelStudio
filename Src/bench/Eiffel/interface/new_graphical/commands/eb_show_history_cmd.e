@@ -12,7 +12,7 @@ class
 inherit
 	EB_TEXT_TOOL_CMD
 
-creation
+create
 	make
 
 feature -- Properties
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			a_list: TWO_WAY_LIST [STRING]
 			choice: EB_CHOICE_DIALOG
 		do
-			create choice.make_default (~retarget_text_area (?))
+			create choice.make_default (agent retarget_text_area (?))
 			create a_list.make
 			fill_list (a_list)
 			choice.set_title (tool.history_dialog_title)

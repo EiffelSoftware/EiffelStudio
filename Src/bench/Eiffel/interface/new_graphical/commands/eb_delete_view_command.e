@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_with_text_and_actions (
 				Interface_names.l_Diagram_delete_view_cmd,
-				<<~ok_pressed>>)
+				<<agent ok_pressed>>)
 		end
 
 feature {NONE} -- Events

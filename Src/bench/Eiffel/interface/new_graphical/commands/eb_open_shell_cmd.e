@@ -30,7 +30,7 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -47,8 +47,8 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text, use_gray_icons)
-			Result.drop_actions.extend (~drop (?))
-			Result.drop_actions.set_veto_pebble_function (~is_storable)
+			Result.drop_actions.extend (agent drop (?))
+			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
 
 feature {NONE} -- Update

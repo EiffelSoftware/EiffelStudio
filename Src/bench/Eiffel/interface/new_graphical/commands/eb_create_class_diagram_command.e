@@ -32,7 +32,7 @@ feature -- Basic operations
 			create a_stone
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 			Result.set_pebble (a_stone)
 			Result.set_accept_cursor (Cursors.cur_Class)
 		end

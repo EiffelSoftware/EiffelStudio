@@ -13,7 +13,7 @@ inherit
 			mini_pixmap
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Implementation

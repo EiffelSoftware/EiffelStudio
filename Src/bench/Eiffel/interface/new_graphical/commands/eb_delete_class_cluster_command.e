@@ -47,8 +47,8 @@ feature -- Access
 			-- it will never be garbage collected.
 		do
 			Result := Precursor (display_text, use_gray_icons)
-			Result.drop_actions.extend (~drop_class)
-			Result.drop_actions.extend (~drop_cluster)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -58,8 +58,8 @@ feature -- Access
 			-- it will never be garbage collected.
 		do
 			Result := Precursor
-			Result.drop_actions.extend (~drop_class)
-			Result.drop_actions.extend (~drop_cluster)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
 		end
 
 feature -- Measurement
@@ -185,11 +185,11 @@ feature {NONE} -- Implementation
 					str := clone (class_i.name)
 					str.to_upper
 					if Application.is_running then
-						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<~delete_class>>)
+						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
 						cd.show_modal_to_window (window.window)
 					else
 						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_class (str),
-												<<~delete_class>>)
+												<<agent delete_class>>)
 						cd.show_modal_to_window (window.window)
 					end
 					class_i := Void
@@ -205,11 +205,11 @@ feature {NONE} -- Implementation
 				then
 					str := clone (cluster_i.cluster_name)
 					if Application.is_running then
-						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<~delete_cluster>>)
+						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_cluster>>)
 						cd.show_modal_to_window (window.window)
 					else
 						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
-													<<~delete_cluster>>)
+													<<agent delete_cluster>>)
 						cd.show_modal_to_window (window.window)
 					end
 					cluster_i := Void

@@ -105,8 +105,8 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
-			Result.drop_actions.extend (~drop_object_stone)
-			Result.drop_actions.set_veto_pebble_function (~is_removable (?))
+			Result.drop_actions.extend (agent drop_object_stone)
+			Result.drop_actions.set_veto_pebble_function (agent is_removable (?))
 		end
 
 feature -- Obsolete

@@ -22,7 +22,7 @@ inherit
 			execute_warner_ok as do_not_exit
 		end
 
-creation
+create
 	make
 	
 feature -- Callbacks

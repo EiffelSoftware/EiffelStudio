@@ -16,7 +16,7 @@ inherit
 			tool
 		end
 
-creation
+create
 
 	make
 

@@ -80,7 +80,7 @@ feature -- Widget
 				notebook.extend (ratio_scope_tab)
 				notebook.set_item_text (ratio_scope_tab, "Scope Ratio")
 
-				notebook.selection_actions.extend (~on_tab_changed)
+				notebook.selection_actions.extend (agent on_tab_changed)
 				vb.extend (notebook)
 
 --			create frame
@@ -90,13 +90,13 @@ feature -- Widget
 --				vb.disable_item_expand (frame)
 
 			create hb
-				create ok_button.make_with_text_and_action ("OK", ~ok_action)
+				create ok_button.make_with_text_and_action ("OK", agent ok_action)
 				ok_button.set_minimum_width (80)
 				hb.extend (create {EV_CELL})
 				hb.extend (ok_button)
 				hb.disable_item_expand (ok_button)
 
-				create save_button.make_with_text_and_action ("Save", ~save_action)
+				create save_button.make_with_text_and_action ("Save", agent save_action)
 				save_button.set_minimum_width (80)
 				create {EV_CELL} ev_any
 				ev_any.set_minimum_width (20)
@@ -105,7 +105,7 @@ feature -- Widget
 				hb.extend (save_button)
 				hb.disable_item_expand (save_button)
 
-				create cancel_button.make_with_text_and_action ("Cancel", ~cancel_action)
+				create cancel_button.make_with_text_and_action ("Cancel", agent cancel_action)
 				cancel_button.set_minimum_width (80)
 				create {EV_CELL} ev_any
 				ev_any.set_minimum_width (20)
@@ -122,9 +122,9 @@ feature -- Widget
 			new_metric_definition_dialog.set_default_push_button (ok_button)
 			new_metric_definition_dialog.set_default_cancel_button (cancel_button)
 
-			ok_button.key_press_actions.extend (~key_enter_pressed (?, ok_button))
-			save_button.key_press_actions.extend (~key_enter_pressed (?, save_button))
-			cancel_button.key_press_actions.extend (~key_enter_pressed (?, cancel_button))
+			ok_button.key_press_actions.extend (agent key_enter_pressed (?, ok_button))
+			save_button.key_press_actions.extend (agent key_enter_pressed (?, save_button))
+			cancel_button.key_press_actions.extend (agent key_enter_pressed (?, cancel_button))
 			is_derived := True
 			is_linear := False
 			is_metric_ratio := False

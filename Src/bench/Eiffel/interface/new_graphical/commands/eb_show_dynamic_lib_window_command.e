@@ -105,7 +105,7 @@ feature {EB_CHOOSE_DYNAMIC_LIB_DIALOG}-- Callbacks
 		do
 			create fod
 --			fod.set_filter (<<"Dynamic Library Definition File (*.def)">>, <<"*.def">>)
-			fod.ok_actions.extend (~execute_with_dialog (fod))
+			fod.ok_actions.extend (agent execute_with_dialog (fod))
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
@@ -214,16 +214,16 @@ feature {NONE} -- Execution
 								execute_with_dialog (Void)
 							elseif f.exists and then not f.is_plain then
 								create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-								cd.button ("Ok").select_actions.extend (~execute_with_dialog (Void))
+								cd.button ("Ok").select_actions.extend (agent execute_with_dialog (Void))
 								cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 							else
 								create cd.make_with_text (Warning_messages.w_Cannot_read_file_retry (fn))
-								cd.button ("Ok").select_actions.extend (~execute_with_dialog (Void))
+								cd.button ("Ok").select_actions.extend (agent execute_with_dialog (Void))
 								cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 							end
 						else
 							create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-							cd.button ("Ok").select_actions.extend (~execute_with_dialog (Void))
+							cd.button ("Ok").select_actions.extend (agent execute_with_dialog (Void))
 							cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 						end
 					end

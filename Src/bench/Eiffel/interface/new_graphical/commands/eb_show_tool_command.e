@@ -112,7 +112,7 @@ feature -- Basic operations
 			if is_selected then
 				Result.enable_select
 			end
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 			Result.enable_sensitive
 			tt := clone (tooltip)
 			if accelerator /= Void then
@@ -140,7 +140,7 @@ feature -- Basic operations
 				mname.append (accelerator.out)
 			end
 			Result.set_text (mname)
-			Result.select_actions.extend (~execute)
+			Result.select_actions.extend (agent execute)
 			Result.enable_sensitive
 			if is_selected then
 				Result.enable_select

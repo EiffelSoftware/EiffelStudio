@@ -10,7 +10,7 @@ inherit
 	EB_TEXT_TOOL_CMD
 	EB_SHARED_INTERFACE_TOOLS
 
-creation
+create
 	make
 
 feature -- Access

@@ -90,8 +90,8 @@ feature -- Initialization
 				end
 				history.do_named_undoable (
 					Interface_names.t_Diagram_delete_inheritance_link_cmd,
-					~remove_inheritance_figure (a_stone.source),
-					~restore_inheritance_figure (a_stone.source, saved_midpoints))
+					agent remove_inheritance_figure (a_stone.source),
+					agent restore_inheritance_figure (a_stone.source, saved_midpoints))
 				if not a_stone.source.last_generation_successful then
 					history.remove_last
 					a_stone.source.update
@@ -158,10 +158,10 @@ feature -- Initialization
 				if not cancelled then
 					history.do_named_undoable (
 						Interface_names.t_Diagram_delete_client_link_cmd,
-						[<<~remove_client_supplier_figures (csfs_to_remove, a_stone.source),
-							~update_label (a_stone.source)>>],
-						[<<~restore_client_supplier_figures (csfs_to_remove, saved_midpoints, a_stone.source),
-							~update_label (a_stone.source)>>])
+						[<<agent remove_client_supplier_figures (csfs_to_remove, a_stone.source),
+							agent update_label (a_stone.source)>>],
+						[<<agent restore_client_supplier_figures (csfs_to_remove, saved_midpoints, a_stone.source),
+							agent update_label (a_stone.source)>>])
 				end
 			end
 		end
@@ -171,11 +171,11 @@ feature -- Initialization
 		do
 			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
-			Result.select_actions.extend (~execute)
-			Result.drop_actions.extend (~execute_with_inherit_stone)
-			Result.drop_actions.extend (~execute_with_client_stone)
-			Result.drop_actions.extend (~drop_class)
-			Result.drop_actions.extend (~drop_cluster)
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_inherit_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
 		end
 
 	project is

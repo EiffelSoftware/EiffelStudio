@@ -16,7 +16,7 @@ inherit
 			on_text_reset
 		end
 
-creation
+create
 	make
 
 feature -- Status setting

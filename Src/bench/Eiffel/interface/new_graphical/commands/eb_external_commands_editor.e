@@ -174,13 +174,13 @@ feature {NONE} -- Implementation
 			dialog.set_size (300, 200)
 			
 				-- Set up events.
-			list.select_actions.extend (~update_edit_buttons)
-			list.deselect_actions.extend (~update_edit_buttons)
-			list.key_press_actions.extend (~on_key)
-			close_button.select_actions.extend (~destroy_dialog)
-			add_button.select_actions.extend (~add_command)
-			edit_button.select_actions.extend (~edit_command)
-			delete_button.select_actions.extend (~delete_command)
+			list.select_actions.extend (agent update_edit_buttons)
+			list.deselect_actions.extend (agent update_edit_buttons)
+			list.key_press_actions.extend (agent on_key)
+			close_button.select_actions.extend (agent destroy_dialog)
+			add_button.select_actions.extend (agent add_command)
+			edit_button.select_actions.extend (agent edit_command)
+			delete_button.select_actions.extend (agent delete_command)
 		end
 
 	destroy_dialog is
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 	update_menus is
 			-- Refresh the 'tools' menus of all development windows.
 		do
-			Window_manager.for_all_development_windows ({EB_DEVELOPMENT_WINDOW}~rebuild_tools_menu)
+			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.rebuild_tools_menu)
 		end
 
 	base_resource_name: STRING is "external_command_"

@@ -30,8 +30,8 @@ feature -- Initialization
 			create import.make (Current)
 			create ev_list
 			ev_list.set_minimum_height (100)
-			ev_list.key_press_actions.extend (~key_delete_action)
-			ev_list.select_actions.extend (~on_select)
+			ev_list.key_press_actions.extend (agent key_delete_action)
+			ev_list.select_actions.extend (agent on_select)
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -125,7 +125,7 @@ feature -- Widget
 
 						create hb1
 						hb1.set_border_width (5)
-						create up_button.make_with_text_and_action ("Up", ~up_action)
+						create up_button.make_with_text_and_action ("Up", agent up_action)
 						up_button.set_minimum_size (60, 22)
 						hb1.extend (up_button)
 						hb1.disable_item_expand (up_button)
@@ -134,7 +134,7 @@ feature -- Widget
 
 						create hb1
 						hb1.set_border_width (5)
-						create down_button.make_with_text_and_action ("Down", ~down_action)
+						create down_button.make_with_text_and_action ("Down", agent down_action)
 						down_button.set_minimum_size (60, 22)
 						hb1.extend (down_button)
 						hb1.disable_item_expand (down_button)
@@ -143,7 +143,7 @@ feature -- Widget
 
 						create hb1
 						hb1.set_border_width (5)
-						create delete_button.make_with_text_and_action ("Delete", ~delete_action)
+						create delete_button.make_with_text_and_action ("Delete", agent delete_action)
 						delete_button.set_minimum_size (60, 22)
 						hb1.extend (delete_button)
 						hb1.disable_item_expand (delete_button)
@@ -152,7 +152,7 @@ feature -- Widget
 
 						create hb1
 						hb1.set_border_width (5)
-						create edit_button.make_with_text_and_action ("Edit", ~edit_action)
+						create edit_button.make_with_text_and_action ("Edit", agent edit_action)
 						edit_button.set_minimum_size (60, 22)
 						hb1.extend (edit_button)
 						hb1.disable_item_expand (edit_button)
@@ -167,7 +167,7 @@ feature -- Widget
 				vb1.extend (hb)
 
 			create hb
-				create save_button.make_with_text_and_action ("Save", ~save_action)
+				create save_button.make_with_text_and_action ("Save", agent save_action)
 				save_button.set_minimum_width (60)
 				hb.extend (create {EV_CELL})
 				hb.extend (save_button)
@@ -184,7 +184,7 @@ feature -- Widget
 				hb.extend (import_button)
 				hb.disable_item_expand (import_button)
 
-				create exit_button.make_with_text_and_action ("Exit", ~exit_action)
+				create exit_button.make_with_text_and_action ("Exit", agent exit_action)
 				exit_button.set_minimum_width (60)
 				create {EV_CELL} ev_any
 				ev_any.set_minimum_width (10)
@@ -272,13 +272,13 @@ feature -- Setting
 				create list_item_data.make (metric_list.item, metric_xml_list.item)
 				list_item.set_data (list_item_data)
 				list_item.set_pebble (list_item)
-				list_item.drop_actions.extend (~drop_action_in_list (?, list_item))
-				list_item.pointer_double_press_actions.extend (~double_click_edit)
+				list_item.drop_actions.extend (agent drop_action_in_list (?, list_item))
+				list_item.pointer_double_press_actions.extend (agent double_click_edit)
 				a_list.extend (list_item)
 				metric_list.forth
 				metric_xml_list.forth
 			end
-			ev_list.drop_actions.extend (~move_to_list (?, ev_list))
+			ev_list.drop_actions.extend (agent move_to_list (?, ev_list))
 		end
 
 	metric (str: STRING; list: EV_LIST): EB_METRIC is
@@ -453,8 +453,8 @@ feature -- Action
 			selected_item := ev_list.selected_item
 			if selected_item /= Void then
 				create actions_array.make (1, 2)
-				actions_array.put (~delete_confirmed, 1)
-				actions_array.put (~do_nothing, 2)
+				actions_array.put (agent delete_confirmed, 1)
+				actions_array.put (agent do_nothing, 2)
 				if not delete_confirmation_shown then
 					create confirm_dialog.make_with_text_and_actions (
 								"Clicking save will remove the selected metric%N%
@@ -730,8 +730,8 @@ feature -- Edit
 				create list_item.make_with_text (edited_metric.name)
 				list_item.set_data (cell)
 				list_item.set_pebble (list_item)
-				list_item.drop_actions.extend (~drop_action_in_list (?, list_item))
-				list_item.pointer_double_press_actions.extend (~double_click_edit)
+				list_item.drop_actions.extend (agent drop_action_in_list (?, list_item))
+				list_item.pointer_double_press_actions.extend (agent double_click_edit)
 				ev_list.extend (list_item)
 			end
 		end

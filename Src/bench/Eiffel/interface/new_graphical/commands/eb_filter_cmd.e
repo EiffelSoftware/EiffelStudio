@@ -18,7 +18,7 @@ inherit
 	EB_SHARED_FORMAT_TABLES
 	EB_CONFIRM_SAVE_CALLBACK
 
-creation
+create
 	make
 
 feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_o),
 				True, False, False)
-			accelerator.actions.extend (~execute)
+			accelerator.actions.extend (agent execute)
 		end
 
 feature -- Basic operation
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 		do
 			create fod
 			fod.set_filter ("*.e")
-			fod.open_actions.extend (~execute_callback (fod))
+			fod.open_actions.extend (agent execute_callback (fod))
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 	
@@ -142,16 +142,16 @@ feature {NONE} -- Implementation
 					end
 				elseif f.exists and then not f.is_plain then
 					create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-					cd.button ("OK").select_actions.extend (~execute)
+					cd.button ("OK").select_actions.extend (agent execute)
 					cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				else
 					create cd.make_with_text (Warning_messages.w_Cannot_read_file_retry (fn))
-					cd.button ("OK").select_actions.extend (~execute)
+					cd.button ("OK").select_actions.extend (agent execute)
 					cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 			else
 				create cd.make_with_text (Warning_messages.w_Not_a_file_retry (fn))
-				cd.button ("OK").select_actions.extend (~execute)
+				cd.button ("OK").select_actions.extend (agent execute)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
 		end
@@ -170,11 +170,11 @@ feature {NONE} -- Implementation
 			create butcont
 			create maincont
 			create butbackup.make_with_text (Interface_names.b_Open_backup)
-			butbackup.select_actions.extend (~open_backup_selected)
-			butbackup.select_actions.extend (dial~destroy)
+			butbackup.select_actions.extend (agent open_backup_selected)
+			butbackup.select_actions.extend (agent dial.destroy)
 			create butnormal.make_with_text (Interface_names.b_Open_original)
-			butnormal.select_actions.extend (~open_normal_selected)
-			butnormal.select_actions.extend (dial~destroy)
+			butnormal.select_actions.extend (agent open_normal_selected)
+			butnormal.select_actions.extend (agent dial.destroy)
 			create lab.make_with_text (Warning_messages.w_Found_backup)
 			butcont.set_padding (3)
 			butcont.extend (create {EV_CELL})

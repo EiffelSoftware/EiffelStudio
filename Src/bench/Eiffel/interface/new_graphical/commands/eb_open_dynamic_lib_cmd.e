@@ -12,7 +12,7 @@ inherit
 			work, loose_changes, save_changes
 		end
 
-creation
+create
 
 	make
 	

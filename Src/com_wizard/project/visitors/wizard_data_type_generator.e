@@ -120,17 +120,20 @@ feature -- Basic operations
 			end
 			a_visitor.set_c_post_type (c_post_type)
 			a_visitor.set_c_type (c_type)
-			if is_basic_type then
+			if is_basic_type or is_enumeration then
 				a_visitor.set_cecil_type (cecil_type)
 			end
 
 			a_visitor.set_eiffel_type (eiffel_type)
 			a_visitor.set_need_generate_ce (need_generate_ce)
 			a_visitor.set_need_generate_ec (need_generate_ec)
-			ce_function_name.to_lower
-			a_visitor.set_ce_function_name (ce_function_name)
-			ec_function_name.to_lower
-			a_visitor.set_ec_function_name (ec_function_name)
+
+			if not is_basic_type and not is_enumeration then
+				ce_function_name.to_lower
+				a_visitor.set_ce_function_name (ce_function_name)
+				ec_function_name.to_lower
+				a_visitor.set_ec_function_name (ec_function_name)
+			end
 
 			if need_generate_ce then
 				a_visitor.set_ce_function_body (ce_function_body)

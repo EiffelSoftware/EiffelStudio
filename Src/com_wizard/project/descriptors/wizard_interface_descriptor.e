@@ -190,7 +190,8 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			not_empty_feature_names: not feature_eiffel_names.empty
+			not_empty_feature_names: not functions.empty and not properties.empty implies 
+									not feature_eiffel_names.empty
 		end
 
 	disambiguate_c_names (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -247,8 +248,10 @@ feature -- Basic operations
 				properties.forth
 			end
 		ensure
-			not_empty_feature_names: not feature_eiffel_names.empty
+			not_empty_feature_names: not functions.empty and not properties.empty implies 
+									not feature_c_names.empty
 		end
+
 	set_functions (some_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
 			-- Set `functions' with `some_functions'
 		require

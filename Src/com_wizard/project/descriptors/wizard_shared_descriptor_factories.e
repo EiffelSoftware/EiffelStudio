@@ -33,20 +33,8 @@ feature -- Access
 			create Result
 		end
 
-	Function_descriptor_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY is
-			-- Function descriptor factory
-		once
-			create Result
-		end
-
 	Parameter_descriptor_factory: WIZARD_PARAMETER_DESCRIPTOR_FACTORY	is
 			-- Parameter descriptor factory
-		once
-			create Result
-		end
-
-	Property_descriptor_factory: WIZARD_PROPERTY_DESCRIPTOR_FACTORY is
-			-- Property descriptor factory
 		once
 			create Result
 		end

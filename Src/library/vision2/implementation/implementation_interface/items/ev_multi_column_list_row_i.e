@@ -43,17 +43,10 @@ feature -- Initialization
 
 feature -- Access
 
---	parent: EV_MULTI_COLUMN_LIST is
---			-- List that container this row
---		deferred
---		end
-
---	columns: INTEGER is
---			-- Number of columns in the row
---		require
---			exists: not destroyed
---		deferred
---		end
+	parent: EV_MULTI_COLUMN_LIST is
+			-- List that container this row
+		deferred
+		end
 
 	index: INTEGER is
 			-- Index of the row in the list
@@ -116,61 +109,6 @@ feature -- Status setting
 		do
 			set_selected (not is_selected)
 		end
-
---	set_columns (value: INTEGER) is
---			-- Set the number of columns of the row.
---			-- When there is a parent, the row has the
---			-- same number of column than it.
---		require
---			exists: not destroyed
---			no_parent: parent_imp = Void
---			valid_value: value > 0
---		deferred
---		end
-
-feature -- Element Change
-
---	set_parent (par: EV_MULTI_COLUMN_LIST) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---			valid_size: par /= Void implies (columns = par.columns)
---		deferred
---		ensure
---			parent_set: parent = par
---		end
-
---	set_cell_text (column: INTEGER; a_text: STRING) is
---			-- Make `text ' the new label of the `column'-th
---			-- cell of the row.
---		require
---			exists: not destroyed
---			column_exists: column >= 1 and column <= columns
---			text_not_void: a_text /= Void
---		deferred
---		end
-
---	set_text (a_text: ARRAY[STRING]) is
---		require
---			exists: not destroyed
---			text_not_void: a_text /= Void
---			valid_text_length: a_text.count = columns
---		local
---			i: INTEGER
---			list_i: INTEGER
---		do
---			from
---				i := a_text.lower
---				list_i := 1
---			until
---				i = a_text.upper + 1
---			loop
---				set_cell_text (list_i, a_text @ i)
---				i := i + 1
---				list_i := list_i + 1
---			end
---		end
 
 feature -- Event : command association
 

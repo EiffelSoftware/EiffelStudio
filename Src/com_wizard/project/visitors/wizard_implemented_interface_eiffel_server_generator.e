@@ -67,6 +67,7 @@ feature {NONE} -- Implementation
 			-- Add creation routines.
 		do
 			eiffel_writer.add_creation_routine (Make_word)
+			eiffel_writer.add_creation_routine ("make_from_pointer")
 		end
 
 	add_default_features (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -74,6 +75,7 @@ feature {NONE} -- Implementation
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		do
 			eiffel_writer.add_feature (make_feature, Initialization)
+			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			eiffel_writer.add_feature (create_item_feature, Basic_operations)
 			eiffel_writer.add_feature (ccom_create_item_feature (an_interface), Externals)
 		end

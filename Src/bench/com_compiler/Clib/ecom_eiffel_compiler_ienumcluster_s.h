@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel Cluster Enumeration.  Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMCLUSTER_S_H__

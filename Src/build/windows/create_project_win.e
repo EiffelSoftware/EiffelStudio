@@ -24,9 +24,6 @@ feature
 		local
 			cmd: CREATE_PROJECT
 		do
-			if main_panel.project_initialized then
-				clear_project
-			end;
 			!!cmd;
 			cmd.execute (selected_file);
 		end;

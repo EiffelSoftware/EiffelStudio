@@ -23,6 +23,8 @@ feature -- Synchro Initialization
 		
 	terminate_dbg_synchronisation is
 			-- Initialize eStudio/.NET debugger synchronisation
+		require
+			dbg_timer_stopped: not dbg_timer_active
 		do
 			debug ("DBG_SYNCHRO")
 				io.error.put_string (">>Terminate eStudio/.NET debugger synchronisation%N")

@@ -49,6 +49,8 @@ feature -- Basic operations
 				loop
 					if inputs.item.substring_index (Comment_indicator, 1) > 0 then
 						inputs.item.replace_substring_all (Comment_indicator, Empty_string)
+						inputs.item.left_adjust
+						inputs.item.right_adjust
 						l_comment.append (inputs.item)
 						l_comment.append ("%N")
 					end

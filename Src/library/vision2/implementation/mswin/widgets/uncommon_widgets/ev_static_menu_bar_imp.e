@@ -29,11 +29,18 @@ feature {NONE} -- Initialization
 			wel_make
 			parent_imp ?= par.implementation
 			check
-				parent_imp /= Void
+				valid_cast: parent_imp /= Void
 			end
-			ev_children := parent_imp.menu_items
 			parent_imp.set_menu (Current)
 		end	
+
+feature -- Access
+
+	menu_container: WEL_MENU is
+			-- Actual WEL container
+		do
+			Result := Current
+		end
 
 feature -- Status report
 
@@ -41,7 +48,6 @@ feature -- Status report
 			-- Is the current menu destroyed ?
 		do
 			Result := False
-	--		Result := not equal (parent_imp.menu, Current)
 		end
 
 feature -- Status setting
@@ -50,14 +56,9 @@ feature -- Status setting
 			-- Destroy the actual static menu-bar.
 		do
 			parent_imp.unset_menu
-		end
-
-feature {NONE} -- Implementation
-
-	menu_container: WEL_MENU is
-			-- Actual WEL container
-		do
-			Result := Current
+			interface.remove_implementation
+			interface := Void
+			clear_items
 		end
 
 feature {NONE} -- Inapplicable

@@ -245,8 +245,6 @@ feature -- Access
 		
 	add_new_menu_bar_component (a_component: GB_COMPONENT) is
 			-- Add a new menu bar component to `Current'.
-		require
-			is_menu_bar_component: a_component.root_element_type.is_equal (Ev_menu_bar_string)
 		local
 			menu_object: GB_MENU_BAR_OBJECT
 		do
@@ -332,8 +330,6 @@ feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 	update_as_root_window_changing is
 			-- Update `Current' to reflect that fact that it is no longer the main
 			-- window for the system.
-		require
-			is_root_window: object_handler.root_window_object = Current
 		do
 			layout_item.set_pixmap (pixmap_by_name (type.as_lower))
 			window_selector_item.set_pixmap (pixmap_by_name (type.as_lower))

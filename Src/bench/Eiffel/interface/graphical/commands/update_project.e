@@ -23,7 +23,8 @@ inherit
 		rename
 			execute_warner_help as choose_template,
 			execute_warner_ok as warner_ok
-		end
+		end;
+	CREATE_ACE_CALLER
 
 creation
 
@@ -41,7 +42,6 @@ feature -- Callbacks
 
 	choose_template is
 		do
-			system_tool.display;
 			load_default_ace;
 		end;
 
@@ -219,12 +219,22 @@ feature {NONE} -- Implementation
 		require
 			project_tool.initialized
 		local
-			file_name: STRING;
+			wiz_dlg: WIZARD_DIALOG;
+			create_ace: CREATE_ACE;
+			wizard: WIZARD
 		do
-			!!file_name.make (50);
-			file_name.append (Default_ace_name);
-			system_tool.text_window.show_file_content (file_name);
-			system_tool.text_window.set_changed (True)
+			!! wiz_dlg.make ("dialog", Project_tool);
+			!! create_ace.make (Current);
+			!! wizard.make (Project_tool, wiz_dlg, create_ace);
+			wizard.execute_action;
+		end;
+
+	perform_post_creation is
+		local
+			file_name: STRING
+		do
+			!!file_name.make (0);
+			file_name.append ("Ace.ace")
 		end;
 
 feature {NONE} -- Attributes
@@ -350,7 +360,7 @@ feature {NONE} -- Implementation; Execution
 						end
 					else
 						warner (text_window).custom_call (Current,
-							l_Specify_ace, "Choose", "Template", "Cancel");
+							l_Specify_ace, "Browse", "Build", "Cancel");
 					end;
 				else
 					warner (text_window).custom_call (Void,

@@ -48,9 +48,11 @@ inherit
 		undefine
 			copy, default_create
 		end
-
-	GB_CONSTANTS
-	
+		
+	GB_EVENT_UTILITIES
+		undefine
+			copy, default_create
+		end
 
 create
 	make_with_object
@@ -180,6 +182,7 @@ feature {NONE} -- Implementation
 			cell: EV_CELL
 			info: GB_ACTION_SEQUENCE_INFO
 			feature_name: STRING
+			renamed_action_sequence_name: STRING
 		do
 			from
 				counter := 1
@@ -212,17 +215,19 @@ feature {NONE} -- Implementation
 				
 				
 				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
+					-- Adjust event names that have been renamed in Vision2 interface
+				renamed_action_sequence_name := modified_action_sequence_name (object.type, info)
 				feature_name := feature_name_of_object_event (info)
 				if feature_name = Void then
 						-- Build empty interface.
-					create label.make_with_text (an_action_sequence.names @ counter + " " + an_action_sequence.comments @ counter)
+					create label.make_with_text (renamed_action_sequence_name + " " + an_action_sequence.comments @ counter)
 					label.align_text_left
 					horizontal_box.extend (label)
 				else
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
 					vertical_box1.set_padding_width (10)
-					create frame.make_with_text (an_action_sequence.names @ counter + " " + an_action_sequence.comments @ counter)
+					create frame.make_with_text (renamed_action_sequence_name + " " + an_action_sequence.comments @ counter)
 					horizontal_box.extend (frame)
 					create label.make_with_text ("Generated feature name : ")
 					create horizontal_box2
@@ -246,7 +251,7 @@ feature {NONE} -- Implementation
 					-- dynamic object building again.
 				all_text_fields.extend (text_field)
 				all_check_buttons.extend (check_button)
-				all_names.extend (an_action_sequence.names @ counter)
+				all_names.extend (renamed_action_sequence_name)
 				all_comments.extend (an_action_sequence.comments @ counter)
 				all_types.extend (an_action_sequence.types @ counter)
 				all_class_names.extend (action_sequences_list.item)
@@ -316,7 +321,7 @@ feature {NONE} -- Implementation
 		do
 			lock_update
 			current_check_button := all_check_buttons @ index
-			current_text_field := all_text_fields @ index
+			current_text_field := all_text_fields @ index	
 			if (current_check_button).is_selected then
 				horizontal_box ?= current_check_button.parent
 				vertical_box ?= horizontal_box.parent
@@ -336,6 +341,8 @@ feature {NONE} -- Implementation
 				horizontal_box.prune (horizontal_box @ 2)
 				vertical_box ?= horizontal_box.parent
 				vertical_box.set_padding_width (0)
+				
+				
 				create label.make_with_text (all_names @ index + " " + all_comments @ index)
 				label.align_text_left
 				horizontal_box.extend (label)

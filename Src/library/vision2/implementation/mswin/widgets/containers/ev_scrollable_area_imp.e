@@ -46,14 +46,15 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Initialize. 
+			-- Initialize current with `interface' `an_interface'. 
 		do
-			Precursor (an_interface)
+			Precursor {EV_VIEWPORT_IMP} (an_interface)
 		end
 
 	initialize is
+			-- Perform post creation initialization.
 		do
-			Precursor
+			Precursor {EV_VIEWPORT_IMP}
 			create scroller.make (Current, 50, 50, 10, 30)
 			enable_horizontal_scroll_bar
 			enable_vertical_scroll_bar
@@ -165,7 +166,7 @@ feature -- Element change
 		do
 			if item /= Void then
 				set_horizontal_position (an_x)
-				Precursor (an_x)
+				Precursor {EV_VIEWPORT_IMP} (an_x)
 			end
 		end
 
@@ -174,7 +175,7 @@ feature -- Element change
 		do
 			if item /= Void then
 				set_vertical_position (a_y)
-				Precursor (a_y)
+				Precursor {EV_VIEWPORT_IMP} (a_y)
 			end
 		end
 

@@ -80,6 +80,11 @@ feature {NONE} -- Implementation
 			pointer: POINTER_REF
 			s: STRING
 			ar: ARRAY [ANY]
+			int_ar: ARRAY [INTEGER]
+			real_ar: ARRAY [REAL]
+			double_ar: ARRAY [DOUBLE]
+			char_ar: ARRAY [CHARACTER]
+			bool_ar: ARRAY [BOOLEAN]
 		do
 			if obj = Void then
 				write (parent_field, "", open_none_field, close_none_field, tab_count, f)
@@ -116,7 +121,32 @@ feature {NONE} -- Implementation
 											if ar /= Void then
 												process_array (parent_field, ar, tab_count, f)
 											else
-												process_reference (parent_field, obj, tab_count, f)
+												int_ar ?= obj
+												if int_ar /= Void then
+													process_array (parent_field, int_ar, tab_count, f)
+												else
+													real_ar ?= obj
+													if real_ar /= Void then
+														process_array (parent_field, real_ar, tab_count, f)
+													else
+														char_ar ?= obj
+														if char_ar /= Void then
+															process_array (parent_field, char_ar, tab_count, f)
+														else
+															bool_ar ?= obj
+															if bool_ar /= Void then
+																process_array (parent_field, bool_ar, tab_count, f)
+															else
+																double_ar ?= obj
+																if double_ar /= Void then
+																	process_array (parent_field, double_ar, tab_count, f)																
+																else
+																	process_reference (parent_field, obj, tab_count, f)
+																end
+															end
+														end
+													end
+												end
 											end
 										end
 									end
@@ -128,12 +158,12 @@ feature {NONE} -- Implementation
 			end	
 		end
 	
-	process_array (name: STRING; ar: ARRAY [ANY]; tab_count: INTEGER; f: TEXT_WRITER) is
+	process_array (name: STRING; obj: ANY; tab_count: INTEGER; f: TEXT_WRITER) is
 			-- 	Write array field `ar' named `name' in `f' tabulated with `tab_count' tabs.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
-			non_void_reference: ar /= Void
+			non_void_reference: obj /= Void
 			valid_tab_count: tab_count >= 0
 			non_void_file: f /= Void
 		local
@@ -143,33 +173,159 @@ feature {NONE} -- Implementation
 			character_array: ARRAY [CHARACTER]
 			pointer_array: ARRAY [POINTER]
 			boolean_array: ARRAY [BOOLEAN]
+			ar: ARRAY [ANY]
+			i, count: INTEGER
 			type_attribute: SYSTEM_STRING
-			i: INTEGER
+			elem: ANY
 		do
-			integer_array ?= ar
+			write_tabs (f, tab_count)
+			f.write_string (Open_array_field)
+			f.write_string (name.to_cil)
+			f.write_string (Quote_space)
+			f.write_string (Array_lower_bound_xml_attribute)
+			f.write_string (Equal_quote)
+			integer_array ?= obj
 			if integer_array /= Void then
-				type_attribute := Integer_node
+				count := integer_array.count
+				f.write_integer_32 (integer_array.lower)
+				f.write_string (Quote_space)
+				f.write_string (Array_count_xml_attribute)
+				f.write_string (Equal_quote)
+				f.write_integer_32 (count)
+				f.write_string (Quote_space)
+				f.write_string (Type_xml_attribute)
+				f.write_string (Equal_quote)
+				f.write_string (Integer_node)
+				f.write_string (End_element)
+				f.write_string (New_line)
+				from
+					i := 1
+				until
+					i > count
+				loop
+					internal_serialize (i.out, integer_array.item (i), tab_count + 1, f)							
+					i := i + 1
+				end
 			else
-				real_array ?= ar
+				real_array ?= obj
 				if real_array /= Void then
-					type_attribute := Real_node
+					count := real_array.count
+					f.write_integer_32 (real_array.lower)
+					f.write_string (Quote_space)
+					f.write_string (Array_count_xml_attribute)
+					f.write_string (Equal_quote)
+					f.write_integer_32 (count)
+					f.write_string (Quote_space)
+					f.write_string (Type_xml_attribute)
+					f.write_string (Equal_quote)
+					f.write_string (Real_node)
+					f.write_string (End_element)
+					f.write_string (New_line)
+					from
+						i := 1
+					until
+						i > count
+					loop
+						internal_serialize (i.out, real_array.item (i), tab_count + 1, f)							
+						i := i + 1
+					end
 				else
-					double_array ?= ar
+					double_array ?= obj
 					if double_array /= Void then
-						type_attribute := Double_node
+						count := double_array.count
+						f.write_integer_32 (double_array.lower)
+						f.write_string (Quote_space)
+						f.write_string (Array_count_xml_attribute)
+						f.write_string (Equal_quote)
+						f.write_integer_32 (count)
+						f.write_string (Quote_space)
+						f.write_string (Type_xml_attribute)
+						f.write_string (Equal_quote)
+						f.write_string (Double_node)
+						f.write_string (End_element)
+						f.write_string (New_line)
+						from
+							i := 1
+						until
+							i > count
+						loop
+							internal_serialize (i.out, double_array.item (i), tab_count + 1, f)							
+							i := i + 1
+						end
 					else
-						character_array ?= ar
+						character_array ?= obj
 						if character_array /= Void then
-							type_attribute := Character_node
+							count := character_array.count
+							f.write_integer_32 (character_array.lower)
+							f.write_string (Quote_space)
+							f.write_string (Array_count_xml_attribute)
+							f.write_string (Equal_quote)
+							f.write_integer_32 (count)
+							f.write_string (Quote_space)
+							f.write_string (Type_xml_attribute)
+							f.write_string (Equal_quote)
+							f.write_string (Character_node)
+							f.write_string (End_element)
+							f.write_string (New_line)
+							from
+								i := 1
+							until
+								i > count
+							loop
+								internal_serialize (i.out, character_array.item (i), tab_count + 1, f)							
+								i := i + 1
+							end
 						else
-							boolean_array ?= ar
+							boolean_array ?= obj
 							if boolean_array /= Void then
-								type_attribute := Boolean_node
+								count := boolean_array.count
+								f.write_integer_32 (boolean_array.lower)
+								f.write_string (Quote_space)
+								f.write_string (Array_count_xml_attribute)
+								f.write_string (Equal_quote)
+								f.write_integer_32 (count)
+								f.write_string (Quote_space)
+								f.write_string (Type_xml_attribute)
+								f.write_string (Equal_quote)
+								f.write_string (Boolean_node)
+								f.write_string (End_element)
+								f.write_string (New_line)
+								from
+									i := 1
+								until
+									i > count
+								loop
+									internal_serialize (i.out, boolean_array.item (i), tab_count + 1, f)							
+									i := i + 1
+								end
 							else
-								pointer_array ?= ar
+								pointer_array ?= obj
 								if pointer_array /= Void then
-									type_attribute := Pointer_node
+									count := pointer_array.count
+									f.write_integer_32 (pointer_array.lower)
+									f.write_string (Quote_space)
+									f.write_string (Array_count_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_integer_32 (count)
+									f.write_string (Quote_space)
+									f.write_string (Type_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_string (Pointer_node)
+									f.write_string (End_element)
+									f.write_string (New_line)
+									from
+										i := 1
+									until
+										i > count
+									loop
+										internal_serialize (i.out, pointer_array.item (i), tab_count + 1, f)							
+										i := i + 1
+									end
 								else
+									ar ?= obj
+									check
+										is_array: ar /= Void
+									end			
 									from
 										i := ar.lower
 									until
@@ -183,6 +339,29 @@ feature {NONE} -- Implementation
 									if type_attribute = Void then
 										type_attribute := None_node										
 									end
+									count := ar.count
+									f.write_integer_32 (ar.lower)
+									f.write_string (Quote_space)
+									f.write_string (Array_count_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_integer_32 (count)
+									f.write_string (Quote_space)
+									f.write_string (Type_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_string (type_attribute)
+									f.write_string (End_element)
+									f.write_string (New_line)
+									from
+										i := 1
+									until
+										i > count
+									loop
+										elem := ar.item (i)
+										if elem /= Void then
+											internal_serialize (i.out, elem, tab_count + 1, f)
+										end
+										i := i + 1
+									end
 								end
 							end
 						end
@@ -190,36 +369,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			write_tabs (f, tab_count)
-			f.write_string (Open_array_field)
-			f.write_string (name.to_cil)
-			f.write_string (Quote_space)
-			f.write_string (Array_lower_bound_xml_attribute)
-			f.write_string (Equal_quote)
-			f.write_integer_32 (ar.lower)
-			f.write_string (Quote_space)
-			f.write_string (Array_count_xml_attribute)
-			f.write_string (Equal_quote)
-			f.write_integer_32 (ar.count)
-			f.write_string (Quote_space)
-			f.write_string (Type_xml_attribute)
-			f.write_string (Equal_quote)
-			f.write_string (type_attribute)
-			f.write_string (End_element)
-			f.write_string (New_line)
-			from
-				i := ar.lower
-			until
-				i > ar.count + ar.lower - 1
-			loop
-				if ar.item (i) /= Void then
-					internal_serialize (i.out, ar.item (i), tab_count + 1, f)				
-				end
-				i := i + 1
-			end
-			write_tabs (f, tab_count)
 			f.write_string (Close_array_field)
 			f.write_string (New_line)			
-
 		end
 
 	process_reference (parent_field: STRING; obj: ANY; tab_count: INTEGER; f: TEXT_WRITER) is

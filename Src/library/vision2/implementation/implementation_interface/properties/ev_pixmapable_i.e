@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 
 inherit
 	EV_ANY_I

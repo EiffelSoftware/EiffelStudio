@@ -10,11 +10,11 @@
 	<paragraph>
 		<paragraph>If the current 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editor</label>
 			</link> contains an <code><class_name>EV_CONTAINER</class_name></code> 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>, then the following control will be available:
 		</paragraph>
@@ -29,21 +29,21 @@
 		</heading>
 		<paragraph>To create a new merge, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> of type <code><class_name>EV_CONTAINER</class_name></code>, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> it anywhere on the control. This will merge the radio button group of the <code><class_name>EV_CONTAINER</class_name></code> referenced in the object editor, to the transported one. Each merge, will show up as a new item in the control.
 			<note>
 				<bold>Note</bold>: Container objects may only be grouped once, and as such, you will not be permitted to add an 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 					<label>object</label>
 				</link> that is already contained in the list.
 			</note>
@@ -53,26 +53,26 @@
 		</heading>
 		<paragraph>To unmerge a container 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> from a group, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> the representation of that 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> from the list, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_delete_small_color.png</url>
 			</image>. This will unmerge the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> from the current group of containers.
 		</paragraph>
@@ -81,15 +81,15 @@
 		</heading>
 		<paragraph>To locate the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> referenced by a list item in the control, left click the item that you wish to locate. This will display the representation of the associated 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> within the 
 			<link>
-				<url>/tools/eiffelbuild/reference/20_layout_constructor/index</url>
+				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label>layout constructor</label>
 			</link>, and the associated icon will be animated for a short period of time.
 		</paragraph>

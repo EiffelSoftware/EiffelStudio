@@ -79,7 +79,7 @@
 			<item><link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link>, describing constructs of the "repetition" form.</item>
 			<item><link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>, describing "terminal" constructs with no further structure.</item>
 			<item><link><url>/libraries/parse/reference/KEYWORD_chart.xml</url><label>KEYWORD</label></link>, describing how to handle keywords.</item>
-			<item><link><url>/libraries/lex/reference/L_INTERFACE_chart.xml</url><label>L_INTERFACE</label></link>, providing a simple interface with the lexical analysis process and the Lex library.</item>
+			<item><link><url>/libraries/parse/reference/L_INTERFACE_chart.xml</url><label>L_INTERFACE</label></link>, providing a simple interface with the lexical analysis process and the Lex library.</item>
 			<item><link><url>/libraries/parse/reference/INPUT_chart.xml</url><label>INPUT</label></link>, describing how to handle the input document.</item>
 		</list>
 		<heading>
@@ -194,7 +194,7 @@ Deferred though it may be, <link><url>/libraries/parse/reference/CONSTRUCT_chart
 			<line_break/>
 where procedures parse and semantics are expressed in terms of some more specific procedures, which are deferred. This defines a general scheme while leaving the details to descendants of the class.
 		</paragraph>
-		<paragraph>Such descendants, given in the library, are classes <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPITITION_chart.xml</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>. They describe the corresponding types of construct, with features providing the operations for parsing their specimens and applying the associated semantic actions.</paragraph>
+		<paragraph>Such descendants, given in the library, are classes <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/CHOICE_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/REPETITION_chart.xml</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/TERMINAL_chart.xml</url><label>TERMINAL</label></link>. They describe the corresponding types of construct, with features providing the operations for parsing their specimens and applying the associated semantic actions.</paragraph>
 		<heading>
 			<size>3</size>Building a processor
 		</heading>
@@ -241,7 +241,7 @@ where procedures parse and semantics are expressed in terms of some more specifi
 		</heading>
 		<paragraph>Having studied the Parse library principles, let us see how to write grammar productions for various kinds of construct. The main task is to write the production function for each construct class.</paragraph>
 		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/AGGREGATE_chart.xml</url><label>AGGREGATE</label></link> will describe how to build a specimen of the corresponding function from a sequence of specimens of each of the constituent constructs. Writing this function from the corresponding production is straightforward.</paragraph>
-		<paragraph>As an example, consider the production function of class <link><url>/libraries/parse/reference/LINE_chart.xml</url><label>LINE</label></link> for the Polynomial example language. The corresponding production is
+		<paragraph>As an example, consider the production function of class <link><label>LINE</label></link> for the Polynomial example language. The corresponding production is
 			<line_break/>
 <code_block>
 Line [=] Variables ":" Sum
@@ -805,7 +805,7 @@ You may go back to the next higher-level choice before C - or admit failure if t
 					<link>
 						<anchor_name>step_e4</anchor_name>
 						<label>4</label>
-					</link> (processing the document) is simply a call to procedure process, obtained from <link><url>/libraries/reference/parse/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link>. Recall that this procedure simply executes
+					</link> (processing the document) is simply a call to procedure process, obtained from <link><url>/libraries/parse/reference/CONSTRUCT_chart.xml</url><label>CONSTRUCT</label></link>. Recall that this procedure simply executes
 					<line_break/>
 <code_block>
 	<feature_name>parse</feature_name>	

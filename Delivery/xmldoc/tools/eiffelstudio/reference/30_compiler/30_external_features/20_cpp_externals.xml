@@ -136,7 +136,7 @@ External_name ==  <keyword>alias</keyword> Manifest_string
 			</item>
 			<item>If the declaration starts with <code><keyword>delete</keyword></code>, it indicates a call to a destructor from the C++ class. In this case the Eiffel class may inherit 
 				<link>
-					<url>/libraries/base/reference/kernel/memory.xml</url>
+					<url>/libraries/base/reference/kernel/classic/MEMORY_chart.xml</url>
 				</link> and redefine the dispose procedure to execute the destructor operations whenever the Eiffel objects are garbage-collected.
 			</item>
 			<item>If the declaration starts with <code><keyword>data_member</keyword></code>, it indicates access to a data member (attribute in Eiffel terminology) from the C++ class.

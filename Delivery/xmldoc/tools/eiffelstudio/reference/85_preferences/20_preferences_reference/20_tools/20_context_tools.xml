@@ -39,7 +39,7 @@
 				<cell>Class view that is selected by default.</cell>
 				<cell>This is the index of the view that be used by default in the Classtool. To find the index associated with a view, refer to 
 					<link>
-						<url>#classnb</url>
+						<anchor_name>classnb</anchor_name>
 						<label>the table below.</label>
 					</link>The default value is 5 (which corresponds to the ancestors view).
 				</cell>
@@ -48,7 +48,7 @@
 				<cell>Feature view that is selected by default.</cell>
 				<cell>This is the index of the view that be used by default in the Featuretool. To find the index associated with a view, refer to 
 					<link>
-						<url>#featnb</url>
+						<anchor_name>featnb</anchor_name>
 						<label>the table below.</label>
 					</link>The default value is 2 (which corresponds to the flat view).
 				</cell>

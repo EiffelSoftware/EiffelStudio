@@ -10,11 +10,11 @@
 	<paragraph>
 		<paragraph>The Builder window provides a view of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> in your system, in which the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> may be manipulated.
 		</paragraph>
@@ -36,11 +36,11 @@
 		</paragraph>
 		<paragraph>The content of this window is a representation of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> you have defined in your project. Each 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> is represented by the 
 			<link>
@@ -48,16 +48,16 @@
 				<label>EiffelVision2</label>
 			</link> control matching its type. For example, an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>representing an <code><class_name>EV_BUTTON</class_name></code> will be displayed in here using an <code><class_name>EV_BUTTON</class_name></code>. As this view provides direct access to the objects ( 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>Pick</label>
 			</link> any of the controls in this window), it enables you to build your interface within a view which provides rich visual feedback.
 		</paragraph>Because this window is just a view of the 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 			<label>objects</label>
 		</link>, it will be always synchronized with the 
 		<link>
@@ -69,7 +69,7 @@
 			<label> reparent objects</label>
 		</link>, using the 
 		<link>
-			<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+			<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 			<label>pick and drop</label>
 		</link> transport method, seamlessly between the two views.
 		<line_break/>
@@ -84,13 +84,13 @@
 				<label>display window</label>
 			</link>). The main difference is that all 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> representing descendents of EV_CONTAINER are parented in a frame. This was implemented so that you would be able to easily manipulate the containers.
 		</paragraph>
 		<paragraph>Imagine that this was not the case, and each container 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> was just represented by an 
 			<link>
@@ -100,17 +100,17 @@
 		</paragraph>
 		<paragraph>In the screenshot above, you can see that there are two 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> representing containers in your project, an <code><class_name>EV_VERTICAL_BOX</class_name></code>, and an <code><class_name>EV_HORIZONTAL_BOX</class_name></code> (Excluding the <code><class_name>EV_TITLED_WINDOW</class_name></code> 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> represented by this window).
 		</paragraph>
 		<paragraph>The properties of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> in you system are always reflected in this window, with a few exceptions:
 		</paragraph>
@@ -118,7 +118,7 @@
 			<item>'user_can_resize', 'maximum_width', 'maximum_height' and 'title_string' are not reflected in this window.</item>
 			<item>'minimum_width' and `minimum_height' are not reflected in any of the controls representing 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 					<label>objects</label>
 				</link> within this window.
 			</item>

@@ -18,11 +18,11 @@
 		<paragraph>As Eiffel Software's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the C compilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as lax as C compilers and they will mostly generate errors.</paragraph>
 		<paragraph>The sections concerning 
 			<link>
-				<url>#macros</url>
+				<anchor_name>macros</anchor_name>
 				<label>Macros</label>
 			</link> and 
 			<link>
-				<url>#structs</url>
+				<anchor_name>structs</anchor_name>
 				<label>Structs</label>
 			</link> are also available for C++ if the macro or the struct is defined in a C++ header file.
 		</paragraph>

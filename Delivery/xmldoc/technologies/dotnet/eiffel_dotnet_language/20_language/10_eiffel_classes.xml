@@ -47,49 +47,49 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#indexing</url>
+					<anchor_name>indexing</anchor_name>
 					<label>Indexing</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#class header</url>
+					<anchor_name>class header</anchor_name>
 					<label>Class header</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#formal generics</url>
+					<anchor_name>formal generics</anchor_name>
 					<label>Formal generics</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#obsolete</url>
+					<anchor_name>obsolete</anchor_name>
 					<label>Obsolete</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#inheritance</url>
+					<anchor_name>inheritance</anchor_name>
 					<label>Inheritance</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#creators</url>
+					<anchor_name>creators</anchor_name>
 					<label>Creators</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#features</url>
+					<anchor_name>features</anchor_name>
 					<label>Features</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#invariant</url>
+					<anchor_name>invariant</anchor_name>
 					<label>Invariant</label>
 				</link>
 			</item>

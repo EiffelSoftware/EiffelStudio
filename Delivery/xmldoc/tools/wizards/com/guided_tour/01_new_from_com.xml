@@ -26,19 +26,19 @@
 		<italic>PruneAll</italic> corresponding respectively to the features 
 		<code>
 			<feature_name>
-				<url>../../../../libraries/base/reference/kernel/string.xml#f_replace_substring</url>
+				<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
 			</feature_name>
 		</code> and 
 		<code>
 			<feature_name>
-				<url>../../../../libraries/base/reference/kernel/string.xml#f_prune_all</url>
+				<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url><anchor_name>f_prune_all</anchor_name>
 				<label>prune_all</label>
 			</feature_name>
 		</code> of the EiffelBase 
 		<code>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/string.xml</url>
+				<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url>
 				<label>
 					<code>
 						<class_name>STRING</class_name>

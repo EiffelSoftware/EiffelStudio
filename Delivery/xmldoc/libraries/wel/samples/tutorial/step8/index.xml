@@ -31,7 +31,7 @@
 			<size>2</size>Under the Hood
 		</heading> The <link><url>../../../reference/stddlgs/WEL_OPEN_FILE_DIALOG_chart.xml</url><label>WEL_OPEN_FILE_DIALOG</label></link> and the <link><url>../../../reference/stddlgs/WEL_SAVE_FILE_DIALOG_chart.xml</url><label>WEL_SAVE_FILE_DIALOG</label></link> are both activated from the redefinition of <code><feature_name>on_menu_command</feature_name></code>. A new class, <code><class_name>LINES</class_name></code> is now used to store the lines drawn by the user and this inherits 
 		<link>
-			<url>/libraries/base/reference/kernel/storable_chart.xml</url>
+			<url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url>
 			<label>STORABLE</label>
 		</link> which allows it to be easily stored and retrieved. 
 		<paragraph>This sample contains the following classes: 

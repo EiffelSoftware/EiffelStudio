@@ -27,7 +27,7 @@
 		</heading>
 		<paragraph>In Eiffel, we have several ways of thinking abstractly about features and categorizing them. As you saw in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
+				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link> the 
 			<code>
@@ -39,7 +39,7 @@
 		</heading>
 		<paragraph>You remember the example class from 
 			<link>
-				<url>./../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
+				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link>:
 			<code_block>
@@ -339,43 +339,43 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#Header Comment</url>
+					<anchor_name>Header Comment</anchor_name>
 					<label>Header Comment</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#obsolete</url>
+					<anchor_name>obsolete</anchor_name>
 					<label>Obsolete</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#Precondition</url>
+					<anchor_name>Precondition</anchor_name>
 					<label>Precondition</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#Local Declarations</url>
+					<anchor_name>Local Declarations</anchor_name>
 					<label>Local Declarations</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#Routine Body</url>
+					<anchor_name>Routine Body</anchor_name>
 					<label>Routine Body</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#Postcondition</url>
+					<anchor_name>Postcondition</anchor_name>
 					<label>Postcondition</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#Rescue</url>
+					<anchor_name>Rescue</anchor_name>
 					<label>Rescue</label>
 				</link>
 			</item>
@@ -511,7 +511,7 @@
 		<tip>
 			<bold>Tip:</bold> Because of the high degree of language interaction provided by Microsoft.NET, it is not necessary in Eiffel for.NET to use externals to use software components from.NET assemblies. Instead, these components are presented to the Eiffel programmer as if they were Eiffel classes. Read more about this in 
 			<link>
-				<url>../../eiffel_dotnet_language/10_conventions/</url>
+				<url>../10_conventions/index.xml</url>
 				<label>Conventions</label>
 			</link>.
 		</tip>

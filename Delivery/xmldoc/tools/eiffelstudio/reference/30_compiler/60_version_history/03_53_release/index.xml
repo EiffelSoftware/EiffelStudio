@@ -10,7 +10,7 @@
 			<item>In .NET code generation, assertions can be turned on or off on a class per class basis without having to recompile those classes.</item>
 			<item>Implemented 
 				<link>
-					<url>../../../../../../libraries/base/content/10_kernel/index.xml#Recoverable_storable</url>
+					<url>../../../../../../libraries/base/content/10_kernel/index.xml</url><anchor_name>Recoverable_storable</anchor_name>
 					<label>recoverable storable</label>
 				</link> to enable the retrieval of slightly different version of an object. It only applies for classic           Eiffel.
 			</item>

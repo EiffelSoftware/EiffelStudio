@@ -29,7 +29,7 @@
 		<list ordered="false">
 			<item>Click 
 				<link>
-					<url>../30_compiler/60_version_history/02_52_release/00_51_to_52_changes.xml</url>
+					<url>../30_compiler/60_version_history/02_52_release/index.xml</url>
 					<label>here</label>
 				</link> for more details on compiler improvements and full Eiffel support on .NET
 			</item>

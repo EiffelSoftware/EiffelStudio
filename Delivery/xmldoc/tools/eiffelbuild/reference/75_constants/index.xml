@@ -196,7 +196,7 @@
 		</heading>
 		<paragraph>Constants may be associated to properties of your 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
 			</link> via an 
 			<link>
@@ -204,7 +204,7 @@
 				<label>object editor</label>
 			</link> targeted to that 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link>. The 
 			<image> 

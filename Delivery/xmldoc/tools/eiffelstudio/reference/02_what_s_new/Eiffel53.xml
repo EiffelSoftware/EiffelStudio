@@ -12,8 +12,8 @@
 		<list ordered="false">
 			<item>In project settings, we now accept a root class without creation procedure.</item>
 			<item>In .NET code generation, we do not force the C compilation at each compilation. It is only done when necessary (for example when a C external has been added).</item>
-			<item>Incremental .NET code generation (See <link><url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url><label>compiler release notes</label></link> for more info).</item>
-			<item>Recoverable storable (See <link><url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url><label>compiler release notes</label></link> for more info).</item>
+			<item>Incremental .NET code generation (See <link><url>../30_compiler/60_version_history/03_53_release/index.xml</url><label>compiler release notes</label></link> for more info).</item>
+			<item>Recoverable storable (See <link><url>../30_compiler/60_version_history/03_53_release/index.xml</url><label>compiler release notes</label></link> for more info).</item>
 		</list>
 		<heading>
 			<size>3</size>Bug fixes
@@ -36,7 +36,7 @@
 		<list ordered="false">
 			<item>Click 
 				<link>
-					<url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url>
+					<url>../30_compiler/60_version_history/03_53_release/index.xml</url>
 					<label>here</label>
 				</link> for the compiler release notes.
 			</item>

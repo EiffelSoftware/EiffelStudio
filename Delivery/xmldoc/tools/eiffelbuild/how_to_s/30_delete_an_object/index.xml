@@ -10,22 +10,22 @@
 	<paragraph>
 		<paragraph>To remove an 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
 			</link> from your EiffelBuild system, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
 			</link> the object you wish to delete, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
 			</link> it on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_delete_small_color.png</url>
 			</image>in the 
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label>main toolbar</label>
 			</link>.
 		</paragraph>

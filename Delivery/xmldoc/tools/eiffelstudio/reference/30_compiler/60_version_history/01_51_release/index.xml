@@ -25,7 +25,7 @@
 					<item>Support for INTEGER_64 constants. Now a manifest integer value that is written in decimal or hexadecimal format that can't fit into an INTEGER_32 will be automatically promoted to an INTEGER_64 constant value.</item>
 					<item>New feature access syntax for accessing constants, C/C++ externals and IL static externals. 
 						<link>
-							<url>../../10_ise_eiffel_specific/10_language_specificity.xml</url>
+							<url>../../10_ise_eiffel_specific/index.xml</url>
 							<label>Check out more here</label>
 						</link>.
 					</item>

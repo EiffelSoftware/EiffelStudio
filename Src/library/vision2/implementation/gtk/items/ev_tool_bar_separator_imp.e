@@ -48,7 +48,8 @@ inherit
 			button_press_switch,
 			pointer_motion_actions,	
 			pointer_button_press_actions,
-			pointer_double_press_actions
+			pointer_double_press_actions,
+			destroy
 		redefine
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,

@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 					%class%N%
 					%%T" + root_class_name + "%N%
 					%%N%
-					%creation%N%
+					%create%N%
 					%%T" + root_feature_name + "%N%
 					%%N%
 					%feature -- Initialization%N%

@@ -19,7 +19,7 @@ feature -- Access
 		do
 			
 			c_gtk_style_default_bg_color ($r, $g, $b)
-			!!Result.make_rgb (r, g, b)
+			!! Result.make_rgb (r, g, b)
 		end
 
 	Color_read_only: EV_COLOR is

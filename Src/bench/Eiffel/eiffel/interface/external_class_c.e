@@ -2,7 +2,7 @@ indexing
 	description: "Representation of a non-Eiffel compiled class that is external to current system."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EXTERNAL_CLASS_C
 
@@ -16,7 +16,7 @@ inherit
 			make,
 			assembly
 		end
-		
+
 create
 	make
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			Precursor {CLASS_C} (l)
 			is_external := True
 		end
-		
+
 feature -- Initialization
 
 	process_degree_5 is
@@ -41,14 +41,14 @@ feature -- Initialization
 				-- some memory as we do not use it anymore.
 			create l_reader
 			external_class ?= l_reader.new_object_from_file (lace_class.file_name)
-			
+
 			if external_class = Void then
 					-- For some reasons, the XML file could not be retried.
 				error_handler.insert_error (create {VIIC}.make (Current))
-				error_handler.raise_error				
+				error_handler.raise_error
 			else
 				private_external_name := external_class.dotnet_name
-	
+
 					-- This initialization is required as `initialize_from_xml_data'
 					-- needs proper information about classes to build correct feature
 					-- signature.
@@ -56,19 +56,19 @@ feature -- Initialization
 				is_expanded := external_class.is_expanded
 				is_enum := external_class.is_enum
 				is_frozen := external_class.is_frozen
-	
+
 					-- Initializes inheritance structure
 				process_parents
-	
+
 					-- Check if it is a nested type or not.
 				process_nesting
-	
+
 					-- Initializes client/supplier relations.
 				process_syntax_features (external_class.fields)
 				process_syntax_features (external_class.constructors)
 				process_syntax_features (external_class.procedures)
 				process_syntax_features (external_class.functions)
-				
+
 					-- Remove further processing except degree_4 since we assume that
 					-- imported XML is correct.
 				degree_3.remove_class (Current)
@@ -83,7 +83,7 @@ feature -- Initialization
 			not_in_degree_1: not degree_1_needed
 			not_in_degree_minus_1: not degree_minus_1_needed
 		end
-		
+
 	process_degree_4 is
 			-- Read XML data and create feature table.
 		require
@@ -122,7 +122,7 @@ feature -- Initialization
 
 				-- Initialize `types'.
 			init_types
-			
+
 				-- Create CLASS_INTERFACE instance
 			init_class_interface
 
@@ -139,7 +139,7 @@ feature -- Initialization
 			types_not_void: types /= Void
 			class_interface_not_void: class_interface /= Void
 		end
-		
+
 feature -- Access
 
 	lace_class: EXTERNAL_CLASS_I
@@ -156,16 +156,25 @@ feature -- Access
 		do
 			Result := lace_class.assembly
 		end
-		
+
+	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A is
+			-- Given an external type `c' get its associated CL_TYPE_A.
+			-- Void, if `c' is not part of system.
+		require
+			c_not_void: c /= Void
+		do
+			Result := internal_type_from_consumed_type (False, c)
+		end
+
 feature -- Status report
 
 	is_nested: BOOLEAN
 			-- Is current external class a nested type?
-			
+
 	is_true_external: BOOLEAN is True
 			-- Is class an instance of EXTERNAL_CLASS_C?
-			-- If yes, we do not generate it.		
-			
+			-- If yes, we do not generate it.
+
 feature {NONE} -- Initialization
 
 	process_parents is
@@ -183,11 +192,11 @@ feature {NONE} -- Initialization
 			if external_class.interfaces /= Void then
 				nb := nb + external_class.interfaces.count
 			end
-			
+
 			create pars.make (nb)
-			
+
 			if external_class.parent /= Void then
-				parent_type := type_from_consumed_type (external_class.parent)
+				parent_type := internal_type_from_consumed_type (True, external_class.parent)
 				pars.extend (parent_type)
 				parent_class := parent_type.associated_class
 				parent_class.add_descendant (Current)
@@ -204,7 +213,7 @@ feature {NONE} -- Initialization
 					syntactical_suppliers.extend (parent_class)
 				end
 			end
-		
+
 			if external_class.interfaces /= Void and not external_class.interfaces.is_empty then
 				from
 					i := external_class.interfaces.lower
@@ -212,7 +221,7 @@ feature {NONE} -- Initialization
 				until
 					i > nb
 				loop
-					parent_type := type_from_consumed_type (external_class.interfaces.item (i))
+					parent_type := internal_type_from_consumed_type (True, external_class.interfaces.item (i))
 					pars.extend (parent_type)
 					parent_class := parent_type.associated_class
 					parent_class.add_descendant (Current)
@@ -244,11 +253,11 @@ feature {NONE} -- Initialization
 			loop
 				l_member := a_features.item (i)
 
-				if l_member.has_return_value then			
-					l_external_type := type_from_consumed_type (l_member.return_type)
+				if l_member.has_return_value then
+					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
 					add_syntactical_supplier (l_external_type)
 				end
-				
+
 				if l_member.has_arguments then
 					from
 						l_args := l_member.arguments
@@ -258,23 +267,23 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
-						l_external_type := type_from_consumed_type (l_args.item (j).type)
+						l_external_type := internal_type_from_consumed_type (True, l_args.item (j).type)
 						add_syntactical_supplier (l_external_type)
 						l := l + 1
 						j := j + 1
 					end
 				end
-			
+
 				i := i + 1
 			end
 		end
-	
+
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAY [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 			has_origin_table: a_feat_tbl.origin_table /= Void
-			a_features_not_void: a_features /= Void	
+			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
 			l_literal: CONSUMED_LITERAL_FIELD
@@ -314,7 +323,7 @@ feature {NONE} -- Initialization
 				l_constant := Void
 
 				l_member := a_features.item (i)
-				
+
 				if l_member.is_attribute then
 					if l_member.is_literal then
 						l_literal ?= l_member
@@ -410,9 +419,9 @@ feature {NONE} -- Initialization
 						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Normal_type)
 					end
 				end
-				
+
 				l_ext.set_base_class (l_member.declared_type.name)
-				
+
 				if l_ext.type = feature {SHARED_IL_CONSTANTS}.Enum_field_type then
 					l_names_heap.put (l_literal.value)
 					l_ext.set_alias_name_id (l_names_heap.found_item)
@@ -431,30 +440,30 @@ feature {NONE} -- Initialization
 				l_feat.set_rout_id_set (l_rout_id_set)
 				l_feat.set_feature_name (l_member.eiffel_name)
 				l_feat.set_feature_id (feature_id_counter.next)
-				
-				l_written_type := type_from_consumed_type (l_member.declared_type)
+
+				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
 				l_feat.set_written_in (l_written_type.class_id)
 				l_feat.set_origin_class_id (l_written_type.class_id)
 				l_feat.set_written_feature_id (l_feat.feature_id)
-				
+
 				if l_written_type.class_id = class_id then
 					l_feat.set_is_origin (True)
 				end
 
-				if l_member.has_return_value then			
-					l_external_type := type_from_consumed_type (l_member.return_type)
+				if l_member.has_return_value then
+					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
 					add_syntactical_supplier (l_external_type)
-					
+
 					l_feat.set_type (l_external_type)
-					
+
 					l_names_heap.put (l_member.return_type.name)
 					l_ext.set_return_type (l_names_heap.found_item)
-					
+
 					if l_constant /= Void then
 						set_constant_value (l_constant, l_external_type, l_literal.value)
 					end
 				end
-				
+
 				if l_member.has_arguments then
 					from
 						l_args := l_member.arguments
@@ -466,14 +475,14 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
-						l_external_type := type_from_consumed_type (l_args.item (j).type)
+						l_external_type := internal_type_from_consumed_type (True, l_args.item (j).type)
 						l_feat_arg.put_i_th (l_external_type, l + 1)
 						l_names_heap.put (l_args.item (j).eiffel_name)
 						l_feat_arg.argument_names.put (l_names_heap.found_item, l)
-						
+
 						l_names_heap.put (l_args.item (j).type.name)
 						l_arg_ids.put (l_names_heap.found_item, l + 1)
-						
+
 						add_syntactical_supplier (l_external_type)
 						l := l + 1
 						j := j + 1
@@ -485,13 +494,13 @@ feature {NONE} -- Initialization
 					l_ext.set_argument_types (l_arg_ids)
 					l_proc.set_arguments (l_feat_arg)
 				end
-			
+
 				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
 				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
 				i := i + 1
 			end
 		end
-	
+
 	process_nesting is
 			-- If `external_class' represent an instance of CONSUMED_NESTED_TYPE
 			-- we initialize `enclosing_class' correctly.
@@ -503,15 +512,18 @@ feature {NONE} -- Initialization
 		do
 			l_nested ?= external_class
 			if l_nested /= Void then
-				l_enclosing_type := type_from_consumed_type (l_nested.enclosing_type)
+				l_enclosing_type := internal_type_from_consumed_type (True, l_nested.enclosing_type)
 				is_nested := True
 				enclosing_class := l_enclosing_type.associated_class
 				add_syntactical_supplier (l_enclosing_type)
 			end
 		end
 
-	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A is
+	internal_type_from_consumed_type (
+			force_compilation: BOOLEAN; c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
+		is
 			-- Given an external type `c' get its associated CL_TYPE_A.
+			-- If `force_compilation' automatically add it for later compilation
 		require
 			c_not_void: c /= Void
 		local
@@ -522,50 +534,67 @@ feature {NONE} -- Initialization
 			l_is_array: BOOLEAN
 			l_generics: ARRAY [TYPE_A]
 			l_array_type: CONSUMED_ARRAY_TYPE
+			l_type_a: CL_TYPE_A
 		do
 			l_assembly := lace_class.assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
-				create l_generics.make (1, 1)
-				l_generics.put (type_from_consumed_type (l_array_type.element_type), 1)
-				create {GEN_TYPE_A} Result.make (
-					System.native_array_class.compiled_class.class_id, l_generics)
+				l_type_a := internal_type_from_consumed_type (force_compilation,
+					l_array_type.element_type)
+				if l_type_a /= Void then
+					create l_generics.make (1, 1)
+					l_generics.put (l_type_a, 1)
+					create {GEN_TYPE_A} Result.make (
+						System.native_array_class.compiled_class.class_id, l_generics)				
+				end
 			else
-				l_name := c.name
-				l_result := l_assembly.dotnet_classes.item (l_name)
+				l_result := l_assembly.dotnet_classes.item (c.name)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
-					if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
-						l_result := System.integer_8_class
-					elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
-						l_result := System.integer_16_class
-					elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
-						l_result := System.integer_32_class
-					elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
-						l_result := System.integer_64_class
-					elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
-						l_result := System.pointer_class
-					elseif l_name.is_equal ("System.Double") then
-						l_result := System.double_class
-					elseif l_name.is_equal ("System.Single") then
-						l_result := System.real_class
-					elseif l_name.is_equal ("System.Char") then
-						l_result := System.character_class
-					elseif l_name.is_equal ("System.Boolean") then
-						l_result := System.boolean_class
+					check
+						has_basic: Basic_type_mapping.has (c.name)
 					end
+					l_result := Basic_type_mapping.item (c.name)
 				end
 				
-				if not l_result.is_compiled then
+				check
+					l_result_not_void: l_result /= Void
+				end
+				
+				if force_compilation and then not l_result.is_compiled then
 					Workbench.add_class_to_recompile (l_result)
 				end
-				l_class := l_result.compiled_class
-				Result := l_class.actual_type				
+				if l_result.is_compiled then
+					l_class := l_result.compiled_class
+					Result := l_class.actual_type
+				end
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_not_void: force_compilation implies Result /= Void
+		end
+
+	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is
+			-- Mapping between name of basic class in mscorlib and Eiffel CLASS_I.
+		once
+			create Result.make (20)
+			Result.put (System.boolean_class, "System.Boolean")
+			Result.put (System.character_class, "System.Char")
+			Result.put (System.integer_8_class, "System.Byte")
+			Result.put (System.integer_8_class, "System.SByte")
+			Result.put (System.integer_16_class, "System.Int16")
+			Result.put (System.integer_16_class, "System.UInt64")
+			Result.put (System.integer_32_class, "System.Int32")
+			Result.put (System.integer_32_class, "System.UInt32")
+			Result.put (System.integer_64_class, "System.Int64")
+			Result.put (System.integer_64_class, "System.UInt64")
+			Result.put (System.pointer_class, "System.IntPtr")
+			Result.put (System.pointer_class, "System.UIntPtr")
+			Result.put (System.real_class, "System.Single")
+			Result.put (System.double_class, "System.Double")
+		ensure
+			basic_type_mapping_not_void: Result /= Void
 		end
 
 	set_constant_value (a_constant: CONSTANT_I; a_external_type: CL_TYPE_A; a_value: STRING) is
@@ -598,7 +627,7 @@ feature {NONE} -- Initialization
 				($l_double).memory_copy ($l_int32, 4)
 				l_int32 := l_int.lower;
 				($l_double + 4).memory_copy ($l_int32, 4)
-				
+
 				create l_double_value
 				l_double_value.set_double_value (l_double)
 				l_value := l_double_value
@@ -607,7 +636,7 @@ feature {NONE} -- Initialization
 				l_int.initialize_from_hexa ("0x" + a_value)
 				l_int32 := l_int.lower;
 				($l_real).memory_copy ($l_int32, 4)
-				
+
 				create l_real_value
 				l_real_value.set_real_value (l_real)
 				l_value := l_real_value

@@ -222,7 +222,10 @@ feature -- Access: tokens
 			-- Token for `ise_runtime' assembly
 
 	ise_eiffel_exception_ctor_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor'.
+			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor (int, string)'.
+
+	ise_eiffel_exception_chained_ctor_token: INTEGER
+			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor (int, string, Exception)'.
 
 	ise_last_exception_token: INTEGER
 			-- Token for `ISE.Runtime.last_exception' static field that holds
@@ -2411,8 +2414,17 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
 			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 			ise_eiffel_exception_ctor_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make (".ctor"),
-				l_token, l_meth_sig)
+				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
+
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (3)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
+			ise_eiffel_exception_chained_ctor_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
 
 				-- Define `ise_assertion_tag_token'
 			l_sig.reset

@@ -7,7 +7,7 @@ root
 default
 	il_verifiable (no)
 	msil_generation_type ("exe")
-	assertion (no)
+	assertion (check)
 	disabled_debug (yes)
 	debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
@@ -20,6 +20,7 @@ default
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
 	line_generation (no)
 	profile (no)
@@ -34,6 +35,7 @@ default
 	exception_trace (no)
 	inlining (no)
 	multithreaded (no)
+
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
@@ -111,7 +113,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "xm_formatter.e"; "xm_named_node.e"; "xm_content_concatenator.e"; "other"; 
+			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"

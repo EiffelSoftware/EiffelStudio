@@ -28,7 +28,17 @@ feature {NONE} -- Initialization
 			!EV_MENU_IMP!implementation.make_with_text (par, label)
 			par.implementation.add_menu (Current)
 		end	
-	
+
+feature -- Access
+
+	text: STRING is
+			-- Label of the current menu
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text
+		end
+
 feature -- Implementation
 	
 	implementation: EV_MENU_I	

@@ -13,7 +13,8 @@ inherit
 		end;
 	STRING
 		rename
-			set as string_set
+			set as string_set,
+			is_integer as string_is_integer
 		end
 
 creation

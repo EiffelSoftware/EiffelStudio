@@ -65,10 +65,11 @@ feature
 
 	label_width: LABEL;
 
+	label_x: LABEL;
+
+	label_y: LABEL;
+
 	make_visible (a_parent: COMPOSITE) is
-		local
-			label_x: LABEL;
-			label_y: LABEL;
 		do
 			initialize (Widget_names.geometry_form_name, a_parent);
 
@@ -128,17 +129,55 @@ feature
 
 	reset is
 		do
-			if text_field_x.int_value /= context.x then
-				text_field_x.set_int_value (context.x);
-			end
-			if text_field_y.int_value /= context.y then
-				text_field_y.set_int_value (context.y);
-			end
-			if text_field_width.int_value /= context.width then
-				text_field_width.set_int_value (context.width);
-			end
-			if text_field_height.int_value /= context.height then
-				text_field_height.set_int_value (context.height);
+			if context.is_movable then
+				if text_field_x.int_value /= context.x then
+					text_field_x.set_int_value (context.x);
+				end;
+				if not text_field_x.managed then
+					label_x.manage;
+					text_field_x.manage
+				end;
+				if text_field_y.int_value /= context.y then
+					text_field_y.set_int_value (context.y);
+				end
+				if not text_field_y.managed then
+					text_field_y.manage
+					label_y.manage;
+				end;
+			else
+				if text_field_x.managed then
+					text_field_x.unmanage;
+					label_x.unmanage;
+				end;
+				if text_field_y.managed then
+					text_field_y.unmanage;
+					label_y.unmanage;
+				end;
+			end;
+			if context.is_resizable then
+				if text_field_width.int_value /= context.width then
+					text_field_width.set_int_value (context.width);
+				end;
+				if not text_field_width.managed then
+					text_field_width.manage
+					label_width.manage;
+				end;
+				if text_field_height.int_value /= context.height then
+					text_field_height.set_int_value (context.height);
+				end
+				if not text_field_height.managed then
+					text_field_height.manage
+					label_height.manage;
+				end;
+			else
+				if text_field_width.managed then
+					text_field_width.unmanage;
+					label_width.unmanage;
+				end;
+				if text_field_height.managed then
+					text_field_height.unmanage
+					label_height.unmanage;
+				end;
 			end
 		end;
 

@@ -146,11 +146,17 @@ feature -- Status setting
 			other_not_merged: other.merged_radio_button_groups = Void
 			not_contained_in_this_group: merged_radio_button_groups /= Void implies
 				not merged_radio_button_groups.has (other)
-			first_radio_button_now_selected: not old other.has_selected_radio_button and
+			other_first_radio_button_now_selected: not old other.has_selected_radio_button and
 				old other.has_radio_button implies
 				other.first_radio_button_selected
 			original_radio_button_still_selected: old has_selected_radio_button implies
 				has_selected_radio_button
+			other_first_radio_button_now_selected: not old has_selected_radio_button and
+				old other.has_radio_button and old merged_radio_button_groups.count = 1 implies
+				first_radio_button_selected
+			other_original_radio_button_still_selected: old other.has_selected_radio_button implies
+				other.has_selected_radio_button
+			-- old merged_radio_button_groups.count > 1 implies original selection from that group still selected.
 		end
 
 feature -- Status report

@@ -25,6 +25,14 @@
 #include "plug.h"
 #include "run_idr.h"
 
+#ifdef I_STRING
+#include <string.h>				/* For strlen() */
+#else
+#include <strings.h>
+#endif
+
+/*#define DEBUG_GENERAL_STORE	/**/
+
 /*#define DEBUG 1    /**/
 
 public int fides;
@@ -42,19 +50,24 @@ extern char *idr_temp_buf; 			/*temporary buffer for idr floats and doubles*/
 private void internal_store();
 private void st_store();				/* Second pass of the store */
 private void ist_write();
+private void gst_write();
 private void make_header();				/* Make header */
 private void imake_header();				/* Make header */
 private int store_buffer ();
 private void object_write ();
+private void gen_object_write ();
 public long get_offset ();
+public long get_alpha_offset ();
 public void allocate_gen_buffer();
 void store_write();
 private void st_clean();
+public void free_sorted_attributes();
 
 /*
  * Shared data declarations
  */
 shared char *account = (char *) 0;			/* Array of traversed dyn types */
+shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
 
 extern int scount;					/* Maximum dtype */
 
@@ -86,9 +99,12 @@ char *object;
 
 	fides = (int) file_desc;
 	accounting = TR_ACCOUNT;
+	st_write_func = gst_write;
 	allocate_gen_buffer();
 	internal_store(object);
+	free_sorted_attributes();
 	accounting = 0;
+	st_write_func = st_write;
 }
 
 public void estore(file_desc, object)
@@ -161,15 +177,33 @@ char *object;
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = '\04';
-		else
-			c = '\03';
+			c = INDEPENDENT_STORE_3_2;
+		else {
+			c = GENERAL_STORE_3_3;
+
+				/* Allocate the array to store the sorted attributes */
+			sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
+#ifdef DEBUG_GENERAL_STORE
+printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsigned int *), sorted_attributes);
+#endif
+			if (sorted_attributes == (unsigned int **) 0){
+				xfree(accounting);
+				xraise(EN_MEM);
+			}
+			bzero(sorted_attributes, scount * sizeof(unsigned int *));
+		}
 	} else
-		c = '\02';
+		c = BASIC_STORE_3_2;
 
 	/* Write the kind of store */
 	if (write(fides, &c, sizeof(char)) < 0){
-		xfree(account);
+		if (accounting) {
+			xfree(account);
+			if (c==GENERAL_STORE_3_3)
+					/* sorted_attributes is empty so a basic free is enough */
+				xfree(sorted_attributes);
+				sorted_attributes = (unsigned int **) 0;
+			}
 		eio();
 		}
 
@@ -184,6 +218,7 @@ char *object;
 	if (accounting) {
 		make_header_func();			/* Make header */
 		xfree(account);			/* Free accouting character array */
+
 		account = (char *) 0;
 	}
 	/* Write in file `fides' the count of stored objects */
@@ -272,7 +307,7 @@ public void st_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
-	 * Use for basic and general store
+	 * Use for basic and general (before 3.3) store
 	 */
 
 	register2 union overhead *zone;
@@ -319,6 +354,51 @@ char *object;
 
 }
 
+private void gst_write(object)
+char *object;
+{
+	/* Write an object in file `fides'.
+	 * used for general store
+	 */
+
+	register2 union overhead *zone;
+	uint32 flags;
+	register1 uint32 nb_char;
+
+	zone = HEADER(object);
+	flags = zone->ov_flags;
+	/* Write address */
+
+	buffer_write(&object, sizeof(char *));
+	buffer_write(&flags, sizeof(uint32));
+
+#if DEBUG & 1
+		printf ("\n %lx", object);
+		printf (" %lx", flags);
+#endif
+
+	if (flags & EO_SPEC) {
+		char * o_ptr;
+		uint32 count, elm_size;
+		o_ptr = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+		count = (uint32)(*(long *) o_ptr);
+		elm_size = (uint32)(*(long *) (o_ptr + sizeof (long *)));
+
+		/* We have to save the number of objects in the special object */
+
+		buffer_write(&count, sizeof(uint32));
+		buffer_write(&elm_size, sizeof(uint32));
+
+#if DEBUG & 1
+		printf ("\ncount  %x", count);
+		printf (" %x", elm_size);
+#endif
+
+	} 
+	/* Write the body of the object */
+	gen_object_write(object);
+
+}
 
 private void ist_write(object)
 char *object;
@@ -366,27 +446,189 @@ char *object;
 
 }
 
-public long get_offset (o_type, attrib_num)
+public long get_offset(o_type, attrib_num)
 uint32 o_type, attrib_num;
 {
-#ifdef WORKBENCH
+#ifndef WORKBENCH
+	return ((System(o_type).cn_offsets[attrib_num])[o_type]);
+#else
     int32 rout_id;                  /* Attribute routine id */
     long offset;
-#endif
 
-#ifndef WORKBENCH
-    return ((System(o_type).cn_offsets[attrib_num])[o_type]);
-#else
     rout_id = System(o_type).cn_attr[attrib_num];
     CAttrOffs(offset,rout_id,o_type);
     return offset;
 #endif
+}
 
+public long get_alpha_offset(o_type, attrib_num)
+uint32 o_type, attrib_num;
+{
+	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
 
+#ifdef WORKBENCH
+	int32 rout_id;                  /* Attribute routine id */
+	long offset;
+#endif
+	uint32 alpha_attrib_num;
+
+	unsigned int *attr_types = sorted_attributes[o_type];
+
+	if (attr_types == (unsigned int *)0) {
+		alpha_attrib_num = attrib_num;
+	} else {
+		alpha_attrib_num = attr_types[attrib_num];
+	}
+#ifndef WORKBENCH
+	return ((System(o_type).cn_offsets[alpha_attrib_num])[o_type]);
+#else
+	rout_id = System(o_type).cn_attr[alpha_attrib_num];
+	CAttrOffs(offset,rout_id,o_type);
+	return offset;
+#endif
 }
 
 
-private void object_write (object)
+private void gen_object_write(object)
+char * object;
+{
+		/* Writes an object to disk (used by the new (3.3) general store)
+		 * It uses the same algorithm as `object_write' and should be updated
+		 * at the same time.
+		 */
+
+	long attrib_offset;
+	int z;
+	uint32 o_type;
+	uint32 num_attrib;
+	uint32 flags = HEADER(object)->ov_flags;
+
+	o_type = flags & EO_TYPE;
+	num_attrib = System(o_type).cn_nbattr;
+
+	if (num_attrib > 0) {
+		for (; num_attrib > 0;) {
+			attrib_offset = get_alpha_offset(o_type, --num_attrib);
+			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
+				case SK_INT:
+					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER));
+					break;
+				case SK_BOOL:
+				case SK_CHAR:
+					buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER));
+					break;
+				case SK_FLOAT:
+					buffer_write(object + attrib_offset, sizeof(EIF_REAL));
+					break;
+				case SK_DOUBLE:
+					buffer_write(object + attrib_offset, sizeof(EIF_DOUBLE));
+					break;
+				case SK_BIT:
+					{
+						int q;
+						struct bit *bptr = (struct bit *)(object + attrib_offset);
+						buffer_write(&(HEADER(bptr)->ov_flags), sizeof(uint32));
+						buffer_write(&(bptr->b_length), sizeof(uint32));
+						buffer_write(bptr->b_value, bptr->b_length);
+					}
+					break;
+				case SK_EXP:
+					gst_write (object + attrib_offset);
+					break;
+				case SK_REF:
+				case SK_POINTER:
+					buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE));
+					break;
+				default:
+					eio();
+			}
+		} 
+	} else {
+		if (flags & EO_SPEC) {		/* Special object */
+			long count, elem_size;
+			char *ref, *o_ptr;
+			char *vis_name;
+			uint32 dgen, dgen_typ;
+			struct gt_info *info;
+
+			o_ptr = (char *) (object + (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2));
+			count = *(long *) o_ptr;
+			vis_name = System(o_type).cn_generator;
+
+
+			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
+			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
+			/* Generic type, write in file:
+			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 */
+				int16 *gt_type = info->gt_type;
+				int32 *gt_gen;
+				int nb_gen = info->gt_param;
+	
+				for (;;) {
+					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
+						break;
+				}
+				gt_type--;
+				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+				dgen = *gt_gen;
+			}
+	
+			if (!(flags & EO_REF)) {		/* Special of simple types */
+				switch (dgen & SK_HEAD) {
+					case SK_INT:
+						buffer_write(((long *)object), count*sizeof(EIF_INTEGER));
+						break;
+					case SK_BOOL:
+					case SK_CHAR:
+						buffer_write(object, count*sizeof(EIF_CHARACTER));
+						break;
+					case SK_FLOAT:
+						buffer_write((float *)object, count*sizeof(EIF_REAL));
+						break;
+					case SK_DOUBLE:
+						buffer_write((double *)object, count*sizeof(EIF_DOUBLE));
+						break;
+					case SK_BIT:
+						dgen_typ = dgen & SK_DTYPE;
+						elem_size = *(long *) (o_ptr + sizeof(long));
+
+/*FIXME: header for each object ????*/
+						buffer_write((struct bit *)object, count*elem_size);
+						break;
+					case SK_EXP:
+						elem_size = *(long *) (o_ptr + sizeof(long));
+						buffer_write(&(HEADER (object + OVERHEAD)->ov_flags), sizeof(uint32));
+						for (ref = object + OVERHEAD; count > 0;
+							count --, ref += elem_size) {
+							gen_object_write(ref);
+						}
+						break;
+					case SK_POINTER:
+						buffer_write(object, count*sizeof(EIF_POINTER));
+						break;
+					default:
+   	   	          		eio();
+						break;
+				}
+			} else {
+				if (!(flags & EO_COMP)) {	/* Special of references */
+					buffer_write(object, count*sizeof(EIF_REFERENCE));
+				} else {			/* Special of composites */
+					elem_size = *(long *) (o_ptr + sizeof(long));
+					buffer_write(&(HEADER (object)->ov_flags), sizeof(uint32));
+					for (ref = object + OVERHEAD; count > 0;
+							count --, ref += elem_size) {
+						gen_object_write(ref);
+					}
+				}
+			}
+		} 
+	}
+}
+
+
+private void object_write(object)
 char * object;
 {
 	long attrib_offset;
@@ -646,7 +888,10 @@ private void make_header()
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
-			continue;				/* No object of dyn. type `i'.
+			continue;				/* No object of dyn. type `i'. */
+
+		sort_attributes(i);
+
 		/* vis_name = Visible(i) */;/* Visible name of the dyn. type */
 		vis_name = System(i).cn_generator;
 
@@ -710,6 +955,71 @@ private void make_header()
 	expop(&eif_stack);
 }
 
+public void sort_attributes(dtype)
+int dtype;
+{
+	/* Sort the attributes alphabeticaly by type */
+
+	struct cnode *class_info;		/* Info on the current type */
+	unsigned int *s_attr;			/* Sorted attributes for the type */
+	char **attr_names;
+	uint32 *attr_types;
+	unsigned int no_swap, swapped, tmp;
+
+	long attr_nb;
+	unsigned int j;
+
+	class_info = &(System(dtype));
+	attr_nb = class_info->cn_nbattr;
+
+	if (attr_nb){
+		attr_names = class_info->cn_names;
+		attr_types = class_info->cn_types;
+
+#ifdef DEBUG_GENERAL_STORE
+printf ("attr_nb: %d class name: %s\n", attr_nb, class_info->cn_generator);
+printf ("Dtype: %d \n", dtype);
+#endif
+		s_attr = (unsigned int*) xmalloc (attr_nb * sizeof(unsigned int), C_T, GC_OFF);
+#ifdef DEBUG_GENERAL_STORE
+printf ("alloc s_attr (%d) %lx\n", dtype, s_attr);
+#endif
+		if (s_attr == (unsigned int*) 0)
+			xraise(EN_MEM);
+
+		sorted_attributes[dtype] = s_attr;
+
+		for (j=0; j < attr_nb; j++)
+			s_attr[j] = j;
+
+		swapped = no_swap = 1;
+
+		while (swapped)
+			for (j = swapped = 0; j < attr_nb-1; j ++)
+				if ((attr_types[s_attr[j]]==attr_types[s_attr[j+1]])&&
+					(strcmp (attr_names[s_attr[j]], attr_names[s_attr[j+1]]) > 0)) {
+#ifdef DEBUG
+printf ("Swapping %s and %s\n", attr_names[s_attr[j]], attr_names[s_attr[j+1]]);
+printf ("%d %d\n", s_attr[j], s_attr[j+1]);
+printf ("%d %d\n", attr_types[s_attr[j]], attr_types[s_attr[j+1]]);
+#endif
+						swapped = 1;
+						no_swap = 0;
+						tmp = s_attr[j];
+						s_attr[j] = s_attr[j+1];
+						s_attr[j+1] = tmp;
+					}
+
+			/* if the skeleton is already sorted, bcopy will work both for store and retrieve */
+		if (no_swap){
+#ifdef DEBUG_GENERAL_STORE
+printf ("Freeing s_attr %lx\n", s_attr);
+#endif
+			xfree(s_attr);
+			sorted_attributes[dtype] = (unsigned int*)0;
+			}
+		}
+}
 
 private void imake_header()
 {
@@ -833,7 +1143,7 @@ private void imake_header()
 }
 
 
-private void st_clean ()
+private void st_clean()
 {
 	/* clean up memory allocation and reset function pointers */
 
@@ -841,16 +1151,37 @@ private void st_clean ()
 	flush_buffer_func = flush_st_buffer;
 	st_write_func = st_write;
 	if (s_buffer != (char *) 0) {
-		xfree (s_buffer);
+		xfree(s_buffer);
 		s_buffer = (char *) 0;
 	}
 	if (account != (char *)0) {
-		xfree (account);
+		xfree(account);
 		account = (char *) 0;
 	}
-	if (!(idr_temp_buf == (char *)0)) {
-		xfree (idr_temp_buf);
+	free_sorted_attributes();
+	if (idr_temp_buf != (char *)0) {
+		xfree(idr_temp_buf);
 		idr_temp_buf = (char *)0;
+	}
+}
+
+public void free_sorted_attributes()
+{
+	unsigned int i;
+	unsigned int *s_attr;
+
+	if (sorted_attributes != (unsigned int **)0){
+#ifdef DEBUG_GENERAL_STORE
+printf ("free_sorted_attributes %lx\n", sorted_attributes);
+#endif
+		for (i=0; i < scount; i++)
+			if ((s_attr = sorted_attributes[i])!= (unsigned int *)0){
+				xfree(s_attr);
+#ifdef DEBUG_GENERAL_STORE
+printf ("Free s_attr (%d) %lx\n", i, s_attr);
+#endif
+				}
+		sorted_attributes = (unsigned int **)0;
 	}
 }
 

@@ -22,6 +22,15 @@
 #include "malloc.h"				/* For macros HEADER */
 #include "garcol.h"				/* For flags manipulation */
 
+/* Different kinds of storage */
+
+#define BASIC_STORE_3_1 '\0'
+#define BASIC_STORE_3_2 '\02'
+#define GENERAL_STORE_3_1 '\01'
+#define GENERAL_STORE_3_2 '\03'
+#define GENERAL_STORE_3_3 '\05'
+#define INDEPENDENT_STORE_3_2 '\04'
+
 /*
  * Eiffel calls
  */
@@ -44,5 +53,12 @@ extern int end_of_buffer;
 
 extern void (*store_write_func)();
 extern void store_write();
+
+extern long get_offset();          /* get offset of attrib in object*/
+
+	/* General store utilities (3.3 and later) */
+extern unsigned int **sorted_attributes;
+extern void sort_attributes();
+extern void free_sorted_attributes();
 
 #endif

@@ -68,8 +68,7 @@ feature -- Basic operations
 				-- needs to have its drop actions set.
 			do
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
-				Result.drop_actions.extend (agent delete_object)
-				Result.drop_actions.extend (agent delete_component)
+				Result.drop_actions.extend (agent delete_transported_object)
 				Result.drop_actions.extend (agent delete_radio_merge)
 				Result.drop_actions.extend (agent delete_directory)
 				Result.drop_actions.set_veto_pebble_function (agent veto_the_delete)
@@ -82,7 +81,26 @@ feature -- Basic operations
 			do
 			end
 	
-feature {GB_WINDOW_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation		
+feature {GB_WINDOW_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
+
+	delete_transported_object (object_stone: GB_OBJECT_STONE) is
+			-- Delete object represented by `object_stone'.
+		require
+			object_stone_not_void: object_stone /= Void
+		local
+			standard_object_stone: GB_STANDARD_OBJECT_STONE
+			component_object_stone: GB_COMPONENT_OBJECT_STONE
+		do
+			standard_object_stone ?= object_stone
+			if standard_object_stone /= Void then
+				delete_object (standard_object_stone.object)
+			else
+				component_object_stone ?= object_stone
+				if component_object_stone /= Void then
+					component_selector.delete_component (component_object_stone.component.name)
+				end
+			end
+		end
 			
 	delete_object (an_object: GB_OBJECT) is
 			-- Remove `an_object' from the system.
@@ -134,22 +152,13 @@ feature {GB_WINDOW_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 				an_object.instance_referers.forth
 			end
 		end
-		
-			
+	
 feature {NONE} -- Implementation
 
 	delete_radio_merge (group_link: GB_RADIO_GROUP_LINK) is
 			-- Unmerge the containers referenced in `group_link'.
 		do
 			group_link.gb_ev_container.unlink_group (group_link)
-		end
-		
-	delete_component (a_component: GB_COMPONENT) is
-			-- Remove `a_component' from `Current'.
-		require
-			component_not_void: a_component /= Void
-		do
-			component_selector.delete_component (a_component.name)
 		end
 		
 	delete_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
@@ -160,13 +169,25 @@ feature {NONE} -- Implementation
 			Window_selector.remove_directory (a_directory)
 		end
 
-	veto_the_delete (an_object: GB_OBJECT): BOOLEAN is
+	veto_the_delete (object_stone: GB_OBJECT_STONE): BOOLEAN is
 			-- Do not allow the delete if the object was picked
 			-- from a type of component. The way that we are checking this,
 			-- is by looking at the parent of the object. If it is Void then
 			-- we should not be deleting the object.
+		local
+			clipboard_object_stone: GB_CLIPBOARD_OBJECT_STONE
+			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
-			Result := an_object.layout_item /= Void
+			clipboard_object_stone ?= object_stone
+			Result := clipboard_object_stone = Void
+			if Result then
+				standard_object_stone ?= object_stone
+				if standard_object_stone /= Void then
+						-- This ensures you cannot delete an object straight from
+						-- the type selector.
+					Result := standard_object_stone.object.layout_item /= Void
+				end
+			end
 		end
 
 end -- class GB_DELETE_OBJECT

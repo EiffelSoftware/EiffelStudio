@@ -1146,7 +1146,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 					*(EIF_CHARACTER *)o_ref = new_value->it_char;
 					break;
 				case SK_WCHAR: /* Character attribute */
-					*(EIF_WIDE_CHAR *)o_ref = new_value->it_char;
+					*(EIF_WIDE_CHAR *)o_ref = new_value->it_wchar;
 					break;
 				case SK_INT8: /* Integer attribute */
 					*(EIF_INTEGER_8 *)o_ref = new_value->it_int8;
@@ -1243,7 +1243,7 @@ rt_private unsigned char modify_attr(char *object, long attr_number, struct item
 				*(EIF_CHARACTER *)o_ref = new_value->it_char;
 				break;
 			case SK_WCHAR: /* Character attribute */
-				*(EIF_WIDE_CHAR *)o_ref = new_value->it_char;
+				*(EIF_WIDE_CHAR *)o_ref = new_value->it_wchar;
 				break;
 			case SK_INT8: /* Integer attribute */
 				*(EIF_INTEGER_8 *)o_ref = new_value->it_int8;

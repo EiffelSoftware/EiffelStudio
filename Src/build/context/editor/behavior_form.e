@@ -46,7 +46,7 @@ feature -- Interface
 			end;
 		end;
 
-	reset_editor is
+	clear_editor is
 			-- Reset the edited_function of Current. 
 		do
 			behavior_editor.clear
@@ -58,6 +58,30 @@ feature -- Interface
 				event_catalog.unregister_holes;
 				behavior_editor.unregister_holes
 			end;
+		end;
+
+	reset_editor is
+		local
+			behavior: BEHAVIOR;
+			previous_behavior: BEHAVIOR;
+			current_state: STATE;
+		do
+			current_state := behavior_editor.current_state;
+			if (current_state = Void) then
+				current_state := app_editor.initial_state_circle.data;
+			end;
+			current_state.find_input (context);
+			if not current_state.after then
+				behavior := current_state.output.data;
+			else
+				!!behavior.make;
+				behavior.set_internal_name ("");
+				behavior.set_context (context);
+				current_state.add (context, behavior);
+			end;
+			behavior_editor.set_edited_function (behavior);
+			behavior_editor.set_context_editor (editor);
+			behavior_editor.set_current_state (current_state);
 		end;
 
 feature {NONE}
@@ -77,28 +101,9 @@ feature {NONE}
 		end;
 
 	reset is
-		local
-			behavior: BEHAVIOR;
-			previous_behavior: BEHAVIOR;
-			current_state: STATE;
 		do
 			event_catalog.update_pages (context);
-			current_state := behavior_editor.current_state;
-			if (current_state = Void) then
-				current_state := app_editor.initial_state_circle.data;
-			end;
-			current_state.find_input (context);
-			if not current_state.after then
-				behavior := current_state.output.data;
-			else
-				!!behavior.make;
-				behavior.set_internal_name ("");
-				behavior.set_context (context);
-				current_state.add (context, behavior);
-			end;
-			behavior_editor.set_edited_function (behavior);
-			behavior_editor.set_context_editor (editor);
-			behavior_editor.set_current_state (current_state);
+			reset_editor
 		end;
 
 	show is

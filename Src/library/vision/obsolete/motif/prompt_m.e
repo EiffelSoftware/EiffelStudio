@@ -18,7 +18,7 @@ inherit
 			create_callback_struct, create_widget,
 			default_button, cancel_button
 		redefine
-			make
+			make, set_foreground_color_from_imp
 		end;
 
 	MEL_SELECTION_BOX
@@ -32,7 +32,7 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		select
 			selection_make, make_no_auto_unmanage
 		end
@@ -45,11 +45,12 @@ feature {NONE} -- Initialization
 
 	make (a_prompt: PROMPT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif prompt.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			selection_make (a_prompt.identifier,
-					mel_parent (a_prompt, widget_index),
-					man);
+			selection_make (a_prompt.identifier, mc, man)
 		end;
 
 feature -- Status Report
@@ -72,7 +73,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
 			ms.free
 		end;
@@ -83,7 +84,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
 			ms.free
 		end;
@@ -94,7 +95,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
 			ms.free
 		end;
@@ -105,7 +106,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
 			ms.free
 		end;
@@ -116,7 +117,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_label);
+			!! ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
 			ms.free
 		end;
@@ -126,7 +127,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_localized (a_text);
+			!! ms.make_default_l_to_r (a_text);
 			set_text_string (ms);
 			ms.free
 		end;
@@ -241,57 +242,13 @@ feature -- Removal
 			remove_ok_callback (mel_vision_callback (a_command), argument)
 		end;
 
-feature {NONE} -- Color
+feature {NONE} -- Implementation
 
-	update_other_fg_color (pixel: POINTER) is
-		local
-			ext_name: ANY;
+	set_foreground_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
 		do
-			--ext_name := Mforeground_color.to_c
-			--c_set_color (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_TEXT),
-					--pixel,
-					--$ext_name);
-		end;
-
-	update_other_bg_color (pixel: POINTER) is
-		do
-			xm_set_children_bg_color (pixel, screen_object)
-		end;
-
-feature {NONE} -- Font
-
-	update_text_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_TEXT),
-					--f_ptr)
-		end;
-
-	update_label_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_SELECTION_LABEL),
-					--f_ptr)
-		end;
-
-	update_button_font (f_ptr: POINTER) is
-		do
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_APPLY_BUTTON),
-					--f_ptr)
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_CANCEL_BUTTON),
-					--f_ptr)
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_DEFAULT_BUTTON),
-					--f_ptr)
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_HELP_BUTTON),
-					--f_ptr)
-			--set_primitive_font (xm_selection_box_get_child 
-					--(screen_object, MDIALOG_OK_BUTTON),
-					--f_ptr)
+			mel_set_foreground_color (color_imp);
+			text.set_foreground_color (color_imp)
 		end;
 
 end -- class PROMPT_M

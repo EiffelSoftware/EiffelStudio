@@ -53,6 +53,8 @@ feature -- Access
 			combo_box.select_actions.extend (agent selection_changed)
 			combo_box.select_actions.extend (agent update_editors)
 
+			update_attribute_editor
+
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
@@ -78,12 +80,6 @@ feature -- Access
 			end
 
 			combo_box.select_actions.resume
---			if first.is_sensitive then
---				check_button.enable_select
---			else
---				check_button.disable_select
---			end
---			check_button.select_actions.resume
 		end
 
 feature {GB_XML_STORE} -- Output

@@ -116,6 +116,7 @@ feature {EV_ANY_I} -- Implementation
 					--| normal capture only works on the current windows thread.
 				set_capture_type (Capture_normal)
 	
+				application_imp.dock_ended
 				complete_dock
 			end
 		end
@@ -133,6 +134,8 @@ feature {NONE} -- Implementation
 	start_docking (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE) is
 			-- Initialize the docking mechanism.
+		local
+			source_imp: EV_DOCKABLE_SOURCE_IMP
 		do
 			if not awaiting_movement then
 					-- Store arguments so they can be passed to
@@ -147,6 +150,11 @@ feature {NONE} -- Implementation
 				awaiting_movement := True
 				application_imp.start_awaiting_movement
 				actual_source := source
+				source_imp ?= actual_source.implementation
+				check
+					source_valid: source_imp /= Void
+				end
+				application_imp.dock_started (source_imp)
 			end
 		end
 		

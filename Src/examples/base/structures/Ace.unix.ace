@@ -19,4 +19,10 @@ cluster
 				-- $EIFFEL4/examples/base/structures by the name of
 				-- that directory on the above line.
 
+		--EiffelBase:
+	all base:				"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
 end

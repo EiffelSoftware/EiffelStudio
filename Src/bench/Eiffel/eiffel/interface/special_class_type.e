@@ -120,25 +120,33 @@ feature -- C code generation
 			if (not final_mode) or else assertion_level.check_precond then
 				if final_mode then
 					buffer.putstring ("%Tif (~in_assertion) {%N");
-				end;
-				buffer.putstring ("%
-					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
-					%%Tif (arg2 >= 0) {%N%
-					%%T%TRTCK;%N%
-					%%T} else {%N%
-					%%T%TRTCF;%N%T}%N");
+					buffer.putstring ("%
+						%%TRTCT(%"index_large_enough%", EX_PRE);%N%
+						%%Tif (arg2 >= 0) {%N%
+						%%T%TRTCK;%N%
+						%%T} else {%N%
+						%%T%TRTCF;%N%T}%N");
 
-				buffer.putstring ("%
-					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
-					%%Tif (arg2 < *(long *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
-						% - LNGPAD(2))) {%N%
-					%%T%TRTCK;%N%
-					%%T} else {%N%
-					%%T%TRTCF;%N%T}%N");
+					buffer.putstring ("%
+						%%TRTCT(%"index_small_enough%", EX_PRE);%N%
+						%%Tif (arg2 < *(EIF_INTEGER *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+							% - LNGPAD(2))) {%N%
+						%%T%TRTCK;%N%
+						%%T} else {%N%
+						%%T%TRTCF;%N%T}%N");
 
-				if final_mode then
 					buffer.putstring ("%T}%N");
+				else
+					buffer.putstring ("%
+						%%Tif (arg2 < 0) {%N%
+						%%T%Teraise (%"index_large_enough%", EN_PRE);%N%T}%N");
+
+					buffer.putstring ("%
+						%%Tif (arg2 >= *(EIF_INTEGER *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+							% - LNGPAD(2))) {%N%
+						%%T%Teraise (%"index_small_enough%", EN_PRE);%N%T}%N");
 				end
 			end;
 
@@ -233,25 +241,34 @@ feature -- C code generation
 			if (not final_mode) or else assertion_level.check_precond then
 				if final_mode then
 					buffer.putstring ("%Tif (~in_assertion) {%N");
-				end;
-				buffer.putstring ("%
-					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
-					%%Tif (arg1 >= 0) {%N%
-					%%T%TRTCK;%N%
-					%%T } else {%N%
-					%%T%TRTCF;%N%T}%N");
-	
-				buffer.putstring ("%
-					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
-					%%Tif (arg1 < *(long *) %
-						%(Current + (HEADER(Current)->ov_size & B_SIZE) %
-						%- LNGPAD(2))) {%N%
-					%%T%TRTCK;%N%
-					%%T } else {%N%
-					%%T%TRTCF;%N%T}%N");
 
-				if final_mode then
+					buffer.putstring ("%
+						%%TRTCT(%"index_large_enough%", EX_PRE);%N%
+						%%Tif (arg1 >= 0) {%N%
+						%%T%TRTCK;%N%
+						%%T } else {%N%
+						%%T%TRTCF;%N%T}%N");
+		
+					buffer.putstring ("%
+						%%TRTCT(%"index_small_enough%", EX_PRE);%N%
+						%%Tif (arg1 < *(EIF_INTEGER *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE) %
+							%- LNGPAD(2))) {%N%
+						%%T%TRTCK;%N%
+						%%T } else {%N%
+						%%T%TRTCF;%N%T}%N");
+
 					buffer.putstring ("%T}%N");
+				else
+					buffer.putstring ("%
+						%%Tif (arg1 < 0) {%N%
+						%%T%Teraise (%"index_large_enough%", EN_PRE);%N%T}%N");
+
+					buffer.putstring ("%
+						%%Tif (arg1 >= *(EIF_INTEGER *) %
+							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
+							% - LNGPAD(2))) {%N%
+						%%T%Teraise (%"index_small_enough%", EN_PRE);%N%T}%N");
 				end
 			end;
 

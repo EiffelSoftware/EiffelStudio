@@ -26,9 +26,9 @@ feature -- Initialization
 --			io.put_string ("prepared!%N")
 --			projector.project
 --			io.put_string ("projected!%N")
---			test_drawing_area
+			test_drawing_area
 --			test_figures
-			test_font
+--			test_font
 		end
 
 	my_device: EV_DRAWING_AREA
@@ -41,8 +41,9 @@ feature -- Initialization
 			create my_device
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
-			my_device.expose_actions.extend (~on_repaint_font)
+			my_device.expose_actions.extend (~on_repaint_font2)
 			create fd.make_with_drawable (my_device)
+			my_device.font.set_family (Ev_font_family_sans)
 		end
 
 	on_repaint_font2 (x, y, w, h: INTEGER) is
@@ -52,7 +53,7 @@ feature -- Initialization
 		do
 			from size_test := 5 until size_test = 100 loop
 				my_device.font.set_height (size_test)
-				io.put_string (my_device.font.system_name + "%N")
+				--io.put_string (my_device.font.system_name + "%N")
 				my_device.clear
 				my_device.draw_text (20, 20 + size_test, "Bigger " + size_test.out)
 				size_test := size_test + 1
@@ -217,21 +218,19 @@ feature -- Initialization
 			-- Do the projection
 		do
 			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
-
 			my_device.clear
 
 			--my_device.enable_dashed_line_style
 
 			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
 
-			my_device.fill_rectangle (10, 110, 10, 15)
-			my_device.fill_ellipse (50, 110, 10, 15)
-			my_device.fill_polygon (<<create {EV_COORDINATES}.set (80, 110),
-				create {EV_COORDINATES}.set (90, 120),
-				create {EV_COORDINATES}.set (90, 130)>>)
-			my_device.fill_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
-
-			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
+			my_device.fill_rectangle (110, 210, 110, 115)
+			my_device.fill_ellipse (150, 210, 110, 115)
+			my_device.fill_polygon (<<create {EV_COORDINATES}.set (180, 210),
+				create {EV_COORDINATES}.set (190, 220),
+				create {EV_COORDINATES}.set (190, 230)>>)
+			my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
 
 			my_device.draw_point (10, 10)
 			my_device.draw_text (10, 200, "Text-primitive")

@@ -48,7 +48,7 @@ create
 feature -- Access
 
 	pixmaps_width: INTEGER is
-			-- Width of displayed pixmaps in the list.
+			-- Width of pixmaps displayed in list.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -58,7 +58,7 @@ feature -- Access
 		end
 
 	pixmaps_height: INTEGER is
-			-- Height of displayed pixmaps in the list.
+			-- Height of pixmaps dispalyed in list.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -84,7 +84,7 @@ feature -- Element change
 		end
 
 	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in `Current'.
+			-- Set the size of pixmaps displayed in `Current'.
 			-- Note: The Default value is 16x16
 		require
 			not_destroyed: not is_destroyed

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Simple XML deserializer using the eXML library.
+					Simple XML deserializer using the Gobo library.
 					Does not process reference cycles.
 					Does not deserialize expanded references.
 					Does not deserialize attributes of type INTEGER_64,
@@ -27,6 +27,21 @@ inherit
 create
 	default_create
 
+feature {NONE} -- Initialization
+
+	xml_parser: XM_EIFFEL_PARSER is
+			-- Create a unique XML parser.
+		once
+			create Result.make
+			Result.set_callbacks (pipe_callback.start)
+		end
+
+	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+			-- Create unique callback pipe.
+		once
+			create Result.make
+		end
+
 feature -- Query
 
 	new_object_from_file (a_file_name: STRING): ANY is
@@ -35,36 +50,30 @@ feature -- Query
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
-			retried: BOOLEAN
-			l_xml_tree_parser: XML_TREE_PARSER
-			l_file: RAW_FILE
+			l_xml_parser: like xml_parser
+			l_file: KL_TEXT_INPUT_FILE
+			l_bool: BOOLEAN
 		do
-			if not retried then
-				create l_file.make (a_file_name)
-				
-				if l_file.exists and l_file.is_readable then
-					l_file.open_read
-					l_file.readstream (l_file.count)
-					l_file.close
+			create l_file.make (a_file_name)
 
-					create l_xml_tree_parser.make
-					l_xml_tree_parser.parse_string (l_file.last_string)
-					l_xml_tree_parser.set_end_of_file
-					
-					if l_xml_tree_parser.is_correct then
-						Result := reference_from_xml (l_xml_tree_parser.root_element)
-					end
+			if l_file.exists and l_file.is_readable then
+				l_xml_parser := Xml_parser
+				l_file.open_read
+				debug ("disable_assertions")
+					l_bool := feature {ISE_RUNTIME}.check_assert (False)
 				end
-			else
-				if l_file /= Void and then not l_file.is_closed then
-					l_file.close
+				l_xml_parser.parse_from_stream (l_file)
+				debug ("disable_assertions")
+					l_bool := feature {ISE_RUNTIME}.check_assert (l_bool)
 				end
+				l_file.close
+
+				if l_xml_parser.is_correct then
+					Result := reference_from_xml (Pipe_callback.document.root_element)
+				end			
 			end
-		rescue
-			retried := True
-			retry
 		end
-		
+
 feature {NONE} -- Object retrieval from node.
 
 	reference_from_xml (a_xml_element: like xml_element): ANY is
@@ -78,40 +87,48 @@ feature {NONE} -- Object retrieval from node.
 			dt: INTEGER
 			l_xml_attribute: like xml_attribute
 		do
-			l_xml_attribute := a_xml_element.attributes.item (Type_attr)
+			l_xml_attribute ?= a_xml_element.item (2)
 			name := l_xml_attribute.value.out
-			
-			dt := dynamic_type_from_string (type_from_id (name.to_integer))
+
+			dt := dynamic_type_from_id (name.to_integer)
 			if dt = -1 then
 			else
 				Result := new_instance_of (dt)
-				if a_xml_element.attributes.count = 2 then
+				if a_xml_element.count >= 3 then
 					initialize_object (a_xml_element, Result)				
 				end
 			end
 		end
-		
+
 	array_from_xml (a_xml_element: like xml_element): ANY is
 			-- Instantiate object described in `a_xml_element'.
 		require
 			a_xml_element_not_void: a_xml_element /= Void
-			a_xml_element_valid_count: a_xml_element.attributes.count = 4
+			a_xml_element_valid_count: a_xml_element.count >= 4
 			valid_array_element: a_xml_element.name.is_equal (Array_node)
 		local
 			l_lower, l_count: INTEGER
 			l_element_type_name: STRING
 			l_attr: like xml_attribute
 		do
+			a_xml_element.start
+
+				-- We skip `name'.
+			a_xml_element.forth
+
 				-- We get `lower'.
-			l_attr := a_xml_element.attributes.item (lower_attr)
+			l_attr ?= a_xml_element.item_for_iteration
+			a_xml_element.forth
 			l_lower := l_attr.value.to_integer
 
 				-- We get `count'.
-			l_attr := a_xml_element.attributes.item (count_attr)
+			l_attr ?= a_xml_element.item_for_iteration
+			a_xml_element.forth
 			l_count := l_attr.value.to_integer
-			
+
 				-- we get `type'.
-			l_attr ?= a_xml_element.attributes.item (type_attr)
+			l_attr ?= a_xml_element.item_for_iteration
+			a_xml_element.forth
 			l_element_type_name := l_attr.value.out
 
 			inspect abstract_types (l_element_type_name)
@@ -133,16 +150,15 @@ feature {NONE} -- Object retrieval from node.
 		require
 			object_not_void: obj /= Void
 			a_xml_element_not_void: a_xml_element /= Void
-			valid_count: a_xml_element.attributes.count = 2
+			valid_count: a_xml_element.count >= 3
 		local
 			l_field_table: HASH_TABLE [INTEGER, STRING]
 			l_field_element: like xml_element
 			l_attr: like xml_attribute
-			l_data: like xml_character_data
+			l_string_content: STRING
 			i, l_field_type: INTEGER
 			dtype: INTEGER
 			l_node_name, l_field_name: STRING
-			l_string_content: STRING
 		do
 			from
 					-- We know it is a reference node, so we can skip
@@ -164,29 +180,26 @@ feature {NONE} -- Object retrieval from node.
 
 				if not a_xml_element.after then
 					l_field_element.start
-					l_attr := l_field_element.attributes.item (Name_attr)
+					l_attr ?= l_field_element.item_for_iteration
 					l_field_name := l_attr.value
-					
+					l_field_element.forth
+
 						-- Lookup to see that field belongs to `obj'.
 					l_field_table.search (l_field_name.out)
 					if l_field_table.found then
 						i := l_field_table.found_item
 						l_field_type := field_type_of_type (i, dtype)
 
-						
 						inspect l_field_type
 						when Boolean_type then
-							l_data ?= l_field_element.item_for_iteration
-							check l_data /= Void end
-							set_boolean_field (i, obj, l_data.content.out.to_boolean)
+							l_string_content := retrieve_text (l_field_element)
+							set_boolean_field (i, obj, l_string_content.to_boolean)
 						when Character_type then
-							l_data ?= l_field_element.item_for_iteration
-							check l_data /= Void end
-							set_character_field (i, obj, l_data.content.out.item (1))
+							l_string_content := retrieve_text (l_field_element)
+							set_character_field (i, obj, l_string_content.item (1))
 						when Integer_32_type then
-							l_data ?= l_field_element.item_for_iteration
-							check l_data /= Void end
-							set_integer_field (i, obj, l_data.content.out.to_integer)
+							l_string_content := retrieve_text (l_field_element)
+							set_integer_field (i, obj, l_string_content.to_integer)
 						when Reference_type then
 							l_node_name := l_field_element.name
 							if l_node_name.is_equal (Reference_node) then
@@ -195,17 +208,7 @@ feature {NONE} -- Object retrieval from node.
 								if l_field_element.after then
 									l_string_content := Void
 								else
-									from
-										l_data ?= l_field_element.item_for_iteration
-										l_string_content := l_data.content.out
-										l_field_element.forth
-									until
-										l_field_element.after
-									loop
-										l_data ?= l_field_element.item_for_iteration
-										l_string_content.append (l_data.content.out)
-										l_field_element.forth
-									end
+									l_string_content := retrieve_text (l_field_element)
 								end
 								set_reference_field (i, obj, l_string_content)
 							elseif l_node_name.is_equal (Array_node) then
@@ -227,11 +230,6 @@ feature {NONE} -- Object retrieval from node.
 
 feature {NONE} -- Node constants
 
-	type_attr: STRING is "T"
-	name_attr: STRING is "N"
-	count_attr: STRING is "C"
-	lower_attr: STRING is "L"
-	
 	reference_node: STRING is "R"
 	array_node: STRING is "A"
 	string_node: STRING is "S"
@@ -240,7 +238,7 @@ feature {NONE} -- Node constants
 	boolean_node: STRING is "B"
 
 	none_node: STRING is "NONE"
-		
+
 feature {NONE} -- Internal speedup
 
 	field_table (dtype: INTEGER): HASH_TABLE [INTEGER, STRING] is
@@ -257,7 +255,7 @@ feature {NONE} -- Internal speedup
 				nb := field_count_of_type (dtype)
 				create Result.make (nb)
 				l_table.put (Result, dtype)
-				
+
 				from
 					i := 1
 				until
@@ -269,19 +267,17 @@ feature {NONE} -- Internal speedup
 			end
 		end
 
-	dynamic_type_from_string (name: STRING): INTEGER is
+	dynamic_type_from_id (an_id: INTEGER): INTEGER is
 			-- Given a type name `name' retrieves its corresponding 
 			-- dynamic type.
 		local
-			l_table: like internal_dynamic_types
+			l_full_name: STRING
 		do
-			l_table := internal_dynamic_types
-			l_table.search (name)
-			if l_table.found then
-				Result := l_table.found_item
-			else
-				Result := internal_dynamic_type_from_string (name)
-				l_table.put (Result, name)
+			Result := internal_dynamic_types.item (an_id)
+			if Result = 0 then
+				l_full_name := types.item (an_id)
+				Result := internal_dynamic_type_from_string (l_full_name)
+				internal_dynamic_types.put (Result, an_id)
 			end
 		end
 
@@ -296,7 +292,7 @@ feature {NONE} -- Internal speedup
 				Result := l_table.found_item
 			end
 		end
-	
+
 	internal_abstract_types: HASH_TABLE [INTEGER, STRING] is
 			-- List of correspondance between basic types and ID defined in
 			-- INTERNAL.
@@ -314,11 +310,11 @@ feature {NONE} -- Internal speedup
 			create Result.make (10)
 		end
 
-	internal_dynamic_types: HASH_TABLE [INTEGER, STRING] is
+	internal_dynamic_types: ARRAY [INTEGER] is
 			-- List of correspondance between type names and their
 			-- corresponding dynamic types.
 		once
-			create Result.make (10)
+			create Result.make (1, 19)
 		end
 
 	String_type: INTEGER is -1
@@ -339,7 +335,7 @@ feature {NONE} -- Array manipulations
 			l_attr: like xml_attribute
 			l_index: INTEGER
 			l_type: STRING
-			l_data: like xml_character_data
+			l_data_content: STRING
 		do
 			from
 				a_xml_element.start
@@ -358,8 +354,8 @@ feature {NONE} -- Array manipulations
 				if not a_xml_element.after then
 					l_field_element.start
 					l_type := l_field_element.name
-				
-					l_attr ?= l_field_element.attributes.item (Name_attr)
+					l_attr ?= l_field_element.item_for_iteration
+					l_field_element.forth
 					l_index := l_attr.value.to_integer
 
 					if l_type.is_equal (Reference_node) then
@@ -367,8 +363,8 @@ feature {NONE} -- Array manipulations
 					elseif l_type.is_equal (Array_node) then
 						item_processor.call ([array_from_xml (l_field_element), l_index])
 					else
-						l_data ?= l_field_element.item_for_iteration
-						item_processor.call ([l_data.content.out, l_index])
+						l_data_content := retrieve_text (l_field_element)
+						item_processor.call ([l_data_content, l_index])
 					end
 				end
 			end
@@ -385,7 +381,7 @@ feature {NONE} -- Array manipulations
 			non_void_array: Result /= Void
 			valid_array: Result.lower = lower and Result.upper = upper
 		end
-	
+
 	character_array_from_xml (a_xml_element: like xml_element; lower, upper: INTEGER): ARRAY [CHARACTER] is
 			-- Character array as described in XML file
 		require
@@ -397,7 +393,7 @@ feature {NONE} -- Array manipulations
 			non_void_array: Result /= Void
 			valid_array: Result.lower = lower and Result.upper = upper
 		end
-	
+
 	boolean_array_from_xml (a_xml_element: like xml_element; lower, upper: INTEGER): ARRAY [BOOLEAN] is
 			-- Boolean array as described in XML file
 		require
@@ -421,7 +417,7 @@ feature {NONE} -- Array manipulations
 			non_void_array: Result /= Void
 			valid_array: Result.lower = lower and Result.upper = upper
 		end
-		
+
 	reference_array_from_xml (a_xml_element: like xml_element; lower, upper: INTEGER): ARRAY [ANY] is
 			-- Integer array as described in XML file
 		require
@@ -473,21 +469,58 @@ feature {NONE} -- Array manipulations
 			put: array.item (index) = value.to_boolean
 		end
 
+feature {NONE} -- Implementation
+
+	retrieve_text (a_field_element: like xml_element): STRING is
+			-- Retrieve text
+		require
+			non_void_element: a_field_element /= Void
+			element_is_character_data: is_character_data (a_field_element)
+		local
+			l_data: XM_CHARACTER_DATA
+		do
+			l_data ?= a_field_element.item_for_iteration
+			check l_data /= Void end
+			create Result.make_from_string (l_data.content)
+			from
+				a_field_element.forth
+			until
+				a_field_element.after or l_data = Void
+			loop
+				l_data ?= a_field_element.item_for_iteration
+				if l_data /= Void then
+					Result.append (l_data.content)
+				end
+				a_field_element.forth
+			end
+		ensure
+			non_void_retrieve_text: Result /= Void
+		end
+
+	is_character_data (a_field_element: like xml_element): BOOLEAN is
+			-- Is `a_field_element' a XM_CHARACTER_DATA?
+		local
+			l_data: XM_CHARACTER_DATA
+		do
+			l_data ?= a_field_element.item_for_iteration
+			Result := l_data /= Void
+		end
+	
 feature {NONE} -- Type specification
 
-	xml_attribute: XML_ATTRIBUTE is
+	xml_attribute: XM_ATTRIBUTE is
 			-- To get proper type so that code can be easily modified back
 			-- and forth between New/old
 		do
 		end
 
-	xml_element: XML_ELEMENT is
+	xml_element: XM_ELEMENT is
 			-- To get proper type so that code can be easily modified back
 			-- and forth between New/old
 		do
 		end
 
-	xml_character_data: XML_CHARACTER_DATA is
+	xml_character_data: XM_CHARACTER_DATA is
 			-- To get proper type so that code can be easily modified back
 			-- and forth between New/old
 		do

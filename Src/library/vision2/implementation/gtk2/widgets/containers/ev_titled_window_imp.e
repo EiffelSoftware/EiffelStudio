@@ -24,10 +24,17 @@ inherit
 			interface,
 			make,
 			has_wm_decorations,
-			is_displayed
+			is_displayed,
+			initialize,
+			initialize_client_area
 		end
 		
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
+		export {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
+			minimize_actions_internal,
+			maximize_actions_internal,
+			restore_actions_internal
+		end
 
 create
 	make
@@ -40,7 +47,84 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
-		
+
+	initialize is
+			-- Setup accelerators for window
+		do
+			Precursor {EV_WINDOW_IMP}
+			accel_group := feature {EV_GTK_EXTERNALS}.gtk_accel_group_new
+			real_signal_connect (
+				accel_group,
+				"accel-activate",
+				agent (App_implementation.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
+				agent (App_implementation.gtk_marshal).gtk_args_to_tuple
+			)
+			feature {EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
+			real_signal_connect (c_object, "window-state-event", agent (App_implementation.gtk_marshal).window_state_intermediary (internal_id, ? , ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+		end
+
+	initialize_client_area is
+			-- Setup client area of window
+		do
+			Precursor {EV_WINDOW_IMP}
+			accel_box := feature {EV_GTK_EXTERNALS}.gtk_menu_item_new
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (accel_box, feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (accel_box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	call_window_state_event (a_window_state: INTEGER) is
+			-- Call either minimize, maximize or restore actions for window
+		do
+			if a_window_state = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+				is_minimized := True
+				is_maximized := False
+				if minimize_actions_internal /= Void then
+					minimize_actions_internal.call (Void)
+				end
+			elseif a_window_state = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+				is_maximized := True
+				is_minimized := False
+				if maximize_actions_internal /= Void then
+					maximize_actions_internal.call (Void)
+				end
+			else
+				is_maximized := False
+				is_minimized := False
+				if restore_actions_internal /= Void then
+					restore_actions_internal.call (Void)
+				end
+			end
+		end
+
+	call_accelerators (a_v2_key_value, accel_mods: INTEGER) is
+			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
+		local
+			acc: EV_ACCELERATOR
+			acc_imp: EV_ACCELERATOR_IMP
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > accelerators_internal.count
+			loop
+				acc ?= accelerators_internal.i_th (i)
+				if acc /= Void then
+					acc_imp ?= acc.implementation
+					if acc_imp.key.code = a_v2_key_value and then acc_imp.modifier_mask = accel_mods then
+						if acc_imp.actions /= Void then
+							acc_imp.actions.call (Void)
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Accelerators
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -49,7 +133,7 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			acc_imp.add_accel (accel_group)
+			acc_imp.add_accel (Current)
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -58,7 +142,7 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 		do
 			acc_imp ?= an_accel.implementation
-			acc_imp.remove_accel (accel_group)
+			acc_imp.remove_accel (Current)
 		end
 
 feature -- Access
@@ -81,19 +165,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
-		do
---			Result := feature {EV_GTK_EXTERNALS}.c_gdk_window_is_iconified (
---				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
---			)
-		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
-		do
-			--Result := old_geometry /= Void
-		end
 
 	is_displayed: BOOLEAN is
 			-- Is 'Current' displayed on screen?
@@ -130,7 +206,11 @@ feature -- Status setting
 	restore is
 			-- Restore to original position when minimized or maximized.
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)			
+			if is_maximized then
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
+			else
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
+			end
 		end
 
 feature -- Element change
@@ -151,9 +231,8 @@ feature -- Element change
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create icon_pixmap
-			icon_pixmap.copy (an_icon)
-			pixmap_imp ?= icon_pixmap.implementation
+			pixmap_imp ?= an_icon.twin.implementation
+			icon_pixmap := pixmap_imp.interface
 			check
 				icon_implementation_exists: pixmap_imp /= Void
 			end
@@ -168,6 +247,14 @@ feature {NONE} -- Implementation
 		do
 			Result := True
 		end
+
+feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
+
+	accel_group: POINTER
+			-- Pointer to GtkAccelGroup struct.
+
+	accel_box: POINTER
+			-- Pointer to the on screen zero size accelerator widget
 
 feature {EV_ANY_I} -- Implementation
 

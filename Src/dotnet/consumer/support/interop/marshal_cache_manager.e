@@ -132,6 +132,11 @@ feature -- Basic Exportations
 			non_void_result: Result /= Void
 		end
 
+	prepare_for_unload is
+			-- prepares all that in necessary be before running app domain in unloaded
+		do
+			implementation.compact_and_clean_cache
+		end
 
 feature {NONE} -- Implementation
 			

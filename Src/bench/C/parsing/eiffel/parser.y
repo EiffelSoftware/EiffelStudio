@@ -153,7 +153,7 @@ Feature_clause_list
 Clients Feature_declaration
 Declaration_body Inheritance Parent Rename New_exports New_export_item
 Feature_set Undefine Redefine Select Formal_arguments Type_mark
-Routine Routine_body External
+Routine Routine_body External External_language
 External_name Internal Local_declarations Precondition
 Instruction1 
 Postcondition Assertion_clause Type Class_type Existing_generics
@@ -637,8 +637,12 @@ Routine_body: 				Internal
 								{$$ = create_node(DEFERRED_AS);}
 	;
 
-External:					TE_EXTERNAL Non_empty_string External_name
+External:					TE_EXTERNAL External_language External_name
 								{$$ = create_node2(EXTERNAL_AS,$2,$3);}
+	;
+
+External_language:			Non_empty_string
+								{$$ = create_node1(EXTERNAL_LANG_AS, $1);}
 	;
 
 External_name:				/* empty */

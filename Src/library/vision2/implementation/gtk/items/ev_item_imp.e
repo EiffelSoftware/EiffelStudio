@@ -14,20 +14,26 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 		rename
-			interface as widget_interface,
-			set_interface as set_widget_interface,
+			set_parent as widget_set_parent,
+			parent_imp as widget_parent_imp,
+			parent_set as widget_parent_set,
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk
+		redefine
+			has_parent
 		end
 		
 	EV_WIDGET_IMP
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
-			interface as widget_interface,
-			set_interface as set_widget_interface,
+			set_parent as widget_set_parent,
+			parent_imp as widget_parent_imp,
+			parent_set as widget_parent_set,
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk
+		redefine
+			has_parent
 		end
 
 	EV_GTK_ITEMS_EXTERNALS
@@ -40,6 +46,14 @@ feature -- Acces
 			check
 				not_yet_implemented: False
 			end
+		end
+
+feature -- Assertion features
+
+	has_parent: BOOLEAN is
+			-- True if the widget has a parent, False otherwise
+		do
+			Result := parent_imp /= void
 		end
 
 feature -- Event : command association

@@ -328,6 +328,28 @@ feature -- Basic operations
 			end
 		end
 		
+	tree_item_matching_path (tree_list: EV_TREE_NODE_LIST; texts: ARRAYED_LIST [STRING]): EV_TREE_ITEM is
+			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each 
+			-- matched item in `texts'.
+		require
+			tree_list_not_void: tree_list /= Void
+			texts_not_void: texts /= Void
+			texts_not_empty: not texts.is_empty
+		local
+			current_text: STRING
+			text_cursor, tree_cursor: CURSOR
+		do
+			text_cursor := texts.cursor
+			tree_cursor := tree_list.cursor
+			texts.start
+			Result := internal_tree_item_matching_path (tree_list, texts)
+			texts.go_to (text_cursor)
+			tree_list.go_to (tree_cursor)
+		ensure
+			texts_unchanged: old texts.is_equal (texts) and old texts.index = texts.index
+			tree_list_unchanged: old tree_list.index = tree_list.index
+		end
+
 	reparent (original_widget, new_widget: EV_WIDGET) is
 			-- Replace `original_widget' with `new_widget' within parent of `original_widget'.
 		require
@@ -394,6 +416,39 @@ feature {NONE} -- Implementation
 			if node.is_expanded then
 				node.collapse
 			end
+		end
+		
+	internal_tree_item_matching_path (tree_list: EV_TREE_NODE_LIST; texts: ARRAYED_LIST [STRING]): EV_TREE_ITEM is
+			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each 
+			-- matched item in `texts'.
+		require
+			tree_list_not_void: tree_list /= Void
+			texts_not_void: texts /= Void
+			texts_not_empty: not texts.is_empty
+		local
+			current_text: STRING
+			tree_cursor: CURSOR
+		do
+			tree_cursor := tree_list.cursor
+			current_text := texts.item
+			from
+				tree_list.start
+			until
+				tree_list.off or Result /= Void
+			loop
+				if tree_list.item.text.is_equal (current_text) then
+					if texts.index = texts.count then
+						Result ?= tree_list.item
+					else
+						texts.forth
+						Result ?= internal_tree_item_matching_path (tree_list.item, texts)
+					end
+				end
+				tree_list.forth
+			end
+			tree_list.go_to (tree_cursor)
+		ensure
+			tree_list_unchanged: old tree_list.index = tree_list.index
 		end
 
 end -- class GB_UTILITIES

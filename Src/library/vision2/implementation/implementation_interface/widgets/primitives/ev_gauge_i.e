@@ -42,8 +42,7 @@ feature -- Access
 
 	range: INTEGER_INTERVAL is
 			-- Get `minimum' and `maximum' as interval.
-		do
-			create Result.make (minimum, maximum)
+		deferred
 		end
 
 feature -- Status setting
@@ -189,6 +188,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/15 16:44:11  brendel
+--| Moved implementating of feature `range' to _IMP.
+--|
 --| Revision 1.5  2000/02/14 22:19:51  brendel
 --| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
 --| This is to take advantage of the newly introduced operator |..|.

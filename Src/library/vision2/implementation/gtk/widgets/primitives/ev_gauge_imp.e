@@ -69,6 +69,12 @@ feature -- Access
 			Result := C.gtk_adjustment_struct_upper (adjustment).rounded
 		end
 
+	range: INTEGER_INTERVAL is
+			-- Get `minimum' and `maximum' as interval.
+		do
+			create Result.make (minimum, maximum)
+		end
+
 feature -- Status setting
 
 	step_forward is
@@ -157,6 +163,7 @@ feature -- Element change
 		do
 			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
 			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+			C.gtk_adjustment_changed (adjustment)
 			C.gtk_adjustment_set_value (adjustment, a_range.lower)
 			C.gtk_adjustment_value_changed (adjustment)
 		end
@@ -194,6 +201,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/15 16:44:11  brendel
+--| Moved implementating of feature `range' to _IMP.
+--|
 --| Revision 1.8  2000/02/15 00:43:40  brendel
 --| Removed connection to "changed" signal, since we only want the "value-changed".
 --|

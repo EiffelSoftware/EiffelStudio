@@ -476,7 +476,7 @@ feature {NONE} -- Generation
 					c_return_type.generate_function_cast (gen_file, a_types)
 
 					if
-						Compilation_modes.is_precompiling or
+						Compilation_modes.is_precompiling or else
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id);

@@ -975,6 +975,9 @@ feature {NONE} -- Actions
 					end
 					if node = l_item then
 						found := True
+						if not node.is_empty then
+							remove_subtree_info (node)
+						end
 						cluster_tree.remove
 					else
 						remove_tree_item (node, l_item)
@@ -993,6 +996,7 @@ feature {NONE} -- Actions
 		local
 			node: EV_TREE_ITEM
 			found: BOOLEAN
+			clus_name: STRING
 		do
 			from
 				tree.start
@@ -1005,11 +1009,36 @@ feature {NONE} -- Actions
 				end
 				if node = element then
 					found := True
+					if not node.is_empty then
+						remove_subtree_info (node)
+					end
 					tree.remove
 				else
 					remove_tree_item (node, element)
 					tree.forth
 				end
+			end
+		end
+
+	remove_subtree_info (tree: EV_TREE_NODE) is
+		require
+			tree_not_void: tree /= Void
+			tree_not_empty: not tree.is_empty
+		local
+			node: EV_TREE_NODE
+		do
+			from
+				tree.start
+			until
+				tree.after
+			loop
+				node := tree.item
+				if not node.is_empty then
+					remove_subtree_info (node)
+				else
+					clusters.remove (node.text)
+				end
+				tree.forth
 			end
 		end
 

@@ -262,7 +262,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<italic>0</italic>.
 			</paragraph>
 			<paragraph>Cases in which character is not a printable character use the following conventions:
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>'\ooo'</cell>
 						<cell>Character given by its three-digit octal code
@@ -409,7 +409,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 					<bold>$B</bold>, describes the set of all tokens made of one or more specimens of the characters blank, new-line, carriage-return and tabulation.
 				</paragraph>
 				<paragraph>The following non-elementary forms are abbreviations for commonly needed regular expressions:</paragraph>
-				<table>
+				<table><border>1</border>
 					<row>
 						<cell>Code</cell>
 						<cell>Equivalent expression</cell>
@@ -474,7 +474,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<size>3</size>Combining expression-building mechanisms
 			</heading>
 			<paragraph>You may freely combine the various construction mechanisms to describe complex regular expressions. Below are a few examples.</paragraph>
-			<table>
+			<table><border>1</border>
 				<row>
 					<cell>
 						<italic>'a'..'z' - 'c' - 'e'</italic>

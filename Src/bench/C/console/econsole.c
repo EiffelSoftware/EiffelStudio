@@ -109,7 +109,9 @@ rt_public void eif_show_console(void)
 		BOOL bLaunched;
 		BOOL bSuccess;
 		int hCrt;
+#ifndef EIF_BORLAND
 		FILE *hf;
+#endif
 
 		bSuccess = AllocConsole();
 
@@ -134,18 +136,37 @@ rt_public void eif_show_console(void)
 				 * handles `stdin', `stdout' and `stderr' to the new
 				 * created console.
 				 * Code was taken from http://codeguru.earthweb.com/console/Console.html
+				 * But also checkout Microsoft support web site:
+				 * 	http://support.microsoft.com/default.aspx?scid=kb;EN-US;q105305
+				 * 
+				 * Note: For Borland, the above trick does not work, one has to
+				 *  duplicate the handle, unfortunately the solution does not work
+				 *  with Microsoft which explains the ifdef statement.
 				 */
 			hCrt = _open_osfhandle ((long) eif_conout, _O_TEXT);
+#ifdef EIF_BORLAND
+			dup2 (hCrt, _fileno(stdout));
+#else
 			hf = _fdopen (hCrt, "w");
 			*stdout = *hf;
+#endif
 
 			hCrt = _open_osfhandle ((long) eif_conerr, _O_TEXT);
+#ifdef EIF_BORLAND
+			dup2 (hCrt, _fileno(stderr));
+#else
 			hf = _fdopen (hCrt, "w");
 			*stderr = *hf;
+#endif
+
 
 			hCrt = _open_osfhandle ((long) eif_conin, _O_RDONLY);
+#ifdef EIF_BORLAND
+			dup2 (hCrt, _fileno(stdin));
+#else
 			hf = _fdopen (hCrt, "r");
 			*stdin = *hf;
+#endif
 		}
 
 			/* We are computing the cursor position to figure out, if the application

@@ -341,14 +341,16 @@ feature -- Basic operation
 			check
 				window_found: window_object /= Void
 			end
-			layout_item ?= window_object.layout_item.first
-			window_child ?= layout_item.object
-			check
-				window_child_not_void: window_child /= Void
+			if window_object.layout_item /= Void and then not window_object.layout_item.is_empty then
+				layout_item ?= window_object.layout_item.first
+				window_child ?= layout_item.object
+				check
+					window_child_not_void: window_child /= Void
+				end
+				window_child.unparent
+				objects.wipe_out
+				objects.extend (window_object)
 			end
-			window_child.unparent
-			objects.wipe_out
-			objects.extend (window_object)
 		end
 		
 		

@@ -33,9 +33,6 @@ feature -- Access
 		deferred
 		end
 
-	interface: EV_MULTI_COLUMN_LIST_ROW
-			-- Interface of current implementation.
-
 feature -- Status report
 	
 	is_selected: BOOLEAN is
@@ -93,14 +90,6 @@ feature -- Element Change
 				i := i + 1
 				list_i := list_i + 1
 			end
-		end
-
-	set_interface (list: EV_MULTI_COLUMN_LIST_ROW) is
-			-- Make `list' the new interface.
-		require
-			list_not_void: list /= Void
-		do
-			interface := list
 		end
 
 feature -- Event : command association

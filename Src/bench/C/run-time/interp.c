@@ -1092,7 +1092,6 @@ end:
 			head_type = last->type & SK_HEAD;
 			if (head_type != SK_BIT) {
 				new_obj = RTLN(code);
-				last = opop();
 				switch (last->type) {
 				case SK_BOOL:
 				case SK_CHAR:	
@@ -1120,6 +1119,8 @@ end:
 			} else {
 				/* Bit metamorhose is a clone */
 				new_obj = b_clone(last->it_bit);
+				last = iget();
+				last->type = SK_BIT;
 				last->it_bit = new_obj;
 			}
 		}

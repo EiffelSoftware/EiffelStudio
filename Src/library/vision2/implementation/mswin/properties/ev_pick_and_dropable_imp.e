@@ -198,7 +198,7 @@ feature {EV_ANY_I} -- Implementation
 				if pebble_function /= Void then
 					pebble := pebble_function.last_result
 				end
-				if pebble /= Void and application_imp.pick_and_drop_source = Void then
+				if pebble /= Void and not application_imp.drop_actions_executing then
 					-- Note that we check there is not a pick and drop source currently executing.
 					-- If you drop on to a widget that is also a source and call `process_events' from the
 					-- `drop_actions', this causes the transport to start. The above check prevents this
@@ -372,12 +372,15 @@ feature {EV_ANY_I} -- Implementation
 				text_component.disable_context_menu
 			end
 
+			application_imp.transport_ended
+			application_imp.set_transport_just_ended
+
 			create env
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
 				-- Check that transport can be ended.
-				--| Drag and drop is always ended with the left button release.
+				--| Drag and drop is always ended with the left button release.+
 				--| Pick and drop is always ended with the right button press.
 				--| Drop actions only need to be called if the transport
 				--| has actually ended correctly.
@@ -386,12 +389,14 @@ feature {EV_ANY_I} -- Implementation
 					-- Retrieve `target'.
 				if target /= Void then
 					if target.drop_actions.accepts_pebble (pebble) then
+						application_imp.enable_drop_actions_executing
 						target.drop_actions.call ([pebble])
 							-- If there is a target then execute the drop
 							-- actions for `target'.
 							
 						env.application.drop_actions.call ([pebble])
 							-- Execute drop_actions for the application.
+						application_imp.disable_drop_actions_executing
 					else
 						env.application.cancel_actions.call ([pebble])
 					end
@@ -400,13 +405,6 @@ feature {EV_ANY_I} -- Implementation
 				env.application.cancel_actions.call ([pebble])
 			end
 
-				-- Update `application_imp' to reflect end of transport.
-				-- We call `transport_ended' after calling the `drop_actions' as if this is not done,
-				-- dropping on to a widget that is also a source and calling `process_events' from the
-				-- `drop_actions', causes the transport to start.
-			application_imp.transport_ended
-			application_imp.set_transport_just_ended
-	
 			abstract_pick_and_dropable ?= target
 			check
 				abstract_pick_and_dropable_correct: target /= Void implies abstract_pick_and_dropable /= Void

@@ -102,6 +102,7 @@ feature -- Basic Operations
 		indexing
 			external_name: "Commit"
 		local
+			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
 			notifier: ISE_REFLECTION_NOTIFIER
 		do
 			check
@@ -110,8 +111,8 @@ feature -- Basic Operations
 				not_empty_assembly_name: eiffel_assembly.AssemblyName.Length > 0
 			end
 			generate_assembly_xml_file
-			create notifier.make1
-			notifier.make
+			create notifier_handle.make1
+			notifier := notifier_handle.currentnotifier
 			notifier.notifyadd (assembly_descriptor)
 			assembly_descriptor := Void
 			eiffel_assembly := Void
@@ -147,6 +148,7 @@ feature -- Basic Operations
 			index_path: STRING
 			path_to_remove: STRING
 			write_lock: SYSTEM_IO_FILESTREAM
+			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
 			notifier: ISE_REFLECTION_NOTIFIER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			retried: BOOLEAN
@@ -173,13 +175,15 @@ feature -- Basic Operations
 							last_removal_successful := False
 						else
 							write_lock.Close
+								-- Delete Write lock
+							file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))
 
 								-- Delete assembly folder.
 							dir.Delete_String_Boolean (assembly_path, True)
 
 								-- Remove assembly folder name from `index.xml'.
-							index_path := reflection_support.AssembliesFolderPath
-							index_path := index_path.Concat_String_String_String_String (index_path, "\", IndexFilename, XmlExtension)
+							index_path := reflection_support.Eiffeldeliverypath
+							index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
 							create xml_reader.make_xmltextreader_10 (index_path)
 								-- WhitespaceHandling = None
 							xml_reader.set_WhitespaceHandling (2)
@@ -229,12 +233,10 @@ feature -- Basic Operations
 							else
 								file.Delete (index_path)
 							end
-								-- Delete Write lock
-							file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))
 
 								-- Notify assembly removal
-							create notifier.make1
-							notifier.make
+							create notifier_handle.make1
+							notifier := notifier_handle.currentnotifier
 							notifier.NotifyRemove (a_descriptor)
 							last_removal_successful := True
 						end

@@ -182,6 +182,37 @@ feature -- Basic operations
 			end
 		end
 
+	finalize_names is
+			-- Remove name clashes in system.
+		require
+			complete: complete
+		local
+			i, local_counter: INTEGER
+			tmp_string: STRING
+		do
+			from
+				i := 1
+			variant
+				descriptors.count - i + 1
+			until
+				i > descriptors.count
+			loop
+				if descriptors.item (i) /= Void then
+					if system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) then
+						local_counter := counter
+						create tmp_string.make (0)
+						tmp_string.append_integer (local_counter)
+						descriptors.item (i).eiffel_class_name.append (tmp_string)
+						descriptors.item (i).c_header_file_name.insert (tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+						descriptors.item (i).c_type_name.append (tmp_string)
+						descriptors.item (i).name.append (tmp_string)
+					end
+					system_descriptor.eiffel_names.force (descriptors.item (i).eiffel_class_name)
+				end
+				i := i + 1
+			end
+		end
+
 	finalize_aliases is
 			-- Remove anonymous aliases.
 		require
@@ -331,6 +362,22 @@ feature -- Basic operations
 				end
 				i := i + 1
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	counter: INTEGER is
+			-- Counter
+		do
+			Result := counter_impl.item
+			counter_impl.set_item (Result + 1)
+		end
+
+	counter_impl: INTEGER_REF is
+			-- Global counter
+		once
+			create Result
+			Result.set_item (1)
 		end
 
 invariant

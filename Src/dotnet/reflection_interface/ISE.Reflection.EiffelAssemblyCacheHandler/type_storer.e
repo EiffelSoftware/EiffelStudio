@@ -100,6 +100,7 @@ feature -- Basic Operations
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
 				filename := reflection_support.XmlTypeFilename (eiffel_class.assemblydescriptor, eiffel_class.FullExternalName)
+				filename := filename.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
 				if overwrite or (not overwrite and not exists (filename)) then
 					create text_writer.make_xmltextwriter_1 (filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 

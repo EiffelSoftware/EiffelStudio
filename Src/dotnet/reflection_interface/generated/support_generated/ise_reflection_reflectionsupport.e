@@ -78,13 +78,6 @@ feature -- Basic Operations
 			"AssemblyDescriptionFilename"
 		end
 
-	AssembliesFolderRelativePath: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
-		alias
-			"AssembliesFolderRelativePath"
-		end
-
 	AssemblyFolderPathFromInfo (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
 		external
 			"IL signature (ISE.Reflection.AssemblyDescriptor): System.String use ISE.Reflection.ReflectionSupport"

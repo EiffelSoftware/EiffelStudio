@@ -94,6 +94,7 @@ feature -- Access
 			eiffel_cluster_path: STRING
 			emitter_version_number: STRING
 			type_filename: STRING
+			reflection_support: REFLECTION_SUPPORT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -155,12 +156,14 @@ feature -- Access
 
 				-- Add `types'.
 				if assembly_description.Name.Equals_String (xml_elements.Assembly_types_element) then
+					create reflection_support.make
 					assembly_description.ReadStartElement_String (xml_elements.Assembly_types_element)
 					from
 					until
 						not assembly_description.Name.Equals_String (xml_elements.Assembly_type_filename_element)
 					loop
 						type_filename := assembly_description.ReadElementString_String (xml_elements.Assembly_type_filename_element)
+						type_filename := type_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 						Result.AddType (eiffel_class_from_xml (type_filename))
 					end
 					assembly_description.ReadEndElement

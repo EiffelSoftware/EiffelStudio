@@ -152,7 +152,8 @@ feature -- Basic Operations
 			if not retried then
 				create reflection_support.make_reflectionsupport
 				reflection_support.make
-				assembly_path := reflection_support.AssemblyFolderPathFromInfo (a_descriptor)
+				assembly_path := reflection_support.Eiffeldeliverypath
+				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
 				if support.HasWriteLock (assembly_path) then
 					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
 					last_error := support.lasterror
@@ -317,7 +318,8 @@ feature {NONE} -- Implementation
 				end
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				assembly_folder_path := reflection_support.AssemblyFolderPathFromInfo (assembly_descriptor)
+				assembly_folder_path := reflection_support.Eiffeldeliverypath
+				assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (assembly_descriptor))
 
 					-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
 					-- Set `last_write_successful' and `last_error_info' if needed.
@@ -387,6 +389,7 @@ feature {NONE} -- Implementation
 			subset: STRING
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			index_path: STRING
+			relative_folder_path: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -399,7 +402,8 @@ feature {NONE} -- Implementation
 
 					-- Add `assembly_folder_path' to `index.xml' located in `$EIFFEL\dotnet\assemblies'.
 					-- Create `index.xml' if it doesn't already exist.
-				index_path := reflection_support.AssembliesFolderPath
+				index_path := reflection_support.Eiffeldeliverypath
+				index_path := index_path.concat_string_string (index_path, reflection_support.AssembliesFolderPath)
 				index_path := index_path.Concat_String_String_String_String (index_path, "\", IndexFilename, XmlExtension)
 				if file.Exists (index_path) then
 					create xml_reader.make_xmltextreader_10 (index_path)
@@ -416,8 +420,9 @@ feature {NONE} -- Implementation
 					end
 					xml_reader.ReadEndElement
 					xml_reader.Close
-					if not assembly_folders_list.Contains (assembly_folder_path) then
-						assembly_folder_name_added := assembly_folders_list.Add (assembly_folder_path)				
+					relative_folder_path := assembly_folder_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+					if not assembly_folders_list.Contains (relative_folder_path) then
+						assembly_folder_name_added := assembly_folders_list.Add (relative_folder_path)				
 						create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 							-- Set generation options
 							-- `1' for `Formatting.Indented'
@@ -461,7 +466,7 @@ feature {NONE} -- Implementation
 						-- <assemblies>
 					text_writer.writestartelement (AssembliesElement)			
 						-- <assembly_folder_name>
-					text_writer.writeelementstring (AssemblyFilenameElement, assembly_folder_path)
+					text_writer.writeelementstring (AssemblyFilenameElement, assembly_folder_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.EiffelKey))
 						-- </assemblies>
 					text_writer.WriteEndElement
 					text_writer.Close
@@ -500,6 +505,7 @@ feature {NONE} -- Implementation
 				reflection_support.Make
 
 				filename := reflection_support.XmlAssemblyFilename (assembly_descriptor)
+				filename := filename.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
 				create text_writer.make_xmltextwriter_1 (filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 					-- Set generation options
@@ -604,8 +610,9 @@ feature {NONE} -- Implementation
 			if not retried then
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				assembly_folder_path := reflection_support.AssemblyFolderPathFromInfo (an_assembly_descriptor)
-
+				assembly_folder_path := reflection_support.Eiffeldeliverypath
+				assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (an_assembly_descriptor))
+				
 					-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
 					-- Set `last_write_successful' and `last_error_info' if needed.
 				if dir.Exists (assembly_folder_path) then

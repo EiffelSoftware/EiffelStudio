@@ -13,17 +13,14 @@
 #include <stdio.h>
 #endif
 
-#ifdef EIF_OS2
-#include <stdlib.h>
-#include <types.h>
-#include <sys/socket.h>
-#include <io.h>
+#ifndef EIF_WIN32
+#include <sys/time.h>
 #endif
 
 #include <sys/types.h>
 
 #ifndef EIF_WIN32
-#include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #include <errno.h>

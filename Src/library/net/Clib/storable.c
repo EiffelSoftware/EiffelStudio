@@ -18,8 +18,9 @@
 #define GET_SOCKET_ERROR WSAGetLastError()
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #else
-#include <sys/types.h>		/* select */
 #include <sys/time.h>		/* select */
+#include <sys/types.h>		/* select */
+#include <unistd.h>
 #define SOCKET_ERROR -1
 #define GET_SOCKET_ERROR errno
 #endif

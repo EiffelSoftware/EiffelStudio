@@ -61,8 +61,8 @@ feature -- Status Report
 						end
 						if l_is_errornous then
 								-- Non-CLS compliant parameters or return type in CLS compliant method
-							io.put_string ("%NNon CLS compliant parameters or return type in CLS compliant member.%N")
-							io.put_string ("%Assembly:  ")
+							io.put_string ("%NNon CLS compliant parameters or return type in CLS compliant member.")
+							io.put_string ("%N%TAssembly:  ")
 							io.put_string (m.declaring_type.assembly.full_name)
 							io.put_string ("%N%TType: ")
 							io.put_string (m.declaring_type.full_name)
@@ -118,14 +118,14 @@ feature -- Status Report
 					-- check that field is fully cls compliant
 				Result := is_consumed_field_cls_compliant (f)
 				
-				if Result then
-					Result := f.is_literal implies is_valid_literal_field (f)
+				if Result and then f.is_literal then
+					Result := is_valid_literal_field (f)
 				end
 				debug ("log_illegal_non_cls_compliancy") 
 					if not Result then
 							-- Non-CLS compliant return type in CLS compliant field
-						io.put_string ("%NNon CLS compliant return type for CLS compliant field.%N")
-						io.put_string ("%Assembly:  ")
+						io.put_string ("%NNon CLS compliant return type for CLS compliant field.")
+						io.put_string ("%N%TAssembly:  ")
 						io.put_string (f.declaring_type.assembly.full_name)
 						io.put_string ("%N%TType: ")
 						io.put_string (f.declaring_type.full_name)
@@ -143,7 +143,7 @@ feature -- Status Report
 			f_not_void: f /= Void
 			f_is_literal: f.is_literal
 		do
-			Result := not f.declaring_type.is_enum implies f.get_value (Void) /= Void
+			Result := f.get_value (Void) /= Void
 		end
 		
 	is_consumed_field_cls_compliant (f: FIELD_INFO): BOOLEAN is
@@ -152,7 +152,7 @@ feature -- Status Report
 			f_not_void: f /= Void
 			f_is_cls_compliant: is_cls_compliant (f)
 		do
-			Result := is_cls_compliant (f) implies is_cls_compliant_type (f.field_type)
+			Result := is_cls_compliant (f) and then is_cls_compliant_type (f.field_type)
 		end
 		
 	is_cls_compliant_type (a_type: TYPE): BOOLEAN is

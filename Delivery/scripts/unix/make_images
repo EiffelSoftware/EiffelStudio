@@ -35,14 +35,14 @@ if [ ! -e cdrom ]; then
 	mkdir cdrom
 fi
 
-if [ ! -f Eiffel51_deliv.tgz ]; then
-	remtrace Saving empty delivery in Eiffel51_deliv.tgz
-	tar -c Eiffel51 | gzip -c > Eiffel51_deliv.tgz
+if [ ! -f Eiffel52_deliv.tgz ]; then
+	remtrace Saving empty delivery in Eiffel52_deliv.tgz
+	tar -c Eiffel52 | gzip -c > Eiffel52_deliv.tgz
 fi
 
-if [ ! -e Eiffel51 ]; then
+if [ ! -e Eiffel52 ]; then
 	remtrace Extracting current delivery
-	gunzip -c Eiffel51_deliv.tgz | tar -xf -
+	gunzip -c Eiffel52_deliv.tgz | tar -xf -
 fi
 
 
@@ -54,10 +54,10 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
 	remtrace Building Home CD image
-	mv Eiffel51 cdrom
-	cp cdrom/Eiffel51/INSTALL cdrom	
-	make_cd_image Eiffel51_free Eiffel51_free.iso cdrom
-	mv cdrom/Eiffel51 Eiffel51
+	mv Eiffel52 cdrom
+	cp cdrom/Eiffel52/INSTALL cdrom	
+	make_cd_image Eiffel52_free Eiffel52_free.iso cdrom
+	mv cdrom/Eiffel52 Eiffel52
 fi
 
 if [ -f build_deliv.tgz ]; then
@@ -73,7 +73,7 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
 remtrace Building Enterprise CD image
-mv Eiffel51 cdrom
-cp cdrom/Eiffel51/INSTALL cdrom	
-make_cd_image Eiffel51_enterprise Eiffel51_enterprise.iso cdrom
-mv cdrom/Eiffel51 Eiffel51
+mv Eiffel52 cdrom
+cp cdrom/Eiffel52/INSTALL cdrom	
+make_cd_image Eiffel52_enterprise Eiffel52_enterprise.iso cdrom
+mv cdrom/Eiffel52 Eiffel52

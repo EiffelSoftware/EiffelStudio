@@ -48,9 +48,9 @@ feature -- Status setting
 			main_widget.set_homogeneous (False)
 			!! b1.make_with_text (main_widget, "Button")
 			
-			!! pixmap.make_from_file (b1, the_parent.pixname("power_small"))
+			!! pixmap.make_from_file (the_parent.pixname("power_small"))
 			!! b2.make (main_widget)
-			!! pixmap.make_from_file (b2, the_parent.pixname("power_small"))
+			!! pixmap.make_from_file (the_parent.pixname("power_small"))
 			!! toggle_b.make_with_text (main_widget, "Toggle Button")
 			!! check_b.make_with_text (main_widget, "Check Button")
 

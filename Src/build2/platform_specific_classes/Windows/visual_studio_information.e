@@ -53,9 +53,6 @@ feature -- Access
 			-- as we are always on Windows.
 		require
 			visual_studio_wizard: is_visual_studio_wizard
-		local
-			visual_studio_information: VISUAL_STUDIO_INFORMATION
-			pixmap_file_location: FILE_NAME
 		once
 			create Result.make_from_string (wizard_installation_path)
 			Result := Result + "\Wizards\Build\bitmaps\ico"

@@ -394,7 +394,7 @@ feature -- Generic conformance
 			l_buffer.put_string ("int16 typarr [] = {")
 
 			l_buffer.put_integer (context.current_type.generated_id (context.final_mode))
-			l_buffer.put_string (", ")
+			l_buffer.put_character (',')
 
 			if use_init then
 				create idx_cnt

@@ -103,7 +103,7 @@ feature {NONE} -- Retrieval
 								argument_value := val.value
 								if 
 									not (argument_value.is_empty or else
-									argument_value.is_equal (no_arg_string) or else
+									argument_value.is_equal (No_argument_string) or else
 									argument_value.is_equal (" "))
 								then
 										-- Add argument to list.
@@ -133,14 +133,14 @@ feature {NONE} -- Retrieval
 			-- Retrieve and initialize the user specific arguments from 'arguments.wb'.
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			l_last_string, l_pnem_last_string: STRING
+			l_last_string: STRING
 		do	
 			user_arguments_list.wipe_out
 			user_combo.wipe_out
 			set_mode (User_mode)
 			create arguments_file.make (Arguments_file_name)
 			if not arguments_file.exists then
-				-- Create new arguments file.
+					-- Create new arguments file.
 				arguments_file.create_read_write
 			else
 				arguments_file.open_read
@@ -152,35 +152,32 @@ feature {NONE} -- Retrieval
 					arguments_file.end_of_file
 				loop
 					arguments_file.read_line
-					if l_last_string /= Void then
-						l_pnem_last_string := l_last_string
-					end
 					l_last_string := clone (arguments_file.last_string)
 					if 
 						l_last_string /= Void and 
 						not (l_last_string.is_empty or else
-							l_last_string.is_equal (no_arg_string) or else
+							l_last_string.is_equal (No_argument_string) or else
 							l_last_string.is_equal (" "))
 					then
+						if l_last_string.item (1) = '[' then
+							-- This is the saved argument so don't add it to the list here.
+							l_last_string.remove (1)
+							l_last_string.remove (l_last_string.count)
+							saved_argument := l_last_string
+							Current_selected_cmd_line_argument.put (saved_argument)
+						else
 							-- Add argument to list.
 						create l_row
 						user_arguments_list.extend (l_row)
 						l_row.put_front (clone (l_last_string))
 							-- Add argument to combo.
 						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (l_last_string)))
+						end
 					end
 				end
-				if not user_arguments_list.is_empty then
-					user_arguments_list.prune (user_arguments_list.last)
-					user_combo.prune (user_combo.last)
-				end
-				if l_pnem_last_string /= Void then
-					saved_argument := l_pnem_last_string
-					Current_selected_cmd_line_argument.put (saved_argument)
-				end
 			else
-				-- File was empty so it must have just been created.
-				saved_argument := No_arg_string
+					-- File was empty so it must have just been created.
+				saved_argument := No_argument_string
 			end
 			arguments_file.close
 		end
@@ -303,6 +300,9 @@ feature {NONE} -- Storage
 				arguments_file.wipe_out
 				arguments_file.open_write
 				arguments_file.start
+					-- Also save current argument here for retrieval in new execution of compiler.
+				arguments_file.putstring ("[" + clone (saved_argument) + "]")
+				arguments_file.new_line
 				user_arguments_list.start
 			until
 				user_arguments_list.after
@@ -312,9 +312,6 @@ feature {NONE} -- Storage
 				arguments_file.new_line
 				user_arguments_list.forth
 			end
-				-- Also save current argument here for retrieval in new execution of compiler.
-			arguments_file.putstring (clone (saved_argument))
-			arguments_file.new_line
 			arguments_file.close
 		end
 
@@ -536,7 +533,7 @@ feature -- Status Setting
 				-- Determine last argument run and set mode and argument to this.
 				-- If not use Ace mode as default.
 			
-			if saved_argument /= Void and not saved_argument.is_equal (No_arg_string) then
+			if saved_argument /= Void and not saved_argument.is_equal (No_argument_string) then
 				if ace_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (1))
 					set_mode (Ace_mode)
@@ -905,8 +902,6 @@ feature {NONE} -- Constants
 			
 	User_mode: INTEGER is 2
 			-- User mode constant.
-			
-	No_arg_string: STRING is "(No Argument)"
 
 invariant
 	parent_not_void: parent_window /= Void

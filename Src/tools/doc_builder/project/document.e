@@ -59,14 +59,13 @@ feature -- Creation
 		ensure
 			has_file: file /= Void
 		end		
-		
+			
 	initialize is
 			-- Initialization
-		do			
-			create observers.make (2)
+		do		
 			create schema_validator	
-			attach (Application_window)
-			attach (shared_web_browser)
+			attach (application_window)
+--			attach (shared_web_browser)
 		end
 
 feature -- Access	
@@ -204,9 +203,13 @@ feature -- GUI
 feature -- Query
 
 	is_modified: BOOLEAN is
-			-- Has current been modified since last save?	
+			-- Has current been modified since last save?
 		do
-			Result := not saved_text.is_equal (text)
+			if internal_widget /= Void then
+				Result := not saved_text.is_equal (internal_widget.internal_edit_widget.text)
+			else				
+				Result := not saved_text.is_equal (text)	
+			end
 		end
 		
 	do_update_link: BOOLEAN
@@ -310,6 +313,7 @@ feature {NONE} -- Implementation
 			end
 			write_to_disk
 			notify_observers
+			internal_xml := Void
 		end		
 
 	write_to_disk is
@@ -320,8 +324,10 @@ feature {NONE} -- Implementation
 			end
 			create file.make_open_write (name)
 			if file.is_open_write then
-					-- Add a new line character to end of all files
-				if text.item (text.count) /= '%N' then
+					-- Add a new line character to end of all files				
+				if text.is_empty then
+					text.append_character ('%N')
+				elseif text.item (text.count) /= '%N' then
 					text.append_character ('%N')
 				end
 				file.putstring (text)

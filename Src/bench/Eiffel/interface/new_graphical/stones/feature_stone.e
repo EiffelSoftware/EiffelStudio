@@ -85,6 +85,16 @@ feature -- Access
 			Result := e_feature.name
 		end
 
+	origin_name: STRING is
+			-- Name of the feature in its written class.
+		do
+			if e_feature.written_class.has_feature_table then
+				Result := e_feature.written_class.feature_with_body_index (e_feature.body_index).name
+			else
+				Result := e_feature.name
+			end
+		end
+
 	history_name: STRING is
 			-- Name used in the history list
 		do

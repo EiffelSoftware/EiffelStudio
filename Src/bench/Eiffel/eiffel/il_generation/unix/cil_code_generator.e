@@ -60,6 +60,11 @@ inherit
 			{NONE} all
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is

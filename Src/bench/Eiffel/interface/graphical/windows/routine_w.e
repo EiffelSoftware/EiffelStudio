@@ -182,9 +182,9 @@ feature -- Update
 					txt.extend (')')
 				end
 					-- syntax error occurred
+				text_window.set_cursor_position (syn_error.start_position)
 				text_window.highlight_selected (syn_error.start_position,
 									syn_error.end_position)
-				text_window.set_cursor_position (syn_error.start_position)
 				e_class.clear_syntax_error
 				warner (popup_parent).gotcha_call (txt)
 			else

@@ -38,6 +38,7 @@ typedef struct {
    argument tuple `args', open map `omap' and closed map `cmap'
 */
 RT_LNK EIF_REFERENCE rout_obj_create (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap, EIF_REFERENCE cmap);
+RT_LNK EIF_REFERENCE rout_obj_create2 (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER true_rout_disp, EIF_REFERENCE args, EIF_REFERENCE omap);
 
 /* Argument structure (alloc/free) */
 
@@ -56,6 +57,8 @@ RT_LNK void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNIO
 /* Macros */
 
 #define rout_obj_call_procedure(r,a) ((void(*)(char *, char *, EIF_ARG_UNION *))(r))(((EIF_ARG_UNION*)(a))[0].rarg, (char *)(((EIF_ARG_UNION*)(a))+1), (EIF_ARG_UNION *)0)
+
+#define rout_obj_call_agent(r,a, val) ((val(*)(EIF_TYPED_ELEMENT *))(r))((EIF_TYPED_ELEMENT *)(a))
 
 #define RBVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? EIF_FALSE : *((EIF_BOOLEAN *)v))
 #define RCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER) 0 : *((EIF_CHARACTER *)v))
@@ -92,6 +95,10 @@ RT_LNK void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNIO
 #define rout_putp(a,i,v) (((EIF_ARG_UNION *)(a))[i].parg = (v))
 #define rout_putr(a,i,v) (((EIF_ARG_UNION *)(a))[i].rarg = (EIF_REFERENCE) v)
 
+/* Copy TUPLE element s[j] into t[i] */
+#define rout_tuple_item_copy(t,i,s,j) \
+	(*((EIF_TYPED_ELEMENT *) (t) + i)).element = (*((EIF_TYPED_ELEMENT *) (s) + j)).element;\
+	if (eif_item_type(t,i) == 'r') RTAS(eif_reference_item(s,j), t);
 
 /***************************************/
 /* Macros used for tuple manipulations */

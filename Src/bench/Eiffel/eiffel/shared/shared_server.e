@@ -105,11 +105,4 @@ feature {NONE}
 			Result := System.Rep_depend_server;
 		end;
  
-	Poly_server: POLY_SERVER is
-			-- Server of polymorphic unit tables
-		once
-			io.error.putstring ("SHARED_SERVER:Poly_server ");
-			io.error.putstring ("Should not be used anymore%N")
-		end;
-
 end

@@ -56,7 +56,6 @@ feature -- Interface
 			attach_left (font_b, 1);
 			attach_right (font_b, 1);
 			attach_top (font_b, 1);
-			set_fraction_base (100);
 			font_text_form.attach_left_widget (font_stone, font_text, 1);
 			font_text_form.attach_top (font_stone, 1);
 			font_text_form.attach_left (font_stone, 1);
@@ -71,7 +70,7 @@ feature -- Interface
 			attach_bottom (reset_button, 10);
 			attach_right (reset_button, 10);
 			attach_bottom_widget (reset_button, separator, 5);
-			attach_left_position (reset_button, 9);
+			attach_left_position (reset_button, 52);
 			attach_right (reset_button, 10);
 
 			detach_top (reset_button);

@@ -57,19 +57,63 @@ feature -- Access code
 			-- Is current call based on an operator instead of a function
 			-- call?
 
+feature -- Status
+
+	valid_function_type (type: INTEGER): BOOLEAN is
+			-- Is `f' a valid function type supported by Current.
+		do
+			Result := type >= 1 and type <= 26
+		ensure
+			valid: Result implies (type >= 1 and type <= 26)
+		end
+
 feature -- IL code generation
 
-	generate_il (type: CL_TYPE_I) is
+	generate_il (type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			il_generation: System.il_generation
+			valid_function_type: valid_function_type (function_type)
 			type_not_void: type /= Void
 			is_basic_or_is_enum: type.is_basic or else type.is_enum
-			is_basic_implies_integer: type.is_basic implies type.is_long
+--			is_basic_implies_integer: type.is_basic implies type.is_long
+		local
+			f_type: INTEGER
 		do
-			inspect function_type
-			when bit_and_type..bit_test_type then
-				generate_il_operation_code (function_type)
+			f_type := function_type
+			inspect f_type
+			when bit_and_type..bit_shift_right_type then
+				if parameters /= Void then
+					parameters.generate_il
+				end
+				generate_il_operation_code (f_type)
+			when bit_test_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
+				end
+				il_generator.put_integer_32_constant (1)
+				parameters.i_th (1).generate_il
+				generate_il_operation_code (bit_shift_left_type)
+				generate_il_operation_code (bit_and_type)
+			when equal_type then
+				if parameters /= Void then
+					parameters.generate_il
+				end
+				il_generator.generate_binary_operator (il_eq)
+			when zero_type then
+				il_generator.put_default_value (type)
+			when one_type then
+				il_generator.put_integer_constant (type, 1)
+			when to_integer_8_type then
+				il_generator.convert_to_integer_8
+			when to_integer_16_type then
+				il_generator.convert_to_integer_16
+			when to_integer_32_type then
+				il_generator.convert_to_integer_32
+			when to_integer_64_type then
+				il_generator.convert_to_integer_64
+			else
 			end
 		end
 
@@ -79,6 +123,7 @@ feature -- Byte code special generation
 			-- Generate byte code sequence that will be used with basic types.
 		require
 			basic_type_not_void: basic_type /= Void
+			valid_function_type: valid_function_type (function_type)
 		do
 			inspect function_type
 			when equal_type then
@@ -127,6 +172,7 @@ feature -- C special code generation
 		require
 			valid_output_buffer: buffer /= Void
 			valid_target: target /= Void
+			valid_function_type: valid_function_type (function_type)
 		local
 			parameter: REGISTRABLE
 		do
@@ -300,7 +346,7 @@ feature {NONE} -- IL code generation
 			when bit_xor_type then
  				il_generator.generate_binary_operator (il_xor)
  			when bit_not_type then
-				il_generator.generate_binary_operator (il_not)
+				il_generator.generate_unary_operator (il_bitwise_not)
 			when bit_shift_left_type then
 				il_generator.generate_binary_operator (il_shl)
  			when bit_shift_right_type then

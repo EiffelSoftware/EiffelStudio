@@ -120,12 +120,16 @@ feature {NONE} -- Initialization
 			end		
 		end
 
-	deselect_callback (n: INTEGER; a_list_item: POINTER) is
+	deselect_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is deselected.
+		require
+			one_arg: n_args = 1
 		local
 			l_item: EV_LIST_ITEM_IMP
 		do
-			l_item ?= eif_object_from_c (a_list_item)
+		 	l_item ?= eif_object_from_c (
+				gtk_value_pointer (args)
+			)
 			l_item.interface.deselect_actions.call ([])
 			interface.deselect_actions.call ([l_item.interface])
 			previous_selected_item := Void
@@ -252,6 +256,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/12 18:48:28  oconnor
+--| fixed interpretation of Gdk event data in deselect_callback
+--|
 --| Revision 1.39  2000/04/06 22:21:47  brendel
 --| Added list_widget. Removed invariant since it is now in
 --| EV_DYNAMIC_LIST_IMP.

@@ -13,20 +13,20 @@ inherit
 			{ANY} is_ok
 			{ANY} is_connected
 		undefine
-			is_equal, out, copy, consistent, setup
+			is_equal, out, copy
 
 		end
 
 	DB_EXEC_USE
 		undefine
-			is_equal, out, copy, consistent, setup
+			is_equal, out, copy
 		end 
 
 	SQL_SCAN
 
 	HANDLE_SPEC [G]
 		undefine
-			is_equal, out, copy, consistent, setup
+			is_equal, out, copy
 		end
 
 create -- Creation procedure

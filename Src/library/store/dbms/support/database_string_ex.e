@@ -12,7 +12,7 @@ inherit
 
 	HANDLE_SPEC [G]
 		undefine
-			is_equal, out, copy, consistent, setup
+			is_equal, out, copy
 		end
 
 create -- Creation procedure

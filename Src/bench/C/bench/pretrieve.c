@@ -17,6 +17,10 @@
 #include "retrieve.h"
 #include "store.h"
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 extern void esys();
 extern void allocate_gen_buffer();
 

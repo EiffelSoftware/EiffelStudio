@@ -1,0 +1,89 @@
+<HTML>
+
+<HEAD>
+<META HTTP-EQUIV="Content-Language" CONTENT="en-us">
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 5.0">
+<META NAME="ProgId" CONTENT="FrontPage.Editor.Document">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<LINK REL="StyleSheet" HREF="../../../default.css">
+<TITLE>Code behind example</TITLE>
+</HEAD>
+
+<BODY>
+
+<H1>Code behind example</H1>
+<P>This example shows you how to use the code behind mechanism. It is the same program than the
+<A HREF="click_event.html">Event click example</A> simply using the code behind mechanism.</P>
+<P>Here we have an ASP page written in C# that references some code behind written in Eiffel. The
+code behind display or erase the message &quot;Hello world!&quot; in the label `my_lbl' when the button is
+clicked.</P>
+<P CLASS="warning"><B>Note</B>: Within an ASP page written in Eiffel, it is not possible to write
+any code behind also written in Eiffel.</P>
+<P>&nbsp;</P>
+<H2>C# ASP. NET page using Eiffel code behind:</H2>
+<PRE>&lt;%@ Page <B>Language=&quot;C#&quot;</B> inherits=&quot;<SPAN CLASS="eClass">BUTTON_EVENT</SPAN>&quot; Src=<SPAN CLASS="eString">&quot;button_event_code\button_event.e&quot;</SPAN> %&gt;
+&lt;html&gt;
+    &lt;body&gt;
+	&lt;form runat=server&gt;
+	    &lt;asp:Button id=Button1 text=&quot;Click me&quot; OnClick=<B><SPAN CLASS="eString">&quot;button_click&quot;</SPAN></B>; runat=server /&gt;
+	    &lt;br&gt;
+	    &lt;asp:Label runat=server text=&quot;&quot; id=my_lbl /&gt;
+	&lt;/form runat=server&gt;
+    &lt;/body&gt;
+&lt;html&gt;&gt;</PRE>
+<P>&nbsp;</P>
+<H2>Eiffel code behind class:</H2>
+<P>There are some rules you must follow in order to write a code behind class:</P>
+<UL>
+	<LI>&nbsp;&nbsp;&nbsp; Your class has to inherit <SPAN CLASS="eClass">WEB_PAGE</SPAN> and
+	<SPAN CLASS="eClass">ANY</SPAN>&nbsp;&nbsp; </LI>
+	<LI>&nbsp;&nbsp;&nbsp; Your class should declare public instance (export {ANY}) of ASP. NET
+	server controls that are on the web page, using the same name for the variable the web control
+	has.</LI>
+</UL>
+<PRE><SPAN CLASS="eKeyword">indexing</SPAN>
+	<SPAN CLASS="eKeyword">description</SPAN>: <SPAN CLASS="eString">&quot;Code behind class of page code_behind.aspx&quot;</SPAN>
+
+<SPAN CLASS="eKeyword">class</SPAN>
+	<SPAN CLASS="eClass">BUTTON_EVENT</SPAN>
+
+<SPAN CLASS="eKeyword">inherit</SPAN>
+	<SPAN CLASS="eClass">WEB_PAGE</SPAN>
+		<SPAN CLASS="eKeyword">undefine</SPAN>
+			<SPAN CLASS="eFeature">finalize,
+			get_hash_code,
+			equals,
+			to_string</SPAN>
+		<SPAN CLASS="eKeyword">end</SPAN>
+	<SPAN CLASS="eClass">ANY</SPAN>
+
+<SPAN CLASS="eKeyword">feature</SPAN> <SPAN CLASS="eComment">-- Access</SPAN>
+
+	<SPAN CLASS="eFeature">my_lbl</SPAN>: <SPAN CLASS="eClass">WEB_LABEL</SPAN>
+			<SPAN CLASS="eComment">-- Label to display message when button is clicked.</SPAN>
+
+<SPAN CLASS="eKeyword">feature</SPAN> <SPAN CLASS="eComment">-- Basic Operation</SPAN>
+
+	<SPAN CLASS="eFeature">button_click</SPAN> (source: <SPAN CLASS="eClass">SYSTEM_OBJECT</SPAN>; e: <SPAN CLASS="eClass">EVENT_ARGS</SPAN>) <SPAN CLASS="eKeyword">is</SPAN>
+			<SPAN CLASS="eComment">-- Action performed on button click</SPAN>
+		<SPAN CLASS="eKeyword">do</SPAN>
+			<SPAN CLASS="eKeyword">if</SPAN> <SPAN CLASS="eFeature">my_lbl.text.length</SPAN> = 0 <SPAN CLASS="eKeyword">then</SPAN>
+				<SPAN CLASS="eFeature">my_lbl.set_text</SPAN> ((<SPAN CLASS="eString">&quot;Hello world!&quot;</SPAN>).<SPAN CLASS="eFeature">to_cil</SPAN>)
+			<SPAN CLASS="eKeyword">else</SPAN>
+				<SPAN CLASS="eFeature">my_lbl.set_text</SPAN> ((<SPAN CLASS="eString">&quot;&quot;</SPAN>).<SPAN CLASS="eFeature">to_cil</SPAN>)
+			<SPAN CLASS="eKeyword">end</SPAN>
+		<SPAN CLASS="eKeyword">end</SPAN>
+
+<SPAN CLASS="eKeyword">end</SPAN> <SPAN CLASS="eComment">-- Class BUTTON_EVENT</SPAN>
+</PRE>
+<P>&nbsp;</P>
+<P>Here is the output after one click on the button:</P>
+<P ALIGN="center">&nbsp;</P>
+<P ALIGN="center"><IMG BORDER="0" SRC="../../../images/asp.net/event_example_output.png" WIDTH="531" HEIGHT="196"></P>
+<P ALIGN="left">&nbsp;</P>
+<P ALIGN="center"><A HREF="http://localhost/eiffel_samples/code_behind.aspx">[run the example]</A></P>
+</SPAN></SPAN>
+
+</BODY>
+
+</HTML>

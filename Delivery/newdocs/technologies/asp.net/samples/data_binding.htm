@@ -1,0 +1,87 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<LINK REL=StyleSheet HREF="../../../default.css">
+<title>Data Binding</title>
+</head>
+
+<body>
+
+<h1>Data Binding example</h1>
+<p>This example shows you how to use data binding with Eiffel.</p>
+
+        <blockquote>
+
+<pre>&lt;html&gt;
+&lt;head&gt;
+
+&lt;script language=&quot;Eiffel&quot; runat=&quot;server&quot;&gt;
+
+    page_load (sender: SYSTEM_OBJECT; e: EVENT_ARGS) is
+	    -- feature performed on page load.
+	require
+	    non_void_sender: sender /= Void
+	    non_void_e: e /= Void
+	local
+	    h: HASHTABLE
+	do
+	    if not page.is_post_back then
+		create h.make
+		h.add ((&quot;key1&quot;).to_cil, (&quot;value1&quot;).to_cil)
+		h.add ((&quot;key2&quot;).to_cil, (&quot;value2&quot;).to_cil)
+		h.add ((&quot;key3&quot;).to_cil, (&quot;value3&quot;).to_cil)
+
+		my_data_list.set_data_source (h)
+		my_data_list.data_bind
+	    end
+	end
+
+    data_item (container: WEB_DATA_LIST_ITEM): DICTIONARY_ENTRY is
+	    -- Retrieve container.data_item.
+	require
+	    non_void_container: container /= Void
+	do
+	    Result ?= container.data_item
+	ensure
+	    non_void_result: Result /= Void
+	end
+&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+   &lt;h3&gt;&lt;font face=&quot;Verdana&quot;&gt;DataBinding to a Hashtable&lt;/font&gt;&lt;/h3&gt;
+   &lt;form runat=server&gt;
+	&lt;asp:DataList id=&quot;my_data_list&quot; runat=&quot;server&quot;
+		BorderColor=&quot;black&quot;
+		BorderWidth=&quot;1&quot;
+		GridLines=&quot;Both&quot;
+		CellPadding=&quot;4&quot;
+		CellSpacing=&quot;0&quot; &gt;
+	    &lt;ItemTemplate&gt;
+		&lt;%# (data_item (container)).key %&gt; :
+		&lt;%# (data_item (container)).value %&gt;
+	    &lt;/ItemTemplate&gt;
+
+	&lt;/asp:DataList&gt;
+    &lt;/form&gt;
+
+&lt;/body&gt;</pre>
+
+        </blockquote>
+
+<p>Here is the output: </p>
+
+<p>&nbsp;</p>
+
+<p align="center">
+<img border="0" src="../../../images/asp.net/data_binding_5.png" width="527" height="265"></p>
+
+<p align="center"><a href="http://localhost/eiffel_samples/binding_5.aspx">[run the
+example]</a></p>
+
+</body>
+
+</html>

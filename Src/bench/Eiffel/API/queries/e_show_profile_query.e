@@ -33,7 +33,7 @@ feature -- Initialization
 		do
 			structured_text := new_st;
 			prof_query := profiler_query;
-			prof_options := profiler_options;
+			prof_options := clone (profiler_options);
 			!! expanded_filenames.make
 		end;
 
@@ -185,7 +185,7 @@ debug("SHOW_PROF_QUERY")
 	io.error.new_line;
 end;
 			until
-				i >= prof_options.filenames.upper
+				i > prof_options.filenames.upper
 			loop
 				name := prof_options.filenames.item (i);
 				if has_wildcards(name) then
@@ -701,13 +701,10 @@ end;
 					structured_text.add_string (item.self_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("descendants") then
 					structured_text.add_string (item.descendants_sec.out);
-					-- structured_text.add_indent
-					--| Guillaume - 09/18/07
 				elseif prof_options.output_names.item (i).is_equal ("total") then
 					structured_text.add_string (item.total_sec.out)
 				elseif prof_options.output_names.item (i).is_equal ("percentage") then
 					structured_text.add_string (item.percentage.out);
-					structured_text.add_indent
 				end
 				structured_text.add_indent
 				i := i + 1

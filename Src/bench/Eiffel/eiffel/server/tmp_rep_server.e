@@ -11,12 +11,12 @@ inherit
 			make as basic_make,
 			put as old_put
 		redefine
-			make_index, init_file
+			make_index, need_index, init_file
 		end;
 
 	COMPILER_SERVER [REP_FEATURES, CLASS_ID]
 		redefine
-			put, make_index, make, init_file
+			put, make_index, need_index, make, init_file
 		select
 			put, make
 		end
@@ -96,6 +96,12 @@ feature
 				index.force (read_info, feat.id);
 			end;
 		end;
+
+	need_index (obj: ANY): BOOLEAN is
+			-- Is an index needed for `obj'?
+		do
+			Result := True
+		end
 
 	clear_index is
 		do

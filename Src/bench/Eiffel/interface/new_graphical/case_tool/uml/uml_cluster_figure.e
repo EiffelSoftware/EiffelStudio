@@ -34,6 +34,11 @@ inherit
 			default_create
 		end
 		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model
 		
@@ -60,7 +65,7 @@ feature {NONE} -- Initialization
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
 			
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			is_shown := True
 		end

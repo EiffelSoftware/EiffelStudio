@@ -23,17 +23,15 @@ inherit
 			default_create
 		end
 		
-	RESOURCE_OBSERVATION_MANAGER
+	OBSERVER
 		rename
-			initialize as initialize_resources
+			update as retrieve_preferences
 		undefine
 			default_create,
 			copy
 		end
 		
-	OBSERVER
-		rename
-			update as retrieve_preferences
+	EB_SHARED_PREFERENCES
 		undefine
 			default_create,
 			copy
@@ -62,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MODEL_WORLD_CELL}
 			drawing_area.set_pointer_style (cursors.open_hand_cursor)
-			add_observer ("diagram_auto_scroll_speed", Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 		end
 
@@ -181,7 +179,7 @@ feature {NONE} -- Implementation
 		local
 			val: INTEGER
 		do
-			val := integer_resource_value ("diagram_auto_scroll_speed", 50)
+			val := preferences.diagram_tool_data.diagram_auto_scroll_speed
 			val := val.min(100).max(0)
 			scroll_speed := val / 100
 		end

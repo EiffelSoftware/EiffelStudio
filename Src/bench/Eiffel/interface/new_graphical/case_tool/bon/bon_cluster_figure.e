@@ -50,6 +50,11 @@ inherit
 			default_create
 		end
 		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model
 		
@@ -93,7 +98,7 @@ feature {NONE} -- Initialization
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
 			
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			
 			name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)		
@@ -293,7 +298,7 @@ feature -- Element change
 			Precursor {EIFFEL_CLUSTER_FIGURE}
 			label_move_handle.pointer_double_press_actions.prune_all (agent on_label_double_press)
 			polyline_label_recycle
-			diagram_preferences.remove_observer (Current)
+			preferences.diagram_tool_data.remove_observer (Current)
 		end
 
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is

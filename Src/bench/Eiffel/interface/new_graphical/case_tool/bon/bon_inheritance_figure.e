@@ -30,6 +30,12 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model,
 	default_create
@@ -44,7 +50,7 @@ feature {NONE} -- Initialization
 			is_high_quality := True
 			initialize
 
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			
 			retrieve_preferences
 			
@@ -100,7 +106,7 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE}
-			diagram_preferences.remove_observer (Current)
+			preferences.diagram_tool_data.remove_observer (Current)
 		end
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update

@@ -48,7 +48,8 @@ public char **melt;						/* Byte code array */
 public struct eif_opt *eoption;			/* Option table */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
-#define exvec() exft()					/* No stack dump in final mode */
+/*#define exvec() exft()					/* No stack dump in final mode */
+#define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
 private void failure();					/* The Eiffel exectution failed */

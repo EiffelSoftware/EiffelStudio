@@ -19,7 +19,7 @@ inherit
 feature {LACE_AST_FACTORY} -- Initialization
 
 	initialize (cn: like cluster_name; pn: like parent_name;
-		dn: like directory_name; cp: like cluster_properties) is
+		dn: like directory_name; cp: like cluster_properties; is_recursive: BOOLEAN) is
 			-- Create a new CLUSTER AST node.
 		require
 			cn_not_void: cn /= Void
@@ -33,6 +33,7 @@ feature {LACE_AST_FACTORY} -- Initialization
 			end
 			directory_name := dn
 			cluster_properties := cp
+			process_subclusters := is_recursive
 		ensure
 			cluster_name_set: cluster_name = cn
 			parent_name_set: parent_name = pn
@@ -53,6 +54,11 @@ feature {NONE} -- Initialization
 			if parent_name /= Void then
 				parent_name.to_lower
 			end
+
+			-- NOTE: Here is the place to set the
+			--       attribute `process_subclusters'
+			--       to True, iff 'ALL' was specified.
+			-- FIXME: Not implemented in the C parser
 		ensure then
 			directory_name_exists: directory_name /= Void;
 			cluster_name_exists: cluster_name /= Void;
@@ -71,6 +77,9 @@ feature -- Properties
 
 	parent_name: ID_SD;
 			-- Name of the parent cluster
+
+	process_subclusters: BOOLEAN
+			-- Must subclusters be processed (keyword `all')?
 
 feature {COMPILER_EXPORTER} -- Lace recompilation
 
@@ -172,13 +181,17 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 					-- New cluster
 				!!cluster.make (directory_name);
 				cluster.set_cluster_name (cluster_name);
+				cluster.set_is_recursive (process_subclusters)
 				Universe.insert_cluster (cluster);
 debug ("REMOVE_CLASS")
 	io.error.putstring ("CLUSTER_SD calling fill%N");
 end;
 				cluster.fill (exclude_list, include_list);
 			else
-				cluster := old_cluster.new_cluster (cluster_name, exclude_list, include_list);
+				cluster := old_cluster.new_cluster (cluster_name, 
+													exclude_list, 
+													include_list,
+													process_subclusters);
 			end;
 			check
 				cluster_exists: cluster /= Void

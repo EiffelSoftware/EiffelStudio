@@ -151,14 +151,14 @@ feature -- Access
 			renamings_set: Result.renamings = r
 		end
 
-	new_cluster_sd (cn, pn, dn: ID_SD; cp: CLUST_PROP_SD): CLUSTER_SD is
+	new_cluster_sd (cn, pn, dn: ID_SD; cp: CLUST_PROP_SD; is_recursive: BOOLEAN): CLUSTER_SD is
 			-- New CLUSTER AST node
 		require
 			cn_not_void: cn /= Void
 			dn_not_void: dn /= Void
 		do
 			!! Result
-			Result.initialize (cn, pn, dn, cp)
+			Result.initialize (cn, pn, dn, cp, is_recursive)
 		ensure
 			cluster_sd_not_void: Result /= Void
 			cluster_name_set: Result.cluster_name = cn

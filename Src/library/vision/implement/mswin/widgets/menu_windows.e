@@ -2,7 +2,7 @@ indexing
 	description: "Menus with a windows implementation";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision$"
+	revision: "$Revision$" 
 
 class
 	MENU_WINDOWS
@@ -76,17 +76,29 @@ feature -- Status setting
 			-- otherwise.
 		local
 			m: MENU_WINDOWS
+			opw: OPTION_PULL_WINDOWS
 		do
 			if realized then
 				if parent /= Void and parent.realized and then parent.exists then
-					if not managed and then flag then
-						managed := flag
-						m ?= parent
-						m.manage_item (Current)
-					elseif managed and then not flag then
-						managed := flag
-						m ?= parent
-						m.unmanage_item (Current)
+					managed := flag
+					m ?= parent
+					opw ?= parent
+						-- The `parent' can be a descendant of `MENU_WINDOWS', but
+						-- also a `OPTION_PULL_WINDOWS', and there is no inheritance
+						-- relationship when these lines are written. So we use the
+						-- following workaround.
+					if m /= Void then
+						if not managed and then flag then
+							m.manage_item (Current)
+						elseif managed and then not flag then
+							m.unmanage_item (Current)
+						end
+					elseif opw /= Void then
+						if not managed and then flag then
+							opw.manage_item (Current)
+						elseif managed and then not flag then
+							opw.unmanage_item (Current)
+						end
 					end
 				end
 				managed := flag
@@ -340,7 +352,10 @@ feature -- Element change
 				if b.parent.managed then
 					delete_item (id_children.item (b))
 				end
-				associated_root.remove (id_children.item (b))
+					-- Guillaume
+				if associated_root /= Void then
+					associated_root.remove (id_children.item (b))
+				end
 				id_children.remove (b)
 				pb ?= b
 				if pb /= Void then

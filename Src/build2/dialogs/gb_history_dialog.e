@@ -49,6 +49,7 @@ feature -- Initialization
 			set_default_size_for_button (close_button)
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
+			close_button.select_actions.extend (agent hide)
 			set_minimum_size (250, 250)
 		end
 		

@@ -25,6 +25,12 @@ feature -- Access
 
 feature -- Start output features
 
+	put_new_compilation is
+			-- A new compilation has begun.
+		do
+			
+		end
+
 	put_start_degree_6 (total_nbr: INTEGER) is
 			-- Put message indicating the start of degree six
 			-- with `total_nbr' passes to be done.

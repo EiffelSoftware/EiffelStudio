@@ -459,6 +459,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
+			degree_output.put_new_compilation
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.set_item (True)
 				Workbench.recompile

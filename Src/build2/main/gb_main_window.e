@@ -12,7 +12,8 @@ inherit
 	EV_TITLED_WINDOW
 		export
 			{NONE} all
-			{ANY} is_empty, is_show_requested, show, hide, accelerators
+			{ANY} is_empty, is_show_requested, show, hide, accelerators,
+				item
 		undefine
 			is_in_default_state
 		redefine
@@ -56,6 +57,7 @@ inherit
 	GB_SHARED_SYSTEM_STATUS
 		export
 			{NONE} all
+			{ANY} system_status
 		undefine
 			default_create, copy, is_equal
 		end

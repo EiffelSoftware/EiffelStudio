@@ -22,6 +22,7 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+			{ANY} item_string
 		end
 		
 	GB_FILE_CONSTANTS

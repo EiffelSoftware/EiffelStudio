@@ -11,7 +11,8 @@ inherit
 	EV_TREE
 		export
 			{NONE} all
-			{ANY} first, parent
+			{ANY} first, parent, is_destroyed, is_displayed,
+				has_recursively
 		undefine
 			is_in_default_state
 		redefine

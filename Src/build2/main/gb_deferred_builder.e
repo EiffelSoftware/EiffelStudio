@@ -67,7 +67,7 @@ feature {GB_EV_ANY} -- Basic operation
 			all_element_extended: all_element.has (element) and (all_element.count = old all_element.count + 1)
 		end
 	
-feature {GB_COMPONENT} -- Implementation
+feature {GB_COMPONENT, GB_XML_LOAD} -- Implementation
 
 	all_gb_ev: ARRAYED_LIST [GB_EV_ANY]
 		-- All instances of `gb_ev_any' which have been set as

@@ -40,9 +40,9 @@ feature -- Access
 			when double_code then Result := eif_double_item ($Current, index)
 			when real_code then Result := eif_real_item ($Current, index)
 			when pointer_code then Result := eif_pointer_item ($Current, index)
-			when integer_code then Result := eif_integer_32_item ($Current, index)
 			when integer_8_code then Result := eif_integer_8_item ($Current, index)
 			when integer_16_code then Result := eif_integer_16_item ($Current, index)
+			when integer_32_code then Result := eif_integer_32_item ($Current, index)
 			when integer_64_code then Result := eif_integer_64_item ($Current, index)
 			when Reference_code then Result := eif_reference_item ($Current, index)
 			end
@@ -193,9 +193,9 @@ feature -- Status report
 				when double_code then l_hash := eif_double_item ($Current, i).hash_code
 				when real_code then l_hash := eif_real_item ($Current, i).hash_code
 				when pointer_code then l_hash := eif_pointer_item ($Current, i).hash_code
-				when integer_code then l_hash := eif_integer_32_item ($Current, i).hash_code
 				when integer_8_code then l_hash := eif_integer_8_item ($Current, i).hash_code
 				when integer_16_code then l_hash := eif_integer_16_item ($Current, i).hash_code
+				when integer_32_code then l_hash := eif_integer_32_item ($Current, i).hash_code
 				when integer_64_code then l_hash := eif_integer_64_item ($Current, i).hash_code
 				when reference_code then
 					l_key ?= eif_reference_item ($Current, i) 
@@ -246,9 +246,9 @@ feature -- Status report
 				when double_code then l_d ?= v; Result := l_d /= Void
 				when real_code then l_r ?= v; Result := l_r /= Void
 				when pointer_code then l_p ?= v; Result := l_p /= Void
-				when integer_code then l_i ?= v; Result := l_i /= Void
 				when integer_8_code then l_i8 ?= v; Result := l_i8 /= Void
 				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
+				when integer_32_code then l_i ?= v; Result := l_i /= Void
 				when integer_64_code then l_i64 ?= v; Result := l_i64 /= Void
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
@@ -299,9 +299,9 @@ feature -- Element change
 			when double_code then eif_put_double_item_with_object ($Current, index, $v)
 			when real_code then eif_put_real_item_with_object ($Current, index, $v)
 			when pointer_code then eif_put_pointer_item_with_object ($Current, index, $v)
-			when integer_code then eif_put_integer_32_item_with_object ($Current, index, $v)
 			when integer_8_code then eif_put_integer_8_item_with_object ($Current, index, $v)
 			when integer_16_code then eif_put_integer_16_item_with_object ($Current, index, $v)
+			when integer_32_code then eif_put_integer_32_item_with_object ($Current, index, $v)
 			when integer_64_code then eif_put_integer_64_item_with_object ($Current, index, $v)
 			when Reference_code then eif_put_reference_item_with_object ($Current, index, $v)
 			end
@@ -461,7 +461,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_item_type ($Current, index) = integer_code)
+			Result := (eif_item_type ($Current, index) = integer_32_code)
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN is
@@ -501,10 +501,10 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		local
-			tcode: CHARACTER
+			tcode: INTEGER_8
 		do
 			tcode := eif_item_type ($Current, index)
-			Result := (tcode = integer_code) or else
+			Result := (tcode = integer_32_code) or else
 					 (tcode = real_code) or else
 					 (tcode = double_code)
 		end
@@ -568,7 +568,7 @@ feature -- Type queries
 	is_uniform_integer, is_uniform_integer_32: BOOLEAN is
 			-- Are all items of type INTEGER?
 		do
-			Result := is_tuple_uniform (integer_code)
+			Result := is_tuple_uniform (integer_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -611,7 +611,7 @@ feature -- Type conversion queries
 			-- Is current convertible to an array of doubles?
 		local
 			i, cnt: INTEGER
-			tcode: CHARACTER
+			tcode: INTEGER_8
 		do
 			Result := True
 			from
@@ -621,7 +621,7 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_item_type ($Current, i)
-				Result := (tcode = integer_code) or else 
+				Result := (tcode = integer_32_code) or else 
 						 (tcode = real_code) or else 
 						 (tcode = double_code)
 				i := i + 1
@@ -634,7 +634,7 @@ feature -- Type conversion queries
 			-- Is current convertible to an array of reals?
 		local
 			i, cnt: INTEGER
-			tcode: CHARACTER
+			tcode: INTEGER_8
 		do
 			Result := True
 			from
@@ -644,7 +644,7 @@ feature -- Type conversion queries
 				i > cnt or else not Result
 			loop
 				tcode := eif_item_type ($Current, i)
-				Result := (tcode = integer_code) or else (tcode = real_code)
+				Result := (tcode = integer_32_code) or else (tcode = real_code)
 				i := i + 1
 			end
 		ensure
@@ -872,7 +872,7 @@ feature -- Retrieval
 		
 feature {ROUTINE}
 
-	arg_item_code (index: INTEGER): CHARACTER is
+	arg_item_code (index: INTEGER): INTEGER_8 is
 			-- Type code of item at `index'. Used for
 			-- argument processing in ROUTINE
 		require
@@ -881,31 +881,32 @@ feature {ROUTINE}
 			Result := eif_item_type ($Current, index)
 		end
 
+feature {ROUTINE} -- Internal constant code
+
+	reference_code: INTEGER_8 is 0x00
+	boolean_code: INTEGER_8 is 0x01
+	character_code: INTEGER_8 is 0x02
+	double_code: INTEGER_8 is 0x03
+	real_code: INTEGER_8 is 0x04
+	pointer_code: INTEGER_8 is 0x05
+	integer_8_code: INTEGER_8 is 0x06
+	integer_16_code: INTEGER_8 is 0x07
+	integer_32_code: INTEGER_8 is 0x08
+	integer_64_code: INTEGER_8 is 0x09
+	wide_character_code: INTEGER_8 is 0x0E
+	any_code: INTEGER_8 is 0xFF
+			-- Code used to identify type in TUPLE.
+
 feature {NONE} -- Implementation
 
 	area_name: STRING is "area"
 			-- Name of attributes where TUPLE elements were stored.
 
-	boolean_code: CHARACTER is 'b'
-	character_code: CHARACTER is 'c'
-	wide_character_code: CHARACTER is 'u'
-	double_code: CHARACTER is 'd'
-	real_code: CHARACTER is 'f'
-	integer_code: CHARACTER is 'i'
-	integer_32_code: CHARACTER is 'i'
-	pointer_code: CHARACTER is 'p'
-	reference_code: CHARACTER is 'r'
-	integer_8_code: CHARACTER is 'j'
-	integer_16_code: CHARACTER  is 'k'
-	integer_64_code: CHARACTER is 'l'
-	any_code: CHARACTER is '?'
-			-- Code used to identify type in TUPLE.
-
-	is_tuple_uniform (code: CHARACTER): BOOLEAN is
+	is_tuple_uniform (code: INTEGER_8): BOOLEAN is
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
-			l_code: CHARACTER
+			l_code: INTEGER_8
 		do
 			Result := True
 			if count > 0 then
@@ -937,7 +938,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals: Access
 
-	eif_item_type (obj: POINTER; pos: INTEGER): CHARACTER is
+	eif_item_type (obj: POINTER; pos: INTEGER): INTEGER_8 is
 			-- Code for generic parameter `pos' in `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""

@@ -116,8 +116,8 @@ feature -- Status report
 			i: INTEGER
 			mismatch: BOOLEAN
 			arg: ANY
-			arg_type_code: CHARACTER
-			open_arg_type_code: CHARACTER
+			arg_type_code: INTEGER_8
+			open_arg_type_code: INTEGER
 			a_boolean_ref: BOOLEAN_REF
 			a_character_ref: CHARACTER_REF
 			a_double_ref: DOUBLE_REF
@@ -144,45 +144,45 @@ feature -- Status report
 				loop
 					arg := args.item (i)
 					arg_type_code := args.arg_item_code (i)
-					open_arg_type_code := open_type_codes.item (i + 1)
-					if arg_type_code = eif_reference_code then				
+					open_arg_type_code := open_type_codes.item (i + 1).code
+					if arg_type_code = feature {TUPLE}.reference_code then				
 						inspect	open_arg_type_code
-						when eif_boolean_code then
+						when feature {TUPLE}.boolean_code then
 							a_boolean_ref ?= arg
 							mismatch := a_boolean_ref = Void
-						when eif_character_code then
+						when feature {TUPLE}.character_code then
 							a_character_ref ?= arg
 							mismatch := a_character_ref = Void
-						when eif_double_code then
+						when feature {TUPLE}.double_code then
 							a_double_ref ?= arg
 							mismatch := a_double_ref = Void
-						when eif_integer_64_code then
+						when feature {TUPLE}.integer_64_code then
 							an_integer_64_ref ?= arg
 							an_integer_ref ?= arg
 							an_integer_16_ref ?= arg
 							an_integer_8_ref ?= arg
 							mismatch := an_integer_64_ref = Void and then an_integer_ref = Void
 								and then an_integer_16_ref = Void and then an_integer_8_ref = Void
-						when eif_integer_code then
+						when feature {TUPLE}.integer_32_code then
 							an_integer_ref ?= arg
 							an_integer_16_ref ?= arg
 							an_integer_8_ref ?= arg
 							mismatch := an_integer_ref = Void and then
 								an_integer_16_ref = Void and then an_integer_8_ref = Void
-						when eif_integer_16_code then
+						when feature {TUPLE}.integer_16_code then
 							an_integer_16_ref ?= arg
 							an_integer_8_ref ?= arg
 							mismatch := an_integer_16_ref = Void and then an_integer_8_ref = Void
-						when eif_integer_8_code then
+						when feature {TUPLE}.integer_8_code then
 							an_integer_8_ref ?= arg
 							mismatch := an_integer_8_ref = Void
-						when eif_pointer_code then
+						when feature {TUPLE}.pointer_code then
 							a_pointer_ref ?= arg
 							mismatch := a_pointer_ref = Void
-						when eif_real_code then
+						when feature {TUPLE}.real_code then
 							a_real_ref ?= arg
 							mismatch := a_real_ref = Void
-						when eif_reference_code then
+						when feature {TUPLE}.reference_code then
 							if arg /= Void and then not eif_gen_conf (
 								int.dynamic_type (arg),
 								open_operand_type (i))
@@ -197,21 +197,24 @@ feature -- Status report
 						if arg_type_code /= open_arg_type_code then
 							inspect
 								open_arg_type_code
-							when eif_integer_64_code then
-								mismatch := arg_type_code /= eif_integer_code and then
-									arg_type_code /= eif_integer_16_code and then
-									arg_type_code /= eif_integer_8_code
-							when eif_integer_code then
-								mismatch := arg_type_code /= eif_integer_16_code and then
-									arg_type_code /= eif_integer_8_code
-							when eif_integer_16_code then
-								mismatch := arg_type_code /= eif_integer_8_code
-							when eif_integer_8_code then
+							when feature {TUPLE}.integer_64_code then
+								mismatch :=
+									arg_type_code /= feature {TUPLE}.integer_32_code and then
+									arg_type_code /= feature {TUPLE}.integer_16_code and then
+									arg_type_code /= feature {TUPLE}.integer_8_code
+							when feature {TUPLE}.integer_32_code then
+								mismatch :=
+									arg_type_code /= feature {TUPLE}.integer_16_code and then
+									arg_type_code /= feature {TUPLE}.integer_8_code
+							when feature {TUPLE}.integer_16_code then
+								mismatch := arg_type_code /= feature {TUPLE}.integer_8_code
+							when feature {TUPLE}.integer_8_code then
 									-- As seen in above if statement, `arg_type_code' is not
 									-- equal to `open_arg_type_code'.
 								mismatch := True
 							else
-								mismatch := (open_arg_type_code = eif_reference_code implies
+								mismatch :=
+									(open_arg_type_code = feature {TUPLE}.reference_code implies
 									open_operand_type (i) > 0)
 							end
 						end
@@ -433,22 +436,6 @@ feature {NONE} -- Implementation
 				open_types.force (Result, i)
 			end
 		end
-
-feature {NONE} -- Runtime constants
-
-	eif_boolean_code: CHARACTER is 'b'
-	eif_character_code: CHARACTER is 'c'
-	eif_double_code: CHARACTER is 'd'
-	eif_real_code: CHARACTER is 'f'
-	eif_integer_code: CHARACTER is 'i'
-	eif_pointer_code: CHARACTER is 'p'
-	eif_reference_code: CHARACTER is 'r'
-	eif_integer_8_code: CHARACTER is 'j'
-	eif_integer_16_code: CHARACTER is 'k'
-	eif_integer_64_code: CHARACTER is 'l'
-	eif_wide_char_code: CHARACTER is 'u'
-			-- Type constants used by runtime to recognize types
-			-- needed to perform call
 
 feature {NONE} -- Externals
 

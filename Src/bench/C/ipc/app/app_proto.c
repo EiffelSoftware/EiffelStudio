@@ -638,7 +638,7 @@ rt_private void adopt(int s, Opaque *what)
 	char hector_addr[20];	/* Buffer where indirection address is stored */
 
 	physical_addr = (char *) what->op_third;
-	sprintf(hector_addr, "0x" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
+	sprintf(hector_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
 	twrite(hector_addr, strlen(hector_addr));
 }
 
@@ -661,7 +661,7 @@ rt_private void ipc_access(int s, Opaque *what)
 	char *hector_addr;		/* Hector address with indirection */
 
 	hector_addr = (char *) what->op_third;
-	sprintf(physical_addr, "0x" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
+	sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
 	twrite(physical_addr, strlen(physical_addr));
 }
 

@@ -9,6 +9,7 @@ inherit
 			true_generics,
 			same_as, is_equal,
 			is_valid,
+			is_explicit,
 			has_formal,
 			instantiation_in,
 			dump,
@@ -108,6 +109,24 @@ feature
 					(meta_generic.item (i).instantiation_in (other), i)
 				true_gen.put
 					(true_generics.item (i).complete_instantiation_in (other), i)
+				i := i + 1
+			end
+		end
+
+	is_explicit: BOOLEAN is
+
+		local
+			i, count: INTEGER
+		do
+			Result := (cr_info = Void)
+
+			from
+				i := 1
+				count := true_generics.count
+			until
+				i > count or else not Result
+			loop
+				Result := true_generics.item (i).is_explicit
 				i := i + 1
 			end
 		end

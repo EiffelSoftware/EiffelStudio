@@ -214,7 +214,13 @@ feature -- Generic conformance
 		require
 			valid_type : gtype /= Void
 		do
-			generated_file.putstring ("int16 typarr [] = {")
+			if gtype.is_explicit then
+				-- Optimize: Use static array
+				generated_file.putstring ("static int16 typarr [] = {")
+			else
+				generated_file.putstring ("int16 typarr [] = {")
+			end
+
 			generated_file.putint (context.current_type.generated_id (context.final_mode))
 			generated_file.putstring (", ")
 			generated_file.putstring (gtype.gen_type_string (context.final_mode, True))

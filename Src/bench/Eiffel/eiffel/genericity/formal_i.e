@@ -4,7 +4,7 @@ inherit
 	TYPE_I
 		redefine
 			is_formal, same_as, has_formal, instantiation_in,
-			complete_instantiation_in, generated_id
+			complete_instantiation_in, generated_id, is_explicit
 		end
 
 feature
@@ -20,6 +20,8 @@ feature
 
 	is_formal: BOOLEAN is True
 			-- Is the type a formal type ?
+
+	is_explicit: BOOLEAN is False
 
 	has_formal: BOOLEAN is True
 			-- Has the type formal in its structure ?

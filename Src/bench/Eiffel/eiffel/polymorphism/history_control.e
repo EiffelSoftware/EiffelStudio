@@ -43,15 +43,10 @@ feature
 				poly_table.set_rout_id (rout_id);
 				new_units.put (poly_table, rout_id);
 				create_poly_table_with_entry (poly_table, entry);
-				count := count + 1
 			else
---				old_count := poly_table.count;
-					-- Extension of `poly_table' to take care of genericty
 				extend_poly_table_with_entry (poly_table, entry);
---				if poly_table.count > old_count then
-					count := count + 1
---				end;
 			end
+			count := count + 1
 		end;
 
 	create_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
@@ -121,14 +116,17 @@ feature
 				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
+					-- We need to sort the data so we can work with them later
+					-- either at degree 4 or degree 5.
+				new_set.sort
 				id := new_set.rout_id;
 				if Tmp_poly_server.has (id) then
 					server_set := Tmp_poly_server.item (id);
+						-- Merge `new_set' with `server_set' and keep the order.
 					server_set.merge (new_set);
 				else
 					server_set := new_set;
 				end;
-				server_set.sort
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
 			end;

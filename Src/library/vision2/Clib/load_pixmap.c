@@ -815,20 +815,20 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	*((DWORD *)pData) = 0;			pData += 4;	// ClrImportant
 
 	/* Create a Windows DIB Header for the mask bitmap */
-	*((DWORD *)pAlphaData) = 40;		pAlphaData += 4;	// size of header
-	*((DWORD *)pAlphaData) = width;		pAlphaData += 4;	// width in pixel
-	*((DWORD *)pAlphaData) = height;	pAlphaData += 4;	// height in pixel
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	// bit plane
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	// bits/pixel
-	*((DWORD *)pAlphaData) = BI_RGB;	pAlphaData += 4;	// compression
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// imageSize
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// XPelPerM
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// YPelPerM
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	// ClrUsed
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	// ClrImportant
+	*((DWORD *)pAlphaData) = 40;		pAlphaData += 4;/* size of header */
+	*((DWORD *)pAlphaData) = width;		pAlphaData += 4;/* width in pixel */
+	*((DWORD *)pAlphaData) = height;	pAlphaData += 4;/* height in pixel */
+	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;/* bit plane */
+	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;/* bits/pixel */
+	*((DWORD *)pAlphaData) = BI_RGB;	pAlphaData += 4;/* compression */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;/* imageSize */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;/* XPelPerM */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;/* YPelPerM */
+	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;/* ClrUsed */
+	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;/* ClrImportant */
 	/* Color Table */
-	*((DWORD *)pAlphaData) = 0x00000000;pAlphaData += 4;	// Index 0 (black)
-	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;	// Index 1 (white)
+	*((DWORD *)pAlphaData) = 0x00000000;pAlphaData += 4;/* Index 0 (black) */
+	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;/* Index 1 (white) */
 
 
 	for (row = height; row > 0; row--)

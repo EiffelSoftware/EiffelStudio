@@ -30,24 +30,22 @@ feature {NONE} -- Basic operation
 			temp_height: INTEGER
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
---			if new_height /= height then
-				lchild := ev_children
-				resize (width, minimum_height.max (new_height))
-				temp_height := minimum_height.max (new_height) - 2 * border_width
-				if not lchild.empty then
-					from
-						lchild.start
-					until
-						lchild.after
-					loop
-						lchild.item.parent_ask_resize(lchild.item.child_cell.width, temp_height)
-						lchild.forth
-					end
+			lchild := ev_children
+			resize (width, new_height)
+			temp_height := new_height - 2 * border_width
+			if not lchild.empty then
+				from
+					lchild.start
+				until
+					lchild.after
+				loop
+					lchild.item.parent_ask_resize(lchild.item.child_cell.width, temp_height)
+					lchild.forth
 				end
---			end
+			end
 		end
 
-	set_local_width (new_width: INTEGER) is
+	set_local_width (temp_width: INTEGER) is
 			-- Set `new_width' to the box and adapt the children width.
 			-- To distribute the extra space in case the size given is not a 
 			-- multiple of the number of children to resize, we need to store
@@ -55,127 +53,60 @@ feature {NONE} -- Basic operation
 			-- at this children and we grow to add space or we go back if we 
 			-- have some space to remove.
 		local
-			temp_width: INTEGER
 			total_rest: INTEGER
 			rate: INTEGER
 			mark: INTEGER
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 		do
---			if new_width /= width then
-				if already_displayed then
-					temp_width := minimum_width.max (new_width)
-					if not ev_children.empty then
-						lchild := ev_children
-
+			if already_displayed then
+				if not ev_children.empty then
+					lchild := ev_children
 						-- Homogeneous state : only the visible children are
 						-- importante.
-						if is_homogeneous then
-							if childvisible_nb > 0 then
-								rate := (temp_width - width) // childvisible_nb
-								total_rest := (temp_width - width) \\ childvisible_nb
+					if is_homogeneous then
+						if childvisible_nb > 0 then
+							rate := (temp_width - width) // childvisible_nb
+							total_rest := (temp_width - width) \\ childvisible_nb
 	
-								-- A first loop to see who will have a rest.
-								-- The loop is different is the window grow or reduce.
-								if childvisible_nb /= lchild.count then
-									if rate >= 0 then
-										from
-											lchild.go_i_th (index)
-										until
-											lchild.index = modulo(index - 1, lchild.count) or
-											modulo(lchild.index - index, lchild.count) = total_rest
-										loop
-											if not lchild.item.shown then
-												total_rest := total_rest + 1
-											end
-											if lchild.islast then
-												lchild.start
-											else
-												lchild.forth
-											end
+							-- A first loop to see who will have a rest.
+							-- The loop is different is the window grow or reduce.
+							if childvisible_nb /= lchild.count then
+								if rate >= 0 then
+									from
+										lchild.go_i_th (index)
+									until
+										lchild.index = modulo(index - 1, lchild.count) or
+										modulo(lchild.index - index, lchild.count) = total_rest
+									loop
+										if not lchild.item.shown then
+											total_rest := total_rest + 1
 										end
-									else
-										from
-											lchild.go_i_th (modulo (index - 1, lchild.count))
-										until
-											lchild.index = index or
-												modulo(lchild.index - index, lchild.count) > total_rest
-										loop
-											if not lchild.item.shown then
-												total_rest := total_rest - 1
-											end
-											if lchild.isfirst then
-												lchild.finish
-											else
-												lchild.back
-											end
+										if lchild.islast then
+											lchild.start
+										else
+											lchild.forth
 										end
 									end
-								end
-		
-								-- Then, we ask the children to move and resize.
-								from
-									mark := border_width
-									lchild.start
-								until
-									lchild.after
-								loop
-									if lchild.item.shown or else not shown then
-										lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width + rate + rest (total_rest), client_height)
-										mark := mark + spacing + lchild.item.child_cell.width
-									end
-									lchild.forth
-								end
-								mark := mark - spacing
-							end
-		
-						-- Non homogeneous state : we have to be carefull to the non
-						-- expanded children too.
-						else
-							if childexpand_nb > 0 then
-								rate := (temp_width - width) // childexpand_nb
-								total_rest := (temp_width - width) \\ childexpand_nb
-			
-								-- A first loop to see who will have a rest.
-								-- The loop is different is the window grow or reduce.
-								if childvisible_nb /= lchild.count or childexpand_nb /= lchild.count then
-									if rate >= 0 then
-										from
-											lchild.go_i_th (index)
-										until
-											lchild.index = modulo (index - 1, lchild.count) or
-												modulo(lchild.index - index, lchild.count) = total_rest
-										loop
-											if not lchild.item.shown or not lchild.item.expandable then
-												total_rest := total_rest + 1
-											end
-											if lchild.islast then
-												lchild.start
-											else
-												lchild.forth
-											end
+								else
+									from
+										lchild.go_i_th (modulo (index - 1, lchild.count))
+									until
+										lchild.index = index or
+											modulo(lchild.index - index, lchild.count) > total_rest
+									loop
+										if not lchild.item.shown then
+											total_rest := total_rest - 1
 										end
-									else
-										from
-											lchild.go_i_th (modulo (index - 1, lchild.count))
-										until
-											lchild.index = index or
-												modulo(lchild.index - index, lchild.count) > total_rest
-										loop
-											if not lchild.item.shown or not lchild.item.expandable then
-												total_rest := total_rest - 1
-											end
-											if lchild.isfirst then
-												lchild.finish
-											else
-												lchild.back
-											end
+										if lchild.isfirst then
+											lchild.finish
+										else
+											lchild.back
 										end
 									end
 								end
 							end
-		
+	
 							-- Then, we ask the children to move and resize.
-							-- Be carefull to the expanded child.
 							from
 								mark := border_width
 								lchild.start
@@ -183,31 +114,92 @@ feature {NONE} -- Basic operation
 								lchild.after
 							loop
 								if lchild.item.shown or else not shown then
-									if lchild.item.expandable then
-										lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width + rate + rest (total_rest), client_height)
-									else
-										lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width, client_height)
-									end
+									lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width + rate + rest (total_rest), client_height)
 									mark := mark + spacing + lchild.item.child_cell.width
 								end
 								lchild.forth
 							end
 							mark := mark - spacing
+						end
 	
-						end -- is_homogeneous
-						index := modulo (index + total_rest, lchild.count)
-						mark := mark + border_width
+					-- Non homogeneous state : we have to be carefull to the non
+					-- expanded children too.
 					else
-						-- if there are no children, we simply set the
-						-- given height.
-						mark := temp_width
-					end -- ev_children.empty
+						if childexpand_nb > 0 then
+							rate := (temp_width - width) // childexpand_nb
+							total_rest := (temp_width - width) \\ childexpand_nb
+		
+							-- A first loop to see who will have a rest.
+							-- The loop is different is the window grow or reduce.
+							if childvisible_nb /= lchild.count or childexpand_nb /= lchild.count then
+								if rate >= 0 then
+									from
+										lchild.go_i_th (index)
+									until
+										lchild.index = modulo (index - 1, lchild.count) or
+											modulo(lchild.index - index, lchild.count) = total_rest
+									loop
+										if not lchild.item.shown or not lchild.item.expandable then
+											total_rest := total_rest + 1
+										end
+										if lchild.islast then
+											lchild.start
+										else
+											lchild.forth
+										end
+									end
+								else
+									from
+										lchild.go_i_th (modulo (index - 1, lchild.count))
+									until
+										lchild.index = index or
+											modulo(lchild.index - index, lchild.count) > total_rest
+									loop
+										if not lchild.item.shown or not lchild.item.expandable then
+											total_rest := total_rest - 1
+										end
+										if lchild.isfirst then
+											lchild.finish
+										else
+											lchild.back
+										end
+									end
+								end
+							end
+						end
+	
+						-- Then, we ask the children to move and resize.
+						-- Be carefull to the expanded child.
+						from
+							mark := border_width
+							lchild.start
+						until
+							lchild.after
+						loop
+							if lchild.item.shown or else not shown then
+								if lchild.item.expandable then
+									lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width + rate + rest (total_rest), client_height)
+								else
+									lchild.item.set_move_and_size (mark, border_width, lchild.item.child_cell.width, client_height)
+								end
+								mark := mark + spacing + lchild.item.child_cell.width
+							end
+							lchild.forth
+						end
+						mark := mark - spacing
+					end -- is_homogeneous
+					index := modulo (index + total_rest, lchild.count)
+					mark := mark + border_width
+				else
+					-- if there are no children, we simply set the
+					-- given height.
+					mark := temp_width
+				end -- ev_children.empty
 
-					-- At the end, we resize the window in both cases
-					-- already displayed or not.
-					resize (mark, height)
-				end -- already_displayed
---			end
+				-- At the end, we resize the window in both cases
+				-- already displayed or not.
+				resize (mark, height)
+			end -- already_displayed
 		end
 
 	initialize_length_at_minimum is

@@ -9,6 +9,8 @@ indexing
 class EB_TOP_SHELL
 
 inherit
+
+	TOOLTIP_INITIALIZER;
 	EB_SHELL
 		undefine
 			screen, top
@@ -22,8 +24,7 @@ inherit
 			implementation
 		end;
 	WINDOWS;
-	EB_CONSTANTS;
-	INTERFACE_W
+	EB_CONSTANTS
 
 creation
 	make
@@ -39,6 +40,14 @@ feature -- Initialization
 			!! associated_form.make ("", Current);
 		ensure
 			screen_set: equal (screen, a_screen)
+		end;
+
+feature -- Access
+
+	tooltip_parent: COMPOSITE is
+			-- Tooltip parent
+		do
+			Result := Current
 		end;
 
 feature -- Properties

@@ -265,6 +265,8 @@ feature -- Icon representing shell
 			-- as the application's icon
 		do
 			Result := implementation.icon_pixmap
+		ensure
+			valid_result: Result /= Void
 		end;
 
 	set_icon_x (x_value: INTEGER) is

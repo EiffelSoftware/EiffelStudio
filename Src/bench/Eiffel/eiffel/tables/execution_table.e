@@ -181,8 +181,8 @@ end
 				file.new_line
 				!!temp.make (0)
 				i := 1
-				temp.append ("%Nint egc_fpatidtab[] = {%N")
-				file.putstring ("fnptr egc_frozen[] = {%N")
+				temp.append ("%Nint egc_fpatidtab_init[] = {%N")
+				file.putstring ("fnptr egc_frozen_init[] = {%N")
 			until
 				i > nb
 			loop

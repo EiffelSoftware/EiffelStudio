@@ -183,7 +183,7 @@ end
 			from
 				i := 1
 				file.putstring ("#include %"eif_portable.h%"%N%N")
-				file.putstring ("uint32 egc_fdispatch[] = {%N")
+				file.putstring ("uint32 egc_fdispatch_init[] = {%N")
 			until
 				i > nb
 			loop

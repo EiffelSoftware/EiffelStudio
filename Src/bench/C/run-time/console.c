@@ -14,34 +14,34 @@
 #endif
 
 #include "eif_console.h"
+#include "rt_assert.h"
 
-rt_public EIF_POINTER file_def(int file)
+rt_public EIF_POINTER console_def (EIF_INTEGER file)
 {
+#ifdef EIF_WINDOWS
+	return NULL;
+#else
 	/* Convert the integer `i' into the corresponding
 	 * inpout output standard file :
 	 *       0 : standard input file descriptor
 	 *       1 : standard output file descriptor
 	 *       2 : standard error file descriptor
-	 *      otherwise : eif_panic
 	 */
 
 	switch (file) {
-	case 0: return (EIF_POINTER) stdin;
-	case 1: return (EIF_POINTER) stdout;
-	case 2: return (EIF_POINTER) stderr;
-	default: eif_panic(MTC "invalid file request");
+	case 0:
+	  	return (EIF_POINTER) stdin;
+	case 1:
+			/* Output is set to only have line buffered. Meaning that
+			 * each displayed %N will flush the buffer. */
+	  	setvbuf(stdout, NULL, _IOLBF, 0);
+		return (EIF_POINTER) stdout;
+	case 2:
+		return (EIF_POINTER) stderr;
+	default:
+		CHECK ("Invalid File Request", EIF_FALSE);
+		return NULL;
 	}
-
-	/* NOTREACHED */
-	return 0; /* to avoid a warning */
-}
-
-rt_public EIF_POINTER console_def (EIF_INTEGER file)
-{
-#ifdef EIF_WINDOWS
-	return (EIF_POINTER) NULL;
-#else
-	return file_def (file);
 #endif
 }            
 

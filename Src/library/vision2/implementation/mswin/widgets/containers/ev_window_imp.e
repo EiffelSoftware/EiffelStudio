@@ -1,12 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision untitled window, mswindows implementation."
-	note: " In the implementation of the window, we use internal_changes to know%
-		% if the user changed the size of the window. In this case, we won't%
-		% resize it to the minimum_size. The bit used are the following:%
-		% bit 7 -> The user has set the width of the window while it was hidden (64),%
-		% bit 8 -> The user has set the height of the window shile it was hidden (128)."
-	id: "$Id$"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,7 +45,8 @@ inherit
 			on_destroy,
 			notebook_parent,
 			interface,
-			notify_change
+			notify_change,
+			initialize
 		end
 
 	WEL_FRAME_WINDOW
@@ -104,7 +100,8 @@ inherit
 			default_process_message,
 			wel_move_and_resize,
 			on_menu_command,
-			on_wm_close
+			on_wm_close,
+			show
 		end
 
 	WEL_MA_CONSTANTS
@@ -117,7 +114,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -128,6 +125,20 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			make_top ("")
+		end
+
+	initialize is
+			-- Initialize window.
+		local
+			app_imp: EV_APPLICATION_IMP
+		do
+			Precursor
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_imp.add_root_window (interface)
+			destroy_agent := interface~destroy
+			interface.close_actions.extend (destroy_agent)
+		--| FIXME	create accel_list.make (10)
+			is_initialized := True
 		end
 
 feature -- Access
@@ -214,6 +225,10 @@ feature -- Status setting
 		local
 			app_imp: EV_APPLICATION_IMP
 		do
+			if not on_wm_close_executed then
+				interface.close_actions.prune_all (destroy_agent)
+				interface.close_actions.call ([])
+			end
 			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 			app_imp.remove_root_window (interface)
 			if parent_imp /= Void then
@@ -227,7 +242,8 @@ feature -- Status setting
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			internal_set_minimum_size (window_minimum_width, window_minimum_height)
+			--| FIXME Only for dialogs maybe?
+			internal_set_minimum_size (250, 140)
 			set_maximum_width (maximized_window_width)
 			set_maximum_height (maximized_window_height)
 		end
@@ -353,16 +369,20 @@ feature -- Element change
 			-- Set `is_modal' to `True'.
 		do
 			is_modal := True
-			set_capture_type (Capture_normal)
-			enable_capture
+		--	if is_show_requested and then not has_capture then
+		--		set_capture_type (Capture_normal)
+		--		enable_capture
+		--	end
 		end
 
 	disable_modal is
 			-- Set `is_modal' to `False'.
 		do
 			is_modal := False
-			disable_capture
-			set_capture_type (Capture_heavy)
+		--	if has_capture then
+		--		disable_capture
+		--		set_capture_type (Capture_heavy)
+		--	end
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is
@@ -372,6 +392,13 @@ feature -- Element change
 		end
 
 feature -- Resizing
+
+--| " In the implementation of the window, we use internal_changes to know%
+--| % if the user changed the size of the window. In this case, we won't%
+--| % resize it to the minimum_size. The bit used are the following:%
+--| % bit 7 -> The user has set the width of the window while it was hidden%
+--| % bit 8 -> The user has set the height of the window shile it was hidden."
+
 
 	set_size (w, h: INTEGER) is
 			-- Resize the widget when it is not managed.
@@ -410,7 +437,21 @@ feature -- Resizing
 			end
 		end
 
+feature -- Basic operations
+
+	show is
+			-- Show dialog.
+		do
+			{WEL_FRAME_WINDOW} Precursor
+			if is_modal then
+				enable_modal
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	destroy_agent: PROCEDURE [EV_WINDOW, TUPLE []]
+		-- `interface~destroy'.
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been chosen from the menu.
@@ -571,7 +612,7 @@ feature {NONE} -- Inapplicable
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
-		-- Set with the option `Ws_clipchildren' to avoid flashing.
+				-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_popup + Ws_overlapped + Ws_dlgframe
 					+ Ws_clipchildren + Ws_clipsiblings
@@ -849,21 +890,21 @@ feature -- Implementation
 
 end -- class EV_WINDOW_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -871,6 +912,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/19 00:43:05  brendel
+--| Revised.
+--|
 --| Revision 1.36  2000/04/17 23:40:41  brendel
 --| Reverted.
 --|

@@ -156,22 +156,24 @@ feature -- Element change
 
 	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
 			-- Insert `an_item' at the zero-based `index'.
-			-- A window must be associate to the item before to call
-			-- this feature.
 		require
 			exists: exists
 			an_item_not_void: an_item /= Void
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
-			window_exists: an_item.window /= Void and an_item.window.exists
+		local
+			window: WEL_WINDOW
 		do
 			cwin_send_message (item, Tcm_insertitem, index,
 				an_item.to_integer)
-			an_item.window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, True)
-			if index = 0 then
-				an_item.window.show
-			else
-				an_item.window.hide
+			window := an_item.window
+			if window /= Void and then window.exists then
+				window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, True)
+				if index = 0 then
+					window.show
+				else
+					window.hide
+				end
 			end
 		ensure
 			count_increased: count = old count + 1
@@ -216,20 +218,27 @@ feature -- Notifications
 		end
 
 	on_tcn_selchange is
-			-- The selection has changed
+			-- Selection has changed.
+			-- Shows the current selected page by default.
 		require
 			exists: exists
-		local
-			selected_item: WEL_TAB_CONTROL_ITEM
 		do
-			selected_item := get_item (current_selection)
-			if selected_item.window /= Void and then selected_item.window.exists then
-				selected_item.window.show
-			end
+			show_current_selection
 		end
 
 	on_tcn_selchanging is
-			-- The selection is about to change
+			-- Selection is about to change.
+			-- Hides the current selected page by default.
+		require
+			exists: exists
+		do
+			hide_current_selection
+		end
+
+feature {NONE} -- Basic operation
+
+	hide_current_selection is
+			-- Hide the current selected page.
 		require
 			exists: exists
 		local
@@ -241,7 +250,18 @@ feature -- Notifications
 			end
 		end
 
-feature {NONE} -- Basic operation
+	show_current_selection is
+			-- Show the current selected page.
+		require
+			exists: exists
+		local
+			selected_item: WEL_TAB_CONTROL_ITEM
+		do
+			selected_item := get_item (current_selection)
+			if selected_item.window /= Void and then selected_item.window.exists then
+				selected_item.window.show
+			end
+		end
 
 	adjust_items is
 			-- Adjust the size of the windows of the items

@@ -478,14 +478,14 @@ feature {EV_APPLICATION_IMP} -- Externals
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Call `an_agent' after `a_delay'.
 		external
-			"C (gint, EIF_OBJECT) | %"gtk_eiffel.h%""
+			"C (gint, EIF_OBJECT) | %"ev_gtk_callback_marshal.h%""
 		end
 
 	c_ev_gtk_callback_marshal_idle_connect
 				(an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
 			-- Call `an_agent' when idle.
 		external
-			"C (EIF_OBJECT): guint | %"gtk_eiffel.h%""
+			"C (EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
 		end
 
 end -- class EV_GTK_CALLBACK_MARSHAL

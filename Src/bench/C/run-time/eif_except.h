@@ -153,10 +153,13 @@ RT_LNK void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
 RT_LNK void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
 RT_LNK void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
 RT_LNK void exresc(EIF_CONTEXT struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
-RT_LNK void excatch(jmp_buf *jmp);				/* Set exception catcher from C to interpret */
+RT_LNK struct ex_vect * extre(EIF_CONTEXT_NOARG);		/* Enter try section */
+RT_LNK struct ex_vect * extrl(EIF_CONTEXT_NOARG);		/* Leave try section */
 RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 
+#ifndef WORKBENCH
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
+#endif
 RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object); /* Set execution stack on routine entrance */
 RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid); /* Set execution stack on routine entrance */
 

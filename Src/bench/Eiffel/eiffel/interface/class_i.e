@@ -15,7 +15,7 @@ inherit
 
 creation
 
-	make, do_nothing
+	make
 
 	
 feature 
@@ -40,8 +40,14 @@ feature
 			Result.append (base_name)
 		end;
 
+	date: INTEGER;
+			-- Date of the file
+
 	changed: BOOLEAN;
 			-- Must the class be recompiled ?
+
+	pass2_done: BOOLEAN;
+			-- Pass2 has been done?
 
 	compiled_class: CLASS_C;
 			-- Compiled class
@@ -100,16 +106,50 @@ feature
 			cluster := c
 		end;
 
+	set_date is
+			-- Assign `d' to `date'
+		local
+			str: ANY;
+		do
+			str := file_name.to_c;
+			date := eif_date ($str);
+		end;
+
 	set_changed (b: BOOLEAN) is
 			-- Assign `b' to `changed'.
 		do
-			changed := b
+			changed := b;
+			pass2_done := False;
+		end;
+
+	set_pass2_done is
+		do
+			pass2_done := True
 		end;
 
 	set_compiled_class (c: CLASS_C) is
 			-- Assign `c' to `compiled_class'.
 		do
 			compiled_class := c;
+		end;
+
+	date_has_changed: BOOLEAN is
+		local
+			str: ANY;
+			new_date: INTEGER
+		do
+			str := file_name.to_c;
+			new_date := eif_date ($str);
+			Result := new_date /= date;
+io.error.putstring ("CLASS_I ");
+io.error.putstring (base_name);
+io.error.putstring (" date: ");
+io.error.putint (date);
+io.error.putstring (" new_date: ");
+io.error.putint (new_date);
+io.error.new_line;
+io.error.putbool (Result);
+io.error.new_line;
 		end;
 
 feature -- Drag and drop
@@ -132,52 +172,52 @@ feature -- Drag and drop
 feature -- Compiled class
 
 	class_to_recompile: CLASS_C is
-            -- Instance of a class to remcompile
-        require
-            class_name_exists: class_name /= Void;
-        local
-            local_system: SYSTEM_I;
-        do
-            local_system := system;
-            if Current = local_system.boolean_class then
-                !BOOLEAN_B! Result.make (Current)
-            elseif Current = local_system.character_class then
-                !CHARACTER_B! Result.make (Current)
-            elseif Current = local_system.integer_class then
-                !INTEGER_B! Result.make (Current)
-            elseif Current = local_system.real_class then
-                !REAL_B! Result.make (Current)
-            elseif Current = local_system.double_class then
-                !DOUBLE_B! Result.make (Current)
-            elseif Current = local_system.pointer_class then
-                !POINTER_B! Result.make (Current)
-            elseif Current = local_system.any_class then
-                !ANY_B! Result.make (Current)
-            elseif Current = local_system.special_class then
-                !SPECIAL_B! Result.make (Current)
-            elseif Current = local_system.to_special_class then
-                !TO_SPECIAL_B! Result.make (Current)
-            elseif Current = local_system.array_class then
-                !ARRAY_CLASS_B! Result.make (Current)
-            elseif Current = local_system.string_class then
-                !STRING_CLASS_B! Result.make (Current)
-            elseif Current = local_system.character_ref_class then
-                !CHARACTER_REF_B! Result.make (Current)
-            elseif Current = local_system.boolean_ref_class then
-                !BOOLEAN_REF_B! Result.make (Current)
-            elseif Current = local_system.integer_ref_class then
-                !INTEGER_REF_B! Result.make (Current)
-            elseif Current = local_system.real_ref_class then
-                !REAL_REF_B! Result.make (Current)
-            elseif Current = local_system.double_ref_class then
-                !DOUBLE_REF_B! Result.make (Current)
-            elseif Current = local_system.pointer_ref_class then
-                !POINTER_REF_B! Result.make (Current)
-            else
-                !!Result.make (Current);
-            end;
-        ensure
-            Result_exists: Result /= Void;
+			-- Instance of a class to remcompile
+		require
+			class_name_exists: class_name /= Void;
+		local
+			local_system: SYSTEM_I;
+		do
+			local_system := system;
+			if Current = local_system.boolean_class then
+				!BOOLEAN_B! Result.make (Current)
+			elseif Current = local_system.character_class then
+				!CHARACTER_B! Result.make (Current)
+			elseif Current = local_system.integer_class then
+				!INTEGER_B! Result.make (Current)
+			elseif Current = local_system.real_class then
+				!REAL_B! Result.make (Current)
+			elseif Current = local_system.double_class then
+				!DOUBLE_B! Result.make (Current)
+			elseif Current = local_system.pointer_class then
+				!POINTER_B! Result.make (Current)
+			elseif Current = local_system.any_class then
+				!ANY_B! Result.make (Current)
+			elseif Current = local_system.special_class then
+				!SPECIAL_B! Result.make (Current)
+			elseif Current = local_system.to_special_class then
+				!TO_SPECIAL_B! Result.make (Current)
+			elseif Current = local_system.array_class then
+				!ARRAY_CLASS_B! Result.make (Current)
+			elseif Current = local_system.string_class then
+				!STRING_CLASS_B! Result.make (Current)
+			elseif Current = local_system.character_ref_class then
+				!CHARACTER_REF_B! Result.make (Current)
+			elseif Current = local_system.boolean_ref_class then
+				!BOOLEAN_REF_B! Result.make (Current)
+			elseif Current = local_system.integer_ref_class then
+				!INTEGER_REF_B! Result.make (Current)
+			elseif Current = local_system.real_ref_class then
+				!REAL_REF_B! Result.make (Current)
+			elseif Current = local_system.double_ref_class then
+				!DOUBLE_REF_B! Result.make (Current)
+			elseif Current = local_system.pointer_ref_class then
+				!POINTER_REF_B! Result.make (Current)
+			else
+				!!Result.make (Current);
+			end;
+		ensure
+			Result_exists: Result /= Void;
 		end;
 
 	compiled: BOOLEAN is
@@ -257,6 +297,14 @@ feature -- Comveniences
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
+		end;
+
+feature {NONE} -- Externals
+
+	eif_date (s: ANY): INTEGER is
+			-- Date of file of name `str'.
+		external
+			"C"
 		end;
 
 end

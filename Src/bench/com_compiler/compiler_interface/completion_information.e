@@ -119,9 +119,123 @@ feature -- Access
 			retry
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING): COMPLETION_ENTRY_ENUMERATOR is
+	target_features (target, feature_name, file_name: STRING; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
 			-- `target' [in].
+			-- `feature_name' [in].
+			-- `file_name' [in].
+			-- `return_names' [out].
+			-- `return_signatures' [out].
+			-- `return_image_indexes' [out].
+		local
+			l_entries: like completion_list_for_target
+			l_entry: COMPLETION_ENTRY
+			l_feature_descriptor: FEATURE_DESCRIPTOR
+			l_index: INTEGER
+			l_bool_ref: BOOLEAN_REF
+			l_names: ECOM_ARRAY [STRING]
+			l_signatures: ECOM_ARRAY [STRING]
+			l_image_indexes: ECOM_ARRAY [INTEGER]
+			l_image_index_enum: ECOM_TAG_EIF_ENTITY_IMAGES_ENUM
+			l_image_index: INTEGER
+		do
+			create l_image_index_enum
+			l_entries := completion_list_for_target (target, feature_name, file_name)
+			if l_entries /= Void then
+				create l_names.make (1, <<1>>, <<l_entries.count>>)
+				create l_signatures.make (1, <<1>>, <<l_entries.count>>)
+				create l_image_indexes.make (1, <<1>>, <<l_entries.count>>)
+				
+				from 
+					l_index := 1
+				until
+					l_index > l_entries.count
+				loop
+					l_entry := l_entries.i_th (l_index)
+					l_names.put (l_entry.name, <<l_index>>)
+					l_signatures.put (l_entry.signature, <<l_index>>)
+	
+					create l_bool_ref
+					l_entry.is_feature (l_bool_ref)
+					if l_bool_ref.item then
+						l_feature_descriptor ?= l_entry
+						if l_feature_descriptor /= Void then
+							if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_once
+							elseif l_feature_descriptor.is_attribute then
+								if l_feature_descriptor.is_obsolete then
+									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+								elseif l_feature_descriptor.is_frozen then
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+								else
+									l_image_index := l_image_index_enum.Eif_entity_images_attribute
+								end
+							elseif l_feature_descriptor.is_once then
+								if l_feature_descriptor.is_obsolete then
+									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+								elseif l_feature_descriptor.is_frozen then
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+								else
+									l_image_index := l_image_index_enum.Eif_entity_images_once
+								end
+							elseif l_feature_descriptor.is_obsolete then
+								l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+							elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_external
+							elseif l_feature_descriptor.is_frozen then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_feature
+							elseif l_feature_descriptor.is_external then
+								l_image_index := l_image_index_enum.Eif_entity_images_external_feature
+							elseif l_feature_descriptor.is_deferred then
+								l_image_index := l_image_index_enum.Eif_entity_images_deferred
+							else
+								l_image_index := l_image_index_enum.Eif_entity_images_feature
+							end
+						else
+							l_image_index := l_image_index_enum.Eif_entity_images_variable
+						end
+					else
+						l_image_index := l_image_index_enum.Eif_entity_images_variable
+					end
+					l_image_indexes.put (l_image_index, <<l_index>>)
+					l_index := l_index + 1
+				end
+			else
+				create l_names.make_empty
+				create l_signatures.make_empty
+				create l_image_indexes.make_empty
+			end
+			return_names.set_string_array (l_names)
+			return_signatures.set_string_array (l_signatures)
+			return_image_indexes.set_integer_array (l_image_indexes)
+		ensure
+			non_void_names: return_names /= Void
+			non_void_signatures: return_signatures /= Void
+			non_void_image_indexes: return_image_indexes /= Void
+		end
+		
+feature -- Basic Operations
+
+		add_local (name: STRING; type: STRING) is
+				-- Add local variable used for solving member completion list.
+			do
+				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
+					locals.put (name, type)
+				end
+			end
+
+		add_argument (name: STRING; type: STRING) is
+				-- Add argument used for solving member completion list.
+			do
+				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
+					arguments.put (name, type)
+				end
+			end		
+
+feature {NONE} -- Implementation
+
+	completion_list_for_target (target: STRING; feature_name: STRING; file_name: STRING): ARRAYED_LIST [COMPLETION_ENTRY] is
+			-- Features accessible from target.
 		local
 			ci: CLASS_I
 			fi: FEATURE_I
@@ -161,8 +275,7 @@ feature -- Access
 							variable_list.resize (1, old_count + features.count)
 							variable_list.subcopy (features, 1, features.count, old_count + 1)
 							variable_list.sort
-							create arrayed_list.make_from_array (variable_list)
-							create Result.make (arrayed_list)
+							create Result.make_from_array (variable_list)
 						else
 							qualified_call := True
 							targets := target.split ('.')
@@ -188,7 +301,7 @@ feature -- Access
 								targets.remove
 								feature_table := recursive_lookup (target_type, targets)
 								if feature_table /= Void then
-									Result := features_from_table (feature_table)
+									create Result.make_from_array (features_list_from_table (feature_table))
 								end
 							end
 						end
@@ -204,26 +317,6 @@ feature -- Access
 			retried := True
 			retry
 		end
-
-feature -- Basic Operations
-
-		add_local (name: STRING; type: STRING) is
-				-- Add local variable used for solving member completion list.
-			do
-				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
-					locals.put (name, type)
-				end
-			end
-
-		add_argument (name: STRING; type: STRING) is
-				-- Add argument used for solving member completion list.
-			do
-				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
-					arguments.put (name, type)
-				end
-			end		
-
-feature {NONE} -- Implementation
 
 	recursive_lookup (target_type: TYPE; targets: LIST [STRING]): FEATURE_TABLE is
 			-- Available features after resolution of `targets' in `target_type'
@@ -263,17 +356,6 @@ feature {NONE} -- Implementation
 					end					
 				end
 			end
-		end
-	
-	features_from_table (table: FEATURE_TABLE): COMPLETION_ENTRY_ENUMERATOR is
-			-- Convert `table' into an instance of COMPLETION_ENTRY_ENUMERATOR.
-		require
-			non_void_table: table /= Void
-		local
-			arrayed_list: ARRAYED_LIST [FEATURE_DESCRIPTOR]
-		do
-			create arrayed_list.make_from_array (features_list_from_table (table))
-			create Result.make (arrayed_list)
 		end
 
 	features_list_from_table (table: FEATURE_TABLE): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is

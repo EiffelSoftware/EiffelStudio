@@ -18,7 +18,6 @@ cluster
 		table:				"$EIFFEL3/library/base/structures/table";
 		traversing:			"$EIFFEL3/library/base/structures/traversing";
 		tree:				"$EIFFEL3/library/base/structures/tree";
-		lex:				"$EIFFEL3/library/lex";
 	
 	-- ES3 SPECIFIC CLUSTERS
 		--liman_common:		"$BENCH/Eiffel/limand/common";
@@ -131,7 +130,6 @@ external
 		"$(BENCH)/C/ipc/shared/libipc.a";
 		"$(BENCH)/C/liman/client/libliman.a";
 		"$(BENCH)/C/liman/shared/libshared.a";
-		"$(BENCH)/C/idrs/libidr.a";
-		"$(EIFFEL3)/library/lex/spec/$(PLATFORM)/lib/lex.a"
+		"$(BENCH)/C/idrs/libidr.a"
 
 end

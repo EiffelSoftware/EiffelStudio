@@ -2291,8 +2291,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
  
 			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
-			((void (*)()) RTWF(stype, feat_id, dtype))
-									(new_obj, 1L, nbr_of_items);
+			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
 			if (tagval != stagval)
@@ -2383,8 +2382,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
  
 			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
-			((void (*)()) RTWPF(origin, ooffset, dtype))
-									(new_obj, 1L, nbr_of_items);
+			((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
 			if (tagval != stagval)

@@ -50,6 +50,14 @@ cluster
 
 	const:		"$EIFFEL_SRC/Eiffel/const"
 
+	xml:		"$EIFFEL_SRC/library/exml"
+
+	xml_main (xml):		"$/main"
+
+	xml_tree_parser (xml_main):		"$/tree_parser"
+
+	xml_spec (xml):		"$/compiler_specific/ise"
+
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; 
@@ -104,17 +112,23 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
 external
 
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
 		"\$(EIFFEL_SRC)/C/platform",
+		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib",
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include"
 
 	object:
 		"\$(EIFFEL_SRC)/C/platform/libplatform.a",
 		"\$(EIFFEL_SRC)/C/bench/libcompiler.a",
 		"\$(EIFFEL_SRC)/C/minilzo/minilzo.o"
+		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o"
 
 
 end

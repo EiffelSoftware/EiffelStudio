@@ -1,7 +1,7 @@
 # vision2.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -W4 -DEIF_IL_DLL \
+CFLAGS = -c -Ox -DEIF_IL_DLL \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \

@@ -195,18 +195,11 @@ feature -- Removal
 	remove_selected_item is
 			-- Remove the currently selected item from the list.
 		local
-			removed: BOOLEAN
+			list_item: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from
-				start
-			until
-				after or removed
-			loop
-				if item.is_selected then
-					remove
-					removed := True
-				end
-				forth
+			list_item := selected_item
+			if list_item /= Void  then
+				prune (list_item)
 			end
 		end
 		

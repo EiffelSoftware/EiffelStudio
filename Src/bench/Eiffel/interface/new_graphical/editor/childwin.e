@@ -258,47 +258,83 @@ feature -- Basic operations
 				end
 
 			elseif  virtual_key = Vk_up then
-				invalidate_cursor_rect (False)
-				cursor.go_up_line
-				if has_selection and then not (shifted_key) then
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := clone (cursor)
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_up_line
+					invalidate_cursor_rect (True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_up_line
+					invalidate_cursor_rect (True)
+				else
+					cursor.go_up_line
 					has_selection := False
 					invalidate
 					update
-				else
-					invalidate_cursor_rect (True)
 				end
 
 			elseif  virtual_key = Vk_down then
-				invalidate_cursor_rect (False)
-				cursor.go_down_line
-				if has_selection and then not (shifted_key) then
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := clone (cursor)
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_down_line
+					invalidate_cursor_rect (True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_down_line
+					invalidate_cursor_rect (True)
+				else
+					cursor.go_down_line
 					has_selection := False
 					invalidate
 					update
-				else
-					invalidate_cursor_rect (True)
 				end
 
 			elseif  virtual_key = Vk_home then
-				invalidate_cursor_rect (False)
-				cursor.go_start_line
-				if has_selection and then not (shifted_key) then
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := clone (cursor)
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_start_line
+					invalidate_cursor_rect (True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_start_line
+					invalidate_cursor_rect (True)
+				else
+					cursor.go_start_line
 					has_selection := False
 					invalidate
 					update
-				else
-					invalidate_cursor_rect (True)
 				end
 
 			elseif  virtual_key = Vk_end then
-				invalidate_cursor_rect (False)
-				cursor.go_end_line
-				if has_selection and then not (shifted_key) then
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := clone (cursor)
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_end_line
+					invalidate_cursor_rect(True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_end_line
+					invalidate_cursor_rect(True)
+				else
+					cursor.go_end_line
 					has_selection := False
 					invalidate
 					update
-				else
-					invalidate_cursor_rect(True)
 				end
 
 			elseif  virtual_key = Vk_delete then
@@ -325,6 +361,9 @@ feature -- Basic operations
 				update
 
 			elseif virtual_key = Vk_Return then
+				if has_selection then
+					delete_selection
+				end
 				cursor.insert_eol
 				invalidate
 				update
@@ -382,7 +421,18 @@ feature -- Basic operations
 --			l_number := ((y_pos - Top_margin_width)// line_increment) + first_line_displayed
 --			create cursor.make_from_absolute_pos (x_pos - Left_margin_width, l_number, text_displayed)
 			l_number := (y_pos // line_increment) + first_line_displayed
-			cursor.make_from_absolute_pos (x_pos, l_number, Current)
+			if not has_selection then
+				if shifted_key then
+					has_selection := True
+					selection_start := clone (cursor)
+				end
+				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+			elseif shifted_key then
+				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+			else
+				cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				has_selection := False
+			end
 			invalidate
 			update
 		end

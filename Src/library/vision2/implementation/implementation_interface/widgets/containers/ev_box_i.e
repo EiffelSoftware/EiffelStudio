@@ -45,6 +45,17 @@ feature -- Access
 		ensure
 			positive_result: Result >= 0
 		end
+
+feature -- Status report
+
+	is_child_expandable (child: EV_WIDGET): BOOLEAN is
+			-- Is the child corresponding to `index' expandable. ie: does it
+			-- accept the parent to resize or move it.
+		require
+			exist: not destroyed
+			has_child: -- To do
+		deferred
+		end
 	
 feature -- Status settings
 	
@@ -71,6 +82,15 @@ feature -- Status settings
 		require
 			exist: not destroyed
 			positive_value: value >= 0
+		deferred
+		end	
+
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+			-- Make the child corresponding to `index' expandable if `flag',
+			-- not expandable otherwise.
+		require
+			exist: not destroyed
+			has_child: -- To do
 		deferred
 		end	
 	

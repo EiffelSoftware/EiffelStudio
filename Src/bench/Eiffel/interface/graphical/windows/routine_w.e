@@ -57,28 +57,41 @@ feature {NONE}
 				format_bar.attach_top (showroutclients_command, 0);
 				format_bar.attach_left_widget (showtext_command, showroutclients_command, 0);
 
+			!!showpast_command.make (format_bar, text_window);
+				format_bar.attach_top (showpast_command, 0);
+				format_bar.attach_left_widget (showroutclients_command, showpast_command, 0);
+
+			!!showfuture_command.make (format_bar, text_window);
+				format_bar.attach_top (showfuture_command, 0);
+				format_bar.attach_left_widget (showpast_command, showfuture_command, 0);
+
 			!!debug_run_command.make (format_bar, text_window);
 				format_bar.attach_top (debug_run_command, 0);
 				format_bar.attach_left_widget (showroutclients_command, debug_run_command, 50);
 
-			!!step_command.make (format_bar, text_window);
-				format_bar.attach_top (step_command, 0);
-				format_bar.attach_left_widget (debug_run_command, step_command, 50);
-			!!next_command.make (format_bar, text_window);
-				format_bar.attach_top (next_command, 0);
-				format_bar.attach_left_widget (step_command, next_command, 0);
-			!!line_command.make (format_bar, text_window);
-				format_bar.attach_top (line_command, 0);
-				format_bar.attach_left_widget (next_command, line_command, 0);
-			!!continue_command.make (format_bar, text_window);
-				format_bar.attach_top (continue_command, 0);
-				format_bar.attach_left_widget (line_command, continue_command, 0);
+--			!!step_command.make (format_bar, text_window);
+--				format_bar.attach_top (step_command, 0);
+--				format_bar.attach_left_widget (debug_run_command, step_command, 50);
+--			!!next_command.make (format_bar, text_window);
+--				format_bar.attach_top (next_command, 0);
+--				format_bar.attach_left_widget (step_command, next_command, 0);
+			!!debug_showbreak.make (format_bar, text_window);
+				format_bar.attach_top (debug_showbreak, 0);
+				format_bar.attach_left_widget (debug_run_command, debug_showbreak, 0);
+--			!!line_command.make (format_bar, text_window);
+--				format_bar.attach_top (line_command, 0);
+--				format_bar.attach_left_widget (debug_run_command, line_command, 0);
+--				format_bar.attach_left_widget (next_command, line_command, 0);
+--			!!continue_command.make (format_bar, text_window);
+--				format_bar.attach_top (continue_command, 0);
+--				format_bar.attach_left_widget (line_command, continue_command, 0);
+
 			!!debug_quit_command.make (format_bar, text_window);
 				format_bar.attach_top (debug_quit_command, 0);
-				format_bar.attach_left_widget (continue_command, debug_quit_command, 0);
+				format_bar.attach_left_widget (debug_showbreak, debug_quit_command, 0);
 			!!break_command.make (format_bar, text_window);
 				format_bar.attach_top (break_command, 0);
-				format_bar.attach_right (break_command, 0)
+				format_bar.attach_right (break_command, 0);
 		end;
 
 	build_edit_bar is
@@ -106,13 +119,16 @@ feature {NONE}
 		end;
 
 	debug_run_command: DEBUG_RUN;
-	step_command: STEP;
-	next_command: NEXT;
-	line_command: TIL_LINE;
-	continue_command: CONTINUE;
+--	step_command: STEP;
+--	next_command: NEXT;
+--	line_command: TIL_LINE;
+--	continue_command: CONTINUE;
 --	break_command: SET_BREAKPOINT;
-	break_command: SHOW_BREAKPOINTS;	
+	break_command: DEBUG_STOPIN;	
 	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
+	debug_showbreak: DEBUG_SHOWBREAK;
+	showpast_command: SHOW_PAST;
+	showfuture_command: SHOW_FUTURE;
 
 end

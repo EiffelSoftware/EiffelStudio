@@ -74,6 +74,9 @@ feature {NONE}
 	job_done_handler: JOB_DONE_HDLR;
 	failure_handler: FAILURE_HDLR;
 	melt_handler: MELT_HDLR;
+	dead_handler: DEAD_HDLR;
+	stopped_handler: STOPPED_HDLR;
+	
 
 	pass_adresses is
 			-- Create all possible kinds of RQST_HANDLER that the outside could
@@ -83,7 +86,9 @@ feature {NONE}
 			!!db_info_handler.make;
 			!!job_done_handler.make;
 			!!failure_handler.make;
-			!!melt_handler.make
+			!!melt_handler.make;
+			!!dead_handler.make;
+			!!stopped_handler.make
 		end;
 
 feature {NONE} -- External features

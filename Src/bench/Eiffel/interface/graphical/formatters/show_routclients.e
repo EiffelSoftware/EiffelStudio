@@ -34,13 +34,9 @@ feature {NONE}
 			-- Display Senders of `c'.
 		local
 			cmd: EWB_SENDERS;
-			class_c: CLASS_C;
-			feature_i: FEATURE_I;
 		do
-			feature_i := f.feature_i;
-			class_c := feature_i.written_class;
-			!!cmd.make (class_c.class_name, feature_i.feature_name);
-			cmd.display_senders (text_window, class_c, feature_i.feature_id);
+			!!cmd.null;
+			cmd.display_senders (text_window, f.class_c, f.feature_i);
 		end;
 
 end

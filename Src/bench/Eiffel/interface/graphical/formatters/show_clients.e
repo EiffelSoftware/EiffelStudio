@@ -50,7 +50,7 @@ feature {NONE}
 					!!class_c.make (clients.item);
 					text_window.put_string (tabs (1));
 					text_window.put_clickable_string (class_c, class_c.signature);
-					text_window.new_line;
+					text_window.put_string ("%N");
 				end;
 				clients.forth
 			end

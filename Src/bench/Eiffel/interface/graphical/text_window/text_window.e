@@ -10,7 +10,10 @@ inherit
 		undefine
 			twin
 		end;
-	CLICKABLE;
+	CLICKABLE
+		redefine
+			clear_window, display
+		end;
 	COMMAND_W
 		undefine
 			twin
@@ -188,6 +191,18 @@ feature
 			not changed
 		end;
 
+	clear_window is
+		do
+			clean;
+			show_image;
+			set_changed (False);
+		end;
+
+	display is
+		do
+			show_image;
+			bench_error_window.set_changed (False);	
+		end;
 	
 feature {NONE}
 

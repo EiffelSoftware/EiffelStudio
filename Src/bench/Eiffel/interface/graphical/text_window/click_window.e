@@ -16,6 +16,10 @@ feature
 			put_string (i.out);
 		end;
 
+	display is do end;
+ 
+	clear_window is do end;
+ 
 feature -- Obsolete
 
 	putstring (s: STRING) is obsolete "Use put_string"

@@ -17,7 +17,8 @@ inherit
 		export
 			{NONE} all
 		end;
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	SHARED_DEBUG
 
 
 creation
@@ -30,7 +31,8 @@ feature
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window);
-			!!request.make (Rqst_application)
+			!!run_request.make (Rqst_application);
+			!!cont_request.make (Rqst_cont)
 		end;
 
 	
@@ -40,19 +42,32 @@ feature {NONE}
 			-- Re-run the application
 		local
 			application_path: STRING;
+			status: BOOLEAN
 		do
-			if project_tool.initialized then
-				!!application_path.make (50);
-				application_path.append (Generation_path);
-				application_path.append ("/");
-				application_path.append (System.system_name);
+			debug_info.trace;
+			if Run_info.is_running then
+					-- Application is running. Continue execution.
+				status := cont_request.send_byte_code;
+				if status then
+					cont_request.send_breakpoints
+				end;
+				debug_info.tenure;
+				cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
+			else
+					-- Application is not running. Start it.
+				if project_tool.initialized then
+					!!application_path.make (50);
+					application_path.append (Generation_path);
+					application_path.append ("/");
+					application_path.append (System.system_name);
 io.putstring ("Pop up prompt window to ask for arguments%N");
-				request.set_application_name (application_path);
-				request.send
-			end
+					run_request.set_application_name (application_path);
+					run_request.send
+				end
+			end;
+			Run_info.set_is_stopped (False);
 		end;
 
-	
 feature 
 
 	symbol: PIXMAP is 
@@ -66,6 +81,8 @@ feature {NONE}
 
 	command_name: STRING is do Result := l_Debug_run end;
 
-	request: RUN_REQUEST
+	run_request: RUN_REQUEST;
+
+	cont_request: EWB_REQUEST
 
 end

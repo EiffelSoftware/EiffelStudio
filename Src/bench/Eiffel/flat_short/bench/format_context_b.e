@@ -410,7 +410,7 @@ feature -- type control
 			end;
 			if feature_i /= void then
 				feature_as := body_server.item (feature_i.body_id);
-				!!stone.make (feature_i, feature_as.start_position,
+				!!stone.make (feature_i, class_c, feature_as.start_position,
 						feature_as.end_position);
 				!CLICKABLE_TEXT!item.make (format.local_types.final_name, stone);
 			else			

@@ -9,7 +9,7 @@ inherit
 
 creation
 
-	make
+	make, null
 
 feature -- Creation
 
@@ -21,6 +21,8 @@ feature -- Creation
 			feature_name.to_lower
 		end;
 
+	null is do end;
+
 	class_name, feature_name: STRING;
 
 feature
@@ -30,7 +32,7 @@ feature
 	execute is
 		local
 			class_c: CLASS_C;
-			fid: INTEGER;
+			feature_i: FEATURE_I;
 		do
 			init_project;
 			if not (error_occurred or project_is_new) then
@@ -39,15 +41,15 @@ feature
 						-- Get the class
 						-- Note: class name amiguities are not resolved.
 					class_c := Universe.unique_class (class_name).compiled_class;
-					fid := class_c.feature_table.item (feature_name).feature_id;
-					display_senders (error_window, class_c, fid);
+					feature_i := class_c.feature_table.item (feature_name);
+					display_senders (error_window, class_c, feature_i);
 				end;
 			end;
 		end;
 
-	display_senders (display: CLICK_WINDOW; class_c: CLASS_C; fid: INTEGER) is
+	display_senders (display: CLICK_WINDOW; class_c: CLASS_C; feature_i: FEATURE_I) is
 		local
-			feature_i : FEATURE_I;
+			fid: INTEGER;
 			clients: LINKED_LIST [CLASS_C];
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;
@@ -55,6 +57,7 @@ feature
 			client: CLASS_C;
 			ftable: FEATURE_TABLE;
 		do
+			fid := feature_i.feature_id;
 			clients := class_c.clients;
 			from
 				clients.start
@@ -79,7 +82,7 @@ feature
 							client := clients.item;
 							client.append_clickable_name (display);
 							display.put_string (".");
-							client.feature_table.item (cfeat).append_clickable_name (display);
+							client.feature_table.item (cfeat).append_clickable_name (display, client);
 							display.new_line;
 						end;
 						fdep.forth

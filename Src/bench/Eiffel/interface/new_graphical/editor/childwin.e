@@ -7,8 +7,8 @@ inherit
 			make as mdi_child_window_make
 		redefine
 			on_paint, on_size, class_icon, default_style,
-			on_vertical_scroll, on_key_down, on_char,
-			on_left_button_down
+			on_vertical_scroll, on_key_down, on_key_up,
+			on_char, on_left_button_down
 		end
 
 	APPLICATION_IDS
@@ -213,47 +213,100 @@ feature -- Basic operations
 			end
 		end
 
-	on_key_down(virtual_key: INTEGER; key_data: INTEGER) is
+	on_key_down (virtual_key: INTEGER; key_data: INTEGER) is
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
 			if virtual_key = Vk_left then 
-				invalidate_cursor_rect(False)
-				cursor.go_left_char
-				invalidate_cursor_rect(True)
+				if not has_selection then
+					if shifted_key then
+						has_selection := True
+						selection_start := cursor
+					end
+					invalidate_cursor_rect (False)
+					cursor.go_left_char
+					invalidate_cursor_rect (True)
+				elseif shifted_key then
+					invalidate_cursor_rect (False)
+					cursor.go_left_char
+					invalidate_cursor_rect (True)
+				else
+					cursor.go_left_char
+					has_selection := False
+					invalidate
+					update
+				end
 
 			elseif  virtual_key = Vk_right then
-				invalidate_cursor_rect(False)
+				invalidate_cursor_rect (False)
 				cursor.go_right_char
-				invalidate_cursor_rect(True)
+				if has_selection and then not (shifted_key) then
+					has_selection := False
+					invalidate
+					update
+				else
+					invalidate_cursor_rect (True)
+				end
 
 			elseif  virtual_key = Vk_up then
-				invalidate_cursor_rect(False)
+				invalidate_cursor_rect (False)
 				cursor.go_up_line
-				invalidate_cursor_rect(True)
+				if has_selection and then not (shifted_key) then
+					has_selection := False
+					invalidate
+					update
+				else
+					invalidate_cursor_rect (True)
+				end
 
 			elseif  virtual_key = Vk_down then
-				invalidate_cursor_rect(False)
+				invalidate_cursor_rect (False)
 				cursor.go_down_line
-				invalidate_cursor_rect(True)
+				if has_selection and then not (shifted_key) then
+					has_selection := False
+					invalidate
+					update
+				else
+					invalidate_cursor_rect (True)
+				end
 
 			elseif  virtual_key = Vk_home then
-				invalidate_cursor_rect(False)
+				invalidate_cursor_rect (False)
 				cursor.go_start_line
-				invalidate_cursor_rect(True)
+				if has_selection and then not (shifted_key) then
+					has_selection := False
+					invalidate
+					update
+				else
+					invalidate_cursor_rect (True)
+				end
 
 			elseif  virtual_key = Vk_end then
-				invalidate_cursor_rect(False)
+				invalidate_cursor_rect (False)
 				cursor.go_end_line
-				invalidate_cursor_rect(True)
+				if has_selection and then not (shifted_key) then
+					has_selection := False
+					invalidate
+					update
+				else
+					invalidate_cursor_rect(True)
+				end
 
 			elseif  virtual_key = Vk_delete then
-				cursor.delete_char
+				if has_selection then
+					delete_selection
+				else
+					cursor.delete_char
+				end
 				invalidate
 				update
 
 			elseif  virtual_key = Vk_Back then
-				cursor.delete_previous
+				if has_selection then
+					delete_selection
+				else
+					cursor.delete_previous
+				end
 				invalidate
 				update
 
@@ -266,8 +319,21 @@ feature -- Basic operations
 				cursor.insert_eol
 				invalidate
 				update
+
+			elseif virtual_key = Vk_Shift then
+				shifted_key := True
+
 			else
 				-- Key not handled, do nothing
+			end
+		end
+
+	on_key_up (virtual_key: INTEGER; key_data: INTEGER) is
+			-- Process Wm_keydown message corresponding to the
+			-- key `virtual_key' and the associated data `key_data'.
+		do
+			if virtual_key = Vk_Shift then
+				shifted_key := False
 			end
 		end
 
@@ -281,16 +347,22 @@ feature -- Basic operations
 
 			if (character_code /= Vk_Back) and then	(character_code /= Vk_return) then
 				c := character_code.ascii_char
-
-				invalidate_cursor_rect(False)
-
-				if insert_mode then
-					cursor.replace_char (c)
-				else
+				if has_selection then
+					delete_selection
 					cursor.insert_char (c)
-				end
+					invalidate
+					update
+				else
+					invalidate_cursor_rect(False)
 
-				invalidate_cursor_rect(True)
+					if insert_mode then
+						cursor.replace_char (c)
+					else
+						cursor.insert_char (c)
+					end
+
+					invalidate_cursor_rect(True)
+				end
 			end
  		end
 
@@ -305,6 +377,40 @@ feature -- Basic operations
 			invalidate
 			update
 		end
+
+feature -- Selection Handling
+
+	cut_selection is
+		do
+			copy_selection
+			delete_selection
+		end
+
+	copy_selection is
+		do
+		end
+
+	paste_selection is
+		do
+		end
+
+	delete_selection is
+			-- delete text being in selection.
+		local
+			begin: TEXT_CURSOR
+		do
+			if (cursor < selection_start) then
+				begin := cursor
+				text_displayed.delete_selection (cursor, selection_start)
+			else
+				begin := selection_start
+				text_displayed.delete_selection (selection_start, cursor)
+			end
+			cursor.make_from_absolute_pos (begin.x_in_pixels, begin.y_in_lines, Current)
+			has_selection := False
+		end
+
+
 
 feature {NONE} -- Display functions
 	
@@ -454,6 +560,8 @@ feature {NONE} -- Implementation
 	selection_start: TEXT_CURSOR
 
 	has_selection: BOOLEAN
+
+	shifted_key: BOOLEAN
 
 end -- class CHILD_WINDOW
 

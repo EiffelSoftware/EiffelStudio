@@ -9,7 +9,7 @@ CC = cl
 #	-I$(ISE_EIFFEL)\studio\spec\windows\include
 
 # Release version
-CFLAGS = -c -O1 \
+CFLAGS = -c -Ox -W3 \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \

@@ -39,6 +39,7 @@ feature -- Basic operations
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			tmp_string: STRING
 		do
 			a_var_desc := a_type_info.var_desc (an_index)
 			member_id := a_var_desc.member_id
@@ -59,7 +60,10 @@ feature -- Basic operations
 			else
 				name := clone (a_documentation.name)
 			end
-			if eiffel_key_words.has (name) then
+
+			tmp_string := clone (name)
+			tmp_string.to_lower
+			if eiffel_key_words.has (tmp_string) then
 				name.append (One)
 			end
 

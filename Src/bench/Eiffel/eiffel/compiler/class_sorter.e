@@ -51,7 +51,7 @@ feature
 					-- not Void.
 				if cl /= Void then
 					count := count + 1;
-					cl.set_class_id (count);
+					cl.set_topological_id (count);
 					original.put (cl, count);
 					successors.put (cl.descendants, count);
 				end;
@@ -132,7 +132,7 @@ io.error.putstring (": ");
 io.error.putstring (cl.class_name);
 io.error.new_line;
 end;
-				cl.set_class_id (i);
+				cl.set_topological_id (i);
 				i := i + 1
 			end;
 				-- Update system data.

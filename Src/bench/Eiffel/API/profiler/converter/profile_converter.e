@@ -9,7 +9,9 @@ class PROFILE_CONVERTER
 
 inherit
 
-	STORABLE
+	STORABLE;
+	SHARED_EIFFEL_PROJECT;
+	COMPILER_EXPORTER
 
 creation
 	make
@@ -264,7 +266,7 @@ end;
 			space, number: INTEGER;
 			num_str: STRING;
 			class_n, feature_n, cluster_n: STRING;
-			project: SHARED_EIFFEL_PROJECT
+			class_id: INTEGER
 		do
 			if config.get_function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -285,16 +287,32 @@ end;
 						is_c := false;
 						is_cycle := false;
 					elseif function_name.substring_index (" from ", 1) > 0 then
-						!! project;
 						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1));
-						class_n := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count);
 debug("PROFILE_CONVERT")
-	io.error.putstring ("Feature name: ");
-	io.error.putstring (feature_n);
+	io.error.putstring ("Total token: ");
+	io.error.putstring (function_name);
 	io.error.new_line;
-	io.error.putstring ("Class name: ");
+	io.error.putstring ("class_id representation is: ");
+	io.error.putstring (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count));
+	io.error.new_line
+end;
+						class_id := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count).to_integer;
+						if Eiffel_system.valid_dynamic_id (class_id + 1) then
+							class_n := Eiffel_system.class_of_dynamic_id (class_id + 1).name_in_upper
+						end
+debug("PROFILE_CONVERT")
+	io.error.putstring ("Class id: ");
+	io.error.putint (class_id);
+	io.error.new_line;
+	io.error.putstring ("Class id is ");
+	if not Eiffel_system.valid_dynamic_id (class_id + 1) then
+		io.error.putstring ("not");
+	end
+	io.error.putstring (" valid.");
+	io.error.new_line;
+	io.error.putstring ("The class name of class_id is: ");
 	io.error.putstring (class_n);
-	io.error.new_line;
+	io.error.new_line
 end;
 						--cluster_n := project.Eiffel_universe.class_with_name (class_n).cluster.cluster_name;
 						cluster_n := "<cluster_tag>"
@@ -478,7 +496,7 @@ end;
 
 					-- Eiffel generates ` from ABC' as well...
 
-debug("PROFILE_CIONVERT")
+debug("PROFILE_CONVERT")
 	io.error.putstring ("Substring (string_idx, string_idx + 4) is: ");
 	io.error.putstring (profile_string.substring (string_idx, string_idx + 4));
 	io.error.new_line;

@@ -618,6 +618,19 @@ feature -- Cluster tree warnings
 						%Please select a different cluster name.")
 		end
 
+	w_Invalid_feature_name (feature_name: STRING): STRING is
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			create Result.make (100)
+			Result.append ("'")
+			Result.append (feature_name)
+			Result.append ("' is not a valid feature name.%N%
+						%Feature names should only include %N%
+						%alphanumeric characters or underscores.%N%
+						%Please select a different feature name.")
+		end
+
 	w_Class_modified (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void

@@ -78,6 +78,9 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (member_id)
 			end
+			if (invoke_kind = Invoke_propertyput) or (invoke_kind = Invoke_propertyputref) then
+				name.prepend ("set_")
+			end
 			tmp_string := clone (name)
 			tmp_string.to_lower
 			if eiffel_key_words.has (tmp_string) then

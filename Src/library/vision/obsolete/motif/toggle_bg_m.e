@@ -13,8 +13,8 @@ inherit
 
 	TOGGLE_R_M
 		export
-            {NONE} all
-        end;
+            		{NONE} all
+       		end;
 
 	TOGGLE_BG_I
 		export
@@ -22,10 +22,21 @@ inherit
 		end;
 
 	BUTTON_M
+		rename
+			clean_up as button_clean_up
 		redefine
 			set_action, remove_action,
 			set_background_color,
 			set_foreground
+		end;
+
+	BUTTON_M
+		redefine
+			set_action, remove_action,
+			set_background_color,
+			set_foreground, clean_up
+		select
+			clean_up
 		end;
 
 	FONTABLE_M
@@ -44,9 +55,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_toggle_bg.identifier.to_c;
 			screen_object := create_toggle_b_gadget ($ext_name,
-					a_toggle_bg.parent.implementation.screen_object);
+					parent_screen_object (a_toggle_bg, widget_index));
 			a_toggle_bg.set_font_imp (Current)
 		end;
 
@@ -135,6 +147,20 @@ feature {NONE}
 
 	value_changed_actions: EVENT_HAND_M
 			-- An event handler to manage call-backs when value is changed
+
+	clean_up is
+		do
+			button_clean_up;
+			if arm_actions /= Void then
+				arm_actions.free_cdfd
+			end;
+			if release_actions /= Void then
+				release_actions.free_cdfd
+			end;
+			if value_changed_actions /= Void then
+				value_changed_actions.free_cdfd
+			end;
+		end
 
 feature
 

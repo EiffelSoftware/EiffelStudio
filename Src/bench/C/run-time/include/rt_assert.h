@@ -39,7 +39,7 @@ extern int ise_printf (char *StrFmt, ...);
 
 #define INTERNAL_CHECK(type, tag, exp) \
 	if (!(exp)) \
-		printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", \
+		ise_printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", \
 				(type), (tag), __FILE__, __LINE__, #exp);
 
 	/* Precondition checking */

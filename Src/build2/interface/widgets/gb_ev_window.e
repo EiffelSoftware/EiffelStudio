@@ -25,8 +25,6 @@ inherit
 		undefine
 			default_create
 		end
-		
-	GB_CONSTANTS
 	
 	GB_GENERAL_UTILITIES
 		undefine

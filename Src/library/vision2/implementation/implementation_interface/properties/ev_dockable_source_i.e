@@ -118,9 +118,9 @@ feature -- Status setting
 		ensure
 			is_dragable: is_dragable
 		end
-		
+
 	internal_enable_drag is
-			--
+			-- Platform specific implementation of `enable_drag'.
 		deferred
 		end
 
@@ -134,7 +134,7 @@ feature -- Status setting
 		end
 		
 	internal_disable_drag is
-			--
+			-- Platform specific implementation of `disable_drag'.
 		deferred
 		end
 

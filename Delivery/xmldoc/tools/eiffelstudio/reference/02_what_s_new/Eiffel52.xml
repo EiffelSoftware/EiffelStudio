@@ -39,13 +39,13 @@
 		</heading>
 		<list ordered="false">
 			<item>Right-clicking on one of the run buttons will popup a dialog enabling you to choose the command line argument (it is a shortcut for `Project Settings'-&gt; Debug tab).</item>
-			<item>Expressions can now be dynamically evaluated in the debugger.( 
+			<item>Expressions can now be dynamically evaluated in the debugger. (
 				<link>
 					<url>../40_debugger/50_expression_evaluation/index.xml</url>
 					<label>info</label>
 				</link>)
 			</item>
-			<item>Conditional breakpoints. ( 
+			<item>Conditional breakpoints. (
 				<link>
 					<url>../40_debugger/20_breakpoints/index.xml</url>
 					<label>info</label>
@@ -54,16 +54,16 @@
 			<item>Classes can now define 
 				<code>
 					<feature_name>debug_output</feature_name>
-				</code> a feature inherited from 
+				</code>, a feature inherited from 
 				<code>
 					<class_name>DEBUG_OUTPUT</class_name>
-				</code>, whose string result is automatically displayed in the debugger for all objects of that type. ( 
+				</code>, whose string result is automatically displayed in the debugger for all objects of that type. (
 				<link>
 					<url>../40_debugger/40_object_tool/17_debug_output.xml</url>
 					<label>info</label>
 				</link>)
 			</item>
-			<item>Possible stack overflows can now be detected in the debugger before they occur. ( 
+			<item>Possible stack overflows can now be detected in the debugger before they occur. (
 				<link>
 					<url>../40_debugger/60_stack_overflow_prevention.xml</url>
 					<label>info</label>
@@ -105,8 +105,6 @@
 				<code>
 					<class_name>STRING</class_name>
 				</code> changes:
-			</item>
-			<item>
 				<list ordered="false">
 					<item>Fixed 
 						<code>
@@ -152,7 +150,7 @@
 								</code> and 
 								<code>
 									<feature_name>tail</feature_name>
-								</code>obsolete.
+								</code> obsolete.
 							</item>
 							<item>Added 
 								<code>
@@ -177,8 +175,8 @@
 									<feature_name>as_lower</feature_name>
 								</code>, 
 								<code>
-									<feature_name>as_upper.</feature_name>
-								</code>
+									<feature_name>as_upper</feature_name>
+								</code>.
 							</item>
 							<item>Modified 
 								<code>
@@ -268,7 +266,7 @@
 			<item>Put Windows and Unix version to the same version number.</item>
 			<item>Fixed EiffelWeb documentation and example.</item>
 			<item>Fixed minor issues found with EiffelVision2 on Unix and Windows which were affecting EiffelBuild.</item>
-			<item>Fixed incorrect Ace file specification for EiffelVision2examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
+			<item>Fixed incorrect Ace file specification for EiffelVision2 examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
 			<item>Fixed EiffelStore handle for Oracle so that it works fine when compiled with the Borland C compiler.</item>
 			<item>Fixed incorrect version number in VERSION file on Unix platforms.</item>
 		</list>
@@ -288,21 +286,15 @@
 					<class_name>STRING</class_name>
 				</code> in dotnet mode.
 			</item>
-			<item>Fixed issue with setting of arguments. After restarting EiffelStudio the command line argument contains an extra `]'character.</item>
+			<item>Fixed issue with setting of arguments. After restarting EiffelStudio the command line argument contains an extra `]' character.</item>
 			<item>Fixed issue with working directories where only the first one ever set was used even if new ones have been set afterwards.</item>
 			<item>Fixed issue in IL code generation where having a class that inherits from a non-Eiffel .NET class. And the class has the following features:
 				<line_break/>
-				<code>
-					<feature_name>a</feature_name>:
-					<class_name>ARRAY</class_name> [
-					<keyword>like</keyword>
-					<feature_name>f</feature_name>]
-					<feature_name>f</feature_name>:
-					<class_name>STRING</class_name>
-					<keyword>is</keyword>
-					<keyword>do</keyword>
-					<keyword>end</keyword>
-				</code>
+				<code_block>
+<feature_name>a</feature_name>: <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>f</feature_name>]
+<feature_name>f</feature_name>: <class_name>STRING</class_name> <keyword>is</keyword>
+	<keyword>do</keyword>
+	<keyword>end</keyword></code_block>
 				<paragraph>Then you could neither load nor execute the generated code.</paragraph>
 			</item>
 			<item>Fixed issue with incorrect C code generation of inspect instruction based on character values above 128.</item>
@@ -312,22 +304,19 @@
 				</code> from 
 				<code>
 					<class_name>STRING</class_name>
-				</code> where following code was violating `valid_count' invariant from 
+				</code> where following code was violating <code><feature_name>valid_count</feature_name></code> invariant from 
 				<code>
 					<class_name>STRING</class_name>
 				</code>: 
-				<code>
-					<keyword>local</keyword>    s, t:
-					<class_name>STRING</class_name>
-					<keyword>do</keyword>
-					<keyword>create</keyword> s.
-					<feature_name>make</feature_name> (9)
-					<keyword>create</keyword> t.
-					<feature_name>make</feature_name> (10)    t.
-					<feature_name>append</feature_name> ("1234567890")    s.
-					<feature_name>copy</feature_name> (t)
-					<keyword>end</keyword>
-				</code>
+				<code_block>
+<keyword>local</keyword>
+	s, t: <class_name>STRING</class_name>
+<keyword>do</keyword>
+	<keyword>create</keyword> s.<feature_name>make</feature_name> (9)
+	<keyword>create</keyword> t.<feature_name>make</feature_name> (10) 
+	t.<feature_name>append</feature_name> ("1234567890") 
+	s.<feature_name>copy</feature_name> (t)
+<keyword>end</keyword></code_block>
 			</item>
 			<item>Fixed incorrect C file naming when generating a .NET system that uses a C++ external (it should be .cpp, not just .c).</item>
 			<item>Enabled support for Borland C compiler in .NET.</item>

@@ -23,6 +23,7 @@
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
 			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
+			<item>Removed <code><feature_name>Void</feature_name></code> from <code><class_name>ANY</class_name></code> as <code><keyword>Void</keyword></code> is now a keyword.</item>
 		</list>
 	</paragraph>
 </document>

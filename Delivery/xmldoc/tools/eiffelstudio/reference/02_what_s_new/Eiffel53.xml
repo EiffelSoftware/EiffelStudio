@@ -11,20 +11,24 @@
 		</heading>
 		<list ordered="false">
 			<item>In project settings, we now accept a root class without creation procedure.</item>
+			<item>In .NET code generation, we do not force the C compilation at each compilation. It is only done when necessary (for example when a C external has been added).</item>
+			<item>Incremental .NET code generation (See <link><url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url><label>compiler release notes</label></link> for more info).</item>
+			<item>Recoverable storable (See <link><url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url><label>compiler release notes</label></link> for more info).</item>
 		</list>
 		<heading>
 			<size>3</size>Bug fixes
 		</heading>
 		<list ordered="false">
-			<item>Fixed issue with setting of arguments. After restarting EiffelStudio the command line argument contains an extra `]'character.</item>
+			<item>Fixed issue with setting of arguments. After restarting EiffelStudio the command line argument contains an extra `]' character.</item>
 			<item>Fixed issue with working directories where only the first one ever set was used even if new ones have been set afterwards.</item>
 			<item>Fixed issue where generating documentation for all/library cluster would stop during generation without completing.</item>
 			<item>Fixed crash in diagram tool when moving label on client/supplier link between two classes.</item>
 			<item>Fixed resource leak on Windows 98 and Windows Me.</item>
 			<item>Fixed issue in projects where clusters are specified with relative path would not compile after adding a local assembly.</item>
 			<item>Fixed problem with cluster tool management where moving classes around or looking up a class will generate an error box instead of performing the requested operation.</item>
-			<item>Fixed incorrect Ace file specification for EiffelVision2examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
+			<item>Fixed incorrect Ace file specification for EiffelVision2 examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
 			<item>Fixed disappearance of EiffelStudio when debugging a routine `infix' or `prefix' in which an exception was raised. This issue was only occurring with melted code (usually noticeable when using a precompiled library).</item>
+			<item>Changing the project specific command line arguments will not touch the project settings configuration file (ace file).</item>
 		</list>
 		<heading>
 			<size>2</size>Compiler
@@ -114,23 +118,20 @@
 				</code> from 
 				<code>
 					<class_name>STRING</class_name>
-				</code> where following code was violating `valid_count' invariant from 
+				</code> where following code was violating <code><feature_name>valid_count</feature_name></code> invariant from 
 				<code>
 					<class_name>STRING</class_name>
 				</code>: 
-				<code>
-					<keyword>local</keyword>    s, t:
-					<class_name>STRING</class_name>
-					<keyword>do</keyword>
-					<keyword>create</keyword> s.
-					<feature_name>make</feature_name> (9)
-					<keyword>create</keyword> t.
-					<feature_name>make</feature_name> (10)    t.
-					<feature_name>append</feature_name> ("1234567890")    s.
-					<feature_name>copy</feature_name> (t)
-					<keyword>end</keyword>
-				</code>
-			</item>
+				<code_block>
+<keyword>local</keyword>
+	s, t: <class_name>STRING</class_name>
+<keyword>do</keyword>
+	<keyword>create</keyword> s.<feature_name>make</feature_name> (9)
+	<keyword>create</keyword> t.<feature_name>make</feature_name> (10) 
+	t.<feature_name>append</feature_name> ("1234567890") 
+	s.<feature_name>copy</feature_name> (t)
+<keyword>end</keyword></code_block>
+			</item>			
 			<item>Added support for storable in .NET. However .NET and classic implementation are completely different and 
 				<code>
 					<feature_name>independent_store</feature_name>
@@ -144,26 +145,20 @@
 					<class_name>LIST</class_name>
 				</code> where comparing two lists of different counts could break the comparison:
 				<line_break/>
-				<code>
-					<feature_name>make</feature_name>
-					<keyword>is</keyword>
-					<keyword>local</keyword>        a, b:
-					<class_name>LIST</class_name> [
-					<class_name>INTEGER</class_name>]
-					<keyword>do</keyword>        create {
-					<class_name>ARRAYED_LIST</class_name> [
-					<class_name>INTEGER</class_name>]} a.
-					<feature_name>make</feature_name> (2)        a.
-					<feature_name>extend</feature_name> (10)        create {
-					<class_name>ARRAYED_LIST</class_name> [
-					<class_name>INTEGER</class_name>]} b.
-					<feature_name>make</feature_name> (2)        b.
-					<feature_name>extend</feature_name> (10)        b.
-					<feature_name>extend</feature_name> (11)
-					<feature_name>print</feature_name> (
-					<feature_name>equal</feature_name> (b, a))
-					<keyword>end</keyword>
-				</code>
+				<code_block>
+<feature_name>make</feature_name> <keyword>is</keyword>
+	<keyword>local</keyword>
+		a, b: <class_name>LIST</class_name> [<class_name>INTEGER</class_name>]
+	<keyword>do</keyword>
+		<keyword>create</keyword> {<class_name>ARRAYED_LIST</class_name> [<class_name>INTEGER</class_name>]} a.<feature_name>make</feature_name> (2)
+		a.<feature_name>extend</feature_name> (10)
+		
+		<keyword>create</keyword> {<class_name>ARRAYED_LIST</class_name> [<class_name>INTEGER</class_name>]} b.<feature_name>make</feature_name> (2)
+		b.<feature_name>extend</feature_name> (10)
+		b.<feature_name>extend</feature_name> (11)
+		
+		<feature_name>print</feature_name> (<feature_name>equal</feature_name> (b, a))
+	<keyword>end</keyword></code_block>
 			</item>
 			<item>Fixed .NET implementation of 
 				<code>
@@ -176,18 +171,22 @@
 					<class_name>FILE</class_name>
 				</code>. They were not resetting the file size to zero if file already existed.
 			</item>
+			<item>Added <code><feature_name>correct_mismatch</feature_name></code> on <code><class_name>ANY</class_name></code> used for `recoverable storable'.</item>
+			<item>Added <code><feature_name>correct_mismatch</feature_name></code> on <code><class_name>HASH_TABLE</class_name></code> to enable retrieval of the 5.1 and older version of <code><class_name>HASH_TABLE</class_name></code>.</item>
+			<item>Fixed bug in implementation of <code><feature_name>copy</feature_name></code> and <code><feature_name>is_equal</feature_name></code> for <code><class_name>TREE</class_name></code> and descendant classes. Now descendants of <code><class_name>TREE</class_name></code> that would like to compare additional attributes of their class needs to redefine <code><feature_name>node_is_equal</feature_name></code> whose default implementation will always result in a true value.</item>
+			<item>Changed default semantic of <code><feature_name>make</feature_name></code> and <code><feature_name>put_child</feature_name></code> from <code><class_name>FIXED_TREE</class_name></code>, to preserve existing semantic, you should use <code><feature_name>make_filled</feature_name></code> and <code><feature_name>replace_child</feature_name></code> instead. </item>
 		</list>
 		<heading>
 			<size>3</size>Eiffel2Java
 		</heading>
 		<list ordered="false">
-			<item>Updated library so that it works both in classic and dotnetmode.</item>
+			<item>Updated library so that it works both in classic and dotnet mode.</item>
 		</list>
 		<heading>
 			<size>3</size>EiffelCOM
 		</heading>
 		<list ordered="false">
-			<item>Fixed crash in ccom_set_name from FONT_IMPL_PROXY.</item>
+			<item>Fixed crash in <code><feature_name>ccom_set_name</feature_name></code> from <code><class_name>FONT_IMPL_PROXY</class_name></code>.</item>
 		</list>
 		<heading>
 			<size>3</size>EiffelNet
@@ -202,7 +201,7 @@
 				</code> from 
 				<code>
 					<class_name>HTTP_PROTOCOL</class_name>
-				</code> if assertions are enabled onEiffelBase.
+				</code> if assertions are enabled on EiffelBase.
 			</item>
 		</list>
 		<heading>
@@ -219,7 +218,7 @@
 					<class_name>EXT_INTERNAL</class_name>
 				</code>.
 			</item>
-			<item>Removed need for additional object file (`support.lib' onwindows and `libsupport.a' on Unix platforms), so make sure to remove it from your project configurations.</item>
+			<item>Removed need for additional object file (`support.lib' on Windows and `libsupport.a' on Unix platforms), so make sure to remove it from your project configurations.</item>
 		</list>
 		<heading>
 			<size>3</size>EiffelVision2
@@ -236,17 +235,7 @@
 			<size>3</size>WEL
 		</heading>
 		<list ordered="false">
-			<item>Removed inheritance to 
-				<code>
-					<class_name>WEL_STRUCTURE</class_name>
-				</code> in 
-				<code>
-					<class_name>WEL_STRING</class_name>
-				</code>, it now inherits from new 
-				<code>
-					<class_name>C_STRING</class_name>
-				</code> class.
-			</item>
+			<item>Removed inheritance to <code><class_name>WEL_STRUCTURE</class_name></code> in <code><class_name>WEL_STRING</class_name></code>, it now inherits from new <code><class_name>C_STRING</class_name></code> class. In the process removed the following features which were inherited from <code><class_name>WEL_STRUCTURE</class_name></code> and did not make sense to <code><class_name>WEL_STRING</class_name></code> <code><feature_name>memory_copy</feature_name></code>, <code><feature_name>structure_size</feature_name></code>, <code><feature_name>dispose</feature_name></code>, <code><feature_name>set_item</feature_name></code>, <code><feature_name>set_shared</feature_name></code>, <code><feature_name>set_unshared</feature_name></code>, <code><feature_name>shared</feature_name></code>, <code><feature_name>to_integer</feature_name></code>. No replacements have been provided for those features. Made <code><feature_name>initialize</feature_name></code> and <code><feature_name>initialize_with_character</feature_name></code> obsolete, instead we now provide two features inherited from <code><class_name>C_STRING</class_name></code> <code><feature_name>fill_blank</feature_name></code> and <code><feature_name>fill_value</feature_name></code>.</item>
 		</list>
 		<paragraph> </paragraph>
 		<paragraph>

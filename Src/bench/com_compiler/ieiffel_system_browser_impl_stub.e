@@ -42,6 +42,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	root_cluster: IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+			-- Number of top-level clusters in system.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	cluster_descriptor (cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is

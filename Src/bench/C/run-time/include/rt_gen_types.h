@@ -51,6 +51,7 @@ extern "C" {
 #define EIF_DOUBLE_CODE		'd'
 #define EIF_REAL_CODE		'f'
 #define EIF_INTEGER_CODE	'i'
+#define EIF_INTEGER_32_CODE	'i'
 #define EIF_POINTER_CODE	'p'
 #define EIF_REFERENCE_CODE	'r'
 #define EIF_INTEGER_8_CODE	'j'
@@ -62,6 +63,8 @@ extern "C" {
 
 extern char *eif_typename (int16);
 extern int  eif_typename_len (int16);
+extern int eif_gen_count_with_dftype (int16 dftype);
+extern char eif_gen_typecode_with_dftype (int16 dftype, int pos);
 
 #ifdef __cplusplus
 }

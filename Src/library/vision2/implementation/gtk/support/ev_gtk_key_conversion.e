@@ -14,7 +14,7 @@ inherit
 feature -- Conversion
 
 	key_code_to_gtk (a_key_code: INTEGER): INTEGER is
-			-- Corresponding WEL code for ``a_key_code''.
+			-- Corresponding GTK code for ``a_key_code''.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
 		do

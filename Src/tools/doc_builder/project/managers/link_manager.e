@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			if error_report /= Void then
 				error_report.clear
 			else
-				create error_report.make_empty ("Invalid Links")
+				create error_report.make ("Invalid Links")
 			end
 					-- Traverse `documents' and perform necessary commands
 			from
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 				if do_check then
 					l_doc.check_links
 					if not l_doc.invalid_links.is_empty then
-						error_report.append_report (l_doc.invalid_links)
+						error_report.show
 					end
 				end
 				documents.forth

@@ -14,7 +14,7 @@ deferred class
 inherit
 	EV_ANY_I
 		export
-			{EV_INTERMEDIARY_ROUTINES, EV_ANY_IMP}
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_ANY_IMP}
 				is_destroyed
 		end
 

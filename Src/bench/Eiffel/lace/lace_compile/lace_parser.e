@@ -39,356 +39,371 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 75
+--|#line 77
 	yy_do_action_1
 when 2 then
---|#line 77
+--|#line 79
 	yy_do_action_2
 when 3 then
---|#line 81
+--|#line 83
 	yy_do_action_3
 when 4 then
---|#line 85
+--|#line 87
 	yy_do_action_4
 when 5 then
---|#line 89
+--|#line 91
 	yy_do_action_5
 when 6 then
---|#line 93
+--|#line 98
 	yy_do_action_6
 when 8 then
---|#line 99
+--|#line 104
 	yy_do_action_8
 when 10 then
---|#line 105
+--|#line 110
 	yy_do_action_10
 when 11 then
---|#line 109
+--|#line 114
 	yy_do_action_11
 when 12 then
---|#line 111
+--|#line 116
 	yy_do_action_12
 when 13 then
---|#line 115
+--|#line 120
 	yy_do_action_13
 when 14 then
---|#line 120
+--|#line 125
 	yy_do_action_14
 when 15 then
---|#line 127
+--|#line 132
 	yy_do_action_15
 when 16 then
---|#line 129
+--|#line 134
 	yy_do_action_16
 when 17 then
---|#line 131
+--|#line 136
 	yy_do_action_17
 when 18 then
---|#line 133
+--|#line 138
 	yy_do_action_18
 when 19 then
---|#line 135
+--|#line 140
 	yy_do_action_19
 when 20 then
---|#line 137
+--|#line 142
 	yy_do_action_20
 when 22 then
---|#line 143
+--|#line 148
 	yy_do_action_22
 when 23 then
---|#line 148
+--|#line 153
 	yy_do_action_23
 when 24 then
---|#line 150
+--|#line 155
 	yy_do_action_24
 when 25 then
---|#line 152
+--|#line 157
 	yy_do_action_25
 when 26 then
---|#line 154
+--|#line 159
 	yy_do_action_26
 when 27 then
---|#line 156
+--|#line 161
 	yy_do_action_27
 when 28 then
---|#line 158
+--|#line 163
 	yy_do_action_28
 when 29 then
---|#line 160
+--|#line 165
 	yy_do_action_29
 when 30 then
---|#line 162
+--|#line 167
 	yy_do_action_30
 when 31 then
---|#line 166
+--|#line 171
 	yy_do_action_31
 when 33 then
---|#line 173
+--|#line 178
 	yy_do_action_33
 when 34 then
---|#line 178
+--|#line 183
 	yy_do_action_34
 when 35 then
---|#line 186
+--|#line 191
 	yy_do_action_35
 when 37 then
---|#line 192
+--|#line 197
 	yy_do_action_37
 when 38 then
---|#line 197
+--|#line 202
 	yy_do_action_38
 when 40 then
---|#line 203
+--|#line 208
 	yy_do_action_40
 when 41 then
---|#line 207
+--|#line 212
 	yy_do_action_41
 when 44 then
---|#line 215
+--|#line 220
 	yy_do_action_44
 when 45 then
---|#line 219
+--|#line 224
 	yy_do_action_45
 when 47 then
---|#line 225
+--|#line 230
 	yy_do_action_47
 when 48 then
---|#line 230
+--|#line 235
 	yy_do_action_48
 when 49 then
---|#line 237
+--|#line 242
 	yy_do_action_49
 when 50 then
---|#line 242
+--|#line 247
 	yy_do_action_50
 when 51 then
---|#line 249
+--|#line 254
 	yy_do_action_51
 when 52 then
---|#line 254
+--|#line 259
 	yy_do_action_52
 when 54 then
---|#line 263
+--|#line 268
 	yy_do_action_54
 when 55 then
---|#line 267
+--|#line 272
 	yy_do_action_55
 when 57 then
---|#line 273
+--|#line 278
 	yy_do_action_57
 when 58 then
---|#line 278
+--|#line 283
 	yy_do_action_58
 when 59 then
---|#line 285
+--|#line 290
 	yy_do_action_59
 when 60 then
---|#line 287
+--|#line 292
 	yy_do_action_60
 when 61 then
---|#line 291
+--|#line 296
 	yy_do_action_61
 when 62 then
---|#line 296
+--|#line 301
 	yy_do_action_62
 when 63 then
---|#line 303
+--|#line 308
 	yy_do_action_63
 when 65 then
---|#line 309
+--|#line 314
 	yy_do_action_65
 when 66 then
---|#line 313
+--|#line 318
 	yy_do_action_66
 when 69 then
---|#line 321
+--|#line 326
 	yy_do_action_69
 when 70 then
---|#line 325
+--|#line 330
 	yy_do_action_70
 when 72 then
---|#line 331
+--|#line 336
 	yy_do_action_72
 when 73 then
---|#line 336
+--|#line 341
 	yy_do_action_73
 when 74 then
---|#line 343
+--|#line 348
 	yy_do_action_74
 when 75 then
---|#line 345
+--|#line 350
 	yy_do_action_75
 when 76 then
---|#line 347
+--|#line 352
 	yy_do_action_76
 when 77 then
---|#line 349
+--|#line 354
 	yy_do_action_77
 when 78 then
---|#line 353
+--|#line 358
 	yy_do_action_78
 when 79 then
---|#line 355
+--|#line 360
 	yy_do_action_79
 when 80 then
---|#line 357
+--|#line 362
 	yy_do_action_80
 when 81 then
---|#line 359
+--|#line 364
 	yy_do_action_81
 when 82 then
---|#line 361
+--|#line 366
 	yy_do_action_82
 when 83 then
---|#line 363
+--|#line 368
 	yy_do_action_83
 when 84 then
---|#line 372
+--|#line 377
 	yy_do_action_84
 when 85 then
---|#line 377
+--|#line 382
 	yy_do_action_85
 when 86 then
---|#line 384
+--|#line 389
 	yy_do_action_86
 when 88 then
---|#line 390
+--|#line 395
 	yy_do_action_88
 when 89 then
---|#line 394
+--|#line 399
 	yy_do_action_89
 when 90 then
---|#line 399
+--|#line 404
 	yy_do_action_90
 when 92 then
---|#line 408
+--|#line 413
 	yy_do_action_92
 when 93 then
---|#line 412
+--|#line 417
 	yy_do_action_93
 when 94 then
---|#line 414
+--|#line 419
 	yy_do_action_94
 when 95 then
---|#line 416
+--|#line 421
 	yy_do_action_95
 when 96 then
---|#line 420
+--|#line 425
 	yy_do_action_96
 when 97 then
---|#line 422
+--|#line 427
 	yy_do_action_97
 when 98 then
---|#line 424
+--|#line 429
 	yy_do_action_98
 when 99 then
---|#line 428
+--|#line 433
 	yy_do_action_99
 when 100 then
---|#line 430
+--|#line 435
 	yy_do_action_100
 when 101 then
---|#line 432
+--|#line 437
 	yy_do_action_101
 when 102 then
---|#line 434
+--|#line 439
 	yy_do_action_102
 when 103 then
---|#line 436
+--|#line 441
 	yy_do_action_103
 when 105 then
---|#line 442
+--|#line 447
 	yy_do_action_105
 when 107 then
---|#line 448
+--|#line 453
 	yy_do_action_107
 when 108 then
---|#line 453
+--|#line 458
 	yy_do_action_108
 when 109 then
---|#line 460
+--|#line 465
 	yy_do_action_109
 when 110 then
---|#line 464
+--|#line 470
 	yy_do_action_110
+when 112 then
+--|#line 479
+	yy_do_action_112
 when 114 then
---|#line 477
+--|#line 485
 	yy_do_action_114
 when 115 then
---|#line 482
+--|#line 490
 	yy_do_action_115
+when 116 then
+--|#line 497
+	yy_do_action_116
+when 117 then
+--|#line 501
+	yy_do_action_117
+when 121 then
+--|#line 514
+	yy_do_action_121
 when 122 then
---|#line 507
+--|#line 519
 	yy_do_action_122
-when 123 then
---|#line 511
-	yy_do_action_123
-when 125 then
---|#line 517
-	yy_do_action_125
-when 126 then
---|#line 522
-	yy_do_action_126
-when 127 then
---|#line 529
-	yy_do_action_127
-when 128 then
---|#line 531
-	yy_do_action_128
 when 129 then
---|#line 533
+--|#line 544
 	yy_do_action_129
 when 130 then
---|#line 535
+--|#line 548
 	yy_do_action_130
-when 131 then
---|#line 537
-	yy_do_action_131
 when 132 then
---|#line 539
+--|#line 554
 	yy_do_action_132
 when 133 then
---|#line 543
+--|#line 559
 	yy_do_action_133
+when 134 then
+--|#line 566
+	yy_do_action_134
 when 135 then
---|#line 549
+--|#line 568
 	yy_do_action_135
 when 136 then
---|#line 553
+--|#line 570
 	yy_do_action_136
+when 137 then
+--|#line 572
+	yy_do_action_137
 when 138 then
---|#line 559
+--|#line 574
 	yy_do_action_138
 when 139 then
---|#line 563
+--|#line 576
 	yy_do_action_139
-when 141 then
---|#line 569
-	yy_do_action_141
+when 140 then
+--|#line 580
+	yy_do_action_140
 when 142 then
---|#line 574
+--|#line 586
 	yy_do_action_142
-when 144 then
---|#line 583
-	yy_do_action_144
+when 143 then
+--|#line 590
+	yy_do_action_143
 when 145 then
---|#line 587
+--|#line 596
 	yy_do_action_145
 when 146 then
---|#line 591
+--|#line 600
 	yy_do_action_146
-when 147 then
---|#line 596
-	yy_do_action_147
+when 148 then
+--|#line 606
+	yy_do_action_148
 when 149 then
---|#line 605
-	yy_do_action_149
-when 150 then
---|#line 609
-	yy_do_action_150
-when 151 then
 --|#line 611
+	yy_do_action_149
+when 151 then
+--|#line 620
 	yy_do_action_151
+when 152 then
+--|#line 624
+	yy_do_action_152
+when 153 then
+--|#line 628
+	yy_do_action_153
+when 154 then
+--|#line 633
+	yy_do_action_154
+when 156 then
+--|#line 642
+	yy_do_action_156
+when 157 then
+--|#line 646
+	yy_do_action_157
+when 158 then
+--|#line 648
+	yy_do_action_158
 			else
 					-- No action
 				yyval := yyval_default
@@ -396,7 +411,7 @@ when 151 then
 		end
 
 	yy_do_action_1 is
-			--|#line 75
+			--|#line 77
 		local
 
 		do
@@ -406,7 +421,7 @@ ast := yytype1 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_2 is
-			--|#line 77
+			--|#line 79
 		local
 
 		do
@@ -416,261 +431,263 @@ ast := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_3 is
-			--|#line 81
+			--|#line 83
 		local
 			yyval1: ACE_SD
 		do
 
-yyval1 := new_ace_sd (yytype7 (yyvs.item (yyvsp - 6)), yytype13 (yyvs.item (yyvsp - 5)), yytype19 (yyvs.item (yyvsp - 4)), yytype18 (yyvs.item (yyvsp - 3)), yytype25 (yyvs.item (yyvsp - 2)), click_list) 
+create yyval1.initialize (yytype8 (yyvs.item (yyvsp - 7)), yytype14 (yyvs.item (yyvsp - 6)), yytype21 (yyvs.item (yyvsp - 5)), yytype19 (yyvs.item (yyvsp - 4)), yytype25 (yyvs.item (yyvsp - 2)), click_list) 
 			yyval := yyval1
 		end
 
 	yy_do_action_4 is
-			--|#line 85
+			--|#line 87
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_5 is
-			--|#line 89
+			--|#line 91
 		local
-			yyval13: ROOT_SD
+			yyval14: ROOT_SD
 		do
 
-yyval13 := new_root (yytype30 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp - 1)), yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval13
+				create yyval14.initialize (yytype30 (yyvs.item (yyvsp - 2)).first, yytype8 (yyvs.item (yyvsp - 1)), yytype8 (yyvs.item (yyvsp)))
+				yytype30 (yyvs.item (yyvsp - 2)).second.set_node (yyval14)
+			
+			yyval := yyval14
 		end
 
 	yy_do_action_6 is
-			--|#line 93
+			--|#line 98
 		local
 			yyval30: PAIR [ID_SD, CLICK_AST]
 		do
 
-yyval30 := new_clickable_id (yytype7 (yyvs.item (yyvsp))) 
+yyval30 := new_clickable_id (yytype8 (yyvs.item (yyvsp))) 
 			yyval := yyval30
 		end
 
 	yy_do_action_8 is
-			--|#line 99
+			--|#line 104
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_10 is
-			--|#line 105
+			--|#line 110
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_11 is
-			--|#line 109
+			--|#line 114
 		local
-			yyval18: LACE_LIST [CLUSTER_SD]
+			yyval19: LACE_LIST [CLUSTER_SD]
 		do
 
-yyval18 := yytype18 (yyvs.item (yyvsp)) 
-			yyval := yyval18
+yyval19 := yytype19 (yyvs.item (yyvsp)) 
+			yyval := yyval19
 		end
 
 	yy_do_action_12 is
-			--|#line 111
+			--|#line 116
 		local
-			yyval18: LACE_LIST [CLUSTER_SD]
+			yyval19: LACE_LIST [CLUSTER_SD]
 		do
 
-yyval18 := Void 
-			yyval := yyval18
+yyval19 := Void 
+			yyval := yyval19
 		end
 
 	yy_do_action_13 is
-			--|#line 115
+			--|#line 120
 		local
-			yyval18: LACE_LIST [CLUSTER_SD]
+			yyval19: LACE_LIST [CLUSTER_SD]
 		do
 
-				yyval18 := new_lace_list_cluster_sd (10)
-				yyval18.extend (yytype5 (yyvs.item (yyvsp - 1)))
+				create yyval19.make (10)
+				yyval19.extend (yytype5 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval18
+			yyval := yyval19
 		end
 
 	yy_do_action_14 is
-			--|#line 120
+			--|#line 125
 		local
-			yyval18: LACE_LIST [CLUSTER_SD]
+			yyval19: LACE_LIST [CLUSTER_SD]
 		do
 
-				yyval18 := yytype18 (yyvs.item (yyvsp - 2))
-				yyval18.extend (yytype5 (yyvs.item (yyvsp - 1)))
+				yyval19 := yytype19 (yyvs.item (yyvsp - 2))
+				yyval19.extend (yytype5 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval18
+			yyval := yyval19
 		end
 
 	yy_do_action_15 is
-			--|#line 127
+			--|#line 132
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 3)), yytype7 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp)), Void, False, False) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 3)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void, False, False) 
 			yyval := yyval5
 		end
 
 	yy_do_action_16 is
-			--|#line 129
+			--|#line 134
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 3)), yytype7 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp)), Void, True, False) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 3)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void, True, False) 
 			yyval := yyval5
 		end
 
 	yy_do_action_17 is
-			--|#line 131
+			--|#line 136
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 3)), yytype7 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp)), Void, True, True) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 3)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void, True, True) 
 			yyval := yyval5
 		end
 
 	yy_do_action_18 is
-			--|#line 133
+			--|#line 138
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 5)), yytype7 (yyvs.item (yyvsp - 4)), yytype7 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), False, False) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 5)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), False, False) 
 			yyval := yyval5
 		end
 
 	yy_do_action_19 is
-			--|#line 135
+			--|#line 140
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 5)), yytype7 (yyvs.item (yyvsp - 4)), yytype7 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), True, False) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 5)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), True, False) 
 			yyval := yyval5
 		end
 
 	yy_do_action_20 is
-			--|#line 137
+			--|#line 142
 		local
 			yyval5: CLUSTER_SD
 		do
 
-yyval5 := new_cluster_sd (yytype7 (yyvs.item (yyvsp - 5)), yytype7 (yyvs.item (yyvsp - 4)), yytype7 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), True, True) 
+create yyval5.initialize (yytype8 (yyvs.item (yyvsp - 5)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype3 (yyvs.item (yyvsp - 1)), True, True) 
 			yyval := yyval5
 		end
 
 	yy_do_action_22 is
-			--|#line 143
+			--|#line 148
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_23 is
-			--|#line 148
+			--|#line 153
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (yytype28 (yyvs.item (yyvsp - 7)), yytype7 (yyvs.item (yyvsp - 6)), yytype24 (yyvs.item (yyvsp - 5)), yytype21 (yyvs.item (yyvsp - 4)), yytype17 (yyvs.item (yyvsp - 3)), yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (yytype28 (yyvs.item (yyvsp - 7)), yytype8 (yyvs.item (yyvsp - 6)), yytype24 (yyvs.item (yyvsp - 5)), yytype24 (yyvs.item (yyvsp - 4)), yytype18 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_24 is
-			--|#line 150
+			--|#line 155
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, yytype7 (yyvs.item (yyvsp - 6)), yytype24 (yyvs.item (yyvsp - 5)), yytype21 (yyvs.item (yyvsp - 4)), yytype17 (yyvs.item (yyvsp - 3)), yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, yytype8 (yyvs.item (yyvsp - 6)), yytype24 (yyvs.item (yyvsp - 5)), yytype24 (yyvs.item (yyvsp - 4)), yytype18 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_25 is
-			--|#line 152
+			--|#line 157
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, yytype24 (yyvs.item (yyvsp - 5)), yytype21 (yyvs.item (yyvsp - 4)), yytype17 (yyvs.item (yyvsp - 3)), yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, yytype24 (yyvs.item (yyvsp - 5)), yytype24 (yyvs.item (yyvsp - 4)), yytype18 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_26 is
-			--|#line 154
+			--|#line 159
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, Void, yytype21 (yyvs.item (yyvsp - 4)), yytype17 (yyvs.item (yyvsp - 3)), yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, Void, yytype24 (yyvs.item (yyvsp - 4)), yytype18 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_27 is
-			--|#line 156
+			--|#line 161
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, Void, Void, yytype17 (yyvs.item (yyvsp - 3)), yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, Void, Void, yytype18 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_28 is
-			--|#line 158
+			--|#line 163
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, Void, Void, Void, yytype19 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, Void, Void, Void, yytype21 (yyvs.item (yyvsp - 2)), yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_29 is
-			--|#line 160
+			--|#line 165
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, yytype26 (yyvs.item (yyvsp - 1)), yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, Void, Void, Void, Void, yytype26 (yyvs.item (yyvsp - 1)), yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_30 is
-			--|#line 162
+			--|#line 167
 		local
 			yyval3: CLUST_PROP_SD
 		do
 
-yyval3 := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, yytype16 (yyvs.item (yyvsp))) 
+create yyval3.initialize (Void, Void, Void, Void, Void, Void, Void, yytype17 (yyvs.item (yyvsp))) 
 			yyval := yyval3
 		end
 
 	yy_do_action_31 is
-			--|#line 166
+			--|#line 171
 		local
 			yyval28: LACE_LIST [DEPEND_SD]
 		do
@@ -680,63 +697,63 @@ yyval28 := yytype28 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_33 is
-			--|#line 173
-		local
-			yyval28: LACE_LIST [DEPEND_SD]
-		do
-
-				yyval28 := new_lace_list_depend_sd (10)
-				yyval28.extend (yytype15 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval28
-		end
-
-	yy_do_action_34 is
 			--|#line 178
 		local
 			yyval28: LACE_LIST [DEPEND_SD]
 		do
 
+				create yyval28.make (10)
+				yyval28.extend (yytype16 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval28
+		end
+
+	yy_do_action_34 is
+			--|#line 183
+		local
+			yyval28: LACE_LIST [DEPEND_SD]
+		do
+
 				yyval28 := yytype28 (yyvs.item (yyvsp - 2))
-				yyval28.extend (yytype15 (yyvs.item (yyvsp - 1)))
+				yyval28.extend (yytype16 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval28
 		end
 
 	yy_do_action_35 is
-			--|#line 186
+			--|#line 191
 		local
-			yyval15: DEPEND_SD
+			yyval16: DEPEND_SD
 		do
 
-yyval15 := new_depend_sd (yytype22 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval15
+create yyval16.initialize (yytype22 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp))) 
+			yyval := yyval16
 		end
 
 	yy_do_action_37 is
-			--|#line 192
+			--|#line 197
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_38 is
-			--|#line 197
+			--|#line 202
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
+yyval8 := yytype8 (yyvs.item (yyvsp)) 
+			yyval := yyval8
 		end
 
 	yy_do_action_40 is
-			--|#line 203
+			--|#line 208
 		local
-			yyval24: LACE_LIST [INCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
 yyval24 := yytype24 (yyvs.item (yyvsp)) 
@@ -744,9 +761,9 @@ yyval24 := yytype24 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_41 is
-			--|#line 207
+			--|#line 212
 		local
-			yyval24: LACE_LIST [INCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
 yyval24 := yytype24 (yyvs.item (yyvsp)) 
@@ -754,217 +771,217 @@ yyval24 := yytype24 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_44 is
-			--|#line 215
+			--|#line 220
 		local
-			yyval21: LACE_LIST [EXCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
-yyval21 := yytype21 (yyvs.item (yyvsp)) 
-			yyval := yyval21
+yyval24 := yytype24 (yyvs.item (yyvsp)) 
+			yyval := yyval24
 		end
 
 	yy_do_action_45 is
-			--|#line 219
+			--|#line 224
 		local
-			yyval21: LACE_LIST [EXCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
-yyval21 := yytype21 (yyvs.item (yyvsp)) 
-			yyval := yyval21
+yyval24 := yytype24 (yyvs.item (yyvsp)) 
+			yyval := yyval24
 		end
 
 	yy_do_action_47 is
-			--|#line 225
+			--|#line 230
 		local
-			yyval24: LACE_LIST [INCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
-				yyval24 := new_lace_list_include_sd (10)
-				yyval24.extend (new_include_sd (yytype7 (yyvs.item (yyvsp - 1))))
+				create yyval24.make (10)
+				yyval24.extend (create {FILE_NAME_SD}.initialize (yytype8 (yyvs.item (yyvsp - 1))))
 			
 			yyval := yyval24
 		end
 
 	yy_do_action_48 is
-			--|#line 230
+			--|#line 235
 		local
-			yyval24: LACE_LIST [INCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
 				yyval24 := yytype24 (yyvs.item (yyvsp - 2))
-				yyval24.extend (new_include_sd (yytype7 (yyvs.item (yyvsp - 1))))
+				yyval24.extend (create {FILE_NAME_SD}.initialize (yytype8 (yyvs.item (yyvsp - 1))))
 			
 			yyval := yyval24
 		end
 
 	yy_do_action_49 is
-			--|#line 237
+			--|#line 242
 		local
-			yyval21: LACE_LIST [EXCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
-				yyval21 := new_lace_list_exclude_sd (10)
-				yyval21.extend (new_exclude_sd (yytype7 (yyvs.item (yyvsp - 1))))
+				create yyval24.make (10)
+				yyval24.extend (create {FILE_NAME_SD}.initialize (yytype8 (yyvs.item (yyvsp - 1))))
 			
-			yyval := yyval21
+			yyval := yyval24
 		end
 
 	yy_do_action_50 is
-			--|#line 242
+			--|#line 247
 		local
-			yyval21: LACE_LIST [EXCLUDE_SD]
+			yyval24: LACE_LIST [FILE_NAME_SD]
 		do
 
-				yyval21 := yytype21 (yyvs.item (yyvsp - 2))
-				yyval21.extend (new_exclude_sd (yytype7 (yyvs.item (yyvsp - 1))))
+				yyval24 := yytype24 (yyvs.item (yyvsp - 2))
+				yyval24.extend (create {FILE_NAME_SD}.initialize (yytype8 (yyvs.item (yyvsp - 1))))
 			
-			yyval := yyval21
+			yyval := yyval24
 		end
 
 	yy_do_action_51 is
-			--|#line 249
-		local
-			yyval22: LACE_LIST [ID_SD]
-		do
-
-				yyval22 := new_lace_list_id_sd (10)
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
-			
-			yyval := yyval22
-		end
-
-	yy_do_action_52 is
 			--|#line 254
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
 
+				create yyval22.make (10)
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
+			
+			yyval := yyval22
+		end
+
+	yy_do_action_52 is
+			--|#line 259
+		local
+			yyval22: LACE_LIST [ID_SD]
+		do
+
 				yyval22 := yytype22 (yyvs.item (yyvsp - 2))
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
 			
 			yyval := yyval22
 		end
 
 	yy_do_action_54 is
-			--|#line 263
+			--|#line 268
 		local
-			yyval17: LACE_LIST [CLUST_ADAPT_SD]
+			yyval18: LACE_LIST [CLUST_ADAPT_SD]
 		do
 
-yyval17 := yytype17 (yyvs.item (yyvsp)) 
-			yyval := yyval17
+yyval18 := yytype18 (yyvs.item (yyvsp)) 
+			yyval := yyval18
 		end
 
 	yy_do_action_55 is
-			--|#line 267
+			--|#line 272
 		local
-			yyval17: LACE_LIST [CLUST_ADAPT_SD]
+			yyval18: LACE_LIST [CLUST_ADAPT_SD]
 		do
 
-yyval17 := yytype17 (yyvs.item (yyvsp)) 
-			yyval := yyval17
+yyval18 := yytype18 (yyvs.item (yyvsp)) 
+			yyval := yyval18
 		end
 
 	yy_do_action_57 is
-			--|#line 273
+			--|#line 278
 		local
-			yyval17: LACE_LIST [CLUST_ADAPT_SD]
+			yyval18: LACE_LIST [CLUST_ADAPT_SD]
 		do
 
-				yyval17 := new_lace_list_clust_adapt_sd (10)
-				yyval17.extend (yytype4 (yyvs.item (yyvsp - 1)))
+				create yyval18.make (10)
+				yyval18.extend (yytype4 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval17
+			yyval := yyval18
 		end
 
 	yy_do_action_58 is
-			--|#line 278
+			--|#line 283
 		local
-			yyval17: LACE_LIST [CLUST_ADAPT_SD]
+			yyval18: LACE_LIST [CLUST_ADAPT_SD]
 		do
 
-				yyval17 := yytype17 (yyvs.item (yyvsp - 2))
-				yyval17.extend (yytype4 (yyvs.item (yyvsp - 1)))
+				yyval18 := yytype18 (yyvs.item (yyvsp - 2))
+				yyval18.extend (yytype4 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval17
+			yyval := yyval18
 		end
 
 	yy_do_action_59 is
-			--|#line 285
+			--|#line 290
 		local
 			yyval4: CLUST_ADAPT_SD
 		do
 
-yyval4 := new_clust_ign_sd (yytype7 (yyvs.item (yyvsp - 2))) 
+create {CLUST_IGN_SD} yyval4.initialize (yytype8 (yyvs.item (yyvsp - 2))) 
 			yyval := yyval4
 		end
 
 	yy_do_action_60 is
-			--|#line 287
+			--|#line 292
 		local
 			yyval4: CLUST_ADAPT_SD
 		do
 
-yyval4 := new_clust_ren_sd (yytype7 (yyvs.item (yyvsp - 3)), yytype27 (yyvs.item (yyvsp))) 
+create {CLUST_REN_SD} yyval4.initialize (yytype8 (yyvs.item (yyvsp - 3)), yytype27 (yyvs.item (yyvsp))) 
 			yyval := yyval4
 		end
 
 	yy_do_action_61 is
-			--|#line 291
-		local
-			yyval27: LACE_LIST [TWO_NAME_SD]
-		do
-
-				yyval27 := new_lace_list_two_name_sd (10)
-				yyval27.extend (yytype14 (yyvs.item (yyvsp)))
-			
-			yyval := yyval27
-		end
-
-	yy_do_action_62 is
 			--|#line 296
 		local
 			yyval27: LACE_LIST [TWO_NAME_SD]
 		do
 
+				create yyval27.make (10)
+				yyval27.extend (yytype15 (yyvs.item (yyvsp)))
+			
+			yyval := yyval27
+		end
+
+	yy_do_action_62 is
+			--|#line 301
+		local
+			yyval27: LACE_LIST [TWO_NAME_SD]
+		do
+
 				yyval27 := yytype27 (yyvs.item (yyvsp - 2))
-				yyval27.extend (yytype14 (yyvs.item (yyvsp)))
+				yyval27.extend (yytype15 (yyvs.item (yyvsp)))
 			
 			yyval := yyval27
 		end
 
 	yy_do_action_63 is
-			--|#line 303
+			--|#line 308
 		local
-			yyval14: TWO_NAME_SD
+			yyval15: TWO_NAME_SD
 		do
 
-yyval14 := new_two_name_sd (yytype7 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval14
+create yyval15.initialize (yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp))) 
+			yyval := yyval15
 		end
 
 	yy_do_action_65 is
-			--|#line 309
+			--|#line 314
 		local
-			yyval19: LACE_LIST [D_OPTION_SD]
+			yyval21: LACE_LIST [D_OPTION_SD]
 		do
 
-yyval19 := yytype19 (yyvs.item (yyvsp)) 
-			yyval := yyval19
+yyval21 := yytype21 (yyvs.item (yyvsp)) 
+			yyval := yyval21
 		end
 
 	yy_do_action_66 is
-			--|#line 313
+			--|#line 318
 		local
-			yyval19: LACE_LIST [D_OPTION_SD]
+			yyval21: LACE_LIST [D_OPTION_SD]
 		do
 
-yyval19 := yytype19 (yyvs.item (yyvsp)) 
-			yyval := yyval19
+yyval21 := yytype21 (yyvs.item (yyvsp)) 
+			yyval := yyval21
 		end
 
 	yy_do_action_69 is
-			--|#line 321
+			--|#line 326
 		local
 			yyval26: LACE_LIST [O_OPTION_SD]
 		do
@@ -974,7 +991,7 @@ yyval26 := yytype26 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_70 is
-			--|#line 325
+			--|#line 330
 		local
 			yyval26: LACE_LIST [O_OPTION_SD]
 		do
@@ -984,169 +1001,169 @@ yyval26 := yytype26 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_72 is
-			--|#line 331
+			--|#line 336
 		local
-			yyval19: LACE_LIST [D_OPTION_SD]
+			yyval21: LACE_LIST [D_OPTION_SD]
 		do
 
-				yyval19 := new_lace_list_d_option_sd (10)
-				yyval19.extend (yytype6 (yyvs.item (yyvsp - 1)))
+				create yyval21.make (10)
+				yyval21.extend (yytype7 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval19
+			yyval := yyval21
 		end
 
 	yy_do_action_73 is
-			--|#line 336
+			--|#line 341
 		local
-			yyval19: LACE_LIST [D_OPTION_SD]
+			yyval21: LACE_LIST [D_OPTION_SD]
 		do
 
-				yyval19 := yytype19 (yyvs.item (yyvsp - 2))
-				yyval19.extend (yytype6 (yyvs.item (yyvsp - 1)))
+				yyval21 := yytype21 (yyvs.item (yyvsp - 2))
+				yyval21.extend (yytype7 (yyvs.item (yyvsp - 1)))
 			
-			yyval := yyval19
+			yyval := yyval21
 		end
 
 	yy_do_action_74 is
-			--|#line 343
+			--|#line 348
 		local
-			yyval6: D_OPTION_SD
+			yyval7: D_OPTION_SD
 		do
 
-yyval6 := new_d_precompiled_sd (Precompiled_keyword, yytype11 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval6
+create {D_PRECOMPILED_SD} yyval7.initialize (Precompiled_keyword, yytype12 (yyvs.item (yyvsp)), Void) 
+			yyval := yyval7
 		end
 
 	yy_do_action_75 is
-			--|#line 345
+			--|#line 350
 		local
-			yyval6: D_OPTION_SD
+			yyval7: D_OPTION_SD
 		do
 
-yyval6 := new_d_precompiled_sd (Precompiled_keyword, yytype11 (yyvs.item (yyvsp - 1)), Void) 
-			yyval := yyval6
+create {D_PRECOMPILED_SD} yyval7.initialize (Precompiled_keyword, yytype12 (yyvs.item (yyvsp - 1)), Void) 
+			yyval := yyval7
 		end
 
 	yy_do_action_76 is
-			--|#line 347
+			--|#line 352
 		local
-			yyval6: D_OPTION_SD
+			yyval7: D_OPTION_SD
 		do
 
-yyval6 := new_d_precompiled_sd (Precompiled_keyword, yytype11 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval6
+create {D_PRECOMPILED_SD} yyval7.initialize (Precompiled_keyword, yytype12 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
+			yyval := yyval7
 		end
 
 	yy_do_action_77 is
-			--|#line 349
+			--|#line 354
 		local
-			yyval6: D_OPTION_SD
+			yyval7: D_OPTION_SD
 		do
 
-yyval6 := new_d_option_sd (yytype12 (yyvs.item (yyvsp - 1)), yytype11 (yyvs.item (yyvsp))) 
-			yyval := yyval6
+create yyval7.initialize (yytype13 (yyvs.item (yyvsp - 1)), yytype12 (yyvs.item (yyvsp))) 
+			yyval := yyval7
 		end
 
 	yy_do_action_78 is
-			--|#line 353
+			--|#line 358
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-yyval12 := Assertion_keyword 
-			yyval := yyval12
+yyval13 := Assertion_keyword 
+			yyval := yyval13
 		end
 
 	yy_do_action_79 is
-			--|#line 355
+			--|#line 360
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-yyval12 := Debug_keyword 
-			yyval := yyval12
+yyval13 := Debug_keyword 
+			yyval := yyval13
 		end
 
 	yy_do_action_80 is
-			--|#line 357
+			--|#line 362
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-yyval12 := Disabled_debug_keyword 
-			yyval := yyval12
+yyval13 := Disabled_debug_keyword 
+			yyval := yyval13
 		end
 
 	yy_do_action_81 is
-			--|#line 359
+			--|#line 364
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-yyval12 := Optimize_keyword 
-			yyval := yyval12
+yyval13 := Optimize_keyword 
+			yyval := yyval13
 		end
 
 	yy_do_action_82 is
-			--|#line 361
+			--|#line 366
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-yyval12 := Trace_keyword 
-			yyval := yyval12
+yyval13 := Trace_keyword 
+			yyval := yyval13
 		end
 
 	yy_do_action_83 is
-			--|#line 363
+			--|#line 368
 		local
-			yyval12: OPTION_SD
+			yyval13: OPTION_SD
 		do
 
-				yyval12 := new_free_option_sd (yytype7 (yyvs.item (yyvsp)))
-				if not yyval12.is_valid then
+				create {FREE_OPTION_SD} yyval13.initialize (yytype8 (yyvs.item (yyvsp)))
+				if not yyval13.is_valid then
 					raise_error
 				end
 			
-			yyval := yyval12
+			yyval := yyval13
 		end
 
 	yy_do_action_84 is
-			--|#line 372
-		local
-			yyval26: LACE_LIST [O_OPTION_SD]
-		do
-
-				yyval26 := new_lace_list_o_option_sd (10)
-				yyval26.extend (yytype10 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval26
-		end
-
-	yy_do_action_85 is
 			--|#line 377
 		local
 			yyval26: LACE_LIST [O_OPTION_SD]
 		do
 
+				create yyval26.make (10)
+				yyval26.extend (yytype11 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval26
+		end
+
+	yy_do_action_85 is
+			--|#line 382
+		local
+			yyval26: LACE_LIST [O_OPTION_SD]
+		do
+
 				yyval26 := yytype26 (yyvs.item (yyvsp - 2))
-				yyval26.extend (yytype10 (yyvs.item (yyvsp - 1)))
+				yyval26.extend (yytype11 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval26
 		end
 
 	yy_do_action_86 is
-			--|#line 384
+			--|#line 389
 		local
-			yyval10: O_OPTION_SD
+			yyval11: O_OPTION_SD
 		do
 
-yyval10 := new_o_option_sd (yytype12 (yyvs.item (yyvsp - 2)), yytype11 (yyvs.item (yyvsp - 1)), yytype22 (yyvs.item (yyvsp))) 
-			yyval := yyval10
+create yyval11.initialize (yytype13 (yyvs.item (yyvsp - 2)), yytype12 (yyvs.item (yyvsp - 1)), yytype22 (yyvs.item (yyvsp))) 
+			yyval := yyval11
 		end
 
 	yy_do_action_88 is
-			--|#line 390
+			--|#line 395
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
@@ -1156,151 +1173,209 @@ yyval22 := yytype22 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_89 is
-			--|#line 394
-		local
-			yyval22: LACE_LIST [ID_SD]
-		do
-
-				yyval22 := new_lace_list_id_sd (10)
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
-			
-			yyval := yyval22
-		end
-
-	yy_do_action_90 is
 			--|#line 399
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
 
+				create yyval22.make (10)
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
+			
+			yyval := yyval22
+		end
+
+	yy_do_action_90 is
+			--|#line 404
+		local
+			yyval22: LACE_LIST [ID_SD]
+		do
+
 				yyval22 := yytype22 (yyvs.item (yyvsp - 2))
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
 			
 			yyval := yyval22
 		end
 
 	yy_do_action_92 is
-			--|#line 408
+			--|#line 413
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := yytype11 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval11
+yyval12 := yytype12 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval12
 		end
 
 	yy_do_action_93 is
-			--|#line 412
+			--|#line 417
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := yytype11 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval12 := yytype12 (yyvs.item (yyvsp)) 
+			yyval := yyval12
 		end
 
 	yy_do_action_94 is
-			--|#line 414
+			--|#line 419
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := yytype11 (yyvs.item (yyvsp)) 
-			yyval := yyval11
+yyval12 := yytype12 (yyvs.item (yyvsp)) 
+			yyval := yyval12
 		end
 
 	yy_do_action_95 is
-			--|#line 416
+			--|#line 421
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := new_name_sd (yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval11
+create yyval12.make (yytype8 (yyvs.item (yyvsp))) 
+			yyval := yyval12
 		end
 
 	yy_do_action_96 is
-			--|#line 420
+			--|#line 425
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Yes_keyword 
-			yyval := yyval11
+yyval12 := Yes_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_97 is
-			--|#line 422
+			--|#line 427
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := No_keyword 
-			yyval := yyval11
+yyval12 := No_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_98 is
-			--|#line 424
+			--|#line 429
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := All_keyword 
-			yyval := yyval11
+yyval12 := All_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_99 is
-			--|#line 428
+			--|#line 433
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Require_keyword 
-			yyval := yyval11
+yyval12 := Require_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_100 is
-			--|#line 430
+			--|#line 435
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Ensure_keyword 
-			yyval := yyval11
+yyval12 := Ensure_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_101 is
-			--|#line 432
+			--|#line 437
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Invariant_keyword 
-			yyval := yyval11
+yyval12 := Invariant_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_102 is
-			--|#line 434
+			--|#line 439
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Loop_keyword 
-			yyval := yyval11
+yyval12 := Loop_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_103 is
-			--|#line 436
+			--|#line 441
 		local
-			yyval11: OPT_VAL_SD
+			yyval12: OPT_VAL_SD
 		do
 
-yyval11 := Check_keyword 
-			yyval := yyval11
+yyval12 := Check_keyword 
+			yyval := yyval12
 		end
 
 	yy_do_action_105 is
-			--|#line 442
+			--|#line 447
+		local
+			yyval20: LACE_LIST [ASSEMBLY_SD]
+		do
+
+yyval20 := yytype20 (yyvs.item (yyvsp)) 
+			yyval := yyval20
+		end
+
+	yy_do_action_107 is
+			--|#line 453
+		local
+			yyval20: LACE_LIST [ASSEMBLY_SD]
+		do
+
+				create yyval20.make (5)
+				yyval20.extend (yytype6 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval20
+		end
+
+	yy_do_action_108 is
+			--|#line 458
+		local
+			yyval20: LACE_LIST [ASSEMBLY_SD]
+		do
+
+				yyval20 := yytype20 (yyvs.item (yyvsp - 2))
+				yyval20.extend (yytype6 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval20
+		end
+
+	yy_do_action_109 is
+			--|#line 465
+		local
+			yyval6: ASSEMBLY_SD
+		do
+
+					-- name: "assembly_name", "version", "culture"
+				create yyval6.initialize (yytype8 (yyvs.item (yyvsp - 6)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void)
+			
+			yyval := yyval6
+		end
+
+	yy_do_action_110 is
+			--|#line 470
+		local
+			yyval6: ASSEMBLY_SD
+		do
+
+					-- name: "assembly_name", "version", "culture", "public_key_token"
+				create yyval6.initialize (yytype8 (yyvs.item (yyvsp - 8)), yytype8 (yyvs.item (yyvsp - 6)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)))
+			
+			yyval := yyval6
+		end
+
+	yy_do_action_112 is
+			--|#line 479
 		local
 			yyval25: LACE_LIST [LANG_TRIB_SD]
 		do
@@ -1309,64 +1384,64 @@ yyval25 := yytype25 (yyvs.item (yyvsp))
 			yyval := yyval25
 		end
 
-	yy_do_action_107 is
-			--|#line 448
+	yy_do_action_114 is
+			--|#line 485
 		local
 			yyval25: LACE_LIST [LANG_TRIB_SD]
 		do
 
-				yyval25 := new_lace_list_lang_trib_sd (10)
-				yyval25.extend (yytype8 (yyvs.item (yyvsp - 1)))
+				create yyval25.make (10)
+				yyval25.extend (yytype9 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval25
 		end
 
-	yy_do_action_108 is
-			--|#line 453
+	yy_do_action_115 is
+			--|#line 490
 		local
 			yyval25: LACE_LIST [LANG_TRIB_SD]
 		do
 
 				yyval25 := yytype25 (yyvs.item (yyvsp - 2))
-				yyval25.extend (yytype8 (yyvs.item (yyvsp - 1)))
+				yyval25.extend (yytype9 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval25
 		end
 
-	yy_do_action_109 is
-			--|#line 460
+	yy_do_action_116 is
+			--|#line 497
 		local
-			yyval8: LANG_TRIB_SD
+			yyval9: LANG_TRIB_SD
 		do
 
-yyval8 := new_lang_trib_sd (yytype9 (yyvs.item (yyvsp - 2)), yytype22 (yyvs.item (yyvsp))) 
-			yyval := yyval8
-		end
-
-	yy_do_action_110 is
-			--|#line 464
-		local
-			yyval9: LANGUAGE_NAME_SD
-		do
-
-yyval9 := new_language_name_sd (yytype7 (yyvs.item (yyvsp))) 
+create yyval9.initialize (yytype10 (yyvs.item (yyvsp - 2)), yytype22 (yyvs.item (yyvsp))) 
 			yyval := yyval9
 		end
 
-	yy_do_action_114 is
-			--|#line 477
+	yy_do_action_117 is
+			--|#line 501
+		local
+			yyval10: LANGUAGE_NAME_SD
+		do
+
+create yyval10.initialize (yytype8 (yyvs.item (yyvsp))) 
+			yyval := yyval10
+		end
+
+	yy_do_action_121 is
+			--|#line 514
 		local
 
 		do
 			yyval := yyval_default;
---		$$ := new_lace_list_lang_gen_sd (10)
+--		create $$.make (10)
 --		$$.extend ($1)
 	
 
 		end
 
-	yy_do_action_115 is
-			--|#line 482
+	yy_do_action_122 is
+			--|#line 519
 		local
 
 		do
@@ -1377,152 +1452,122 @@ yyval9 := new_language_name_sd (yytype7 (yyvs.item (yyvsp)))
 
 		end
 
-	yy_do_action_122 is
-			--|#line 507
-		local
-			yyval16: LACE_LIST [CLAS_VISI_SD]
-		do
-
-yyval16 := yytype16 (yyvs.item (yyvsp)) 
-			yyval := yyval16
-		end
-
-	yy_do_action_123 is
-			--|#line 511
-		local
-			yyval16: LACE_LIST [CLAS_VISI_SD]
-		do
-
-yyval16 := yytype16 (yyvs.item (yyvsp)) 
-			yyval := yyval16
-		end
-
-	yy_do_action_125 is
-			--|#line 517
-		local
-			yyval16: LACE_LIST [CLAS_VISI_SD]
-		do
-
-				yyval16 := new_lace_list_clas_visi_sd (10)
-				yyval16.extend (yytype2 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval16
-		end
-
-	yy_do_action_126 is
-			--|#line 522
-		local
-			yyval16: LACE_LIST [CLAS_VISI_SD]
-		do
-
-				yyval16 := yytype16 (yyvs.item (yyvsp - 2))
-				yyval16.extend (yytype2 (yyvs.item (yyvsp - 1)))
-			
-			yyval := yyval16
-		end
-
-	yy_do_action_127 is
-			--|#line 529
-		local
-			yyval2: CLAS_VISI_SD
-		do
-
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp)), Void, Void, Void, Void) 
-			yyval := yyval2
-		end
-
-	yy_do_action_128 is
-			--|#line 531
-		local
-			yyval2: CLAS_VISI_SD
-		do
-
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void) 
-			yyval := yyval2
-		end
-
 	yy_do_action_129 is
-			--|#line 533
+			--|#line 544
 		local
-			yyval2: CLAS_VISI_SD
+			yyval17: LACE_LIST [CLAS_VISI_SD]
 		do
 
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp - 2)), Void, Void, Void, yytype27 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval2
+yyval17 := yytype17 (yyvs.item (yyvsp)) 
+			yyval := yyval17
 		end
 
 	yy_do_action_130 is
-			--|#line 535
+			--|#line 548
 		local
-			yyval2: CLAS_VISI_SD
+			yyval17: LACE_LIST [CLAS_VISI_SD]
 		do
 
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp - 3)), Void, Void, yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval2
-		end
-
-	yy_do_action_131 is
-			--|#line 537
-		local
-			yyval2: CLAS_VISI_SD
-		do
-
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp - 4)), Void, yytype22 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval2
+yyval17 := yytype17 (yyvs.item (yyvsp)) 
+			yyval := yyval17
 		end
 
 	yy_do_action_132 is
-			--|#line 539
+			--|#line 554
+		local
+			yyval17: LACE_LIST [CLAS_VISI_SD]
+		do
+
+				create yyval17.make (10)
+				yyval17.extend (yytype2 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval17
+		end
+
+	yy_do_action_133 is
+			--|#line 559
+		local
+			yyval17: LACE_LIST [CLAS_VISI_SD]
+		do
+
+				yyval17 := yytype17 (yyvs.item (yyvsp - 2))
+				yyval17.extend (yytype2 (yyvs.item (yyvsp - 1)))
+			
+			yyval := yyval17
+		end
+
+	yy_do_action_134 is
+			--|#line 566
 		local
 			yyval2: CLAS_VISI_SD
 		do
 
-yyval2 := new_clas_visi_sd (yytype7 (yyvs.item (yyvsp - 5)), yytype7 (yyvs.item (yyvsp - 4)), yytype22 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp)), Void, Void, Void, Void) 
 			yyval := yyval2
 		end
 
-	yy_do_action_133 is
-			--|#line 543
-		local
-			yyval7: ID_SD
-		do
-
-yyval7 := yytype7 (yyvs.item (yyvsp)) 
-			yyval := yyval7
-		end
-
 	yy_do_action_135 is
-			--|#line 549
+			--|#line 568
 		local
-			yyval22: LACE_LIST [ID_SD]
+			yyval2: CLAS_VISI_SD
 		do
 
-yyval22 := yytype22 (yyvs.item (yyvsp)) 
-			yyval := yyval22
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void) 
+			yyval := yyval2
 		end
 
 	yy_do_action_136 is
-			--|#line 553
+			--|#line 570
 		local
-			yyval22: LACE_LIST [ID_SD]
+			yyval2: CLAS_VISI_SD
 		do
 
-yyval22 := yytype22 (yyvs.item (yyvsp)) 
-			yyval := yyval22
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 2)), Void, Void, Void, yytype27 (yyvs.item (yyvsp - 1))) 
+			yyval := yyval2
+		end
+
+	yy_do_action_137 is
+			--|#line 572
+		local
+			yyval2: CLAS_VISI_SD
+		do
+
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 3)), Void, Void, yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
+			yyval := yyval2
 		end
 
 	yy_do_action_138 is
-			--|#line 559
+			--|#line 574
 		local
-			yyval22: LACE_LIST [ID_SD]
+			yyval2: CLAS_VISI_SD
 		do
 
-yyval22 := yytype22 (yyvs.item (yyvsp)) 
-			yyval := yyval22
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 4)), Void, yytype22 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
+			yyval := yyval2
 		end
 
 	yy_do_action_139 is
-			--|#line 563
+			--|#line 576
+		local
+			yyval2: CLAS_VISI_SD
+		do
+
+create yyval2.initialize (yytype8 (yyvs.item (yyvsp - 5)), yytype8 (yyvs.item (yyvsp - 4)), yytype22 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1))) 
+			yyval := yyval2
+		end
+
+	yy_do_action_140 is
+			--|#line 580
+		local
+			yyval8: ID_SD
+		do
+
+yyval8 := yytype8 (yyvs.item (yyvsp)) 
+			yyval := yyval8
+		end
+
+	yy_do_action_142 is
+			--|#line 586
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
@@ -1531,32 +1576,62 @@ yyval22 := yytype22 (yyvs.item (yyvsp))
 			yyval := yyval22
 		end
 
-	yy_do_action_141 is
-			--|#line 569
+	yy_do_action_143 is
+			--|#line 590
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
 
-				yyval22 := new_lace_list_id_sd (10)
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
+yyval22 := yytype22 (yyvs.item (yyvsp)) 
+			yyval := yyval22
+		end
+
+	yy_do_action_145 is
+			--|#line 596
+		local
+			yyval22: LACE_LIST [ID_SD]
+		do
+
+yyval22 := yytype22 (yyvs.item (yyvsp)) 
+			yyval := yyval22
+		end
+
+	yy_do_action_146 is
+			--|#line 600
+		local
+			yyval22: LACE_LIST [ID_SD]
+		do
+
+yyval22 := yytype22 (yyvs.item (yyvsp)) 
+			yyval := yyval22
+		end
+
+	yy_do_action_148 is
+			--|#line 606
+		local
+			yyval22: LACE_LIST [ID_SD]
+		do
+
+				create yyval22.make (10)
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
 			
 			yyval := yyval22
 		end
 
-	yy_do_action_142 is
-			--|#line 574
+	yy_do_action_149 is
+			--|#line 611
 		local
 			yyval22: LACE_LIST [ID_SD]
 		do
 
 				yyval22 := yytype22 (yyvs.item (yyvsp - 2))
-				yyval22.extend (yytype7 (yyvs.item (yyvsp)))
+				yyval22.extend (yytype8 (yyvs.item (yyvsp)))
 			
 			yyval := yyval22
 		end
 
-	yy_do_action_144 is
-			--|#line 583
+	yy_do_action_151 is
+			--|#line 620
 		local
 			yyval27: LACE_LIST [TWO_NAME_SD]
 		do
@@ -1565,8 +1640,8 @@ yyval27 := yytype27 (yyvs.item (yyvsp))
 			yyval := yyval27
 		end
 
-	yy_do_action_145 is
-			--|#line 587
+	yy_do_action_152 is
+			--|#line 624
 		local
 			yyval27: LACE_LIST [TWO_NAME_SD]
 		do
@@ -1575,58 +1650,58 @@ yyval27 := yytype27 (yyvs.item (yyvsp))
 			yyval := yyval27
 		end
 
-	yy_do_action_146 is
-			--|#line 591
+	yy_do_action_153 is
+			--|#line 628
 		local
 			yyval27: LACE_LIST [TWO_NAME_SD]
 		do
 
-				yyval27 := new_lace_list_two_name_sd (10)
-				yyval27.extend (yytype14 (yyvs.item (yyvsp)))
+				create yyval27.make (10)
+				yyval27.extend (yytype15 (yyvs.item (yyvsp)))
 			
 			yyval := yyval27
 		end
 
-	yy_do_action_147 is
-			--|#line 596
+	yy_do_action_154 is
+			--|#line 633
 		local
 			yyval27: LACE_LIST [TWO_NAME_SD]
 		do
 
 				yyval27 := yytype27 (yyvs.item (yyvsp - 2))
-				yyval27.extend (yytype14 (yyvs.item (yyvsp)))
+				yyval27.extend (yytype15 (yyvs.item (yyvsp)))
 			
 			yyval := yyval27
 		end
 
-	yy_do_action_149 is
-			--|#line 605
+	yy_do_action_156 is
+			--|#line 642
 		local
-			yyval14: TWO_NAME_SD
+			yyval15: TWO_NAME_SD
 		do
 
-yyval14 := new_two_name_sd (yytype7 (yyvs.item (yyvsp - 2)), yytype7 (yyvs.item (yyvsp))) 
-			yyval := yyval14
+create yyval15.initialize (yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp))) 
+			yyval := yyval15
 		end
 
-	yy_do_action_150 is
-			--|#line 609
+	yy_do_action_157 is
+			--|#line 646
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := new_id_sd (token_buffer, False) 
-			yyval := yyval7
+yyval8 := new_id_sd (token_buffer, False) 
+			yyval := yyval8
 		end
 
-	yy_do_action_151 is
-			--|#line 611
+	yy_do_action_158 is
+			--|#line 648
 		local
-			yyval7: ID_SD
+			yyval8: ID_SD
 		do
 
-yyval7 := new_id_sd (token_buffer, True) 
-			yyval := yyval7
+yyval8 := new_id_sd (token_buffer, True) 
+			yyval := yyval8
 		end
 
 feature {NONE} -- Table templates
@@ -1667,7 +1742,7 @@ feature {NONE} -- Table templates
 			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
 			   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37,   38,   39,   40,   41,   42,   43>>)
+			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44>>)
 		end
 
 	yyr1_template: ANY is
@@ -1675,23 +1750,24 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,  107,  107,   44,   55,   66,  106,   56,   56,   57,
-			   57,   76,   76,   77,   77,   48,   48,   48,   48,   48,
-			   48,   54,   54,   46,   46,   46,   46,   46,   46,   46,
-			   46,  105,  105,  104,  104,   69,   53,   53,   52,   93,
-			   93,   92,   92,   82,   82,   81,   81,   94,   94,   83,
-			   83,   91,   91,   74,   74,   73,   73,   75,   75,   47,
-			   47,  103,  103,   68,   80,   80,   79,   79,   99,   99,
-			   98,   98,   78,   78,   49,   49,   49,   49,   65,   65,
-			   65,   65,   65,   65,   97,   97,   60,   89,   89,   90,
-			   90,   61,   61,   62,   62,   62,   63,   63,   63,   64,
+			    0,  111,  111,   45,   57,   68,  110,   58,   58,   59,
+			   59,   78,   78,   79,   79,   49,   49,   49,   49,   49,
+			   49,   56,   56,   47,   47,   47,   47,   47,   47,   47,
+			   47,  109,  109,  108,  108,   71,   55,   55,   54,   97,
+			   97,   96,   96,   94,   94,   93,   93,   98,   98,   95,
+			   95,   92,   92,   76,   76,   75,   75,   77,   77,   48,
+			   48,  107,  107,   70,   84,   84,   83,   83,  103,  103,
+			  102,  102,   82,   82,   51,   51,   51,   51,   67,   67,
+			   67,   67,   67,   67,  101,  101,   62,   90,   90,   91,
+			   91,   63,   63,   64,   64,   64,   65,   65,   65,   66,
 
-			   64,   64,   64,   64,   95,   95,   95,   96,   96,   58,
-			   59,  108,  108,  108,  110,  110,  111,  112,  112,  113,
-			  113,   72,   72,   71,   71,   70,   70,   45,   45,   45,
-			   45,   45,   45,   51,   88,   88,   87,   86,   86,   85,
-			   84,   84,   84,  102,  102,  101,  100,  100,   67,   67,
-			   50,   50,  109,  109>>)
+			   66,   66,   66,   66,   80,   80,   80,   81,   81,   50,
+			   50,   99,   99,   99,  100,  100,   60,   61,  112,  112,
+			  112,  114,  114,  115,  116,  116,  117,  117,   74,   74,
+			   73,   73,   72,   72,   46,   46,   46,   46,   46,   46,
+			   53,   89,   89,   88,   87,   87,   86,   85,   85,   85,
+			  106,  106,  105,  104,  104,   69,   69,   52,   52,  113,
+			  113>>)
 		end
 
 	yyr2_template: ANY is
@@ -1699,7 +1775,7 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,    1,    1,    7,    2,    4,    1,    0,    3,    0,
+			    0,    1,    1,    8,    2,    4,    1,    0,    3,    0,
 			    2,    2,    2,    2,    3,    4,    5,    5,    6,    7,
 			    7,    0,    3,    8,    7,    6,    5,    4,    3,    2,
 			    1,    2,    2,    2,    3,    3,    0,    1,    2,    0,
@@ -1710,12 +1786,13 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    2,    3,    3,    0,    2,    1,
 			    3,    0,    3,    1,    1,    1,    1,    1,    1,    1,
 
-			    1,    1,    1,    1,    0,    2,    2,    2,    3,    3,
-			    1,    0,    2,    2,    2,    3,    4,    0,    3,    1,
-			    1,    0,    1,    2,    2,    2,    3,    1,    2,    3,
-			    4,    5,    6,    2,    0,    1,    2,    0,    1,    2,
-			    0,    1,    3,    0,    1,    2,    1,    3,    0,    3,
-			    1,    1,    0,    1>>)
+			    1,    1,    1,    1,    0,    2,    2,    2,    3,    7,
+			    9,    0,    2,    2,    2,    3,    3,    1,    0,    2,
+			    2,    2,    3,    4,    0,    3,    1,    1,    0,    1,
+			    2,    2,    2,    3,    1,    2,    3,    4,    5,    6,
+			    2,    0,    1,    2,    0,    1,    2,    0,    1,    3,
+			    0,    1,    2,    1,    3,    0,    3,    1,    1,    0,
+			    1>>)
 		end
 
 	yydefact_template: ANY is
@@ -1723,35 +1800,37 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,  152,    0,    0,  152,  152,  152,  152,  152,  152,
-			    1,    2,   39,    0,   30,   64,   68,   53,   43,  121,
-			   36,  151,  153,  150,  152,  127,  123,  124,   38,    4,
-			   82,   81,   80,   79,   78,   83,  152,   91,   70,   71,
-			  152,   41,   42,   51,  152,    0,   31,   32,  152,   45,
-			   46,   91,  152,   91,   66,   67,  152,    0,   55,   56,
-			   40,   43,    0,   64,   65,   68,   69,  121,   54,   64,
-			   44,   53,  122,   29,   37,   39,  125,  148,  140,  128,
-			  140,    0,  134,  143,  137,    0,  152,   84,    0,   87,
-			  152,   47,  152,   33,    0,    0,  152,   49,  152,   74,
+			    0,  159,    0,    0,  159,  159,  159,  159,  159,  159,
+			    1,    2,   39,    0,   30,   64,   68,   53,   43,  128,
+			   36,  158,  160,  157,  159,  134,  130,  131,   38,    4,
+			   82,   81,   80,   79,   78,   83,  159,   91,   70,   71,
+			  159,   41,   42,   51,  159,    0,   31,   32,  159,   45,
+			   46,   91,  159,   91,   66,   67,  159,    0,   55,   56,
+			   40,   43,    0,   64,   65,   68,   69,  128,   54,   64,
+			   44,   53,  129,   29,   37,   39,  132,  155,  147,  135,
+			  147,    0,  141,  150,  144,    0,  159,   84,    0,   87,
+			  159,   47,  159,   33,    0,    0,  159,   49,  159,   74,
 
-			   72,   77,  152,   57,    0,  152,   53,    6,    7,    0,
-			  121,   28,   68,   64,   43,    0,  146,  145,  141,  139,
-			  136,  133,  135,  137,  144,    0,  138,  143,  129,  126,
+			   72,   77,  159,   57,    0,  159,   53,    6,    7,    0,
+			  128,   28,   68,   64,   43,    0,  153,  152,  148,  146,
+			  143,  140,  142,  144,  151,    0,  145,  150,  136,  133,
 			   96,   99,   97,  102,  101,  100,  103,   98,   95,    0,
 			   93,   94,    0,   86,   85,   48,   52,   35,   34,   50,
-			   75,    0,   73,    0,   59,   58,   64,    0,    9,  152,
-			  104,   27,  121,   68,   53,    0,  148,    0,  143,  130,
+			   75,    0,   73,    0,   59,   58,   64,    0,    9,  159,
+			  104,   27,  128,   68,   53,    0,  155,    0,  150,  137,
 			    0,   92,   89,   88,   76,    0,   61,   60,   68,    0,
-			    0,    5,    0,    0,  152,   21,   11,   12,  152,  111,
-			   26,  121,   64,  149,  147,  142,    0,  131,    0,    0,
+			    0,    5,    0,    0,  159,   21,   11,   12,  159,  111,
+			   26,  128,   64,  156,  154,  149,    0,  138,    0,    0,
 
-			    0,  121,    8,   10,   21,   21,   13,    0,    0,  152,
-			  110,  152,    0,  105,  106,  152,    0,   25,   68,  132,
-			   90,   63,   62,   24,    0,    0,    0,    0,   14,  107,
-			    0,  152,  117,  113,  112,  152,    3,  121,    0,    0,
-			   22,   15,  109,  108,    0,    0,  152,  114,   23,   17,
-			   16,    0,  119,  120,    0,    0,  115,    0,    0,   18,
-			  118,  116,   20,   19,    0,    0,    0>>)
+			    0,  128,    8,   10,   21,   21,   13,    0,    0,  159,
+			  159,    0,  105,  106,  159,  118,   25,   68,  139,   90,
+			   63,   62,   24,    0,    0,    0,    0,   14,  107,    0,
+			  159,  117,  159,    0,  112,  113,  159,    0,  128,    0,
+			    0,   22,   15,    0,  108,  114,    0,  159,  124,  120,
+			  119,  159,    3,   23,   17,   16,    0,    0,  116,  115,
+			    0,    0,  159,  121,    0,    0,   18,    0,  126,  127,
+			    0,    0,  122,   20,   19,    0,  125,  123,  109,    0,
+			  110,    0,    0,    0>>)
 		end
 
 	yydefgoto_template: ANY is
@@ -1759,13 +1838,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   10,   24,   11,   56,  184,   52,   35,   82,   12,   75,
-			  208,   13,  158,  181,  211,  212,   36,   89,  139,  140,
-			  141,   37,   63,  116,  176,   44,   26,   72,   73,   15,
-			   69,   58,  160,  186,   54,   64,   65,   17,   71,   49,
-			  119,  126,  127,   84,  123,  143,  173,   45,   18,   61,
-			   41,  189,  213,   38,   66,   67,  117,  124,  125,  177,
-			   46,   20,  108,  264,  216,   27,  234,  235,  245,  254>>)
+			   10,   24,   11,   56,  184,  210,   52,   35,   82,   12,
+			   75,  208,   13,  158,  181,  232,  233,   36,   89,  139,
+			  140,  141,   37,   63,  116,  176,   44,   26,   72,   73,
+			   15,   69,   58,  160,  186,  189,  212,   54,   64,   65,
+			  119,  126,  127,   84,  123,  143,  173,   45,   17,   71,
+			   49,   18,   61,   41,  215,  234,   38,   66,   67,  117,
+			  124,  125,  177,   46,   20,  108,  281,  237,   27,  250,
+			  251,  261,  270>>)
 		end
 
 	yypact_template: ANY is
@@ -1773,35 +1853,37 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   71,   49,    4,    4,  276,   49,   49,   49,  255,   49,
-			 -32768, -32768,  133,  134, -32768,  103,   76,  129,  131,   55,
-			  132, -32768, -32768, -32768,   37,   24,    4, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768,   37,  136,  267, -32768,
-			   37,    4, -32768, -32768,   37,   73,    4, -32768,   37,    4,
-			 -32768,  136,   37,  136,  256, -32768,   37,  152,    4, -32768,
-			 -32768,  131,    4,  103, -32768,   76, -32768,   55, -32768,  103,
-			 -32768,  129, -32768, -32768, -32768,  133, -32768,    4,    4, -32768,
-			    4,    4,  143,   98,  123,  138,   37, -32768,  218,  140,
-			   37, -32768,   37, -32768,    4,    4,   37, -32768,   37,   12,
+			  130,   21,    0,    0,  276,   21,   21,   21,  194,   21,
+			 -32768, -32768,  161,  166, -32768,  112,   90,  137,  157,   74,
+			  151, -32768, -32768, -32768,   33,   16,    0, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768,   33,  164,  302, -32768,
+			   33,    0, -32768, -32768,   33,   75,    0, -32768,   33,    0,
+			 -32768,  164,   33,  164,  214, -32768,   33,  179,    0, -32768,
+			 -32768,  157,    0,  112, -32768,   90, -32768,   74, -32768,  112,
+			 -32768,  137, -32768, -32768, -32768,  161, -32768,    0,    0, -32768,
+			    0,    0,  171,  126,  148,  162,   33, -32768,  267,  170,
+			   33, -32768,   33, -32768,    0,    0,   33, -32768,   33,    4,
 
-			 -32768, -32768,   37, -32768,   -2,   37,  129, -32768,  124,  139,
-			   55, -32768,   76,  103,  131,  141, -32768,  135, -32768,  130,
-			  130, -32768, -32768,  123, -32768,  122, -32768,   98, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  104,
-			 -32768, -32768,    4, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768,  121, -32768,    4, -32768, -32768,  103,    4,  126,   32,
-			  113, -32768,   55,   76,  129,    4,    4,    4,   98, -32768,
-			  116, -32768, -32768,  119, -32768,  120, -32768,  117,   76,   92,
-			    4, -32768,    4,    4,   37,   89,   29, -32768,   49,   97,
-			 -32768,   55,  103, -32768, -32768, -32768,  102, -32768,    4,    4,
+			 -32768, -32768,   33, -32768,   18,   33,  137, -32768,  150,  167,
+			   74, -32768,   90,  112,  157,  168, -32768,  159, -32768,  152,
+			  152, -32768, -32768,  148, -32768,  146, -32768,  126, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  125,
+			 -32768, -32768,    0, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768,  135, -32768,    0, -32768, -32768,  112,    0,  143,   30,
+			  141, -32768,   74,   90,  137,    0,    0,    0,  126, -32768,
+			  127, -32768, -32768,  124, -32768,  131, -32768,  120,   90,   95,
+			    0, -32768,    0,    0,   33,  102,   31, -32768,   21,  118,
+			 -32768,   74,  112, -32768, -32768, -32768,  116, -32768,    0,    0,
 
-			    4,   55, -32768, -32768,   89,   89, -32768,    4,  105,   37,
-			 -32768,   37,  101,    4, -32768,   49,   88, -32768,   76, -32768,
-			 -32768, -32768, -32768, -32768,   91,   90,   63,    4, -32768, -32768,
-			    4,   37,   72, -32768,    4,   37, -32768,   55,    4,    4,
-			 -32768,  191,   68, -32768,   10,   38,   37, -32768, -32768,  191,
-			  191,   45, -32768, -32768,  -10,    4, -32768,   34,   22, -32768,
-			 -32768, -32768, -32768, -32768,   31,   28, -32768>>)
+			    0,   74, -32768, -32768,  102,  102, -32768,    0,  115,   33,
+			   33,  114,    0, -32768,   21,  101, -32768,   90, -32768, -32768,
+			 -32768, -32768, -32768,  110,  109,   83,    0, -32768, -32768,    0,
+			   33, -32768,   33,  107,    0, -32768,   21,   99,   74,    0,
+			    0, -32768,   70,  103, -32768, -32768,    0,   33,   73, -32768,
+			    0,   33, -32768, -32768,   70,   70,   76,    0,   72, -32768,
+			   -2,   62,   33, -32768,   47,   34, -32768,   45, -32768, -32768,
+			   12,    0, -32768, -32768, -32768,    0, -32768, -32768,   19,    0,
+			 -32768,   39,   26, -32768>>)
 		end
 
 	yypgoto_template: ANY is
@@ -1809,13 +1891,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			 -32768,  166, -191,  144,    5,  142,   -1, -32768,  170, -32768,
-			 -113, -32768, -32768, -32768,  -24, -192,  150,  -19, -32768, -32768,
-			 -32768,   11, -32768,   18,  -23,  137, -32768,    9,  -57,   -4,
-			  -60, -32768, -32768, -32768, -32768,    7,  -49,   -6,  -44, -32768,
-			  106,  153,   50,   94, -32768, -32768, -32768,  -55,    6,   99,
-			 -32768, -32768, -32768, -32768,    3,  -50, -32768,   -9, -105, -32768,
-			 -32768, -32768, -32768, -32768, -32768,  115, -32768,  -64, -32768, -32768>>)
+			 -32768,  215, -164,  178,   37,   10,  176,   -1, -32768,  200,
+			 -32768, -108, -32768, -32768, -32768,  -15, -207,  180,  -20, -32768,
+			 -32768, -32768,    6, -32768,   50,   14,  169, -32768,   13,  -64,
+			   -7,  -54, -32768, -32768, -32768, -32768, -32768, -32768,   11,  -47,
+			  132,  185,   85,  123, -32768, -32768, -32768,  -51,   -6,  -43,
+			 -32768,    7,  129, -32768, -32768, -32768, -32768,    9,  -50, -32768,
+			  -18, -103, -32768, -32768, -32768, -32768, -32768, -32768,   98, -32768,
+			  -57, -32768, -32768>>)
 		end
 
 	yytable_template: ANY is
@@ -1823,46 +1906,46 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   25,   28,   29,   19,   40,   43,   48,   16,   57,   14,
-			  111,  113,   70,   68,  109,  110,   85,  106,   60,   53,
-			  112,  154,  170,  232,  260,   25,   23,  150,  266,   81,
-			  153,  265,   99,  183,  101,   80,  183,  263,  253,   79,
-			   92,   21,  232,   78,   77,   43,  156,  255,   98,  262,
-			  251,   23,  252,  161,   23,   70,   77,   57,  257,  258,
-			  259,  107,  162,  196,  163,   53,   21,   68,   22,   21,
-			  164,   23,  182,   22,    9,  182,  115,  118,   94,  118,
-			  121,   60,   95,   94,    8,   22,   21,  138,    7,    6,
-			  151,  224,  225,  146,  147,    5,    1,  240,  244,  239,
+			   25,   28,   29,  111,   40,   43,   48,   85,   57,   19,
+			   68,   16,   70,   14,   53,  110,  109,  113,  106,   60,
+			  150,   81,  112,   23,  170,   25,  283,  269,   80,  248,
+			  279,   99,   79,  101,  183,  183,   78,   77,   21,  282,
+			   92,  268,  154,  248,   23,   43,  161,  276,   98,   77,
+			  274,  153,  156,   23,   23,   70,  275,   57,   22,   21,
+			   53,  107,  162,  273,   68,  196,  163,   22,   21,   21,
+			   22,  164,  271,    9,  182,  182,  115,  118,  256,  118,
+			  121,  151,   60,   94,    8,   95,   94,  138,    7,    6,
+			  264,  265,  266,  146,  147,    5,  223,  224,  190,   68,
 
-			  238,    4,   68,  236,  192,  190,    4,  178,   70,    3,
-			  230,    2,    1,  191,  227,  207,    8,  219,  215,   39,
-			   42,   47,   50,   55,   59,  199,  202,  200,  201,  198,
-			   77,  197,    9,  188,  217,  180,  174,  169,  171,   76,
-			  167,  172,   78,  218,  223,  166,  165,  159,    7,  142,
-			  157,   87,  175,  128,   80,   91,  179,    5,  185,   93,
-			   68,  104,   88,   97,  193,  115,  195,  100,  237,   62,
-			  246,  103,    2,  168,  114,  242,  122,  222,   83,  203,
-			  248,  204,  205,   96,  194,  185,  120,  210,   90,  231,
-			   74,  209,   86,    0,    9,    0,  102,  220,  221,  175,
+			  260,    4,   39,   42,   47,   50,   55,   59,   70,  178,
+			  192,    2,    1,  191,  257,  252,    1,  246,  241,  240,
+			  239,    4,   76,  236,  229,  226,    8,  216,  201,  207,
+			  202,  200,  218,    9,   87,  198,  199,  222,   91,  214,
+			    9,  172,   93,  197,    8,  217,   97,  188,    7,    6,
+			  100,  174,  175,  180,  103,    5,  179,   68,  185,   77,
+			  171,    4,  169,  167,  193,  115,  195,  238,   78,    3,
+			  166,    2,    1,  165,  253,    7,  159,  157,  128,  203,
+			  142,  204,  205,   80,  129,  185,    5,  211,  144,  104,
+			  145,   88,    2,  262,  148,  258,  149,  219,  220,  175,
 
-			    0,  129,  105,    0,    8,  144,  226,  145,    7,    6,
-			    0,  148,  210,  149,  210,    5,    0,  152,    0,    0,
-			  155,    4,  137,    0,    0,  136,  241,    0,    0,   43,
-			    0,    2,    1,  210,  135,    0,    0,  249,  250,    0,
-			   23,    0,    0,  134,   19,  133,  132,    0,   16,    0,
-			   14,  131,   19,   19,  261,   21,   16,   16,   14,   14,
-			  130,   34,   34,    0,    0,    0,    0,   33,   33,   32,
-			   32,    0,    0,   34,  187,    0,    0,   23,   23,   33,
-			    0,   32,   34,    0,   31,   31,   51,   51,   33,   23,
-			   32,   22,   21,   21,   30,   30,   31,    0,   23,  206,
+			  152,   34,   62,  155,  114,  122,  225,   33,  168,   32,
+			   83,  211,  120,  231,  221,   96,  194,   23,   90,  247,
+			   74,   34,  230,  209,   31,  242,   51,   33,  243,   32,
+			  102,   22,   21,  231,   30,  231,  105,   23,  254,  255,
+			    0,   86,    0,    0,   31,   43,   51,    0,    0,  231,
+			    0,   19,   21,   16,   30,   14,  267,  187,    0,    0,
+			    0,    0,    0,   19,   19,   16,   16,   14,   14,    0,
+			  277,  137,    0,    0,  278,  136,    0,    0,  280,    0,
+			    0,    0,  206,   34,  135,    0,  213,    0,    0,   33,
+			   23,   32,    0,  134,    0,  133,  132,    0,    0,   23,
 
-			    0,    0,    0,  214,   21,   31,   30,    0,    0,    0,
-			    0,    0,   22,   21,    0,   30,    0,    0,    0,    0,
-			    0,    0,    0,    0,  228,    0,  229,    0,    0,    0,
-			  233,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,  243,    0,    0,    0,
-			  247,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,  256>>)
+			    0,  131,    0,    0,    0,   21,   31,  227,  228,   34,
+			  130,    0,  235,   22,   21,   33,   30,   32,    0,    0,
+			    0,    0,    0,    0,    0,   23,    0,    0,  244,    0,
+			  245,    0,   31,    0,  249,    0,    0,    0,    0,    0,
+			   21,    0,   30,    0,    0,  259,    0,    0,    0,  263,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			  272>>)
 		end
 
 	yycheck_template: ANY is
@@ -1870,46 +1953,46 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    1,    2,    3,    0,    5,    6,    7,    0,    9,    0,
-			   67,   71,   18,   17,   63,   65,   25,   61,   12,    8,
-			   69,   23,  127,  215,   34,   26,   22,   15,    0,    5,
-			   32,    0,   51,    4,   53,   11,    4,   15,   28,   15,
-			   41,   37,  234,   19,   32,   46,  106,    9,   49,   15,
-			  241,   22,   42,  110,   22,   61,   32,   58,  249,  250,
-			   15,   62,  112,  168,  113,   54,   37,   71,   36,   37,
-			  114,   22,   43,   36,    3,   43,   77,   78,   10,   80,
-			   81,   75,    9,   10,   13,   36,   37,   88,   17,   18,
-			   99,  204,  205,   94,   95,   24,   41,   34,   26,    9,
+			    1,    2,    3,   67,    5,    6,    7,   25,    9,    0,
+			   17,    0,   18,    0,    8,   65,   63,   71,   61,   12,
+			   16,    5,   69,   23,  127,   26,    0,   29,   12,  236,
+			   11,   51,   16,   53,    4,    4,   20,   33,   38,    0,
+			   41,   43,   24,  250,   23,   46,  110,   35,   49,   33,
+			   16,   33,  106,   23,   23,   61,   11,   58,   37,   38,
+			   54,   62,  112,   16,   71,  168,  113,   37,   38,   38,
+			   37,  114,   10,    3,   44,   44,   77,   78,  242,   80,
+			   81,   99,   75,   11,   14,   10,   11,   88,   18,   19,
+			  254,  255,   16,   94,   95,   25,  204,  205,  162,  106,
 
-			    9,   30,  106,   15,  164,  162,   30,  156,  114,   38,
-			    9,   40,   41,  163,    9,   26,   13,   15,   21,    4,
-			    5,    6,    7,    8,    9,    5,   34,   10,  178,   10,
-			   32,   15,    3,   20,  191,    9,   15,   15,   34,   24,
-			   10,  142,   19,  192,  201,   10,    5,    8,   17,    9,
-			   26,   36,  153,   15,   11,   40,  157,   24,  159,   44,
-			  164,    9,   26,   48,  165,  166,  167,   52,  218,   35,
-			  234,   56,   40,  123,   75,  230,   82,  200,   25,  180,
-			  237,  182,  183,   46,  166,  186,   80,  188,   38,  213,
-			   20,  186,   26,   -1,    3,   -1,   54,  198,  199,  200,
+			   27,   31,    4,    5,    6,    7,    8,    9,  114,  156,
+			  164,   41,   42,  163,   11,   16,   42,   10,   35,   10,
+			   10,   31,   24,   22,   10,   10,   14,  191,  178,   27,
+			   35,   11,   16,    3,   36,   11,    5,  201,   40,   21,
+			    3,  142,   44,   16,   14,  192,   48,    6,   18,   19,
+			   52,   16,  153,   10,   56,   25,  157,  164,  159,   33,
+			   35,   31,   16,   11,  165,  166,  167,  217,   20,   39,
+			   11,   41,   42,    5,  238,   18,    9,   27,   16,  180,
+			   10,  182,  183,   12,   86,  186,   25,  188,   90,   10,
+			   92,   27,   41,  250,   96,  246,   98,  198,  199,  200,
 
-			   -1,   86,   58,   -1,   13,   90,  207,   92,   17,   18,
-			   -1,   96,  213,   98,  215,   24,   -1,  102,   -1,   -1,
-			  105,   30,    4,   -1,   -1,    7,  227,   -1,   -1,  230,
-			   -1,   40,   41,  234,   16,   -1,   -1,  238,  239,   -1,
-			   22,   -1,   -1,   25,  241,   27,   28,   -1,  241,   -1,
-			  241,   33,  249,  250,  255,   37,  249,  250,  249,  250,
-			   42,    6,    6,   -1,   -1,   -1,   -1,   12,   12,   14,
-			   14,   -1,   -1,    6,  159,   -1,   -1,   22,   22,   12,
-			   -1,   14,    6,   -1,   29,   29,   31,   31,   12,   22,
-			   14,   36,   37,   37,   39,   39,   29,   -1,   22,  184,
+			  102,    7,   36,  105,   75,   82,  207,   13,  123,   15,
+			   25,  212,   80,  214,  200,   46,  166,   23,   38,  234,
+			   20,    7,  212,  186,   30,  226,   32,   13,  229,   15,
+			   54,   37,   38,  234,   40,  236,   58,   23,  239,  240,
+			   -1,   26,   -1,   -1,   30,  246,   32,   -1,   -1,  250,
+			   -1,  242,   38,  242,   40,  242,  257,  159,   -1,   -1,
+			   -1,   -1,   -1,  254,  255,  254,  255,  254,  255,   -1,
+			  271,    4,   -1,   -1,  275,    8,   -1,   -1,  279,   -1,
+			   -1,   -1,  184,    7,   17,   -1,  188,   -1,   -1,   13,
+			   23,   15,   -1,   26,   -1,   28,   29,   -1,   -1,   23,
 
-			   -1,   -1,   -1,  188,   37,   29,   39,   -1,   -1,   -1,
-			   -1,   -1,   36,   37,   -1,   39,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,  209,   -1,  211,   -1,   -1,   -1,
-			  215,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,  231,   -1,   -1,   -1,
-			  235,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,  246>>)
+			   -1,   34,   -1,   -1,   -1,   38,   30,  209,  210,    7,
+			   43,   -1,  214,   37,   38,   13,   40,   15,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   23,   -1,   -1,  230,   -1,
+			  232,   -1,   30,   -1,  236,   -1,   -1,   -1,   -1,   -1,
+			   38,   -1,   40,   -1,   -1,  247,   -1,   -1,   -1,  251,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			  262>>)
 		end
 
 feature {NONE} -- Conversion
@@ -1999,7 +2082,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype6 (v: ANY): D_OPTION_SD is
+	yytype6 (v: ANY): ASSEMBLY_SD is
 		require
 			valid_type: yyis_type6 (v)
 		do
@@ -2010,13 +2093,13 @@ feature {NONE} -- Conversion
 
 	yyis_type6 (v: ANY): BOOLEAN is
 		local
-			u: D_OPTION_SD
+			u: ASSEMBLY_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype7 (v: ANY): ID_SD is
+	yytype7 (v: ANY): D_OPTION_SD is
 		require
 			valid_type: yyis_type7 (v)
 		do
@@ -2027,13 +2110,13 @@ feature {NONE} -- Conversion
 
 	yyis_type7 (v: ANY): BOOLEAN is
 		local
-			u: ID_SD
+			u: D_OPTION_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype8 (v: ANY): LANG_TRIB_SD is
+	yytype8 (v: ANY): ID_SD is
 		require
 			valid_type: yyis_type8 (v)
 		do
@@ -2044,13 +2127,13 @@ feature {NONE} -- Conversion
 
 	yyis_type8 (v: ANY): BOOLEAN is
 		local
-			u: LANG_TRIB_SD
+			u: ID_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype9 (v: ANY): LANGUAGE_NAME_SD is
+	yytype9 (v: ANY): LANG_TRIB_SD is
 		require
 			valid_type: yyis_type9 (v)
 		do
@@ -2061,13 +2144,13 @@ feature {NONE} -- Conversion
 
 	yyis_type9 (v: ANY): BOOLEAN is
 		local
-			u: LANGUAGE_NAME_SD
+			u: LANG_TRIB_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype10 (v: ANY): O_OPTION_SD is
+	yytype10 (v: ANY): LANGUAGE_NAME_SD is
 		require
 			valid_type: yyis_type10 (v)
 		do
@@ -2078,13 +2161,13 @@ feature {NONE} -- Conversion
 
 	yyis_type10 (v: ANY): BOOLEAN is
 		local
-			u: O_OPTION_SD
+			u: LANGUAGE_NAME_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype11 (v: ANY): OPT_VAL_SD is
+	yytype11 (v: ANY): O_OPTION_SD is
 		require
 			valid_type: yyis_type11 (v)
 		do
@@ -2095,13 +2178,13 @@ feature {NONE} -- Conversion
 
 	yyis_type11 (v: ANY): BOOLEAN is
 		local
-			u: OPT_VAL_SD
+			u: O_OPTION_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype12 (v: ANY): OPTION_SD is
+	yytype12 (v: ANY): OPT_VAL_SD is
 		require
 			valid_type: yyis_type12 (v)
 		do
@@ -2112,13 +2195,13 @@ feature {NONE} -- Conversion
 
 	yyis_type12 (v: ANY): BOOLEAN is
 		local
-			u: OPTION_SD
+			u: OPT_VAL_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype13 (v: ANY): ROOT_SD is
+	yytype13 (v: ANY): OPTION_SD is
 		require
 			valid_type: yyis_type13 (v)
 		do
@@ -2129,13 +2212,13 @@ feature {NONE} -- Conversion
 
 	yyis_type13 (v: ANY): BOOLEAN is
 		local
-			u: ROOT_SD
+			u: OPTION_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype14 (v: ANY): TWO_NAME_SD is
+	yytype14 (v: ANY): ROOT_SD is
 		require
 			valid_type: yyis_type14 (v)
 		do
@@ -2146,13 +2229,13 @@ feature {NONE} -- Conversion
 
 	yyis_type14 (v: ANY): BOOLEAN is
 		local
-			u: TWO_NAME_SD
+			u: ROOT_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype15 (v: ANY): DEPEND_SD is
+	yytype15 (v: ANY): TWO_NAME_SD is
 		require
 			valid_type: yyis_type15 (v)
 		do
@@ -2163,13 +2246,13 @@ feature {NONE} -- Conversion
 
 	yyis_type15 (v: ANY): BOOLEAN is
 		local
-			u: DEPEND_SD
+			u: TWO_NAME_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype16 (v: ANY): LACE_LIST [CLAS_VISI_SD] is
+	yytype16 (v: ANY): DEPEND_SD is
 		require
 			valid_type: yyis_type16 (v)
 		do
@@ -2180,13 +2263,13 @@ feature {NONE} -- Conversion
 
 	yyis_type16 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [CLAS_VISI_SD]
+			u: DEPEND_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype17 (v: ANY): LACE_LIST [CLUST_ADAPT_SD] is
+	yytype17 (v: ANY): LACE_LIST [CLAS_VISI_SD] is
 		require
 			valid_type: yyis_type17 (v)
 		do
@@ -2197,13 +2280,13 @@ feature {NONE} -- Conversion
 
 	yyis_type17 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [CLUST_ADAPT_SD]
+			u: LACE_LIST [CLAS_VISI_SD]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype18 (v: ANY): LACE_LIST [CLUSTER_SD] is
+	yytype18 (v: ANY): LACE_LIST [CLUST_ADAPT_SD] is
 		require
 			valid_type: yyis_type18 (v)
 		do
@@ -2214,13 +2297,13 @@ feature {NONE} -- Conversion
 
 	yyis_type18 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [CLUSTER_SD]
+			u: LACE_LIST [CLUST_ADAPT_SD]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype19 (v: ANY): LACE_LIST [D_OPTION_SD] is
+	yytype19 (v: ANY): LACE_LIST [CLUSTER_SD] is
 		require
 			valid_type: yyis_type19 (v)
 		do
@@ -2231,13 +2314,13 @@ feature {NONE} -- Conversion
 
 	yyis_type19 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [D_OPTION_SD]
+			u: LACE_LIST [CLUSTER_SD]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype20 (v: ANY): EXCLUDE_SD is
+	yytype20 (v: ANY): LACE_LIST [ASSEMBLY_SD] is
 		require
 			valid_type: yyis_type20 (v)
 		do
@@ -2248,13 +2331,13 @@ feature {NONE} -- Conversion
 
 	yyis_type20 (v: ANY): BOOLEAN is
 		local
-			u: EXCLUDE_SD
+			u: LACE_LIST [ASSEMBLY_SD]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype21 (v: ANY): LACE_LIST [EXCLUDE_SD] is
+	yytype21 (v: ANY): LACE_LIST [D_OPTION_SD] is
 		require
 			valid_type: yyis_type21 (v)
 		do
@@ -2265,7 +2348,7 @@ feature {NONE} -- Conversion
 
 	yyis_type21 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [EXCLUDE_SD]
+			u: LACE_LIST [D_OPTION_SD]
 		do
 			u ?= v
 			Result := (u = v)
@@ -2288,7 +2371,7 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype23 (v: ANY): INCLUDE_SD is
+	yytype23 (v: ANY): FILE_NAME_SD is
 		require
 			valid_type: yyis_type23 (v)
 		do
@@ -2299,13 +2382,13 @@ feature {NONE} -- Conversion
 
 	yyis_type23 (v: ANY): BOOLEAN is
 		local
-			u: INCLUDE_SD
+			u: FILE_NAME_SD
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype24 (v: ANY): LACE_LIST [INCLUDE_SD] is
+	yytype24 (v: ANY): LACE_LIST [FILE_NAME_SD] is
 		require
 			valid_type: yyis_type24 (v)
 		do
@@ -2316,7 +2399,7 @@ feature {NONE} -- Conversion
 
 	yyis_type24 (v: ANY): BOOLEAN is
 		local
-			u: LACE_LIST [INCLUDE_SD]
+			u: LACE_LIST [FILE_NAME_SD]
 		do
 			u ?= v
 			Result := (u = v)
@@ -2427,23 +2510,23 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 266
+	yyFinal: INTEGER is 283
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 44
+	yyNtbase: INTEGER is 45
 			-- Number of tokens
 
-	yyLast: INTEGER is 361
+	yyLast: INTEGER is 360
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 298
+	yyMax_token: INTEGER is 299
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 114
+	yyNsyms: INTEGER is 118
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

@@ -52,7 +52,7 @@ feature -- Search and replace
 				clusters.forth
 			end
 			clusters.go_to (cur)
-			Progress_dialog.set_title ("Replacing in compiled classes")
+			Progress_dialog.set_title ("Renaming in compiled classes")
 			perform_replacing (cl, a_search_string, a_replace_string)
 		end
 
@@ -88,7 +88,7 @@ feature -- Search and replace
 				clusters.forth
 			end
 			clusters.go_to (cur)
-			Progress_dialog.set_title ("Replacing in universe")
+			Progress_dialog.set_title ("Renaming in universe")
 			perform_replacing (cl, a_search_string, a_replace_string)
 		end
 
@@ -117,8 +117,8 @@ feature {NONE} -- Implementation
 			-- Perform search/replace on `cl'.
 		do
 			Progress_dialog.set_title ("Progress")
-			Progress_dialog.set_degree ("Replacing:")
-			Progress_dialog.set_current_degree (s + " with " + r)
+			Progress_dialog.set_degree ("Renaming:")
+			Progress_dialog.set_current_degree (s + " to " + r)
 			Progress_dialog.set_entity ("Class:")
 			Progress_dialog.set_to_go_label ("Classes to go:")
 			Progress_dialog.set_to_go (cl.count.out)

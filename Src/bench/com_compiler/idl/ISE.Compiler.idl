@@ -9,6 +9,7 @@
 
 // GUID's for type library
 #include "ise_compiler_guid.h"
+
 // Depenancies
 import "oaidl.idl";
 
@@ -46,8 +47,8 @@ interface IEnumAssembly;
 interface IEnumCompletionEntry;
 interface IEnumParameter;
 interface IEiffelParameterDescriptor;
-interface IEiffelHTMLDocGenerator;
-interface IEiffelHTMLDocEvents;
+interface IEiffelHtmlDocumentationGenerator;
+interface IEiffelHtmlDocumentationEvents;
 interface IEiffelException;
 enum EIF_ENTITY_IMAGES;
 enum EIF_FEATURE_TYPES;
@@ -55,6 +56,7 @@ enum EIF_EXCEPTIONS;
 enum EIF_PROJECT_TYPES;
 enum EIF_ASSERTIONS;
 enum EIF_CLUSTER_NAMESPACE_GENERATION;
+enum EIF_COMPILATION_MODE;
 
 
 // =========================================================================
@@ -187,6 +189,18 @@ typedef enum EIF_EXCEPTIONS
     EIF_EXCEPTIONS_InvalidAssemblyPrefix
 
 } EIF_EXCEPTIONS;
+//---------------------------------------------------------------------
+
+[
+    uuid (UUID_EnumEIF_COMPILATION_MODE),
+    helpstring ("Various modes of compilation.")
+]
+typedef enum EIF_COMPILATION_MODE
+{
+	EIF_COMPILATION_MODE_Workbench = 0,
+	EIF_COMPILATION_MODE_Finalize = 1,
+	EIF_COMPILATION_MODE_Precompile = 2
+}EIF_COMPILATION_MODE;
 //---------------------------------------------------------------------
 
 [
@@ -323,13 +337,13 @@ interface IEiffelSystemClusters: IDispatch
 interface IEiffelException: IDispatch
 {
     [helpstring ("Get inner exception"), propget]
-    HRESULT inner_exception ([out, retval] IEiffelException** a_result);
+    HRESULT InnerException ([out, retval] IEiffelException** ppIEiffelException);
     
     [helpstring ("Get exception message"), propget]
-    HRESULT message ([out, retval] BSTR* a_result);
+    HRESULT Message ([out, retval] BSTR* pbstrMessage);
     
     [helpstring ("Retrieve exception type"), propget]
-    HRESULT exception_code ([out, retval] EIF_EXCEPTIONS* a_result);
+    HRESULT ExceptionCode ([out, retval] EIF_EXCEPTIONS* pEIF_EXCEPTIONS);
 };
 //---------------------------------------------------------------------
 
@@ -341,46 +355,49 @@ interface IEiffelException: IDispatch
 interface IEiffelProject: IDispatch
 {
     [helpstring ("Retrieve Eiffel Project")]
-    HRESULT retrieve_eiffel_project ([in] BSTR a_project_file_name);
+    HRESULT RetrieveEiffelProject ([in] BSTR bstrProjectFileName);
 
-    [helpstring ("Create new Eiffel project.")]
-    HRESULT create_eiffel_project ([in] BSTR a_ace_file_name, [in] BSTR a_project_directory_path);
+    [helpstring ("Create new Eiffel project from an existing ace file.")]
+    HRESULT CreateEiffelProject ([in] BSTR bstrAceFileName, [in] BSTR bstrProjectDirectory);
 
-    [helpstring ("Full path to .epr file.")]
-    HRESULT project_file_name ([out, retval] BSTR * return_value);
+    [helpstring ("Create new Eiffel project from scratch.")]
+    HRESULT GenerateNewEiffelProject ([in] BSTR bstrProjectName, [in] BSTR bstrAceFileName, [in] BSTR bstrRootClassName, [in] BSTR bstrCreationRoutine, [in] BSTR bstrProjectDirectory);
 
-    [helpstring ("Full path to Ace file.")]
-    HRESULT ace_file_name ([out, retval] BSTR * return_value);
+    [helpstring ("Full path to .epr file."), propget]
+    HRESULT ProjectFileName ([out, retval] BSTR* pbstrProjectFileName);
 
-    [helpstring ("Project directory.")]
-    HRESULT project_directory ([out, retval] BSTR * return_value);
+    [helpstring ("Full path to Ace file."), propget]
+    HRESULT AceFileName ([out, retval] BSTR* pbstrAceFileName);
 
-    [helpstring ("Is project valid?")]
-    HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Project directory."), propget]
+    HRESULT ProjectDirectory ([out, retval] BSTR* pbstrProjectDirectory);
 
-    [helpstring ("Last exception raised")]
-    HRESULT last_exception ([out, retval] IEiffelException** a_result);
+    [helpstring ("Is project valid?"), propget]
+    HRESULT IsValidProject ([out, retval] VARIANT_BOOL* pvbValid);
 
-    [helpstring ("Compiler.")]
-    HRESULT compiler ([out, retval] IEiffelCompiler ** return_value);
+    [helpstring ("Last exception raised"), propget]
+    HRESULT LastException ([out, retval] IEiffelException** ppIEiffelException);
 
-    [helpstring ("Has system been compiled?")]
-    HRESULT is_compiled ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Compiler."), propget]
+    HRESULT Compiler ([out, retval] IEiffelCompiler** ppIEiffelCompiler);
 
-    [helpstring ("Has the project updated since last compilation?")]
-    HRESULT project_has_updated ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Has system been compiled?"), propget]
+    HRESULT IsCompiled ([out, retval] VARIANT_BOOL* pvbCompiled);
 
-    [helpstring ("System Browser.")]
-    HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
+    [helpstring ("Has the project updated since last compilation?"), propget]
+    HRESULT ProjectHasUpdated ([out, retval] VARIANT_BOOL* pvbUpdated);
 
-    [helpstring ("Project Properties.")]
-    HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
+    [helpstring ("System Browser."), propget]
+    HRESULT SystemBrowser ([out, retval] IEiffelSystemBrowser** ppEiffelSystemBrowser);
 
-    [helpstring ("Completion information")]
-    HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
+    [helpstring ("Project Properties."), propget]
+    HRESULT ProjectProperties ([out, retval] IEiffelProjectProperties** ppIEiffelProjectProperties);
 
-    [helpstring ("Help documentation generator")]
-    HRESULT html_doc_generator ([out, retval] IEiffelHTMLDocGenerator ** return_value);
+    [helpstring ("Completion information"), propget]
+    HRESULT CompletionInformation ([out, retval] IEiffelCompletionInfo** ppIEiffelCompletionInfo);
+
+    [helpstring ("Help documentation generator"), propget]
+    HRESULT HtmlDocumentationGenerator ([out, retval] IEiffelHtmlDocumentationGenerator** ppIEiffelHtmlDocumentationGenerator);
 };
 //---------------------------------------------------------------------
 
@@ -392,22 +409,22 @@ interface IEiffelProject: IDispatch
 interface IEiffelCompletionInfo: IDispatch
 {
     [helpstring ("Add a local variable used for solving member completion list")]
-    HRESULT add_local ([in] BSTR name, [in] BSTR type);
+    HRESULT AddLocal ([in] BSTR bstrName, [in] BSTR bstrType);
 
     [helpstring ("Add an argument used for solving member completion list")]
-    HRESULT add_argument ([in] BSTR name, [in] BSTR type);
+    HRESULT AddArgument ([in] BSTR bstrName, [in] BSTR bstrType);
 
     [helpstring ("Features accessible from target.")]
-    HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out] VARIANT* return_names, [out] VARIANT* return_signatures, [out] VARIANT* return_image_indexes);
+    HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
 
     [helpstring ("Feature information")]
-    HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
+    HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
 
-    [helpstring ("Flush temporary completion features for a specifi file")]
-    HRESULT flush_completion_features ([in] BSTR a_file_name);
+    [helpstring ("Flush temporary completion features for a specific file")]
+    HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
 
     [helpstring ("Initialize a feature for completion without compiltation")]
-    HRESULT initialize_feature ([in] BSTR a_name, [in] VARIANT a_arguments, [in] VARIANT a_argument_types, [in] BSTR a_return_type, [in] ULONG a_feature_type, [in] BSTR a_file_name);
+    HRESULT InitializeFeature ([in] BSTR bstrName, [in] VARIANT varArguments, [in] VARIANT varArgumentTypes, [in] BSTR bstrReturnType, [in] ULONG ulFeatureType, [in] BSTR bstrFileName);
 };
 //---------------------------------------------------------------------
 
@@ -418,65 +435,44 @@ interface IEiffelCompletionInfo: IDispatch
 ]
 interface IEiffelCompiler: IDispatch
 {
-    [helpstring ("Compile.")]
-    HRESULT compile ();
-
-    [helpstring ("Finalize.")]
-    HRESULT finalize ();
-
-    [helpstring ("Precompile.")]
-    HRESULT precompile ();
-
-    [helpstring ("Compile with piped output.")]
-    HRESULT compile_to_pipe ();
-
-    [helpstring ("Finalize with piped output.")]
-    HRESULT finalize_to_pipe ();
-
-    [helpstring ("Precompile with piped output.")]
-    HRESULT precompile_to_pipe ();
-
-    [helpstring ("Was last compilation successful?")]
-    HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
-
-    [helpstring ("Did last compile warrant a call to finish_freezing?")]
-    HRESULT freezing_occurred ([out, retval] VARIANT_BOOL * return_value);
-
-    [helpstring ("Compiler version.")]
-    HRESULT compiler_version ([out, retval] BSTR * return_value);
-
-    [helpstring ("Takes a path and expands it using the env vars.")]
-    HRESULT expand_path ([in] BSTR a_path, [out, retval] BSTR * return_value);
-
-    [helpstring ("Generate a cyrptographic key filename.")]
-    HRESULT generate_msil_keyfile ([in] BSTR filename);
-
-    [helpstring ("Eiffel Freeze command name")]
-    HRESULT freeze_command_name ([out, retval] BSTR * return_value);
-
-    [helpstring ("Eiffel Freeze command arguments")]
-    HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
-
-    [helpstring ("Is the compiler a trial version.")]
-    HRESULT has_signable_generation ([out, retval] VARIANT_BOOL * return_value);
-
-    [helpstring ("Remove file locks")]
-    HRESULT remove_file_locks ();
-
-    [helpstring ("Output pipe's name")]
-    HRESULT output_pipe_name ([out, retval] BSTR * return_value);
-
-    [helpstring ("Set output pipe's name")]
-    HRESULT set_output_pipe_name ([in] BSTR return_value);
-
-    [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
-    HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Compiler version."), propget]
+    HRESULT CompilerVersion ([out, retval] BSTR* pbstrVersion);
+    
+    [helpstring ("Is the compiler a trial version."), propget]
+    HRESULT HasSignableGeneration ([out, retval] VARIANT_BOOL* pvbSignable);
 
     [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
-    HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT CanRun ([out, retval] VARIANT_BOOL* pvbCanRun);
+
+    [helpstring ("Compile.")]
+    HRESULT Compile (EIF_COMPILATION_MODE mode);
     
-    [helpstring ("Set state indicating if compiler warnings should be displayed")]
-    HRESULT set_display_warnings ([in] VARIANT_BOOL vbShow);
+    [helpstring ("Compile to an already established named pipe.")]
+    HRESULT CompileToPipe (EIF_COMPILATION_MODE mode, BSTR bstrPipeName);
+
+    [helpstring ("Was last compilation successful?"), propget]
+    HRESULT WasCompilationSuccessful ([out, retval] VARIANT_BOOL* pvbSuccess);
+
+    [helpstring ("Did last compile warrant a call to finish_freezing?"), propget]
+    HRESULT FreezingOccurred ([out, retval] VARIANT_BOOL* pvbDidFreeze);
+
+    [helpstring ("Eiffel Freeze command name"), propget]
+    HRESULT FreezeCommandName ([out, retval] BSTR* pbstrCmdName);
+
+    [helpstring ("Eiffel Freeze command arguments"), propget]
+    HRESULT FreezeCommandArguments ([out, retval] BSTR* pbstrCmdArgs);
+
+    [helpstring ("Remove file locks")]
+    HRESULT RemoveFileLocks ();
+   
+    [helpstring ("Should warning events be raised when compilation raises a warning?"), propput]
+    HRESULT DisplayWarnings ([in] VARIANT_BOOL vbShowWarnings);
+       
+    [helpstring ("Takes a path and expands it using the env vars.")]
+    HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
+
+    [helpstring ("Generate a cyrptographic key filename.")]
+    HRESULT GenerateMsilKeyFileName ([in] BSTR bstrFileName);
 };
 //---------------------------------------------------------------------
 
@@ -511,59 +507,52 @@ interface IEiffelCompilerEvents: IUnknown
 //---------------------------------------------------------------------
 [
     oleautomation,
-    uuid (UUID_IEiffelHTMLDocGenerator),
+    uuid (UUID_IEiffelHtmlDocumentationGenerator),
     helpstring ("Eiffel Project HTML Documentation Generator.")
 ]
-interface IEiffelHTMLDocGenerator: IDispatch
+interface IEiffelHtmlDocumentationGenerator: IDispatch
 {
-    [propget, helpstring ("Is the project loaded?")]
-    HRESULT is_loaded ([out, retval] VARIANT_BOOL* return_value);
-
-    [propget, helpstring ("Is the project oorrupted?")]
-    HRESULT is_corrupted ([out, retval] VARIANT_BOOL* return_value);
-
-    [propget, helpstring ("Is the project incompatible with the current version of the compiled?")]
-    HRESULT is_incompatible ([out, retval] VARIANT_BOOL* return_value);
-
-    [helpstring ("Add a callback interface.")]
-    HRESULT add_status_callback ([in] IEiffelHTMLDocEvents* new_callback);
-
-    [helpstring ("Remove a callback interface.")]
-    HRESULT remove_status_callback ([in] IEiffelHTMLDocEvents* old_callback);
-
     [helpstring ("Exclude a cluster from being generated.")]
-    HRESULT add_excluded_cluster ([in] BSTR cluster_full_name);
+    HRESULT AddExcludedCluster ([in] BSTR bstrFullClusterName);
 
     [helpstring ("Include a cluster to be generated.")]
-    HRESULT remove_excluded_cluster ([in] BSTR cluster_full_name);
+    HRESULT RemoveExcludedCluster ([in] BSTR bstrFullClusterName);
 
     [helpstring ("Generate the HTML documents into path.")]
-    HRESULT generate ([in] BSTR path);
+    HRESULT StartGeneration ([in] BSTR bstrGenerationPath);
+    
+    [helpstring ("Add a callback interface.")]
+    HRESULT AdviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
+
+    [helpstring ("Remove a callback interface.")]
+    HRESULT UnadviseStatusCallback ([in] IEiffelHtmlDocumentationEvents* pIEiffelHtmlDocumentationEvents);
 };
 //---------------------------------------------------------------------
 
 [
     oleautomation,
-    uuid (UUID_IEiffelHTMLDocEvents),
+    uuid (UUID_IEiffelHtmlDocumentationEvents),
     helpstring ("Callback interface for HTML Documentation Generator.")
 ]
-interface IEiffelHTMLDocEvents: IDispatch
+interface IEiffelHtmlDocumentationEvents: IDispatch
 {
-
-    [helpstring ("Put a header message to the output")]
-    HRESULT put_header ([in] BSTR new_value);
-
-    [helpstring ("Put a string to the output")]
-    HRESULT put_string ([in] BSTR new_value);
-
-    [helpstring ("Put a class name to the output")]
-    HRESULT put_class_document_message ([in] BSTR new_value);
-
     [helpstring ("Notify that documentation generating is initializing")]
-    HRESULT put_initializing_documentation ();
+    HRESULT NotifyInitalizingDocumentation ();
 
     [helpstring ("Notify that the percentage completed has changed")]
-    HRESULT put_percentage_completed ([in] ULONG new_value);
+    HRESULT NotifyPercentageComplete ([in] ULONG ulPercent);
+
+    [helpstring ("Put a header message to the output")]
+    HRESULT OutputHeader ([in] BSTR bstrMsg);
+
+    [helpstring ("Put a string to the output")]
+    HRESULT OutputString ([in] BSTR bstrMsg);
+
+    [helpstring ("Put a class name to the output")]
+    HRESULT OutputClassDocumentMessage ([in] BSTR bstrMsg);
+    
+    [helpstring ("Should compilation continue.")]
+    HRESULT ShouldContinue ([in, out] VARIANT_BOOL* pvbContinue);
 };
 //---------------------------------------------------------------------
 
@@ -574,38 +563,40 @@ interface IEiffelHTMLDocEvents: IDispatch
 ]
 interface IEnumEiffelClass: IDispatch
 {
-    HRESULT Next([out] IEiffelClassDescriptor **rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClassDescriptor** ppIEiffelClassDescriptor, [out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumEiffelClass ** ppenum);
+    HRESULT Clone([out] IEnumEiffelClass** ppIEnumEiffelClass);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClassDescriptor **rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG* pulCount);
 };
 //---------------------------------------------------------------------
 
 [
-        oleautomation,
-        uuid(UUID_IEnumCluster),
-        helpstring ("Eiffel Cluster Enumeration.")
+    oleautomation,
+    uuid(UUID_IEnumCluster),
+    helpstring ("Eiffel Cluster Enumeration.")
 ]
 interface IEnumCluster: IDispatch
 {
-    HRESULT Next([out] IEiffelClusterDescriptor **rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor, [out] ULONG *pulCount);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumCluster ** ppenum);
+    HRESULT Clone([out] IEnumCluster** ppIEnumCluster);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterDescriptor **rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG* pulCount);
 };
 //---------------------------------------------------------------------
 
@@ -616,21 +607,18 @@ interface IEnumCluster: IDispatch
 ]
 interface IEnumFeature: IDispatch
 {
-    HRESULT Next(
-            [out] IEiffelFeatureDescriptor **rgelt,
-            [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor, [out] ULONG *pulFetched);
 
-    HRESULT Skip(
-            [in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-            [out] IEnumFeature ** ppenum);
+    HRESULT Clone([out] IEnumFeature** ppIEnumFeature);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelFeatureDescriptor **rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG *ulCount);
 };
 //---------------------------------------------------------------------
 
@@ -641,21 +629,18 @@ interface IEnumFeature: IDispatch
 ]
 interface IEnumParameter: IDispatch
 {
-    HRESULT Next(
-            [out] IEiffelParameterDescriptor ** rgelt,
-            [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor , [out] ULONG *pulFetched);
 
-    HRESULT Skip(
-            [in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-            [out] IEnumParameter ** ppenum);
+    HRESULT Clone([out] IEnumParameter** ppIEnumParameter);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelParameterDescriptor ** rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelParameterDescriptor** ppIEiffelParameterDescriptor);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG *ulCount);
 };
 
 //---------------------------------------------------------------------
@@ -667,17 +652,18 @@ interface IEnumParameter: IDispatch
 ]
 interface IEnumClusterProp: IDispatch
 {
-    HRESULT Next([out] IEiffelClusterProperties **rgelt,[out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClusterProperties** ppIEiffelClusterProperties,[out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumClusterProp ** ppenum);
+    HRESULT Clone([out] IEnumClusterProp** ppIEnumClusterProp);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterProperties **rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] IEiffelClusterProperties** ppIEiffelClusterProperties);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG *pulCount0);
 };
 //---------------------------------------------------------------------
 
@@ -689,17 +675,18 @@ interface IEnumClusterProp: IDispatch
 
 interface IEnumClusterExcludes: IDispatch
 {
-    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *pbstrExclude, [out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumClusterExcludes ** ppenum);
+    HRESULT Clone([out] IEnumClusterExcludes** ppIEnumClusterExcludes);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrExclude);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG *pulCount);
 };
 //---------------------------------------------------------------------
 
@@ -710,17 +697,18 @@ interface IEnumClusterExcludes: IDispatch
 ]
 interface IEnumAssembly: IDispatch
 {
-    HRESULT Next([out] IEiffelAssemblyProperties ** rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties, [out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumAssembly ** ppenum);
+    HRESULT Clone([out] IEnumAssembly** ppIEnumAssembly);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelAssemblyProperties ** rgelt);
+    HRESULT IthItem ([in] ULONG ulCount, [out] IEiffelAssemblyProperties** ppIEiffelAssemblyProperties);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG* pulCount);
 };
 //---------------------------------------------------------------------
 
@@ -731,17 +719,18 @@ interface IEnumAssembly: IDispatch
 ]
 interface IEnumIncludePaths: IDispatch
 {
-    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *pbstrIncludePath, [out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumIncludePaths ** ppenum);
+    HRESULT Clone([out] IEnumIncludePaths** ppIEnumIncludePaths);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrIncludePath);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG* pulCount);
 };
 
 //---------------------------------------------------------------------
@@ -752,17 +741,18 @@ interface IEnumIncludePaths: IDispatch
 ]
 interface IEnumObjectFiles: IDispatch
 {
-    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *pbstrObjectFile, [out] ULONG *pulFetched);
 
-    HRESULT Skip([in] ULONG celt);
+    HRESULT Skip([in] ULONG ulCount);
 
     HRESULT Reset();
 
-    HRESULT Clone([out] IEnumObjectFiles ** ppenum);
+    HRESULT Clone([out] IEnumObjectFiles** ppIEnumObjectFiles);
 
-    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+    HRESULT IthItem ([in] ULONG ulIndex, [out] BSTR *pbstrObjectFile);
 
-    HRESULT count ([out, retval] ULONG *return_value);
+	[propget]
+    HRESULT Count ([out, retval] ULONG* pulCount);
 };
 //---------------------------------------------------------------------
 
@@ -774,46 +764,46 @@ interface IEnumObjectFiles: IDispatch
 interface IEiffelSystemBrowser: IDispatch
 {
     [helpstring ("List of classes in system.")]
-    HRESULT system_classes ([out, retval] IEnumEiffelClass ** some_classes);
+    HRESULT SystemClasses ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of classes in system.")]
-    HRESULT class_count ([out, retval] ULONG * return_value);
+    HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
 
     [helpstring ("List of system's clusters.")]
-    HRESULT system_clusters ([out, retval] IEnumCluster ** some_clusters);
+    HRESULT SystemClusters ([out, retval] IEnumCluster** ppIEnumCluster);
 
     [helpstring ("List of system's external clusters.")]
-    HRESULT external_clusters ([out, retval] IEnumCluster ** some_clusters);
+    HRESULT ExternalClusters ([out, retval] IEnumCluster** ppIEnumCluster);
 
-    [propget, helpstring ("Returns all of the assemblies in an enumerator")]
-    HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
+    [helpstring ("Returns all of the assemblies in an enumerator")]
+    HRESULT Assemblies ([out, retval] IEnumAssembly** ppIEnumAssembly);
 
     [helpstring ("Number of top-level clusters in system.")]
-    HRESULT cluster_count ([out, retval] ULONG * return_value);
+    HRESULT ClusterCount ([out, retval] ULONG* pulClusterCount);
 
     [propget, helpstring ("Number of top-level clusters in system.")]
-    HRESULT root_cluster ([out, retval] IEiffelClusterDescriptor ** return_value);
+    HRESULT RootCluster ([out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
 
     [helpstring ("Cluster descriptor.")]
-    HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);
+    HRESULT ClusterDescriptor ([in] BSTR bstrClassName, [out, retval] IEiffelClusterDescriptor** ppIEiffelClusterDescriptor);
 
     [helpstring ("Class descriptor.")]
-    HRESULT class_descriptor ([in] BSTR class_name, [out, retval] IEiffelClassDescriptor ** return_value);
+    HRESULT ClassDescriptor ([in] BSTR bstrClusterName, [out, retval] IEiffelClassDescriptor** ppIEiffelClassDescriptor);
 
     [helpstring ("Feature descriptor.")]
-    HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
+    HRESULT FeatureDescriptor ([in] BSTR bstrClassName, [in] BSTR bstrFeatureName, [out, retval] IEiffelFeatureDescriptor** ppIEiffelFeatureDescriptor);
 
     [helpstring ("Search classes with names matching `a_string'.")]
-    HRESULT search_classes ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumEiffelClass ** some_classes);
+    HRESULT SearchClasses ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Search feature with names matching `a_string'.")]
-    HRESULT search_features ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumFeature ** some_features);
+    HRESULT SearchFeatures ([in] BSTR bstrSearchStr, [in] VARIANT_BOOL vbIsSubstring, [out, retval] IEnumFeature ** ppIEnumFeature);
 
     [helpstring ("Retrieve description from dotnet type")]
-    HRESULT description_from_dotnet_type ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [out, retval] BSTR *return_value);
+    HRESULT DescriptionFromDotnetType ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [out, retval] BSTR *pbstrDescription);
 
     [helpstring ("Retrieve description from dotnet feature")]
-    HRESULT description_from_dotnet_feature ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [in] BSTR a_feature_signature, [out, retval] BSTR *return_value);
+    HRESULT DescriptionFromDotnetFeature ([in] BSTR bstrAssemblyName, [in] BSTR bstrFullDotnetName, [in] BSTR bstrFeatureSignature, [out, retval] BSTR *pbstrDescription);
 
 };
 //---------------------------------------------------------------------
@@ -826,38 +816,38 @@ interface IEiffelSystemBrowser: IDispatch
 ]
 interface IEiffelClusterDescriptor: IDispatch
 {
-    [helpstring ("Cluster name.")]
-    HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster name."), propget]
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
-    [helpstring ("Cluster description.")]
-    HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster description."), propget]
+    HRESULT Description ([out, retval] BSTR* pbstrDescription);
 
-    [helpstring ("Cluster Tool Tip.")]
-    HRESULT tool_tip ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster Tool Tip."), propget]
+    HRESULT ToolTip ([out, retval] BSTR* pbstrToolTop);
 
     [helpstring ("List of classes in cluster.")]
-    HRESULT classes ([out, retval] IEnumEiffelClass ** some_classes);
+    HRESULT Classes ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of classes in cluster.")]
-    HRESULT class_count ([out, retval] ULONG * return_value);
+    HRESULT ClassCount ([out, retval] ULONG* pulClassCount);
 
     [helpstring ("List of subclusters in cluster.")]
-    HRESULT clusters ([out, retval] IEnumCluster ** some_clusters);
+    HRESULT Clusters ([out, retval] IEnumCluster** ppIEnumCluster);
 
     [helpstring ("Number of subclusters in cluster.")]
-    HRESULT cluster_count ([out, retval] ULONG * return_value);
+    HRESULT ClusterCount ([out, retval] ULONG* pulCount);
 
-    [helpstring ("Full path to cluster.")]
-    HRESULT cluster_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to cluster."), propget]
+    HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
 
     [helpstring ("Relative path to cluster.")]
-    HRESULT relative_path ([out, retval] BSTR * path);
+    HRESULT RelativePath ([out, retval] BSTR* pbstrPath);
 
-    [helpstring ("Should this cluster classes take priority over other classes with same name?")]
-    HRESULT is_override_cluster ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
+    HRESULT IsOverrideCluster ([out, retval] VARIANT_BOOL* pvbOverride);
 
-    [helpstring ("Should this cluster be treated as library?")]
-    HRESULT is_library ([out, retval] VARIANT_BOOL * path);
+    [helpstring ("Should this cluster be treated as library?"), propget]
+    HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
 };
 //---------------------------------------------------------------------
 
@@ -868,86 +858,86 @@ interface IEiffelClusterDescriptor: IDispatch
 ]
 interface IEiffelClassDescriptor: IDispatch
 {
-    [helpstring ("Class name.")]
-    HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Class name."), propget]
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
-    [helpstring ("Class description.")]
-    HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Class description."), propget]
+    HRESULT Description ([out, retval] BSTR* pbstrDescription);
 
-    [helpstring ("Class external name.")]
-    HRESULT external_name ([out, retval] BSTR * return_value);
+    [helpstring ("Class external name."), propget]
+    HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
 
-    [helpstring ("Class Tool Tip.")]
-    HRESULT tool_tip ([out, retval] BSTR * return_value);
+    [helpstring ("Class Tool Tip."), propget]
+    HRESULT ToolTip ([out, retval] BSTR* pbstrToolTip);
 
-    [helpstring ("Is class in system?")]
-    HRESULT is_in_system ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class in system?"), propget]
+    HRESULT IsInSystem ([out, retval] VARIANT_BOOL* pvbInSystem);
 
     [helpstring ("List of names of class features.")]
-    HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
+    HRESULT FeatureNames ([out, retval] SAFEARRAY (BSTR)* psabstrFeatureNames);
 
     [helpstring ("List of class features.")]
-    HRESULT features ([out, retval] IEnumFeature ** some_features);
+    HRESULT Features ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of class features.")]
-    HRESULT feature_count ([out, retval] ULONG * return_value);
+    HRESULT FeatureCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of class features including ancestor features.")]
-    HRESULT flat_features ([out, retval] IEnumFeature ** some_features);
+    HRESULT FlatFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of flat class features.")]
-    HRESULT flat_feature_count ([out, retval] ULONG * return_value);
+    HRESULT FlatFeatureCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of class inherited features.")]
-    HRESULT inherited_features ([out, retval] IEnumFeature ** some_features);
+    HRESULT InheritedFeatures ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of inherited features.")]
-    HRESULT inherited_feature_count ([out, retval] ULONG * return_value);
+    HRESULT InheritedFeatureCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of class creation routines.")]
-    HRESULT creation_routines ([out, retval] IEnumFeature ** some_features);
+    HRESULT CreationRoutines ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of creation routines.")]
-    HRESULT creation_routine_count ([out, retval] ULONG * return_value);
+    HRESULT CreationRoutineCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of class clients.")]
-    HRESULT clients ([out, retval] IEnumEiffelClass ** some_clients);
+    HRESULT Clients ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of class clients.")]
-    HRESULT client_count ([out, retval] ULONG * return_value);
+    HRESULT ClientCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of class suppliers.")]
-    HRESULT suppliers ([out, retval] IEnumEiffelClass ** some_suppliers);
+    HRESULT Suppliers ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of class suppliers.")]
-    HRESULT supplier_count ([out, retval] ULONG * return_value);
+    HRESULT SupplierCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of direct ancestors of class.")]
-    HRESULT ancestors ([out, retval] IEnumEiffelClass ** some_ancestors);
+    HRESULT Ancestors ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of direct ancestors.")]
-    HRESULT ancestor_count ([out, retval] ULONG * return_value);
+    HRESULT AncestorCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of direct descendants of class.")]
-    HRESULT descendants ([out, retval] IEnumEiffelClass ** some_descendants);
+    HRESULT Descendants ([out, retval] IEnumEiffelClass** ppIEnumEiffelClass);
 
     [helpstring ("Number of direct descendants.")]
-    HRESULT descendant_count ([out, retval] ULONG * return_value);
+    HRESULT DescendantCount ([out, retval] ULONG* pulCount);
 
-    [helpstring ("Full path to file.")]
-    HRESULT class_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to file."), propget]
+    HRESULT ClassPath ([out, retval] BSTR* pbstrPath);
 
-    [helpstring ("Is class deferred?")]
-    HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class deferred?"), propget]
+    HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDefferred);
 
-    [helpstring ("Is class external?")]
-    HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class external?"), propget]
+    HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
 
-    [helpstring ("Is class generic?")]
-    HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class generic?"), propget]
+    HRESULT IsGeneric ([out, retval] VARIANT_BOOL* pvbGeneric);
 
-    [helpstring ("Is class part of a library?")]
-    HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class part of a library?"), propget]
+    HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
 };
 //---------------------------------------------------------------------
 
@@ -958,113 +948,113 @@ interface IEiffelClassDescriptor: IDispatch
 ]
 interface IEiffelFeatureDescriptor: IDispatch
 {
-    [helpstring ("Feature name.")]
-    HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Feature name."), propget]
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
-    [helpstring ("Feature external name.")]
-    HRESULT external_name ([out, retval] BSTR * return_value);
+    [helpstring ("Feature external name."), propget]
+    HRESULT ExternalName ([out, retval] BSTR* pbstrExternalName);
 
-    [helpstring ("Name of class where feature is written in.")]
-    HRESULT written_class ([out, retval] BSTR * return_value);
+    [helpstring ("Name of class where feature is written in."), propget]
+    HRESULT WrittenClass ([out, retval] BSTR* pbstrClass);
 
-    [helpstring ("Name of class where feature was evaluated in.")]
-    HRESULT evaluated_class ([out, retval] BSTR * return_value);
+    [helpstring ("Name of class where feature was evaluated in."), propget]
+    HRESULT EvaluatedClass ([out, retval] BSTR* pbstrClass);
 
-    [helpstring ("Feature signature.")]
-    HRESULT signature ([out, retval] BSTR * return_value);
+    [helpstring ("Feature signature."), propget]
+    HRESULT Signature ([out, retval] BSTR* pbstrSignature);
 
-    [helpstring ("Feature description.")]
-    HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Feature description."), propget]
+    HRESULT Description ([out, retval] BSTR* pbstrDescription);
 
     [helpstring ("Feature parameters.")]
-    HRESULT parameters ([out, retval] IEnumParameter** params);
+    HRESULT Parameters ([out, retval] IEnumParameter** ppIEnumParameter);
 
-    [helpstring ("Feature return type.")]
-    HRESULT return_type ([out, retval] BSTR* return_value);
+    [helpstring ("Feature return type."), propget]
+    HRESULT ReturnType ([out, retval] BSTR* pbstrReturnType);
 
     [helpstring ("Feature location, full path to file and line number")]
-    HRESULT feature_location ([out] BSTR * file_path, [out] ULONG * line_number);
+    HRESULT FeatureLocation ([out] BSTR* pbstrPath, [out] ULONG* pulLine);
 
     [helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
-    HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
+    HRESULT AllCallers ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of all callers.")]
-    HRESULT all_callers_count ([out, retval] ULONG * return_value);
+    HRESULT AllCallersCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of feature callers.")]
-    HRESULT local_callers ([out, retval] IEnumFeature ** some_callers);
+    HRESULT LocalCallers ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of local callers.")]
-    HRESULT local_callers_count ([out, retval] ULONG * return_value);
+    HRESULT LocalCallersCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of feature callers, including callers of descendant versions.")]
-    HRESULT descendant_callers ([out, retval] IEnumFeature ** some_callers);
+    HRESULT DescendantCallers ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of descendant callers.")]
-    HRESULT descendant_callers_count ([out, retval] ULONG * return_value);
+    HRESULT DescendantCallersCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of implementers.")]
-    HRESULT implementers ([out, retval] IEnumFeature ** some_implementers);
+    HRESULT Implementers ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of feature implementers.")]
-    HRESULT implementer_count ([out, retval] ULONG * return_value);
+    HRESULT ImplementersCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of ancestor versions.")]
-    HRESULT ancestor_versions ([out, retval] IEnumFeature ** some_implementers);
+    HRESULT AncestorVersions ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of ancestor versions.")]
-    HRESULT ancestor_version_count ([out, retval] ULONG * return_value);
+    HRESULT AncestorVersionsCount ([out, retval] ULONG* pulCount);
 
     [helpstring ("List of descendant versions.")]
-    HRESULT descendant_versions ([out, retval] IEnumFeature ** some_implementers);
+    HRESULT DescendantVersions ([out, retval] IEnumFeature** ppIEnumFeature);
 
     [helpstring ("Number of descendant versions.")]
-    HRESULT descendant_version_count ([out, retval] ULONG * return_value);
+    HRESULT DescendantVersionsCount ([out, retval] ULONG* pulCount);
 
-    [helpstring ("Is feature exported to all classes?")]
-    HRESULT exported_to_all ([out, retval] VARIANT_BOOL * names);
+    [helpstring ("Is feature exported to all classes?"), propget]
+    HRESULT ExportedToAll ([out, retval] VARIANT_BOOL* pvbExported);
 
-    [helpstring ("Is once feature?")]
-    HRESULT is_once ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is once feature?"), propget]
+    HRESULT IsOnce ([out, retval] VARIANT_BOOL* pvbOnce);
 
-    [helpstring ("Is external feature?")]
-    HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is external feature?"), propget]
+    HRESULT IsExternal ([out, retval] VARIANT_BOOL* pvbExternal);
 
-    [helpstring ("Is deferred feature?")]
-    HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is deferred feature?"), propget]
+    HRESULT IsDeferred ([out, retval] VARIANT_BOOL* pvbDeferred);
 
-    [helpstring ("Is constant?")]
-    HRESULT is_constant ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is constant?"), propget]
+    HRESULT IsConstant ([out, retval] VARIANT_BOOL* pvbConstant);
 
-    [helpstring ("is frozen feature?")]
-    HRESULT is_frozen ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("is frozen feature?"), propget]
+    HRESULT IsFrozen ([out, retval] VARIANT_BOOL* pvbFroze);
 
-    [helpstring ("Is infix?")]
-    HRESULT is_infix ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is infix?"), propget]
+    HRESULT IsInfix ([out, retval] VARIANT_BOOL* pvbInfix);
 
-    [helpstring ("Is prefix?")]
-    HRESULT is_prefix ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is prefix?"), propget]
+    HRESULT IsPrefix ([out, retval] VARIANT_BOOL* pvbPrefix);
 
-    [helpstring ("Is attribute?")]
-    HRESULT is_attribute ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is attribute?"), propget]
+    HRESULT IsAttribute ([out, retval] VARIANT_BOOL* pvbAttribute);
 
-    [helpstring ("Is procedure?")]
-    HRESULT is_procedure ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is procedure?"), propget]
+    HRESULT IsProcedure ([out, retval] VARIANT_BOOL* pvbProcedure);
 
-    [helpstring ("Is function?")]
-    HRESULT is_function ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is function?"), propget]
+    HRESULT IsFunction ([out, retval] VARIANT_BOOL* pvbFunction);
 
-    [helpstring ("Is unique?")]
-    HRESULT is_unique ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is unique?"), propget]
+    HRESULT IsUnique ([out, retval] VARIANT_BOOL* pvbUnique);
 
-    [helpstring ("Is obsolete feature?")]
-    HRESULT is_obsolete ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is obsolete feature?"), propget]
+    HRESULT IsObsolete ([out, retval] VARIANT_BOOL* pvbObsolete);
 
-    [helpstring ("Does feature have precondition?")]
-    HRESULT has_precondition([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does feature have precondition?"), propget]
+    HRESULT HasPrecondition([out, retval] VARIANT_BOOL* pvbPrecondition);
 
-    [helpstring ("Does feature have postcondition?")]
-    HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does feature have postcondition?"), propget]
+    HRESULT HasPostcondition([out, retval] VARIANT_BOOL* pvbPostcondition);
 };
 //---------------------------------------------------------------------
 
@@ -1075,11 +1065,11 @@ interface IEiffelFeatureDescriptor: IDispatch
 ]
 interface IEiffelParameterDescriptor: IDispatch
 {
-    [helpstring ("Parameter name")]
-    HRESULT name ([out, retval] BSTR* return_value);
+    [helpstring ("Parameter name"), propget]
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
-    [helpstring ("Parameter display")]
-    HRESULT display ([out, retval] BSTR* return_value);
+    [helpstring ("Parameter display"), propget]
+    HRESULT Display ([out, retval] BSTR* pbstrDisplay);
 };
 
 //---------------------------------------------------------------------
@@ -1093,141 +1083,138 @@ interface IEiffelParameterDescriptor: IDispatch
 interface IEiffelProjectProperties: IDispatch
 {
     [id (DISPID_system_name), helpstring ("System name."), propget]
-    HRESULT system_name ([out, retval] BSTR * return_value);
+    HRESULT SystemName ([out, retval] BSTR* pbstrName);
 
     [id (DISPID_system_name), helpstring ("System name."), propput]
-    HRESULT system_name ([in] BSTR a_name);
+    HRESULT SystemName ([in] BSTR bstrName);
 
     [id (DISPID_root_class_name), helpstring ("Root class name."), propget]
-    HRESULT root_class_name ([out, retval] BSTR * return_value);
+    HRESULT RootClassName ([out, retval] BSTR* pbstrClassName);
 
     [id (DISPID_root_class_name), helpstring ("Root class name."), propput]
-    HRESULT root_class_name ([in] BSTR a_name);
+    HRESULT RootClassName ([in] BSTR bstrClassName);
 
     [id (DISPID_creation_routine), helpstring ("Creation routine name."), propget]
-    HRESULT creation_routine ([out, retval] BSTR * return_value);
+    HRESULT CreationRoutine ([out, retval] BSTR* pbstrRoutineName);
 
     [id (DISPID_creation_routine), helpstring ("Creation routine name."), propput]
-    HRESULT creation_routine ([in] BSTR a_routine);
+    HRESULT CreationRoutine ([in] BSTR bstrRoutineName);
 
     [id (DISPID_namespace_generation), helpstring ("Namespace generation for cluster"), propget]
-    HRESULT namespace_generation ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penuClusterNamespaceGeneration);
+    HRESULT NamespaceGeneration ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penumClusterNamespaceGeneration);
 
     [id (DISPID_namespace_generation), helpstring ("Namespace generation for cluster"), propput]
-    HRESULT namespace_generation ([in] EIF_CLUSTER_NAMESPACE_GENERATION enuClusterNamespaceGeneration);
+    HRESULT NamespaceGeneration ([in] EIF_CLUSTER_NAMESPACE_GENERATION enumClusterNamespaceGeneration);
 
     [id (DISPID_default_namespace), helpstring ("Default namespace."), propget]
-    HRESULT default_namespace ([out, retval] BSTR * return_value);
+    HRESULT DefaultNamespace ([out, retval] BSTR* pbstrNamespace);
 
     [id (DISPID_default_namespace), helpstring ("Default namespace."), propput]
-    HRESULT default_namespace ([in] BSTR a_namespace);
+    HRESULT DefaultNamespace ([in] BSTR bstrNamespace);
 
     [id (DISPID_project_type), helpstring ("Project type"), propget]
-    HRESULT project_type ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
+    HRESULT ProjectType ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
 
     [id (DISPID_project_type), helpstring ("Project type"), propput]
-    HRESULT project_type ([in] EIF_PROJECT_TYPES enumProjectType);
+    HRESULT ProjectType ([in] EIF_PROJECT_TYPES enumProjectType);
 
     [id (DISPID_dot_net_naming_convention), helpstring (".NET Naming convention"), propget]
-    HRESULT dot_net_naming_convention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
+    HRESULT DotNetNamingConvention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
 
     [id (DISPID_dot_net_naming_convention), helpstring (".NET Naming convention"), propput]
-    HRESULT dot_net_naming_convention ([in] VARIANT_BOOL pvbNamingConvention);
+    HRESULT DotNetNamingConvention ([in] VARIANT_BOOL vbNamingConvention);
 
     [id (DISPID_generate_debug_info), helpstring ("Generate debug info?"), propget]
-    HRESULT generate_debug_info ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT GenerateDebugInfo ([out, retval] VARIANT_BOOL* pvbGenerate);
 
     [id (DISPID_generate_debug_info), helpstring ("Generate debug info?"), propput]
-    HRESULT generate_debug_info ([in] VARIANT_BOOL new_value);
+    HRESULT GenerateDebugInfo ([in] VARIANT_BOOL vbGenerate);
 
     [id (DISPID_precompiled_library), helpstring ("Precompiled file."), propget]
-    HRESULT precompiled_library ([out, retval] BSTR * return_value);
+    HRESULT PrecompiledLibrary ([out, retval] BSTR* pbstrPath);
 
     [id (DISPID_precompiled_library), helpstring ("Precompiled file."), propput]
-    HRESULT precompiled_library([in] BSTR new_value);
+    HRESULT PrecompiledLibrary ([in] BSTR bstrPath);
 
     [id (DISPID_assertions), helpstring ("Project assertions"), propget]
-    HRESULT assertions ([out, retval] ULONG* pAssertions);
+    HRESULT Assertions ([out, retval] ULONG* pulAssertions);
 
     [id (DISPID_assertions), helpstring ("Project assertions"), propput]
-    HRESULT assertions ([in] ULONG pAssertions);
+    HRESULT Assertions ([in] ULONG ulAssertions);
 
     [id (DISPID_clusters), helpstring ("Project Clusters."), propget]
-    HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
+    HRESULT Clusters ([out, retval] IEiffelSystemClusters** ppIEiffelSystemClusters);
 
     [id (DISPID_externals), helpstring ("Externals."), propget]
-    HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
+    HRESULT Externals ([out, retval] IEiffelSystemExternals** ppIEiffelSystemExternals);
 
     [id (DISPID_assemblies), helpstring ("Assemblies."), propget]
-    HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
+    HRESULT Assemblies ([out, retval] IEiffelSystemAssemblies** ppIEiffelSystemAssemblies);
 
     [id (DISPID_title), helpstring ("Project title."), propget]
-    HRESULT title ([out, retval] BSTR * return_value);
+    HRESULT Title ([out, retval] BSTR* pbstrTitle);
 
     [id (DISPID_title), helpstring ("Project title."), propput]
-    HRESULT title ([in] BSTR new_value);
+    HRESULT Title ([in] BSTR bstrTitle);
 
     [id (DISPID_description), helpstring ("Project description."), propget]
-    HRESULT description ([out, retval] BSTR * return_value);
+    HRESULT Description ([out, retval] BSTR* pbstrDescription);
 
     [id (DISPID_description), helpstring ("Project description."), propput]
-    HRESULT description ([in] BSTR new_value);
+    HRESULT Description ([in] BSTR bstrDescription);
 
     [id (DISPID_company), helpstring ("Project company."), propget]
-    HRESULT company ([out, retval] BSTR * return_value);
+    HRESULT Company ([out, retval] BSTR* pbstrCompany);
 
     [id (DISPID_company), helpstring ("Project company."), propput]
-    HRESULT company ([in] BSTR new_value);
+    HRESULT Company ([in] BSTR bstrCompany);
 
     [id (DISPID_product), helpstring ("Product."), propget]
-    HRESULT product ([out, retval] BSTR * return_value);
+    HRESULT Product ([out, retval] BSTR* ppbstrProduct);
 
     [id (DISPID_product), helpstring ("Product."), propput]
-    HRESULT product ([in] BSTR new_value);
+    HRESULT Product ([in] BSTR bstrProduct);
 
     [id (DISPID_version), helpstring ("Project version."), propget]
-    HRESULT version ([out, retval] BSTR * return_value);
+    HRESULT Version ([out, retval] BSTR* pbstrVersion);
 
     [id (DISPID_version), helpstring ("Project version."), propput]
-    HRESULT version ([in] BSTR new_value);
+    HRESULT Version ([in] BSTR bstrVersion);
 
     [id (DISPID_trademark), helpstring ("Project trademark."), propget]
-    HRESULT trademark ([out, retval] BSTR * return_value);
+    HRESULT Trademark ([out, retval] BSTR* pbstrTrademark);
 
     [id (DISPID_trademark), helpstring ("Project trademark."), propput]
-    HRESULT trademark ([in] BSTR new_value);
+    HRESULT Trademark ([in] BSTR bstrTrademark);
 
     [id (DISPID_copyright), helpstring ("Project copyright."), propget]
-    HRESULT copyright ([out, retval] BSTR * return_value);
+    HRESULT Copyright ([out, retval] BSTR* pbstrCopyright);
 
     [id (DISPID_copyright), helpstring ("Project copyright."), propput]
-    HRESULT copyright ([in] BSTR new_value);
+    HRESULT Copyright ([in] BSTR bstrCopyright);
 
     [id (DISPID_culture), helpstring ("Asembly culture."), propget]
-    HRESULT culture ([out, retval] BSTR * return_value);
+    HRESULT Culture ([out, retval] BSTR* pbstrCultre);
 
     [id (DISPID_culture), helpstring ("Asssembly culture."), propput]
-    HRESULT culture ([in] BSTR new_value);
+    HRESULT Culture ([in] BSTR bstrCultre);
 
     [id (DISPID_key_file_name), helpstring ("Asembly signing key file name."), propget]
-    HRESULT key_file_name ([out, retval] BSTR * return_value);
+    HRESULT KeyFileName ([out, retval] BSTR* pbstrFileName);
 
     [id (DISPID_key_file_name), helpstring ("Assembly signing key file name."), propput]
-    HRESULT key_file_name ([in] BSTR new_value);
+    HRESULT KeyFileName ([in] BSTR bstrFileName);
 
     [id (DISPID_working_directory), helpstring ("Project working directory"), propget]
-    HRESULT working_directory ([out, retval] BSTR* pbstrWorkingDirectory);
+    HRESULT WorkingDirectory ([out, retval] BSTR* pbstrWorkingDirectory);
 
     [id (DISPID_working_directory), helpstring ("Project working directory"), propput]
-    HRESULT working_directory ([in] BSTR bstrWorkingDirectory);
+    HRESULT WorkingDirectory ([in] BSTR bstrWorkingDirectory);
 
     [id (DISPID_Apply), helpstring ("Apply changes")]
     HRESULT Apply ();
 };
 //---------------------------------------------------------------------
-
-
-
 [
     dual,
     object,
@@ -1237,16 +1224,16 @@ interface IEiffelProjectProperties: IDispatch
 interface IEiffelSystemAssemblies: IDispatch
 {
     [id (DISPID_wipe_out), helpstring ("Wipe out current list of assemblies")]
-    HRESULT wipe_out ();
+    HRESULT FlushAssemblies ();
 
     [id (DISPID_add_assembly), helpstring ("Add an assembly to the project.")]
-    HRESULT add_assembly ([in] BSTR a_prefix, [in] BSTR a_cluster_name, [in] BSTR a_path, VARIANT_BOOL a_copy);
+    HRESULT AddAssembly ([in] BSTR bstrPrefix, [in] BSTR bstrClusterName, [in] BSTR bstrFileName, VARIANT_BOOL vbCopyLocally);
 
-    [id (DISPID_last_exception), helpstring ("Last execption to occur")]
-    HRESULT last_exception ([out, retval] IEiffelException** pException);
+    [id (DISPID_last_exception), helpstring ("Last execption to occur"), propget]
+    HRESULT LastException ([out, retval] IEiffelException** pException);
 
     [id (DISPID_store), helpstring ("Save changes.")]
-    HRESULT store ();
+    HRESULT Store ();
 };
 
 //---------------------------------------------------------------------
@@ -1260,91 +1247,91 @@ interface IEiffelSystemAssemblies: IDispatch
 interface IEiffelClusterProperties: IDispatch
 {
     [id (DISPID_name), helpstring ("Cluster name."), propget]
-    HRESULT name ([out, retval] BSTR * return_value);
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
     [id (DISPID_cluster_path), helpstring ("Full path to cluster."), propget]
-    HRESULT cluster_path ([out, retval] BSTR * path);
+    HRESULT ClusterPath ([out, retval] BSTR* pbstrPath);
 
     [id (DISPID_cluster_path), helpstring ("Full path to cluster."), propput]
-    HRESULT cluster_path ([in] BSTR path);
+    HRESULT ClusterPath ([in] BSTR bstrPath);
 
     [id (DISPID_override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
-    HRESULT override ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT Override ([out, retval] VARIANT_BOOL* pvbOverride);
 
     [id (DISPID_override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
-    HRESULT override ([in] VARIANT_BOOL a_bool);
+    HRESULT Override ([in] VARIANT_BOOL vbOverride);
 
     [id (DISPID_is_library), helpstring ("Should this cluster be treated as library?"), propget]
-    HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
 
     [id (DISPID_is_library), helpstring ("Should this cluster be treated as library?"), propput]
-    HRESULT is_library ([in] VARIANT_BOOL a_bool);
+    HRESULT IsLibrary ([in] VARIANT_BOOL vbLibrary);
 
     [id (DISPID_all), helpstring ("Should all subclusters be included?"), propget]
-    HRESULT all ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT All ([out, retval] VARIANT_BOOL* pvbAll);
 
     [id (DISPID_all), helpstring ("Should all subclusters be included?"), propput]
-    HRESULT all ([in] VARIANT_BOOL new_value);
+    HRESULT All ([in] VARIANT_BOOL vbAll);
 
     [id (DISPID_use_system_default), helpstring ("Should use system default?"), propget]
-    HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT UseSystemDefault ([out, retval] VARIANT_BOOL* pvbUseDefaults);
 
     [id (DISPID_use_system_default), helpstring ("Should use system default?"), propput]
-    HRESULT use_system_default ([in] VARIANT_BOOL new_value);
+    HRESULT UseSystemDefault ([in] VARIANT_BOOL vbUseDefaults);
 
     [id (DISPID_evaluate_require_by_default), helpstring ("Should preconditions be evaluated by default?"), propget]
-    HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT EvaluateRequireByDefault ([out, retval] VARIANT_BOOL* pvbRequire);
 
     [id (DISPID_evaluate_ensure_by_default), helpstring ("Should postconditions be evaluated by default?"), propget]
-    HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT EvaluateEnsureByDefault ([out, retval] VARIANT_BOOL* pvbEnsure);
 
     [id (DISPID_evaluate_check_by_default), helpstring ("Should check assertions be evaluated by default?"), propget]
-    HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT EvaluateCheckByDefault ([out, retval] VARIANT_BOOL* pvbCheck);
 
     [id (DISPID_evaluate_loop_by_default), helpstring ("Should loop assertions be evaluated by default?"), propget]
-    HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT EvaluateLoopByDefault ([out, retval] VARIANT_BOOL* pvbLoop);
 
     [id (DISPID_evaluate_invariant_by_default), helpstring ("Should class invariants be evaluated by default?"), propget]
-    HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
+    HRESULT EvaluateInvariantByDefault ([out, retval] VARIANT_BOOL* pvbInvariant);
 
     [id (DISPID_set_assertions), helpstring ("Set assertions for cluster.")]
-    HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check, [in] VARIANT_BOOL evaluate_require, [in] VARIANT_BOOL evaluate_ensure, [in] VARIANT_BOOL evaluate_loop, [in] VARIANT_BOOL evaluate_invariant);
+    HRESULT SetAssertions ([in] VARIANT_BOOL vbCheck, [in] VARIANT_BOOL vbRequire, [in] VARIANT_BOOL vbEnsure, [in] VARIANT_BOOL vbLoop, [in] VARIANT_BOOL vbInvariant);
 
     [id (DISPID_excluded), helpstring ("List of excluded directories.")]
-    HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
+    HRESULT Excluded ([out, retval] IEnumClusterExcludes** ppIEnumClusterExcludes);
 
-    [id (DISPID_add_exclude), helpstring ("Add a directory to exclude.")]
-    HRESULT add_exclude ([in] BSTR dir_name);
+    [id (DISPID_add_exclude), helpstring ("Add a item to exclude.")]
+    HRESULT AddExclude ([in] BSTR bstrName);
 
-    [id (DISPID_remove_exclude), helpstring ("Remove a directory to exclude.")]
-    HRESULT remove_exclude ([in] BSTR dir_name);
+    [id (DISPID_remove_exclude), helpstring ("Remove a item from being excluded.")]
+    HRESULT RemoveExclude ([in] BSTR bstrName);
 
     [id (DISPID_parent_name), helpstring ("Name of the parent cluster."), propget]
-    HRESULT parent_name ([out, retval] BSTR * return_value);
+    HRESULT ParentName ([out, retval] BSTR* pbstrParentName);
 
     [id (DISPID_has_parent), helpstring ("Does the current cluster have a parent cluster?"), propget]
-    HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT HasParent ([out, retval] VARIANT_BOOL* pvbHasParent);
 
     [id (DISPID_subclusters), helpstring ("List subclusters (list of IEiffelClusterProperties*)."), propget]
-    HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
+    HRESULT Subclusters ([out, retval] IEnumClusterProp** ppIEnumClusterProp);
 
     [id (DISPID_has_children), helpstring ("Does the current cluster have children?"), propget]
-    HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT HasChildren ([out, retval] VARIANT_BOOL* pvbHasChildren);
 
     [id (DISPID_cluster_id), helpstring ("Cluster identifier."), propget]
-    HRESULT cluster_id ([out, retval] ULONG * return_value);
+    HRESULT ClusterId ([out, retval] ULONG* pulId);
 
     [id (DISPID_is_eiffel_library), helpstring ("Is the cluster in the Eiffel library")]
-    HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
+    HRESULT IsEiffelLibrary ([out, retval] VARIANT_BOOL* pvbEiffelLibrary);
 
     [id (DISPID_expanded_cluster_path), helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
-    HRESULT expanded_cluster_path ([out, retval] BSTR * path);
+    HRESULT ExpandedClusterPath ([out, retval] BSTR* pbstrExpandedPath);
 
     [id (DISPID_cluster_namespace), helpstring ("Cluster namespace."), propget]
-    HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
+    HRESULT ClusterNamespace ([out, retval] BSTR* pbstrNamespace);
 
     [id (DISPID_cluster_namespace), helpstring ("Cluster namespace."), propput]
-    HRESULT cluster_namespace ([in] BSTR a_namespace);
+    HRESULT ClusterNamespace ([in] BSTR bstrNamespace);
 };
 //---------------------------------------------------------------------
 
@@ -1357,31 +1344,31 @@ interface IEiffelClusterProperties: IDispatch
 interface IEiffelAssemblyProperties: IDispatch
 {
     [id (DISPID_assembly_name), helpstring ("Assembly name."), propget]
-    HRESULT assembly_name ([out, retval] BSTR * return_value);
+    HRESULT Name ([out, retval] BSTR* pbstrName);
 
     [id (DISPID_assembly_version), helpstring ("Assembly version."), propget]
-    HRESULT assembly_version ([out, retval] BSTR * path);
+    HRESULT Version ([out, retval] BSTR* pbstrVersion);
 
     [id (DISPID_assembly_culture), helpstring ("Assembly culture."), propget]
-    HRESULT assembly_culture ([out, retval] BSTR *path);
+    HRESULT Culture ([out, retval] BSTR* pbstrVersion);
 
     [id (DISPID_assembly_public_key_token), helpstring ("Assembly public key token"), propget]
-    HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
+    HRESULT PublicKeyToken ([out, retval] BSTR* pvbPublicKeyToken);
 
     [id (DISPID_is_local), helpstring ("Is the assembly local"), propget]
-    HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
+    HRESULT IsLocal ([out, retval] VARIANT_BOOL* pvbIsLocal);
 
     [id (DISPID_assembly_cluster_name), helpstring ("Assembly cluster name."), propget]
-    HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
+    HRESULT ClusterName ([out, retval] BSTR* pbstrClusterName);
 
     [id (DISPID_assembly_prefix), helpstring ("Prefix."), propget]
-    HRESULT assembly_prefix ([out, retval] BSTR * return_value);
+    HRESULT Prefix ([out, retval] BSTR* pbstrPrefix);
 
     [id (DISPID_assembly_prefix), helpstring ("Prefix."), propput]
-    HRESULT assembly_prefix ([in] BSTR a_prefx);
+    HRESULT Prefix ([in] BSTR bstrPrefix);
 
     [id (DISPID_is_prefix_read_only), helpstring ("Is assembly prefix read only.")]
-    HRESULT is_prefix_read_only ([out, retval] VARIANT_BOOL* is_prefix_read_only);
+    HRESULT IsPrefixReadOnly ([out, retval] VARIANT_BOOL* pvbReadOnly);
 };
 //---------------------------------------------------------------------
 
@@ -1393,32 +1380,32 @@ interface IEiffelAssemblyProperties: IDispatch
 ]
 interface IEiffelSystemExternals: IDispatch
 {
-    [id (DISPID_store), helpstring ("Save changes.")]
-    HRESULT store ();
-
     [id (DISPID_add_include_path), helpstring ("Add a include path to the project.")]
-    HRESULT add_include_path ([in] BSTR include_path);
+    HRESULT AddIncludePath ([in] BSTR bstrPath);
 
     [id (DISPID_remove_include_path), helpstring ("Remove a include path from the project.")]
-    HRESULT remove_include_path ([in] BSTR include_path);
+    HRESULT RemoveIncludePath ([in] BSTR bstrPath);
 
     [id (DISPID_replace_include_path), helpstring ("Replace an include path in the project.")]
-    HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
+    HRESULT ReplaceIncludePath ([in] BSTR bstrPath, [in] BSTR bstrOldPath);
 
     [id (DISPID_include_paths), helpstring ("Include paths.")]
-    HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
+    HRESULT IncludePaths ([out, retval] IEnumIncludePaths** ppIEnumIncludePaths);
 
     [id (DISPID_add_object_file), helpstring ("Add a object file to the project.")]
-    HRESULT add_object_file ([in] BSTR object_file);
+    HRESULT AddObjectFile ([in] BSTR bstrFileName);
 
     [id (DISPID_remove_object_file), helpstring ("Remove a object file from the project.")]
-    HRESULT remove_object_file ([in] BSTR object_file);
+    HRESULT RemoveObjectFile ([in] BSTR bstrFileName);
 
     [id (DISPID_replace_object_file), helpstring ("Replace an object file in the project.")]
-    HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
+    HRESULT ReplaceObjectFile ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
 
     [id (DISPID_object_files), helpstring ("Object files.")]
-    HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
+    HRESULT ObjectFiles ([out, retval] IEnumObjectFiles** ppIEnumObjectFiles);
+
+    [id (DISPID_store), helpstring ("Save changes.")]
+    HRESULT Store ();
 };
 
 
@@ -1473,8 +1460,8 @@ library EiffelComCompiler
     interface IEnumCompletionEntry;
     interface IEnumParameter;
     interface IEiffelParameterDescriptor;
-    interface IEiffelHTMLDocGenerator;
-    interface IEiffelHTMLDocEvents;
+	interface IEiffelHtmlDocumentationGenerator;
+	interface IEiffelHtmlDocumentationEvents;
     interface IEiffelException;
     
     //
@@ -1486,6 +1473,7 @@ library EiffelComCompiler
     enum EIF_PROJECT_TYPES;
     enum EIF_ASSERTIONS;
     enum EIF_CLUSTER_NAMESPACE_GENERATION;
+    enum EIF_COMPILATION_MODE;
 
     //
     // CoClasses

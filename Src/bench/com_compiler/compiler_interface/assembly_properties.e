@@ -112,7 +112,7 @@ feature -- Status setting
 			asm_prefix: ID_SD
 		do
 			if a_prefix /= Void and then a_prefix.count > 0 then
-				asm_prefix := new_id_sd(a_prefix.clone(a_prefix), FALSE)
+				asm_prefix := new_id_sd(a_prefix.clone(a_prefix), true)
 				asm_prefix.to_upper				
 				assembly_sd.set_prefix_name (asm_prefix)
 			else

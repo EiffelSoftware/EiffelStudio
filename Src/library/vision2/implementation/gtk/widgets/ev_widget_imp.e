@@ -349,7 +349,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pointer_style, internal_set_pointer_style (a_cursor: like pointer_style) is
+	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		local
 			--a_cursor_imp: EV_PIXMAP_IMP
@@ -375,7 +375,12 @@ feature -- Element change
 			--	a_cursor_imp.height
 			--)
 		end
-
+		
+	internal_set_pointer_style (a_cursor: like pointer_style) is
+			-- Assign `a_cursor' to `pointer_style', used for PND
+		do
+			--| FIXME Needs implementing to use set_pointer_style
+		end
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
@@ -667,7 +672,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 		do
 			if a_key_press then
 				-- The event is a key press event.
-				if key_press_actions_internal /= Void then
+				if a_key /= Void and then key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([a_key])
 				end
 				if key_press_string_actions_internal /= Void then
@@ -684,7 +689,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 				end
 			else
 				-- The event is a key release event.
-				if key_release_actions_internal /= Void then
+				if a_key /= Void and then key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([a_key])
 				end
 			end
@@ -833,6 +838,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2001/06/14 20:14:29  king
+--| Not calling key action sequence if key is void
+--|
 --| Revision 1.70  2001/06/14 18:25:26  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

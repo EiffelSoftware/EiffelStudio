@@ -117,7 +117,8 @@ feature -- Project Initialization
 					msg := "You cannot specifiy a project name which contains a directory separator%N"
 					msg.append ("when you are specifying a project path.")
 				else
-					Project_directory_name.set_directory (project_path_name)
+					dir_name := clone (project_path_name)
+					Project_directory_name.set_directory (dir_name)
 					new_file_name := clone (project_path_name)
 					if new_file_name.item (new_file_name.count) /= Directory_separator then
 						new_file_name.append_character (Directory_separator)
@@ -149,6 +150,12 @@ feature -- Project Initialization
 					--| Retrieve existing project
 				!! project_file.make (new_file_name)
 				!! project_dir.make (dir_name, project_file)
+			else
+				if msg /= Void then
+					io.error.putstring (msg)
+					io.error.new_line
+					error_occurred := True
+				end
 			end
 		end
 

@@ -87,7 +87,7 @@ feature -- Access
 				i = dependancies.count
 			loop
 				a_dependancy := dependancies.item (i)
-				added := dependancies_list.add (a_dependancy.get_name)
+				added := dependancies_list.extend (a_dependancy.get_name)
 				i := i + 1
 			end
 			dependancies_list.sort
@@ -184,11 +184,11 @@ feature {NONE} -- Implementation
 					i = assembly_names.count
 				loop
 					a_dependency := assembly_names.item (i)
-					if not done.contains (a_dependency.get_full_name) and not a_dependency.get_full_name.equals_string ("Microsoft.VisualC, Version=7.0.9249.59748, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" ) then
+					if not done.has (a_dependency.get_full_name) and not a_dependency.get_full_name.equals_string ("Microsoft.VisualC, Version=7.0.9249.59748, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" ) then
 						new_assembly := new_assembly.load (a_dependency)
-						added := done.add (a_dependency.get_full_name)
-						Result.add_range (intern_dependencies_from_info (new_assembly))
-						added := Result.add (new_assembly)
+						added := done.extend (a_dependency.get_full_name)
+						Result.append (intern_dependencies_from_info (new_assembly))
+						added := Result.extend (new_assembly)
 					end
 					i := i + 1
 				end

@@ -85,11 +85,11 @@ feature -- Basic Operations
 			"SetExportationList"
 		end
 
-	is_equal (obj: ISE_REFLECTION_EXPORTCLAUSE): BOOLEAN is
+	frozen a_invariant_export_clause (current_object: ISE_REFLECTION_EXPORTCLAUSE) is
 		external
-			"IL signature (ISE.Reflection.ExportClause): System.Boolean use ISE.Reflection.ExportClause"
+			"IL static signature (ISE.Reflection.ExportClause): System.Void use ISE.Reflection.ExportClause"
 		alias
-			"IsEqual"
+			"_invariant"
 		end
 
 	empty_string: STRING is
@@ -111,13 +111,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
 			"AllKeyword"
-		end
-
-	frozen a_invariant (current_object: ISE_REFLECTION_EXPORTCLAUSE) is
-		external
-			"IL static signature (ISE.Reflection.ExportClause): System.Void use ISE.Reflection.ExportClause"
-		alias
-			"_invariant"
 		end
 
 	set_all is
@@ -174,6 +167,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
 			"InternStringRepresentation"
+		end
+
+	equals_export_clause (obj: ISE_REFLECTION_EXPORTCLAUSE): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.ExportClause): System.Boolean use ISE.Reflection.ExportClause"
+		alias
+			"Equals"
 		end
 
 	space: STRING is

@@ -37,6 +37,13 @@ feature -- Basic Operations
 			"StringRepresentation"
 		end
 
+	frozen a_invariant (current_object: ISE_REFLECTION_INHERITANCECLAUSE) is
+		external
+			"IL static signature (ISE.Reflection.InheritanceClause): System.Void use ISE.Reflection.InheritanceClause"
+		alias
+			"_invariant"
+		end
+
 	make (a_source_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.InheritanceClause"

@@ -106,7 +106,7 @@ feature -- Status Report
 	is_equal (obj: EXPORT_CLAUSE): BOOLEAN is
 		indexing
 			description: "Is Current equals to `obj'?"
-			external_name: "IsEqual"			
+			external_name: "Equals"			
 		do
 			if exportation_list /= Void and obj.exportation_list = Void then
 				Result := False

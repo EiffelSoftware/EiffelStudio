@@ -107,12 +107,12 @@ feature -- Basic Operations
 			assembly_label.set_size (a_size)
 			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold) 
 			assembly_label.set_font (label_font)
-			get_controls.add (assembly_label)
+			get_controls.extend (assembly_label)
 
 			create_assembly_labels
 			build_types_table
 			display_types
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 			
 			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
 			add_resize (on_resize_delegate)
@@ -168,9 +168,9 @@ feature -- Event handling
 						if eiffel_name /= Void then
 							eiffel_class ?= types.get_item (eiffel_name)
 							if eiffel_class /= Void then
-								if not children_table.contains (eiffel_class) then
+								if not children_table.has (eiffel_class) then
 									children := children_factory.recursive_children (eiffel_class)
-									children_table.add (eiffel_class, children)
+									children_table.extend (eiffel_class, children)
 								else
 									children ?= children_table.get_item (eiffel_class)
 								end
@@ -201,7 +201,7 @@ feature -- Basic Operations
 			get_controls.remove (data_grid)
 			build_types_table
 			display_types
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 			refresh		
 		end
 		
@@ -215,9 +215,9 @@ feature {TYPE_VIEW} -- Status Setting
 			non_void_eiffel_class: an_eiffel_class /= Void
 			non_void_children_list: children_list /= Void	
 		do
-			if children_table.contains (an_eiffel_class) then
+			if children_table.has (an_eiffel_class) then
 				children_table.remove (an_eiffel_class)
-				children_table.add (an_eiffel_class, children_list)
+				children_table.extend (an_eiffel_class, children_list)
 			end		
 		end
 		
@@ -386,8 +386,8 @@ feature {NONE} -- Implementation
 			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
 			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.get_grid_column_styles.add (eiffel_name_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (external_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (eiffel_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (external_name_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
 				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
@@ -445,8 +445,8 @@ feature {NONE} -- Implementation
 			loop
 				a_class ?= type_list.get_Item (i)
 				if a_class /= Void then
-					if not types.contains (a_class.get_eiffel_name) then
-						types.add (a_class.get_eiffel_name, a_class)
+					if not types.has (a_class.get_eiffel_name) then
+						types.extend (a_class.get_eiffel_name, a_class)
 					end
 					build_row (a_class, row_count)
 					row_count := row_count + 1

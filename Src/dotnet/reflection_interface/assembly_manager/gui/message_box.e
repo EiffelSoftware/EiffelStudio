@@ -103,7 +103,7 @@ feature -- Basic Operations
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Bold)
 			message_label.set_font (a_font)
 			message_label.set_text (message)
-			get_controls.add (message_label)
+			get_controls.extend (message_label)
 
 			create a_label.make_label
 			a_point.set_x (dictionary.Margin)
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, style.Regular)
 			a_label.set_font (a_font)
 			a_label.set_text (dictionary.Other_message)
-			get_controls.add (a_label)
+			get_controls.extend (a_label)
 			
 				-- Image
 			if not retried then
@@ -144,7 +144,7 @@ feature -- Basic Operations
 				a_point.set_y (2 * dictionary.Margin)
 				a_panel.set_location (a_point)
 			end
-			get_controls.add (a_panel)	
+			get_controls.extend (a_panel)	
 		rescue 
 			retried := True
 			retry

@@ -48,11 +48,11 @@ feature -- Basic Operations
 			"AssemblyRetrievalFailedMessage"
 		end
 
-	invalid_assembly_qualified_name_message: STRING is
+	registry_key_not_registered: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"InvalidAssemblyQualifiedNameMessage"
+			"RegistryKeyNotRegistered"
 		end
 
 	file_access_failed: STRING is
@@ -104,6 +104,13 @@ feature -- Basic Operations
 			"TypeRetrievalFailed"
 		end
 
+	invalid_assembly_qualified_name_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"InvalidAssemblyQualifiedNameMessage"
+		end
+
 	type_retrieval_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -123,6 +130,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"NoSuchType"
+		end
+
+	registry_key_not_registered_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"RegistryKeyNotRegisteredMessage"
 		end
 
 	has_read_lock_message: STRING is

@@ -157,7 +157,7 @@ feature -- Basic Operations
 			data_grid.set_Size (a_size)
 			data_grid.set_caption_text (caption_text)
 			display_dependancies
-			get_controls.add (data_grid)
+			get_controls.extend (data_grid)
 
 				-- Question to the user
 			create question_label.make_label
@@ -191,11 +191,11 @@ feature -- Basic Operations
 			no_button.add_Click (on_no_event_handler_delegate)
 			
 				-- Addition of get_controls
-			get_controls.add (assembly_label)
-			get_controls.add (dependancies_label)
-			get_controls.add (question_label)
-			get_controls.add (yes_button)
-			get_controls.add (no_button)
+			get_controls.extend (assembly_label)
+			get_controls.extend (dependancies_label)
+			get_controls.extend (question_label)
+			get_controls.extend (yes_button)
+			get_controls.extend (no_button)
 		rescue
 			retried := True
 			retry

@@ -97,10 +97,10 @@ feature -- Basic Operations
 			non_void_argument_name: new_argument_name /= Void
 		do
 			if not arguments_modifications.contains_key (an_argument) then
-				arguments_modifications.add (an_argument, new_argument_name)
+				arguments_modifications.extend (an_argument, new_argument_name)
 			else
 				arguments_modifications.remove (an_argument)
-				arguments_modifications.add (an_argument, new_argument_name)
+				arguments_modifications.extend (an_argument, new_argument_name)
 			end
 		ensure
 			argument_modification_added: arguments_modifications.contains_value (new_argument_name)

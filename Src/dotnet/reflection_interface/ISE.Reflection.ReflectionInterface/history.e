@@ -80,7 +80,7 @@ feature -- Status Report
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
-			Result := assemblies_table.contains (a_descriptor)
+			Result := assemblies_table.has (a_descriptor)
 		end
 
 	has_type (a_type: SYSTEM_TYPE): BOOLEAN is
@@ -90,7 +90,7 @@ feature -- Status Report
 		require
 			non_void_type: a_type /= Void
 		do
-			Result := types_table.contains (a_type)
+			Result := types_table.has (a_type)
 		end
 		
 feature -- Basic Operations
@@ -114,7 +114,7 @@ feature -- Basic Operations
 					assemblies_table.remove (first_key)
 				end
 			end
-			assemblies_table.add (a_descriptor, an_eiffel_assembly)
+			assemblies_table.extend (a_descriptor, an_eiffel_assembly)
 		ensure
 			assembly_added: assemblies_table.contains_key (a_descriptor)
 		end
@@ -138,7 +138,7 @@ feature -- Basic Operations
 					types_table.remove (first_key)
 				end
 			end
-			types_table.add (a_type, an_eiffel_class)
+			types_table.extend (a_type, an_eiffel_class)
 		ensure
 			assembly_added: types_table.contains_key (a_type)
 		end
@@ -150,7 +150,7 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 		do
-			assembly_found := assemblies_table.contains (a_descriptor)
+			assembly_found := assemblies_table.has (a_descriptor)
 			if assembly_found then
 				search_for_assembly_result ?= assemblies_table.get_item (a_descriptor)
 			end
@@ -167,7 +167,7 @@ feature -- Basic Operations
 			current_type: SYSTEM_TYPE
 			found: BOOLEAN
 		do
-			type_found := types_table.contains (a_type)
+			type_found := types_table.has (a_type)
 			if type_found then
 				search_for_type_result ?= types_table.get_item (a_type)
 			end

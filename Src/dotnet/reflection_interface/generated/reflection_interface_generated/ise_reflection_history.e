@@ -103,11 +103,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	maximum_count: INTEGER is
+	add_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
-			"IL signature (): System.Int32 use ISE.Reflection.History"
+			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.History"
 		alias
-			"MaximumCount"
+			"AddAssembly"
 		end
 
 	search_for_type (a_type: SYSTEM_TYPE) is
@@ -131,18 +131,11 @@ feature -- Basic Operations
 			"HasType"
 		end
 
-	has_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+	maximum_count: INTEGER is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.History"
+			"IL signature (): System.Int32 use ISE.Reflection.History"
 		alias
-			"HasAssembly"
-		end
-
-	add_type (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
-		external
-			"IL signature (System.Type, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.History"
-		alias
-			"AddType"
+			"MaximumCount"
 		end
 
 	search_for_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -159,11 +152,18 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	add_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
+	add_type (a_type: SYSTEM_TYPE; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.History"
+			"IL signature (System.Type, ISE.Reflection.EiffelClass): System.Void use ISE.Reflection.History"
 		alias
-			"AddAssembly"
+			"AddType"
+		end
+
+	has_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.AssemblyDescriptor): System.Boolean use ISE.Reflection.History"
+		alias
+			"HasAssembly"
 		end
 
 end -- class ISE_REFLECTION_HISTORY

@@ -282,7 +282,7 @@ feature -- Basic Operations
 			until
 				path_exists or slash_index = -1
 			loop
-				added := folder_names.add (path.substring (slash_index + 1))
+				added := folder_names.extend (path.substring (slash_index + 1))
 				path_exists := dir.exists (path.substring_int32_int32 (0, slash_index))
 				path := path.substring_int32_int32 (0, slash_index)
 				slash_index := path.last_index_of ("\") 
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 						end
 						type_description.read_end_element
 					end
-					added := generic_derivations.add (generic_derivation)
+					added := generic_derivations.extend (generic_derivation)
 					type_description.read_end_element
 				end
 				type_description.read_end_element
@@ -690,7 +690,7 @@ feature {NONE} -- Implementation
 							rename_clauses_string := type_description.read_element_string_string (xml_elements.Rename_element)
 							if rename_clauses_string.get_length > 0 then
 								if rename_clauses_string.Index_Of_Char (',') = -1 then
-									clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clauses_string))
+									clause_added := rename_clauses.extend (support.rename_clause_from_text (rename_clauses_string))
 								else					
 									from
 									until
@@ -698,10 +698,10 @@ feature {NONE} -- Implementation
 									loop
 										comma_index := rename_clauses_string.Index_Of_Char (',')
 										rename_clause_text := rename_clauses_string.Substring_Int32_Int32 (0, comma_index)
-										clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clause_text))
+										clause_added := rename_clauses.extend (support.rename_clause_from_text (rename_clause_text))
 										rename_clauses_string := rename_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clauses_string))
+									clause_added := rename_clauses.extend (support.rename_clause_from_text (rename_clauses_string))
 								end
 							end					
 						end
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 								if undefine_clauses_string.Index_Of_Char (',') = -1 then
 									create undefine_clause.make_undefineclause
 									undefine_clause.make (undefine_clauses_string)
-									clause_added := undefine_clauses.Add (undefine_clause)
+									clause_added := undefine_clauses.extend (undefine_clause)
 								else					
 									from
 									until
@@ -720,12 +720,12 @@ feature {NONE} -- Implementation
 										comma_index := undefine_clauses_string.Index_Of_Char (',')
 										create undefine_clause.make_undefineclause
 										undefine_clause.make (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
-										clause_added := undefine_clauses.Add (undefine_clause)
+										clause_added := undefine_clauses.extend (undefine_clause)
 										undefine_clauses_string := undefine_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create undefine_clause.make_undefineclause
 									undefine_clause.make (undefine_clauses_string)
-									clause_added := undefine_clauses.Add (undefine_clause)
+									clause_added := undefine_clauses.extend (undefine_clause)
 								end
 							end						
 						end
@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 								if redefine_clauses_string.Index_Of_Char (',') = -1 then
 									create redefine_clause.make_redefineclause
 									redefine_clause.make (redefine_clauses_string)
-									clause_added := redefine_clauses.Add (redefine_clause)
+									clause_added := redefine_clauses.extend (redefine_clause)
 								else					
 									from
 									until
@@ -744,12 +744,12 @@ feature {NONE} -- Implementation
 										comma_index := redefine_clauses_string.Index_Of_Char (',')
 										create redefine_clause.make_redefineclause
 										redefine_clause.make (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
-										clause_added := redefine_clauses.Add (redefine_clause)
+										clause_added := redefine_clauses.extend (redefine_clause)
 										redefine_clauses_string := redefine_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create redefine_clause.make_redefineclause
 									redefine_clause.make (redefine_clauses_string)
-									clause_added := redefine_clauses.Add (redefine_clause)
+									clause_added := redefine_clauses.extend (redefine_clause)
 								end
 							end						
 						end
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 								if select_clauses_string.Index_Of_Char (',') = -1 then
 									create select_clause.make_selectclause
 									select_clause.make (select_clauses_string)
-									clause_added := select_clauses.Add (select_clause)
+									clause_added := select_clauses.extend (select_clause)
 								else					
 									from
 									until
@@ -768,12 +768,12 @@ feature {NONE} -- Implementation
 										comma_index := select_clauses_string.Index_Of_Char (',')
 										create select_clause.make_selectclause
 										select_clause.make (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
-										clause_added := select_clauses.Add (select_clause)
+										clause_added := select_clauses.extend (select_clause)
 										select_clauses_string := select_clauses_string.Substring (comma_index + 1).Trim
 									end
 									create select_clause.make_selectclause
 									select_clause.make (select_clauses_string)
-									clause_added := select_clauses.Add (select_clause)
+									clause_added := select_clauses.extend (select_clause)
 								end
 							end						
 						end
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 							export_clauses_string := type_description.Read_Element_String_String (xml_elements.Export_element)
 							if export_clauses_string.get_length > 0 then
 								if export_clauses_string.Index_Of_Char (',') = -1 then
-									clause_added := export_clauses.Add (support.export_clause_from_text (export_clauses_string))
+									clause_added := export_clauses.extend (support.export_clause_from_text (export_clauses_string))
 								else					
 									from
 									until
@@ -789,10 +789,10 @@ feature {NONE} -- Implementation
 									loop
 										comma_index := export_clauses_string.Index_Of_Char (',')
 										export_text := export_clauses_string.Substring_Int32_Int32 (0, comma_index)
-										clause_added := export_clauses.Add (support.export_clause_from_text (export_text))
+										clause_added := export_clauses.extend (support.export_clause_from_text (export_text))
 										export_clauses_string := export_clauses_string.Substring (comma_index + 1).Trim
 									end
-									clause_added := export_clauses.Add (support.export_clause_from_text (export_clauses_string))
+									clause_added := export_clauses.extend (support.export_clause_from_text (export_clauses_string))
 								end
 							end							
 						end

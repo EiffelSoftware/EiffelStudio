@@ -127,6 +127,13 @@ feature -- Basic Operations
 			"XmlAssemblyFilename"
 		end
 
+	ise_eiffel_key_path: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"
+		alias
+			"IseEiffelKeyPath"
+		end
+
 	key: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionSupport"

@@ -40,8 +40,8 @@ feature -- Basic Operations
 				loop
 					a_descriptor ?= a_list.get_item (i)
 					if a_descriptor /= Void then
-						added := tmp_list.add (a_descriptor.get_name)
-						tmp_table.add (a_descriptor.get_name, a_descriptor)
+						added := tmp_list.extend (a_descriptor.get_name)
+						tmp_table.extend (a_descriptor.get_name, a_descriptor)
 					end
 					i := i + 1
 				end
@@ -56,7 +56,7 @@ feature -- Basic Operations
 					if a_name /= Void then
 						a_descriptor ?= tmp_table.get_item (a_name)
 						if a_descriptor /= Void then
-							added := sorted_list.add (a_descriptor)
+							added := sorted_list.extend (a_descriptor)
 						end
 					end
 					i := i + 1
@@ -97,8 +97,8 @@ feature -- Basic Operations
 				loop
 					an_eiffel_assembly ?= a_list.get_item (i)
 					if an_eiffel_assembly /= Void then
-						added := tmp_list.add (an_eiffel_assembly.get_assembly_descriptor.get_name)
-						tmp_table.add (an_eiffel_assembly.get_assembly_descriptor.get_name, an_eiffel_assembly)
+						added := tmp_list.extend (an_eiffel_assembly.get_assembly_descriptor.get_name)
+						tmp_table.extend (an_eiffel_assembly.get_assembly_descriptor.get_name, an_eiffel_assembly)
 					end
 					i := i + 1
 				end
@@ -113,7 +113,7 @@ feature -- Basic Operations
 					if a_name /= Void then
 						an_eiffel_assembly ?= tmp_table.get_item (a_name)
 						if an_eiffel_assembly /= Void then
-							added := sorted_list.add (an_eiffel_assembly)
+							added := sorted_list.extend (an_eiffel_assembly)
 						end
 					end
 					i := i + 1
@@ -153,8 +153,8 @@ feature -- Basic Operations
 				loop
 					an_eiffel_class ?= a_list.get_item (i)
 					if an_eiffel_class /= Void then
-						added := tmp_list.add (an_eiffel_class.get_eiffel_name)
-						tmp_table.add (an_eiffel_class.get_eiffel_name, an_eiffel_class)
+						added := tmp_list.extend (an_eiffel_class.get_eiffel_name)
+						tmp_table.extend (an_eiffel_class.get_eiffel_name, an_eiffel_class)
 					end
 					i := i + 1
 				end
@@ -169,7 +169,7 @@ feature -- Basic Operations
 					if a_name /= Void then
 						an_eiffel_class ?= tmp_table.get_item (a_name)
 						if an_eiffel_class /= Void then
-							added := sorted_list.add (an_eiffel_class)
+							added := sorted_list.extend (an_eiffel_class)
 						end
 					end
 					i := i + 1

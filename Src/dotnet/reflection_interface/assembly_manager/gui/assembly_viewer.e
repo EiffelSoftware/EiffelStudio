@@ -339,7 +339,7 @@ feature -- Basic Operations
 			build_toolbar
 			build_assemblies_table
 			display_assemblies
-			get_controls.Add (data_grid)
+			get_controls.extend (data_grid)
 
 			create on_resize_delegate.make_eventhandler (Current, $on_resize_action)
 			add_resize (on_resize_delegate)
@@ -398,30 +398,30 @@ feature -- Basic Operations
 			public_key_menu_item.set_checked (False)
 			dependancies_menu_item.set_checked (False)
 
-			added := view_menu_item.get_menu_items.add (name_menu_item)	
-			added := view_menu_item.get_menu_items.add (version_menu_item)	
-			added := view_menu_item.get_menu_items.add (culture_menu_item)	
-			added := view_menu_item.get_menu_items.add (public_key_menu_item)				
-			added := view_menu_item.get_menu_items.add (dependancies_menu_item)
+			added := view_menu_item.get_menu_items.extend (name_menu_item)	
+			added := view_menu_item.get_menu_items.extend (version_menu_item)	
+			added := view_menu_item.get_menu_items.extend (culture_menu_item)	
+			added := view_menu_item.get_menu_items.extend (public_key_menu_item)				
+			added := view_menu_item.get_menu_items.extend (dependancies_menu_item)
 					
 				-- Build Tools menu
 			create dependancy_viewer_menu_item.make_menuitem_1 (dictionary.Dependancy_viewer_menu_item)
 			dependancy_viewer_menu_item.set_shortcut (shortcut.Ctrl_D)
-			added := tools_menu_item.get_menu_items.add (dependancy_viewer_menu_item)
+			added := tools_menu_item.get_menu_items.extend (dependancy_viewer_menu_item)
 			separator := tools_menu_item.get_menu_items.add_string ("-")
 			
 				-- Build Help menu item.
 			create help_topics_menu_item.make_menuitem_1 (dictionary.Help_topics_menu_item)
 			create about_menu_item.make_menuitem_1 (dictionary.About_menu_item)
 			help_topics_menu_item.set_shortcut (shortcut.Ctrl_H)
-			added := help_menu_item.get_menu_items.add (help_topics_menu_item)
+			added := help_menu_item.get_menu_items.extend (help_topics_menu_item)
 			separator := help_menu_item.get_menu_items.add_string ("-")
-			added := help_menu_item.get_menu_items.add (about_menu_item)			
+			added := help_menu_item.get_menu_items.extend (about_menu_item)			
 				
-			added := main_menu.get_menu_items.add (file_menu_item)
-			added := main_menu.get_menu_items.add (view_menu_item)
-			added := main_menu.get_menu_items.add (tools_menu_item)
-			added := main_menu.get_menu_items.add (help_menu_item)
+			added := main_menu.get_menu_items.extend (file_menu_item)
+			added := main_menu.get_menu_items.extend (view_menu_item)
+			added := main_menu.get_menu_items.extend (tools_menu_item)
+			added := main_menu.get_menu_items.extend (help_menu_item)
 			set_menu (main_menu)
 		end
 	
@@ -583,7 +583,7 @@ feature -- Basic Operations
 			added := toolbar.get_buttons.add_tool_bar_button (culture_toolbar_button)
 			added := toolbar.get_buttons.add_tool_bar_button (public_key_toolbar_button)
 			added := toolbar.get_buttons.add_tool_bar_button (dependancies_toolbar_button)
-			get_controls.add (toolbar)
+			get_controls.extend (toolbar)
 			
 				-- Set action.
   			create toolbar_button_click_delegate.make_toolbarbuttonclickeventhandler (Current, $on_toolbar_button_clicked)
@@ -663,13 +663,13 @@ feature -- Basic Operations
 				create image_list.make_imagelist
 				toolbar.set_image_list (image_list)
 				images := image_list.get_images
-				images.add (name_image)
-				images.add (version_image)
-				images.add (culture_image)
-				images.add (public_key_image)
-				images.add (dependancies_image)
-				images.add (dependancy_viewer_image)
-				images.add (help_image)
+				images.extend (name_image)
+				images.extend (version_image)
+				images.extend (culture_image)
+				images.extend (public_key_image)
+				images.extend (dependancies_image)
+				images.extend (dependancy_viewer_image)
+				images.extend (help_image)
 			else
 				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
@@ -772,11 +772,11 @@ feature -- Basic Operations
 			data_grid_table_style.set_mapping_name (dictionary.Data_table_title)
 			data_grid_table_style.set_allow_sorting (False)
 			
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_name_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_version_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_culture_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (assembly_public_key_column_style)
-			added := data_grid_table_style.get_grid_column_styles.add (dependancies_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_name_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_version_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_culture_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (assembly_public_key_column_style)
+			added := data_grid_table_style.get_grid_column_styles.extend (dependancies_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
 				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
@@ -1135,19 +1135,19 @@ feature {NONE} -- Implementation
 			Result.get_Table.get_Default_View.set_Allow_Edit (False)
 			Result.get_Table.get_Default_View.set_Allow_New (False)
 			Result.get_Table.get_Default_View.set_Allow_Delete (False)
-			if columns.contains (dictionary.Assembly_name_column_title) then
+			if columns.has (dictionary.Assembly_name_column_title) then
 				Result.set_Item_String (dictionary.Assembly_name_column_title, dictionary.Empty_string)
 			end
-			if columns.contains (dictionary.Assembly_version_column_title) then
+			if columns.has (dictionary.Assembly_version_column_title) then
 				Result.set_Item_String (dictionary.Assembly_version_column_title, dictionary.Empty_string)
 			end
-			if columns.contains (dictionary.Assembly_culture_column_title) then
+			if columns.has (dictionary.Assembly_culture_column_title) then
 				Result.set_Item_String (dictionary.Assembly_culture_column_title, dictionary.Empty_string)
 			end
-			if columns.contains (dictionary.Assembly_public_key_column_title) then
+			if columns.has (dictionary.Assembly_public_key_column_title) then
 				Result.set_Item_String (dictionary.Assembly_public_key_column_title, dictionary.Empty_string)
 			end			
-			if columns.contains (dictionary.Dependancies_column_title) then
+			if columns.has (dictionary.Dependancies_column_title) then
 				Result.set_Item_String (dictionary.Dependancies_column_title, dictionary.Empty_string)
 			end
 			data_table.get_Rows.Add (Result)
@@ -1301,19 +1301,19 @@ feature {NONE} -- Implementation
 			Result.get_Table.get_Default_View.set_Allow_Edit (False)
 			Result.get_Table.get_Default_View.set_Allow_New (False)
 			Result.get_Table.get_Default_View.set_Allow_Delete (False)
-			if columns.contains (dictionary.Assembly_name_column_title) then
+			if columns.has (dictionary.Assembly_name_column_title) then
 				Result.set_Item_String (dictionary.Assembly_name_column_title, a_descriptor.get_name)
 			end
-			if columns.contains (dictionary.Assembly_version_column_title) then
+			if columns.has (dictionary.Assembly_version_column_title) then
 				Result.set_Item_String (dictionary.Assembly_version_column_title, a_descriptor.get_version)
 			end
-			if columns.contains (dictionary.Assembly_culture_column_title) then
+			if columns.has (dictionary.Assembly_culture_column_title) then
 				Result.set_Item_String (dictionary.Assembly_culture_column_title, a_descriptor.get_culture)
 			end
-			if columns.contains (dictionary.Assembly_public_key_column_title) then
+			if columns.has (dictionary.Assembly_public_key_column_title) then
 				Result.set_Item_String (dictionary.Assembly_public_key_column_title, a_descriptor.get_public_key)
 			end			
-			if columns.contains (dictionary.Dependancies_column_title) then
+			if columns.has (dictionary.Dependancies_column_title) then
 				dependancies := support.dependancies_from_info (a_descriptor)
 				if dependancies.count > 0 then
 					Result.set_Item_String (dictionary.Dependancies_column_title, support.dependancies_string (dependancies))

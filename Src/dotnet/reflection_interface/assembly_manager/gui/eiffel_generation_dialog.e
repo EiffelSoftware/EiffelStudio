@@ -108,7 +108,7 @@ feature -- Basic Operations
 			default_path_check_box.set_size (a_size)
 			default_path_check_box.set_checked (True)
 			default_path_check_box.set_auto_check (True)
-			get_controls.add (default_path_check_box)
+			get_controls.extend (default_path_check_box)
 			create checked_changed_delegate.make_eventhandler (Current, $on_check)
 			default_path_check_box.add_checked_changed (checked_changed_delegate)
 			
@@ -135,8 +135,8 @@ feature -- Basic Operations
 			cancel_button.add_Click (on_cancel_event_handler_delegate)
 			
 				-- Addition of get_controls
-			get_controls.add (ok_button)
-			get_controls.add (cancel_button)
+			get_controls.extend (ok_button)
+			get_controls.extend (cancel_button)
 		rescue
 			retried := True
 			retry

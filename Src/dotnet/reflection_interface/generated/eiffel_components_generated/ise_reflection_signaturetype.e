@@ -10,7 +10,7 @@ inherit
 		redefine
 			finalize,
 			get_hash_code,
-			equals,
+			is_equal,
 			to_string
 		end
 	ISE_REFLECTION_ISIGNATURETYPE
@@ -99,7 +99,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use ISE.Reflection.SignatureType"
 		alias

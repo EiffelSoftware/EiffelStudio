@@ -36,6 +36,13 @@ feature -- Access
 
 feature -- Basic Operations
 
+	equals_rename_clause (obj: ISE_REFLECTION_RENAMECLAUSE): BOOLEAN is
+		external
+			"IL signature (ISE.Reflection.RenameClause): System.Boolean use ISE.Reflection.RenameClause"
+		alias
+			"Equals"
+		end
+
 	space: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
@@ -48,13 +55,6 @@ feature -- Basic Operations
 			"IL signature (System.String, System.String): System.Void use ISE.Reflection.RenameClause"
 		alias
 			"MakeFromInfo"
-		end
-
-	is_equal (obj: ISE_REFLECTION_RENAMECLAUSE): BOOLEAN is
-		external
-			"IL signature (ISE.Reflection.RenameClause): System.Boolean use ISE.Reflection.RenameClause"
-		alias
-			"IsEqual"
 		end
 
 	string_representation: STRING is

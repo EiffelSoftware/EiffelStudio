@@ -72,6 +72,7 @@ feature -- Basic operations
 	load_file (file_name: STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
 			-- Load file `file_name. `Result' contains the 
 			-- information contained in the file.
+			-- Do nothing if the file is a directory.
 		local
 			file: RAW_FILE
 			buffer: STRING
@@ -81,17 +82,21 @@ feature -- Basic operations
 				-- If not, then raise an error.
 				-- 54 is completely arbitary, but enough to validate.
 			create file.make_open_read (file_name)
-			create buffer.make (file.count) 
-			file.start
-			file.read_stream (file.count)
-			file.close
-			buffer := file.last_string
-			if buffer.count < 54 or (buffer.substring (1, 54).is_equal (xml_format + "<Project_setting")) then
-				parser := create_tree_parser
-				Result := load_and_parse_xml_file (file_name)
-					-- Assign `True' to `last_load_successful' so it can be queried
-					-- externally.
-				last_load_successful := True
+			if not file.is_directory and not file.is_device then
+				create buffer.make (file.count) 
+				file.start
+				file.read_stream (file.count)
+				file.close
+				buffer := file.last_string
+				if buffer.count < 54 or (buffer.substring (1, 54).is_equal (xml_format + "<Project_setting")) then
+					parser := create_tree_parser
+					Result := load_and_parse_xml_file (file_name)
+						-- Assign `True' to `last_load_successful' so it can be queried
+						-- externally.
+					last_load_successful := True
+				else
+					show_warning_dialog
+				end
 			else
 				show_warning_dialog
 			end

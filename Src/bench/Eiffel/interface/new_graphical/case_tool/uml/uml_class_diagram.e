@@ -10,7 +10,6 @@ class
 inherit
 	EIFFEL_CLASS_DIAGRAM
 		redefine
-			default_view_name,
 			default_create
 		end
 
@@ -38,14 +37,6 @@ feature {NONE} -- Initialization
 			make_with_model_and_factory (a_graph, create {UML_FACTORY})
 			context_editor := a_tool
 			is_client_supplier_links_shown := False
-		end
-
-feature -- Access
-
-	default_view_name: STRING is
-			-- Name for default view.
-		do
-			Result := "DEFAULT:UML"
 		end
 
 end -- class UML_CLASS_DIAGRAM

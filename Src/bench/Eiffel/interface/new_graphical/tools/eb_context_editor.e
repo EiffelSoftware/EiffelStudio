@@ -170,8 +170,6 @@ feature {NONE} -- Initialization
 			delete_view_cmd.enable_displayed
 			create diagram_to_ps_cmd.make (Current)
 			diagram_to_ps_cmd.enable_displayed
-			create crop_cmd.make (Current)
-			crop_cmd.enable_displayed
 			create toggle_force_cmd.make (Current)
 			toggle_force_cmd.enable_displayed
 			create toggle_cluster_cmd.make (Current)
@@ -184,27 +182,35 @@ feature {NONE} -- Initialization
 			toggle_uml_cmd.enable_sensitive
 			create fit_to_screen_cmd.make (Current)
 			fit_to_screen_cmd.enable_sensitive
+			create reset_view_cmd.make (Current)
+			reset_view_cmd.enable_sensitive
 		end
 
 	build_tool_bar is
 			-- Create diagram option bar.
 		local
 			bar_bar: EV_HORIZONTAL_BOX
-			view_menu_button: EV_TOOL_BAR_BUTTON
-			view_menu_toolbar: EV_TOOL_BAR
+			view_menu: EV_HORIZONTAL_BOX
 			customize_area: EV_CELL
 			tb_commands: LINKED_LIST [EB_TOOLBARABLE_COMMAND]
 			zoom_cell: EV_CELL
 			h_box: EV_HORIZONTAL_BOX
 			label: EV_LABEL
+			view_label: EV_LABEL
 		do
 			create bar_bar
 
 			create tb_commands.make
 			tb_commands.extend (center_diagram_cmd)
+			
+-- TODO: Remove and make create class in standart toolbar pick and dropable
 			tb_commands.extend (create_class_cmd)
+			
 			tb_commands.extend (create_new_links_cmd)
+			
+-- TODO: Move to standart toolbar
 			tb_commands.extend (delete_cmd)
+			
 			tb_commands.extend (undo_cmd)
 			tb_commands.extend (history_cmd)
 			tb_commands.extend (redo_cmd)
@@ -215,20 +221,18 @@ feature {NONE} -- Initialization
 			tb_commands.extend (select_depth_cmd)
 			tb_commands.extend (fill_cluster_cmd)
 			tb_commands.extend (zoom_in_cmd)
+			tb_commands.extend (fit_to_screen_cmd)
 			tb_commands.extend (zoom_out_cmd)
 			tb_commands.extend (toggle_supplier_cmd)
 			tb_commands.extend (toggle_inherit_cmd)
 			tb_commands.extend (toggle_labels_cmd)
 			tb_commands.extend (toggle_quality_cmd)
-			tb_commands.extend (delete_view_cmd)
 			tb_commands.extend (diagram_to_ps_cmd)
-			tb_commands.extend (crop_cmd)
 			tb_commands.extend (toggle_force_cmd)
 			tb_commands.extend (toggle_cluster_cmd)
 			tb_commands.extend (remove_anchor_cmd)
 			tb_commands.extend (toggle_cluster_legend_cmd)
 			tb_commands.extend (toggle_uml_cmd)
-			tb_commands.extend (fit_to_screen_cmd)
 			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
 
 			custom_toolbar.update_toolbar
@@ -239,7 +243,7 @@ feature {NONE} -- Initialization
 			
 				create h_box
 				
-				create label.make_with_text ("zoom: ")
+				create label.make_with_text ("Zoom ")
 				h_box.extend (label)
 				h_box.disable_item_expand (label)
 			
@@ -259,19 +263,28 @@ feature {NONE} -- Initialization
 
 			create customize_area
 			bar_bar.extend (customize_area)
+			
+			create view_menu
+			
+				create view_label.make_with_text ("View ")
+				view_menu.extend (view_label)
+				view_menu.disable_item_expand (view_label)
 
-			create view_menu_button.make_with_text ("View")
-			create view_menu_toolbar
-			view_menu_toolbar.extend (view_menu_button)
-
-			view_menu_button.select_actions.extend (agent show_view_menu)
-			bar_bar.extend (view_menu_toolbar)
-			bar_bar.disable_item_expand (view_menu_toolbar)
-
-			create view_selector.make_default
-			view_selector.select_actions.extend (agent on_view_changed)
-			bar_bar.extend (view_selector)
-			bar_bar.disable_item_expand (view_selector)
+				create view_selector.make_with_text ("DEFAULT")
+				view_selector.return_actions.extend (agent on_view_changed)
+				view_selector.set_minimum_size (100, 20)
+				view_menu.extend (view_selector)
+				view_menu.disable_item_expand (view_selector)
+			
+				create view_menu_button
+				view_menu_button.set_pixmap (pixmaps.icon_down_triangle)
+				view_menu_button.set_minimum_size (15, 20)
+				view_menu.extend (view_menu_button)
+				view_menu.disable_item_expand (view_menu_button)
+				view_menu_button.select_actions.extend (agent show_view_menu)
+				
+			bar_bar.extend (view_menu)
+			bar_bar.disable_item_expand (view_menu)
 
 			customize_area.pointer_button_release_actions.extend (agent on_customize)
 		end
@@ -281,16 +294,45 @@ feature {NONE} -- Initialization
 			-- Display "View" menu.
 		local
 			view_menu: EV_MENU
+			l_list: LIST [STRING]
+			menu_item: EV_MENU_ITEM
 		do
 			create view_menu
-			view_menu.extend (select_depth_cmd.new_menu_item)
+			view_menu.extend (reset_view_cmd.new_menu_item)
+			create menu_item.make_with_text_and_action ("Name view", agent name_view)
+			view_menu.extend (menu_item)
+			view_menu.extend (delete_view_cmd.new_menu_item)
+			if world.current_view.is_equal (world.default_view_name) then
+				delete_view_cmd.disable_sensitive
+			end
 			view_menu.extend (create {EV_MENU_SEPARATOR})
-			view_menu.extend (crop_cmd.new_menu_item)
-			view_menu.extend (create {EV_MENU_SEPARATOR})
-			view_menu.extend (delete_view_cmd.new_menu_item)			
-			view_menu.extend (diagram_to_ps_cmd.new_menu_item)
+			from
+				l_list := world.available_views
+				l_list.start
+			until
+				l_list.after
+			loop
+				create menu_item.make_with_text_and_action (l_list.item, agent select_view (l_list.item))
+				view_menu.extend (menu_item)
+				l_list.forth
+			end
 			view_menu.show
 		end
+		
+	select_view (a_name: STRING) is
+			-- Select `a_name' as the current view and switch to that view.
+		do
+			view_selector.set_text (a_name)
+			on_view_changed
+		end
+		
+	name_view is
+			-- Name the view.
+		do
+			view_selector.select_all
+			view_selector.set_focus
+		end
+		
 
 feature -- Status report
 
@@ -465,7 +507,6 @@ feature -- Status settings.
 			zoom_out_cmd.disable_sensitive
 			delete_view_cmd.disable_sensitive
 			diagram_to_ps_cmd.disable_sensitive
-			crop_cmd.disable_sensitive
 			toggle_force_cmd.disable_sensitive
 			toggle_cluster_cmd.disable_sensitive
 			remove_anchor_cmd.disable_sensitive
@@ -473,6 +514,9 @@ feature -- Status settings.
 			toggle_uml_cmd.disable_sensitive
 			fit_to_screen_cmd.disable_sensitive
 			toggle_quality_cmd.disable_sensitive
+			reset_view_cmd.disable_sensitive
+			view_selector.disable_sensitive
+			view_menu_button.disable_sensitive
 		end
 		
 	enable_toolbar is
@@ -709,6 +753,10 @@ feature -- Element change
 					if is_valide_diagram_file (f) then
 						world.load_available_views (f)
 					end
+					world.set_current_view (view_selector.text)
+					if not world.available_views.has (world.current_view) then
+						world.available_views.extend (world.current_view)
+					end
 					layout.layout
 				end
 				cf ?= world.figure_from_model (class_graph.center_class)
@@ -845,6 +893,10 @@ feature -- Element change
 					if is_valide_diagram_file (f) then
 						world.load_available_views (f)
 					end
+					world.set_current_view (view_selector.text)
+					if not world.available_views.has (world.current_view) then
+						world.available_views.extend (world.current_view)
+					end
 					layout.layout
 				end
 				
@@ -929,94 +981,55 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 				disable_force_directed
 			end
 			if world.is_uml then
-				if world.available_views.has ("DEFAULT") then
-					-- "Load" default
-					from
-						view_selector.start
-					until
-						view_selector.item.text.is_equal ("DEFAULT")
-					loop
-						view_selector.forth
+				world.recycle
+				if class_graph /= Void then
+					create bon_class.make (class_graph, Current)
+					if world.scale_factor /= 1.0 then
+						bon_class.scale (world.scale_factor)	
 					end
-					view_selector.select_actions.block
-					view_selector.item.enable_select
-					view_selector.select_actions.resume
-					on_view_changed
+					world_cell.set_world (bon_class)
+					reset_tool_bar_for_class_view
 				else
-					world.recycle
-					if class_graph /= Void then
-						create bon_class.make (class_graph, Current)
-						if world.scale_factor /= 1.0 then
-							bon_class.scale (world.scale_factor)	
-						end
-						world_cell.set_world (bon_class)
-						reset_tool_bar_for_class_view
-					else
-						create bon_cluster.make (cluster_graph, Current)
-						if world.scale_factor /= 1.0 then
-							bon_cluster.scale (world.scale_factor)	
-						end
-						world_cell.set_world (bon_cluster)
-						reset_tool_bar_for_cluster_view
+					create bon_cluster.make (cluster_graph, Current)
+					if world.scale_factor /= 1.0 then
+						bon_cluster.scale (world.scale_factor)	
 					end
-					layout.set_spacing (40, 40)
-					layout.set_world (world)
-					force_directed_layout.set_world (world)
-					layout.layout
-					world.load_available_views (f)
-					reset_tool_bar_toggles
-					reset_view_selector
-					crop_diagram
-					world.figure_change_end_actions.extend (agent on_figure_change_end)
-					world.figure_change_start_actions.extend (agent on_figure_change_start)
-					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
-					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+					world_cell.set_world (bon_cluster)
+					reset_tool_bar_for_cluster_view
 				end
+				layout.set_spacing (40, 40)
 			else
-				if world.available_views.has ("DEFAULT:UML") then
-					-- "Load" default
-					from
-						view_selector.start
-					until
-						view_selector.item.text.is_equal ("DEFAULT:UML")
-					loop
-						view_selector.forth
+				world.recycle
+				if class_graph /= Void then
+					create uml_class.make (class_graph, Current)
+					uml_class.set_current_view (world.current_view)
+					if world.scale_factor /= 1.0 then
+						uml_class.scale (world.scale_factor)	
 					end
-					view_selector.select_actions.block
-					view_selector.item.enable_select
-					view_selector.select_actions.resume
-					on_view_changed
+					world_cell.set_world (uml_class)
+					reset_tool_bar_for_uml_class_view
 				else
-					world.recycle
-					if class_graph /= Void then
-						create uml_class.make (class_graph, Current)
-						if world.scale_factor /= 1.0 then
-							uml_class.scale (world.scale_factor)	
-						end
-						world_cell.set_world (uml_class)
-						reset_tool_bar_for_uml_class_view
-					else
-						create uml_cluster.make (cluster_graph, Current)
-						if world.scale_factor /= 1.0 then
-							uml_cluster.scale (world.scale_factor)	
-						end
-						world_cell.set_world (uml_cluster)
-						reset_tool_bar_for_uml_cluster_view
+					create uml_cluster.make (cluster_graph, Current)
+					uml_cluster.set_current_view (world.current_view)
+					if world.scale_factor /= 1.0 then
+						uml_cluster.scale (world.scale_factor)	
 					end
-					layout.set_spacing (150, 150)
-					layout.set_world (world)
-					force_directed_layout.set_world (world)
-					layout.layout
-					world.load_available_views (f)
-					reset_tool_bar_toggles
-					reset_view_selector
-					crop_diagram
-					world.figure_change_end_actions.extend (agent on_figure_change_end)
-					world.figure_change_start_actions.extend (agent on_figure_change_start)
-					world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
-					world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
+					world_cell.set_world (uml_cluster)
+					reset_tool_bar_for_uml_cluster_view
 				end
+				layout.set_spacing (150, 150)
 			end
+			layout.set_world (world)
+			force_directed_layout.set_world (world)
+			layout.layout
+			world.load_available_views (f)
+			reset_tool_bar_toggles
+			reset_view_selector
+			crop_diagram
+			world.figure_change_end_actions.extend (agent on_figure_change_end)
+			world.figure_change_start_actions.extend (agent on_figure_change_start)
+			world.cluster_legend.move_actions.extend (agent on_cluster_legend_move)
+			world.cluster_legend.pin_actions.extend (agent on_cluster_legend_pin)
 		end
 		
 	is_uml: BOOLEAN is
@@ -1183,29 +1196,17 @@ feature {NONE} -- Views
 
 	reset_view_selector is
 			-- Set entries in `view_selector' to `available_views' in `world'.
-		local
-			l_item: EV_LIST_ITEM
 		do
-			view_selector.select_actions.block
-			view_selector.set_strings (world.available_views)
-			from
-				view_selector.start
-			until
-				view_selector.after
-			loop
-				l_item := view_selector.item
-				if l_item.text.is_equal (world.current_view) then
-					l_item.enable_select
-				end
-				view_selector.forth
-			end
-			view_selector.select_actions.resume
+			view_selector.set_text (world.current_view)
 		end
 
 feature {NONE} -- Commands
 
-	view_selector: EB_VIEW_SELECTOR
+	view_selector: EV_TEXT_FIELD
 			-- Combo box that lets the user change views.
+			
+	view_menu_button: EV_BUTTON
+			-- Button for the view menu.
 
 	history_cmd: EB_DIAGRAM_HISTORY_COMMAND
 			-- History command.
@@ -1247,13 +1248,10 @@ feature {NONE} -- Commands
 			-- Command to select the depth of the diagram.
 
 	link_tool_cmd: EB_LINK_TOOL_COMMAND
-			-- Command to create new links.
+			-- Toggle right angles.
 
 	fill_cluster_cmd: EB_FILL_CLUSTER_COMMAND
 			-- Command to fill cluster with all classes.
-	
-	crop_cmd: EB_CROP_DIAGRAM_COMMAND
-			-- Crop command.
 
 	zoom_in_cmd: EB_ZOOM_IN_COMMAND
 			-- Zoom in command.
@@ -1278,6 +1276,9 @@ feature {NONE} -- Commands
 			
 	delete_view_cmd: EB_DELETE_VIEW_COMMAND
 			-- Delete current view.
+			
+	reset_view_cmd: EB_RESET_VIEW_COMMAND
+			-- Reset current view.
 			
 	toggle_uml_cmd: EB_TOGGLE_UML_COMMAND
 			-- Toggle between UML/BON.
@@ -1424,11 +1425,11 @@ feature {NONE} -- Events
 		local
 			cancelled: BOOLEAN
 		do
-			if not cancelled and not view_selector.is_empty then
+			if not cancelled then--and not view_selector.is_empty then
 				reset_history		
 
 				progress_dialog.set_title ("Loading view")
-				progress_dialog.set_message ("Diagram for " + view_selector.selected_item.text)
+				progress_dialog.set_message ("Diagram for " + view_selector.text)
 				progress_dialog.set_degree ("Calculating size:")
 				progress_dialog.enable_cancel
 				progress_dialog.show
@@ -1444,7 +1445,7 @@ feature {NONE} -- Events
 				world_cell.disable_resize
 				projector.disable_painting
 			
-				world.set_current_view (view_selector.selected_item.text)
+				world.retrieve_view (view_selector.text)
 
 				projector.enable_painting
 				world_cell.enable_resize
@@ -1526,7 +1527,7 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 			if not cancelled then
 				
 				progress_dialog.set_title ("Loading view")
-				progress_dialog.set_message ("Diagram for " + view_selector.selected_item.text)
+				progress_dialog.set_message ("Diagram for " + view_selector.text)
 				progress_dialog.enable_cancel
 				progress_dialog.show
 				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
@@ -1552,11 +1553,7 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 				if world.is_right_angles then
 					world.apply_right_angles
 				end
-				
-				view_selector.select_actions.block
-				view_selector.set_strings (world.available_views)
-				view_selector.set_text ("DEFAULT")
-				view_selector.select_actions.resume
+				view_selector.set_text (world.current_view)
 			end
 		rescue
 			cancelled := True
@@ -1572,6 +1569,18 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 			retry
 		end
 		
+feature {EB_RESET_VIEW_COMMAND} -- Implementation
+
+	reset_current_view is
+			-- Reset current view to default.
+		do
+			if class_graph /= Void then
+				create_class_view (class_graph.center_class.class_i, False)
+			else
+				create_cluster_view (cluster_graph.center_cluster.cluster_i, False)
+			end
+		end
+
 feature {EB_FIT_TO_SCREEN_COMMAND} -- Implementation
 
 	world_cell: EIFFEL_FIGURE_WORLD_CELL
@@ -1776,11 +1785,12 @@ feature {NONE} -- Implementation
 			zoom_out_cmd.enable_sensitive
 			delete_view_cmd.enable_sensitive
 			diagram_to_ps_cmd.enable_sensitive
-			crop_cmd.enable_sensitive
 			toggle_uml_cmd.enable_sensitive
 			fit_to_screen_cmd.enable_sensitive
+			reset_view_cmd.enable_sensitive
+			view_selector.enable_sensitive
+			view_menu_button.enable_sensitive
 		end
-		
 		
 	project_close_agent: PROCEDURE [ANY, TUPLE]
 			-- The agent that is called when the project is closed.
@@ -2008,7 +2018,6 @@ invariant
 	area_not_void: area /= Void
 	area_as_widget_not_void: area_as_widget /= Void
 	projector_not_void: projector /= Void
-	
-	
+
 end -- class EB_CONTEXT_EDITOR
 

@@ -10,7 +10,6 @@ class
 inherit
 	EIFFEL_CLUSTER_DIAGRAM
 		redefine
-			default_view_name,
 			default_create
 		end
 	
@@ -37,14 +36,6 @@ feature {NONE} -- Initialization
 		do
 			make_with_model_and_factory (a_graph, create {UML_FACTORY})
 			context_editor := a_tool
-		end
-
-feature -- Access
-
-	default_view_name: STRING is
-			-- Name for default view.
-		do
-			Result := "DEFAULT:UML"
 		end
 
 end -- class UML_CLUSTER_DIAGRAM

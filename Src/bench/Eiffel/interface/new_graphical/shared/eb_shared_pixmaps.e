@@ -1014,6 +1014,11 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("delete_view")
 		end
+		
+	Icon_reset_view: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("reset_view")
+		end
 
 	Icon_export_to_png: ARRAY [EV_PIXMAP] is
 		once

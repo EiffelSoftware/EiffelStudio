@@ -26,6 +26,7 @@ feature -- Properties
 			else
 				!! ctxt;
 				ctxt.set_clickable;
+				ctxt.set_feature_clause_order (Void);
 				ctxt.format (stone.e_class);
 				if not ctxt.error then
 					Result := ctxt.text;
@@ -48,6 +49,7 @@ feature -- Properties
 			else
 				!! ctxt;
 				ctxt.set_clickable;
+				ctxt.set_feature_clause_order (Void);
 				ctxt.set_is_short;
 				ctxt.format (stone.e_class);
 				if not ctxt.error then

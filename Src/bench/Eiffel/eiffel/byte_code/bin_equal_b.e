@@ -223,8 +223,8 @@ feature -- IL code generation
 			right_type := context.real_type (right.type)
 			
 			if
-				(left_type.is_none and right_type.is_basic) or
-				(left_type.is_basic and right_type.is_none)
+				(left_type.is_none and right_type.is_expanded) or
+				(left_type.is_expanded and right_type.is_none)
 			then
 					-- Simple type can never be Void
 				generate_il_boolean_constant

@@ -32,14 +32,14 @@ feature
 					debug_info.tenure;
 					send_rqst_1 (Rqst_resume, Resume_cont);
 					debug_window.clear_window;
-					debug_window.put_string ("Application is running%N");
+					debug_window.put_string ("System is running%N");
 					run_info.set_is_running (True);
 					run_info.set_is_stopped (False);
 					debug_window.display					
 				else
 					debug_info.tenure;
 					debug_window.clear_window;
-					debug_window.put_string ("Unable to launch application%N");
+					debug_window.put_string ("Unable to launch system%N");
 					debug_window.display					
 				end
 			end

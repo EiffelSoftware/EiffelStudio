@@ -51,10 +51,10 @@ feature {NONE}
 		do
 			if not Run_info.is_running then
 				warner.set_window (text_window);
-				warner.gotcha_call ("Application is not running")
+				warner.gotcha_call ("System is not running")
 			elseif not Run_info.is_stopped then
 				warner.set_window (text_window);
-				warner.gotcha_call ("Application is not stopped")
+				warner.gotcha_call ("System is not stopped")
 			else
 				!! attr_request.make (object.object_address);
 				attr_request.send;

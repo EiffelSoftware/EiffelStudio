@@ -88,7 +88,7 @@ end;
 					end;
 					cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
 					debug_window.clear_window;
-					debug_window.put_string ("Application is running%N");
+					debug_window.put_string ("System is running%N");
 					debug_window.display
 				end;
 			else
@@ -125,7 +125,7 @@ end;
 									-- The Makefile file is more recent than the application
 								!!message.make (0);
 								message.append (Makefile_SH);
-								message.append (" is more recent than the application.%N%
+								message.append (" is more recent than the system.%N%
 												%Do you want to compile the generated C code?");
 								warner.set_window (text_window);
 								warner.custom_call (Current, message, " OK ", Void, "Cancel");
@@ -138,7 +138,7 @@ end;
 						elseif make_f.exists then
 								-- There is no application
 							warner.set_window (text_window);
-							warner.custom_call (Current, "No application was generated.%N%
+							warner.custom_call (Current, "No system was generated.%N%
 										%Do you want to compile the generated C code?", " OK ", Void, "Cancel");
 						else
 							warner.set_window (text_window);

@@ -53,8 +53,10 @@ feature -- Execution
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
 			table: EXTEND_TABLE [SORTED_LIST [STRING], CLASS_ID];
-			st: like structured_text
+			st: like structured_text;
+			invariant_name: STRING
 		do
+			invariant_name := "_invariant";
 			st := structured_text;
 			clients := current_class.clients;
 			!! table.make (5);
@@ -91,12 +93,11 @@ feature -- Execution
 					list.after
 				loop
 					cfeat := list.item;
-					feat := client.feature_with_name (cfeat);
 					add_tabs (st, tabs + 1);
-					if feat = Void then
+					if cfeat.is_equal (invariant_name) then
 						st.add_string ("invariant")
 					else
-						feat.append_name (st)	
+						st.add_feature_name (cfeat, client)
 					end;
 					st.add_new_line;
 					list.forth

@@ -85,9 +85,10 @@ feature {NONE} -- Special childrens
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			l_att_name: STRING
 		do
-			if icd_value_info.is_object then
+			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.interface_debug_object_value			
 			end
+			
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
 				
@@ -96,7 +97,8 @@ feature {NONE} -- Special childrens
 					
 					l_icd_module := l_icd_class.get_module
 					l_md_import := l_icd_module.interface_md_import
-		
+
+						--| Get "direct" Fields		
 					l_enum_hdl := 0
 					l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
 					l_tokens_count := l_md_import.count_enum (l_enum_hdl)
@@ -109,11 +111,11 @@ feature {NONE} -- Special childrens
 							l_tokens.fill (l_tokens_array)
 						end
 					end
+					l_md_import.close_enum (l_enum_hdl)
 				
 -- FIXME: JFIAT: 2004-01-14 : Check with User's preference limit.
 -- FIXME: JFIAT: 2004-01-14 : do we get all inherited fields too ?
 	
-					l_md_import.close_enum (l_enum_hdl)
 					
 					if l_tokens /=  Void then
 						create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} Result.make

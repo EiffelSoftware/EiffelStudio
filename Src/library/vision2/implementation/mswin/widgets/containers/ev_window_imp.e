@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision untitled window, mswindows implementation."
@@ -870,6 +869,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/19 05:53:52  oconnor
+--| released
+--|
 --| Revision 1.19  2000/02/14 11:40:43  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -70,6 +70,16 @@ feature {NONE} -- Access
 
 feature {EV_PND_TRANSPORTER_IMP} -- Access
 
+	accept (data_type: EV_PND_TYPE): BOOLEAN is
+			-- Is Current accept this data type ?
+		do
+			if pnd_commands_list /= Void then
+				Result := pnd_commands_list.has (data_type)
+			else
+				Result := False
+			end
+		end
+
 	receive (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA) is
 		local
 			list: LINKED_LIST [EV_INTERNAL_COMMAND]

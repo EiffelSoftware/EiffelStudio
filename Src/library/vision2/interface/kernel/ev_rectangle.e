@@ -98,12 +98,6 @@ feature -- Status report
 
 feature -- Status report
 
-	empty: BOOLEAN is
-			-- Is area of `Current' 0?
-		do
-			Result := width = 0 and height = 0
-		end
-
 	has (c: EV_COORDINATE): BOOLEAN is
 			-- Is `c' inside `Current'?
 		require

@@ -29,8 +29,8 @@ DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS)
 LDFLAGS = $(LIBARCH) $(LIBIDRARCH)
 
-RemoteTargetDependency(ebench,$(LIBDIR),$(LIBNAME))
-RemoteTargetDependency(ebench,$(LIBIDR),$(LIBIDRNAME))
+RemoteTargetDependency(estudio,$(LIBDIR),$(LIBNAME))
+RemoteTargetDependency(estudio,$(LIBIDR),$(LIBIDRNAME))
 
 DependTarget()
-NormalProgramTarget(ebench,$(SRC),$(OBJ))
+NormalProgramTarget(estudio,$(SRC),$(OBJ))

@@ -40,9 +40,9 @@ creation
 
     make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-    make (a_label: LABEL) is
+    make (a_label: LABEL; man: BOOLEAN) is
             -- Create a motif label.
         local
             ext_name: ANY
@@ -50,7 +50,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
             ext_name := a_label.identifier.to_c;
             screen_object := create_label ($ext_name,
-					parent_screen_object (a_label, widget_index));
+					parent_screen_object (a_label, widget_index),
+					man);
             a_label.set_font_imp (Current)
         end;
 
@@ -68,6 +69,12 @@ feature
 			-- some changes on its value.
 		do
 			set_xt_boolean (screen_object, False, MrecomputeSize)
+		end;
+
+	set_right_alignment is
+			-- Set text alignment to right.
+		do
+			set_xt_unsigned_char (screen_object, MALIGNMENT_END, Malignment)
 		end;
 
 	set_center_alignment is
@@ -117,7 +124,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-    create_label (l_name: ANY; scr_obj: POINTER): POINTER is
+    create_label (l_name: ANY; scr_obj: POINTER;
+				man: BOOLEAN): POINTER is
         external
             "C"
         end;

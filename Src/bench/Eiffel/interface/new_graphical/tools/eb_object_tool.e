@@ -660,8 +660,8 @@ feature {NONE} -- Implementation
 					cse_dotnet ?= cse
 
 					create module_item
-					module_item.set_text ("Module = " + cse_dotnet.dotnet_module_filename)
-					module_item.set_data (cse_dotnet.dotnet_module_name)
+					module_item.set_text ("Module = " + cse_dotnet.dotnet_module_name)
+					module_item.set_data (cse_dotnet.dotnet_module_filename)
 					module_item.set_pixmap (Pixmaps.Icon_green_tick)
 					local_tree.extend (module_item)				
 

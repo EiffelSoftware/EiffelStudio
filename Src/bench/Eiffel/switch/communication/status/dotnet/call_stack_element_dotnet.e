@@ -216,14 +216,9 @@ feature {NONE} -- Implementation
 
 			private_dotnet_feature_token := l_function.get_token		
 			private_dotnet_class_token := l_function.get_class.get_token
-			private_dotnet_module_name := l_function.get_module.get_name
-			private_dotnet_module_filename := l_function.get_module.file_name
+			private_dotnet_module_name := l_function.get_module.module_name
+			private_dotnet_module_filename := l_function.get_module.get_name
 
---			l_dotnet_ref_value ?= current_object
---			l_class_token := l_dotnet_ref_value.value_class_token
---			l_mod_name := l_dotnet_ref_value.value_module_file_name
-			
-			
 			dotnet_initialized := True
 		ensure
 			dotnet_initialized

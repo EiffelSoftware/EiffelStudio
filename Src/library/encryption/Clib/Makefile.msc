@@ -1,0 +1,21 @@
+# wel.lib - Makefile for Microsoft C
+
+EIFFEL_SRC="E:\43dev"
+EIFFEL_SRC2="F:\Eiffel43"
+
+CC = cl
+CFLAGS = -c -Ox -W3 -I$(EIFFEL_SRC)\library\encryption\Clib -I$(EIFFEL_SRC2)\bench\spec\windows\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = des.obj desop.obj
+
+des.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	if not exist $(EIFFEL_SRC)\library\encryption\spec\msc mkdir $(EIFFEL_SRC)\library\encryption\spec\msc
+	if not exist $(EIFFEL_SRC)\library\encryption\spec\msc\lib mkdir $(EIFFEL_SRC)\library\encryption\spec\msc\lib
+	copy $@ $(EIFFEL_SRC)\library\encryption\spec\msc\lib
+	del $@
+	del *.obj

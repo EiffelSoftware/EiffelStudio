@@ -59,11 +59,8 @@ feature
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater then Current ?
 		do
-			Result := 	level < other.level
-						or else
-						(	level = other.level
-							and then
-							feature_id < other.feature_id);
+			Result := level < other.level
+				or else (level = other.level and then feature_id < other.feature_id)
 		end;
 
 	is_reference: BOOLEAN is

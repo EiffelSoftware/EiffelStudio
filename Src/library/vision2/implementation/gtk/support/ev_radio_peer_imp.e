@@ -27,7 +27,7 @@ feature -- Status report
 			peer_imp: like Current
 		do
 			create Result.make
-			if gslist = Void then
+			if gslist = Default_pointer then
 				Result.extend (interface)
 			else
 				from
@@ -48,7 +48,7 @@ feature -- Status report
 			cur: POINTER
 			peer_imp: like Current
 		do
-			if gslist = Void then
+			if gslist = Default_pointer then
 				Result := interface
 			else
 				from
@@ -97,6 +97,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/13 22:05:54  king
+--| Corrected gslist equality statements from Void to Default_pointer
+--|
 --| Revision 1.4  2000/02/26 01:26:02  brendel
 --| Removed annoying put_string.
 --|

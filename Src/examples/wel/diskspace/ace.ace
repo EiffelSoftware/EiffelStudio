@@ -6,9 +6,10 @@ root
 
 default
 	assertion (all)
+	console_application (yes)
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\diskspace"
+	root_cluster:	"."
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"

@@ -130,11 +130,14 @@ feature -- Setting
 			heir_links_set: heir_links = l
 		end;
 
-	set_x_y ( a: INTEGER; b: INTEGER ) is
-		do
-			x := a
-			y:= b
-		end
+    set_x ( a : INTEGER ) is
+        do
+            x := a
+        end
+    set_y ( a : INTEGER ) is
+        do
+            y := a
+        end
 
 	set_color_name ( s : STRING ) is
 		do

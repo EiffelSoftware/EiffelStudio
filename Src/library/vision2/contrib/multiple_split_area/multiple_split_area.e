@@ -293,6 +293,8 @@ feature -- Status setting
 			all_holders.go_i_th (position)
 			all_holders.put_left (holder)
 			external_representation.extend (widget)
+			holder.minimize_button.disable_sensitive
+			holder.maximize_button.disable_sensitive
 			create dialog
 			holder.main_box.parent.prune_all (holder.main_box)
 			dialog.extend (holder.main_box)

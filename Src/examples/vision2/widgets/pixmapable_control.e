@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create vertical_box
 			extend (vertical_box)
 			create pixmap
-			pixmap.set_with_named_file ("../../bm_About.png")
+			pixmap.set_with_named_file ("bm_About.png")
 			create button.make_with_text ("Set_pixmap")
 			create button1.make_with_text ("Remove_pixmap")
 			button.select_actions.extend (agent pixmapable.set_pixmap (pixmap))

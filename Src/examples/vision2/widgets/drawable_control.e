@@ -20,7 +20,7 @@ feature {NONE}-- Initialization
 			-- displaying output in `output'.
 		do
 			create pixmap
-			pixmap.set_with_named_file ("../../icon_wizard_blank_project.png")
+			pixmap.set_with_named_file ("icon_wizard_blank_project.png")
 			drawable := a_drawable
 			default_create
 			xvel := 7

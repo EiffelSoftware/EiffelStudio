@@ -15,6 +15,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
 		export

@@ -2201,11 +2201,10 @@ feature -- Final mode generation
 			degree_minus_5
 
 			generate_main_finalized_eiffel_files
-	
-			Tmp_poly_server.clear
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out
+			Tmp_poly_server.clear
 			Tmp_opt_byte_server.clear
 
 			remover := Void

@@ -1,4 +1,4 @@
-OBJS =  server.o ser_list.o parameter.o ref_table.o concurrency.o print.o idle.o curerror.o subs.o stack.o sep_call.o sep_ser.o
+OBJS =  server.o ser_list.o parameter.o ref_table.o concurrency.o print.o idle.o curerror.o subs.o stack.o sep_call.o sep_ser.o sep_obj.o
 CC = cc
 FLAG = -c  -DWORKBENCH -DCONCURRENT_EIFFEL  -I../ 
 
@@ -36,6 +36,9 @@ stack.o:	stack.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h
 
 sep_ser.o:	sep_ser.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h 
 		$(CC) $(FLAG) sep_ser.c
+
+sep_obj.o:	sep_obj.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h 
+		$(CC) $(FLAG) sep_obj.c
 
 sep_call.o:	sep_call.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h 
 		$(CC) $(FLAG) sep_call.c

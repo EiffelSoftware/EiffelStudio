@@ -32,6 +32,7 @@ extern "C" {
  *  - cn_nbattr is the number of attributes in the class.
  *  - cn_names is a pointer to an array of attributes' name.
  *  - cn_types is a pointer on an array of attributes' type (non workbench).
+ *  - cn_gtypes is a pointer to generic type arrays.
  *  - cn_init is a pointer to a routine which initializes the object.
  *  - cn_offsets is a pointer on an array of attributes' offset (non workbench).
  *  - cn_parents is a sequence of dymanic types, used for invariant checking.
@@ -43,6 +44,7 @@ struct cnode {
 	char **cn_names;			/* Attribute names */
 	int *cn_parents;			/* Dynamic types of parents (-1 marks end) */
 	uint32 *cn_types;			/* Attribute types */
+	int16 **cn_gtypes;			/* Attribute generic types (expanded attributes only) */
 #ifdef WORKBENCH
 	int32 *cn_attr;				/* Array of attribute routine ids */
 	long size;					/* Object size */

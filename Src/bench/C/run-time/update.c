@@ -378,6 +378,7 @@ rt_public void cnode_updt(void)
 	struct cnode *node;		/* Structure to update */
 	char **names;			/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
+	int16 **gtypes;			/* Attribute full-type array */
 	short nbparents;		/* Parent count */
 	int *parents;			/* Parent dynmaic type array */
 	int32 *rout_ids;		/* Routine id array */
@@ -421,6 +422,10 @@ rt_public void cnode_updt(void)
 		if (types == (uint32 *) 0)
 			enomem(MTC_NOARG);
 		node->cn_types = types;
+		gtypes = (int16 **) cmalloc(nbattr * sizeof(int16 *));
+		if (gtypes == (int16 **) 0)
+			enomem(MTC_NOARG);
+		node->cn_gtypes = gtypes;
 #ifdef DEBUG
 	dprintf(4)("\tattribute names = ");
 #endif
@@ -445,10 +450,18 @@ rt_public void cnode_updt(void)
 	dprintf(4)("0x%lx ", types[i]);
 #endif
 		}
-		
+		for (i=0; i<nbattr; i++)
+		{
+			if (wshort ())
+				gtypes[i] = wtype_array((int16 *)0);
+			else
+				gtypes[i] = (int16 *)0;
+		}
+
 	} else {
 		node->cn_names = (char **) 0;
 		node->cn_types = (uint32 *) 0;
+		node->cn_gtypes = (int16 **) 0;
 	}
 		
 		/* 5. Parent dynamic type array */
@@ -1039,9 +1052,6 @@ rt_public char *wclass_name(void)
 
 rt_private void write_long(char *where, long int value)
 {
-	/* Note: This body has been copied to `debug.c' for the update
-	 * of once functions for supermelted code, so don't forget to update
-	 * `debug.c' accordingly when modifying this routine */
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
 	union {

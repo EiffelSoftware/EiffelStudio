@@ -169,7 +169,7 @@ rt_private void assign(long int fid, int stype, uint32 type);					/* Assignment 
 rt_private void passign(int32 origin, int32 f_offset, uint32 type);					/* Assignment in a precomp attribute */
 
 /* Calling protocol */
-rt_private void init_var(struct item *ptr, long int type);	/* Initialize to 0 a variable entity */
+rt_private void init_var(struct item *ptr, long int type, char *current_ref);	/* Initialize to 0 a variable entity */
 rt_private void init_registers(EIF_CONTEXT_NOARG);	/* Intialize registers in callee */
 rt_private void allocate_registers(EIF_CONTEXT_NOARG);		/* Allocate the register array */
 rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top);			/* Resynchronize the register array */
@@ -568,7 +568,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			}
 		}
 
-		init_var(iresult, rtype);
+		init_var(iresult, rtype, icurrent->it_ref);
 
 		switch(flag) {				/* What are we interpreting? */
 		case INTERP_CMPD:			/* A compound (i.e. Eiffel feature) */
@@ -4905,19 +4905,25 @@ rt_private void write_address(char *where, char *value)
  * Calling protocol
  */
 
-rt_private void init_var(struct item *ptr, long int type)
+rt_private void init_var(struct item *ptr, long int type, char *current_ref)
 {
 	/* Initializes variable 'ptr' to be of type 'type' */
+	short dtype;
 
 	ptr->type = type;					/* Set to correct type */
+
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
 	case SK_CHAR:		ptr->it_char = (char) 0; break;
 	case SK_INT:		ptr->it_long = (long) 0; break;
 	case SK_FLOAT:		ptr->it_float = (float) 0; break;
 	case SK_DOUBLE:		ptr->it_double = (double) 0; break;
-	case SK_BIT:
-	case SK_EXP:
+	case SK_BIT:		ptr->it_ref = (char *)0; break;
+	case SK_EXP:		dtype = get_short ();
+						dtype = get_compound_id(MTC current_ref, (short) dtype);
+						ptr->type = (type & EO_UPPER) | ((uint32) dtype);
+						ptr->it_ref = (char *) 0;
+						break;
 	case SK_REF:		ptr->it_ref = (char *) 0; break;
 	case SK_POINTER:	ptr->it_ptr = (char *) 0; break;
 	case SK_VOID:		break;
@@ -4975,7 +4981,7 @@ rt_private void init_registers(EIF_CONTEXT_NOARG)
 	reg = iregs + SPECIAL_REG;				/* Start of locals */
 	for (n = 0; n < locnum; n++, reg++) {	/* Pushed in order */
 		last = iget();
-		init_var(last, get_long());			/* Initialize to zero */
+		init_var(last, get_long(), current);			/* Initialize to zero */
 		*reg = last;						/* Save pointer in stack */
 	}
 

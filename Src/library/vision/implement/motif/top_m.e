@@ -17,18 +17,27 @@ inherit
 	WM_SHELL_R_M;
 
 	SHELL_M
+		rename
+			clean_up as shell_clean_up
 		redefine
 			set_x, set_y, set_x_y
+		end
+
+	SHELL_M
+		redefine
+			set_x, set_y, set_x_y, clean_up
+		select
+			clean_up
 		end
 
 feature {NONE}
 
 	to_c_if_not_void (a_string: STRING): ANY is
-            -- `a_string.to_c' if not void, void otherwise
-        do
-            if not (a_string = Void) then
-                Result := a_string.to_c
-            end
+  			-- `a_string.to_c' if not void, void otherwise
+   		do
+			if a_string /= Void then
+				Result := a_string.to_c
+			end
         end;
 
 feature 
@@ -121,6 +130,29 @@ feature
 			Result := (xt_int (screen_object, MinitialState) = MICONIC_STATE)
 		end;
 
+feature {NONE}
+
+	cdfd: POINTER;
+		-- CDFD C structure
+
+	clean_up is
+		do
+			shell_clean_up;
+			check
+				cdfd_not_freed: not is_cdfd_freed
+			end;
+			c_free_cdfd (cdfd);
+			cdfd := null_pointer
+		ensure then
+			is_cdfd_freed: is_cdfd_freed
+		end;
+
+	is_cdfd_freed: BOOLEAN is
+			 -- Is `cdfd' freed ?
+		do
+			Result := null_pointer = cdfd
+		end;
+
 feature {NONE} -- External features
 
 	xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
@@ -133,7 +165,14 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	xm_delete_window_protocol (disp: POINTER; scr_obj: POINTER; obj: ANY; call: POINTER) is
+	c_free_cdfd (p: POINTER) is
+		-- Free CDFD structure `p'.
+		external
+			"C"
+		end
+
+	xm_delete_window_protocol (disp: POINTER; scr_obj: POINTER;
+			obj: ANY; call: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -21,8 +21,7 @@ inherit
 	EV_ANY
 		redefine
 			create_action_sequences,
-			implementation,
-			destroy
+			implementation
 		end
 
 feature {NONE} -- Initialization
@@ -95,12 +94,6 @@ feature -- Basic operation
 			msec_non_negative: msec >= 0 
 		do
 			implementation.sleep (msec)
-		end
-
-	destroy is
-			-- Quit the application.
-		do
-			exit_normal
 		end
 
 feature -- Status report
@@ -181,15 +174,6 @@ feature {NONE} -- Implementation
 			post_launch_actions := Void
 		end
 
-feature {NONE} -- Externals
-
-	exit_normal is
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"exit(0)"
-		end
-
 invariant
 	pick_actions_not_void: pick_actions /= Void
 	drop_actions_not_void: drop_actions /= Void
@@ -220,6 +204,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/05 17:45:46  brendel
+--| Reverted to old destroy.
+--|
 --| Revision 1.24  2000/04/05 15:47:25  brendel
 --| Corrected `destroy'.
 --|

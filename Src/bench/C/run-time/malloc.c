@@ -235,10 +235,6 @@ rt_private void free_unused(void);
 #endif
 #endif
 
-#ifdef TEST
-rt_private int cc_for_speed = 1;	/* Optimized for speed */
-#endif
-
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
 

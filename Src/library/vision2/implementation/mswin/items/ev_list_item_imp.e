@@ -119,9 +119,9 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := txt
+			text := clone (txt)
 			if parent_imp /= Void then
-				parent_imp.internal_set_text (Current.interface, txt)
+				parent_imp.internal_set_text (Current.interface, clone (txt))
 			end
 		end
 
@@ -198,6 +198,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/02 16:58:33  rogers
+--| Set_text now sets the text to a clone of the passed text.
+--|
 --| Revision 1.29  2000/03/01 16:37:54  rogers
 --| Changed type of parent_imp from EV_LIST_IMP to EV_LIST_ITEM_HOLDER_IMP.
 --|

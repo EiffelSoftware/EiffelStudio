@@ -9,8 +9,8 @@ class SHARED_EIFFEL_PARSER
 
 feature -- Access
 
-	Eiffel_parser: YACC_EIFFEL_PARSER is
---	Eiffel_parser: EIFFEL_PARSER is
+--	Eiffel_parser: YACC_EIFFEL_PARSER is
+	Eiffel_parser: EIFFEL_PARSER is
 			-- Eiffel parser
 		once
 			!! Result.make

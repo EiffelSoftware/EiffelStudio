@@ -444,9 +444,13 @@ feature -- Controle execution
 		do
 			l_controller := Eifnet_debugger.icor_debug_controller
 			if l_controller /= Void then
+				l_controller.add_ref
 				l_enum_thread := l_controller.enumerate_threads
-				l_last_thread_id := Eifnet_debugger_info.icd_thread.get_id.to_hex_string
 				if l_enum_thread /= Void and then l_enum_thread.count > 0 then
+					l_th := Eifnet_debugger_info.icd_thread
+					if l_th /= Void then
+						l_last_thread_id := l_th.get_id.to_hex_string
+					end
 					l_threads := l_enum_thread.next (l_enum_thread.count)
 					print ("[info]  => " + l_threads.count.out + " Threads.%N")
 					print ("        => last   :: " + l_last_thread_id + "%N")
@@ -462,6 +466,7 @@ feature -- Controle execution
 					end
 					l_enum_thread.clean_on_dispose
 				end
+				l_controller.release
 			end
 		end
 

@@ -53,6 +53,12 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
+	has_parent: BOOLEAN is
+			-- Is `Current' parented?
+		do
+			Result := parent /= Void
+		end
+
 	parent: EV_ANY is
 		deferred
 		end

@@ -79,6 +79,7 @@ inherit
 			on_draw_item
 		redefine
 			default_style,
+			default_ex_style,
 			class_name
 		end
 
@@ -368,6 +369,12 @@ feature {NONE} -- Implementation
 			-- Class name
 		once
 			Result := "EvisionShell"
+		end
+
+	default_ex_style: INTEGER is
+			-- Windows 3D look
+		once
+			Result := 768
 		end
 
 end -- SHELL_WINDOWS

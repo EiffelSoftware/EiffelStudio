@@ -67,7 +67,9 @@ feature {ICOR_EXPORTER} -- Access
 
 			last_call_success := cpp_call_function (item, a_func.item, a_args.count, l_mp_args.item)
 
---			print ("ICOR_DEBUG_EVAL.call_function : " +a_func.to_string + "%N%T=> return code = " + last_call_success.out + "%N")
+--			debug ("DEBUGGER_TRACE_EVAL")
+--				print ("ICOR_DEBUG_EVAL.call_function : " +a_func.to_string + "%N%T=> return code = " + last_call_success.out + "%N")
+--			end
 --		ensure
 --			success: last_call_success = 0
 		end

@@ -6,7 +6,7 @@ inherit
 		redefine
 			dump, is_none, is_void, is_basic, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			cecil_value
+			cecil_value, append_clickable_signature
 		end;
 	SHARED_C_LEVEL;
 
@@ -26,6 +26,11 @@ feature
 
 	is_basic: BOOLEAN is False;
 			-- A NONE type is not a basic type.
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("NONE");
+		end;
 
 	dump (file: UNIX_FILE) is
 			-- Debug purpose

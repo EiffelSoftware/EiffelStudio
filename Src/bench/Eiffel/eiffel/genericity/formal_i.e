@@ -49,6 +49,12 @@ feature
 			False
 		end; -- c_type
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("Formal #");
+			a_clickable.put_int (position);
+		end;
+
 	dump (file: UNIX_FILE) is
 			-- Debug purpose
 		do

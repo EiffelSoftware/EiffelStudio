@@ -11,6 +11,10 @@ inherit
 
 feature
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		deferred
+		end;
+
 	dump (file: UNIX_FILE) is
 			-- Debug purpose
 		deferred

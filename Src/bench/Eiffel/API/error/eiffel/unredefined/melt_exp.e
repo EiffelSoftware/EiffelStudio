@@ -24,7 +24,8 @@ feature
 
 	build_explain is
 		do
-			generic_type.trace;
+			put_string ("Type: ");
+			generic_type.append_clickable_signature (error_window);
 		end;
 
 end

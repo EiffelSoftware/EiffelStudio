@@ -271,6 +271,7 @@ feature {COMPILER_EXPORTER}
 			i: INTEGER
 			string_value: STRING
 			path: DIRECTORY_NAME
+			l_version: VERSION
 		do
 			if value = Void then
 				error_found := True
@@ -360,15 +361,15 @@ feature {COMPILER_EXPORTER}
 
 				when override_cluster then
 					if not value.is_name then
-						error_found := true
+						error_found := True
 					elseif compilation_modes.is_precompiling then
-						error_found := true
+						error_found := True
 					elseif universe.has_override_cluster then
-						error_found := true
+						error_found := True
 					elseif universe.has_cluster_of_name (value.value) then
 						universe.set_override_cluster_name (value.value)
 					else
-						error_found := true
+						error_found := True
 					end
 
 				when address_expression then
@@ -614,7 +615,12 @@ feature {COMPILER_EXPORTER}
 					
 				when version then
 					if value.is_name then
-						System.set_msil_version (value.value)	
+						create l_version
+						if l_version.is_version_valid (value.value) then
+							System.set_msil_version (value.value)
+						else
+							error_found := True
+						end
 					else
 						error_found := True
 					end

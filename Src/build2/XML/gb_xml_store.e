@@ -264,7 +264,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				window_selector_item ?= window_selector.item
 				 if window_selector_item /= Void then
 				 		-- We ignore directories, although we should add them soon.
-					window_element := create_widget_instance (application_element, Ev_titled_window_string)
+					window_element := create_widget_instance (application_element, window_selector_item.object.type)
 					application_element.force_last (window_element)
 					add_new_object_to_output (window_selector_item.object, window_element, generation_settings)		
 				end
@@ -282,7 +282,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 					loop
 						window_selector_item ?= window_selector_layout.item
 						if window_selector_item /= Void then
-							window_element := create_widget_instance (directory_element, Ev_titled_window_string)
+							window_element := create_widget_instance (directory_element, window_selector_item.object.type)
 							directory_element.force_last (window_element)
 							add_new_object_to_output (window_selector_item.object, window_element, generation_settings)	
 						end

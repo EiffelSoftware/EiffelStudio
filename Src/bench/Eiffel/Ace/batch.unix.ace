@@ -49,17 +49,9 @@ cluster
 
 	const:		"$EIFFEL_SRC/Eiffel/const"
 
-	xml:		"$EIFFEL_SRC/library/exml"
-
-	xml_main (xml):		"$/main"
-
-	xml_tree_parser (xml_main):		"$/tree_parser"
-
-	xml_spec (xml):		"$/compiler_specific/ise"
-
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other";
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "xm_formatter.e"; "xm_named_node.e"; 
 		end
 
 	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
@@ -132,15 +124,12 @@ external
 
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
-		"\$(EIFFEL_SRC)/C/platform",
-		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib"
+		"\$(EIFFEL_SRC)/C/platform"
 
 	object:
 		"$(EIFFEL_SRC)/C/bench/libcompiler.a",
         "$(EIFFEL_SRC)/C/platform/libplatform.a",
-        "$(EIFFEL_SRC)/C/minilzo/minilzo.o",
-        "$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
-        "$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o"
+        "$(EIFFEL_SRC)/C/minilzo/minilzo.o"
 
 
 end

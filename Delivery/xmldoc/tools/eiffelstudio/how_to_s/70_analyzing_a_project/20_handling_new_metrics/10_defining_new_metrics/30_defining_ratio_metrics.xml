@@ -1,55 +1,55 @@
 <document title="Defining ratio metrics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,new,metric ratio,define</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,new,metric ratio,define</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Defining ratio metrics
+	<paragraph >
+		<heading >
+			<size >1</size>Defining ratio metrics
 		</heading>
-		<paragraph>To define a ratio metric, you must have already clicked on 
-			<image>
-				<border>0</border>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+		<paragraph >To define a ratio metric, you must have already clicked on 
+			<image >
+				<border >0</border>
+				<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
 			</image> of the "Metric" tab in the context tool. Select then the "Metric Ratio" tab of the "New metric" dialog:
 		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/mratio.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<url >/images/eiffelstudio/metrics_png/mratio.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
 		<list ordered="true">
-			<item>Enter a name in the "New metric name" field.</item>
-			<item>Select a metric for numerator in the "Metric" combo box of the "Numerator" frame to change the numerator in the "Ratio" field. </item>
-			<item>Select a metric for denominator in the "Metric" combo box ofthe "Denominator" frame to change the denominator in the "Ratio" field. </item>
-			<item>If you want to change again either numerator or denominator repeat operations 2. or 3. as many times as needed.</item>
-			<item>If you want to display measures, when evaluating this metric, in a percentage style, select "Display as percentage".</item>
-			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>
-			<item>If you want to define another ratio metric, click on  
-				<image>
-					<border>0</border>
-					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			<item >Enter a name in the "New metric name" field.</item>
+			<item >Select a metric for numerator in the "Metric" combo box of the "Numerator" frame to change the numerator in the "Ratio" field. </item>
+			<item >Select a metric for denominator in the "Metric" combo box ofthe "Denominator" frame to change the denominator in the "Ratio" field. </item>
+			<item >If you want to change again either numerator or denominator repeat operations 2. or 3. as many times as needed.</item>
+			<item >If you want to display measures, when evaluating this metric, in a percentage style, select "Display as percentage".</item>
+			<item >If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>
+			<item >If you want to define another ratio metric, click on  
+				<image >
+					<border >0</border>
+					<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
 				</image> to reset.
 			</item>
 		</list>
-		<paragraph> </paragraph>
-		<note>
-			<bold>Note</bold>: - The formula field below each metric combo box gives the selected metric's definition.
-			<line_break></line_break>           - The ratio field is filled in by default, you have just to change numerator and denominator as needed.
+		<paragraph > </paragraph>
+		<note >
+			<bold >Note</bold>: - The formula field below each metric combo box gives the selected metric's definition.
+			<line_break />           - The ratio field is filled in by default, you have just to change numerator and denominator as needed.
 		</note>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
-				<label>Managing new metrics</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
+				<label >Managing new metrics</label>
 			</link>
-			<line_break></line_break>
+			<line_break />
 		</seealso>
 	</paragraph>
 </document>

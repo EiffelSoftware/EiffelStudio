@@ -1,55 +1,55 @@
 <document title="Updating an archive" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,archive,update</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,archive,update</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Updating an archive
+	<paragraph >
+		<heading >
+			<size >1</size>Updating an archive
 		</heading>
-		<paragraph>After recompiling a project, measures are liable to have changed, and then, the archive created for this file -if any- is probably out of date. To update an archive, you mist have already clicked on 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
-				<border>0</border>
+		<paragraph >After recompiling a project, measures are liable to have changed, and then, the archive created for this file -if any- is probably out of date. To update an archive, you mist have already clicked on 
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				<border >0</border>
 			</image> in the "Metric" tab of the contexttool.
 		</paragraph>
-		<paragraph>
-			<image>
-				<height>526</height>
-				<width>279</width>
-				<url>/images/eiffelstudio/metrics_png/archive_update.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<height >526</height>
+				<width >279</width>
+				<url >/images/eiffelstudio/metrics_png/archive_update.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
 		<list ordered="true">
-			<item>In the "Update archive" frame, click on "Browse".</item>
-			<item>Select the archive file of the current system.</item>
+			<item >In the "Update archive" frame, click on "Browse".</item>
+			<item >Select the archive file of the current system.</item>
 		</list>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>10_creating_an_archive.xml</url>
-				<label>Creating an archive</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >10_creating_an_archive.xml</url>
+				<label >Creating an archive</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>30_comparing_to_an_archive.xml</url>
-				<label>Comparing to an archive</label>
+			<line_break />
+			<link >
+				<url >30_comparing_to_an_archive.xml</url>
+				<label >Comparing to an archive</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>40_evaluating_a_metric_over_an_archive.xml</url>
-				<label>Evaluating a metric over an archive</label>
+			<line_break />
+			<link >
+				<url >40_evaluating_a_metric_over_an_archive.xml</url>
+				<label >Evaluating a metric over an archive</label>
 			</link>
 		</seealso>  
-		<line_break></line_break>
-		<line_break></line_break>
+		<line_break />
+		<line_break />
 	</paragraph>
 </document>

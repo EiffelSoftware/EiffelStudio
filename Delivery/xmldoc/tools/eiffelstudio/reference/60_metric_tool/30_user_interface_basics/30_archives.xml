@@ -1,51 +1,51 @@
 <document title="Archives" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,archives</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,archives</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Archives
+	<paragraph >
+		<heading >
+			<size >1</size>Archives
 		</heading>
-		<paragraph>Icon 
-			<image>
-				<url>/images/eiffelstudio/icons/icon_sorter_color.gif</url>
-				<border>0</border>
+		<paragraph >Icon 
+			<image >
+				<url >/images/eiffelstudio/icons/icon_sorter_color.gif</url>
+				<border >0</border>
 			</image> in the metric tool is provided to handle archives. This operation is really specific. It allows comparison between system scopes.
 		</paragraph>
-		<paragraph>Indeed, it is actually easy to compare smaller scopes (such as features, classes and clusters) one to another among the same project. But this is different for systems since one project contains one and only one system. That is why archives have been created, to store measures for a given system when it is loaded and retrieve them later on when another system is being loaded.</paragraph>
-		<paragraph>The metric tool allows two kinds of facilities concerning archives:</paragraph>
+		<paragraph >Indeed, it is actually easy to compare smaller scopes (such as features, classes and clusters) one to another among the same project. But this is different for systems since one project contains one and only one system. That is why archives have been created, to store measures for a given system when it is loaded and retrieve them later on when another system is being loaded.</paragraph>
+		<paragraph >The metric tool allows two kinds of facilities concerning archives:</paragraph>
 		<list ordered="false">
-			<item>Creation and update for the loaded system</item>
-			<item>Comparison to another system whose measures have beenarchived</item>
+			<item >Creation and update for the loaded system</item>
+			<item >Comparison to another system whose measures have beenarchived</item>
 		</list>
-		<paragraph> </paragraph>
-		<paragraph>
-			<span>By clicking on 
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_sorter_color.gif</url>
-					<border>0</border>
+		<paragraph > </paragraph>
+		<paragraph >
+			<span >By clicking on 
+				<image >
+					<height >16</height>
+					<width >16</width>
+					<url >/images/eiffelstudio/icons/icon_sorter_color.gif</url>
+					<border >0</border>
 				</image> , the following dialog pops-up:
 			</span>
 		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/archive.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<url >/images/eiffelstudio/metrics_png/archive.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
-		<paragraph>Which allows archive creation update and comparison. for more details see section: 
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/30_handling_archives/00_introduction.xml</url>
-				<label>handling archives</label>
+		<paragraph >Which allows archive creation update and comparison. for more details see section: 
+			<link >
+				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/30_handling_archives/00_introduction.xml</url>
+				<label >handling archives</label>
 			</link> 
 		</paragraph>
-		<paragraph>The metric tool creates automatically a sub folder named "Metrics" in the current location of the loaded project. It is advised, but not compulsory, to save created archives in that folder, since it has been provided for metric needs.</paragraph>
+		<paragraph >The metric tool creates automatically a sub folder named "Metrics" in the current location of the loaded project. It is advised, but not compulsory, to save created archives in that folder, since it has been provided for metric needs.</paragraph>
 	</paragraph>
 </document>

@@ -1,26 +1,26 @@
 <document title="Retrieving all classes into a cluster" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Cluster,Retrieve all classes</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Cluster,Retrieve all classes</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>Class,Retreive all in cluster</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >Class,Retreive all in cluster</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Retrieving all classes into a cluster
+	<paragraph >
+		<heading >
+			<size >1</size>Retrieving all classes into a cluster
 		</heading>
-		<paragraph></paragraph>
+		<paragraph />
 		<list ordered="false">
-			<item>If you have a cluster in your view that is incomplete and you want to show all classes in it, drop the cluster into the 
-				<bold>Include all classes of cluster</bold> hole. 
-				<image>
-					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
+			<item >If you have a cluster in your view that is incomplete and you want to show all classes in it, drop the cluster into the 
+				<bold >Include all classes of cluster</bold> hole. 
+				<image >
+					<url >/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
 				</image>
 			</item>
 		</list>

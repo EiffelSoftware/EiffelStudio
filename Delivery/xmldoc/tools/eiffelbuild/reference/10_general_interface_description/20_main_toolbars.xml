@@ -1,26 +1,26 @@
 <document title="Main toolbar" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>toolbars</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >toolbars</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Main toolbar
+	<paragraph >
+		<heading >
+			<size >1</size>Main toolbar
 		</heading>At the top of the EiffelBuild development window, one toolbar is displayed by default, as shown below: 
-		<paragraph>
-			<image>
-				<url>/images/eiffelbuild/screenshots/toolbar.png</url>
+		<paragraph >
+			<image >
+				<url >/images/eiffelbuild/screenshots/toolbar.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The complete list of the icons in the toolbar is displayed below.
-			<line_break></line_break> 
+		<paragraph >The complete list of the icons in the toolbar is displayed below.
+			<line_break /> 
 		</paragraph>
-		<div>
-			<bold>Note</bold>: It is not possible to customize the toolbar.
+		<div >
+			<bold >Note</bold>: It is not possible to customize the toolbar.
 		</div>
 	</paragraph>
 </document>

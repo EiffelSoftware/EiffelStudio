@@ -1,50 +1,50 @@
 <document title="Changing class names and formal generics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Class,Change name</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Class,Change name</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>Class,Change formal generics</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >Class,Change formal generics</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Changing class names and formal generics
+	<paragraph >
+		<heading >
+			<size >1</size>Changing class names and formal generics
 		</heading>
-		<paragraph></paragraph>
+		<paragraph />
 		<list ordered="true">
-			<item>Start pick-and-drop on the class bubble of which you want to change the name or formal generics.</item>
-			<item>Drop it in the 
-				<bold>Change class name and generics</bold> hole. 
-				<image>
-					<url>/images/eiffelstudio/icons/icon_class_header_color.gif</url>
+			<item >Start pick-and-drop on the class bubble of which you want to change the name or formal generics.</item>
+			<item >Drop it in the 
+				<bold >Change class name and generics</bold> hole. 
+				<image >
+					<url >/images/eiffelstudio/icons/icon_class_header_color.gif</url>
 				</image>
 			</item>
-			<item>The 
-				<bold>Class header</bold> dialog appears. You can enter a new name and/or formal generics. 
-				<image>
-					<url>/images/eiffelstudio/diagram/diagram-classheader.png</url>
+			<item >The 
+				<bold >Class header</bold> dialog appears. You can enter a new name and/or formal generics. 
+				<image >
+					<url >/images/eiffelstudio/diagram/diagram-classheader.png</url>
 				</image>
 			</item>
-			<item>If you changed the name, choose between these options: 
+			<item >If you changed the name, choose between these options: 
 				<list ordered="false">
-					<item>
-						<bold>Change name locally</bold>: the name will be changed in the class declaration only. Any references to this one are now invalid.
+					<item >
+						<bold >Change name locally</bold>: the name will be changed in the class declaration only. Any references to this one are now invalid.
 					</item>
-					<item>
-						<bold>Global search/replace of name in compiled classes</bold>: like the option above, but every reference to the class in compiled classes are also replaced with the new name.
+					<item >
+						<bold >Global search/replace of name in compiled classes</bold>: like the option above, but every reference to the class in compiled classes are also replaced with the new name.
 					</item>
-					<item>
-						<bold>Global search/replace of name in entire universe</bold>: like the option above, but references are replaced even in classes that are not in the system.
+					<item >
+						<bold >Global search/replace of name in entire universe</bold>: like the option above, but references are replaced even in classes that are not in the system.
 					</item>
 				</list>
 			</item>
-			<item>Click 
-				<bold>OK</bold>.
+			<item >Click 
+				<bold >OK</bold>.
 			</item>
 		</list>
 	</paragraph>

@@ -1,95 +1,95 @@
 <document title="Using libraries" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>libraries, importing</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >libraries, importing</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>using libraries</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >using libraries</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
-			<meta>
-				<content>C externals, using</content>
-				<name>MS-HKWD</name>
+			<meta >
+				<meta_content >C externals, using</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Using libraries
+	<paragraph >
+		<heading >
+			<size >1</size>Using libraries
 		</heading>
-		<paragraph>There are two kinds of libraries in Eiffel: precompiled Eiffel libraries and C libraries.</paragraph>
-		<paragraph>To use an Eiffel precompiled library:</paragraph>
+		<paragraph >There are two kinds of libraries in Eiffel: precompiled Eiffel libraries and C libraries.</paragraph>
+		<paragraph >To use an Eiffel precompiled library:</paragraph>
 		<list ordered="false">
-			<item>Open the 
-				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
-					<label>System Settings</label>
+			<item >Open the 
+				<link >
+					<url >/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
+					<label >System Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the 
-				<bold>General</bold> tab, enter the location of the precompiled library you want to use in the 
-				<bold>Precompiled Library</bold> field.
+			<item >In the 
+				<bold >General</bold> tab, enter the location of the precompiled library you want to use in the 
+				<bold >Precompiled Library</bold> field.
 			</item>
-			<item>Click 
-				<bold>Apply</bold> or 
-				<bold>OK</bold>.
+			<item >Click 
+				<bold >Apply</bold> or 
+				<bold >OK</bold>.
 			</item>
-			<item>You must 
-				<link>
-					<url>10_generating_executables.xml</url>
-					<label>recompile</label>
+			<item >You must 
+				<link >
+					<url >10_generating_executables.xml</url>
+					<label >recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<note>
-			<bold>Note</bold>: You can only use one precompiled library at a time in a project. To use more than one, you should precompile all the libraries you want to use together in a single precompiled library.
+		<note >
+			<bold >Note</bold>: You can only use one precompiled library at a time in a project. To use more than one, you should precompile all the libraries you want to use together in a single precompiled library.
 		</note>
-		<paragraph>To use a C library:</paragraph>
+		<paragraph >To use a C library:</paragraph>
 		<list ordered="false">
-			<item>Open the 
-				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/50_externals.xml</url>
-					<label>System Settings</label>
+			<item >Open the 
+				<link >
+					<url >/tools/eiffelstudio/reference/25_project_settings/50_externals.xml</url>
+					<label >System Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the 
-				<bold>Externals</bold> tab, in the 
-				<bold>Include path</bold> field, type the paths of the header files needed to use the library (pressing the 
-				<bold>Add</bold> button for each).
+			<item >In the 
+				<bold >Externals</bold> tab, in the 
+				<bold >Include path</bold> field, type the paths of the header files needed to use the library (pressing the 
+				<bold >Add</bold> button for each).
 			</item>
-			<item>In the 
-				<bold>Object file</bold> field, type the object files needed to use the library (pressing the 
-				<bold>Add</bold> button for each). These files can be either library files (.lib, .a, etc) or object files (.obj, .o, etc)
+			<item >In the 
+				<bold >Object file</bold> field, type the object files needed to use the library (pressing the 
+				<bold >Add</bold> button for each). These files can be either library files (.lib, .a, etc) or object files (.obj, .o, etc)
 			</item>
-			<item>Click 
-				<bold>Apply</bold> or 
-				<bold>OK</bold>.
+			<item >Click 
+				<bold >Apply</bold> or 
+				<bold >OK</bold>.
 			</item>
-			<item>You must 
-				<link>
-					<url>10_generating_executables.xml</url>
-					<label>recompile</label>
+			<item >You must 
+				<link >
+					<url >10_generating_executables.xml</url>
+					<label >recompile</label>
 				</link> your project for the changes to take effect.
 			</item>
 		</list>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>15_generating_libraries.xml</url>
-				<label>Creating libraries</label>
+		<seealso >
+			<bold >See Also</bold>
+			<line_break />
+			<link >
+				<url >15_generating_libraries.xml</url>
+				<label >Creating libraries</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>../30_editing_a_project/10_adding_a_cluster.xml</url>
-				<label>Adding classes and clusters from Eiffel libraries without precompiling the library</label>
+			<line_break />
+			<link >
+				<url >../30_editing_a_project/10_adding_a_cluster.xml</url>
+				<label >Adding classes and clusters from Eiffel libraries without precompiling the library</label>
 			</link>
-			<line_break></line_break>
-			<link>
-				<url>/tools/eiffelstudio/reference/30_compiler/30_external_features/10_c_externals.xml</url>
-				<label>Making C calls in Eiffel</label>
+			<line_break />
+			<link >
+				<url >/tools/eiffelstudio/reference/30_compiler/30_external_features/10_c_externals.xml</url>
+				<label >Making C calls in Eiffel</label>
 			</link>
 		</seealso>
 	</paragraph>

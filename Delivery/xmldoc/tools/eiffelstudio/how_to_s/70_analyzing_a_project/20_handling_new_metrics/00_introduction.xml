@@ -1,74 +1,74 @@
 <document title="Handling new metrics" output="studio">
-	<meta_data>
-		<help>
-			<meta>
-				<content>Metric,new,handle</content>
-				<name>MS-HKWD</name>
+	<meta_data >
+		<help >
+			<meta >
+				<meta_content >Metric,new,handle</meta_content>
+				<name >MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>
-		<heading>
-			<size>1</size>Handling new metrics
+	<paragraph >
+		<heading >
+			<size >1</size>Handling new metrics
 		</heading>
-		<paragraph>The metric tool ("Metric" tab of the context tool) provides by default a set of metrics that can be used to make some measurements over various scopes in order to evaluate a project. These metrics are available in the metric menu of the metric tool.</paragraph>
-		<paragraph>
-			<image>
-				<height>282</height>
-				<width>504</width>
-				<url>/images/eiffelstudio/metrics_png/metricmenu.png</url>
-				<border>0</border>
+		<paragraph >The metric tool ("Metric" tab of the context tool) provides by default a set of metrics that can be used to make some measurements over various scopes in order to evaluate a project. These metrics are available in the metric menu of the metric tool.</paragraph>
+		<paragraph >
+			<image >
+				<height >282</height>
+				<width >504</width>
+				<url >/images/eiffelstudio/metrics_png/metricmenu.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
-		<paragraph>This set of metrics is certainly not complete, users may probably want to define other metrics regarding their own needs. And then, since needs are different and in order to avoid an explosion in the number of basic metrics, we agreed on implementing only elementary metrics that could not be evaluated if not implemented in the tool.</paragraph>
-		<paragraph>Users can then define their own metrics. The metric tool provides an interface to define new metrics. click on 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-				<border>0</border>
+		<paragraph >This set of metrics is certainly not complete, users may probably want to define other metrics regarding their own needs. And then, since needs are different and in order to avoid an explosion in the number of basic metrics, we agreed on implementing only elementary metrics that could not be evaluated if not implemented in the tool.</paragraph>
+		<paragraph >Users can then define their own metrics. The metric tool provides an interface to define new metrics. click on 
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				<border >0</border>
 			</image> in the metric tool to display the following dialog:
 		</paragraph>
-		<paragraph>
-			<image>
-				<height>601</height>
-				<width>450</width>
-				<url>/images/eiffelstudio/metrics_png/derived.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<height >601</height>
+				<width >450</width>
+				<url >/images/eiffelstudio/metrics_png/derived.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
-		<paragraph>However, to avoid defining unmeaning metrics, it is not possible to define any kind of metrics. the tool allows linear, ratio and logical combination of the available metrics. See section:</paragraph>
+		<paragraph >However, to avoid defining unmeaning metrics, it is not possible to define any kind of metrics. the tool allows linear, ratio and logical combination of the available metrics. See section:</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>10_defining_new_metrics/00_introduction.xml</url>
-					<label>Defining new metrics</label>
+			<item >
+				<link >
+					<url >10_defining_new_metrics/00_introduction.xml</url>
+					<label >Defining new metrics</label>
 				</link>
 			</item>
 		</list>
-		<paragraph>Further operation on new metrics are available, such as reordering these new metrics, deleting some of them, editing them to check (and possibly change) their definition, eventually, import a set of metrics defined in a given file.</paragraph>
-		<paragraph>To achieve one of these operations, click on 
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
-				<border>0</border>
+		<paragraph >Further operation on new metrics are available, such as reordering these new metrics, deleting some of them, editing them to check (and possibly change) their definition, eventually, import a set of metrics defined in a given file.</paragraph>
+		<paragraph >To achieve one of these operations, click on 
+			<image >
+				<height >16</height>
+				<width >16</width>
+				<url >/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
+				<border >0</border>
 			</image> in the metric tool to display the following interface:
 		</paragraph>
-		<paragraph>
-			<image>
-				<height>396</height>
-				<width>316</width>
-				<url>/images/eiffelstudio/metrics_png/manage.png</url>
-				<border>0</border>
+		<paragraph >
+			<image >
+				<height >396</height>
+				<width >316</width>
+				<url >/images/eiffelstudio/metrics_png/manage.png</url>
+				<border >0</border>
 			</image>
 		</paragraph>
-		<paragraph>For further information on the use of this interface, please, see section:</paragraph>
+		<paragraph >For further information on the use of this interface, please, see section:</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url>20_managing_new_metrics/00_introduction.xml</url>
-					<label>Managing new metrics</label>
+			<item >
+				<link >
+					<url >20_managing_new_metrics/00_introduction.xml</url>
+					<label >Managing new metrics</label>
 				</link>
 			</item>
 		</list>

@@ -302,10 +302,11 @@ feature -- Basic operations
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
 			-- item to be searched.
+			-- if `index' = -1 then the search begins on the first item.
 			-- Returns -1 if the search was unsuccessful.
 		require
 			exists: exists
-			index_large_enough: index >= 0
+			index_large_enough: index >= -1
 			index_small_enough: index < count
 			a_string_not_void: a_string /= Void
 		local
@@ -321,10 +322,11 @@ feature -- Basic operations
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
+			-- if `index' = -1 then the search begins on the first item.
 			-- Returns -1 if the search was unsuccessful.
 		require
 			exists: exists
-			index_large_enough: index >= 0
+			index_large_enough: index >= -1
 			index_small_enough: index < count
 			a_string_not_void: a_string /= Void
 		local

@@ -2,7 +2,7 @@
  * Jmakefile for compiler building.
  */
 
-SUB = idrs ipc run-time parsing platform
+SUB = idrs ipc run-time platform
 
 all::
 

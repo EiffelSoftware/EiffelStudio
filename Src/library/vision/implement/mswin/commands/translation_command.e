@@ -319,24 +319,9 @@ feature {WIDGET_ACTIONS, WIDGET_WINDOWS}
 					end
 				else
 					-- Another event type
-					debug ("ACTION")
-						io.putstring ("Another event type%N")
-					end
-					rz ?= context_data
-					if rz /= Void then
-						debug ("ACTION")
-							io.putstring ("Resize action%N")
-							io.putstring ("Special translation number ")
-							io.putint (special_translation_number)
-							io.new_line
-							io.putstring ("rz.wparam = ")
-							io.putint (rz.wparam)
-							io.new_line
-						end
-                                                Result := (special_translation_number = 1 and rz.wparam = size_minimized) or
-                                                        (special_translation_number = 2 and rz.wparam = size_restored) or 
-                                                        (special_translation_number = 3 and rz.wparam = size_restored)
-					end
+					-- Configure event on WM_MOVE
+					-- Configure, Map or Unmap on WM_SIZE
+					Result := True
 				end
 			end
 		end
@@ -437,15 +422,11 @@ feature {WIDGET_WINDOWS, TRANSLATION_COMMAND, WIDGET_ACTIONS}
 	special_translations : ARRAY [STRING] is
 			-- Translations we will specifically allow and deal with
 		once
-			!! Result.make (1, 4)
-			Result.put ("<Unmap>,<Prop>", 1)
-			Result.put ("<Prop>,<Map>", 2)
-			Result.put ("<Visible>", 3)
-			Result.put ("<Configure>", 4)
---			Result := << 
---				"<Unmap>,<Prop>",       -- Popdown of a shell
---				"<Prop>,<Map>",         -- Popup of a shell
---				"<Visible>" >>          -- Popup of a shell
+			Result := << 
+				"<Unmap>,<Prop>",       -- WM_SIZE & SIZE_MINIMIZED message.
+				"<Prop>,<Map>",         -- WM_SIZE & SIZE_MAXMIZE or SIZE_RESTORED message.
+				"<Visible>",            -- WM_SHOWWINDOW message.
+				"<Configure>">>		-- WM_MOVE and WM_SIZE message.
 		end
 
 end -- class TRANSLATION_COMMAND

@@ -70,6 +70,8 @@ remtrace studio
 exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
+remtrace build
+exprt -r %DEFAULT_CVS_TAG -d build Delivery/build
 remtrace eifinit
 exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace .NET libraries
@@ -140,6 +142,9 @@ remtrace Create directories
 safe_md %INSTALL_DIR\studio\spec
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+safe_md %INSTALL_DIR\build\spec
+safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
 safe_md %INSTALL_DIR\wizards
 safe_md %INSTALL_DIR\wizards\com
 safe_md %INSTALL_DIR\wizards\com\config

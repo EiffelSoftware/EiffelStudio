@@ -13,8 +13,8 @@ inherit
 
 feature -- Access
 
-	thread_id: POINTER
-			-- Pointer to the thread-id of the current thread object.
+    thread_id: POINTER
+            -- Pointer to the thread-id of the current thread object.
 
 feature -- Basic operations
 
@@ -36,14 +36,6 @@ feature -- Basic operations
 			create_thread_with_args (Current, $thr_main,
 						attr.priority, attr.scheduling_policy, attr.detached)
 			thread_id := last_created_thread
-		end
-
-	exit is
-			-- Exit calling thread. Must be called from the thread itself.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_exit"
 		end
 
 feature {NONE} -- Implementation
@@ -73,23 +65,6 @@ feature {NONE} -- Externals
 		alias
 			"eif_thr_create_with_args"
 		end
-
-	get_current_id: POINTER is
-			-- Returns a pointer to the thread-id of the thread.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_thread_id"
-		end
-
-	last_created_thread: POINTER is
-			-- Returns a pointer to the thread-id of the last created thread.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_last_thread"
-		end
-
 
 end -- class THREAD
 

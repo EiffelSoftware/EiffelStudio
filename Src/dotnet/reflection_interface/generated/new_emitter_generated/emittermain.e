@@ -1,16 +1,15 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "EmitterMain"
-
 external class
 	EMITTERMAIN
 
 inherit
 	ARGPARSER
 		redefine
-			OnDoneParse,
-			OnNonSwitch,
-			OnSwitch
+			on_done_parse,
+			on_non_switch,
+			on_switch
 		end
 
 create
@@ -23,9 +22,18 @@ feature {NONE} -- Initialization
 			"IL creator use EmitterMain"
 		end
 
+feature -- Access
+
+	frozen eiffel_formatting_switch: STRING is
+		external
+			"IL field signature :System.String use EmitterMain"
+		alias
+			"EiffelFormattingSwitch"
+		end
+
 feature -- Basic Operations
 
-	frozen Main is
+	frozen main is
 		external
 			"IL static signature (): System.Void use EmitterMain"
 		alias
@@ -34,25 +42,25 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	OnNonSwitch (switchValue: STRING): INTEGER is
+	on_switch (switch_symbol: STRING; switch_value: STRING): SWITCHSTATUS_IN_ARGPARSER is
 		external
-			"IL signature (System.String): enum ArgParser+SwitchStatus use EmitterMain"
-		alias
-			"OnNonSwitch"
-		end
-
-	OnSwitch (switchSymbol: STRING; switchValue: STRING): INTEGER is
-		external
-			"IL signature (System.String, System.String): enum ArgParser+SwitchStatus use EmitterMain"
+			"IL signature (System.String, System.String): ArgParser+SwitchStatus use EmitterMain"
 		alias
 			"OnSwitch"
 		end
 
-	OnDoneParse: INTEGER is
+	on_done_parse: SWITCHSTATUS_IN_ARGPARSER is
 		external
-			"IL signature (): enum ArgParser+SwitchStatus use EmitterMain"
+			"IL signature (): ArgParser+SwitchStatus use EmitterMain"
 		alias
 			"OnDoneParse"
+		end
+
+	on_non_switch (switch_value: STRING): SWITCHSTATUS_IN_ARGPARSER is
+		external
+			"IL signature (System.String): ArgParser+SwitchStatus use EmitterMain"
+		alias
+			"OnNonSwitch"
 		end
 
 end -- class EMITTERMAIN

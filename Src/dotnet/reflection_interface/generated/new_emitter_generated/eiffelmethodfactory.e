@@ -8,10 +8,10 @@ external class
 inherit
 	ANY
 		redefine
-			Finalize,
-			GetHashCode,
-			Equals,
-			ToString
+			finalize,
+			get_hash_code,
+			equals,
+			to_string
 		end
 	SYSTEM_ICOMPARABLE
 
@@ -22,24 +22,24 @@ create
 
 feature {NONE} -- Initialization
 
-	frozen make_2 (Other: EIFFELMETHODFACTORY) is
+	frozen make_2 (other: EIFFELMETHODFACTORY) is
 		external
 			"IL creator signature (EiffelMethodFactory) use EiffelMethodFactory"
 		end
 
-	frozen make (PolymorphID: INTEGER) is
+	frozen make (polymorph_id: INTEGER) is
 		external
 			"IL creator signature (System.Int32) use EiffelMethodFactory"
 		end
 
-	frozen make_1 (OtherIDs: SYSTEM_COLLECTIONS_ICOLLECTION) is
+	frozen make_1 (other_ids: SYSTEM_COLLECTIONS_ICOLLECTION) is
 		external
 			"IL creator signature (System.Collections.ICollection) use EiffelMethodFactory"
 		end
 
 feature -- Access
 
-	frozen IsPolymorphic: BOOLEAN is
+	frozen is_polymorphic: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use EiffelMethodFactory"
 		alias
@@ -48,28 +48,28 @@ feature -- Access
 
 feature -- Basic Operations
 
-	CompareTo (obj: ANY): INTEGER is
+	compare_to (obj: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use EiffelMethodFactory"
 		alias
 			"CompareTo"
 		end
 
-	GetHashCode: INTEGER is
+	get_hash_code: INTEGER is
 		external
 			"IL signature (): System.Int32 use EiffelMethodFactory"
 		alias
 			"GetHashCode"
 		end
 
-	ToString: STRING is
+	to_string: STRING is
 		external
 			"IL signature (): System.String use EiffelMethodFactory"
 		alias
 			"ToString"
 		end
 
-	Equals (obj: ANY): BOOLEAN is
+	equals (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use EiffelMethodFactory"
 		alias
@@ -78,7 +78,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Finalize is
+	finalize is
 		external
 			"IL signature (): System.Void use EiffelMethodFactory"
 		alias

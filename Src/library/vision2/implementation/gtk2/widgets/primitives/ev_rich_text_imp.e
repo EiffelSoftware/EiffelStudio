@@ -630,8 +630,6 @@ feature -- Status setting
 		
 	set_tab_width (a_width: INTEGER) is
 			-- Assign `a_width' to `tab_width'.
-		local
-			a_tab_array: POINTER
 		do
 			tab_width := a_width
 			update_tab_positions (1)

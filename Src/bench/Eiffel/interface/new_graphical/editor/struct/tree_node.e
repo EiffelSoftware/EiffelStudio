@@ -413,7 +413,7 @@ feature -- Transformation
 		end		
 
 	balance_light_root is
-			-- rebalance the root node by merging it with its children
+			-- Rebalance the root node by merging it with its children.
 		require
 			Current_is_root: is_root
 			several_level_tree: not is_leaf
@@ -424,19 +424,21 @@ feature -- Transformation
 			i,j: INTEGER
 		do
 				--| Copy old root contents.
+				--| Root has two children only, otherwise
+				--| no merging would have been compulsory.
 			parent_key := keys @ 1
 			node1 := children @ 1
 			node2 := children @ 2
 				--| Write first child contents.
 			make_with_child (node1.children @ 1)
 			insert_key_and_right_child (node1.keys @ 1, node1.children @ 2, arity)
-			if node1.arity > 1 then
+			if node1.arity > 2 then
 				insert_key_and_right_child (node1.keys @ 2, node1.children @ 3, arity)
 			end
 				--| Write second child contents.
 			insert_key_and_right_child (parent_key, node2.children @ 1, arity)
 			insert_key_and_right_child (node2.keys @ 1, node2.children @ 2, arity)
-			if node2.arity > 1 then
+			if node2.arity > 2 then
 				insert_key_and_right_child (node2.keys @ 2, node2.children @ 3, arity)
 			end
 		end

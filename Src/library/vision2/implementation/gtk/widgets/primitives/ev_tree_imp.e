@@ -752,40 +752,12 @@ feature {NONE} -- Implementation
 			-- Move `v' to `a_position' in Current.
 		local
 			item_imp: EV_TREE_NODE_IMP
-			temp_list: like ev_children
-			a_counter: INTEGER
 		do
 			item_imp ?= v.implementation
 			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
+			ev_children.prune_all (item_imp)
 			ev_children.go_i_th (a_position)
-			ev_children.put_left (item_imp)
-
---				-- Insert `v' in to ev_children list.	
---			create temp_list.make (0)
---			from
---				a_counter := 1
---			until
---				a_counter = a_position
---			loop
---				temp_list.extend (ev_children.i_th (a_counter))
---				a_counter := a_counter + 1
---			end
---			
---				-- Insert `v' at a_position
---			temp_list.extend (item_imp)
---
---			from
---				a_counter := a_position
---			until
---				a_counter = count
---				-- The child to be reordered is always at i_th (count)
---				-- Ie: We are reordering and truncating.
---			loop
---				temp_list.extend (ev_children.i_th (a_counter))
---				a_counter := a_counter + 1
---			end
---
---			ev_children := temp_list	
+			ev_children.put_left (item_imp)	
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

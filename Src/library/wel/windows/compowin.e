@@ -361,6 +361,10 @@ feature -- Basic operations
 		do
 			if parent = Void then
 				move_absolute (a_x, a_y)
+				resize (a_width, a_height)
+				if repaint then
+					invalidate
+				end
 			else
 				!! point.make (a_x, a_y)
 				point.client_to_screen (parent)

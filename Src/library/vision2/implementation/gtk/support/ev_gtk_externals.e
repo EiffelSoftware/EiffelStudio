@@ -459,6 +459,16 @@ feature {NONE} -- GTK C functions for option buttons
 		external "C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_option_button_set_fg_color (option: POINTER; r, g, b: INTEGER) is
+		external
+			"C (GtkOptionMenu *, gint, gint, gint) | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_option_button_set_bg_color (option: POINTER; r, g, b: INTEGER) is
+		external
+			"C (GtkOptionMenu *, gint, gint, gint) | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for list
 
 	gtk_list_new: POINTER is
@@ -549,6 +559,16 @@ feature {NONE} -- GTK C functions for multi-column list
 	gtk_clist_column_titles_hide (list: POINTER) is
 		external
 			"C | <gtk/gtk.h>"
+		end
+
+	c_gtk_clist_title_shown (list: POINTER): BOOLEAN is
+		external
+			"C (GtkCList *): EIF_BOOLEAN | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_column_width (list: POINTER; column: INTEGER): INTEGER is
+		external
+			"C (GtkCList *, gint): EIF_INTEGER | %"gtk_eiffel.h%""
 		end
 
 	gtk_clist_column_titles_active (list: POINTER) is

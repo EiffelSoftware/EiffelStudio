@@ -31,7 +31,7 @@ inherit
 			draw_text, draw_segment, draw_straight_line, draw_arc, 
 			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline, 
 			draw_pie_slice, fill_rectangle, fill_ellipse, fill_polygon, 
-			fill_pie_slice
+			fill_pie_slice, set_with_default
 		select
 			width,
 			height,
@@ -162,6 +162,16 @@ feature -- Loading/Saving
 			--            "Unable to load the file"
 		do
 			Precursor (file_name)
+			update_display
+		end
+
+	set_with_default (pixmap_name: STRING) is
+			-- Initialize the pixmap with the default
+			-- image named `pixmap_name'.
+			--
+			-- Exceptions "Unable to retrieve icon information", 
+		do
+			Precursor (pixmap_name)
 			update_display
 		end
 
@@ -787,6 +797,10 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/28 16:32:43  pichery
+--| Added feature `set_with_default' To load a default
+--| pixmap.
+--|
 --| Revision 1.4  2000/04/13 18:32:06  pichery
 --| Added destroy feature in order to correctly free
 --| unused objects.

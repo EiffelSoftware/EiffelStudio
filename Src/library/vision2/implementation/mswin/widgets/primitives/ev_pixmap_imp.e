@@ -14,7 +14,8 @@ inherit
 	EV_PIXMAP_I
 		redefine
 			interface,
-			on_parented
+			on_parented,
+			set_with_default
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -56,8 +57,30 @@ feature {NONE} -- Initialization
 
 feature -- Loading/Saving
 
+	set_with_default (pixmap_name: STRING) is
+			-- Initialize the pixmap with the default
+			-- image named `pixmap_name'.
+			--
+			-- Exceptions "Unable to retrieve icon information", 
+		local
+			icon_id: POINTER
+		do
+			if pixmap_name.is_equal ("Information") then
+				icon_id := Idi_constants.Idi_information
+			elseif pixmap_name.is_equal ("Warning") then
+				icon_id := Idi_constants.Idi_warning
+			elseif pixmap_name.is_equal ("Error") then
+				icon_id := Idi_constants.Idi_error
+			elseif pixmap_name.is_equal ("Question") then
+				icon_id := Idi_constants.Idi_question
+			end
+
+			create icon.make_by_predefined_id (icon_id)
+			retrieve_icon_information
+		end
+
 	read_from_file (a_file: IO_MEDIUM) is
-			-- Load the pixmap described in 'file_name'. 
+			-- Load the pixmap described in 'file_name'.
 		local
 			dib: EV_WEL_DIB
 			s_dc: WEL_SCREEN_DC
@@ -109,7 +132,6 @@ feature -- Loading/Saving
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
 		local
-			icon_info: WEL_ICON_INFO
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
@@ -120,15 +142,7 @@ feature -- Loading/Saving
 				if data_type = Loadpixmap_hicon then
 						-- create the icon
 					create icon.make_by_pointer(rgb_data)
-
-						-- retrieve the bitmap from the icon.
-					icon_info := icon.get_icon_info
-					if icon_info /= Void then
-						bitmap := icon_info.color_bitmap
-						mask_bitmap := icon_info.mask_bitmap
-					else
-						exception_raise ("Unable to retrieve icon information")
-					end
+					retrieve_icon_information
 				end
 
 				if data_type = Loadpixmap_hbitmap then
@@ -1115,6 +1129,22 @@ feature {NONE} -- Implementation
 			Result := new_bitmap
 		end
 
+	retrieve_icon_information is
+			-- Retrieve the bitmap and the mask bitmap from the
+			-- icon handle.
+		local
+			icon_info: WEL_ICON_INFO
+		do
+				-- retrieve the bitmap from the icon.
+			icon_info := icon.get_icon_info
+			if icon_info /= Void then
+				bitmap := icon_info.color_bitmap
+				mask_bitmap := icon_info.mask_bitmap
+			else
+				exception_raise ("Unable to retrieve icon information")
+			end
+		end
+
 feature {NONE} -- Constants
 
 	Loadpixmap_error_noerror: INTEGER is 0
@@ -1137,6 +1167,11 @@ feature {NONE} -- Constants
 
 	Raster_operations_constants: WEL_RASTER_OPERATIONS_CONSTANTS is
 			-- Class containing the RASTER_OPERATIONS constants
+		once
+			create Result
+		end
+
+	Idi_constants: WEL_IDI_CONSTANTS is
 		once
 			create Result
 		end
@@ -1197,6 +1232,10 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/28 16:32:43  pichery
+--| Added feature `set_with_default' To load a default
+--| pixmap.
+--|
 --| Revision 1.32  2000/04/25 01:24:27  pichery
 --| Stretching a pixmap now preserve the icon.
 --|

@@ -21,7 +21,7 @@ feature
 	put (object: JAVA_OBJECT) is
 			-- Add a new object to the table
 		require
-			jobject_not_void: (object /= Void) and then (object.java_object_id /= default_pointer)
+			jobject_not_void: object /= Void
 		local
 			it: JAVA_OBJECT
 			ex: EXCEPTIONS

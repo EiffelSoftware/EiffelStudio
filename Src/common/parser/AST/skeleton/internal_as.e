@@ -88,7 +88,6 @@ feature {AST_EIFFEL} -- Output
 			ctxt.new_line;
 			if compound /= Void then
 				ctxt.indent
-				ctxt.set_separator (ti_Semi_colon);
 				ctxt.set_new_line_between_tokens;
 				compound.simple_format (ctxt);
 				ctxt.new_line;

@@ -65,7 +65,9 @@ void c_ev_gtk_callback_marshal (
         );
 		*/
     // require
-            g_assert (object != NULL);
+            // `object' == NULL on idle callback.
+			// We do not use `object', so no need for precondition.
+			// g_assert (object != NULL);
             g_assert (agent != NULL);
             g_assert (ev_gtk_callback_marshal_object != NULL);
             g_assert (ev_gtk_callback_marshal != NULL);
@@ -378,6 +380,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2000/03/27 19:30:31  brendel
+// Commented out precondition.
+//
 // Revision 1.4  2000/03/08 16:46:44  brendel
 // Added cast so that no compiler warning appears anymore.
 //

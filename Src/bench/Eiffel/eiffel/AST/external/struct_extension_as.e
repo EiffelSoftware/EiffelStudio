@@ -27,21 +27,19 @@ feature  -- Initialization
 			is_cpp_set: is_cpp = is_cpp_struct
 		end
 
-	initialize (is_cpp_struct: like is_cpp; a_name, a_field_name: ID_AS; type: EXTERNAL_TYPE_AS; use_list: USE_LIST_AS) is
+	initialize (is_cpp_struct: like is_cpp; a_name: EXTERNAL_TYPE_AS; a_field_name: ID_AS; type: EXTERNAL_TYPE_AS; use_list: USE_LIST_AS) is
 			-- Create STRUCT_EXTENSION_AS node.
 		require
 			use_list_not_void: use_list /= Void
 			use_list_not_empty: not use_list.is_empty
 			a_name_not_void: a_name /= Void
 			a_field_name_not_void: a_field_name /= Void
-			a_name_not_empty: a_name.count > 0
 			a_field_name_not_empty: a_field_name.count > 0
 		local
 			id: INTEGER
 		do
 			is_cpp := is_cpp_struct
-			Names_heap.put (a_name)
-			id := Names_heap.found_item
+			id := a_name.value_id
 			if type /= Void then
 					-- It is a `setter'
 				create argument_types.make (1, 2)

@@ -3,8 +3,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-frozen class
+class
 	MONITOR_SYNCHRONIZATION
+
+inherit
+	SYSTEM_OBJECT
+
+	ANY
 
 create
 	make
@@ -16,7 +21,11 @@ feature {NONE} -- Initialization
 		local
 			 counter: INTEGER
 			 return: BOOLEAN
+			 l_res: RESOURCE
 		do
+				-- Initialize `res' before executing any thread, otherwise there might
+				-- be a race condition.
+			l_res := res
 			num_operations := 5
 			from
 				counter := 1
@@ -31,7 +40,6 @@ feature {NONE} -- Initialization
 			return := async_operations.wait_one
 			io.put_new_line
 			io.put_string ("All operations have completed.")
-			io.read_line
 		end
 
 feature -- Access

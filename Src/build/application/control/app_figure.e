@@ -16,7 +16,7 @@ feature
 	radius: INTEGER is
 			-- Radius of Current
 		deferred
-		end;
+		end; 
 
 	data: GRAPH_ELEMENT is
 		deferred
@@ -72,6 +72,7 @@ feature
 		do
 			temp_int := inner_figure.interior;
 			temp_int.set_foreground_color (Resources.background_figure_color);
+			text_image_init;
 			draw;
 		end; -- deselect
 
@@ -122,6 +123,8 @@ feature
 		do
 			temp_int := inner_figure.interior;
 			temp_int.set_foreground_color (Resources.foreground_figure_color);
+			text_image.set_foreground_color (Resources.background_figure_color);
+			text_image.set_background_color (Resources.foreground_figure_color);
 			draw
 		end;
 
@@ -222,8 +225,6 @@ feature {NONE}
 			int: INTERIOR
 		do
 			!!int.make;
-			int.set_stipple (Pixmaps.app_interior_stipple);
-			int.set_stippled_fill;
 			int.set_foreground_color (Resources.background_figure_color);
 			!!a_path.make;
 			a_path.set_foreground_color (Resources.foreground_figure_color);

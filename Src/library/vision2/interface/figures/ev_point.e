@@ -56,7 +56,7 @@ feature -- Access
 		do
 			xr := other.x - x
 			yr := other.y - y
-			Result := (sqrt(xr * xr + y	* yr)).truncated_to_integer
+			Result := (sqrt(xr * xr + yr * yr)).truncated_to_integer
 		end
 
 feature -- Comparison

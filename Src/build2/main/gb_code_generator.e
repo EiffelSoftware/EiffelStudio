@@ -53,15 +53,10 @@ feature -- Basic operation
 			-- Generate the project as per settings in `project_settings'.
 		local	
 			directory: DIRECTORY
-			directory_file_name: FILE_NAME
-			root_element: XML_ELEMENT
-			current_element: XML_ELEMENT
-			current_name: STRING
-			current_type: STRING
-			window_element: XML_ELEMENT
+			root_element, current_element, window_element: XML_ELEMENT
+			current_name, current_type: STRING
 			name_counter: INTEGER
-			window_file_name, directory_name: FILE_NAME
-			current_directory: STRING
+			window_file_name, directory_name, directory_file_name: FILE_NAME
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
@@ -336,10 +331,7 @@ feature {NONE} -- Implementation
 				-- Generate a main window for the project.
 			local
 				window_template_file, window_output_file: PLAIN_TEXT_FILE
-				window_file_name, window_template: FILE_NAME
-				store: GB_XML_STORE
-				generation_settings: GB_GENERATION_SETTINGS
-				file_name: FILE_NAME
+				window_template, file_name: FILE_NAME
 				a_class_name: STRING
 			do
 				set_progress (0.6)
@@ -479,10 +471,8 @@ feature {NONE} -- Implementation
 			-- Generate interface of our window.
 		local
 			window_template_file, window_output_file: PLAIN_TEXT_FILE
-			window_file_name, window_template: FILE_NAME
-			temp_string: STRING
-			file_name: FILE_NAME
-			a_class_name: STRING
+			file_name, window_template: FILE_NAME
+			temp_string, a_class_name: STRING
 		do
 			check
 				document_info_not_void: document_info /= Void

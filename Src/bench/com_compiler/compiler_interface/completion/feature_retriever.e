@@ -89,26 +89,18 @@ feature {NONE} -- Implementation
 				from
 					l_overloaded_features.start
 				until
-					l_feature_i /= Void or l_overloaded_features.after
+					l_overloaded_features.after
 				loop
-					if is_listed (l_overloaded_features.item, class_i, l_class_i) then
-						l_feature_i := l_overloaded_features.item
+					l_feature_i := l_overloaded_features.item
+					if is_listed (l_feature_i, class_i, l_class_i) then
+						extract_description (l_feature_i, l_class_i)
+						if Result = Void then
+							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
+						else
+							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump, clone (extracted_description))								
+						end
 					end
 					l_overloaded_features.forth
-				end
-				if l_feature_i /= Void then
-					extract_description (l_feature_i, l_class_i)
-					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description, l_feature_i.written_class.file_name, feature_location (l_feature_i))
-					from
-					until
-						l_overloaded_features.after
-					loop
-						l_feature_i := l_overloaded_features.item
-						if is_listed (l_feature_i, class_i, l_class_i) then
-							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump)								
-						end
-						l_overloaded_features.forth
-					end
 				end
 			else
 				feature_table.search (a_name)
@@ -116,7 +108,7 @@ feature {NONE} -- Implementation
 					l_feature_i := feature_table.found_item
 					if is_listed (l_feature_i, class_i, l_class_i) then
 						extract_description (l_feature_i, l_class_i)
-						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description, l_feature_i.written_class.file_name, feature_location (l_feature_i))
+						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end
 			end

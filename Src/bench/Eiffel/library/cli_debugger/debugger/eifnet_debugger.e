@@ -1970,8 +1970,8 @@ feature -- Specific function evaluation
 			a_feat_not_void: a_feat /= Void
 			adapted_class_not_void: a_adapted_class_type /= Void
 		local
-			l_once_info_tokens: TUPLE [INTEGER, INTEGER, INTEGER]
-			l_data_class_token, l_done_token, l_result_token: INTEGER
+			l_once_info_tokens: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			l_data_class_token, l_done_token, l_result_token, l_exception_token: INTEGER
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_already_called: BOOLEAN
@@ -1980,6 +1980,9 @@ feature -- Specific function evaluation
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 		do
+			last_once_failed := False
+			last_once_available := False
+
 				--| Set related frame
 			l_icd_frame := a_icd_frame
 			if l_icd_frame = Void and then icor_debug_thread /= Void then
@@ -1993,6 +1996,7 @@ feature -- Specific function evaluation
 				l_data_class_token := l_once_info_tokens.integer_item (1)
 				l_done_token := l_once_info_tokens.integer_item (2)
 				l_result_token := l_once_info_tokens.integer_item (3)
+				l_exception_token := l_once_info_tokens.integer_item (4)
 			end
 			
 				--| Set ICorDebugClass
@@ -2012,11 +2016,15 @@ feature -- Specific function evaluation
 					l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
 					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icd_debug_value)
 					if l_prepared_icd_debug_value /= l_icd_debug_value then
-						l_prepared_icd_debug_value.clean_on_dispose						
+						l_prepared_icd_debug_value.clean_on_dispose
 					end
 					l_icd_debug_value.clean_on_dispose
 				else
-					l_once_not_available := True
+					if (l_icd_class.last_call_success & 0xFFFF) = feature {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
+						l_once_already_called := False
+					else
+						l_once_not_available := True
+					end
 				end
 			else
 				l_once_not_available := True
@@ -2028,7 +2036,17 @@ feature -- Specific function evaluation
 			else
 				last_once_available := True
 				if l_once_already_called then
-					if l_result_token /= 0 then
+					l_icd_debug_value := l_icd_class.get_static_field_value (l_exception_token, l_icd_frame)
+					if l_icd_debug_value /= Void then
+						l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
+						last_once_failed := not Edv_formatter.prepared_icor_debug_value_is_null (l_prepared_icd_debug_value)
+						if l_prepared_icd_debug_value /= l_icd_debug_value then
+							l_prepared_icd_debug_value.clean_on_dispose
+						end
+						l_icd_debug_value.clean_on_dispose
+					end
+					
+					if not last_once_failed and then l_result_token /= 0 then
 						Result := l_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 					end
 				end
@@ -2038,6 +2056,10 @@ feature -- Specific function evaluation
 	last_once_available: BOOLEAN
 			-- Last once request show the once is available
 			-- if False, this mean the debugger had issue to get information
+
+	last_once_failed: BOOLEAN
+			-- Last once request show the once has failed
+			-- if True, this mean the once had an exception
 
 --| NOTA jfiat [2004/03/19] : not yet ready, to be continued
 --

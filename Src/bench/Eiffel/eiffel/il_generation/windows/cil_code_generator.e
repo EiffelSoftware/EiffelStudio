@@ -4275,7 +4275,7 @@ feature -- Once management
 				end
 			end
 
-			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, feat, current_class)
+			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feat, current_class)
 
 			if feat.is_process_relative then
 					-- Generate flag that indicates that once data fields are ready to use

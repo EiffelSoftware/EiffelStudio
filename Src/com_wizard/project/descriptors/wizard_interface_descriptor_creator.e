@@ -42,9 +42,9 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		local
-			tmp_type_attr: ECOM_TYPE_ATTR
-			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_guid: ECOM_GUID
+			a_handle: INTEGER
+			tmp_type_info: ECOM_TYPE_INFO
+			dispinterface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
 		do
 			name := clone (a_documentation.name)
 
@@ -59,6 +59,54 @@ feature -- Basic operations
 				dual := True
 			end
 
+			if dual and dispinterface then
+				a_handle := a_type_info.ref_type_of_impl_type (-1)
+				tmp_type_info := a_type_info.type_info (a_handle)
+				type_kind := tmp_type_info.type_attr.type_kind
+				dispinterface := False
+				create dispinterface_creator
+				dispinterface_descriptor := dispinterface_creator.create_dispinterface_descriptor (a_documentation, a_type_info)
+			else
+				tmp_type_info := a_type_info
+			end
+			Result := interface_descriptor (tmp_type_info)
+		end
+
+	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
+			-- Create descriptor.
+		require
+			valid_documentation: a_documentation /= Void and then
+				a_documentation.name /= Void
+			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
+						or a_type_info.type_attr.type_kind = Tkind_dispatch
+		do
+			name := clone (a_documentation.name)
+
+			description := clone (a_documentation.doc_string)
+			type_kind := a_type_info.type_attr.type_kind
+
+			if type_kind = Tkind_dispatch then
+				dispinterface := True
+			end
+			flags := a_type_info.type_attr.flags
+			if is_typeflag_fdual (flags) then
+				dual := True
+			end
+
+			Result := interface_descriptor (a_type_info)
+		end
+
+	interface_descriptor (a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
+			-- Create descriptor.
+		require
+			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
+						or a_type_info.type_attr.type_kind = Tkind_dispatch
+		local
+			tmp_type_attr: ECOM_TYPE_ATTR
+			tmp_type_lib: ECOM_TYPE_LIB
+			tmp_guid: ECOM_GUID
+			a_handle: INTEGER
+		do
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid	
 			tmp_type_attr := a_type_info.type_attr
@@ -132,6 +180,7 @@ feature -- Basic operations
 				a_descriptor.set_vtbl_size (vtbl_size)
 				a_descriptor.set_flags (flags)
 				a_descriptor.set_type_library (type_library_descriptor)
+				a_descriptor.set_dispinterface_descriptor (dispinterface_descriptor)
 			end
 
 	create_function_descriptors (a_type_info: ECOM_TYPE_INFO) is
@@ -211,30 +260,31 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= void
 			have_inherited_interface: a_type_info.type_attr.count_implemented_types > 0
 		local
-			i, a_handle: INTEGER;
-			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR;
-			tmp_documentation: ECOM_DOCUMENTATION;
-			tmp_type_info: ECOM_TYPE_INFO;
-			tmp_descriptor_index: INTEGER;
-			tmp_type_lib: ECOM_TYPE_LIB;
-			tmp_guid: ECOM_GUID;
+			i, a_handle: INTEGER
+			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			tmp_documentation: ECOM_DOCUMENTATION
+			tmp_type_info: ECOM_TYPE_INFO
+			tmp_descriptor_index: INTEGER
+			tmp_type_lib: ECOM_TYPE_LIB
+			tmp_guid: ECOM_GUID
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			a_handle := a_type_info.ref_type_of_impl_type (0);
-			tmp_type_info := a_type_info.type_info (a_handle);
-			tmp_descriptor_index := tmp_type_info.index_in_type_lib + 1;
-			tmp_type_lib := tmp_type_info.containing_type_lib;
-			tmp_guid := tmp_type_lib.library_attributes.guid;
+			a_handle := a_type_info.ref_type_of_impl_type (0)
+			tmp_type_info := a_type_info.type_info (a_handle)
+
+			tmp_descriptor_index := tmp_type_info.index_in_type_lib + 1
+			tmp_type_lib := tmp_type_info.containing_type_lib
+			tmp_guid := tmp_type_lib.library_attributes.guid
 			if system_descriptor.has_library (tmp_guid) then
 				tmp_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			else
-				create tmp_library_descriptor.make (tmp_type_lib);
-				system_descriptor.add_library_descriptor (tmp_library_descriptor);
+				create tmp_library_descriptor.make (tmp_type_lib)
+				system_descriptor.add_library_descriptor (tmp_library_descriptor)
 				tmp_library_descriptor.generate
 			end;
 			if tmp_library_descriptor.descriptors.item (tmp_descriptor_index) = void then
-				tmp_documentation := tmp_type_lib.documentation (tmp_type_info.index_in_type_lib);
-				tmp_interface_descriptor ?= type_descriptor_factory.create_type_descriptor (tmp_documentation, tmp_type_info);
+				tmp_documentation := tmp_type_lib.documentation (tmp_type_info.index_in_type_lib)
+				tmp_interface_descriptor ?= type_descriptor_factory.create_type_descriptor (tmp_documentation, tmp_type_info)
 				tmp_library_descriptor.add_descriptor (tmp_interface_descriptor, tmp_descriptor_index)
 			else
 				tmp_interface_descriptor ?= tmp_library_descriptor.descriptors.item (tmp_descriptor_index);
@@ -263,6 +313,9 @@ feature {NONE} -- Implementation
 
 	dispinterface: BOOLEAN
 			-- Is dispinterface?
+
+	dispinterface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			-- If interface is dual, then it has dual description as dispinterface.
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.

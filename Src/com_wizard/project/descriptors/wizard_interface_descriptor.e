@@ -60,6 +60,9 @@ feature -- Access
 	dispinterface: BOOLEAN
 			-- Is dispinterface?
 
+	dispinterface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			-- If interface is dual, then it has dual description as dispinterface.
+
 	lcid: INTEGER
 			-- Locale of member names and doc strings.
 
@@ -199,12 +202,20 @@ feature -- Element Change
 			valid_properties: properties /= Void and properties = some_properties
 		end
 
-	set_inherited_interface (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
-			-- Set `inherited_interfaces' with `some_interfaces'
+	set_inherited_interface (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Set `inherited_interface' with `an_interface'
 		do
-			inherited_interface := a_interface
+			inherited_interface := an_interface
 		ensure
-			interface_set: inherited_interface = a_interface
+			interface_set: inherited_interface = an_interface
+		end
+
+	set_dispinterface_descriptor (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Set `dispinterface_descriptor' with `an_interface'
+		do
+			dispinterface_descriptor := an_interface
+		ensure
+			interface_set: dispinterface_descriptor = an_interface
 		end
 
 	update_dual (a_dual_value: BOOLEAN) is

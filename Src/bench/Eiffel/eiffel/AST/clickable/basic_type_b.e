@@ -39,7 +39,7 @@ feature -- Formatting
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
-			ctxt.put_class_name (actual_type.associated_class);
+			ctxt.put_classi (actual_type.associated_class.lace_class);
 		end;
 
 end -- class BASIC_TYPE_B

@@ -5,13 +5,29 @@ inherit
 
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
-	WINDOWS;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS
 	SHARED_FORMAT_INFO;
 	S_CASE_INFO;
 	SHARED_CASE_INFO;
-	STORABLE
+	STORABLE;
+	COMPILER_EXPORTER
+
+creation
+
+	make
+
+feature -- Initialization
+
+	make (ow: like output_window) is
+			-- Set `output_window' to `ow'.
+		do
+			output_window := ow
+		end;
+
+feature -- Property
+
+	output_window: OUTPUT_WINDOW;
 
 feature -- Execution
 
@@ -26,15 +42,15 @@ feature -- Execution
 			fn: FILE_NAME
 		do
 			if not rescued then
-				error_window.clear_window;
+				output_window.clear_window;
 				if workbench.successfull then
 					Error_handler.wipe_out;
 					Create_case_storage_directory;
 					!! d.make (Case_storage_path);
 					if not d.exists or else not d.is_readable then
-						error_window.put_string ("Directory ");
-						error_window.put_string (case_storage_path);
-						error_window.put_string ("%Nis not readable. Please check permission.%N")
+						output_window.put_string ("Directory ");
+						output_window.put_string (case_storage_path);
+						output_window.put_string ("%Nis not readable. Please check permission.%N")
 					else
 						!! fn.make_from_string (Case_storage_path);
 						fn.set_file_name (System_name);	
@@ -47,17 +63,17 @@ feature -- Execution
 							convert_to_case_format;
 							remove_old_classes;
 							clear_shared_case_information;
-							error_window.put_string ("Finished storing EiffelCase project.%N");
+							output_window.put_string ("Finished storing EiffelCase project.%N");
 						else
-							error_window.put_string ("EiffelCase project is up to date.%N");
+							output_window.put_string ("EiffelCase project is up to date.%N");
 						end;
 					end;
-					error_window.display
+					output_window.display
 				else
-					error_window.put_string ("Project is in an unstable state.%N");
-					error_window.put_string ("Make sure that the system has been%N");
-					error_window.put_string ("successfully compiled.%N");
-					error_window.display
+					output_window.put_string ("Project is in an unstable state.%N");
+					output_window.put_string ("Make sure that the system has been%N");
+					output_window.put_string ("successfully compiled.%N");
+					output_window.display
 				end;
 			else
 				rescued := False
@@ -367,5 +383,8 @@ feature {NONE} -- Implementation
 			file.close;
 		end;
 
+invariant
+
+	valid_output_window: output_window /= Void
 
 end	

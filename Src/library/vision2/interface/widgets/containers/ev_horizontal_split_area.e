@@ -25,9 +25,8 @@ feature -- Initialization
 		do
 			create {EV_HORIZONTAL_BOX} split_box
 			create {EV_VERTICAL_SEPARATOR} sep
-			initialize_split_area
-			sep.pointer_button_press_actions.extend (~on_click)
 			Precursor
+			sep.pointer_button_press_actions.extend (~on_click)
 		end
 	
 feature -- Access
@@ -36,15 +35,14 @@ feature -- Access
 			-- split_position of the left side of `sep' relative to
 			-- the left side of `split_box'.
 		do
-			Result := first_cell.width + 1
-
+			Result := first_cell.width
 		end
 
 	minimum_split_position: INTEGER is
 			-- Minimum size of `split_position'.
 		do
-			if first /= Void then
-				Result := first.minimum_width + 1
+			if first_cell.readable then
+				Result := first.minimum_width
 			else
 				Result := 1
 			end
@@ -55,10 +53,12 @@ feature -- Access
 		local
 			sec_item_min_width: INTEGER
 		do
-			if second /= Void then
+			if second_cell.readable /= Void then
 				sec_item_min_width := second.minimum_width
+			else
+				sec_item_min_width := 1
 			end
-			Result := (split_box.width - sep.width - sec_item_min_width) + 1
+			Result := (split_box.width - sep.width - sec_item_min_width)
 		end
 
 feature -- Status setting
@@ -67,7 +67,8 @@ feature -- Status setting
 			-- Set the pixel-split_position of the left side of `sep'
 			-- with respect to `split_box'.
 		do
-			first_cell.set_minimum_width (a_split_position - 1)
+			first_cell.set_minimum_width (a_split_position)
+			second_cell.set_minimum_width (split_box.width - sep.width - a_split_position + 1)
 		end
 
 	set_proportion (a_proportion: REAL) is
@@ -85,7 +86,6 @@ feature -- Status setting
 				set_split_position (current_proportion)
 			end	
 		end
-			
 
 feature {NONE} -- Implementation
 
@@ -98,73 +98,69 @@ feature {NONE} -- Implementation
 	x_offset: INTEGER
 		-- X offset of the initial click on the separator.
 
-	mouse_screen_coord: INTEGER
-		-- Initial X screen-coordinate of the drag.
-
 	on_click (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Start of the drag.
 		do
 			if first /= Void then
-				mouse_screen_coord := scr_x
 				x_offset := a_x
-				sep.pointer_motion_actions.extend (~on_motion)
-				first_cell_screen_x := first_cell.screen_x
-				first_cell_screen_y := first_cell.screen_y 
+				x_origin := scr_x - a_x - first_cell.width
+				y_origin := scr_y - a_y
 				sep.enable_capture
+				sep.pointer_motion_actions.extend (~on_motion)
 				sep.pointer_button_release_actions.extend (~on_release)
+				previous_split_position := -1
 			end
 		end
 
 	on_motion (a_x, a_y: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Draw separator line.
 		local
-			wid: INTEGER
+			current_split_position: INTEGER
 		do
-			wid := valid_split_position (scr_x - mouse_screen_coord)
-			wid := first_cell_screen_x + wid + x_offset
-
-			if separator_in_motion then
-				scr.draw_segment (previous_split_position, first_cell_screen_y,
-					previous_split_position, first_cell_screen_y + sep.height)
-				scr.draw_segment (wid, first_cell_screen_y, wid,
-					first_cell_screen_y + sep.height)
-			else
-				scr.draw_segment (wid, first_cell_screen_y, wid,
-					first_cell_screen_y + sep.height)
-				separator_in_motion := True
+			current_split_position := scr_x - x_origin
+			if current_split_position < minimum_split_position then
+				current_split_position := minimum_split_position
+			elseif current_split_position > maximum_split_position then
+				current_split_position := maximum_split_position
 			end
-
-			line_drawn := True
-
-			previous_split_position := wid
+			if previous_split_position >= 0 then
+				scr.draw_segment (previous_split_position, y_origin,
+					previous_split_position, y_origin + sep.height)
+			end
+			scr.draw_segment (current_split_position + x_origin, y_origin,
+				current_split_position + x_origin, y_origin + sep.height)
+			previous_split_position := current_split_position + x_origin
 		end
 
 	previous_split_position: INTEGER
 		-- Previous split_position
 
-
-	first_cell_screen_x: INTEGER
+	x_origin: INTEGER
 		-- Horizontal screen offset of first cell.
 		-- Used for speed optimization of motion routine.
 
-	first_cell_screen_y: INTEGER
+	y_origin: INTEGER
 		-- Vertical screen offset of first cell.
 		-- Used for speed optimization of motion routine.
 
 	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- End of the drag.
+		local
+			current_split_position: INTEGER
 		do
-			if line_drawn then
-				line_drawn := False
-				scr.draw_segment (previous_split_position, first_cell_screen_y,
-					previous_split_position, first_cell_screen_y + sep.height)
+			current_split_position := scr_x - x_origin
+			if current_split_position < minimum_split_position then
+				current_split_position := minimum_split_position
+			elseif current_split_position > maximum_split_position then
+				current_split_position := maximum_split_position
 			end
-	
-			first_cell.set_minimum_width (valid_split_position (
-				scr_x - mouse_screen_coord))
-			sep.pointer_motion_actions.wipe_out
+			if previous_split_position >= 0 then
+				scr.draw_segment (previous_split_position, y_origin,
+					previous_split_position, y_origin + sep.height)
+			end
+			set_split_position (current_split_position)
 			sep.disable_capture
-			separator_in_motion := False
+			sep.pointer_motion_actions.wipe_out
 			sep.pointer_button_release_actions.wipe_out
 		end
 
@@ -212,6 +208,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/03 22:59:48  brendel
+--| Fixed line positioning.
+--|
 --| Revision 1.9  2000/03/03 20:32:24  brendel
 --| Fixed bug in initialize. Before, Precursor was not called.
 --| Formatted for 80 columns.

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			-- Create a mel application context from 
 			-- an existing application context.
 		require
-			a_pointer_not_null: a_pointer /= default_pointer
+			pointer_not_null: a_pointer /= default_pointer
 		do
 			handle := a_pointer
 		ensure
@@ -104,8 +104,8 @@ feature -- Element change
 			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			non_void_file: a_file /= Void;
-			non_void_a_callback: a_callback /= Void
+			file_not_void: a_file /= Void;
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -113,7 +113,7 @@ feature -- Element change
 			Mel_dispatcher.add_input_callback
 					(Current, a_file, XtInputReadMask, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 	add_input_write_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
@@ -123,8 +123,8 @@ feature -- Element change
 			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			non_void_file: a_file /= Void;
-			non_void_a_callback: a_callback /= Void
+			file_not_void: a_file /= Void;
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -132,7 +132,7 @@ feature -- Element change
 			Mel_dispatcher.add_input_callback
 					(Current, a_file, XtInputWriteMask, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 	add_input_except_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
@@ -142,8 +142,8 @@ feature -- Element change
 			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			non_void_file: a_file /= Void;
-			non_void_a_callback: a_callback /= Void
+			file_not_void: a_file /= Void;
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -151,7 +151,7 @@ feature -- Element change
 			Mel_dispatcher.add_input_callback
 					(Current, a_file, XtInputExceptMask, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 	add_input_none_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
@@ -161,8 +161,8 @@ feature -- Element change
 			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			non_void_file: a_file /= Void;
-			non_void_a_callback: a_callback /= Void
+			file_not_void: a_file /= Void;
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -170,7 +170,7 @@ feature -- Element change
 			Mel_dispatcher.add_input_callback
 					(Current, a_file, XtInputNoneMask, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 	add_time_out_callback (a_delay: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
@@ -182,7 +182,7 @@ feature -- Element change
 		require
 			is_valid: is_valid;
 			valid_time: a_delay > 0;
-			non_void_a_callback: a_callback /= Void
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -190,7 +190,7 @@ feature -- Element change
 			Mel_dispatcher.add_timer_callback
 					(Current, a_delay, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 	add_work_proc_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
@@ -199,7 +199,7 @@ feature -- Element change
 			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			non_void_a_callback: a_callback /= Void
+			callback_not_void: a_callback /= Void
 		local
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
@@ -207,7 +207,7 @@ feature -- Element change
 			Mel_dispatcher.add_work_proc_callback
 					(Current, a_callback_exec);
 		ensure
-			non_void_id: last_id /= Void and then last_id.is_valid
+			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
 feature -- Miscellaneous

@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 			dc.set_background_opaque
 			dc.set_background_transparent
 			set_drawing_mode (drawing_mode_copy)
-			set_line_width (1)
 			reset_pen
 			reset_brush
+			set_line_width (1)
 
 			is_initialized := True
 		end
@@ -555,7 +555,7 @@ feature -- Drawing operations
 					dc.bit_blt (
 						x, y, 
 						source_width, source_height, 
-						display_bitmap_dc, source_x, source_y, Srccopy
+						display_bitmap_dc, source_x, source_y, src_drawing_mode
 					)
 				end
 
@@ -1035,6 +1035,23 @@ feature {NONE} -- Implementation
 				internal_brush := Void
 			end
 			release_dc
+		end
+		
+	src_drawing_mode: INTEGER is
+			-- Src drawing mode from current `wel_drawing_mode'
+			-- Used for bit blits.
+		do
+			if wel_drawing_mode = R2_copypen then
+				Result := Srccopy
+			elseif wel_drawing_mode = R2_xorpen then
+				Result := Srcerase
+			elseif wel_drawing_mode = R2_not then
+				Result := Srcinvert
+			elseif wel_drawing_mode = R2_maskpen then
+				Result := Srcand
+			elseif wel_drawing_mode = R2_mergepen then
+				Result := Srcpaint
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Command

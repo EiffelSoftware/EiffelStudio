@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -12,8 +13,6 @@ deferred class
 	EV_INVISIBLE_CONTAINER_IMP
 	
 inherit
-	EV_CONTAINER_I
-
 	EV_CONTAINER_IMP
 		undefine
 			propagate_foreground_color,
@@ -139,6 +138,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/21 20:14:23  brendel
+--| Unreleased.
+--|
 --| Revision 1.28  2000/03/21 18:17:46  rogers
 --| Removed extra comma.
 --|

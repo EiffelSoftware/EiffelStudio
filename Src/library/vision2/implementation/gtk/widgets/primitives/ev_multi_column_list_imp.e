@@ -70,10 +70,10 @@ feature {NONE} -- Initialization
 			temp_c_object := c_object
 			c_object := list_widget
 			signal_connect ("select_row", ~select_callback)
-			signal_connect ("unselect_row", (interface.deselect_actions)~call ([]))
+			signal_connect ("unselect_row", ~deselect_callback)
 
 			--| FIXME IEK  Click column needs special attention in marshal feature
-			--signal_connect ("click_column", (interface.column_click_actions)~call ([]))
+			--signal_connect ("click_column", (~column_click_callback)
 			c_object := temp_c_object
 
 			if rows_height > 0 then
@@ -96,10 +96,21 @@ feature {NONE} -- Initialization
 			show_title_row
 		end
 
-	select_callback is
+	select_callback (int: INTEGER) is
 		do
+			print (int.out + "%N")
 			interface.select_actions.call ([])
 			selected_item.select_actions.call ([])
+		end
+
+	deselect_callback (int: INTEGER) is
+		do
+			interface.deselect_actions.call ([])
+		end
+
+	column_click_callback (int: INTEGER) is
+		do
+			interface.column_click_actions.call ([])
 		end	
 
 feature -- Access
@@ -521,6 +532,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/18 22:26:02  king
+--| Added callback features to call action sequences so zero arg of PROCEDURE is of type EV_MULTI_COLUMN_LIST_IMP
+--|
 --| Revision 1.25  2000/02/18 18:37:46  king
 --| Removed redundant command association commands
 --|

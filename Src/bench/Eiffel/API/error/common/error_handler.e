@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 									$make_too_many_generics);
 		end;
 
-feature {EXPR_ADDRESS_AS} -- Passed to C
+feature {COMPILER_EXPORTER, EXPR_ADDRESS_AS} -- Passed to C
 
 	make_syntax_error is
 			-- Build a syntax error message

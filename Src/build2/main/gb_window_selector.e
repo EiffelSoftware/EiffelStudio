@@ -361,7 +361,6 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			directory_not_void: a_directory /= Void
 			has_directory: has (a_directory)
 		local
-			confirmation_dialog: EV_CONFIRMATION_DIALOG
 			perform_delete: BOOLEAN
 			window_item: GB_WINDOW_SELECTOR_ITEM
 			all_objects: ARRAYED_LIST [GB_OBJECT]

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Command to apply a format"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +9,7 @@ class
 inherit
 	EV_COMMAND
 
-	EB_COMMAND_FEEDBACK
+	EB_TWO_STATES_COMMAND_FEEDBACK
 
 	EB_CONFIRM_SAVE_CALLBACK
 
@@ -35,6 +35,7 @@ feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 		do
 --			execute_licensed (s)
 			f.format (s)
+			set_selected (True)
 		end
 
 feature -- Execution
@@ -43,6 +44,7 @@ feature -- Execution
 			-- Execute current command but don't change the cursor into watch shape.
 		local
 --			mp: MOUSE_PTR
+			ed: EB_EDIT_TOOL
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
 			if argument = Void then
@@ -50,8 +52,13 @@ feature -- Execution
 			else
 				s ?= argument.first
 			end
-			if f.tool.text_window.changed then
-				create csd.make_and_launch (f.tool, Current)
+			ed ?= f.tool
+			if ed /= Void then
+				if ed.text_area.changed then
+					create csd.make_and_launch (ed, Current)
+				else
+					process
+				end
 			else
 				process
 			end

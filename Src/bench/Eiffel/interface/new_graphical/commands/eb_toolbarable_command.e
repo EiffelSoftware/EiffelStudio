@@ -36,9 +36,7 @@ feature -- Access
 		end
 
 	tooltext: STRING is
-			-- Text displayed when `has_text' is True
-		require
-			has_text: has_text
+			-- Text displayed on the toolbar button.
 		do
 			Result := ""
 		ensure

@@ -178,13 +178,13 @@ feature {NONE} -- Implementation
 				set_window_title
 				create char_format.make
 				char_format.set_face_name ("Arial")
-				char_format.set_height (10)
+				char_format.set_height_in_points (10)
 				char_format.unset_bold
 				rich_edit.set_character_format_selection (char_format)
 			when Cmd_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					file_name := clone (open_file_dialog.file_name)
+					file_name := open_file_dialog.file_name.twin
 					create file.make_open_read (file_name)
 					if file_name.substring_index ("txt", 1) > 0 then
 						rich_edit.load_text_file (file)
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 				if choose_font.selected then
 					create char_format.make
 					char_format.set_face_name (choose_font.log_font.face_name)
-					char_format.set_height (choose_font.log_font.height_in_points)
+					char_format.set_height_in_points (choose_font.log_font.height_in_points)
 					char_format.set_char_set (choose_font.log_font.char_set)
 					char_format.set_pitch_and_family (choose_font.log_font.pitch_and_family)
 					char_format.set_text_color (choose_font.color)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := clone (Title)
+			s := Title.twin
 			s.append (" - ")
 			if file_name /= Void then
 				s.append (file_name)

@@ -389,13 +389,6 @@ feature -- Conveniences
 		do
 		end
 
-	is_void_entity: BOOLEAN is
-			-- Is access the 'Void' entity?
-		do
-			Result := context.real_type (type).is_none and
-				(is_attribute or is_local)
-		end
-
 feature -- Code generation
 
 	argument_types: ARRAY [STRING] is

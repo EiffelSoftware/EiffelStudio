@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
-		
+
 <TITLE>HASH_TABLE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -18,7 +18,7 @@
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
 <BR>
 
@@ -26,7 +26,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Allocate hash table for at least </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> items.</SPAN><BR>
 
@@ -40,7 +40,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="hash_table.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Allocate hash table for at least </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> items.</SPAN><BR>
 
@@ -54,105 +54,105 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_current_keys"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_current_keys"><A CLASS="efeature" HREF="hash_table.html#f_current_keys">current_keys</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of actually used keys, from 1 to </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_count">count</A><SPAN CLASS="ecomment"></SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of actually used keys, from 1 to </SPAN><A CLASS="efeature" HREF="hash_table.html#f_count">count</A><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/array.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_count">count</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">good_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="array.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_count">count</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_dead_key"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_dead_key">dead_key</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_dead_key"><A CLASS="efeature" HREF="hash_table.html#f_dead_key">dead_key</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Special key used to mark deleted items</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_found_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found_item">found_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found_item"><A CLASS="efeature" HREF="hash_table.html#f_found_item">found_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item found during a search with </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_has">has</A><SPAN CLASS="ecomment"> to reduce the number of</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item found during a search with </SPAN><A CLASS="efeature" HREF="hash_table.html#f_has">has</A><SPAN CLASS="ecomment"> to reduce the number of</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> search for clients</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has"><A CLASS="efeature" HREF="hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there an item in the table with key </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_has_item">has_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_has_item"><A CLASS="efeature" HREF="hash_table.html#f_has_item">has_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does structure include </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Reference or object equality,</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> based on </SPAN><A CLASS="efeature" HREF="hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if True use </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_is_equal">is_equal</A><SPAN CLASS="ecomment"> else</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if True use </SPAN><A CLASS="efeature" HREF="hash_table.html#f_is_equal">is_equal</A><SPAN CLASS="ecomment"> else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/any.html#f_reference_equal">reference_equal</A><SPAN CLASS="ecomment">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="any.html#f_reference_equal">reference_equal</A><SPAN CLASS="ecomment">)</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_found_in_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_is_empty">is_empty</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_found_in_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_is_empty">is_empty</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item associated with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">, if present;</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> otherwise default value of type </SPAN><SPAN CLASS="equoted">G</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><SPAN CLASS="equoted">@</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><SPAN CLASS="equoted">@</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/table.html">TABLE</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="table.html">TABLE</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_item_for_iteration"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item_for_iteration">item_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_item_for_iteration"><A CLASS="efeature" HREF="hash_table.html#f_item_for_iteration">item_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element at current iteration position</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_off">off</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_off">off</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_key_at"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_key_at">key_at</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_key_at"><A CLASS="efeature" HREF="hash_table.html#f_key_at">key_at</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Key corresponding to entry </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_key_for_iteration"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_key_for_iteration">key_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_key_for_iteration"><A CLASS="efeature" HREF="hash_table.html#f_key_for_iteration">key_for_iteration</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Key at current iteration position</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_off">off</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_off">off</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_@"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../../base_net/reference/kernel/hash_table.html#f__infix_@">@</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f__infix_@"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="hash_table.html#f__infix_@">@</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Item associated with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">, if present;</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> otherwise default value of type </SPAN><SPAN CLASS="equoted">G</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/table.html">TABLE</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="table.html">TABLE</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -160,19 +160,19 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_capacity"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_capacity">capacity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_capacity"><A CLASS="efeature" HREF="hash_table.html#f_capacity">capacity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items in table</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_count">count</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_count">count</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/integer.html">INTEGER</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="hash_table.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="integer.html">INTEGER</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items in table</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_capacity">capacity</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_capacity">capacity</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -180,7 +180,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_equal"><A CLASS="efeature" HREF="hash_table.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does table contain the same information as </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
 
@@ -190,91 +190,91 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_after"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_after"><A CLASS="efeature" HREF="hash_table.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is cursor past last item?</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_off">off</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_off">off</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment"> be changed?</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May </SPAN><A CLASS="efeature" HREF="hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="ecomment"> be changed?</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Answer: yes by default.)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_compare_objects"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_compare_objects">compare_objects</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_compare_objects"><A CLASS="efeature" HREF="hash_table.html#f_compare_objects">compare_objects</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that future search operations will use </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"> for comparing references.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_object_comparison">object_comparison</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="hash_table.html#f_object_comparison">object_comparison</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_compare_references"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_compare_references">compare_references</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_compare_references"><A CLASS="efeature" HREF="hash_table.html#f_compare_references">compare_references</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that future search operations will use </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"> for comparing references.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="hash_table.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/container.html">CONTAINER</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="container.html">CONTAINER</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_object_comparison">object_comparison</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_object_comparison">object_comparison</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_conflict"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_conflict"><A CLASS="efeature" HREF="hash_table.html#f_conflict">conflict</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Did last operation cause a conflict?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_extendible"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_extendible"><A CLASS="efeature" HREF="hash_table.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May new items be added? (Answer: yes.)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="hash_table.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Did last operation find the item sought?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_full">full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_full"><A CLASS="efeature" HREF="hash_table.html#f_full">full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is structured filled to capacity? (Answer: no.)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_inserted"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_inserted"><A CLASS="efeature" HREF="hash_table.html#f_inserted">inserted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Did last operation insert an item?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_empty"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_empty"><A CLASS="efeature" HREF="hash_table.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there no element?</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_inserted"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_inserted"><A CLASS="efeature" HREF="hash_table.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> been inserted by the most recent insertion?</SPAN><BR>
 
@@ -286,7 +286,7 @@
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_object_comparison"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_object_comparison"><A CLASS="efeature" HREF="hash_table.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must search operations use </SPAN><SPAN CLASS="equoted">equal</SPAN><SPAN CLASS="ecomment"> rather than </SPAN><SPAN CLASS="equoted">=</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
@@ -294,49 +294,49 @@
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_off"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_off"><A CLASS="efeature" HREF="hash_table.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is cursor past last item?</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_after">after</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_after">after</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_prunable"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_prunable"><A CLASS="efeature" HREF="hash_table.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May items be removed? (Answer: yes.)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_removed"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_removed"><A CLASS="efeature" HREF="hash_table.html#f_removed">removed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Did last operation remove an item?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_replaced"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_replaced"><A CLASS="efeature" HREF="hash_table.html#f_replaced">replaced</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A></A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Did last operation replace an item?</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_search"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_search"><A CLASS="efeature" HREF="hash_table.html#f_search">search</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Search for item of key </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If found, set </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found">found</A><SPAN CLASS="ecomment"> to True, and set</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If found, set </SPAN><A CLASS="efeature" HREF="hash_table.html#f_found">found</A><SPAN CLASS="ecomment"> to True, and set</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found_item">found_item</A><SPAN CLASS="ecomment"> to item associated with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="hash_table.html#f_found_item">found_item</A><SPAN CLASS="ecomment"> to item associated with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">found_or_not_found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found">found</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_or">or</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found">found</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">found_or_not_found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_found">found</A> <A CLASS="ekeyword" HREF="boolean.html#f__infix_or">or</A> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_found">found</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_if_found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found">found</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_found_item">found_item</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_internal_implementation">internal_implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base_net/reference/support/system_collections_hashtable.html#f_get_item">get_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_if_found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_found">found</A> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="hash_table.html#f_found_item">found_item</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_internal_implementation">internal_implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature">get_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_valid_key"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/boolean.html">BOOLEAN</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_valid_key"><A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="boolean.html">BOOLEAN</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">k</SPAN><SPAN CLASS="ecomment"> a valid key?</SPAN><BR>
 
@@ -346,7 +346,7 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_dead_key">dead_key</A><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_dead_key">dead_key</A><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -354,17 +354,17 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_forth"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_forth">forth</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_forth"><A CLASS="efeature" HREF="hash_table.html#f_forth">forth</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Advance cursor by one position.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_off">off</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_off">off</A><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_start"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_start">start</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start"><A CLASS="efeature" HREF="hash_table.html#f_start">start</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Bring cursor to first position.</SPAN><BR>
 
@@ -374,81 +374,81 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_force"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_force">force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_force"><A CLASS="efeature" HREF="hash_table.html#f_force">force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> is present, replace corresponding item by </SPAN><SPAN CLASS="equoted">new</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if not, insert item </SPAN><SPAN CLASS="equoted">new</SPAN><SPAN CLASS="ecomment"> with key </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_inserted">inserted</A><SPAN CLASS="ecomment"> true.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="hash_table.html#f_inserted">inserted</A><SPAN CLASS="ecomment"> true.</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_put"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_put"><A CLASS="efeature" HREF="hash_table.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Insert </SPAN><SPAN CLASS="equoted">new</SPAN><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> if there is no other item</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> associated with the same key.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_inserted">inserted</A><SPAN CLASS="ecomment"> true if and only if an insertion has</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="hash_table.html#f_inserted">inserted</A><SPAN CLASS="ecomment"> true if and only if an insertion has</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> been made (i.e. </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> was not present).</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/table.html">TABLE</A><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="table.html">TABLE</A><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_inserted">inserted</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_inserted">inserted</A> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_replace"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_replace"><A CLASS="efeature" HREF="hash_table.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Replace item at </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">, if present,</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">new</SPAN><SPAN CLASS="ecomment">; do not change associated key.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replaced">replaced</A><SPAN CLASS="ecomment"> true if and only if a replacement has</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="hash_table.html#f_replaced">replaced</A><SPAN CLASS="ecomment"> true if and only if a replacement has</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> been made (i.e. </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> was present).</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replaced">replaced</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_replaced">replaced</A> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="hash_table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_replace_key"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replace_key">replace_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_replace_key"><A CLASS="efeature" HREF="hash_table.html#f_replace_key">replace_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If table contains an item at </SPAN><SPAN CLASS="equoted">old_key</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> replace its key by </SPAN><SPAN CLASS="equoted">new_key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replaced">replaced</A><SPAN CLASS="ecomment"> true if and only if a replacement has</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="hash_table.html#f_replaced">replaced</A><SPAN CLASS="ecomment"> true if and only if a replacement has</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> been made (i.e. </SPAN><SPAN CLASS="equoted">old_key</SPAN><SPAN CLASS="ecomment"> was present).</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_keys</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_key</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_keys</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_key</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__infix_and">and</A> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_replaced">replaced</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_replaced">replaced</A> <A CLASS="ekeyword" HREF="boolean.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">old_key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -456,37 +456,37 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_clear_all"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_clear_all">clear_all</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_clear_all"><A CLASS="efeature" HREF="hash_table.html#f_clear_all">clear_all</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset all items to default values.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_wipe_out">wipe_out</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_wipe_out">wipe_out</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_remove"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_remove"><A CLASS="efeature" HREF="hash_table.html#f_remove">remove</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">H</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove item associated with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">, if present.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_removed">removed</A><SPAN CLASS="ecomment"> true if and only if an item has been</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="hash_table.html#f_removed">removed</A><SPAN CLASS="ecomment"> true if and only if an item has been</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> removed (i.e. </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> was not present).</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_valid_key">valid_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">removed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base_net/reference/kernel/boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">removed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="boolean.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="hash_table.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
 </A><BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wipe_out"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_wipe_out">wipe_out</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_wipe_out"><A CLASS="efeature" HREF="hash_table.html#f_wipe_out">wipe_out</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset all items to default values.</SPAN><BR>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/kernel/hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_clear_all">clear_all</A><SPAN CLASS="ecomment">.</SPAN><BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="hash_table.html">HASH_TABLE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="hash_table.html#f_clear_all">clear_all</A><SPAN CLASS="ecomment">.</SPAN><BR>
 
 </A> &nbsp; &nbsp; &nbsp;<BR>
 
@@ -494,7 +494,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_linear_representation"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/kernel/linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_linear_representation"><A CLASS="efeature" HREF="hash_table.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	linear_representation: ARRAYED_LIST [G] is</SPAN><BR>
 
@@ -508,7 +508,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_copy"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_copy"><A CLASS="efeature" HREF="hash_table.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Re-initialize from </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
 
@@ -516,11 +516,11 @@
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
 
-<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	implementation: </SPAN><A CLASS="eclass" HREF="../../../base_net/reference/support/system_collections_hashtable.html">SYSTEM_COLLECTIONS_HASHTABLE</A><SPAN CLASS="ecomment"> is</SPAN><BR>
+<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	implementation: </SPAN><A CLASS="eclass">SYSTEM_COLLECTIONS_HASHTABLE</A><SPAN CLASS="ecomment"> is</SPAN><BR>
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_implementation"><A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_implementation">implementation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base_net/reference/support/system_collections_icollection.html">SYSTEM_COLLECTIONS_ICOLLECTION</A><BR>
+ &nbsp; &nbsp; &nbsp;<A NAME="f_implementation"><A CLASS="efeature" HREF="hash_table.html#f_implementation">implementation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass">SYSTEM_COLLECTIONS_ICOLLECTION</A><BR>
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Object for .NET access and implementation</SPAN><BR>
 
@@ -530,7 +530,7 @@
 
 <BR>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">count_big_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../../../base_net/reference/kernel/hash_table.html#f_count">count</A><BR>
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">count_big_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="hash_table.html#f_count">count</A><BR>
 
 <BR>
 

@@ -14,6 +14,9 @@ inherit
 		end
 
 	EV_STANDARD_DIALOG_IMP
+		undefine
+			internal_accept
+		end
 
 	WEL_PRINT_DIALOG
 		rename

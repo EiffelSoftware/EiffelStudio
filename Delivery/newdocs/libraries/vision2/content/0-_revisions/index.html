@@ -32,6 +32,7 @@
 			<LI><B>EV_SPLIT_AREA</B> - Added `splitter_width' which returns the width of the splitter in pixels.</li>
 		<li><B>EV_ANY_HANDLER</B> - This is the only class to which `default_create' from EV_ANY is supposed to be exported. However, paticular descendents were exporting `default_create' to ANY instead. This has now been fixed.</li>
 		<li><B>EV_DOCKABLE_SOURCE</B> - Added features `is_external_docking_relative', `enable_external_docking_relative' and `disable_external_docking_relative'. This permits you to dock a source to an EV_DOCKABLE_DIALOG that is not displayed relative to the original top window.</li>
+		<li><b>EV_ACTIVE_LIST</b> - New class added which replaces all occurances of ACTIVE_LIST within the interface. This prevents the EiffeLVision implementation from being "unhooked" by user modification through the interface. The class is completely backwards comaptible, and does not require any modifications to your code. Classes such as EV_ACCELERATOR_LIST and EV_FONT incorporate this change.</LI>
 		</UL>
 		<p><b>Bug fixes</b></p>
 		<UL>
@@ -50,7 +51,10 @@
 				</ul>
 				<li><B>EV_FONT</B> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</li>
 				<li><B>EV_SCROLL_BAR</B> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.</li>
-				<li><b>EV_TEXT</B> - Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.</li>
+				<li><b>EV_TEXT</B><ul class="square">
+				<li>Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.</li>
+				<li> Modified `insert_text' so that the control is no longer scrolled to the top as a result. The original position is now maintained wherever possible.</li>
+				</ul>
 			</UL>
 				<b>Gtk</b>
 				<UL>

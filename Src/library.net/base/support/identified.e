@@ -7,11 +7,6 @@ indexing
 class IDENTIFIED
 
 inherit
-	ANY
-		redefine
-			is_equal, copy
-		end
-
 	MEMORY
 		export
 			{NONE} all

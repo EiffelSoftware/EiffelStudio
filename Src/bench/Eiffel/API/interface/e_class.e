@@ -390,7 +390,7 @@ feature -- Output
 						st.add_string (", ");
 					end;
 				end;
-				st.add_char (']');
+				st.add_string ("]");
 				Inst_context.set_cluster (old_cluster);
 			end;
 		end;

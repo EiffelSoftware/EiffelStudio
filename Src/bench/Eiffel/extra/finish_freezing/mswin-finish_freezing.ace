@@ -62,7 +62,7 @@ cluster
 external
 
 	include_path:
-		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_PLATFORM)\include"
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"

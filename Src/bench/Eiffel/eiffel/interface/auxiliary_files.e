@@ -16,6 +16,8 @@ inherit
 
 	SHARED_COMPILATION_MODES
 
+	SHARED_EIFFEL_PROJECT
+
 creation
 	make
 
@@ -119,20 +121,39 @@ feature -- Dynamic Library file
 			def_buffer := header_generation_buffer
 			def_buffer.clear_all
 
-			dynamic_lib := system.eiffel_dynamic_lib
-			is_dll_generated := dynamic_lib /= Void
-			if is_dll_generated then
 						-- We need to reparse the Eiffel DEF file in order to
 						-- get the latest version saved by the user.
 						--| Note: this is required because during some incremental
 						--| compilation some IDs are going to be changed and thus
 						--| what has been stored in E_DYNAMIC_LIB is not valid anymore.
-				!! eiffel_def_file.make_open_read (dynamic_lib.file_name)
-				is_dll_generated := dynamic_lib.parse_exports_from_file (eiffel_def_file)
-				eiffel_def_file.close
-				dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
-				system_name := clone(system.eiffel_system.name)
-				is_dll_generated := not dynamic_lib_exports.empty
+			dynamic_lib := system.eiffel_dynamic_lib
+			is_dll_generated := dynamic_lib /= Void
+			if not is_dll_generated then
+					-- Check if a `.def' file has been specified in the Ace file.
+				if System.dynamic_def_file /= Void then
+						-- Create for the first time the dynamic library.
+					Eiffel_project.create_dynamic_lib
+					dynamic_lib := system.eiffel_dynamic_lib
+					dynamic_lib.set_file_name (System.dynamic_def_file)
+					is_dll_generated := True
+				end
+			end
+			if is_dll_generated then
+				!! eiffel_def_file.make (dynamic_lib.file_name)
+				if
+					eiffel_def_file.exists and then
+					eiffel_def_file.is_readable and then
+					eiffel_def_file.is_plain
+				then
+					eiffel_def_file.open_read
+					is_dll_generated := dynamic_lib.parse_exports_from_file (eiffel_def_file)
+					eiffel_def_file.close
+					dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
+					system_name := clone(system.eiffel_system.name)
+					is_dll_generated := not dynamic_lib_exports.empty
+				else
+					is_dll_generated := False
+				end
 			end
 
 			if is_dll_generated then
@@ -252,6 +273,10 @@ feature -- Dynamic Library file
 									buffer.putstring ("%N")
 									buffer.putstring (return_type)
 									buffer.putstring (" ")
+									if dl_exp.has_call_type then
+										buffer.putstring (dl_exp.call_type)
+										buffer.putstring (" ")
+									end
 									buffer.putstring (feature_name)
 									buffer.putstring (" (")
 

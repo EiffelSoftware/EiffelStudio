@@ -36,6 +36,7 @@ feature
 				error_msg := new_error
 				error_msg.set_class (feat_table.associated_class)
 				error_msg.set_type (type)
+				error_msg.set_feature (f)
 				update (error_msg)
 				Error_handler.insert_error (error_msg)
 					-- Exception propagation now: cannot go on...

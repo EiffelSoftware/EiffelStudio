@@ -32,8 +32,9 @@
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
+#ifndef EIF_VMS
 #include <malloc.h>
-
+#endif
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

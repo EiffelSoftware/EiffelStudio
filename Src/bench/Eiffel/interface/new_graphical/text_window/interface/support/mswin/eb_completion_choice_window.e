@@ -424,9 +424,9 @@ feature {NONE} -- Implementation
 				is_closing := True
 				if before_complete /= void then
 					if feature_mode then
-						editor.complete_feature_from_window (point_if_needed + before_complete, False, character_to_append)
+						editor.complete_feature_from_window (point_if_needed + before_complete, False, '%U')
 					else
-						editor.complete_class_from_window (before_complete)
+						editor.complete_class_from_window (before_complete, '%U')
 					end
 				end
 				if has_capture then

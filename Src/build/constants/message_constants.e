@@ -25,6 +25,8 @@ feature -- Error messages
 			"Cannot remove inherited argument %%X!";
 	Cannot_remove_label_er: STRING is 
 			"Cannot remove inherited label %%X!";
+	Cannot_remove_translation_er: STRING is 
+			"Cannot remove translation %%X!%NTranslation is being used.";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";

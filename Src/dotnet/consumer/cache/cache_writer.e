@@ -55,6 +55,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			l_string_tuple: TUPLE [STRING]
 			l_new_assembly: BOOLEAN
+			l_assembly_folder: STRING
 		do
 			if not retried then
 				assembly := feature {ASSEMBLY}.load_assembly_name (aname)
@@ -62,12 +63,16 @@ feature -- Basic Operations
 					assembly_not_void: assembly /= Void
 				end
 				create cr.make (clr_version)
-				create dir.make (cr.absolute_assembly_path (assembly.get_name))
+				
+				l_assembly_folder := cr.absolute_assembly_path (assembly.get_name)
+				l_assembly_folder.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
+				create dir.make (l_assembly_folder)
 
 				create consumer
-					-- only consume the assembly if it has been modified or the
-					-- assembly is not already in the EAC.
-				if consumer.is_assembly_modified (assembly, dir.name) then
+					-- only consume `assembly' if assembly has not already been consumed,
+					-- corresponding assembly has been modified or if consumer tool has been 
+					-- modified.
+				if not dir.exists or else consumer.is_assembly_modified (assembly, dir.name) or else consumer.is_newer_tool (dir.name) then
 					if dir.exists then
 						dir.recursive_delete
 					else

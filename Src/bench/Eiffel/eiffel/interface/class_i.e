@@ -147,11 +147,9 @@ feature -- Access
 	date_has_changed: BOOLEAN is
 		local
 			str: ANY;
-			new_date: INTEGER
 		do
 			str := file_name.to_c;
-			new_date := eif_date ($str);
-			Result := new_date /= date;
+			Result := eif_date ($str) /= date;
 		end;
 
 feature -- Setting
@@ -459,7 +457,7 @@ feature -- Document processing
 			tmp: STRING
 			d_name: DIRECTORY_NAME;
 			i: INTEGER;
-        do
+		do
 			d_name := cluster.document_path;
 			if d_name /= Void then
 				!! Result.make_from_string (d_name);
@@ -478,7 +476,7 @@ feature -- Document processing
 
 feature {NONE} -- Document processing
 
-	No_word: STRING is "no";
+	No_word: STRING is "no"
 
 feature {NONE} -- Externals
 
@@ -486,12 +484,12 @@ feature {NONE} -- Externals
 			-- Date of file of name `str'.
 		external
 			"C"
-		end;
+		end
 
-    eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
-            -- Is `c' a valid class file extension?
-        external
-            "C"
-        end;
+	eif_valid_class_file_extension (c: CHARACTER): BOOLEAN is
+			-- Is `c' a valid class file extension?
+		external
+			"C"
+		end
 
 end -- class CLASS_I

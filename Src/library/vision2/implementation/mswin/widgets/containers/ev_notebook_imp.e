@@ -106,7 +106,9 @@ inherit
 			show_current_selection,
 			on_tcn_selchange,
 			wel_move_and_resize,
-			wel_resize
+			wel_resize,
+			on_wm_theme_changed,
+			on_erase_background
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -145,6 +147,8 @@ feature {NONE} -- Initialization
 			tab_pos := interface.tab_top
 			initialize_pixmaps
 			index := 0
+				-- Retrieve the theme for the tab.
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
 		end
 
 	initialize is
@@ -154,7 +158,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			check_notebook_assertions := True
 		end
-
+	
 feature {AV_ANY_I} --  Access
 
 	top_level_window_imp: EV_WINDOW_IMP
@@ -981,6 +985,38 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				Result := child_imp.interface
 			end
 		end
+		
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+			if application_imp.themes_active then
+					-- On Windows XP when thems are active, the tab control draws
+					-- all of its background itself. Therefore we do not need to paint anything.
+					-- This helps to reduce flicker.
+				disable_default_processing
+				set_message_return_value (to_lresult (1))
+			else
+				Precursor {WEL_TAB_CONTROL} (paint_dc, invalid_rect)
+			end
+		end
+		
+	on_wm_theme_changed is
+			-- `Wm_themechanged' message received by Windows so update current theming.
+		do
+			application_imp.theme_drawer.close_theme_data (open_theme)
+			application_imp.update_theme_drawer			
+			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
+		end
+		
+feature {EV_XP_THEME_DRAWER_IMP} -- Implementation
+		
+	open_theme: POINTER
+		-- Theme currently open for `Current'. May be Void while running on Windows versions that
+		-- do no support theming.
 
 feature {NONE} -- Font implementation
 

@@ -228,13 +228,12 @@ feature -- Access
 			if count > 0 then
 				from
 					i := 1
+					tmp := "_"
 				until
 					i > count
 				loop
-					Result.append ("_")
-					tmp := clone (l_meta.item (i).il_type_name)
-					tmp := tmp.substring (tmp.last_index_of ('.', tmp.count) + 1, tmp.count)
 					Result.append (tmp)
+					Result.append (l_meta.item (i).il_type_name)
 					i := i + 1
 				end
 			end

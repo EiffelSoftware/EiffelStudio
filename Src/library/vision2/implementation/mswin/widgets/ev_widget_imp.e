@@ -30,7 +30,7 @@ inherit
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine	
-			interface	
+			interface, enable_capture, disable_capture
 		end
 		
 	EV_DOCKABLE_SOURCE_IMP
@@ -378,6 +378,21 @@ feature -- Status setting
 			-- Redefined by many widgets.
 		do
 			ev_set_minimum_size (0, 0)
+		end
+		
+	enable_capture is
+			-- Enable capture.
+			--| Accessible through the interface of widget.
+		do
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
+			application_imp.set_captured_widget (interface)
+		end
+
+	disable_capture is
+			-- Release all user events.
+		do
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
+			application_imp.set_captured_widget (Void)
 		end
 
 feature -- Element change

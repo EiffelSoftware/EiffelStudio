@@ -580,8 +580,6 @@ feature {NONE} -- Basic operations for implementation
 		do
 			list := ev_children
 			if not list.is_empty then
-					--| FIXME Why do we only deal with the rows in here?
-					--| is it necessary to do this?
 				initialize_rows (rows)
 				initialize_columns (columns)
 

@@ -108,7 +108,6 @@ pebble_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 				new_y := C.gtk_adjustment_struct_value (v_adjust).rounded
 				new_y := a_y + new_y
 				if parent_imp.row_from_y_coord (new_y) = index then
-					print ("Over row " + index.out + "%N")
 					Result := True
 				end	
 			end
@@ -167,6 +166,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/30 23:46:40  king
+--| Removed testing statement
+--|
 --| Revision 1.44  2000/03/30 23:22:21  king
 --| Implemented pnd target functionality
 --|

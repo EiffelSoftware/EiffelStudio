@@ -105,7 +105,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 "<="						{return process(TE_LE);}
 ">="						{return process(TE_GE);}
 "/="						{return process(TE_NE);}
-"--"						{return process(TE_COMM);}
 "("							{return process(TE_LPARAN);}
 ")"							{return process(TE_RPARAN);}
 "{"							{return process(TE_LCURLY);}
@@ -121,7 +120,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 "!"							{return process(TE_BANG);}
 "<<"						{return process(TE_LARRAY);}
 ">>"						{return process(TE_RARRAY);}
-(@|#|\||&)[@|#|0-9|a-z|A-Z|_|!|\"|#|\$|&|\'|\(|\)|\*|\+|\,|\-|\.|/|:|;|<|>|=|\?|\[|\\|\]|\^|\`|\{|\}|\||\~|%]*	{return process_name(TE_FREE);}
+(@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~%]*	{return process_name(TE_FREE);}
 "//"						{return process(TE_DIV);}
 "\\\\"						{return process(TE_MOD);}
 {A}{X}*						{return process_name(TE_ID);}

@@ -441,6 +441,9 @@ feature -- Miscellaneous
 	Event_modification_text: STRING is "Modify events"
 		-- Displayed on button in object editor which pops
 		-- up event dialog.
+		
+	Comment_start_string: STRING is "-- Actions to be performed when"
+		-- Text presumed to be at start of all action sequence comments.
 	
 feature -- Warning Dialogs
 

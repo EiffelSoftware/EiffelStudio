@@ -62,6 +62,8 @@ feature -- Access
 			-- As dynamic list descendants are all sets,
 			-- Result will be zero for all values of `i'
 			-- that are not equal to one
+		require
+			positive_occurances: i > 0
 		local
 			an_index: INTEGER
 		do
@@ -366,7 +368,7 @@ feature -- Removal
 			-- cursor was on `v', move to right neighbor.
 		local
 			item_index: INTEGER
-		do
+		do			
 			item_index := index_of (v, 1)
 			if item_index > 0 then
 				remove_i_th (item_index)
@@ -391,6 +393,8 @@ feature -- Removal
 	remove is
 			-- Remove current item. Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
+		require
+			writable: not off
 		do
 			remove_i_th (index)
 			if index > count + 1 then
@@ -403,6 +407,9 @@ feature -- Removal
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
+		require
+			left_exists: index > 1
+			not_before: not (index = 0)
 		do
 			index := index - 1
 			remove_i_th (index)
@@ -413,6 +420,8 @@ feature -- Removal
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
+		require
+			right_exists: index < count
 		do
 			remove_i_th (index + 1)
 		ensure then

@@ -17,7 +17,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_BOX) is
 			-- Create application menu bar.
 		local
 			new_state_b: APP_NEW_STATE
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			cut_hole: CUT_HOLE
 		do
 			{EV_TOOL_BAR} Precursor (par)
+			par.set_child_expandable (Current, False)
 			create new_state_b.make (Current)
 			create init_state_hole.make (Current) 
 			create self_hole.make (Current)

@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 
 				--| lists box
 			create state_label.make_with_text (vbox, Widget_names.state_name)
-			state_label.set_expand (False)
+			vbox.set_child_expandable (state_label, False)
 			create state_list.make (vbox, Current)
 			create transition_label.make_with_text (vbox, Widget_names.transition_name)
-			transition_label.set_expand (False)
+			vbox.set_child_expandable (transition_label, False)
 			create transition_list.make (vbox)
 				--| drawing area
 			create drawing_area.make (drawing_sw)

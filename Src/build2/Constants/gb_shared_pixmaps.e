@@ -225,6 +225,21 @@ feature -- Pngs
 			Result := build_classic_pixmap ("past")
 		end		
 		
+	Icon_cut: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("cut")
+		end		
+		
+	Icon_copy: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("copy")
+		end
+		
+	Icon_clipboard: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("clipboard")
+		end
+		
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
 			-- `Result' is a pixmap loaded from file matching
 			-- `a_name' in Build bitmaps location.

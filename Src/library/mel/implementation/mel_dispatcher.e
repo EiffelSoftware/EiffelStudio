@@ -84,22 +84,22 @@ feature {MEL_OBJECT} -- Implementation
 			added: wm_protocol_callbacks.has_callback (a_screen_object, atom.identifier)
 		end;
 
-	add_event_handler (a_screen_object,
-				a_resource: POINTER;
+	add_event_handler (a_screen_object: POINTER;
+				a_mask: INTEGER;
 				a_callback_exec: MEL_CALLBACK_EXEC) is
-			-- Add event callback list for `a_screen_object' with `a_resource'
+			-- Add event callback list for `a_screen_object' with `a_mask'
 		require
 			valid_a_screen_object: Mel_widgets.has (a_screen_object);
-			a_resource_not_null: a_resource /= default_pointer;
+			a_mask_not_null: a_mask /= 0;
 			valid_exec: a_callback_exec /= Void
 		do	
 			xt_event_callbacks.add_callback (a_screen_object, 
-						a_resource, a_callback_exec)
+						a_mask, a_callback_exec)
 			if xt_event_callbacks.need_to_call_c then
-				c_add_event_handler (a_screen_object, a_resource)
+				c_add_event_handler (a_screen_object, a_mask)
 			end
 		ensure
-			added: xt_event_callbacks.has_callback (a_screen_object, a_resource)
+			added: xt_event_callbacks.has_callback (a_screen_object, a_mask)
 		end;
 
 	set_translation (a_screen_object: POINTER;
@@ -174,19 +174,19 @@ feature {MEL_OBJECT} -- Implementation
 			end
 		end;
 
-	remove_event_handler (a_screen_object,
-				a_resource: POINTER;
+	remove_event_handler (a_screen_object: POINTER;
+				a_mask: INTEGER;
 				a_callback_exec: MEL_CALLBACK_EXEC) is
 			-- Add Xm motif callback list for `a_screen_object' with `a_resource'
 		require
 			valid_a_screen_object: Mel_widgets.has (a_screen_object);
-			a_resource_not_null: a_resource /= default_pointer;
+			a_mask_not_zero: a_mask /= 0;
 			valid_exec: a_callback_exec /= Void
 		do	
 			xt_event_callbacks.remove_callback (a_screen_object, 
-						a_resource, a_callback_exec)
+						a_mask, a_callback_exec)
 			if xt_event_callbacks.need_to_call_c then
-				c_remove_event_handler (a_screen_object, a_resource)
+				c_remove_event_handler (a_screen_object, a_mask)
 			end
 		end;
 
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 	wm_protocol_callbacks: MEL_CALLBACK_TABLE [POINTER];
 			-- WM Motif protocol callbacks for all widgets
 
-	xt_event_callbacks: MEL_CALLBACK_TABLE [POINTER];
+	xt_event_callbacks: MEL_CALLBACK_TABLE [INTEGER];
 			-- Xt Event callbacks for all widgets
 
 	xt_input_callbacks: HASH_TABLE [MEL_CALLBACK_EXEC, POINTER];
@@ -457,7 +457,7 @@ feature {NONE} -- External features passed out to C
 		end;
 
 	frozen handle_event (a_screen_object: POINTER; 
-				mask: POINTER; 
+				mask: INTEGER; 
 				event_ptr: POINTER) is
 			-- Handle the Xt event that was specified in `add_event_handler'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
@@ -643,7 +643,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	c_add_event_handler (scr_obj: POINTER; mask: POINTER) is
+	c_add_event_handler (scr_obj: POINTER; mask: INTEGER) is
 		external
 			"C"
 		end;
@@ -663,7 +663,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	c_remove_event_handler (scr_obj: POINTER; mask: POINTER) is
+	c_remove_event_handler (scr_obj: POINTER; mask: INTEGER) is
 		external
 			"C"
 		end;

@@ -629,7 +629,11 @@ feature -- Plug and Makefile file
 			buffer.putstring ("%N%Tegc_ce_type = egc_ce_type_init;%N")
 			buffer.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init;%N")
 			buffer.putstring ("%Tegc_fsystem = egc_fsystem_init;%N")
-			buffer.putstring ("%Tegc_fco_table = egc_fco_table_init;%N")
+			if not final_mode then
+					-- FIXME: Needs to be removed in Workbench mode, but there is
+					-- still some work to do with the Byte code.
+				buffer.putstring ("%Tegc_fco_table = egc_fco_table_init;%N")
+			end
 			buffer.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init;%N")
 			buffer.putstring ("%Tegc_partab = egc_partab_init;%N")
 			buffer.putstring ("%Tegc_partab_size = egc_partab_size_init;%N")
@@ -652,13 +656,13 @@ feature -- Plug and Makefile file
 			else
 					-- Initialization routines
 				buffer.putstring ("%Tegc_ecreate = ")
-				buffer.putstring ("(char *(**)()) ")
+				buffer.putstring ("(char *(**)(void)) ")
 				buffer.putstring (init_name)
 				buffer.putstring (";%N")
 
 					-- Dispose routines
 				buffer.putstring ("%Tegc_edispose = ")
-				buffer.putstring ("(void (**)()) ")
+				buffer.putstring ("(void (**)(void)) ")
 				buffer.putstring (dispose_name)
 				buffer.putstring (";%N")
 

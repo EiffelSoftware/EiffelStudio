@@ -40,9 +40,13 @@ feature -- Basic Operation
 				then
 					deserialized_object := f.retrieved
 				end
+				f.close
 			end
 		rescue
 			retried := True
+			if f /= Void then
+				f.close
+			end
 			retry
 		end
 

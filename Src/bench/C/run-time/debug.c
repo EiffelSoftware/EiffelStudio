@@ -186,7 +186,7 @@ rt_shared EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against conc
 
 #ifdef EIF_THREADS
 #define DBGMTX_CREATE \
-	EIF_LW_MUTEX_CREATE(db_mutex, "Cannot create mutex for the debugger [dbreak]\n")
+	EIF_LW_MUTEX_CREATE(db_mutex, -1, "Cannot create mutex for the debugger [dbreak]\n")
 #define DBGMTX_DESTROY \
 	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\

@@ -670,7 +670,7 @@ rt_shared void eif_cecil_init () {
 	REQUIRE ("Root thread", eif_thr_is_root ());
 	REQUIRE ("Cecil mutex not created", !cecil_lock);
 
-	EIF_LW_MUTEX_CREATE(cecil_lock, "Couldn't create cecil lock");
+	EIF_LW_MUTEX_CREATE(cecil_lock, -1, "Couldn't create cecil lock");
 }
 
 rt_shared void eif_cecil_reclaim () {

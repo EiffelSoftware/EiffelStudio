@@ -76,7 +76,6 @@ feature -- Status Report
 			c_not_void: c /= Void
 		local
 			l_assembly: ASSEMBLY_I
-			l_result: CLASS_I
 			l_name: STRING
 			l_is_array: BOOLEAN
 			l_array_type: CONSUMED_ARRAY_TYPE
@@ -87,34 +86,35 @@ feature -- Status Report
 			if l_is_array then
 				Result := System.native_array_class
 			else
-				l_name := c.name
-				l_result := l_assembly.dotnet_classes.item (l_name)
-				if l_result = Void then
-						-- Case where this is a class from `mscorlib' that is in fact
-						-- written as an Eiffel class, e.g. INTEGER, ....
-					if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
-						l_result := System.integer_8_class
-					elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
-						l_result := System.integer_16_class
-					elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
-						l_result := System.integer_32_class
-					elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
-						l_result := System.integer_64_class
-					elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
-						l_result := System.pointer_class
-					elseif l_name.is_equal ("System.Double") then
-						l_result := System.double_class
-					elseif l_name.is_equal ("System.Single") then
-						l_result := System.real_class
-					elseif l_name.is_equal ("System.Char") then
-						l_result := System.character_class
-					elseif l_name.is_equal ("System.Boolean") then
-						l_result := System.boolean_class
+				if c.is_by_ref then
+					Result := System.typed_pointer_class
+				else
+					l_name := c.name
+					Result := l_assembly.dotnet_classes.item (l_name)
+					if Result = Void then
+							-- Case where this is a class from `mscorlib' that is in fact
+							-- written as an Eiffel class, e.g. INTEGER, ....
+						if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
+							Result := System.integer_8_class
+						elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
+							Result := System.integer_16_class
+						elseif l_name.is_equal ("System.Int32") or l_name.is_equal ("System.UInt32") then
+							Result := System.integer_32_class
+						elseif l_name.is_equal ("System.Int64") or l_name.is_equal ("System.UInt64") then
+							Result := System.integer_64_class
+						elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
+							Result := System.pointer_class
+						elseif l_name.is_equal ("System.Double") then
+							Result := System.double_class
+						elseif l_name.is_equal ("System.Single") then
+							Result := System.real_class
+						elseif l_name.is_equal ("System.Char") then
+							Result := System.character_class
+						elseif l_name.is_equal ("System.Boolean") then
+							Result := System.boolean_class
+						end
 					end
 				end
-
-				Result := l_result
-				
 			end
 		ensure
 			result_not_void: Result /= Void

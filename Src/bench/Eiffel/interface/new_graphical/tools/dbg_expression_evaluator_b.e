@@ -943,13 +943,15 @@ feature -- Concrete evaluation
 		local
 			l_params_index: INTEGER
 			dmp: DUMP_VALUE
+			bak_ct: CLASS_TYPE
 		do
 				--| Prepare parameters ...
+			bak_ct := Byte_context.class_type
+			Byte_context.set_class_type (dt)
 			create Result.make (1, params.count)
 			from
 				l_params_index := 0
 				params.start
-				byte_context.set_class_type (dt)
 			until
 				params.after or error_occurred
 			loop
@@ -957,7 +959,7 @@ feature -- Concrete evaluation
 				l_params_index := l_params_index + 1
 				if
 					dmp.is_basic and
-					(not byte_context.real_type (
+					(not Byte_context.real_type (
 						f.arguments.i_th (params.index).type_i).is_basic)
 				then
 					dmp := dbg_evaluator.dotnet_metamorphose_basic_to_reference_value (dmp)
@@ -968,6 +970,9 @@ feature -- Concrete evaluation
 					
 				Result.put (dmp, l_params_index)
 				params.forth
+			end
+			if bak_ct /= Void then
+				Byte_context.set_class_type (bak_ct)				
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -983,11 +988,14 @@ feature -- Concrete evaluation
 			params /= Void and then not params.is_empty
 		local
 			dmp: DUMP_VALUE
+			bak_ct: CLASS_TYPE
 		do
 				--| Prepare parameters ...
+			bak_ct := Byte_context.class_type
+			Byte_context.set_class_type (dt)
 			from
 				params.start
-				byte_context.set_class_type (dt)
+
 			until
 				params.after or error_occurred
 			loop
@@ -1002,7 +1010,7 @@ feature -- Concrete evaluation
 					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
 				if
 					dmp.is_basic and
-					(not byte_context.real_type (
+					(not Byte_context.real_type (
 						f.arguments.i_th (params.index).type_i).is_basic)
 				then
 					debug ("debugger_trace_eval_data")
@@ -1012,6 +1020,7 @@ feature -- Concrete evaluation
 				end
 				params.forth
 			end -- metamorphosme on dotnet or classic
+			Byte_context.set_class_type (bak_ct)
 		end
 
 	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
@@ -1197,6 +1206,7 @@ feature -- Change Context
 			l_reset_byte_node: BOOLEAN
 			f_i: FEATURE_I
 			c_f_i: FEATURE_I
+			c_c_t: CLASS_TYPE
 		do
 			if c /= Void then
 				if f /= Void then
@@ -1205,25 +1215,28 @@ feature -- Change Context
 				if context_feature /= Void then
 					c_f_i := context_feature.associated_feature_i
 				end
-				
 				if 
 					f_i /= c_f_i
 				then
 					context_feature := f
 					l_reset_byte_node := True
 				end
-				if context_class = Void or else not c.is_equal (context_class) then
+				if not equal (context_class, c) then
 					context_class := c
 					l_reset_byte_node := True
-				end			
-				if context_class_type = Void or else not ct.is_equal (context_class_type) then
-					context_class_type := ct
+				end
+				if ct /= Void then
+					c_c_t := ct
+				elseif context_class /= Void then
+					c_c_t := context_class.actual_type.type_i.associated_class_type
+				end
+				if not equal (context_class_type, c_c_t) then
+					context_class_type := c_c_t
 					l_reset_byte_node := True
-				end				
+				end
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
 					reset_expression_byte_node
-					reset_ast_context
 				end				
 			end
 		end
@@ -1245,7 +1258,8 @@ feature -- Access
 			old_context_feature: like context_feature
 			old_context_class: like context_class
 			old_context_class_type: like context_class_type
-			old_int_expression_byte_note: like internal_expression_byte_node			
+			old_int_expression_byte_note: like internal_expression_byte_node
+			bak_context_class_type: CLASS_TYPE
 		do
 				--| Backup current context and values
 			old_context_feature := context_feature
@@ -1260,7 +1274,12 @@ feature -- Access
 				--| Get expression_byte_node
 			get_expression_byte_node
 			if expression_byte_node /= Void then
+				bak_context_class_type := Byte_context.class_type
+				Byte_context.set_class_type (context_class_type)
 				Result := expression_byte_node.type.is_boolean
+				if bak_context_class_type /= Void then
+					Byte_context.set_class_type (bak_context_class_type)
+				end
 			end
 			
 				--| FIXME JFIAT: check in which cases we call the is_condition
@@ -1295,41 +1314,72 @@ feature {NONE} -- Implementation
 			context_class_not_void: context_class /= Void
 		local
 			retried: BOOLEAN
+			
+			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
+			f_as: FEATURE_AS
+			l_fi: FEATURE_I
+			l_byte_code: BYTE_CODE
+			l_ta: CL_TYPE_A
+			bak_byte_code: BYTE_CODE
 		do
 			if not retried then
 				if internal_expression_byte_node = Void then
 					debug ("debugger_trace_eval_data")
-						print ("DBG_EXPRESSION_EVALUATOR_B: Recompute expression_byte_node ["+dbg_expression.expression+"]%N")
-						if on_context then
-							print ("                on_context: " + on_context.out +"%N")					
-						end
-						if on_class then
-							print ("                on_class  : " + on_class.out +"%N")
-						end
-						if on_object then
-							print ("                on_object : " + on_object.out +"%N")
-						end
+						print (generator + ".get_expression_byte_node from ["+dbg_expression.expression+"]%N")
+						print ("%T%T on_context: " + on_context.out +"%N")					
+						print ("%T%T on_class  : " + on_class.out +"%N")
+						print ("%T%T on_object : " + on_object.out +"%N")
 						if context_class /= Void then
-							print ("            context_class : " + context_class.name_in_upper +"%N")
+							print ("%T%T context_class : " + context_class.name_in_upper +"%N")
 						end
 						if context_address /= Void then
-							print ("          context_address : " + context_address.out +"%N")						
+							print ("%T%T context_address : " + context_address.out +"%N")						
 						end
 						if context_feature /= Void then
-							print ("          context_feature : " + context_feature.name +"%N")
+							print ("%T%T context_feature : " + context_feature.name +"%N")
 						end
 					end
 						--| If we want to recompute the `expression_byte_node', 
 						--| we need to call `reset_expression_byte_nod' 
 
 					if context_class /= Void then
-							--| Prepare AST context
-						prepare_ast_context (context_feature, context_class, context_class_type)
-						
+						Ast_context.clear1
+							--| Prepare Compiler context
+						Ast_context.set_current_class (context_class)
+						if context_class_type /= Void then
+							l_ta := context_class_type.type.type_a
+						end
+						Ast_context.set_current_class_with_actual_type (context_class, l_ta)
+						Inst_context.set_cluster (context_class.cluster)
+
+						bak_byte_code := Byte_context.byte_code
+			
+						if on_context and then context_feature /= Void then
+								--| Locals
+							f_as := context_feature.ast
+							l_fi := context_feature.associated_feature_i
+
+							Ast_context.set_current_feature (l_fi)
+			
+								--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
+							l_byte_code := l_fi.byte_server.item (context_feature.body_index)
+							Byte_context.set_byte_code (l_byte_code)
+							
+							if l_fi /= Void then
+								l_ct_locals := f_as.local_table (l_fi)
+								Ast_context.set_locals (l_ct_locals)
+							end
+						end
 							--| Compute and get `expression_byte_node'
-						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)						
+						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)
+							--| Reset Compiler context
+						if bak_byte_code /= Void then
+							Byte_context.set_byte_code (bak_byte_code)
+						end
+						Ast_context.clear1
 					else
 						set_error_expression_and_tag ("Context corrupted or not found", Void)
+						Ast_context.clear1
 					end
 				end
 			else
@@ -1362,10 +1412,9 @@ feature {NONE} -- Implementation
 					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					Result := Void
 				else
-					ast_context.start_lines
+					Ast_context.start_lines
 					Result := exp.byte_node
 				end
-				reset_ast_context
 			else
 				if not type_check_succeed then
 					set_error_expression ("Type checking failed")
@@ -1380,58 +1429,12 @@ feature {NONE} -- Implementation
 					end
 				end
 				Result := Void
-				reset_ast_context
 			end
 		rescue
 			retried := True
 			retry
-		end		
-		
-	prepare_ast_context (f: like context_feature; c: like context_class; ct: like context_class_type) is
-			-- Preparing AST Context for evaluation
-		require
-			f_not_void: on_context implies context_feature /= Void
-			c_not_void: c /= Void
-		local
-			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
-			f_as: FEATURE_AS
-			l_fi: FEATURE_I
-			
-			l_byte_code: BYTE_CODE
-			l_ta: CL_TYPE_A
-		do
-			Ast_context.set_current_class (c)
-			if ct /= Void then
-				l_ta := ct.type.type_a
-			end
-			Ast_context.set_current_class_with_actual_type (c, l_ta)
-			Inst_context.set_cluster (ast_context.current_class.cluster)
-
-			if on_context and then f /= Void then
-				Ast_context.set_current_feature (f.associated_feature_i)
-				
-					--| Locals
-				f_as := f.ast
-				l_fi := f.associated_feature_i
-
-					--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
-				l_byte_code := l_fi.byte_server.item (f.body_index)
-				Byte_context.set_byte_code (l_byte_code)
-				
-				if l_fi /= Void then
-					l_ct_locals := f_as.local_table (l_fi)
-					ast_context.set_locals (l_ct_locals)
-				end
-			end
 		end
 		
-	reset_ast_context is
-			-- Reset AST Context
-			-- useful especially when error occurred on expression
-		do
-			Ast_context.clear1
-		end
-
 	reset_expression_byte_node is
 		do
 			internal_expression_byte_node := Void

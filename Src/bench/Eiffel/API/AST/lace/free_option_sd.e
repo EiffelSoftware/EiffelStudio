@@ -77,6 +77,7 @@ feature -- Properties
 	address_expression,
 	arguments,
 	array_optimization,
+	check_generic_creation_constraint,
 	check_vape,
 	company,
 	console_application,
@@ -175,6 +176,7 @@ feature {NONE} -- Codes and names.
 			Result.force (address_expression, "address_expression")
 			Result.force (arguments, "arguments")
 			Result.force (array_optimization, "array_optimization")
+			Result.force (check_generic_creation_constraint, "check_generic_creation_constraint")
 			Result.force (check_vape, "check_vape")
 			Result.force (company, "company")
 			Result.force (console_application, "console_application")
@@ -337,6 +339,15 @@ feature {COMPILER_EXPORTER}
 						else
 							error_found := True
 						end
+					else
+						error_found := True
+					end
+
+				when check_generic_creation_constraint then
+					if value.is_no then
+						System.set_check_generic_creation_constraint (False)
+					elseif value.is_yes then
+						System.set_check_generic_creation_constraint (True)
 					else
 						error_found := True
 					end

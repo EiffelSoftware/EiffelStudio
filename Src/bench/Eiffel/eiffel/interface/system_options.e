@@ -26,6 +26,10 @@ feature -- Access
 	do_not_check_vape: BOOLEAN
 			-- Does system check for VAPE error in precondition?
 
+	check_generic_creation_constraint: BOOLEAN
+			-- Do we check a generic type against any of the creation constraint specified
+			-- in associated base class.
+
 	address_expression_allowed: BOOLEAN
 			-- Does system accept such statement as $(a.to_c)?
 	
@@ -285,6 +289,14 @@ feature -- Update
 			do_not_check_vape := b
 		ensure
 			do_not_check_vape_set: do_not_check_vape = b
+		end
+
+	set_check_generic_creation_constraint (b: BOOLEAN) is
+			-- Set `check_generic_creation_constraint' with `b'.
+		do
+			check_generic_creation_constraint := b
+		ensure
+			check_generic_creation_constraint_set: check_generic_creation_constraint = b
 		end
 
 	allow_address_expression (b: BOOLEAN) is

@@ -518,7 +518,7 @@ feature -- Modification
 									cs_fig := diagram.new_client_supplier_figure (c, fig, supplier_data)
 								end
 								diagram.add_client_supplier_figure (cs_fig)
-								if cs_fig.is_reflexive then
+								if cs_fig.is_reflexive and then cs_fig.parent_link = Void then
 									cs_fig.set_reflexive
 								end
 								cs_fig.update

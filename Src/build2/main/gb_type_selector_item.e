@@ -98,7 +98,7 @@ feature -- Access
 			container ?= object
 				-- We may only replace an EV_CONTAINER with a primitive if the container is empty.
 			if container /= Void and container.object.count > 0 and
-				type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE"))then
+				type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) then
 				can_drop := False
 			end
 			
@@ -116,7 +116,7 @@ feature -- Access
 			cell ?= object
 			if cell /= Void then
 					-- We may only replace an EV_CELL with an EV_PRIMITIVE if the cell is empty.
-				if type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE")) and (cell.object.count = 1) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) and (cell.object.count = 1) then
 					can_drop := False
 				end
 			end
@@ -133,13 +133,13 @@ feature -- Access
 						end
 						-- We may only replace an EV_CONTAINER with an EV_CELL if the container
 						-- holds no more than one item.
-					elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_CELL")) then
+					elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_cell_string)) then
 						if container.object.count <= 1 then
 							can_drop := True
 						else
 							can_drop := False
 						end		
-					elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_PRIMITIVE")) then
+					elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) then
 						if container.object.is_empty then
 							can_drop := True
 						else
@@ -152,7 +152,7 @@ feature -- Access
 				-- Special case for menu bar.
 				-- Menu bars are not widgets, or items, and can only
 				-- be replaced by other menu bars.
-			if type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_BAR")) then
+			if type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
 				menu_bar ?= constructor_item.object
 				if menu_bar = Void then
 					can_drop := False

@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			l_item: EV_LIST_ITEM_IMP
 		do
 		 	l_item ?= eif_object_from_c (
-				gtk_value_pointer (args)
+				gtk_marshal.gtk_value_pointer (args)
 			)
 			if l_item.deselect_actions_internal /= Void then
 				l_item.deselect_actions_internal.call ([])

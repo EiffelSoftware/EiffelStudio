@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM_IMP
 		do
 			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c (gtk_value_pointer (args))
+		 	l_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (args))
 			call_select_actions (l_item)
 		end
 

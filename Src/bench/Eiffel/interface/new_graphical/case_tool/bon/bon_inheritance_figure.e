@@ -145,6 +145,51 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			end
 		end
 
+	draw_figure_line (line: EV_FIGURE_LINE) is
+			-- Draw standard representation of `line' to canvas.
+		local
+			s, t: EV_RELATIVE_POINT
+			p: EV_FIGURE_POLYGON
+			d: like drawable
+		do
+			d := drawable
+			d.set_foreground_color (line.foreground_color)
+			if line.is_start_arrow or else line.is_end_arrow then
+				d.set_line_width (0)
+				if line.is_start_arrow then
+					p := line.start_arrow
+					p.i_th_point (2).set_angle (line.start_angle)
+					d.fill_polygon (offset_coordinates (p.point_array))
+					s := line.start_draw_point
+				else
+					s := line.point_a
+				end
+				if line.is_end_arrow then
+					p := line.end_arrow
+					p.i_th_point (2).set_angle (line.end_angle)
+					d.fill_polygon (offset_coordinates (p.point_array))
+					t := line.end_draw_point
+				else
+					t := line.point_b
+				end
+			else
+				s := line.point_a
+				t := line.point_b
+			end
+			if line.dashed_line_style then
+				d.enable_dashed_line_style
+			end
+			d.set_line_width (line.line_width)
+			d.draw_segment (
+				s.x_abs - drawable_position.x,
+				s.y_abs - drawable_position.y,
+				t.x_abs - drawable_position.x,
+				t.y_abs - drawable_position.y)
+			if line.dashed_line_style then
+				d.disable_dashed_line_style
+			end
+		end
+
 feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
 
 	draw_ps (ps_proj: EV_POSTSCRIPT_PROJECTOR) is

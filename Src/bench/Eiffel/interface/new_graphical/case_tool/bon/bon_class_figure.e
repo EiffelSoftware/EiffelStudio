@@ -333,8 +333,8 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			d: like drawable
 		do
 			d := drawable
-			cx := ellipse.center_x
-			cy := ellipse.center_y
+			cx := ellipse.center_x - drawable_position.x
+			cy := ellipse.center_y - drawable_position.y
 			r1 := ellipse.radius1
 			r2 := ellipse.radius2
 			d.set_line_width (bon_class_line_width)
@@ -344,8 +344,8 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			d.draw_ellipse (cx - r1, cy - r2, 2 * r1, 2 * r2)
 			if is_root_class then
 			    re := root_ellipse
-			    cx := re.center_x
-			    cy := re.center_y
+			    cx := re.center_x - drawable_position.x
+			    cy := re.center_y - drawable_position.y
 			    r1 := re.radius1
 			    r2 := re.radius2
 			    d.draw_ellipse (cx - r1, cy - r2, 2 * r1, 2 * r2)
@@ -366,7 +366,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			loop
 				fig_txt := name_figures.item
 				d.set_foreground_color (fig_txt.foreground_color)
-				d.draw_text_top_left (fig_txt.point.x_abs, fig_txt.point.y_abs, fig_txt.text)
+				d.draw_text_top_left (fig_txt.point.x_abs - drawable_position.x, fig_txt.point.y_abs - drawable_position.y, fig_txt.text)
 				name_figures.forth
 			end
 
@@ -380,7 +380,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 				generics_font.set_height ((generics_font.height * world.point.scale_y).rounded)
 				d.set_font (generics_font)
 				d.set_foreground_color (generics_figure.foreground_color)
-				d.draw_text_top_left (fig_txt.point.x_abs, fig_txt.point.y_abs, fig_txt.text)
+				d.draw_text_top_left (fig_txt.point.x_abs - drawable_position.x, fig_txt.point.y_abs - drawable_position.y, fig_txt.text)
 			end
 
 			from
@@ -389,7 +389,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 				icon_figures.after
 			loop
 				fig_pic := icon_figures.item
-				d.draw_pixmap (fig_pic.point.x_abs, fig_pic.point.y_abs, fig_pic.pixmap)
+				d.draw_pixmap (fig_pic.point.x_abs - drawable_position.x, fig_pic.point.y_abs - drawable_position.y, fig_pic.pixmap)
 				icon_figures.forth
 			end
 		end

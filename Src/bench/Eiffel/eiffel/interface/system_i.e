@@ -404,6 +404,9 @@ feature
 			!!onbidt.make (50);
 			!!optimization_tables.make;
 			!!dle_frozen_nobid_table.make (50)
+
+				-- Address table
+			!!address_table.make (100)
 		end;
 
 	reset_debug_counter is
@@ -1803,6 +1806,8 @@ end;
 
 			generate_option_file;
 
+			address_table.generate (False);
+
 			generate_rout_info_table;
 
 			pattern_table.generate;
@@ -2026,6 +2031,9 @@ end;
 				-- Generate main file
 			generate_main_file;
 			generate_init_file;
+
+				-- Address table
+			address_table.generate (True)
 
 			if extendible then
 					-- Keep track of the generated data for the
@@ -3389,7 +3397,12 @@ feature --Workbench option file generation
 			Option_file.close;
 		end;
 
-feature 
+feature -- Address table
+
+	address_table: ADDRESS_TABLE
+			-- Generate encapsulation of function pointers
+
+feature
 
 	set_code_replication_off (b: BOOLEAN) is
 			-- Assign `b' to `replication_off'

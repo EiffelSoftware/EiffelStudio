@@ -11,8 +11,7 @@ inherit
 	ICONED_COMMAND
 		redefine
 			licence_checked
-		end;
-	SHARED_LICENSE
+		end
 
 creation
 

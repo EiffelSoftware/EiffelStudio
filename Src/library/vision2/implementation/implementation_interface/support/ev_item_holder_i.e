@@ -34,7 +34,8 @@ feature -- Access
 feature -- Element change
 
 	clear_items is
-			-- Clear all the items of the list.
+			-- Clear all the items of the item holder.
+			-- (Remove them and destroy them).
 		require
 			exists: not destroyed
 		deferred

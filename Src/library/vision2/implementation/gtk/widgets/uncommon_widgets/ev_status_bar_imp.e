@@ -131,6 +131,7 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+			-- (Remove them from the status bar and destroy them).
 		do
 			clear_ev_children
 			c_gtk_container_remove_all_children (widget)

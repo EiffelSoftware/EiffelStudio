@@ -94,6 +94,7 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+			-- (Remove them from the popup menu and destroy them).
 		do
 			check
 				To_be_implemented: False

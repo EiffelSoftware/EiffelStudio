@@ -1,5 +1,5 @@
 indexing
-
+	description: "Can read and convert X-bitmap to Windows bitmap"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -8,7 +8,6 @@ class
 	X_BITMAP_WINDOWS
 
 inherit
-
 	WEL_DIB
 		redefine
 			width, height

@@ -1,5 +1,5 @@
 indexing
-
+	description: "A dialog displaying a working icon"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"

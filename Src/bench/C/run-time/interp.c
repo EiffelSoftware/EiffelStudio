@@ -875,28 +875,24 @@ rt_private void interpret(int flag, int where)
 		offset = get_long ();	/* Get integer size */
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case (SK_FLOAT):{
-				EIF_REAL f = last->it_float;
+			case SK_FLOAT:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) f; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) f; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) f; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) f; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_float; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_float; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_float; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_float; break;
 					default:
 						eif_panic ("Illegal type");
-				}
 				}
 				break;
-			case (SK_DOUBLE):{
-				EIF_DOUBLE d = last->it_double;
+			case SK_DOUBLE:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) d; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) d; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) d; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) d; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_double; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_double; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_double; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_double; break;
 					default:
 						eif_panic ("Illegal type");
-				}
 				}
 				break;
 			case SK_INT8:
@@ -938,6 +934,16 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}	
+				break;
+			case SK_BOOL:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) EIF_TEST(last->it_char); break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) EIF_TEST(last->it_char); break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) EIF_TEST(last->it_char); break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) EIF_TEST(last->it_char); break;
+					default:
+						eif_panic ("Illegal type");
+				}
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");

@@ -20,7 +20,11 @@
 #include "stream.h"
 #include <stdio.h>				/* To get BUFSIZ */
 
+#ifdef EIF_WIN32
+rt_public STREAM *sp;				/* Stream used for communications */
+#else
 rt_private STREAM *sp;				/* Stream used for communications */
+#endif
 
 extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 
@@ -30,7 +34,7 @@ rt_public void tpipe(STREAM *stream)
 	 * remote process. This enables us to omit this parameter whenever an I/O
 	 * with the remote process has to be made.
 	 */
-	
+
 	sp = stream;
 
 #ifdef DEBUG
@@ -54,12 +58,20 @@ rt_public char *tread(int *size)
 	Request_Clean (rqst);
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
+#ifdef EIF_WIN32
+	add_log(20, "waiting for leading request on #%d", sp);
+#else
 	add_log(20, "waiting for leading request on #%d", readfd(sp));
+#endif
 #endif
 #endif
 
 	/* The first request gives us the amount of bytes we have to expect */
+#ifdef EIF_WIN32
+	if (-1 == recv_packet(sp, &rqst, TRUE)) {
+#else
 	if (-1 == recv_packet(readfd(sp), &rqst)) {
+#endif
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot receive transfer request");
 #endif
@@ -79,13 +91,25 @@ rt_public char *tread(int *size)
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
+#ifdef EIF_WIN32
+		swallow(sp, rqst.rq_ack.ak_type);
+#else
 		swallow(readfd(sp), rqst.rq_ack.ak_type);
+#endif
 		if (size != (int *) 0)
 			*size = 0;
 		return (char *) 0;
 	}
 
+#ifdef EIF_WIN32
+#ifdef USE_ADD_LOG
+	add_log(9, "expecting %d bytes from remote process", rqst.rq_ack.ak_type);
+#endif
+
+	if (-1 == net_recv(sp, buffer, rqst.rq_ack.ak_type, TRUE)) {
+#else
 	if (-1 == net_recv(readfd(sp), buffer, rqst.rq_ack.ak_type)) {
+#endif
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR net_recv: %m (%e)");
 #endif
@@ -94,7 +118,7 @@ rt_public char *tread(int *size)
 			*size = 0;
 		return (char *) 0;
 	}
-	
+
 	if (size != (int *) 0)
 		*size = (int) rqst.rq_ack.ak_type;
 
@@ -108,6 +132,7 @@ rt_public int twrite(char *buffer, int size)
 	 */
 
 	Request rqst;		/* Leading request */
+	int t;
 
 	Request_Clean (rqst);
 	rqst.rq_type = TRANSFER;
@@ -119,7 +144,11 @@ rt_public int twrite(char *buffer, int size)
 #endif
 #endif
 
+#ifdef EIF_WIN32
+	send_packet(sp, &rqst);
+#else
 	send_packet(writefd(sp), &rqst);
+#endif
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
@@ -127,10 +156,23 @@ rt_public int twrite(char *buffer, int size)
 #endif
 #endif
 
-	return net_send(writefd(sp), buffer, size);
+#ifdef EIF_WIN32
+	t = net_send(sp, buffer, size);
+#ifdef USE_ADD_LOG
+	add_log(20, "net_send was %d", t);
+#endif
+#else
+	t = net_send(writefd(sp), buffer, size);
+#endif
+
+	return t;
 }
 
+#ifdef EIF_WIN32
+rt_public void swallow(STREAM *fd, int size)
+#else
 rt_public void swallow(int fd, int size)
+#endif
 {
 	/* Swallow 'size' bytes from 'fd' and discard them */
 
@@ -141,9 +183,12 @@ rt_public void swallow(int fd, int size)
 		amount = size;
 		if (amount > BUFSIZ)
 			amount = BUFSIZ;
+#ifdef EIF_WIN32
+		if (-1 == net_recv(fd, buf, amount, TRUE))
+#else
 		if (-1 == net_recv(fd, buf, amount))
+#endif
 			return;
 		size -= amount;
 	}
 }
-

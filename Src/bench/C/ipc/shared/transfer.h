@@ -18,6 +18,11 @@
 extern void tpipe(STREAM *stream);		/* Open transfer "pipe" */
 extern char *tread(int *size);		/* Read from the transfer "pipe" */
 extern int twrite(char *buffer, int size);		/* Write to the transfer "pipe" */
+
+#ifdef EIF_WIN32
+extern void swallow(STREAM *fd, int size);		/* Discard a certain amount of bytes from file */
+#else
 extern void swallow(int fd, int size);		/* Discard a certain amount of bytes from file */
+#endif
 
 #endif

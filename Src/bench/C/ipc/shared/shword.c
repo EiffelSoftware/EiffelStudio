@@ -8,10 +8,20 @@
   ####   #    #  #    #   ####   #    #  #####    ###     ####
 
 	Shell word parsing of a command string.
-*/
+
+	For Windows:
+		From UNIX - should be checked for more complex expressions such as:
+			command args "'a'"
+			command args "'hello" "'godbye"
+ */
 
 #include "config.h"
 #include "portable.h"
+#include "shword.h"
+
+#ifdef EIF_WIN32
+#include <string.h>
+#endif
 
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */
@@ -38,7 +48,11 @@ rt_private char *add_argv(char *word);		/* Append one word to the argv[] array *
 rt_public void shfree(void);			/* Free structure used by argv[] */
 rt_public char **shword(char *cmd);			/* Parse command string and split into words */
 
+#ifdef EIF_WIN32
+rt_private char *str_save(char *s);		/* Save string somewhere in memory */
+#else
 extern char *str_save(char *s);			/* Save string somewhere in memory */
+#endif
 
 rt_private int is_separator(char c)
        			/* Character to be tested among those in the ifs set */
@@ -50,7 +64,7 @@ rt_private int is_separator(char c)
 
 	while ((d = *p) && c != d)	/* Loop over, until end of string or match */
 		p++;
-	
+
 	return d ? 1 : 0;		/* Boolean stating whether we found it */
 }
 
@@ -87,7 +101,7 @@ rt_private int init_argv(void)
 	argv = (char **) malloc(size);
 	if (argv == (char **) 0)		/* Not enough memory */
 		return -1;
-	
+
 	bzero(argv, size);				/* Ensure all slots are null pointers */
 	argc = ARGV_NUMBER;				/* Record dynamic size of argv[] */
 	where = 0;						/* Next allocation will be done here */
@@ -122,7 +136,7 @@ rt_private char *add_argv(char *word)
 	new_argv = (char **) realloc(argv, new_size);
 	if (new_argv == (char **) 0)
 		return (char *) 0;			/* Out of memory */
-	
+
 	argc += ARGV_INCREASE;
 	argv = new_argv;
 	argv[where++] = saved;
@@ -158,7 +172,7 @@ rt_public char **shword(char *cmd)
 
 	if (-1 == init_argv())		/* Initialize array storing collected words */
 		return (char **) 0;		/* Cannot get a valid argv[] array */
-	
+
 	for (pos = 0, c = *cmd++; c != '\0'; c = *cmd++) {
 		if (in_simple) {				/* In simple quote */
 			if (was_backslash) {		/* Last character was a backslash */
@@ -197,7 +211,16 @@ rt_public char **shword(char *cmd)
 			if (!in_simple)
 				in_quote = 1;			/* Entering double quote */
 			else
+#ifdef EIF_WIN32
+				if (!in_quote)
+					word[pos++] = c;		/* Must have been escaped */
+				else {
+					in_quote = 0;
+					continue;
+				}
+#else
 				word[pos++] = c;		/* Must have been escaped */
+#endif
 			break;
 		default:
 			if (in_simple || in_quote)
@@ -222,6 +245,29 @@ rt_public char **shword(char *cmd)
 	return argv;				/* Pointer to argument word array */
 }
 
+#ifdef EIF_WIN32
+rt_private char *str_save(char *s)
+{
+	/* Save string 's' somewhere in memory */
+
+	char *new;
+
+	if (s == (char *) 0)
+		return (char *) 0;
+
+	new = (char *) malloc(strlen(s) + 1);
+	if (new == (char *) 0) {
+#ifdef USE_ADD_LOG
+		add_log(2, "ERROR cannot malloc %d bytes", strlen(s) + 1);
+#endif
+		return (char *) 0;
+	}
+
+	(void) strcpy(new, s);
+	return new;
+}
+#endif
+
 #ifdef TEST
 print_argv(void)
 {
@@ -232,7 +278,7 @@ print_argv(void)
 
 	while (str = *array++)
 		printf("\"%s\"\n", str);
-	
+
 	printf("END\n");
 }
 

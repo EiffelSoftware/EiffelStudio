@@ -16,6 +16,10 @@
 #include "except.h"
 #include "interp.h"
 
+#ifdef EIF_WIN32
+#include "stream.h"
+#endif
+
 /* Available dumps */
 #define ST_PENDING	0			/* Dump pending exceptions */
 #define ST_CALL		1			/* Dump calling stack */
@@ -33,7 +37,7 @@ struct once {					/* A once object */
 	char *obj_addr;				/* Object's address */
 	int obj_type;				/* Dynamic type of object */
 };
-	
+
 /* Structure returned by dumps */
 struct dump {
 	int dmp_type;					/* Union discriminent */
@@ -58,7 +62,12 @@ struct dump {
 #define DMP_VOID	4			/* No more arguments or locals to be sent. */
 
 /* Visible routine */
+#ifdef EIF_WIN32
+extern void send_stack(STREAM *s, int what);
+extern void send_once_result(STREAM *s, uint32 body_id, int arg_num);
+#else
 extern void send_stack(int s, int what);		/* Send a stack dump to ewb */
 extern void send_once_result(int s, uint32 body_id, int arg_num);	/* Send result of once function to ewb */
+#endif
 
 #endif

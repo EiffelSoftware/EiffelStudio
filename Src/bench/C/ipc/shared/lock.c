@@ -33,7 +33,10 @@ rt_private int locked = 0;					/* Did we lock successfully? */
 
 rt_private void check_lock(char *file);				/* Make sure lockfile is not too old */
 
+#ifndef EIF_WIN32
 extern int errno;						/* System error status */
+#endif
+
 extern Time_t time(Time_t *t);					/* Current time */
 extern int usleep(unsigned int);					/* Micro sleeps */
 

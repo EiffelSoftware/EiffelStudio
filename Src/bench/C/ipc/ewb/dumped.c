@@ -10,7 +10,10 @@
 	Eiffle/C interface routines for dump (debugger)
  	The dual Eiffel class is RECV_VALUE (cluster ipc)
 	and CALL_INFO (cluster debug)
- */
+
+	For Windows:
+		Simplified version from Unix using STREAM *sp from transfer.c:tpipe().
+*/
 
 #include "macros.h"
 #include "interp.h"
@@ -30,22 +33,27 @@ EIF_PROC set_bits;
 EIF_PROC set_error;
 EIF_PROC set_void;
 
+#ifdef EIF_WIN32
+extern STREAM *sp;
+#endif
 
-rt_public c_recv_rout_info (EIF_OBJ target)
-	       	       
+rt_public void c_recv_rout_info (EIF_OBJ target)
+
 /*
  * 	Wait for a request. If the request is of type DUMPED, DMP_VECT or DMP_MELTED
  *	ie. the trace of a routine call, fill the CALL_INFO instance (target)
  *	accordingly. If an aknowledge is recieved, signal the CALL_INFO that
  *	the call stack is exhausted. If something else comes, signal an error
  *  if the request is nether a DUMPED nor an AKNOLEDGE, signal an error and
- *	treat the incoming request as a normal asynchonous request. 
+ *	treat the incoming request as a normal asynchonous request.
  */
 
 {
 	static int sleep_delay = 30;
 	Request pack;
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];
+#endif
 	Dump dump;
 	char *c_rout_name, *eif_rout_name, *obj_addr;
 	char string [128], *ptr = string;
@@ -53,7 +61,11 @@ rt_public c_recv_rout_info (EIF_OBJ target)
 	uint32 orig, dtype;
 
 	Request_Clean (pack);
+#ifdef EIF_WIN32
+	if (-1 != recv_packet (sp, &pack, TRUE)){ /* else send error */
+#else
 	if (-1 != recv_packet (readfd (sp), &pack)){ /* else send error */
+#endif
 		switch (pack.rq_type) {
 			case DUMPED:
 				dump = pack.rq_dump;
@@ -71,16 +83,16 @@ rt_public c_recv_rout_info (EIF_OBJ target)
 						dtype = hack << 16;
 						dtype >>= 16;
 
-						(set_rout) (eif_access (target), 
+						(set_rout) (eif_access (target),
 							(EIF_BOOLEAN) dump.dmp_type == DMP_MELTED,
 							(EIF_BOOLEAN) 0,
 							obj_addr,
 							orig, dtype,
 							eif_rout_name);
-						return;	
+						return;
 					default:
 						break; /* send error */
-				}			
+				}
 			case ACKNLGE:	/* send exhausted */
 				(set_rout) (eif_access (target),
 					(EIF_BOOLEAN) 0,
@@ -89,33 +101,39 @@ rt_public c_recv_rout_info (EIF_OBJ target)
 				return;
 			default:
 				request_dispatch (pack); /* treat asynchronous request */
-				break;	/* send error */	
+				break;	/* send error */
 		}
 	}
 	else
-	(set_error) (eif_access (target));
+		(set_error) (eif_access (target));
 	return;
 }
 
 
-rt_public c_recv_value (EIF_OBJ target)
-	       	       
+rt_public void c_recv_value (EIF_OBJ target)
+
 /*
- *	wait for a request. If it is a dumped item, send it to the RECV_VALUE 
- *	instance target. Else, report an error to target. If the request is not a 
+ *	wait for a request. If it is a dumped item, send it to the RECV_VALUE
+ *	instance target. Else, report an error to target. If the request is not a
  *	DUMPED, treat it as a normal asynchronous request (and report the error too)
  */
 {
 	Request pack;
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];
+#endif
 	Dump dump;
 	struct item item;
 	uint32 type_flag;
 
 	Request_Clean (pack);
-	if (-1 != recv_packet (readfd (sp), &pack)){
-		if (pack.rq_type == DUMPED){
-			if (pack.rq_dump.dmp_type == DMP_ITEM){
+#ifdef EIF_WIN32
+	if (-1 != recv_packet (sp, &pack, TRUE)) {
+#else
+	if (-1 != recv_packet (readfd (sp), &pack)) {
+#endif
+		if (pack.rq_type == DUMPED) {
+			if (pack.rq_dump.dmp_type == DMP_ITEM) {
 				item = *pack.rq_dump.dmp_item;
 				type_flag = item.type;
 				switch (type_flag & SK_HEAD) {
@@ -140,35 +158,33 @@ rt_public c_recv_value (EIF_OBJ target)
 					case SK_REF:
 					case SK_EXP:
 						set_ref (eif_access (target),
-								item.it_ref, 
+								item.it_ref,
 								type_flag & SK_DTYPE);
 							/* reference and dynamic type */
 						return;
 					case SK_BIT:
 						set_bits (eif_access (target),
-							item.it_ref, 
+							item.it_ref,
 							type_flag & SK_BMASK);
 							/* reference and number of bits */
 						return;
-					default:	
+					default:
 						break;
 				}
-			} else if (pack.rq_dump.dmp_type == DMP_VOID){
+			} else if (pack.rq_dump.dmp_type == DMP_VOID) {
 				/* No more values to be received */
 				(set_void) (eif_access (target));
 				return;
 			}
-		} else{
+		} else {
 			request_dispatch (pack);
 		}
 	}
-	(set_error) (eif_access (target)); 
+	(set_error) (eif_access (target));
 }
 
 
-rt_public c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
-                                                        
-                                          
+rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */
@@ -184,9 +200,8 @@ rt_public c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char
 	set_error = d_error;
 	set_void = d_void;
 }
-		
-rt_public c_pass_set_rout (EIF_PROC d_rout)
-                
+
+rt_public void c_pass_set_rout (EIF_PROC d_rout)
 /*
  *	Register the routine to communicate with a CALL_INFO
  */

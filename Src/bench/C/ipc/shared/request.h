@@ -12,11 +12,7 @@
 #ifndef _request_h_
 #define _request_h_
 
-#ifdef EIF_WINDOWS
-#include "rqst_con.h"
-#else
 #include "rqst_const.h"
-#endif
 #include "stack.h"
 
 /*

@@ -1,4 +1,4 @@
-indexing
+indexinf
 
 	description:
 		"Facilities for tuning up the garbage collection mechanism. %
@@ -159,9 +159,9 @@ feature -- Status setting
 
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'. Every `value' collection,
-			-- the Garbage collector will performed a collection
+			-- the Garbage collector will perform a collection
 			-- on the whole memory, otherwise a simple partial
-			-- collction is done.
+			-- collection is done.
 			
 		require
 			positive_value: value > 0;

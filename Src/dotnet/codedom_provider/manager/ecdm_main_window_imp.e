@@ -30,6 +30,7 @@ feature {NONE}-- Initialization
 			l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 			l_ev_cell_1, l_ev_cell_2: EV_CELL
+			internal_font: EV_FONT
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
@@ -70,6 +71,7 @@ feature {NONE}-- Initialization
 			create edit_box
 			create general_frame
 			create general_box
+			create general_entries_box
 			create general_titles_box
 			create fail_on_error_label
 			create log_server_label
@@ -78,6 +80,9 @@ feature {NONE}-- Initialization
 			create fail_on_error_check_button
 			create log_server_text_field
 			create log_level_combo
+			create warning_box
+			create warning_title_label
+			create warning_content_label
 			create compiler_frame
 			create compiler_box
 			create compiler_titles_box
@@ -151,14 +156,18 @@ feature {NONE}-- Initialization
 			main_box.extend (edit_box)
 			edit_box.extend (general_frame)
 			general_frame.extend (general_box)
-			general_box.extend (general_titles_box)
+			general_box.extend (general_entries_box)
+			general_entries_box.extend (general_titles_box)
 			general_titles_box.extend (fail_on_error_label)
 			general_titles_box.extend (log_server_label)
 			general_titles_box.extend (log_level_label)
-			general_box.extend (general_values_box)
+			general_entries_box.extend (general_values_box)
 			general_values_box.extend (fail_on_error_check_button)
 			general_values_box.extend (log_server_text_field)
 			general_values_box.extend (log_level_combo)
+			general_box.extend (warning_box)
+			warning_box.extend (warning_title_label)
+			warning_box.extend (warning_content_label)
 			edit_box.extend (compiler_frame)
 			compiler_frame.extend (compiler_box)
 			compiler_box.extend (compiler_titles_box)
@@ -256,8 +265,8 @@ feature {NONE}-- Initialization
 			edit_box.disable_item_expand (general_frame)
 			edit_box.disable_item_expand (compiler_frame)
 			general_frame.set_text ("General Settings")
-			general_box.set_border_width (5)
-			general_box.disable_item_expand (general_titles_box)
+			general_entries_box.set_border_width (5)
+			general_entries_box.disable_item_expand (general_titles_box)
 			general_titles_box.set_minimum_width (120)
 			general_titles_box.set_padding_width (5)
 			general_titles_box.set_border_width (5)
@@ -272,6 +281,19 @@ feature {NONE}-- Initialization
 			log_server_text_field.set_minimum_width (80)
 			log_level_combo.set_minimum_width (80)
 			log_level_combo.disable_edit
+			warning_box.set_padding_width (5)
+			warning_box.set_border_width (5)
+			create internal_font
+			internal_font.set_family (3)
+			internal_font.set_weight (8)
+			internal_font.set_shape (10)
+			internal_font.set_height (11)
+			internal_font.preferred_families.extend ("Microsoft Sans Serif")
+			warning_title_label.set_font (internal_font)
+			warning_title_label.set_text ("Warning: Logging requires registry access rights.")
+			warning_title_label.align_text_left
+			warning_content_label.set_text ("The default configuration for applications such as ASP.NET might%Nnot authorize access to the required registry entries. If your system%Nrequires logging, configure the application accordingly by granting %Nthe proper security access rights.")
+			warning_content_label.align_text_left
 			compiler_frame.set_text ("Compiler Settings")
 			compiler_box.set_border_width (5)
 			compiler_box.disable_item_expand (compiler_titles_box)
@@ -351,15 +373,14 @@ feature {NONE}-- Initialization
 			configurations_list.pointer_double_press_actions.extend (agent on_configuration_double_click (?, ?, ?, ?, ?, ?, ?, ?))
 			fail_on_error_check_button.select_actions.extend (agent on_fail_on_error_select)
 			log_server_text_field.change_actions.extend (agent on_log_server_select)
-			log_server_text_field.return_actions.extend (agent on_log_server_select)
-			log_server_text_field.focus_out_actions.extend (agent on_log_server_select)
 			log_level_combo.select_actions.extend (agent on_log_level_select)
-			log_level_combo.focus_out_actions.extend (agent on_log_level_select)
+			log_level_combo.change_actions.extend (agent on_log_level_select)
 			root_class_text_field.change_actions.extend (agent on_root_class_select)
 			precompile_combo.select_actions.extend (agent on_precompiled_select)
 			precompile_combo.change_actions.extend (agent on_precompiled_select)
 			browse_button.select_actions.extend (agent on_precompiled_browse)
 			metadata_cache_combo.select_actions.extend (agent on_metadata_cache_select)
+			metadata_cache_combo.change_actions.extend (agent on_metadata_cache_select)
 			metadata_cache_browse_button.select_actions.extend (agent on_metadata_cache_browse)
 			prefixes_list.select_actions.extend (agent on_assembly_file_name_select (?))
 			prefixes_list.deselect_actions.extend (agent on_assembly_file_name_deselect (?))
@@ -387,9 +408,9 @@ feature -- Access
 	save_menu_item, revert_menu_item, exit_menu_item, new_menu_item, properties_menu_item, 
 	delete_menu_item, help_content_menu_item, about_menu_item: EV_MENU_ITEM
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
-	window_box, configurations_box, edit_box, general_titles_box, general_values_box, 
-	compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
-	tool_bars_box, main_box, general_box, compiler_box, precompile_box, metadata_cache_box, 
+	window_box, configurations_box, edit_box, general_box, general_titles_box, general_values_box, 
+	warning_box, compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
+	tool_bars_box, main_box, general_entries_box, compiler_box, precompile_box, metadata_cache_box, 
 	prefix_components_box, assembly_file_name_buttons_box, buttons_box: EV_HORIZONTAL_BOX
 	main_tool_bar, help_tool_bar: EV_TOOL_BAR
 	new_button, save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
@@ -397,8 +418,8 @@ feature -- Access
 	right_buttons_padding_cell: EV_CELL
 	configurations_list, applications_list: EV_LIST
 	general_frame, compiler_frame, prefixes_frame, applications_frame: EV_FRAME
-	fail_on_error_label, log_server_label, log_level_label, default_root_clas_label, 
-	precompile_label, metadata_cache_label: EV_LABEL
+	fail_on_error_label, log_server_label, log_level_label, warning_title_label, warning_content_label, 
+	default_root_clas_label, precompile_label, metadata_cache_label: EV_LABEL
 	fail_on_error_check_button: EV_CHECK_BUTTON
 	log_server_text_field, root_class_text_field, prefix_text_field, assembly_file_name_text_field: EV_TEXT_FIELD
 	log_level_combo, precompile_combo, metadata_cache_combo: EV_COMBO_BOX

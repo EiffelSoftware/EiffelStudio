@@ -30,8 +30,10 @@ feature -- Commands
 			from
 				i := 1
 				nb := s.count
+			invariant
+				s.count = nb
 			variant
-				i
+				nb - i + 1
 			until
 				i > nb
 			loop

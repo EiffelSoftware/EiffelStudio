@@ -23,7 +23,9 @@ inherit
 			set_foreground_color,
 			set_background_color,
 			foreground_color,
-			background_color
+			background_color,
+			set_parent,
+			parent_imp
 		end
 
 create
@@ -292,14 +294,7 @@ feature -- Event : command association
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
-		local
---			ev_data: EV_EVENT_DATA
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
---			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
---			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False, default_pointer)
-
 			-- We need the index so we pass it as the extra_data.
 			add_command (parent_imp.widget, "select_row", cmd, arg, c_gtk_integer_to_pointer (index))
 		end	
@@ -307,14 +302,7 @@ feature -- Event : command association
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unselected.
-		local
---			ev_data: EV_EVENT_DATA		
 		do
---			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-
---			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XX.
---			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False, default_pointer)
-
 			-- We need the index so we pass it as the extra_data.
 			add_command (parent_imp.widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (index))
 		end

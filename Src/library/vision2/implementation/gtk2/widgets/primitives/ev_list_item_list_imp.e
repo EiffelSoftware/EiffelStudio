@@ -57,6 +57,13 @@ feature {NONE} -- Initialization
 			tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (2, $a_type_array_c)
 		end
 
+feature -- Access
+
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+			-- `Result is all items currently selected in `Current'.
+		deferred
+		end
+
 feature -- Status report
 
 	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is

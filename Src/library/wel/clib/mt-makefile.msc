@@ -1,7 +1,7 @@
 # mtwel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -nologo -W1 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CFLAGS = -nologo -W1 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

@@ -272,27 +272,28 @@ feature -- Plug and Makefile file
 			special_cl.generate_dynamic_types (plug_file)
 			generate_dynamic_ref_type (plug_file)
 
-			Plug_file.putstring ("%N%Tegc_frozen = egc_frozen_init ; %N")
-			Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init ; %N");
-			Plug_file.putstring ("%Tegc_ce_type = egc_ce_type_init ; %N")
+			Plug_file.putstring ("%N%Tegc_ce_type = egc_ce_type_init ; %N")
 			Plug_file.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init ; %N")
+			Plug_file.putstring ("%Tegc_fsystem = egc_fsystem_init ; %N")
+			Plug_file.putstring ("%Tegc_fco_table = egc_fco_table_init ; %N")
+			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init ; %N")
+
+			Plug_file.putstring ("%N#ifdef WORKBENCH%N")
+			Plug_file.putstring ("%Tegc_frozen = egc_frozen_init ; %N")
+			Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init ; %N");
 			Plug_file.putstring ("%Tegc_foption = egc_foption_init ; %N")
 			Plug_file.putstring ("%Tegc_address_table = egc_address_table_init ; %N")
 			Plug_file.putstring ("%Tegc_fdispatch = egc_fdispatch_init ; %N")
-			Plug_file.putstring ("%Tegc_fsystem = egc_fsystem_init ; %N")
+			Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init ; %N")
+			
+			Plug_file.putstring ("%N%Tegc_einit = egc_einit_init ; %N")
+			Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init ; %N")
 
-			Plug_file.putstring ("%N#ifdef WORKBENCH%N")
-			Plug_file.putstring ("%Tegc_fcall = egc_fcall_init ; %N")
+			Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init ; %N")
 			Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init ; %N")
 			Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init ; %N")
 			Plug_file.putstring ("#endif%N")
 
-			Plug_file.putstring ("%N%Tegc_fco_table = egc_fco_table_init ; %N")
-			Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init ; %N")
-
-			Plug_file.putstring ("%N%Tegc_einit = egc_einit_init ; %N")
-			Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init ; %N")
-			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init ; %N")
 
 			Plug_file.putstring ("%N}%N")
 
@@ -309,17 +310,17 @@ feature -- Plug and Makefile file
 		do
 			local_system := System
 
-			Plug_file.putstring ("%Negc_int_ref_dtype = ")
+			Plug_file.putstring ("%N%Tegc_int_ref_dtype = ")
 			Plug_file.putint (system.integer_ref_dtype - 1)
-			Plug_file.putstring (";%Negc_bool_ref_dtype = ")
+			Plug_file.putstring (";%N%Tegc_bool_ref_dtype = ")
 			Plug_file.putint (system.boolean_ref_dtype - 1)
-			Plug_file.putstring (";%Negc_real_ref_dtype = ")
+			Plug_file.putstring (";%N%Tegc_real_ref_dtype = ")
 			Plug_file.putint (system.real_ref_dtype - 1)
-			Plug_file.putstring (";%Negc_char_ref_dtype = ")
+			Plug_file.putstring (";%N%Tegc_char_ref_dtype = ")
 			Plug_file.putint (system.character_ref_dtype - 1)
-			Plug_file.putstring (";%Negc_doub_ref_dtype = ")
+			Plug_file.putstring (";%N%Tegc_doub_ref_dtype = ")
 			Plug_file.putint (system.double_ref_dtype - 1)
-			Plug_file.put_string (";%Negc_point_ref_dtype = ")
+			Plug_file.put_string (";%N%Tegc_point_ref_dtype = ")
 			Plug_file.put_integer (system.pointer_ref_dtype - 1)
 			Plug_file.put_string (";%N");	
 		end

@@ -14,7 +14,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, p)
 		ensure
 			access_assert_as_not_void: Result /= Void
@@ -27,7 +27,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, p)
 		ensure
 			access_feat_as_not_void: Result /= Void
@@ -40,7 +40,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, p)
 		ensure
 			access_id_as_not_void: Result /= Void
@@ -53,7 +53,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, p)
 		ensure
 			access_inv_as_not_void: Result /= Void
@@ -66,7 +66,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f)
 		ensure
 			address_as_not_void: Result /= Void
@@ -76,7 +76,7 @@ feature -- Access
 	new_address_current_as: ADDRESS_CURRENT_AS is
 			-- New ADDRESS_CURRENT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			address_current_as_not_void: Result /= Void
@@ -85,7 +85,7 @@ feature -- Access
 	new_address_result_as: ADDRESS_RESULT_AS is
 			-- New ADDRESS_RESULT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			address_result_as_not_void: Result /= Void
@@ -94,7 +94,7 @@ feature -- Access
 	new_all_as: ALL_AS is
 			-- New ALL AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			all_as_not_void: Result /= Void
@@ -105,7 +105,7 @@ feature -- Access
 		require
 			exp_not_void: exp /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (exp)
 		ensure
 			array_as_not_void: Result /= Void
@@ -118,7 +118,7 @@ feature -- Access
 			t_not_void: t /= Void
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, s, p, l)
 		ensure
 			assign_as_not_void: Result /= Void
@@ -134,7 +134,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_and_as_not_void: Result /= Void
@@ -148,7 +148,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_and_then_as_not_void: Result /= Void
@@ -162,7 +162,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_div_as_not_void: Result /= Void
@@ -176,7 +176,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_eq_as_not_void: Result /= Void
@@ -191,7 +191,7 @@ feature -- Access
 			op_not_void: op /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, op, r)
 		ensure
 			bin_free_as_not_void: Result /= Void
@@ -206,7 +206,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_ge_as_not_void: Result /= Void
@@ -220,7 +220,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_gt_as_not_void: Result /= Void
@@ -234,7 +234,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_implies_as_not_void: Result /= Void
@@ -248,7 +248,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_le_as_not_void: Result /= Void
@@ -262,7 +262,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_lt_as_not_void: Result /= Void
@@ -276,7 +276,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_minus_as_not_void: Result /= Void
@@ -290,7 +290,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_mod_as_not_void: Result /= Void
@@ -304,7 +304,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_ne_as_not_void: Result /= Void
@@ -318,7 +318,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_or_as_not_void: Result /= Void
@@ -332,7 +332,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_or_else_as_not_void: Result /= Void
@@ -346,7 +346,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_plus_as_not_void: Result /= Void
@@ -360,7 +360,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_power_as_not_void: Result /= Void
@@ -374,7 +374,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_slash_as_not_void: Result /= Void
@@ -388,7 +388,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_star_as_not_void: Result /= Void
@@ -402,7 +402,7 @@ feature -- Access
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, r)
 		ensure
 			bin_xor_as_not_void: Result /= Void
@@ -416,7 +416,7 @@ feature -- Access
 		require
 			b_not_void: b /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (b)
 		ensure
 			bit_const_as_not_void: Result /= Void
@@ -428,7 +428,7 @@ feature -- Access
 		require
 			v_not_void: v /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (v)
 		ensure
 			bits_as_not_void: Result /= Void
@@ -440,7 +440,7 @@ feature -- Access
 		require
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (s)
 		ensure
 			bits_symbol_as_not_void: Result /= Void
@@ -450,7 +450,7 @@ feature -- Access
 	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE; c: CONTENT_AS): BODY_AS is
 			-- New BODY AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a, t, c)
 		ensure
 			body_as_not_void: Result /= Void
@@ -462,7 +462,7 @@ feature -- Access
 	new_boolean_as (b: BOOLEAN): BOOL_AS is
 			-- New BOOLEAN AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (b)
 		ensure
 			boolean_as_not_void: Result /= Void
@@ -472,7 +472,7 @@ feature -- Access
 	new_boolean_type_as: BOOL_TYPE_AS is
 			-- New type AST node for "BOOLEAN"
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -484,7 +484,7 @@ feature -- Access
 		require
 			i_not_void: i /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (i, c, l)
 		ensure
 			case_as_not_void: Result /= Void
@@ -496,7 +496,7 @@ feature -- Access
 	new_character_as (c: CHARACTER): CHAR_AS is
 			-- New CHARACTER AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c)
 		ensure
 			character_as_not_void: Result /= Void
@@ -515,7 +515,7 @@ feature -- Access
 	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; s, l: INTEGER): CHECK_AS is
 			-- New CHECK AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c, s, l)
 		ensure
 			check_as_not_void: Result /= Void
@@ -541,7 +541,7 @@ feature -- Access
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind, g, p, c, f, inv, s, o, cl)
 		ensure
 			class_as_not_void: Result /= Void
@@ -571,7 +571,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, g)
 		ensure
 			class_type_as_not_void: Result /= Void
@@ -584,7 +584,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, s, e)
 		ensure
 			click_ast_not_void: Result /= Void
@@ -599,7 +599,7 @@ feature -- Access
 			c_not_void: c /= Void
 			c_not_empty: not c.is_empty
 		do
-			!! Result
+			create Result
 			Result.initialize (c)
 		ensure
 			client_as_not_void: Result /= Void
@@ -611,7 +611,7 @@ feature -- Access
 		require
 			v_not_void: v /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (v)
 		ensure
 			constant_as_not_void: Result /= Void
@@ -621,7 +621,7 @@ feature -- Access
 	new_create_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_NAME]): CREATE_AS is
 			-- New creation clause AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c, f)
 		ensure
 			create_as_not_void: Result /= Void
@@ -634,7 +634,7 @@ feature -- Access
 		require
 			tg_not_void: tg /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (tp, tg, c, s, l)
 		ensure
 			creation_as_not_void: Result /= Void
@@ -650,7 +650,7 @@ feature -- Access
 		require
 			t_not_void: t /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, c, s, l)
 		ensure
 			creation_expr_as_not_void: Result /= Void
@@ -661,7 +661,7 @@ feature -- Access
 	new_current_as: CURRENT_AS is
 			-- New CURRENT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			current_as_not_void: Result /= Void
@@ -670,7 +670,7 @@ feature -- Access
 	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; s, l: INTEGER): DEBUG_AS is
 			-- New DEBUG AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (k, c, s, l)
 		ensure
 			debug_as_not_void: Result /= Void
@@ -683,7 +683,7 @@ feature -- Access
 	new_deferred_as: DEFERRED_AS is
 			-- New DEFERRED AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			deferred_as_not_void: Result /= Void
@@ -692,7 +692,7 @@ feature -- Access
 	new_do_as (c: EIFFEL_LIST [INSTRUCTION_AS]): DO_AS is
 			-- New DO AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c)
 		ensure
 			do_as_not_void: Result /= Void
@@ -702,7 +702,7 @@ feature -- Access
 	new_double_type_as: DOUBLE_TYPE_AS is
 			-- New type AST node for "DOUBLE"
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -713,7 +713,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -724,7 +724,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -735,7 +735,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -746,7 +746,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -757,7 +757,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -768,7 +768,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -779,7 +779,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -790,7 +790,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -801,7 +801,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -812,7 +812,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -823,7 +823,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -834,7 +834,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -845,7 +845,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -856,7 +856,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -867,7 +867,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -878,7 +878,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -889,7 +889,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -900,7 +900,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -911,7 +911,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -922,7 +922,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -933,7 +933,7 @@ feature -- Access
 		require
 			n_positive: n >= 0
 		do
-			!! Result.make (n)
+			create Result.make (n)
 		ensure
 			list_not_void: Result /= Void
 			list_empty: Result.is_empty
@@ -944,7 +944,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e, c, l)
 		ensure
 			elseif_as_not_void: Result /= Void
@@ -956,7 +956,7 @@ feature -- Access
 	new_ensure_as (a: EIFFEL_LIST [TAGGED_AS]): ENSURE_AS is
 			-- New ENSURE AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			ensure_as_not_void: Result /= Void
@@ -966,7 +966,7 @@ feature -- Access
 	new_ensure_then_as (a: EIFFEL_LIST [TAGGED_AS]): ENSURE_THEN_AS is
 			-- New ENSURE THEN AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			ensure_then_as_not_void: Result /= Void
@@ -978,7 +978,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, g)
 		ensure
 			expanded_type_as_not_void: Result /= Void
@@ -992,7 +992,7 @@ feature -- Access
 			c_not_void: c /= Void
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (c, f)
 		ensure
 			export_item_as_not_void: Result /= Void
@@ -1005,7 +1005,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			expr_address_as_not_void: Result /= Void
@@ -1017,7 +1017,7 @@ feature -- Access
 		require
 			c_not_void: c /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (c)
 		ensure
 			expr_call_as_not_void: Result /= Void
@@ -1029,7 +1029,7 @@ feature -- Access
 		require
 			l_not_void: l /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, a)
 		ensure
 			external_as_not_void: Result /= Void
@@ -1042,7 +1042,7 @@ feature -- Access
 		require
 			l_not_void: l /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, s)
 		ensure
 			external_lang_as_not_void: Result /= Void
@@ -1058,7 +1058,7 @@ feature -- Access
 			b_not_void: b /= Void
 			can_have_indexing_clause: i /= Void implies f.count = 1
 		do
-			!! Result
+			create Result
 			Result.initialize (f, b, i, s, e)
 		ensure
 			feature_as_not_void: Result /= Void
@@ -1073,7 +1073,7 @@ feature -- Access
 			f_not_void: f /= Void
 			p_non_negative: p > 0
 		do
-			!! Result
+			create Result
 			Result.initialize (c, f, p)
 		ensure
 			feature_clause_as_not_void: Result /= Void
@@ -1087,7 +1087,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f)
 		ensure
 			feature_list_not_void: Result /= Void
@@ -1099,7 +1099,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, b)
 		ensure
 			feature_name_id_as_not_void: Result /= Void
@@ -1110,7 +1110,7 @@ feature -- Access
 	new_formal_as (p: INTEGER): FORMAL_AS is
 			-- New FORMAL AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (p)
 		ensure
 			formal_as_not_void: Result /= Void
@@ -1123,7 +1123,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, c, cf, p)
 		ensure
 			formal_dec_as_not_void: Result /= Void
@@ -1139,7 +1139,7 @@ feature -- Access
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		do
-			!! Result.initialize (s)
+			create Result.initialize (s)
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -1151,7 +1151,7 @@ feature -- Access
 		require
 			cnd_not_void: cnd /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (cnd, cmp, ei, e, s, l)
 		ensure
 			if_as_not_void: Result /= Void
@@ -1168,7 +1168,7 @@ feature -- Access
 		require
 			i_not_void: i /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, i)
 		ensure
 			index_as_not_void: Result /= Void
@@ -1181,7 +1181,7 @@ feature -- Access
 		require
 			op_not_void: op /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (op, b)
 		ensure
 			infix_as_not_void: Result /= Void
@@ -1195,7 +1195,7 @@ feature -- Access
 		require
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (s, c, e, p, l)
 		ensure
 			inspect_as_not_void: Result /= Void
@@ -1211,7 +1211,7 @@ feature -- Access
 		require
 			c_not_void: c /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (c, s, l)
 		ensure
 			instr_call_as_not_void: Result /= Void
@@ -1223,7 +1223,7 @@ feature -- Access
 	new_integer_as (i: INTEGER): INTEGER_AS is
 			-- New INTEGER AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (i)
 		ensure
 			integer_as_not_void: Result /= Void
@@ -1233,7 +1233,7 @@ feature -- Access
 	new_integer_as_from_hexa (s: STRING): INTEGER_AS is
 			-- New INTEGER AST node
 		do
-			!! Result
+			create Result
 			Result.initialize_from_hexa (s)
 		ensure
 			integer_as_not_void: Result /= Void
@@ -1257,7 +1257,7 @@ feature -- Access
 		require
 			l_not_void: l /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (l, u)
 		ensure
 			interval_as_not_void: Result /= Void
@@ -1268,7 +1268,7 @@ feature -- Access
 	new_invariant_as (a: EIFFEL_LIST [TAGGED_AS]): INVARIANT_AS is
 			-- New INVARIANT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			invariant_as_not_void: Result /= Void
@@ -1280,7 +1280,7 @@ feature -- Access
 		require
 			a_not_void: a /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			like_id_as_not_void: Result /= Void
@@ -1290,7 +1290,7 @@ feature -- Access
 	new_like_current_as: LIKE_CUR_AS is
 			-- New LIKE_CURRENT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			like_current_as_not_void: Result /= Void
@@ -1303,7 +1303,7 @@ feature -- Access
 		require
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (f, i, v, s, c, p, l)
 		ensure
 			loop_as_not_void: Result /= Void
@@ -1322,7 +1322,7 @@ feature -- Access
 			t_not_void: t /= Void
 			m_not_void: m /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, m)
 		ensure
 			nested_as_not_void: Result /= Void
@@ -1336,7 +1336,7 @@ feature -- Access
 			t_not_void: t /= Void
 			m_not_void: m /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, m)
 		ensure
 			nested_expr_as_not_void: Result /= Void
@@ -1347,7 +1347,7 @@ feature -- Access
 	new_none_type_as: NONE_TYPE_AS is
 			-- New type AST node for "NONE"
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -1356,7 +1356,7 @@ feature -- Access
 	new_once_as (c: EIFFEL_LIST [INSTRUCTION_AS]): ONCE_AS is
 			-- New ONCE AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c)
 		ensure
 			once_as_not_void: Result /= Void
@@ -1366,7 +1366,7 @@ feature -- Access
 	new_result_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
 			-- New OPERAND AST node
 		do
-			!! Result
+			create Result
 			Result.initialize_result
 		ensure
 			operand_as_not_void: Result /= Void
@@ -1379,7 +1379,7 @@ feature -- Access
 	new_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
 			-- New OPERAND AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (c, t, e)
 		ensure
 			operand_as_not_void: Result /= Void
@@ -1393,7 +1393,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			paran_as_not_void: Result /= Void
@@ -1407,7 +1407,7 @@ feature -- Access
 		require
 			t_not_void: t /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, rn, e, u, rd, s)
 		ensure
 			parent_as_not_void: Result /= Void
@@ -1422,7 +1422,7 @@ feature -- Access
 	new_pointer_type_as: POINTER_TYPE_AS is
 			-- New type AST node for "POINTER"
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -1431,7 +1431,7 @@ feature -- Access
 	new_precursor_as (n: ID_AS; p: EIFFEL_LIST [EXPR_AS]): PRECURSOR_AS is
 			-- New PRECURSOR AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (n, p)
 		ensure
 			precursor_as_not_void: Result /= Void
@@ -1444,7 +1444,7 @@ feature -- Access
 		require
 			op_not_void: op /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (op, b)
 		ensure
 			prefix_as_not_void: Result /= Void
@@ -1458,7 +1458,7 @@ feature -- Access
 		require
 			r_not_void: r /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (r)
 		ensure
 			real_as_not_void: Result /= Void
@@ -1468,7 +1468,7 @@ feature -- Access
 	new_real_type_as: REAL_TYPE_AS is
 			-- New type AST node for "REAL"
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			type_as_not_void: Result /= Void
@@ -1480,7 +1480,7 @@ feature -- Access
 			o_not_void: o /= Void
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (o, n)
 		ensure
 			rename_as_not_void: Result /= Void
@@ -1491,7 +1491,7 @@ feature -- Access
 	new_require_as (a: EIFFEL_LIST [TAGGED_AS]): REQUIRE_AS is
 			-- New REQUIRE AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			require_as_not_void: Result /= Void
@@ -1501,7 +1501,7 @@ feature -- Access
 	new_require_else_as (a: EIFFEL_LIST [TAGGED_AS]): REQUIRE_ELSE_AS is
 			-- New REQUIRE ELSE AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (a)
 		ensure
 			require_else_as_not_void: Result /= Void
@@ -1511,7 +1511,7 @@ feature -- Access
 	new_result_as: RESULT_AS is
 			-- New RESULT AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			result_as_not_void: Result /= Void
@@ -1520,7 +1520,7 @@ feature -- Access
 	new_retry_as (l: INTEGER): RETRY_AS is
 			-- New RETRY AST node
 		do
-			!! Result
+			create Result
 			Result.initialize (l)
 		ensure
 			retry_as_not_void: Result /= Void
@@ -1532,7 +1532,7 @@ feature -- Access
 			t_not_void: t /= Void
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, s, p, l)
 		ensure
 			reverse_as_not_void: Result /= Void
@@ -1549,7 +1549,7 @@ feature -- Access
 		require
 			b_not_void: b /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (o, pr, l, b, po, r, p)
 		ensure
 			routine_as_not_void: Result /= Void
@@ -1567,7 +1567,7 @@ feature -- Access
 		require
 			f_not_void: f /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, f, o)
 		ensure
 			routine_creation_as_not_void: Result /= Void
@@ -1581,7 +1581,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (n, g)
 		ensure
 			separate_type_as_not_void: Result /= Void
@@ -1594,7 +1594,7 @@ feature -- Access
 		require
 			s_not_void: s /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (s)
 		ensure
 			string_as_not_void: Result /= Void
@@ -1607,7 +1607,7 @@ feature -- Access
 			s_not_void: s /= Void
 			marker_not_void: marker /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (s, marker)
 		ensure
 			verbatim_string_as_not_void: Result /= Void
@@ -1620,7 +1620,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, e, s, l)
 		ensure
 			tagged_as_not_void: Result /= Void
@@ -1635,7 +1635,7 @@ feature -- Access
 		require
 			exp_not_void: exp /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (exp)
 		ensure
 			tuple_as_not_void: Result /= Void
@@ -1648,7 +1648,7 @@ feature -- Access
 			i_not_void: i /= Void
 			t_not_void: t /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (i, t)
 		ensure
 			type_dec_as_not_void: Result /= Void
@@ -1662,7 +1662,7 @@ feature -- Access
 			op_not_void: op /= Void
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (op, e)
 		ensure
 			un_free_as_not_void: Result /= Void
@@ -1675,7 +1675,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			un_minus_as_not_void: Result /= Void
@@ -1687,7 +1687,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			un_not_as_not_void: Result /= Void
@@ -1699,7 +1699,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			un_old_as_not_void: Result /= Void
@@ -1711,7 +1711,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (e)
 		ensure
 			un_plus_as_not_void: Result /= Void
@@ -1723,7 +1723,7 @@ feature -- Access
 		require
 			i_not_void: i /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (i)
 		ensure
 			un_strip_as_not_void: Result /= Void
@@ -1733,7 +1733,7 @@ feature -- Access
 	new_unique_as: UNIQUE_AS is
 			-- New UNIQUE AST node
 		do
-			!! Result
+			create Result
 			Result.initialize
 		ensure
 			unique_as_not_void: Result /= Void
@@ -1744,7 +1744,7 @@ feature -- Access
 		require
 			t_not_void: t /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t)
 		ensure
 			value_as_not_void: Result /= Void
@@ -1756,7 +1756,7 @@ feature -- Access
 		require
 			e_not_void: e /= Void
 		do
-			!! Result
+			create Result
 			Result.initialize (t, e, s, l)
 		ensure
 			variant_as_not_void: Result /= Void

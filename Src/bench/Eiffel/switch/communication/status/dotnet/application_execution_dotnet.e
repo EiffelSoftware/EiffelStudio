@@ -626,8 +626,10 @@ feature -- Breakpoints controller
 					debug ("debugger_trace_breakpoint")
 						print ("ADD BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
 					end
-					add_dotnet_breakpoint (l_bp_item)
-					l_bp_item.set_application_set
+					if l_bp_item.is_valid then
+						add_dotnet_breakpoint (l_bp_item)
+						l_bp_item.set_application_set
+					end
 				when feature {BREAKPOINT}.Breakpoint_to_remove then
 					debug ("debugger_trace_breakpoint")
 						print ("DEL BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
@@ -679,20 +681,19 @@ feature -- BreakPoints
 	add_dotnet_breakpoint (bp: BREAKPOINT) is
 			-- enable the `i'-th breakpoint of `f'
 			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
+		require
+			bp_valid: bp.is_valid
 		local
 			f: E_FEATURE
 			i: INTEGER
-
 			l_feature_token: INTEGER
 			l_il_offset_list: LIST [INTEGER]
 			l_il_offset: INTEGER
-			
 			l_module_name: STRING
 			l_class_c: CLASS_C
 			l_class_token: INTEGER
 			
 			l_is_entry_point: BOOLEAN
-			
 			l_class_type_list: TYPE_LIST
 			l_class_type: CLASS_TYPE			
 		do
@@ -1010,7 +1011,7 @@ feature {NONE} -- Events on notification
 						evaluator := expr.expression_evaluator
 						if evaluator.error_message = Void then
 							Result := evaluator.final_result_is_true_boolean_value
-						else		
+						else
 							Result := False
 						end
 					else

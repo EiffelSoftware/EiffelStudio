@@ -24,6 +24,7 @@ inherit
 			generate_cid_init,
 			generate_gen_type_il,
 			generate_expanded_creation,
+			generate_expanded_initialization,
 			instantiation_in,
 			generic_derivation,
 			is_generated_as_single_type
@@ -377,70 +378,16 @@ feature -- Setting
 
 feature -- C generation
 
-	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING) is
 			-- Generate creation of expanded object associated to Current.
-		local
-			gen_type: GEN_TYPE_I
-			written_class: CLASS_C
-			class_type, written_type: CLASS_TYPE
-			creation_feature: FEATURE_I
-			c_name: STRING
-			buffer: GENERATION_BUFFER
 		do
-			buffer := byte_code.buffer
+			associated_class_type.generate_expanded_creation (buffer, target_name)
+		end
 
-			gen_type  ?= Current
-
-			if gen_type /= Void then
-				byte_code.generate_block_open
-				byte_code.generate_gen_type_conversion (gen_type)
-			end
-			reg.print_register
-			if workbench_mode then
-					-- RTLX is a macro used to create
-					-- expanded types
-				if gen_type /= Void then
-					buffer.put_string (" = RTLX(typres")
-				else
-					buffer.put_string (" = RTLX(RTUD(")
-					buffer.put_static_type_id (associated_class_type.static_type_id)
-					buffer.put_character (')')
-				end
-			else
-				if gen_type /= Void then
-					buffer.put_string (" = RTLN(typres")
-				else
-					buffer.put_string (" = RTLN(")
-					buffer.put_type_id (type_id)
-				end
-				class_type := associated_class_type
-				creation_feature := class_type.associated_class.creation_feature
-				if creation_feature /= Void then
-					written_class := System.class_of_id (creation_feature.written_in)
-					if written_class.generics = Void then
-						written_type := written_class.types.first
-					else
-						written_type :=
-							written_class.meta_type (class_type.type).associated_class_type
-					end
-					c_name := Encoder.feature_name (written_type.static_type_id,
-						creation_feature.body_index)
-					buffer.put_string (");")
-					buffer.put_new_line
-					buffer.put_string (c_name)
-					buffer.put_character ('(')
-					reg.print_register
-					Extern_declarations.add_routine_with_signature (Void_c_type,
-						c_name, <<"EIF_REFERENCE">>)
-				end
-			end
-			buffer.put_character (')')
-			buffer.put_character (';')
-
-			if gen_type /= Void then
-				byte_code.generate_block_close
-			end
-			buffer.put_new_line
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING) is
+			-- Generate creation of expanded object associated to Current.
+		do
+			associated_class_type.generate_expanded_initialization (buffer, target_name, target_name, True)
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is

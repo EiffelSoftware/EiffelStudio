@@ -319,15 +319,21 @@ feature -- Code generation
 		deferred
 		end
 
-	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
-			-- Generate object associated to current.
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING) is
+			-- Generate object associated to current and initializes it.
 		require
-			byte_code_not_void: byte_code /= Void
-			reg_not_void: reg /= Void
+			buffer_not_void: buffer /= Void
+			target_name_not_void: target_name /= Void
 		do
-			check
-				not_called: False
-			end
+		end
+
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING) is
+			-- Initializes object associated to current.
+		require
+			buffer_not_void: buffer /= Void
+			target_name_not_void: target_name /= Void
+			target_name_not_empty: not target_name.is_empty
+		do
 		end
 		
 	sk_value: INTEGER is

@@ -9,7 +9,8 @@ inherit
 			metamorphose,
 			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init,
-			generate_default_value, generate_expanded_creation, default_create,
+			generate_default_value, generate_expanded_creation,
+			generate_expanded_initialization, default_create,
 			tuple_code, name, has_associated_class_type
 		end
 
@@ -193,17 +194,20 @@ feature
 			ba.append_integer (size)
 		end 
 
-	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING) is
 			-- Generate object associated to current.
-		local
-			l_buffer: GENERATION_BUFFER
 		do
-			l_buffer := byte_code.buffer
-			reg.print_register
-			l_buffer.put_string (" = RTLB(")
-			l_buffer.put_integer (size)
-			l_buffer.put_string (Gc_rparan_semi_c)
-			l_buffer.put_new_line
+			buffer.put_string (target_name)
+			buffer.put_string (" = RTLB(")
+			buffer.put_integer (size)
+			buffer.put_string (Gc_rparan_semi_c)
+			buffer.put_new_line
+		end
+
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING) is
+			-- Generate creation of expanded object associated to Current.
+			-- (from CL_TYPE_I)
+		do
 		end
 		
 end

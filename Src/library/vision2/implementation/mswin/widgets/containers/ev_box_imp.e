@@ -62,7 +62,10 @@ feature -- Access
 		do
 			Result := spacing * children.count
 		end
-	
+
+	already_displayed: BOOLEAN
+			-- Tell if the box has already been displayed
+
 feature -- Status setting (box specific)
 
 	set_homogeneous (flag: BOOLEAN) is
@@ -240,6 +243,7 @@ feature {EV_WIDGET_I} -- Implementation
 			initialize_length_at_minimum
 			child_cell.set_width (minimum_width)
 			child_cell.set_height (minimum_height)
+			already_displayed := True
 		end
 
 end -- class EV_BOX_IMP

@@ -47,6 +47,14 @@ feature -- reset
 			list_feature_token.wipe_out
 			list_once_tokens.wipe_out
 			list_breakable_il_offset.wipe_out
+			clean_temporary_data
+		end
+
+	clean_temporary_data is
+		do
+			last_eiffel_line_number := 0
+			last_instruction_position := 0
+			last_feature_name_id := 0
 		end
 
 feature -- Properties
@@ -189,17 +197,21 @@ feature -- Recording Operation
 			-- Breakable line info for `eiffel_line' inside `a_data'
 		do
 			from
-				a_data.start
+				a_data.finish
 			until
-				a_data.after or Result /= Void
+				a_data.before or Result /= Void
 			loop
 				if a_data.item.integer_item (1) = a_eiffel_line then
 					Result := a_data.item
 				else
-					a_data.forth
+					a_data.back
 				end
 			end
 		end
+
+	last_eiffel_line_number: INTEGER
+	last_instruction_position: INTEGER
+	last_feature_name_id: INTEGER
 
 	record_add_line_info (a_feature: FEATURE_I; a_il_offset: INTEGER; a_eiffel_line: INTEGER) is
 			-- Record IL Information regarding breakable Lines
@@ -213,14 +225,32 @@ feature -- Recording Operation
 			l_offsets_info: LIST [INTEGER]
 				-- bp index => [eiffel line number, [IL offsets, ...]]
 			l_feature_name_id: INTEGER
-		do
+		do		
 			l_feature_name_id := a_feature.feature_name_id
+
+			if 
+				l_feature_name_id = last_feature_name_id
+				and a_eiffel_line = last_eiffel_line_number
+			then
+				last_instruction_position := last_instruction_position + 1
+			else
+				last_feature_name_id := l_feature_name_id
+				last_eiffel_line_number := a_eiffel_line
+				last_instruction_position := 0
+			end
+
 			l_il_offset_list := list_breakable_il_offset.item (l_feature_name_id)
 			if l_il_offset_list = Void then
 				create l_il_offset_list.make (20)
 				list_breakable_il_offset.put (l_il_offset_list, l_feature_name_id)
 			end
-			l_line_info := line_info_for_eiffel_line (a_eiffel_line, l_il_offset_list)
+			if last_instruction_position > 0 then
+					--| if the instruction is on the same line as an other ...
+					--| this is a new breakable point
+				l_line_info := Void
+			else
+				l_line_info := line_info_for_eiffel_line (a_eiffel_line, l_il_offset_list)
+			end
 			if l_line_info = Void then
 				create {LINKED_LIST [INTEGER]} l_offsets_info.make
 				l_line_info := [a_eiffel_line, l_offsets_info]
@@ -230,7 +260,7 @@ feature -- Recording Operation
 			end
 			l_offsets_info.extend (a_il_offset)
 			debug ("debugger_il_info_trace")
-				print (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out +  ": " + l_il_offset_list.count.out + "%N")
+				print (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out  + "["+last_instruction_position.out+"]" +  ": " + l_il_offset_list.count.out + "%N")
 			end
 		end
 

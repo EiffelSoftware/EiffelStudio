@@ -37,8 +37,13 @@ feature -- Access
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
 			-- which this window is placed.
+		local
+			window_pointer: POINTER
 		do
-			Result := window_of_item (cwel_windowpos_get_hwndinsertafter (item))
+			window_pointer := cwel_windowpos_get_hwndinsertafter (item)
+			if is_window (window_pointer) then
+				Result := window_of_item (window_pointer)
+			end
 		end
 
 	hwindow_insert_after: POINTER is

@@ -193,7 +193,7 @@ feature -- Processing
 				s_f:= clone (f.last_string)
 					-- Add the inheritance from 'queryable' containing tags.
 				add_get_feature (s_f)
-					-- Replace tags owing to rep.
+					-- Replace tags (for inheritance) owing to rep.
 				replace_tags (s_f, rep)
 				f.close
 				f.wipe_out

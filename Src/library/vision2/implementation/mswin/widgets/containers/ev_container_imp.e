@@ -25,7 +25,7 @@ inherit
 			internal_set_minimum_width,
 			internal_set_minimum_height,
 			internal_set_minimum_size,
-			internal_resize,
+			integrate_changes,
 			minimum_width,
 			minimum_height
 		redefine

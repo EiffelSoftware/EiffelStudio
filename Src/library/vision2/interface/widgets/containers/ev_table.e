@@ -26,6 +26,8 @@ inherit
 		end
 		
 	CHAIN [EV_WIDGET]
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			default_create, copy, is_equal, put,
 			changeable_comparison_criterion, remove,

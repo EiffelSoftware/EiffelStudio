@@ -1,6 +1,6 @@
 indexing	
 	description: 
-		"Eiffel Vision item. Implementation interface"
+		"Eiffel Vision item. Implementation interface."
 	status: "See notice at end of class"
 	keywords: "item"
 	date: "$Date$"
@@ -10,7 +10,17 @@ deferred class
 	EV_ITEM_I
 
 inherit
-	EV_ANY_I
+	EV_ITEM_I
+		redefine
+			interface
+		end
+
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
+
+	EV_PIXMAPABLE_I
 		redefine
 			interface
 		end
@@ -60,6 +70,9 @@ end -- class EV_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/07 20:47:35  brendel
+--| Merged with EV_SIMPLE_ITEM_I. (except for EV_TEXTABLE_I).
+--|
 --| Revision 1.11  2000/02/22 23:04:44  rogers
 --| Removed parent_set. This was marked as obsolete, but still required by Windows, so moved into the Windows ev_item_imp.
 --|

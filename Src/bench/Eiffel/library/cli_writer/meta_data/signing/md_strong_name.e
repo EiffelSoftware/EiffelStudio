@@ -6,9 +6,6 @@ indexing
 class
 	MD_STRONG_NAME
 
-inherit
-	IL_ENVIRONMENT
-
 create
 	make
 
@@ -35,8 +32,12 @@ feature {NONE} -- Status report
 			retried, success: BOOLEAN
 			path, path_name: WEL_STRING
 			s: STRING
+			l_il_env: IL_ENVIRONMENT
 		once
-			if not retried and is_dotnet_installed then
+				-- Look for default version of the runtime since `mscorsn.dll' is not
+				-- version specific.
+			create l_il_env
+			if not retried and l_il_env.is_dotnet_installed then
 					-- We try to call `get_error'. If the DLL exists, it 
 					-- will work, if it does not exist it will not reach
 					-- `Result := True', thus `Result' will be False.
@@ -45,7 +46,7 @@ feature {NONE} -- Status report
 				l_val := get_environment_variable (path_name.item, path.item, 32767)
 				if l_val > 0 then
 					s := path.string
-					s.append (";" + dotnet_framework_path)
+					s.append (";" + l_il_env.dotnet_framework_path)
 					create path.make (s)
 					success := set_environment_variable (path_name.item, path.item)
 				end

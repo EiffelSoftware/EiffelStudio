@@ -134,8 +134,12 @@ feature -- Status report
 			until 
 				not Result or i > data_values.count 
 			loop
-				Result := ((data_values @ i).occurrences ('%T') = 0) and
-					(table @ i).input_accepted (data_values @ i)
+				if data_values @ i /= Void then
+					Result := ((data_values @ i).occurrences ('%T') = 0) and
+						(table @ i).input_accepted (data_values @ i)
+				else 
+					Result := True
+				end
 				i := i + 1
 			end
 		end
@@ -231,7 +235,9 @@ feature {NONE} -- Constants
 
 	Comment_character: CHARACTER is '#'
 			-- Character for commenting out data records
-
+	Void_entity: STRING is "[]"
+			-- String that is used for denoting a void string object
+ 
 feature {NONE} -- Implementation
 
 	table: ARRAY [TEST_DATA_COLUMN]
@@ -265,13 +271,14 @@ feature {NONE} -- Implementation
 				else
 					val := s
 				end
+				if equal (val, Void_entity) then val := Void end
 				data_values.put (val, i)
 				i := i + 1
 			end
 		ensure
 			data_values_exist: data_values /= Void
 			columns_ok: data_values.count = columns
-			no_void_values: data_values.occurrences (Void) = 0
+			
 		end
 
 	inject_record (c: INTEGER) is
@@ -308,8 +315,7 @@ invariant
 	table_exists: table /= Void
 	file_exists: file /= Void
 	valid_line_constraint: is_line_valid implies has_last_string
-	data_values_consistent: has_data_values implies
-		(data_values.count = columns and data_values.occurrences (Void) = 0)
+	data_values_consistent: has_data_values implies data_values.count = columns
 
 end -- class TEST_DATA_READER
 

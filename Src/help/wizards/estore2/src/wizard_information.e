@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			data_source := ""
 			location := ""
 			project_name := "sample"
-			create table_list.make
+			create table_list.make (10)
 			is_oracle := False
 			compile_project := True
 			precompiled_base := False
@@ -57,13 +57,13 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			new_project := b			
 		end
 
-	set_table_list (li: LINKED_LIST [CLASS_NAME]) is
+	set_table_list (li: ARRAYED_LIST [CLASS_NAME]) is
 			-- Set table to be generated.
 		do
 			table_list := li
 		end
 
-	set_unselected_table_list (li: LINKED_LIST [CLASS_NAME]) is
+	set_unselected_table_list (li: ARRAYED_LIST [CLASS_NAME]) is
 			-- Table not to be generated
 		do
 			unselected_table_list := li
@@ -132,10 +132,10 @@ feature -- Access
 	vision_example: BOOLEAN
 		-- Does the user want to generate an example using the EiffelVision2 library ?
 
-	table_list: LINKED_LIST[CLASS_NAME]
+	table_list: ARRAYED_LIST [CLASS_NAME]
 		-- List of the selected database tables.
 
-	unselected_table_list: LINKED_LIST [CLASS_NAME]
+	unselected_table_list: ARRAYED_LIST [CLASS_NAME]
 		-- List of the unselected database tables.
 
 	generate_every_table: BOOLEAN

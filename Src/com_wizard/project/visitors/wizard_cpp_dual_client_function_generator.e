@@ -10,9 +10,9 @@ class
 inherit
 	WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 		redefine
-			set_client_result_type_and_signature,
 			feature_body,
-			retval_struct_pointer_set_up
+			retval_struct_pointer_set_up,
+			does_return_application_data
 		end
 
 feature {NONE} -- Implementation
@@ -143,27 +143,10 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		end
 
-
-	set_client_result_type_and_signature is
-			-- Set result type and signature of function
-		local
-			visitor : WIZARD_DATA_TYPE_VISITOR
+	does_return_application_data: BOOLEAN is
+			-- Does function return application data?
 		do
-			if func_desc.arguments /= Void and not func_desc.arguments.empty then
-				ccom_feature_writer.set_signature (set_result_type_and_signature)
-			end
-
-			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
-				visitor := func_desc.return_type.visitor
-
-				if visitor.is_basic_type or visitor.is_enumeration then
-					ccom_feature_writer.set_result_type (visitor.cecil_type)
-				elseif (visitor.vt_type = Vt_bool) then
-					ccom_feature_writer.set_result_type (Eif_boolean)
-				else
-					ccom_feature_writer.set_result_type (Eif_reference)
-				end
-			end
+			Result := not func_desc.return_type.name.is_equal (Void_c_keyword) 
 		end
 
 	feature_body (interface_name: STRING): STRING is

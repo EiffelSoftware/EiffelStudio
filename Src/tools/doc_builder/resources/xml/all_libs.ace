@@ -48,7 +48,7 @@ cluster
 	
 	all store:		"$EIFFEL_SRC\library\store"
 		exclude
-			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"; "install"; "precomp"; "spec";
 		end
 	
 	all net:		"$EIFFEL_SRC\library\net"
@@ -63,7 +63,7 @@ cluster
 		
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"; 
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"; "implementation";
 		end
 		
 	all web:		"$EIFFEL_SRC\library\web"

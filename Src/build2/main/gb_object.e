@@ -530,9 +530,6 @@ feature -- Basic operations
 			object_not_full: not is_full
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
-			counter: INTEGER
-			new_type: STRING
-			a_new_object: GB_OBJECT
 		do
 				-- `an_object' may already be contained in `Current'.
 				-- If this is the case, then the insert position is the number of

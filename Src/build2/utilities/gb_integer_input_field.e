@@ -28,11 +28,12 @@ create
 
 feature {NONE} -- Initialization
 	
-	make (gb_ev_any: GB_EV_ANY; a_parent: EV_CONTAINER; label_text: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+	make (gb_ev_any: GB_EV_ANY; a_parent: EV_CONTAINER; label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
 			-- `a_validate_agent' is used to query whether the current value is valid as an argument for `execution_agent'.
+			-- `tooltip' is tooltip to be displayed on visible parts of control.
 		require
 			gb_ev_any_not_void: gb_ev_any /= Void
 			a_parent_not_void: a_parent /= Void
@@ -44,9 +45,11 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			create label.make_with_text (label_text)
+			label.set_tooltip (tooltip)
 			extend (label)
 			label.align_text_left
 			create text_field
+			text_field.set_tooltip (tooltip)
 			extend (text_field)
 			disable_item_expand (label)
 			a_parent.extend (Current)

@@ -6,6 +6,7 @@ root
 
 default
 	assertion (no)
+	console_application (yes)
 	dead_code_removal (yes)
 -- RTEA version
 	exception_trace (yes)

@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 		do
 			window.set_size (400, 400)
 			details_box.hide
-			message_text.disable_word_wrapping
+			message_text.enable_word_wrapping
 			message_text.disable_edit
 			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)			
 		end

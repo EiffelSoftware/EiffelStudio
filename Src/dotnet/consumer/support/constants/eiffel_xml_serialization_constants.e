@@ -8,6 +8,9 @@ class
 
 feature -- Access
 
+	xmls_ver: STRING is "5.5.918.0"
+			-- version of XML to serialize/deserialize
+
 	Integer_node: SYSTEM_STRING is "I"
 
 	Real_node: SYSTEM_STRING is "Re"

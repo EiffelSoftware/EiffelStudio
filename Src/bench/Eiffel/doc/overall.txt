@@ -169,12 +169,92 @@ universe. When the constraint is also generic, we need to check the validity of 
 declaration.
 
 For each class of the controler we will do:
-1) Execution of `execute' from PASS2_C:
-a) We marked the class as non-reverse engineered.
-b) If class marked as changed we mark `do_pass2' and insert it in `pass3_controler'
+Execution of `execute' from PASS2_C:
+1) We marked the class as non-reverse engineered.
+
+2) If class marked as changed we mark `do_pass2' and insert it in `pass3_controler'
    and `pass4_controler'
    Otherwise `do_pass2' has the value of `changed2' of current class
-c) If `do_pass2', we called `pass2' from INHERIT_TABLE.
+
+3) If `do_pass2', we called `pass2' from INHERIT_TABLE.
+a) Getting the current class, its ID, its cluster, its `is_supplier_status_modifier', its
+   CLASS_INFO, and the parents list. We wipe out the content of Selected.
+b) We compute the feature table:
+   - We search for the feature table with the ID `a_class.id' in FEAT_TBL_SERVER,
+     if we found it we call `update_table' on it.
+   - `Update_table' check that all the elements of the table are valid, and remove the
+      invalid one and put them in `removed_feature_ids'.
+   - We prepare `inherited_features' by setting the ID
+   - If it is a resumed compilation we do `update_table' on the feature table found
+     in the TMP_FEAT_TBL_SERVER.
+c) We take each parents which have been put in the correct order and we merge them into
+   the current INHERIT_TABLE.
+   - We `check_parents' of CLASS_C on `a_class' each time we call `merge'
+   - We take the feature table of each parent, and for each entry we duplicate it and
+     instantiate it (??). With the new feature_i we create a new INHERIT_INFO object
+	 that we insert in the INHERIT_TABLE
+d) We check validity1, this is for the renaming purpose.
+   - Make sure that old_name is different from new_name
+   - Make sure that old_name is a feature of the parent
+   - If new_name is infixed make sure it has one argument and it is a function
+   - If new_name is prefixed make sure it has no argument and it is a function.
+e) We check twice for the renamings
+f) Analyze
+   - For each feature which are inherited we call `process' on them.
+     This will check that we are not undefining a deferred, a once, an attribute or
+	 a frozen feature.
+	 Then we check that the redefinition are correct in `check_features' from INHERIT_FEAT.
+	 We insert the feature in `adapatations' if it defines an inherited deferred feature,
+	 otherwuse we put the `inherited_info' into Òrigin_table.
+     
+g) We check validity2, this is for the undefine/redefine/select/export clause.
+   - Make sure that the redefined features exist in the parent.
+   - Make sure that the selected features exist in the parent.
+   - Make sure that the undefined features exist in the parent.
+   - Make sure that the exported features exist in the parent.
+
+h) If the class has been marked `changed' we clean `changed_features' of `a_class' and we
+   analyze the class declarations. I.e. we create for each features a corresponding FEATURE_I
+   by calling `feature_unit'.
+
+4) Then if the `local_extra_check_list' does not have the current compiled class, we
+   insert it, because we need to do some stuff at the end of degree 4.
+
+5) We check the validity of the creation constraints, i.e. that the feature specified in
+   the creation clause are part of the constrained class.
+
+6) If the system has some expanded types, we do a check on all the system to be sure about
+   the validity of the use of expanded type.
+
+7) If the system support `code_replication' we do a single pass on all the compiled class
+   of degree 4.
 
 
-2)
+Note and improvements:
+----------------------
+
+1) Can we do a marking of all living features now and get rid of the Dead Code Removal part?
+2) We can improve the remove of `update_table' called in 3-b)
+3) We can maybe do only one call to `check_parents' from 3-c)
+4) Are we sure to do twice `check_generics' in 3-e)
+
+
+Between Degree 4 and 3:
+-----------------------
+
+Make sure that all the creation procedures of the ROOT_CLASS have 0 argument or 1 argument
+of type ARRAY[STIRNG].
+
+Notes:
+------
+
+We should not go through all the creation procedures of the root class, we just need to
+take the `creation_name' from the Ace file and make sure it has the correct number of
+arguments and it is a creation procedure.
+
+
+Degree 3:
+---------
+
+We call `execute' of PASS3_C, which calls `pass3' of each CLASS_C which needs to be recompiled.
+

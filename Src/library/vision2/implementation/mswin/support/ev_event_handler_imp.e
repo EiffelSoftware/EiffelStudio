@@ -64,8 +64,10 @@ feature {NONE} -- status setting
 
 	remove_command (event_id: INTEGER) is
 			-- Remove all the commands associated with
-			-- the event `event_id. If the array of command
+			-- the event `event_id'. If the array of command
 			-- is then empty, we set it to Void.
+		require
+			valid_id: event_id >= 1 and event_id <= command_count
 		do
 			if command_list /= Void then
 				if (command_list @ event_id) /= Void then
@@ -75,6 +77,36 @@ feature {NONE} -- status setting
 				if command_list.all_cleared then
 					command_list := Void
 					argument_list := Void
+				end
+			end
+		end
+
+	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
+			-- Remove `cmd' from the list of commmands associated
+			-- with the event `event_id'.
+		require
+			valid_command: cmd /= Void
+			valid_id: event_id >= 1 and event_id <= command_count
+		local
+			list_com: LINKED_LIST [EV_COMMAND]
+			list_arg: LINKED_LIST [EV_ARGUMENT]
+		do
+			if command_list /= Void and then 
+					(command_list @ event_id) /= Void then
+				list_com := command_list @ event_id
+				list_arg := argument_list @ event_id
+				if list_com.has (cmd) then
+					from
+						list_com.start
+						list_arg.start
+					until
+						list_com.exhausted
+					loop
+						list_com.search (cmd)
+						list_com.remove
+						list_arg.go_i_th (list_com.index)
+						list_arg.remove
+					end			
 				end
 			end
 		end

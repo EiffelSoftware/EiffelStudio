@@ -49,6 +49,7 @@ warning_level='-W3'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
 #
 link32='$compiler_path\bin\link'
+cc='cl'
 compiler_path='d:\apps\MSVC\VC98'
 ###compiler_path='%MSVCDIR%'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
@@ -168,9 +169,9 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-cc='cl'
 cpp_stuff='42'
 defvoidused='15'
+eif_sgi='undef'
 eif_win32='define'
 eif_windows='define'
 voidflags='15'

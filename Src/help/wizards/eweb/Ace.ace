@@ -5,7 +5,7 @@ root
 	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
 
 default
-	assertion (no)
+	assertion (ensure)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)
@@ -20,7 +20,7 @@ default
 
 cluster
 	
-	root_cluster: "D:\Eiffel_Projects\Wizards\eweb";
+	root_cluster: "D:\src\help\Wizards\eweb";
 	src(root_cluster): "$\src"
 
 		-- EiffelBase
@@ -29,24 +29,27 @@ cluster
 			"desc";"table_eiffel3"
 		end
 
-	all vision2: 			"$EIFFEL4\library\new_vision"
+	all vision2: 			"$EIFFEL4\library\vision2_devel"
 		exclude
 			"gtk"
 			"test"
 		end
 
-	all Events:				"$EIFFEL4\library\events"
+	all Events:				"$EIFFEL4\library\event"
 
-	all wel: 				"$EIFFEL4\library\new_wel"
+	all wel: 				"$EIFFEL4\library\wel_devel"
 
 	all wizard_tool:				"$EIFFEL4\tools\wizard"
 
 
 external
 	include_path:	
-			"$EIFFEL4\library\new_wel\spec\windows\include"
+			"$EIFFEL4\library\wel_devel\spec\windows\include",
+			"$EIFFEL4\library\vision2_devel\spec\include"
 
 	object:
-			"$EIFFEL4\library\new_wel\spec\msc\lib\wel.lib"
-
+			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
 end

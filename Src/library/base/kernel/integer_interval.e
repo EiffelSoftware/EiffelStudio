@@ -145,12 +145,12 @@ feature -- Access
 			-- Does `v' appear in interval?
 		do
 			Result :=
-				upper_defined implies v <= upper and
-				lower_defined implies v >= lower
+				(upper_defined implies v <= upper) and
+				(lower_defined implies v >= lower)
 		ensure then
 			iff_within_bounds: Result = 
-				upper_defined implies v <= upper and
-				lower_defined implies v >= lower
+				((upper_defined implies v <= upper) and
+				(lower_defined implies v >= lower))
 		end
 
 feature -- Measurement
@@ -206,12 +206,12 @@ feature -- Comparison
 			-- Is array made of the same items as `other'?
 		do
 			Result :=
-				lower_defined implies other.lower_defined and lower = other.lower and
-				upper_defined implies other.upper_defined and upper = other.upper
+				(lower_defined implies (other.lower_defined and lower = other.lower)) and
+				(upper_defined implies (other.upper_defined and upper = other.upper))
 		ensure then
 			iff_same_bounds: Result =
-				lower_defined implies other.lower_defined and lower = other.lower and
-				upper_defined implies other.upper_defined and upper = other.upper
+				((lower_defined implies (other.lower_defined and lower = other.lower)) and
+				(upper_defined implies (other.upper_defined and upper = other.upper)))
 		end
 
 feature -- Status report

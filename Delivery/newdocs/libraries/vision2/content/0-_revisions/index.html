@@ -86,8 +86,10 @@
 				<B>EV_STANDARD_DIALOG</B> - Corrected postcondition of `make_with_text' which
 				was checking that `text' was the same object as the STRING pased as an
 				argument. This was incorrect, as `text' is cloned during the creation.</LI>
-			<li><B>EV_WIDGET</B> Added `remove_real_target' which ensures that `real_target' is Void.</li>
+			<li><B>EV_WIDGET</B> - Added `remove_real_target' which ensures that `real_target' is Void.</li>
+			<li><B>EV_WIDGET_ACTION_SEQUENCES</B>  - Added `mouse_wheel_actions', fired each time that the mouse wheel is scrolled.</li>
 			<LI><B>EV_NOTEBOOK</B> - Now inherits EV_FONTABLE permitting a font to be applied to the item texts.</li>
+			<li><B>EV_ENVIRONMENT</B> - Added `mouse_wheel_scroll_lines' which returns an INTEGER corresponding to the number of lines that should be scrolled in response to each mouse wheel scroll event received.</li>
 </ul>
 		<P><b>Breaking changes</b></P>
 		<UL>

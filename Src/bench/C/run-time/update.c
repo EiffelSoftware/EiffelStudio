@@ -664,7 +664,7 @@ public void option_updt()
 
 	char c;
 	struct eif_opt *current;	/* Current option structure */
-	int16 as_level;				/* Assertion level */
+	int16 as_level, o_level;	/* Assertion & option levels */
 	struct dbg_opt *debug_opt;	/* Debug structure */
 	int16 debug_level;			/* Debug level */
 	short debug_count;			/* Debug tag count */
@@ -695,12 +695,12 @@ public void option_updt()
 		debug_opt = &current->debug_level;
 		debug_level = 0;
 		switch (c) {
-		case BCDB_NO:	debug_level = DB_NO;
+		case BCDB_NO:	debug_level = OPT_NO;
 						break;
-		case BCDB_YES:	debug_level = DB_ALL;
+		case BCDB_YES:	debug_level = OPT_ALL;
 						debug_opt->nb_keys = 0;
 						break;
-		case BCDB_TAG:	debug_level = DB_ALL;
+		case BCDB_TAG:	debug_level = OPT_ALL;
 						debug_count = wshort();
 						keys = (char **) cmalloc(debug_count * sizeof(char *));
 						if (keys == (char **) 0)
@@ -721,6 +721,27 @@ public void option_updt()
 		default:		panic("invalid debug level");
 		}
 		debug_opt->debug_level = debug_level;
+		wread(&c, 1);		   /* Assertion level byte code */
+		o_level = 0;
+		switch (c) {
+		case BC_NO:			o_level = OPT_NO;
+	break;
+		case BC_YES:			o_level = OPT_ALL;
+	break;
+		default:			panic("invalid trace level");
+		}
+		current->trace_level = o_level;
+
+		wread(&c, 1);			/* Assertion level byte code */
+		o_level = 0;
+		switch (c) {
+		case BC_NO:		     o_level = OPT_NO;
+	break;
+		case BC_YES:		    o_level = OPT_ALL;
+	break;
+		default:			panic("invalid profile level");
+		}
+		current->profile_level = o_level;
 	}
 }
 

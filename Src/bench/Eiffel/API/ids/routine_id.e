@@ -4,7 +4,11 @@ class ROUTINE_ID
 
 inherit
 
-	COMPILER_ID;
+	COMPILER_ID
+		export
+			{COMPILER_EXPORTER} all;
+			{ANY} is_equal
+		end;
 	ENCODER
 		export
 			{NONE} all
@@ -14,7 +18,7 @@ creation
 
 	make
 
-feature -- Status report
+feature {COMPILER_EXPORTER} -- Status report
 
 	is_attribute: BOOLEAN is
 			-- Is the current id an attribute id?
@@ -22,7 +26,7 @@ feature -- Status report
 		do
 		end;
 
-feature -- Access
+feature {COMPILER_EXPORTER} -- Access
 
 	table_name: STRING is
 			-- Name of a table of data for the final Eiffel executable.

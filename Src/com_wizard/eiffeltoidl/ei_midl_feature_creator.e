@@ -8,8 +8,12 @@ class
 	EI_MIDL_FEATURE_CREATOR
 
 inherit
-
 	ECOM_PARAM_FLAGS
+		export
+			{NONE} all
+		end
+
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -46,10 +50,17 @@ feature -- Basic operations
 			l_succeed: BOOLEAN
 			midl_parameter: EI_MIDL_PARAMETER
 			com_type: STRING
+			tmp_name, tmp_string: STRING
 		do
 			l_succeed := True
 
-			create midl_feature.make (l_feature.name)
+			tmp_name := clone (l_feature.name)
+			if c_keywords.has (tmp_name) then
+				tmp_string := clone (tmp_name)
+				tmp_string.append (message_output.name_is_C_keyword)
+				message_output.add_warning (Current, tmp_string)
+			end
+			create midl_feature.make (tmp_name)
 
 			create type_mapper.make
 			midl_feature.set_comment (l_feature.comment)
@@ -72,7 +83,12 @@ feature -- Basic operations
 						com_type := type_mapper.com_type (l_feature.parameters.item.type)
 
 						if com_type /= Void then
-							create midl_parameter.make (l_feature.parameters.item.name, com_type )
+							tmp_name := clone (l_feature.parameters.item.name)
+							if c_keywords.has (tmp_name) then
+								tmp_name.prepend ("a_")
+							end
+
+							create midl_parameter.make (tmp_name, com_type )
 							if type_mapper.inout_type then
 								midl_parameter.set_flag (Paramflag_fout)
 							else

@@ -54,16 +54,15 @@ feature -- Creation
 			!! windows_category.make (Menu_names.Windows, menu_bar)
 			!! help_category.make (Menu_names.Help, menu_bar)
 					--| File menu
-			!! select_toolkit_menu_entry.make (Menu_names.Toolkit, file_category)
 			!! generate_menu_entry.make (Menu_names.Generate, file_category)
 			!! import_menu_entry.make (Menu_names.Import, file_category)
 			!! menu_separator1.make ("", file_category)
 			!! save_project_menu_entry.make (Menu_names.Save, file_category)
+			!! save_as_menu_entry.make (Menu_names.Save_as, file_category)
 			!! exit_menu_entry.make (Menu_names.Exit, file_category)
 					--| Action menu
 			!! create_command_entry.make (Menu_names.create_command, action_category)
 					--| View menu
---			!! context_sub_menu.make (Menu_names.Context, view_category)
 			!! context_tree_entry.make (Menu_names.Context_tree, view_category)
 			!! context_catalog_entry.make (Menu_names.Context_catalog, view_category)
 			!! command_catalog_entry.make (Menu_names.Command_catalog, view_category)
@@ -82,23 +81,24 @@ feature -- Creation
 			!! separator2.make (widget_names.separator, form)
 				--| Button bar
 			!! button_form.make (widget_names.form, form)
-			!! cut_b.make (button_form)
-			!! namer_b.make (button_form)
-			!! help_b.make (button_form)
-			!! con_b.make (button_form)
-			!! cmd_b.make (button_form)
---			!! state_b.make (button_form)
+			!! create_proj_b.make (button_form)
+			!! load_proj_b.make (button_form)
+			!! save_b.make (button_form)
 			!! import_b.make (button_form)
-			!! editing_box.make ("editing box", button_form)
+			!! v_separator_1.make ("", button_form)
 			!! executing_box.make ("executing box", button_form)
  			!! execute_b.make ("Execute", executing_box)
+			!! editing_box.make ("editing box", button_form)
 			!! edit_b.make ("Edit", editing_box)
+			!! v_separator_2.make ("", button_form)
+			!! help_b.make (button_form)
+			!! namer_b.make (button_form)
+			!! cut_b.make (button_form)
+			!! v_separator_3.make ("", button_form)
+			!! con_b.make (button_form)
+			!! cmd_b.make (button_form)
 			!! current_state_hole.make (button_form)
 			!! current_state_label.make ("", button_form)
-			!! save_b.make (button_form)
-			!! v_separator_1.make ("", button_form)
-			!! v_separator_2.make ("", button_form)
-			!! v_separator_3.make ("", button_form)
 				--| Split windows
 			!! main_split_window.make_horizontal ("Main split window", form)
 			!! context_tree_split_form.make ("Context tree form", main_split_window)
@@ -138,7 +138,6 @@ feature -- Creation
 		do
 			set_title (widget_names.main_panel)
 			resources.check_fonts (base)
---			base.forbid_resize
 			base.set_min_height (35)
 			if Pixmaps.eiffelbuild_pixmap.is_valid then
 				base.set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
@@ -171,12 +170,14 @@ feature -- Creation
 	attach_all is
 			-- Perform attachments.
 		do
+			button_form.attach_top (create_proj_b, 0)
+			button_form.attach_top (load_proj_b, 0)
+
 			button_form.attach_top (cut_b, 0)
 			button_form.attach_top (namer_b, 0)
 			button_form.attach_top (help_b, 0)
 			button_form.attach_top (con_b, 0)
 			button_form.attach_top (cmd_b, 0)
---			button_form.attach_top (state_b, 0)
 			button_form.attach_top (import_b, 0)
 			button_form.attach_top (save_b, 0)
 			button_form.attach_top (executing_box, 0)
@@ -186,12 +187,15 @@ feature -- Creation
 			button_form.attach_top (v_separator_1, 0)
 			button_form.attach_top (v_separator_2, 0)
 			button_form.attach_top (v_separator_3, 0)
+
+			button_form.attach_bottom (create_proj_b, 0)
+			button_form.attach_bottom (load_proj_b, 0)
+
 			button_form.attach_bottom (cut_b, 0)
 			button_form.attach_bottom (namer_b, 0)
 			button_form.attach_bottom (help_b, 0)
 			button_form.attach_bottom (con_b, 0)
 			button_form.attach_bottom (cmd_b, 0)
---			button_form.attach_bottom (state_b, 0)
 			button_form.attach_bottom (import_b, 0)
 			button_form.attach_bottom (save_b, 0)
 			button_form.attach_bottom (executing_box, 0)
@@ -202,9 +206,11 @@ feature -- Creation
 			button_form.attach_bottom (v_separator_2, 0)
 			button_form.attach_bottom (v_separator_3, 0)
 			
- 			button_form.attach_left (import_b, 0)
- 			button_form.attach_left_widget (import_b, save_b, 0)
- 			button_form.attach_left_widget (save_b, v_separator_1, 0)
+ 			button_form.attach_left (create_proj_b, 0)
+			button_form.attach_left_widget (create_proj_b, load_proj_b, 0)
+ 			button_form.attach_left_widget (load_proj_b, save_b, 0)
+ 			button_form.attach_left_widget (save_b, import_b, 0)
+ 			button_form.attach_left_widget (import_b, v_separator_1, 0)
  			button_form.attach_left_widget (v_separator_1, executing_box, 0)
  			button_form.attach_left_widget (executing_box, editing_box, 0)
  			button_form.attach_left_widget (editing_box, v_separator_2, 0)
@@ -216,23 +222,6 @@ feature -- Creation
  			button_form.attach_left_widget (con_b, cmd_b, 0)
  			button_form.attach_left_widget (cmd_b, current_state_hole, 0)
  			button_form.attach_left_widget (current_state_hole, current_state_label, 3)
-
--- 			button_form.attach_left (con_b, 0)
--- 			button_form.attach_left_widget (con_b, cmd_b, 0)
--- 			button_form.attach_left_widget (cmd_b, state_b, 0)
--- 			button_form.attach_left_widget (state_b, help_b, 0)
--- 			button_form.attach_left_widget (help_b, namer_b, 0)
--- 			button_form.attach_left_widget (namer_b, cut_b, 0)
--- 			button_form.attach_left_widget (cut_b, v_separator_1, 0)
--- 			button_form.attach_left_widget (v_separator_1, save_b, 0)
--- 			button_form.attach_left_widget (save_b, import_b, 0)
--- 			button_form.attach_left_widget (import_b, v_separator_2, 0)
--- 			button_form.attach_left_widget (v_separator_2, executing_box, 0)
--- 			button_form.attach_left_widget (executing_box, editing_box, 0)
--- 			button_form.attach_left_widget (editing_box, v_separator_3, 0)
--- 			button_form.attach_left_widget (v_separator_3, current_state_hole, 0)
--- 			button_form.attach_left_widget (current_state_hole, current_state_label, 3)
-
 			form.attach_top (separator1, 1)
 			form.attach_left (separator1, 0)
 			form.attach_right (separator1, 0)
@@ -307,24 +296,18 @@ feature -- Creation
 			generate: GENERATE
 			save_project: SAVE_PROJECT
 			exit_cmd: EXIT_EIFFEL_BUILD_CMD
-			change_mode: CHANGE_MODE_CMD
 		do
-			edit_b.add_value_changed_action (Current, edit_b)
-			execute_b.add_value_changed_action (Current, execute_b)
 			!! raise_import_window
 			import_menu_entry.add_activate_action (raise_import_window, Void)
 			!! generate
-			save_b.add_button_press_action (3, generate, First)
-			select_toolkit_menu_entry.add_activate_action (generate, First)
 			generate_menu_entry.add_activate_action (generate, Void)
 			!! save_project
 			save_project_menu_entry.add_activate_action (save_project, Void)
 			base.set_action ("Ctrl<Key>S", save_project, Void)
 			!! exit_cmd
 			exit_menu_entry.add_activate_action (exit_cmd, Void)
-			!! change_mode
-			execute_b.add_activate_action (change_mode, executing_mode)
-			edit_b.add_activate_action (change_mode, editing_mode)
+			execute_b.add_value_changed_action (Current, execute_b)
+			edit_b.add_value_changed_action (Current, edit_b)
 		end
 
 feature -- Attributes
@@ -353,11 +336,6 @@ feature -- Implementation
 			save_b.set_unsaved_symbol
 		end
 
-feature {NONE} -- Implementation
-
-	changing_mode: BOOLEAN
-			-- Is the application changing its mode?
-			
 feature {NONE} -- Graphical interface
 
 		--| Forms
@@ -417,16 +395,15 @@ feature -- Graphical interface
 	help_category: MENU_PULL
 	action_category: MENU_PULL
 		--| Entries in the File category
-	select_toolkit_menu_entry: PUSH_B
 	generate_menu_entry: PUSH_B
-	save_project_menu_entry: PUSH_B
 	import_menu_entry: PUSH_B
 	menu_separator1, menu_separator2: SEPARATOR
+	save_project_menu_entry: PUSH_B
+	save_as_menu_entry: SAVE_AS_BUTTON
 	exit_menu_entry: PUSH_B
 		--| Entries in the Actions category
 	create_command_entry: NEW_COMMAND_BUTTON
 		--| Entries in the View category
---	context_sub_menu: MENU_PULL
 	context_tree_entry: CONTEXT_TREE_ENTRY
 	context_catalog_entry: CONTEXT_CATALOG_ENTRY
 	command_catalog_entry: COMMAND_CATALOG_ENTRY
@@ -453,8 +430,13 @@ feature -- Graphical interface
 			-- `Context editor' button
 	cmd_b: CMD_ED_HOLE
 			-- `Command editor' button
---	state_b: STATE_ED_HOLE
-			-- `State editor' button
+	create_proj_b: CREATE_PROJ_BUTTON
+			-- Create new project button
+	load_proj_b: LOAD_PROJ_BUTTON
+			-- Retrieve project button
+	save_b: SAVE_BUTTON
+			-- Button to save current project
+			-- Buuton to save project as ...
 	import_b: IMPORT_BUTTON
 			-- `Import' button
 	execute_b: 	TOGGLE_B
@@ -465,8 +447,6 @@ feature -- Graphical interface
 			-- Hole used to change current state.
 	current_state_label: LABEL
 			-- Label displaying the current state.
-	save_b: SAVE_BUTTON
-			-- Button to save current project
 	v_separator_1, v_separator_2, v_separator_3: THREE_D_SEPARATOR
 			-- Vertical separators between menu buttons
 
@@ -501,7 +481,9 @@ feature
 			-- Set project_initialized to True.
 		do 		
 			project_initialized := True 
---			enable_toggle_buttons
+			enable_menus
+			enable_toggle_buttons
+			set_mode (editing_mode)
 		end
 
 	unset_project_initialized is 
@@ -509,7 +491,9 @@ feature
 		do 		
 			project_initialized := False 
 			set_title (Widget_names.main_panel)
---			disable_toggle_buttons
+			disable_menus
+			disable_toggle_buttons
+			set_mode (executing_mode)
 		end
 
 feature -- Realization
@@ -524,27 +508,63 @@ feature -- Realization
 			show_context_tree
 		end
 
-feature -- Closing Current
+feature {NONE} -- Execute/Edit action
 
 	work (arg: ANY) is 
-			-- We have to use `changing_mode' the way it is done because
-			-- since we used add_value_changed_action on both TOGGLE_B `edit_b'
-			-- and `execute_b', disarm one of them will trigger another event
-			-- value_changed and call again this command.
+			-- Execute `edit_b' and `execute_b' command.
+		local
+			generate: GENERATE
+			temp: STRING
+			project_file: RAW_FILE
+			first_compilation: BOOLEAN
 		do 
-			if arg = edit_b and not changing_mode then
-				changing_mode := True
-				execute_b.disarm
+			if arg = edit_b and then current_mode = executing_mode then
+				execute_b.set_toggle_off
+				base.set_normal_state
+				enable
+				interface_entry.arm
 				interface_only_entry.disarm
 				set_mode (editing_mode)
-			elseif arg = execute_b and not changing_mode then
-				changing_mode := True
-				edit_b.disarm
-				interface_only_entry.arm
+			elseif arg = execute_b and then current_mode = editing_mode then
+				edit_b.set_toggle_off
+--				interface_only_entry.arm
+--				interface_entry.disarm
+				disable
+				base.set_iconic_state
 				set_mode (executing_mode)
+					--| Compile the generated application
+				!! generate
+				generate.execute (Void)
+				!! temp.make (0)
+				temp.append (environment.Es4_file)
+				!! project_file.make (environment.Project_epr_file)
+				if project_file.exists then
+					temp.append (" -project ")
+					temp.append (environment.Project_epr_file)
+				else
+					first_compilation := True
+					temp.append (" -project_path ")
+					temp.append (environment.project_directory)
+					temp.append (" -ace ")
+					temp.append (environment.project_ace_file)
+				end
+				environment.system (temp)
+				environment.change_working_directory (environment.W_code_directory)
+				if first_compilation then
+					first_compilation := False
+					temp.wipe_out
+					temp.append (environment.Finish_freezing_file)
+					environment.system (temp)
+				end
+				temp.wipe_out
+				temp.append (environment.Application_name)
+				environment.system (temp)
+				environment.change_working_directory (environment.project_directory)
+				edit_b.arm
 			end
-			changing_mode := False
 		end
+
+feature -- Closing Current
 
 	save_question: BOOLEAN
 
@@ -639,29 +659,68 @@ feature -- Interface
 feature -- Enabel/Disable buttons
 
 	enable_buttons is
-			-- Enable all buttons on Main Panel.
+			-- Enable all buttons in the buttons menu.
 		do
+			create_proj_b.set_sensitive
+			load_proj_b.set_sensitive
 			cut_b.set_sensitive
 			namer_b.set_sensitive
 			help_b.set_sensitive
 			con_b.set_sensitive
 			cmd_b.set_sensitive
---			state_b.set_sensitive
 			import_b.set_sensitive
 			current_state_hole.set_sensitive
 		end
 
 	disable_buttons is
-			-- Disable all buttons on Main Panel except Exit button.
+			-- Disable all buttons in the buttons menu except Save button.
 		do
+			create_proj_b.set_insensitive
+			load_proj_b.set_insensitive
 			cut_b.set_insensitive
 			namer_b.set_insensitive
 			help_b.set_insensitive
 			con_b.set_insensitive
 			cmd_b.set_insensitive
---			state_b.set_insensitive
 			import_b.set_insensitive
 			current_state_hole.set_insensitive
+		end
+
+feature -- Enable/Disable menus
+
+	enable_menus is 
+			-- Enable menus after openning a project.
+		do
+			import_menu_entry.set_sensitive
+			action_category.set_sensitive
+			view_category.set_sensitive
+			windows_category.set_sensitive
+		end
+
+	disable_menus is
+			-- Disable all the menus except `File' and `Help'.
+		do
+			import_menu_entry.set_insensitive
+			action_category.set_insensitive
+			view_category.set_insensitive
+			windows_category.set_insensitive
+		end
+
+
+feature -- Enable/Disable toggle buttons
+
+	enable_toggle_buttons is
+			-- Enable `execute_b' and `edit_b'.
+		do
+			execute_b.set_sensitive
+			edit_b.set_sensitive
+		end
+
+	disable_toggle_buttons is
+			-- Disable `execute_b' and `edit_b'.
+		do
+			execute_b.set_insensitive
+			edit_b.set_insensitive
 		end
 
 feature -- Hide/Show Bottom split form
@@ -846,12 +905,7 @@ feature -- Enable/Disable EiffelBuild
 			-- Enable widgets of Main Panel and popup previously
 			-- hidden tools.
 		do
-			action_category.set_sensitive
-			application_editor_entry.set_sensitive
-			class_importer_entry.set_sensitive
-			history_window_entry.set_sensitive
-			command_editor_entry.set_sensitive
-			editors_entry.set_sensitive
+			enable_menus
 			enable_buttons
 		end
 
@@ -859,12 +913,7 @@ feature -- Enable/Disable EiffelBuild
 			-- Disable all widgets of Main Panel and popdown
 			-- every tools.
 		do
-			action_category.set_insensitive
-			application_editor_entry.set_insensitive
-			class_importer_entry.set_insensitive
-			history_window_entry.set_insensitive
-			command_editor_entry.set_insensitive
-			editors_entry.set_insensitive
+			disable_menus
 			disable_buttons
 		end
 

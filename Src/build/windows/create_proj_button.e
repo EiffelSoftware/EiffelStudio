@@ -35,8 +35,6 @@ feature {NONE}
 feature {NONE}
 
 	work (argument: ANY) is
-		local
-			pw: CREATE_PROJ_WIN
 		do
 			if not main_panel.project_initialized then
 				popup_window

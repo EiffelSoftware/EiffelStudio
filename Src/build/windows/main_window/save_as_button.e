@@ -1,38 +1,62 @@
 class SAVE_AS_BUTTON 
+
 inherit
 
-	CREATE_PROJ_BUTTON
-		rename
-			make as parent_make
+	PUSH_B
+		undefine
+			init_toolkit
 		redefine
-			symbol, popup_window, app_not_save_qu, create_focus_label
-		end;
+			make
+		end
+		
+	LICENCE_COMMAND
+
+	QUEST_POPUPER
+
 	
 creation
 
 	make
 
-feature {NONE} -- Focusable
+feature {NONE} 
 
-    make (a_parent: COMPOSITE) is
-        do
-            parent_make (a_parent)
-        end
+	make (a_name: STRING; a_parent: COMPOSITE) is
+		do
+			{PUSH_B} Precursor (a_name, a_parent)
+			set_callbacks
+		end
+
+	set_callbacks is
+		do
+			add_activate_action (Current, Void)
+		end
+
+	work (argument: ANY) is
+		do
+			if not main_panel.project_initialized then
+				popup_window
+			else
+				if history_window.saved_application then
+					popup_window
+				else
+					question_box.popup (Current, app_not_save_qu, Void)
+				end
+			end
+		end
   
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.save_project_as_label)
-		end;
-
-	symbol: PIXMAP is
-		do
-			Result := Pixmaps.save_as_pixmap
-		end;
-
 	app_not_save_qu: STRING is
 		do
 			Result := Messages.save_as_project_qu
-		end;
+		end
+
+	question_cancel_action is
+		do
+		end
+
+	question_ok_action is
+		do
+			popup_window
+		end
 
 	popup_window is
 		local
@@ -42,6 +66,11 @@ feature {NONE} -- Focusable
 				!!pw.make (main_panel.base)
 				pw.popup
 			end
-		end;
+		end
 
-end
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
+		end
+
+end -- class SAVE_AS_BUTTON

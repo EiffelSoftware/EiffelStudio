@@ -381,6 +381,14 @@ feature -- Interaction with .Net Debugger
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
 		do
+			check
+				outside_callback_notification: not callback_notification_processing
+			end
+			
+			debug ("debugger_trace_synchro")
+				notify_debugger ("<start> " + generator + ".do_stop %N")
+			end
+
 			l_controller := icor_debug_controller
 			if exit_process_occurred or else l_controller = Void then
 				on_exit_process
@@ -394,6 +402,9 @@ feature -- Interaction with .Net Debugger
 					print ("EIFNET_DEBUGGER.do_stop : after stop ICorDebugController.last_call_success = " + l_controller.last_error_code_id + "%N")
 				end
 				waiting_debugger_callback ("stop")
+			end
+			debug ("debugger_trace_synchro")
+				notify_debugger ("<end> " + generator + ".do_stop %N")
 			end
 		end
 		
@@ -1196,12 +1207,14 @@ feature -- Specific function evaluation
 			a_feat_not_void: a_feat /= Void
 			adapted_class_not_void: a_adapted_class_type /= Void
 		local
-			l_once_info_tokens: TUPLE [INTEGER, INTEGER]
-			l_done_token, l_result_token: INTEGER
+			l_once_info_tokens: TUPLE [INTEGER, INTEGER, INTEGER]
+			l_data_class_token, l_done_token, l_result_token: INTEGER
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
 			l_once_already_called: BOOLEAN
 			l_icd_frame: ICOR_DEBUG_FRAME
+			l_icd_class: ICOR_DEBUG_CLASS
+			l_icd_module: ICOR_DEBUG_MODULE
 		do
 				--| Set related frame
 			l_icd_frame := a_icd_frame
@@ -1212,15 +1225,26 @@ feature -- Specific function evaluation
 
 				--| Get related tokens
 			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, a_adapted_class_type)
-			l_done_token := l_once_info_tokens.integer_item (1)
-			l_result_token := l_once_info_tokens.integer_item (2)
+			if l_once_info_tokens /= Void then
+				l_data_class_token := l_once_info_tokens.integer_item (1)
+				l_done_token := l_once_info_tokens.integer_item (2)
+				l_result_token := l_once_info_tokens.integer_item (3)
+			end
 			
+				--| Set ICorDebugClass
+			l_icd_class := a_icd_class
+			if l_data_class_token /= 0 then
+				l_icd_module := l_icd_class.get_module
+				l_icd_class := l_icd_module.get_class_from_token (l_data_class_token)
+				l_icd_module.clean_on_dispose
+			end
+
 				--| Check if already called (_done)
 			if 
 				l_icd_frame /= Void and then 
 				l_done_token /= 0 
 			then
-				l_icd_debug_value := a_icd_class.get_static_field_value (l_done_token, l_icd_frame)
+				l_icd_debug_value := l_icd_class.get_static_field_value (l_done_token, l_icd_frame)
 				if l_icd_debug_value /= Void then
 					l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
 					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icd_debug_value)
@@ -1234,7 +1258,7 @@ feature -- Specific function evaluation
 				--| if already called then get the value (_result)
 			if l_once_already_called then
 				if l_result_token /= 0 then
-					Result := a_icd_class.get_static_field_value (l_result_token, l_icd_frame)
+					Result := l_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 				end
 			end
 		end

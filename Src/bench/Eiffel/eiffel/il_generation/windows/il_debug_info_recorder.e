@@ -383,7 +383,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := feature_token_for_feat_and_class_type (a_feat, l_class_type)
 		end
 
-	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER] is
+	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER, INTEGER] is
 			-- `_done' and `_result' Tokens for the once `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -697,27 +697,53 @@ feature {IL_CODE_GENERATOR} -- line debug recording
 
 feature {IL_CODE_GENERATOR} -- Token recording
 
-	record_once_info (a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_once_name: STRING; a_once_done_token, a_once_result_token: INTEGER;) is
+	record_once_info_for_class (a_data_class_token: INTEGER; a_once_done_token, a_once_result_token: INTEGER;
+								a_feature: FEATURE_I; a_class_c: CLASS_C) is
 			--  Record `_done' and `_result' tokens for once `a_once_name' from `a_class_type'.
+		local
+			l_class_types: LIST [CLASS_TYPE]
+		do
+			if 
+				is_debug_info_enabled
+			then
+				from
+					l_class_types := a_class_c.types
+					l_class_types.start
+				until
+					l_class_types.after						
+				loop
+					record_once_info_for_class_type	(a_data_class_token, a_once_done_token, a_once_result_token, 
+														a_feature, l_class_types.item)					
+					l_class_types.forth
+				end
+			end
+		end
+		
+	record_once_info_for_class_type (a_data_class_token: INTEGER; a_once_done_token, a_once_result_token: INTEGER; 
+									a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
+		require
+			a_feature_i /= Void
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 		do
 			if 
-				is_debug_info_enabled 
---				and then a_feature /= Void
+				is_debug_info_enabled
 			then
 				debug ("debugger_il_info_trace")
-					print ("[>] Recording Once : "  + a_once_name + " = "
+					print ("[>] Recording Once : "
 							+ a_class_type.associated_class.name_in_upper 
-							+ "." + a_feature.feature_name 
+							+ "." + a_feature_i.feature_name 
 							+ " -> "
+							+ "Data=0x" + a_data_class_token.to_hex_string
+							+ "::"
 							+ "Done=0x" + a_once_done_token.to_hex_string
 							+ "::"
 							+ "Result=0x" + a_once_result_token.to_hex_string
 							+ "%N")
-				end
+				end			
 				l_info_from_class_type := info_from_class_type (a_class_type, True)
-				l_info_from_class_type.record_once_tokens (a_once_done_token, a_once_result_token, a_feature)
+				l_info_from_class_type.record_once_tokens (-- a_data_class_token, 
+							a_data_class_token, a_once_done_token, a_once_result_token, a_feature_i)				
 			end
 		end
 

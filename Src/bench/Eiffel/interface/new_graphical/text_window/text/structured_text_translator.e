@@ -298,7 +298,7 @@ feature -- Text processing
 			stone: FEATURE_ERROR_STONE
 		do
 			create tok.make (t.image)
-			create stone.make (t.e_feature, t.position)
+			create stone.make (t.e_feature, t.line)
 			tok.set_pebble (stone)
 			last_line.append_token (tok)
 		end

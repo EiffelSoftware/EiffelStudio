@@ -412,6 +412,15 @@ feature -- Status setting
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
+		
+	save_to_named_file (a_filename: FILE_NAME) is
+			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
+		require
+			not_destroyed: not is_destroyed
+			filename_not_void: a_filename /= Void
+		do
+			implementation.save_to_named_file (a_filename)
+		end
 
 feature {NONE} -- Contract support
 

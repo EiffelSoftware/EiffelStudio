@@ -30,9 +30,9 @@ feature -- Access
 		do
 			if ev_children.item /= Void then
 				w ?= ev_children.item.interface
-					check
-						interface_not_void: w /= Void
-					end
+				check
+					interface_not_void: w /= Void
+				end
 				Result := w
 			end
 		end
@@ -102,23 +102,27 @@ feature -- Element change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
-			w: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 			ww: WEL_WINDOW
 			was_after: BOOLEAN
 		do
-			w ?= v.implementation
+			v_imp ?= v.implementation
 			check
-				new_item_implementation_not_void: w /= Void
+				v_imp_not_void: v /= Void
 			end
 			was_after := ev_children.after
-			ev_children.extend (w)
+			ev_children.extend (v_imp)
 			if was_after then
-				--| This is to work around a difference in behaviour of ARRAYED_LIST.
+				--| This is to work around a difference in behaviour of
+				--| ARRAYED_LIST.
 				ev_children.go_i_th (ev_children.count + 1)
 			end
 			ww ?= Current
-			w.wel_set_parent (ww)
-			w.set_top_level_window_imp (top_level_window_imp)
+			check
+				ww_not_void: ww /= Void
+			end
+			v_imp.wel_set_parent (ww)
+			v_imp.set_top_level_window_imp (top_level_window_imp)
 			notify_change (2 + 1)
 			new_item_actions.call ([v])
 		end
@@ -127,17 +131,22 @@ feature -- Element change
 			-- Replace current item by `v'.
 		local
 			ww: WEL_WINDOW
-			child_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 			a_parent_imp: EV_CONTAINER_IMP
 		do
 			remove
-			child_imp ?= v.implementation
-			ev_children.put_left (child_imp)
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			ev_children.put_left (v_imp)
 			ev_children.move (-1)
-
 			ww ?= Current
-			child_imp.wel_set_parent (ww)
-			child_imp.set_top_level_window_imp (top_level_window_imp)
+			check
+				ww_not_void: ww /= Void
+			end
+			v_imp.wel_set_parent (ww)
+			v_imp.set_top_level_window_imp (top_level_window_imp)
 			notify_change (2 + 1)
 			new_item_actions.call ([item])
 		end
@@ -146,18 +155,24 @@ feature -- Element change
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		local
-			w: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 			ww: WEL_WINDOW
 		do
-			w ?= v.implementation
-			check
-				new_item_implementation_not_void: w /= Void
+			if v.parent /= Void then
+				v.parent.prune (v)
 			end
-			ev_children.put_front (w)
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			ev_children.put_front (v_imp)
 			notify_change (Nc_minsize)
 			ww ?= Current
-			w.wel_set_parent (ww)
-			w.set_top_level_window_imp (top_level_window_imp)
+			check
+				ww_not_void: ww /= Void
+			end
+			v_imp.wel_set_parent (ww)
+			v_imp.set_top_level_window_imp (top_level_window_imp)
 			new_item_actions.call ([v])
 		end
 
@@ -165,21 +180,23 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
-			w: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
 			ww: WEL_WINDOW
 		do
-			w ?= v.implementation
-			check
-				new_item_implementation_not_void: w /= Void
+			if v.parent /= Void then
+				v.parent.prune (v)
 			end
-			ev_children.put_right (w)
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			ev_children.put_right (v_imp)
 			notify_change (Nc_minsize)
 			ww ?= Current
-			w.wel_set_parent (ww)
-			w.set_top_level_window_imp (top_level_window_imp)
+			v_imp.wel_set_parent (ww)
+			v_imp.set_top_level_window_imp (top_level_window_imp)
 			new_item_actions.call ([v])
 		end
-
 
 feature -- Removal
 
@@ -191,6 +208,9 @@ feature -- Removal
 			old_index: INTEGER
 		do
 			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
 			if ev_children.has (v_imp) then
 				old_index := ev_children.index
 				ev_children.start
@@ -210,21 +230,21 @@ feature -- Removal
 			-- Move cursor to right neighbour.
 			-- (or `after' if no right neighbour)
 		local
-			child_imp: EV_WIDGET_IMP
-			a_parent_imp: EV_CONTAINER_IMP
+			item_imp: EV_WIDGET_IMP
+			item_parent_imp: EV_CONTAINER_IMP
 			old_index: INTEGER
 		do
 			remove_item_actions.call ([item])
 			old_index := index
-			child_imp ?= item.implementation
+			item_imp ?= item.implementation
 			check
-				cast_not_void: child_imp /= Void
+				item_imp_not_void: item_imp /= Void
 			end
-			a_parent_imp ?= child_imp.parent_imp
+			item_parent_imp ?= item_imp.parent_imp
 			check
-				cast_not_void: a_parent_imp /= Void
+				item_parent_imp_not_void: item_parent_imp /= Void
 			end
-			a_parent_imp.remove_child (child_imp)
+			item_parent_imp.remove_child (item_imp)
 			ev_children.go_i_th (old_index)
 		end
 

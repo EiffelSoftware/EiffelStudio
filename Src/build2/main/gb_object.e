@@ -28,6 +28,8 @@ inherit
 	GB_XML_OBJECT_BUILDER
 	
 	GB_SHARED_XML_HANDLER
+	
+	GB_WIDGET_UTILITIES
 
 feature {NONE} -- Initialization
 	
@@ -146,14 +148,12 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER} -- Status setting
 		do
 			layout_item ?= a_layout_item
 			layout_item.set_object (Current)
-			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
-			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
-			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			build_drop_actions_for_layout_item
 		ensure
 			layout_item_set: layout_item = a_layout_item
 			layout_item_object_set: layout_item.object = Current
 		end
-
+		
 feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
 
 	unparent is
@@ -161,28 +161,11 @@ feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_
 			-- of `an_object' must be removed from their parents to
 			-- concide with this change.
 		local
-			container: EV_CONTAINER
-			widget: EV_WIDGET
 			parent_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			widget ?= object
-			container ?= widget.parent
-			check
-				widget_or_parent_not_void: container /= Void and widget /= Void
-				widget_contained_in_parent: container.has (widget)
-			end
-				-- Remove `object' from its parent.
-			container.prune (widget)
-			
-			widget ?= display_object
-			container ?= widget.parent
-			check
-				widget_or_parent_not_void: container /= Void and widget /= Void
-				widget_contained_in_parent: container.has (widget)
-			end
-				-- Remove `display_object' from its parent.
-			container.prune (widget)
-			
+			unparent_ev_object (object)
+			unparent_ev_object (display_object)
+
 				-- Remove `layout_item' from its parent.
 			parent_item ?= layout_item.parent
 			check
@@ -205,27 +188,9 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 			-- We keep the existing layout item of the original widget which
 			-- allows us to access the new object in the history after the type
 			-- change has completed.
-		local
-			container: EV_CONTAINER
-			widget: EV_WIDGET
 		do
-			widget ?= object
-			container ?= widget.parent
-			check
-				widget_or_parent_not_void: container /= Void and widget /= Void
-				widget_contained_in_parent: container.has (widget)
-			end
-				-- Remove `object' from its parent.
-			container.prune (widget)
-			
-			widget ?= display_object
-			container ?= widget.parent
-			check
-				widget_or_parent_not_void: container /= Void and widget /= Void
-				widget_contained_in_parent: container.has (widget)
-			end
-				-- Remove `display_object' from its parent.
-			container.prune (widget)
+			unparent_ev_object (object)
+			unparent_ev_object (display_object)
 			
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
@@ -245,15 +210,34 @@ feature {GB_OBJECT_HANDLER} -- Element change
 			object_initialized: object /= Void
 		end
 		
-	can_add_child (an_object: GB_OBJECT): BOOLEAN is
-			-- Can `an_object' be added to `Current'
-			-- if shift not pressed.
-			-- Can `an_object' be added to `Current'
-			-- if shift pressed.
+	can_add_child (object_representation: ANY): BOOLEAN is
+			-- May an object represented by `object_representation' be added
+			-- to `Current'. `object_representation' may be either a GB_COMPONENT or a 
+			-- GB_OBJECT. We do not just create an object from the component and use that,
+			-- as this can be very slow, and this feature is called many times during
+			-- a pick and drop.
 		local
 			env: EV_ENVIRONMENT
 			local_parent_object: GB_OBJECT
+			an_object: GB_OBJECT
+			a_component: GB_COMPONENT
+			new_type: STRING
 		do
+			an_object ?= object_representation
+				-- We get the new type of the object to be added. With this
+				-- information, we can then see if `Current' will accept
+				-- a child of this type.
+			if an_object /= Void then
+				new_type := an_object.type
+			else
+				-- If we are not an object, then we must be a component.
+				a_component ?= object_representation
+				check
+					is_component: a_component /= Void
+				end
+				new_type := a_component.root_element_type
+			end
+			Result := True
 			create env
 			if env.application.shift_pressed then
 				local_parent_object := parent_object
@@ -262,31 +246,53 @@ feature {GB_OBJECT_HANDLER} -- Element change
 				if local_parent_object /= Void then
 					Result := not local_parent_object.is_full
 					if local_parent_object /= Void then
-						Result := Result and override_drop_on_child (an_object)
-					end	
+							-- We only need to check this if we are not a component,
+							-- as this means there is no way we could be contained in `Current'.
+						if an_object /= Void then
+							Result := Result and override_drop_on_child (an_object)
+						end
+						Result := Result and local_parent_object.accepts_child (new_type)
+					end
+				else
+					Result := False
 				end
 			else
 				Result := not is_full
+				Result := Result and accepts_child (new_type)
+					-- We only need to check this if we are not a component,
+					-- as this means there is no way we could be contained in `Current'.
 				if an_object /= Void then
 					Result := Result and override_drop_on_child (an_object)
 				end
 			end
-			
 		end
-		
+
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
 		require
 			no_layout_item_associated: layout_item = Void
 		do
 			create layout_item.make (Current)
-			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
-			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
-			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			build_drop_actions_for_layout_item
 		ensure
 			lyout_item_initialized: layout_item /= Void
 			layout_item_not_parented: layout_item.parent = Void
-		end		
+		end
+		
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
+		
+	accepts_child (a_type: STRING):BOOLEAN is
+			-- Does `Current' accept `an_object'. By default,
+			-- widgets are accepted. Redefine in primitives
+			-- that must hold items to allow insertion.
+		local
+			current_type: INTEGER
+		do
+			current_type := dynamic_type_from_string (a_type)
+			if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET")) then
+				Result := True
+			end
+		end
 
 feature -- Basic operations
 		
@@ -523,6 +529,16 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		end
 		
 feature {NONE} -- Implementation
+
+	build_drop_actions_for_layout_item is
+			-- Build the drop actions for the layout item.
+			-- Wipe out any existing actions.
+		do
+			layout_item.drop_actions.wipe_out
+			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
+			layout_item.drop_actions.extend (agent add_new_component_wrapper (?))
+			layout_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+		end
 
 	add_new_object_wrapper (an_object: GB_OBJECT) is
 			-- If shift pressed then add `an_object' to

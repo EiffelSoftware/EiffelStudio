@@ -72,6 +72,16 @@ feature -- Status setting
 
 feature -- Event : command association
 
+	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is toggled.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_toggle_command (cmd, arg)
+		end
+
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unselected.
@@ -83,6 +93,15 @@ feature -- Event : command association
 		end
 
 feature -- Event -- removing command association
+
+	remove_toggle_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is toggled.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_toggle_commands
+		end
 
 	remove_unselect_commands is
 			-- Empty the list of commands to be executed when

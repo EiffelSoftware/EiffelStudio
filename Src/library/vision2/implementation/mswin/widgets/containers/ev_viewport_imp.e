@@ -93,7 +93,7 @@ feature -- Access
 			-- Horizontal position of viewport relative to `item'.
 		do
 			if child /= Void then
-				Result := xo
+				Result := - child.x_position
 			end
 		end
 
@@ -101,18 +101,15 @@ feature -- Access
 			-- Vertical position of viewport relative to `item'.
 		do
 			if child /= Void then
-				Result := yo
+				Result := - child.y_position
 			end
 		end
-
-	xo, yo: INTEGER
 
 feature -- Element change
 
 	set_x_offset (an_x: INTEGER) is
 			-- Set `x_offset' to `an_x'.
 		do
-			xo := an_x
 			if child /= Void then
 				child.wel_move (- an_x, child.y_position)
 			end
@@ -121,7 +118,6 @@ feature -- Element change
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			yo := a_y
 			if child /= Void then
 				child.wel_move (child.x_position, - a_y)
 			end
@@ -140,7 +136,8 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_controlparent + Ws_ex_clientedge
 		end
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+				repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			--| Scrollbars may NEVER be visible.
@@ -176,6 +173,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/21 22:35:58  brendel
+--| Improved implementation.
+--|
 --| Revision 1.8  2000/04/21 22:03:23  brendel
 --| Implemented offset functions.
 --|

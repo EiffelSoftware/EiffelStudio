@@ -57,8 +57,32 @@ feature -- Basic Operations
 			serialize_consumed_types			
 		end
 
+	is_newer_tool (a_path: STRING): BOOLEAN is
+			-- is prior consumed assembly in `a_path' out of date because of an updated consumer tool?
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		local
+			l_dir_time_stamp: INTEGER
+			l_tool_time_stamp: INTEGER
+			l_tool: RAW_FILE
+			l_directory: DIRECTORY
+			l_args: ARGUMENTS
+		do
+			create l_args
+			create l_tool.make (l_args.argument (0))
+			create l_directory.make (a_path)
+			
+			if l_tool.exists and then l_directory.exists then
+				Result := l_tool.date > (create {RAW_FILE}.make (l_directory.name)).date			
+			elseif not l_directory.exists then
+					-- tool is newer
+				Result := True
+			end
+		end
+
 	is_assembly_modified (ass: ASSEMBLY; apath: STRING): BOOLEAN is
-			-- is the assembly 'ass' newer than the version in the specified path 'apath'
+			-- is the assembly 'ass' newer than the version in the specified path 'apath'.
 		require
 			non_void_assembly: ass /= Void
 			non_void_path: apath /= Void

@@ -29,14 +29,22 @@ feature -- Access
 
 	bitmaps_width: INTEGER is
 			-- width of all bitmaps located in this imageList
+		local
+			loc_imagelist: WEL_IMAGE_LIST
 		do
-			Result := default_image_list.bitmaps_width
+			loc_imagelist := get_image_list
+			Result := loc_imagelist.bitmaps_width
+			loc_imagelist.destroy
 		end
 	
 	bitmaps_height: INTEGER is
 			-- height of all bitmaps located in this imageList
+		local
+			loc_imagelist: WEL_IMAGE_LIST
 		do
-			Result := default_image_list.bitmaps_height
+			loc_imagelist := get_image_list
+			Result := loc_imagelist.bitmaps_height
+			loc_imagelist.destroy
 		end
 	
 	buttons_width: INTEGER is
@@ -50,14 +58,6 @@ feature -- Access
 		do
 			Result := get_button_height
 		end
-
-	default_image_list: WEL_IMAGE_LIST
-			-- ImageList associated with the toolbar
-			-- Note: only used in the "Win95+IE3" version
-
-	hot_image_list: WEL_IMAGE_LIST
-			-- ImageList associated with the toolbar for hot buttons
-			-- Note: only used in the "Win95+IE3" version
 
 feature -- Status report
 
@@ -118,30 +118,34 @@ feature -- Element change
 
 	set_image_list (an_image_list: WEL_IMAGE_LIST) is
 			-- Set the default imageList to `an_image_list'.
-		require
-			an_image_list_not_void: an_image_list /= Void
+			--
+			-- To remove the imagelist, set `an_image_list' to Void.
 		do
-			cwin_send_message (item, Tb_setimagelist, 0, cwel_pointer_to_integer (an_image_list.item))
+			if an_image_list = Void then
+				cwin_send_message (item, Tb_setimagelist, 0, 0)
+			else
+				cwin_send_message (item, Tb_setimagelist, 0, cwel_pointer_to_integer (an_image_list.item))
+			end
+		end
+
+	get_image_list: WEL_IMAGE_LIST is
+		local
+			imagelist_pointer: INTEGER
+		do
+			imagelist_pointer := cwin_send_message_result (item, Tb_getimagelist, 0, 0)
+			create Result.make_by_pointer(cwel_integer_to_pointer (imagelist_pointer))
 		end
 
 	set_hot_image_list (an_image_list: WEL_IMAGE_LIST) is
 			-- Set the hot imageList to `an_image_list'.
-		require
-			an_image_list_not_void: an_image_list /= Void
+			--
+			-- To remove the imagelist, set `an_image_list' to Void.
 		do
-			cwin_send_message (item, Tb_sethotimagelist, 0, cwel_pointer_to_integer (an_image_list.item))
-		end
-
-	remove_image_list is
-			-- Remove the default imageList.
-		do
-			cwin_send_message (item, Tb_setimagelist, 0, 0)
-		end
-
-	remove_hot_image_list is
-			-- Remove the hot imageList.
-		do
-			cwin_send_message (item, Tb_sethotimagelist, 0, 0)
+			if an_image_list = Void then
+				cwin_send_message (item, Tb_sethotimagelist, 0, 0)
+			else
+				cwin_send_message (item, Tb_sethotimagelist, 0, cwel_pointer_to_integer (an_image_list.item))
+			end
 		end
 
 feature {NONE} -- Implementation

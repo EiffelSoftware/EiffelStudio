@@ -1,0 +1,72 @@
+
+          Some Problems in Previous EiffelStore
+          =====================================
+
+1. Perform NON_SELECT SQL statements DYNAMICALLY.
+
+   I've changed it(refer to Characteristics of EiffelStore on Ingres
+for reasons).
+
+
+2. When I use random procedure to test EiffelStore on Ingres, I found
+that when the test program finished and the program was about to
+exit, there was an error from DATABASE::dispose, which told me that
+is_connected failed. I understand the error in this way:
+
+	The object which provides feature is_connected is freed, so
+when DATABASE tries to call is_connected in feature dispose, 
+errr occurs. 
+
+	After commented the statements in feature DATABASE::dispose,
+everything is OK. I've just changed class DATABASE in my home
+directory, but not in EIFFEL4, because I have no such permission.
+
+
+3. Use make_default_table in DB_STORE_XXX, which cause error in
+the following case:
+when the order of fields in a database table which is created by a 
+database user from database interface is different from the order
+if the table is created through DB_REPOSITORY of EiffelStore, and
+Eiffel object tries to insert objects into the table.  
+   
+   How to fix? Delete post_condition from SQL_SCAN::next_index;
+change DB_STORE_XXX::update_map_table.
+   I've changed it in my home directory, but not in EIFFEL4,
+because I have no such permission.
+
+   After changing these, EiffelStore is correct in the case the
+following two conditions hold:
+   (1) Set of fields in Eiffel object is equal to the set of
+fields in data base table;
+   (2) The data type of Eiffel object's field is compatiable
+with the corresponding data type of field of data base table.
+
+
+
+
+   In order to make EiffelStore correct for any case, the following
+change(3) must be done. From some sense, the following can be 
+regarded as an improvement not as an error to correct.
+
+4. If the number of fields in an object is less than the number 
+of fields in a corresponding table, error occurs if use DB_SELECTION
+to select data from database into Eiffel object.
+
+   How to fix? 
+   (1) Change DB_STORE_XXX::put ---- add fields' name to INSERT 
+statement;
+   (2) Change DB_SELECTION_XXX::update_map_table abd 
+DB_STORE_XXX::update_map_table  ---- if the corresponding object
+field does not exist, assign -1 to the map_table item;
+   (3) Change SQL_SCAN::get_value & get_complex_value  --- if 
+the map_table item is -1, don't fill in value;
+   (4) Change DB_SELECTION_XXX::cursor_to_object --- if the 
+corresponding map_table item is -1, don't try to copy the cursor 
+field's value to object field.
+
+
+5. Maybe there is something wrong in feature io.purchar, io.putstring,
+because in testing program ESQL, there is a io.putchar('%T') statement
+which cause some output errased, when I change it into io.putstring(" %T"),
+the output is ok, but when I change it into io.putstring("%T") again,
+the same error occurs.

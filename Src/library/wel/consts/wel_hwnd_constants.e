@@ -9,28 +9,28 @@ class
 
 feature -- Access
 
-	Hwnd_top: INTEGER is
+	Hwnd_top: POINTER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HWND_TOP"
 		end
 
-	Hwnd_bottom: INTEGER is
+	Hwnd_bottom: POINTER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HWND_BOTTOM"
 		end
 
-	Hwnd_topmost: INTEGER is
+	Hwnd_topmost: POINTER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HWND_TOPMOST"
 		end
 
-	Hwnd_notopmost: INTEGER is
+	Hwnd_notopmost: POINTER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_hwnd_constant (c: INTEGER): BOOLEAN is
+	valid_hwnd_constant (c: POINTER): BOOLEAN is
 			-- Is `c' a valid hwnd constant?
 		do
 			Result := c = Hwnd_top or else

@@ -16,7 +16,7 @@ inherit
 
 creation
 
-	make, make_expanded_unit, make_creation_unit
+	make, make_expanded_unit, make_creation_unit, make_no_dead_code
 
 feature  -- Initialization
 
@@ -32,6 +32,14 @@ feature  -- Initialization
 			written_in := f.written_in
 			body_index := f.body_index
 			is_external := f.is_external
+		end
+
+	make_no_dead_code (c_id: CLASS_ID; f: INTEGER) is
+			-- creation of a depend unit with just a feature_id
+			-- cannot be used during the dead code removal
+		do
+			id := c_id
+			feature_id := f
 		end
 
 	make_expanded_unit (c_id: CLASS_ID) is

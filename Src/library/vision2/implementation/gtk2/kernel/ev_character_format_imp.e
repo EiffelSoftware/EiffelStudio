@@ -359,7 +359,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
-					create propvalue.make (name)
+					propvalue := (name)
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
 				end
 				if applicable_attributes.font_height then
@@ -442,67 +442,67 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	family_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("family")	
+			Result := ("family")	
 		end
 
 	size_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("size")	
+			Result := ("size")	
 		end
 
 	style_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("style")
+			Result := ("style")
 		end
 
 	weight_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("weight")	
+			Result := ("weight")	
 		end
 
 	foreground_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("foreground")	
+			Result := ("foreground")
 		end
 
 	background_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("background")	
+			Result := ("background")	
 		end
 
 	foreground_gdk_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("foreground-gdk")	
+			Result := ("foreground-gdk")
 		end
 
 	background_gdk_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("background-gdk")	
+			Result := ("background-gdk")	
 		end
 
 	underline_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("underline")	
+			Result := ("underline")
 		end
 
 	strikethrough_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("strikethrough")	
+			Result := ("strikethrough")	
 		end
 
 	rise_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			create Result.make ("rise")	
+			Result := ("rise")	
 		end
 
 feature {NONE} -- Implementation
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Clean up
 		do
-			-- Do nothing
+			is_destroyed := True
 		end
 
 end -- class EV_CHARACTER_FORMAT_IMP

@@ -2,8 +2,6 @@ indexing
 	description:
 		"Top level window. Contains a single widget.%N%
 		%`title' is not displayed."
-	note:
-		"At any time, when all windows are destroyed, the application quits."
 	appearance:
 		" _____________ %N%
 		%|____________X|%N%

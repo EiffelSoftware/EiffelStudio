@@ -2,7 +2,6 @@ indexing
 
 	description: "[
 		Platform-dependent properties.
-		This class is an ancestor to all developer-written classes.
 		]"
 
 	status: "See notice at end of class"

@@ -221,7 +221,7 @@ feature
 			if context.default_position /= set_default_position_t.state then
 				context.set_default_position (set_default_position_t.state);
 			end;
-			if set_hidden.state = context.start_hidden then
+			if set_hidden.state /= context.start_hidden then
 				context.set_start_hidden (set_hidden.state);
 			end;
 			if iconic_state.state /= context.is_iconic_state then

@@ -199,7 +199,7 @@ feature -- Modification
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
-				execute_wizard (create {EB_FEATURE_COMPOSITION_WIZARD})
+				execute_wizard (create {EB_FEATURE_COMPOSITION_WIZARD}.make)
 			else
 				create warning_dialog.make_with_text (Warning_messages.w_Class_syntax_error)
 				warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
@@ -219,7 +219,7 @@ feature -- Modification
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
-				create qcw
+				create qcw.make
 				qcw.set_type (preset_type)
 				qcw.set_name_number (diagram.next_feature_name_number)
 				qcw.enable_expanded_needed
@@ -260,7 +260,7 @@ feature -- Modification
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
-				create qcw
+				create qcw.make
 				qcw.set_type (preset_type)
 				qcw.set_name_number (diagram.next_feature_name_number)
 				if x_pos + qcw.width > screen_w then

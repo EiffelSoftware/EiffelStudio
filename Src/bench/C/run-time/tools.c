@@ -32,7 +32,7 @@ register4 long count;
 	while (count--)
 		hashval = ((hashval % magic) << 8) + (unsigned int) *s++;
 
-	return hashval & 0x7fffffff;	/* Clear bit 31 (no unsigned in Eiffel) */
+	return (long) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
 }
 
 public uint32 nprime(n)

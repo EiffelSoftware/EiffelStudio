@@ -37,10 +37,10 @@ int sval;
 	
 	hsize = nprime((5 * n) / 4);	/* Table's size */
 
-	array = xcalloc(hsize, sizeof(int32));	/* Mallocs array of keys */
+	array = xcalloc(hsize, sizeof(long));	/* Mallocs array of keys */
 	if (array == (char *) 0)
 		return -1;					/* Malloc failed */
-	ht->h_keys = (int *) array;		/* Where array of keys is stored */
+	ht->h_keys = (unsigned long *) array;		/* Where array of keys is stored */
 
 	array = cmalloc(hsize * sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
@@ -62,23 +62,23 @@ struct htable *ht;
 
 	int32 hsize = ht->h_size;
 
-	bzero(ht->h_keys, hsize * sizeof(int32));
+	bzero(ht->h_keys, hsize * sizeof(long));
 	bzero(ht->h_values, hsize * ht->h_sval);
 }
  
 public char *ht_value(ht, key)
 struct htable *ht;
-register1 int32 key;
+register1 unsigned long key;
 {
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
 	
-	register2 int32 pos;		/* Position in H table */
+	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
-	register4 int32 *hkeys;		/* Array of keys */
+	register4 unsigned long *hkeys;		/* Array of keys */
 	register5 int32 try = 0;	/* Count number of attempts */
-	register6 int32 inc;		/* Loop increment */
+	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -91,7 +91,7 @@ register1 int32 key;
 	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key)
 			return ht->h_values + (pos * ht->h_sval);
-		else if (hkeys[pos] == 0)
+		else if (hkeys[pos] == 0L)
 			break;
 	}
 
@@ -100,18 +100,18 @@ register1 int32 key;
 
 public char *ht_first(ht, key)
 struct htable *ht;
-register1 int32 key;
+register1 unsigned long key;
 {
 	/* Retrun first available item address where key is present or should
 	 * be. In case there is no more room, return a null pointer.
 	 */
 
-	register2 int32 pos;		/* Position in H table */
+	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;	  	/* Size of H table */
-	register4 int32 *hkeys;	 	/* Array of keys */
+	register4 unsigned long *hkeys;	 	/* Array of keys */
 	register5 int32 try = 0;	/* Count number of attempts */
-	register6 int32 inc;		/* Loop increment */
-	register7 int32 other_key;
+	register6 long inc;		/* Loop increment */
+	register7 unsigned long other_key;
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -138,7 +138,7 @@ register1 int32 key;
 
 public char *ht_put(ht, key, val)
 struct htable *ht;
-register1 int32 key;
+register1 unsigned long key;
 char *val;
 {
 	/* Puts value held at 'val' tagged with key 'key' in H table 'ht'. If
@@ -146,11 +146,11 @@ char *val;
 	 * value is copied in the array. Otherwise, return a null pointer.
 	 */
 
-	register2 int32 pos;		/* Position in H table */
+	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
-	register4 int32 *hkeys;		/* Array of keys */
+	register4 unsigned long *hkeys;		/* Array of keys */
 	register5 int32 try = 0;	/* Records number of attempts */
-	register6 int32 inc;		/* Loop increment */
+	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -168,7 +168,7 @@ char *val;
 #endif
 		if (hkeys[pos] == 0) {			/* Found a free location */
 			hkeys[pos] = key;			/* Record item */
-			hkeys = (int *) (ht->h_values + (pos * ht->h_sval));
+			hkeys = (unsigned long *) (ht->h_values + (pos * ht->h_sval));
 			bcopy(val, (char *) hkeys, ht->h_sval);
 			return (char *) hkeys;
 		}
@@ -190,7 +190,7 @@ struct htable *ht;
 
 	register1 int size;				/* Size of old H table */
 	register2 int sval;				/* Size of an H table item */
-	register3 int32 *key;			/* To loop over keys */
+	register3 unsigned long *key;			/* To loop over keys */
 	register4 char *val;			/* To loop over values */
 	struct htable new_ht;
 

@@ -21,7 +21,7 @@
  */
 struct htable {
 	int32 h_size;		/* Size of table (prime number) */
-	int32 *h_keys;		/* Array of keys (integers) */
+	unsigned long *h_keys;		/* Array of keys (integers) */
 	int h_sval;			/* Size of each value item, in bytes */
 	char *h_values;		/* Array of values (pointer needs casting) */
 };

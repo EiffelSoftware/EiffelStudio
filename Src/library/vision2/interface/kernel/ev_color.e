@@ -506,6 +506,7 @@ feature -- Constants
 
 	Max_32_bit: INTEGER is 4294967295
 			-- Maximum value for 32 bit unsigned integers.
+			--| FIXME INTEGER is signed!
 
 feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP} -- Implementation
 
@@ -537,7 +538,7 @@ invariant
 	blue_16_bit_within_range: blue_16_bit >= 0 and blue_16_bit <= Max_16_bit
 --|	alpha_16_bit_within_range: alpha_16_bit >= 0 and alpha_16_bit <= Max_16_bit
 	rgb_24_bit_within_range: rgb_24_bit >= 0 and rgb_24_bit <= Max_24_bit
-	rgba_32_bit_within_range: rgba_32_bit >= 0 and rgba_32_bit <= Max_32_bit
+--|	rgba_32_bit_within_range: rgba_32_bit >= 0 and rgba_32_bit <= Max_32_bit
 	red_16_bit_conversion: (red * Max_16_bit).rounded = red_16_bit
 	red_8_bit_conversion: (red * Max_8_bit).rounded = red_8_bit
 	green_16_bit_conversion: (green * Max_16_bit).rounded = green_16_bit
@@ -571,6 +572,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/16 22:42:15  brendel
+--| Commented out invariant using Max_32_bit.
+--|
 --| Revision 1.13  2000/03/16 02:00:24  oconnor
 --| removed set_alpha from copy pending its implementation
 --|

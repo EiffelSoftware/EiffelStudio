@@ -6,7 +6,8 @@ root
 
 default
 	assertion (no)
-	msil_generation ("exe")
+	msil_generation (yes)
+	msil_generation_type ("exe")
 	address_expression (no)
 	array_optimization (no)
 	console_application (no)
@@ -26,6 +27,6 @@ default
 cluster
 	root_cluster:		"."
 
-	all base:		"$ISE_EIFFEL\library.net\base.net"
+	all base:		"$ISE_EIFFEL\library.net\base"
 
 end

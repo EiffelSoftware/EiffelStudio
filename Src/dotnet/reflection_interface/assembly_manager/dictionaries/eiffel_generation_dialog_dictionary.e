@@ -10,7 +10,7 @@ inherit
 	
 feature -- Access
 	
-	Assembly_generation_message: STRING is "The assembly manager will now generate the Eiffel classes corresponding to the selected assembly. This may take a few minutes. Please be patient."
+	Assembly_generation_message: STRING is "Generating Eiffel classes..."
 			-- Message to let the user know selected assembly will be generated to the Eiffel repository.
 		indexing
 			external_name: "AssemblyGenerationMessage"

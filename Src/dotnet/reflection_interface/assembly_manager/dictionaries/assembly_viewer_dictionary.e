@@ -69,7 +69,13 @@ feature -- Menu items
 			description: "Text of tools menu item"
 			external_name: "ToolsMenuItem"
 		end
-				
+
+	dependancy_viewer_menu_item: STRING is "&Dependency Viewer"
+		indexing
+			description: "Text of `dependency viewer' menu item"
+			external_name: "DependancyViewerMenuItem"
+		end
+		
 	Help_menu_item: STRING is "&Help"
 		indexing
 			description: "Text of help menu item"
@@ -186,40 +192,88 @@ feature -- Toolbar constants
 
 feature -- Toolbar icons filename
 	
-	Name_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_name_color.ico"
+	Name_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on name toolbar button"
-			external_name: "NameIconFilename"			
+			external_name: "NameIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Name_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Version_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_version_color.ico"
+	Version_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on version toolbar button"
 			external_name: "VersionIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Version_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 
-	Culture_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_culture_color.ico"
+	Culture_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on culture toolbar button"
 			external_name: "CultureIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Culture_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Public_key_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_key_color.ico"
+	Public_key_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on public key toolbar button"
 			external_name: "PublicKeyIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Public_key_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Dependancies_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_dependencies_color.ico"
+	Dependancies_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on dependancies toolbar button"
 			external_name: "DependanciesIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Dependancies_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
+		end
+
+	Dependancy_viewer_icon_filename: STRING is 
+		indexing
+			description: "Filename of icon on dependancy viewer toolbar button"
+			external_name: "DependancyViewerIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Dependancy_viewer_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 						
-	Help_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_help_color.ico"
+	Help_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on help toolbar button"
 			external_name: "HelpIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Help_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
 feature -- Columns names
@@ -334,6 +388,69 @@ feature -- Other constants
 			-- Window width
 		indexing
 			external_name: "WindowWidth"
+		end
+
+feature {NONE} -- Implementation
+
+	base_filename: STRING is
+		indexing
+			description: "Path to folder where icons are stored"
+			external_name: "BaseRelativeFilename"
+		local
+			support: ISE_REFLECTION_REFLECTIONSUPPORT
+		once
+			create support.make_reflectionsupport
+			support.make
+			Result := support.Eiffeldeliverypath
+			Result := Result.concat_string_string (Result, Base_relative_filename)
+		end
+		
+	Base_relative_filename: STRING is "\bench\wizards\new_projects\dotnet\pixmaps\"
+		indexing
+			description: "Path to folder where icons are stored"
+			external_name: "BaseRelativeFilename"
+		end
+		
+	Name_icon_relative_filename: STRING is "icon_assembly_name_color.ico"
+		indexing
+			description: "Filename of icon on name toolbar button"
+			external_name: "NameIconRelativeFilename"			
+		end
+		
+	Version_icon_relative_filename: STRING is "icon_assembly_version_color.ico"
+		indexing
+			description: "Filename of icon on version toolbar button"
+			external_name: "VersionIconRelativeFilename"
+		end
+
+	Culture_icon_relative_filename: STRING is "icon_assembly_culture_color.ico"
+		indexing
+			description: "Filename of icon on culture toolbar button"
+			external_name: "CultureIconRelativeFilename"
+		end
+		
+	Public_key_icon_relative_filename: STRING is "icon_assembly_key_color.ico"
+		indexing
+			description: "Filename of icon on public key toolbar button"
+			external_name: "PublicKeyIconRelativeFilename"
+		end
+		
+	Dependancies_icon_relative_filename: STRING is "icon_assembly_dependencies_color.ico"
+		indexing
+			description: "Filename of icon on dependancies toolbar button"
+			external_name: "DependanciesIconRelativeFilename"
+		end
+
+	Dependancy_viewer_icon_relative_filename: STRING is "icon_assembly_dependencies_dialog_color.ico"
+		indexing
+			description: "Filename of icon on dependancy viewer toolbar button"
+			external_name: "DependancyViewerIconRelativeFilename"
+		end
+						
+	Help_icon_relative_filename: STRING is "icon_assembly_help_color.ico"
+		indexing
+			description: "Filename of icon on help toolbar button"
+			external_name: "HelpIconRelativeFilename"
 		end
 		
 end -- class ASSEMBLY_VIEWER_DICTIONARY	

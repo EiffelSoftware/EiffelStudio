@@ -74,34 +74,64 @@ feature -- Shortcuts
 		
 feature -- Toolbar icons filename
 
-	Path_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_paths_color.ico"
+	Path_icon_filename: STRING is
 		indexing
 			description: "Filename of icon on eiffel path toolbar button"
 			external_name: "PathIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Path_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Edit_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_edit_assembly_color.ico"
+	Edit_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on edit toolbar button"
 			external_name: "EditIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Edit_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Remove_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_delete_color.ico"
+	Remove_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on remove toolbar button"
 			external_name: "RemoveIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Remove_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 		
-	Eiffel_generation_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_to_eiffel_color.ico"
+	Eiffel_generation_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on Eiffel generation toolbar button"
 			external_name: "EiffelGenerationIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Eiffel_generation_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 
-	Import_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_import_assembly_tool_color.ico"
+	Import_icon_filename: STRING is 
 		indexing
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
+		once
+			Result := base_filename
+			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.length > 0
 		end
 
 feature -- Column Names
@@ -138,6 +168,38 @@ feature -- Other constants
 		indexing
 			description: "Error message in case the user wants to edit an assembly that cannot be edited"
 			external_name: "NonEditbleAssembly"
+		end
+
+feature {NONE} -- Implementation
+
+	Path_icon_relative_filename: STRING is "icon_assembly_paths_color.ico"
+		indexing
+			description: "Filename of icon on eiffel path toolbar button"
+			external_name: "PathIconRelativeFilename"
+		end
+		
+	Edit_icon_relative_filename: STRING is "icon_edit_assembly_color.ico"
+		indexing
+			description: "Filename of icon on edit toolbar button"
+			external_name: "EditIconRelativeFilename"
+		end
+		
+	Remove_icon_relative_filename: STRING is "icon_delete_color.ico"
+		indexing
+			description: "Filename of icon on remove toolbar button"
+			external_name: "RemoveIconRelativeFilename"
+		end
+		
+	Eiffel_generation_icon_relative_filename: STRING is "icon_to_eiffel_color.ico"
+		indexing
+			description: "Filename of icon on Eiffel generation toolbar button"
+			external_name: "EiffelGenerationIconRelativeFilename"
+		end
+
+	Import_icon_relative_filename: STRING is "icon_import_assembly_tool_color.ico"
+		indexing
+			description: "Filename of icon on import toolbar button"
+			external_name: "ImportIconRelativeFilename"
 		end
 		
 end -- class IMPORTED_ASSEMBLY_VIEWER_DICTIONARY	

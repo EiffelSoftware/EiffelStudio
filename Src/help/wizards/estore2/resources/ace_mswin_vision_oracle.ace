@@ -4,70 +4,89 @@ system
 	SAMPLE
 
 root
-	APPLICATION: "make_and_launch"
+	APPLICATION: make
 
 default
-	assertion (ensure)
-	multithreaded (no)
-	exception_trace (no)
-	console_application (yes)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
-	<FL_TAG_PRECOMPILED>precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
-
+	assertion(require)
+	assertion(ensure)
+	address_expression(no)
+	array_optimization(no)
+	console_application(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(no)
+	check_vape(no)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("wel")
+	disabled_debug("win_dispatcher")
+	disabled_debug("gdi_count")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("vision2_windows")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	<FL_TAG_PRECOMPILED>precompiled ("$ISE_EIFFEL/precomp/spec/$PLATFORM/base");
 
 cluster
-	
-	root_cluster: "<FL_PATH>"
-
-		-- EiffelBase
-	all base:				"$EIFFEL4/library/base"
+	all root_cluster:		"<FL_PATH>"
 		exclude
-			"desc";"table_eiffel3"
+			"EIFGEN"; 
 		end
 
-		-- Vision
-
-	all wel:				"$EIFFEL4\library\wel"
-	all vision2: 			"$EIFFEL4\library\vision2"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
-			"gtk"
-			"test"
+			"desc"; "table_eiffel3"; 
 		end
-			-- EiffelTime
-	time:				"$EIFFEL4\library\time";
-	time_format(time):	"$\format";
-	time_english(time):	"$\format\english";
 
-		-- EiffelStore
-	estore_support:		"$EIFFEL4\library\store\support"
-	estore_interface:	"$EIFFEL4\library\store\interface"
-	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
-	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
-	all estore_generation:	"$EIFFEL4\library\store\generation"
+	all wel:		"$ISE_EIFFEL\library\wel"
 
+	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"; "test"; 
+		end
+
+	time:		"$ISE_EIFFEL\library\time"
+
+	time_format (time):		"$\format"
+
+	time_english (time):		"$\format\english"
+
+	estore_support:		"$ISE_EIFFEL\library\store\support"
+
+	estore_interface:		"$ISE_EIFFEL\library\store\interface"
+
+	estore_db_support:		"$ISE_EIFFEL\library\store\dbms\support"
+
+	estore_rdbms:		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle"
+
+	all estore_generation:		"$ISE_EIFFEL\library\store\generation"
+
+	all dataview:		"D:\Eiffel_Projects\new_ISEsap\it\dbvision"
 
 external
-	include_path:		
-						"$EIFFEL4\library\wel\spec\windows\include",
-						"$EIFFEL4\library\vision2\spec\include",
-						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
-						"$(ORACLE_HOME)\OCI\include"
 
-	object: 
-						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
-						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
-						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib",
-						"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib",
-						"$EIFFEL4\library\wel\spec\msc\lib\wel.lib",
-						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
-						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+	include_path:
+		"$ISE_EIFFEL\library\wel\spec\windows\include",
+		"$ISE_EIFFEL\library\vision2\spec\include",
+		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle\Clib",
+		"$(ORACLE_HOME)\OCI\include",
+		"$ISE_EIFFEL\library\time\Clib"
+
+	object:
+		"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\support.lib",
+		"$ISE_EIFFEL\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib",
+		"$ISE_EIFFEL\library\time\spec\$(COMPILER)\lib\datetime.lib",
+		"$ISE_EIFFEL\library\wel\spec\msc\lib\wel.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+		"$ISE_EIFFEL\library\vision2\spec\$(COMPILER)\lib\zlib.lib"
+
 end
-

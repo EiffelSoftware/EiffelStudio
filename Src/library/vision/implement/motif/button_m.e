@@ -132,8 +132,9 @@ feature {NONE} -- Implementation
 				if pos = 0 then
 					if set_text_explicity then
 						set_label_as_string (a_text)
-					else
-						set_mnemonic ('%U')
+						if mnemonic /= '%U' then
+							set_mnemonic ('%U');
+						end
 					end
 				else
 					keysym := a_text.item (pos + 1);

@@ -42,23 +42,22 @@ feature
 			text: STRING;
 		do
 			!! widget.make_fixed_size (entity_name, a_parent);
-			from
-				i := 1;
-			until
-				i > 3
-			loop
-				!!text.make (0);
-				text.append ("i");
-				text.append (to_string (i));
-				widget.put_right (text);
-				i := i + 1;
-				widget.forth;
-			end;
-			size_modified := True;
-			widget.set_size (110, 100);
-			i := widget.visible_item_count;
-			widget.set_visible_item_count (i + 1);
-			widget.set_visible_item_count (i);
+			if retrieved_node = Void then
+					-- Not creating widget from retrieval
+				from
+					i := 1;
+				until
+					i > 3
+				loop
+					!!text.make (0);
+					text.append ("i");
+					text.append (to_string (i));
+					widget.put_right (text);
+					i := i + 1;
+					widget.forth;
+				end;
+				set_size (110, 100);
+			end
 		end;
 
 	widget: SCROLL_LIST;
@@ -127,9 +126,9 @@ feature
 			widget.set_size (new_w, new_h);
 				-- Then shake it so the height will match
 				-- the visible count
-			it_count := widget.visible_item_count;
-			widget.set_visible_item_count (it_count + 1);
-			widget.set_visible_item_count (it_count);
+			--it_count := widget.visible_item_count;
+			--widget.set_visible_item_count (it_count + 1);
+			--widget.set_visible_item_count (it_count);
 			eb_bulletin ?= parent.widget;
 			eb_bulletin.update_ratios (widget);
 			widget.manage;

@@ -1085,16 +1085,18 @@ end;
 			good_argument: resulting_table /= Void;
 		local
 			a_feature: FEATURE_I;
+			sys: SYSTEM_I
 		do
 			from
+				sys := System
 				origins.start
 			until
 				origins.after
 			loop
 				a_feature := resulting_table.item (origins.item);
-				if System.has_separate and then a_class.is_used_as_separate then
-					if a_feature.sep_process_pattern and then System.byte_context.generation_mode then
-						System.set_freeze
+				if sys.has_separate and then a_class.is_used_as_separate then
+					if a_feature.sep_process_pattern and then sys.byte_context.generation_mode then
+						sys.set_freeze
 					end;
 				else
 					a_feature.process_pattern;

@@ -12,7 +12,6 @@
 */
 /* TEMPORARY */
 #include <stdio.h>
-extern char *getenv();
 
 #include "macros.h"
 #include "struct.h"
@@ -20,6 +19,7 @@ extern char *getenv();
 #include "except.h"
 #include "update.h"
 #include "cecil.h"
+#include "misc.h"
 
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
@@ -77,7 +77,7 @@ char ignore_updt;
 #define UPDT_NAME "/.UPDT"
 #endif
 
-meltpath = getenv ("MELT_PATH");
+meltpath = eif_getenv ("MELT_PATH");
 if (meltpath) 
 	filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 else

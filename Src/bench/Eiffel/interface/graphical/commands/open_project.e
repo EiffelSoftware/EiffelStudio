@@ -173,6 +173,11 @@ feature
 				!!workb;
 				workbench_file.open_binary_read;
 				workb ?= workb.retrieved (workbench_file);
+				if workb = Void then
+					retried := True
+				end;
+			end;
+			if not retried then
 				if not workbench_file.is_closed then
 					workbench_file.close
 				end;

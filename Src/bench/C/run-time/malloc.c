@@ -981,9 +981,11 @@ private int free_last_chunk()
 	uint32 i;				/* Index in hash table where block is stored */
 	uint32 r;				/* To compute hashing index for released block */
 
+#ifdef HAS_SBRK
 #ifndef HAS_SMART_SBRK
 	return -5;
-#else	
+#endif
+#endif
 	last_chk = cklst.ck_tail;			/* Last chunk in memory */
 	if (last_chk == (struct chunk *) 0)	/* No more chunk */
 		return -4;						/* Make sure a failure is reported */
@@ -1165,7 +1167,6 @@ private int free_last_chunk()
 	SIGRESUME;							/* Critical section ends */
 
 	return 0;			/* Signals no error */
-#endif
 }
 
 private char *set_up(selected, nbytes)

@@ -19,8 +19,6 @@ feature
 				%.SUFFIXES: .x%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
-				%.x.c:%N%
-				%%T$(EIFFEL3)/bench/spec/$(PLATFORM)/bin/x2c < $< > $@%N%N%
 				%.x.o:%N%
 				%%T$(EIFFEL3)/bench/spec/$(PLATFORM)/bin/x2c < $< > $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%

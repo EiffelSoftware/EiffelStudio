@@ -359,14 +359,27 @@ feature -- Command loop
 					done := True;
 				elseif last_request_cmd /= Void then
 					licence.alive;
-					if licence.is_alive then
+					if
+						licence.is_alive
+					or else successfull_reconnection then
 						yank_window.reset_output;
 						last_request_cmd.set_output_window (yank_window);
 						last_request_cmd.loop_execute;
 					else
 						io.putstring ("You have lost your licence.%N");
-						done := True
 					end;
+				end;
+			end;
+		end;
+
+	successfull_reconnection: BOOLEAN is
+		do
+			licence.register;
+			if licence.registered then
+				licence.open_licence;
+				if licence.licenced then
+					licence.alive;
+					Result := licence.is_alive
 				end;
 			end;
 		end;

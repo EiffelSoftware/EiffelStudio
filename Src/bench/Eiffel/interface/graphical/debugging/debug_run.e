@@ -93,6 +93,7 @@ end;
 
 						makefile_sh_name.append (Makefile_SH);
 						application_name.append (System.system_name);
+						application_name.append (Executable_suffix);
 
 						!!uf.make (application_name);
 						!!make_f.make (makefile_sh_name);

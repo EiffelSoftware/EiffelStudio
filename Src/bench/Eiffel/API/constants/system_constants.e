@@ -34,7 +34,7 @@ feature {NONE}
 
 	Econform: STRING is "Econform"
 
-	Edispatch: STRING is "Edispatch"
+	Edispatch: STRING is "Edisptch"
 
 	Efrozen: STRING is "Efrozen"
 
@@ -63,6 +63,8 @@ feature {NONE}
 	Eskelet: STRING is "Eskelet"
 
 	Evisib: STRING is "Evisib"
+
+	Executable_suffix: STRING is ""
 
 	F_code: STRING is "F_code"
 

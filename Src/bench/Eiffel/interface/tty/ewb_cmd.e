@@ -168,6 +168,11 @@ if not initialized.item then
 				!!workb;
 				!!workbench_file.make_open_binary_read (Project_file_name);
 				workb ?= workb.retrieved (workbench_file);
+				if workb = Void then
+					retried := True;
+				end;
+			end;
+			if not retried then
 				if not workbench_file.is_closed then
 					workbench_file.close
 				end
@@ -250,7 +255,6 @@ feature -- Compilation
 					if termination_requested then
 						--lic_die (0);
 							-- es3 -loop does NOT like lic_die(0)
-						discard_license;
 						exit := True
 					end
 				else

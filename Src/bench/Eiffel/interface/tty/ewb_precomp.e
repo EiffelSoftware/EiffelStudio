@@ -37,7 +37,7 @@ feature
 				if not error_occurred then
 					System.set_precompilation (True);
 					compile;
-					if System.successfull then
+					if Workbench.successfull then
 						System.save_precompilation_info;
 						terminate_project;
 						print_tail;

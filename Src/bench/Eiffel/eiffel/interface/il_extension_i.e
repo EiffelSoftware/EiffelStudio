@@ -60,7 +60,7 @@ feature -- Call generation
 	generate_call (is_polymorphic: BOOLEAN) is
 			-- Generate external feature call on Current.
 		require
-			valid_alias_name: alias_name_id > 0
+			valid_call: alias_name_id > 0 or else type = Creator_type
 		do
 			if type = enum_field_type then
 				il_generator.put_integer_32_constant (Names_heap.item (alias_name_id).to_integer)
@@ -74,7 +74,7 @@ feature -- Call generation
 			-- Generate external feature call on constructor `n' using information
 			-- of Current wihtout creating an object.
 		require
-			valid_alias_name: alias_name_id > 0
+			valid_call: type = Creator_type
 		do
 				-- Generate a normal non-virtual call.
 			il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),

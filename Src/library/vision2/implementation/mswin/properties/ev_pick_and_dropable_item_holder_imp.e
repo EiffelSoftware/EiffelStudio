@@ -122,7 +122,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				and not is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
 				pnd_item_source.is_dnd_in_transport) then
-				if pointer_double_press_actions_internal /= Void then
+				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call
 						([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
@@ -193,7 +193,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			else
 				check_dragable_release (x_pos, y_pos)
 			end
-			if pointer_button_press_actions_internal /= Void then
+			if pointer_button_release_actions_internal /= Void then
 				pointer_button_release_actions_internal.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end

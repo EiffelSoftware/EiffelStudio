@@ -18,7 +18,6 @@
 #define FALSE 0
 #endif
 
-private long ei_str_dtype();	/* Look for a dynamic type with a string */
 private char *ei_oref();		/* Offset in object */
 
 public long ei_dtype (object)
@@ -66,7 +65,7 @@ char *object;
 		{
 			char val = *(char *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("CHARACTER_REF"));
+			new_obj = RTLN(char_ref_dtype);
 			*(char *) new_obj = val;
 			return new_obj;
 		}
@@ -74,7 +73,7 @@ char *object;
 		{
 			char val = *(char *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("BOOLEAN_REF"));
+			new_obj = RTLN(bool_ref_dtype);
 			*(char *) new_obj = val;
 			return new_obj;
 		}
@@ -82,7 +81,7 @@ char *object;
 		{
 			long val = *(long *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("INTEGER_REF"));
+			new_obj = RTLN(int_ref_dtype);
 			*(long *) new_obj = val;
 			return new_obj;
 		}
@@ -90,7 +89,7 @@ char *object;
 		{
 			float val = *(float *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("REAL_REF"));
+			new_obj = RTLN(real_ref_dtype);
 			*(float *) new_obj = val;
 			return new_obj;
 		}
@@ -98,7 +97,7 @@ char *object;
 		{
 			fnptr val = *(fnptr *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("POINTER_REF"));
+			new_obj = RTLN(point_ref_dtype);
 			*(fnptr *) new_obj = val;
 			return new_obj;
 		}
@@ -106,7 +105,7 @@ char *object;
 		{
 			double val = *(double *) o_ref;
 
-			new_obj = RTLN(ei_str_dtype("DOUBLE_REF"));
+			new_obj = RTLN(doub_ref_dtype);
 			*(double *) new_obj = val;
 			return new_obj;
 		}
@@ -276,20 +275,6 @@ char *object;
 	o_ref = object + offset;
 #endif
 	return o_ref;
-}
-
-private long ei_str_dtype(s)
-char *s;
-{
-	/* Return dynamic type associated to generator `s' */
-
-	long i;
-
-	for (i=0; i<scount; i++)
-		if (0 == strcmp(s,System(i).cn_generator))
-			return i;
-
-	return -1;
 }
 
 public void ei_set_reference_field(i, object, value)

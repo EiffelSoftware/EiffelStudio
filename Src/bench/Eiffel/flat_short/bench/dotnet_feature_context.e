@@ -38,13 +38,34 @@ feature {NONE} -- Initialization
 		require
 			a_feature_not_void: a_feature /= Void
 			c_not_void: c /= Void
+		local
+			l_feat: E_FEATURE
+			l_class: CLASS_C
+			l_rout_id_set: ROUT_ID_SET
+			i, nb: INTEGER
 		do
 			class_i ?= a_feature.associated_class.lace_class
 			if class_i /= Void then
-				class_c ?= class_i.compiled_class				
+				class_c ?= class_i.compiled_class
+			end
+			l_class := a_feature.written_class
+			if l_class /= Void and then l_class.has_feature_table then
+				l_rout_id_set := a_feature.rout_id_set
+				from
+					i := l_rout_id_set.lower
+					nb := i + l_rout_id_set.count - 1
+				until
+					i > nb or l_feat /= Void
+				loop
+					l_feat := l_class.feature_with_rout_id (l_rout_id_set.item (i))
+					i := i + 1
+				end
+			end
+			if l_feat = Void then
+				l_feat := a_feature
 			end
 			format_make (c)
-			current_feature := feature_from_type (c, a_feature)
+			current_feature := feature_from_type (c, l_feat)
 			set_assembly_name
 			initialize
 		ensure
@@ -76,7 +97,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				Precursor
+				Precursor {DOTNET_FORMAT_CONTEXT}
 				declared_type := current_feature.declared_type
 				name_of_current_feature := current_feature.eiffel_name.twin
 				dotnet_name_of_current_feature := current_feature.dotnet_eiffel_name.twin

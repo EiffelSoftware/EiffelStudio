@@ -10,7 +10,7 @@
 */
 
 #include "eif_portable.h"
-#include "eif_wbench.h"
+#include "rt_wbench.h"
 #include "eif_project.h"
 #include "eif_macros.h"
 #include "eif_malloc.h"

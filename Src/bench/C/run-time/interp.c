@@ -34,6 +34,7 @@
 #include "x2c.h"		/* For LNGPAD */
 #include "eif_misc.h"
 #include "rt_assert.h"
+#include "rt_wbench.h"
 #include "server.h" /* For debug_mode: we need to move dynamic_eval */
 
 #ifdef CONCURRENT_EIFFEL

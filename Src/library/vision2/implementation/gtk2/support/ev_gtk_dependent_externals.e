@@ -1667,7 +1667,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_utf8_validate ((gchar*) $a_utf8_string, (gssize) $maximum, (gchar**) $a_end)"
+			"g_utf8_validate ((gchar*) $a_utf8_string, (gssize) $maximum, (const gchar**) $a_end)"
 		end
 
 	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is

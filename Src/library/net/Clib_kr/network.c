@@ -241,7 +241,7 @@ EIF_POINTER proto;
 	if (sp == (struct servent *) 0)
 		eio();
 	else
-		return (EIF_INTEGER) sp->s_port;
+		return (EIF_INTEGER) ntohs(sp->s_port);
 }
 
 

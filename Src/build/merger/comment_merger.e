@@ -13,6 +13,7 @@ feature
 				end;
 				!! merge_result.make_from (n);
 				if user_d /= Void then
+					-- Keeping user added comments.
 					merge_result.merge (user_d)
 				end
 			elseif u /= Void then

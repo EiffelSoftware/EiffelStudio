@@ -48,7 +48,7 @@ feature {NONE}
 
 	help_path: STRING is
 		local
-			file_name: FILE_NAME
+			file_name: DIRECTORY_NAME
 		once
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "help", "errors">>);
@@ -68,7 +68,7 @@ feature {NONE}
 
 	filter_path: STRING is
 		local
-			file_name: FILE_NAME
+			file_name: DIRECTORY_NAME
 		once
 			!!file_name.make_from_string (Eiffel3_dir_name);
 			file_name.extend_from_array (<<"bench", "filters">>);
@@ -83,7 +83,7 @@ feature {NONE}
 
 	tmp_directory: STRING is
 		local
-			file_name: FILE_NAME
+			file_name: DIRECTORY_NAME
 		once
 			!!file_name.make;
 			file_name.set_directory ("tmp");

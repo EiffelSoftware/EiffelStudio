@@ -84,7 +84,7 @@ feature -- Implementation
 			Result.clear			
 			create l_pix
 			create l_filename.make_from_string (icon_resources_directory)
-			l_filename.extend ("unchecked.png")
+			l_filename.extend ("icon_unchecked.png")
 			l_pix.set_with_named_file (l_filename.string)
 			Result.draw_sub_pixmap (2, 2, l_pix, create {EV_RECTANGLE}.make (0, 0, l_pix.width, l_pix.height))
 		end
@@ -101,7 +101,7 @@ feature -- Implementation
 			Result.clear			
 			create l_pix
 			create l_filename.make_from_string (icon_resources_directory)
-			l_filename.extend ("checked.png")
+			l_filename.extend ("icon_checked.png")
 			l_pix.set_with_named_file (l_filename.string)
 			Result.draw_sub_pixmap (2, 2, l_pix, create {EV_RECTANGLE}.make (0, 0, l_pix.width, l_pix.height))
 		end

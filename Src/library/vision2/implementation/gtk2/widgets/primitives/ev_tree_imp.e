@@ -142,21 +142,20 @@ feature {NONE} -- Initialization
 			)
 			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
 			
 			a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
-			
-			
+
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
 			create a_gtk_c_str.make ("pixbuf")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 			
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)
+			
 			create a_gtk_c_str.make ("text")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
@@ -171,7 +170,7 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 			connect_button_press_switch
 			
-			set_row_height (App_implementation.default_font_height + 5)
+			set_row_height (App_implementation.default_font_size + 9)
 				-- We explicitly set the row height to be proportional to the default gtk application font
 		end
 
@@ -701,13 +700,17 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
 			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
 		do
 			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			a_cell_rend := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			
+			create a_gtk_c_str.make ("vertical-separator")
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			
 			create a_gtk_c_str.make ("height")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
 
@@ -716,6 +719,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
 			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
 		do
 			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
@@ -725,7 +729,9 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_integer (a_cell_rend, a_gtk_c_str.item, $Result)
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 			
-			Result := Result + 2 -- spacing
+			create a_gtk_c_str.make ("vertical-separator")
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			Result := Result + a_vert_sep -- spacing
 		end
 
 	tree_view: POINTER

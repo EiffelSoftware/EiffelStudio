@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Callback Marshal to deal with gtk signal emissions"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ create
 feature {NONE} -- Initialization
 
 	default_create is
-			-- Create the dispatcher.
+			-- Create the dispatcher, one object per system.
 		once
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
 		end
@@ -49,7 +49,6 @@ feature {EV_APPLICATION_IMP} -- Destruction
 		end
 
 feature {NONE} -- Implementation
-
 
 	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
 			-- Call `action' with GTK+ event data from `args'.
@@ -73,7 +72,6 @@ feature {NONE} -- Implementation
 		once
 			Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
 		end
-		
 
 feature {NONE} -- Externals
 
@@ -90,6 +88,22 @@ feature {NONE} -- Externals
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
+		end
+		
+feature {EV_APPLICATION_IMP} -- Externals
+		
+	c_ev_gtk_callback_marshal_delayed_agent_call
+				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
+			-- Call `an_agent' after `a_delay'.
+		external
+			"C (gint, EIF_OBJECT) | %"gtk_eiffel.h%""
+		end
+
+	c_ev_gtk_callback_marshal_idle_connect
+				(an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+			-- Call `an_agent' when idle.
+		external
+			"C (EIF_OBJECT): guint | %"gtk_eiffel.h%""
 		end
 
 end -- class EV_GTK_CALLBACK_MARSHAL

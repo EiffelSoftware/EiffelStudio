@@ -16,7 +16,7 @@ inherit
 			make as normal_create
 		redefine
 			hole, build_format_bar, text_window,
-			build_edit_bar
+			build_edit_bar, tool_name
 		end
 
 creation
@@ -24,6 +24,8 @@ creation
 	make
 	
 feature 
+
+	text_window: ROUTINE_TEXT;
 
 	make (a_screen: SCREEN) is
 			-- Create an object tool.
@@ -35,13 +37,6 @@ feature
 feature {NONE}
 
 	tool_name: STRING is do Result := l_Routine end;
-
-feature 
-
-	text_window: ROUTINE_TEXT;
-
-	
-feature {NONE}
 
 	hole: ROUTINE_HOLE;
 			-- Hole caraterizing current

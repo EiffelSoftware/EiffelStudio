@@ -1669,9 +1669,15 @@ feature -- PS
 	stone (c: CLASS_C): FEATURE_STONE is
 		local
 			body: FEATURE_AS;
+			bd: INTEGER
 		do
-			if Body_server.has (body_id) then
-				body := Body_server.item (body_id);
+			bd := body_id;
+			if Body_server.has (bd) or else Rep_feat_server.has (bd) then
+				if is_code_replicated then
+					body := Rep_feat_server.item (bd)
+				else
+					body := Body_server.item (bd)
+				end;
 				!!Result.make (Current, c, body.start_position, body.end_position);
 			else
 				!!Result.make (Current, c, 0, 0);

@@ -254,9 +254,15 @@ feature -- Commands
 					l_toc.set_filter_skipped_sub_nodes (False)
 					l_toc.set_make_index_root (True)
 				end
-				report ("Sorting Table of Contents...")				
-				l_toc.sort				
+				report ("Sorting Table of Contents...")
+				shared_constants.help_constants.set_help_project_name (l_project.name)
 				shared_constants.help_constants.set_help_toc (l_toc)
+				if help_generation_type.is_equal ("web_tree") then										
+					shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_tree)
+				elseif help_generation_type.is_equal ("web_simple") then
+					shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_simple)
+				end
+				l_toc.sort								
 				report ("success%N")
 		
 					-- Generate HTML from written documentation files
@@ -287,12 +293,13 @@ feature -- Commands
 					report ("success%N")
 				elseif help_generation_type.is_equal ("web_tree") then					
 					l_help_project := create {WEB_HELP_PROJECT_TREE}.make (l_html_directory, l_project.name, l_toc)					
+					shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_tree)
 					report ("success%N")
 				elseif help_generation_type.is_equal ("web_simple") then					
 					l_help_project := create {WEB_HELP_PROJECT_SIMPLE}.make (l_html_directory, l_project.name, l_toc)
+					shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_simple)
 					report ("success%N")
-				end
-				shared_constants.help_constants.set_help_project_name (l_project.name)
+				end				
 				report ("Generating help from help project information...")
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate

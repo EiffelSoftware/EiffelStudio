@@ -84,6 +84,19 @@ feature -- Access
 			Result := iitem + 1
 		end
 
+	text: LINKED_LIST [STRING] is
+			-- Return the text of the row
+		do
+			from
+				!! Result.make
+				Result.start
+			until
+				Result.count = columns
+			loop
+				Result.extend (cell_text (Result.count + 1))
+			end
+		end
+
 	cell_text (column: INTEGER): STRING is
 			-- Return the text of the cell number `column' .
 		do
@@ -121,6 +134,23 @@ feature -- Status setting
 				parent_imp := Void
 			end
 			interface := Void
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item.
+		local
+			i: INTEGER
+		do
+--			set_iitem (value)
+			parent_imp.move_item (value, Current)
+			from
+				i := 2
+			until
+				i = columns + 1
+			loop
+				parent_imp.move_item (value, subitems @ i)
+				i := i + 1
+			end
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -163,22 +193,6 @@ feature -- Status setting
 				i := i + 1
 			end
 			subitems := array
-		end
-
-	set_rows (value: INTEGER) is
-			-- Set the index of the rows in the list
-		local
-			i: INTEGER
-		do
-			set_iitem (value)
-			from
-				i := 2
-			until
-				i = columns + 1
-			loop
-				(subitems @ i).set_iitem (value)
-				i := i + 1
-			end
 		end
 
 feature -- Element Change
@@ -243,6 +257,24 @@ feature -- Event -- removing command association
 			-- when the item is deactivated.
 		do
 			remove_command (Cmd_item_deactivate)		
+		end
+
+feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
+
+	set_rows (value: INTEGER) is
+			-- Set the index of the rows in the list
+		local
+			i: INTEGER
+		do
+			set_iitem (value)
+			from
+				i := 2
+			until
+				i = columns + 1
+			loop
+				(subitems @ i).set_iitem (value)
+				i := i + 1
+			end
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP

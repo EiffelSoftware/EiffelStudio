@@ -6,13 +6,32 @@ root
 
 default
 	assertion (all);
+	msil_generation_type ("dll")
+	msil_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
 
 cluster 
 
 		-- EiffelBase
-	all base_net: 		"$EIFFEL_SRC\library\base.net"
+	all base: 		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "CVS"; "EIFGEN"; "Documentation"; "libraries"
+			"table_eiffel3"; "CVS"; "classic"; "EIFGEN"; "Documentation"; "libraries"
 		end
-		
+
+	all base_net:	"$EIFFEL_SRC\library.net\base"
+
+assembly
+	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+		prefix
+			"XML_"
+		end
+	
+	
 end -- system base

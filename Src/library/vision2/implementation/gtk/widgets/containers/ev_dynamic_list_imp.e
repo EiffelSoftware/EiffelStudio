@@ -55,8 +55,10 @@ feature -- Measurement
 		do
 			if list_widget /= NULL and then not is_destroyed then
 				a_child_list := C.gtk_container_children (list_widget)
-				Result := C.g_list_length (a_child_list)
-				C.g_list_free (a_child_list)
+				if a_child_list /= NULL then
+					Result := C.g_list_length (a_child_list)
+					C.g_list_free (a_child_list)					
+				end
 			end
 		end
 

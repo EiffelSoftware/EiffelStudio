@@ -136,6 +136,7 @@ feature -- Status setting
 					class_i := Void
 				else
 					-- Is not compiled
+					create l_reader
 					consumed_type ?= l_reader.new_object_from_file (new_stone.file_name)
 					set_classi (new_stone.class_i)
 					associated_class := Void

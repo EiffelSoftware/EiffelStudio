@@ -135,7 +135,8 @@ feature -- Status setting
 					set_class (a_stone.e_class)
 					class_i := Void
 				else
-					-- Is not compiled .NET type/
+					-- Is a non-compiled .NET type
+					create l_reader
 					consumed_type ?= l_reader.new_object_from_file (new_stone.file_name)
 					set_classi (new_stone.class_i)					
 					associated_class := Void

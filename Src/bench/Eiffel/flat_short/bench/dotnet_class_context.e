@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			class_i ?= a_classi
 			class_c ?= a_classi.compiled_class
 			format_make (a_consumed_type)
-			create ast.make (a_consumed_type, a_flag, class_c)
+			create ast.make (a_consumed_type, a_flag, class_i)
 			initialize
 		ensure
 			analyze_ancestors: not current_class_only

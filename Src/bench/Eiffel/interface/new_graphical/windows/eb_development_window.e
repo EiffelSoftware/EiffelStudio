@@ -2584,13 +2584,9 @@ feature {NONE} -- Implementation
 					else
 							-- if a feature_stone has been dropped
 							-- scroll to the corresponding feature in the basic text format
-							-- FIXME NC: Doesn't work for .NET features
-						--if 
-						--	feature_stone.e_feature.ast /= Void and 
-						--	not feature_stone.e_feature.is_external and
-						--	not during_synchronization then
+						if not during_synchronization then
 							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
-						--end
+						end
 					end
 				end
 					-- Update the title of the window
@@ -2643,13 +2639,16 @@ feature {NONE} -- Implementation
 			tmp_text: STRING
 		do
 			if not feat_as.is_il_external then
-				begin_index := feat_as.ast.start_position
-				if platform_constants.is_windows then
-					tmp_text := displayed_class.text.substring (1, begin_index)
-					offset := tmp_text.occurrences('%R')
+				if feat_as.ast /= Void then
+					begin_index := feat_as.ast.start_position
+					if platform_constants.is_windows then
+						tmp_text := displayed_class.text.substring (1, begin_index)
+						offset := tmp_text.occurrences('%R')
+					end
+					editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 				end
-				editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 			else
+					-- FIXME NC: Doesn't work properly for .NET features
 					-- .NET formatted feature.
 				begin_index := feature_positions.item (feat_as)
 				if platform_constants.is_windows then
@@ -2659,7 +2658,6 @@ feature {NONE} -- Implementation
 				editor_tool.text_area.scroll_to_when_ready (begin_index // 2) -- - offset)
 			end
 		end
-
 
 	check_passed: BOOLEAN
 

@@ -20,19 +20,28 @@ feature {TEXT_ITEM} -- Text processing
 	process_comment_text (text: COMMENT_TEXT) is
 			-- Process comment text. 
 		do
-			put_comment_text (text.image)
+			put_comment (text.image)
 		end;
 
 	process_quoted_text (text: QUOTED_TEXT) is
 			-- Process the quoted `text' within a comment.
 		do
-			put_quoted_text (text.image)
+			put_quoted_comment (text.image)
 		end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 			-- Process class name text `t'.
+		local
+			e_class: E_CLASS;
+			class_i: CLASS_I
 		do
-			put_classi (text.class_i, text.image)
+			class_i := text.class_i;
+			e_class := class_i.compiled_eclass;
+			if e_class /= Void then
+				put_class (e_class, text.image)
+			else
+				put_classi (class_i, text.image)
+			end;
 		end;
 
 	process_feature_name_text (text: FEATURE_NAME_TEXT) is
@@ -44,10 +53,10 @@ feature {TEXT_ITEM} -- Text processing
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
 		do
-			put_feature_text (text.image, text.e_feature, text.e_class)
+			put_feature (text.e_feature, text.e_class, text.image)
 		end;
 
-	process_breakpoint is
+	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
 			-- Process breakpoint.
 		do
 		end;
@@ -66,13 +75,13 @@ feature {TEXT_ITEM} -- Text processing
 	process_indentation (text: INDENT_TEXT) is
 			-- Process indentation `t'.
 		do
-			put_indent_text (text.image)
+			put_indent (text.indent_depth, text.image)
 		end;
 
 	process_after_class (text: AFTER_CLASS) is
 			-- Process after class text `t'.
 		do
-			put_after_class (text.image)
+			put_after_class (text.e_class, text.image)
 		end;
 
 	process_before_class (text: BEFORE_CLASS) is
@@ -90,19 +99,19 @@ feature {TEXT_ITEM} -- Text processing
 	process_symbol_text (text: SYMBOL_TEXT) is
 			-- Process symbol text.
 		do
-			put_symbol_text (text.image)
+			put_symbol (text.image)
 		end;
 
 	process_keyword_text (text: KEYWORD_TEXT) is
 			-- Process keyword text.
 		do
-			put_keyword_text (text.image)
+			put_keyword (text.image)
 		end;
 
 	process_operator_text (text: OPERATOR_TEXT) is
 			-- Process operator text.
 		do
-			put_operator_text (text.image, text.e_feature, text.e_class, text.is_keyword)
+			put_operator (text.image, text.e_feature, text.e_class, text.is_keyword)
 		end;
 
 	process_address_text (text: ADDRESS_TEXT) is
@@ -218,15 +227,6 @@ feature -- Ouput
 			put_string (f_name)
 		end;
 
-	put_feature_text (f_text: STRING; e_feature: E_FEATURE; e_class: E_CLASS) is
-			-- Put feature text `f_text', from `e_feature' defined in `e_class'
-			-- at the current text position.
-		require
-			f_text_valid: f_text /= Void
-		do
-			put_string (f_text)
-		end;
-
 	put_address (address: STRING; e_class: E_CLASS) is
 			-- Put `address' for `e_class'.
 		require
@@ -253,7 +253,7 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_comment_text (str: STRING) is
+	put_comment (str: STRING) is
 			-- Put `str' as representation of a comment.
 		require
 			valid_str: str /= Void
@@ -261,7 +261,7 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_quoted_text (str: STRING) is
+	put_quoted_comment (str: STRING) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -269,15 +269,21 @@ feature -- Ouput
 			put_string (str)
 		end;	
 
-	put_indent_text (str: STRING) is
-			-- Put `str' as representation of quoted text.
+	put_one_indent is
+			-- Put one indent to Current.
+		do
+			put_indent (1, "%T")
+		end;
+
+	put_indent (nbr_of_tabs: INTEGER; str: STRING) is
+			-- Put indent of `nbr_of_tabs' with image `str'.
 		require
 			valid_str: str /= Void
 		do
 			put_string (str)
 		end;
 
-	put_after_class (str: STRING) is
+	put_after_class (e_class: E_CLASS; str: STRING) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -299,7 +305,7 @@ feature -- Ouput
 		do
 		end;
 
-	put_symbol_text (str: STRING) is
+	put_symbol (str: STRING) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -307,7 +313,7 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_keyword_text (str: STRING) is
+	put_keyword (str: STRING) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -315,7 +321,7 @@ feature -- Ouput
 			put_string (str)
 		end;
 
-	put_operator_text (str: STRING; e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
+	put_operator (str: STRING; e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void;

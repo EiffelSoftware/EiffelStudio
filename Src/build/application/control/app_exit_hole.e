@@ -16,7 +16,7 @@ feature {NONE}
 
 	symbol: PIXMAP is
 		do
-			Result := Pixmaps.exit_pixmap
+			Result := Pixmaps.exit_label_pixmap
 		end;
 
 	focus_string: STRING is

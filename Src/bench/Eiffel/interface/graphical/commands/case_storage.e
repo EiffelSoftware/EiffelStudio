@@ -51,15 +51,21 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Execute the command.
 		local
-			format_storage: E_STORE_CASE_INFO;
 			mp: MOUSE_PTR
 		do
 			if project_tool.initialized then
 				!! mp.set_watch_cursor;
-				!! format_storage.make (Error_window, Project_tool.progress_dialog);
 				format_storage.execute;
 				mp.restore
 			end
 		end;
+
+feature {NONE} -- Implementation
+
+	format_storage: E_STORE_CASE_INFO is
+			-- Storage info
+		once
+			!! Result.make (Error_window, Project_tool.progress_dialog);
+		end
 	
 end -- class CASE_STORAGE

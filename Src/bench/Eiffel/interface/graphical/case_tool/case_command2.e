@@ -9,13 +9,15 @@ deferred class
 inherit
 	COMMAND
 
+	WINDOWS
+
 feature
-	make ( w : CASE_INTERFACE ) is
-	do
-		case_window := w
-	end
+	
+	make (w: CASE_INTERFACE) is
+		do
+			case_window := w
+		end
 
 	case_window : CASE_INTERFACE
-
 
 end -- class CASE_COMMAND2

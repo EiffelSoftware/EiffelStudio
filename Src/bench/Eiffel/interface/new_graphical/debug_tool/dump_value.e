@@ -44,6 +44,16 @@ inherit
 			{NONE} all
 		end
 
+	RECV_VALUE		
+		export
+			{NONE} all
+		end
+
+	IPC_SHARED
+		export
+			{NONE} all
+		end
+
 create
 	make_boolean, make_character, make_integer, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
@@ -532,22 +542,54 @@ feature {DUMP_VALUE} -- string_representation Implementation
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
 		local
-			expr: EB_EXPRESSION
+			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_final_result_value: DUMP_VALUE
-			evaluator: DBG_EXPRESSION_EVALUATOR
 			l_feat: FEATURE_I
+			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
+			par: INTEGER
+			rout_info: ROUT_INFO
+			l_error_message: STRING
+			l_dyntype: CLASS_TYPE
 		do
 			l_feat := debug_output_feature_i (dynamic_class)
-			if l_feat /= Void then
-				create expr.make_with_object (
-						create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
-						l_feat.feature_name
-					)
-				expr.evaluate
-				evaluator := expr.expression_evaluator
-	
-				l_final_result_value := evaluator.final_result_value
-				if evaluator.error_message = Void and then not l_final_result_value.is_void then
+			if l_feat /= Void and  value_address /= Void then
+					-- Initialize the communication.
+
+				create l_dbg_obj.make_with_class (value_address, dynamic_class) -- debuggable_class
+				l_dyntype := l_dbg_obj.class_type
+
+				if l_feat.is_attribute then
+					l_dbg_val := l_dbg_obj.attribute_by_name (l_feat.feature_name)
+					if l_dbg_val /= Void then
+						l_final_result_value := l_dbg_val.dump_value
+					end
+				else
+					Init_recv_c
+					send_value
+					if l_feat.is_external then
+						par := par + 1
+					end
+
+					if l_feat.written_class.is_precompiled then
+						par := par + 2
+						rout_info := Eiffel_system.system.rout_info_table.item (l_feat.rout_id_set.first)
+						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+					else
+						send_rqst_3 (Rqst_dynamic_eval, l_feat.feature_id, l_dyntype.static_type_id - 1, par)
+					end
+						-- Receive the Result.
+					c_recv_value (Current)
+
+					if item /= Void then
+						item.set_hector_addr
+						l_final_result_value := item.dump_value
+					end
+				end
+				if l_final_result_value = Void then
+					l_error_message := "Feature " + l_feat.feature_name + " raised an exception"
+				end
+				
+				if l_error_message = Void and then not l_final_result_value.is_void then
 					Result := l_final_result_value.classic_string_representation (min, max)
 					last_string_representation_length := l_final_result_value.last_string_representation_length
 				end				

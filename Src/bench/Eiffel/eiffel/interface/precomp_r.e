@@ -295,7 +295,6 @@ feature {NONE} -- Implementation
 						Workbench.precompiled_directories.force
 							(project_dir, sys.compilation_id);
 						precompiled_options.item (precomp_name).rename_clusters (project.saved_workbench.universe)
-						Eiffel_project.system.merge (project.system);
 						Workbench.merge (project.saved_workbench)
 					else
 						!! vd41;	

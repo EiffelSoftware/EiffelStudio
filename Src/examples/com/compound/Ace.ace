@@ -11,7 +11,7 @@ default
 	dead_code_removal (yes);
 
 cluster
-	root_cluster: ".";
+	root_cluster: "$ISE_EIFFEL\examples\com\compound";
 
 	-- Base
 	all base:		"$ISE_EIFFEL\library\base"
@@ -35,6 +35,6 @@ external
 	include_path:	"$(ISE_EIFFEL)\library\com\spec\windows\include",
 				"$(ISE_EIFFEL)\library\wel\spec\windows\include";
 
-	object:		"$(ISE_EIFFEL)\library\com\spec\$(ISE_COMPILER)\lib\com.lib",
-				"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	object:		"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+				"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 end

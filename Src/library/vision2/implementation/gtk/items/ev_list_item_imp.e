@@ -10,10 +10,7 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_ITEM_IMP
@@ -23,11 +20,9 @@ inherit
 		redefine
 			interface,
 			initialize,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
 			make,
-			set_parent_imp
+			needs_event_box,
+			set_item_parent_imp
 		end
 
 	EV_TEXTABLE_IMP
@@ -49,6 +44,8 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is False
+	
+	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
 			-- Create a list item with an empty name.
@@ -91,12 +88,14 @@ feature {NONE} -- Initialization
 			check_box := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 		end
+
+feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 		
-	set_parent_imp (a_container: EV_CONTAINER_IMP) is
+	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
 			-- 
 		do
-			Precursor {EV_ITEM_IMP} (a_container)
-			if a_container = Void then
+			Precursor {EV_ITEM_IMP} (a_parent)
+			if a_parent = Void then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
 			end
 		end
@@ -189,14 +188,6 @@ feature -- Status setting
 			end
 
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature -- Element change
 

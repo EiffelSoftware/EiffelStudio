@@ -116,6 +116,7 @@ feature -- Event handling
 			-- Create a resize action sequence.
 		do
 			create Result
+			real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 		end
 		
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
@@ -125,6 +126,12 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for size allocation events
+		once
+			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
+		end
 
 	event_widget: POINTER is
 			-- Pointer to the gtk event widget 

@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 				agent (App_implementation.gtk_marshal).list_item_clicked_intermediary (c_object),
 				App_implementation.default_translate
 				)
-			v_imp.key_press_actions.extend (agent on_key_pressed)
+		--	v_imp.key_press_actions.extend (agent on_key_pressed)
 		end
 
 	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is

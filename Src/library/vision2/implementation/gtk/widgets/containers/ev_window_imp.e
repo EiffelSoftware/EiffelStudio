@@ -37,7 +37,8 @@ inherit
 			show,
 			hide,
 			internal_set_minimum_size,
-			on_widget_mapped
+			on_widget_mapped,
+			is_parentable
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -56,6 +57,8 @@ feature -- Initialization
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum))
 		end
+
+	is_parentable: BOOLEAN is False
 
 feature  -- Access
 

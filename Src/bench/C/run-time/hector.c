@@ -11,12 +11,12 @@
 */
 
 #include "eif_globals.h"
-#include "config.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "except.h"
-#include "cecil.h"
-#include "hector.h"
+#include "eif_config.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_cecil.h"
+#include "eif_hector.h"
 
 #ifndef EIF_THREADS
 /* The following stack records the addresses of objects which were given to
@@ -61,7 +61,6 @@ rt_private struct stack free_stack = {			/* Entries free in hector */
 #endif /* EIF_THREADS */
 
 /* Private function declarations */
-rt_private EIF_OBJ hector_addr(char *root);		/* Maps an adress to an hector position */
 rt_private char *hpop(void);				/* Pop a free entry off the free stack */
 
 #ifndef lint
@@ -166,7 +165,7 @@ rt_public EIF_OBJ ewean(EIF_OBJ object)
 	 */
 	EIF_GET_CONTEXT
 	EIF_OBJ ret;
-	
+
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
 		plsc();									/* Run GC cycle */
 		if (-1 == epush(&free_stack, object))	/* Again, we can't */
@@ -198,6 +197,7 @@ rt_public void eufreeze(char *object)
 			eraise("hector unfreezing", EN_MEM);	/* No more memory */
 	}
 	unprotected_ref = eif_access(address);
+
 	HEADER(unprotected_ref)->ov_size &= ~B_C;		/* Back to the Eiffel world */
 	eif_access(address) = (char *) 0;				/* Reset hector's entry */
 	EIF_END_GET_CONTEXT
@@ -342,7 +342,7 @@ rt_private char *hpop(void)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private EIF_OBJ hector_addr(char *root)
+rt_public EIF_OBJ hector_addr(char *root)
 {
 	/* Given an object's address, look in the stack and find the hector address
 	 * associated with the physical address and return it. This is a linear

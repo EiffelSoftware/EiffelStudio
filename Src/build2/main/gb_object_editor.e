@@ -302,7 +302,7 @@ feature -- Status setting
 			end
 		end
 		
-feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT} -- Implementation
+feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS_DIALOG, GB_CONSTANT} -- Implementation
 		
 	constant_added (a_constant: GB_CONSTANT) is
 			-- Update `Current' to reflect adition of constant `a_constant'.
@@ -347,6 +347,30 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT} -- Implementation
 				end
 			end
 		end
+		
+	constant_changed (a_constant: GB_CONSTANT) is
+			--  Update `Current' to reflect modification of constant `a_constant'.
+		local
+			pixmap_constant: GB_PIXMAP_CONSTANT
+		do
+			pixmap_constant ?= a_constant
+			if pixmap_constant /= Void then
+				from
+					all_pixmap_editors.start
+				until
+					all_pixmap_editors.off
+				loop
+					all_pixmap_editors.item.constant_changed (pixmap_constant)
+					all_pixmap_editors.forth
+				end
+			else
+				check
+					no_other_types_supported: False
+				end
+					-- At present, only pixmaps must update their representations.
+			end
+		end
+		
 
 	constant_removed (a_constant: GB_CONSTANT) is
 			-- Update `Current' to reflect removal of constant `a_constant'.

@@ -39,10 +39,10 @@ feature -- Basic Operations
 
 	add_c_type is
 			-- Add `c_type_name' to system's list.
-			-- Modify it to avoid name clashes in system.
+			-- Modify it to avoid name clashes in system if it's not a standard structure.
 		do
-			name := unique_identifier (name, agent has_c_type_or_is_forbidden)
-			system_descriptor.add_c_type (name.twin)
+			c_type_name := unique_identifier (name, agent has_c_type_or_is_forbidden)
+			system_descriptor.add_c_type (c_type_name.twin)
 		end
 
 	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is

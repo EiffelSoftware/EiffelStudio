@@ -68,13 +68,13 @@ feature {NONE} -- Implementation
 				then
 					create wd.make_with_text (project_tool.parent, t_Confirm, "Some files have not been saved.%NDo you want to save them?")
 					wd.show_yes_no_cancel_buttons
-					wd.add_yes_command(Current, save_and_exit)
-					wd.add_no_command(Current, do_exit)
+					wd.add_yes_command (Current, save_and_exit)
+					wd.add_no_command (Current, do_exit)
 					wd.show
 				else
 					create wd.make_with_text (project_tool.parent, t_Confirm, "Quit EiffelBench?")
 					wd.show_ok_cancel_buttons
-					wd.add_ok_command(Current, do_exit)
+					wd.add_ok_command (Current, do_exit)
 					wd.show
 				end
 			elseif arg = do_exit then

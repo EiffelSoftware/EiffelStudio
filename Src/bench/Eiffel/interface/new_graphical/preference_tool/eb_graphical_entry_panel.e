@@ -28,24 +28,24 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create combo_text.make (Current)
+			create combo_text.make (Current)
 
 			resources.extend (combo_text)
 
-			Create windows_text.make_with_resource (Void, parameters.windows_text)
-			Create normal_text.make_with_resource (Void, parameters.normal_text)
-			Create default_text.make_with_resource (Void, parameters.default_text)
-			Create comment_text.make_with_resource (Void, parameters.comment_text)
-			Create string_text.make_with_resource (Void, parameters.string_text)
-			Create class_text.make_with_resource (Void, parameters.class_text)
-			Create cluster_text.make_with_resource (Void, parameters.cluster_text)
-			Create feature_text.make_with_resource (Void, parameters.feature_text)
-			Create object_text.make_with_resource (Void, parameters.object_text)
-			Create error_text.make_with_resource (Void, parameters.error_text)
-			Create breakable_text.make_with_resource (Void, parameters.breakable_text)
-			Create keyword_text.make_with_resource (Void, parameters.keyword_text)
-			Create symbol_text.make_with_resource (Void, parameters.symbol_text)
-			Create html_text.make_with_resource (Void, parameters.html_text)
+			create windows_text.make_with_resource (Void, parameters.windows_text)
+			create normal_text.make_with_resource (Void, parameters.normal_text)
+			create default_text.make_with_resource (Void, parameters.default_text)
+			create comment_text.make_with_resource (Void, parameters.comment_text)
+			create string_text.make_with_resource (Void, parameters.string_text)
+			create class_text.make_with_resource (Void, parameters.class_text)
+			create cluster_text.make_with_resource (Void, parameters.cluster_text)
+			create feature_text.make_with_resource (Void, parameters.feature_text)
+			create object_text.make_with_resource (Void, parameters.object_text)
+			create error_text.make_with_resource (Void, parameters.error_text)
+			create breakable_text.make_with_resource (Void, parameters.breakable_text)
+			create keyword_text.make_with_resource (Void, parameters.keyword_text)
+			create symbol_text.make_with_resource (Void, parameters.symbol_text)
+			create html_text.make_with_resource (Void, parameters.html_text)
 
 			combo_text.add_resource_display (windows_text)
 			combo_text.add_resource_display (normal_text)
@@ -67,43 +67,43 @@ feature {NONE} -- Initialization
 --			combo_text.select_item (1)
 --			windows_text.display (combo_text)
 
---			Create font.make_with_resource (Current, parameters.font)
---			Create text_font.make_with_resource (Current, parameters.text_font)
---			Create default_text_font.make_with_resource (Current, parameters.default_text_font)
---			Create comment_font.make_with_resource (Current, parameters.comment_font)
---			Create string_text_font.make_with_resource (Current, parameters.string_text_font)
---			Create class_font.make_with_resource (Current, parameters.class_font)
---			Create cluster_font.make_with_resource (Current, parameters.cluster_font)
---			Create feature_font.make_with_resource (Current, parameters.feature_font)
---			Create object_font.make_with_resource (Current, parameters.object_font)
---			Create error_font.make_with_resource (Current, parameters.error_font)
---			Create breakable_font.make_with_resource (Current, parameters.breakable_font)
---			Create keyword_font.make_with_resource (Current, parameters.keyword_font)
---			Create symbol_font.make_with_resource (Current, parameters.symbol_font)
---			Create html_font.make_with_resource (Current, parameters.html_font)
+--			create font.make_with_resource (Current, parameters.font)
+--			create text_font.make_with_resource (Current, parameters.text_font)
+--			create default_text_font.make_with_resource (Current, parameters.default_text_font)
+--			create comment_font.make_with_resource (Current, parameters.comment_font)
+--			create string_text_font.make_with_resource (Current, parameters.string_text_font)
+--			create class_font.make_with_resource (Current, parameters.class_font)
+--			create cluster_font.make_with_resource (Current, parameters.cluster_font)
+--			create feature_font.make_with_resource (Current, parameters.feature_font)
+--			create object_font.make_with_resource (Current, parameters.object_font)
+--			create error_font.make_with_resource (Current, parameters.error_font)
+--			create breakable_font.make_with_resource (Current, parameters.breakable_font)
+--			create keyword_font.make_with_resource (Current, parameters.keyword_font)
+--			create symbol_font.make_with_resource (Current, parameters.symbol_font)
+--			create html_font.make_with_resource (Current, parameters.html_font)
 --
---			Create text_background_color.make_with_resource (Current, parameters.text_background_color)
---			Create text_foreground_color.make_with_resource (Current, parameters.text_foreground_color)
+--			create text_background_color.make_with_resource (Current, parameters.text_background_color)
+--			create text_foreground_color.make_with_resource (Current, parameters.text_foreground_color)
 --			if not Platform_constants.is_windows then
---				Create focus_label_color.make_with_resource (Current, parameters.focus_label_color)
---				Create progress_bar_color.make_with_resource (Current, parameters.progress_bar_color)
---				Create highlight_line_background_color.make_with_resource (Current, parameters.highlight_line_background_color)
---				Create highlight_line_foreground_color.make_with_resource (Current, parameters.highlight_line_foreground_color)
+--				create focus_label_color.make_with_resource (Current, parameters.focus_label_color)
+--				create progress_bar_color.make_with_resource (Current, parameters.progress_bar_color)
+--				create highlight_line_background_color.make_with_resource (Current, parameters.highlight_line_background_color)
+--				create highlight_line_foreground_color.make_with_resource (Current, parameters.highlight_line_foreground_color)
 --			end
---			Create foregrnd_color.make_with_resource (Current, parameters.foreground_color)
---			Create string_text_color.make_with_resource (Current, parameters.string_text_color)
---			Create default_text_color.make_with_resource (Current, parameters.default_text_color)
---			Create stop_color.make_with_resource (Current, parameters.stop_color)
---			Create breakable_color.make_with_resource (Current, parameters.breakable_color)
---			Create symbol_color.make_with_resource (Current, parameters.symbol_color)
---			Create html_color.make_with_resource (Current, parameters.html_color)
---			Create class_color.make_with_resource (Current, parameters.class_color)
---			Create cluster_color.make_with_resource (Current, parameters.cluster_color)
---			Create feature_color.make_with_resource (Current, parameters.feature_color)
---			Create error_color.make_with_resource (Current, parameters.error_color)
---			Create object_color.make_with_resource (Current, parameters.object_color)
---			Create comment_color.make_with_resource (Current, parameters.comment_color)
---			Create keyword_color.make_with_resource (Current, parameters.keyword_color)
+--			create foregrnd_color.make_with_resource (Current, parameters.foreground_color)
+--			create string_text_color.make_with_resource (Current, parameters.string_text_color)
+--			create default_text_color.make_with_resource (Current, parameters.default_text_color)
+--			create stop_color.make_with_resource (Current, parameters.stop_color)
+--			create breakable_color.make_with_resource (Current, parameters.breakable_color)
+--			create symbol_color.make_with_resource (Current, parameters.symbol_color)
+--			create html_color.make_with_resource (Current, parameters.html_color)
+--			create class_color.make_with_resource (Current, parameters.class_color)
+--			create cluster_color.make_with_resource (Current, parameters.cluster_color)
+--			create feature_color.make_with_resource (Current, parameters.feature_color)
+--			create error_color.make_with_resource (Current, parameters.error_color)
+--			create object_color.make_with_resource (Current, parameters.object_color)
+--			create comment_color.make_with_resource (Current, parameters.comment_color)
+--			create keyword_color.make_with_resource (Current, parameters.keyword_color)
 --
 --			resources.extend (font)
 --			resources.extend (text_font)
@@ -150,49 +150,18 @@ feature -- Access
 	name: STRING is "Graphical preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 			-- Current's symobl for being unselected
-		once
+		do
 			Result := Pixmaps.bm_Graph
 		end
 
 feature {NONE} -- Implementation
 
---	font,
---	text_font,
---	default_text_font,
---	comment_font,
---	string_text_font,
---	class_font,
---	cluster_font,
---	feature_font,
---	object_font,
---	error_font,
---	breakable_font,
---	keyword_font,
---	symbol_font,
---	html_font: EB_FONT_RESOURCE_DISPLAY
-
 	text_background_color,
---	text_foreground_color,
---	foregrnd_color,
 	focus_label_color,
 	progress_bar_color,
---	string_text_color,
---	default_text_color,
-	stop_color,
---	breakable_color,
---	symbol_color,
---	html_color,
---	class_color,
---	cluster_color,
---	feature_color,
---	error_color,
---	object_color,
---	comment_color,
---	keyword_color,
-	highlight_line_background_color,
-	highlight_line_foreground_color: EB_COLOR_RESOURCE_DISPLAY
+	stop_color: EB_COLOR_RESOURCE_DISPLAY
 
 	windows_text,
 	normal_text,

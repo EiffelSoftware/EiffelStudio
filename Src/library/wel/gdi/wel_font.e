@@ -166,26 +166,49 @@ feature -- Access
 			index, n: INTEGER
 			screen_dc: WEL_SCREEN_DC
 			extent: WEL_SIZE
+			substring: STRING
 		do
-			create screen_dc
-			screen_dc.get
-			screen_dc.select_font (Current)
-			from
-				n := 1
-			until
-				n > a_string.count
-			loop
-				index := a_string.index_of ('%N', n)
-				if index <= 0 then
-					index := a_string.count + 1
+			if a_string.is_empty then
+				cur_width := 0
+				cur_height := 0
+			else
+				create screen_dc
+				screen_dc.get
+				screen_dc.select_font (Current)
+				from
+					n := 1
+				until
+					n > a_string.count
+				loop
+					index := a_string.index_of ('%N', n)
+					if index <= 0 then
+							-- No more '%N' characters in the text
+						index := a_string.count
+
+						if n = 1 then
+							substring := a_string
+						else
+							substring := a_string.substring (n, index)
+						end
+					else
+							-- There are still some '%N' characters in the text
+						substring := a_string.substring (n, index - 1)
+					end
+					n := index + 1
+					extent := screen_dc.string_size (substring)
+					if substring.is_empty then
+							-- This line is empty, but we need to count its height
+							-- otherwise `string_size ("%N%N%N") would return a height of 0
+						cur_height := cur_height + screen_dc.string_size (" ").height
+					else
+						cur_height := cur_height + extent.height
+					end
+					cur_width := cur_width.max (extent.width)
 				end
-				extent := screen_dc.string_size (a_string.substring (n, index - 1))
-				n := index + 1
-				cur_width := cur_width.max (extent.width)
-				cur_height := cur_height + extent.height
+				screen_dc.unselect_font
+				screen_dc.quick_release
 			end
-			screen_dc.unselect_font
-			screen_dc.quick_release
+
 			Result := [cur_width, cur_height]
 		end
 

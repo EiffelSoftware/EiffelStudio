@@ -1,5 +1,4 @@
 indexing
-
 	description: "This class represents a MS_WINDOWS multi-line text editor with scrollbar";
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -9,6 +8,7 @@ class
 	SCROLLED_TEXT_WINDOWS
 
 inherit
+	SCROLLED_T_I
 
 	TEXT_WINDOWS
 		redefine
@@ -20,8 +20,6 @@ inherit
 			form_height,
 			form_width
 		end
-
-	SCROLLED_T_I
 
 	WEL_BIT_OPERATIONS
 		export
@@ -45,6 +43,7 @@ feature -- Initialization
 			is_vertical_scrollbar := True
 			parent ?= oui_parent.implementation
 			private_text := ""
+			tab_length := 6
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
 			set_maximum_size (131072)	-- 131072 = 128 * 1024
@@ -63,18 +62,23 @@ feature -- Initialization
 
 				if height = 0  then 
 					fw ?= font.implementation
-					set_height (fw.string_height (Current, "I") * 7 // 4 + 2)
+					set_height (fw.string_height (Current, "I"))
  				end
 
 				resize_for_shell
+
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+
 				set_control_options
-				enable_standard_notifications
+				set_text_limit (131072)	-- 131072 = 128 * 1024
+				set_tab_length (tab_length)
 
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
 				end
+
+				enable_standard_notifications
 
 				if private_font /= Void then
 					set_font (private_font)
@@ -96,6 +100,7 @@ feature -- Initialization
 				end
 
 				if is_multi_line_mode then
+					set_top_character_position (private_top_character_position)
 					if is_vertical_scrollbar then
 						show_vertical_scrollbar
 					end
@@ -105,10 +110,6 @@ feature -- Initialization
 					wel_hide
 				elseif parent.shown then
 					shown := true
-				end
-
-				if is_multi_line_mode then
-					set_top_character_position (private_top_character_position)
 				end
 
 				if private_is_read_only then
@@ -134,6 +135,9 @@ feature -- Status report
 		do
 			Result := width
 		end
+
+	tab_length: INTEGER
+			-- Size for each tabulation
 
 feature -- Status setting
 
@@ -195,6 +199,25 @@ feature -- Status setting
 			vertical_scrollbar: is_vertical_scrollbar
 		end
 
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'.
+		local
+			fw: FONT_WINDOWS
+			pos: INTEGER
+		do
+			tab_length := new_length
+			if exists then
+				fw ?= font.implementation
+				pos := top_character_position
+				hide_selection
+				set_selection (0, count)
+				set_tab_stops (tab_length * fw.average_width * 10)
+				set_caret_position (pos)
+				show_selection
+				invalidate
+			end
+		end
+
 feature {NONE} -- Inapplicable
 
 	action_target: POINTER is
@@ -207,13 +230,15 @@ feature {NONE} -- Implementation
 	set_control_options is
 			-- Set options to control.
 		local
-			options: INTEGER
+			new_options: INTEGER
 		do
-			options := Eco_autovscroll + Eco_nohidesel + eco_savesel + Eco_selectionbar 
-			if not is_word_wrap_mode then
-				options := options + Eco_autohscroll
-			end
-			set_options (Ecoop_set, options)
+				--| Automatic scroll when the cursor moves
+				--| Always show the selection even if it is not active
+				--| Add a small white left part to select lines
+			new_options := Eco_autohscroll + Eco_autovscroll + Eco_nohidesel + Eco_savesel + Eco_selectionbar
+
+				--| Overwrite the previous options
+			set_options (Ecoop_set, new_options)
 		end
 
 	default_style: INTEGER is

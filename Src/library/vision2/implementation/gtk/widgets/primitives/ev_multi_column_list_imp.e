@@ -349,7 +349,7 @@ feature {NONE} -- Initialization
 				pointer_motion_actions_internal.call (t)
 			end
 			if a_y > y_coord_offset then
-				a_row_number := ((a_y - y_coord_offset) // row_height) + 1
+				a_row_number := row_from_y_coord (a_y)
 				if a_row_number <= count then
 					a_row_imp := ev_children @ a_row_number
 					if a_row_imp.pointer_motion_actions_internal /= Void then
@@ -949,8 +949,14 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_from_y_coord (a_y: INTEGER): INTEGER is
 			-- Returns the row at relative coordinate `a_y'.
+		local
+			ver_adj: POINTER
+			temp_a_y, ver_offset: INTEGER
 		do
-			Result := a_y // (row_height + 1) + 1
+			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
+			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
+			temp_a_y := (ver_offset - y_coord_offset) + a_y
+			Result := temp_a_y // (row_height + 1) + 1
 			if Result > ev_children.count then
 				Result := 0
 			end

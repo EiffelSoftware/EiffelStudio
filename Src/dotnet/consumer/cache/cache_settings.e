@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	short_cache_name: STRING is "md_test"
+	short_cache_name: STRING is "md"
 			-- Short cache name.
 			-- Note: this should be as short as possible given file name
 			-- length restriction on Windows. This is name used when

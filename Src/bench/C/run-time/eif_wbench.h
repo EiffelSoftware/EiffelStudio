@@ -23,13 +23,13 @@ extern "C" {
 #endif
 
 extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
-extern char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(/* ??? */);				/* Feature call */
-extern char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(/* ??? */);				/* Precompiled feature call */
-extern char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(/* ??? */);			/* Nested feature call */
-extern char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))(/* ??? */);			/* Nested precompiled feature call */
+extern EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
+extern EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
+extern EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, char *object); /* Nested feature call */
+extern EIF_FN_REF wpfeat_inv(int32 origin, int32 offset, char *name, char *object);/* Nested precompiled feature call */
 extern void wexp(int static_type, int32 feature_id, int dyn_type, char *object);						/* Creation call for expanded types */
 extern void wpexp(int32 origin, int32 offset, int dyn_type, char *object);			/* Creation call for precomp expanded types */
-extern char *(*wdisp(int dyn_type))(/* ??? */);          	/* Feature call for dispose routine */ 
+extern EIF_FN_REF wdisp(int dyn_type); /* Feature call for dispose routine */ 
 extern long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
 extern long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
 extern long wattr_inv(int static_type, int32 feature_id, char *name, char *object);				/* Nested attribute access */

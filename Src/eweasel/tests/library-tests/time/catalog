@@ -1,0 +1,3 @@
+source_path $TESTROOTDIR
+
+test	make-from-string			datetimestring001 tcf regression

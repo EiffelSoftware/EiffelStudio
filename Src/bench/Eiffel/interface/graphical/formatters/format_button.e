@@ -52,12 +52,10 @@ feature -- Access
 	compatible (a_stone: STONE): BOOLEAN is
 			-- Is the hole compatible with `a_stone'
 		local
-			class_w: CLASS_W;
+			tool: TOOL_W;
 		do
-			class_w ?= associated_format.tool;
-			Result := associated_format.tool.compatible (a_stone) and then	
-				(class_w = Void or else 
-				(a_stone.stone_type /= Routine_type))
+			tool := associated_format.tool;
+			Result := (tool.stone_type = a_stone.stone_type)
 		end;
 
 	stone_type: INTEGER is

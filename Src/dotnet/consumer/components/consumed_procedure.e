@@ -14,7 +14,8 @@ inherit
 			has_arguments, arguments
 		end
 create
-	make
+	make,
+	make_attribute_setter
 
 feature {NONE} -- Initialization
 
@@ -61,6 +62,33 @@ feature {NONE} -- Initialization
 			is_new_slot_set: is_new_slot = ns
 			is_virtual_set: is_virtual = virt
 			is_property_or_event_set: is_property_or_event = poe
+			declared_type_set: declared_type = a_type
+		end
+
+	make_attribute_setter (en: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE) is
+			-- Initialize consumed method.
+		require
+			non_void_eiffel_name: en /= Void
+			valid_eiffel_name: not en.is_empty
+			non_void_arguments: arg /= Void
+			a_type_not_void: a_type /= Void
+		do
+			member_make (en, en, True, a_type)
+			a := <<arg>>
+			f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
+			f := f | feature {FEATURE_ATTRIBUTE}.Is_static
+			f := f | feature {FEATURE_ATTRIBUTE}.Is_attribute_setter
+		ensure
+			eiffel_name_set: eiffel_name = en
+			dotnet_name_set: dotnet_name = en
+			is_frozen_set: is_frozen = True
+			is_static_set: is_static = True
+			is_deferred_set: is_deferred = False
+			is_public_set: is_public = True
+			is_new_slot_set: is_new_slot = False
+			is_virtual_set: is_virtual = False
+			is_property_or_event_set: is_property_or_event = False
+			is_attribute_setter_set: is_attribute_setter = True
 			declared_type_set: declared_type = a_type
 		end
 		

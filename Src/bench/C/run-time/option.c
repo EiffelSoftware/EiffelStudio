@@ -592,10 +592,10 @@ void exitprf(void)
 		SYSTEMTIME *execution_time;
 #endif  /* HAS_GERUSAGE */
 
-		unsigned long *keys;		/* Keys from H table */
+		rt_uint_ptr *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
 		struct prof_info *features;	/* Features from H tables */
-		int i,					/* Outer-loop-counter */
+		size_t i,					/* Outer-loop-counter */
 	    	j,					/* Inner-loop-counter */
 	    	index;				/* Index counter for output */
 		FILE *prof_output;		/* Storage file */
@@ -639,7 +639,7 @@ void exitprf(void)
 		record_time (execution_time); 
 
 #ifdef EIF_THREADS
-		sprintf(buffer, "%x\0", eif_thr_id);
+		sprintf(buffer, "%" EIF_POINTER_DISPLAY "\0", (rt_uint_ptr) eif_thr_id);
 		file_name = malloc (strlen(profile_output_file) + strlen(buffer) + 2);
 		file_name[0] = '\0';
 		strcat (file_name, profile_output_file);
@@ -687,7 +687,7 @@ void exitprf(void)
 						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
 #endif
 						
-						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
+						fprintf(prof_output, "[%lu]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
 #ifdef HAS_GETRUSAGE
 		    					(real_time(features[j].all_total_time)) / 1000000.,
 								(real_time(features[j].descendent_time)) / 1000000.,
@@ -829,7 +829,7 @@ void start_trace(char *name, int origin, int dtype)
 		EIF_TRACE_LOCK
 		print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-		print_err_msg(stderr, "Thread ID 0x%016lX:", eif_thr_id);
+		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
 #endif
 		for (i = 0; i < trace_call_level - 1; i++)
 			print_err_msg (stderr, "|  ");		/* Print preceding spaces */
@@ -864,7 +864,7 @@ void stop_trace(char *name, int origin, int dtype)
 	EIF_TRACE_LOCK
 	print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
-		print_err_msg(stderr, "Thread ID 0x%016lX:", eif_thr_id);
+		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_id);
 #endif
 
 	for (i = 0; i < trace_call_level; i++)
@@ -892,8 +892,8 @@ struct prof_info* prof_stack_pop(void)
 	 */
 
 	if(prof_recording) {
-	EIF_GET_CONTEXT
-		register1 struct prof_info *stk_item;	/* Top item of stack */
+		EIF_GET_CONTEXT
+		struct prof_info *stk_item;	/* Top item of stack */
 
 		if((stk_item = prof_stack_top())) {
 				/* Okay, data structure still intact */

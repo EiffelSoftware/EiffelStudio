@@ -12,7 +12,8 @@ inherit
 	EB_FORM_DIALOG
 		rename
 			make as form_d_make,
-			popdown as form_d_popdown
+			popdown as form_d_popdown,
+			display as form_d_display
 		end;
 	EB_CONSTANTS;
 	COMMAND;
@@ -150,6 +151,14 @@ feature -- Properties
 
 	separator: SEPARATOR
 
+feature -- Settings
+
+	display (new_width: INTEGER) is
+		do
+			set_width (new_width)
+			form_d_display
+		end
+
 feature -- Access
 
 	call (class_n: STRING; cl: CLUSTER_I) is
@@ -160,6 +169,7 @@ feature -- Access
 			clus_list: LINKED_LIST [CLUSTER_I];
 			str_el: SCROLLABLE_LIST_STRING_ELEMENT;
 			clus: CLUSTER_I
+			new_width: INTEGER
 		do
 			cluster := cl;
 			class_name := clone (class_n);
@@ -173,6 +183,7 @@ feature -- Access
 			file_name := clone (class_name);
 			file_name.append (".e");
 			file_entry.set_text (file_name);
+			new_width := file_name.count;
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.empty then
 				from
@@ -185,6 +196,7 @@ feature -- Access
 						!! str_el.make (0);
 						str_el.append (clus.cluster_name);
 						cluster_list.extend (str_el);
+						new_width := new_width.max (str_el.count)
 					end;
 					clus_list.forth
 				end;
@@ -214,7 +226,7 @@ feature -- Access
 			else
 				create_b.set_insensitive
 			end;
-			display
+			display ((200).max (new_width * 12))
 		end;
 
 	change_cluster is

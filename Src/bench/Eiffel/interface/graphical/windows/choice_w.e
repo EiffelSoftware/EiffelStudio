@@ -89,8 +89,8 @@ feature
 					a_title /= Void
 		local
 			str: SCROLLABLE_LIST_STRING_ELEMENT
+			new_width: INTEGER
 		do
-			set_width (200);
 			caller := command;
 			list.wipe_out;
 			!! str.make (0);
@@ -101,6 +101,7 @@ feature
 			loop
 				!! str.make (0);
 				str.append (name_list.item);
+				new_width := new_width.max (name_list.item.count)
 				list.extend (str);
 				name_list.forth
 			end
@@ -111,6 +112,8 @@ feature
 			else
 				list.set_visible_item_count (1);
 			end;
+			
+			set_width ((200).max (new_width * 12));
 			set_title (a_title);
 			display
 		end;

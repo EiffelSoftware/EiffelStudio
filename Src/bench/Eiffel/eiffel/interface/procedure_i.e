@@ -9,14 +9,14 @@ inherit
 			duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message, check_local_names
+			obsolete_message, assert_id_set, set_assert_id_set
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message, check_local_names
+			obsolete_message, assert_id_set, set_assert_id_set
 		select
 			transfer_to
 		end
@@ -43,6 +43,15 @@ feature
 	obsolete_message: STRING;
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+
+	assert_id_set: ASSERT_ID_SET;
+			-- Assertions to which the procedure belongs to 
+
+	set_assert_id_set (set: like assert_id_set) is
+			-- Assign `set' to assert_id_set.
+		do
+			assert_id_set := set
+		end;
 
 	set_arguments (args: like arguments) is
 			-- Assign `args' to `arguments'.

@@ -314,10 +314,14 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 			break;
 */
 		default:
-		(void) signal(sig, handler);	/* Ignore EINVAL errors */
+			if (esigdefined(sig)) {
+				(void) signal(sig, handler);	/* Ignore EINVAL errors */
+			}
 	}			
 #else
-		(void) signal(sig, handler);	/* Ignore EINVAL errors */
+		if (esigdefined(sig)) {
+			(void) signal(sig, handler);	/* Ignore EINVAL errors */
+		}
 #endif	/* EIF_THREADS */
 
 	/* Do not catch SIGTSTP (stop signal from tty like ^Z under csh or ksh)

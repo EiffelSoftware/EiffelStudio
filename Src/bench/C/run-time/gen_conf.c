@@ -1895,6 +1895,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	/* Search */
 
 	gdp  = eif_derivations [dftype];
+		/* FIXME: Eric Bezault fix is the following */
+	/*gdp  = eif_derivations [RTUD(dftype)];*/
 	prev = (EIF_GEN_DER *) 0;
 
 	while (gdp != (EIF_GEN_DER *) 0)
@@ -1928,6 +1930,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 		if (prev == (EIF_GEN_DER *)0)
 			eif_derivations [dftype] = gdp;
+				/* FIXME: Eric Bezault fix is the following */
+			/*eif_derivations [RTUD(dftype)] = gdp;*/
 		else
 			prev->next = gdp;
 

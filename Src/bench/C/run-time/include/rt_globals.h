@@ -274,8 +274,8 @@ rt_private rt_global_context_t * eif_pthread_getspecific (EIF_TSD_TYPE global_ke
 
 #elif defined SOLARIS_THREADS	/* Solaris Threads */
 rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
-	rt_global_context_t * Result;
-	(void) thr_getspecific(global_key,(void **)&Result);
+	void * Result;
+	(void) thr_getspecific(global_key, &Result);
 	return Result;
 }
 #define RT_GET_CONTEXT \

@@ -178,12 +178,13 @@ feature -- Input/Output
 
 	confirmed: BOOLEAN is
 		do
-			io.putstring ("Do you wish to ");
-			io.putstring (name);
-			io.putstring (" the system [y/n]? ");
-			io.readchar;
-			io.next_line;	
-			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
+--			io.putstring ("Do you wish to ");
+--			io.putstring (name);
+--			io.putstring (" the system [y/n]? ");
+--			io.readchar;
+--			io.next_line;	
+--			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
+			Result := True
 		end;
 
 	print_header is

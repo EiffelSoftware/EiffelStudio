@@ -194,7 +194,7 @@ interface IEiffelSystemBrowser: IUnknown
   HRESULT system_clusters ([out, retval] IEnumCluster ** some_clusters);
   
   [helpstring ("Number of top-level clusters in system.")]
-  HRESULT cluster_count ([out, retval] LONG * return_value);
+  HRESULT cluster_count ([out, retval] ULONG * return_value);
 
   [helpstring ("Cluster descriptor.")]
   HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);

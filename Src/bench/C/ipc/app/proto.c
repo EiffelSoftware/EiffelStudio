@@ -477,7 +477,6 @@ rt_private void once_inspect(int s, Opaque *what)
 	 * its result may be ask by ewb.
 	 */
 
-	int arg_num;
 	uint32 body_id = (uint32) what->op_third;	/* Body_id of once routine */
 
 	switch (what->op_first) {		/* First value describes request */
@@ -488,8 +487,9 @@ rt_private void once_inspect(int s, Opaque *what)
 			twrite("false", 5);
 		break;
 	case OUT_RESULT:			/* Result of already called once function */
-		arg_num = what->op_second;	/* Number of arguments to be passed */
-		send_once_result(s, body_id, arg_num);	/* Send result back to ewb */
+		send_once_result(s, body_id, what->op_second);	/* Send result back to ewb */
+														/* the last argument is the number of 
+														/* arguments to be passed */
 		break;
 	default:
 		panic("BUG once inspect");

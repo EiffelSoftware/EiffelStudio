@@ -49,6 +49,14 @@ feature -- Access
 
 feature -- Status report
 
+	is_editable: BOOLEAN is
+			-- Is the text editable
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_editable
+		end
+
 	position: INTEGER is
 			-- Current position of the caret.
 		require
@@ -106,6 +114,7 @@ feature -- Status setting
 			exist: not destroyed			
 			position_large_enough: pos >= 1
 			position_small_enough: pos <= text_length + 1
+			is_editable: is_editable
 		do
 			implementation.set_position (pos)
 		end
@@ -117,6 +126,7 @@ feature -- Element change
 		require
 			exists: not destroyed	
 			valid_text: txt /= Void
+			is_editable: is_editable
 		do
 			implementation.set_text (txt)
 		ensure
@@ -128,6 +138,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
+			is_editable: is_editable
 		do
 			implementation.insert_text (txt)
 		end
@@ -137,6 +148,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
+			is_editable: is_editable
 		do
 			implementation.append_text (txt)
 		ensure
@@ -148,6 +160,7 @@ feature -- Element change
 		require
 			exist: not destroyed			
 			valid_text: txt /= Void
+			is_editable: is_editable
 		do
 			implementation.prepend_text (txt)
 		ensure
@@ -211,6 +224,7 @@ feature -- Basic operation
 		require
 			exist: not destroyed
 			has_selection: has_selection
+			is_editable: is_editable
 		do
 			implementation.delete_selection
 		ensure
@@ -226,6 +240,7 @@ feature -- Basic operation
 		require
 			exists: not destroyed
 			has_selection: has_selection
+			is_editable: is_editable
 		do
 			implementation.cut_selection
 		end
@@ -249,6 +264,9 @@ feature -- Basic operation
 			-- If the Clipboard is empty, it does nothing. 
 		require
 			exists: not destroyed
+			index_large_enough: index >= 1
+			index_small_enough: index <= text_length + 1
+			is_editable: is_editable
 		do
 			implementation.paste (index)
 		end

@@ -26,6 +26,7 @@ feature -- Initialization
 			unc_mapper: UNC_PATH_MAPPER
 			mapped_path: BOOLEAN
 			l_exception: EXCEPTIONS
+			gen_only: BOOLEAN
 		do
 			
 				-- Location defaults to the current directory
@@ -37,6 +38,9 @@ feature -- Initialization
 				location := argument (location_index + 1)
 			end
 			
+				-- if generate_only is specified then only generate makefile
+			gen_only := index_of_word_option ("generate_only") /= 0
+		
 				-- Map `location' if it is a network path if needed
 			if location.substring (1, 2).is_equal ("\\") then
 				create unc_mapper.make (location)
@@ -56,7 +60,7 @@ feature -- Initialization
 				create translator.make (mapped_path)
 
 				translator.translate
-				if translator.has_makefile_sh then
+				if not gen_only and translator.has_makefile_sh then
 						-- We don't want to be launched when there is no Makefile.SH file.
 					translator.run_make
 					c_error := c_compilation_error
@@ -69,33 +73,34 @@ feature -- Initialization
 				unc_mapper := Void
 			end
 
-			if translator.has_makefile_sh then
-				if index_of_word_option ("silent") = 0 then
-					make_util := translator.options.get_string ("make", "make utility")
-					create status_box.make (make_util, retried, c_error, False, False)
+			if not gen_only then
+				if translator.has_makefile_sh then
+					if index_of_word_option ("silent") = 0 then
+						make_util := translator.options.get_string ("make", "make utility")
+						create status_box.make (make_util, retried, c_error, False, False)
+					else
+						if not c_error then
+								-- For eweasel processing
+							io.put_string ("C compilation completed%N")
+							io.default_output.flush
+						end
+					end
 				else
-					if not c_error then
+					if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
 							-- For eweasel processing
 						io.put_string ("C compilation completed%N")
 						io.default_output.flush
 					end
 				end
-			else
-				if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
-						-- For eweasel processing
-					io.put_string ("C compilation completed%N")
-					io.default_output.flush
-				end
 			end
-			
 			if index_of_word_option ("vs") /= 0 then
-				if retried or c_error then
+				if retried or else (c_error and not gen_only) then
 						-- Make the application return a non-zero value to OS to flag an error
 						-- to calling process.
 					create l_exception
 					l_exception.die (1)
 				end
-			end
+			end	
 		rescue
 			retried := True
 			retry

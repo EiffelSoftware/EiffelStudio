@@ -21,7 +21,7 @@ inherit
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
-			save_as_command, quit_command, editable,
+			save_as_command, editable,
 			create_edit_buttons, set_default_size,
 			build_widgets, resize_action,
 			build_edit_bar
@@ -30,7 +30,7 @@ inherit
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
-			save_as_command, quit_command, editable,
+			save_as_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
 			make, set_default_size, build_widgets, attach_all,
 			close_windows, resize_action
@@ -186,7 +186,6 @@ feature {NONE}
 	open_command: OPEN_FILE;
 	save_command: SAVE_FILE;
 	save_as_command: SAVE_AS_FILE;
-	quit_command: QUIT_FILE; 
 
 	resize_action is 
 			-- If the window is moved or resized, raise

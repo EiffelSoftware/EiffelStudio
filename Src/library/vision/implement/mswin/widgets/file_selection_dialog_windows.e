@@ -247,9 +247,6 @@ feature -- Status setting
 		do
 			directory := clone (s)
 			directory.replace_substring_all ("/", "\")
-			if directory @ directory.count /= '\' then
-				directory.append_character ('\')
-			end
 		end
 
 	set_open_file is

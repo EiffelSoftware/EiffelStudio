@@ -83,20 +83,35 @@ feature {NONE} -- Status report
 
 	is_tuple (a_class_i: CLASS_I): BOOLEAN is
 			-- Is it a TUPLE type?
+		require
+			a_class_i_not_void: a_class_i /= Void
 		do
-			Result := System.tuple_class = a_class_i
+			check
+				tuple_class_not_void: System.tuple_class /= Void
+			end
+			Result := System.tuple_class.compiled_class = a_class_i.compiled_class
 		end
 
 	is_native_array (a_class_i: CLASS_I): BOOLEAN is
 			-- Is it a NATIVE_ARRAY type?
+		require
+			a_class_i_not_void: a_class_i /= Void
+		local
+			l_native: CLASS_I
 		do
-			Result := System.native_array_class = a_class_i
+			l_native := System.native_array_class
+			Result := l_native /= Void and then (l_native.compiled_class = a_class_i.compiled_class)
 		end
 		
 	is_typed_pointer (a_class_i: CLASS_I): BOOLEAN is
 			-- Is it a TYPED_POINTER type?
+		require
+			a_class_i_not_void: a_class_i /= Void
 		do
-			Result := System.typed_pointer_class = a_class_i
+			check
+				typed_pointer_class_not_void: System.typed_pointer_class /= Void
+			end
+			Result := System.typed_pointer_class.compiled_class = a_class_i.compiled_class
 		end
 
 feature -- Conveniences

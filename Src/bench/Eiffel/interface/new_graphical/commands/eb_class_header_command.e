@@ -271,14 +271,13 @@ feature {NONE} -- Implementation
 				text_has_correct_syntax: stone_as /= Void
 			end
 			click_ast := stone_as.click_ast
-			sp := click_ast.start_position + 1
+			sp := click_ast.start_position
 			if stone_as.generics_end_position > 0 then
-				ep := stone_as.generics_end_position + 1
+				ep := stone_as.generics_end_position
 			else
-				ep := click_ast.end_position
+				ep := click_ast.end_position - 1
 			end
-			text.replace_substring ("", sp, ep)
-			text.insert_string (new_name, sp)
+			text.replace_substring (new_name, sp, ep)
 			if not new_generics.is_empty then
 				text.insert_string (" " + new_generics, sp + new_name.count)
 			end

@@ -5,8 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class
+deferred class
 	CLICKABLE_AST
+	
+inherit
+	AST_EIFFEL
+		undefine
+			type_check, byte_node, number_of_breakpoint_slots
+		end
 
 feature -- Properties
 

@@ -67,6 +67,11 @@ feature -- Access
 		do
 		end
 
+	is_property_or_event: BOOLEAN is
+			-- Is entity an event or property related feature?
+		do
+		end
+		
 feature -- Status report
 
 	has_arguments: BOOLEAN is

@@ -26,7 +26,7 @@ inherit
 		end
 
 create
-	make_from_absolute_pos, make_from_relative_pos
+	make_from_absolute_pos, make_from_relative_pos, make_from_character_pos
 
 feature -- Initialization
 
@@ -106,6 +106,18 @@ feature -- Access
 			loop
 				Result := Result + current_token.length
 				current_token := current_token.previous
+			end
+		end
+
+		--| Other functions
+
+	item: CHARACTER is
+			-- Character current points on
+		do
+			if token = line.eol_token then
+				Result := '%N'
+			else
+				Result := token.image @ pos_in_token
 			end
 		end
 
@@ -500,7 +512,7 @@ feature -- Transformation
 				--| (except first and last line, of course).
 			cline := line
 			t := token
-			if token.length <= pos_in_token + n then
+			if token.length > pos_in_token + n then
 					--| All the characters to erase are in the same token.
 				pos := pos_in_token + n
 			else

@@ -283,7 +283,7 @@ feature -- commands to be executed
 			read_mask.set_medium (a_command.active_medium)
 			read_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_removed: read_command_list.has (a_command)
+			command_added: read_command_list.has (a_command)
 		end
 
 	remove_read_command (a_command: POLL_COMMAND) is
@@ -333,7 +333,7 @@ feature -- commands to be executed
 			write_mask.set_medium (a_command.active_medium)
 			write_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_removed: write_command_list.has (a_command)
+			command_added: write_command_list.has (a_command)
 		end
 
 	remove_write_command (a_command: POLL_COMMAND) is
@@ -381,7 +381,7 @@ feature -- commands to be executed
 			except_mask.set_medium (a_command.active_medium)
 			exception_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_removed: exception_command_list.has (a_command)
+			command_added: exception_command_list.has (a_command)
 		end
 
 	remove_exception_command (a_command: POLL_COMMAND) is

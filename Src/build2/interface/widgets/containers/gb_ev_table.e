@@ -75,8 +75,9 @@ feature -- Access
 			create row_spacing_entry.make (Current, Result, "Row spacing", agent set_row_spacing (?), agent valid_spacing (?))
 			create column_spacing_entry.make (Current, Result, "Column spacing", agent set_column_spacing (?), agent valid_spacing (?))
 			create border_width_entry.make (Current, Result, "Border width", agent set_border_width (?), agent valid_spacing (?))
-			create homogeneous_button.make_with_text ("Enable_homogeneous")
+			create homogeneous_button.make_with_text ("Is_homogeneous?")
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
+			homogeneous_button.select_actions.extend (agent update_editors)
 			Result.extend (homogeneous_button)
 			create layout_button.make_with_text ("Position children")
 			if first.widget_count = 0 then
@@ -93,12 +94,19 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
+			homogeneous_button.select_actions.block
 			rows_entry.set_text (first.rows.out)
 			columns_entry.set_text (first.columns.out)
 			border_width_entry.set_text (first.border_width.out)
 			column_spacing_entry.set_text (first.column_spacing.out)
 			row_spacing_entry.set_text (first.row_spacing.out)
-
+			if first.is_homogeneous then
+				homogeneous_button.enable_select
+				homogeneous_button.set_text ("Disable homogeneous")
+			else
+				homogeneous_button.disable_select
+				homogeneous_button.set_text ("Enable homogeneous")
+			end
 				-- We cannot check whether layout_window.is_show_requested,
 				-- which is what we really should be checking for, as
 				-- checking this re-creates the window which is not good.
@@ -108,6 +116,7 @@ feature -- Access
 				selected_item := Void
 				draw_widgets
 			end
+			homogeneous_button.select_actions.resume
 		end
 		
 feature {GB_XML_STORE} -- Output
@@ -1033,7 +1042,7 @@ feature {NONE} -- Attributes
 	rows_entry, columns_entry, row_spacing_entry, column_spacing_entry, border_width_entry: GB_INTEGER_INPUT_FIELD
 		-- Input widgets used.
 		
-	homogeneous_button: EV_BUTTON
+	homogeneous_button: EV_CHECK_BUTTON
 		-- Toggles `is_homogeneous' for table.
 		
 	layout_button: EV_BUTTON

@@ -14,17 +14,18 @@ inherit
 			emit_tabs as old_emit_tabs,
 			make as old_make
 		redefine
-			put_breakable, formal_name
+			put_breakable, formal_name, put_class_name
 		end
 	FORMAT_CONTEXT
 		rename
 			make as old_make
 		redefine
 			put_breakable, emit_tabs,
-			formal_name
+			formal_name, put_class_name
 		select
 			emit_tabs
-		end
+		end;
+	SHARED_WORKBENCH
 
 creation
 
@@ -72,6 +73,25 @@ feature -- Element change
 		do
 			Result := clone (e_class.generics.i_th (pos).formal_name)
 			Result.to_upper;
+		end;
+
+	put_class_name (s: STRING) is
+			-- Append `s' to `text'.
+		local
+			classi: CLASS_I;
+			tmp: STRING
+		do
+			if not tabs_emitted then
+				emit_tabs;
+			end;
+			tmp := clone (s);
+			tmp.to_lower;
+			classi := Universe.class_named (tmp, e_class.cluster);
+			if classi = Void then
+				text.add_default_string (s);
+			else
+				text.add_classi (classi, s);
+			end
 		end;
 
 feature {NONE} -- Implementation

@@ -48,7 +48,7 @@
 			<size>3</size>.NET issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Corrected processing of literal floating point fields from external assemblies to obtain proper values (e.g., <code><cluster_name>System</cluster_name><symbol>.</symbol><class_name>Math</class_name><symbol>.</symbol><feature_name>PI</feature_name></code>).</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

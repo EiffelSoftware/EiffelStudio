@@ -16,7 +16,7 @@ inherit
 			set_header_file_name as set_definition_header_file_name
 		end
 
-	WIZARD_SHARED_GENERATORS
+	WIZARD_SHARED_MAPPER_HELPERS
 		export
 			{NONE} all
 		end

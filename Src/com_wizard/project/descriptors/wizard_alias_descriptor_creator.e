@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATORS
+	WIZARD_SHARED_MAPPER_HELPERS
 		export
 			{NONE} all
 		end
@@ -73,7 +73,7 @@ feature -- Basic operations
 			
 			create c_header_file_name.make (30)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
-				c_header_file_name.append (Alias_header_file_name.twin)
+				c_header_file_name.append ("ecom_aliases.h")
 			end
 
 			type_desc := a_type_info.type_attr.type_alias

@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATORS
+	WIZARD_SHARED_MAPPER_HELPERS
 		export
 			{NONE} all
 		end
@@ -349,7 +349,7 @@ feature -- Access
 							%EIF_INTEGER_FUNCTION eiffel_function = 0;%N%T%T%
 							%eiffel_function = eif_integer_function (%"" + 
 										add_feature_name (source_interface) + "%", type_id);%N%T%T%
-							%EIF_OBJECT tmp_object = eif_protect (" + Ce_mapper +
+							%EIF_OBJECT tmp_object = eif_protect (rt_ce" +
 								".ccom_ce_pointed_interface (p" + source_interface.name + 
 								", %"" + source_interface.implemented_interface.eiffel_class_name + "%"));%N%T%T%
 							%*pdwCookie = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function)" + 

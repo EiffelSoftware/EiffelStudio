@@ -32,23 +32,22 @@ feature -- Access
 	compiler_kernel: PROJECT_MANAGER
 			-- Implementation.
 
-
 	project_file_name: STRING is
 			-- Full path to .epr file.
 		do
-			-- Put Implementation here.
+			Result := compiler_kernel.project_file_name
 		end
 
 	ace_file_name: STRING is
 			-- Full path to Ace file.
 		do
-			-- Put Implementation here.
+			Result := compiler_kernel.ace_file_name
 		end
 
 	project_directory: STRING is
 			-- Project directory.
 		do
-			-- Put Implementation here.
+			Result := compiler_kernel.project_directory
 		end
 		
 	valid_project: BOOLEAN is
@@ -60,7 +59,7 @@ feature -- Access
 	is_compiled: BOOLEAN is
 			-- Has system been compiled?
 		do
-			--| FIXME to be implemented.
+			Result := compiler_kernel.is_compiled
 		end
 		
 	last_error_message: STRING is
@@ -84,7 +83,7 @@ feature -- Access
 	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
 			-- Project Properties.
 		do
-			--| FIXME to be implemented.
+			Result := compiler_kernel.project_properties
 		end
 
 feature -- Basic Operations

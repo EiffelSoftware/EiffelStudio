@@ -10,27 +10,34 @@ indexing
 
 deferred class PATH_NAME
 
+inherit
+	STRING
+		rename
+			make as string_make,
+			make_from_string as string_make_from_string,
+			extend as string_extend
+		export
+			{NONE} all
+			{ANY} empty, to_c
+		end
+
 feature -- Initialization
 
 	make is
 			-- Create path name object.
 		do
-			!!path.make (0);
+			string_make (0);
 		end;
 
 	make_from_string (p: STRING) is
 			-- Create path name object and initialize it with the
 			-- path name `p'
 		do
-			path := clone (p);
+			string_make (0);
+			append (p);
 		ensure
 			valid_file_name: is_valid
 		end
-
-feature -- Implementation
-
-	path: STRING
-		-- Text representation of the path name
 
 feature
 
@@ -39,9 +46,9 @@ feature
 		require
 			string_exists: volume_name /= Void
 			valid_volume_name: is_volume_name_valid (volume_name)
-			empty_path_name: path.empty
+			empty_path_name: empty
 		do
-			path := volume_name
+			append (volume_name)
 		ensure
 			valid_file_name: is_valid
 		end
@@ -55,13 +62,13 @@ feature
 			new_size: INTEGER
 			str1, str2: ANY
 		do
-			new_size := path.count + directory_name.count + 3;
-			if path.capacity < new_size then
-				path.resize (new_size)
+			new_size := count + directory_name.count + 5;
+			if capacity < new_size then
+				resize (new_size)
 			end
-			str1 := path.area;
-			str2 := directory_name.area;
-			c_append_directory ($path, $str1, $str2);
+			str1 := to_c;
+			str2 := directory_name.to_c;
+			c_append_directory ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
 		end
@@ -75,13 +82,13 @@ feature
 			new_size: INTEGER
 			str1, str2: ANY
 		do
-			new_size := path.count + directory_name.count + 3;
-			if path.capacity < new_size then
-				path.resize (new_size)
+			new_size := count + directory_name.count + 5;
+			if capacity < new_size then
+				resize (new_size)
 			end
-			str1 := path.area;
-			str2 := directory_name.area;
-			c_set_directory ($path, $str1, $str2);
+			str1 := to_c;
+			str2 := directory_name.to_c;
+			c_set_directory ($Current, $str1, $str2);
 		ensure
 			valid_file_name: is_valid
 		end
@@ -131,11 +138,6 @@ feature
 		deferred
 		end
 
-	exists: BOOLEAN is
-			-- Does the path name exist?
-		deferred
-		end
-
 feature {NONE} -- Externals
 
 	c_is_volume_name_valid (p: POINTER): BOOLEAN is
@@ -162,7 +164,7 @@ end -- class PATH_NAME
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -175,7 +175,6 @@ feature {EV_ANY_I} -- implementation
 				ev_children.forth
 			end
 			if not ev_children.after then
-				remove_item_actions.call ([v])
 				remove
 			end		
 			ev_children.go_i_th (original_index)
@@ -297,6 +296,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/27 19:11:31  rogers
+--| Removed call to remove_item_actions from prune.
+--|
 --| Revision 1.23  2000/03/24 19:20:25  rogers
 --| Added initialize, item_parented item_orphaned, new_item_actions and remove_item_actions.Set up addition and removal so new_item_actions or remove_item_actions are called appropriately.
 --|

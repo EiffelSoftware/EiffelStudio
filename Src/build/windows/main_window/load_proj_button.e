@@ -9,9 +9,6 @@ inherit
 	WINDOWS;
 	LICENCE_COMMAND
 	QUEST_POPUPER
-		redefine
-			continue_after_question_popdown
-		end
 
 creation
 
@@ -54,14 +51,14 @@ feature {NONE}
 
 feature {NONE}
 
-	continue_after_question_popdown (yes: BOOLEAN) is
-		local
-			pw: OPEN_PROJ_WIN
+	question_ok_action is
 		do
-			if yes then
-				popup_window
-			end
-		end
+			popup_window
+		end;
+
+	question_cancel_action is
+		do
+		end;
 
 	open_new_application is
 		local

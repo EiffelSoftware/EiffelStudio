@@ -6,10 +6,7 @@ inherit
 	COMMAND_ARGS;
 	CONSTANTS;
 	CLOSEABLE
-	QUEST_POPUPER	
-		redefine
-			continue_after_question_popdown
-		end;
+	QUEST_POPUPER;
 	SHARED_CONTEXT;
 	LICENCE_COMMAND
 
@@ -265,25 +262,29 @@ feature -- Closing Current
 			end;
 		end;
 
-	continue_after_question_popdown (yes: BOOLEAN) is
+	question_ok_action is
 		local
 			save_proj: SAVE_PROJECT;
 			quit_app_com: QUIT_NOW_COM
 		do
 			if save_question then
-				if yes then
-					!!save_proj;
-					save_proj.execute (Void);
-				end;
+				!!save_proj;
+				save_proj.execute (Void);
 				save_question := False;
 				question_box.popup (Current, Messages.exit_qu, Void)
 			else
-				if yes then
-					discard_licence;
-					!! quit_app_com;
-					quit_app_com.execute (Void)
-				end;
+				discard_licence;
+				!! quit_app_com;
+				quit_app_com.execute (Void)
 			end
+		end;
+
+	question_cancel_action is
+		do
+			if save_question then
+				save_question := False;
+				question_box.popup (Current, Messages.exit_qu, Void)
+			end;
 		end;
 
 	popuper_parent: COMPOSITE is

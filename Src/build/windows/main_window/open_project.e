@@ -9,9 +9,6 @@ inherit
 	SHARED_STORAGE_INFO;
 	ERROR_POPUPER;
 	QUEST_POPUPER
-		redefine
-			continue_after_question_popdown
-		end;
 
 feature 
 
@@ -68,15 +65,16 @@ feature
 			end
 		end;
 
-	continue_after_question_popdown (yes: BOOLEAN) is
+	question_ok_action is
 		do
-			if yes then
-				retrieve_project (Environment.restore_directory)
-				history_window.set_unsaved_application;
-			else
-				retrieve_project (Environment.storage_directory);
-				history_window.set_saved_application;
-			end
+			retrieve_project (Environment.restore_directory)
+			history_window.set_unsaved_application;
+		end;
+
+	question_cancel_action is
+		do
+			retrieve_project (Environment.storage_directory);
+			history_window.set_saved_application;
 		end;	
 
 feature {NONE}

@@ -21,17 +21,14 @@ inherit
 	COMMAND;
 	WINDOWS;
 	ERROR_POPUPER;
-	QUEST_POPUPER
-		redefine
-			continue_after_question_popdown
-		end;
+	QUEST_POPUPER;
 	CLOSEABLE
 
 creation
 
 	make
 
-feature {NONE, CMD_ED_POPUP_CLASS_NAME, CMD_INH_HOLE, CMD_EDIT_HOLE, CMD_ED_GENERATE}
+feature 
 
 	-- Currently edited command.
 	-- Void if `current_command' is
@@ -604,12 +601,14 @@ feature {USER_CMD}
 
 feature -- Top shell features
 
-	continue_after_question_popdown (ok: BOOLEAN) is
+	question_ok_action is
 		do
-			if ok then
-				text_editor.set_text (edited_command.template)
-			end
+			text_editor.set_text (edited_command.template)
 		end
+
+	question_cancel_action is
+		do
+		end;
 
 	popuper_parent: COMPOSITE is
 		do

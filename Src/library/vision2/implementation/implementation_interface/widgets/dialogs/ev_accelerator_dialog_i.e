@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 			litem.set_data(key.key_9)
 		end
 
-feature {EV_ACCELERATOR_SELECTION_DIALOG_IMP} -- Execution features
+feature -- Execution features
 
 	changed_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed each time the user change a parameter of the accelerator.

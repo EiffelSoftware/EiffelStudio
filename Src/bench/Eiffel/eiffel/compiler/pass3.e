@@ -47,7 +47,7 @@ feature -- Execution
 				pass3_c.execute (deg_output, classes_left)
 				classes_left := classes_left - 1
 
-				changed_classes.forth;
+				changed_classes.remove
 			end;
 
 			changed_classes.wipe_out

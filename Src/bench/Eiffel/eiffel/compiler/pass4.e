@@ -33,10 +33,10 @@ feature
 			classes_left: INTEGER
 		do
 			if System.freeze then
-	      		from
-      				deg_output := Degree_output
+				from
+					deg_output := Degree_output
 					classes_left := changed_classes.count
-	      	      	deg_output.put_start_degree (Degree_number, classes_left)
+					deg_output.put_start_degree (Degree_number, classes_left)
 					changed_classes.start
 				until
 					changed_classes.after
@@ -52,10 +52,10 @@ feature
 				deg_output.put_end_degree
 				System.set_current_class (Void)
 			else
-	      		from
-      				deg_output := Degree_output
+				from
+					deg_output := Degree_output
 					classes_left := changed_classes.count
-	      	      	deg_output.put_start_degree (Degree_number, classes_left)
+					deg_output.put_start_degree (Degree_number, classes_left)
 					changed_classes.start
 				until
 					changed_classes.after

@@ -18,7 +18,15 @@ inherit
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
-			on_right_button_up
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_set_focus,
+			on_kill_focus,
+			on_key_down,
+			on_key_up,
+			on_set_cursor
 		end
 
 	WEL_COLOR_CONSTANTS
@@ -70,6 +78,24 @@ feature -- Status report
 
 feature -- Basic operation
 
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
+			-- Find the item at the given position.
+			-- Position is relative to the toolbar.
+		local
+			index: INTEGER
+			point: WEL_POINT
+			button: WEL_TOOL_BAR_BUTTON
+		do
+			create point.make (x_pos, y_pos)
+--			index := cwin_send_message_result (item, Tb_hittest, 0, point.to_integer)
+			index := cwin_send_message_result (item, 1093, 0, point.to_integer)
+			create button.make
+			if index >= 0 then
+				cwin_send_message (item, Tb_getbutton, index, button.to_integer)
+				Result := ev_children @ button.command_id
+			end
+		end
+
 	internal_index (command_id: INTEGER): INTEGER is
 			-- Retrieve the current index of the button with
 			-- `command_id' as id.
@@ -94,7 +120,7 @@ feature -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 			-- A new style to avoid a line on the top.
@@ -146,6 +172,16 @@ feature {NONE} -- Implementation
 		do
 			internal_propagate_event (Cmd_item_button_one_press,
 				x_pos, y_pos)
+			parent.on_left_button_down (keys, x_pos, y_pos)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_three_press,
+				x_pos, y_pos)
+--			parent.on_middle_button_down (keys, x_pos, y_pos)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -154,6 +190,7 @@ feature {NONE} -- Implementation
 		do
 			internal_propagate_event (Cmd_item_button_three_press,
 				x_pos, y_pos)
+			parent.on_right_button_down (keys, x_pos, y_pos)
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -162,6 +199,16 @@ feature {NONE} -- Implementation
 		do
 			internal_propagate_event (Cmd_item_button_one_release,
 				x_pos, y_pos)
+			parent.on_left_button_up (keys, x_pos, y_pos)
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_one_release,
+				x_pos, y_pos)
+--			parent.on_middle_button_up (keys, x_pos, y_pos)
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -170,6 +217,64 @@ feature {NONE} -- Implementation
 		do
 			internal_propagate_event (Cmd_item_button_three_release,
 				x_pos, y_pos)
+			parent.on_right_button_up (keys, x_pos, y_pos)
+		end
+
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondblclk message
+		do
+			parent.on_left_button_double_click (keys, x_pos, y_pos)
+		end
+
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+		do
+--			parent.on_middle_button_double_click (keys, x_pos, y_pos)
+		end
+
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+
+		do
+			parent.on_right_button_double_click (keys, x_pos, y_pos)
+		end
+
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mousemove message
+		do
+			parent.on_mouse_move (keys, x_pos, y_pos)
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Wm_keydown message
+
+		do
+			parent.on_key_down (virtual_key, key_data)
+		end
+
+	on_key_up (virtual_key, key_data: INTEGER) is
+			-- Wm_keyup message
+		do
+			parent.on_key_up (virtual_key, key_data)
+		end
+
+	on_set_focus is
+			-- Wm_setfocus message
+		do
+			parent.on_set_focus
+		end
+
+	on_kill_focus is
+			-- Wm_killfocus message
+		do
+			parent.on_kill_focus
+		end
+
+	on_set_cursor (hit_code: INTEGER) is
+			-- Wm_setcursor message.
+			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
+		do
+			parent.on_set_cursor (hit_code)
 		end
 
 end -- class EV_INTERNAL_TOOL_BAR_IMP

@@ -41,8 +41,6 @@ feature {NONE} -- Initialization
 			a_log_font_not_void: a_log_font /= Void
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
-		ensure
-			exists: exists
 		end
 
 feature -- Access

@@ -55,8 +55,6 @@ feature {NONE} -- Initialization
 			a_log_pen_not_void: a_log_pen /= Void
 		do
 			item := cwin_create_pen_indirect (a_log_pen.item)
-		ensure
-			exist: exists
 		end
 
 feature -- Access

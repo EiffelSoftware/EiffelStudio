@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			-- Default alignment used during
 			-- creation of real implementation
 		do
-			Result := feature {EV_TEXT_ALIGNABLE_CONSTANTS}.Ev_text_alignment_left
+			Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 
 end -- class EV_FRAME_I

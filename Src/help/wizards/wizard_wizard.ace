@@ -60,6 +60,9 @@ cluster
 	all wel:		"$EIFFEL_SRC\library\wel"
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
+		exclude
+			"unix"; "CVS"
+		end
 
 external
 

@@ -58,6 +58,9 @@ cluster
 
 		-- Wizard library
 	all wizard_library: "$EIFFEL_SRC\library\wizard"
+		exclude
+			"unix"; "CVS"
+		end
 
 		-- Lex and Parse
 	lex: "$EIFFEL_SRC\library\lex"

@@ -72,7 +72,7 @@ cluster
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
-			"CVS"; 
+			"unix"; "CVS"
 		end
 
 	all lex:		"$EIFFEL_SRC\library\lex"

@@ -1,0 +1,100 @@
+system
+	wizard
+
+root
+	WIZARD_MANAGER: make_and_launch
+
+default
+	assertion(require)
+	assertion(ensure)
+	address_expression(no)
+	array_optimization(no)
+	console_application(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments("/usr/local/home/xavier/Delivery/bench/wizards/precompile")
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("win_dispatcher")
+	disabled_debug("wel")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("vision2_windows")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+
+-- Root cluster
+-- Precompilation Wizard
+-- EiffelBase
+-- Wel
+-- EiffelVision2
+-- Wizard library
+-- Lex and Parse
+
+cluster
+	root_cluster:		"$EIFFEL_SRC/help/wizards"
+		exclude
+			"CVS"; 
+		end
+
+	precompile_wizard (root_cluster):		"$/eprecompile"
+		exclude
+			"CVS"; 
+		end
+
+	all base:		"$EIFFEL_SRC/library/base"
+		exclude
+			"desc"; "table_eiffel3"; "CVS"; 
+		end
+
+	all gel:		"$EIFFEL_SRC/library/gel"
+		exclude
+			"CVS"; 
+		default
+			assertion(ensure)
+		end
+
+	all vision2:		"$EIFFEL_SRC/library/vision2"
+		exclude
+			"mswin"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
+		end
+
+	all wizard_library:		"$EIFFEL_SRC/library/wizard"
+		exclude
+			"mswin"; "CVS"; 
+		end
+
+	all lex:		"$EIFFEL_SRC/library/lex"
+		exclude
+			"CVS"; 
+		end
+
+	all parse:		"$EIFFEL_SRC/library/parse"
+		exclude
+			"CVS"; 
+		end
+	all helpers (root_cluster): "$/linux_helpers"
+
+external
+
+	include_path:
+		"\$(EIFFEL_SRC)/library/event/Clib",
+		"\$(EIFFEL_SRC)/library/vision2/spec/include",
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+			-- For system time.
+--		"/usr/lib/libc.a",
+		"-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+end

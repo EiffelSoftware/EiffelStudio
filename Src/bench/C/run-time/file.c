@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -975,15 +976,28 @@ int op;
 	int uid = buf->st_uid;				/* File owner */
 	int gid = buf->st_gid;				/* File group */
 
+#ifdef HAS_GETEUID
+	int euid, egid;						/* Effective user and group */
+#endif
+
     switch (op) {
 	case 0: /* Is file readable */
 #ifdef EIF_WIN32
 	return (EIF_BOOLEAN)((mode && S_IREAD) ? '\01' : '\0');
 #elif defined HAS_GETEUID
-		if (uid == geteuid())
+		euid = geteuid();
+		egid = getegid();
+
+		if (euid == 0)
+			return (EIF_BOOLEAN) '\01';
+		else if (uid == euid)
 			return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
-		else if (gid == getegid())
+		else if (gid == egid)
 			return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
+#endif
 		else
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
@@ -991,10 +1005,19 @@ int op;
 #ifdef EIF_WIN32
 	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
 #elif defined HAS_GETEUID
-		if (uid == geteuid())
+		euid = geteuid();
+		egid = getegid();
+
+		if (euid == 0)
+			return (EIF_BOOLEAN) '\01';
+		else if (uid == euid)
 			return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
-		else if (gid == getegid())
+		else if (gid == egid)
 			return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
+#endif
 		else
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
@@ -1002,10 +1025,19 @@ int op;
 #ifdef EIF_WIN32
 	return (EIF_BOOLEAN) '\01';
 #elif defined HAS_GETEUID
-		if (uid == geteuid())
+		euid = geteuid();
+		egid = getegid();
+
+		if (euid == 0)
+			return (EIF_BOOLEAN) '\01';
+		else if (uid == euid)
 			return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
-		else if (gid == getegid())
+		else if (gid == egid)
 			return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
+#endif
 		else
 #endif
 			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
@@ -1559,6 +1591,31 @@ int gid;
 	
 	return makestr(str, strlen(str));
 }
+
+#ifdef HAS_GETGROUPS
+
+/* Does the list of groups the user belongs to include `gid'? */
+
+EIF_BOOLEAN eif_group_in_list(gid)
+int gid;
+{
+	Groups_t group_list[NGROUPS_MAX];
+	int i;
+
+	if (getgroups(NGROUPS_MAX, group_list) == -1)
+		eio();
+
+	for (i=0; i< NGROUPS_MAX; i++)
+		if (group_list[i] == gid)
+			{fprintf (stderr, "eif_group_in_list: True\n");
+			return (EIF_BOOLEAN) '\01';
+			}
+
+	fprintf (stderr, "eif_group_in_list: False\n");
+	return (EIF_BOOLEAN) '\0';
+}
+
+#endif
 
 /*
  * Emulation of possibly non-existent system calls.

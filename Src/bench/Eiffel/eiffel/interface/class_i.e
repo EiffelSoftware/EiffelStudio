@@ -442,6 +442,8 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				create {POINTER_REF_B} Result.make (Current)
 			elseif Current = local_system.tuple_class then
 				create {TUPLE_CLASS_B} Result.make (Current)
+			elseif Current = local_system.native_array_class then
+				create {NATIVE_ARRAY_B} Result.make (Current)
 			else
 				create Result.make (Current);
 			end;

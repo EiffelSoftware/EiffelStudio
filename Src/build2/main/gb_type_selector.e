@@ -10,8 +10,8 @@ class
 inherit
 
 	EV_TREE
-		export {NONE}
-			all
+		export
+			{NONE} all
 		undefine
 			is_in_default_state
 		redefine
@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			-- Fill with supported Widgets.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
-			
 		do
 			Precursor {EV_TREE}
 			create tree_item1.make_with_text ("Widgets")
@@ -58,6 +57,18 @@ feature {NONE} -- Initialization
 			tree_item4.expand
 			recursive_do_all (agent strip_leading_ev (?))
 		end
+		
+feature -- Basic operation
+
+	ensure_top_item_visible is
+			-- Ensure that the topmost displayed item
+			-- in `Current' is visible.
+		require
+			is_displayed: is_displayed
+		do
+			ensure_item_visible (i_th (1))
+		end
+		
 
 feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic operations
 

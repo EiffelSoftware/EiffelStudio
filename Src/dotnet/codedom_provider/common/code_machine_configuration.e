@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			non_void_config: machine_config /= Void
 			non_void_compilers_node_if_initialized: initialized implies compilers_node /= Void
 		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.process_exception
 			l_retried := True
 			retry
 		end

@@ -520,9 +520,12 @@ feature {NONE} -- Implementation
 			directory_constant: GB_DIRECTORY_CONSTANT
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			new_pixmap: EV_PIXMAP
+			rescued: BOOLEAN
 		do
 			from
-				create dialog
+				if not rescued then
+					create dialog
+				end
 			until
 				(dialog.file_name.is_empty and shown_once) or opened_file
 			loop
@@ -572,6 +575,19 @@ feature {NONE} -- Implementation
 					relative_directory_combo.extend (list_item)
 				end
 			end
+		rescue
+			rescued := True
+			Show_invalid_file_warning
+			retry
+		end
+		
+	show_invalid_file_warning is
+			-- Display a dialog informing user of invalid file.
+		local
+			warning_dialog: EV_WARNING_DIALOG
+		do
+			create warning_dialog.make_with_text ("Unable to load selected image, as it appears to be invalid.%N%NPlease select a valid image file.")
+			warning_dialog.show_modal_to_window (Current)
 		end
 		
 	modify_directory is
@@ -588,17 +604,27 @@ feature {NONE} -- Implementation
 			list_item: EV_LIST_ITEM
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			directory_value: STRING
+			rescued: BOOLEAN
+			rescued_index: INTEGER
 		do
-			create dialog
-			dialog.show_modal_to_window (Current)
+			if not rescued then
+				create dialog
+				dialog.show_modal_to_window (Current)
+			end
 			if not dialog.directory.is_empty or not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-				pixmap_list.check_actions.block
-				file_path := dialog.directory
-				create directory.make (dialog.directory)
-				supported_types := (create {EV_ENVIRONMENT}).supported_image_formats
-				files := directory.linear_representation
+				if not rescued then
+					pixmap_list.check_actions.block
+					file_path := dialog.directory
+					create directory.make (dialog.directory)
+					supported_types := (create {EV_ENVIRONMENT}).supported_image_formats
+					files := directory.linear_representation
+				end
 				from
-					files.start
+					if not rescued then
+						files.start	
+					else
+						files.go_i_th (rescued_index + 1)
+					end
 				until
 					files.off
 				loop
@@ -639,6 +665,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			update_ok_button
+		rescue
+			rescued := True
+			rescued_index := files.index
+			retry
 		end
 		
 	display_pixmap_info (a_list_item: EV_LIST_ITEM) is

@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_TEXT_AREA_I
-		undefine
-			build
-		end
 		
 	EV_TEXT_COMPONENT_IMP
 

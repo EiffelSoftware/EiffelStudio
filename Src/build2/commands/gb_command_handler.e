@@ -11,7 +11,7 @@ inherit
 	
 	ANY
 	
-	GB_ACCESSIBLE_XML_HANDLER
+	GB_SHARED_XML_HANDLER
 	
 feature -- Access
 

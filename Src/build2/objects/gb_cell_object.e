@@ -13,7 +13,7 @@ inherit
 			object, display_object, is_full
 		end
 
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 	
 create
 	make_with_type,

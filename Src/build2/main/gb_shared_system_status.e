@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 
 feature -- Access
 

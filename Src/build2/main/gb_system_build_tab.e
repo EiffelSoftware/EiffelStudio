@@ -16,7 +16,7 @@ inherit
 			is_equal, copy, default_create
 		end
 	
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create, copy, is_equal
 		end

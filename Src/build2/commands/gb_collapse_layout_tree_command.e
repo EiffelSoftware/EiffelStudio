@@ -14,9 +14,9 @@ inherit
 			make, execute
 		end
 
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 	
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 
 create
 	make

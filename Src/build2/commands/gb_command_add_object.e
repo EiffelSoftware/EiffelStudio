@@ -14,13 +14,13 @@ class
 	
 inherit
 	
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 	
 	GB_COMMAND
 	
-	GB_ACCESSIBLE_HISTORY
+	GB_SHARED_HISTORY
 	
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 	
 	GB_WIDGET_UTILITIES
 	
@@ -181,7 +181,6 @@ feature {NONE} -- Implementation
 			-- For every item in `editors', update to reflect removal of `deleted_object'.
 		local
 			editor: GB_OBJECT_EDITOR
-			window_parent: EV_WINDOW
 		do
 			from
 				editors.start

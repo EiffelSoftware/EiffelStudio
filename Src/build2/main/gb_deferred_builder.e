@@ -32,8 +32,6 @@ feature {GB_XML_LOAD} -- Basic operation
 			-- `all_element' during the process.
 		require
 			lists_equal_in_length: all_gb_ev.count = all_element.count
-		local
-			counter: INTEGER
 		do
 			from
 				all_gb_ev.start

@@ -39,9 +39,9 @@ feature -- Output
 			st: STRUCTURED_TEXT
 		do
 			if not retried then
-				warning_list := handler.warning_list
-				!! st.make;
 				from
+					!! st.make;
+					warning_list := handler.warning_list
 					warning_list.start
 				until
 					warning_list.after
@@ -57,13 +57,11 @@ feature -- Output
 						-- put a separation before the next message
 					display_separation_line (st)
 				end;
-				warning_list.wipe_out;
 			else
 				retried := False;
 				display_error_error (st)
 			end;
-			output_window.process_text (st);
-			output_window.display
+			output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True;
@@ -80,16 +78,17 @@ feature -- Output
 			to_go: INTEGER
 		do
 			if not retried then
-				!! st.make;
-				error_list := handler.error_list;
 				from
+					!! st.make;
+					error_list := handler.error_list;
 					error_list.start
 				until
 					error_list.after
 				loop
-					display_before_error_trace (st)
+					display_separation_line (st);
+					st.add_new_line;
 					error_list.item.trace (st);
-					display_after_error_trace (st)
+					st.add_new_line;
 					error_list.forth;
 				end;
 				display_separation_line (st);	

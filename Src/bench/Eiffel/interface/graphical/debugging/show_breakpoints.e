@@ -40,14 +40,19 @@ feature
 		do
 			if stone /= Void then
 				feature_i := stone.feature_i;
-				if feature_i.is_debuggable then
+				if feature_i.body_index /= 0 and then
+					feature_i.is_debuggable 
+				then
 					old_format (stone)
 				else
 					tool ?= text_window.tool;
 					if tool /= Void then
 						tool.showtext_command.execute (stone)
 					end;
-					if feature_i.is_external then
+					if feature_i.body_index = 0 then
+							--FIXME need specify error message
+						message := w_Cannot_debug_feature
+					elseif feature_i.is_external then
 						message := w_Cannot_debug_externals
 					elseif feature_i.is_deferred then
 						message := w_Cannot_debug_deferreds
@@ -81,7 +86,7 @@ feature
 
 feature {NONE}
 
-	display_info (i: INTEGER; s: FEATURE_STONE) is
+	display_info (s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
 			text_window.process_text (debug_context_text (s))

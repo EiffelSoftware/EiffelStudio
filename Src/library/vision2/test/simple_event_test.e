@@ -63,8 +63,8 @@ feature -- Access
 			create t
 			create b.make_with_text ("Test button")
 			b.select_actions.extend (~on_select)
-			b.press_actions.extend (~on_press)
-			b.release_actions.extend (~on_release)
+			b.pointer_button_press_actions.extend (~on_press)
+			b.pointer_button_release_actions.extend (~on_release)
 			first_window.extend (b)
 			t.actions.extend (~do_test)
 			t.set_interval (5000)

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_TEXT_CONTAINER
+	EV_TEXTABLE
 
 inherit
 	EV_ANY
@@ -83,10 +83,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	implementation: EV_TEXT_CONTAINER_I
+	implementation: EV_TEXTABLE_I
 			-- Implementation of text container
 
-end -- class EV_TEXT_CONTAINER
+end -- class EV_TEXTABLE
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -88,6 +88,15 @@ feature -- Duplication
 		deferred
 		end
 
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Pixmap region of `Current' represented by rectangle `area'
+		require
+			area_not_void: area /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAP

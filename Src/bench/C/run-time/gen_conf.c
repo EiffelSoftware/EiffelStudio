@@ -289,7 +289,7 @@ rt_shared void eif_gen_conf_cleanup ();
 
 rt_private EIF_MUTEX_TYPE   *eif_gen_mutex = (EIF_MUTEX_TYPE *) 0;
 
-rt_public int16 eifthd_compound_id (int16 *, EIF_REFERENCE , int16, int16 *);
+rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
 rt_public int16 eifthd_final_id (int16, int16 *, int16 **, EIF_REFERENCE );
 rt_public int16 eifthd_gen_param (int16, EIF_REFERENCE , int, char *, long *);
 rt_public int eifthd_gen_count (EIF_REFERENCE );

@@ -301,7 +301,7 @@ feature
 				count := arguments.count;
 				if generate_current then
 					!! Result.make (1, count + 1)
-					Result.put ("char *", 1)
+					Result.put ("EIF_REFERENCE", 1)
 					j := 2
 				else
 					!! Result.make (1, count)
@@ -319,7 +319,7 @@ feature
 				end
 			elseif generate_current then
 				!! Result.make (1, 1)
-				Result.put ("char *", 1)
+				Result.put ("EIF_REFERENCE", 1)
 			else
 				!! Result.make (1, 0)
 			end;

@@ -143,7 +143,7 @@ feature -- Code generation
 		end
 
 	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
-				entry: POLY_TABLE [ENTRY]; type: CL_TYPE_I; ret_type: TYPE_C) is
+				type: CL_TYPE_I; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
 		do
 			buffer.putstring (external_name)

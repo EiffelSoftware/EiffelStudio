@@ -35,6 +35,9 @@ feature -- Access
 				end
 				a_coclass.interface_descriptors.forth
 			end
+			if Result.dual then
+				Result := Result.dispinterface_descriptor
+			end
 		end
 
 feature -- Basic operations
@@ -125,7 +128,7 @@ feature {NONE} -- Implementation
 			-- Add constructor.
 		local
 			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
-			a_signature: STRING
+			a_signature, a_constructor_body: STRING
 		do
 			create constructor_writer.make
 
@@ -136,7 +139,14 @@ feature {NONE} -- Implementation
 
 			constructor_writer.set_signature (a_signature)
 
-			constructor_writer.set_body (constructor_body)
+			create a_constructor_body.make (1000)
+			a_constructor_body.append (Tab)
+			a_constructor_body.append (Type_id)
+			a_constructor_body.append (Space_equal_space)
+			a_constructor_body.append (Type_id_variable_name)
+			a_constructor_body.append (Semicolon)
+			a_constructor_body.append (constructor_body)
+			constructor_writer.set_body (a_constructor_body)
 		
 			check
 				valid_constructor_writer: constructor_writer.can_generate

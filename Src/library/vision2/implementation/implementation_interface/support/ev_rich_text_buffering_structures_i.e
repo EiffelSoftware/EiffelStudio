@@ -90,7 +90,7 @@ feature -- Status Setting
 			if not hashed_formats.has (hashed_character_format) then
 				hashed_formats.put (a_format, hashed_character_format)
 				formats.extend (a_format)
-				heights.extend (a_format.font.height * 2)
+				heights.extend (pixels_to_half_points (a_format.font.height))
 				format_offsets.put (hashed_formats.count, hashed_character_format)
 			
 				build_color_from_format (a_format)
@@ -141,7 +141,7 @@ feature -- Status Setting
 			vertical_offset := formats.i_th (format_index).effects.vertical_offset
 			if vertical_offset /= current_vertical_offset then
 				temp_string.append (start_vertical_offset)
-				height_in_half_points := ((vertical_offset * 72 / screen.vertical_resolution) * 2).truncated_to_integer
+				height_in_half_points := (pixels_to_half_points (vertical_offset))
 				temp_string.append (height_in_half_points.out)
 				current_vertical_offset := vertical_offset
 			end
@@ -173,8 +173,13 @@ feature -- Status Setting
 			end
 		end
 		
-		
-	
+	pixels_to_half_points (pixels: INTEGER): INTEGER is
+			-- `Result' is pixels converted to half points, being
+			-- the meaurement used for font sizes in RTF.
+		do
+			Result := (pixels * 72 // screen.vertical_resolution) * 2
+		end
+
 feature -- Access
 
 	rich_text: EV_RICH_TEXT_I

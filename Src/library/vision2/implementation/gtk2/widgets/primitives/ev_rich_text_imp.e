@@ -37,24 +37,104 @@ feature -- Status Report
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'.
+		local
+			a_buf_x, a_buf_y: INTEGER
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			text_count: INTEGER
 		do
+			gtk_text_view_window_to_buffer_coords (text_view, an_x_position, a_y_position, $a_buf_x, $a_buf_y)
+			create a_text_iter.make
+			gtk_text_view_get_iter_at_location (text_view, a_text_iter.item, a_buf_x, a_buf_y)
+			text_count := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer)
+
+			Result := feature {EV_GTK_EXTERNALS}.gtk_text_iter_get_offset (a_text_iter.item) + 1
+			Result := Result.min (text_count).max (1)
 		end
 		
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
 			-- Position of character at index `an_index'.
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_x, a_y, a_x2, a_y2: INTEGER
+			a_rectangle: MANAGED_POINTER
 		do
+			create a_text_iter.make
+			create a_rectangle.make (feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_size)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, an_index - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_iter_location (text_view, a_text_iter.item, a_rectangle.item)
+			a_x := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (a_rectangle.item)
+			a_y := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (a_rectangle.item)
+			gtk_text_view_buffer_to_window_coords (text_view, a_x, a_y, $a_x2, $a_y2)
+			create Result.set (a_x2, a_y2)
 		end
 		
 	character_displayed (an_index: INTEGER): BOOLEAN is
 			-- Is character `an_index' currently visible in `Current'?
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_x, a_y, a_char_x, a_char_y, a_char_width, a_char_height: INTEGER
+			a_rectangle: MANAGED_POINTER
 		do
+			create a_text_iter.make
+			create a_rectangle.make (feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_size)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, an_index - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_iter_location (text_view, a_text_iter.item, a_rectangle.item)
+			a_x := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (a_rectangle.item)
+			a_y := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (a_rectangle.item)
+			a_char_width := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (a_rectangle.item)
+			a_char_height := feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (a_rectangle.item)
+			gtk_text_view_buffer_to_window_coords (text_view, a_x, a_y, $a_char_x, $a_char_y)
+			Result := (a_char_x >= 0 and a_char_x < width) and then (a_char_y >= 0 and a_char_y < height)
 		end
 	
 feature -- Status report
 
 	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
 			-- `Result' is character format of character `character_index'.
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text_attributes, a_text_appearance: POINTER
+			a_font_description: POINTER
+			a_color: POINTER
+			a_font: EV_FONT
+			font_size, font_weight, font_style: INTEGER
+			a_effects: EV_CHARACTER_FORMAT_EFFECTS
+			a_red, a_blue, a_green: INTEGER
+			a_family: STRING
 		do
+			create Result
+			create a_text_iter.make
+			feature {EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 1)
+			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
+			gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
+			
+			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
+			
+
+			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
+			create a_family.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
+			font_style := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
+			font_weight := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
+			font_size := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_size (a_font_description) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+
+			
+			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
+			a_red := feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256
+			a_blue := feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
+			a_green := feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (a_red, a_green, a_blue))
+			
+			create a_effects
+			if gtk_text_appearance_struct_strikethrough (a_text_appearance) > 0 then
+				a_effects.enable_striked_out
+			end
+			if gtk_text_appearance_struct_underline (a_text_appearance) > 0 then
+				a_effects.enable_underlined
+			end
+			
+			Result.set_effects (a_effects)
+	
+			gtk_text_attributes_free (a_text_attributes)
 		end
 
 feature -- Status setting
@@ -159,6 +239,78 @@ feature -- Status setting
 		
 feature {NONE} -- Implementation
 
+	gtk_text_attributes_struct_font_description (a_text_attributes: POINTER): POINTER is
+			external
+				"C struct GtkTextAttributes access font use <gtk/gtk.h>"
+			end
+
+	gtk_text_attributes_struct_text_appearance (a_text_attributes: POINTER): POINTER is
+			external
+				"C struct GtkTextAttributes access &appearance use <gtk/gtk.h>"
+			end
+
+	gtk_text_appearance_struct_bg_color (a_text_appearance: POINTER): POINTER is
+			external
+				"C struct GtkTextAppearance access &bg_color use <gtk/gtk.h>"
+			end
+			
+	gtk_text_appearance_struct_underline (a_text_appearance: POINTER): INTEGER is
+			external
+				"C struct GtkTextAppearance access underline use <gtk/gtk.h>"
+			end
+
+	gtk_text_appearance_struct_strikethrough (a_text_appearance: POINTER): INTEGER is
+			external
+				"C struct GtkTextAppearance access strikethrough use <gtk/gtk.h>"
+			end
+
+	gtk_text_appearance_struct_fg_color (a_text_appearance: POINTER): POINTER is
+			external
+				"C struct GtkTextAppearance access &fg_color use <gtk/gtk.h>"
+			end
+
+	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_iter_get_attributes ((GtkTextIter*) $a_text_iter, (GtkTextAttributes*) $a_text_values )"
+			end
+			
+	gtk_text_view_get_default_attributes (a_text_view: POINTER): POINTER is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
+			end
+			
+	gtk_text_attributes_free (a_text_attributes: POINTER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"free ((GtkTextAttributes*) $a_text_attributes)"
+			end
+
+	gtk_text_view_get_iter_at_location (a_text_view,  a_text_iter: POINTER; buffer_x, buffer_y: INTEGER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_view_get_iter_at_location ((GtkTextView*) $a_text_view, (GtkTextIter*) $a_text_iter, (gint) $buffer_x, (gint) $buffer_y)"
+			end
+
+	gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; window_x, window_y: INTEGER; buffer_x, buffer_y: POINTER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_view_window_to_buffer_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $window_x, (gint) $window_y, (gint *) $buffer_x, (gint *) $buffer_y)"
+			end
+		
+	gtk_text_view_buffer_to_window_coords (a_text_view: POINTER; buffer_x, buffer_y: INTEGER; window_x, window_y: POINTER) is
+			external
+				"C inline use <gtk/gtk.h>"
+			alias
+				"gtk_text_view_buffer_to_window_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $buffer_x, (gint) $buffer_y, (gint *) $window_x, (gint *) $window_y)"
+			end
+
 	format_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
@@ -189,8 +341,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {NONE} -- Implementation
-
 	dispose_append_buffer is
 			-- Clean up `append_buffer'.
 		do
@@ -199,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_buffer: POINTER
-		-- Pointer to the GtkTextBuffer used for appending.	
+		-- Pointer to the GtkTextBuffer used for append buffering.	
 
 feature {EV_ANY_I} -- Implementation
 	

@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 
-		set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN) is
 				-- `flag' true make the component read-write and
 				-- `flag' false make the component read-only.
 			local

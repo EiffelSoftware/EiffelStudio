@@ -29,8 +29,8 @@ feature -- Cursor for iteration
 			-- set position_for_iteration to p
 		do
 			iteration_position := p;
-			if p < keys.lower then
-				iteration_position := keys.lower - 1	
+			if p < 0 then
+				iteration_position := - 1	
 			end;
 		end;
 

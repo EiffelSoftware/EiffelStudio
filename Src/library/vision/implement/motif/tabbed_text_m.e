@@ -29,6 +29,9 @@ inherit
 			x_coordinate as i_x_coordinate,
 			y_coordinate as i_y_coordinate,
 			character_position as i_character_position
+		redefine
+			expanded_position, unexpanded_position,
+			actual_text, actual_count, actual_cursor_position
 		select
 			i_append, i_insert, i_replace, i_set_text, i_text, 
 			i_clear, i_count, i_cursor_position, i_set_cursor_position,
@@ -40,20 +43,23 @@ inherit
 		rename
 			make as st_make,
 			make_word_wrapped as st_make_word_wrapped,
-            append as st_append,
-            replace as st_replace,
-            set_text as st_set_text,
-            text as st_text,
-            clear as st_clear,
-            count as st_count,
-            cursor_position as st_cursor_position,
-            set_cursor_position as st_set_cursor_position,
-            set_selection as st_set_selection,
-            begin_of_selection as st_begin_of_selection,
-            end_of_selection as st_end_of_selection,
-            x_coordinate as st_x_coordinate,
-            y_coordinate as st_y_coordinate,
-            character_position as st_character_position
+			append as st_append,
+			replace as st_replace,
+			set_text as st_set_text,
+			text as st_text,
+			clear as st_clear,
+			count as st_count,
+			cursor_position as st_cursor_position,
+			set_cursor_position as st_set_cursor_position,
+			set_selection as st_set_selection,
+			begin_of_selection as st_begin_of_selection,
+			end_of_selection as st_end_of_selection,
+			x_coordinate as st_x_coordinate,
+			y_coordinate as st_y_coordinate,
+			character_position as st_character_position
+		redefine
+			expanded_position, unexpanded_position,
+			actual_text, actual_count, actual_cursor_position
 		end;
 
 	COMMAND
@@ -96,8 +102,8 @@ feature -- Initialization
 
 feature -- Status report
 
-    tab_length: INTEGER;
-            -- Number of blank characters in a tabulation
+	tab_length: INTEGER;
+			-- Number of blank characters in a tabulation
 
 feature -- Status setting
 
@@ -136,6 +142,18 @@ feature -- Access
 			-- of Current text widget at character position `char_pos'.
 		do
 			Result := st_y_coordinate (expanded_position (char_pos))
+		end;
+
+	actual_text: STRING is
+			-- Actual text of scrolled text `text'
+		do
+			Result := st_text
+		end;
+
+	actual_count: INTEGER is
+			-- Actual count of scrolled text `text'
+		do
+			Result := st_count
 		end;
 
 feature -- Text manipulation
@@ -399,6 +417,12 @@ feature -- Text count
 
 feature -- Text cursor position
 
+	actual_cursor_position: INTEGER is
+			-- Actual cursor position
+		do
+			Result := st_cursor_position
+		end;
+
 	i_cursor_position: INTEGER is
 			--  Current position of the text cursor (it indicates the position
 			--  where the next character pressed by the user will be inserted)
@@ -470,8 +494,6 @@ feature {NONE} -- Conversion
 
 	expanded_position (pos: INTEGER): INTEGER is
 			-- Position in the text after tabulation expansion
-		require
-			valid_pos: pos >= 0 and pos <= i_count
 		local
 			offset, tab_nb: INTEGER
 		do
@@ -512,14 +534,10 @@ debug ("TABULATION")
 	io.error.putstring ("tabulations after `expanded_position': %N");
 	tabulations_trace
 end;
-		ensure
-			valid_result: Result >= 0 and Result <= st_count
 		end;
 
 	unexpanded_position (pos: INTEGER): INTEGER is
 			-- Position in the text before tabulation expansion
-		require
-			valid_pos: pos >= 0 and pos <= st_count
 		local
 			offset, tab_nb: INTEGER
 		do
@@ -574,8 +592,6 @@ debug ("TABULATION")
 	io.error.putstring ("tabulations after `unexpanded_position': %N");
 	tabulations_trace
 end;
-		ensure
-			valid_result: Result >= 0 and Result <= i_count
 		end;
 
 feature {NONE} -- Default callbacks

@@ -11,13 +11,9 @@ class
 	ACTIVE_LIST [G]
 
 inherit
-	LINKED_LIST [G]
+	INTERACTIVE_LIST [G]
 		redefine
-			default_create,
-			new_cell,
-			cleanup_after_remove,
-			merge_left,
-			merge_right
+			default_create
 		end
 
 create
@@ -28,7 +24,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Initialize
 		do
-			make
+			Precursor
 			create add_actions.make ("add", <<"item">>)
 			create remove_actions.make ("remove", <<"item">>)
 		end
@@ -41,73 +37,29 @@ feature -- Access
 	remove_actions: ACTION_SEQUENCE [TUPLE [G]]
 			-- Actions performed when an item is removed.
 
-feature  -- Element Change
+feature -- Miscellaneous
 
-	merge_left (other: like Current) is
-			-- Merge `other' into current structure after cursor
-			-- position. Do not move cursor. Empty `other'
+	on_item_added (an_item: G) is
+			-- `an_item' is about to be added.
 		do
-			add_all (other)
-			Precursor (other)
+			add_actions.call ([an_item])
 		end
 
-	merge_right (other: like Current) is
-			-- Merge `other' into current structure before cursor
-			-- position. Do not move cursor. Empty `other'
+	on_item_removed (an_item: G) is
+			-- `an_item' is about to be removed.
 		do
-			add_all (other)
-			Precursor (other)
+			remove_actions.call ([an_item])
 		end
-
-feature  {LINKED_LIST} -- Implementation
-
-	new_cell (v: like item): like first_element is
-			-- Create new cell with `v'.
-		do
-			consistency_count := consistency_count + 1
-			add_actions.call ([v])
-			create Result
-			Result.put (v)
-		end
-
-	cleanup_after_remove (v: like first_element) is
-			-- Clean-up a just removed cell.
-		do
-			consistency_count := consistency_count - 1
-			remove_actions.call ([v.item])
-		end
-
-feature {NONE} -- Implementation
-
-	add_all (other: like Current) is
-			-- Call add action sequence for all elements in `other'.
-		do
-			from
-				other.start
-			until
-				other.after
-			loop
-				consistency_count := consistency_count + 1
-				add_actions.call ([other.item])
-				other.forth
-			end
-		end
-
-feature {NONE} -- Contract support
-
-	consistency_count: INTEGER
-			-- Number of items in the list.
 
 invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void
-	consistency_count_equal_to_count: consistency_count = count
 
 end -- class ACTIVE_LIST
 
 --!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! EiffelEvent: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license.
 --! Contact ISE for any other use.
@@ -126,6 +78,9 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.4  2000/03/23 16:42:58  brendel
+--| Now inherits new class INTERACTIVE_LIST.
+--|
 --| Revision 1.3  2000/01/25 18:19:29  oconnor
 --| added keywords and Contract support feature heading
 --|

@@ -403,12 +403,11 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			type := visitor.vt_type
-
-			if visitor.is_basic_type then
-				message_output.add_warning (Current, message_output.Not_pointer_type)
-
-			elseif visitor.is_enumeration then
-				message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
+		
+			if visitor.is_basic_type or visitor.is_enumeration then
+				tmp_string := clone (name)
+				Result := clone (New_line_tab)
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))
 
 			else
 				Result := clone (New_line_tab)

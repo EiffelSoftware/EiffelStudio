@@ -11,14 +11,29 @@ class
 inherit
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
-	
-	TOE_TREE_FACTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
+	
+	XM_CALLBACKS_NULL
+		export
+			{NONE} all
+		end
 	
 feature -- Basic operations
 
@@ -30,24 +45,19 @@ feature -- Basic operations
 			root_node_name_not_void: root_node_name /= Void
 			
 		local
-			formater: XML_FORMATER
-			document: XML_DOCUMENT
-			root_element: XML_ELEMENT
-			toe_document: TOE_DOCUMENT
+			formater: XM_FORMATTER
+			document: XM_DOCUMENT
+			root_element: XM_ELEMENT
 			counter: INTEGER
+			namespace: XM_NAMESPACE
 			a_name_string, a_data_string: STRING
 		do
 				-- Create the root element.
-			root_element := new_root_element (root_node_name, "")
+			create namespace.make ("", "")
+			create root_element.make_root (root_node_name, namespace)
 			add_attribute_to_element (root_element, "xsi", "xmlns", Schema_instance)	
-			
-			create toe_document.make
-			create document.make_from_imp (toe_document)
-			document.start
-				-- Add `application_element' as the root element of `document'.
+			create document.make
 			document.force_first (root_element)
-			
-			
 				-- Add information in `names' and `data' to the file.
 			from
 				counter := 1
@@ -66,7 +76,7 @@ feature -- Basic operations
 				-- Format and save the document.
 			create formater.make
 			formater.process_document (document)
-			write_file_to_disk (formater.last_string.to_utf8, file_name)
+			write_file_to_disk (formater.last_string, file_name)
 		end
 		
 	load_file (file_name: STRING): ARRAYED_LIST [TUPLE [STRING, STRING]] is
@@ -88,8 +98,9 @@ feature -- Basic operations
 				file.read_stream (file.count)
 				file.close
 				buffer := file.last_string
+					-- This checks that the file actually is a valid Build file, the fact
+					-- that 54 charaters are checked is arbitary.
 				if buffer.count < 54 or (buffer.substring (1, 54).is_equal (xml_format + "<Project_setting")) then
-					parser := create_tree_parser
 					Result := load_and_parse_xml_file (file_name)
 						-- Assign `True' to `last_load_successful' so it can be queried
 						-- externally.
@@ -106,9 +117,6 @@ feature -- Basic operations
 		-- Was the last call to `load file' successful?
 		
 feature {NONE} -- Implementation
-
-	parser: XML_TREE_PARSER
-		-- XML tree parser used by `Current'.
 
 	write_file_to_disk (xml_text: STRING; file_name: STRING) is
 			-- Create a file named `filename' with content `xml_text'.
@@ -128,7 +136,7 @@ feature {NONE} -- Implementation
 		local
 			temp_window: EV_TITLED_WINDOW
 			error_dialog:EV_ERROR_DIALOG
-			root_element: XML_ELEMENT
+			root_element: XM_ELEMENT
 			child_names: ARRAYED_LIST [STRING]
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
@@ -141,7 +149,7 @@ feature {NONE} -- Implementation
 				temp_window.destroy
 			else
 				create Result.make (0)
-				root_element := parser.document.root_element
+				root_element := pipe_callback.document.root_element
 				child_names := all_child_element_names (root_element)
 				full_information := get_unique_full_info (root_element)
 				from
@@ -156,6 +164,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+				
+	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+			-- Create unique callback pipe.
+		once
+			create Result.make
+		end
+		
 	parse_file (a_filename: STRING) is
 			-- Parse XML file `filename' with `parser'.
 		local
@@ -167,9 +182,13 @@ feature {NONE} -- Implementation
 			file.start
 			file.read_stream (file.count)
 			buffer := file.last_string
+			create parser.make
+			parser.set_callbacks (pipe_callback.start)
 			parser.parse_from_string (buffer)
-			parser.set_end_of_document
+			parser.finish_incremental
 		end
+		
+	parser: XM_EIFFEL_PARSER
 		
 	show_warning_dialog is
 			-- Show a warning with notification that the file
@@ -181,6 +200,5 @@ feature {NONE} -- Implementation
 			create dialog.make_with_text (Invalid_project_warning)
 			dialog.show_modal_to_window (main_window)
 		end
-		
 
 end -- class GB_SIMPLE_XML_FILE_HANDLER

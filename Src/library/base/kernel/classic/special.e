@@ -90,13 +90,13 @@ feature -- Measurement
 	frozen upper: INTEGER is 
 			-- Maximum index of Current
 		do
-			Result := feature {ISE_RUNTIME}.sp_count ($Current) - 1
+			Result := {ISE_RUNTIME}.sp_count ($Current) - 1
 		end
 
 	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
-			Result := feature {ISE_RUNTIME}.sp_count ($Current)
+			Result := {ISE_RUNTIME}.sp_count ($Current)
 		end
 
 feature -- Status report

@@ -21,14 +21,14 @@ feature -- Access
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
-			Result := feature {ISE_RUNTIME}.c_generator ($Current)
+			Result := {ISE_RUNTIME}.c_generator ($Current)
 		end
 
  	generating_type: STRING is
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
  		do
- 			Result := feature {ISE_RUNTIME}.c_generating_type ($Current)
+ 			Result := {ISE_RUNTIME}.c_generating_type ($Current)
  		end
 
 feature -- Status report
@@ -39,7 +39,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := feature {ISE_RUNTIME}.c_conforms_to ($other, $Current)
+			Result := {ISE_RUNTIME}.c_conforms_to ($other, $Current)
 		end
 
 	same_type (other: ANY): BOOLEAN is
@@ -47,7 +47,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := feature {ISE_RUNTIME}.c_same_type ($other, $Current)
+			Result := {ISE_RUNTIME}.c_same_type ($other, $Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
@@ -61,7 +61,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := feature {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
+			Result := {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
 		ensure
 			symmetric: Result implies other.is_equal (Current)
 			consistent: standard_is_equal (other) implies Result
@@ -73,7 +73,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := feature {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
+			Result := {ISE_RUNTIME}.c_standard_is_equal ($Current, $other)
 		ensure
 			same_type: Result implies same_type (other)
 			symmetric: Result implies other.standard_is_equal (Current)
@@ -120,7 +120,7 @@ feature -- Comparison
 				Result := other = Void
 			else
 				Result := other /= Void and then
-							feature {ISE_RUNTIME}.c_deep_equal ($some, $other)
+							{ISE_RUNTIME}.c_deep_equal ($some, $other)
 			end
 		ensure
 			shallow_implies_deep: standard_equal (some, other) implies Result
@@ -137,10 +137,10 @@ feature -- Duplication
 		local
 			l_temp: BOOLEAN
 		do
-			l_temp := feature {ISE_RUNTIME}.check_assert (False)
-			Result ?= feature {ISE_RUNTIME}.c_standard_clone ($Current)
+			l_temp := {ISE_RUNTIME}.check_assert (False)
+			Result ?= {ISE_RUNTIME}.c_standard_clone ($Current)
 			Result.copy (Current)
-			l_temp := feature {ISE_RUNTIME}.check_assert (l_temp)
+			l_temp := {ISE_RUNTIME}.check_assert (l_temp)
 		ensure
 			twin_not_void: Result /= Void
 			is_equal: Result.is_equal (Current)
@@ -153,7 +153,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			feature {ISE_RUNTIME}.c_standard_copy ($other, $Current)
+			{ISE_RUNTIME}.c_standard_copy ($other, $Current)
 		ensure
 			is_equal: is_equal (other)
 		end
@@ -165,7 +165,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			feature {ISE_RUNTIME}.c_standard_copy ($other, $Current)
+			{ISE_RUNTIME}.c_standard_copy ($other, $Current)
 		ensure
 			is_standard_equal: standard_is_equal (other)
 		end
@@ -206,10 +206,10 @@ feature -- Duplication
 		local
 			temp: BOOLEAN
 		do
-			temp := feature {ISE_RUNTIME}.check_assert (False)
-			Result ?= feature {ISE_RUNTIME}.c_standard_clone ($Current)
+			temp := {ISE_RUNTIME}.check_assert (False)
+			Result ?= {ISE_RUNTIME}.c_standard_clone ($Current)
 			Result.standard_copy (Current)
-			temp := feature {ISE_RUNTIME}.check_assert (temp)
+			temp := {ISE_RUNTIME}.check_assert (temp)
 		ensure
 			standard_twin_not_void: Result /= Void
 			equal: standard_equal (Result, Current)
@@ -218,7 +218,7 @@ feature -- Duplication
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		do
-			Result ?= feature {ISE_RUNTIME}.c_deep_clone ($Current)
+			Result ?= {ISE_RUNTIME}.c_deep_clone ($Current)
 		ensure
 			deep_equal: deep_equal (Current, Result)
 		end
@@ -281,7 +281,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := feature {ISE_RUNTIME}.c_tagged_out (Current)
+			Result := {ISE_RUNTIME}.c_tagged_out (Current)
 		end
 
 	print (some: ANY) is

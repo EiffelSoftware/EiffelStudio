@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_text_and_actions (
-		a_text: EV_TEXT;
+		a_text: STRING;
 		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
 	) is
 			-- Create dialog with `a_text' and `actions'.
@@ -133,8 +133,8 @@ feature -- Status setting
 			button_box.wipe_out
 			buttons.clear_all
 			button_box.extend (create {EV_CELL})
-			from i := 1 until i > but_texts.count loop
-				add_button (but_texts @ i)
+			from i := 1 until i > button_labels.count loop
+				add_button (button_labels @ i)
 				i := i + 1
 			end
 			button_box.extend (create {EV_CELL})
@@ -229,6 +229,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/06 19:48:11  oconnor
+--| renamed but_texts -> button_labels
+--|
 --| Revision 1.17  2000/03/06 19:32:02  oconnor
 --| removed stray comma
 --|

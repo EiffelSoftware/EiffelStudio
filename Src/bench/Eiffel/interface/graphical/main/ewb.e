@@ -19,7 +19,8 @@ inherit
 		end
 	SHARED_LICENSE;
 	SHARED_RESOURCES;
-	SHARED_BATCH_COMPILER
+	SHARED_BATCH_COMPILER;
+	SHARED_EIFFEL_PROJECT
 
 feature -- Initialization
 
@@ -53,7 +54,7 @@ feature -- Initialization
 				if argument_count = 1 and then
 					argument (1).is_equal ("-bench")
 				then
-					set_batch_mode (False);
+					Eiffel_project.set_batch_mode (False);
 					init_connection;
 					if toolkit = Void then end;
 					if init_licence then
@@ -61,7 +62,7 @@ feature -- Initialization
 						iterate
 					end;
 				else
-					set_batch_mode (True);
+					Eiffel_project.set_batch_mode (True);
 					if init_licence then
 						start_batch_compiler;
 						discard_licence;
@@ -73,7 +74,7 @@ feature -- Initialization
 			end;
 		rescue
 			discard_licence;
-			if not batch_mode then
+			if not Eiffel_project.batch_mode then
 					-- The rescue in BASIC_ES will display the tag
 				io.error.putstring ("ISE Eiffel3: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
@@ -104,13 +105,4 @@ feature -- Access
 			Result := licence.licensed;
 		end;
 
-feature {NONE} -- Implementation
-
-	init_windowing is
-			-- Initialize the windowing environment.
-		do
-			if project_tool = Void then end;
-			project_tool.popup_file_selection;
-		end
- 
 end -- class EWB

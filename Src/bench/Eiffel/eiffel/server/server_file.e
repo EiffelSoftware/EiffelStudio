@@ -57,16 +57,16 @@ feature
 			temp.extend ('S');
 			temp.append_integer ((i // packet_size) + 1);
 			d_name.extend (temp);
-			!!d.make (d_name.path);
+			!!d.make (d_name);
 			if not d.exists then
 				d.create
 			end;
-			!!f_name.make_from_string (d_name.path);
+			!!f_name.make_from_string (d_name);
 			!!temp.make (5);
 			temp.extend ('E');
 			temp.append_integer (i);
 			f_name.set_file_name (temp);
-			file_make (f_name.path);
+			file_make (f_name);
 			if not Project_read_only.item then
 					-- If the file exists, open_write + close
 					-- will delete the previous content
@@ -169,7 +169,7 @@ end;
 			temp.extend ('E');
 			temp.append_integer (id);
 			fname.set_file_name (temp);
-			name := fname.path
+			name := fname
 		end;
 
 	precompiled: BOOLEAN;
@@ -184,16 +184,6 @@ end;
 
 feature -- Packet size
 
-	packet_size: INTEGER is
-		once
-			Result := eif_packet_size
-		end
-
-feature {NONE} -- Externals
-
-	eif_packet_size: INTEGER is
-		external
-			"C"
-		end
+	packet_size: INTEGER is 100
 
 end

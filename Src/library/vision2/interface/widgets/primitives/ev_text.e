@@ -37,6 +37,20 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		require
+			exists: not destroyed
+			valid_string: str /= Void
+		do
+			Result := implementation.search (str)
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_TEXT_AREA_I

@@ -30,7 +30,9 @@ feature -- Access
 		do
 			Precursor
 			set_fill_color (create {EV_COLOR}.make_with_rgb (
-				random_real, random_real, random_real))
+				random_real / 2 + 0.5,
+				random_real / 2 + 0.5,
+				random_real / 2 + 0.5))
 		end
 
 feature -- Status report
@@ -81,6 +83,9 @@ end -- class EV_CLOSED_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/27 22:13:15  brendel
+--| Changed to a brighter color.
+--|
 --| Revision 1.7  2000/04/27 19:10:50  brendel
 --| Centralized testing code.
 --|

@@ -89,11 +89,10 @@ feature -- Generation
 			gen_file := Address_table_file (final_mode)
 			gen_file.open_write
 
-			gen_file.putstring ("#include %"eiffel.h%"%N")
+			gen_file.putstring ("#include %"eif_eiffel.h%"%N")
 
 			if final_mode then
-				gen_file.putstring ("#include %"")
-				gen_file.putstring ("eaddress")
+				gen_file.putstring ("#include %"eaddress")
 				gen_file.putstring (Dot_h)
 				gen_file.putstring ("%"%N%N")
 			elseif Compilation_modes.is_precompiling then
@@ -157,7 +156,7 @@ end
 
 				gen_file.open_write
 
-				gen_file.putstring ("#include %"eiffel.h%"%N");
+				gen_file.putstring ("#include %"eif_eiffel.h%"%N");
 
 				gen_file.close
 
@@ -296,11 +295,9 @@ feature {NONE} -- Generation
 			gen_file.putstring ("};%N%N")
 
 			if System.extendible then
-				gen_file.putstring
-					("fnptr **eif_address_table = Seif_address_table;%N%N")
+				gen_file.putstring ("fnptr **eif_address_table = Seif_address_table;%N%N")
 			elseif not System.is_dynamic then
-				gen_file.putstring
-					("fnptr **eif_address_table = feif_address_table;%N%N")
+				gen_file.putstring ("fnptr **eif_address_table = feif_address_table;%N%N")
 			end
 		end
 
@@ -415,7 +412,7 @@ feature {NONE} -- Generation
 				a_type.type.dump (gen_file)
 				gen_file.putstring (" ")
 				gen_file.putstring (a_feature.feature_name)
-				gen_file.putstring ("*/%N");
+				gen_file.putstring (" */%N");
 
 				c_return_type := solved_type (return_type)
 				return_type_string := c_return_type.c_string
@@ -434,8 +431,7 @@ feature {NONE} -- Generation
 						(return_type_string, f_name, True, gen_file,
 						<<"Current">>, a_types);
 				end
-				gen_file.putstring ("%N%
-					%%T");
+				gen_file.putstring ("%N%T");
 
 				if final_mode then
 					entry :=  Eiffel_table.poly_table (rout_id)
@@ -455,10 +451,7 @@ feature {NONE} -- Generation
 						gen_file.putstring (table_name)
 						gen_file.putchar ('-')
 						gen_file.putint (entry.min_used - 1)
-						gen_file.putchar (')')
-						gen_file.putchar ('[')
-						gen_file.putstring ("Dtype(Current)")
-						gen_file.putstring ("])(Current")
+						gen_file.putstring (")[Dtype(Current)])(Current")
 
 						if has_arguments then
 							generate_arg_list (args.count)
@@ -504,7 +497,7 @@ feature {NONE} -- Generation
 					gen_file.putstring (");%N")
 				end
 
-				gen_file.putstring ("%N%TEDCX%N}%N%N") -- ss MT
+				gen_file.putstring ("%N}%N%N") -- ss MT
 
 				types.go_to (cursor)
 				types.forth

@@ -765,7 +765,7 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLUSTER_FIGURE", l_namespace)
-			Result.add_attribute ("NAME", l_namespace, cluster_i.cluster_name)
+			add_attribute ("NAME", l_namespace, cluster_i.cluster_name, Result)
 			Result.put_last (xml_node (Result, "ICONIFIED", iconified.out))
 			Result.put_last (xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (xml_node (Result, "Y_POS", point.y.out))

@@ -371,7 +371,7 @@ feature -- Metric constituents
 			a_unit := unit_field.text
 			create l_namespace.make ("", "")
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "SRatio")
-			Result.add_attribute ("Percentage", l_namespace, percentage.out)
+			add_attribute ("Percentage", l_namespace, percentage.out, Result)
 			Result.put_last (xml_node (Result, "FORMULA", displayed_metric))
 			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
 				-- Fill metric_definition with convinient xml element in polish syntax.
@@ -387,7 +387,7 @@ feature -- Metric constituents
 
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
-				Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
+				add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
 			end		
 		end
 

@@ -441,7 +441,7 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 			name_in_lower.to_lower
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLASS_FIGURE", l_namespace)
-			Result.add_attribute ("NAME", l_namespace, name_in_lower)
+			add_attribute ("NAME", l_namespace, name_in_lower, Result)
 			Result.put_last (xml_node (Result, "X_POS", point.x.out))
 			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
 			Result.put_last (xml_node (Result, "COLOR",
@@ -729,6 +729,7 @@ feature {NONE} -- Implementation
 		local
 			dial: EV_CONFIRMATION_DIALOG
 			class_file: PLAIN_TEXT_FILE
+			l_error_window: EV_WARNING_DIALOG
 		do
 			create class_file.make (a_stone.class_i.file_name)
 			if class_file.is_writable and then not a_stone.class_i.cluster.is_library then
@@ -748,8 +749,8 @@ feature {NONE} -- Implementation
 					world.add_aggregate_client_supplier_relation (a_stone.source, Current)
 				end
 			else
-				create error_window.make_with_text ("Class is not editable")
-				error_window.show_modal_to_window (world.context_editor.development_window.window)
+				create l_error_window.make_with_text ("Class is not editable")
+				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
 			end
 		end
 

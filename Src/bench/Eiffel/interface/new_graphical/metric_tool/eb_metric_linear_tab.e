@@ -355,7 +355,7 @@ feature -- Metric constituents.
 			end
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
-				Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
+				add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
 			end
 		end
 

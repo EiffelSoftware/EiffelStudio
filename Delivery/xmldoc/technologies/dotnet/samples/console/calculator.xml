@@ -28,7 +28,7 @@
 				</item>
 				<item>Browse to 
 					<output output="envision">ENViSioN! root directory</output>
-					<output output="studio">Eiffel54</output>\examples\dotnet\calculator\.
+					<output output="studio">$ISE_EIFFEL</output>\examples\dotnet\calculator\.
 					<italic/>
 				</item>
 				<item>Choose

@@ -216,9 +216,9 @@ feature -- Access
 			if is_valid then
 				create enum
 				if ace.il_generation_type = ace.Il_generation_exe then
-					Result := enum.is_application
+					Result := enum.eif_compt_is_application
 				elseif ace.il_generation_type = ace.Il_generation_dll then
-					Result := enum.is_library
+					Result := enum.eif_compt_is_library
 				else
 					Result := -1
 				end
@@ -377,9 +377,9 @@ feature -- Element change
 		do
 			if is_valid then
 				create enum
-				if return_value = enum.is_application then
+				if return_value = enum.eif_compt_is_application then
 					ace.set_il_generation_type (ace.Il_generation_exe)
-				elseif return_value = enum.is_library then
+				elseif return_value = enum.eif_compt_is_library then
 					ace.set_il_generation_type (ace.Il_generation_dll)
 				end
 			end

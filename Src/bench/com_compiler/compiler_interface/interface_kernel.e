@@ -142,7 +142,7 @@ feature -- Basic Operations
 							create {PROJECT_PROPERTIES} project_properties_internal.make
 							create enum
 							Valid_project_ref.set_item (True)
-							project_properties.set_compilation_type (enum.is_application)
+							project_properties.set_compilation_type (enum.eif_compt_is_application)
 						else
 							last_error_message := "Project could not be initialized"
 						end

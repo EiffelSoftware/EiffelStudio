@@ -35,7 +35,7 @@ feature -- Access
 	item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when resizing completes on a header item.
 		do
-			Result := implementation.item_resize_start_actions
+			Result := implementation.item_resize_end_actions
 		ensure
 			not_void: Result /= Void
 		end

@@ -172,9 +172,7 @@ feature -- Output
 		local
 			l_feature_table: FEATURE_TABLE
 			l_feature_i: FEATURE_I
-			l_att_token: INTEGER
 
-			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
@@ -202,25 +200,9 @@ feature -- Output
 					end
 
 					if l_feature_i.is_attribute then
-						l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feature_i, dynamic_class_type) 
-						if l_att_token /= 0 then
-							l_att_icd_debug_value := object_value.get_field_value (l_icd_class, l_att_token)
-							if l_att_icd_debug_value /= Void then
-								l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
-								if l_att_debug_value /= Void then
-									l_att_debug_value.set_name (l_feature_i.feature_name)
-									Result.extend (l_att_debug_value)
-								else
-										--| FIXME: JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
-										--| we had problem to get its value ...
-									debug ("DEBUGGER_TRACE_CHILDREN")
-										print ("Unable to build debug value for : " 
-												+ dynamic_class.name_in_upper + "." + l_feature_i.feature_name 
-												+ "%N"				
-											)
-									end
-								end
-							end
+						l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
+						if l_att_debug_value /= Void then
+							Result.extend (l_att_debug_value)							
 						end
 					end
 					l_feature_table.forth
@@ -228,6 +210,33 @@ feature -- Output
 			end
 		ensure then
 			Result /= Void
+		end
+
+	attribute_value (a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+			-- Attribute's value in the context of Current related to `f'
+		local
+			l_att_token: INTEGER
+			l_att_icd_debug_value: ICOR_DEBUG_VALUE
+		do
+			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type) 
+			if l_att_token /= 0 then
+				l_att_icd_debug_value := object_value.get_field_value (a_icd_class, l_att_token)
+				if l_att_icd_debug_value /= Void then
+					Result := debug_value_from_icdv (l_att_icd_debug_value)
+					if Result /= Void then
+						Result.set_name (f.feature_name)
+					else
+							--| FIXME: JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
+							--| we had problem to get its value ...
+						debug ("DEBUGGER_TRACE_CHILDREN")
+							print ("Unable to build debug value for : " 
+									+ dynamic_class.name_in_upper + "." + f.feature_name 
+									+ "%N"				
+								)
+						end
+					end
+				end
+			end
 		end
 		
 	kind: INTEGER is

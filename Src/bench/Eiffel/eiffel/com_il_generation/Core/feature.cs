@@ -306,23 +306,28 @@ internal class FEATURE
 		if (is_attribute && !is_static && !needs_attribute) {
 			return_type = COMPILER.Classes [return_type_id].Builder;
 			setter_builder = ((TypeBuilder) current_class.Builder).
-				DefineMethod (COMPILER.SetterPrefix + name(),
+				DefineMethod (COMPILER.Setter_prefix + name(),
 				Attributes | MethodAttributes.Family, COMPILER.VoidType,
 				new Type [1] {return_type} );
 			setter_builder.DefineParameter (1, ParameterAttributes.In, name ());
+			setter_builder.SetCustomAttribute (CA.not_cls_compliant_attr);
 		}
 
 		if (is_c_external && is_static) {
-			((MethodBuilder) method_builder).SetCustomAttribute (CA.suppress_check_attr ());
+			((MethodBuilder) method_builder).SetCustomAttribute (CA.suppress_check_attr);
 		}
 
 		if
 			(COMPILER.is_debugging_enabled &&
 			!info.is_interface_routine && !info.is_static)
 		{
-			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_step_through_attr ());
-			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_hidden_attr ());
+			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_step_through_attr);
+			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_hidden_attr);
 		}
+		if (!info.is_interface_routine && !is_attribute && info.is_static) {
+			((MethodBuilder) method_builder).SetCustomAttribute (CA.not_cls_compliant_attr);
+		}
+
 		if( method_builder == null && attribute_builder == null ) {
 			throw new ApplicationException (
 				"create_method_builder: method_builder null after call for " + name());

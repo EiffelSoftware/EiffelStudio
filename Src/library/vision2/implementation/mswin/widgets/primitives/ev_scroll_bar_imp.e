@@ -66,13 +66,6 @@ inherit
 
 feature {EV_SCROLL_BAR_IMP} -- Access
 
-	user_scroll_bar_width: INTEGER is
-			-- Scrollbar width set by user.
-		do
-			Result := 15
-			--| FIXME To be implemented as suggested by Arnaud.
-		end
-
 	wel_parent: WEL_WINDOW is
 			--|---------------------------------------------------------------
 			--| FIXME ARNAUD
@@ -167,6 +160,9 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/07 00:08:38  brendel
+--| Removed user_scroll_bar_width
+--|
 --| Revision 1.6  2000/02/22 18:21:01  pichery
 --| added 4 times the same small hack with `wel_parent' in order to
 --| avoid a Segmentation Violation with EiffelBench 4.6.008

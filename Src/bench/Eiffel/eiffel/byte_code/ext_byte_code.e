@@ -7,9 +7,11 @@ class EXT_BYTE_CODE
 
 inherit
 	STD_BYTE_CODE
+		rename
+			argument_types as std_argument_types
 		redefine
-			generate, generate_current, generate_compound, is_external,
-			pre_inlined_code, inlined_byte_code
+			generate, generate_compound, generate_expanded_cloning,
+			is_external, pre_inlined_code, inlined_byte_code
 		end
 
 create
@@ -40,88 +42,60 @@ feature -- Access
 	external_name_id: INTEGER
 			-- Name ID of external.
 
+	argument_types: like std_argument_types is
+			-- Type of arguments, not including Current.
+		do
+			Result := std_argument_types
+			if Result.count > 1 then
+				Result := Result.subarray (Result.lower + 1, Result.upper)
+			else
+				create Result.make (1, 0)
+			end
+		end
+
 feature -- Status report
 
 	is_external: BOOLEAN is True
 			-- Is the current byte code a byte code for external
 			-- features ?
 
-	generate_current: BOOLEAN is False
-			-- Do we need to generate `Current'? No for externals.
-
 feature -- C code generation
 
 	generate is
-			-- Byte code generation
+			-- Generate body of routine.
 		local
-			internal_name: STRING
-			buf: GENERATION_BUFFER
-			l_result: RESULT_BL
-			l_ret_type: TYPE_I
-			l_ext: EXTERNAL_EXT_I
-			l_result_protected: BOOLEAN
+			l_ret_type: like result_type
 		do
-			buf := buffer
-			l_ext := Context.current_feature.extension
-
 				-- Generate the header "int foo(Current, args)"
 			l_ret_type := result_type
 			result_type := real_type (result_type)
 
 			if not result_type.is_void then
-					-- Only creates a result when needed.
-				create l_result.make (l_ret_type)
-			end
-				-- Function's name
-			internal_name := Encoder.feature_name (
-					System.class_type_of_id (context.current_type.type_id).static_type_id,
-					body_index)
-
-			add_in_log (internal_name);
-
-				-- Generate function signature
-			 buf.generate_function_signature
-				(result_type.c_type.c_string, internal_name, True,
-				 Context.header_buffer, argument_names, argument_types)
-
-				-- Starting body of C routine
-			buf.indent;
-
-			if l_result /= Void then
-					-- Generate `Result' declaration since needed. However no `volatile'
-					-- qualifier.
 				Context.mark_result_used
-				generate_result_declaration (False)
-				if
-					System.has_multithreaded and
-					result_type.is_reference and l_ext.is_blocking_call
-				then
-						-- We need to protect `Result' only in `is_blocking_call' case
-						-- as this where a GC collection might be triggered in
-						-- multithreaded mode.
-					l_result_protected := True
-					buf.putstring ("RTLD;")
-					buf.new_line
-					buf.putstring ("RTLI(1);")
-					buf.new_line
-					buf.put_result_registration (0)
-					buf.new_line
-				end
 			end
 
-				-- Clone expanded parameters, raise exception in caller if
-				-- needed (void assigned to expanded).
-			generate_expanded_cloning;
+				-- Actual code generation.
+			Precursor {STD_BYTE_CODE}
 
-				-- Generate execution trace information
-			--generate_execution_trace;
-				-- Generate the saving of the workbench mode assertion level
-			--if context.workbench_mode then
-				--generate_save_assertion_level;
-			--end;
-
-				-- Generate local expanded variable creations
-			generate_expanded_variables;
+				-- Restore `result_type' as usually it is not kept evaluated.
+			result_type := l_ret_type
+		end
+		
+	generate_compound is
+			-- Byte code generation
+		local
+			buf: GENERATION_BUFFER
+			l_result: RESULT_BL
+			l_ext: EXTERNAL_EXT_I
+		do
+			buf := buffer
+			l_ext := Context.current_feature.extension
+			check
+				is_external: Context.current_feature.is_external
+					-- Current feature should be an external one and therefore
+					-- should have an extension.
+				l_ext_not_void: l_ext /= Void
+			end
 
 				-- Now we want the body
 			if l_ext.is_blocking_call then
@@ -129,6 +103,12 @@ feature -- C code generation
 				buf.new_line
 			end
 			
+			if not result_type.is_void then
+					-- Only creates a result when needed.
+				create l_result.make (result_type)
+			end
+
+				-- Generate call to external.
 			l_ext.generate_body (Current, l_result)
 			
 			if l_ext.is_blocking_call then
@@ -137,34 +117,19 @@ feature -- C code generation
 				buf.putstring ("EIF_EXIT_C;")
 				buf.new_line
 			end
-
-			if l_result /= Void then
-				if l_result_protected then
-					buf.putstring ("RTLE;")
-					buf.new_line
-				end
-				buf.putstring ("return ")
-				l_result.print_register
-				buf.putchar (';')
-				buf.new_line
-			end
-			
-			buf.exdent;
-
-				-- Leave a blank line after function definition
-			buf.putstring ("}%N%N");
-			Context.inherited_assertion.wipe_out;
-
-				-- Restore `result_type' as usually it is not kept evaluated.
-			result_type := l_ret_type
-		end
-
-	generate_compound is
-			-- Generate actual compound. Nothing to be done as it is all taken care
-			-- in `generate'.
-		do
 		end
 		
+	generate_expanded_cloning is
+			-- Clone expanded parameters.
+		do
+			-- FIXME: Manu 07/28/2003.
+			-- When object is automatically promoted to an EIF_OBJECT for a C externals, cloning
+			-- does not work as it is necessary to perform `eif_access' all the time. Because we 
+			-- don't know how to do this yet, we have disabled cloning for expanded objects arguments
+			-- when calling an external routine.
+		end
+		
+
 feature -- Inlining
 
 	pre_inlined_code: like Current is

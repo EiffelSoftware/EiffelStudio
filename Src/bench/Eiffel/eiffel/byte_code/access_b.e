@@ -429,23 +429,14 @@ feature -- Code generation
 		do
 			p := parameters
 			if p = Void then
-				if is_external then
-					Result := <<>>
-				else
-					Result := <<"EIF_REFERENCE">>
-				end
+				Result := <<"EIF_REFERENCE">>
 			else
 				from
 					i := 1
 					nb := p.count
-					if is_external then
-						create Result.make (1, nb)
-						j := 1
-					else
-						create Result.make (1, nb + 1)
-						Result.put ("EIF_REFERENCE", 1)
-						j := 2
-					end
+					create Result.make (1, nb + 1)
+					Result.put ("EIF_REFERENCE", 1)
+					j := 2
 				until
 					i > nb
 				loop

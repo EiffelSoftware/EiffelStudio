@@ -1,67 +1,33 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description:
+		"Abstract notion of a command associated with a tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EB_TOOL_COMMAND
 
 inherit
-	ENTER_CLASS_HERE_IF_NEEDED
-		rename
+	EV_COMMAND
 		export
-		undefine
-		redefine
-		select
+			{EB_TOOL_COMMAND} execute
 		end
 
-creation
-	make
+feature {NONE} -- Initialization
 
-feature -- Initialization
-
-	make is
-			-- Initialize
+	make (a_tool: like tool) is
+			-- Initialize Current.
+		require
+			a_tool_not_void: a_tool /= Void
 		do
-			-- Your instructions here
+			tool := a_tool
 		ensure
-			postcondition_clause: -- Your postcondition here
+			tool_set: tool.is_equal (a_tool)
 		end
 
-feature -- Access
+feature -- Properties
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	tool: EB_TOOL
+			-- The tool
 
 end -- class EB_TOOL_COMMAND

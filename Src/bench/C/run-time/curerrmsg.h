@@ -8,7 +8,8 @@
 #define GET_DATA_MSG1	"%d/%d Para type: %d, len: %d, "
 
 
-/* In the following, we classify the error messages into 3 catalogues:
+/* In the following, we classify the error messages into 4 catalogues:
+ * o Prompt message
  * o Implementation Error Message
  *   This kind of error messages are most likely(even not surely) caused 
  *   by our implementation, so they can be used to debug concurrent 
@@ -22,6 +23,40 @@
 */
 
 /*--------------------------------------------------------*/
+/*     Prompt Message From SERVER.c                       */
+/*--------------------------------------------------------*/
+
+#define CURPROMPT9	" RESERVE_SEP_OBJ "
+#define CURPROMPT10	" ACKNOWLEDGE_TO_RESERVE_SEP_OBJ "	
+#define CURPROMPT11	" REJECT_TO_RESERVE_SEP_OBJ "	
+#define CURPROMPT12	" REGISTER_FIRST_FROM_PARENT "	
+#define CURPROMPT13	" REGISTER "	
+#define CURPROMPT14	" REGISTER_ACK "	
+#define CURPROMPT15	" REGISTER_ACK_WITH_ROOT_OID "	
+#define CURPROMPT16	" UNREGISTER "	
+#define CURPROMPT17	" RELEASE "	
+#define CURPROMPT18	" QUERY_RESULT "	
+#define CURPROMPT19	" ACKNOWLEDGE_FOR_PROCEDURE "	
+#define CURPROMPT20	" MIDDLE_RESULT_OF_IMPORTATION "	
+#define CURPROMPT21	" CREATE_SEP_OBJ "	
+#define CURPROMPT22	" CREATION_FEATURE_PARAMETER "	
+#define CURPROMPT23	" END_OF_REQUEST "	
+#define CURPROMPT24	" CONNECTION_FROM_SEP_CHILD "
+#define CURPROMPT25	" INFORMATION_FROM_SEP_CHILD "
+#define CURPROMPT26	" MESSAGE_ACK "
+#define CURPROMPT27	" EXECUTE_PROCEDURE "
+#define CURPROMPT28	" EXECUTE_QUERY "
+#define CURPROMPT29	" QUERY_RESULT_ACK "
+#define CURPROMPT30	" REPORT_ERROR "
+#define CURPROMPT31	" STOP_EXECUTION "
+#define CURPROMPT32	" START_SEP_OBJ_OK "
+#define CURPROMPT33	" EXIT_OK "
+#define CURPROMPT34	" NOT_DEFINED "
+#define CURPROMPT35	" UNKNOWN COMMAND CODE(%d) "
+#define CURPROMPT36	"\n*************** Error Message of Running Concurrent Application ***************\n"
+#define CURPROMPT37	"\n*******************************************************************************\n"
+
+/*--------------------------------------------------------*/
 /*     Error Message From SERVER.c                        */
 /*--------------------------------------------------------*/
 
@@ -31,6 +66,7 @@
 #define CURIMPERR3	"    Expect REGISTER_ACK_WITH_ROOT_OID but got %s (in 'remote_server')."
 #define CURIMPERR4	"    Expect REGISTER/REGISTER_FIRST_FROM_PARENT/SEP_CHILD/SEP_CHILD_INFO\nbut got %s (in 'wait_sep_child')\n-- caused by the crash of the new-born separate child object."
 
+#define CURIMPERR26	"    The object(whose Dtype is %d) is not a separate object(whose Dtype is: %d)."
 
 /* The following are application error messages */
 #define CURAPPERR1  "    Error in reserving separate object. Expect ACKNOWLEDGE_TO_RESERVE_SEP_OBJ\nor REJECT_TO_RESERVE_SEP_OBJ but got %s \n--maybe caused by the crash of other separate object(s)."
@@ -61,6 +97,19 @@
 #define CURERR21	"    Network exception happened on the parent of the local processor."
 #define CURERR22	"    Network exception happened on the child(ren) of the local processor."
 
+
+/*--------------------------------------------------------*/
+/*     Prompt Message From CONCURRENCY.c                  */
+/*--------------------------------------------------------*/
+
+#define CURPROMPT1	"------------------------------ Configure Table --------------------------------\n"
+#define CURPROMPT2	"Remote Servers:\n"
+#define CURPROMPT3	"\nNet Work Resources:\n"
+#define CURPROMPT4	"  In Group <%s>:\n"
+#define CURPROMPT5	"\nCursor is on \n<%s, %d, %s, %s>\nof group <%s> with count: %d.\n"
+#define CURPROMPT6	"\nInvalid Cursor. \n"
+#define CURPROMPT7	"\nDefault Port for External Server: %d;   Default Instance: %d\n"
+#define CURPROMPT8	"-------------------------------------------------------------------------------\n"
 
 /*--------------------------------------------------------*/
 /*     Error Message From CONCURRENCY.c                   */
@@ -185,7 +234,7 @@
 /* The following are error messages whose causes are not clear  */
 #define CURERR13	"    Error in separate_call. Got %s."	
 #define CURERR14	"    Error happened when execute separate feature/attribute `%s'\nof `%s'."
-#define CURERR15	"   Attribute %s is not found in class %s."
+#define CURERR15	"    Attribute %s is not found in class %s."
 #define CURERR16	"    Not implemented type(0x%x) of separate attribute."
 #define CURERR24	"    Can't find feature %s(in class %s)'s pattern ID."
 
@@ -205,9 +254,14 @@
 /*     Error Message From                                 */
 /*--------------------------------------------------------*/
 
+/* The following are prompt messages */
+/*
+#define CURPROMPT38
+*/
+
 /* The following are implementation error messages */
 /*
-#define CURIMPERR26	
+#define CURIMPERR27	
 */
 
 /* The following are application error messages */

@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	SERVER [G -> SERVER_INFO, T -> IDABLE, H -> COMPILER_ID]
+	ISE_SERVER [G -> SERVER_INFO, T -> IDABLE, H -> COMPILER_ID]
 
 inherit
 	EXTEND_TABLE [G, H]

@@ -91,9 +91,12 @@ feature {NONE} -- Initialization
 			old_list_widget: POINTER
 			temp_title: STRING
 			temp_width: INTEGER
+			temp_alignment, default_alignment: EV_TEXT_ALIGNMENT
+			temp_alignment_code: INTEGER
 			p: POINTER
 		do
 			old_list_widget := list_widget
+			create default_alignment
 			
 			list_widget := C.gtk_clist_new (a_columns)
 		
@@ -129,22 +132,37 @@ feature {NONE} -- Initialization
 			until
 				i > a_columns
 			loop
-				if column_titles /= Void and then 
+				if column_titles /= Void and then
 					column_titles.valid_index (i) and then
 						column_titles.i_th (i) /= Void then
 					temp_title := column_titles.i_th (i)
 				else
 					temp_title := ""
 				end
-				if column_widths /= Void and then column_widths.valid_index (i)
-				then
+				if column_widths /= Void and then column_widths.valid_index (i) then
 					temp_width := column_widths.i_th (i)
 				else
 					temp_width := Default_column_width
 				end
+				if column_alignments /= Void and then column_alignments.valid_index (i) then
+					-- Create alignment from alignment code.
+					temp_alignment_code := column_alignments.i_th (i)
+					create temp_alignment
+					if temp_alignment_code = temp_alignment.left_alignment then
+						temp_alignment.set_left_alignment
+					elseif temp_alignment_code = temp_alignment.center_alignment then
+						temp_alignment.set_center_alignment
+					else
+						temp_alignment.set_right_alignment
+					end
+				else
+					temp_alignment := default_alignment
+				end
 
 				column_title_changed (temp_title, i)
 				column_width_changed (temp_width, i)
+				column_alignment_changed (temp_alignment, i)
+
 				i := i + 1
 			end
 
@@ -222,11 +240,6 @@ feature -- Access
 		do
 			Result := ev_children.count
 		end
-
-	--item: EV_MULTI_COLUMN_LIST_ROW is
-	--	do
-	--		Result := (ev_children @ (index)).interface
-	--	end
 
 	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
 		do
@@ -389,33 +402,6 @@ feature -- Status setting
 			)	
 		end
 
-	align_text_left (a_column: INTEGER) is
-		do
-			C.gtk_clist_set_column_justification (
-				list_widget,
-				a_column - 1,
-				C.GTK_JUSTIFY_LEFT_ENUM
-			)
-		end
-
-	align_text_right (a_column: INTEGER) is
-		do
-			C.gtk_clist_set_column_justification (
-				list_widget,
-				a_column - 1,
-				C.GTK_JUSTIFY_RIGHT_ENUM
-			)
-		end
-
-	align_text_center (a_column: INTEGER) is
-		do
-			C.gtk_clist_set_column_justification (
-				list_widget,
-				a_column - 1,
-				C.GTK_JUSTIFY_CENTER_ENUM
-			)
-		end
-
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
 		do
@@ -456,6 +442,26 @@ feature -- Element change
 			if list_widget /= NULL then
 				C.gtk_clist_set_column_width (list_widget, column - 1, value)
 			end
+		end
+
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+			-- Set alignment of `a_column' to corresponding `alignment_code'.
+		local
+			an_alignment_code: INTEGER
+		do
+			if an_alignment.is_left_aligned then
+				an_alignment_code := C.GTK_JUSTIFY_LEFT_ENUM
+			elseif an_alignment.is_center_aligned then
+				an_alignment_code := C.GTK_JUSTIFY_CENTER_ENUM
+			else
+				an_alignment_code := C.GTK_JUSTIFY_RIGHT_ENUM
+			end
+
+			C.gtk_clist_set_column_justification (
+				list_widget,
+				a_column - 1,
+				an_alignment_code
+			)
 		end
 
 	set_row_height (value: INTEGER) is
@@ -920,6 +926,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/20 21:04:28  king
+--| Added alignment implementation
+--|
 --| Revision 1.64  2000/04/19 21:34:33  oconnor
 --| Removed reliance on externals
 --|

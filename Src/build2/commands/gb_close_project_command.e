@@ -21,6 +21,8 @@ inherit
 	
 	GB_ACCESSIBLE_OBJECT_HANDLER
 	
+	GB_ACCESSIBLE_OBJECT_EDITOR
+	
 	GB_CONSTANTS
 	
 	EV_DIALOG_CONSTANTS
@@ -77,8 +79,13 @@ feature -- Basic operations
 				-- Actually perfrom the closing of the project.
 			do
 				object_handler.clear_all_objects
+					-- This must be called before we hide the tools, 
+					-- as during this call, we find the parent window
+					-- of the `docked_object_editor'.
+				docked_object_editor.make_empty
 				system_status.close_current_project
 				system_status.main_window.hide_tools
+				floating_object_editors.wipe_out
 				command_handler.update	
 			end
 

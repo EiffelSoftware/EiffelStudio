@@ -54,10 +54,11 @@ feature -- Generation Structure
 		deferred
 		end
 
-	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id, type_id: INTEGER; feature_id: INTEGER) is
 			-- Define entry point for IL component from `feature_id' in
 			-- class `type_id'.
 		require
+			positive_creation_type_id: creation_type_id > 0
 			positive_type_id: type_id > 0
 			positive_feature_id: feature_id > 0
 		deferred

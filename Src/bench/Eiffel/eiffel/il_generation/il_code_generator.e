@@ -42,6 +42,13 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_AST_CONTEXT
+		rename
+			context as ast_context
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -208,14 +215,15 @@ feature -- Generation Structure
 			module_generation_started: module_generation_started
 		end
 
-	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id, type_id: INTEGER; feature_id: INTEGER) is
 			-- Define entry point for IL component from `feature_id' in
 			-- class `type_id'.
 		require
+			positive_creation_type_id: creation_type_id > 0
 			positive_type_id: type_id > 0
 			positive_feature_id: feature_id > 0
 		do
-			implementation.define_entry_point (type_id, feature_id)
+			implementation.define_entry_point (creation_type_id, type_id, feature_id)
 		end
 
 	end_assembly_generation is
@@ -627,6 +635,13 @@ feature -- IL Generation
 			current_select_tbl := class_c.feature_table.origin_table
 			Inst_context.set_cluster (class_c.cluster)
 			is_frozen_class := class_c.is_frozen
+
+				-- Generate custom attributes if defined on Eiffel classes
+				-- to be generated.
+			if not class_c.is_external then
+				ast_context.set_a_class (class_c)
+				meta_data_generator.generate_class_custom_attribute (class_type)
+			end
 
 				-- Initialize implementation.
 			if not is_frozen_class then

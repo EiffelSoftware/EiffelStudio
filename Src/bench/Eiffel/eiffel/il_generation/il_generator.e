@@ -63,16 +63,8 @@ feature -- Generation
 			classes: ARRAY [CLASS_C]
 		do
 			if not retried then
-				if System.java_generation then
-					check
-						False
-					end
---					il_generator.set_java_generation
---					create {JVM_META_DATA_GENERATOR} il_md_gen.make
-				else
-					create {MSIL_META_DATA_GENERATOR} il_md_gen.make
-					il_generator.set_msil_generation
-				end
+				create il_md_gen.make
+				il_generator.set_msil_generation
 				il_generator.set_meta_data_generator (il_md_gen)
 
 					-- Compute name of generated file if any.
@@ -193,6 +185,7 @@ feature {NONE} -- Type description
 				class_c := classes.item (i)
 				if class_c /= Void then
 					degree_output.put_degree_1 (class_c, j)
+					System.set_current_class (class_c)
 					j := j - 1
 					from
 						not_is_external := not class_c.is_external
@@ -213,12 +206,6 @@ feature {NONE} -- Type description
 							-- and inheritance hierarchy.
 						il_md_gen.generate_il_class_description (class_c, cl_type)
 
-							-- Generate custom attributes if defined on Eiffel classes
-							-- to be generated.
-						if not_is_external then
-							ast_context.set_a_class (class_c)
-							il_md_gen.generate_class_custom_attribute (cl_type)
-						end
 						types.forth
 					end
 				end
@@ -237,6 +224,7 @@ feature {NONE} -- Type description
 			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
+			cl_type: CLASS_TYPE
 		do
 			from
 				i := classes.lower
@@ -251,6 +239,7 @@ feature {NONE} -- Type description
 				class_c := classes.item (i)
 				if class_c /= Void and then not class_c.is_external then
 					degree_output.put_degree_minus_1 (class_c, j)
+					System.set_current_class (class_c)
 					j := j - 1
 					from
 						types := class_c.types
@@ -258,12 +247,14 @@ feature {NONE} -- Type description
 					until
 						types.after
 					loop
-						context.init (types.item)
+						cl_type := types.item
+						context.init (cl_type)
+
 							-- Generate entity to represent current Eiffel interface class
-						il_md_gen.generate_il_features_description (class_c, types.item)
+						il_md_gen.generate_il_features_description (class_c, cl_type)
 
 						if not class_c.is_frozen then
-							il_generator.start_il_generation (types.item.static_type_id)
+							il_generator.start_il_generation (cl_type.static_type_id)
 							il_generator.end_class
 						end
 						types.forth
@@ -298,9 +289,7 @@ feature {NONE} -- Type description
 				class_c := classes.item (i)
 				if class_c /= Void and then not class_c.is_external then
 					degree_output.put_degree_minus_2 (class_c, j)
-					if j = 62 then
-						print ("")
-					end
+					System.set_current_class (class_c)
 					j := j - 1
 					from
 						types := class_c.types
@@ -326,6 +315,7 @@ feature {NONE} -- Type description
 		local
 			a_class: CLASS_C
 			root_feat: FEATURE_I
+			l_decl_type: CL_TYPE_I
 		do
 			if
 				System.msil_generation_type.is_equal ("exe") and then
@@ -334,8 +324,10 @@ feature {NONE} -- Type description
 					-- Update the root class info
 				a_class := System.root_class.compiled_class
 				root_feat := a_class.feature_table.item (System.creation_name)
-				il_generator.define_entry_point (a_class.types.first.implementation_id,
-					root_feat.feature_id)
+				l_decl_type := il_generator.implemented_type (root_feat.origin_class_id,
+					a_class.types.first.type)
+				il_generator.define_entry_point (a_class.types.first.implementation_id, l_decl_type.associated_class_type.implementation_id,
+					root_feat.origin_feature_id)
 			end
 		end
 		

@@ -295,6 +295,12 @@ feature {NONE} -- Implementation
 			create interval.make (lower, integer)
 			first.value_range.adapt (interval)
 			(objects @ 2).value_range.adapt (interval)
+				-- We update the system settings to reflect
+				-- the fact that a user modification has taken place.
+				-- This enables us to do things such as enable the save
+				-- options.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 	valid_upper (upper: INTEGER): BOOLEAN is
@@ -315,6 +321,12 @@ feature {NONE} -- Implementation
 			create interval.make (integer, upper)
 			first.value_range.adapt (interval)
 			(objects @ 2).value_range.adapt (interval)
+				-- We update the system settings to reflect
+				-- the fact that a user modification has taken place.
+				-- This enables us to do things such as enable the save
+				-- options.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 	valid_lower (lower: INTEGER): BOOLEAN is

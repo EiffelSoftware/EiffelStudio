@@ -176,21 +176,6 @@ int c_gtk_widget_destroyed (GtkWidget *widget)
     return (GTK_OBJECT_DESTROYED (GTK_OBJECT (widget)));
 }
 
-/* Create a pixmap widget from an xpm file */
-GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname) 
-{
-    GdkBitmap *mask;
-    GdkPixmap *pixmap;
-  
-    /* Widget must be realized before we can attach a pixmap to it */
-    if (widget->window == NULL)
-	gtk_widget_realize (widget);
-    pixmap = gdk_pixmap_create_from_xpm (widget->window,
-					 &mask, 
-					 &widget->style->bg[GTK_STATE_NORMAL],
-					 fname);
-    return (gtk_pixmap_new (pixmap, mask));
-}
 
 /* Set widget flags */
 void c_gtk_widget_set_flags (GtkWidget *widget, int flags) 
@@ -427,6 +412,69 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button)
 {
     return (GTK_TOGGLE_BUTTON(button)->active);
 }
+
+				/* Pixmap */
+				
+/* Data for empty pixmap of size 1x1 */
+static char * xpm_data[] = {
+      "1 1 1 1",
+      "       c None",
+      " "};
+
+/* Create an empty pixmap */
+GtkWidget* c_gtk_pixmap_create_empty  (GtkWidget *widget)
+{
+    GdkBitmap *mask;
+    GdkPixmap *pixmap;
+  
+    /* Widget must be realized before we can attach a pixmap to it */
+    if (widget->window == NULL)
+	gtk_widget_realize (widget);
+    pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
+					 &mask, 
+					 &widget->style->bg[GTK_STATE_NORMAL],
+					 (gchar **)xpm_data);
+    return (gtk_pixmap_new (pixmap, mask));
+}
+
+
+/* Create a pixmap widget from an xpm file */
+/* file must exist an be in xpm format */
+GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname) 
+{
+    GdkBitmap *mask;
+    GdkPixmap *pixmap;
+  
+    /* Widget must be realized before we can attach a pixmap to it */
+    if (widget->window == NULL)
+	gtk_widget_realize (widget);
+    pixmap = gdk_pixmap_create_from_xpm (widget->window,
+					 &mask, 
+					 &widget->style->bg[GTK_STATE_NORMAL],
+					 fname);
+    return (gtk_pixmap_new (pixmap, mask));
+}
+
+/* Read the pixmap for xpm file */
+/* file must exist an be in xpm format */
+void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
+				  GtkWidget *pixmap_parent,
+				  char *file_name )
+{
+    GdkPixmap* gdk_pixmap;
+    GdkBitmap *mask;
+    GtkStyle *style;
+
+    style = gtk_widget_get_style (pixmap_parent);
+    gdk_pixmap = gdk_pixmap_create_from_xpm (pixmap_parent->window,
+					     &mask,
+					     &style->bg[GTK_STATE_NORMAL],
+					     file_name);
+    
+    gtk_pixmap_set (pixmap, gdk_pixmap, mask);
+}
+					     
+					     
 
 				/* static functions */
 static void

@@ -33,6 +33,30 @@ feature -- Access
                                 not_yet_implemented: False
                         end		
 		end
+	
+feature {EV_RADIO_BUTTON_IMP} -- Access
+	
+	radio_button_group: POINTER is
+			-- Gtk radio button group for this container. 
+			-- If no radio buttons are added inside this 
+			-- container, return Default_pointer
+		do
+			if rbg_pointer = Void then
+				Result := Default_pointer
+			else
+				Result := rbg_pointer
+			end
+		end
+	
+	set_rbg_pointer (new_rbg_pointer: POINTER) is
+		do
+			rbg_pointer := new_rbg_pointer
+		end
+	
+feature {NONE} -- Implementation
+	
+	rbg_pointer: POINTER
+						
 
 feature {EV_CONTAINER} -- Element change
 	

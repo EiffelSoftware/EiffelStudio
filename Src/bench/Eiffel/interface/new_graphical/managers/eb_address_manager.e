@@ -560,6 +560,9 @@ feature {NONE} -- Execution
 					end
 				end
 			else
+				if output_line /= Void then
+					output_line.remove_text
+				end
 				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_cluster))
 			end
 		end
@@ -581,6 +584,9 @@ feature {NONE} -- Execution
 					not ctxt.has ('*') and then
 					not ctxt.has ('?')
 				then
+					if output_line /= Void then
+						output_line.remove_text
+					end
 					if is_valid_class_name (ctxt) then
 						create new_class_win.make_default (parent)
 						new_class_win.set_stone_when_finished
@@ -619,18 +625,21 @@ feature {NONE} -- Execution
 		do
 			if current_class = Void then
 				if class_i = Void then
+					if output_line /= Void then
+						output_line.set_text (Warning_messages.w_Specify_a_class)
+					else
+						--| FIXME XR: How do we warn the user?
+					end
 					if class_address.is_displayed then
-						if output_line /= Void then
-							output_line.set_text (Warning_messages.w_Specify_a_class)
-						else
-							--| FIXME XR: How do we warn the user?
-						end
 						class_address.set_focus
 						if not class_address.text.is_empty then
 							class_address.select_all
 						end
 					end
 				else
+					if output_line /= Void then
+						output_line.remove_text
+					end
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			else
@@ -662,8 +671,14 @@ feature {NONE} -- Execution
 				end
 				--| FIXME XR: Propose to create a new feature in current_class instead?
 			elseif mode then
+				if output_line /= Void then
+					output_line.remove_text
+				end
 				parent.advanced_set_stone (create {FEATURE_STONE}.make (current_feature))
 			else
+				if output_line /= Void then
+					output_line.remove_text
+				end
 				if current_feature.written_class.has_feature_table then
 					f := current_feature.written_class.feature_with_body_index (current_feature.body_index)
 				end
@@ -750,6 +765,9 @@ feature {NONE} -- Implementation
 				cluster_list.forth
 			end
 			if not cluster_names.is_empty then
+				if output_line /= Void then
+					output_line.remove_text
+				end
 				if cluster_names.count = 1 then
 					process_cluster_callback (1)
 				else
@@ -806,6 +824,9 @@ feature {NONE} -- Implementation
 				class_list.forth
 			end
 			if not class_names.is_empty then
+				if output_line /= Void then
+					output_line.remove_text
+				end
 				if class_names.count = 1 then
 					process_class_callback (1)
 				else
@@ -2034,7 +2055,6 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			address_dialog.set_position (start_x, header_info.screen_y)
 			address_dialog.set_size (parent_window.width + parent_window.screen_x - start_x, header_info.height)
 			address_dialog.show
-			output_line.remove_text
 		end
 
 	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is

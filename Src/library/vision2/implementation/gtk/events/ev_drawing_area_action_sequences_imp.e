@@ -12,7 +12,7 @@ deferred class
 inherit
 	EV_DRAWING_AREA_ACTION_SEQUENCES_I
 		export 
-			{INTERMEDIARY_ROUTINES} expose_actions_internal
+			{EV_INTERMEDIARY_ROUTINES} expose_actions_internal
 		end
 
 	EV_ANY_IMP 
@@ -25,25 +25,10 @@ feature -- Event handling
 	create_expose_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Create a expose action sequence.
 			-- Attach to GTK "expose-event" signal.
-		local
-			action_sequence: ACTION_SEQUENCE [TUPLE]
 		do
---			create action_sequence.make
---			action_sequence.extend (agent Gtk_marshal.create_expose_actions_intermediary (c_object, ?, ?, ?, ?))
---			create Result
---			real_connect_signal_to_actions (c_object, "expose-event", 
---				action_sequence, 
---				default_translate)
-				
 			create Result
 			real_signal_connect (c_object, "expose-event", agent gtk_marshal.create_expose_actions_intermediary (c_object, ?, ?, ?, ?), default_translate)
 		end
-
---	Gtk_signal_expose_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("expose-event")
---		end
-
 end
 
 

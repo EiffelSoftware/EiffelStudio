@@ -20,6 +20,7 @@ inherit
 		redefine
 			make,
 			interface,
+			on_activate,
 			menu_item_type,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
@@ -37,7 +38,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_check_menu_item_new)
 			C.gtk_check_menu_item_set_show_toggle (c_object, True)
-			C.gtk_check_menu_item_set_active (c_object, False)
+			disable_select
 		end
 
 feature -- Status report
@@ -53,21 +54,32 @@ feature -- Status setting
 	enable_select is
 			-- Select this menu item.
 		do
-			C.gtk_check_menu_item_set_active (c_object, True)
+			if not is_selected then
+				ignore_select_actions := True
+				C.gtk_check_menu_item_set_active (c_object, True)		
+				ignore_select_actions := False
+			end
 		end
 
 	disable_select is
 			-- Deselect this menu item.
 		do
-			C.gtk_check_menu_item_set_active (c_object, False)
+			if is_selected then
+				ignore_select_actions := True
+				C.gtk_check_menu_item_set_active (c_object, False)
+				ignore_select_actions := False
+			end	
 		end
 
 	toggle is
 			-- Invert the value of `is_selected'.
 		do
-			C.gtk_check_menu_item_set_active (c_object, not is_selected)
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
 		end
-		
 		
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
@@ -76,6 +88,20 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			Result := Check_type
 		end
 
+feature {NONE} -- Implementation
+
+	on_activate is
+			-- `Current' has been activated.
+		do
+			if not ignore_select_actions then
+				{EV_MENU_ITEM_IMP} Precursor
+			end
+		end
+		
+	ignore_select_actions: BOOLEAN
+			-- Should select actions be ignore, ues if enable_select is called.
+			
+			
 feature {EV_ANY_I} -- Implementation
 
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE

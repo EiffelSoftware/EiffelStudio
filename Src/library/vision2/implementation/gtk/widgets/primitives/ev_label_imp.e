@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			C.gtk_container_add (c_object, text_label)
 			set_font (font)
+			align_text_center
 		end
 
 feature {NONE} -- Implementation

@@ -3,8 +3,6 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class 
 	EV_LIST_ITEM_LIST_IMP
@@ -95,7 +93,7 @@ feature {NONE} -- Initialization
 			)
 		end
 
-feature {INTERMEDIARY_ROUTINES} -- Initialization
+feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
 
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.
@@ -244,7 +242,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	list_widget: POINTER
 	
-feature {INTERMEDIARY_ROUTINES} -- Implementation	
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation	
 	
 	on_list_clicked is
 			-- The list was clicked.
@@ -315,17 +313,11 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_to_container (v: like item) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
 			-- (from EV_ITEM_LIST_IMP)
 			-- (export status {NONE})
-		local
-			v_imp: EV_ITEM_IMP
 		do
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= void
-			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 
@@ -386,7 +378,7 @@ feature {NONE} -- Implementation
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
 		
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Called when a list item is selected.

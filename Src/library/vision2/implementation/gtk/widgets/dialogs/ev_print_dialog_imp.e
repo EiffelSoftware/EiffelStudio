@@ -163,7 +163,8 @@ feature {NONE} -- Initialization
 			main_dialog_container.extend (button_hbox)
 			extend (main_dialog_container)
 			disable_user_resize
-			signal_connect_true ("delete_event", agent on_cancel)
+
+			signal_connect_true ("delete_event", agent gtk_marshal.on_window_close_request (c_object))
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
 			print_btn_imp ?= print_btn.implementation
@@ -236,22 +237,22 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	from_page: INTEGER is
-                        -- Value for the starting page edit control
-                do
+			-- Value for the starting page edit control
+		do
 			Result := from_spn.value
-                end
+		end
 
-        to_page: INTEGER is
-                        -- Value for the ending page edit control
-                do
+	to_page: INTEGER is
+			-- Value for the ending page edit control
+		do
 			Result := to_spn.value
-                end
+		end
 
-        copies: INTEGER is
-                        -- Number of copies for the Copies edit control
-                do
+	copies: INTEGER is
+			-- Number of copies for the Copies edit control
+		do
 			Result := copies_spn.value
-                end
+		end
 
 	output_file_name: STRING is
 			-- String representation of the path to output
@@ -270,22 +271,22 @@ feature -- Access
 feature -- Status report
 
 	all_pages_selected: BOOLEAN is
-                        -- Is the "All pages" radio button selected?
-                do
+			-- Is the "All pages" radio button selected?
+		do
 			Result := all_rdo.is_selected
-                end
+		end
 
-        page_numbers_selected: BOOLEAN is
-                        -- Is the "Page" radio button selected?
-                do
+	page_numbers_selected: BOOLEAN is
+			-- Is the "Page" radio button selected?
+		do
 			Result := range_rdo.is_selected
-                end
+		end
 
-        selection_selected: BOOLEAN is
-                        -- Is the "Selection" radio button selected?
-                do
+	selection_selected: BOOLEAN is
+			 -- Is the "Selection" radio button selected?
+		do
 			Result := selection_rdo.is_selected
-                end
+		end
 
 	page_numbers_enabled: BOOLEAN is
 			-- Is the "Range" radio button enabled?
@@ -299,11 +300,11 @@ feature -- Status report
 			Result := selection_rdo.is_sensitive
 		end
 
-        collate_checked: BOOLEAN is
-                        -- Is the "Collate" check box checked?
-                do
+	collate_checked: BOOLEAN is
+			-- Is the "Collate" check box checked?
+		do
 			Result := collate_chk.is_selected
-                end
+		end
 
 	print_to_file_enabled: BOOLEAN is
 			-- Is the "File" radio button enabled?
@@ -317,40 +318,40 @@ feature -- Status report
 			Result := file_rdo.is_show_requested
 		end
 
-        print_to_file_checked: BOOLEAN is
-                        -- Is the "File" radio button checked?
-                do
+	print_to_file_checked: BOOLEAN is
+			-- Is the "File" radio button checked?
+		do
 			Result := file_rdo.is_selected
-                end
+		end
 
-        landscape_checked: BOOLEAN is
-                        -- Is the "Landscape" radio button checked?
-                do
+	landscape_checked: BOOLEAN is
+			-- Is the "Landscape" radio button checked?
+		do
 			Result := landscape_rdo.is_selected
-                end
+ 		end
 
 feature -- Status setting
 
 	select_all_pages is
 			-- Select the "All pages" radio button.
-                        -- Selected by default.
-                do
+			-- Selected by default.
+		do
 			all_rdo.enable_select
-                end
+		end
 
-        select_page_numbers is
-                        -- Select the "Page numbers" radio button.
-                        -- By default, the "All pages" button is selected.
-                do
+	select_page_numbers is
+			-- Select the "Page numbers" radio button.
+			-- By default, the "All pages" button is selected.
+		do
 			range_rdo.enable_select
-                end
+		end
 
-        select_selection is
-                        -- Select the "Selection" radio button.
-                        -- By default, the "All pages" button is selected.
-                do
+ 	select_selection is
+  			-- Select the "Selection" radio button.
+			-- By default, the "All pages" button is selected.
+		do
 			selection_rdo.enable_select
-                end
+		end
 
 	enable_page_numbers is
 			-- Enable the "Range" radio button.
@@ -376,11 +377,11 @@ feature -- Status setting
 			selection_rdo.disable_sensitive
 		end
 
-        check_collate is
+	check_collate is
                         -- Check the "Collate" check box.
-                do
+		do
 			collate_chk.enable_select
-                end
+		end
 
 	uncheck_collate is
 			-- Uncheck the "Collate" check box.
@@ -432,11 +433,11 @@ feature -- Status setting
 
 feature -- Element change
 
-        set_from_page (value: INTEGER) is
+	set_from_page (value: INTEGER) is
 			 -- Make `value' the new `from_page' number.
 		do
 			from_spn.set_value (value)
-                end
+  		end
 
 	set_to_page (value: INTEGER) is
 			-- Make `value' the new `to_page' number.

@@ -37,13 +37,17 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			C.gtk_toggle_button_set_active (visual_widget, True)
+			if not is_selected then
+				C.gtk_toggle_button_set_active (visual_widget, True)
+			end
 		end
 
 	disable_select is
 				-- Set `is_selected' `False'.
 		do
-			C.gtk_toggle_button_set_active (visual_widget, False)
+			if is_selected then
+				C.gtk_toggle_button_set_active (visual_widget, False)
+			end	
 		end
 
 	toggle is

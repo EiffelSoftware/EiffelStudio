@@ -45,6 +45,7 @@ inherit
 		redefine
 			i_th,
 			count,
+			insert_i_th,
 			remove_i_th,
 			reorder_child,
 			add_to_container,
@@ -299,7 +300,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	select_callback (int: TUPLE [INTEGER]) is
 		local
@@ -307,20 +308,22 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 			a_position: INTEGER
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			temp_int ?= int.item (1)
-			a_position := temp_int.item + 1
-
-			an_item := (ev_children @ a_position)
-			if an_item /= previously_selected_node then		
-				if an_item.select_actions_internal /= Void then
-					an_item.select_actions_internal.call (empty_tuple)
+			if not ignore_select_callback then
+				temp_int ?= int.item (1)
+				a_position := temp_int.item + 1
+	
+				an_item := (ev_children @ a_position)
+				if an_item /= previously_selected_node then
+					if an_item.select_actions_internal /= Void then
+						an_item.select_actions_internal.call (empty_tuple)
+					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call ([an_item.interface])
+					end
+					switch_to_browse_mode_if_necessary
 				end
-				if select_actions_internal /= Void then
-					select_actions_internal.call ([an_item.interface])
-				end
-				switch_to_browse_mode_if_necessary
+				previously_selected_node := an_item
 			end
-			previously_selected_node := an_item
 		end
 		
 	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -411,7 +414,7 @@ feature -- Access
 						0
 					)
 				)
-				Result ?= (ev_children @ (an_index + 1)).interface
+				Result := (ev_children @ (an_index + 1)).interface
 			end
 		end
 
@@ -444,7 +447,7 @@ feature -- Access
 						i
 					)
 				)
-				row ?= (ev_children @ (an_index + 1)).interface
+				row := (ev_children @ (an_index + 1)).interface
 				Result.force (row)
 				i := i + 1
 			end
@@ -504,6 +507,7 @@ feature -- Status setting
 			-- For constants, see EV_GTK_CONSTANTS.
 		do
 			multiple_selection_enabled := True
+			ignore_select_callback := True
 			if selection_mode_is_single then
 				C.gtk_clist_set_selection_mode (
 					list_widget,
@@ -515,6 +519,7 @@ feature -- Status setting
 					C.GTK_SELECTION_EXTENDED_ENUM
 				)
 			end
+			ignore_select_callback := False
 		end
 
 	disable_multiple_selection is
@@ -523,12 +528,14 @@ feature -- Status setting
 			-- For constants, see EV_GTK_CONSTANTS.
 		do
 			multiple_selection_enabled := False
+			ignore_select_callback := True
 			selection_mode_is_single := True
 			C.gtk_clist_unselect_all (list_widget)
 			C.gtk_clist_set_selection_mode (
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
+			ignore_select_callback := False
 		end
 
 	select_item (an_index: INTEGER) is
@@ -550,7 +557,9 @@ feature -- Status setting
 		do
 			if list_widget /= NULL then
 				switch_to_single_mode_if_necessary
+				ignore_select_callback := True
 				C.gtk_clist_unselect_all (list_widget)
+				ignore_select_callback := False
 			end
 		end
 
@@ -775,15 +784,20 @@ feature -- Implementation
 				a_enable_flag := ev_children.item.is_transport_enabled
 				ev_children.forth
 			end
-
+			update_pnd_connection (a_enable_flag)
+		end
+		
+	update_pnd_connection (a_enable: BOOLEAN) is
+			-- Update the PND connection of `Current' if needed.
+		do
 			if not is_transport_enabled then
-				if a_enable_flag or pebble /= Void then
+				if a_enable or pebble /= Void then
 					connect_pnd_callback
 				end
-			elseif not a_enable_flag and pebble = Void then
+			elseif not a_enable and pebble = Void then
 				disable_transport_signals
 				is_transport_enabled := False
-			end
+			end		
 		end
 
 	start_transport_filter (
@@ -899,9 +913,6 @@ feature -- Implementation
 
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.mode_is_pick_and_drop then
@@ -910,13 +921,8 @@ feature -- Implementation
 			elseif mode_is_pick_and_drop then
 					signal_emit_stop (c_object, "button-press-event")
 			end
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
 
-			app_imp.on_drop (pebble)
+			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void	
@@ -1018,6 +1024,7 @@ feature {NONE} -- Implementation
 			sel_items: like selected_items
 		do
 			if list_widget /= NULL and then not selection_mode_is_single then
+				ignore_select_callback := True
 				if multiple_selection_enabled then
 					sel_items := selected_items
 					if 
@@ -1038,6 +1045,7 @@ feature {NONE} -- Implementation
 					)
 					selection_mode_is_single := True
 				end
+				ignore_select_callback := False
 			end
 		end
 		
@@ -1046,6 +1054,7 @@ feature {NONE} -- Implementation
 			-- if necessary.
 		do
 			if list_widget /= NULL and then selection_mode_is_single then
+				ignore_select_callback := True
 				if multiple_selection_enabled then
 					C.gtk_clist_set_selection_mode (
 						list_widget, 
@@ -1057,9 +1066,13 @@ feature {NONE} -- Implementation
 						C.Gtk_selection_browse_enum
 					)
 				end
+				ignore_select_callback := False
 				selection_mode_is_single := False
 			end
 		end
+		
+	ignore_select_callback: BOOLEAN
+		-- Ignore the select callback should selection mode change
 
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `a_item' is visible on the screen.
@@ -1072,13 +1085,14 @@ feature {NONE} -- Implementation
 			create_list (a_columns)
 		end
 
-	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
-			-- Add `v' to the list.
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			p: POINTER
 			dummy: INTEGER
 		do
+			-- add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 
@@ -1095,7 +1109,26 @@ feature {NONE} -- Implementation
 				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
 			end
-			update_pnd_status		
+			
+			if item_imp.is_transport_enabled then
+				update_pnd_connection (True)
+			end
+	
+			child_array.go_i_th (i)
+			child_array.put_left (v)		
+			
+			if i < count then
+				-- reorder_child (v, v_imp, i)
+				C.gtk_clist_row_move (
+					list_widget,
+					item_imp.index - 1,
+					i - 1
+				)
+				-- Insert `v' in to ev_children list.
+				
+				ev_children.go_i_th (i)
+				ev_children.put_left (item_imp)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -1115,22 +1148,21 @@ feature {NONE} -- Implementation
 			child_array.remove
 			update_pnd_status
 		end
-
-	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		local
-			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		
+	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW; v_imp: EV_ITEM_IMP) is
+			-- Add `v' to the list.
 		do
-			item_imp ?= v.implementation
-			C.gtk_clist_row_move (
-				list_widget,
-				item_imp.index - 1,
-				a_position - 1
-			)
-			-- Insert `v' in to ev_children list.
-			
-			ev_children.go_i_th (a_position)
-			ev_children.put_left (item_imp)	
+			check
+				do_not_call: False
+			end
+		end
+
+	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
+			-- Move `v' to `a_position' in Current.
+		do
+			check
+				do_not_call: False
+			end
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

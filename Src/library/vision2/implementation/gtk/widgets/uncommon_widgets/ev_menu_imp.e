@@ -29,7 +29,8 @@ inherit
 			menu_item_type,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			pointer_double_press_actions_internal,
+			destroy
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -38,7 +39,8 @@ inherit
 			initialize,
 			list_widget,
 			insert_menu_item,
-			dispose
+			dispose,
+			destroy
 		end
 
 create
@@ -56,16 +58,6 @@ feature {NONE} -- Initialization
 			{EV_MENU_ITEM_LIST_IMP} Precursor
 			{EV_MENU_ITEM_IMP} Precursor
 		end
-		
-	dispose is
-			-- 
-		do
-			{EV_MENU_ITEM_IMP} Precursor
-		--	print ("Menu is being disposed%N")
-		--	gtk_object_unref (list_widget)
-			list_widget := NULL
-		end
-		
 
 feature -- Element change
 
@@ -178,6 +170,22 @@ feature {EV_ANY_I} -- Implementation
 	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+feature {NONE} -- Implementation
+	
+	destroy is
+			-- Destroy the menu
+		do
+			interface.wipe_out
+			Precursor {EV_MENU_ITEM_IMP}
+		end
+		
+	dispose is
+			-- Disposal routine
+		do
+			{EV_MENU_ITEM_IMP} Precursor
+			list_widget := NULL
+		end
 
 end -- class EV_MENU_IMP
 

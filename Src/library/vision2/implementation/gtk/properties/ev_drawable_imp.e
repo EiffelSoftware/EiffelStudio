@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 
 	init_default_values is
 			-- Set default values. Call during initialization.
+		local
+			a_font: EV_FONT
 		do
 			create background_color
 			create foreground_color
@@ -38,9 +40,9 @@ feature {NONE} -- Initialization
 			line_style := C.Gdk_line_solid_enum
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
-			create font
-			internal_font_ascent := font.ascent
-			internal_font_imp ?= font.implementation
+			create a_font
+			internal_font_ascent := a_font.ascent
+			internal_font_imp ?= a_font.implementation
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
@@ -90,8 +92,11 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 
 feature -- Access
 
-	font: EV_FONT
+	font: EV_FONT is
 			-- Font used for drawing text.
+		do
+			Result := clone (internal_font_imp.interface)
+		end
 
 	foreground_color: EV_COLOR
 			-- Color used to draw primitives.
@@ -172,9 +177,8 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-			font := clone (a_font)
-			internal_font_ascent := font.ascent
-			internal_font_imp ?= font.implementation
+			internal_font_ascent := a_font.ascent
+			internal_font_imp ?= a_font.implementation
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -631,7 +635,7 @@ feature {NONE} -- Implemention
 			end
 		ensure
 			Result_exists: Result /= Void
-			same_size: pts.count = Result.count
+			same_size: pts.count = Result.count / 2
 		end
 
 	radians_to_gdk (ang: REAL): INTEGER is

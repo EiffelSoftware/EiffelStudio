@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Initialize the notebook.
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
-			selected_item_index := 1
+			selected_item_index := 0
 		end
 
 feature -- Access
@@ -194,7 +194,7 @@ feature -- Element change
 			)
 		end
 
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	page_switch (a_page: TUPLE [POINTER]) is
 			-- Called when the page is switched.
@@ -217,11 +217,11 @@ feature {INTERMEDIARY_ROUTINES} -- Implementation
 		
 feature {EV_ANY_I} -- Implementation
 
-	on_new_item (an_item: EV_WIDGET) is
+	on_new_item (an_item_imp: EV_WIDGET_IMP) is
 			-- Set `an_item's text empty.
 		do
-			Precursor (an_item)
-			set_item_text (an_item, "")
+			Precursor (an_item_imp)
+			set_item_text (an_item_imp.interface, "")
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

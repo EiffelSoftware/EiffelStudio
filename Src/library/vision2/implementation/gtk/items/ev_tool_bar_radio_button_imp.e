@@ -75,7 +75,9 @@ feature -- Status setting
 	enable_select is
 			-- Select `Current' in its grouping.
 		do
-			C.gtk_toggle_button_set_active (c_object, True)
+			if not is_selected then
+				C.gtk_toggle_button_set_active (c_object, True)
+			end
 		end
 
 feature -- Status report
@@ -99,7 +101,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (c_object, "toggled", agent Gtk_marshal.on_tool_bar_radio_button_activate (c_object), Void)
 		end
 		
-feature {INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_activate is
 			-- The button has been activated by the user (pushed).

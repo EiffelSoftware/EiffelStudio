@@ -140,65 +140,47 @@ char **information_pixmap_xpm (void) {
 }
 
 /* XPM */
-char *error_pixmap_data[] = {
-/* width height ncolors chars_per_pixel */
-"32 32 17 1",
-/* colors */
-"  c None",
-"` c #000000",
-"a c #737300",
-"b c #292900",
-"c c #7B7B00",
-"d c #313100",
-"e c #C6C600",
-"f c #101000",
-"g c #A5A500",
-"h c #181800",
-"i c #F7F700",
-"j c #636300",
-"k c #8C8C00",
-"l c #424200",
-"n c #FFFF00",
-"o c #6B6B00",
-"p c #DEDE00",
-/* pixels */
-"              ````              ",
-"          ````nnnn````          ",
-"        ``nnnnnnnnnnnn``        ",
-"       `nnnnnnnnnnnnnnnn`       ",
-"     ``nnnnnnnnnnnnnnnnnn``     ",
-"    `nnnnnnnnnnnnnnnnnnnnnn`    ",
-"    `nnnnnnnnpd`dpnnnnnnnnn`    ",
-"   `nnnnnnnnnd```dnnnnnnnnnn`   ",
-"  `nnnnnnnnnn`````nnnnnnnnnnn`  ",
-"  `nnnnnnnnnnf```hnnnnnnnnnnn`  ",
-" `nnnnnnnnnnnb```bnnnnnnnnnnnn` ",
-" `nnnnnnnnnnnl```lnnnnnnnnnnnn` ",
-" `nnnnnnnnnnnj```jnnnnnnnnnnnn` ",
-"`nnnnnnnnnnnna```cnnnnnnnnnnnnn`",
-"`nnnnnnnnnnnnk```knnnnnnnnnnnnn`",
-"`nnnnnnnnnnnng```gnnnnnnnnnnnnn`",
-"`nnnnnnnnnnnne```ennnnnnnnnnnnn`",
-"`nnnnnnnnnnnnp```pnnnnnnnnnnnnn`",
-"`nnnnnnnnnnnni```innnnnnnnnnnnn`",
-" `nnnnnnnnnnnnj`jnnnnnnnnnnnnn` ",
-" `nnnnnnnnnnnnnnnnnnnnnnnnnnnn` ",
-" `nnnnnnnnnnnnnnnnnnnnnnnnnnnn` ",
-"  `nnnnnnnnnnnnnnnnnnnnnnnnnn`  ",
-"  `nnnnnnnnnnno`onnnnnnnnnnnn`  ",
-"   `nnnnnnnnnn```nnnnnnnnnnn`   ",
-"    `nnnnnnnnno`onnnnnnnnnn`    ",
-"    `nnnnnnnnnnnnnnnnnnnnnn`    ",
-"     ``nnnnnnnnnnnnnnnnnn``     ",
-"       `nnnnnnnnnnnnnnnn`       ",
-"        ``nnnnnnnnnnnn``        ",
-"          ````nnnn````          ",
-"              ````              "
-};
+static char * warning_pixmap_data[] = {
+"32 32 3 1",
+" 	c None",
+"$	c #FFFF00",
+"%	c #000000",
+"              $$                ",
+"             $$$$%              ",
+"            $$$$$$%             ",
+"            $$$$$$%%            ",
+"           $$$$$$$$%%           ",
+"           $$$$$$$$%%           ",
+"           $$$$$$$$$%%          ",
+"          $$$$$$$$$$%%          ",
+"         $$$$$$%$$$$$%%         ",
+"         $$$$$%%%$$$$%%         ",
+"         $$$$%%%%%$$$$%%        ",
+"        $$$$$%%%%%$$$$%%        ",
+"        $$$$$%%%%%$$$$$%%       ",
+"       $$$$$$%%%%%$$$$$%%       ",
+"       $$$$$$$%%%$$$$$$$%%      ",
+"      $$$$$$$$%%%$$$$$$$%%      ",
+"      $$$$$$$$%%%$$$$$$$$%%     ",
+"     $$$$$$$$$%%%$$$$$$$$%%     ",
+"     $$$$$$$$)%%%$$$$$$$$$%%    ",
+"    $$$$$$$$$$%%%$$$$$$$$$%%    ",
+"    $$$$$$$$$$%%%$$$$$$$$$$%%   ",
+"   $$$$$$$$$$$$%$$$$$$$$$$$%%   ",
+"   $$$$$$$$$$$$%$$$$$$$$$$$$%%  ",
+"  $$$$$$$$$$$$$$$$$$$$$$$$$$%%  ",
+"  $$$$$$$$$$$$$%$$$$$$$$$$$$$%% ",
+" $$$$$$$$$$$$$%%%$$$$$$$$$$$$%% ",
+" $$$$$$$$$$$$$%%%$$$$$$$$$$$$$% ",
+" $$$$$$$$$$$$$$%$$$$$$$$$$$$$$%%",
+" $$$$$$$$$$$$$$$$$$$$$$$$$$$$$%%",
+"  $$$$$$$$$$$$$$$$$$$$$$$$$$$%%%",
+"   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+"    %%%%%%%%%%%%%%%%%%%%%%%%%%% "};
 
 
-char **error_pixmap_xpm (void) {
-        return error_pixmap_data;
+char **warning_pixmap_xpm (void) {
+        return warning_pixmap_data;
 }
 
 /* XPM */
@@ -270,7 +252,7 @@ char **question_pixmap_xpm (void) {
 }
 
 /* XPM */
-char *warning_pixmap_data[] = {
+char *error_pixmap_data[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 17 1",
 /* colors */
@@ -326,8 +308,8 @@ char *warning_pixmap_data[] = {
 "              ````              "
 };
 
-char **warning_pixmap_xpm (void) {
-        return warning_pixmap_data;
+char **error_pixmap_xpm (void) {
+        return error_pixmap_data;
 }
 
 /* XPM */
@@ -1124,6 +1106,12 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.18  2002/11/26 21:21:19  king
+// Merged with changes from 52 branch
+//
+// Revision 1.17.6.1  2002/10/11 01:24:38  king
+// Fixed error and warning xpm issue
+//
 // Revision 1.17  2001/11/06 02:12:28  king
 // Corrected pixmap externals
 //

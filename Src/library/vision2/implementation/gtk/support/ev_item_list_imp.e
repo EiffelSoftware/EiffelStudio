@@ -29,14 +29,19 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
+		local
+			v_imp: EV_ITEM_IMP
 		do
-			add_to_container (v)
+			v_imp ?= v.implementation
+			check
+				imp_not_void: v_imp /= Void
+			end
+			add_to_container (v, v_imp)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then
-				reorder_child (v, i)
+				reorder_child (v, v_imp, i)
 			end
-			on_new_item (v)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -47,9 +52,7 @@ feature {NONE} -- Implementation
 		do			
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
-			check
-				imp_not_void: imp /= Void
-			end
+
 			item_ptr := imp.c_object
 			C.gtk_object_ref (item_ptr)
 			C.gtk_container_remove (list_widget, item_ptr)
@@ -67,42 +70,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Obsolete
 
-	add_to_container (v: like item) is
+	add_to_container (v: EV_ITEM; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
 			--| FIXME VB Will be obsolete
-		local
-			v_imp: EV_ITEM_IMP
 		do
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 		end
 
-	reorder_child (v: like item; a_position: INTEGER) is
+	reorder_child (v: EV_ITEM; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
 			-- Move `v' to `a_position'.
-		local
-			v_imp: EV_ITEM_IMP
 		do
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
 			gtk_reorder_child (list_widget, v_imp.c_object, a_position - 1)
-		end
-
-feature -- Event handling
-
-	on_new_item (an_item: G) is
-			-- Called after `an_item' is added.
-		do
-		end
-
-	on_removed_item (an_item: G) is
-			-- Called just before `an_item' is removed.
-		do
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -59,8 +59,8 @@ feature -- Element change
 			if v /= Void then
 				imp ?= v.implementation
 				C.gtk_container_add (container_widget, imp.c_object)
-				update_child_requisition (imp.c_object)
-				on_new_item (v)
+				--update_child_requisition (imp.c_object)
+				on_new_item (imp)
 			end
 		end
 

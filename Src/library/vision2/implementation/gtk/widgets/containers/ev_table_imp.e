@@ -115,19 +115,20 @@ feature -- Status settings
 			C.gtk_table_set_col_spacings (container_widget, a_value)
 		end
 
-	put (v: EV_WIDGET; a_x, a_y, column_span, row_span: INTEGER) is
+	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
 			-- Set the position of the `v' in the table.
 		local
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
+			item_imp.set_parent_imp (Current)
 			C.gtk_table_attach_defaults (
 					container_widget,
 					item_imp.c_object,
-					a_x - 1,
-					a_x - 1 + column_span,
-					a_y - 1,
-					a_y - 1 + row_span
+					a_column - 1,
+					a_column - 1 + column_span,
+					a_row - 1,
+					a_row - 1 + row_span
 			)
 		end
 
@@ -137,47 +138,126 @@ feature -- Status settings
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= v.implementation
+			item_imp.set_parent_imp (Void)
 			C.gtk_object_ref (item_imp.c_object)
 			C.gtk_container_remove (container_widget, item_imp.c_object)
-			C.gtk_object_unref (item_imp.c_object)
 		end
 		
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
-			-- 
+			-- Resize 'v' to occupy column span and row span
+		local
+			a_column, a_row: INTEGER
 		do
-			--| FIXME Implement me please
+			a_column := item_column_position (v)
+			a_row := item_row_position (v)
+			remove (v)
+			put (v, a_column, a_row, column_span, row_span)
 		end
 		
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
-			-- 
+			-- Move `v' to position `a_column', `a_row'.
+		local
+			column_span, row_span: INTEGER
 		do
-			--| FIXME Implement me please
+			column_span := item_column_span (v)
+			row_span := item_row_span (v)
+			remove (v)
+			put (v, a_column, a_row, column_span, row_span)
 		end
 		
 	item_column_span (widget: EV_WIDGET): INTEGER is
-			-- 
+			-- `Result' is number of columns taken by `widget'.
+		local
+			row_index, column_index: INTEGER
+			end_span: BOOLEAN
 		do	
-			--| FIXME Implement me please
+			from
+				row_index := item_row_position (widget)
+				column_index := item_column_position (widget)
+			until
+				end_span or (column_index - 1) = interface.columns
+			loop
+				if interface.item (column_index, row_index) = widget then
+					Result := Result + 1
+				else
+					end_span := True
+				end
+				column_index := column_index + 1
+			end
 		end
 	
 	item_row_span (widget: EV_WIDGET): INTEGER is
-			-- 
+			--  `Result' is number of rows taken by `widget'.
+		local
+			row_index, column_index: INTEGER
+			end_span: BOOLEAN
 		do	
-			--| FIXME Implement me please
+			from
+				row_index := item_row_position (widget)
+				column_index := item_column_position (widget)
+			until
+				end_span or else (row_index - 1) = interface.rows
+			loop
+				if interface.item (column_index, row_index) = widget then
+					Result := Result + 1
+				else
+					end_span := True
+				end
+				row_index := row_index + 1
+			end
 		end
 		
 	item_row_position (widget: EV_WIDGET): INTEGER is
-			-- 
+			-- Result is row coordinate of 'widget'
+		local
+			row_cnt, column_cnt: INTEGER
+			found: BOOLEAN
 		do	
-			--| FIXME Implement me please
+			from
+				row_cnt := 1
+			until
+				row_cnt > interface.rows or found
+			loop
+				from
+					column_cnt := 1
+				until
+					column_cnt > interface.columns or found					
+				loop
+					if interface.item (column_cnt, row_cnt) = widget then
+						Result := row_cnt
+						found := True
+					end
+					column_cnt := column_cnt + 1
+				end
+				row_cnt := row_cnt + 1	
+			end
 		end
 		
 	item_column_position (widget: EV_WIDGET): INTEGER is
-			-- 
-		do
-			--| FIXME Implement me please
+			-- Result is column coordinate of 'widget'
+		local
+			row_cnt, column_cnt: INTEGER
+			found: BOOLEAN
+		do	
+			from
+				row_cnt := 1
+			until
+				row_cnt > interface.rows or found
+			loop
+				from
+					column_cnt := 1
+				until
+					column_cnt > interface.columns or found			
+				loop
+					if interface.item (column_cnt, row_cnt) = widget then
+						Result := column_cnt
+						found := True
+					end
+					column_cnt := column_cnt + 1
+				end
+				row_cnt := row_cnt + 1
+			end
 		end
-		
 
 feature {NONE} -- Externals
 

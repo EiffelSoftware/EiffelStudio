@@ -16,7 +16,8 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
-			visual_widget
+			visual_widget,
+			on_key_event
 		end
 		
 	EV_FONTABLE_IMP
@@ -27,7 +28,7 @@ inherit
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
 		export
-			{INTERMEDIARY_ROUTINES}
+			{EV_INTERMEDIARY_ROUTINES}
 				return_actions_internal
 		redefine
 			create_return_actions
@@ -45,6 +46,8 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_event_box_new)
 			entry_widget := C.gtk_entry_new
 			C.gtk_widget_show (entry_widget)
+			C.gtk_widget_set_usize (entry_widget, 40, -1)
+			--| Minimum sizes need to be similar on both platforms
 			C.gtk_container_add (c_object, entry_widget)
 			set_text ("")
 		end
@@ -109,8 +112,15 @@ feature -- Status Report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_editable_get_position (entry_widget) + 1
+			if in_change_action and not last_key_backspace then
+				Result := C.gtk_editable_get_position (entry_widget) + 2
+			else
+				Result := C.gtk_editable_get_position (entry_widget) + 1	
+			end
 		end
+	
+	last_key_backspace: BOOLEAN
+			-- Was the last key pressed the backspace/delete key?
 
 feature {NONE} -- Implementation
 
@@ -123,12 +133,27 @@ feature {NONE} -- Implementation
 			Result := entry_widget
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences.
+		do
+			if a_key_press then
+					-- The event is a key press event.
+				if a_key /= Void then
+					if a_key.code = feature {EV_KEY_CONSTANTS}.Key_back_space then
+						last_key_backspace := True
+					else
+						last_key_backspace := False
+					end	
+				end
+			end
+			Precursor (a_key, a_key_string, a_key_press)
+		end
 
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			--real_connect_signal_to_actions (entry_widget, "activate", Result, Void)
 			real_signal_connect (entry_widget, "activate", agent gtk_marshal.text_field_return_intermediary (c_object), Void)
 		end
 

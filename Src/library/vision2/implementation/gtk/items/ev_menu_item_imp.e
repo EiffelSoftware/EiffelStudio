@@ -140,7 +140,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Assignment optimization
 			Result := Item_type
 		end
 
-feature {EV_ANY_I, INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 

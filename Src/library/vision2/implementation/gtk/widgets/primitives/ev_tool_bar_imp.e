@@ -62,14 +62,14 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	add_to_container (v: like item) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to tool bar, set to non-expandable.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
 			wid_imp: EV_WIDGET_IMP
 			
 		do
-			Precursor (v)
+			Precursor (v, v_imp)
 			wid_imp ?= v.implementation
 			C.gtk_box_query_child_packing (
 				list_widget,

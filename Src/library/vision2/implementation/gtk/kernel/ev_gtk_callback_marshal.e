@@ -37,11 +37,9 @@ inherit
 			default_create
 		end
 
-	INTERMEDIARY_ROUTINES
+	EV_INTERMEDIARY_ROUTINES
 		undefine
 			default_create
-		redefine
-			empty_tuple
 		end
 
 create
@@ -402,11 +400,6 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 			Result := [gtk_value_pointer (p)]
 		end
 		
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
-		
 	empty_tuple_tuple: TUPLE is
 		once
 			Result := [[]]
@@ -484,7 +477,14 @@ feature {EV_ANY_IMP} -- Externals
 			"C | %"ev_c_util.h%""
 		end
 		
-feature {EV_APPLICATION_IMP} -- Externals
+feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
+
+	c_ev_gtk_callback_marshal_timeout_connect
+		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+			-- Call `an_agent' after `a_delay'.
+		external
+			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
+		end
 		
 	c_ev_gtk_callback_marshal_delayed_agent_call
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is

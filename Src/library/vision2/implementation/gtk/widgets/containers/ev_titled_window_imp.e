@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TITLED_WINDOW_IMP
 
@@ -20,11 +20,7 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			make,
-			x_position,
-			y_position,
-			screen_x,
-			screen_y
+			make
 		end
 		
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -95,36 +91,6 @@ feature -- Status report
 			Result := old_geometry /= Void
 		end
 
-	screen_x, x_position: INTEGER is
-			-- Horizontal position of `Current' on screen.
-		local
-			a_x: INTEGER
-		do
-				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
-				--| It should be test with other window managers
-			C.gdk_window_get_root_origin (
-				C.gtk_widget_struct_window (c_object),
-				$a_x,
-				NULL
-			)
-			Result := a_x
-		end
-
-	screen_y, y_position: INTEGER is
-			-- Vertical position of `Current' on screen.
-		local
-			a_y: INTEGER
-		do
-				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
-				--| It should be test with other window managers
-			C.gdk_window_get_root_origin (
-				C.gtk_widget_struct_window (c_object),
-				NULL,
-				$a_y
-			)
-			Result := a_y
-		end
-
 feature -- Status setting
 
 	raise is
@@ -141,11 +107,16 @@ feature -- Status setting
 
 	minimize is
 			-- Display iconified/minimised.
+		local
+			main_not_running: INTEGER
 		do
-			C.c_gdk_window_iconify (
-				C.gtk_widget_struct_window (c_object)
-			)
-			(create {EV_ENVIRONMENT}).application.process_events
+			from
+				C.c_gdk_window_iconify (C.gtk_widget_struct_window (c_object))
+			until 
+				C.gtk_events_pending = 0
+			loop
+				main_not_running := C.gtk_main_iteration_do (False)
+			end
 		end
 
 	maximize is

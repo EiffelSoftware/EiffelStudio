@@ -23,7 +23,9 @@ inherit
 			replace
 		redefine
 			interface,
-			initialize
+			initialize,
+			height,
+			width
 		end
 
 feature {NONE} -- Initialization
@@ -37,6 +39,55 @@ feature {NONE} -- Initialization
 		end
 
 feature
+
+	height: INTEGER is
+			-- Height of `Current' in screen pixels.
+		local
+			a_box: EV_BOX_IMP
+			a_h_box: EV_HORIZONTAL_BOX
+			a_v_split: EV_SPLIT_AREA_IMP
+		do
+			Result := Precursor {EV_CONTAINER_IMP}
+			-- Hack to retrieve correct height if geometry calculation has not been done yet.
+			
+			if Result = minimum_height then
+				a_box ?= parent_imp
+				a_h_box ?= a_box
+				a_v_split ?= parent_imp
+				if a_box /= Void and then a_box.is_item_expanded (interface) then
+					if a_box.count = 1 or else a_h_box /= Void then
+						Result := a_box.height
+					end
+				else
+					if a_v_split /= Void and a_v_split.second = Void then
+							Result := a_v_split.height	
+					end
+				end
+			end
+		end
+		
+	width: INTEGER is
+			-- Width of `Current' in screen pixels.
+		local
+			a_box: EV_BOX_IMP
+			a_v_box: EV_VERTICAL_BOX
+			a_split: EV_SPLIT_AREA
+		do
+			Result := Precursor {EV_CONTAINER_IMP}
+			-- Hack to retrieve correct width if geometry calculation has not been done yet.
+			a_box ?= parent_imp
+			a_v_box ?= a_box
+			a_split ?= parent_imp
+			if a_box /= Void and then a_box.is_item_expanded (interface) then
+				if a_box.count = 1 or else a_v_box /= Void then
+					Result := a_box.width
+				end
+			else
+				if a_split /= Void and a_split.second = Void then
+					Result := a_split.width
+				end
+			end
+		end
 
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
@@ -55,10 +106,7 @@ feature
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
-		--	update_child_requisition (item_imp.c_object)
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
@@ -72,10 +120,7 @@ feature
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
-	--		update_child_requisition (item_imp.c_object)
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
@@ -179,7 +224,8 @@ feature {NONE} -- Implementation
 				second_expandable := a_resizable
 			end
 			item_imp ?= an_item.implementation
-			C.gtk_widget_queue_resize (item_imp.c_object)
+			C.gtk_widget_queue_resize (c_object)
+			C.gtk_widget_queue_draw (c_object)
 		end
 
 	update_splitter is

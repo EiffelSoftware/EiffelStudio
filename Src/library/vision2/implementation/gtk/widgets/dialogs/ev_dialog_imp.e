@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
 			C.gtk_widget_realize (c_object)
 			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
-			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
+			C.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
 			enable_closeable
 		end
 		
@@ -102,6 +102,7 @@ feature -- Basic operations
 			end				
 			
 			show
+			
 			block
 			if not is_destroyed and then not was_modal then
 				disable_modal

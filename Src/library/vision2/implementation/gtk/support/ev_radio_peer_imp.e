@@ -38,7 +38,9 @@ feature -- Status report
 					wid_obj := widget_object (cur)
 					if wid_obj /= NULL then
 						peer_imp ?= eif_object_from_c (wid_obj)
-						Result.extend (peer_imp.interface)
+						if peer_imp /= Void then
+							Result.extend (peer_imp.interface)
+						end
 					end		
 					cur := C.gslist_struct_next (cur)
 				end
@@ -62,7 +64,7 @@ feature -- Status report
 					wid_obj := widget_object (cur)
 					if wid_obj /= NULL then
 						peer_imp ?= eif_object_from_c (widget_object (cur))
-						if peer_imp.is_selected then
+						if peer_imp /= Void and then peer_imp.is_selected then
 							Result := peer_imp.interface
 						end
 					end

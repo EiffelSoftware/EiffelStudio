@@ -11,8 +11,16 @@ deferred class
 
 inherit
 	EV_WINDOW_ACTION_SEQUENCES_I
+		export
+			{EV_INTERMEDIARY_ROUTINES} show_actions_internal
+		end
+		
+	EV_ANY_IMP
 
-EV_ANY_IMP undefine dispose, destroy end
+		undefine 
+			dispose,
+			destroy
+		end
 
 feature -- Event handling
 
@@ -33,14 +41,8 @@ feature -- Event handling
 			-- Attach to GTK "map-event" signal.
 		do
 			create Result
-			--connect_signal_to_actions (Gtk_signal_map_event, Result, default_translate)
-			connect_signal_to_actions ("map-event", Result, default_translate)
+			real_signal_connect (c_object, "map-event", agent Gtk_marshal.on_window_show (c_object), default_translate)
 		end
-
---	Gtk_signal_map_event: INTEGER is
---		once
---			Result := C.gtk_signal_name ("map-event")
---		end
 
 end
 

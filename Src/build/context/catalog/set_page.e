@@ -19,7 +19,7 @@ feature {NONE}
 
 	build_interface is
 		local
-			toggle_b: TOGGLE_BG;
+			toggle_b: TOGGLE_B;
 			frame_radio_box: FRAME;
 			frame_check_box: FRAME;
 			radio_box: RADIO_BOX;

@@ -42,8 +42,8 @@ feature {NONE}
 
 feature {NONE}
 
-	add_button: PUSH_BG;
-	add_submenu: PUSH_BG;
+	add_button: PUSH_B;
+	add_submenu: PUSH_B;
 	
 	create_buttons is
 		do
@@ -65,7 +65,7 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label: LABEL_G;
+			label: LABEL;
 		do
 			initialize (Widget_names.menu_form_name, a_parent);
 			!!label.make (Widget_names.title_name, Current);

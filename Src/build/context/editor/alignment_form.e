@@ -17,7 +17,7 @@ feature -- Interface
 		local	
 			radio_box_direction: RADIO_BOX;
 			radio_box_point: RADIO_BOX;
-			a_separator: SEPARATOR_G;
+			a_separator: SEPARATOR;
 		do	
 			initialize (Widget_names.alignment_form_name, a_parent);
 			create_ok_button;

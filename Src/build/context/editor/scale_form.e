@@ -89,7 +89,7 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			text_l, granularity_l, min_l, max_l: LABEL_G;
+			text_l, granularity_l, min_l, max_l: LABEL;
 		do
 			initialize (Widget_names.scale_form_name, a_parent);
 

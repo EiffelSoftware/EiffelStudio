@@ -204,7 +204,7 @@ feature {NONE}
 	input_frame, output_frame: FRAME;
 	menu_bar: FUNCTION_BAR;
 	left_arrow, right_arrow: ARROW_B;
-	page_label, row_label: LABEL_G;
+	page_label, row_label: LABEL;
 	page_number, number_of_pages: INTEGER;
 
 	create_input_stone (a_parent: COMPOSITE) is

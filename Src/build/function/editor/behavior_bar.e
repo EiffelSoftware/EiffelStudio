@@ -29,11 +29,11 @@ feature {NONE}
 
 feature 
 
-	label1: LABEL_G;
+	label1: LABEL;
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: BEHAVIOR_EDITOR) is
 		local
-			label: LABEL_G;
+			label: LABEL;
 		do
 			form_create (a_name, a_parent);
 			!!edit_hole.make (ed, Current);

@@ -53,7 +53,7 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label: LABEL_G;
+			label: LABEL;
 			radio_box: RADIO_BOX
 		do
 			initialize (Widget_names.label_text_form_name, a_parent);

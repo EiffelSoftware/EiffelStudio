@@ -62,8 +62,8 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			title_label: LABEL_G;
-			icon_label: LABEL_G;
+			title_label: LABEL;
+			icon_label: LABEL;
 		do	
 			initialize (Widget_names.temp_wind_form_name, a_parent);
 

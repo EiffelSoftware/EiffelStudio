@@ -14,7 +14,7 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			pixmap_open_b: PUSH_BG;
+			pixmap_open_b: PUSH_B;
 			color_set: COLOR_SET;
 			label_bg_color: LABEL;
 			label_pixmap: LABEL;

@@ -61,14 +61,14 @@ feature
 			Result := text_field_y.int_value;
 		end;
 
-	label_height: LABEL_G;
+	label_height: LABEL;
 
-	label_width: LABEL_G;
+	label_width: LABEL;
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label_x: LABEL_G;
-			label_y: LABEL_G;
+			label_x: LABEL;
+			label_y: LABEL;
 		do
 			initialize (Widget_names.geometry_form_name, a_parent);
 

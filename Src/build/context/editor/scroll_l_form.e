@@ -40,7 +40,7 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			visible_label: LABEL_G;
+			visible_label: LABEL;
 		do
 			initialize (Widget_names.scroll_list_form_name, a_parent);
 

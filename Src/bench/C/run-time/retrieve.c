@@ -3923,10 +3923,11 @@ rt_public int retrieve_read (void)
 
 	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
-		if (part_read <= 0)
+		if (part_read <= 0) {
 				/* If we read 0 bytes, it means that we reached the end of file,
 				 * so we are missing something, instead of going further we stop */
 			eio();
+		}
 		read_size -= part_read;
 		ptr += part_read;
 	}
@@ -3959,10 +3960,11 @@ rt_public int retrieve_read_with_compression (void)
 	
 	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
-		if (part_read <= 0)
+		if (part_read <= 0) {
 				/* If we read 0 bytes, it means that we reached the end of file,
 				 * so we are missing something, instead of going further we stop */
 			eio();
+		}
 		read_size -= part_read;
 		ptr += part_read;
 	}

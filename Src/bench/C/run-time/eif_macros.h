@@ -208,8 +208,9 @@ RT_LNK int fcount;
 #define RTAUP_EIF_REFERENCE(cast,x,y,val,i) \
 	{ \
 	register EIF_REFERENCE ptr_current = (*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))); \
-	RTAS (val, ptr_current); \
-	*(EIF_REFERENCE*)(ptr_current+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(EIF_REFERENCE)) = val; \
+	register long i = i-*(long*)(y+CAT2(x,_lower_offset)); \
+	*((EIF_REFERENCE *)ptr_current + i) = val; \
+	RTAS_OPT (val, i, ptr_current); \
 	}
 
 #define RTAUP_BASIC(cast,x,y,val,i) \
@@ -258,8 +259,8 @@ RT_LNK int fcount;
 
 #define RTAP_EIF_REFERENCE(cast,x,val,i) \
 		{ \
-		RTAS (val, CAT2(x,_area)); \
-		*(cast*)(CAT2(x,_area_minus_lower)+(i)*sizeof(cast)) = val; \
+		*((cast*)CAT2(x,_area_minus_lower) + i) = val; \
+		RTAS_OPT (val, i, CAT2(x,_area)); \
 		}
 
 #define RTAP_BASIC(cast,x,val,i) \

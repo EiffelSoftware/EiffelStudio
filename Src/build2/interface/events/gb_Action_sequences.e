@@ -34,13 +34,6 @@ feature -- Access
 		deferred
 		end
 		
-	display_agents: HASH_TABLE [PROCEDURE [EV_ANY, TUPLE], STRING] is
-			-- 
-		do
-			
-		end
-		
-		
 invariant
 	-- Cannot be executed as the invariant will not execute the once.
 	-- Could reference each atribute in the 

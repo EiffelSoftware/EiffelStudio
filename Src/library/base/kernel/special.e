@@ -1,21 +1,14 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
-
--- Redefining  'ANY' conformance features
-
 indexing
 
+	description:
+		"Special objects: homogeneous sequences of values, %
+		%used to represent arrays and strings";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SPECIAL [T]
-
-inherit
+class SPECIAL [T] inherit
 
 	ANY
 		redefine
@@ -41,7 +34,6 @@ feature -- Access
 			Result := other.count = count
 		end;
 
-
 feature -- Measurement
 
 	count: INTEGER is
@@ -50,9 +42,7 @@ feature -- Measurement
 			Result := sp_count ($Current);
 		end;
 
-
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	put (v: T; i: INTEGER) is
 			-- Put item `v' at position `i'.
@@ -63,17 +53,13 @@ feature -- Modification & Insertion
 			-- Built-in
 		end;
 
-feature  {NONE} -- External, Measurement
+feature {NONE} -- Implementation
 
 	sp_count (sp_obj: SPECIAL [T]): INTEGER is
 			-- Count of the special object
 		external
 			"C"
 		end;
-
-
-
-feature  {NONE} -- External, Comparison
 
 	c_standard_is_equal (source, target: SPECIAL [T]): BOOLEAN is
 			-- Is `source' equal to `target' ?
@@ -85,8 +71,6 @@ feature  {NONE} -- External, Comparison
 			"spequal"
 		end;
 
-feature  {NONE} -- External, Duplication
-
 	c_standard_copy (source, target: SPECIAL [T]) is
 			-- Copy entries of `target' into `source'.
 		external
@@ -95,17 +79,26 @@ feature  {NONE} -- External, Duplication
 			"spcopy"
 		end;
 
-
-
 	c_standard_clone (other: SPECIAL [T]): SPECIAL [T] is
-            -- New special object of size `count'
-        external
-            "C"
-        alias
-            "spclone"
-        end
-
-
-
+			-- New special object of size `count'
+		external
+			"C"
+		alias
+			"spclone"
+		end
 
 end -- class SPECIAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,47 +1,41 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
-
--- Homogeneous sequences of values conforming to an arbitrary 
--- type accessing through contiguous integer indices          
-
-
 indexing
 
+	description:
+		"Sequences of values, all of the same type or of a conforming one, %
+		%accessible through integer indices in a contiguous range";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class ARRAY [G] inherit
 
-	RESIZABLE
-		undefine
-			empty
+	RESIZABLE [G]
 		redefine
-			full, twin
+			full, copy, is_equal,
+			consistent, setup
 		end;
 
 	INDEXABLE [G, INTEGER]
 		redefine
-			twin
+			copy, is_equal,
+			consistent, setup
 		end;
 
 	BASIC_ROUTINES
 		export
 			{NONE} all
 		redefine
-			twin
+			copy, is_equal,
+			consistent, setup
 		end;
 
 	TO_SPECIAL [G]
 		export
-			{ARRAY}
-				set_area
+			{ARRAY} set_area
 		redefine
-			twin
+			copy, is_equal,
+			consistent, setup
 		end
 
 creation
@@ -57,11 +51,22 @@ feature -- Initialization
 			upper := -1;
 				-- (`lower' initialized to 0 by default, so invariant holds)
 			if minindex <= maxindex then
-				allocate_space (minindex, maxindex)
+				make_area (maxindex - minindex + 1);
+				lower := minindex;
+				upper := maxindex
+			else
+				make_area (0)
 			end;
 		ensure
 			(minindex > maxindex) implies (capacity = 0);
 			(minindex <= maxindex) implies (capacity = maxindex - minindex + 1)
+		end;
+
+	setup (other: like Current) is
+			-- Perform actions on a freshly created object so that
+			-- the contents of `other' can be safely copied onto it.
+		do
+			make_area (other.capacity)
 		end;
 
 feature -- Access
@@ -74,9 +79,8 @@ feature -- Access
 
 
 	has (v: G): BOOLEAN is
-			-- Does `Current' include `v'?
-			-- (According to the `='
-			-- discrimination rule used in `search')
+			-- Does `v' appear in array?
+			-- (According to the `=' discrimination rule used in `search')
 		local
 			i: INTEGER
 		do
@@ -106,56 +110,89 @@ feature -- Measurement
 			Result := upper - lower + 1
 		end;
 
+	occurrences (v: G): INTEGER is
+			-- Number of times `v' appears in structure
+		local
+			i: INTEGER
+		do
+			from
+				i := lower
+			until
+				i > upper
+			loop
+				if item (i) = v then
+					Result := Result +1
+				end;
+				i := i + 1
+			end
+		end;
+
+feature -- Element change
+
 
 feature -- Comparison
 
-	array_is_equal (array: like Current): BOOLEAN is
+	is_equal (array: like Current): BOOLEAN is
 		do
 			Result := area.is_equal (array.area)
 		end;
 
-	
-feature -- Conversion
-		
-	sequential_representation: SEQUENTIAL [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
+feature -- Status report
+
+	consistent (other: like Current): BOOLEAN is
+				-- Is object in a consistent state so that others
+				-- can be copied onto it? (Default answer: yes).
+		do
+			Result := capacity = other.capacity
+		end;
+
+	full: BOOLEAN is
+			-- Is structure filled to capacity? (Answer: yes)
+		do
+			Result := true
+		end;
+
+	all_cleared: BOOLEAN is
+			-- Are all items set to default values?
 		local
-			temp: ARRAY_SEQUENCE [G];
 			i: INTEGER;
+			dead_element: G;
 		do
-			!! temp.make (count);
 			from
-				i := lower;
+				i := lower
+			variant
+				upper + 1 - i
 			until
-				i > upper
+				(i > upper) or else not (dead_element = item (i))
 			loop
-				temp.add (item (i));
-				i := i + 1;
+				i := i + 1
 			end;
-			Result := temp;
+			Result := i > upper;
 		end;
 
-feature -- Duplication
-
-
-	twin: like Current is
-			-- New object field-by-field identical to `Current'
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid index?
 		do
-			Result := standard_twin;
-			Result.set_area (area.standard_twin);
-		ensure then
-			equal_areas: area.is_equal (Result.area)
+			Result := (lower <= i) and then (i <= upper)
 		end;
 
 
-feature -- Modification & Insertion
- 
+	extendible: BOOLEAN is
+			-- May items be added? (Answer: no.)
+		do
+			Result := false
+		end;
 
+	prunable: BOOLEAN is
+			-- May items be removed? (Answer: no.)
+		do
+			Result := false
+		end;
+
+feature -- Element change
+ 
 	put (v: G; i: INTEGER) is
-			-- Replace `i'-th entry, if in index interval, by `v'.
+			-- Replace `i'-th entry, if in index range, by `v'.
 		do
 			area.put (v, i - lower);
 		end;
@@ -164,31 +201,24 @@ feature -- Modification & Insertion
 			-- Assign item `v' to `i'-th entry.
 			-- Always applicable: resize the array if `i' falls out of
 			-- currently defined bounds; preserve existing elements.
-		local
-			j: INTEGER
 		do
 			if upper < lower then
-				allocate_space (i, i + additional_space)
+				resize (i, i);	
 			elseif i < lower then
-				j := i - additional_space;
-				resize (j, upper);
-				lower := j
+				auto_resize (i, upper);
 			elseif i > upper then
-				j := i + additional_space;
-				resize (lower, j);
-				upper := j
+				auto_resize (lower, i);
 			end;
 			put (v, i)
 		ensure
 			inserted: item (i) = v;
-			higher_capacity: capacity >= old capacity
+			--higher_capacity: capacity >= old capacity
 		end;
 
 feature -- Removal
 
-
 	wipe_out is
-			-- Empty `Current': discard all items.
+			-- Make array empty.
 		do
 			lower := 0;
 			upper := -1;
@@ -215,13 +245,11 @@ feature -- Removal
 			all_cleared: all_cleared
 		end;
 
-
-
  
- feature -- Resizing
+feature -- Resizing
 
 	grow (i: INTEGER) is
-			-- Change the capacity of `Current' to at least `i'.
+			-- Change the capacity to at least `i'.
 		do
 			if i > capacity then
 				resize (lower, upper + i - capacity)
@@ -229,95 +257,100 @@ feature -- Removal
 		end;
 
 	resize (minindex, maxindex: INTEGER) is
-			-- Rearrange `Current' so that it can accommodate
+			-- Rearrange array so that it can accommodate
 			-- indices down to `minindex' and up to `maxindex'.
 			-- Do not lose any previously entered item.
 		require
 			valid_indices: minindex <= maxindex
 		local
-			i: INTEGER
+			old_size, new_size, old_count: INTEGER;
+			new_lower, new_upper: INTEGER;
 		do
-			if empty then
-				allocate_space (minindex, maxindex)
-			elseif minindex < lower then
-				if maxindex > upper then
-					i := lower - minindex;
-					area := arycpy
-					($area, maxindex - minindex + 1, i, count);
-					upper := maxindex
+			if empty_area then
+				new_lower := minindex;
+				new_upper := maxindex
+			else
+				if minindex < lower then
+					new_lower := minindex
 				else
-					i := lower - minindex;
-					area := arycpy
-					($area, upper - minindex + 1, i, count)
+					new_lower := lower
 				end;
-				lower := minindex
-			elseif maxindex > upper then
-				i := maxindex - lower + 1;
-				area := arycpy ($area, i, 0, count);
-				upper := maxindex
-			end
-		ensure
-			lower <= minindex;
-			maxindex <= upper
-		end;
-
-feature -- Status report
-
-
-	full: BOOLEAN is false;
-			-- Is `Current' full?
-
-	all_cleared: BOOLEAN is
-			-- Are all items set to default values?
-		local
-			i: INTEGER;
-			dead_element: G;
-		do
-			from
-				i := lower
-			variant
-				upper + 1 - i
-			until
-				(i > upper) or else not (dead_element = item (i))
-			loop
-				i := i + 1
+				if maxindex > upper then
+					new_upper := maxindex
+				else
+					new_upper := upper
+				end
 			end;
-			Result := i > upper;
-		end;
-
+			new_size := new_upper - new_lower + 1;
+			if not empty_area then 
+				old_size := area.count;
+				old_count := upper - lower + 1
+			end;
+			if empty_area then
+				make_area (new_size);
+			elseif new_size /= old_size then
+				area := arycpy ($area, new_size, 
+					lower - new_lower, old_count)
+			end;
+			lower := new_lower;
+			upper := new_upper
+		end;	
+				
+				
+feature -- Conversion
 		
-
-
-feature -- Obsolete, Duplication
-
-	duplicate: like Current is obsolete "Use ``twin''"
+	sequential_representation: SEQUENTIAL [G] is
+			-- Representation as a sequential structure
+		local
+			temp: ARRAYED_LIST [G];
+			i: INTEGER;
 		do
-			Result := twin
+			!! temp.make (capacity);
+			from
+				i := lower;
+			until
+				i > upper
+			loop
+				temp.extend (item (i));
+				i := i + 1;
+			end;
+			Result := temp;
 		end;
 
-feature  {NONE} -- Initialization
+feature -- Duplication
 
-	allocate_space (minindex, maxindex: INTEGER) is
-			-- Allocate memory and initialize indexes.
-		require
-			valid_indices: maxindex >= minindex
+
+	copy (other: like Current) is
+			-- Reinitialize by copying all the elements of `other'.
+			-- (This is also used by `clone'.)
 		do
-			lower := minindex;
-			upper := maxindex;
-			make_area (maxindex - minindex + 1)
+			standard_copy (other);
+			set_area (standard_clone (other.area));
+		ensure then
+			equal_areas: area.is_equal (other.area)
 		end;
 
 
-feature -- External, Access
+feature -- Obsolete
 
-	to_c: ANY is
-			-- Address of actual sequence of values,
-			-- for passing to external (non-Eiffel) routines.
+	duplicate: like Current is obsolete "Use ``clone''"
 		do
-			Result := area
+			Result := clone (Current)
 		end;
 
-feature  {ARRAY} -- External, Duplication
+feature {NONE} -- Inapplicable
+
+	prune (v: G) is
+			-- Precondition is always false here.
+		do
+		end;
+
+	extend (v: G) is
+			-- Precondition is always false here.
+		do
+		end;
+
+feature {ARRAY} -- Implementation
 
 	arycpy (old_area: like area; newsize, s, n: INTEGER): like area is
 			-- New area of size `newsize' containing `n' items
@@ -327,17 +360,83 @@ feature  {ARRAY} -- External, Duplication
 			"C"
 		end;
 
-feature -- Assertion check
+feature {NONE} -- Implementation
 
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid index?
+	auto_resize (minindex, maxindex: INTEGER) is
+			-- Rearrange array so that it can accommodate
+			-- indices down to `minindex' and up to `maxindex'.
+			-- Do not lose any previously entered item.
+			-- If area must be extended, ensure that space for at least
+			-- additional_space item is added.
+		require
+			valid_indices: minindex <= maxindex
+		local
+			old_size, new_size: INTEGER;
+			new_lower, new_upper: INTEGER;
 		do
-			Result := (lower <= i) and then (i <= upper)
+			if empty_area then
+				new_lower := minindex;
+				new_upper := maxindex
+			else
+				if minindex < lower then
+					new_lower := minindex
+				else
+					new_lower := lower
+				end;
+				if maxindex > upper then
+					new_upper := maxindex
+				else
+					new_upper := upper
+				end
+			end;
+			new_size := new_upper - new_lower + 1;
+			if not empty_area then 
+				old_size := area.count;
+				if new_size > old_size
+					 and new_size - old_size < additional_space
+				then
+					new_size := old_size + additional_space
+				end
+			end;
+			if empty_area then
+				make_area (new_size);
+			elseif new_size > old_size or new_lower < lower then
+					area := arycpy ($area, new_size, 
+						lower - new_lower, capacity)
+			end;
+			lower := new_lower;
+			upper := new_upper
+		end;
+	
+	to_c: ANY is
+			-- Address of actual sequence of values,
+			-- for passing to external (non-Eiffel) routines.
+		do
+			Result := area
+		end;
+		
+	empty_area: BOOLEAN is
+		do
+			Result := area.count = 0
 		end;
 
 invariant
 
 	consistent_size: capacity = upper - lower + 1;
-	non_negative_size: count >= 0;
+	non_negative_size: capacity >= 0;
 
 end -- class ARRAY
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

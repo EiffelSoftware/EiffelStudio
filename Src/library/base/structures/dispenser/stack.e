@@ -1,15 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Stacks (last-in, first-out dispensers),
--- without commitment to a particular representation
-
 indexing
+	description:
+		"Stacks (last-in, first-out dispensers), without commitment %
+		%to a particular representation";
 
+	copyright: "See notice at end of class";
 	names: stack, dispenser;
 	access: fixed, lifo, membership;
 	contents: generic;
@@ -20,76 +14,65 @@ deferred class STACK [G] inherit
 
 	DISPENSER [G]
 		redefine
-			add, fill, put
-		end
-
-feature -- Modification & Insertion
-
-	push (v: like item) is
-		deferred
+			fill
 		end;
 
-	add (v: like item) is
-			-- Push `v' onto `Current'.
+feature -- Element change
+
+	extend, force, put (v: like item) is
+			-- Push `v' onto top.
 		deferred
 		ensure then
 			item_pushed: item = v
-		end;
-
-	put (v: like item) is
-			-- Push `v' onto `Current'.
-			-- (Synonym for `add').
-		do
-			add (v)
 		end;
 
 	replace (v: like item) is
 			-- Replace top item by `v'.
 		do
 			remove;
-			add (v)
+			extend (v)
 		end;
 
-	fill (other: CONTAINER [G]) is
-			-- Fill `Current' with as many elements of `other'
-			-- as possible.
+	fill (other: SEQUENTIAL [G]) is
+			-- Fill with as many elements of `other' as possible.
 			-- Fill items with greatest index from `other' first.
-			-- Item inserted with lowest index (from `other') will
+			-- Items inserted with lowest index (from `other') will
 			-- always be on the top of stack.
-			-- The representations of `other' and `Current'
-			-- need not be the same. (This feature enables you
-			-- to map one implementation to another.)
+			-- The representations of `other' and current structure
+			-- need not be the same.
 		local
-			lin_rep: SEQUENTIAL [G];
-			temp: FIXED_STACK [G]
+			temp: ARRAYED_STACK [G]
 		do
-			lin_rep := other.sequential_representation;
-			!! temp.make (other.count);
+			!! temp.make (0);
 			from
-				lin_rep.start
+				other.start
 			until
-				lin_rep.off
+				other.off
 			loop
-				temp.add (lin_rep.item);
-				lin_rep.forth
+				temp.extend (other.item);
+				other.forth
 			end;
 			from
 			until
-				temp.empty or else not extensible
+				temp.empty or else not extendible
 			loop
-				add (temp.item);
+				extend (temp.item);
 				temp.remove
 			end
 		end;
 
-feature -- Removal
-
-	pop: G is
-		require
-			not_empty: not empty
-		do
-			Result := item;
-			remove;	
-		end;
-
 end -- class STACK
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

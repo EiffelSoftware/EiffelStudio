@@ -1,25 +1,20 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Notion of files
-
 indexing
 
+	description:
+		"Sequential files, viewed as persistent sequences of characters";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class FILE inherit
 
-	UNBOUNDED;
+	UNBOUNDED [CHARACTER];
 
 	SEQUENCE [CHARACTER]
-		undefine
-			empty
-		end
+		redefine
+			prune
+		end;
 
 feature -- Access
 
@@ -33,7 +28,7 @@ feature -- Access
 		end;
 
 	readint is
-			-- Read a new integer from `Current'.
+			-- Read a new integer.
 			-- Make result available in `lastint'.
 		require
 			is_readable: file_readable;
@@ -41,7 +36,7 @@ feature -- Access
 		end;
 
 	readreal is
-			-- Read a new real from `Current'.
+			-- Read a new real.
 			-- Make result available in `lastreal'.
 		require
 			is_readable: file_readable;
@@ -49,7 +44,7 @@ feature -- Access
 		end;
 
 	readdouble is
-			-- Read a new double from `Current'.
+			-- Read a new double.
 			-- Make result available in `lastdouble'.
 		require
 			is_readable: file_readable;
@@ -57,7 +52,7 @@ feature -- Access
 		end;
 
 	readchar is
-			-- Read a new character from `Current'.
+			-- Read a new character.
 			-- Make result available in `lastchar'.
 		require
 			is_readable: file_readable;
@@ -74,7 +69,7 @@ feature -- Access
 		end;
 
 	open_read is
-			-- Open `Current' in read mode.
+			-- Open in read mode.
 		require
 			is_closed: is_closed;
 		deferred
@@ -83,9 +78,8 @@ feature -- Access
 		end;
 
 	open_write is
-			-- Open `Current' in write mode and
-			-- create a file `name' as a physical
-			-- representation if non-existent.
+			-- Open in write mode and create a file of name `name'
+			-- if none exists.
 		require
 			is_closed: is_closed;
 		deferred
@@ -95,9 +89,8 @@ feature -- Access
 		end;
 
 	open_append is
-			-- Open `Current' in append mode and
-			-- create a file `name' as a physical
-			-- representation if non-existent.
+			-- Open in append mode and create a file of name `name'
+			-- if none exists.
 		require
 			is_closed: is_closed;
 		deferred
@@ -111,18 +104,17 @@ feature -- Access
 		deferred
 		end;
 
-
 feature -- Measurement
 
 	count: INTEGER is
-			-- Size of `Current' in bytes
+			-- Size in bytes
 		deferred
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
-	add (v: CHARACTER) is
-			-- Include `v' in `Current'.
+	extend (v: CHARACTER) is
+			-- Include `v' at end.
 		do
 			putchar (v)
 		end;
@@ -130,67 +122,45 @@ feature -- Modification & Insertion
 	putstring (s: STRING) is
 			-- Write `s' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 
 	putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 
 	putreal (r: REAL) is
 			-- Write ASCII value of `r' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 
 	putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 	
 	putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 	
 	putdouble (d: DOUBLE) is
 			-- Write ASCII value of `d' at current position.
 		require
-			extensible
+			extendible
 		deferred
 		end;
 	
-
-
-feature -- Removal
-
-	delete is
-			-- Forget link between `Current' and (physical) file.
-		require
-			file_exists: exists
-		deferred
-		end;
-
-	reset (fn: STRING) is
-			-- Change file name to `fn' and reset
-			-- all (internal) information.
-		require
-			fn /= Void
-		deferred
-		ensure
-			file_renamed: name = fn;
-			file_closed: is_closed
-		end;
-
 feature -- Status report
 
 	lastchar: CHARACTER;
@@ -219,7 +189,7 @@ feature -- Status report
 			-- Does (physical) file exist?
 		deferred
 		ensure
-			mode = old mode
+			--mode = old mode
 		end;
 
 	is_readable: BOOLEAN is
@@ -278,25 +248,85 @@ feature -- Status report
 			Result := mode >= Write_file
 		end;
 
-	extensible: BOOLEAN is
-			-- May new items be added to `Current'?
+	extendible: BOOLEAN is
+			-- May new items be added?
 		do
 			Result := mode >= Write_file
 		end;
 
-	file_contractable: BOOLEAN is
-			-- May items be removed from `Current'?
+	file_prunable: BOOLEAN is
+			-- May items be removed?
 		do
-			Result := mode >= Write_file and contractable
+			Result := mode >= Write_file and prunable
 		end;
 
-	contractable: BOOLEAN is
-			-- Is there an item to be removed from `Current'?
-		do
-			Result := not off
+	full: BOOLEAN is false;
+			-- Is structure filled to capacity?
+
+feature -- Removal
+
+	delete is
+			-- Remove link with physical file.
+		require
+			file_exists: exists
+		deferred
 		end;
 
-feature  {UNIX_FILE, UNIX_STD, FILE} -- Access
+	reset (fn: STRING) is
+			-- Change file name to `fn' and reset
+			-- all (internal) information.
+		require
+			fn /= Void
+		deferred
+		ensure
+			file_renamed: name = fn;
+			file_closed: is_closed
+		end;
+
+feature {NONE} -- Inapplicable
+
+	marked: CURSOR is
+			-- Retained position (for possible later return)
+		do
+		end;
+
+	go_to (r: CURSOR) is
+			-- Move to position marked `r'.
+		do
+		end;
+
+	replace (v: like item) is
+			-- Replace current item by `v'.
+		require else
+			is_writable: file_writable
+		do
+		ensure then
+			item = v;
+		  	--count = old count
+		end;
+
+	prunable: BOOLEAN is
+			-- Is there an item to be removed?
+		do
+		end;
+
+	remove is
+			-- Remove current item.
+		require else
+			file_prunable: file_prunable
+		do
+		end;
+
+	prune	(v: like item) is
+			-- Remove `v'.
+		require else
+			prunable: file_prunable
+		do
+		ensure 	then
+		  	--count <= old count
+		end;
+
+feature {FILE} -- Implementation
 
 	mode: INTEGER;
 			-- Input-output mode
@@ -308,8 +338,6 @@ feature  {UNIX_FILE, UNIX_STD, FILE} -- Access
 	Append_file: INTEGER is 3;
 	Read_Write_file: INTEGER is 4;
 	Append_Read_file: INTEGER is 5;
-
-feature  {UNIX_FILE, UNIX_STD, FILE} -- Modification & Insertion
 
 	set_read_mode is
 			-- Define file mode as read.
@@ -323,43 +351,18 @@ feature  {UNIX_FILE, UNIX_STD, FILE} -- Modification & Insertion
 			mode := Write_file
 		end;
 
-
-feature  {NONE} -- Modification & Insertion
-
-	replace (v: like item) is
-			-- Replace current item by `v'.
-		require else
-			is_writable: file_writable
-		do
-		ensure then
-			item = v;
-		  	count = old count
-		end;
-
-feature  {NONE} -- Removal
-
-		-- deferred features inherited from COLLECTION and ACTIVE
-		-- which have no sense in class FILE
-
-	remove is
-			-- Remove current item.
-		require else
-			is_contractable: file_contractable
-		do
-		ensure then
-			not full;
-		  	count = (old count - 1)
-		end;
-
-
-
-	remove_item	(v: like item) is
-			-- Remove `v' from `Current'.
-		require else
-			is_contractable: file_contractable
-		do
-		ensure 	then
-		  	count <= old count
-		end;
-
 end -- class FILE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

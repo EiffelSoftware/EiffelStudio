@@ -1,14 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Binary search trees
-
 indexing
 
+	description:
+		"Binary search trees; left child item is less than current item, %
+		%right child item is greater";
+
+	copyright: "See notice at end of class";
 	names: binary_search_tree, tree;
 	representation: recursive, array;
 	access: cursor, membership;
@@ -16,14 +12,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BINARY_SEARCH_TREE [G -> PART_COMPARABLE] inherit
+class BINARY_SEARCH_TREE [G -> COMPARABLE] inherit
 
 	BINARY_TREE [G]
 		rename
 			make as bt_make,
-			put as bt_put,
-			min as bt_min,
-			max as bt_max
+			put as bt_put
 		export {BINARY_SEARCH_TREE}
 			put_left_child, put_right_child,
 			remove_left_child, remove_right_child
@@ -41,11 +35,8 @@ feature -- Initialization
 			-- Create single node with item `v'.
 		do
 			bt_make (v);
-			depth := 0;
-			balanced := true
 		ensure
 			node_item: item = v;
-			binary_tree_arity: arity = 2;
 			no_child: (left_child = Void) and (right_child = Void)
 		end;
 
@@ -56,12 +47,10 @@ feature -- Access
 
  	has (v: like item): BOOLEAN is
 			-- Is there a node with item `v' in `Current'?
-			-- (According to the `='
-			-- discrimination rule)
 		require else
 			item_exists: v /= Void
 		do
-			if v = item then
+			if v.is_equal (item) then
                 Result := true
             elseif v < item then
                 Result := (left_child /= Void) and then
@@ -79,8 +68,6 @@ feature -- Measurement
 		do
 			if has_left then
 				Result := left_child.min
-			elseif has_right then
-				Result := right_child.min
 			else
 				Result := item
 			end
@@ -91,76 +78,53 @@ feature -- Measurement
 		do
 			if has_right then
 				Result := right_child.max
-			elseif has_left then
-				Result := left_child.max
 			else
 				Result := item
 			end
-		end;
-
-	median: like item is
-			-- Median in `Current'
-		do
-			Result := item
 		end;
 
 feature -- Transformation
 
 	sort is
 			-- Sort `Current'.
-			--| Very dumb implementation: insert all nodes from
-			--| a `sequential_representation'.
+			--| use heapsort
+			--| the reason for the `external sort' is that
+			--| the insertion order in the tree will ensure
+			--| it is balanced
 		local
-			seq: SEQUENTIAL [G]
+			seq: SEQUENTIAL [G];
+			temp: ARRAY [G];	
+			heap: HEAP [G];
+			i: INTEGER
 		do
 			seq := sequential_representation;
+			remove_left_child;
+			remove_right_child;
 			from
 				seq.start;
-				wipe_out
+				!!heap.make (count)
 			until
 				seq.off
 			loop
-				put (seq.item);
-				seq.forth
+				heap.put (seq.item);
+				seq.forth;
+			end;	
+			from
+				!!temp.make (1, heap.count)
+			until
+				heap.empty
+			loop
+				temp.put (heap.item, i);
+				heap.remove;
+				i := i + 1
 			end;
-			balance
+			replace (temp.item ((temp.count) // 2));
+			fill_from_sorted_special (temp.area, 0, temp.count - 1);
 		end;
-
-	balance is
-			-- Balance current tree: depths of children will
-			-- differ by 0 or 1.
-		local
-			dd: INTEGER;
-		do
-			if not balanced then
-				from
-					dd := depth_difference
-				until
-					balanced
-				loop
-					if dd > 1 then
-						balance_child_right
-					elseif dd < - 1 then
-						balance_child_left
-					else
-						balanced := true;
-						if left_child.depth > right_child.depth then
-							depth := left_child.depth + 1
-						else
-							depth := right_child.depth + 1
-						end
-					end;
-					dd := depth_difference
-				end
-			end
-		ensure
-			is_balanced: balanced
-		end;
-
-
+					
 feature -- Modification & Insertion
 
-	put (v: like item) is
+	put, extend (v: like item) is
 			-- Put `v' at proper position in tree
 			-- (unless `v' exists already).
 			-- (Comparisons are made according to the
@@ -171,24 +135,25 @@ feature -- Modification & Insertion
 			if v /= item then
                 if v < item then
                     if left_child = Void then
-                        put_left_child (new_tree (v))
-                    else
+                        put_left_child (new_tree);
+						left_child.replace (v)
+					else
                         left_child.put (v)
                     end
                 else
                     if right_child = Void then
-                        put_right_child (new_tree (v))
+                        put_right_child (new_tree);
+						right_child.replace (v)
                     else
                         right_child.put (v)
                     end
                 end;
-                balanced := false
             end
 		ensure
 			item_inserted: has (v)
 		end;
 
-
+			
 feature -- Cursor movement
 
 	node_action (v: like item) is
@@ -239,193 +204,195 @@ feature -- Cursor movement
 			node_action (item)
 		end;
 
-feature -- Status report
+feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 
-	balanced: BOOLEAN;
-			-- Is the node balanced ?
-			-- true if depths of children differ by 0 or 1
 
+	is_subset (other: like Current): BOOLEAN is
+			-- Is Current a subset of other
+		do
+			Result := other.has (item);
+			if Result and left_child /= Void then
+				Result := left_child.is_subset (other)
+			end;
+			if Result and right_child /= Void then
+				Result := right_child.is_subset (other)
+			end
+		end;
+	
+	intersect (other: BINARY_SEARCH_TREE [G]) is
+			-- Remove all items not in `other'.
+		do
+			if right_child /= Void then
+				right_child.intersect (other)
+			end;
+			if left_child /= Void then
+				left_child.intersect (other)
+			end;
+			if not other.has (item) then
+				remove_node
+			end
+		end;
+
+	substract (other: BINARY_SEARCH_TREE [G]) is
+			-- Remove all items also in `other'.
+		require
+			set_exists: other /= Void
+		do
+			if right_child /= Void then
+				right_child.substract (other)
+			end;
+			if left_child /= Void then
+				left_child.substract (other)
+			end;
+			if other.has (item) then
+				remove_node
+			end;
+		end;
+
+	merge (other: like Current) is
+			-- Add all items of `other'.
+		do
+			if other.right_child /= Void then
+				merge (other.right_child)
+			end;
+			if other.left_child /= Void then
+				merge (other.left_child)
+			end;
+			extend (other.item)
+		end;
+
+	remove_node is
+			--remove current node from the tree
+		require
+			is_not_root: not is_root
+		local
+			is_left_child: BOOLEAN;
+			m: like Current;
+		do
+			is_left_child := Current = parent.left_child;
+			if not has_right then
+				if is_left_child then
+					parent.put_left_child (left_child)
+				else
+					parent.put_right_child (left_child)
+				end;
+				parent := Void;
+			elseif not has_left then
+				if is_left_child then
+					parent.put_left_child (right_child)
+				else
+					parent.put_right_child (right_child)
+				end;
+				parent := Void
+			else
+				m := right_child.min_node;
+				m.remove_node;
+				item := m.item;
+			end
+		end;
+
+	pruned (v: like item): like Current is
+		local
+			m: like Current
+		do
+			if item = v then
+				if has_none then
+					-- Do nothing: Void Result
+				elseif not has_right then
+					Result := left_child
+				elseif not has_left then
+					Result := right_child
+				else
+					m := right_child.min_node;
+					m.remove_node;
+					item := m.item;
+					Result := Current
+				end
+			else
+				Result := Current;
+				if v < item then
+					if left_child /= Void then
+						left_child := left_child.pruned (v)
+					end;
+				else
+					if right_child /= Void then
+						right_child := right_child.pruned (v)
+					end;
+				end
+			end
+		end;
+				
+	min_node: like Current is
+			-- node containing min
+		do
+			if has_left then
+				Result := left_child.min_node
+			else
+				Result := Current
+			end
+		end;				
+
+	max_node: like Current is
+			-- node containing max
+		do
+			if has_right then
+				Result := right_child.min_node
+			else
+				Result := Current
+			end
+		end;
+			
 feature  {NONE} -- Initialization
 
-	new_tree (v: like item): like Current is
-			-- Newly allocated node with `tree_item' set to `v'.
+	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
+			-- put values from `t' in `Current' in such an order that
+			-- the tree will be balanced if `t' is sorted
+		local
+			m : INTEGER
 		do
-			!! Result.make (v)
-		ensure
-			new_tree_exist: Result /= Void;
-			new_tree_item: Result.item = v
-		end
+			m := (s + e) // 2;
+			put (t.item (m));
+			if m - 1 > s then
+				fill_from_sorted_special (t, s, m - 1)
+			end;
+			if m + 1 < e then
+				fill_from_sorted_special (t, m + 1, e)
+			end;
+		end;
+			
+feature	-- Status Report
 
-
-
-
-feature  {BINARY_SEARCH_TREE} -- Measurement
-
-	depth: INTEGER;
-			-- Depth of tree whose root is `Current'.
-			-- Meaningful only when balanced is true
-
-	depth_difference: INTEGER is
-			-- Difference in depth between the left
-			-- and the right sibling
+	sorted: BOOLEAN is
+			-- Is Current sorted
 		do
-			if right_child = Void then
-				if left_child = Void then
-					balanced := true;
-					depth := 0;
-					Result := 0
-				else
-					left_child.balance;
-					if left_child.depth = 0 then
-						balanced := true;
-						depth := 1
-					end;
-					Result := - 1 - left_child.depth
+			Result := true;
+			if
+				has_left and left_item > item 
+				or has_right and right_item < item
+			then
+				Result := false
+			else
+				if has_left then
+					Result := left_child.sorted
+				end;
+				if has_right and Result then
+					Result := right_child.sorted
 				end
-			elseif left_child = Void then
-				right_child.balance;
-				if right_child.depth = 0 then
-					balanced := true;
-					depth := 1
-				end;
-				Result := right_child.depth + 1
-			else
-				right_child.balance;
-				left_child.balance;
-				Result := right_child.depth - left_child.depth
 			end
 		end;
-
-
-feature  {NONE} -- Transformation
-
-	balance_child_left is
-			-- Balance on the left side.
-		local
-			t, ll, lr: like Current
-		do
-			ll := left_child.left_child;
-			lr := left_child.right_child;
-			if ll = Void then
-				!! t.make (item);
-				bt_put (lr.item);
-				put_right_child (t);
-				left_child.remove_right_child
-			elseif lr = Void then
-				!! t.make (item);
-				bt_put (left_child.item);
-				put_right_child (t);
-				put_left_child (ll)
-			elseif lr.depth > ll.depth then
-				!! t.make (item);
-				t.set_unbalanced;
-				if right_child /= Void then
-					t.put_right_child (right_child);
-				end;
-				if lr.right_child /= Void then
-					t.put_left_child (lr.right_child);
-				end;
-				bt_put (lr.item);
-				if lr.left_child /= Void then
-					left_child.put_right_child (lr.left_child)
-				else
-					left_child.remove_right_child
-				end;
-				left_child.set_unbalanced;
-				put_right_child (t)
-			else
-				!! t.make (item);
-				if right_child /= Void then
-					t.put_right_child (right_child)
-				end;
-				t.set_unbalanced;
-				t.put_left_child (lr);
-				put_right_child (t);
-				bt_put (left_child.item);
-				put_left_child (ll)
-			end
-		end;
-
-	balance_child_right is
-			-- Balance on the right side.
-		local
-			t, rl, rr: like Current
-		do
-			rl := right_child.left_child;
-			rr := right_child.right_child;
-			if rr = Void then
-				!! t.make (item);
-				bt_put (rl.item);
-				put_left_child (t);
-				right_child.remove_left_child
-			elseif rl = Void then
-				!! t.make (item);
-				bt_put (right_child.item);
-				put_left_child (t);
-				put_right_child (rr)
-			elseif rl.depth > rr.depth then
-				!! t.make (item);
-				t.set_unbalanced;
-				if left_child /= Void then
-					t.put_left_child (left_child)
-				end;
-				if rl.left_child /= Void then
-					t.put_right_child (rl.left_child)
-				end;
-				bt_put (rl.item);
-				if rl.right_child /= Void then
-					right_child.put_left_child (rl.right_child)
-				else
-					right_child.remove_left_child
-				end;
-				right_child.set_unbalanced;
-				put_left_child (t)
-			else
-				!! t.make (item);
-				if left_child /= Void then
-					t.put_left_child (left_child)
-				end;
-				t.put_right_child (rl);
-				t.set_unbalanced;
-				put_left_child (t);
-				bt_put (right_child.item);
-				put_right_child (rr)
-			end
-		end;
-
-feature  {BINARY_SEARCH_TREE} -- Modification & Insertion
-
-	set_unbalanced is
-			-- Set `balanced' to `false'.
-			-- Depth is not meaningful anymore.
-		do
-			balanced := false
-		end;
-
-
-
-feature
-
-   --sorted: BOOLEAN is
-         -- Is `Current' sorted?
-      --local
-         --m: like item
-      --do
-         --if empty then
-            --Result := true
-         --else
-            --from
-               --start;
-               --m := item;
-               --forth
-            ----until
-               --exhausted or else (item < m)
-            --loop
-               --m := item;
-               --forth
-            --end;
-            --Result := exhausted
-         --end
-      --end
 
 end -- class BINARY_SEARCH_TREE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,25 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
-
--- Allocate special data area of objects
-
-
 indexing
 
+	description:
+		"References to special objects, for direct access to arrays and strings";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TO_SPECIAL [T]
-
-creation
+class TO_SPECIAL [T] creation
 
 	make_area
-
 
 feature -- Access
 
@@ -27,19 +17,19 @@ feature -- Access
 			-- Special data zone
 
 
-feature  {NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make_area (n: INTEGER) is
 			-- Creates a special object for `n' entries.
 		require
-			positive_argument: n >= 0;
+			non_negative_argument: n >= 0;
 		do
 			-- Built-in
 		ensure
 			area_allocated: area /= Void and then area.count = n
 		end;
 
-feature  {NONE} -- Modification & Insertion
+feature {NONE} -- Element change
 
 	set_area (other: like area) is
 			-- Assign `other' to `area'
@@ -48,3 +38,17 @@ feature  {NONE} -- Modification & Insertion
 		end;
 
 end -- class TO_SPECIAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

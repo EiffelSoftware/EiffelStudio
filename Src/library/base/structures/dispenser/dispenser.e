@@ -1,16 +1,12 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Dispensers, i.e. containers for which clients
--- have no say as to what item they can access
--- at a given time. Examples are stacks and queues
 
 indexing
 
+	description:
+			"Dispensers: containers for which clients have no say %
+			%as to what item they can access at a given time. %
+			%Examples include stacks and queues."
+
+	copyright: "See notice at end of class";
 	names: dispenser, active;
 	access: fixed, membership;
 	contents: generic;
@@ -19,27 +15,9 @@ indexing
 
 deferred class DISPENSER [G] inherit
 
-	SEQUENCE [G]
-		export
-			{NONE}
-				search, search_equal, has, index_of
-		redefine
-			readable, writable, contractable,
-			append
-		end
+	ACTIVE [G];
 
- 	
-
-feature -- Modification & Insertion
-
-	append (s: SEQUENCE [G]) is
-			-- Append a copy of `s' to `Current'.
-			-- (Synonym for `fill')
-		do
-			fill (s)
-		end;
-
-
+	FINITE [G]
 feature -- Status report
 
 	readable: BOOLEAN is
@@ -54,26 +32,32 @@ feature -- Status report
 			Result := not empty
 		end;	
 
+feature -- Element change
 
-feature  {NONE} -- Removal
-
-	remove_item (v: G) is
-			-- Remove `v' from `Current'.
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'.
+			-- (Synonym for `fill')
 		do
-		end;
-
-feature  {NONE} -- Status report
-
-	contractable: BOOLEAN is
-			-- May items be removed from `Current'?
-		do
-			Result := not empty
+			fill (s)
 		end;
 
 invariant
 
 	readable_definition: readable = not empty;
 	writable_definition: writable = not empty;
-	contractable_definition: contractable = not empty
 
 end -- class DISPENSER
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,20 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	--
---|	270 Storke Road, Suite 7 Goleta, California 93117	--
---|				   (805) 685-1006		--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- The only class with no parent, introduces the platform
--- independent universal feature such as clone and out.  
-
 indexing
 
+	description:
+		"Platform-independent universal properties. %
+		%This class is an ancestor to all developer-written classes.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class GENERAL
-
+class
+	GENERAL
 
 feature -- Access
 
@@ -27,46 +22,87 @@ feature -- Access
  
 	conforms_to (other: like Current): BOOLEAN is
 			-- Is dynamic type of current object a descendant of
-			-- dynamic type `other' ?
+			-- dynamic type of `other'?
 		require
 			other_not_void: other /= Void
 		do
 			Result := c_conforms_to ($other, $Current)
 		end;
 
+feature -- Status report
+
+	consistent (other: like Current): BOOLEAN is
+			-- Is object in a consistent state so that others
+			-- can be copied onto it? (Default answer: yes).
+		do
+			Result := true
+		end;
+
 feature -- Comparison
 
 	is_equal, frozen standard_is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object field-by-field identical
-			-- to current object ?
+			-- to current object?
 		require
 			other_not_void: other /= Void;
 		do
 			Result := c_standard_is_equal ($Current, $other)
 		end;
 
-	equal, frozen standard_equal (some: GENERAL; other: like some): BOOLEAN is
-			-- Are `some' and `other' either both void or attached to
-			-- field-by-field identical objects ?
+	frozen equal (some: GENERAL; other: like some): BOOLEAN is
+			-- Are `some' and `other' either both void or attached
+			-- to field-by-field identical objects?
+			--
+			-- For non-void arguments, `equal' calls `is_equal';
+			-- to change comparison criterion, redefine `is_equal'.
 		do
-			Result := 	(some = Void and other = Void)
-						or else
-						(	(some /= Void and other /= Void)
-							and then
-							some.is_equal (other)
-						)
+			Result := (some = Void and other = Void) or else
+						((some /= Void and other /= Void) and then
+						some.is_equal (other))
 		ensure
-			Result = 	(some = Void and other = Void)
-						or else
-						(	(some /= Void and other /= Void)
-							and then
-							some.is_equal (other)
-						)
+			Result = (some = Void and other = Void) or else
+						((some /= Void and other /= Void) and then
+						some.is_equal (other))
+		end;
+
+	frozen standard_equal (some: GENERAL; other: like some): BOOLEAN is
+			-- Are `some' and `other' either both void or attached to
+			-- field-by-field identical objects?
+			-- Always uses the default object comparison criterion.
+		do
+			Result := (some = Void and other = Void) or else
+						((some /= Void and other /= Void) and then
+						some.standard_is_equal (other))
+		ensure
+			Result = (some = Void and other = Void) or else
+						((some /= Void and other /= Void) and then
+						some.standard_is_equal (other))
+		end;
+
+	deep_equal (some: GENERAL; other: like some): BOOLEAN is
+			-- Are `some' and `other' either both void or attached recursively
+			-- isomrphic object structures?
+		do
+			Result := (some = Void and then other = Void) or else
+						(some /= Void and then other /= Void and then
+						c_deep_equal ($some, $other))
 		end;
 
 feature -- Duplication
 
-	copy, frozen standard_copy (other: like Current) is
+	copy (other: like Current) is
+			-- Copy the structure representing by `other' onto
+			-- that represented by current object.
+		require
+			other_not_void: other /= Void;
+			conformance: other.conforms_to (Current);
+		do
+			c_standard_copy ($other, $Current)
+		ensure
+			is_equal: is_equal (other)
+		end;
+
+	frozen standard_copy (other: like Current) is
 			-- Copy every field of `other' onto corresponding field
 			-- of current object.
 		require
@@ -78,12 +114,17 @@ feature -- Duplication
 			is_equal: is_equal (other)
 		end;
 
-	clone (other: GENERAL): like other is
+	frozen clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
-			-- field-by-field identical to `other'
+			-- field-by-field identical to `other'.
+			--
+			-- For non-void `other', `clone' calls `copy';
+		 	-- to change copying/cloning semantics, redefine `copy'.
 		do
 			if other /= Void then
-				Result := other.twin;
+				Result := c_standard_clone ($other);
+				Result.setup (other);
+				Result.copy (other)
 			end
 		ensure
 			equal: equal (Result, other)
@@ -91,34 +132,18 @@ feature -- Duplication
 
 	frozen standard_clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
-			-- field-by-field identical to `other'
+			-- field-by-field identical to `other'.
+			-- Always uses the default copying semantics.
 		do
 			if other /= Void then
-				Result := other.standard_twin;
+				Result := c_standard_clone ($other);
+				Result.standard_copy (Current)
 			end
 		ensure
-			equal: equal (Result, Current)
+			equal: standard_equal (Result, Current)
 		end;
 
-	twin: like Current is
-			-- New object field-by-field identical to `Current'
-		do
-			Result := c_standard_clone ($Current);
-			Result.copy (Current)
-		ensure
-			is_equal: Result.is_equal (Current)
-		end;
-
-	frozen standard_twin: like Current is
-			-- New object field-by-field identical to `other'
-		do
-			Result := c_standard_clone ($Current);
-			Result.standard_copy (Current)
-		ensure
-			is_equal: Result.standard_is_equal (Current)
-		end;
-
-	deep_clone, frozen standard_deep_clone (other: GENERAL): like other is
+	frozen deep_clone (other: GENERAL): like other is
 			-- Void of `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
 		do
@@ -129,7 +154,7 @@ feature -- Duplication
 			deep_equal: deep_equal (other, Result)
 		end;
 
-	deep_copy, frozen standard_deep_copy (other: like Current) is
+	frozen deep_copy (other: like Current) is
 			-- Effect equivalent to that of:
 			-- 		temp := deep_clone (other);
 			--		copy (temp)
@@ -144,19 +169,15 @@ feature -- Duplication
 			deep_equal: deep_equal (Current, other)
 		end; 
 
-	deep_equal, frozen standard_deep_equal (some: GENERAL; other: like some): BOOLEAN is
-			-- Are `some' and `other' either both void or attached recursively
-			-- isomrphic object structures ?
+	setup (other: like Current) is
+			-- Perform actions on a freshly created object so that
+			-- the contents of `other' can be safely copied onto it.
 		do
-			Result := 	(	some = Void and then other = Void)
-						or else
-						(	some /= Void and then other /= Void
-							and then
-							c_deep_equal ($some, $other)
-					)
+		ensure
+			consistent (other)
 		end;
 
-feature -- Ouput
+feature -- Output
 	
 	io: STD_FILES is
 			-- Standard files access
@@ -187,15 +208,8 @@ feature -- Miscellaneous
 		do
 		end;
 
- 
-
-feature  {NONE} -- Access
-
 	Void: NONE;
 			-- Void reference
-
-
-feature -- External, Access
 
 	die (code: INTEGER) is
 			-- Exit program with exit status `code'.
@@ -205,33 +219,27 @@ feature -- External, Access
 			"esdie"
 		end;
 
-feature -- External, Access
+feature {NONE} -- Implementation
 
 	frozen c_conforms_to (obj1, obj2: GENERAL): BOOLEAN is
 			-- Does dynamic type of object attached to `obj1' conform to
-			-- dynamic type of object attached to `obj2' ?
+			-- dynamic type of object attached to `obj2'?
 		external
 			"C"
 		alias
 			"econfg"
 		end;
 
-feature  {NONE} -- External, Comparison
-
 	c_standard_is_equal (target, source: GENERAL): BOOLEAN is
 			-- C external performing standard equality
-			-- ## To be redefined in AREA into "spequal"
 		external
 			"C"
 		alias
 			"eequal"
 		end;
 
-feature  {NONE} -- External, Duplication
-
 	c_standard_copy (source, target: GENERAL) is
 			-- C external performing standard copy
-			-- ## To be redefined in AREA into "spcopy"
 		external
 			"C"
 		alias
@@ -240,7 +248,6 @@ feature  {NONE} -- External, Duplication
 
 	c_standard_clone (other: GENERAL): like other is
 			-- New object of same dynamic type as `other'
-			-- ## To be redefined in AREA into "spclone"
 		external
 			"C"
 		alias
@@ -258,14 +265,12 @@ feature  {NONE} -- External, Duplication
 
 	frozen c_deep_equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' attached to recursively isomorphic
-			-- object structures ?
+			-- object structures?
 		external
 			"C"
 		alias
 			"ediso"
 		end;
-
-feature  {NONE} -- External, Ouput
 
 	frozen c_tagged_out (some: GENERAL): STRING is
 			-- Printable representation of `some'
@@ -279,5 +284,20 @@ feature  {NONE} -- External, Ouput
 			"C"
 		end;
 
- 
+invariant
+
 end -- class GENERAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

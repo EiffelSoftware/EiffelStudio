@@ -1,11 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
-class INTERNAL
+	description:
+		"Access to internal object properties. %
+		%This class may be used as ancestor by classes needing its facilities.";
+
+	copyright: "See notice at end of class"
+
+class
+	INTERNAL
 
 feature -- Access
 
@@ -170,9 +172,6 @@ feature -- Access
 			Result := c_is_special ($object)
 		end;
 
-
-
-
 feature -- Measurement
 
 	field_count (object: ANY): INTEGER is
@@ -206,8 +205,7 @@ feature -- Measurement
 			Result := c_size ($object)
 		end;
 
-
-feature  {NONE} -- External, Access
+feature {NONE} -- Implementation
 
 	c_dynamic_type (object: ANY): INTEGER is
 			-- Dynamic type of `object'
@@ -313,8 +311,6 @@ feature  {NONE} -- External, Access
 			"ei_offset"
 		end;
 
-feature  {NONE} -- External, Measurement
-			
 	c_field_count (object: ANY): INTEGER is
 			-- Number of logical fields in `object'
 		external
@@ -343,3 +339,17 @@ feature  {NONE} -- External, Measurement
 
 
 end -- class INTERNAL
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

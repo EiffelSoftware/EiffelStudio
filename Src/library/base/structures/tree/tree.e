@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Trees,
--- without commitment to a particular representation
 
 indexing
 
+	description:
+		"Trees, without commitment to a particular representation";
+
+	copyright: "See notice at end of class";
 	names: tree;
 	access: cursor, membership;
 	representation: recursive;
@@ -17,14 +12,18 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class TREE [G]
+deferred class
+	TREE [G]
 
 feature -- Access
 
 	parent: TREE [G];
-			-- Parent of `Current'
+			-- Parent of current node
 
 	child: like parent is
+			-- Current child node
+		require
+			readable: readable_child
 		deferred
 		end;
 
@@ -34,10 +33,15 @@ feature -- Access
 		end; -- item
 
    	child_item: like item is
-		deferred
+			-- Item in current child node
+		require
+			readable: child_readable
+		do
+			Result := child.item
 		end; -- child_item
 
 	arity: INTEGER is
+			-- Number of children
 		deferred
 		end;
 
@@ -47,7 +51,10 @@ feature -- Access
 		end;
 
 	child_index: INTEGER is
+			-- Index of current child
 		deferred
+		ensure
+			Result >= 0 and Result <= arity + 1
 		end;
 
 	first_child: like parent is
@@ -65,186 +72,50 @@ feature -- Access
 		end;
 
 	left_sibling: like parent is
-			-- Left neighbor of `Current' (if any)
+			-- Left neighbor (if any)
 		require
 			is_not_root: not is_root
 		deferred
 		ensure
-			(Result /= Void) implies (Result.right_sibling = Current)
+			is_sibling (Result);
+			(Result /= Void) implies (Result.right_sibling = Current);
 		end;
 
 	right_sibling: like parent is
-			-- Right neighbor of `Current' (if any)
+			-- Right neighbor (if any)
 		require
 			is_not_root: not is_root
 		deferred
 		ensure
+			is_sibling (Result);
 			(Result /= Void) implies (Result.left_sibling = Current)
 		end;
 
 	has (v: G): BOOLEAN is
-			-- Does `Current' include `v'?
+			-- Does subtree include `v'?
 			-- (According to the currently adopted
 			-- discrimination rule)
 		do
 			Result := v = item or else subtree_has (v)
 		end;
+		
+	is_sibling (other: like parent): BOOLEAN is
+			-- are `Current' and `other' siblings
+		do
+			Result := not is_root and other.parent = parent
+		ensure
+			not_root: Result implies not is_root;
+			other_not_root: Result implies not other.is_root;
+			same_parent: Result = not is_root and other.parent = parent
+		end;
 
 feature -- Measurement
 
 	count: INTEGER is
-			-- Number of elements in `Current'
+			-- Number of elements
 		do
 			Result := subtree_count + 1
 		end;
-
-
-
-feature -- Conversion
-
-	sequential_representation: SEQUENTIAL [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
-		local
-			fl: FIXED_LIST [G]
-		do
-			!!fl.make (count);
-			fl.start;
-			fl.replace (item);
-			fl.forth;
-			fill_list (fl);
-			Result := fl
-		end;
-
-
-
-
-
-feature -- Duplication
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-tree beginning at cursor position and
-			-- having min (`n', `arity' - `child_index' + 1)
-			-- children.
-		require
-			not_child_off: not child_off;
-			valid_sublist: n >= 0
-		deferred
-		end;
-
-
-feature -- Modification & Insertion
-
-	replace (v: like item) is
-			-- Replace item in `Current' by `v'.
-		require
-			is_writable: writable
-		deferred
-		ensure
-			item_inserted: item = v
-		end; -- replace
-		
-	put (v: like item) is
-			-- Replace item in `Current' by `v'.
-			-- (Synonym for replace)
-		require
-			is_writable: writable
-		do
-			replace (v)
-		ensure
-			item_inserted: item = v
-		end; -- put
-
-	child_replace (v: like item) is
-			-- Put `v' at current child position.
-		require
-			child_writable: child_writable
-		deferred
-		ensure
-			item_inserted: child_item = v
-		end; -- child_replace
-
-	child_put (v: like item) is
-			-- Put `v' at current child position.
-			-- (Synonym for `child_replace')
-		require
-			child_writable: child_writable
-		do
-			child_replace (v)
-		ensure
-			item_inserted: child_item = v
-		end; -- child_put
-
-	replace_child (n: like parent) is
-			-- Put `n' at current child position.
-		require
-			writable_child: writable_child
-		deferred
-		ensure
-			child_replaced: child = n
-		end; -- replace_child
-
-	put_child (n: like parent) is
-			-- Put `n' at current child position.
-			-- (Synonym for `replace_child')
-		require
-			writable_child: writable_child
-		do
-			replace_child (n)
-		ensure
-			child_replaced: child = n
-		end; -- put_child
-
-	fill (other: TREE [G]) is
-			-- Fill `Current' with as many elements of `other'
-			-- as possible.
-			-- The representations of `other' and `Current'
-			-- need not be the same. (This feature enables you
-			-- to map one implementation to another.)
-		do
-			replace (other.item);
-			fill_subtree (other)
-		end;
-
-feature -- Cursor movement
-
-	child_go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
-		deferred
-		end;
-
-	child_start is
-			-- Move to first child in `Current'.
-		deferred
-		ensure then
-			not empty implies child_isfirst
-		end;
-
-	child_finish is
-			-- Move to last child in `Current'.
-		deferred
-		ensure then
-			is_last_child: not empty implies child_islast
-		end; -- child_finish
-
-	child_forth is
-		deferred
-		end;
-
-	child_go_i_th (i: INTEGER) is
-			-- Move cursor to `i'-th child.
-		require else
-			valid_cursor_index: valid_cursor_index (i)
-		deferred
-		ensure then
-			position: child_index = i;
-			is_before: (i = 0) implies child_before;
-			is_after: (i = arity + 1) implies child_after
-		end;
-
-
 
 feature -- Status report
 	
@@ -277,39 +148,38 @@ feature -- Status report
 			Result := not child_off
 		end;
 
-	contractable: BOOLEAN is false;
-			-- May items be removed from `Current'?
-
-
-
 	child_off: BOOLEAN is
-		deferred
+			-- Is there no current child
+		do
+			Result := child_before or child_after
 		end;
 
 	child_before: BOOLEAN is
-		deferred
+			-- Is there no valid child position to the left
+		do
+			Result := child_index = 0
 		end;
 
 	child_after: BOOLEAN is
-		deferred
+			-- Is there no valid child position to the right
+		do
+			Result := child_index = arity + 1
 		end;
 
-
-
 	empty: BOOLEAN is
-			-- Is `Current' empty?
+			-- Is structure empty of elements?
 		do
 			Result := false
 		end;
 
 	is_leaf: BOOLEAN is
-			-- Has `Current' no children?
+			-- Are there no children?
 		do
 			Result := arity = 0
 		end;
 
 	is_root: BOOLEAN is
-			-- Has `Current' no parent?
+			-- Is there no parent?
 		do
 			Result := parent = Void
 		end;
@@ -317,17 +187,17 @@ feature -- Status report
 	child_isfirst: BOOLEAN is
 			-- Is cursor under first child?
 		do
-			Result := (child_index = 1)
+			Result := not is_leaf and child_index = 1
 		ensure
-			Result implies (not empty)
+			Result implies (not is_leaf)
 		end;
 
 	child_islast: BOOLEAN is
 			-- Is cursor under last child?
 		do
-			Result := (child_index = arity)
+			Result := not is_leaf and child_index = arity
 		ensure
-			Result implies (not empty)
+			Result implies (not is_leaf)
 		end;
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is
@@ -338,15 +208,165 @@ feature -- Status report
 			valid_index_definition: Result = (i >= 0) and (i <= arity + 1)
 		end;
 
+feature -- Cursor movement
 
-feature -- Obsolete, Access
+	child_go_to (p: CURSOR) is
+			-- Move cursor to position `p'.
+		deferred
+		end;
+
+	child_start is
+			-- Move to first child.
+		deferred
+		ensure then
+			is_first_child: not is_leaf implies child_isfirst;
+			after_if_leaf: is_leaf implies child_after
+		end;
+
+	child_finish is
+			-- Move to last child.
+		deferred
+		ensure then
+			is_last_child: not is_leaf implies child_islast;
+			before_if_leaf: is_leaf  implies child_before
+		end; -- child_finish
+
+	child_forth is
+		deferred
+		end;
+
+	child_back is
+		deferred
+		end;
+
+	child_go_i_th (i: INTEGER) is
+			-- Move cursor to `i'-th child.
+		require else
+			valid_cursor_index: valid_cursor_index (i)
+		deferred
+		ensure then
+			position: child_index = i;
+			is_before: (i = 0) implies child_before;
+			is_after: (i = arity + 1) implies child_after
+		end;
+
+
+feature -- Element change
+
+	sprout is
+			-- Make `Current' a root
+		do
+			if parent /= void then
+				parent.prune (Current)
+			end
+		end;
+		
+	put, replace (v: like item) is
+			-- Replace element at cursor position by `v'.
+		require
+			is_writable: writable
+		deferred
+		ensure
+			item_inserted: item = v
+		end; -- replace
+			
+	child_put, child_replace (v: like item) is
+			-- Put `v' at current child position.
+		require
+			child_writable: child_writable
+		deferred
+		ensure
+			item_inserted: child_item = v
+		end; -- child_replace
+
+	put_child, replace_child (n: like parent) is
+			-- Put `n' at current child position.
+		require
+			writable_child: writable_child;
+			was_root: n.is_root
+		deferred
+		ensure
+			child_replaced: child = n
+		end; -- replace_child
+
+	prune (n: like parent) is
+			-- Remove `n' from the children
+		require
+			is_child: n.parent = Current
+		deferred
+		ensure
+			n.is_root
+		end;
+		
+	fill (other: TREE [G]) is
+			-- Fill with as many elements of `other' as possible.
+			-- The representations of `other' and current node
+			-- need not be the same.
+		do
+			replace (other.item);
+			fill_subtree (other)
+		end;
+	
+feature -- Conversion
+
+	sequential_representation: SEQUENTIAL [G] is
+			-- Representation as a sequential structure
+		local
+			al: ARRAYED_LIST [G]
+		do
+			!! al.make (count);
+			al.start;
+			al.extend (item);
+			fill_list (al);
+			Result := al
+		end;
+
+	binary_representation: BINARY_TREE[G] is
+			-- Convert to binary representation:
+			-- first child becomes left child, 
+			-- right sibling becomes right child.
+		local
+			current_sibling: BINARY_TREE [G];
+		do
+			!!Result.make (item);
+			if not is_leaf then
+				Result.put_left_child (first_child.binary_representation);
+				from
+					child_start;
+					child_forth;
+					current_sibling := Result.left_child
+				until
+					child_after
+				loop
+					current_sibling.put_right_child (child.binary_representation);
+					current_sibling := current_sibling.right_child;
+					child_forth
+				end
+			end
+		ensure
+			Result_is_root: Result.is_root;
+			Result_has_no_right_child: not Result.has_right
+		end;
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-tree beginning at cursor position and
+			-- having min (`n', `arity' - `child_index' + 1)
+			-- children.
+		require
+			not_child_off: not child_off;
+			valid_sublist: n >= 0
+		deferred
+		end;
+
+feature -- Obsolete
 
 	child_position: INTEGER is obsolete "Use ``child_index''"
 			-- Position of child cursor
 		do
 			Result := child_index
 		end;
-feature -- Obsolete, Cursor movement
 
 	child_go (i: INTEGER) is obsolete "Use ``child_go_i_th''"
 			-- Move cursor to `i'-th position.
@@ -357,9 +377,6 @@ feature -- Obsolete, Cursor movement
 		ensure
 			position_espected: child_index = i
 		end;
-
-
-feature -- Obsolete, Status report
 
 	child_offleft: BOOLEAN is obsolete "Use ``child_before''"
 			-- Is child cursor left of leftmost child?
@@ -373,13 +390,10 @@ feature -- Obsolete, Status report
 			Result := child_after
 		end;
 
-
-
-
-feature  {TREE} -- Access
+feature {TREE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is
-			-- Do the children of `Current' include `v'?
+			-- Do children include `v'?
 			-- (According to the currently adopted
 			-- discrimination rule)
 		do
@@ -389,7 +403,7 @@ feature  {TREE} -- Access
 				child_off or else Result
 			loop
 				if child /= Void then
-					Result := equal (v, child_item)
+					Result := v.is_equal (child_item)
 				end;
 				child_forth
 			end;
@@ -404,9 +418,6 @@ feature  {TREE} -- Access
 				child_forth
 			end
 		end;
-
-
-feature  {TREE} -- Measurement
 
 	subtree_count: INTEGER is
 			-- Number of elements in children
@@ -429,10 +440,8 @@ feature  {TREE} -- Measurement
 		end;
 
 
-feature  {TREE} -- Duplication
-
-	fill_list (fl: FIXED_LIST [G]) is
-			-- Fill `fl' with all the childrens items.
+	fill_list (al: ARRAYED_LIST [G]) is
+			-- Fill `al' with all the children's items.
 		do
 			from
 				child_start
@@ -440,20 +449,16 @@ feature  {TREE} -- Duplication
 				child_off
 			loop
 				if child /= Void then
-					fl.replace (child_item);
-					fl.forth;
-					child.fill_list (fl)
+					al.extend (child_item);
+					child.fill_list (al)
 				end;
 				child_forth
 			end
 		end;
 
 
-
-feature  {TREE} -- Modification & Insertion
-
 	attach_to_parent (n: like parent) is
-			-- Make `n' parent of `Current'.
+			-- Make `n' parent of current node.
 		do
 			parent := n
 		ensure
@@ -465,9 +470,7 @@ feature  {TREE} -- Modification & Insertion
 		deferred
 		end;
 
- 
-
-feature  {NONE} -- Removal
+feature {NONE} -- Implementation
 
 	remove is
 			-- Remove current item
@@ -479,14 +482,29 @@ feature  {NONE} -- Removal
 		do
 		end;
 
-
 invariant
 
 	leaf_definition: is_leaf = (arity = 0);
-
+	leaf_constraint: is_leaf implies child_off;
+	child_off_definition: child_off = child_before or child_after;
 	child_before_definition: child_before = (child_index = 0);
-	child_isfirst_definition: child_isfirst = (child_index = 1);
-	child_islast_definition: child_islast = (child_index = arity);
-	child_after_definition: child_after = (child_index = arity + 1)
+	child_isfirst_definition: child_isfirst = (not is_leaf and child_index = 1);
+	child_islast_definition: child_islast = (not is_leaf and child_index = arity);
+	child_after_definition: child_after = (child_index = arity + 1);
+	child_consistency: child_readable implies child.parent = Current
 
 end -- class TREE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

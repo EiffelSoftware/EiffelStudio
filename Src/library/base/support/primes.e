@@ -1,19 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Specialists in prime numbers
-
 indexing
 
+	description:
+		"Prime number properties";
+
+	copyright: "See notice at end of class";
 	names: primes;
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PRIMES
+class
+	PRIMES
 
 feature -- Access
 
@@ -76,7 +72,7 @@ feature -- Access
 		do
 				-- All odd numbers except 1 are candidates
 			from
-				!!Result.make (1, n);
+				!! Result.make (1, n);
 				i := 3
 			until
 				i > n
@@ -111,7 +107,7 @@ feature -- Access
 	test_prime (n: INTEGER): BOOLEAN is
 			-- Is `n' a prime number?
 		require
-			n_positive: n >= 0
+			non_negative_argument: n >= 0
 		local
 			to_test, divisor: INTEGER
 		do
@@ -134,3 +130,17 @@ feature -- Access
 		end;
 
 end -- class PRIMES
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

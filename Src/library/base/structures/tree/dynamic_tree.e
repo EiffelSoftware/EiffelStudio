@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Dynamically modifiable trees
-
 indexing
 
+	description:
+		"Trees with a dynamically modifiable structure";
+
+	copyright: "See notice at end of class";
 	names: dynamic_tree, tree;
 	representation: recursive;
 	access: cursor, membership;
@@ -27,7 +22,162 @@ feature -- Access
 
 
 	parent: DYNAMIC_TREE [G];
-			-- Parent of `Current'
+			-- Parent of current node.
+
+feature -- Status report
+
+	extendible: BOOLEAN is true;
+			-- May new items be added?
+
+feature -- Element change
+
+	extend (v: like item) is
+			-- Insert `v' as new child.
+		do
+			child_extend (v)
+		end;
+
+	child_extend (v: like item) is
+			-- Add `v' to the list of children.
+			-- Do not move child cursor.
+		deferred
+		end;
+
+	child_add_left (v: like item) is
+			-- Add `v' to the left of cursor position.
+			-- Do not move child cursor.
+		require
+			extendible: extendible;
+			not_child_before: not child_before
+		deferred
+		end;
+
+	child_add_right (v: like item) is
+			-- Add `v' to the right of cursor position.
+			-- Do not move child cursor.
+		require
+			extendible: extendible;
+			not_child_after: not child_after
+		deferred
+		end;
+
+	add_child (n: like parent) is
+			-- Add `n' to the list of children.
+			-- Do not move child cursor.
+		require else
+			non_void_argument: n /= Void
+		deferred
+		end;
+
+	add_child_left (n: like parent) is
+			-- Add `n' to the left of cursor position.
+			-- Do not move cursor.
+		require
+			extendible: extendible;
+			not_child_before: not child_before;
+			non_void_argument: n /= Void
+		deferred
+		end;
+
+	add_child_right (n: like parent) is
+			-- Add `n' to the right of cursor position.
+			-- Do not move cursor.
+		require
+			extendible: extendible;
+			not_child_after: not child_after;
+			non_void_argument: n /= Void
+		deferred
+		end;
+
+	merge_tree_before (other: like first_child) is
+			-- Merge children of `other' into current structure
+			-- after cursor position. Do not move cursor.
+			-- Make `other' a leaf.
+		require
+			not_child_off: not child_off;
+			other_exists: (other /= Void) 
+		deferred
+		ensure
+			other_is_leaf: other.is_leaf
+		end;
+
+	merge_tree_after (other: like first_child) is
+			-- Merge children of `other' into current structure
+			-- after cursor position. Do not move cursor.
+			-- Make `other' a leaf.
+		require
+			not_child_off: not child_off;
+			other_exists: (other /= Void) 
+		deferred
+		ensure
+			other_is_leaf: other.is_leaf
+		end;
+
+feature -- Removal
+
+	remove_left_child is
+			-- Remove item to the left of cursor position.
+			-- Do not move cursor.
+		require
+			is_not_first: not child_isfirst;
+		deferred
+		ensure
+	 		--new_arity: arity = old arity - 1;
+	 		--new_child_index: child_index = old child_index - 1
+		end;
+
+	remove_right_child is
+			-- Remove item to the right of cursor position.
+			-- Do not move cursor.
+		require
+			is_not_last: not child_islast;
+		deferred
+		ensure
+	 	  --new_arity: arity = old arity - 1;
+	 	  --new_child_index: child_index = old child_index
+		end;
+
+	remove_child is
+			-- Remove child at cursor position.
+			-- Move cursor to the next sibling or after if none
+		require
+			child_not_off: not child_off
+		deferred
+		ensure
+			--new_arity: arity = old arity - 1;
+			--new_child_index: child_index = old child_index
+		end;
+
+	wipe_out is
+			-- Remove all child
+		deferred
+		end;
+
+feature -- Conversion
+
+	fill_from_binary (b: BINARY_TREE [G]) is
+			-- Fill from a binary representation.
+			-- Left_child becomes first_child.
+			-- Right_child becomes right_sibling.
+			-- The right child of b is ignored.
+		local
+			current_node: BINARY_TREE [G]
+		do
+			replace (b.item);
+			wipe_out;
+			if b.has_left then
+				from
+					current_node := b.left_child
+				until
+					current_node = Void
+				loop
+					child_add_right (current_node.item);
+					child_forth;
+					child.fill_from_binary (current_node);
+					current_node := current_node.right_child
+				end
+			end	
+		end;
 
 feature -- Duplication
 
@@ -52,151 +202,7 @@ feature -- Duplication
 			child_go_to (pos)
 		end;
 
-
-feature -- Modification & Insertion
-
-	add (v: like item) is
-			-- Add `v' to `Current'.
-		do
-			child_add (v)
-		end;
-
-	child_add (v: like item) is
-			-- Add `v' to the children list of `Current'.
-			-- Do not move child cursor.
-		deferred
-		end;
-
-	child_add_left (v: like item) is
-			-- Add `v' to the left of cursor position.
-			-- Do not move child cursor.
-		require
-			extensible: extensible;
-			not_child_before: not child_before
-		deferred
-		end;
-
-	child_add_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move child cursor.
-		require
-			extensible: extensible;
-			not_child_after: not child_after
-		deferred
-		end;
-
-	add_child (n: like parent) is
-			-- Add `n' to the children list of `Current'.
-			-- Do not move child cursor.
-		require else
-			non_void_argument: n /= Void
-		deferred
-		end;
-
-	add_child_left (n: like parent) is
-			-- Add `n' to the left of cursor position.
-			-- Do not move cursor.
-		require
-			extensible: extensible;
-			not_child_before: not child_before;
-			non_void_argument: n /= Void
-		deferred
-		end;
-
-	add_child_right (n: like parent) is
-			-- Add `n' to the right of cursor position.
-			-- Do not move cursor.
-		require
-			extensible: extensible;
-			not_child_after: not child_after;
-			non_void_argument: n /= Void
-		deferred
-		end;
-
-	put_between (bef, aft: like first_child) is
-			-- Put `Current' between `bef' and `aft'.
-		require
-			same_parent:
-				(bef /= Void and aft /= Void) implies
-				(bef.parent = aft.parent)
-		deferred
-		end;
-
-	merge_tree_before (other: like first_child) is
-			-- Merge children of `other' into `Current'
-			-- after cursor position. Do not move cursor.
-			-- Make `other' a leaf.
-		require
-			not_child_off: not child_off;
-			other_has_children:
-				(other /= Void) and then (other.arity > 0)
-		deferred
-		ensure
-			other_is_leaf: other.is_leaf
-		end;
-
-	merge_tree_after (other: like first_child) is
-			-- Merge children of `other' into `Current'
-			-- after cursor position. Do not move cursor.
-			-- Make `other' a leaf.
-		require
-			not_child_off: not child_off;
-			other_has_children:
-				(other /= Void) and then (other.arity > 0)
-		deferred
-		ensure
-			other_is_leaf: other.is_leaf
-		end;
-
-	
-feature -- Removal
-
-	remove_left_child is
-			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
-		require
-			is_not_first: not child_isfirst;
-			child_contractable: child_contractable
-		deferred
-		ensure
-	 		new_count: count = old count - 1;
-	 		new_arity: arity = old arity - 1;
-	 		new_child_index: child_index = old child_index - 1
-		end;
-
-	remove_right_child is
-			-- Remove item to the right of cursor position.
-			-- Do not move cursor.
-		require
-			is_not_last: not child_islast;
-			child_contractable: child_contractable
-		deferred
-		ensure
-	 	  new_count: count = old count - 1;
-	 	  new_arity: arity = old arity - 1;
-	 	  new_child_index: child_index = old child_index
-		end;
-
-	wipe_out is
-			-- Empty `Current'.
-		deferred
-		end;
-
-	
-
-
-feature -- Status report
-
-	extensible: BOOLEAN is true;
-			-- May new items be added to `Current'?
-
-	child_contractable: BOOLEAN is
-			-- May items be removed from `Current'?
-		do
-			Result := not child_off
-		end;
-
-feature -- Obsolete, Removal
+feature -- Obsolete
 
 	remove_child_left (n: INTEGER) is
 			obsolete "Use ``remove_left_child'' repeatedly"
@@ -232,23 +238,17 @@ feature -- Obsolete, Removal
 			end
 		end;
 
-feature  {DYNAMIC_TREE} -- Initialization
+feature {DYNAMIC_TREE} -- Implementation
 
 	new_tree: like Current is
-			-- Instance of class `like Current'.
-			-- This feature should be implemented in
-			-- every effective descendant of DYNAMIC_TREE,
-			-- so as to return an adequately allocated and
-			-- initialized object.
+			-- A newly created instance of the same type.
+			-- This feature may be redefined in descendants so as to
+			-- produce an adequately allocated and initialized object.
 		deferred
 		ensure
 			result_exists: Result /= Void;
 			result_item: Result.item = item
 		end;
-
-
-
-feature  {DYNAMIC_TREE} -- Duplication
 
 	duplicate_all: like Current is
 			-- Copy of sub-tree including all children
@@ -269,10 +269,6 @@ feature  {DYNAMIC_TREE} -- Duplication
 			child_go_to (pos)
 		end;
 
-
-
-feature  {DYNAMIC_TREE} -- Modification & Insertion
-
 	fill_subtree (other: TREE [G]) is
 			-- Fill children with children of `other'.
 		do
@@ -281,7 +277,7 @@ feature  {DYNAMIC_TREE} -- Modification & Insertion
 			until
 				other.child_off
 			loop
-				child_add (other.item);
+				child_extend (other.item);
 				other.child_forth
 			end;
 			from
@@ -296,10 +292,22 @@ feature  {DYNAMIC_TREE} -- Modification & Insertion
 			end
 		end;
 
-
 invariant
 
-	extensible_definition: extensible = true;
-	child_property: child_contractable = not child_off
+	extendible_definition: extendible;
 
 end -- class DYNAMIC_TREE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,14 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Data-structures on which items a partial order relation is defined
-
 indexing
 
+	description:
+		"Data structures whose items may be compared %
+		%according to a partial order relation";
+
+	copyright: "See notice at end of class";
 	names: comparable_struct;
 	access: min, max;
 	contents: generic;
@@ -22,47 +18,73 @@ deferred class COMPARABLE_STRUCT [G -> PART_COMPARABLE] inherit
 feature -- Measurement
 
 	min: like item is
-			-- Minimum in `Current'
-		local
-			m: like item
+			-- Minimum element
+		require
+			min_max_avialable
+
 		do
 			from
 				start;
-				m := item;
+				Result := item;
 				forth
 			until
 				off
 			loop
-				if item < m then
-					m := item
+				if item < Result then
+					Result := item
 				end;
 				forth
 			end
 		ensure
 		--	is_minimum:
-		--		for all `elements in `Current': `Result <= element'
+		--		for all elements: `Result <= element'
 		end;
 			
 	max: like item is
-			-- Maximum in `Current'
-		local
-			m: like item
+			-- Maximum element
+		require
+			min_max_avialable
+
 		do
 			from
 				start;
-				m := item;
+				Result := item;
 				forth
 			until
 				off
 			loop
-				if item > m then
-					m := item
+				if item > Result then
+					Result := item
 				end;
 				forth
 			end
 		ensure
 		--	is_maximum:
-		--		for all `elements in `Current': `element <= Result'
+		--		for all elements: `element <= Result'
 		end;
 
+	min_max_avialable: BOOLEAN is
+			-- Can min and max be computed?
+		do
+			Result := not empty
+		end;
+
+invariant
+	
+	empty_constraint: min_max_avialable implies not empty
+
 end -- class COMPARABLE_STRUCT
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

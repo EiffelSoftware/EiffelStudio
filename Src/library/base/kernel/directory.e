@@ -1,20 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Unix specific directory
-
 indexing
 
+	description:
+		"Directories, in the Unix sense, with creation and exploration features";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DIRECTORY
-
-creation
+class DIRECTORY creation
 
 	make, make_open_read
 
@@ -117,13 +110,10 @@ feature -- Access
 			dir_rewind (directory_pointer);
 		end;
 	
-
-
-
 feature -- Measurement
 
 	count: INTEGER is
-			-- Number of entries in `Current'.
+			-- Number of entries in directory.
 		local
 			dir_temp: DIRECTORY;
 			counter: INTEGER
@@ -145,9 +135,8 @@ feature -- Measurement
 feature -- Conversion
 
 
-	sequential_representation: ARRAY_SEQUENCE [STRING] is
-			-- Sequential representation of the entries
-			-- of `Current'.
+	sequential_representation: ARRAYED_LIST [STRING] is
+			-- The entries, in sequential format.
 		local
 			dir_temp: DIRECTORY;
 		do
@@ -159,13 +148,14 @@ feature -- Conversion
 			until
 				dir_temp.lastentry = Void
 			loop
-				Result.add (dir_temp.lastentry);
+				Result.extend (dir_temp.lastentry);
 				dir_temp.readentry
 			end;
 		end;
 
 				
 feature -- Status report	
+
 	lastentry: STRING;
 			-- Last entry read by `readentry'
 
@@ -176,7 +166,7 @@ feature -- Status report
 		end;
 
 	exists: BOOLEAN is
-			-- Does the directory exist ?
+			-- Does the directory exist?
 		local
 			external_name: ANY;
 		do
@@ -185,12 +175,19 @@ feature -- Status report
 		end;
 
 
-feature  {DIRECTORY} -- Access
+feature {DIRECTORY} -- Implementation
 
 	directory_pointer: POINTER;
 			-- Directory pointer as required in C
 
-feature  {NONE} -- Status report
+	dir_search (dir_ptr: POINTER; entry: ANY): ANY is
+			-- Return the `DIRENTRY' structure corresponding
+			-- to the name `entry' of directory `dir_ptr'.
+		external
+			"C"
+		end;
+
+feature {NONE} -- Implementation
 
 	mode: INTEGER;
 			-- Status mode of the directory.
@@ -200,16 +197,11 @@ feature  {NONE} -- Status report
 
 	Read_directory: INTEGER is unique;
 
-
-feature  {NONE} -- External, Initialization
-
 	file_mkdir (dir_name: ANY) is
 			-- Make directory `dir_name'.
 		external
 			"C"
 		end;
-
-feature  {NONE} -- External, Access
 
 	dir_open (dir_name: ANY): POINTER is
 			-- Open the directory `dir_name'.
@@ -235,17 +227,6 @@ feature  {NONE} -- External, Access
 			"C"
 		end;
 
-feature  {DIRECTORY} -- External, Access
-
-	dir_search (dir_ptr: POINTER; entry: ANY): ANY is
-			-- Return the `DIRENTRY' structure corresponding
-			-- to the name `entry' of directory `dir_ptr'.
-		external
-			"C"
-		end;
-
-feature  {NONE} -- External, Status report
-
 	file_exists (dir_name: ANY): BOOLEAN is
 			-- Does `dir_name' exist ?
 		external
@@ -253,3 +234,17 @@ feature  {NONE} -- External, Status report
 		end;
 
 end --class DIRECTORY
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Sequential lists,
--- without commitment to a particular representation
 
 indexing
 
+	description:
+		"Sequential lists, without commitment to a particular representation";
+
+	copyright: "See notice at end of class";
 	names: list, sequence;
 	access: index, cursor, membership;
 	contents: generic;
@@ -18,12 +13,9 @@ indexing
 
 deferred class LIST [G] inherit
 
-
 	CHAIN [G]
-		export
-			remove
-		undefine
-			search, off, search_equal
+		 undefine
+			search, off
 		end;
 
 	LINEAR [G]
@@ -34,18 +26,18 @@ deferred class LIST [G] inherit
 feature -- Status report
 
 	after: BOOLEAN is
-			-- Is there no position to the right of the cursor?
+			-- Is there no valid position to the right of the cursor?
 		do
-			Result := index = (count + 1)
+			Result := (index = count + 1)
 		end;
 
 	before: BOOLEAN is
-			-- Is there no position to the left of the cursor?
+			-- Is there no valid position to the left of the cursor?
 		do
-			Result := index = 0
+			Result := (index = 0)
 		end;
 
-feature -- Obsolete, Status report
+feature -- Obsolete
 
 	offleft: BOOLEAN is obsolete "Use ``before''"
 		do
@@ -59,10 +51,22 @@ feature -- Obsolete, Status report
 
 invariant
 
-	assertion_1: not (after and before);
+	not_both: not (after and before);
 	before_definition: before = (index = 0);
 	after_definition: after = (index = count + 1);
-	offleft_definition: offleft = before or empty;
-	offright_definition: offright = after or empty
 
 end -- class LIST
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

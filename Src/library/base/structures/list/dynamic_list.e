@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Sequential, dynamically modifiable lists,
--- without commitment to a particular representation
-
 indexing
 
+	description:
+		"Sequential, dynamically modifiable lists, %
+		%without commitment to a particular representation"
+
+	copyright: "See notice at end of class";
 	names: dynamic_list, sequence;
 	access: index, cursor, membership;
 	contents: generic;
@@ -20,9 +15,9 @@ deferred class DYNAMIC_LIST [G] inherit
 
 	LIST [G]
 		undefine
-			off, remove_item, contractable,
+			off, prune,
 			sequential_index_of, sequential_has,
-			remove
+			remove, prune_all
 		end;
 
 	DYNAMIC_CHAIN [G]
@@ -31,7 +26,7 @@ deferred class DYNAMIC_LIST [G] inherit
 		export
 			{NONE} chain_wipe_out
 		undefine
-			search, search_equal
+			search
 		redefine
 			add_left, add_right,
 			remove_left, remove_right
@@ -39,7 +34,7 @@ deferred class DYNAMIC_LIST [G] inherit
 
 	DYNAMIC_CHAIN [G]
 		undefine
-			search, search_equal
+			search
 		redefine
 			add_left, add_right,
 			remove_left, remove_right, wipe_out
@@ -47,11 +42,13 @@ deferred class DYNAMIC_LIST [G] inherit
 			wipe_out
 		end
 
-feature -- Modification & Insertion
+feature -- Element change
 
 	add_left (v: like item) is
 			-- Put `v' to the left of cursor position.
 			-- Do not move cursor.
+		require else
+			not_before: not before
 		local
 			temp: like item
 		do
@@ -76,10 +73,11 @@ feature -- Modification & Insertion
 		end;
 
 	merge_left (other: like Current) is
-			-- Merge `other' into `Current' before cursor
+			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require else
-			not_before: not before
+			not_before: not before;
+			other_exists: other /= Void
 		do
 			from
 				other.start
@@ -92,10 +90,11 @@ feature -- Modification & Insertion
 		end;
 
 	merge_right (other: like Current) is
-			-- Merge `other' into `Current' after cursor
+			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require else
-			not_after: not after
+			not_after: not after;
+			other_exists: other /= Void
 		do
 			from
 				other.finish
@@ -130,13 +129,11 @@ feature -- Removal
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
-		require else
-			not_after: not after
 		deferred
 		end;
 
 	wipe_out is
-			-- Empty `Current'.
+			-- Remove all elements.
 		do
 			chain_wipe_out;
 			back
@@ -144,7 +141,7 @@ feature -- Removal
 			before: before
 		end;
 
-feature -- Obsolete, Modification & Insertion
+feature -- Obsolete
 
 	put_left (v: like item) is obsolete "Use ``add_left''"
 		require
@@ -163,3 +160,17 @@ feature -- Obsolete, Modification & Insertion
 		end;
 
 end -- class DYNAMIC_LIST
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Circular chains, implemented as two way linked lists
-
 indexing
 
+	description:
+		"Circular chains, implemented as two way linked lists";
+
+	copyright: "See notice at end of class";
 	names: two_way_circular, ring, sequence;
 	representation: linked;
 	access: index, cursor, membership;
@@ -19,22 +14,21 @@ indexing
 class TWO_WAY_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
-        undefine
+		undefine
 			wipe_out,
-            isfirst,
-            readable, first ,
-            islast, last
+			isfirst,
+			readable, first ,
+			islast, last
 		select
-			search, search_equal,
+			search, 
 			remove,
 			start, finish, back, forth, move, go_i_th
-        end;
+		end;
 
 
 	TWO_WAY_LIST [G]
 		rename
 			search as standard_search,
-			search_equal as standard_search_equal,
 			remove as standard_remove,
 			forth as standard_forth,
 			back as standard_back,
@@ -51,25 +45,39 @@ class TWO_WAY_CIRCULAR [G] inherit
 	TWO_WAY_LIST [G]
 		undefine
 			valid_cursor_index, exhausted,
-			search, search_equal,
+			search, 
 			remove,
 			forth, back, move, start, finish, go_i_th
 		redefine
 			new_chain
 		end
 
-	
-
 creation
 
 	make
 
-feature  {TWO_WAY_CIRCULAR} -- Initialization
+feature {TWO_WAY_CIRCULAR} -- Implementation
 
 	new_chain: like Current is
-			-- Instance of class `like Current'.
+			-- A newly created instance of the same type.
+			-- This feature may be redefined in descendants so as to
+			-- produce an adequately allocated and initialized object.
 		do
 			!! Result.make
 		end;
 
 end -- class TWO_WAY_CIRCULAR
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

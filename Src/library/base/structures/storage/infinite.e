@@ -1,32 +1,27 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Infinite data structures
--- E.g. the set of all natural numbers
-
 indexing
 
+	description:
+		"Infinite containers.";
+
+	copyright: "See notice at end of class";
 	names: infinite, storage ;
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INFINITE inherit
+deferred class INFINITE [G] inherit
 
-	BOX
+	BOX [G]
+		redefine
+			empty
+		end
 
 feature -- Status report
 
 	empty: BOOLEAN is false;
-			-- Is `Current' empty?
+			-- Is structure empty? (Answer: no.)
 
 	full: BOOLEAN is true;
-			-- Is `Current' full?
-			-- (You can't add something to an infinite
-			-- data structure.)
+			-- The structure is complete
 
 invariant
 
@@ -34,3 +29,17 @@ invariant
 	always_full: full
 
 end -- class INFINITE
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

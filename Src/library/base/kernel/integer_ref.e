@@ -1,22 +1,13 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Hashable comparable integer number
--- Representation uses at most 'Integer_bits' from constant 
--- attribute in class 'PLATFORM'
-
 indexing
 
+	description:
+		"References to objects containing an integer value";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class INTEGER_REF
-
-inherit
+class INTEGER_REF inherit
 
 	NUMERIC
 		redefine
@@ -44,61 +35,68 @@ feature -- Access
 			Result := item;
 		end;
 
-
-
 feature -- Comparison
 
 	infix "<" (other: INTEGER_REF): BOOLEAN is
-			-- Is `Current' less than `other'?
+			-- Is current integer less than `other'?
 		require else
 			other_exists: other /= Void
 		do
 			Result := item < other.item
 		end;
 
-feature -- Basic operation
+feature -- Element change
+
+
+	set_item (i: INTEGER) is
+			-- Assign `i' to `item'.
+		do
+			item := i
+		end;
+
+feature -- Basic operations
 
 	infix "+" (other: INTEGER_REF): INTEGER_REF is
-			-- Sum of `Current' and `other'
+			-- Sum with `other'
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item + other.item)
 		end;
 
 	infix "-" (other: INTEGER_REF): INTEGER_REF is
-			-- Difference between `Current' and `other'
+			-- Result of subtracting `other'
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item - other.item)
 		end;
 
 	infix "*" (other: INTEGER_REF): INTEGER_REF is
-			-- Product of `Current' by `other'
+			-- Product by `other'
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item * other.item)
 		end;
 
-	infix "/" (other: INTEGER_REF): INTEGER_REF is
-			-- Division of `Current' by `other'
+	infix "/" (other: INTEGER_REF): DOUBLE_REF is
+			-- Division by `other'
 		require else
 			good_divisor: other.item /= 0.0
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item / other.item)
 		end;
 
 	prefix "+": INTEGER_REF is
-			-- Unary addition applied to `Current'
+			-- Unary plus
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (+ item)
 		end;
 
 	prefix "-": INTEGER_REF is
-			-- Unary subtraction applied to `Current'
+			-- Unary minus
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (- item)
 		end;
 
@@ -108,7 +106,7 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item // other.item)
 		end;
 
@@ -117,43 +115,48 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item \\ other.item)
 		end;
 
 	infix "^" (other: INTEGER_REF): INTEGER_REF is
-			-- Power of `Current' by `other'
+			-- Current integer to the power `other'
 		require
 			other_exists: other /= Void
 		do
-			!!Result;
+			!! Result;
 			Result.set_item (item ^ other.item)
 		end;
 
-feature -- Modification & Insertion
-
-
-	set_item (i: INTEGER) is
-			-- Assign `i' to `item'.
-		do
-			item := i
-		end;
-
-feature -- Ouput
+feature -- Output
 
 	out: STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation of current object.
 		do
 			Result := c_outi ($item)
 		end;
 
 
-feature  {NONE} -- External, Ouput
+feature {NONE} -- Implementation
 
 	c_outi (i: INTEGER): STRING is
-			-- Return a printable representation of `Current'.
+			-- Printable representation of current object.
 		external
 			"C"
 		end;
 
 end -- class INTEGER_REF
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,16 +1,10 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	--
---|	270 Storke Road, Suite 7 Goleta, California 93117	--
---|				   (805) 685-1006		--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Homogeneous sequences of characters accessibe
--- through contiguous integer indices
-
-
 indexing
 
+	description:
+		"Sequences of characters, accessible through integer indices %
+		%in a contiguous range.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -18,37 +12,35 @@ class STRING inherit
 
 	INDEXABLE [CHARACTER, INTEGER]
 		redefine
-			twin, copy, is_equal, out
+			copy, is_equal, out, prune_all,
+			consistent, setup,
+			changeable_comparison_criterion
 		end;
 
-	TO_SPECIAL [CHARACTER]
+	RESIZABLE [CHARACTER]
 		redefine
-			twin, copy, is_equal, out
-		end;
-
-	RESIZABLE
-		undefine
-			empty
-		redefine
-			twin, copy, is_equal, out
-		end;
-
-	BAG [CHARACTER]
-		rename
-			add as append_character
-		redefine
-			append_character, out, twin, copy, is_equal
+			copy, is_equal, out,
+			consistent, setup,
+			changeable_comparison_criterion
 		end;
 
 	HASHABLE
 		redefine
-			twin, copy, is_equal, out
+			copy, is_equal, out,
+			consistent, setup
 		end;
 
 	COMPARABLE
 		redefine
-			twin, copy, is_equal, out
-		end
+			copy, is_equal, out,
+			consistent, setup
+		end;
+
+	TO_SPECIAL [CHARACTER]
+		redefine
+			copy, is_equal, out,
+			consistent, setup
+		end;
 
 creation
 
@@ -75,8 +67,26 @@ feature -- Initialization
 			Result.share (s)
 		end;
 
+	from_c (c_string: ANY) is
+			-- Assign to current string the contents of `c_string',
+			-- a string created by some external C function.
+		require
+			c_string /= Void
+		local
+			length: INTEGER
+		do
+			length := str_len ($c_string);
+			make_area (length);
+			str_cpy ($area, $c_string, length);
+			count := length
+		end;
 
-
+	setup (other: like Current) is
+			-- Perform actions on a freshly created object so that
+			-- the contents of `other' can be safely copied onto it.
+		do
+			make (other.capacity)	
+		end;
 
 feature -- Access
 
@@ -99,7 +109,7 @@ feature -- Access
 		end;
 
 	hash_code: INTEGER is
-			-- Hash code value of `Current'
+			-- Hash code value.
 		do
 			Result := hashcode ($area, count)
 		end;
@@ -108,26 +118,39 @@ feature -- Access
 			-- Constant string "true"
 
 	shared_with (other: like Current): BOOLEAN is
-			-- Does `Current' share the text of `other'?
+			-- Does string share the text of `other'?
 		do
 			Result := (other /= Void) and then (area = other.area)
 		end;
 
 
 	has (c: CHARACTER): BOOLEAN is
-			-- Does `Current' include `c'?
+			-- Does string include `c'?
 		local
 			counter: INTEGER
 		do
 			if not empty then
 				from
+					counter := 1
 				until
-					counter = count or else (item (counter + 1) = c)
+					counter > count or else (item (counter) = c)
 				loop
 					counter := counter + 1;
 				end;
-				Result := counter /= count;
+				Result := (counter <= count);
 			end;
+		end;
+
+	to_c: ANY is
+			-- An integer which a C function may cast into a pointer
+			-- to a `C' form of current string.
+			-- Useful only for interfacing with C software.
+		do
+			if count = 0 or else item (count) /= '%U' then
+				extend ('%U');
+				count := count - 1;
+			end;
+			Result := area
 		end;
 
 feature -- Measurement
@@ -141,12 +164,29 @@ feature -- Measurement
 	count: INTEGER;
 			-- Actual number of characters making up the string
 
+	occurrences (c: CHARACTER): INTEGER is
+			-- Number of times `c' appears in the string
+		local
+			counter: INTEGER
+		do
+			from
+				counter := 1
+			until
+				counter > count
+			loop
+				if item (counter) = c then
+					Result := Result + 1
+				end;
+				counter := counter + 1;
+			end
+		end;
+			
 
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is `Current' made of same character sequence as `other'?
-			-- `Current' may not have the same capacity.
+			-- Is string made of same character sequence as `other'
+			-- (possibly with a different capacity)?
 		local
 			o_area: like area;
 			i: INTEGER
@@ -161,8 +201,8 @@ feature -- Comparison
 		end;
 
 	infix "<" (other: STRING): BOOLEAN is
-			-- Is `Current' lexicographically lower than `other'?
-			-- (False if other is void)
+			-- Is string lexicographically lower than `other'?
+			-- (False if `other' is void)
 		local
 			other_area: like area
 		do
@@ -172,179 +212,68 @@ feature -- Comparison
 			end;
 		end;
 
-feature -- Transformation
+feature -- Status report	
 
-	to_lower is
-			-- Convert `Current' to lower case.
+	consistent (other: like Current): BOOLEAN is
+				-- Is object in a consistent state so that others
+				-- can be copied onto it? (Default answer: yes).
 		do
-			str_lower ($area, count)
+			Result := (other.capacity = capacity)
 		end;
 
-	to_upper is
-			-- Convert `Current' to upper case.
+	extendible: BOOLEAN is true;
+			-- May new items be added? (Answer yes.)
+
+
+	prunable: BOOLEAN is
+			-- May items be removed? (Answer: yes.)
 		do
-			str_upper ($area, count)
+			Result := true
 		end;
 
-feature -- Conversion
-
-	to_integer: INTEGER is
-			-- Integer value of `Current',
-			-- assumed to contain digits only.
-			-- When applied to "123", will yield 123
-		require
-			-- String contains digits only
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' correctly bounded?
 		do
-			Result := str_atoi ($area, count)
+			Result := (i > 0) and (i <= count);
 		end;
 
-	to_real: REAL is
-			-- Real value of `Current',
-			-- assumed to contain real digits only.
-			-- When applied to "123.0", will yield 123.0
-		require
-			-- String contains real digits only
-		do
-			Result := str_ator ($area, count)
-		end;
+	changeable_comparison_criterion: BOOLEAN is false;
 
-	to_double: DOUBLE is
-			-- Double value of `Current',
-			-- assumed to contain double digits only.
-			-- When applied to "123.0", will yield 123.0
-		require
-			-- String contains double digits only
-		do
-			Result := str_atod ($area, count)
-		end;
-
-	to_boolean: BOOLEAN is
-			-- Boolean value of `Current',
-			-- "true" yields `true', "false" yields `false' 
-			-- (case insensitive)
-		require
-			-- String contains "true" or "false" only
-			-- (case insensitive)
-		local
-			s: STRING
-		do
-			s := twin;
-			s.to_lower;
-			Result := s.is_equal (True_constant)
-		end;
-
-
-
-feature -- Duplication
-
-	 
-
-	twin: like Current is
-			-- Clone of Current
-		do
-			!! Result.make (capacity);
-			Result.copy (Current)
-		end;
-
-	duplicate: like Current is
-			-- Copy of `Current'
-		local
-			other_area: like area;
-		do
-			!! Result.make (capacity);
-			other_area := Result.area;
-			str_cpy ($other_area, $area, count);
-			Result.set_count (count)
-		ensure
-			new_result_count: Result.count = count;
-			-- for all `i: 1..count, Result.item (i) = item (i)'
-		end;
-
-	mirrored: like Current is
-			-- Current string read from right to left.
-			-- The returned string has the same `capacity' and the
-			-- same current position (i.e. the cursor is pointing
-			-- at the same item)
-		local
-			result_area: like area;
-		do
-			!! Result.make (capacity);
-			if count > 0 then
-				result_area := Result.area;
-				str_mirror ($area, $result_area, count);
-				Result.set_count (count);
-			end;
-		ensure
-			same_count: Result.count = count;
-		--  reverse_entries:
-		--	  for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
-		end;
-
-	mirror is
-			-- Reverse the characters order.
-			-- "Hello world" -> "dlrow olleH".
-			-- The current position will be on the same item
-			-- as before.
-		do
-			str_reverse ($area, count);
-		ensure
-			same_count: count = old count;
-		--  	reverse_entries:
-		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
-		end;
-
-	substring (n1, n2: INTEGER): like Current is
-			-- Copy of substring of `Current' containing
-			-- all characters at indices between `n1' and `n2'
-		require
-			meaningful_origin: 1 <= n1;
-			meaningful_interval: n1 <= n2;
-			meaningful_end: n2 <= count
-		local
-			other_area: like area
-		do
-			!! Result.make (n2 - n1 + 1);
-			other_area := Result.area;
-			str_take ($area, $other_area, n1, n2);
-			Result.set_count (n2 - n1 + 1)
-		ensure
-			new_result_count: Result.count = n2 - n1 + 1
-			-- for all `i: 1..n2-n1, Result.item (i) = item (n1 + i - 1)'
-		end;
-
-	
-
-
-feature -- Modification & Insertion
+feature -- Element change
 
 	set (t: like Current; n1, n2: INTEGER) is
-			-- Set `Current' to substring of `t' from `n1' .. `n2'
-			-- and place index at the beginning of the string.
+			-- Set current string to substring of `t' from indices `n1' to `n2'.
+			-- If no such substring, set to empty string.
 		require
 			argument_not_void: t /= Void;
-			meaningful_origin: 1 <= n1;
-			meaningful_interval: n1 <= n2;
-			meaningful_end: n2 <= t.count
 		local
 			t_area: like area
 		do
-			resize (n2 - n1 + 1); -- if necessary
-			t_area := t.area;
-			str_take ($t_area, $area, n1, n2);
-			count := n2 - n1 + 1;
+			if (1 <= n1) and (n1 <= n2) and (n2 <= t.count) then
+				resize (n2 - n1 + 1); -- if necessary
+				t_area := t.area;
+				str_take ($t_area, $area, n1, n2);
+				count := n2 - n1 + 1;
+			else
+				wipe_out
+			end
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end;
 
 
-
 	copy (other: like Current) is
-			-- Reinitialize `Current' with copy of `other'.
-		require else
-			same_capacity: capacity = other.capacity
+			-- Reinitialize by copying the characters of `other'.
+			-- (This is also used by `clone'.)
+		--require else
+			--same_capacity: capacity = other.capacity
 		do
+			make (other.capacity);
 			area.copy (other.area);
 			count := other.count
+		ensure then
+			new_result_count: count = other.count;
+			-- for all `i: 1..count, item (i) = other.item (i)'
 		end;
 
 
@@ -362,13 +291,13 @@ feature -- Modification & Insertion
 			substring_size := end_pos - start_pos + 1;
 			new_size := s.count + count - substring_size;
 			if new_size > capacity then
-				resize (new_size + additional_space + 1)
+				resize (new_size + additional_space)
 			end;
 			s_area := s.area;
 			str_replace ($area, $s_area, count, s.count, start_pos, end_pos);
 			count := new_size
 		ensure
-		   new_count: count = old count + s.count - end_pos + start_pos -1
+		   --new_count: count = old count + s.count - end_pos + start_pos -1
 		end;
 
 	fill_blank is
@@ -426,7 +355,7 @@ feature -- Modification & Insertion
 
 
 	share (other: like Current) is
-			-- Make `Current' share the text of `other'.
+			-- Make current string share the text of `other'.
 		require
 			argument_not_void: other /= Void
 		do
@@ -449,22 +378,20 @@ feature -- Modification & Insertion
 			area.put (c, i - 1)
 		end;
 
- 
-
 	precede (c: CHARACTER) is
 			-- Add `c' at front.
 		do
 			if count = capacity then
-				resize (count + additional_space + 1)
+				resize (count + additional_space)
 			end;
 			str_cprepend ($area, $c, count);
 			count := count + 1
  		ensure
- 		  new_count: count = old count + 1;
+ 		  --new_count: count = old count + 1;
 		end;
 
 	prepend (s: STRING) is
-			-- Prepend a copy of `s' at front of `Current'.
+			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
 		local
@@ -473,58 +400,58 @@ feature -- Modification & Insertion
 		do
 			new_size := count + s.count;
 			if new_size > capacity then
-				resize (new_size + additional_space + 1)
+				resize (new_size + additional_space)
 			end;
 			s_area := s.area;
 			str_insert ($area, $s_area, count, s.count, 1);
 			count := new_size
  		ensure
- 		  new_count: count = old count + s.count;
+ 		  --new_count: count = old count + s.count;
 		end;
 
 	append (s: STRING) is
-			-- Append a copy of `s' at end of `Current'.
+			-- Append a copy of `s' at end.
 		local
 			new_size: INTEGER;
 			s_area: like area
 		do
 			new_size := s.count + count;
 			if new_size > capacity then
-				resize (new_size + additional_space + 1)
+				resize (new_size + additional_space)
 			end;
 			s_area := s.area;
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
  		ensure then
-			new_count: count = old count + s.count
+			--new_count: count = old count + s.count
 		end;
 
 	append_integer (i: INTEGER) is
-			-- Append the string representation of `i' at end of `Current'.
+			-- Append the string representation of `i' at end.
 			--| Should use `sprintf'
 		do
 			append (i.out);
 		end;
 
 	append_real (r: REAL) is
-			-- Append the string representation of `r' at end of `Current'.
+			-- Append the string representation of `r' at end.
 			--| Should use `sprintf'
 		do
 			append (r.out);
 		end;
 
 	append_double (d: DOUBLE) is
-			-- Append the string representation of `d' at end of `Current'.
+			-- Append the string representation of `d' at end.
 			--| Should use `sprintf'
 		do
 			append (d.out);
 		end;
 
-	append_character (c: CHARACTER) is
-			-- Append `c' at end of `Current'.
+	extend (c: CHARACTER) is
+			-- Append `c' at end.
 		do
 			if count = capacity then
-				resize (capacity + 1 + additional_space);
+				resize (capacity + additional_space);
 			end;
 			area.put (c, count);
 			count := count + 1;
@@ -533,7 +460,7 @@ feature -- Modification & Insertion
 		end;
 
 	append_boolean (b: BOOLEAN) is
-			-- Append the string representation of `b' at end of `Current'.
+			-- Append the string representation of `b' at end.
 			--| Should use `sprintf'
 		do
 			append (b.out);
@@ -551,16 +478,14 @@ feature -- Modification & Insertion
 		do
 			new_size := s.count + count;
 			if new_size > capacity then
-				resize (new_size + additional_space + 1)
+				resize (new_size + additional_space)
 			end;
 			s_area := s.area;
 			str_insert ($area, $s_area, count, s.count, i);
 			count := new_size
 		ensure
-			new_count: count = old count + s.count
+			--new_count: count = old count + s.count
 		end;
-
-
 
 feature -- Removal
 
@@ -573,38 +498,43 @@ feature -- Removal
 			str_rmchar ($area, count, i);
 			count := count - 1;
  		ensure
-			new_count: count = old count - 1;
+			--new_count: count = old count - 1;
 		end;
 
-	remove_item (c: CHARACTER) is
-			-- Remove `c' from `Current'.
-			-- No effect if `Current' doesn't include `c'.
+	prune (c: CHARACTER) is
+			-- Remove `c'.
+			-- No effect if string does not include `c'.
+		require else
+			true
 		local
 			counter: INTEGER
 		do
 			from
+				counter := 1
 			until
-				counter = count or else (item (counter + 1) = c)
+				counter > count or else (item (counter) = c)
 			loop
 				counter := counter + 1;
 			end;
-			if counter /= count then
-				remove (counter + 1);
+			if counter <= count then
+				remove (counter);
 			end;
 		end;
 
-	remove_all_occurrences (c: CHARACTER) is
+	prune_all (c: CHARACTER) is
 			-- Remove all occurrences of `c'.
+		require else
+			true
 		do
 			count := str_rmall ($area, $c, count)
-		ensure
+		ensure then
 			-- `for all i: 1..count, item (i) /= c'
 			-- `count' = old `count' - number of
 			-- occurrences of `c' in initial string
 		end;
 
 	wipe_out is
-			-- Clear out `Current'.
+			-- Remove all characters.
 		do
 			make_area(0);
 			count := 0;
@@ -612,7 +542,6 @@ feature -- Removal
 			Empty_string: count = 0;
 			Empty_area: capacity = 0
 		end;
-
 
 feature -- Resizing
 
@@ -637,7 +566,7 @@ feature -- Resizing
 		end;
 
 	grow (newsize: INTEGER) is
-			-- Change the capacity of `Current' to at least `newsize'.
+			-- Ensure that the capacity is at least `newsize'.
 		require else
 			new_size_non_negative: newsize >= 0
 		do
@@ -646,133 +575,171 @@ feature -- Resizing
 			end;
 		end;
 
+feature -- Transformation
 
-
-feature -- Ouput	
-
-	out: like Current is
-			-- Printable representation of `Current'
+	to_lower is
+			-- Convert to lower case.
 		do
-			!! Result.make (count + 2);
-			Result.append ("%"");
-			Result.append (Current);
-			Result.append ("%"");
+			str_lower ($area, count)
 		end;
 
-feature -- Status report	
-
-	extensible: BOOLEAN is true;
-			-- May new items be added to `Current'?
-
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' correctly bounded?
+	to_upper is
+			-- Convert to upper case.
 		do
-			Result := (i > 0) and (i <= count);
+			str_upper ($area, count)
+		end;
+
+feature -- Conversion
+
+	to_integer: INTEGER is
+			-- Integer value;
+			-- for example, when applied to "123", will yield 123
+		require
+			-- String contains digits only
+		do
+			Result := str_atoi ($area, count)
+		end;
+
+	to_real: REAL is
+			-- Real value;
+			-- for example, when applied to "123.0", will yield 123.0
+		require
+			-- String is representation of real number.
+		do
+			Result := str_ator ($area, count)
+		end;
+
+	to_double: DOUBLE is
+			-- "Double" value;
+			-- for example, when applied to "123.0", will yield 123.0 (double)
+		require
+			-- String contains double digits only
+		do
+			Result := str_atod ($area, count)
+		end;
+
+	to_boolean: BOOLEAN is
+			-- Boolean value;
+			-- "true" yields `true', "false" yields `false' 
+			-- (case insensitive)
+		require
+			-- String is "true" or "false" (with some letters possibly upper-case)
+		local
+			s: STRING
+		do
+			s := clone (Current);
+			s.to_lower;
+			Result := s.is_equal (True_constant)
+		end;
+
+	sequential_representation: SEQUENTIAL [CHARACTER] is
+			-- Representation as a sequential structure
+		do
+		end;
+
+feature -- Duplication
+
+	mirrored: like Current is
+			-- Mirror image of string (i.e. string read from right to left);
+			-- result for "Hello world" is "dlrow olleH".
+		local
+			result_area: like area;
+		do
+			!! Result.make (capacity);
+			if count > 0 then
+				result_area := Result.area;
+				str_mirror ($area, $result_area, count);
+				Result.set_count (count);
+			end;
+		ensure
+			same_count: Result.count = count;
+		--  reverse_entries:
+		--	  for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
+		end;
+
+	mirror is
+			-- Reverse the order of characters.
+			-- "Hello world" -> "dlrow olleH".
+		do
+			str_reverse ($area, count);
+		ensure
+			--same_count: count = old count;
+		--  	reverse_entries:
+		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
+		end;
+
+	substring (n1, n2: INTEGER): like Current is
+			-- Copy of substring containing all characters at indices
+			-- between `n1' and `n2'
+		require
+			meaningful_origin: 1 <= n1;
+			meaningful_interval: n1 <= n2;
+			meaningful_end: n2 <= count
+		local
+			other_area: like area
+		do
+			!! Result.make (n2 - n1 + 1);
+			other_area := Result.area;
+			str_take ($area, $other_area, n1, n2);
+			Result.set_count (n2 - n1 + 1)
+		ensure
+			new_result_count: Result.count = n2 - n1 + 1
+			-- for all `i: 1..n2-n1, Result.item (i) = item (n1 + i - 1)'
+		end;
+
+feature -- Output	
+
+	out: like Current is
+			-- Printable representation
+		do
+			Result := clone (Current);
 		end;
 
 feature -- Pattern matching
 
-	search_character (c: CHARACTER; start: INTEGER): INTEGER is
+	index_of (c: CHARACTER; start: INTEGER): INTEGER is
 		do
 			Result := str_search (area, c, start, count)
 		end;
 
 	search_substring (other: STRING; start: INTEGER): INTEGER is
 		do
-			Result := str_str (area, other.area, count, other.count, start, 0)
+			Result := str_str (area, other.area, count, other.count, start, 0);
 		end;
 
-feature -- Obsolete, Access
+feature -- Obsolete
 
-	to_external: ANY is obsolete "Use ``to_c''"
+	clear is obsolete "Use ``wipe_out''"
 		do
-			Result := to_c
+			wipe_out
 		end;
-		
 
-feature -- Obsolete, Measurement
+	duplicate: like Current is obsolete "Use ``clone (string)''"
+		do
+			Result := clone (Current)
+		end;
 
 	max_size: INTEGER is obsolete "Use ``capacity''"
 		do
 			Result := capacity
 		end;
 
-
-feature -- Obsolete, Removal
-
-	clear is obsolete "Use ``wipe_out''"
+	to_external: ANY is obsolete "Use ``to_c''"
 		do
-			wipe_out
+			Result := to_c
 		end;
 	
-
-feature  {STRING, UNIX_FILE, TEXT_FILLER} -- Measurement
+feature {STRING, FILE, TEXT_FILLER} -- Implementation
 
 	frozen set_count (number: INTEGER) is
-			-- Set `count' to `number' of characters in `Current'
+			-- Set `count' to `number' of characters.
 		do
 			count := number
 		ensure
 			new_count: count = number
 		end;
 
-
-
-feature  {NONE} -- Conversion
-
-	sequential_representation: SEQUENTIAL [CHARACTER] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
-		do
-		end;
-	
-
-
-feature  {NONE} -- Status report
-
-	contractable: BOOLEAN is
-			-- May current item be removed from `Current'?
-			-- Useless because no current item.
-		do
-		end;
-
-
-feature -- External, Initialization
-
-	from_c (c_string: ANY) is
-			-- Assign to `Current' the contents of `c_string',
-			-- a string created by some external C function.
-		require
-			c_string /= Void
-		local
-			length: INTEGER
-		do
-			length := str_len ($c_string);
-			make_area (length);
-			str_cpy ($area, $c_string, length);
-			count := length
-		end;
-
-
-
-feature -- External, Access
-
-	to_c: ANY is
-			-- An integer which a C function may cast into a pointer
-			-- to a `C' form of `Current'.
-			-- Useful only for interfacing with C software.
-		do
-			if count = 0 or else item (count) /= '%U' then
-				append_character ('%U');
-				count := count - 1;
-			end;
-			Result := area
-		end;
-
-feature  {STRING} -- External, Access
+feature {STRING} -- Implementation
 
 	str_code (c_string: like area; i: INTEGER): INTEGER is
 			-- Numeric code of `i'-th character in `c_string'
@@ -805,8 +772,6 @@ feature  {STRING} -- External, Access
 			"C"
 		end;	
 
-feature  {STRING} -- External, Measurement
-
 	c_p_i: INTEGER is
 			-- Number of characters per INTEGER
 		do
@@ -821,10 +786,6 @@ feature  {STRING} -- External, Measurement
 			"strlen"
 		end;
 
-		
-
-feature  {STRING} -- External, Comparison
-
 	str_cmp (this, other: like area; this_len, other_len: INTEGER ): INTEGER is
 			-- Compare `this' and `other' C strings.
 			-- 0 if equal, < 0 if `this' < `other',
@@ -832,8 +793,6 @@ feature  {STRING} -- External, Comparison
 		external
 			"C"
 		end;
-
-feature  {STRING} -- External, Transformation
 
 	str_lower (c_string: like area; length: INTEGER) is
 			-- Convert `c_string' to lower case.
@@ -852,8 +811,6 @@ feature  {STRING} -- External, Transformation
 		external
 			"C"
 		end;
-
-feature  {STRING} -- External, Conversion
 
 	str_atoi (c_string: like area; length: INTEGER): INTEGER is
 			-- Value of integer in `c_string'
@@ -874,9 +831,6 @@ feature  {STRING} -- External, Conversion
 		end;
 
 	
-feature  {STRING} -- External, Duplication
-	
-
 	str_mirror (c_string, new_string: like area; length: INTEGER) is
 			-- Build a new string into `new_string' which is the
 			-- mirror copy of the original string held in `c_string'.
@@ -890,8 +844,6 @@ feature  {STRING} -- External, Duplication
 		external
 			"C"
 		end;
-
-feature  {STRING} -- External, Modification & Insertion
 
 	str_blank (c_string: like area; n: INTEGER) is
 			-- Fill `c_string' with `n' blanks.
@@ -934,8 +886,6 @@ feature  {STRING} -- External, Modification & Insertion
 			"C"
 		end;
 
-feature  {STRING} -- External, Removal
-
 	str_rmchar (c_string: like area; length, i: INTEGER) is
 			-- Remove `i'-th character from `c_string'.
 		external
@@ -971,9 +921,6 @@ feature  {STRING} -- External, Removal
 			"C"
 		end;
 
-feature  {STRING} -- External, Resizing
-
-
 	str_resize (a: like area; newsize: INTEGER): like area is
 			-- Area which can accomodate
 			-- at least `newsize' characters
@@ -985,9 +932,21 @@ feature  {STRING} -- External, Resizing
 
 invariant
 
-	extensible = true
+	extendible: extendible;
+	compare_character:object_comparison = false
 
 end -- class STRING
 
 
-	
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

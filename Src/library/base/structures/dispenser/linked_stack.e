@@ -1,15 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Stacks with no physical size limit,
--- implemented as linked lists
-
 indexing
+		"Unbounded stacks implemented as linked lists";
 
+	copyright: "See notice at end of class";
 	names: linked_stack, dispenser, linked_list;
 	representation: linked;
 	access: fixed, lifo, membership;
@@ -21,23 +13,29 @@ class LINKED_STACK [G] inherit
 
 	STACK [G]
 		undefine
-			replace, search, has, empty, search_equal,
-			index_of, remove_item, sequential_representation
+			replace
 		select
-			put, item
+			item
 		end;
 
 	LINKED_LIST [G]
 		rename
-			item as ll_item
+			item as ll_item,
+			remove as ll_remove,
+			remove_right as remove
 		export
 			{NONE} all;
-			readable, writable, extensible, contractable, make, wipe_out
+			{ANY}
+				count, readable, writable, extendible,
+				make, wipe_out
 		undefine
-			readable, writable, contractable, fill,
-			append, sequential_representation, put
+			readable, writable, fill,
+			append, sequential_representation, put,
+			prune_all
 		redefine
-			add, remove, duplicate
+			extend, force, duplicate
+		select
+			remove
 		end
 
 creation
@@ -54,82 +52,84 @@ feature -- Access
 			Result := first_element.item
 		end;
 
+feature -- Element change
 
-
-feature -- Conversion
-
-	sequential_representation: ARRAY_SEQUENCE [G] is
-			-- Sequential representation of `Current'.
-			-- This feature enables you to manipulate each
-			-- item of `Current' regardless of its
-			-- actual structure.
-			-- First element will be the top of the stack.
-		local
-			temp: like Current;
-		do
-			temp := duplicate (count);
-			from
-				!! Result.make (count);
-			until
-				temp.count = 0
-			loop
-				Result.add (temp.item);
-				temp.remove;
-			end;
-				-- The reason for redefining
-				-- `sequential_representation' here is that the
-				-- cursor of `Current' must not be manipulated
-				-- by clients in order not to invalidate the
-				-- `before' invariant clause and a new `item'
-				-- has been redefined and selected.
-		end;
-
-feature -- Duplication
-
-
-
-    duplicate (n: INTEGER): like Current is
-            -- Return a stack with the `n' latest items pushed
-            -- on `Current'. If `n' is greater than `count', it
-            -- duplicate `Current'
-		require else
-			positive_argument: n > 0
-		local
-			counter: INTEGER
-        do
-            finish;
-            from
-                !! Result.make;
-            until
-                off or counter >= n
-            loop
-                Result.add (ll_item);
-                back;
-				counter := counter + 1;
-            end;
-			start;
-            back;
-        end;
-
-
-feature -- Modification & Insertion
-
-	push, add (v: like item) is
-			-- Push `v' onto `Current'.
+	put, extend, force (v: like item) is
+			-- Push `v' onto top.
 		do
 			add_front (v)
 		end;
 
-feature -- Removal
+feature -- Conversion
 
-	remove is
-			-- Remove top item.
+	sequential_representation: ARRAYED_LIST [G] is
+			-- Representation as a sequential structure
+			-- (order is reverse of original order of insertion)
 		do
-			remove_right
+			from
+				!!Result.make (count);
+				start
+			until
+				after
+			loop
+				Result.extend (ll_item);
+			forth;
+			end;
+			start;
+			back
+		end;
+
+feature -- Duplication
+
+	duplicate (n: INTEGER): like Current is
+			-- New stack containing the `n' latest items inserted
+			-- in current stack.
+			-- If `n' is greater than `count', identical to current stack.
+		require else
+			positive_argument: n > 0
+		local
+			counter: INTEGER;
+			temp: like Current;
+		do
+			if not empty then
+				from
+					!!temp.make;
+					start
+				until
+					after or temp.count = n
+				loop
+					temp.put (ll_item);
+					forth
+				end;
+				from
+					!!Result.make
+				until
+					temp.empty
+				loop
+					Result.put (temp.item);
+					temp.remove
+				end;
+				start;
+				back
+			end	
 		end;
 
 invariant
 
-	is_always_before: before
+	always_before: before
 
 end -- class LINKED_STACK
+
+
+--|----------------------------------------------------------------
+--| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

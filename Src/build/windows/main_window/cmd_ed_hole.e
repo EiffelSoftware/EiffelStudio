@@ -52,7 +52,7 @@ feature {NONE}
 
 	process_instance (dropped: CMD_INST_STONE) is
 		do
-			dropped.associated_command.create_editor
+			dropped.data.create_editor
 		end;
 
 	create_focus_label is 

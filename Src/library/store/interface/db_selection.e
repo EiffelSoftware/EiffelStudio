@@ -133,6 +133,7 @@ feature -- Status setting
 	object_convert (reference: ANY) is
 			-- Set `object' with `reference', reference to an Eiffel 
 			-- object to be filled in with `cursor' field values.
+			-- Use this before `load_result' for performance.
 		require
 			reference_exists: reference /= Void
 		do
@@ -161,8 +162,10 @@ feature -- Status setting
 			object_exists: object /= Void
 		do
 			if cursor.map_table_to_create or else update_map_table then
+					-- This case must only happen when `object_convert' has been
+					-- called after `load_result': each cursor's map table should be
+					-- modified to fit to new object. (Cedric)
 				cursor.update_map_table (object)
-				update_map_table := False
 			end
 			if is_ok then
 				implementation.cursor_to_object (object, cursor)
@@ -244,7 +247,9 @@ feature -- Basic operations
 				end
 				if handle.status.found then
 					cursor.fill_in
-					if object /= Void and then (cursor.map_table_to_create or else update_map_table) then
+					if object /= Void then
+							-- Map table will be cloned if there is
+							-- more than 1 row. (Cedric)
 						cursor.update_map_table (object)
 						update_map_table := False
 					end

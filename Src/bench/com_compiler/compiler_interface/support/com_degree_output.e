@@ -81,7 +81,9 @@ feature -- Start output features
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			interface.event_output_string (a_message)
+			if should_continue then
+				interface.event_output_string (a_message)	
+			end
 		end				
 
 	put_system_compiled is
@@ -95,8 +97,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (1)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 
 	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -104,8 +106,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (2)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 		
 	put_degree_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -113,8 +115,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (3)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 		
 	put_degree_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -122,8 +124,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (4)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 		
 	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -131,16 +133,16 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (5)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 		
 	put_degree_6 (a_name: STRING; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_name' is being
 			-- compiled during degree six' clusters to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_name, nbr_to_go)
 			interface.event_begin_degree (6)
+			Precursor {DEGREE_OUTPUT} (a_name, nbr_to_go)
 		end
 			
 	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -148,8 +150,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (-1)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 
 	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -157,8 +159,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (-2)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 		
 	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -166,8 +168,8 @@ feature -- Start output features
 			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		do
-			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 			interface.event_begin_degree (-3)
+			Precursor {DEGREE_OUTPUT} (a_class, nbr_to_go)
 		end
 				
 feature -- Output on per class
@@ -186,13 +188,8 @@ feature -- Other
 
 	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
 			-- Display degree `deg_nbr' with entity `a_class'.
-		local
-			b: BOOLEAN_REF
 		do
-			create b
-			b.set_item (True)
-			interface.event_should_continue (b)
-			if b.item then
+			if should_continue then
 				total_number := total
 				put_string (percentage_output (to_go) + deg_nbr)
 			else
@@ -208,11 +205,10 @@ feature {NONE} -- Implementation
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do		
-			put_string (percentage_output (to_go) + 
-										deg_nbr + a_name)
-
 			if not should_continue then
 				Error_handler.insert_interrupt_error (True)
+			else
+				put_string (percentage_output (to_go) + deg_nbr + a_name)
 			end
 		end
 		

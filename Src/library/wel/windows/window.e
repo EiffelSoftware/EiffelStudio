@@ -83,7 +83,7 @@ inherit
 
 feature -- Access
 
-	parent: WEL_COMPOSITE_WINDOW
+	parent: WEL_WINDOW
 			-- Parent window
 
 	commands: WEL_COMMAND_MANAGER
@@ -1159,12 +1159,19 @@ feature -- Messages
 		do
 		end
 
+	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+		require
+			exists: exists
+			info_not_void: info /= Void
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	default_window_procedure: POINTER
 			-- Default window procedure
 
-	internal_window_make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
+	internal_window_make (a_parent: WEL_WINDOW; a_name: STRING;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER) is
 			-- Create the window
@@ -1252,6 +1259,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_wm_show_window (wparam, lparam: INTEGER) is
+			-- Wm_showwindow message
 		require
 			exists: exists
 		do
@@ -1274,6 +1282,17 @@ feature {NONE} -- Implementation
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)
+		end
+
+	on_wm_notify (wparam, lparam: INTEGER) is
+			-- Wm_notify message
+		require
+			exists: exists
+		local
+			info: WEL_NMHDR
+		do
+			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			on_notify (wparam, info)
 		end
 
 	default_process_message (msg, wparam, lparam: INTEGER) is
@@ -1356,6 +1375,8 @@ feature {WEL_DISPATCHER}
 				on_sys_key_up (wparam, lparam)
 			elseif msg = Wm_showwindow then
 				on_wm_show_window (wparam, lparam)
+			elseif msg = Wm_notify then
+				on_wm_notify (wparam, lparam)
 			elseif msg = Wm_destroy then
 				on_wm_destroy
 			else

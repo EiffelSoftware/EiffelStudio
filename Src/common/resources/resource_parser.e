@@ -17,12 +17,15 @@ feature -- Parsing
 			resource_name: STRING
 		do
 			!! resource_file.make (filename);
-			if resource_file.exists and then resource_file.is_readable then
+			if not resource_file.exists then 
+				-- Do nothing (no message) if the resource file does not exist
+			elseif resource_file.is_readable then
 				resource_file.open_read;
 				if resource_file.readable then
 					from
 						line_number := 0;
-						read_line
+						read_line;
+						parse_separators
 					until
 						end_of_file
 					loop
@@ -48,11 +51,6 @@ feature -- Parsing
 					end
 				end;
 				resource_file.close
-			elseif not resource_file.exists then
---				io.error.put_string ("Warning: Resource file %"");
---				io.error.put_string (filename);
---				io.error.put_string ("%" does not exist.");
---				io.error.new_line
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
 				io.error.put_string (filename);

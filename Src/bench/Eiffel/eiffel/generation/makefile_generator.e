@@ -181,10 +181,10 @@ feature -- Cecil
 			generate_objects_macros;
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
-			Make_file.putstring (" Makefile%N%Tar x ");
+			Make_file.putstring (" Makefile%N%T$(AR) x ");
 			Make_file.putstring ("$(EIFLIB)");
 			Make_file.new_line;
-			Make_file.putstring ("%Tar cr ");
+			Make_file.putstring ("%T$(AR) cr ");
 			Make_file.putstring (libname);
 			Make_file.putchar (' ');
 			generate_objects_macros;
@@ -446,7 +446,8 @@ feature -- Generation, Header
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
-				%CPP = $cpp%N")
+				%CPP = $cpp%N%
+				%AR = $ar%N")
 
 			if Lace.ace_options.has_multithreaded then
 				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");

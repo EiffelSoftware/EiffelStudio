@@ -132,6 +132,7 @@ feature -- Constants
 	system_boolean_name_id: INTEGER is 122
 	get_hash_code_name_id: INTEGER is 123
 	equals_name_id: INTEGER is 124
+	three_way_comparison_name_id: INTEGER is 125
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

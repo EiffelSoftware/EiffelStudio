@@ -49,17 +49,17 @@ feature {NONE} -- Implementation
 		do
 			status := Application.status;
 			if status = Void then
-				warner (text_window).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (text_window).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (w_System_not_stopped)
 			elseif status.e_feature = Void or status.dynamic_class = Void then
 					-- Should never happen.
-				warner (text_window).gotcha_call (w_Unknown_class)
+				warner (popup_parent).gotcha_call (w_Unknown_class)
 			else
 					-- Show the current routine in that class.
 				e_class := status.origin_class;
 				!! st.make (status.e_feature, e_class);
-				text_window.tool.process_feature (st)
+				tool.process_feature (st)
 			end
 		end;
 

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			okay_button.select_actions.extend (agent okay)
+			cancel_button.select_actions.extend (agent hide)
 		end
 
 feature {NONE} -- Implementation

@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			l_no := line_data (a_item.text).integer_32_item (1)
 			l_pos := line_data (a_item.text).integer_32_item (2)
 			a_item.pointer_double_press_actions.force_extend 
-				(agent curr_doc.highlight_error (l_no, l_pos))
+				(agent curr_doc.highlight_error_pos (l_no, l_pos))
 		end
 	
 	error_reports: ARRAYED_LIST [HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING]] is

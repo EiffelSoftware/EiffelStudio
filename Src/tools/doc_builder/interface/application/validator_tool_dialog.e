@@ -56,7 +56,9 @@ feature {NONE} -- Implementation
 	run is
 			-- Run
 		do
-			if schema_radio.is_selected then
+			if xml_radio.is_selected then
+				Shared_project.validate_files_xml
+			elseif schema_radio.is_selected then
 				Shared_project.validate_files
 			else
 				Shared_project.validate_links

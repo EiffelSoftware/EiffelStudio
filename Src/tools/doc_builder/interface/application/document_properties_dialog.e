@@ -56,31 +56,31 @@ feature {NONE} -- Initialization
 			okay_button.select_actions.extend (agent okay)
 			apply_button.select_actions.extend (agent apply)
 			cancel_button.select_actions.extend (agent destroy)
-			override_12_check.select_actions.extend (agent toggle_studio_override)
-			override_20_check.select_actions.extend (agent toggle_envision_override)
-			output_combo.select_actions.extend (agent toggle_override_widgets)
+			override_12_check.select_actions.extend (agent toggle_override_widgets)
+			override_20_check.select_actions.extend (agent toggle_override_widgets)
 			output_combo.disable_edit
+			toggle_override_widgets
 		end
 
 	initialize_output is
 			-- Initialize output options
 		local
-			l_outputs: ARRAYED_LIST [STRING]
+			l_outputs: HASH_TABLE [STRING, STRING]
 			l_item: EV_LIST_ITEM
 		do
-			l_outputs := Shared_constants.Output_constants.Output_list.linear_representation
+			l_outputs := Shared_constants.Output_constants.Output_list
 			from
 				l_outputs.start
 			until
 				l_outputs.after
 			loop
-				create l_item.make_with_text (l_outputs.item)
+				create l_item.make_with_text (l_outputs.key_for_iteration)
 				output_combo.extend (l_item)
-				if document.output_filter_text.is_equal (l_outputs.item) then
+				if document.output_filter_text.is_equal (l_outputs.key_for_iteration) then
 					l_item.enable_select
 				end
 				l_outputs.forth
-			end
+			end			
 		end		
 
 feature -- Commands
@@ -88,7 +88,7 @@ feature -- Commands
 	apply is
 			-- Apply
 		do
-			set_options			
+			set_options		
 		end
 		
 	okay is
@@ -127,9 +127,13 @@ feature {NONE} -- Implementation
 				toc_title_text.set_text (document.title)
 			end
 			if xm_document /= Void then
+					-- Meta Data
 				l_toc_element := xm_document.root_element.element_by_name ("meta_data")
+				
+					-- Help
 				l_toc_element ?= l_toc_element.element_by_name ("help")
 				if l_toc_element /= Void then
+						-- TOC
 					l_toc_element ?= l_toc_element.element_by_name ("toc")
 					if l_toc_element /= Void then
 						if l_toc_element /= Void then
@@ -169,8 +173,6 @@ feature {NONE} -- Implementation
 						end		
 					end
 				end				
-				toggle_studio_override
-				toggle_envision_override
 			end
 		end
 
@@ -178,9 +180,14 @@ feature {NONE} -- Implementation
 			-- Set options chosen in widgets
 		local
 			l_formatter: XM_ESCAPED_FORMATTER
+			l_meta_array,
 			l_toc_array: ARRAY [STRING]
 		do
+			l_meta_array := <<"document", "meta_data">>
 			l_toc_array := <<"document", "meta_data", "help", "toc">>
+			
+			document.clear_element (xm_document, l_meta_array)
+			
 					-- File name
 			if has_name_changed then
 				display_name_change_warning
@@ -188,36 +195,42 @@ feature {NONE} -- Implementation
 					-- Title
 			document.set_attribute (xm_document, <<"document">>, "title", toc_title_text.text)
 			
+			document.set_element (xm_document, l_meta_array, "", "")
+			
 					-- Output filter
-			if output_combo.selected_item.text.is_equal ("all") then
+			if output_combo.selected_item.text.is_equal (shared_constants.output_constants.unfiltered) then
 				document.set_attribute (xm_document, <<"document">>, "output", "")
 			else
-				document.set_attribute (xm_document, <<"document">>, "output", output_combo.selected_item.text)
+				document.set_attribute (xm_document, <<"document">>, "output", shared_constants.output_constants.output_list.item (output_combo.selected_item.text))
 			end
 			
 					-- EiffelStudio Overrides
-			if override_12_check.is_sensitive and then override_12_check.is_selected then
-				document.set_element (xm_document, l_toc_array, "studio_title", toc_12_title_text.text)				
-				document.set_element (xm_document, l_toc_array, "studio_location", toc_12_location_text.text)
-				document.set_element (xm_document, l_toc_array, "studio_pseudo_name", toc_12_pseudo_text.text)
-			else
-				document.set_element (xm_document, l_toc_array, "studio_title", "")
-				document.set_element (xm_document, l_toc_array, "studio_location", "")
-				document.set_element (xm_document, l_toc_array, "studio_pseudo_name", "")
+			if override_12_check.is_selected then
+				if not toc_12_title_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "studio_title", toc_12_title_text.text)				
+				end
+				if not toc_12_location_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "studio_location", toc_12_location_text.text)
+				end			
+				if not toc_12_pseudo_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "studio_pseudo_name", toc_12_pseudo_text.text)
+				end
 			end
 			
 					-- ENViSioN! Override
-			if override_20_check.is_sensitive and then override_20_check.is_selected then
-				document.set_element (xm_document, l_toc_array, "envision_title", toc_20_title_text.text)
-				document.set_element (xm_document, l_toc_array, "envision_location", toc_20_location_text.text)
-				document.set_element (xm_document, l_toc_array, "envision_pseudo_name", toc_20_pseudo_text.text)
-			else
-				document.set_element (xm_document, l_toc_array, "envision_title", "")
-				document.set_element (xm_document, l_toc_array, "envision_location", "")
-				document.set_element (xm_document, l_toc_array, "envision_pseudo_name", "")
+			if override_20_check.is_selected then
+				if not toc_20_title_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "envision_title", toc_20_title_text.text)
+				end
+				if not toc_20_location_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "envision_location", toc_20_location_text.text)
+				end
+				if not toc_20_pseudo_text.text.is_empty then
+					document.set_element (xm_document, l_toc_array, "envision_pseudo_name", toc_20_pseudo_text.text)
+				end
 			end		
 				
-			save_xml_document (xm_document, create {FILE_NAME}.make_from_string (document.name))
+			save_xml_document (xm_document, document.name)
 			create l_formatter.make
 			l_formatter.process_document (xm_document)
 			document.set_text (l_formatter.last_string)
@@ -251,24 +264,7 @@ feature {NONE} -- Commands
 			-- Toggle widgets used for overriding default TOC options
 			-- based on output type in `output_combo'
 		do
-			if output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Web_flag) then
-				override_12_check.enable_sensitive
-				override_20_check.enable_sensitive
-			elseif output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Studio_flag) then
-				override_12_check.disable_sensitive
-				override_20_check.disable_sensitive
-			elseif output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Envision_flag) then
-				override_12_check.disable_sensitive
-				override_20_check.disable_sensitive
-			end
-			toggle_studio_override
-			toggle_envision_override
-		end
-
-	toggle_studio_override is
-			-- Toggle overide widgets accordingly
-		do
-			if override_12_check.is_sensitive and then override_12_check.is_selected then
+			if override_12_check.is_selected then
 				toc_12_title_box.enable_sensitive
 				toc_12_location_box.enable_sensitive
 				toc_12_pseudo_box.enable_sensitive
@@ -277,12 +273,7 @@ feature {NONE} -- Commands
 				toc_12_location_box.disable_sensitive
 				toc_12_pseudo_box.disable_sensitive
 			end
-		end
-		
-	toggle_envision_override is
-			-- Toggle overide widgets accordingly
-		do
-			if override_20_check.is_sensitive and then override_20_check.is_selected then
+			if override_20_check.is_selected then
 				toc_20_title_box.enable_sensitive
 				toc_20_location_box.enable_sensitive
 				toc_20_pseudo_box.enable_sensitive
@@ -290,7 +281,7 @@ feature {NONE} -- Commands
 				toc_20_title_box.disable_sensitive
 				toc_20_location_box.disable_sensitive
 				toc_20_pseudo_box.disable_sensitive
-			end
+			end			
 		end
 
 	display_name_change_warning is

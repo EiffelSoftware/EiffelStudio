@@ -56,6 +56,7 @@ feature {NONE}-- Initialization
 			set_title ("Search")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
 			l_ev_horizontal_box_1.set_border_width (border_width)

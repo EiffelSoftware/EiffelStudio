@@ -115,18 +115,20 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create toc_new_heading
 			create toc_new_page
-			create toc_remove_topic
 			create l_ev_cell_4
-			create toc_menu_button
+			create toc_remove_topic
+			create toc_exclude_button
 			create l_ev_cell_5
+			create toc_menu_button
+			create l_ev_cell_6
 			create document_toc
 			create node_properties_tool
 			create node_properties_area
 			create l_ev_frame_2
 			create l_ev_horizontal_box_2
 			create l_ev_label_2
-			create l_ev_cell_6
 			create l_ev_cell_7
+			create l_ev_cell_8
 			create l_ev_tool_bar_6
 			create node_properties_close
 			create node_properties_list
@@ -138,8 +140,8 @@ feature {NONE}-- Initialization
 			create l_ev_frame_3
 			create l_ev_horizontal_box_3
 			create l_ev_label_3
-			create l_ev_cell_8
 			create l_ev_cell_9
+			create l_ev_cell_10
 			create l_ev_tool_bar_7
 			create attribute_list_close
 			create attribute_list
@@ -150,8 +152,8 @@ feature {NONE}-- Initialization
 			create l_ev_frame_4
 			create l_ev_horizontal_box_4
 			create title_label
-			create l_ev_cell_10
 			create l_ev_cell_11
+			create l_ev_cell_12
 			create l_ev_tool_bar_8
 			create sub_element_close
 			create sub_elements_list
@@ -160,8 +162,8 @@ feature {NONE}-- Initialization
 			create l_ev_frame_5
 			create l_ev_horizontal_box_5
 			create l_ev_label_4
-			create l_ev_cell_12
 			create l_ev_cell_13
+			create l_ev_cell_14
 			create l_ev_tool_bar_9
 			create editor_close
 			create document_area
@@ -258,18 +260,20 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.extend (l_ev_cell_3)
 			toc_vertical_toolbar.extend (toc_new_heading)
 			toc_vertical_toolbar.extend (toc_new_page)
-			toc_vertical_toolbar.extend (toc_remove_topic)
 			toc_vertical_toolbar.extend (l_ev_cell_4)
-			toc_vertical_toolbar.extend (toc_menu_button)
+			toc_vertical_toolbar.extend (toc_remove_topic)
+			toc_vertical_toolbar.extend (toc_exclude_button)
 			toc_vertical_toolbar.extend (l_ev_cell_5)
+			toc_vertical_toolbar.extend (toc_menu_button)
+			toc_vertical_toolbar.extend (l_ev_cell_6)
 			toc_area.extend (document_toc)
 			l_ev_vertical_split_area_3.extend (node_properties_tool)
 			node_properties_tool.extend (node_properties_area)
 			node_properties_area.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_2)
-			l_ev_horizontal_box_2.extend (l_ev_cell_6)
 			l_ev_horizontal_box_2.extend (l_ev_cell_7)
+			l_ev_horizontal_box_2.extend (l_ev_cell_8)
 			l_ev_horizontal_box_2.extend (l_ev_tool_bar_6)
 			l_ev_tool_bar_6.extend (node_properties_close)
 			node_properties_area.extend (node_properties_list)
@@ -281,8 +285,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (l_ev_frame_3)
 			l_ev_frame_3.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (l_ev_label_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_8)
 			l_ev_horizontal_box_3.extend (l_ev_cell_9)
+			l_ev_horizontal_box_3.extend (l_ev_cell_10)
 			l_ev_horizontal_box_3.extend (l_ev_tool_bar_7)
 			l_ev_tool_bar_7.extend (attribute_list_close)
 			l_ev_vertical_box_3.extend (attribute_list)
@@ -293,8 +297,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_4.extend (l_ev_frame_4)
 			l_ev_frame_4.extend (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_4.extend (title_label)
-			l_ev_horizontal_box_4.extend (l_ev_cell_10)
 			l_ev_horizontal_box_4.extend (l_ev_cell_11)
+			l_ev_horizontal_box_4.extend (l_ev_cell_12)
 			l_ev_horizontal_box_4.extend (l_ev_tool_bar_8)
 			l_ev_tool_bar_8.extend (sub_element_close)
 			l_ev_vertical_box_4.extend (sub_elements_list)
@@ -303,8 +307,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_5.extend (l_ev_frame_5)
 			l_ev_frame_5.extend (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_5.extend (l_ev_label_4)
-			l_ev_horizontal_box_5.extend (l_ev_cell_12)
 			l_ev_horizontal_box_5.extend (l_ev_cell_13)
+			l_ev_horizontal_box_5.extend (l_ev_cell_14)
 			l_ev_horizontal_box_5.extend (l_ev_tool_bar_9)
 			l_ev_tool_bar_9.extend (editor_close)
 			l_ev_vertical_box_5.extend (document_area)
@@ -427,8 +431,10 @@ feature {NONE}-- Initialization
 			toc_vertical_toolbar.disable_item_expand (l_ev_cell_3)
 			toc_vertical_toolbar.disable_item_expand (toc_new_heading)
 			toc_vertical_toolbar.disable_item_expand (toc_new_page)
-			toc_vertical_toolbar.disable_item_expand (toc_remove_topic)
 			toc_vertical_toolbar.disable_item_expand (l_ev_cell_4)
+			toc_vertical_toolbar.disable_item_expand (toc_remove_topic)
+			toc_vertical_toolbar.disable_item_expand (toc_exclude_button)
+			toc_vertical_toolbar.disable_item_expand (l_ev_cell_5)
 			toc_vertical_toolbar.disable_item_expand (toc_menu_button)
 			toc_new_button.set_tooltip ("New Table of Contents")
 			toc_new_button.set_pixmap (icon_new_doc_ico)
@@ -445,9 +451,11 @@ feature {NONE}-- Initialization
 			toc_new_heading.set_pixmap (icon_toc_folder_open_ico)
 			toc_new_page.set_tooltip ("New Topic File")
 			toc_new_page.set_pixmap (icon_format_text_color_ico)
+			l_ev_cell_4.set_minimum_height (20)
 			toc_remove_topic.set_tooltip ("Delete Topic")
 			toc_remove_topic.set_pixmap (icon_file_close_ico)
-			l_ev_cell_4.set_minimum_height (20)
+			toc_exclude_button.set_pixmap (icon_settings_ico)
+			l_ev_cell_5.set_minimum_height (20)
 			toc_menu_button.set_tooltip ("Loaded Table of Contents")
 			toc_menu_button.set_pixmap (icon_toc_folder_closed_ico)
 			node_properties_tool.set_style (1)
@@ -548,11 +556,11 @@ feature -- Access
 	line_pos_label: EV_LABEL
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
 	l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10, l_ev_cell_11, l_ev_cell_12, 
-	l_ev_cell_13: EV_CELL
+	l_ev_cell_13, l_ev_cell_14: EV_CELL
 	selector, document_editor: EV_NOTEBOOK
 	document_selector, document_toc, element_selector, type_selector: EV_TREE
 	toc_new_button, toc_open_button, toc_save_button, toc_properties_button, toc_new_heading, 
-	toc_new_page, toc_remove_topic, toc_menu_button: EV_BUTTON
+	toc_new_page, toc_remove_topic, toc_exclude_button, toc_menu_button: EV_BUTTON
 	node_properties_list, attribute_list: EV_MULTI_COLUMN_LIST
 	sub_elements_list: EV_LIST
 

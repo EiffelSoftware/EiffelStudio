@@ -35,6 +35,7 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_2
 			create l_ev_label_1
 			create l_ev_vertical_box_3
+			create xml_radio
 			create schema_radio
 			create link_radio
 			create l_ev_vertical_box_4
@@ -51,6 +52,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (l_ev_label_1)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (xml_radio)
 			l_ev_vertical_box_3.extend (schema_radio)
 			l_ev_vertical_box_3.extend (link_radio)
 			l_ev_vertical_box_3.extend (l_ev_vertical_box_4)
@@ -63,7 +65,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (cancel_bt)
 			
 			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_medium_height)
+			set_minimum_height (300)
 			set_title ("Validator")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
@@ -76,8 +78,10 @@ feature {NONE}-- Initialization
 			l_ev_label_1.align_text_left
 			l_ev_vertical_box_3.set_padding_width (padding_width)
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
+			l_ev_vertical_box_3.disable_item_expand (xml_radio)
 			l_ev_vertical_box_3.disable_item_expand (schema_radio)
 			l_ev_vertical_box_3.disable_item_expand (link_radio)
+			xml_radio.set_text ("Validate project documents as XML")
 			schema_radio.set_text ("Validate project documents against schema definition")
 			link_radio.set_text ("Validate document links")
 			l_ev_vertical_box_4.set_padding_width (padding_width)
@@ -113,7 +117,7 @@ feature -- Access
 
 	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL
-	schema_radio, link_radio: EV_RADIO_BUTTON
+	xml_radio, schema_radio, link_radio: EV_RADIO_BUTTON
 	link_check, images_check: EV_CHECK_BUTTON
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_cell_1: EV_CELL

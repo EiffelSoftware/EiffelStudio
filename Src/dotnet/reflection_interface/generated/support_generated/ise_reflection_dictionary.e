@@ -80,13 +80,6 @@ feature -- Basic Operations
 			"Comma"
 		end
 
-	Dash: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"Dash"
-		end
-
 	DtdExtension: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
@@ -99,6 +92,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"XmlExtension"
+		end
+
+	Dash: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"Dash"
 		end
 
 end -- class ISE_REFLECTION_DICTIONARY

@@ -33,8 +33,11 @@ feature {NONE} -- Initialization
 			create support.make_codegenerationsupport
 			support.make
 			eiffel_assembly := support.EiffelAssemblyFromXml (assembly_description_filename)
+			create eiffel_code_generator.make_from_info (eiffel_assembly)
 		ensure
 			assembly_description_set: assembly_description_filename.Equals_String (an_assembly_description_filename)
+			non_void_eiffel_assembly: eiffel_assembly /= Void
+			non_void_eiffel_code_generator: eiffel_code_generator /= Void
 		end
 	
 feature -- Access
@@ -50,6 +53,12 @@ feature -- Access
 		indexing
 			external_name: "EiffelAssembly"
 		end
+	
+	eiffel_code_generator: EIFFEL_CODE_GENERATOR
+			-- Eiffel code generator
+		indexing
+			external_name: "EiffelCodeGenerator"
+		end
 		
 feature -- Basic Operations
 	
@@ -64,7 +73,6 @@ feature -- Basic Operations
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			eiffel_class: ISE_REFLECTION_EIFFELCLASS
-			eiffel_code_generator: EIFFEL_CODE_GENERATOR
 			path: STRING
 		do
 			create support.make_codegenerationsupport
@@ -73,8 +81,7 @@ feature -- Basic Operations
 			check
 				non_void_eiffel_assembly: eiffel_assembly /= Void
 			end
-			create eiffel_code_generator.make_from_info (eiffel_class, eiffel_assembly)
-			eiffel_code_generator.generate_eiffel_class 
+			eiffel_code_generator.generate_eiffel_class (eiffel_class)
 		end	
 		
 end -- class EIFFEL_CODE_GENERATOR_FROM_XML

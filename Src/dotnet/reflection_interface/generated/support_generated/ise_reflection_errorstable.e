@@ -40,13 +40,6 @@ feature -- Basic Operations
 			"ErrorDescription"
 		end
 
-	Errors: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ErrorsTable"
-		alias
-			"Errors"
-		end
-
 	RemoveError (a_code: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorsTable"
@@ -54,11 +47,11 @@ feature -- Basic Operations
 			"RemoveError"
 		end
 
-	AddError (an_error: ISE_REFLECTION_ERRORINFO) is
+	Errors: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ErrorsTable"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ErrorsTable"
 		alias
-			"AddError"
+			"Errors"
 		end
 
 	ReplaceErrorDescription (a_code: INTEGER; new_description: STRING) is
@@ -80,6 +73,13 @@ feature -- Basic Operations
 			"IL signature (): System.Void use ISE.Reflection.ErrorsTable"
 		alias
 			"_invariant"
+		end
+
+	AddError (an_error: ISE_REFLECTION_ERRORINFO) is
+		external
+			"IL signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ErrorsTable"
+		alias
+			"AddError"
 		end
 
 	ErrorName (a_code: INTEGER): STRING is

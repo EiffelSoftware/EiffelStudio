@@ -34,6 +34,13 @@ feature -- Basic Operations
 			"ClassParentsGenerationFailedMessage"
 		end
 
+	ClassFooterGenerationFailed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassFooterGenerationFailed"
+		end
+
 	ClassFeatureAssertionsGenerationFailedMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
@@ -48,11 +55,11 @@ feature -- Basic Operations
 			"ClassFeaturesGenerationFailedMessage"
 		end
 
-	ReadLockMessage: STRING is
+	ClassParentsGenerationFailed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ReadLockMessage"
+			"ClassParentsGenerationFailed"
 		end
 
 	ClassFeatureArgumentsGenerationFailed: STRING is
@@ -69,11 +76,11 @@ feature -- Basic Operations
 			"EiffelAssemblyGenerationFailedMessage"
 		end
 
-	ClassFooterGenerationFailed: STRING is
+	EiffelClassGenerationFailedMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ClassFooterGenerationFailed"
+			"EiffelClassGenerationFailedMessage"
 		end
 
 	WriteLock: STRING is
@@ -81,20 +88,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
 			"WriteLock"
-		end
-
-	ClassParentsGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassParentsGenerationFailed"
-		end
-
-	ClassBodyGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
-		alias
-			"ClassBodyGenerationFailedMessage"
 		end
 
 	ClassFeaturesGenerationFailed: STRING is
@@ -139,11 +132,11 @@ feature -- Basic Operations
 			"WriteLockMessage"
 		end
 
-	ClassFooterGenerationFailedMessage: STRING is
+	ClassBodyGenerationFailedMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"ClassFooterGenerationFailedMessage"
+			"ClassBodyGenerationFailedMessage"
 		end
 
 	ClassFeatureAssertionsGenerationFailed: STRING is
@@ -167,6 +160,13 @@ feature -- Basic Operations
 			"ClassFeatureCommentsGenerationFailedMessage"
 		end
 
+	ClassFooterGenerationFailedMessage: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
+		alias
+			"ClassFooterGenerationFailedMessage"
+		end
+
 	EiffelAssemblyGenerationFailed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
@@ -181,11 +181,11 @@ feature -- Basic Operations
 			"ClassFeatureInfoGenerationFailed"
 		end
 
-	EiffelClassGenerationFailedMessage: STRING is
+	ReadLockMessage: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.CodeGenerationSupportErrorMessages"
 		alias
-			"EiffelClassGenerationFailedMessage"
+			"ReadLockMessage"
 		end
 
 	ReadLock: STRING is

@@ -31,6 +31,13 @@ feature -- Access
 			"EiffelAssembly"
 		end
 
+	frozen EiffelCodeGenerator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+		external
+			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"EiffelCodeGenerator"
+		end
+
 feature -- Basic Operations
 
 	Make is

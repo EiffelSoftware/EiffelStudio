@@ -22,7 +22,7 @@ feature -- Initialisation
 		do
 			size := Cache_size
 			count := 0
-			make_area (Cache_size)
+			make_area (size)
 			!! array_count.make (0, size - 1)
 			!! history.make (size)
 			!! index.make (0, size - 1)

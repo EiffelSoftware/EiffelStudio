@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	evaluate_type (last_type: TYPE_A; type: TYPE): TYPE_A is
+	evaluate_type (last_type: TYPE_A; type: TYPE_AS): TYPE_A is
 			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;

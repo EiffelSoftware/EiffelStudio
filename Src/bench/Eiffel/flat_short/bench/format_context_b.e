@@ -257,7 +257,7 @@ feature -- Setting
 			set: feature_clause_order = fco
 		end;
 
-	set_type_creation (t: TYPE) is
+	set_type_creation (t: TYPE_AS) is
 			-- Set last_class_printed to the actual type of `t'.
 		local
 			type_b: TYPE_B

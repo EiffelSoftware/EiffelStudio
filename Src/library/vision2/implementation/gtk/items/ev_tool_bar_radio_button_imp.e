@@ -16,26 +16,18 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+	EV_RADIO_PEER_IMP
+		redefine
+			interface
+		end
+
+	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
 			interface,
-			make,
 			connect_signals
 		end
-
-	EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]
-
 create
 	make
-
-feature -- Initialization
-
-	make (an_interface: like interface) is
-			-- Create the tool-bar radio button.
-		do
-			{EV_TOOL_BAR_TOGGLE_BUTTON_IMP} Precursor (an_interface)
-		end
-
 
 feature {NONE} -- Implementation
 
@@ -48,31 +40,38 @@ feature {NONE} -- Implementation
 	on_activate is
 			-- The button has been activated by the user (pushed).
 		do		
-			if group /= Void then
-				if  is_selected then
-						-- The radio button has been depressed.
-					if not group.just_selected (Current) then
-						interface.press_actions.call ([])
-					end
-					group.set_last_selected(Current)
-					group.set_selection_at_no_event (Current)
-				else
-						-- The radio button has been deselected.
-					if group.just_selected (Current) then
-						-- The button has been reselected
-						set_selected (True)
-						-- This will make GTK recall the on_activate callback									
-					end
-				end
-			end
+			--if group /= Void then
+			--	if  is_selected then
+			--			-- The radio button has been depressed.
+			--		if not group.just_selected (Current) then
+			--			interface.press_actions.call ([])
+			--		end
+			--		group.set_last_selected(Current)
+			--		group.set_selection_at_no_event (Current)
+			--	else
+			--			-- The radio button has been deselected.
+			--		if group.just_selected (Current) then
+			--			-- The button has been reselected
+			--			set_selected (True)
+			--			-- This will make GTK recall the on_activate callback									
+			--		end
+			--	end
+			--end
 		end
 
 	on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
 			-- Button's selected state set to flag.
 		do
-			if is_selected and not group.just_selected (Current) then
-				set_selected(False)
-			end	
+			--if is_selected and not group.just_selected (Current) then
+			--	set_selected(False)
+			--end	
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	gslist: POINTER is
+		do
+			Result := C.gtk_radio_button_group (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -102,6 +101,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/05 17:01:28  king
+--| Updated to inherit from tb select button
+--|
 --| Revision 1.11  2000/04/04 20:50:19  oconnor
 --| updated signal connection for new marshaling scheme
 --|

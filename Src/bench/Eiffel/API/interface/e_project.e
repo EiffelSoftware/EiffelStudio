@@ -79,8 +79,9 @@ feature -- Initialization
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER];
 			remote_dir: REMOTE_PROJECT_DIRECTORY
 		do
+			set_error_status (Ok_status)
+
 			p_eif := project_dir.project_eif_file;
-			set_error_status (Ok_status);
 			e_project := p_eif.retrieved_project;
 			if p_eif.error then
 				if p_eif.is_corrupted then
@@ -130,6 +131,7 @@ feature -- Initialization
 				Universe.update_cluster_paths;
 
 				check_permissions (project_dir)
+
 				if not error_occurred then
 					set_is_initialized;
 					if Platform_constants.is_windows then

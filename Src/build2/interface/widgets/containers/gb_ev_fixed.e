@@ -221,6 +221,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			temp_x_position_string, temp_y_position_string,
 			temp_width_string, temp_height_string: STRING
 			extracted_string: STRING
+			lower, upper: INTEGER
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (x_position_string)
@@ -256,29 +257,31 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			until
 				first.off
 			loop
+				lower := (first.index - 1) * 4 + 1
+				upper := (first.index - 1) * 4 + 4
 					-- Read current x position data from `temp_x_position_string'.
-				extracted_string := temp_x_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				extracted_string := temp_x_position_string.substring (lower, upper)
 				check
 					value_is_integer: extracted_string.is_integer
 				end
 				set_x_position (first.item, extracted_string.to_integer)
 					
 					-- Read current y position data from `temp_y_position_string'.
-				extracted_string := temp_y_position_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				extracted_string := temp_y_position_string.substring (lower, upper)
 				check
 					value_is_integer: extracted_string.is_integer
 				end
 				set_y_position (first.item, extracted_string.to_integer)
 				
 					-- Read current width data from `temp_width_string'.
-				extracted_string := temp_width_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				extracted_string := temp_width_string.substring (lower, upper)
 				check
 					value_is_integer: extracted_string.is_integer
 				end
 				set_item_width (first.item, extracted_string.to_integer)
 				
 					-- Read current height data from `temp_height_string'.
-				extracted_string := temp_height_string.substring ((first.index - 1) * 4 + 1, (first.index - 1) * 4 + 4)
+				extracted_string := temp_height_string.substring (lower, upper)
 				check
 					value_is_integer: extracted_string.is_integer
 				end

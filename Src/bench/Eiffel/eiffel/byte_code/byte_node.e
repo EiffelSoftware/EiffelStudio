@@ -48,7 +48,7 @@ feature -- Eiffel source line information
 	generate_line_info is
 			-- Generate source line information.
 		do
-			if System.line_generation then
+			if System.line_generation and then line_number > 0 then
 				buffer.putstring ("%N#line ")
 				buffer.putint (line_number)
 				buffer.new_line

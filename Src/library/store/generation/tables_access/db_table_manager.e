@@ -356,7 +356,7 @@ feature -- Queries
 		do
 			obj := tables.obj (tablecode)
 			has_error := False
-			Result := database_manager.load_list_with_select (query, obj)
+			Result ?= database_manager.load_list_with_select (query, obj)
 			if database_manager.has_error then
 				has_error := True
 				error_message := selection_failed (query) + database_manager.error_message

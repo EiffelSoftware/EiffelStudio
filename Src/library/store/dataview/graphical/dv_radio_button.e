@@ -8,6 +8,9 @@ class
 
 inherit
 	EV_RADIO_BUTTON
+		redefine
+			implementation, create_implementation
+		end
 
 	DV_SENSITIVE_CHECK
 		rename
@@ -49,6 +52,18 @@ feature -- Basic operations
 			-- Request display insensitive.
 		do
 			disable_sensitive
+		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: DV_RADIO_BUTTON_I
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {DV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
 
 indexing

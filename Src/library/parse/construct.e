@@ -13,7 +13,6 @@ deferred class
 	CONSTRUCT
 
 inherit
-
 	TWO_WAY_TREE [CONSTRUCT]
 		rename
 			put as twt_put,

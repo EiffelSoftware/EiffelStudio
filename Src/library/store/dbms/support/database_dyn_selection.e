@@ -19,8 +19,10 @@ inherit
 		end
 
 create
-
 	make
+
+create {DATABASE_DYN_SELECTION}
+	string_make
 
 feature
 

@@ -38,8 +38,10 @@ inherit
 		end
 
 create -- Creation procedure
-
 	make
+
+create {SQL_SCAN}
+	string_make
 
 feature -- Initialization
 
@@ -181,7 +183,7 @@ feature -- Basic operations
 	replace is
 			-- Replace all occurrences of :key by `ht.item (":key")'
 		local
-			new_string: like Current
+			l_new_string: like Current
 			c: CHARACTER
 			old_index: INTEGER
 		do
@@ -199,17 +201,17 @@ feature -- Basic operations
 				if index <= count then
 					c := item (index)
 					if c = ':' then
-						if new_string = Void then
-							create new_string.make (2 * count)
+						if l_new_string = Void then
+							create l_new_string.make (2 * count)
 						end
 						if old_index < index then
-							new_string.append (substring (old_index, index - 1))
+							l_new_string.append (substring (old_index, index - 1))
 						end
 						old_index := index
 						index := index + 1
 						go_after_identifier
 						replacement_string (substring (old_index + 1, 
-							index - 1), new_string)
+							index - 1), l_new_string)
 						old_index := index
 					elseif index < count then
 						index := index_of (c, index + 1)
@@ -220,12 +222,12 @@ feature -- Basic operations
 					end
 				end	
 			end
-			if new_string /= Void then
+			if l_new_string /= Void then
 				if old_index <= count then
-					new_string.append (substring (old_index, count))
+					l_new_string.append (substring (old_index, count))
 				end
 				wipe_out
-				append (new_string)
+				append (l_new_string)
 			end
 		end
 

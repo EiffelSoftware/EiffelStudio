@@ -24,6 +24,9 @@ inherit
 create
 	make
 
+create {DATABASE_DYN_CHANGE}
+	string_make
+
 feature
 
 	prepare (s: STRING) is

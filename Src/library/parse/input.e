@@ -16,8 +16,10 @@ class INPUT inherit
 		end
 
 create
-
 	make
+	
+create {INPUT}
+	make_filled
 
 feature -- Initialisation
 

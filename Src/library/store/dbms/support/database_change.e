@@ -32,6 +32,9 @@ create -- Creation procedure
 
 	make
 
+create {DATABASE_CHANGE}
+	string_make
+
 feature -- Access
 
 	last_parsed_query : STRING

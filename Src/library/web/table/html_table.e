@@ -18,6 +18,9 @@ inherit
 create
 	make
 
+create {HTML_TABLE}
+	array2_make
+
 feature
 
 	make(nb_row, nb_col: INTEGER) is

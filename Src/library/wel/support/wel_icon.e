@@ -10,6 +10,12 @@ class
 inherit
 	WEL_RESOURCE
 
+	WEL_IMAGE_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+
 creation
 	make_by_id,
 	make_by_name,
@@ -28,15 +34,30 @@ feature {NONE} -- Initialization
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (file_name)
+			create a_wel_string.make (file_name)
 			item := cwin_load_image (default_pointer, a_wel_string.item,
 				Image_icon, 0, 0, Lr_loadfromfile)
 		end
 
 	make_by_icon_info (icon_info: WEL_ICON_INFO) is
-		
+			-- Create an icon from a bitmap
 		do
 			item := cwin_create_icon_indirect (icon_info.item)
+		end
+
+feature -- Access
+
+	get_icon_info: WEL_ICON_INFO is
+			-- Retrieve information about an icon
+		local
+			icon_info: WEL_ICON_INFO
+		do
+			create icon_info.make
+			if cwin_get_icon_info(item, icon_info.item) = 0 then
+				Result := Void
+			else
+				Result := icon_info
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -72,6 +93,14 @@ feature {NONE} -- Externals
 			"CreateIconIndirect"
 		end
 
+	cwin_get_icon_info (hicon: POINTER; iconinfo: POINTER): INTEGER is
+			-- SDK CreateIconIndirect
+		external
+			"C [macro <wel.h>] (HICON, ICONINFO *): EIF_INTEGER"
+		alias
+			"GetIconInfo"
+		end
+
 	cwin_destroy_icon (hicon: POINTER) is
 			-- SDK DestroyIcon
 		external
@@ -95,13 +124,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>]"
 		alias
 			"LR_LOADFROMFILE"
-		end
-
-	Image_icon: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"IMAGE_ICON"
 		end
 
 end -- class WEL_ICON

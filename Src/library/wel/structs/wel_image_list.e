@@ -22,25 +22,37 @@ creation
 
 feature -- Initialization
 
-	make(given_width: INTEGER; given_height: INTEGER; image_type: INTEGER) is
+	make(given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN) is
 			-- Initialization with an empty image list. Images located
 			-- in this imageList must have the a width equal to `given_width'
 			-- and a height equal to `given_height'. 
-			-- The flag `image_type' determines the color depth of the bitmaps.
+			--
+			-- The flag `color_depth' determines the color depth of the bitmaps.
 			-- (bitmaps with a different color depth than indicated in
 			-- `image_type' will automatically be converted)
+			-- See Ilc_colorXXXX in WEL_ILC_CONSTANTS for possible values
+			--
+			-- The flag `masked_bitmap' specify whether we are using Bitmaps with mask, or plain
+			-- bitmaps.
 		local
-			h_image_list: POINTER
+			mask_flag: INTEGER
 		do
 				-- remember the width and the height for further check.
 			bitmaps_width := given_width
 			bitmaps_height := given_height
 
 				-- Create the image list
-			h_image_list := cwel_imagelist_create(bitmaps_width, bitmaps_height, image_type, 1, 1)
-
-				-- Create the item.
-			make_by_pointer(h_image_list)
+			if masked_bitmap then
+				mask_flag := Ilc_mask
+				use_masked_bitmap := True
+			end			
+			item := cwel_imagelist_create(
+						bitmaps_width, 
+						bitmaps_height, 
+						color_depth + mask_flag, 
+						Initial_size, 
+						Grow_parameter
+					)
 		end
 
 feature {NONE} -- Removal
@@ -62,6 +74,19 @@ feature -- Access
 			-- Position of last image inserted/deleted.
 			-- updated by `add_image'.
 
+	use_masked_bitmap: BOOLEAN
+			-- Does the ImageList contains 'Bitmap+Mask' or
+			-- only 'Bitmap'
+			--
+			-- Note: to use masked bitmap, create the ImageList
+			--       using `Ilc_mask + Ilc_colorXXXX' as `image_type'
+
+	count: INTEGER is
+		-- Retrieves the number of images in an image list. 
+		do
+			Result := cwel_imagelist_get_image_count(item)
+		end
+
 
 feature -- Basic operations
 
@@ -71,8 +96,21 @@ feature -- Basic operations
 			bitmap_not_void: bitmap_to_add /= Void
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+			not_use_masked_bitmap: not use_masked_bitmap
 		do
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
+		end
+
+	replace_bitmap(bitmap_to_add: WEL_BITMAP; index: INTEGER) is
+			-- Replace the bitmap at position `index' in the imageList by
+			-- `bitmap_to_add'.
+		require
+			bitmap_not_void: bitmap_to_add /= Void
+			not_use_masked_bitmap: not use_masked_bitmap
+			index_not_too_small: index >= 0
+			index_not_too_big: index < count
+		do
+			cwel_imagelist_replace(item, index, bitmap_to_add.item, Default_pointer)
 		end
 
 	add_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP) is
@@ -85,8 +123,27 @@ feature -- Basic operations
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
 			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
 			compatible_height_for_mask: bitmap_mask.height = bitmaps_height
+			masked_bitmap_in_use: use_masked_bitmap
 		do
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, bitmap_mask.item)
+		end
+
+	replace_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP; index: INTEGER) is
+			-- Replace the bitmap at position `index' in the imageList by
+			-- `bitmap_to_add'.
+			-- `bitmap_mask' represents the mask for the bitmap.
+		require
+			bitmap_not_void: bitmap_to_add /= Void
+			mask_not_void: bitmap_mask /= Void
+			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
+			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
+			compatible_width_for_mask: bitmap_mask.width = bitmaps_width
+			compatible_height_for_mask: bitmap_mask.height = bitmaps_height
+			masked_bitmap_in_use: use_masked_bitmap
+			index_not_too_small: index >= 0
+			index_not_too_big: index < count
+		do
+			cwel_imagelist_replace(item, index, bitmap_to_add.item, bitmap_mask.item)
 		end
 
 	add_color_masked_bitmap(bitmap_to_add: WEL_BITMAP; mask_color: WEL_COLOR_REF) is
@@ -112,6 +169,15 @@ feature -- Basic operations
 			icon_not_void: icon_to_add /= Void
 		do
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
+		end
+
+	replace_icon (icon_to_add: WEL_ICON; index: INTEGER) is
+			-- Replace the bitmap at position `index' in the imageList by
+			-- `icon_to_add'.
+		require
+			icon_not_void: icon_to_add /= Void
+		do
+			cwel_imagelist_replace_icon(item, index, icon_to_add.item)
 		end
 
 	set_background_color(new_color: WEL_COLOR_REF) is
@@ -155,11 +221,18 @@ feature {NONE} -- Externals
 			"ImageList_Destroy"
 		end
 
-	cwel_imagelist_add (ptr: POINTER; bitmap_to_add: POINTER; mask_bitmap_to_add: POINTER): INTEGER is
+	cwel_imagelist_add (ptr, bitmap_to_add, mask_bitmap_to_add: POINTER): INTEGER is
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, HBITMAP): int"
 		alias
 			"ImageList_Add"
+		end
+
+	cwel_imagelist_replace (ptr: POINTER;  index: INTEGER; bitmap_to_add, mask_bitmap_to_add: POINTER) is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HBITMAP, HBITMAP)"
+		alias
+			"ImageList_Replace"
 		end
 
 	cwel_imagelist_add_masked (ptr: POINTER; bitmap_to_add: POINTER; mask_color: INTEGER): INTEGER is
@@ -176,6 +249,13 @@ feature {NONE} -- Externals
 			"ImageList_AddIcon"
 		end
 
+	cwel_imagelist_replace_icon (ptr: POINTER;  index: INTEGER; icon_to_add: POINTER) is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HICON)"
+		alias
+			"ImageList_ReplaceIcon"
+		end
+
 	cwel_imagelist_get_bkcolor (ptr: POINTER): INTEGER is
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST): COLORREF"
@@ -188,6 +268,13 @@ feature {NONE} -- Externals
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, COLORREF)"
 		alias
 			"ImageList_SetBkColor"
+		end
+
+	cwel_imagelist_get_image_count (ptr: POINTER): INTEGER is
+		external
+			"C [macro %"wel_image_list.h%"] (HIMAGELIST): int"
+		alias
+			"ImageList_GetImageCount"
 		end
 
 feature {NONE} -- Private Constants
@@ -205,7 +292,7 @@ end -- class WEL_IMAGE_LIST
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

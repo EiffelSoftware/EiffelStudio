@@ -55,7 +55,7 @@ feature -- Access
 		do
 			Result := implementation.selected_items
 		ensure
-			bridge_ok: Result = implementation.selected_items
+			bridge_ok: lists_equal (Result, implementation.selected_items)
 		end
 
 	row_height: INTEGER is
@@ -374,6 +374,10 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/29 20:26:30  rogers
+--| Postcondition on selected_items now uses lists_equal for
+--| comparison
+--|
 --| Revision 1.49  2000/03/27 19:31:27  brendel
 --| Fixed `make_for_text'.
 --|

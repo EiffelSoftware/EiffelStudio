@@ -3,7 +3,6 @@ indexing
 		"Evaluator to check if stack is empty"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

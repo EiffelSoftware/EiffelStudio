@@ -3,7 +3,6 @@ indexing
 		"Test demonstrating how to assert an execution timing"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Test for DATE.date_valid_default"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

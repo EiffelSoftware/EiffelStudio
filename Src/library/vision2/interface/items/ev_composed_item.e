@@ -1,4 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
+--| FIXME Needs major revision !!!! - sam
+--| Should it inherit somthing LINEAR ???
+--| What does the class name mean anyway?
+--| See below.
 indexing	
 	description:
 		" EiffelVision composed item is composed of cell.%
@@ -27,6 +30,8 @@ inherit
 
 feature {NONE} -- Initialization
 
+--|FIXME a_text is an array.
+--|FIXME comment says nothing about a_text.
 	make_with_text (a_text: ARRAY [STRING]) is
 			-- Create a row with text in it.
 		require
@@ -42,6 +47,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+--|FIXME English and period.
+--|FIXME Empty precondition.
 	count: INTEGER is
 			-- Number of element in the item
 		require
@@ -51,6 +58,8 @@ feature -- Access
 			positive_result: result >= 0
 		end
 
+--|FIXME Never say Return, just say what it is.
+--|FIXME Try `an_index' not `value'.
 	cell_text (value: INTEGER): STRING is
 			-- Return the text of the cell number `value' 
 		require
@@ -61,6 +70,8 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
+--|FIXME How can `text' or `Current lable' be a LINKED_LIST?
+--|FIXME Empty precondition.
 	text: LINKED_LIST [STRING] is
 			-- Current label of the item
 		require
@@ -71,6 +82,9 @@ feature -- Access
 			valid_texts: not Result.has (Void)
 		end
 
+--|FIXME Never say Return, just say what it is.
+--|FIXME Empty precondition.
+--|FIXME None of this platform dependant behaviour is allowed!
 	cell_pixmap (value: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
 			-- `value'. On windows platform, 
@@ -80,6 +94,9 @@ feature -- Access
 			Result := implementation.cell_pixmap (value)
 		end
 
+--|FIXME Never say Return, just say what it is.
+--|FIXME Empty precondition.
+--|FIXME None of this platform dependant behaviour is allowed!
 	pixmap: LINKED_LIST [EV_PIXMAP] is
 			-- Return all the pixmaps of the item.
 			-- Only 1 on windows platform.
@@ -90,6 +107,7 @@ feature -- Access
 
 feature -- Element change
 
+--|FIXME Huh?
 	set_count (value: INTEGER) is
 			-- Make `value' the new count.
 			-- When there is a parent, the item has the
@@ -103,6 +121,7 @@ feature -- Element change
 			count_set: count = value
 		end
 
+--|FIXME Wh is txt abvted.
 	set_cell_text (value: INTEGER; txt: STRING) is
 			-- Make `txt' the new label of the `value'-th
 			-- cell of the item.
@@ -115,6 +134,8 @@ feature -- Element change
 			text_set: (cell_text (value)).is_equal (txt)
 		end
 
+--|FIXME Wh is txt abvted.
+--|FIXME why is txt an array when just before it was a STRING?
 	set_text (txt: ARRAY [STRING]) is
 			-- Make `txt' the new label of the item.
 		require
@@ -126,6 +147,9 @@ feature -- Element change
 			text_set: implementation.text_set (txt)
 		end
 
+--|FIXME pix should be a_pixmap.
+--|FIXME value should be `an_index'.
+--|FIXME _cell_ is redundant.
 	set_cell_pixmap (value: INTEGER; pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the 
 			-- `value'-th cell of the item.
@@ -138,6 +162,7 @@ feature -- Element change
 			pixmap_set: (cell_pixmap (value)).is_equal (pix)
 		end
 
+--|FIXME Why is this commented out??
 --	unset_cell_pixmap (value: INTEGER) is
 --			-- Remove the pixmap of the 
 --			-- `value'-th cell of the item.
@@ -150,6 +175,8 @@ feature -- Element change
 --			pixmap_unset: (cell_pixmap (value) = Void)
 --		end
 
+--|FIXME Why is set_pixmap (singular) setting a whole array of pixmaps?
+--|FIXME Why is pix, A, abbreviated, B, singular.
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is
 			-- Make `pix' the new pixmaps of the item.
 		require
@@ -161,9 +188,24 @@ feature -- Element change
 			text_set: implementation.pixmap_set (pix)
 		end
 
-feature -- Assertion features
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_COMPOSED_ITEM_I
+		-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_ITEM} Precursor
+			{EV_PICK_AND_DROPABLE} Precursor
+		end
+
+feature -- Contract support
 
 	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
+			--| FIXME word as question!
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
@@ -171,24 +213,12 @@ feature -- Assertion features
 		end
 
 	pixmaps_size_ok (pix_array: ARRAY[EV_PIXMAP]): BOOLEAN is
+			--| FIXME word as question!
 			-- Check if the size of the pixmaps is ok for
 			-- the container.
 		do
 			Result := implementation.pixmaps_size_ok (pix_array)
 		end
-
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-		do
-			{EV_ITEM} Precursor
-			{EV_PICK_AND_DROPABLE} Precursor
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_COMPOSED_ITEM_I
-		-- Platform dependent access
 
 end -- class EV_COMPOSED_ITEM
 
@@ -213,6 +243,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/22 23:50:50  oconnor
+--| added comments!!
+--|
 --| Revision 1.13  2000/03/10 01:27:27  king
 --| Now inherits from PND
 --|

@@ -43,19 +43,6 @@ feature -- Settings
 
 feature -- Status report
 
-	need_metamorphosis (source_type: TYPE_I): BOOLEAN is
-			-- Do we need to issue a metamorphosis on the `source_type'?
-		local
-			target_type: TYPE_I;
-			real_ty: GEN_TYPE_I
-		do
-			real_ty ?= context.real_type (type);
-			target_type := real_ty.meta_generic.item (1); 
-			if (not target_type.is_basic) and (source_type.is_basic) then
-				Result := True;
-			end;
-		end;
-
 	used (r: REGISTRABLE): BOOLEAN is
 		do
 		end
@@ -152,15 +139,6 @@ feature -- IL generation
 
  					-- Generate expression
  				expr.generate_il
- 				if
- 					actual_type /= Void and then
- 					need_metamorphosis (actual_type)
- 				then 
- 						-- We generate a metamorphosed version of type.
- 					expr.generate_il_metamorphose (actual_type, target_type, True)
-				elseif target_type /= Void and then target_type.is_basic then
-					target_type.il_convert_from (actual_type)
- 				end
 
  				il_generator.put_integer_32_constant (i)
  
@@ -179,13 +157,11 @@ feature -- Byte code generation
 			-- Generate byte code for a manifest array
 		local
 			real_ty: GEN_TYPE_I;
-			actual_type: CL_TYPE_I;
 			f_table: FEATURE_TABLE;
 			feat_i: FEATURE_I;
 			feat_id: INTEGER;
 			expr: EXPR_B;
 			target_type: TYPE_I;
-			basic_i: BASIC_I;
 			base_class: CLASS_C;
 			r_id: INTEGER;
 			rout_info: ROUT_INFO
@@ -204,20 +180,7 @@ feature -- Byte code generation
 				expressions.before
 			loop
 				expr ?= expressions.item;
-				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
-				if actual_type /= Void then
-					if need_metamorphosis (actual_type) then
-							-- Simple type objects are metamorphosed
-						ba.append (Bc_metamorphose)
-					elseif target_type.is_basic and not actual_type.same_as (target_type) then
-							-- A conversion integer_xx => integer_yy,
-							-- integer => real, integer => double
-							-- or real => double is needed
-						basic_i ?= target_type
-						basic_i.generate_byte_code_cast (ba)
-					end
-				end
 				expressions.back;
 			end;
 			if base_class.is_precompiled then

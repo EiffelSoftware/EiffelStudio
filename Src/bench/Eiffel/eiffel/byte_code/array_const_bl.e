@@ -23,9 +23,6 @@ feature
 	array_area_reg: REGISTER;
 			-- Register for array area
 
-	metamorphose_reg: REGISTER;
-			-- Register for metamorphosis
-
 	set_register (r: REGISTRABLE) is
 			-- Set `register' to `r' 
 		do
@@ -38,7 +35,6 @@ feature
 			target_gen_type: TYPE_I;
 			real_ty: GEN_TYPE_I;
 			expr: EXPR_B;
-			require_meta: BOOLEAN
 		do
 			-- We need 'Current'
 			context.add_dftype_current;
@@ -53,17 +49,9 @@ feature
 				expressions.after 
 			loop
 				expr ?= expressions.item;
-				if 
-					need_metamorphosis (context.real_type (expr.type)) 
-				then
-					require_meta := True;
-				end;
 				expr.analyze;
 				expr.free_register;
 				expressions.forth
-			end;
-			if require_meta then
-				create metamorphose_reg.make (target_gen_type.c_type);
 			end;
 		end;
 
@@ -73,7 +61,6 @@ feature
 			expr: EXPR_B;
 		do
 			array_area_reg := Void;
-			metamorphose_reg := Void;
 			set_register (Void)	
 			from
 				expressions.start
@@ -92,9 +79,6 @@ feature
 			Precursor {ARRAY_CONST_B}
 			if array_area_reg /= Void then
 				array_area_reg.free_register
-			end;
-			if metamorphose_reg /= Void then
-				metamorphose_reg.free_register
 			end;
 		end;
 
@@ -149,8 +133,6 @@ feature {NONE} -- C code generation
 		local
 			expr: EXPR_B;
 			actual_type: TYPE_I;
-			basic_i: BASIC_I;
-			metamorphosed: BOOLEAN;
 			is_expanded: BOOLEAN;
 			position: INTEGER;
 			buf: GENERATION_BUFFER
@@ -183,20 +165,9 @@ feature {NONE} -- C code generation
 			until
 				expressions.after
 			loop
-				metamorphosed := False;
 				expr ?= expressions.item;
 				actual_type := context.real_type (expr.type);
-				if need_metamorphosis (actual_type) then
-					basic_i ?= actual_type;
-					expr.generate;
-					basic_i.metamorphose 
-						(metamorphose_reg, expr, buf, context.workbench_mode);
-					buf.put_character (';');
-					buf.put_new_line;
-					metamorphosed := True
-				else
-					expr.generate;
-				end;
+				expr.generate;
 				if is_expanded then
 					if context.workbench_mode then
 						buf.put_string ("ecopy(");
@@ -243,12 +214,8 @@ feature {NONE} -- C code generation
 					buf.put_integer (position);
 					buf.put_character (')');
 					buf.put_string (" = ");
-					if metamorphosed then
-						metamorphose_reg.print_register
-					else
-						target_type.c_type.generate_cast (buf);
-						expr.print_register;
-					end;
+					target_type.c_type.generate_cast (buf);
+					expr.print_register;
 						-- Generation of the RTAR protection
 						-- if the array contains references
 					if target_type.is_reference or target_type.is_bit then
@@ -257,11 +224,7 @@ feature {NONE} -- C code generation
 						buf.put_string ("RTAR(");
 						array_area_reg.print_register;
 						buf.put_character (',');
-						if metamorphosed then
-							metamorphose_reg.print_register
-						else
-							expr.print_register;
-						end;
+						expr.print_register;
 						buf.put_character (')');
 					end
 				end

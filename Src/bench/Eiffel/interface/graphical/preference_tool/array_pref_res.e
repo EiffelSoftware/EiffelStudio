@@ -48,40 +48,32 @@ feature -- Element change
 
 feature -- Output
 
-    save_value (file: PLAIN_TEXT_FILE) is
-            -- Save Current.
-        local
-            ar: like associated_resource;
+	save_value (file: PLAIN_TEXT_FILE) is
+			-- Save Current.
+		local
+			ar: like associated_resource;
 			txt: STRING
-        do
-            ar := associated_resource
-            if text = Void or else equal (ar.value, (text.text)) then
-                    --| text /= Void means text has been displayed
-                    --| and thus the user could have changed the value.
-                if ar.value = Void or else ar.value.empty then
-                    file.putstring ("%"%"");
-                else
-                    if ar.value @ 1 /= '%"' then
-                        file.putchar ('%"')
-                    end
+		do
+			ar := associated_resource
+			if text = Void or else equal (ar.value, (text.text)) then
+					--| text /= Void means text has been displayed
+					--| and thus the user could have changed the value.
+				if ar.value = Void or else ar.value.empty then
+					file.putstring ("%"%"");
+				else
+					file.putchar ('%"')
 					txt := clone (ar.value);
 					txt.replace_substring_all ("%N", "");
-                    file.putstring (txt)
-                    if ar.value @ ar.value.count /= '%"' then
-                        file.putchar ('%"')
-                    end
-                end
-            elseif text.text.empty then
-                file.putstring ("%"%"")
-            else
-                if text.text @ 1 /= '%"' then
-                    file.putchar ('%"')
-                end
-				txt := text.text;
-				txt.replace_substring_all ("%N", "");
-				if text.text @ text.text.count /= '%"' then
+					file.putstring (txt)
 					file.putchar ('%"')
 				end
+			elseif text.text.empty then
+				file.putstring ("%"%"")
+			else
+				file.putchar ('%"')
+				txt := text.text;
+				txt.replace_substring_all ("%N", "");
+				file.putchar ('%"')
 			end
 		end
 

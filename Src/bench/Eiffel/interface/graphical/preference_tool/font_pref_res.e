@@ -85,25 +85,17 @@ feature {PREFERENCE_CATEGORY} -- Access
 				if ar.value = Void or else ar.value.empty then
 					file.putstring ("%"%"")
 				else
-					if ar.value @ 1 /= '%"' then
-						file.putchar ('%"')
-					end
+					file.putchar ('%"')
 					file.putstring (ar.value)
-					if ar.value @ ar.value.count /= '%"' then
-						file.putchar ('%"')
-					end
+					file.putchar ('%"')
 				end
 			else
 				if text.text.empty then
 					file.putstring ("%"%"")
 				else
-					if text.text @ 1 /= '%"' then
-						file.putchar ('%"')
-					end
+					file.putchar ('%"')
 					file.putstring (text.text)
-					if text.text @ text.text.count /= '%"' then
-						file.putchar ('%"')
-					end
+					file.putchar ('%"')
 				end
 			end
 		end;

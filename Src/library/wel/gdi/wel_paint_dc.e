@@ -11,6 +11,8 @@ inherit
 	WEL_DISPLAY_DC
 		rename
 			make_by_pointer as simple_make_by_pointer
+		redefine
+			destroy_item
 		end
 
 creation
@@ -80,10 +82,17 @@ feature {NONE} -- Implementation
 feature {NONE} -- Removal
 
 	destroy_item is
+			-- Delete the current device context.
+		local
+			p: POINTER
 		do
-			unselect_all
-			cwin_end_paint (hwindow, paint_struct.item)
-			item := default_pointer
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
+			if item /= p then
+				unselect_all
+				cwin_end_paint (hwindow, paint_struct.item)
+				item := p
+			end
 		end
 
 feature {NONE} -- Externals

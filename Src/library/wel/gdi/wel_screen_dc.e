@@ -9,6 +9,9 @@ class
 
 inherit
 	WEL_DISPLAY_DC
+		redefine
+			destroy_item
+		end
 
 feature -- Basic operations
 
@@ -18,7 +21,7 @@ feature -- Basic operations
 			p: POINTER
 		do
 			if item = p then
-				item := cwin_get_dc (default_pointer)
+				item := cwin_get_dc (Default_pointer)
 			end
 		end
 
@@ -29,7 +32,7 @@ feature -- Basic operations
 		do
 			if item /= p then
 				unselect_all
-				cwin_release_dc (default_pointer, item)
+				cwin_release_dc (Default_pointer, item)
 				item := p
 			end
 		end
@@ -40,7 +43,7 @@ feature -- Basic operations
 			p: POINTER
 		do
 			if item /= p then
-				cwin_release_dc (default_pointer, item)
+				cwin_release_dc (Default_pointer, item)
 				item := p
 			end
 		end
@@ -48,12 +51,15 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	destroy_item is
+			-- Delete the current device context.
 		local
-			p: POINTER
+			p: POINTER	-- Default_pointer
 		do
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
 			if item /= p then
 				unselect_all
-				cwin_release_dc (default_pointer, item)
+				cwin_release_dc (Default_pointer, item)
 				item := p
 			end
 		end

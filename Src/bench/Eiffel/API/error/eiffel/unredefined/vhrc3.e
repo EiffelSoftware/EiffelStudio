@@ -1,4 +1,5 @@
 -- Error for unvalid renaming
+-- renaming a feature as itselt
 
 class VHRC3 obsolete "NOT DEFINED IN THE BOOK"
 

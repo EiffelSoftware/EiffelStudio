@@ -6,13 +6,14 @@ inherit
 
 	VEEN
 		redefine
-			build_explain
+			build_explain, subcode
 		end;
 
 feature
 
+	subcode: INTEGER is 21;
+
 	build_explain is
 		do
-			put_string ("Identifier: Result%N")
 		end;
 end

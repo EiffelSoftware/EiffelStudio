@@ -534,7 +534,7 @@ feature -- Primitives
 			end;
 		end;
 
-	valid_expanded_creation: BOOLEAN is
+	valid_expanded_creation (a_class: CLASS_C): BOOLEAN is
 			-- Is the expanded type has an associated class with one
 			-- creation routine with no arguments only ?
 		local
@@ -542,7 +542,7 @@ feature -- Primitives
 			gen_param: TYPE_A;
 		do
 			from
-				Result := basic_valid_expanded_creation;
+				Result := basic_valid_expanded_creation (a_class);
 				i := 1;
 				nb := generics.count;
 			until
@@ -550,7 +550,7 @@ feature -- Primitives
 			loop
 				gen_param := generics.item (i);
 				if gen_param.has_expanded then
-					Result := gen_param.valid_expanded_creation
+					Result := gen_param.valid_expanded_creation (a_class);
 				end;
 				i := i + 1;
 			end;

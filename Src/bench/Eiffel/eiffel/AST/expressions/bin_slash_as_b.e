@@ -3,6 +3,9 @@ class BIN_SLASH_AS
 inherit
 
 	ARITHMETIC_AS
+		redefine
+			balanced
+		end;
 
 feature
 
@@ -11,6 +14,10 @@ feature
 			-- binary expression
 		once
 			Result := "_infix_slash";
+		end;
+
+	balanced: BOOLEAN is
+		do
 		end;
 
 	byte_anchor: BIN_SLASH_B is

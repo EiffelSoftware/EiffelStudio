@@ -59,6 +59,7 @@ feature -- Type check, byte code and dead code removal
 			vgcc4: VGCC4;
 			vgcc5: VGCC5;
 			vgcc7: VGCC7;
+			vtug: VTUG;
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -111,7 +112,13 @@ feature -- Type check, byte code and dead code removal
 				if type /= Void then
 						-- Check specified creation type
 					new_creation_type := type.actual_type;
-					if 	new_creation_type.is_none
+					if not new_creation_type.good_generics then
+						vtug := new_creation_type.error_generics;
+						vtug.set_class (context.a_class);
+						vtug.set_feature (context.a_feature);
+						Error_handler.insert_error (vtug);
+						Error_handler.raise_error;
+					elseif 	new_creation_type.is_none
 						or else
 						new_creation_type.is_expanded
 						or else
@@ -123,7 +130,6 @@ feature -- Type check, byte code and dead code removal
 						vgcc3.set_target_name (target.access_name);
 						vgcc3.set_type (creation_type);
 						Error_handler.insert_error (vgcc3);
-						Error_handler.raise_error;
 					elseif
 						not new_creation_type.conform_to (creation_type)
 					then
@@ -143,7 +149,8 @@ feature -- Type check, byte code and dead code removal
 						context.access_line.change_item (access);
 					end;
 				end;
-			
+				Error_handler.checksum;
+
 				creation_class := creation_type.associated_class;
 				if creation_class.is_deferred then
 						-- Associated class cannot be deferred
@@ -152,6 +159,7 @@ feature -- Type check, byte code and dead code removal
 					vgcc2.set_target_name (target.access_name);
 					vgcc2.set_type (creation_type);
 					Error_handler.insert_error (vgcc2);
+					Error_handler.raise_error;
 				end;
 
 				if call /= Void then
@@ -213,7 +221,7 @@ feature -- Type check, byte code and dead code removal
 					end;
 				end;
 			end;
-
+			Error_handler.checksum;
 				-- Compute creation information
 			if type /= Void then
 				!!create_type;

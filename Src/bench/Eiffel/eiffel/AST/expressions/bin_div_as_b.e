@@ -4,8 +4,14 @@ inherit
 
 	ARITHMETIC_AS
 		redefine
-			balanced
-		end
+			numeric_balance
+		select
+			numeric_balance
+		end;
+	ARITHMETIC_AS
+		rename
+			numeric_balance as old_numeric_balance
+		end;
 
 feature
 
@@ -16,10 +22,10 @@ feature
 			Result := "_infix_div";
 		end;
 
-	balanced: BOOLEAN is
-			-- Is the operation balanced ?
+	numeric_balance (left_type, right_type: TYPE_A): BOOLEAN is
 		do
-			-- Do nothing
+			Result := old_numeric_balance (left_type, right_type) and then
+				not (left_type.is_integer and then right_type.is_integer)
 		end;
 
 	byte_anchor: BIN_DIV_B is

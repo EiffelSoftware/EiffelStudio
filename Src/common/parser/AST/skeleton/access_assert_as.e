@@ -31,7 +31,7 @@ feature
 			argument_b: ARGUMENT_B;
 			local_info: LOCAL_INFO;
 			a_feature: FEATURE_I;
-			vuex1: VUEX1;
+			vuar1: VUAR1;
 		do
 			a_feature := context.a_feature;
 				-- Look for an argument
@@ -44,10 +44,10 @@ feature
 				Result := Result.actual_type.instantiation_in
 												(last_type, last_id);
 				if parameters /= Void then
-					!!vuex1;
-					context.init_error (vuex1);
-					vuex1.set_access (Current);
-					Error_handler.insert_error (vuex1);
+					!!vuar1;
+					context.init_error (vuar1);
+					vuar1.set_arg_name (feature_name);
+					Error_handler.insert_error (vuar1);
 				end;
 				!!argument_b;
 				argument_b.set_position (argument_position);

@@ -98,6 +98,11 @@ feature
 				feature_name := key_for_iteration;
 				f2 := other.item (feature_name);
 				if f2 = Void then
+debug ("ACTIVITY")
+	io.error.putstring ("%Tfeature ");
+	io.error.putstring (feature_name);
+	io.error.putstring (" is not in the table.%N");
+end;
 					Result := False;
 				else
 					f1 := item_for_iteration;
@@ -105,20 +110,16 @@ feature
 						f1.feature_name.is_equal (f2.feature_name);
 					end;
 					if not f1.equiv (f2) then
+debug ("ACTIVITY")
+	io.error.putstring ("%Tfeature ");
+	io.error.putstring (feature_name);
+	io.error.putstring (" is not equiv.%N");
+end;
 						Result := False;
 						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
 						pass2_ctrl.propagators.add (depend_unit)
 					end;
 				end;
-debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature ");
-	io.error.putstring (feature_name);
-	if not Result then
-		io.error.putstring (" is not equiv.%N");
-	else
-		io.error.putstring (" is equiv.%N");
-	end;
-end;
 				forth
 			end;
 			if Result then
@@ -166,11 +167,6 @@ end;
 					-- Old feature
 				old_feature_i := item_for_iteration;
 				feature_name := old_feature_i.feature_name;
-debug ("ACTIVITY")
-	io.error.putstring ("Fill pass2_control: ");
-	io.error.putstring (old_feature_i.feature_name);
-	io.error.new_line;
-end;
 					-- New feature
 				new_feature_i := other.item (feature_name);
 					-- First condition, `other' must have the feature

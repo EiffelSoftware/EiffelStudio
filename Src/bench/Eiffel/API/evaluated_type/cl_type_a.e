@@ -122,7 +122,7 @@ feature
 			-- Do the generic parameter of `type' conform to those
 			-- of Current (none).
 		do
-			Result := True;
+			Result := True
 		end;
 
 	generic_conform_to (gen_type: GEN_TYPE_A): BOOLEAN is

@@ -56,13 +56,7 @@ feature
 						unselect (new_t, old_t, feat_table);
 					end;
 					Result.set_is_selected (True);
-debug ("REPLICATION")
-	io.error.putstring ("Selected feature is: ");
-	io.error.putstring (Result.feature_name);
-	io.error.putstring (Result.generator);
-	io.error.new_line;
-end;
-debug ("ACTUAL_REPLICATION")
+debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("Selected feature is: ");
 	io.error.putstring (Result.feature_name);
 	io.error.putstring (Result.generator);
@@ -141,7 +135,7 @@ end;
 			written_id, pos: INTEGER;
 			info: INHERIT_INFO;
 		do
-			pos := position;
+			pos := index;
 			from
 				info := first;
 				Result := True;
@@ -157,7 +151,7 @@ end;
 				end;
 				to_compair := to_compair.instantiation_in
 													(instantiator, written_id);
-				go (2);
+				go_i_th (2);
 			until
 				after or else not Result
 			loop
@@ -174,7 +168,7 @@ end;
 				Result := deep_equal (to_compair, written_type);
 				forth;
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 	
 	unselect (new_t, old_t: FEATURE_TABLE; select_table: SELECT_TABLE) is
@@ -203,12 +197,7 @@ end;
 				-- Process new routine id set
 			!!rout_id_set.make (1);
 			feature_name := a_feature.feature_name;	
-debug ("REPLICATION")
-	io.error.putstring ("unselecting :");
-	io.error.putstring (feature_name);
-	io.error.new_line;
-end;
-debug ("ACTUAL_REPLICATION")
+debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("unselecting :");
 	io.error.putstring (feature_name);
 	io.error.new_line;
@@ -216,7 +205,8 @@ end;
 			old_feature := old_t.item (feature_name);
 				-- Process a new routine id
 			if 	old_feature /= Void and then
-				old_feature.is_unselected and old_feature.access_in = id
+				old_feature.is_attribute = a_feature.is_attribute and then
+				(old_feature.is_unselected and old_feature.access_in = id)
 			then
 					-- Take an old one
 				new_rout_id := old_feature.rout_id_set.first;
@@ -271,7 +261,7 @@ end;
 			--| routine id will be given a new routine id.
 			if System.code_replication_off then
 				from
-					old_pos := position
+					old_pos := index
 				until
 					after
 				loop
@@ -304,7 +294,7 @@ end;
 						forth
 				end
 				end;
-				go (old_pos)
+				go_i_th (old_pos)
 			end
 		end;
 
@@ -333,12 +323,7 @@ feature -- Conceptual Replication
 			loop
 				inh_info := item;
 				curr_feat := item.a_feature;
-debug ("ACTUAL_REPLICATION")
-	io.error.putstring ("(selection) Detecting replication: ");
-	io.error.putstring (curr_feat.feature_name);
-	io.error.new_line;
-end;
-debug ("REPLICATION")
+debug ("ACTUAL_REPLICATION", "REPLICATION")
 	io.error.putstring ("(selection) Detecting replication: ");
 	io.error.putstring (curr_feat.feature_name);
 	io.error.new_line;

@@ -31,7 +31,7 @@ feature
 			local_info: LOCAL_INFO;
 			a_feature: FEATURE_I;
 			error_found: BOOLEAN;
-			vuex1: VUEX1;
+			vuar1: VUAR1;
 			veen2B: VEEN2B;
 		do
 			last_type := context.item;
@@ -75,11 +75,15 @@ feature
 				end;
 			end;
 			if error_found then
-				!!vuex1;
-				context.init_error (vuex1);
-				vuex1.set_access (Current);
-				Error_handler.insert_error (vuex1);
+				!!vuar1;
+				if argument_position /= 0 then
+					vuar1.set_arg_name (feature_name)
+				else
+					vuar1.set_local_name (feature_name)
+				end;
+				context.init_error (vuar1);
+				Error_handler.insert_error (vuar1);
 			end;
 		end;
-		
+
 end

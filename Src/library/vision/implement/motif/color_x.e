@@ -136,7 +136,8 @@ feature {NONE}
 				off
 			loop
 				if item.is_allocated then
-					c_free_color (item.screen.screen_object, item.identifier)
+					c_free_color (item.screen.screen_object, item.identifier);
+					item.set_allocated (False);
 				end;
 				forth
 			end;

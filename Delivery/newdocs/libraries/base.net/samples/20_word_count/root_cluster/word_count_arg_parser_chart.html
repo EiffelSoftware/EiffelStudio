@@ -1,0 +1,89 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>WORD_COUNT_ARG_PARSER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../root_cluster/word_count_arg_parser_chart.html">WORD_COUNT_ARG_PARSER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../root_cluster/index.html">root_cluster</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Word count argument parser"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_build">build</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../root_cluster/arg_parser_chart.html">ARG_PARSER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`aphabetical_usage_showed' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_aphabetical_usage_showed">aphabetical_usage_showed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`array' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_array">array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_array_chart.html">SYSTEM_ARRAY</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`case_sensitive' was declared in ARG_PARSER"><A CLASS="efeature" HREF="../root_cluster/arg_parser.html#f_case_sensitive">case_sensitive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`console' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_console">console</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_console_chart.html">SYSTEM_CONSOLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`encoding' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_encoding">encoding</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_text_encoding_chart.html">SYSTEM_TEXT_ENCODING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`environment' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_environment">environment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_environment_chart.html">SYSTEM_ENVIRONMENT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`error' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_error">Error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`file' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_file">file</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_io_file_chart.html">SYSTEM_IO_FILE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`no_error' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_no_error">No_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`non_switch_value' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_non_switch_value">non_switch_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`occurence_usage_showed' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_occurence_usage_showed">occurence_usage_showed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`output_filename' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_output_filename">output_filename</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parse' was declared in ARG_PARSER"><A CLASS="efeature" HREF="../root_cluster/arg_parser.html#f_parse">parse</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pathname_enumerator' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_pathname_enumerator">pathname_enumerator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/support/system_collections_ienumerator_chart.html">SYSTEM_COLLECTIONS_IENUMERATOR</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`process_post_parsing' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_process_post_parsing">process_post_parsing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_usage' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_show_usage">Show_usage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`string' was declared in STATICS"><A CLASS="efeature" HREF="../root_cluster/statics.html#f_string">string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`switch_value' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_switch_value">switch_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">symbol</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`switches' was declared in ARG_PARSER"><A CLASS="efeature" HREF="../root_cluster/arg_parser.html#f_switches">switches</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`symbols' was declared in ARG_PARSER"><A CLASS="efeature" HREF="../root_cluster/arg_parser.html#f_symbols">symbols</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`usage' is declared in `Current'"><A CLASS="efeature" HREF="../root_cluster/word_count_arg_parser.html#f_usage">usage</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">error_info</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="sample/../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

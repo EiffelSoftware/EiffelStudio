@@ -42,7 +42,11 @@ feature {NONE} -- Implementation
                         gtk_main
                 end
 
-	
+	exit is
+			-- Exit
+		do
+			gtk_main_quit
+		end	
 end
 
 --|----------------------------------------------------------------

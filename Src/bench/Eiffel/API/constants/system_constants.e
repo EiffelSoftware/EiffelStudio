@@ -2,6 +2,10 @@ class SYSTEM_CONSTANTS
 
 feature {NONE}
 
+	Backup: STRING is "BACKUP";
+
+	Backup_info: STRING is "Info";
+
 	Casegen: STRING is "CASEGEN";
 
 	Case_storage: STRING is "Storage";
@@ -131,7 +135,7 @@ feature {NONE}
 
 	Updt: STRING is "melted.eif"
 
-	Version_number: STRING is "3.3.7"
+	Version_number: STRING is "3.3.10 beta"
 
 	W_code: STRING is "W_code"
 

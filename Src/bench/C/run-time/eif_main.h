@@ -25,7 +25,6 @@ extern void once_init (void);		/* Initialization and creation of once keys */
 extern void dinterrupt(void);
 extern void dserver(void);
 extern void eif_alloc_init();
-RT_LNK int in_assertion;
 extern char *ename;				/* Name of the Eiffel program running */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 RT_LNK int scount;				/* Maximum dtype */

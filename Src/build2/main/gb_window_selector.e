@@ -438,8 +438,10 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			if new_directory /= Void then
 				new.extend (new_directory.text)	
 			end
-			move_file_between_directories (original, new, window_item.object.name.as_lower + ".e")
-			move_file_between_directories (original, new, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
+			move_file_between_directories (create {DIRECTORY}.make (original), create {DIRECTORY}.make (new),
+				window_item.object.name.as_lower + ".e")
+			move_file_between_directories (create {DIRECTORY}.make (original), create {DIRECTORY}.make (new),
+				(window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end
 
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
@@ -469,10 +471,10 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				file_name.extend (directory_object.text)
 			end
 			
-			rename_file_if_exists (file_name, old_name + ".e", new_name + ".e")
+			rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
 				--| FIXME must now go into class, and change name.
 			
-			rename_file_if_exists (file_name, old_name + Class_implementation_extension.as_lower + ".e",
+			rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
 				new_name + Class_implementation_extension.as_lower + ".e")
 				--| FIXME must now go into class, and change name.
 		end

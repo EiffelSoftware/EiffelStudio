@@ -57,9 +57,9 @@ rt_public void parsing_retrieve_initialize (void)
 	allocate_gen_buffer();
 }
 
-rt_public EIF_REFERENCE parsing_retrieve (EIF_INTEGER f_desc)
+rt_public EIF_REFERENCE parsing_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos)
 {
-	return ise_compiler_retrieve (f_desc, parsing_retrieve_read_with_compression);
+	return ise_compiler_retrieve (f_desc, a_pos, parsing_retrieve_read_with_compression);
 }
 
 rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)

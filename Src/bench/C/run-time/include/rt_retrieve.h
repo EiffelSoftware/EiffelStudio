@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, int (*ret_func) (void));
+extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*ret_func) (void));
 
 #ifdef __cplusplus
 }

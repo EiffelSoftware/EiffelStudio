@@ -36,8 +36,9 @@ feature -- Access
 			Result.extend ("EV_TREE_NODE_ACTION_SEQUENCES")
 			Result.extend ("EV_WIDGET_ACTION_SEQUENCES")
 			Result.extend ("EV_WINDOW_ACTION_SEQUENCES")
+			Result.extend ("EV_TITLED_WINDOW_ACTION_SEQUENCES")
 		ensure
-			Result_ok: Result /= Void and Result.count = 21
+			Result_ok: Result /= Void and Result.count = 22
 		end
 		
 	action_sequence_list: ARRAYED_LIST [STRING] is
@@ -75,6 +76,7 @@ feature {NONE} -- Implementation
 			gb_ev_tree_action_sequences: GB_EV_TREE_ACTION_SEQUENCES
 			gb_ev_tree_node_action_sequences: GB_EV_TREE_NODE_ACTION_SEQUENCES
 			gb_ev_window_action_sequences: GB_EV_WINDOW_ACTION_SEQUENCES
+			gb_ev_titled_window_action_sequences: GB_EV_TITLED_WINDOW_ACTION_SEQUENCES
 			
 			gb_ev_column_action_sequence: GB_EV_COLUMN_ACTION_SEQUENCE
 			gb_ev_geometry_action_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
@@ -87,6 +89,7 @@ feature {NONE} -- Implementation
 			gb_ev_multi_column_list_row_select_action_sequence: GB_EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			gb_ev_notify_action_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			gb_ev_value_change_action_sequence: GB_EV_VALUE_CHANGE_ACTION_SEQUENCE
+			
 		do		
 		end
 		

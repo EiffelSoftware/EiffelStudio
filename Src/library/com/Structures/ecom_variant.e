@@ -315,7 +315,7 @@ feature -- Access
 			Result.set_unshared
 		end
 
-	unknown_interface: ECOM_INTERFACE is
+	unknown_interface: ECOM_UNKNOWN_INTERFACE is
 			-- IUnknown interface value
 		require
 			is_unknown_ref: variable_type = Vt_unknown
@@ -323,18 +323,18 @@ feature -- Access
 			create Result.make_from_pointer( ccom_unknown_interface (item))
 		end
 
-	unknown_interface_reference: CELL[ECOM_INTERFACE] is
+	unknown_interface_reference: CELL[ECOM_UNKNOWN_INTERFACE] is
 			-- IUnknown interface reference value
 		require
 			is_unknown_ref: is_unknown (variable_type) and is_byref (variable_type)
 		local
-			unk_interface: ECOM_INTERFACE
+			unk_interface: ECOM_UNKNOWN_INTERFACE
 		do
 			create unk_interface.make_from_pointer (ccom_unknown_interface_reference (item))
 			create Result.put (unk_interface)
 		end
 
-	dispatch_interface: ECOM_INTERFACE is
+	dispatch_interface: ECOM_AUTOMATION_INTERFACE is
 			-- IDispatch interface value
 		require
 			is_dispatch_ref: variable_type = Vt_dispatch
@@ -342,12 +342,12 @@ feature -- Access
 			create Result.make_from_pointer (ccom_dispatch_interface (item))
 		end
 
-	dispatch_interface_reference: CELL[ECOM_INTERFACE] is
+	dispatch_interface_reference: CELL[ECOM_AUTOMATION_INTERFACE] is
 			-- IDispatch interface reference value
 		require
 			is_dispatch_ref: is_dispatch (variable_type) and is_byref (variable_type)
 		local
-			disp_interface: ECOM_INTERFACE
+			disp_interface: ECOM_AUTOMATION_INTERFACE
 		do
 			create disp_interface.make_from_pointer (ccom_dispatch_interface_reference (item))
 			create Result.put (disp_interface)
@@ -461,7 +461,7 @@ feature -- Access
 			Result := ccom_safearray_decimal (item)
 		end
 
-	dispatch_interface_array: ECOM_ARRAY [ECOM_INTERFACE] is
+	dispatch_interface_array: ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE] is
 			-- ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			is_dispatch: is_dispatch (variable_type)
@@ -470,7 +470,7 @@ feature -- Access
 			Result := ccom_safearray_dispatch_interface (item)
 		end
 
-	unknown_interface_array: ECOM_ARRAY [ECOM_INTERFACE] is
+	unknown_interface_array: ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE] is
 			-- ARRAY of ECOM_UNKNOWN_INTERFACEs.
 		require
 			is_unknown: is_unknown (variable_type)
@@ -2158,7 +2158,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_dispatch_interface_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_INTERFACE]] is
+	ccom_safearray_dispatch_interface_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
@@ -2379,8 +2379,6 @@ feature {NONE} -- Externals
 		end
 
 end -- class ECOM_VARIANT
-
-
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

@@ -77,8 +77,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNiconMask)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display)
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	icon_pixmap: MEL_PIXMAP is
@@ -88,8 +89,9 @@ feature -- Status report
 		do
 			Result := get_xt_pixmap (Current, XmNiconPixmap)
 		ensure
-			icon_pixmap_is_valid: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	icon_window: POINTER is

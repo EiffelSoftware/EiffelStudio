@@ -70,8 +70,9 @@ feature -- Satus report
 		do
 			Result := get_xt_pixmap (Current, XmNcascadePixmap)
 		ensure
-			valid_result: Result /= Void and then Result.is_valid;
-			result_has_same_display: Result.same_display (display) 
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_has_same_display: Result.same_display (display);
+			Result_is_shared: Result.shared
 		end;
 
 	mapping_delay: INTEGER is

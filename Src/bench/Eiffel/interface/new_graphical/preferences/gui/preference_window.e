@@ -93,7 +93,7 @@ feature -- Initialization
 					not_void: it /= Void 
 				end
 				if it /= Void then
-					if not it.empty then
+					if not it.is_empty then
 						it.expand
 					else
 						it.enable_select

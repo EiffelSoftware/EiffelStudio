@@ -1,17 +1,11 @@
 <document title="EiffelVision 2">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location>Class Libraries</envision_location>
-			</toc>
-		</help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<paragraph>  Type: Library
 			<line_break/>  Platform: Any
 			<line_break/>  Version: 5.0
 			<line_break/>
-		</paragraph> See: 
+		</paragraph> See:
 		<list ordered="false">
 			<item>
 				<link>

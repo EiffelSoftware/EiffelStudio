@@ -1,16 +1,10 @@
 <document title="EiffelBase">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location>Class Libraries</envision_location>
-			</toc>
-		</help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<paragraph>  Type: Library
 			<line_break/>  Platform: Any
 			<line_break/>  Version: 5.0
-			<line_break/>  Availability: Open Source, 
+			<line_break/>  Availability: Open Source,
 			<link>
 				<url>/general/licenses/iffel.xml</url>
 				<label>IFFEL License</label>

@@ -24,7 +24,7 @@ feature -- Execution
 			a_client: E_CLASS
 		do
 			output_window.put_string ("Clients of class ");
-			current_class.append_clickable_signature (output_window);
+			current_class.append_signature (output_window);
 			output_window.put_string (":%N%N");
 			from	
 				clients := current_class.clients;
@@ -35,7 +35,7 @@ feature -- Execution
 				a_client := clients.item;
 				if (current_class /= a_client) then
 					output_window.put_char ('%T');
-					a_client.append_clickable_signature (output_window);
+					a_client.append_signature (output_window);
 					output_window.new_line;
 				end;
 				clients.forth

@@ -25,7 +25,7 @@ feature -- Output
 			a_supplier: E_CLASS
 		do
 			output_window.put_string ("Suppliers of class ");
-			current_class.append_clickable_signature (output_window);
+			current_class.append_signature (output_window);
 			output_window.put_string (":%N%N");
 			from	
 				suppliers := current_class.suppliers;
@@ -36,7 +36,7 @@ feature -- Output
 				a_supplier := suppliers.item.supplier;
 				if (current_class /= a_supplier) then
 					output_window.put_char ('%T');
-					a_supplier.append_clickable_signature (output_window);
+					a_supplier.append_signature (output_window);
 					output_window.new_line;
 				end;
 				suppliers.forth

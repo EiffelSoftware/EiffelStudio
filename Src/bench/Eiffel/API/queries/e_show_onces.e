@@ -35,7 +35,7 @@ feature -- Output
 			ec: E_CLASS;
 			str: STRING
 		do
-			f.append_clickable_signature (output_window, c);
+			f.append_signature (output_window, c);
 			if f.is_constant then
 				output_window.put_string (" is ");
 				const ?= f;	--| Cannot fail

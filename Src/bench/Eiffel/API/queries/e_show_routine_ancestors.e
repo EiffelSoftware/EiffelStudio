@@ -47,11 +47,11 @@ feature -- Execution
 					c := classes.item;
 					other_feature := c.feature_with_rout_id (rout_id);
 					if other_feature /= Void then
-						classes.item.append_clickable_name (output_window);
+						classes.item.append_name (output_window);
 						output_window.put_string (" ");
-						other_feature.append_clickable_signature (output_window, classes.item);
+						other_feature.append_signature (output_window, classes.item);
 						output_window.put_string ("%N%TVersion from class ");
-						other_feature.written_class.append_clickable_name (output_window);
+						other_feature.written_class.append_name (output_window);
 						output_window.new_line;	
 					end;
 					classes.forth

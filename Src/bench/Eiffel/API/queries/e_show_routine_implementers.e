@@ -62,9 +62,9 @@ feature -- Execution
 					if feat /= Void and then 
 						feat.written_in = written_in 
 					then
-						c.append_clickable_name (output_window);
+						c.append_name (output_window);
 						output_window.put_string (" ");
-						feat.append_clickable_name (output_window, c);
+						feat.append_name (output_window, c);
 						if c = written_cl then
 							output_window.put_string (" (version from)");
 						end;

@@ -39,7 +39,7 @@ feature -- Access
 			-- Display feature `f' defined in class `c'
 			-- to the output window.
 		do
-			f.append_clickable_signature (output_window, c);
+			f.append_signature (output_window, c);
 		end;
 
 feature -- Execution
@@ -94,7 +94,7 @@ feature -- Execution
 			loop
 				output_window.put_string ("Class ");
 				e_class := classes.item;
-				e_class.append_clickable_signature (output_window);
+				e_class.append_signature (output_window);
 				output_window.put_string (":%N%N");
 				list := table.item (e_class.id);
 				list.sort;

@@ -21,7 +21,7 @@ feature -- Execution
 	execute is
 		do
 			!! displayed.make;
-			current_class.append_clickable_signature (output_window);
+			current_class.append_signature (output_window);
 			output_window.new_line;
 			rec_display (1, current_class);
 			displayed := Void;
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 					loop
 						parent_class := parents.item.associated_eclass;
 						output_window.put_string (tabs (i));
-						parent_class.append_clickable_signature (output_window);
+						parent_class.append_signature (output_window);
 						if already_processed (parents.item) then
 							output_window.put_string ("...%N")
 						else	

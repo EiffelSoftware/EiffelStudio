@@ -47,13 +47,6 @@ feature {NONE} -- Initialization
 		do
 			parent := cmd
 
-				--| FIXME JFIAT: remove link to EB_SET_SLICE_SIZE_CMD
-				--| the slice limits should be specific to Pretty display settings
-				--| not linked to other dialog
-				--| we need to decide on this
-
-				-- Create `slice_cmd'.				
---			create slice_cmd.make_for_pretty_print (Current)
 			slice_min_ref := 0 									-- slice_cmd.slice_min
 			slice_max_ref := application.displayed_string_size 	-- slice_cmd.slice_max
 			default_create
@@ -262,9 +255,6 @@ feature {NONE} -- Implementation
 	text: STRUCTURED_TEXT
 			-- Text that is displayed in the editor.
 
---	slice_cmd: EB_SET_SLICE_SIZE_CMD
---			-- Command that is supposed to resize special objects.
-
 	parent: EB_PRETTY_PRINT_CMD
 			-- Command that created `Current' and knows about it.
 
@@ -316,9 +306,10 @@ feature {NONE} -- Event handling
 				set_limits (lower, upper)
 --				if upper > 0 then
 --					application.set_displayed_string_size (upper)
---						--| FIXME JFIAT: 2004-01-30 : do we really want this to be fix ?
---						--| a prob is the size for the pretty print dialog and
---						--| the size of the displayed string in object browser are linked ...			
+						--| FIXME JFIAT: 2004-01-30 : linking displayed_string_size between pretty and object browser ??
+						--| do we really want this to be set ?
+						--| prob is the size for the pretty print dialog and
+						--| the size of the displayed string in object browser are linked ...			
 --				end
 				refresh
 			end

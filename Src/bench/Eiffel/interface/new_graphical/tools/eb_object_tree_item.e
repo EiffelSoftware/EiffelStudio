@@ -189,8 +189,9 @@ feature {NONE} -- Filling Implementation
 					end
 				end
 				if dv.dynamic_class = Void then
-					--| FIXME: JFIAT : why do we have Void dynamic_class ?
+					--| Q: Why do we have Void dynamic_class ?
 					--| ANSWER : because of external class in dotnet system
+					--| Should be fixed now by using SYSTEM_OBJECT for unknown type
 				else
 					flist := dv.dynamic_class.once_functions
 					if not flist.is_empty then

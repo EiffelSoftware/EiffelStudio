@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize structure.
 		do
-			valid_project := False
 			valid_ace_file := False
 			create last_error_message.make_from_string ("No project loaded")
 			create {COMPILER} compiler.make
@@ -42,8 +41,11 @@ feature -- Access
 	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE
 			-- System Browser.
 		
-	valid_project: BOOLEAN
+	valid_project: BOOLEAN is
 			-- Is project valid?
+		do
+			Result := Valid_project_ref.item
+		end
 			
 	last_error_message: STRING
 			-- Last error message.
@@ -89,23 +91,24 @@ feature -- Basic Operations
 			rescued: BOOLEAN
 			file: RAW_FILE
 		do
-			valid_project := False
-			if not rescued then
-				if file_name /= Void then
-					create file.make (valid_file_name (file_name))
-					if not file.exists or else file.is_directory then
-						last_error_message := "File does not exist"
-					else
-						if not Eiffel_project.initialized then
-							open_project_file (file_name)
-							create {PROJECT_PROPERTIES} project_properties.make
-							valid_project := True
+			if not Valid_project_ref.item then
+				if not rescued then
+					if file_name /= Void then
+						create file.make (valid_file_name (file_name))
+						if not file.exists or else file.is_directory then
+							last_error_message := "File does not exist"
 						else
-							last_error_message := "Project has already been initialized"
+							if not Eiffel_project.initialized then
+								open_project_file (file_name)
+								create {PROJECT_PROPERTIES} project_properties.make
+								Valid_project_ref.set_item (True)
+							else
+								last_error_message := "Project has already been initialized"
+							end
 						end
+					else
+						last_error_message := "File name is void"
 					end
-				else
-					last_error_message := "File name is void"
 				end
 			end
 		rescue
@@ -119,28 +122,29 @@ feature -- Basic Operations
 		local
 			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 		do
-			valid_project := False
-			if ace_name /= Void and project_directory_path /= Void then
-				check_ace_file (ace_name)
-				if valid_ace_file then
-					Project_directory_name.wipe_out
-					Project_directory_name.set_directory (project_directory_path)
-					create project_dir.make (project_directory_path, Void)
-					Eiffel_project.make_new (project_dir, True, Void, Void)
-					if Eiffel_project.initialized then
-						Eiffel_ace.set_file_name (ace_name)
-						create {PROJECT_PROPERTIES} project_properties.make
-						valid_project := True
-						create enum
-						project_properties.set_compilation_type (enum.is_application)
+			if not Valid_project_ref.item then
+				if ace_name /= Void and project_directory_path /= Void then
+					check_ace_file (ace_name)
+					if valid_ace_file then
+						Project_directory_name.wipe_out
+						Project_directory_name.set_directory (project_directory_path)
+						create project_dir.make (project_directory_path, Void)
+						Eiffel_project.make_new (project_dir, True, Void, Void)
+						if Eiffel_project.initialized then
+							Eiffel_ace.set_file_name (ace_name)
+							create {PROJECT_PROPERTIES} project_properties.make
+							create enum
+							project_properties.set_compilation_type (enum.is_application)
+							Valid_project_ref.set_item (True)
+						else
+							last_error_message := "Project could not be initialized"
+						end
 					else
-						last_error_message := "Project could not be initialized"
+						last_error_message := "Invalid Ace file"
 					end
 				else
-					last_error_message := "Invalid Ace file"
+					last_error_message := "File name is void"
 				end
-			else
-				last_error_message := "File name is void"
 			end
 		end
 
@@ -256,4 +260,11 @@ feature {NONE} -- Implementation
 	eifgen_init: INIT_SERVERS
 			-- Run-time.
 			
+	Valid_project_ref: BOOLEAN_REF is
+			-- Has a valid project been loaded already?
+		once
+			create Result
+			Result.set_item (False)
+		end
+		
 end -- class PROJECT_MANAGER

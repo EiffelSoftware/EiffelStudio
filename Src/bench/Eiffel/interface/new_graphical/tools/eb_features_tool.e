@@ -13,6 +13,7 @@ inherit
 		redefine
 			menu_name,
 			pixmap,
+			on_shown,
 			widget
 		end
 
@@ -58,6 +59,7 @@ feature {NONE} -- Initialization
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
 			end
+			explorer_bar_item.show_actions.extend (~on_bar_item_shown)
 			explorer_bar.add (explorer_bar_item)
 			explorer_bar.repack_widgets
 		end
@@ -134,39 +136,41 @@ feature -- Element change
 				current_stone := conv_cst
 			end
 			classc_stone ?= c
-				-- We put the tree off-screen to optimize performance.
-			widget.wipe_out
-			if classc_stone /= Void then
-				if classc_stone.e_class.has_ast then
-					if classc_stone.e_class /= current_compiled_class then
-						Eiffel_system.System.set_current_class (classc_stone.e_class)
-						new_class := classc_stone.e_class.ast				
-						feature_clauses := new_class.features
-								-- Build the tree
-						--| FIXME
-						if tree.selected_item /= Void then
-							tree.selected_item.disable_select
+			if shown then
+					-- We put the tree off-screen to optimize performance.
+				widget.wipe_out
+				if classc_stone /= Void then
+					if classc_stone.e_class.has_ast then
+						if classc_stone.e_class /= current_compiled_class then
+							Eiffel_system.System.set_current_class (classc_stone.e_class)
+							new_class := classc_stone.e_class.ast				
+							feature_clauses := new_class.features
+									-- Build the tree
+							--| FIXME
+							if tree.selected_item /= Void then
+								tree.selected_item.disable_select
+							end
+							tree.wipe_out
+							current_class := new_class
+							current_compiled_class := classc_stone.e_class
+							if feature_clauses /= Void then
+								tree.build_tree (feature_clauses)
+							else
+								tree.extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.W_no_feature_to_display))
+							end
+							Eiffel_system.System.set_current_class (Void)
 						end
+					else
+						current_compiled_class := Void
 						tree.wipe_out
-						current_class := new_class
-						current_compiled_class := classc_stone.e_class
-						if feature_clauses /= Void then
-							tree.build_tree (feature_clauses)
-						else
-							tree.extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.W_no_feature_to_display))
-						end
-						Eiffel_system.System.set_current_class (Void)
 					end
 				else
-					current_compiled_class := Void
+						-- Invalid stone, wipe out window content.
 					tree.wipe_out
+					current_compiled_class := Void
 				end
-			else
-					-- Invalid stone, wipe out window content.
-				tree.wipe_out
-				current_compiled_class := Void
+				widget.extend (tree)
 			end
-			widget.extend (tree)
 		end
 
 feature {EB_FEATURES_TREE} -- Status setting
@@ -230,6 +234,12 @@ feature {NONE} -- Implementation
 				s2 := s
 			end
 			Result := s2.occurrences ('%N')
+		end
+
+	on_shown is
+			-- Update the display just before the tool is shown.
+		do
+			set_stone (current_stone)
 		end
 
 end -- class EB_FEATURES_TOOL

@@ -29,23 +29,57 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cancel_button_text: STRING is "Cancel"
-		-- `Result' is STRING constant named cancel_button_text.
+	cancel_button_text: STRING is
+			-- `Result' is STRING constant named `cancel_button_text'.
+		once
+			Result := "Cancel"
+		end
 
-	large_spacing_width: INTEGER is 12
-		-- `Result' is INTEGER constant named large_spacing_width.
+	large_spacing_width: INTEGER is 
+			-- `Result' is INTEGER constant named large_spacing_width.
+		once
+			Result := 12
+		end
 
-	next_tip_text: STRING is "Next tip"
-		-- `Result' is STRING constant named next_tip_text.
+	next_tip_text: STRING is
+			-- `Result' is STRING constant named `next_tip_text'.
+		once
+			Result := "Next tip"
+		end
 
-	ok_button_text: STRING is "OK"
-		-- `Result' is STRING constant named ok_button_text.
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
+		end
 
-	default_button_width: INTEGER is 80
-		-- `Result' is INTEGER constant named default_button_width.
+	png_location: STRING is
+			-- `Result' is DIRECTORY constant named `png_location'.
+		once
+			Result := "C:\Documents and Settings\rogers\Desktop"
+		end
 
-	close_text: STRING is "Close"
-		-- `Result' is STRING constant named close_text.
+	default_button_width: INTEGER is 
+			-- `Result' is INTEGER constant named default_button_width.
+		once
+			Result := 80
+		end
+
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
+		once
+			Result := "Close"
+		end
+
+	lightbulb_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (png_location)
+			a_file_name.extend ("lightbulb.png")
+			Result.set_with_named_file (a_file_name)
+		end
 
 
 feature -- Access

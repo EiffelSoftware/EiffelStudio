@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_TITLED_WINDOW 
+		redefine
+			destroy
+		end
 
 	WIZARD_STATE_MANAGER
 		undefine
@@ -45,16 +48,16 @@ feature {NONE} -- Initialization
 			h2: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
 		do	
-			Create h_sep
+			create h_sep
 			a_box.extend(h_sep)
 			a_box.disable_item_expand(h_sep)
-			Create h1
+			create h1
 			a_box.extend (h1)
 			a_box.disable_item_expand (h1)
 
-			Create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
-			Create next_b.make_with_text_and_action ("Next >", ~next_page)	
-			Create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
+			create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
+			create next_b.make_with_text_and_action ("Next >", ~next_page)	
+			create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
 
 			h1.extend (create {EV_CELL})
 
@@ -92,6 +95,16 @@ feature {NONE} -- Initialization
 			Create wizard_initial_state.make (create {WIZARD_INFORMATION}.make)
 			proceed_with_new_state (wizard_initial_state)
 			update_navigation
+		end
+
+feature -- Command
+
+	destroy is
+			-- Destroy underlying native toolkit object.
+			-- Render `Current' unusable.
+		do
+			Precursor;
+			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
 feature -- Access

@@ -234,6 +234,7 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes></eiffel_classes>
 doc:	</attribute>
 */
+
 rt_private class_translations_table class_translations;	/* Table of class name translations */
 
 #endif
@@ -878,12 +879,19 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	fflush (NULL);
 #endif
 
+		/* It makes performance of retrieval bad in a MT system as only one can occurs
+		 * and blocks all other threads, but I don't see yet a way to achieve that without
+		 * simple mutexes and dead locks. */
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+
 	/* Reset nb_recorded */
 	nb_recorded = 0;
 
 	/* Read the kind of stored hierachy */
-	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char))
+	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char)) {
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 		eise_io("Retrieve: unable to read type of storable.");
+	}
 
 	/* set rt_kind depending on the type to be retrieved */
 
@@ -1018,7 +1026,8 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 #ifdef RECOVERABLE_DEBUG
 	fflush (stdout);
 #endif
-
+	
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	return retrieved;
 }
 
@@ -1765,7 +1774,9 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 	RT_GET_CONTEXT
 	EIF_REFERENCE spec;
 
+#ifdef ISE_GC
 	REQUIRE ("No GC", g_data.status & GC_STOP);
+#endif
 	if (mismatches->count == mismatches->capacity)
 		grow_mismatch_table ();
 
@@ -4158,7 +4169,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 	if (num_attrib == 0)
 		return NULL;		/* Nothing to read if no attributes */
 
+#ifdef ISE_GC
 	REQUIRE ("No GC", g_data.status & GC_STOP);
+#endif
 	REQUIRE ("Attribute order exists", attributes != NULL);
 	REQUIRE ("Offset only for expanded", object == NULL  ||
 			(HEADER (object)->ov_flags & EO_COMP) || expanded_offset == 0);

@@ -49,6 +49,8 @@ feature -- Access
 		
 	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE is
 			-- System Browser.
+		require
+			project_initialized: valid_project
 		do
 			if system_browser_internal = Void then
 				create system_browser_internal.make
@@ -67,6 +69,8 @@ feature -- Access
 			
 	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
 			-- Html document generator for the project
+		require
+			project_initialized: valid_project
 		do
 			if html_doc_generator_internal = Void then
 				create html_doc_generator_internal.make
@@ -95,7 +99,7 @@ feature -- Access
 			classes: ARRAY [CLASS_C]
 			i, count: INTEGER
 		do
-			if Eiffel_system.Workbench.successful then
+			if Eiffel_project.initialized and Eiffel_project.system_defined and then Eiffel_system.Workbench.successful then
 				classes := Eiffel_system.Workbench.system.classes.sorted_classes
 				count := classes.count
 				from
@@ -117,22 +121,28 @@ feature -- Access
 		local
 			f: FILE_NAME
 		do
-			create f.make_from_string (Eiffel_project.project_directory.name)
-			f.set_file_name (project_properties.system_name)
-			f.add_extension ("epr")
-			Result := f
+			if Eiffel_project.initialized and project_properties /= Void and project_properties.system_name /= Void then
+				create f.make_from_string (Eiffel_project.project_directory.name)
+				f.set_file_name (project_properties.system_name)
+				f.add_extension ("epr")
+				Result := f				
+			end
 		end
 
 	ace_file_name: STRING is
 			-- Full path to Ace file.
 		do
-			Result := Eiffel_ace.file_name
+			if Eiffel_project.initialized then
+				Result := Eiffel_ace.file_name				
+			end
 		end
 
 	project_directory: STRING is
 			-- Project directory.
 		do
-			Result := Eiffel_project.project_directory.name
+			if Eiffel_project.initialized then
+				Result := Eiffel_project.project_directory.name				
+			end
 		end
 		
 	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
@@ -148,6 +158,9 @@ feature -- Basic Operations
 
 	retrieve_project (file_name: STRING) is
 			-- Retrieve project.
+		require
+			non_void_file_name: file_name /= Void
+			valid_file_name: not file_name.is_empty
 		local
 			rescued: BOOLEAN
 			file: RAW_FILE
@@ -164,8 +177,6 @@ feature -- Basic Operations
 								if not Eiffel_project.retrieval_error then
 									create {PROJECT_PROPERTIES} project_properties_internal.make
 									Valid_project_ref.set_item (True)
-								else
-									Valid_project_ref.set_item (False)
 								end
 							else
 								last_error_message := "Project has already been initialized"
@@ -184,34 +195,43 @@ feature -- Basic Operations
 
 	create_project (ace_name: STRING; project_directory_path: STRING) is
 			-- Create new project.
+		require
+			non_void_ace_name: ace_name /= Void
+			valid_ace_name: not ace_name.is_empty
+			non_void_project_directory: project_directory_path /= Void
+			valid_project_direction: not project_directory_path.is_empty
 		local
 			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 			dir: DIRECTORY
 		do
 			if not Valid_project_ref.item then
 				if ace_name /= Void and project_directory_path /= Void then
-					check_ace_file (ace_name)
-					if valid_ace_file then
-						Project_directory_name.wipe_out
-						Project_directory_name.set_directory (project_directory_path)
-						
-						create dir.make (project_directory_path)
-						if not dir.exists then
-							dir.create_dir
-						end
-						
-						create project_dir.make (project_directory_path, Void)
-						Eiffel_project.make_new (project_dir, True, Void, Void)
-						if Eiffel_project.initialized then
-							Eiffel_ace.set_file_name (ace_name)
-							create {PROJECT_PROPERTIES} project_properties_internal.make
-							create enum
-							Valid_project_ref.set_item (True)
+					if  not Eiffel_project.initialized then
+						check_ace_file (ace_name)
+						if valid_ace_file then
+							Project_directory_name.wipe_out
+							Project_directory_name.set_directory (project_directory_path)
+							
+							create dir.make (project_directory_path)
+							if not dir.exists then
+								dir.create_dir
+							end
+							
+							create project_dir.make (project_directory_path, Void)
+							Eiffel_project.make_new (project_dir, True, Void, Void)
+							if Eiffel_project.initialized then
+								Eiffel_ace.set_file_name (ace_name)
+								create {PROJECT_PROPERTIES} project_properties_internal.make
+								create enum
+								Valid_project_ref.set_item (True)
+							else
+								last_error_message := "Project could not be initialized"
+							end
 						else
-							last_error_message := "Project could not be initialized"
+							last_error_message := "Could not load project settings"
 						end
 					else
-						last_error_message := "Invalid Ace file"
+						last_error_message := "Project has already been initialized"
 					end
 				else
 					last_error_message := "File name is void"

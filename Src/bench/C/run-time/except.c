@@ -1463,7 +1463,7 @@ public void esfail()
 }
 
 #ifdef WORKBENCH
-extern shared void dbreak( int why);
+extern shared void dbreak();
 
 #ifndef NOHOOK
 extern int debug_mode;

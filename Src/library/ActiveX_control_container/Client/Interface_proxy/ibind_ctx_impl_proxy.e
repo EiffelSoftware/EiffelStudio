@@ -69,18 +69,18 @@ feature -- Basic Operations
 			ccom_release_bound_objects (initializer)
 		end
 
-	remote_set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
 			-- No description available.
 			-- `pbindopts' [in].  
 		do
-			ccom_remote_set_bind_options (initializer, pbindopts.item)
+			ccom_set_bind_options (initializer, pbindopts.item)
 		end
 
-	remote_get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
 			-- No description available.
 			-- `pbindopts' [in, out].  
 		do
-			ccom_remote_get_bind_options (initializer, pbindopts.item)
+			ccom_get_bind_options (initializer, pbindopts.item)
 		end
 
 	get_running_object_table (pprot: CELL [IRUNNING_OBJECT_TABLE_INTERFACE]) is
@@ -160,13 +160,13 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_remote_set_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
+	ccom_set_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](ecom_control_library::tagBIND_OPTS2 *)"
 		end
 
-	ccom_remote_get_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
+	ccom_get_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](ecom_control_library::tagBIND_OPTS2 *)"

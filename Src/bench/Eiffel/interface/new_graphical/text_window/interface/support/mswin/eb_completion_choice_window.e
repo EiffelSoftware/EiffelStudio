@@ -117,7 +117,7 @@ feature -- Access
 	choice_list: EV_LIST
 			-- list displaying possible feature signatures
 
-	sorted_names: SORTABLE_ARRAY[EB_NAME_FOR_COMPLETION]
+	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- list of possible feasture signatures sorted alphabetically
 
 	before_complete: STRING

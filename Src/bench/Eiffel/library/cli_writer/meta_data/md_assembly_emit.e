@@ -14,15 +14,22 @@ create
 
 feature -- Access
 
-	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO): INTEGER is
+	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
+			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER is
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
 		local
 			null: POINTER
 		do
-			last_call_success := c_define_assembly_ref (item, null, 0,
-				assembly_name.item, assembly_info.item, null, 0, 0, $Result)
+			if public_key_token /= Void then
+				last_call_success := c_define_assembly_ref (item, public_key_token.item.item,
+					public_key_token.item.size,
+					assembly_name.item, assembly_info.item, null, 0, 0, $Result)
+			else
+				last_call_success := c_define_assembly_ref (item, null, 0,
+					assembly_name.item, assembly_info.item, null, 0, 0, $Result)
+			end
 		ensure
 			success: last_call_success = 0
 			valid_result: Result > 0
@@ -61,7 +68,12 @@ feature {NONE} -- Implementation
 		is
 			-- Call `IMetaDataAssemblyEmit->DefineAssemblyRef'.
 		external
-			"C++ IMetaDataAssemblyEmit signature (void *, ULONG, LPCWSTR, ASSEMBLYMETADATA *, void *, ULONG, DWORD, mdAssembly *): EIF_INTEGER use <cor.h>"
+			"[
+				C++ IMetaDataAssemblyEmit signature
+					(void *, ULONG, LPCWSTR, ASSEMBLYMETADATA *,
+					void *, ULONG, DWORD, mdAssembly *): EIF_INTEGER
+				use <cor.h>
+			]"
 		alias
 			"DefineAssemblyRef"
 		end

@@ -65,13 +65,15 @@ feature -- Save
 		
 feature -- Definition: access
 
-	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO): INTEGER is
+	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
+			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER is
 			-- Get token reference on referenced assembly `assembly_name'.
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
 		do
-			Result := assembly_emitter.define_assembly_ref (assembly_name, assembly_info)
+			Result := assembly_emitter.define_assembly_ref (assembly_name,
+				assembly_info, public_key_token)
 		ensure
 			valid_result: Result > 0
 		end

@@ -760,7 +760,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 
 	generate_xml (element: XM_ELEMENT) is
-			-- Generate an XML representation of sepecific attributes of `Current'
+			-- Generate an XML representation of specific attributes of `Current'
 			-- in `element'.
 		require
 			element_not_void: element /= Void
@@ -1043,7 +1043,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 			layout_item_not_parented: layout_item.parent = Void
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Access
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 		
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'.
@@ -1875,7 +1875,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-feature {GB_OBJECT_HANDLER} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 
 	remove_child_from_children (an_object: GB_OBJECT) is
 			-- Remove `an_object' from `Current'.
@@ -1947,7 +1947,13 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					all_children.item.unconnect_display_object_pick_events
 					all_children.forth
 				end
-				l_object.add_client_representation (Current)
+				
+					-- Special check required for when calling this feature from
+					-- the clipboard. In this situation, the client representation is
+					-- added later.
+				if top_level_parent_object /= Current then
+					l_object.add_client_representation (Current)
+				end
 			end
 		ensure
 			associated_object_set: old associated_top_level_object_on_loading > 0 implies associated_top_level_object = old associated_top_level_object_on_loading

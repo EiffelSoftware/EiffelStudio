@@ -64,7 +64,7 @@ class FIXED_LIST [G] inherit
 			has, infix "@", i_th, put_i_th
 		redefine
 			first, last, swap,
-			go_i_th, move
+			go_i_th, move, start, finish
 		end;
 
 	BASIC_ROUTINES
@@ -191,6 +191,24 @@ feature -- Cursor movement
 			elseif (index < 0) then
 				index := 0
 			end
+		end;
+
+	start is
+		do
+			index := 1		
+		--| Temporary patch. Start moves the cursor
+		--| to the first element. If the list is empty
+		--| the cursor id after. The parents (CHAIN, LIST...)
+		--| and decendants (FIXED_TREE...) need to be revized.
+		end;
+
+	finish is
+		do
+			index := count
+		--| Temporary patch. Start moves the cursor
+		--| to the first element. If the list is empty
+		--| the cursor is before. The parents (CHAIN, LIST...)
+		--| and decendants (FIXED_TREE...) need to be revized.
 		end;
 
 	forth is

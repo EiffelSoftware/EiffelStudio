@@ -120,6 +120,9 @@ typedef struct {
 		/* Type in storing system. */
 	int16 old_type;
 
+		/* Skeleton flags in storing system. */
+	uint16 flags;
+
 		/* Type in retrieving system corresponding to `old_type' in storing
 		 * system. See the type_state enumeration for special values for this
 		 * field.

@@ -154,6 +154,7 @@ feature {NONE} -- Implementation
 			dir: DIRECTORY
 			ass: ASSEMBLY
 			cr: CACHE_READER
+			l_exe_env: EXECUTION_ENVIRONMENT
 		do
 			if not no_copyright_display then
 				display_copyright		
@@ -196,6 +197,11 @@ feature {NONE} -- Implementation
 			elseif not successful then
 				display_error
 			else
+				if not consume_from_fullname and then target_path.index_of (':', 1) = 0 then
+					-- if path is not full path append current working path
+					create l_exe_env
+					target_path.prepend (l_exe_env.current_working_directory + "\")
+				end
 				create cr
 				if consume_from_fullname then
 					ass := feature {ASSEMBLY}.load_string (target_path.to_cil)
@@ -264,15 +270,8 @@ feature {NONE} -- Implementation
 
 	process_non_switch (non_switch_value: STRING) is
 			-- process the args with no swtiches
-		local
-			l_exe_env: EXECUTION_ENVIRONMENT
 		do
 			target_path := non_switch_value
-			if target_path.index_of (':', 1) = 0 then
-				-- if path is not full path append current working path
-				create l_exe_env
-				target_path.prepend (l_exe_env.current_working_directory + "\")
-			end
 		end
 
 	post_process is

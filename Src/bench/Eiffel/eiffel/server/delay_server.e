@@ -100,22 +100,24 @@ end
 			if Result = Void then
 					-- Id not avaible in memory
 				info := tbl_item (real_id);
-				server_file := Server_controler.file_of_id (info.id);
-				if not server_file.is_open then
-					Server_controler.open_file (server_file);
-				end;
-				Result := retrieve_all (server_file.descriptor, info.position);
-					-- Insert it in the queue
-				Result.set_id (real_id);
-				cache.force (Result)
-				to_remove := cache.last_removed_item
-				if to_remove /= Void then 
-					id_to_remove := id (to_remove)
-					if delayed.has (id_to_remove) then
-						write (to_remove)
-						delayed.remove (id_to_remove)
-					end
-				end				
+				if info /= Void then
+					server_file := Server_controler.file_of_id (info.id);
+					if not server_file.is_open then
+						Server_controler.open_file (server_file);
+					end;
+					Result := retrieve_all (server_file.descriptor, info.position);
+						-- Insert it in the queue
+					Result.set_id (real_id);
+					cache.force (Result)
+					to_remove := cache.last_removed_item
+					if to_remove /= Void then 
+						id_to_remove := id (to_remove)
+						if delayed.has (id_to_remove) then
+							write (to_remove)
+							delayed.remove (id_to_remove)
+						end
+					end				
+				end
 			end;
 		end;
 

@@ -22,14 +22,16 @@ feature -- Access
 			if Result = Void then
 					-- Id not avaible in memory
 				info := tbl_item (real_id)
-				server_info := offsets.item (info.class_id)
-				server_file := Server_controler.file_of_id (server_info.id)
-				if not server_file.is_open then
-					Server_controler.open_file (server_file)
+				if info /= Void then
+					server_info := offsets.item (info.class_id)
+					server_file := Server_controler.file_of_id (server_info.id)
+					if not server_file.is_open then
+						Server_controler.open_file (server_file)
+					end
+					Result := partial_retrieve (server_file.descriptor, info.position, info.object_count)
+					Result.set_id (real_id)
+					cache.force (Result)
 				end
-				Result := partial_retrieve (server_file.descriptor, info.position, info.object_count)
-				Result.set_id (real_id)
-				cache.force (Result)
 			end
 		end
 
@@ -44,13 +46,15 @@ feature -- Access
 		do
 			real_id := updated_id(an_id)
 			info := tbl_item (real_id)
-			server_info := offsets.item (info.class_id)
-			server_file := Server_controler.file_of_id (server_info.id)
-			if not server_file.is_open then
-				Server_controler.open_file (server_file)
+			if info /= Void then
+				server_info := offsets.item (info.class_id)
+				server_file := Server_controler.file_of_id (server_info.id)
+				if not server_file.is_open then
+					Server_controler.open_file (server_file)
+				end
+				Result := partial_retrieve (server_file.descriptor, info.position, info.object_count)
+				Result.set_id (real_id)
 			end
-			Result := partial_retrieve (server_file.descriptor, info.position, info.object_count)
-			Result.set_id (real_id)
 		end
 
 	remove (an_id: H) is

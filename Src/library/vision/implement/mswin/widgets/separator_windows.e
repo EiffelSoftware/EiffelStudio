@@ -46,6 +46,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			on_size,
+			on_move,
 			on_right_button_up, on_left_button_down,
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
@@ -78,6 +80,7 @@ feature -- Initialization
 			end
 			managed := man
 			set_horizontal (true)
+			set_default_pen
 			set_single_line
 			set_form_width (1)
 			set_form_height (1)
@@ -191,7 +194,7 @@ feature -- Status setting
 
 	set_double_dashed_line is
 		do
-			!! pen.make (Ps_dash, 1, black_color)
+			!! pen.make (Ps_dash, 1, pen_color)
 			double := True
 			if realized then
 				invalidate
@@ -203,7 +206,7 @@ feature -- Status setting
 
 	set_double_line is
 		do
-			!! pen.make (Ps_solid, 1, black_color)
+			!! pen.make (Ps_solid, 1, pen_color)
 			double := True
 			if realized then
 				invalidate
@@ -233,7 +236,7 @@ feature -- Status setting
 
 	set_no_line is
 		do
-			!! pen.make (Ps_null, 1, black_color)
+			!! pen.make (Ps_null, 1, pen_color)
 			if realized then
 				invalidate
 			end
@@ -241,7 +244,7 @@ feature -- Status setting
 
 	set_single_dashed_line is
 		do
-			!! pen.make (Ps_dash, 1, black_color)
+			!! pen.make (Ps_dash, 1, pen_color)
 			double := False
 			if realized then
 				invalidate
@@ -250,7 +253,7 @@ feature -- Status setting
 
 	set_single_line is
 		do
-			!! pen.make (Ps_solid, 1, black_color)
+			!! pen.make (Ps_solid, 1, pen_color)
 			double := False
 			if realized then
 				invalidate
@@ -287,11 +290,27 @@ feature {NONE} -- Implementation
 			!! Result.make_system (Color_window)
 		end
 
+	pen_color: WEL_COLOR_REF is
+		do
+			if foreground_color.implementation /= Void then
+				Result ?= foreground_color.implementation
+			else
+				Result := black_color
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	black_color: WEL_COLOR_REF is
 		once
 			!! Result.make_rgb (0, 0, 0)
 		ensure
 			result_exists: Result /= Void
+		end
+
+	set_default_pen is
+		do
+			!! pen.make (Ps_solid, 1, black_color)
 		end
 
 	class_name: STRING is

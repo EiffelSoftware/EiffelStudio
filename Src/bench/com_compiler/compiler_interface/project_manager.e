@@ -247,13 +247,12 @@ feature -- Basic Operations
 						Eiffel_project.make_new (project_dir, True, Void, Void)
 						Eiffel_ace.set_file_name (a_ace_file_name)
 						create {PROJECT_PROPERTIES} project_properties_internal.make
+						Valid_project_ref.set_item (True)
 						l_properties ?= project_properties
 						if not l_properties.msil_generation then
 							Valid_project_ref.set_item (False)
 							create last_exception.make (errors_table.item (Eif_exceptions_non_dotnet_project), Eif_exceptions_non_dotnet_project)
 							last_exception.raise
-						else
-							Valid_project_ref.set_item (True)
 						end
 					else
 						create last_exception.make (errors_table.item (eif_exceptions_invalid_ace_file), eif_exceptions_invalid_ace_file)

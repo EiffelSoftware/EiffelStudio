@@ -84,6 +84,20 @@ feature {NONE} -- Containers
 			"GTK_SCROLLED_WINDOW"
 		end
 
+	gtk_window (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
+		alias
+			"GTK_WINDOW"
+		end
+
+	gtk_file_selection (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
+		alias
+			"GTK_FILE_SELECTION"
+		end
+
 feature {NONE} -- Items	
 	
 	gtk_menu_item (widget: POINTER): POINTER is

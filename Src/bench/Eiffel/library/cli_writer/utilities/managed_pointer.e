@@ -95,7 +95,7 @@ feature -- Platform specific, here x86
 		require
 			valid_pos: (pos + 4) <= size
 		do
-			(item + pos).memory_copy ($r, pos)
+			(item + pos).memory_copy ($r, 4)
 		end
 
 	put_double (d: DOUBLE; pos: INTEGER) is
@@ -103,7 +103,7 @@ feature -- Platform specific, here x86
 		require
 			valid_pos: (pos + 8) <= size
 		do
-			(item + pos).memory_copy ($d, pos)
+			(item + pos).memory_copy ($d, 8)
 		end
 		
 feature -- Update in little-endian format

@@ -433,49 +433,39 @@ feature -- Element change
 	put_class_name (c: CLASS_C) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			s: STRING;
-			item: CLASS_NAME_TEXT
+			s: STRING
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			s := clone (c.class_name)
+			s := clone (c.class_name);
 			s.to_upper;
-			!! item.make (s, c.lace_class);
-			text.add (item);
+			text.add_classi (c.lace_class, s)
 		end;
 
 	put_classi_name (c: CLASS_I) is
 			-- Append class name to 'text', treated as a stone.
 		local
 			s: STRING;
-			item: CLASS_NAME_TEXT
 		do
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			s := clone (c.class_name)
+			s := clone (c.class_name);
 			s.to_upper;
-			!!item.make (s, c);
-			text.add (item);
+			text.add_classi (c, s)
 		end;
 
 	prepare_class_text is
 			-- Append standard text before class.
-		local
-			item: BEFORE_CLASS;
 		do
-			!! item.make (class_c.e_class);
-			text.add (item);
+			text.add_class (class_c.e_class);
 		end;
 
 	end_class_text is
 			-- Append standard text after class.
-		local
-			item: AFTER_CLASS
 		do
-			!! item.make (class_c.e_class);
-			text.add (item);
+			text.add_end_class (class_c.e_class);
 		end;
 
 	put_origin_comment is
@@ -487,7 +477,7 @@ feature -- Element change
 				/= global_adapt.target_enclosing_class
 			then
 				put_text_item (ti_Dashdash);
-				text.add (ti_Space);
+				text.add_space;
 				put_comment_text ("(from ");
 				c := global_adapt.source_enclosing_class;
 				put_class_name (c);
@@ -685,7 +675,7 @@ feature {NONE} -- Implementation
 					end;
 					set_separator (ti_Comma);
 					set_space_between_tokens;
-					text.add (ti_Space);
+					text.add_space;
 					text.add (ti_L_parenthesis);
 					abort_on_failure;
 					args.format (Current);
@@ -747,9 +737,9 @@ feature {NONE} -- Implementation
 			adapt: like local_adapt
 		do
 			adapt := local_adapt;
-			text.add (ti_Space);
+			text.add_space;
 			put_infix_name (adapt);
-			text.add (ti_Space);
+			text.add_space;
 			args := arguments;
 			if args /= void then
 				begin;

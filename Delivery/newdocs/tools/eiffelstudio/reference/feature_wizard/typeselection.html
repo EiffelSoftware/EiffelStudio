@@ -1,0 +1,47 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Type selection</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Type selection</H1>
+
+		<P>Whenever you need to give a type of something in the feature wizard, the type selection component is used. The type selection lets you type any class name or you can pick one from the list.</P>
+
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-typeselection.png">
+		</CENTER>
+
+		<H2>Generic parameters</H2>
+
+		<P>When you select a class that is in the system and has formal generic parameters, the type selection component lets you specify an actual generic parameter in another type selection.<BR>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictype.png"></P>
+
+		<P CLASS="note"><B>Note</B>: the window might grow in size because of the added component.</P>
+
+		<P>Since the actual generic type selection is also a type selection, you can select another class with generic parameters and nest them as deep as you need.<BR>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictyperec.png"></P>
+
+		You can also select the type <SPAN CLASS="eclass">TUPLE</SPAN>, which is a special class that can have zero or more generic parameters. When you select it, it has no parameters, but you can add one by clicking on the <B>Add parameter</B> button. Click it as often as the number of generic parameters that you need.
+		<BR>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-tupletype2.png"><BR>
+
+		<P CLASS="warning"><B>Warning</B>: if you need a very complex type, it is better not to use the wizard, because the window might grow bigger than your screen. After you completed the feature, edit it manually in the class text.</P>
+
+		<H2>Generated code</H2>
+		The code generated for the selected type is quite straightforward, an example:<BR>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-complextype.png"><BR>
+		will generate the code:<BR>
+		<CODE>
+		<SPAN CLASS="efeature">new_feature</SPAN><SPAN CLASS="esymbol">:</SPAN>
+		<SPAN CLASS="eclass">FUNCTION</SPAN>
+		<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">ANY</SPAN><SPAN CLASS="esymbol">,</SPAN>
+		<SPAN CLASS="eclass">TUPLE</SPAN>
+		<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">INTEGER</SPAN><SPAN CLASS="esymbol">],</SPAN>
+		<SPAN CLASS="eclass">BOOLEAN</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		</CODE>
+	</BODY>
+</HTML>

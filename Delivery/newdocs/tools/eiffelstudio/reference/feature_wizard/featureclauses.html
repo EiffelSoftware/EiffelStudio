@@ -1,0 +1,41 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Feature clauses</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Feature clauses</H1>
+
+		<P>One of the powers of the wizard is that the feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, the wizard adds the feature clause to the class text based on the feature clause order specified in the preferences. By default, this is the order used by the ISE libraries, such as EiffelBase.</P>
+
+		<H2>Export status</H2>
+
+		<P>The export status is the class the feature is accessible for. Usually, this is <SPAN CLASS="eclass">ANY</SPAN> for public features, or <SPAN CLASS="eclass">NONE</SPAN> for implementation features, but you can specify any class here.</P>
+
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-export.png">
+		</CENTER>
+
+		<P CLASS="note"><B>Note</B>: in the class text, you can export a feature to more than one class but (for simplicity) not with feature wizard.</P>
+
+		<H2>Feature clause names</H2>
+
+		<P>For feature clause names it is recommended that you pick one from the standard ones, but it also possible to create a new one. If you have introduced a special feature clause name in your project, add it to the feature clause order list in the preferences and it will also appear in the feature wizard.<BR>
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-clausenames.png">
+		</CENTER>
+		</P>
+
+		<H2>Generated code</H2>
+		<P>The code that is inserted in your class as a result of the selections made for the feature clause, is of the form:<BR>
+		<CODE><SPAN CLASS="efeature">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN><SPAN CLASS="eclass">EXPORT</SPAN><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">-- Clause name</SPAN></CODE><BR>
+		except if you specified <SPAN CLASS="eclass">ANY</SPAN> as export status, which is similar to having no export status.<BR>
+		<CODE><SPAN CLASS="efeature">feature</SPAN> <SPAN CLASS="ecomment">-- Clause name</SPAN></CODE><BR>
+		For example, if you specified a the "Initialization" feature clause name, and specified <SPAN CLASS="eclass">NONE</SPAN> as export status, you get:<BR>
+		<CODE><SPAN CLASS="efeature">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN><SPAN CLASS="eclass">NONE</SPAN><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">-- Initialization</SPAN></CODE><BR>
+
+	</BODY>
+</HTML>

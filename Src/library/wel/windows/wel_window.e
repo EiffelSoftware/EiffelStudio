@@ -188,6 +188,17 @@ feature -- Status report
 				captured_window = Current
 		end
 
+	has_heavy_capture: BOOLEAN
+			-- Does this window have the heavy capture?
+
+	heavy_capture_activated: BOOLEAN is
+			-- Is the heavy capture currently running?
+			-- (i.e. is there a window in the current program
+			-- with `has_heavy_capture' to True?)
+		do
+			Result := cwel_is_mouse_hooked
+		end
+
 	has_vertical_scroll_bar: BOOLEAN is
 			-- Does this window have a vertical scroll bar?
 		require
@@ -573,6 +584,7 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
+			has_not_heavy_capture: not has_heavy_capture
 		do
 			cwin_set_capture (item)
 		ensure
@@ -589,14 +601,13 @@ feature -- Status setting
 			-- Works for ALL windows.
 		require
 			exists: exists
-			has_not_capture: not has_capture
-		local
-			has_heavy_capture: BOOLEAN
+			has_not_heavy_capture: not has_heavy_capture
+			heavy_capture_deactivated: not heavy_capture_activated
 		do
 			has_heavy_capture := cwel_hook_mouse (item)
-			check
-				capture_initialized: has_heavy_capture
-			end
+		ensure
+			heavy_capture_set: has_heavy_capture
+			heavy_capture_activated: heavy_capture_activated
 		end
 
 	release_capture is
@@ -616,13 +627,13 @@ feature -- Status setting
 			-- to `set_heavy_capture'.
 		require
 			exists: exists
-		local
-			has_heavy_capture: BOOLEAN
+			has_heavy_capture: has_heavy_capture
+			heavy_capture_activated: heavy_capture_activated
 		do
 			has_heavy_capture := not cwel_unhook_mouse
-			check
-				capture_stopped: not has_heavy_capture
-			end
+		ensure
+			heavy_capture_set: not has_heavy_capture
+			heavy_capture_deactivated: not heavy_capture_activated
 		end
 
 	set_style (a_style: INTEGER) is
@@ -2199,6 +2210,11 @@ feature {NONE} -- Externals
 		end
 
 	cwel_unhook_mouse: BOOLEAN is
+		external
+			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
+		end
+
+	cwel_is_mouse_hooked: BOOLEAN is
 		external
 			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
 		end

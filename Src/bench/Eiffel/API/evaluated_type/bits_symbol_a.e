@@ -104,18 +104,18 @@ feature {COMPILER_EXPORTER}
 					error := int_value = Void
 					if not error then
 						bits_value := int_value.integer_32_value
-						error := bits_value <= 0
+						error :=
+							bits_value <= 0 or else
+							bits_value > feature {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 					end
 				end
 				if error then
 					create vtbt
 					vtbt.set_class (feat_table.associated_class)
 					vtbt.set_feature (f)
-					if bits_value < 0 then
-						vtbt.set_value (bits_value)
-					end
+					vtbt.set_value (bits_value)
 					Error_handler.insert_error (vtbt)
-					-- Cannot go on here
+						-- Cannot go on here
 					Error_handler.raise_error
 				end
 				bit_count := bits_value

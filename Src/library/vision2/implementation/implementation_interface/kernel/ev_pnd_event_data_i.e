@@ -12,7 +12,7 @@ inherit
 
 feature -- Access	
 	
-	data: EV_PND_DATA
+	data: ANY
 			-- Transported data
 
 	data_type: EV_PND_TYPE
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Element change
 	
-	set_data (value: EV_PND_DATA) is
+	set_data (value: like data) is
 			-- Make `value' the new data.
 		do
 			data := value

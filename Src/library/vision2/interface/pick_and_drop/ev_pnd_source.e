@@ -18,7 +18,7 @@ inherit
 
 feature -- Attributes 
 
-	transported_data: EV_PND_DATA is
+	transported_data: ANY is
 			-- Transported data
 		do
 			Result := implementation.transported_data
@@ -38,25 +38,15 @@ feature -- Access
 			Result := transported_data /= Void and then data_type /= Void
 		end
 
-	default_activate_pnd (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
-			-- Activate the mechanism through which
-			-- the current stone may be dragged and
-			-- dropped, when right clicking.
-		require
-			valid_type: dt_type /= Void
-		do
-			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, Void, Void)
-		end
-
-	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
-			-- Activate the mechanism through which the current stone
-			-- may be dragged and dropped, when right clicking.
+	activate_pick_and_drop (mouse_button: INTEGER; cmd: EV_COMMAND; args: EV_ARGUMENT) is
+			-- Activate the mechanism of pick and drop,
+			-- when clicking on the `mouse_button'.
 			-- Add `cmd' (if not Void) to the list of commands to be
-			-- executed when initializing the transport.
+			-- executed just before initializing the transport.
 		require
-			valid_type: dt_type /= Void
+			valid_button: mouse_button > 0 and then mouse_button < 4	
 		do
-			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, cmd, args)
+			implementation.activate_pick_and_drop (mouse_button, cmd, args)
 		end
 
 	set_pick_position (a_x, a_y: INTEGER) is
@@ -65,7 +55,7 @@ feature -- Access
 			implementation.set_pick_position (a_x, a_y)
 		end
 
-	set_transported_data (dt: EV_PND_DATA) is
+	set_transported_data (dt: like transported_data) is
 			-- Set the `transported_data'.
 		do
 			implementation.set_transported_data (dt)

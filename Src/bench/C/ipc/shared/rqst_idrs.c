@@ -172,24 +172,104 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 
 rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 {
-	if (! idr_int (idrs, (int *)(&ext->type)))
-		return 0;
-	switch (ext -> type & SK_HEAD) {
-	case SK_POINTER:
-		return idr_u_long(idrs, (long unsigned int *) (&ext->it_ptr));
-	case SK_BOOL:
-	case SK_CHAR:
-		return idr_char (idrs, (char *) &ext->it_char);
-	case SK_FLOAT:
-		return idr_float (idrs, &ext->it_float);
-	case SK_DOUBLE:
-		return idr_double (idrs, &ext->it_double);
-	case SK_BIT:
-		return idr_u_long (idrs, (long unsigned int *) (&ext->it_bit));
-	case SK_STRING:
-		return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
-	default:
-		return idr_u_long (idrs, (long unsigned int *) (&ext->it_ref));
+	if (idrs->i_op == IDR_ENCODE) {
+		memcpy (idrs->i_ptr, &ext->type, sizeof(EIF_INTEGER_32));
+		idrs->i_ptr += sizeof(EIF_INTEGER_32);
+
+		switch (ext -> type & SK_HEAD) {
+		case SK_BOOL:
+		case SK_CHAR:
+			memcpy (idrs->i_ptr, &ext->it_char, sizeof(EIF_CHARACTER));
+			idrs->i_ptr += sizeof(EIF_CHARACTER);
+			return TRUE;
+		case SK_WCHAR:
+			memcpy (idrs->i_ptr, &ext->it_wchar, sizeof(EIF_WIDE_CHAR));
+			idrs->i_ptr += sizeof(EIF_WIDE_CHAR);
+			return TRUE;
+		case SK_INT8:
+			memcpy (idrs->i_ptr, &ext->it_int8, sizeof(EIF_INTEGER_8));
+			idrs->i_ptr += sizeof(EIF_INTEGER_8);
+			return TRUE;
+		case SK_INT16:
+			memcpy (idrs->i_ptr, &ext->it_int16, sizeof(EIF_INTEGER_16));
+			idrs->i_ptr += sizeof(EIF_INTEGER_16);
+			return TRUE;
+		case SK_INT32:
+			memcpy (idrs->i_ptr, &ext->it_int32, sizeof(EIF_INTEGER_32));
+			idrs->i_ptr += sizeof(EIF_INTEGER_32);
+			return TRUE;
+		case SK_INT64:
+			memcpy (idrs->i_ptr, &ext->it_int64, sizeof(EIF_INTEGER_64));
+			idrs->i_ptr += sizeof(EIF_INTEGER_64);
+			return TRUE;
+		case SK_FLOAT:
+			memcpy (idrs->i_ptr, &ext->it_float, sizeof(EIF_REAL));
+			idrs->i_ptr += sizeof(EIF_REAL);
+			return TRUE;
+		case SK_DOUBLE:
+			memcpy (idrs->i_ptr, &ext->it_double, sizeof(EIF_DOUBLE));
+			idrs->i_ptr += sizeof(EIF_DOUBLE);
+			return TRUE;
+		case SK_POINTER:
+			memcpy (idrs->i_ptr, &ext->it_ptr, sizeof(EIF_POINTER));
+			idrs->i_ptr += sizeof(EIF_POINTER);
+			return TRUE;
+		case SK_BIT:
+			return idr_u_long (idrs, (long unsigned int *) (&ext->it_bit));
+		case SK_STRING:
+			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
+		default:
+			return idr_u_long (idrs, (long unsigned int *) (&ext->it_ref));
+		}
+	} else {
+		memcpy (&ext->type, idrs->i_ptr, sizeof(EIF_INTEGER_32));
+		idrs->i_ptr += sizeof(EIF_INTEGER_32);
+
+		switch (ext -> type & SK_HEAD) {
+		case SK_BOOL:
+		case SK_CHAR:
+			memcpy (&ext->it_char, idrs->i_ptr, sizeof(EIF_CHARACTER));
+			idrs->i_ptr += sizeof(EIF_CHARACTER);
+			return TRUE;
+		case SK_WCHAR:
+			memcpy (&ext->it_wchar, idrs->i_ptr, sizeof(EIF_WIDE_CHAR));
+			idrs->i_ptr += sizeof(EIF_WIDE_CHAR);
+			return TRUE;
+		case SK_INT8:
+			memcpy (&ext->it_int8, idrs->i_ptr, sizeof(EIF_INTEGER_8));
+			idrs->i_ptr += sizeof(EIF_INTEGER_8);
+			return TRUE;
+		case SK_INT16:
+			memcpy (&ext->it_int16, idrs->i_ptr, sizeof(EIF_INTEGER_16));
+			idrs->i_ptr += sizeof(EIF_INTEGER_16);
+			return TRUE;
+		case SK_INT32:
+			memcpy (&ext->it_int32, idrs->i_ptr, sizeof(EIF_INTEGER_32));
+			idrs->i_ptr += sizeof(EIF_INTEGER_32);
+			return TRUE;
+		case SK_INT64:
+			memcpy (&ext->it_int64, idrs->i_ptr, sizeof(EIF_INTEGER_64));
+			idrs->i_ptr += sizeof(EIF_INTEGER_64);
+			return TRUE;
+		case SK_FLOAT:
+			memcpy (&ext->it_float, idrs->i_ptr, sizeof(EIF_REAL));
+			idrs->i_ptr += sizeof(EIF_REAL);
+			return TRUE;
+		case SK_DOUBLE:
+			memcpy (&ext->it_double, idrs->i_ptr, sizeof(EIF_DOUBLE));
+			idrs->i_ptr += sizeof(EIF_DOUBLE);
+			return TRUE;
+		case SK_POINTER:
+			memcpy (&ext->it_ptr, idrs->i_ptr, sizeof(EIF_POINTER));
+			idrs->i_ptr += sizeof(EIF_POINTER);
+			return TRUE;
+		case SK_BIT:
+			return idr_u_long (idrs, (long unsigned int *) (&ext->it_bit));
+		case SK_STRING:
+			return idr_string (idrs, &ext->it_ref, 0); /* 0 = no limit */
+		default:
+			return idr_u_long (idrs, (long unsigned int *) (&ext->it_ref));
+		}
 	}
 }
 

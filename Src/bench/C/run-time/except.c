@@ -26,6 +26,7 @@
 #include "main.h"
 #include "garcol.h"
 #include "error.h"
+#include "econsole.h"
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
 #endif
@@ -1535,6 +1536,10 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	(void) backtrack(MTC_NOARG);			/* Unwind the whole stack */
 	dump_trace_stack();			/* Print the stack */
 
+#ifdef EIF_WIN32
+	eif_console_cleanup();
+#endif
+		
 	EIF_END_GET_CONTEXT
 }
 

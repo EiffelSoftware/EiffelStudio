@@ -292,6 +292,8 @@ feature {NONE} -- Implementation: access
 			put ("three_way_comparison") check found_item = three_way_comparison_name_id end
 			put ("<ctype.h>") check found_item = ctype_header_name_id end
 			put ("as_integer_64") check found_item = as_integer_64_name_id end
+			put ("to_real_32") check found_item = to_real_32_name_id end
+			put ("to_real_64") check found_item = to_real_64_name_id end
 		end
 		
 invariant

@@ -126,7 +126,6 @@ feature -- status setting
 			use_wildcards := uw	
 		end
 
-
 feature -- Basic operations
 
 	search (searched_string: STRING) is
@@ -136,6 +135,7 @@ feature -- Basic operations
 		local
 			cur_pos: INTEGER
 		do
+			search_again := search_again or else different_position_as_when_last_saved
 			internal_search (searched_string)
 			if not search_results.is_empty then
 				if reverse then
@@ -153,6 +153,7 @@ feature -- Basic operations
 			end
 			select_and_show (True)
 				-- selecting will make the cursor go forward
+			save_cursor_position
 		end
 
 	replace (searched_string: STRING; replacing_string: STRING) is
@@ -178,6 +179,7 @@ feature {NONE} -- Replacement
 			pos_in_file, difference: INTEGER
 			cur_pos: INTEGER
 		do
+			search_again := search_again or else different_position_as_when_last_saved
 			internal_search (searched_string)
 			if not search_results.is_empty then
 				if has_searched then
@@ -199,14 +201,16 @@ feature {NONE} -- Replacement
 					search_results.item.add_offset (difference)
 					search_results.forth
 				end
+				search_again := search_again or else search_results.is_empty
 				internal_search (searched_string)
 				if not search_results.is_empty then
 					go_to_next_result (current_result.character_count + difference + 1)
 					select_and_show (True)
 				end
 			end
+			save_cursor_position
 		end
-
+	
 	replace_all_occurrences (searched_string: STRING; replacing_string: STRING) is
 			-- replace found word with the content of `the_replace_field'
 		local
@@ -238,7 +242,6 @@ feature {NONE} -- Implementation : Private status
 	has_searched: BOOLEAN
 			-- did `internal_search' actually looked for pattern in text ?
 
-
 feature {NONE} -- Search implementation
 
 	internal_search (searched_string: STRING) is
@@ -254,7 +257,6 @@ feature {NONE} -- Search implementation
 					current_file /= editor.file_name
 						or else
 					 (not searched_string.is_equal (current_pattern))
-
 			if has_searched then
 				current_file := editor.file_name
 				current_pattern := searched_string
@@ -390,6 +392,37 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
+
+	save_cursor_position is
+			-- Save current cursor position.
+		local
+			cur: TEXT_CURSOR
+		do
+			cur := text.cursor
+			x_pos_when_moved := cur.x_in_characters
+			y_pos_when_moved := cur.y_in_lines
+		end
+
+	different_position_as_when_last_saved: BOOLEAN is
+			-- Is the cursor at the same position as when its
+			-- position was saved for the last time?
+		local
+			cur: TEXT_CURSOR
+		do
+			cur := text.cursor
+			Result := 
+					x_pos_when_moved /= cur.x_in_characters
+						or else
+					y_pos_when_moved /= cur.y_in_lines
+
+		end
+
+	x_pos_when_moved: INTEGER
+			-- x position of cursor when saved.
+			
+	y_pos_when_moved: INTEGER
+			-- y position of cursor when saved.
+
 			
 feature {UNDO_REDO_STACK} -- Observer pattern
 

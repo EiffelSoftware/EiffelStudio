@@ -2,17 +2,43 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelStudio how to's</TITLE>
+		<TITLE>Generating multi-format documentation</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Documentation">
 		<LINK REL=StyleSheet HREF="/default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>EiffelStudio how to's</H1>
-		<P>Version: 5.0</P>
-		<P>Availability: Basic Package.</P>
-		<UL>
-			<LI><A HREF="diagram_tool/index.html">Diagram tool</A>
-			<LI><A HREF="feature_wizard/index.html">Feature wizard</A>
-		</UL>
+		<H1>Generating multi-format documentation</H1>
+		<P>EiffelStudio can generate documentation for a system using many different formats.
+		<P>The <B>Documentation Wizard</B>,
+			which helps you to get the documentation you want, is available in the <B>Project</B> menu, under the entry
+			<B>Generate Documentation</B>.
+		<P>The first page of the Documentation Wizard lets you choose between the available formats for the documentation:
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_filter_selection.png">
+		<P CLASS="tip">
+				<B>Tip</B>: The nicest output is produced by the <B>html-stylesheet</B> format.
+		<P>Now the wizard asks you to select the clusters you want to produce documentation for:
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_cluster_selection.png">
+		<P>In the next page you can specify indexing items on which HTML metatags will be based:
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_indexing_selection.png">
+		<P CLASS="note">
+				<B>Note</B>: This page is only available for HTML documentation.
+		<P>You can then pick the formats you need among those available. For example, you might need a file containing
+			the <B>Cluster hierarchy</B> of your system or, for each class, a file containing the <B>Contracts</B> of
+			that class. At this point you can also decide to generate BON diagrams for the clusters selected in the
+			previous page.
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_format_selection.png"></p>
+		<P>If you have checked <B>Cluster diagrams</B> in the previous page, you will now be able to choose a view
+			for each diagram that is going to be generated. You have the choice between an automatically arranged view
+			and all of the <A HREF="/tools/eiffelstudio/reference/50_diagram_tool/30_views.html">views</A> you may have manually arranged with the <A HREF="/tools/eiffelstudio/reference/50_diagram_tool/index.html">Diagram Tool</A>.
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_view_selection.png">
+		<P CLASS="note">
+				<B>Note</B>: Cluster diagrams are only available for HTML documentation.
+		<P>Here comes the last page ; you can choose the directory where the documentation is going to be generated:
+		<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/doc_wizard_path_selection.png">
+		<P CLASS="seealso">
+				<B>See Also</B><BR>
+						<A HREF="/tools/eiffelstudio/how_to_s/80_generating_documentation/20_generating_xmi_documentation/index.html">Generating XMI documentation<A>
+
 	</BODY>
 </HTML>

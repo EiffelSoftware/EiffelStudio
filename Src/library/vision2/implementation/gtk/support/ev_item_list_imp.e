@@ -74,9 +74,12 @@ feature {NONE} -- Obsolete
 
 	add_to_container (v: EV_ITEM; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
+		local
+			a_par: EV_ITEM_LIST_IMP [EV_ITEM]
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
-			v_imp.set_item_parent_imp (Current)
+			a_par ?= Current
+			v_imp.set_item_parent_imp (a_par)
 		end
 
 	remove_from_container (v_imp: EV_ITEM_IMP) is do end

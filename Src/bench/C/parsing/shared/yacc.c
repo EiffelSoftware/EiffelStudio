@@ -80,6 +80,7 @@ char char_arg;				/* Character argument */
  */
 
 struct location *current_location;
+ 
 
 /*
  * Building the interface

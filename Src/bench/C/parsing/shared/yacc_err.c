@@ -24,6 +24,10 @@ fnptr syntax7;					/* Routine for identifier too long */
 fnptr syntax8;					/* Routine for generic basic type */
 fnptr syntax9;					/* Routine for too many generic parameters */
 
+int yacc_error_code = 0 ; /* JOCE */
+#include "yacc_error_message.h"
+/* extern char** yacc_error_message_list; /* JOCE */ 
+
 char *yacc_file_name;			/* File name of the parsed file */
 
 /* 
@@ -70,3 +74,18 @@ char *get_yacc_file_name(void)
 		
 	return yacc_file_name;
 }
+
+int get_yacc_error_code(void)
+{
+	/* Return `yacc_error_code'. */
+
+	return yacc_error_code;	
+}
+
+EIF_REFERENCE get_yacc_error_message(void)
+{
+		/* Return `yacc_error_code'. */
+	
+		return RTMS( yacc_error_message_list[yacc_error_code] );	
+}
+

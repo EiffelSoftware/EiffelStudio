@@ -22,6 +22,8 @@ inherit
 	EV_GRID_ACTION_SEQUENCES
 		undefine
 			copy, is_equal, default_create
+		redefine
+			implementation
 		end
 	
 	REFACTORING_HELPER
@@ -30,6 +32,16 @@ inherit
 		end
 
 feature -- Access
+
+	is_item_set (a_column, a_row: INTEGER): BOOLEAN is
+			-- Has the item at position (`a_column' , `a_row') been set?
+		require
+			not_destroyed: not is_destroyed
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+		do
+			Result := implementation.is_item_set (a_column, a_row)
+		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
 			-- Row `a_row'
@@ -702,6 +714,19 @@ feature -- Element change
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
+			item_set: is_item_set (a_column, a_row)
+		end
+
+	unset_item (a_column, a_row: INTEGER) is
+			-- Replace grid item at position (`a_column', `a_row') with a default item
+		require
+			not_destroyed: not is_destroyed
+			a_column_positive: a_column > 0
+			a_row_positive: a_row > 0
+		do
+			implementation.unset_item (a_column, a_row)
+		ensure
+			item_unset: not is_item_set (a_column, a_row)
 		end
 
 feature -- Removal

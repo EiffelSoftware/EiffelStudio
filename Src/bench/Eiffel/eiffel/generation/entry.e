@@ -12,6 +12,11 @@ inherit
 	SHARED_WORKBENCH
 
 	COMPILER_EXPORTER
+	
+	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
+		end
 
 feature -- comparison
 
@@ -181,8 +186,18 @@ feature -- from ENTRY
 			-- separated by commas.
 		require
 			is_generic : is_generic
+		local
+			l_class_type: CLASS_TYPE
+			l_type: TYPE_I
 		do
-			type.generate_cid (buffer, final_mode, False)
+				-- In order to generate proper type description for current entry we need to
+				-- evaluate `type' in the context of `type_id', otherwise it is possible that
+				-- we would not find the associated class type of `l_type' and therefore generate
+				-- an incorrect type specification (Cf eweasel bug about storable).
+			l_class_type := System.class_type_of_id (type_id)
+			context.set_class_type (l_class_type)
+			l_type := context.creation_type (type)
+			l_type.generate_cid (buffer, final_mode, False)
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is

@@ -467,73 +467,19 @@ feature {NONE} -- Implementation
 
 end -- class EV_PRINT_DIALOG_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.9  2001/07/14 12:46:23  manus
---| Replace --! by --|
---|
---| Revision 1.8  2001/07/14 12:16:27  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.7  2001/06/22 00:50:04  king
---| Now using initialize precursor
---|
---| Revision 1.6  2001/06/07 23:08:06  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.3.4.17  2001/04/26 19:01:47  king
---| Made releasable
---|
---| Revision 1.3.4.16  2000/11/11 00:59:39  andrew
---| Replaced maximum_range facilities with minimum_from_page and maximum_to_page.
---|
---| Revision 1.3.4.15  2000/11/06 19:43:18  king
---| Acccounted for default to stock name change
---|
---| Revision 1.3.4.14  2000/11/02 00:31:27  andrew
---| Removed unreferenced variable, label: EV_LABEL
---|
---| Revision 1.3.4.13  2000/11/01 22:39:08  andrew
---| Made Print the default button and cleaned up attributes - made most local
---|
---| Revision 1.3.4.12  2000/10/31 01:36:47  andrew
---| interface/support/ev_print_context.e
---|
---| Revision 1.3.4.11  2000/10/13 20:54:08  andrew
---| Removed portrait_checked: BOOLEAN
---|
---| Revision 1.3.4.10  2000/10/12 21:49:40  andrew
---| Reviewed and updated routines
---|
---| Revision 1.3.4.8  2000/10/09 23:52:30  andrew
---| Added functionality to dialog
---|
---| Revision 1.3.4.4  2000/10/05 03:40:12  andrew
---| Altered window layout
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

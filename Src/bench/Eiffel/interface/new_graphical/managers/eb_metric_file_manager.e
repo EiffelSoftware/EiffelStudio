@@ -27,17 +27,13 @@ feature -- Initialization
 			l_namespace: XM_NAMESPACE
 		do
 			create observer_list.make (10)
-			create l_namespace.make ("", "")
---			create file_header.make_root ("ROOT", l_namespace)
-			create l_node.make_root ("ROOT", l_namespace)
-			create file_header.make
-			file_header.force_first (l_node)
-			create metric_header.make_child (l_node, "METRIC_DEFINITIONS", l_namespace)
+			create l_namespace.make_default
+			create file_header.make_with_root_named ("ROOT", l_namespace)
+			l_node := file_header.root_element
+			create metric_header.make (l_node, "METRIC_DEFINITIONS", l_namespace)
 			l_node.put_last (metric_header)
-			--file_header.root_element.put_last (metric_header)
-			create measure_header.make_child (l_node, "RECORDED_MEASURES", l_namespace)
+			create measure_header.make (l_node, "RECORDED_MEASURES", l_namespace)
 			l_node.put_last (measure_header)
-			--file_header.root_element.put_last (measure_header)
 		end
 
 feature -- Access
@@ -134,8 +130,8 @@ feature -- Metric definitions
 		local
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_root ("METRIC", l_namespace)
+			create l_namespace.make_default
+			create Result.make_root (create {XM_DOCUMENT}.make, "METRIC", l_namespace)
 
 			Xml_routines.add_attribute ("Name", l_namespace, name, Result)
 			Xml_routines.add_attribute ("Unit", l_namespace, unit, Result)
@@ -211,7 +207,7 @@ feature -- Metric definitions
 		rescue
 		end
 
-	management_metric_notify_all (metric_list: LINKED_LIST [EB_METRIC]; xml_list: LINKED_LIST [XM_ELEMENT]) is
+	management_metric_notify_all (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -236,8 +232,8 @@ feature -- Recorded_measures
 		local
 			l_namespace: XM_NAMESPACE
 		do
-			create l_namespace.make ("", "")
-			create Result.make_root ("MEASURE", l_namespace)
+			create l_namespace.make_default
+			create Result.make_root (create {XM_DOCUMENT}.make, "MEASURE", l_namespace)
 			Xml_routines.add_attribute ("STATUS", l_namespace, status, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "MEASURE_NAME", row.i_th (1)))
 			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
@@ -255,7 +251,6 @@ feature -- Recorded_measures
 			added_row: XM_ELEMENT
 		do
 			added_row := measure_element (row, status)
-			added_row.set_parent (measure_header)
 			measure_header.put_last (added_row)
 		end
 
@@ -277,7 +272,6 @@ feature -- Recorded_measures
 		do
 			measure_header.remove (index)
 			updated_row := measure_element (row, "new")
-			updated_row.set_parent (measure_header)
 			measure_header.put (updated_row, index)
 		end
 

@@ -155,7 +155,6 @@ external
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
-		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\$(ISE_C_COMPILER)\lib\cli_writer.lib",
 		"corguids.lib"
 

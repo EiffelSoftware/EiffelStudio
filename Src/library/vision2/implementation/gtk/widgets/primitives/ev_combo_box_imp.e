@@ -21,8 +21,7 @@ inherit
 		undefine
 			pointer_over_widget,
 			create_focus_in_actions,
-			create_focus_out_actions,
-			has_focus
+			create_focus_out_actions
 		redefine
 			initialize,
 			make,
@@ -31,10 +30,10 @@ inherit
 			foreground_color_pointer,
 			visual_widget,
 			set_text,
-			set_focus,
 			has_focus,
 			destroy,
-			on_key_event
+			on_key_event,
+			set_focus
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -53,11 +52,11 @@ inherit
 			set_foreground_color,
 			foreground_color_pointer,
 			visual_widget,
-			set_focus,
 			has_focus,
 			destroy,
 			on_item_clicked,
-			on_key_event
+			on_key_event,
+			set_focus
 		end
 
 	EV_KEY_CONSTANTS
@@ -119,12 +118,13 @@ feature {NONE} -- Initialization
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
-			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-in-event"), agent attain_focus)
-			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-out-event"), agent lose_focus)
-			temp_sig_id := c_signal_connect (
+			real_signal_connect (entry_widget, "focus-in-event", agent attain_focus, Default_translate)
+			real_signal_connect (entry_widget, "focus-out-event", agent lose_focus, Default_translate)
+			real_signal_connect (
 					list_widget,
-					eiffel_to_c ("button-release-event"),
-					agent on_button_released
+					"button-release-event",
+					agent on_button_released,
+					Default_translate
 			)
 		end
 		
@@ -164,12 +164,6 @@ feature -- Status setting
 			avoid_callback := True
 			Precursor {EV_TEXT_FIELD_IMP} (a_text)
 		end
-	
-	set_focus is
-			-- Set focus on Current.
-		do
-			C.gtk_widget_grab_focus (entry_widget)
-		end
 
 	set_maximum_text_length (len: INTEGER) is
 			-- Set the length of the longest 
@@ -181,6 +175,12 @@ feature -- Status setting
 			-- Set foreground color to `a_color'.
 		do
 			real_set_foreground_color (list_widget, a_color)
+		end
+		
+	set_focus is
+			-- 
+		do
+			C.gtk_widget_grab_focus (entry_widget)
 		end
 
 feature {NONE} -- Implementation
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			Precursor (a_position)
 			imp.set_item_parent_imp (Void)
 			if count = 0 then
-				set_text (Void)
+				set_text ("")
 			end
 		end
 

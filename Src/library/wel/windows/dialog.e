@@ -62,6 +62,14 @@ feature -- Access
 			-- Last control id used to close the dialog.
 			-- See class WEL_ID_CONSTANTS for the different values.
 
+feature -- Status report
+
+	ok_pushed: BOOLEAN is
+			-- Has the OK button been pushed?
+		do
+			Result := result_id = Idok
+		end
+
 feature -- Basic operations
 
 	activate is

@@ -211,6 +211,6 @@ external
 		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
 		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
 		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
-		"-L/usr/X11R6/lib/ -lXt -lXtst"
+		"-L/usr/X11R6/lib/ -lXtst"
 
 end

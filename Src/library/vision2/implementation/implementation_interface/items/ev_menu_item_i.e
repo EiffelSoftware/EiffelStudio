@@ -14,7 +14,6 @@ inherit
 	EV_SIMPLE_ITEM_I
 		redefine
 			parent_imp,
---			top_parent_imp,
 			pixmap_size_ok
 		end
 
@@ -22,8 +21,10 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP is
 			-- Parent implementation
+		deferred
+		end
 
 	top_parent_imp: EV_MENU_ITEM_HOLDER_IMP is
 			-- Top item holder containing the current item.

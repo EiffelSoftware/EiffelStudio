@@ -65,8 +65,8 @@ feature -- Status report
 			has_selection: has_selection
 		deferred
 		ensure
-			result_large_enough: Result >= 0
-			result_small_enough: Result <= text_length - 1
+			result_large_enough: Result >= 1
+			result_small_enough: Result <= text_length
 		end
 
 	selection_end: INTEGER is
@@ -113,7 +113,8 @@ feature -- Status setting
 			-- set current insertion position
 		require
 			exist: not destroyed			
-			valid_pos: pos >= 0 and pos <= text_length
+			position_large_enough: pos >= 1
+			position_small_enough: pos <= text_length + 1
 		deferred
 		end
 	
@@ -171,11 +172,12 @@ feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 
-			-- 'start_pos' and 'end_pos'
+			-- `start_pos' and `end_pos'. Both `start_pos' and
+			-- `end_pos' are selected.
 		require
 			exist: not destroyed
-			valid_start: start_pos > 0 and start_pos <= text_length + 1
-			valid_end: end_pos > 0 and end_pos <= text_length + 1
+			valid_start: start_pos >= 1 and start_pos <= text_length
+			valid_end: end_pos >= 1 and end_pos <= text_length
 		deferred
 		ensure
 			has_selection: has_selection

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
 		do
+			create subrows.make
 			base_make (an_interface)
 		end
 		
@@ -70,7 +71,7 @@ feature -- Access
 			i_positive: i > 0
 			i_less_than_subrow_count: i <= subrow_count
 		do
-			to_implement ("EV_GRID_ROW.subrow")
+			Result := subrows.i_th (i).interface
 		ensure
 			subrow_not_void: Result /= Void
 			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = interface
@@ -91,7 +92,9 @@ feature -- Access
 	parent_row: EV_GRID_ROW is
 			-- Parent of Current if any, Void otherwise
 		do
-			to_implement ("EV_GRID_ROW.parent_row")
+			if parent_row_i /= Void then
+				Result := parent_row_i.interface
+			end
 		ensure
 			has_parent: Result /= Void implies Result.has_subrow (interface)
 		end
@@ -157,7 +160,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.subrow_count")
+			Result := subrows.count
 		ensure
 			subrow_count_non_negative: subrow_count >= 0
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
@@ -251,8 +254,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			valid_parent: parent.row (a_row.index - 1) = interface or
 				True -- for (i in index .. a_row.index - 1) there exists i where
 				-- parent.row (i).parent_row = Current
+		local
+			row_imp: EV_GRID_ROW_I
 		do
-			to_implement ("EV_GRID_ROW.add_subrow")
+			--to_implement ("EV_GRID_ROW.add_subrow")
+			row_imp := a_row.implementation
+			subrows.extend (row_imp)
+			row_imp.internal_set_parent_row (Current)
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
@@ -305,6 +313,15 @@ feature {EV_GRID_I} -- Implementation
 			parent_grid_i_unset: parent_grid_i = Void
 		end
 
+feature {EV_GRID_ROW_I} -- Implementation
+
+	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I) is
+			--
+		do
+			parent_row_i := a_parent_row
+		end
+		
+
 feature {EV_GRID_ITEM_I} -- Implementation
 
 	increase_selected_item_count is
@@ -330,11 +347,17 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 	selected_item_count: INTEGER
 		-- Number of selected items in `Current'
+		
+	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+		-- All subrows of `Current'.
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.
+		
+	parent_row_i: EV_GRID_ROW_I
+		-- Row in which `Current' is parented.
 		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 
@@ -346,6 +369,7 @@ invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
 	index_same_as_parent_index: parent_grid_i /= Void implies parent_grid_i.grid_rows.index_of (Current, 1) = index
 	selected_item_count_valid: selected_item_count >= 0 and then selected_item_count <= count
+	subrows_not_void: subrows /= Void
 
 end
 

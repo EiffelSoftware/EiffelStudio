@@ -92,7 +92,7 @@ X   complete but found to have bugs
     items/ev_item.e                                     *    *     *     .
     items/ev_simple_item.e                              o    *     *     .
     items/ev_separator_item.e                           o    *     *     .
-    support/ev_item_list.e                              o    o 1   *     .
+    support/ev_item_list.e                              o    *     *     .
     
   Support:
     support/ev_default_colors.e                         o    *     *     .

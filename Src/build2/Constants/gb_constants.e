@@ -294,6 +294,13 @@ feature -- Generation constants
 		once
 			Result := "<CUSTOM_FEATURE>"
 		end
+		
+	clr_version_tag: STRING is
+			-- Used in templates as clr setting.
+		once
+			Result := "<CLR_VERSION>"
+		end
+		
 	
 	indent: STRING is
 			-- String representing standard indent

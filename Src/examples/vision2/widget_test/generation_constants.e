@@ -15,10 +15,10 @@ feature -- Access
 	
 	ace_file_name: STRING is
 		once
-			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
+			if (create {PLATFORM}).is_windows then
 				Result := "ace.Windows.ace"
 			else
-				Result := "ace.Linux.ace"
+				Result := "ace.Unix.ace"
 			end
 		end
 	

@@ -138,6 +138,7 @@ feature {NONE} -- Implementation
 			-- Retrieve project
 		local
 			retried: BOOLEAN
+			l_pos: like position
 		do
 			if not retried then
 				open_read
@@ -146,11 +147,11 @@ feature {NONE} -- Implementation
 						--| To add the storable part after the project header
 						--| we need to set the position in the file
 						--| otherwise the retrieving won't work correctly
-					go (position)
+					l_pos := position
 					full_collect
 					full_coalesce
 					collection_off
-					Result := ise_compiler_retrieved (descriptor);
+					Result := ise_compiler_retrieved (descriptor, position);
 					collection_on
 					full_collect
 					full_coalesce
@@ -232,7 +233,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	ise_compiler_retrieved (f_desc: INTEGER) : ANY is
+	ise_compiler_retrieved (f_desc, pos: INTEGER) : ANY is
 		external
 			"C | %"pretrieve.h%""
 		alias

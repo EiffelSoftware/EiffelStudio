@@ -45,6 +45,9 @@ inherit
 	COMPILER_EXPORTER
 
 	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
 
 	SHARED_NAMES_HEAP
 		export

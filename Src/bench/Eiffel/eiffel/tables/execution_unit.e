@@ -23,6 +23,8 @@ inherit
 		end
 
 	SHARED_TYPE_I
+		export
+			{NONE} all
 		undefine
 			is_equal
 		end

@@ -34,7 +34,7 @@ feature -- Access
 			Result.append (get (Eiffel4))
 			Result.append ("\bench\spec\windows\include /I")
 			Result.append (get (Eiffel4))
-			Result.append ("\library\com\include ")
+			Result.append ("\library\com\spec\windows\include ")
 		end
 
 	Client_standard_c_compiler_options: STRING is 

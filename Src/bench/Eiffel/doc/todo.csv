@@ -175,8 +175,8 @@ compiler,,,,
 ,4,Remove deferred classes from the polymorphic tables (and when available also optionally remove classes that are never instantiated),Xavier,CMP0030
 ,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031
 ,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
-,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,
-
+,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,CMP0033
+,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034
 
 
 

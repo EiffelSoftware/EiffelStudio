@@ -163,6 +163,7 @@ feature {NONE} -- Initialization
 			l_stack_adv: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
+			l_extra_info: STRING
 		do
 			debug ("DEBUGGER_TRACE_CALLBACK")
 				io.error.put_string ("  @-> " + generator + ".make : starting%N")
@@ -280,12 +281,17 @@ feature {NONE} -- Initialization
 												else
 													l_hexaddress := "0x0"
 												end
+												if l_module_name /= Void then
+													l_extra_info := "Module : " + l_module_name
+												else
+													l_extra_info := "no debug information"
+												end
 												external_cse.set_info (
 														l_hexaddress,
 														l_module.md_type_name (l_class_token),
 														l_module.md_member_name (l_feature_token),
 														l_il_offset,
-														"no debug information"
+														l_extra_info
 													)
 												call := external_cse
 												external_cse := Void

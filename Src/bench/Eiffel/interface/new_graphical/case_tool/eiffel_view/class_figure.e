@@ -427,7 +427,7 @@ feature {NONE} -- Implementation (adding relations)
 					cg.new_aggregate_query_from_diagram (model.name, x_pos, y_pos, screen_w, screen_h)
 				end
 				-- Reflect new added code in diagram if any is added.
-				if cg.extend_from_diagram_successful and then not cg.class_modified_outside_diagram then
+				if cg.extend_from_diagram_successful then
 					last_query := cg.last_feature_as
 					client_model.add_query (last_query)
 	
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation (adding relations)
 				
 						es_link.synchronize
 						world.context_editor.history.register_named_undoable (
-							interface_names.t_diagram_set_center_class + ": " + model.name,
+							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
 							agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
 							agent remove_added_feature (client_model, added_code, last_query, es_link))
 					end

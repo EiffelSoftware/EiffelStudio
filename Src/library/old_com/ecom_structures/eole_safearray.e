@@ -27,7 +27,7 @@ feature -- Element change
 
 	set_type (t: INTEGER) is
 			-- Set type of data at creation time with `t'
-			-- See class EOLE_VARTYPE for `t' possible values
+			-- See class EOLE_VAR_TYPE for `t' possible values
 		do
 			type := t
 		end
@@ -67,9 +67,9 @@ feature -- Element change
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 			valid_variant: var /= Void and then var.ole_ptr /= default_pointer and 
-							var.vartype /= Vt_array and
-							var.vartype /= Vt_null and
-							var.vartype /= Vt_empty and
+							var.var_type /= Vt_array and
+							var.var_type /= Vt_null and
+							var.var_type /= Vt_empty and
 							not var.is_reference
 			valid_index: is_valid_index (index)
 		do
@@ -169,13 +169,13 @@ feature {NONE} -- Implementation
 
 	type: INTEGER
 			-- Type of data in array at creation time
-			-- See class EOLE_VARTYPE for possible values
+			-- See class EOLE_VAR_TYPE for possible values
 
 	safearray_allocate: POINTER is
 			-- Create associated OLE structure with `dims' 
 			-- dimensions and element type `type'.
 			-- Bounds of each dimension are set with `bounds'.
-			-- See EOLE_VARTYPE for `type' values.
+			-- See EOLE_VAR_TYPE for `type' values.
 		require
 			valid_bounds: bounds /= Void and then bounds.ole_ptr /= default_pointer
 		do

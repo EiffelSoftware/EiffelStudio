@@ -151,7 +151,7 @@ extern "C" HRESULT E_ITypeComp_Bind
 						   DESCKIND FAR* pDescKind, 
 					       BINDPTR FAR* pBindPtr) {
 
-    return ((E_ITypeComp*) ptr)->Bind (szName,lHashVal, wFlags,
+    return ((ITypeComp*) ptr)->Bind (szName,lHashVal, wFlags,
 								    		ppTInfo, pDescKind, pBindPtr);
 }
 
@@ -172,7 +172,7 @@ extern "C" HRESULT E_ITypeComp_BindType
 						   ITypeInfo FAR* FAR* ppTInfo, 
 						   ITypeComp FAR* FAR* ppTComp) {
 
-    return ((E_ITypeComp*) ptr)->BindType (szName,lHashVal,
+    return ((ITypeComp*) ptr)->BindType (szName,lHashVal,
 								    		ppTInfo, ppTComp);
 }
 
@@ -201,31 +201,33 @@ extern "C" EIF_OBJ eole2_typecomp_bind (EIF_POINTER pITypeCompThis,
 	EIF_TYPE_ID res_id;
 	
 	szName = Eif2OleString (Name);
-	lHashVal = LHashValOfName (0, szName);
-	ppTInfo = (ITypeInfo FAR* FAR*)malloc (sizeof (ITypeInfo FAR*));
-	pDescKind = (DESCKIND FAR  *)malloc (sizeof (DESCKIND));
-	pBindPtr = (BINDPTR FAR *)malloc (sizeof (BINDPTR));
-	
-	g_hrStatusCode = E_ITypeComp_Bind (
-                             pITypeCompThis, FALSE // Call from Eiffel!
-							 , (OLECHAR FAR *)szName,
-							 lHashVal, (USHORT)wFlags,
-							 ppTInfo, pDescKind, pBindPtr
-                             );
-	res_id = eif_type_id ("EOLE_BIND_RESULT");	
-	Result = eif_create (res_id);
-	eif_set_tinfo = eif_proc ("set_type_info", res_id);
-	eif_set_dkind = eif_proc ("set_desc_kind", res_id);
-	eif_set_bptr = eif_proc ("set_bind_ptr", res_id);
-	eif_set_tinfo (eif_access (Result), (EIF_POINTER)*ppTInfo);
-	eif_set_dkind (eif_access (Result), (EIF_INTEGER)*pDescKind);
-	if (*pDescKind == DESCKIND_FUNCDESC)
-		eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lpfuncdesc));
-	if (*pDescKind == DESCKIND_VARDESC)
-		eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lpvardesc));
-	if (*pDescKind == DESCKIND_TYPECOMP)
-		eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lptcomp));
-	return eif_access (Result);
+	if (SUCCEEDED (lHashVal = LHashValOfName (9, szName)))
+	{
+		ppTInfo = (ITypeInfo FAR* FAR*)malloc (sizeof (ITypeInfo FAR*));
+		pDescKind = (DESCKIND FAR *)malloc (sizeof (DESCKIND));
+		pBindPtr = (BINDPTR FAR *)malloc (sizeof (BINDPTR));
+
+		g_hrStatusCode = E_ITypeComp_Bind (
+								 pITypeCompThis, FALSE // Call from Eiffel!
+								 , szName, lHashVal, (USHORT)wFlags,
+								 ppTInfo, pDescKind, pBindPtr
+								 );
+		res_id = eif_type_id ("EOLE_BIND_RESULT");	
+		Result = eif_create (res_id);
+		eif_set_tinfo = eif_proc ("set_type_info", res_id);
+		eif_set_dkind = eif_proc ("set_desc_kind", res_id);
+		eif_set_bptr = eif_proc ("set_bind_ptr", res_id);
+		eif_set_tinfo (eif_access (Result), (EIF_POINTER)*ppTInfo);
+		eif_set_dkind (eif_access (Result), (EIF_INTEGER)*pDescKind);
+		if (*pDescKind == DESCKIND_FUNCDESC)
+			eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lpfuncdesc));
+		if (*pDescKind == DESCKIND_VARDESC)
+			eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lpvardesc));
+		if (*pDescKind == DESCKIND_TYPECOMP)
+			eif_set_bptr (eif_access (Result), (EIF_POINTER)((*pBindPtr).lptcomp));
+		return eif_access (Result);
+	}
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -12,53 +12,36 @@ class
 		
 feature -- Access
 
-	name: EOLE_BSTR is
+	name: EOLE_BSTR
 			-- Dll name
-		do
-			Result := dll_name
-		end
 		
-	entry_point: EOLE_BSTR is
+	entry_point: EOLE_BSTR
 			-- Entry point name (if function
 			-- not defined by ordinal)
-		do
-			Result := entry_point_name
-		end
 		
-	ordinal: POINTER is
+	ordinal: POINTER
 			-- Ordinal that defines function
 			-- (if function defined by ordinal)
-		do
-			Result := function_ordinal
-		end
 		
 feature -- Element change
 
 	set_name (n: EOLE_BSTR) is
 			-- set `dll_name' with `n'
 		do
-			dll_name := n
+			name := n
 		end
 
 	set_entry_point (n: EOLE_BSTR) is
 			-- set `entry_point_name' with `n'
 		do
-			entry_point_name := n
+			entry_point := n
 		end
 
 	set_ordinal (ord: POINTER) is
 			-- set `function_ordinal' with `ord'
 		do
-			function_ordinal := ord
+			ordinal := ord
 		end
-
-feature {NONE} -- Implementation
-
-	dll_name: EOLE_BSTR
-
-	entry_point_name: EOLE_BSTR
-
-	function_ordinal: POINTER
 		
 end -- class EOLE_DLL_ENTRY
 

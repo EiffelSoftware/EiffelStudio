@@ -24,7 +24,7 @@ feature -- Message Transmission
 			-- See class EOLE_INVOKE_KIND for `flags' value.
 		require
 			valid_interface: is_valid_interface
-			valid_flags: is_valid_invoke_kind (flags)
+			valid_flags: is_valid_invoke_kind (flags) or flags = 0
 		local
 			wel_string: WEL_STRING
 		do

@@ -17,7 +17,7 @@ inherit
 		
 feature -- Access
 
-	memberid: INTEGER is
+	member_id: INTEGER is
 			-- Member identifier
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -26,25 +26,29 @@ feature -- Access
 		end
 
 	instance_offset: INTEGER is
-			-- Instance offset
+			-- Offset of variable in instance
+			-- `varkind' must be `Var_perinstance'.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
+			valid_var_kind: var_kind = Var_perinstance
 		do
 			Result := ole2_vardesc_get_instance_offset (ole_ptr)
 		end
 
 	constant_variant: EOLE_VARIANT is
 			-- Value of the constant
+			-- `varkind' must be `Var_const'.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
+			valid_var_kind: var_kind = Var_const
 		do
 			!! Result
 			Result.attach (ole2_vardesc_get_constant_variant (ole_ptr))
 		end
 
-	varkind: INTEGER is
+	var_kind: INTEGER is
 			-- Kind of variable
-			-- See EOLE_VARKIND for `Result' value
+			-- See EOLE_VAR_KIND for `Result' value
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 		do
@@ -53,7 +57,7 @@ feature -- Access
 			valid_result: is_valid_var_kind (Result)
 		end
 
-	elemdesc: EOLE_ELEM_DESC is
+	elem_desc: EOLE_ELEM_DESC is
 			-- Corresponding EOLE_ELEMDESC structure
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -62,9 +66,9 @@ feature -- Access
 			Result.attach (ole2_vardesc_get_elemdesc (ole_ptr))
 		end
 
-	varflags: INTEGER is
+	var_flags: INTEGER is
 			-- Flags
-			-- See EOLE_VARFLAGS for `Result' value
+			-- See EOLE_VAR_FLAGS for `Result' value
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 		do

@@ -80,15 +80,23 @@ feature -- Element change
 			ole2_var_set_no_param (ole_ptr)
 		end
 
-	set_vartype (vartyp: INTEGER) is
-			-- Set variable type with `vartype'.
-			-- See class EOLE_VARTYPE for `vartype' value.
+	set_var_type (vartyp: INTEGER) is
+			-- Set variable type with `var_type'.
+			-- See class EOLE_var_type for `var_type' value.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 		do
-			ole2_var_set_vartype (ole_ptr, vartype)
+			ole2_var_set_var_type (ole_ptr, var_type)
 		end
 
+	set_character (char: INTEGER) is
+			-- Set value to 1-byte `char'.
+		require
+			valid_c_structure: ole_ptr /= default_pointer
+		do
+			ole2_var_set_character (ole_ptr, char)
+		end
+		
 	set_integer2 (int2: INTEGER) is
 			-- Set value to short `int2'.
 		require
@@ -104,7 +112,7 @@ feature -- Element change
 		do
 			ole2_var_set_integer4 (ole_ptr, int4)
 		end
-
+		
 	set_real4 (rea4: REAL) is
 			-- Set value to float `real4'.
 		require
@@ -185,25 +193,35 @@ feature -- Element change
 			ole2_var_set_safearray (ole_ptr, sa.ole_ptr)
 		end
 
-	set_by_reference (ptr: POINTER; vartyp: INTEGER) is
-			-- Set value `vartype' referenced by `ptr'.
+	set_by_reference (val: ANY; vartyp: INTEGER) is
+			-- Set value `val' of type `vartyp' by reference.
+			-- `val' must be a referenced dynamic type (INTEGER_REF,
+			-- CHARACTER_REF, ...).
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 		do
-			ole2_var_set_by_reference (ole_ptr, ptr, vartyp)
+			ole2_var_set_by_reference (ole_ptr, $val, vartyp)
 		end
 		
 feature -- Access
 
-	vartype: INTEGER is
+	var_type: INTEGER is
 			-- Variable type
-			-- See class EOLE_VARTYPE for `Result' value.
+			-- See class EOLE_var_type for `Result' value.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
 		do
 			Result := ole2_var_get_type (ole_ptr)
 		end
 
+	character: CHARACTER is
+			-- 1-byte value
+		require
+			valid_c_structure: ole_ptr /= default_pointer
+		do
+			Result := ole2_var_get_character (ole_ptr)
+		end
+		
 	integer2: INTEGER is
 			-- Short value
 		require
@@ -324,9 +342,9 @@ feature -- Access
 	is_reference: BOOLEAN is
 			-- Is variant passed by reference?
 		do
-			Result := c_and (vartype, Vt_byref) = vartype
+			Result := c_and (var_type, Vt_byref) = var_type
 		end
-		
+
 feature {NONE} -- Externals
 
 	c_and (operand1, operand2: INTEGER): INTEGER is
@@ -391,13 +409,20 @@ feature {NONE} -- Externals
 			"eole2_var_set_no_param"
 		end
 
-	ole2_var_set_vartype (ptr: POINTER; vartyp: INTEGER) is
+	ole2_var_set_var_type (ptr: POINTER; vartyp: INTEGER) is
 		external
 			"C"
 		alias
 			"eole2_var_set_vartype"
 		end
 
+	ole2_var_set_character (ptr: POINTER; int1: INTEGER) is
+		external
+			"C"
+		alias
+			"eole2_var_set_character"
+		end
+		
 	ole2_var_set_integer2 (ptr: POINTER; int2: INTEGER) is
 		external
 			"C"
@@ -494,6 +519,13 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"eole2_var_get_type"
+		end
+
+	ole2_var_get_character (ptr: POINTER): CHARACTER is
+		external
+			"C"
+		alias
+			"eole2_var_get_character"
 		end
 
 	ole2_var_get_integer2 (ptr: POINTER): INTEGER is

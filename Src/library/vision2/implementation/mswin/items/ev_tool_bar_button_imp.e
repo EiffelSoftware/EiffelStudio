@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			make_id
+			create real_text.make (0)
 		end
 
 	initialize is
@@ -72,12 +73,12 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	set_parent (par: like parent) is
+	set_parent (a_parent: like parent) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
-			if par /= Void then
-				parent_imp ?= par.implementation
+			if a_parent /= Void then
+				parent_imp ?= a_parent.implementation
 				parent_imp.auto_size
 			else
 				parent_imp := Void
@@ -312,6 +313,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/29 20:36:26  brendel
+--| Modified text handling in compliance with new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.16  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

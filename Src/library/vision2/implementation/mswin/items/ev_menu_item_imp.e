@@ -49,7 +49,10 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in label.
 		do
-			Result := clone (wel_text)
+			Result := wel_text
+			if Result.empty then	
+				Result := Void
+			end
 		end 
 
 feature -- Element change
@@ -101,17 +104,25 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_text: STRING
+	wel_text: STRING is
 			-- Caption of the menu item.
 			--| For the specification given in the note of EV_MENU_ITEM,
 			--| we do not have to take any special action.
 			--| Does not return internal toolkit string because it is possible
 			--| to set the string without parent.
+		do
+			Result := clone (real_text)
+			if Result = Void then
+				Result := ""
+			end
+		end
+
+	real_text: STRING
 
 	wel_set_text (a_text: STRING) is
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
-			wel_text := clone (a_text)
+			real_text := clone (a_text)
 			if has_parent then
 				parent_imp.modify_string (a_text, id)
 			end
@@ -206,6 +217,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/29 20:36:26  brendel
+--| Modified text handling in compliance with new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.34  2000/03/28 16:33:08  rogers
 --| Changed press_actions to select_actions in on_activate.
 --|

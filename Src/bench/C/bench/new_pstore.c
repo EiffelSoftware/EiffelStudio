@@ -40,7 +40,6 @@ rt_private void traversal (EIF_REFERENCE object);	/* Object traversal */
 
 rt_private struct store_htable *address_table;	/* HASH_TABLE [INTEGER, ADDRESS] */
 rt_private int max_object_id;	/* Current maximum allowed object id */
-rt_private int storable_size;	/* Current size of storable */
 rt_private char *buffer;	/* Memory area when storage is done */
 rt_private EIF_INTEGER current_buffer_pos;	/* Offset where we are writing at the moment */
 rt_private fnptr make_index, need_index;	/* Hook functions. */
@@ -94,9 +93,6 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 
 	gc_stop();
 
-		/* Create buffer */
-	buffer = (char *) xmalloc (100000L, C_T, GC_OFF);
-
 		/* Go to `position' in `f_desc'. */
 	if (lseek (f_desc, position, SEEK_SET) == -1)
 		esys ();
@@ -106,6 +102,9 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 			/* If we read 0 bytes, it means that we reached the end of file,
 			 * so we are missing something, instead of going further we stop */
 		eio();
+
+		/* Create buffer */
+	buffer = (char *) xmalloc (length, C_T, GC_OFF);
 
 		/* Read full content of what needs to be read */
 	if (read (f_desc, buffer, length) <= 0)
@@ -230,7 +229,6 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		/* Do the complete traversals of objects that needs to be stored */
 		/* Number of objects is stored in global variables `obj_nb'      */
 	obj_nb = 0;
-	storable_size = 0;
 	traversal (object);
 
 	need_index = nid;
@@ -240,7 +238,6 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		/* `max_object_id' is initialized to `1' because `store_ht_value' already returns 
 		 * `0' when it does not find an item */
 	max_object_id = 1;
-
 
 	current_buffer_pos += 2*sizeof(EIF_INTEGER);
 

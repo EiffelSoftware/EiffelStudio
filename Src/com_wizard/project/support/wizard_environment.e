@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			use_universal_marshaller := True
 			automation := True
 			client := True
-			output_level := Output_warnings
+			output_level := Output_all
 			Compile_c := True
 			Compile_eiffel := True
 			stop_on_error := True

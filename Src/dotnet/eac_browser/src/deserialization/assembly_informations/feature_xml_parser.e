@@ -4,6 +4,7 @@ class
 inherit
 	XML_PARSER
 		redefine
+			make,
 			on_start_tag,
 			on_content,
 			on_end_tag,
@@ -14,39 +15,38 @@ inherit
 
 creation
 	make
+	
+feature -- Initialization
+
+	make is
+			-- Initialization.
+		do
+			Precursor {XML_PARSER}
+			create a_member.make
+			create a_parameter.make
+			create current_comment.make_empty
+			create current_tag.make (10)
+		ensure
+			non_void_a_member: a_member /= Void
+			non_void_a_parameter: a_parameter /= Void
+			non_void_current_comment: current_comment /= Void
+			non_void_current_tag: current_tag /= Void
+		end
+		
 
 feature -- Access
 
-	members_information: HASH_TABLE [MEMBER_INFORMATION, STRING] is
-			-- Members classified by signature.
-		once
-			create Result.make (50)
-		ensure
-			non_void_result: Result /= Void
-		end
+	a_member: MEMBER_INFORMATION
+			-- Temporary attribute.
 
-	a_member: MEMBER_INFORMATION is
-			-- Temporary attribute.
-		once
-			create Result.make
-		ensure
-			non_void_result: Result /= Void
-		end
+
+feature {NONE} -- Access
 	
-	a_parameter: PARAMETER_INFORMATION  is
+	a_parameter: PARAMETER_INFORMATION
 			-- Temporary attribute.
-		once
-			create Result.make
-		ensure
-			non_void_result: Result /= Void
-		end
-		
-	a_temporary_string: CELL [STRING] is
-		once
-			create Result.put (create {STRING}.make_empty)
-		ensure
-			non_void_result: Result /= Void
-		end
+
+	current_comment: STRING
+			-- Current comment.
 		
 	current_tag: ARRAYED_STACK [INTEGER]
 			-- Balises XML opened.
@@ -66,10 +66,10 @@ feature
 				if start_tag.attributes.count > 0 then
 					l_attribute := start_tag.attributes.first.value
 					if l_attribute.item (2).is_equal (':') then
-							-- Is it a reference to a Type or a Method?
+							-- Is it a reference to a Type or a Feature (M: or P: etc)?
 						l_attribute.keep_tail (l_attribute.count - 2)
 					end
-					a_temporary_string.item.append (l_attribute)
+					current_comment.append (l_attribute)
 				end
 				current_tag.put (see)
 			elseif start_tag.name.is_equal (para_str) then
@@ -79,43 +79,28 @@ feature
 					l_name := start_tag.attributes.first.value
 					A_parameter.set_name (l_name)
 				end
-				a_temporary_string.item.wipe_out
+				current_comment.wipe_out
 				current_tag.put (param)
 			elseif start_tag.name.is_equal (returns_str) then
-				a_temporary_string.item.wipe_out
+				current_comment.wipe_out
 				current_tag.put (returns)
 			elseif start_tag.name.is_equal (summary_str) then
-				a_temporary_string.item.wipe_out
+				current_comment.wipe_out
 				current_tag.put (summary)
 			elseif start_tag.name.is_equal (member_str) then
-				A_member.name.wipe_out
-				A_member.summary.wipe_out
-				A_member.parameters.wipe_out
-				A_member.returns.wipe_out
+				A_member.reset
 				if start_tag.attributes.count > 0 then
 					l_name := start_tag.attributes.first.value
 					l_name.keep_tail (l_name.count - 2)
 					A_member.set_name (l_name)
 				end
-				if current_tag = Void then
-					create current_tag.make (10)
-				end
 				current_tag.put (member)
 			elseif start_tag.name.is_equal (param_ref_str) then
 				if start_tag.attributes.count > 0 then
 					l_name := start_tag.attributes.first.value
-					a_temporary_string.item.append (l_name)
+					current_comment.append (l_name)
 				end
 				current_tag.put (param_ref)
---			elseif start_tag.name.is_equal (members_str) then
---				current_tag.put (members)
---			elseif start_tag.name.is_equal (name_str) then
---				current_tag.put (name)
---			elseif start_tag.name.is_equal (assembly_str) then
---				current_tag.put (assembly)
---			elseif start_tag.name.is_equal (doc_str) then
---				create current_tag.make (10)
---				current_tag.put (doc)
 			else
 				if current_tag = Void then
 					create current_tag.make (10)
@@ -132,13 +117,13 @@ feature
 			inspect 
 				current_tag.item
 			when param then
-				a_temporary_string.item.append (content.out)
+				current_comment.append (content.out)
 			when Summary then
-				a_temporary_string.item.append (content.out)
+				current_comment.append (content.out)
 			when returns then
-				a_temporary_string.item.append (content.out)
+				current_comment.append (content.out)
 			else
-				a_temporary_string.item.append (content.out)	
+				current_comment.append (content.out)	
 			end
 		end
 
@@ -148,26 +133,20 @@ feature
 			l_str: STRING
 		do
 --			print (end_tag.out)
---			l_str := clone (a_temporary_string.item)
---			l_str.replace_substring_all ("%N", "")
---			l_str.replace_substring_all ("   ", " ")
---			l_str.replace_substring_all ("  ", " ")
 			inspect 
 				current_tag.item
-			when Para then
-				a_temporary_string.item.append (paragraphe_tag)
+--			when Para then
+--				current_comment.append (paragraphe_tag)
 			when Param then
-				l_str := format_comment (a_temporary_string.item)
+				l_str := format_comment (current_comment)
 				a_parameter.set_description (l_str)
 				a_member.add_parameter (deep_clone (a_parameter))
 			when Summary then
-				l_str := format_comment (a_temporary_string.item)
+				l_str := format_comment (current_comment)
 				a_member.set_summary (l_str)
 			when Returns then
-				l_str := format_comment (a_temporary_string.item)
+				l_str := format_comment (current_comment)
 				a_member.set_returns (l_str)
-			when Member then
-				members_information.put (deep_clone (a_member), clone (a_member.name))
 			else
 			end
 			current_tag.remove
@@ -193,6 +172,13 @@ feature -- Basic Operation
 			Result.replace_substring_all ("  ", " ")
 			Result.replace_substring_all (paragraphe_tag, "%N")
 		end
-		
+
+
+invariant
+	non_void_a_member: a_member /= Void
+	non_void_a_parameter: a_parameter /= Void
+	non_void_current_comment: current_comment /= Void
+	non_void_current_tag: current_tag /= Void
+	
 
 end -- class FEATURE_XML_PARSER

@@ -133,7 +133,7 @@ feature -- Access
 			loop
 				classes := clusters.item.classes
 				if classes.has (cname) then
-					Result.extend (classes.item (cname))
+					Result.extend (classes.found_item)
 				end
 				clusters.forth
 			end
@@ -155,7 +155,7 @@ feature -- Access
 			from clusters.start until clusters.after loop
 				classes := clusters.item.classes
 				if classes.has (cname) then
-					class_i := classes.item (cname)
+					class_i := classes.found_item
 					if class_i.compiled then
 						Result.extend (class_i)
 					end
@@ -187,7 +187,7 @@ feature -- Access
 						-- Evaluation of the real name of the class
 					renamings := rename_clause.renamings
 					if renamings.has (class_name) then
-						real_name := renamings.item (class_name)
+						real_name := renamings.found_item
 					elseif renamings.has_item (class_name) then
 						real_name := Has_been_renamed
 					end
@@ -213,7 +213,7 @@ feature -- Access
 									-- Evaluation of the real name of the class
 								renamings := rename_clause.renamings
 								if renamings.has (class_name) then
-									real_name := renamings.item (class_name)
+									real_name := renamings.found_item
 								elseif renamings.has_item (class_name) then
 									real_name := Has_been_renamed
 								end
@@ -462,7 +462,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			cluster: CLUSTER_I
 			vd23: VD23
 			vd24: VD24
-			i:INTEGER
+			old_cursor: CURSOR
 		do
 			from
 				clusters.start
@@ -470,7 +470,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				clusters.after
 			loop
 				cluster := clusters.item
-				i := clusters.index
+				old_cursor := clusters.cursor
 				compute_last_class (class_name, cluster)
 				if last_class = Void then
 					!!vd23
@@ -487,7 +487,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 					Error_handler.insert_error (vd24)
 				end
 				Result := last_class
-				clusters.go_i_th (i)
+				clusters.go_to (old_cursor)
 				clusters.forth
 			end
 		end
@@ -495,15 +495,15 @@ feature {COMPILER_EXPORTER} -- Implementation
 	duplicate: like Current is
 			-- Duplication of universe
 		local
-			pos: INTEGER
+			old_cursor: CURSOR
 		do
-			pos := clusters.index
+			old_cursor := clusters.cursor
 
-			!!Result.make
+			!! Result.make
 			clusters.start
 			Result.set_clusters (clusters.duplicate (clusters.count))
 
-			clusters.go_i_th (pos)
+			clusters.go_to (old_cursor)
 		end
 
 	compute_last_class (class_name: STRING cluster: CLUSTER_I) is
@@ -536,14 +536,14 @@ feature {COMPILER_EXPORTER} -- Implementation
 							-- Evaluation of the real name of the class
 						renamings := rename_clause.renamings
 						if renamings.has (class_name) then
-							real_name := renamings.item (class_name)
+							real_name := renamings.found_item
 						elseif renamings.has_item (class_name) then
 							real_name := Has_been_renamed
 						end
 					end
 
 					if a_cluster.classes.has (real_name) then
-						new_class := a_cluster.classes.item (real_name)
+						new_class := a_cluster.classes.found_item
 						if last_class = Void then
 							last_class := new_class
 						else
@@ -551,7 +551,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 							vscn.set_first (last_class)
 							vscn.set_second (new_class)
 							vscn.set_cluster (a_cluster)
-							if error_list = void then
+							if error_list = Void then
 								!! error_list.make
 							end
 							error_list.extend (vscn)
@@ -619,7 +619,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			a_class: CLASS_C
 			ovc    : CLUSTER_I
 		do
-			if override_cluster_name /= void then
+			if override_cluster_name /= Void then
 				cluster_of_name (override_cluster_name).set_is_override_cluster (True)
 			end
 
@@ -772,7 +772,7 @@ feature {COMPILER_EXPORTER} -- DLE Implementation
 		local
 			cluster: CLUSTER_I
 			vd24: VD24
-			i:INTEGER
+			old_cursor: CURSOR
 		do
 			from
 				clusters.start
@@ -780,7 +780,7 @@ feature {COMPILER_EXPORTER} -- DLE Implementation
 				clusters.after
 			loop
 				cluster := clusters.item
-				i := clusters.index
+				old_cursor := clusters.cursor
 				compute_last_class (class_name, cluster)
 				if
 					Result /= Void and
@@ -794,7 +794,7 @@ feature {COMPILER_EXPORTER} -- DLE Implementation
 					Error_handler.insert_error (vd24)
 				end
 				Result := last_class
-				clusters.go_i_th (i)
+				clusters.go_to (old_cursor)
 				clusters.forth
 			end
 		end

@@ -41,8 +41,8 @@ extern "C" {
 #define cwel_log_font_get_clipprecision(_ptr_) ((((LOGFONT *) _ptr_)->lfClipPrecision))
 #define cwel_log_font_get_quality(_ptr_) ((((LOGFONT *) _ptr_)->lfQuality))
 #define cwel_log_font_get_pitchandfamily(_ptr_) ((((LOGFONT *) _ptr_)->lfPitchAndFamily))
-#define cwel_log_font_get_pitch(_ptr_) (LOWORD((((LOGFONT *) _ptr_)->lfPitchAndFamily)))
-#define cwel_log_font_get_family(_ptr_) (HIWORD((((LOGFONT *) _ptr_)->lfPitchAndFamily)))
+#define cwel_log_font_get_pitch(_ptr_) (((((LOGFONT *) _ptr_)->lfPitchAndFamily)) & 0x07)
+#define cwel_log_font_get_family(_ptr_) (((((LOGFONT *) _ptr_)->lfPitchAndFamily)) & 0xF8)
 #define cwel_log_font_get_facename(_ptr_) ((((LOGFONT *) _ptr_)->lfFaceName))
 
 

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			window := a_window
 			hwindow := a_window.item
-			!! paint_struct.make
+			create paint_struct.make
 		ensure
 			window_set: window = a_window
 		end
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			window := a_window
 			hwindow := a_window.item
 			simple_make_by_pointer (a_pointer)
-			!! paint_struct.make
+			create paint_struct.make
 		ensure
 			window_set: window = a_window
 		end
@@ -68,7 +68,6 @@ feature -- Basic operations
 			window_not_void: window /= Void
 			window_exist: window.exists
 		do
-			unselect_all
 			cwin_end_paint (hwindow, paint_struct.item)
 			item := default_pointer
 		end

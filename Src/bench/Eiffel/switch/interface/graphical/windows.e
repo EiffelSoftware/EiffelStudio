@@ -1,27 +1,19 @@
+indexing
 
--- All shared access windows.
+	description: 
+		"All shared access windows.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class WINDOWS
 
-inherit
-
-	SHARED_STATUS;
-	NAMER;
-	WARNING_MESSAGES
-
 feature {NONE}
 
---	project_tool: PROJECT_W is
-pt: PROJECT_W is
+	project_tool: PROJECT_W is
 			-- Main and unique control window
 		once
 			!!Result.make
 		end;
-
-project_tool: PROJECT_W is
-do
-	Result := pt
-end;
 
 	system_tool: SYSTEM_W is
 			-- Unique assembly tool
@@ -129,6 +121,20 @@ end;
 			!!Result.make (project_tool.screen, 2);
 		end;
 
+feature -- Compilation Mode
+
+    batch_mode: BOOLEAN is
+            -- Is the compiler in batch mode?
+        do
+            Result := mode.item
+        end;
+
+    set_batch_mode (compiler_mode: BOOLEAN) is
+            -- Set `batch_mode' to `compiler_mode'
+        do
+            mode.put (compiler_mode)
+        end;
+
 feature {NONE} -- Implementation
 
 	last_warner_cell: CELL [WARNER_W] is
@@ -143,4 +149,9 @@ feature {NONE} -- Implementation
 			!! Result.put (Void)
 		end;
 
-end
+    mode: CELL [BOOLEAN] is
+        once
+            !! Result.put (False)
+        end;
+
+end -- class WINDOWS

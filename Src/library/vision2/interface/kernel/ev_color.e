@@ -10,7 +10,8 @@ class
 inherit
 	EV_ANY
 		redefine
-			implementation
+			implementation,
+			same
 		end
 
 creation
@@ -24,6 +25,7 @@ feature -- Initialization
 		do
 			!EV_COLOR_IMP!implementation.make
 			implementation.set_interface (Current)
+			implementation.set_name ("noname")
 		end
 
 	make_rgb (a_red, a_green, a_blue: INTEGER) is
@@ -31,6 +33,7 @@ feature -- Initialization
 		do
 			!EV_COLOR_IMP!implementation.make_rgb (a_red, a_green, a_blue)
 			implementation.set_interface (Current)
+			implementation.set_name ("noname")
 		end
 
 feature -- Access
@@ -53,10 +56,11 @@ feature -- Access
 			Result := implementation.blue
 		end
 
-	equal_color (other: EV_COLOR): BOOLEAN is
-			-- Is this the same color as the other
+	name: STRING is
+			-- Current name of the color
+			-- "noname" is the default name.
 		do
-			Result := other.red = red and other.green = green and other.blue = blue
+			Result := implementation.name
 		end
 
 feature -- Element change
@@ -110,6 +114,32 @@ feature -- Element change
 			implementation.set_blue (value)
 		ensure
 			blue_set: blue = value
+		end
+
+	set_name (txt: STRING) is
+			-- Make `txt' the new name.
+		require
+			valid_name: txt /= Void
+		do
+			implementation.set_name (txt)
+		ensure
+			name_set: name = txt
+		end
+
+feature -- Comparison
+
+	equal_color (other: EV_COLOR): BOOLEAN is
+			-- Is this the same color as the other
+		do
+			Result := other.red = red and other.green = green and other.blue = blue
+		end
+
+	same (other: like Current): BOOLEAN is
+			-- Does Current widget and `other' correspond
+			-- to the same screen object?
+		do
+			Result := (other.red = red) and (other.blue = blue) and
+						(other.green = green)
 		end
 
 feature -- Implementation

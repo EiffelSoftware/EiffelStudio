@@ -173,7 +173,7 @@ feature -- Settings
 				if l_ex.is_defined then
 					Exception_header.register_exception_clause (l_ex)
 				end
-				l_ex := l_meth.once_fault_block
+				l_ex := l_meth.once_catch_block
 				if l_ex.is_defined then
 					Exception_header.register_exception_clause (l_ex)
 				end
@@ -190,7 +190,7 @@ feature -- Settings
 					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
 					l_pos := l_pos + l_ex.count (is_fat_seh)
 				end
-				l_ex := l_meth.once_fault_block
+				l_ex := l_meth.once_catch_block
 				if l_ex.is_defined then
 					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
 					l_pos := l_pos + l_ex.count (is_fat_seh)

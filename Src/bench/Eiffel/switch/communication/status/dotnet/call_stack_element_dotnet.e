@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	ICOR_EXPORTER
-		export
-			{NONE} all
-		end
-
 	DEBUG_VALUE_EXPORTER
 		export
 			{NONE} all
@@ -48,6 +43,11 @@ inherit
 		export
 			{NONE} all
 		end		
+		
+	ICOR_EXPORTER -- debug trace purpose
+		export
+			{NONE} all
+		end		
 
 create {EIFFEL_CALL_STACK}
 	make
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 	make (level: INTEGER) is
 		do
 			level_in_stack := level
-			private_body_index := -1			
+			private_body_index := -1
 		end
 
 feature -- Filling
@@ -119,7 +119,7 @@ feature -- Properties
 		do
 			if private_current_exception = Void then
 				l_icd := application.imp_dotnet.eifnet_debugger.active_exception_value
-				private_current_exception := Eifnet_debug_value_factory.debug_value_from (l_icd, icd_il_frame)
+				private_current_exception := debug_value_from_icdv (l_icd)
 			end
 			Result := private_current_exception
 		end		
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 					loop
 						l_icd_val := l_array_objects @ l_object_index
 						if l_icd_val /= Void then
-							l_abstract_debug_value := Eifnet_debug_value_factory.debug_value_from (l_icd_val, icd_il_frame)
+							l_abstract_debug_value := debug_value_from_icdv (l_icd_val)
 							Result.extend (l_abstract_debug_value)
 						end
 						l_object_index := l_object_index + 1

@@ -29,11 +29,8 @@ feature
 			str_val := i;
 		end;
 
-	is_string: BOOLEAN is
+	is_string: BOOLEAN is True
 			-- Is the current constant a string one ?
-		do
-			Result := True;
-		end;
 
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.

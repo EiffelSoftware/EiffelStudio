@@ -134,7 +134,7 @@ feature -- Element change
 			g_error: POINTER
 			pixbuf: POINTER
 		do
-			create a_cs.make (file_name)
+			a_cs := file_name
 			pixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 				-- We could not load the image so raise an exception
@@ -301,7 +301,7 @@ feature -- Access
 					((array_offset) // a_width) -- Zero based Y coord
 				)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-				-- RGB values of a_color are 16 bit.
+					-- RGB values of a_color are 16 bit.
 				if n_character = 8 then
 					n_character := 0
 					character_result := 0
@@ -362,7 +362,7 @@ feature -- Access
 					((array_offset) // a_width) -- Zero based Y coord
 				)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-				-- RGB values of a_color are 16 bit.
+					-- RGB values of a_color are 16 bit.
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
 				array_area.put ((feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
@@ -470,7 +470,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 feature {NONE} -- Implementation
 
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
-			-- 
+			-- Construct `Current' from GdkPixbuf `a_pixbuf'
 		local
 			a_gdkpix, a_gdkmask: POINTER
 		do
@@ -479,17 +479,17 @@ feature {NONE} -- Implementation
 		end
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
-			-- 
+			-- Save `Current' in `a_format' to `a_filename'
 		local
 			a_gdkpixbuf: POINTER
 			a_gerror: POINTER
 			a_handle, a_filetype: EV_GTK_C_STRING
 		do			
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
-				-- Perform custom saving with GdkPixbuf
+					-- Perform custom saving with GdkPixbuf
 				a_gdkpixbuf := pixbuf_from_drawable
-				create a_handle.make (a_filename)
-				create a_filetype.make (a_format.file_extension)
+				a_handle := a_filename.string
+				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
 					a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
 				end

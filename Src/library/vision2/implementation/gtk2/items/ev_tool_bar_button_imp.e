@@ -111,7 +111,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			tooltip := a_text.twin
-			create a_cs.make (a_text)
+			a_cs := a_text
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,
 				app_implementation.tooltips,

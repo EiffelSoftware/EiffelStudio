@@ -1162,7 +1162,7 @@ feature {NONE} -- Implementation
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, NULL, $Result)
 			
-			create a_gtk_c_str.make ("vertical-separator")
+			a_gtk_c_str := "vertical-separator"
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			Result := Result + a_vert_sep
 		end

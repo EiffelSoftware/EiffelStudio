@@ -38,15 +38,13 @@ feature -- Access
 			Result := transported_data /= Void and then data_type /= Void
 		end
 
-	activate_pick_and_drop (mouse_button: INTEGER; cmd: EV_COMMAND; args: EV_ARGUMENT) is
+	activate_pick_and_drop (cmd: EV_COMMAND; args: EV_ARGUMENT) is
 			-- Activate the mechanism of pick and drop,
-			-- when clicking on the `mouse_button'.
+			-- when clicking on the right button of the mouse.
 			-- Add `cmd' (if not Void) to the list of commands to be
 			-- executed just before initializing the transport.
-		require
-			valid_button: mouse_button > 0 and then mouse_button < 4	
 		do
-			implementation.activate_pick_and_drop (mouse_button, cmd, args)
+			implementation.activate_pick_and_drop (cmd, args)
 		end
 
 	set_pick_position (a_x, a_y: INTEGER) is

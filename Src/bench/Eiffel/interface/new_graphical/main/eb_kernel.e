@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			create eifgen_init.make
 
 				--| Initialization of global resources.
+			register_basic_graphical_types
 			initialize_resources (System_general, Eiffel_preferences)
 			create pref_strs
 			if Platform_constants.is_windows then

@@ -15,7 +15,9 @@ feature -- Access
 	lop_resource: RESOURCE_STRUCTURE is
 			-- Resources specified by the user
 		once
-			create Result.make_from_location (default_file_name, Eiffel_recent_projects)
+			create Result
+			Result.register_basic_types
+			Result.make_from_location (default_file_name, Eiffel_recent_projects)
 		end
 
 feature -- Access
@@ -42,7 +44,9 @@ feature -- Saving
 			if r /= Void then
 				r.set_actual_value (new_value)
 			else
-				create r.make (last_opened_projects_resource_name, new_value)
+				create r.make (last_opened_projects_resource_name, new_value,
+					Lop_resource.registered_types @ Lop_resource.Array_type_index
+				)
 				lop_resource.root_folder.resource_list.extend (r)
 				lop_resource.put_resource (r)
 			end

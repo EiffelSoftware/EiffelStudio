@@ -12,6 +12,17 @@ deferred class
 inherit
 	EV_CONTAINER_I
 
+feature -- Status setting
+
+	set_position (value: INTEGER) is
+			-- Make `value' the new position of the splitter.
+			-- `value' is given in percentage.
+		require
+			exists: not destroyed
+			valid_value: value >= 0 and value <= 100
+		deferred
+		end
+
 end -- class EV_SPLIT_AREA_I
 
 --|----------------------------------------------------------------

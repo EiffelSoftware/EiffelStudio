@@ -458,7 +458,8 @@ feature {NONE} -- Initialization
 		end
 
 	end_build_formatters is
-			-- Finish the initialization of formatters (associate them with the editor and select a formatter).
+			-- Finish initialization of formatters (associate them with editor
+			-- and select a formatter).
 		local
 			f_ind: INTEGER
 		do
@@ -509,7 +510,9 @@ feature {NONE} -- Initialization
 			if f_ind < 1 or f_ind > managed_class_formatters.count then
 				f_ind := 7
 			end
-			(managed_class_formatters @ f_ind).enable_select;
+			if managed_class_formatters.i_th (f_ind) /= Void then
+				managed_class_formatters.i_th (f_ind).enable_select
+			end
 			
 				-- We now select the correct feature formatter.
 			f_ind := default_feature_formatter_index
@@ -519,7 +522,7 @@ feature {NONE} -- Initialization
 			if f_ind < 1 or f_ind > managed_feature_formatters.count then
 				f_ind := 2
 			end
-			(managed_feature_formatters @ f_ind).enable_select
+			managed_class_formatters.i_th (f_ind).enable_select
 		end
 
 	build_tools is

@@ -32,8 +32,14 @@ inherit
 		end
 			
 	MT_RS_CONTAINABLE
+		undefine
+			copy, is_equal
+		end
 
 	MT_LINEAR_COLLECTION [G]
+		undefine
+			copy, is_equal
+		end
 
 creation
 	make
@@ -74,7 +80,7 @@ feature -- Element change
 		local
 			p, old_active: like first_element
 		do
-			if empty then
+			if is_empty then
 				put_front (v)
 			elseif after then
 				back

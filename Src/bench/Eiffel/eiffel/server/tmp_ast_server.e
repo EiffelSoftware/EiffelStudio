@@ -57,13 +57,7 @@ feature
 
 	put (t: CLASS_AS) is
 			-- Append object `t' in file ".TMP_AST".
-		local
-			server_file: SERVER_FILE;
 		do
-			server_file := Server_controler.file_of_id (current_id);
-			if not server_file.is_open then
-				Server_controler.open_file (server_file);
-			end;
 			index.clear_all;
 			last_id := t.id;
 				-- Write data structure in file `file'
@@ -113,7 +107,7 @@ feature
 			invariant_info := Void;
 		end;
 
-	Size_limit: INTEGER is 1000000;
+	Size_limit: INTEGER is 20;
 
 feature {NONE} -- External features
 
@@ -128,11 +122,6 @@ feature {NONE} -- External features
 		end;
 
 	is_feature_as (o: ANY): BOOLEAN is
-		external
-			"C"
-		end;
-
-	nb_object (o: ANY): INTEGER is
 		external
 			"C"
 		end;

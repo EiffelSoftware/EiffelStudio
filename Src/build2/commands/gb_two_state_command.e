@@ -67,14 +67,38 @@ feature -- Execution
 	enable_selected is
 			-- Set `is_selected' to True.
 		do
-			set_selected (True)
+			is_selected := True
+			update_controls (is_selected)
+			--set_selected (True)
 		end
 
 	disable_selected is
 			-- Set `is_selected' to False.
 		do
-			set_selected (False)
+			is_selected := False
+			update_controls (is_selected)
+			--set_selected (False)
 		end
+		
+	safe_disable_selected is
+			-- Set `is_selected' to False
+			-- only if `is_selected' currently True.
+		do
+			if is_selected then
+				execute
+			end
+		end
+		
+	reverse_is_selected is
+			-- Assign not `is_selected' to
+			-- `is_selected'.
+		do
+			is_selected := not is_selected
+		ensure
+			reversed: old is_selected /= is_selected
+		end
+		
+		
 
 feature -- Basic operations
 
@@ -136,7 +160,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_selected (a_selected: BOOLEAN)is
+	update_controls (a_selected: BOOLEAN) is
 			-- Set `is_selected' to `a_selected'.
 		local
 			toolbar_items: like managed_toolbar_items
@@ -152,12 +176,14 @@ feature {NONE} -- Implementation
 					until
 						toolbar_items.after
 					loop
+						toolbar_items.item.select_actions.block
 						if a_selected then
 							toolbar_items.item.enable_select
 						else
 							toolbar_items.item.disable_select
 						end
 						toolbar_items.item.set_tooltip (tooltip)
+						toolbar_items.item.select_actions.resume
 						toolbar_items.forth
 					end
 				end
@@ -178,7 +204,7 @@ feature {NONE} -- Implementation
 						menu_items.forth
 					end
 				end
-				execute
+				--execute
 				safety_flag := False
 			end
 		end
@@ -190,6 +216,5 @@ feature {NONE} -- Implementation
 			
 	is_selected: BOOLEAN
 		-- Is current selected?
-
 
 end -- class GB_TWO_STATE_COMMAND

@@ -41,7 +41,9 @@ feature -- Access
 			-- Item which is currently selected
 			-- It needs to be in single selection mode
 		do
-			Result := selected_items.first
+			if selected_items.count > 0 then
+				Result := selected_items.first
+			end
 		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM] is
@@ -56,16 +58,16 @@ feature -- Access
 		do
 			original_position := interface.index
 			create Result.make
-				from
-					interface.start
-				until
-					interface.off
-				loop
-					if interface.item.is_selected then
-						Result.extend (interface.item)
-					end
-					interface.forth
+			from
+				interface.start
+			until
+				interface.off
+			loop
+				if interface.item.is_selected then
+					Result.extend (interface.item)
 				end
+				interface.forth
+			end
 			interface.go_i_th (original_position)
 		end
 
@@ -149,6 +151,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/01 18:09:08  king
+--| Added lists_equal assertion feature
+--|
 --| Revision 1.41  2000/02/29 23:15:03  rogers
 --| Simplified selected_items. Selected item is no longer deferred, but now implemented in this class.
 --|

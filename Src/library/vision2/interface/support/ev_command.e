@@ -3,9 +3,9 @@ indexing
 	description:
 		"General notion of command (semantic unity). %
 		%To write an actual command inherit from this %
-		%class and implement the `execute' feature";
-	status: "See notice at end of class";
-	date: "$Date$";
+		%class and implement the `execute' feature"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -14,7 +14,7 @@ deferred class
 
 feature -- Access
 
---	context_data: CONTEXT_DATA;
+--	context_data: CONTEXT_DATA
 			-- Information related to Current command,
 			-- provided by the underlying user interface 
 			-- mechanism
@@ -27,24 +27,24 @@ feature -- Status report
 			-- If true, EiffelVision will clone Current command 
 			-- whenever it is invoked as a callback
 		do
-		end;
+		end
 
 	context_data_useful: BOOLEAN is
 			-- Should the context data be available
 			-- when Current command is invoked as a
 			-- callback
 		do
-		end;
+		end
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (arguments: EV_ARGUMENTS) is
 			-- Execute Current command.
-			-- `argument' is automatically passed by
+			-- `arguments' is automatically passed by
 			-- EiffelVision when Current command is
 			-- invoked as a callback.
 		deferred
-		end;
+		end
 	
 	execute_address: POINTER is
 			-- Address of feature execute 

@@ -300,7 +300,10 @@ feature -- Access
 				Result.append (Semicolon)
 				Result.append (New_line)			
 			end
+
 			Result.append (tab)
+			Result.append (clone (Virtual))
+			Result.append (Space)
 			Result.append (Tilda)
 			Result.append (name)
 			Result.append (Space)

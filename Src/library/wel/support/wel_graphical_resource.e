@@ -123,8 +123,10 @@ feature -- Removal
 				delete_result := destroy_resource
 				if not delete_result then
 					last_error := cwin_get_last_error
---					io.putstring ("Unable to Destroy Icon/Cursor, Error="+last_error.out)
---					print (Current)
+					debug ("WEL")
+						io.putstring ("Unable to Destroy Icon/Cursor, Error="+last_error.out)
+						print (Current)
+					end
 				end
 				item := p
 			end

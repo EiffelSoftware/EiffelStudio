@@ -1,0 +1,37 @@
+<document title="Compiler History" output="studio">
+	<meta_data/>
+	<paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_50_release/index.xml</url>
+					<label>Major changes between ISE Eiffel 4.5 and ISE Eiffel 5.0</label>
+				</link>
+			</item>
+			<item>
+					<link>
+						<url>01_51_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.0 and ISE Eiffel 5.1</label>
+					</link>
+			</item>
+			<item>
+					<link>
+						<url>02_52_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.1 and ISE Eiffel 5.2</label>
+					</link>
+			</item>
+			<item>
+					<link>
+						<url>03_53_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.2 and ISE Eiffel 5.3</label>
+					</link>
+			</item>
+			<item>
+				<link>
+					<url>04_54_release/index.xml</url>
+					<label>Major changes between ISE Eiffel 5.3 and ISE Eiffel 5.4</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

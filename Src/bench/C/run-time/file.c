@@ -60,9 +60,13 @@
 #define ST_MODE		0x0fff		/* Keep only permission mode */
 #define NAME_MAX	10			/* Maximum length for user/group name */
 
+private char *file_open_mode();		/* Open file */
 private char *file_fopen();		/* Open file */
 private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
 private char *file_freopen();	/* Reopen file */
+private char *file_binary_fopen();		/* Open file */
+private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */
+private char *file_binary_freopen();	/* Reopen file */
 private void swallow_nl();		/* Swallow next character if new line */
 
 extern int esys();				/* Raise 'Operating system error' exception */
@@ -72,40 +76,46 @@ extern int eio();				/* Raise 'I/O error' exception */
  * Opening a file.
  */
 
+public char *file_open_mode (how, mode)
+int how;
+char mode;
+{
+	static char type [4];
+
+	type[3] = '\0';
+	type[2] = '\0';
+#ifndef __WATCOMC__
+	if (how >= 10) how -= 10;
+#endif
+	switch (how) {
+	case 0: 
+	case 3: type[0] = 'r'; break;
+	case 1:
+	case 4: type[0] = 'w'; break;
+	case 2:
+	case 5: type[0] = 'a'; break;
+	default: type[0] = 'r'; break;
+	}
+	type[1] = mode;
+	switch (how) {
+	case 3:
+	case 4:
+	case 5: if (mode == '\0') type[1] = '+';
+			else type[2] = '+';
+	}
+	return type;
+}
 public fnptr file_open(name, how)
 char *name;
 int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-	char *type;
-
-	switch (how) {					/* Opening mode code */
-	case 0: type = "r"; break;		/* Open for reading */
-	case 1: type = "w"; break;		/* Truncate/create for writing */
-	case 2: type = "a"; break;		/* Open for writing at end of file */
-	case 3: type = "r+"; break;		/* Open for reading & writing */
-	case 4: type = "w+"; break;		/* Truncate/create for reading & writing */
-	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
 #ifdef __WATCOMC__
-	case 10: type = "rt"; break;		/* Open for reading */
-	case 11: type = "wt"; break;		/* Truncate/create for writing */
-	case 12: type = "at"; break;		/* Open for writing at end of file */
-	case 13: type = "rt+"; break;		/* Open for reading & writing */
-	case 14: type = "wt+"; break;		/* Truncate/create for reading & writing */
-	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_fopen(name, file_open_mode(how,'t'));
 #else
-	case 10: type = "r"; break;		/* Open for reading */
-	case 11: type = "w"; break;		/* Truncate/create for writing */
-	case 12: type = "a"; break;		/* Open for writing at end of file */
-	case 13: type = "r+"; break;		/* Open for reading & writing */
-	case 14: type = "w+"; break;		/* Truncate/create for reading & writing */
-	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_fopen(name, file_open_mode(how,'\0'));
 #endif
-	default: type = "r";
-	}
-
-	return (fnptr) file_fopen(name, type);
 }
 
 public fnptr file_dopen(fd, how)
@@ -114,34 +124,11 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-	char *type;
-
-	switch (how) {					/* Opening mode code */
-	case 0: type = "r"; break;		/* Open for reading */
-	case 1: type = "w"; break;		/* Truncate/create for writing */
-	case 2: type = "a"; break;		/* Open for writing at end of file */
-	case 3: type = "r+"; break;		/* Open for reading & writing */
-	case 4: type = "w+"; break;		/* UNUSED: does not make any sense--RAM */
-	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
 #ifdef __WATCOMC__
-	case 10: type = "rt"; break;		/* Open for reading */
-	case 11: type = "wt"; break;		/* Truncate/create for writing */
-	case 12: type = "at"; break;		/* Open for writing at end of file */
-	case 13: type = "rt+"; break;		/* Open for reading & writing */
-	case 14: type = "wt+"; break;		/* UNUSED: does not make any sense--RAM */
-	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_fdopen(fd, file_open_mode(how,'t'));
 #else
-	case 10: type = "r"; break;		/* Open for reading */
-	case 11: type = "w"; break;		/* Truncate/create for writing */
-	case 12: type = "a"; break;		/* Open for writing at end of file */
-	case 13: type = "r+"; break;		/* Open for reading & writing */
-	case 14: type = "w+"; break;		/* UNUSED: does not make any sense--RAM */
-	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_fdopen(fd, file_open_mode(how,'\0'));
 #endif
-	default: type = "r";
-	}
-
-	return (fnptr) file_fdopen(fd, type);
 }
 
 public fnptr file_reopen(name, how, old)
@@ -154,34 +141,54 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-	char *type;
-
-	switch (how) {					/* Opening mode code */
-	case 0: type = "r"; break;		/* Open for reading */
-	case 1: type = "w"; break;		/* Truncate/create for writing */
-	case 2: type = "a"; break;		/* Open for writing at end of file */
-	case 3: type = "r+"; break;		/* Open for reading & writing */
-	case 4: type = "w+"; break;		/* Truncate/create for reading & writing */
-	case 5: type = "a+"; break;		/* Reading anywhere, writing at the end */
 #ifdef __WATCOMC__
-	case 10: type = "rt"; break;		/* Open for reading */
-	case 11: type = "wt"; break;		/* Truncate/create for writing */
-	case 12: type = "at"; break;		/* Open for writing at end of file */
-	case 13: type = "rt+"; break;		/* Open for reading & writing */
-	case 14: type = "wt+"; break;		/* Truncate/create for reading & writing */
-	case 15: type = "at+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_freopen(name, file_open_mode(how,'t'), old);
 #else
-	case 10: type = "r"; break;		/* Open for reading */
-	case 11: type = "w"; break;		/* Truncate/create for writing */
-	case 12: type = "a"; break;		/* Open for writing at end of file */
-	case 13: type = "r+"; break;		/* Open for reading & writing */
-	case 14: type = "w+"; break;		/* Truncate/create for reading & writing */
-	case 15: type = "a+"; break;		/* Reading anywhere, writing at the end */
+	return (fnptr) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif
-	default: type = "r";
-	}
+}
 
-	return (fnptr) file_freopen(name, type, old);
+public fnptr file_binary_open(name, how)
+char *name;
+int how;
+{
+	/* Open file `name' with the corresponding type 'how'. */
+
+#ifdef __WATCOMC__
+	return (fnptr) file_fopen(name, file_open_mode(how,'b'));
+#else
+	return (fnptr) file_fopen(name, file_open_mode(how,'\0'));
+#endif
+}
+
+public fnptr file_binary_dopen(fd, how)
+int fd;
+int how;
+{
+	/* Open file `fd' with the corresponding type 'how'. */
+
+#ifdef __WATCOMC__
+	return (fnptr) file_fdopen(fd, file_open_mode(how,'b'));
+#else
+	return (fnptr) file_fdopen(fd, file_open_mode(how,'\0'));
+#endif
+}
+
+public fnptr file_binary_reopen(name, how, old)
+char *name;
+int how;
+FILE *old;
+{
+	/* Reopen file `name' with the corresponding type 'how' and substitute that
+	 * to the old stream described by `old'. This is useful to redirect 'stdout'
+	 * to another place, for instance.
+	 */
+
+#ifdef __WATCOMC__
+	return (fnptr) file_freopen(name, file_open_mode(how,'b'), old);
+#else
+	return (fnptr) file_freopen(name, file_open_mode(how,'\0'), old);
+#endif
 }
 
 private char *file_fopen(name, type)
@@ -295,6 +302,28 @@ float number;
 		eio();
 }
 
+public void file_pib(f, number)
+FILE *f;
+int	number;
+{
+	/* Write `number' on `f' */
+
+	errno = 0;
+	if (1 != fwrite(&number, sizeof(int),1, f))
+		eio();
+}
+
+public void file_prb(f, number)
+FILE *f;
+float number;
+{
+	/* Write `number' on `f' */
+
+	errno = 0;
+    if (1 != fprintf (&number, sizeof(float),1, f))
+		eio();
+}
+
 public void file_ps(f, str, len)
 FILE *f;
 char *str;
@@ -329,6 +358,17 @@ double val;
 
 	errno = 0;
 	if (0 > fprintf(f, "%.17g", val))
+		eio();
+}
+
+public void file_pdb(f, val)
+FILE *f;
+double val;
+{
+	/* Write double `val' onto `f' */
+
+	errno = 0;
+	if (1 != fwrite (&val, sizeof(double), 1, f))
 		eio();
 }
 
@@ -444,6 +484,50 @@ FILE *f;
 
 	errno = 0;
 	if (0 > fscanf(f, "%lf", &d))
+		eio();
+	swallow_nl(f);
+
+	return d;
+}
+public long file_gib(f) 
+FILE *f;     
+{             
+	/* Get an integer from `f' */
+
+	long i;     
+
+	errno = 0;
+	if (1 != fread (&i, sizeof (long), 1, f))
+		eio();
+	swallow_nl(f);
+
+	return i;
+}
+
+public float file_grb(f) 
+FILE *f;     
+{             
+	/* Get a real from `f' */
+
+	float r;     
+
+	errno = 0;
+	if (1 != fread (&r, sizeof (float), 1, f))
+		eio();
+	swallow_nl(f);
+
+	return r;
+}
+
+public double file_gdb(f) 
+FILE *f;     
+{             
+	/* Get a double from `f' */
+
+	double d;     
+
+	errno = 0;
+	if (1 != fread (&d, sizeof(double), 1, f))
 		eio();
 	swallow_nl(f);
 

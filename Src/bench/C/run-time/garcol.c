@@ -1371,8 +1371,16 @@ private void full_sweep()
 		) {
 			size = zone->ov_size;			/* Size and flags */
 
-			if (!(size & B_BUSY) || (size & B_C)) {
-				/* Object is a C one or belongs to the free list (not busy).
+			if (!(size & B_BUSY)) {
+				/* Object belongs to the free list (not busy).
+				 */
+				size &= B_SIZE;				/* Keep only pure size */
+				continue;					/* Skip block */
+			}
+
+
+			if (size & B_C) {
+				/* Object is a C one.
 				 * However, any Eiffel object (i.e. any object not bearing
 				 * the EO_C mark) is marked during the marking phase and has
 				 * to be unmarked now. It is not freed however, since it is

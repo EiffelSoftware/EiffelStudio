@@ -59,8 +59,8 @@ cluster
     matisse_entities : "$ISE_EIFFEL/library/store/dbms/oodbms/matisse/matisse_entities";
     matisse_entities_externals : "$ISE_EIFFEL/library/store/dbms/oodbms/matisse/matisse_entities/externals";
     matisse_entities_streams : "$ISE_EIFFEL/library/store/dbms/oodbms/matisse/matisse_entities/streams";
-	matisse_sr : 			"$Eiffel4/library/store/dbms/oodbms/matisse/matisse_sr";
-	matisse_odl : 			"$Eiffel4/library/store/dbms/oodbms/matisse/matisse_odl";
+	matisse_sr : 			"$ISE_EIFFEL/library/store/dbms/oodbms/matisse/matisse_sr";
+	matisse_odl : 			"$ISE_EIFFEL/library/store/dbms/oodbms/matisse/matisse_odl";
 
 external
 

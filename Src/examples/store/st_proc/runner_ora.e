@@ -137,9 +137,9 @@ end -- class RUNNER_ORA
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| ISE Building, 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Contact: http://contact.eiffel.com
+--| Customer support: http://support.eiffel.com
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------

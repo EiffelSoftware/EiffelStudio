@@ -226,6 +226,7 @@ feature {NONE} -- Implementation
 			exc: EXCEPTIONS
 			exec_env: EXECUTION_ENVIRONMENT
 			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
+			launched_project_tool: PROJECT_W
 		do
 			if not ewb_display.is_valid then
 				io.error.putstring ("Cannot open display %"")
@@ -240,9 +241,6 @@ feature {NONE} -- Implementation
 				!! exc
 				exc.raise ("Invalid display")
 			end
-				--| First we put bench mode, for
-				--| `popup_file_selection' uses 
-				--| `error_window'.
 				--| If we don't put bench mode here,
 				--| `error_window' will assume batch
 				--| mode and thus it will initialize
@@ -251,7 +249,7 @@ feature {NONE} -- Implementation
 				--| once-function!!
 			mode.set_item (False)
 			!! new_resources.initialize
-			project_tool.popup_file_selection
+			launched_project_tool := Project_tool
 		end
 
 	ewb_display: SCREEN is

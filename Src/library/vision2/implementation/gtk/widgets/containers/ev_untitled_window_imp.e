@@ -172,7 +172,8 @@ feature -- Status setting
 			-- Make the window modal if `True' or
 			-- non-modal if `False'.
 		do
-			c_gtk_window_set_modal(widget, flag)
+--			c_gtk_window_set_modal(widget, flag)
+			gtk_window_set_modal (widget, flag)
 		end
 
 	show is

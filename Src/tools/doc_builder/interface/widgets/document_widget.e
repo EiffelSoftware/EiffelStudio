@@ -58,7 +58,6 @@ feature {NONE} -- Initialization
 --			extend (internal_html_widget, "HTML")
 			
 			create internal_edit_widget.make (document)
-			internal_html_widget.set_document (document)
 			set_first (internal_edit_widget)
 			set_second (internal_html_widget)
 			internal_edit_widget.resize_actions.force_extend (agent editor_resized)

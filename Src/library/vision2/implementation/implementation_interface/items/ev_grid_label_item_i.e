@@ -80,12 +80,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			
 			back_color := internal_background_color
 			if back_color = Void then
-				back_color := parent_grid_i.background_color
+				back_color := parent_i.background_color
 			end
 			drawable.set_foreground_color (back_color)
 			drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 			if is_selected then
-				drawable.set_foreground_color (parent_grid_i.selection_color)
+				drawable.set_foreground_color (parent_i.selection_color)
 				drawable.set_and_mode
 				drawable.fill_rectangle (an_x, a_y, a_width, a_height)
 				drawable.set_foreground_color ((create {EV_STOCK_COLORS}).white)

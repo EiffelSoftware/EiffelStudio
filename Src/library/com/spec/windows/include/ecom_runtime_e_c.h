@@ -55,6 +55,7 @@ class ecom_runtime_ec
 		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref, LARGE_INTEGER * old);
 		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER * old);
 		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
+		void ** ccom_ec_pointed_c_pointer (void * a_pointer);
 
 		// ARRAY
 		char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old);

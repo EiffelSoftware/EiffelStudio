@@ -177,7 +177,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 
 void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2
 	eif_call_finish_freezing(c_code_dir, freeze_cmd_name);
 #else
 	DIR *dirp;
@@ -187,6 +187,9 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 	if (cmd == (char *)0)
 		enomem();
 
+#ifdef __VMS	/* skip cd, cp commands for VMS */
+	strcpy(cmd, "finish_freezing");
+#else
 		/* First copy `finish_freezing' if it does not exist */
 	dirp = (DIR *)dir_open(eif_access(c_code_dir));
 
@@ -201,6 +204,7 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 
 		/* Go to the C code directory and start finish_freezing */
 	sprintf(cmd, "%scd %s; finish_freezing", cmd, eif_access(c_code_dir));
+#endif /* not VMS */
 
 	(*set_proc)(eif_access(request), RTMS (cmd));
 	(*send_proc)(eif_access(request));
@@ -251,9 +255,9 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 #elif defined __VMS
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(driver_name)) + 
-		 strlen(eif_access(c_code_dir)),
-		 strlen(eif_access(system_name)) );
+	cmd = cmalloc(15 + strlen(eif_access(driver_name))
+		 + strlen(eif_access(c_code_dir))
+		 + strlen(eif_access(system_name)) );
 	if (cmd == (char *)0)
 		enomem();
 
@@ -266,7 +270,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 #else
 	char *cmd;
 
-	cmd = cmalloc(15 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
+	cmd = cmalloc(20 + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) +
 					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
 	if (cmd == (char *)0)
 		enomem();
@@ -333,7 +337,11 @@ EIF_BOOLEAN eif_is_windows(void)
 EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 {
 	EIF_REFERENCE result;
+#ifdef __VMS
+	char *date_string = ctime((time_t*)&a_date);
+#else
 	char *date_string = ctime(&a_date);
+#endif
 
 	result = RTMS(date_string);
 	/* free (date_string); FIXME - check with xavier */

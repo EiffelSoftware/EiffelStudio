@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 					create type_consumer.make (type_name.internal_type, type_name.eiffel_name)
 					type_consumers.put (type_consumer, type_name.eiffel_name)
 					if status_printer /= Void then
-						status_printer.call (["Analyzed " + create {STRING}.make_from_cil (t.get_full_name)])
+						status_printer.call (["Analyzed " + create {STRING}.make_from_cil (type_name.internal_type.get_full_name)])
 					end
 					if status_querier /= Void then
 						status_querier.call ([])

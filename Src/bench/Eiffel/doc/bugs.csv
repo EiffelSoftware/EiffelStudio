@@ -31,9 +31,9 @@ Formats,,,,,,,,,,
 Editor,,,,,,,,,,
 ,3,1,The editor doesn't support more than 32000 lines of text (scrollbars jump to the top),,Julian,,,,EDT0001,11/16/2001
 ,4,1,"Writing 256 times ""io.putstring (""A message"");"" on the same line messes up the editor",,Julian,,,,EDT0002,11/16/2001
-,5,3,"When dropping a dragged selection at the start of a line, EiffelStudio is frozen",,Xavier,,,,EDT0003,11/16/2001
+,5,3,"When dropping a dragged selection at the start of a line, EiffelStudio is frozen",,Xavier,Xavier,1,test,EDT0003,11/16/2001
 ,3,2,After recompiling it is possible to edit library classes,,Xavier,,,,EDT0004,11/20/2001
-
+,2,3,"When pasting a text that is larger than the current text, the end of the text is not displayed",,Xavier,,,,EDT0005,11/21/2001
 
 
 
@@ -44,7 +44,7 @@ Editor,,,,,,,,,,
 
 
 Debugger,,,,,,,,,,
-,3,2,"There are sometimes 2 breakpoints at the same line, which causes strange behaviors",,Xavier,,,,DBG0001,11/16/2001
+,3,2,"There are sometimes 2 breakpoints at the same line, which causes strange behaviors",,Xavier,Xavier,1,test,DBG0001,11/16/2001
 ,3,2,Implement a deferred feature without preconditions in a descendant and add a precondition => breakpoints are messed up,,Xavier,,,,DBG0002,11/16/2001
 ,5,2,t: EV_TREE_ITEM; n: EV_TREE_NODE; create t; n?=t.item => crash at run-time,,Xavier,,,,DBG0003,11/16/2001
 ,5,2,"Freeze, run, cancel, end freeze, run => EiffelStudio is frozen",,Julian,,,,DBG0004,11/16/2001

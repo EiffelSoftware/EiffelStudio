@@ -4,12 +4,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class		
 	GB_MAIN_WINDOW
 
 inherit
 	
 	EV_TITLED_WINDOW
+		export
+			{NONE} all
+			{ANY} is_empty, is_show_requested, show, hide
 		undefine
 			is_in_default_state
 		end
@@ -20,27 +23,44 @@ inherit
 		end
 		
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 		
 	GB_DEFAULT_STATE
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
 		
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -120,16 +140,7 @@ feature -- Basic operation
 			command_handler.show_hide_display_window_command.disable_selected
 			command_handler.show_history_command.disable_selected
 			destroy_floating_editors
-		end
-		
-		
-	initialize_split_areas is
-			-- Set splitters to default positions.
-		do
-			horizontal_split_area.set_split_position (Default_width_of_type_selector)
-			vertical_split_area.set_split_position (Default_height_of_type_selector)
-		end
-		
+		end	
 		
 	hide_tools is
 			-- Remove tools from `Current'.
@@ -154,6 +165,13 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
+	
+	initialize_split_areas is
+			-- Set splitters to default positions.
+		do
+			horizontal_split_area.set_split_position (Default_width_of_type_selector)
+			vertical_split_area.set_split_position (Default_height_of_type_selector)
+		end
 
 	initialize_menu is
 			-- Initialize menus.

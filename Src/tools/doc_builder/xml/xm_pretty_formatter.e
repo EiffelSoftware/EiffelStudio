@@ -12,15 +12,12 @@ inherit
 			on_start_tag,
 			on_end_tag,
 			on_content
-		end
+		end		
 
-create
-	make
-	
-feature -- Creation
+feature -- Status Setting
 
-	make (a_string: STRING) is
-			-- Create
+	format (a_string: STRING) is
+			-- Format `a_string'
 		require
 			string_not_void: a_string /= Void
 		do			
@@ -28,27 +25,29 @@ feature -- Creation
 			set_output_string (a_string)
 			Elements.wipe_out
 			Ignore_stack.wipe_out
-		end			
+		end	
 
 feature -- Tag
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print start of start tag.
-		do			
+		do
 			Elements.extend (a_local_part)
 			prev_was_end := False
-			if not Ignorable_elements.has (a_local_part) then
+			curr_has_content := False
+			if not in_ignore_element then
 				output_formatting_text
-			else
-				Ignore_stack.extend (a_local_part)
-			end						
+			end	
+			if ignorable_elements.has (a_local_part) then				
+				Ignore_stack.extend (a_local_part)				
+			end											
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print end tag.
 		do			
-			if prev_was_end then
+			if prev_was_end and not in_ignore_element then
 				output_formatting_text
 			end
 			if in_ignore_element and then Ignore_stack.item.is_equal (a_local_part) then
@@ -56,29 +55,28 @@ feature -- Tag
 			end
 			Elements.remove
 			prev_was_end := True
-			Precursor (a_namespace, a_prefix, a_local_part)
+			if curr_has_content then				
+				Precursor (a_namespace, a_prefix, a_local_part)
+			else
+				last_output.insert_character ('/', last_output.count)
+			end
+			curr_has_content := True
 		end
 
 	on_content (a_content: STRING) is
 			-- Text content.
 		local
 			l_content: STRING
-			l_char: CHARACTER
 		do
-			l_content := a_content
---			if Elements.item.is_equal ("code_block") then
---				if l_content.is_empty then
---					if l_content.area.count > 0 then
---						l_char := l_content.area.item (0)
---						if l_char = Lf_char then
---							l_content := l_char.out
---						end
---					end					
---				end				
---			end			
+			l_content := a_content		
 			if not in_ignore_element then
 				l_content.replace_substring_all ("%T", "")
 				l_content.replace_substring_all ("%N", "")
+				if not curr_has_content then
+					curr_has_content := not l_content.is_empty
+				end
+			else
+				curr_has_content := True
 			end
 			Precursor (l_content)			
 		end
@@ -88,13 +86,18 @@ feature {NONE} -- Implementation
 	output_formatting_text is
 			-- Output the format characters based on current state
 		do
-			if Elements.count > 1 then
+			if Elements.count > 1 and not in_ignore_element then
 				output (new_line)
 			end
 			output (tab_string)
 		end
 
 	prev_was_end: BOOLEAN
+			-- Was last tag an ending tag?		
+			
+	curr_has_content: BOOLEAN
+			-- Does current tag contain any content?  Content here denotes either text or elements
+			-- and therefore indicates if end tag should be <a_tag/> or </a_tag>
 
 	tab_string: STRING is
 			-- Tab string

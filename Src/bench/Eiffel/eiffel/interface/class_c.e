@@ -5094,6 +5094,9 @@ invariant
 	anchored_features_void_in_non_il_generation: 
 		not System.il_generation implies anchored_features = Void
 
+	-- True after proper initialization of Current instance.
+	-- has_ast: has_ast
+
 end -- class CLASS_C
 
 

@@ -15,7 +15,8 @@ inherit
 		rename
 			make as form_dialog_create
 		end;
-	SET_WINDOW_ATTRIBUTES
+	SET_WINDOW_ATTRIBUTES;
+	EIFFEL_ENV	
 
 creation
 

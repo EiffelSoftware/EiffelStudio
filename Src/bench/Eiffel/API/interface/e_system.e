@@ -165,9 +165,15 @@ feature -- Access
 	class_of_id (i: INTEGER): CLASS_C is
 			-- Eiffel Class of id `i'
 		require
-			valid_id: i /= 0
+			valid_id: valid_class_id (i)
 		do
 			Result := System.class_of_id (i)
+		end;
+
+	valid_class_id (i: INTEGER): BOOLEAN is
+			-- Is the class_type dynamic id `i' valid?
+		do
+			Result := System.classes.valid_index (i)
 		end;
 
 	root_class: CLASS_I is

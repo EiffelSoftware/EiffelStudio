@@ -88,7 +88,7 @@ struct stxchunk {
  * account for the last exception that occurred, which might not be in the
  * stack yet if manually or system raised.
  */
-struct except {
+struct eif_except {
 	unsigned char ex_val;	/* Exception code (raised) */
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
 	unsigned char ex_nsig;	/* Number of last signal received */
@@ -196,7 +196,7 @@ struct exprint {
 /* Exported data structures (used by the generated C code) */
 extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
 extern struct xstack eif_trace;	/* Unsolved exception trace */
-extern struct except exdata;	/* Exception handling global flags */
+extern struct eif_except exdata;	/* Exception handling global flags */
 
 /* Exported routines (used by the generated C code or run-time) */
 extern void expop();			/* Pops an execution vector off */

@@ -13,23 +13,10 @@ cluster
 	$root_cluster_line
 
 		-- EiffelBase
-	base:				"$ISE_EIFFEL/library/base"
-	structures(base):		"$/structures"
-	
-	kernel(base):			"$/kernel"
-	support(base):			"$/support"
-	access(structures):		"$/access"
-	cursors(structures):		"$/cursors"
-	cursor_tree(structures):	"$/cursor_tree"
-	dispenser(structures):		"$/dispenser"
-	iteration(structures):		"$/iteration"
-	list(structures):		"$/list"
-	set(structures):		"$/set"
-	sort(structures):		"$/sort"
-	storage(structures):		"$/storage"
-	table(structures):		"$/table"
-	traversing(structures):		"$/traversing"
-	tree(structures):		"$/tree"
+	library base:				"$ISE_EIFFEL/library/base"
+		exclude
+			"table_eiffel3";"desc"
+		end
 
 	thread:				"$ISE_EIFFEL/library/thread"
 

@@ -532,7 +532,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				duplicate_generics.put (generics.item (i).duplicate, i)
 				i := i + 1
 			end
-			Result := clone (Current)
+			Result := twin
 			Result.set_generics (duplicate_generics)
 		end
 
@@ -674,7 +674,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- A [K -> TOTO, H -> ARRAY [K],...] we need to do the substitution
 						-- on the second generic parameter of A in order to have
 						-- ARRAY [TOTO] and not ARRAY [K]. 
-					gen_type ?= deep_clone (constraint_type)
+					gen_type ?= constraint_type.deep_twin
 					gen_type.substitute (generics)
 					constraint_type := gen_type
 				end

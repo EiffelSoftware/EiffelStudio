@@ -165,7 +165,7 @@ feature -- Primitives
 					-- Update anchored type controler
 				Like_control.put (routine_id)
 					-- Re-processing of the anchored type
-				Result := clone (Current)
+				Result := twin
 				Result.set_actual_type
 					(anchor_type.solved_type (feat_table, anchor_feature).actual_type)
 				check
@@ -178,7 +178,7 @@ feature -- Primitives
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.set_actual_type
 							(actual_type.instantiation_in (type, written_id))
 		end

@@ -103,8 +103,7 @@ feature -- Output
 		local
 			class_name: STRING
 		do
-			class_name := clone (associated_class.name)
-			class_name.to_upper
+			class_name := associated_class.name_in_upper
 			if is_true_expanded then
 				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
@@ -378,7 +377,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	duplicate: like Current is
 			-- Duplication
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 	same_class_type (other: CL_TYPE_A): BOOLEAN is

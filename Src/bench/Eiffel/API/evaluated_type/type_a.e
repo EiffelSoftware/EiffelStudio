@@ -365,7 +365,7 @@ feature {COMPILER_EXPORTER} -- Access
 	duplicate: like Current is
 			-- Duplication
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 	good_generics: BOOLEAN is

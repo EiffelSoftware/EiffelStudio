@@ -115,7 +115,7 @@ feature {COMPILER_EXPORTER}
 				bit_count := bits_value
 			end
 			rout_id := anchor_feature.rout_id_set.first
-			Result := clone (Current)
+			Result := twin
 		end
 
 end -- class BITS_SYMBOL_A

@@ -8,11 +8,11 @@ inherit
 		rename
 			format as old_format
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	FORMATTER
 		redefine
-			dark_symbol, format
+			dark_symbol, format, display_temp_header
 		select
 			format
 		end;
@@ -76,4 +76,10 @@ feature {NONE}
 			Result := l_Stoppoints_of
 		end; -- title_part
 	
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Computing stop point positions...")
+		end;
+
 end -- class SHOW_BREAKPOINTS

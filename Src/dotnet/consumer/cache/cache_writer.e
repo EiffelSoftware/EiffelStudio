@@ -28,7 +28,7 @@ feature -- Basic Operations
 			consumer: ASSEMBLY_CONSUMER
 			cr: CACHE_READER
 			dir: DIRECTORY_INFO
-			retried: BOOLEAN
+			retried, retried_2: BOOLEAN
 			l_string_tuple: TUPLE [STRING]
 			l_assembly: ASSEMBLY
 			l_directory_name: STRING
@@ -60,9 +60,9 @@ feature -- Basic Operations
 					consumer.set_status_querier (status_querier)
 					consumer.set_destination_path (l_directory_name)
 					consumer.consume (assembly)
-					
+
 					if not consumer.successful then
-						--set_error (Consume_error, create {STRING}.make_from_cil (assembly.get_name.name))
+						dir.delete_boolean (True)
 					elseif l_new_assembly then
 						-- Update info.xml with new assembly
 						info := cr.info
@@ -84,6 +84,11 @@ feature -- Basic Operations
 							"' has not been modified since last consumption.%N", 1)
 						status_printer.call (l_string_tuple)
 					end
+				end
+			elseif not retried_2 then
+				retried_2 := True
+				if dir /= Void then
+					dir.delete_boolean (True)
 				end
 			end
 		rescue

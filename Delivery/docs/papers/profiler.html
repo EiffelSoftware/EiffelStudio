@@ -511,6 +511,56 @@ To return to just Eiffel, simply type l.
 6.6  Running queries</h2>
 
 <p>
-To run the current total query, use (R) Run.</td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+To run the current total query, use (R) Run.
+
+<p>
+&nbsp;
+
+<h1>
+7 Profiling tuning</h1>
+<p>Starting from version 4.5 of the ISE EiffelBench, ISE introduced a new class
+which enables to stop and restart the Eiffel profiler. As a result, you can now
+profile a portion of your code.
+
+<pre>
+feature -- Status setting
+
+	start_profiling is
+			-- Start profiling.
+
+	stop_profiling is
+			-- Stop profiling
+
+end
+</pre>
+
+<P>A typical use is:
+
+In your root creation procedure you need to stop the profiler right away, by doing the following code:
+
+<pre>	create profiler_setting.make
+	profiler_setting.stop_profiling
+	.... -- Current code of your root creation procedure
+	profiler_setting.start_profiling.
+</pre>
+
+<p>Then in the code you want to profile you need to reactivate it:
+
+<pre>	create profiler_setting.make
+	profiler_setting.start_profiling
+	your_code_here		-- This code will be profiled only.
+	profiler_setting.stop_profiling</pre>
+
+
+<p>
+
+
+
+<font color="#FF0000"><b>Note:</b></font> Do not forget to activate the profiler
+ace option, otherwise the code presented above won't have any effects.
+
+
+
+</td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

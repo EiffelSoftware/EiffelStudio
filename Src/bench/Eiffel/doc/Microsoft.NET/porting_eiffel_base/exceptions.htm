@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>EXCEPTIONS</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+<h1>EXCEPTIONS</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>EXCEPTION_MANAGER
+	<li>EXCEPTION
+	<li>EIFFEL_EXCEPTION
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{EXCEPTION_MANAGER}.last_exception, raise
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>None.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>When calling die, a security exception may be raised.
+</ul>
+<h2>Other notes</h2>
+<ul>
+	<li>Couldn't implement the catch/ignore features.
+	<li>Added the EIFFEL_EXCEPTION and EXCEPTION_MANAGER classes to base.
+	<li>The original exception system is not well supported, we use the Inner exceptions instead.
+	We have to modify the Eiffel run-time so that when an exception is raised in a rescue clause,
+	it is created with an inner exception which should be the exception that brought the user into the rescue clause.
+	<li>When querying the class in which the exception was raised, I'm not sure it returns the dynamic type of the feature,
+	but maybe the written-in type, or maybe something else (I don't quite know what ReflectedType returns).
+	<li>Don't know how to implement the (no_)message_on_failure.
+</ul>
+
+</body>
+
+</html>

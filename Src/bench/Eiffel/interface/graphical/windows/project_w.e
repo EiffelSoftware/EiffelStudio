@@ -14,7 +14,7 @@ inherit
 			text_window, tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
 			process_classi, compatible, process_feature,
-			process_class_syntax, process_ace_syntax
+			process_class_syntax, process_ace_syntax, display
 		end;
 	COMMAND;
 	BASE
@@ -78,6 +78,12 @@ feature -- Properties
 			!! Result
 		end;
 
+	global_form: FORM is
+			-- For representing Current
+		do
+			Result := std_form
+		end;
+
 	ebench_display: SCREEN is
 		local
 			display_name: STRING;
@@ -94,6 +100,13 @@ feature -- Properties
 					%authorized to connect to the corresponding server%N");
 				raise_exception ("Invalid display");
 			end;
+		end;
+
+	eb_shell: EB_SHELL is
+		do
+			Result := Void
+		ensure then
+			result_is_void: Result = Void
 		end;
 
 feature -- Access
@@ -113,8 +126,12 @@ feature -- Window Settings
 	set_default_position is
 			-- Display the project tool at the 
 			-- upper left corner of the screen.
+		local
+			default_x, default_y: INTEGER
 		do
-			set_x_y (0, 0)
+			default_x := Resources.get_integer (r_Project_tool_x, 0);
+			default_y := Resources.get_integer (r_Project_tool_y, 0);
+			set_x_y (default_x, default_y)
 		end;
  
 	set_initialized is
@@ -130,6 +147,11 @@ feature -- Window Settings
 		do
 			changed := f
 		end
+
+	display is
+			-- Display Current on the screen
+		do
+		end;
 
 feature -- Window Implementation
 
@@ -201,6 +223,18 @@ feature -- Pulldown Menus
 	menu_bar: BAR;
 			-- Menu bar in the top section of the window.
 
+	edit_menu: MENU_PULL;
+			-- Edit menu.
+			-- Only used during debugging
+
+	special_menu: MENU_PULL;
+			-- Menu for commands.
+			-- Only used during debugging
+
+	format_menu: MENU_PULL;
+			-- Menu for formats.
+			-- Only used during debugging
+
 	file_menu: MENU_PULL;
 			-- File menu.
 
@@ -214,7 +248,25 @@ feature -- Pulldown Menus
 			-- Preference menu.
 
 	window_menu: MENU_PULL;
-			-- Window_menu.
+			-- Window menu.
+
+	edit_feature_menu: MENU_PULL;
+			-- Edit menu specific for the feature part
+
+	special_feature_menu: MENU_PULL;
+			-- Special menu specific for the feature part
+
+	format_feature_menu: MENU_PULL;
+			-- Format menu specific for the feature part
+
+	edit_object_menu: MENU_PULL;
+			-- Edit menu specific for the object part
+
+	special_object_menu: MENU_PULL;
+			-- Special menu specific for the object part
+
+	format_object_menu: MENU_PULL;
+			-- Format menu specific for the object part
 
 	help_menu: MENU_PULL;
 			-- Help menu.
@@ -225,7 +277,16 @@ feature -- Window Forms
 			-- Icing form with global command buttons
 
 	form_manager: FORM;
-			-- Manager of constraints on sub widgets.
+			-- Manager of constraints on sub widgets
+
+	std_form: FORM;
+			-- Form on which the std protject tool is displayed
+
+	feature_form: FORM;
+			-- Form on which the feature tool during debug will be shown
+
+	object_form: FORM;
+			-- Form on which the object tool during debug will be shown
 
 	classic_bar: FORM;
 			-- Main menu bar
@@ -260,7 +321,7 @@ feature -- Execution Implementation
 					end
 					if is_name_chooser_hidden then
 						is_name_chooser_hidden := false;
-						name_chooser.popup
+						last_name_chooser.popup
 					end
 				else
 						-- The project tool is being raised, moved or resized.
@@ -276,9 +337,9 @@ feature -- Execution Implementation
 					system_tool.close_windows;
 					is_system_window_hidden := True;
 				end;
-				if name_chooser.is_popped_up then
+				if last_name_chooser /= Void and then last_name_chooser.is_popped_up then
 					is_name_chooser_hidden := true;
-					name_chooser.popdown
+					last_name_chooser.popdown
 				end;	
 				if last_warner /= Void and then last_warner.is_popped_up then
 					is_warner_hidden := true;
@@ -298,25 +359,63 @@ feature -- Graphical Interface
 
 	build_widgets is
 			-- Build widget.
+		local
+			default_width, default_height: INTEGER
 		do
-			set_size (478, 340);
+			shown_portions := 1;
+
+			default_width := Resources.get_integer (r_Project_tool_width, 481);
+			default_height := Resources.get_integer (r_Project_tool_height, 340);
+			set_size (default_width, default_height);
 			!! form_manager.make (new_name, Current);
+			form_manager.set_fraction_base (6);
+			!! std_form.make (new_name, form_manager);
+			!! feature_form.make_unmanaged (new_name, form_manager);
+			!! object_form.make_unmanaged (new_name, form_manager);
+
+			form_manager.attach_left (std_form, 0);
+			form_manager.attach_right (std_form, 0);
+			form_manager.attach_left (feature_form, 0);
+			form_manager.attach_right (feature_form, 0);
+			form_manager.attach_left (object_form, 0);
+			form_manager.attach_right (object_form, 0);
+			form_manager.attach_top_position (std_form, 0);
+			form_manager.attach_bottom_position (std_form, 6);
+				--| We have to attach to position 6 to
+				--| be sure that `std_form' is as big as the tool!
+
+			form_manager.attach_top_position (feature_form, 1);
+			form_manager.attach_bottom_position (feature_form, 2);
+			form_manager.attach_top_position (object_form, 2);
+			form_manager.attach_bottom_position (object_form, 3);
+			
 			build_menu;
 			build_text;
 			build_top;
 			build_icing;
 			build_format_bar;
 			exec_stop_frmt_holder.execute (Void);
-			attach_all
+			attach_all;
+
+			!! feature_part.form_create (feature_form);
+			!! object_part.form_create (object_form);
+
+			build_feature_menus;
+			build_object_menus;
 		end;
 
 	build_menu is
 			-- Build the menu bar
 		do
-			!! menu_bar.make (new_name, form_manager);
+			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make ("File", menu_bar);
+			!! edit_menu.make ("Edit", menu_bar);
+			edit_menu.button.set_insensitive;
 			!! compile_menu.make ("Compile", menu_bar);
 			!! debug_menu.make ("Debug", menu_bar);
+			!! format_menu.make ("Formats", menu_bar);
+			!! special_menu.make ("Special", menu_bar);
+			special_menu.button.set_insensitive;
 			!! preference_menu.make ("Preference", menu_bar);
 			!! window_menu.make ("Windows", menu_bar);
 			!! help_menu.make ("Help", menu_bar);
@@ -352,7 +451,7 @@ feature -- Graphical Interface
 			stop_points_menu_entry: EB_MENU_ENTRY;
 		do
 			!! open_command.make (text_window);
-			!! classic_bar.make (new_name, form_manager);
+			!! classic_bar.make (new_name, std_form);
 
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, classic_bar);
@@ -389,6 +488,7 @@ feature -- Graphical Interface
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			change_font_cmd_holder.set_sensitive (False);
 
 			classic_bar.attach_left (explain_button, 0);
 			classic_bar.attach_top (explain_button, 0);
@@ -421,11 +521,11 @@ feature -- Graphical Interface
 			-- Build console text window.
 		do
 			if tabs_disabled then
-				!! text_window.make (new_name, form_manager, Current);
+				!! text_window.make (new_name, Current, Current);
 			else
-				!PROJECT_TAB_TEXT! text_window.make (new_name, form_manager, Current)
+				!PROJECT_TAB_TEXT! text_window.make (new_name, Current, Current)
 			end;
-			text_window.set_size (200, 100);
+--			text_window.set_size (200, 100);
 		end;
 
 	build_format_bar is
@@ -442,9 +542,18 @@ feature -- Graphical Interface
 			step_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			nostop_cmd: EXEC_NOSTOP;
 			nostop_button: EB_BUTTON;
-			nostop_menu_entry: EB_TICKABLE_MENU_ENTRY
+			nostop_menu_entry: EB_TICKABLE_MENU_ENTRY;
+			sep: SEPARATOR;
+			run_final_cmd: EXEC_FINALIZED;
+			run_final_menu_entry: EB_MENU_ENTRY;
+			display_feature_cmd: DISPLAY_ROUTINE_PORTION;
+			display_feature_button: EB_BUTTON;
+			display_feature_menu_entry: EB_MENU_ENTRY;
+			display_object_cmd: DISPLAY_OBJECT_PORTION;
+			display_object_button: EB_BUTTON;
+			display_object_menu_entry: EB_MENU_ENTRY
 		do
-			!! format_bar.make (new_name, form_manager);
+			!! format_bar.make (new_name, std_form);
 
 			!! stop_cmd.make (text_window);
 			!! stop_button.make (stop_cmd, format_bar)
@@ -467,6 +576,23 @@ feature -- Graphical Interface
 			!! nostop_menu_entry.make (nostop_cmd, debug_menu);
 			!! exec_nostop_frmt_holder.make (nostop_cmd, nostop_button, nostop_menu_entry);
 
+			!! sep.make (new_name, debug_menu)
+
+			!! run_final_cmd.make (text_window);
+			!! run_final_menu_entry.make (run_final_cmd, debug_menu);
+			!! run_final_cmd_holder.make_plain (run_final_cmd);
+			run_final_cmd_holder.set_menu_entry (run_final_menu_entry);
+
+			!! display_feature_cmd.make (text_window);
+			!! display_feature_button.make (display_feature_cmd, format_bar);
+			!! display_feature_menu_entry.make (display_feature_cmd, format_menu);
+			!! display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry);
+
+			!! display_object_cmd.make (text_window);
+			!! display_object_button.make (display_object_cmd, format_bar);
+			!! display_object_menu_entry.make (display_object_cmd, format_menu);
+			!! display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry);
+
 			format_bar.attach_left (stop_button, 0);
 			format_bar.attach_top (stop_button, 0);
 			format_bar.attach_bottom (stop_button, 0);
@@ -479,6 +605,12 @@ feature -- Graphical Interface
 			format_bar.attach_top (nostop_button, 0);
 			format_bar.attach_bottom (nostop_button, 0);
 			format_bar.attach_left_widget (last_button, nostop_button, 0);
+			format_bar.attach_right (display_feature_button, 0);
+			format_bar.attach_top (display_feature_button, 0);
+			format_bar.attach_bottom (display_feature_button, 0);
+			format_bar.attach_right_widget (display_feature_button, display_object_button, 0);
+			format_bar.attach_top (display_object_button, 0);
+			format_bar.attach_bottom (display_object_button, 0)
 		end;
 
 	build_icing is
@@ -506,7 +638,7 @@ feature -- Graphical Interface
 			debug_status_menu_entry: EB_MENU_ENTRY;
 			separator: SEPARATOR
 		do
-			!! icing.make (new_name, form_manager);
+			!! icing.make (new_name, std_form);
 			!! update_cmd.make (text_window);
 			!! update_button.make (update_cmd, icing);
 			update_button.set_action ("!c<Btn1Down>", update_cmd, update_cmd.generate_code_only);
@@ -571,35 +703,46 @@ feature -- Graphical Interface
 	attach_all is
 			-- Adjust and attach main widgets together.
 		do
-			form_manager.attach_left (menu_bar, 0);
-			form_manager.attach_right (menu_bar, 0);
-			form_manager.attach_top (menu_bar, 0);
+			std_form.attach_left (menu_bar, 0);
+			std_form.attach_right (menu_bar, 0);
+			std_form.attach_top (menu_bar, 0);
 
-			form_manager.attach_left (classic_bar, 0);
-			form_manager.attach_top_widget (menu_bar, classic_bar, 2);
-			form_manager.attach_right_widget (icing, classic_bar, 0);
+			std_form.attach_left (classic_bar, 0);
+			std_form.attach_top_widget (menu_bar, classic_bar, 2);
+			std_form.attach_right_widget (icing, classic_bar, 0);
 
-			form_manager.attach_left (text_window, 0);
-			form_manager.attach_top_widget (classic_bar, text_window, 0);
-			form_manager.attach_right_widget (icing, text_window, 0);
+			std_form.attach_left (text_window, 0);
+			std_form.attach_top_widget (classic_bar, text_window, 0);
+			std_form.attach_right_widget (icing, text_window, 0);
 			-- (text_window will resize when window grows)
 
-			-- form_manager.attach_left (xterminal, 5);
-			-- form_manager.attach_top_widget (text_window, xterminal, 5);
-			-- form_manager.attach_right_widget (icing, xterminal, 5);
+			-- std_form.attach_left (xterminal, 5);
+			-- std_form.attach_top_widget (text_window, xterminal, 5);
+			-- std_form.attach_right_widget (icing, xterminal, 5);
 			-- (xterminal will resize when window grows)
-			-- form_manager.attach_bottom (xterminal, 5);
+			-- std_form.attach_bottom (xterminal, 5);
 
-			form_manager.attach_bottom_widget (format_bar, text_window, 0);
+			std_form.attach_bottom_widget (format_bar, text_window, 0);
 
-			form_manager.attach_top_widget (menu_bar, icing, 2);
-			form_manager.attach_right (icing, 0);
-			form_manager.attach_bottom (icing, 0)
+			std_form.attach_top_widget (menu_bar, icing, 2);
+			std_form.attach_right (icing, 0);
+			std_form.attach_bottom (icing, 0)
 
-			form_manager.attach_left (format_bar, 0);
-			form_manager.attach_right_widget (icing, format_bar, 0);
-			form_manager.attach_bottom (format_bar, 0)
+			std_form.attach_left (format_bar, 0);
+			std_form.attach_right_widget (icing, format_bar, 0);
+			std_form.attach_bottom (format_bar, 0)
 		end;
+
+feature {NONE} -- Properties
+
+	shown_portions: INTEGER
+			-- Number of portions that are shown
+
+	feature_part: ROUTINE_W
+			-- Feature part of Current for debugging
+
+	object_part: OBJECT_W
+			-- Object part of Current for debugging
 
 feature -- System Execution Modes
 
@@ -642,7 +785,12 @@ feature -- Commands
 
 	change_font_cmd_holder: COMMAND_HOLDER;
 
+	run_final_cmd_holder: COMMAND_HOLDER;
  
+	display_feature_cmd_holder: COMMAND_HOLDER;
+
+	display_object_cmd_holder: COMMAND_HOLDER;
+
 feature -- Hole access
  
 	compatible (dropped_stone: STONE): BOOLEAN is
@@ -719,7 +867,7 @@ feature -- Update
 		local
 			new_tool: OBJECT_W
 		do
-			new_tool := window_manager.object_window;
+			new_tool := window_manager.dialog_object_window;
 			new_tool.process_object (a_stone);
 			new_tool.display
 		end;
@@ -741,4 +889,253 @@ feature -- Update
 			System_tool.display
 		end;
  
+feature {NONE} -- Implementation
+
+	build_feature_menus is
+			-- Build the feature menus.
+		require
+			feature_part_exists: feature_part /= Void
+		local
+			fp: like feature_part;
+
+			search: EB_MENU_ENTRY;
+			shell: EB_MENU_ENTRY;
+			f_current: EB_MENU_ENTRY;
+			next: EB_MENU_ENTRY;
+			previous: EB_MENU_ENTRY;
+
+			clients: EB_TICKABLE_MENU_ENTRY;
+			hist: EB_TICKABLE_MENU_ENTRY;
+			past: EB_TICKABLE_MENU_ENTRY;
+			flat: EB_TICKABLE_MENU_ENTRY;
+			future: EB_TICKABLE_MENU_ENTRY;
+			stop_points: EB_TICKABLE_MENU_ENTRY;
+			text: EB_TICKABLE_MENU_ENTRY;
+			homonym: EB_TICKABLE_MENU_ENTRY;
+
+			separator: SEPARATOR
+		do
+			fp := feature_part
+			!! edit_feature_menu.make ("Feature", edit_menu);
+			edit_feature_menu.button.set_insensitive;
+			!! search.make (fp.search_cmd_holder.associated_command, edit_feature_menu);
+			fp.search_cmd_holder.set_menu_entry (search);
+
+			!! special_feature_menu.make ("Feature", special_menu);
+			special_feature_menu.button.set_insensitive;
+			!! shell.make (fp.shell.associated_command, special_feature_menu);
+			fp.shell.set_menu_entry (shell);
+
+			!! separator.make (new_name, special_feature_menu);
+
+			!! f_current.make (fp.current_target_cmd_holder.associated_command, special_feature_menu);
+			fp.current_target_cmd_holder.set_menu_entry (f_current);
+			!! next.make (fp.next_target_cmd_holder.associated_command, special_feature_menu);
+			fp.next_target_cmd_holder.set_menu_entry (next);
+			!! previous.make (fp.previous_target_cmd_holder.associated_command, special_feature_menu);
+			fp.previous_target_cmd_holder.set_menu_entry (previous);
+
+			!! format_feature_menu.make ("Feature", format_menu);
+			format_feature_menu.button.set_insensitive;
+			!! text.make (fp.showtext_frmt_holder.associated_command, format_feature_menu);
+			fp.showtext_frmt_holder.set_menu_entry (text);
+			!! flat.make (fp.showflat_frmt_holder.associated_command, format_feature_menu);
+			fp.showflat_frmt_holder.set_menu_entry (flat);
+			!! separator.make (new_name, format_feature_menu);
+			!! clients.make (fp.showroutclients_frmt_holder.associated_command, format_feature_menu);
+			fp.showroutclients_frmt_holder.set_menu_entry (clients);
+			!! hist.make (fp.showhistory_frmt_holder.associated_command, format_feature_menu);
+			fp.showhistory_frmt_holder.set_menu_entry (hist);
+			!! past.make (fp.showpast_frmt_holder.associated_command, format_feature_menu);
+			fp.showpast_frmt_holder.set_menu_entry (past);
+			!! future.make (fp.showfuture_frmt_holder.associated_command, format_feature_menu);
+			fp.showfuture_frmt_holder.set_menu_entry (future);
+			!! homonym.make (fp.showhomonyms_frmt_holder.associated_command, format_feature_menu);
+			fp.showhomonyms_frmt_holder.set_menu_entry (homonym);
+			!! separator.make (new_name, format_feature_menu);
+			!! stop_points.make (fp.showstop_frmt_holder.associated_command, format_feature_menu);
+			fp.showstop_frmt_holder.set_menu_entry (stop_points)
+		end;
+
+	build_object_menus is
+			-- Build the object menus.
+		local
+			op: like object_part;
+
+			next: EB_MENU_ENTRY;
+			o_current: EB_MENU_ENTRY;
+			previous: EB_MENU_ENTRY;
+			search: EB_MENU_ENTRY;
+			slice: EB_MENU_ENTRY;
+
+			onces: EB_TICKABLE_MENU_ENTRY;
+			attr: EB_TICKABLE_MENU_ENTRY;
+
+			sep: SEPARATOR
+		do
+			op := object_part;
+			!! edit_object_menu.make ("Object", edit_menu);
+			edit_object_menu.button.set_insensitive;
+			!! search.make (op.search_cmd_holder.associated_command, edit_object_menu);
+			op.search_cmd_holder.set_menu_entry (search);
+
+			!! special_object_menu.make ("Object", special_menu);
+			special_object_menu.button.set_insensitive;
+			!! slice.make (op.slice_cmd_holder.associated_command, special_object_menu);
+			slice.remove_activate_action (op.slice_cmd_holder.associated_command, op.slice_cmd_holder.associated_command.text_window);
+			slice.add_activate_action (op.slice_cmd_holder.associated_command, Void);
+			op.slice_cmd_holder.set_menu_entry (slice);
+
+			!! sep.make (new_name, special_object_menu);
+
+			!! o_current.make (op.current_target_cmd_holder.associated_command, special_object_menu);
+			op.current_target_cmd_holder.set_menu_entry (o_current);
+			!! next.make (op.next_target_cmd_holder.associated_command, special_object_menu);
+			op.next_target_cmd_holder.set_menu_entry (next);
+			!! previous.make (op.previous_target_cmd_holder.associated_command, special_object_menu);
+			op.previous_target_cmd_holder.set_menu_entry (previous);
+
+			!! format_object_menu.make ("Object", format_menu);
+			!! onces.make (op.showonce_frmt_holder.associated_command, format_object_menu);
+			op.showonce_frmt_holder.set_menu_entry (onces);
+			!! attr.make (op.showattr_frmt_holder.associated_command, format_object_menu);
+			op.showattr_frmt_holder.set_menu_entry (attr)
+		end;
+
+feature {DISPLAY_ROUTINE_PORTION} -- Implementation
+
+	hide_feature_portion is
+			-- Hide the feature potion and hide the menu entries
+			-- regarding the feature tool.
+		local
+			new_height: INTEGER
+			new_pos: INTEGER
+		do
+			shown_portions := shown_portions - 1;
+			new_pos := 6 // shown_portions;
+			feature_form.unmanage;
+			feature_part.close_windows;
+
+			form_manager.detach_bottom (std_form);
+			form_manager.attach_bottom_position (std_form, new_pos)
+			if shown_portions = 2 then
+				form_manager.detach_top (object_form);
+				form_manager.detach_bottom (object_form);
+				form_manager.attach_top_position (object_form, new_pos);
+				form_manager.attach_bottom_position (object_form, new_pos + 3)
+			else
+				edit_menu.button.set_insensitive;
+				special_menu.button.set_insensitive
+			end;
+
+			edit_feature_menu.button.set_insensitive;
+			special_feature_menu.button.set_insensitive;
+			format_feature_menu.button.set_insensitive;
+
+			new_height := height - Resources.get_integer (r_Debugger_feature_height, 214);
+			set_height (new_height)
+		end;
+
+	show_feature_portion is
+			-- Show the feature portion and the menu entries
+			-- regarding the feature tool.
+		local
+			new_height: INTEGER;
+			new_pos: INTEGER
+		do
+			shown_portions := shown_portions + 1;
+			new_pos := 6 // shown_portions;
+			feature_form.manage;
+			form_manager.detach_bottom (std_form);
+			form_manager.detach_top (feature_form);
+			form_manager.detach_bottom (feature_form);
+			form_manager.attach_bottom_position (std_form, new_pos);
+			form_manager.attach_top_position (feature_form, new_pos);
+			form_manager.attach_bottom_position (feature_form, new_pos + new_pos);
+
+			if shown_portions = 3 then
+				form_manager.detach_top (object_form);
+				form_manager.attach_top_position (object_form, new_pos + new_pos)
+			end;
+
+			edit_feature_menu.button.set_sensitive;
+			special_feature_menu.button.set_sensitive;
+			format_feature_menu.button.set_sensitive;
+			if shown_portions = 2 then
+				special_menu.button.set_sensitive;
+				edit_menu.button.set_sensitive
+			end;
+
+			new_height := height + Resources.get_integer (r_Debugger_feature_height, 214);
+			set_height (new_height)
+		end;
+
+feature {DISPLAY_OBJECT_PORTION} -- Implementation
+
+	hide_object_portion is
+			-- Hide the object portion and the menu entries
+			-- regarding the feature tool.
+		local
+			new_height: INTEGER;
+			new_pos: INTEGER
+		do
+			shown_portions := shown_portions - 1;
+			new_pos := 6 // shown_portions;
+			object_form.unmanage;
+			object_part.close_windows;
+
+			form_manager.detach_bottom (std_form);
+			form_manager.attach_bottom_position (std_form, new_pos)
+			if shown_portions = 2 then
+				form_manager.detach_top (feature_form);
+				form_manager.detach_bottom (feature_form);
+				form_manager.attach_top_position (feature_form, new_pos);
+				form_manager.attach_bottom_position (feature_form, new_pos + 3);
+			else
+				edit_menu.button.set_insensitive;
+				special_menu.button.set_insensitive;
+			end;
+
+			edit_object_menu.button.set_insensitive;
+			special_object_menu.button.set_insensitive;
+			format_object_menu.button.set_insensitive;
+
+			new_height := height - Resources.get_integer (r_Debugger_object_height, 214);
+			set_height (new_height)
+		end;
+
+	show_object_portion is
+			-- Show the object portion and the menu entries
+			-- regarding the feature tool.
+		local
+			new_height: INTEGER;
+			new_pos: INTEGER
+		do
+			shown_portions := shown_portions + 1;
+			new_pos := 6 // shown_portions;
+			object_form.manage;
+			form_manager.detach_bottom (std_form);
+			form_manager.detach_top (object_form);
+			form_manager.detach_bottom (object_form);
+			form_manager.attach_bottom_position (std_form, new_pos);
+			form_manager.attach_top_position (object_form, new_pos);
+			form_manager.attach_bottom_position (object_form, new_pos + new_pos);
+
+			if shown_portions = 3 then
+				form_manager.detach_top (feature_form);
+				form_manager.attach_top_position (feature_form, new_pos + new_pos)
+			end;
+
+			edit_object_menu.button.set_sensitive;
+			special_object_menu.button.set_sensitive;
+			format_object_menu.button.set_sensitive;
+			if shown_portions = 2 then
+				special_menu.button.set_sensitive;
+				edit_menu.button.set_sensitive
+			end;
+
+			new_height := height + Resources.get_integer (r_Debugger_object_height, 214);
+			set_height (new_height)
+		end;
+
 end -- class PROJECT_W

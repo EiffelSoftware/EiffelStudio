@@ -72,15 +72,13 @@ feature {EV_ANY_IMP} -- Access
 			gdk_event: POINTER
 		do
 			-- integer_pointer_tuple has been already correctly set by `marshal'.
-			--integer_pointer_tuple.put (n_args, 1)
-			--integer_pointer_tuple.put (args, 2)
 
 			t := translate.item (integer_pointer_tuple)
 
-			if t /= Void then
+			if t /= empty_tuple then
 				if
 					--| FIXME IEK This needs to be optimized.
-					type_conforms_to (
+					t /= Void and then type_conforms_to (
 						dynamic_type (an_agent),
 						f_of_tuple_type_id
 					)
@@ -147,7 +145,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 			key: EV_KEY
 		do
 			gdk_event := gtk_value_pointer (args)
-			
+			Result := empty_tuple
 			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
 				feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
@@ -176,7 +174,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 				Gdk_proximity_in_enum,
 				Gdk_proximity_out_enum
 			then
-				Result := empty_tuple
+				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
 
 			when
 				Gdk_expose_enum

@@ -19,7 +19,14 @@ inherit
 
 	WEL_SW_CONSTANTS
 		export
-			{NONE} all;
+			{NONE} all
+		end
+
+	EXECUTION_ENVIRONMENT
+		rename
+			command_line as exec_command_line
+		export
+			{NONE} all
 		end
 
 creation
@@ -88,6 +95,9 @@ feature {NONE}  -- Implementation
 	Sdk_directory_key: STRING is "SDKPath"
 			-- SDK Path registry key name
 
+	Compiler_path: STRING is "Compiler\"
+			-- Path to eif_compiler.exe from root of installation
+
 	default_show_cmd: INTEGER
 			-- Default command used to show `main_window'.
 
@@ -106,20 +116,21 @@ feature {NONE}  -- Implementation
 	register_server is
 			-- Register Server
 		local
-			sdk_directory, gacutil_command, regasm_command, a_string: STRING
+			sdk_directory, gacutil_command, regasm_command, a_string, working_directory: STRING
 		do
-			sdk_directory := (create {EXECUTION_ENVIRONMENT}).get (Sdk_directory_key)
+			sdk_directory := get (Sdk_directory_key)
 			gacutil_command := sdk_directory + "\Bin\" + Gacutil
 			regasm_command := c_net_directory + Regasm
-			if (create {RAW_FILE}.make (gacutil_command)).exists then
+			if (create {RAW_FILE}.make (gacutil_command)).exists and (create {RAW_FILE}.make (regasm_command)).exists then
+				working_directory := current_working_directory
+				change_working_directory ((create {EIFFEL_ENV}).Eiffel_installation_dir_name + Compiler_path)
 				a_string := "%"" + gacutil_command + "%"" + Gacutil_arguments + Ise_runtime;
-				(create {EXECUTION_ENVIRONMENT}).system (a_string)
+				system (a_string)
 				a_string := "%"" + gacutil_command + "%"" + Gacutil_arguments + Eif_generator;
-				(create {EXECUTION_ENVIRONMENT}).system (a_string)
-			end
-			if (create {RAW_FILE}.make (regasm_command)).exists then
+				system (a_string)
 				a_string := "%"" + regasm_command + "%"" + Regasm_arguments + Eif_generator;
-				(create {EXECUTION_ENVIRONMENT}).system (a_string)
+				system (a_string)
+				change_working_directory (working_directory)
 			end
 			ccom_register_server
 		end

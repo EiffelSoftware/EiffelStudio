@@ -20,7 +20,7 @@ feature -- Settings
 	set_major_version (m: INTEGER_16) is
 			-- Set `major_version' to `m'.
 		require
-			valid_version: m > 0
+			valid_version: m >= 0
 		do
 			c_set_major_version (item, m)
 		end
@@ -28,7 +28,7 @@ feature -- Settings
 	set_minor_version (m: INTEGER_16) is
 			-- Set `minor_version' to `m'.
 		require
-			valid_version: m > 0
+			valid_version: m >= 0
 		do
 			c_set_minor_version (item, m)
 		end
@@ -36,7 +36,7 @@ feature -- Settings
 	set_build_number (m: INTEGER_16) is
 			-- Set `build_number' to `m'.
 		require
-			valid_version: m > 0
+			valid_version: m >= 0
 		do
 			c_set_build_number (item, m)
 		end
@@ -44,7 +44,7 @@ feature -- Settings
 	set_revision_number (m: INTEGER_16) is
 			-- Set `revision_number' to `m'.
 		require
-			valid_version: m > 0
+			valid_version: m >= 0
 		do
 			c_set_revision_number (item, m)
 		end

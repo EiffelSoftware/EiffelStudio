@@ -96,13 +96,17 @@ feature
 
 	print_register is
 			-- Print expression value
+		local
+			buf: GENERATION_BUFFER
 		do
-			if (expr.register = Void or expr.register = No_register) and
-				not expr.is_simple_expr
+			if
+				(expr.register = Void or expr.register = No_register)
+				and not expr.is_simple_expr
 			then
-				generated_file.putchar ('(');
+				buf := buffer
+				buf.putchar ('(');
 				expr.print_register;
-				generated_file.putchar (')');
+				buf.putchar (')');
 			else
 					-- No need for parenthesis if expression is held in a
 					-- register (e.g. a semi-strict boolean op).

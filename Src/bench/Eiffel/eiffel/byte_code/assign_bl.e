@@ -354,16 +354,18 @@ feature
 			target_type: TYPE_I;
 			source_type: TYPE_I;
 			access_b: ACCESS_B;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			target_type := context.real_type (target.type);
 			source_type := context.real_type (source.type);
 			if target_type.is_basic and source_type.is_none then
-				generated_file.putstring ("RTEC(EN_VEXP);");
-				generated_file.new_line;
+				buf.putstring ("RTEC(EN_VEXP);");
+				buf.new_line;
 			elseif target_type.is_expanded then
 				if source_type.is_none then
-					generated_file.putstring ("RTEC(EN_VEXP);");
-					generated_file.new_line;
+					buf.putstring ("RTEC(EN_VEXP);");
+					buf.new_line;
 				else
 					generate_regular_assignment (Copy_assignment);
 				end;
@@ -382,14 +384,14 @@ feature
 						if access_b = Void or else not access_b.is_void_entity
 						then
 							source.generate;
-							generated_file.putstring ("(void) ");
+							buf.putstring ("(void) ");
 							source.print_register;
-							generated_file.putchar (';');
-							generated_file.new_line;
+							buf.putchar (';');
+							buf.new_line;
 						end;
 						target.print_register;
-						generated_file.putstring (" = (char *) 0;");
-						generated_file.new_line;
+						buf.putstring (" = (char *) 0;");
+						buf.new_line;
 					else
 						generate_regular_assignment (Simple_assignment);
 					end;
@@ -416,28 +418,30 @@ feature
 			-- Generate special pre-treatment
 		local
 			basic_source_type: BASIC_I;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			if how = Metamorphose_assignment then
 				basic_source_type ?= context.real_type (source.type);
 				basic_source_type.metamorphose
-					(register, source, generated_file, context.workbench_mode);
-				generated_file.putchar (';');
-				generated_file.new_line;
+					(register, source, buf, context.workbench_mode);
+				buf.putchar (';');
+				buf.new_line;
 			elseif how = Clone_assignment then
 				print_register;
-				generated_file.putstring (" = ");
+				buf.putstring (" = ");
 				if context.real_type(target.type).is_separate and
 					not context.real_type(source.type).is_separate then 
-					generated_file.putstring ("CURLTS(")
-					generated_file.putstring ("RTCL(");
+					buf.putstring ("CURLTS(")
+					buf.putstring ("RTCL(");
 					source.print_register;
-					generated_file.putstring ("));/* Really happened ?! */")
+					buf.putstring ("));/* Really happened ?! */")
 				else
-					generated_file.putstring ("RTCL(");
+					buf.putstring ("RTCL(");
 					source.print_register;
-					generated_file.putstring (gc_rparan_comma);
+					buf.putstring (gc_rparan_comma);
 				end;
-				generated_file.new_line;
+				buf.new_line;
 			end;
 		end;
 
@@ -445,7 +449,9 @@ feature
 			-- Genrate assignment not taken care of by target propagation
 		local
 			need_aging_tests: BOOLEAN;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_special (how);
 				-- No aging tests if target is not a reference. Of course, if
 				-- the target is also pre-defined, aging tests are not needed.
@@ -460,32 +466,32 @@ feature
 					-- handle it (it evaluates its arguments more than once).
 				if register /= Void and not register_for_metamorphosis then
 					print_register;
-					generated_file.putstring (" = ");
+					buf.putstring (" = ");
 					if context.real_type(target.type).is_separate and
 						not context.real_type(source.type).is_separate then 
-						generated_file.putstring ("CURLTS(")
+						buf.putstring ("CURLTS(")
 						source.print_register;
-						generated_file.putstring (");/* Really happened ?! */")
+						buf.putstring (");/* Really happened ?! */")
 					else
 						source.print_register;
-						generated_file.putchar (';');
+						buf.putchar (';');
 					end;
-					generated_file.new_line;
-					generated_file.putstring ("RTAR(");
+					buf.new_line;
+					buf.putstring ("RTAR(");
 					print_register;
-					generated_file.putstring (gc_comma);
+					buf.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-					generated_file.putchar (';');
-					generated_file.new_line;
+					buf.putchar (')');
+					buf.putchar (';');
+					buf.new_line;
 				else
-					generated_file.putstring ("RTAR(");
+					buf.putstring ("RTAR(");
 					source_print_register;
-					generated_file.putstring (gc_comma);
+					buf.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-					generated_file.putchar (';');
-					generated_file.new_line;
+					buf.putchar (')');
+					buf.putchar (';');
+					buf.new_line;
 				end;
 			end;
 			if how /= Copy_assignment then
@@ -493,15 +499,15 @@ feature
 					if is_bit_assignment then
 						-- Otherwize, copy bit since I know that
 						-- bits have a default value.
-						generated_file.putstring ("RTXB(");
+						buf.putstring ("RTXB(");
 						source_print_register;
 					else
 						target.print_register;
-						generated_file.putstring (" = ");
+						buf.putstring (" = ");
 					end
 				end;
 			else
-				generated_file.putstring ("RTXA(");
+				buf.putstring ("RTXA(");
 			end;
 			if how /= Copy_assignment then
 				if need_aging_tests then
@@ -510,53 +516,53 @@ feature
 					else
 						if context.real_type(target.type).is_separate and
 							not context.real_type(source.type).is_separate then 
-							generated_file.putstring ("CURLTS(")
+							buf.putstring ("CURLTS(")
 							source_print_register;
-							generated_file.putstring (")")
+							buf.putstring (")")
 						elseif is_bit_assignment then
-							generated_file.putstring (gc_comma);
+							buf.putstring (gc_comma);
 							target.print_register;
-							generated_file.putchar (')');
+							buf.putchar (')');
 						else
 							source_print_register;
 						end;
 					end;
-					generated_file.putchar (';');
-					generated_file.new_line;
+					buf.putchar (';');
+					buf.new_line;
 				else
 					if how = Simple_assignment or need_aging_tests then
 						if is_bit_assignment then
-							generated_file.putstring (gc_comma);
+							buf.putstring (gc_comma);
 							target.print_register;
-							generated_file.putchar (')');
+							buf.putchar (')');
 						else
 							if context.real_type(target.type).is_separate and
 								not context.real_type(source.type).is_separate then 
-								generated_file.putstring ("CURLTS(")
+								buf.putstring ("CURLTS(")
 								source_print_register;
-								generated_file.putstring (")")
+								buf.putstring (")")
 							else
 								source_print_register;
 							end;
 						end;
-						generated_file.putchar (';');
-						generated_file.new_line;
+						buf.putchar (';');
+						buf.new_line;
 					end;
 				end;
 			else
 					-- Assignment into expanded target
 				if register /= Void then
 					print_register;
-					generated_file.putstring (" = ");
+					buf.putstring (" = ");
 					source.print_register;
 				else
 					source.print_register;
 				end;
-				generated_file.putstring (gc_comma);
+				buf.putstring (gc_comma);
 				target.print_register;
-				generated_file.putchar (')');
-				generated_file.putchar (';');
-				generated_file.new_line;
+				buf.putchar (')');
+				buf.putchar (';');
+				buf.new_line;
 			end;
 		end;
 
@@ -568,13 +574,15 @@ feature
 		local
 			target_type: TYPE_I;
 			source_type: TYPE_I;
+			buf: GENERATION_BUFFER
 		do
 			target_type := context.real_type (target.type);
 			source_type := context.real_type (source.type);
 				-- Target (Result) cannot be expanded
 			if target_type.is_basic and source_type.is_none then
-				generated_file.putstring ("RTEC(EN_VEXP);");
-				generated_file.new_line;
+				buf := buffer
+				buf.putstring ("RTEC(EN_VEXP);");
+				buf.new_line;
 			elseif target_type.is_basic then
 				generate_last_assignment (Simple_assignment);
 			else
@@ -595,7 +603,10 @@ feature
 
 	generate_last_assignment (how: INTEGER) is
 			-- Generate last assignment in Result
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			source.generate;
 			generate_special (how);
 			context.byte_code.finish_compound;
@@ -603,16 +614,16 @@ feature
 				-- is the last instruction.
 			if last_instruction and context.byte_code.compound.count > 1
 			then
-				generated_file.new_line;
+				buf.new_line;
 			end;
-			generated_file.putstring ("return ");
+			buf.putstring ("return ");
 			if how = None_assignment then
-				generated_file.putstring ("(char *) 0");
+				buf.putstring ("(char *) 0");
 			else
 				source_print_register;
 			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
 		end;
 
 	generate_simple_assignment is
@@ -624,7 +635,9 @@ feature
 			binary: BINARY_B;
 			other: EXPR_B;
 			int: INT_CONST_B;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			binary ?= source;	-- Cannot fail
 			inspect
 				simple_op_assignment
@@ -636,9 +649,9 @@ feature
 				-- Generate the other side of the expression
 			other.generate;
 			if not target.is_predefined then
-				generated_file.putchar ('(');
+				buf.putchar ('(');
 				target.print_register;
-				generated_file.putchar (')');
+				buf.putchar (')');
 			else
 				target.print_register;
 			end;
@@ -652,8 +665,8 @@ feature
 				binary.generate_simple;
 				other.print_register;
 			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
 		end;
 
 end

@@ -21,13 +21,13 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" / ");
+			buffer.putstring (" / ");
 		end;
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			generated_file.putstring (" /= ");
+			buffer.putstring (" /= ");
 		end;
 
 	is_built_in: BOOLEAN is

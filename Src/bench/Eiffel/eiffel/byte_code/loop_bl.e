@@ -63,7 +63,7 @@ feature
 		end;
 
 	generate is
-			-- Generate C code in `generated_file'.
+			-- Generate C code in `buffer'.
 		do
 			generate_line_info
 			generate_assertions
@@ -82,7 +82,7 @@ feature
 				generate_variant := variant_part /= Void;
 			end;
 				-- Outstand loop structure
-			generated_file.new_line;
+			buffer.new_line;
 			if from_part /= Void then
 				from_part.generate;
 			end;
@@ -102,7 +102,9 @@ feature
 	generate_loop_body is
 		local
 			generate_invariant, generate_variant, workbench_mode: BOOLEAN;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			workbench_mode := context.workbench_mode;
 			if 	workbench_mode
 				or else
@@ -117,11 +119,11 @@ feature
 				-- the end of the while body.
 				-- FIXME: maybe if the expression is too complex, we should
 				-- use the old mechanism (pre 3.2.5) with label and goto
-			generated_file.putstring ("while (!(");
+			buf.putstring ("while (!(");
 			stop.print_register;
-			generated_file.putstring (")) {");
-			generated_file.new_line;
-			generated_file.indent;
+			buf.putstring (")) {");
+			buf.new_line;
+			buf.indent;
 			if generate_invariant then
 				context.set_assertion_type (In_loop_invariant);
 				if workbench_mode then
@@ -149,13 +151,13 @@ feature
 				compound.generate;
 			end;
 			stop.generate;
-			generated_file.putchar (';');
-			generated_file.new_line;
-			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
+			buf.exdent;
+			buf.putchar ('}');
+			buf.new_line;
 				-- Outstand loop structure
-			generated_file.new_line;
+			buf.new_line;
 		end;
 
 	generate_workbench_test is
@@ -163,34 +165,46 @@ feature
 		require
 			workbench_mode: context.workbench_mode;
 			dt_current: context.dt_current > 1;
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("if (RTAL & CK_LOOP) {");
-			generated_file.new_line;
-			generated_file.indent;
+			buf := buffer
+			buf.putstring ("if (RTAL & CK_LOOP) {");
+			buf.new_line;
+			buf.indent;
 		end;
 
 	generate_end_workbench_test is
 			-- Generate end of dynamic test in workbench mode
 		require
 			context.workbench_mode
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf := buffer
+			buf.exdent;
+			buf.putchar ('}');
+			buf.new_line;
 		end;
 
 	generate_final_mode_test is
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("if (~in_assertion) {");
-			generated_file.new_line;
-			generated_file.indent;
+			buf := buffer
+			buf.putstring ("if (~in_assertion) {");
+			buf.new_line;
+			buf.indent;
 		end;
 
 	generate_end_final_mode_test is
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf := buffer
+			buf.exdent;
+			buf.putchar ('}');
+			buf.new_line;
 		end;
 
 	fill_from (l: LOOP_B) is

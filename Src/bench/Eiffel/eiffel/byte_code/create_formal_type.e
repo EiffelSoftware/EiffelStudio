@@ -39,15 +39,15 @@ feature -- C code generation
 	generate is
 			-- Generate the creation type
 		local
-			gen_file: INDENT_FILE;
+			buffer: GENERATION_BUFFER;
 		do
-			gen_file := context.generated_file
+			buffer := context.buffer
 
-			gen_file.putstring ("RTGPTID(")
+			buffer.putstring ("RTGPTID(")
 			context.current_register.print_register_by_name
-			gen_file.putchar (',')
-			gen_file.putint (formal_position)
-			gen_file.putchar (')');
+			buffer.putchar (',')
+			buffer.putint (formal_position)
+			buffer.putchar (')');
 		end;
 
 feature -- Byte code generation
@@ -63,7 +63,7 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 		do
 		end
 

@@ -307,31 +307,31 @@ feature -- Inherited precondition
 	generate_precondition_clause is
 			-- Generate preconditions of a clause.
 		local
-			file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			file := Context.generated_file;
+			buffer := Context.buffer;
 			precondition_context_init;
 			Context.inc_label;
 			precondition_list.item.generate;
 			if not Context.is_prec_first_block then
-				file.putstring ("RTCK;");
-				file.new_line;
+				buffer.putstring ("RTCK;");
+				buffer.new_line;
 			end;
-			file.putstring ("RTJB;");
-			file.new_line;
-			file.exdent;
+			buffer.putstring ("RTJB;");
+			buffer.new_line;
+			buffer.exdent;
 			if has_separate_call_in_precondition then
 				context.print_concurrent_label;
-				file.putchar (':');
-				file.indent;
-				file.putstring (" CURSSFC;");
-				file.new_line;
-				file.exdent;
+				buffer.putchar (':');
+				buffer.indent;
+				buffer.putstring (" CURSSFC;");
+				buffer.new_line;
+				buffer.exdent;
 			end;
 			context.print_current_label;
-			file.putchar (':');
-			file.new_line;
-			file.indent;
+			buffer.putchar (':');
+			buffer.new_line;
+			buffer.indent;
 		end;
 
 	precondition_start is

@@ -68,12 +68,12 @@ feature
 				if c_type.is_pointer then
 					print_register_by_name;
 				else
-					generated_file.putstring (register_name);
+					buffer.putstring (register_name);
 				end;
 			else
 				type_i := real_type (context.byte_code.result_type);
-				type_i.c_type.generate_cast (generated_file);
-				generated_file.putchar ('0');
+				type_i.c_type.generate_cast (buffer);
+				buffer.putchar ('0');
 			end;
 		end;
 
@@ -86,7 +86,7 @@ feature
 			if not context.byte_code.is_once then
 				{RESULT_B} Precursor;
 			else
-				generated_file.putstring (register_name);
+				buffer.putstring (register_name);
 			end;
 		end;
 

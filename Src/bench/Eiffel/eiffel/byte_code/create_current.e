@@ -22,12 +22,12 @@ feature
 	generate is
 			-- Generate creation type id (dynamic type) of current	
 		local
-			gen_file: INDENT_FILE;
+			buffer: GENERATION_BUFFER;
 		do
-			gen_file := context.generated_file;
-			gen_file.putstring ("Dftype(")
+			buffer := context.buffer;
+			buffer.putstring ("Dftype(")
 			context.Current_register.print_register_by_name
-			gen_file.putchar (')')
+			buffer.putchar (')')
 		end;
 
 feature -- Byte code generation
@@ -46,13 +46,13 @@ feature -- Generic conformance
 			-- Nothing.
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			f.putint (-12)
-			f.putstring (", Dftype(")
+			buffer.putint (-12)
+			buffer.putstring (", Dftype(")
 			context.Current_register.print_register_by_name
-			f.putstring ("), ")
+			buffer.putstring ("), ")
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is

@@ -49,7 +49,7 @@ feature
 	generate_equal is
 			-- Generate equality if one side at least is an expanded
 		do
-			generated_file.putstring ("RTEQ(");
+			buffer.putstring ("RTEQ(");
 			generate_equal_end;
 		end;
 
@@ -61,19 +61,19 @@ feature
 			else
 				left_register.print_register;
 			end;
-			generated_file.putstring (gc_comma);
+			buffer.putstring (gc_comma);
 			if right_register = Void then
 				right.print_register;
 			else
 				right_register.print_register;
 			end;
-			generated_file.putchar (')');
+			buffer.putchar (')');
 		end;
 
 	generate_bit_equal is
 			-- Generate equality if one side at least is a bit.
 		do
-			generated_file.putstring ("RTEB(");
+			buffer.putstring ("RTEB(");
 			generate_equal_end
 		end;
 
@@ -157,22 +157,24 @@ feature
 			-- Generate expression
 		local
 			basic_i: BASIC_I;
+			buf: GENERATION_BUFFER
 		do
 			left.generate;
 			right.generate;
+			buf := buffer
 			if left_register /= Void then
 				basic_i ?= context.real_type (left.type);
 				basic_i.metamorphose
-					(left_register, left, generated_file, context.workbench_mode);
-				generated_file.putchar (';');
-				generated_file.new_line;
+					(left_register, left, buf, context.workbench_mode);
+				buf.putchar (';');
+				buf.new_line;
 			end;
 			if right_register /= Void then
 				basic_i ?= context.real_type (right.type);
 				basic_i.metamorphose
-					(right_register, right, generated_file, context.workbench_mode);
-				generated_file.putchar (';');
-				generated_file.new_line;
+					(right_register, right, buf, context.workbench_mode);
+				buf.putchar (';');
+				buf.new_line;
 			end;
 		end;
 

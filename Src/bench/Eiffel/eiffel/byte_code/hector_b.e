@@ -95,21 +95,24 @@ feature -- Byte code generation
 			-- Generate the operator
 		do
 			if expr.type.is_basic then
-				generated_file.putstring ("(char *)&");
+				buffer.putstring ("(char *)&");
 			end
 		end
 
 	print_register is
 			-- Print expression value
+		local
+			buf: GENERATION_BUFFER
 		do
 			if expr.type.is_basic and not expr.type.is_bit then
-				generated_file.putstring ("(char *)&(");
+				buf := buffer
+				buf.putstring ("(char *)&(");
 				if expr.is_attribute then
 					expr.generate_access
 				else
 					expr.print_register;
 				end
-				generated_file.putchar (')');
+				buf.putchar (')');
 			else
 				expr.print_register;
 			end

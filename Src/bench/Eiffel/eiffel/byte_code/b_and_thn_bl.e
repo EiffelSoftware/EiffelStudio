@@ -83,31 +83,34 @@ feature
 
 	generate is
 			-- Generate expression
+		local
+			buf: GENERATION_BUFFER
 		do
 			if has_call then
 					-- Initialize value to false
+				buf := buffer
 				register.print_register;
-				generated_file.putstring (" = '\0';");
-				generated_file.new_line;
+				buf.putstring (" = '\0';");
+				buf.new_line;
 					-- Test first value. If it is false, then the whole
 					-- expression is false and the right handside is not evaled.
 				left.generate;
-				generated_file.putstring (gc_if_l_paran);
+				buf.putstring (gc_if_l_paran);
 				left.print_register;
-				generated_file.putstring (") {");
-				generated_file.new_line;
+				buf.putstring (") {");
+				buf.new_line;
 					-- Left handside was true. Value of the expression is the
 					-- value of the right handside.
-				generated_file.indent;
+				buf.indent;
 				right.generate;
 				register.print_register;
-				generated_file.putstring (" = ");
+				buf.putstring (" = ");
 				right.print_register;
-				generated_file.putchar (';');
-				generated_file.new_line;
-				generated_file.exdent;
-				generated_file.putchar ('}');
-				generated_file.new_line;
+				buf.putchar (';');
+				buf.new_line;
+				buf.exdent;
+				buf.putchar ('}');
+				buf.new_line;
 			else
 				{B_AND_THEN_B} Precursor;
 			end;

@@ -93,7 +93,7 @@ feature
 			if c_type.is_pointer then
 				print_register_by_name;
 			else
-				context.generated_file.putstring (register_name);
+				context.buffer.putstring (register_name);
 			end;
 		end;
 

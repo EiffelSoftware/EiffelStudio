@@ -333,7 +333,7 @@ end
 			type_i: TYPE_I
 			class_type: CL_TYPE_I
 			basic_type: BASIC_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			type_i := context_type
 				-- Special provision is made for calls on basic types
@@ -342,7 +342,7 @@ end
 				if is_feature_special and not type_i.is_bit then
 					generate_special_feature (reg)
 				else
-					f := generated_file
+					buf := buffer
 						-- Generation of metamorphosis is enclosed between (), and
 						-- the expressions are separated with ',' which means the C
 						-- keeps only the last expression, i.e. the function call.
@@ -353,14 +353,14 @@ end
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					f.putchar ('(')
+					buf.putchar ('(')
 					basic_type.metamorphose (basic_register, reg,
-									f, context.workbench_mode)
-					f.putchar (',')
-					f.new_line
-					f.putchar ('%T')
+									buf, context.workbench_mode)
+					buf.putchar (',')
+					buf.new_line
+					buf.putchar ('%T')
 					generate_metamorphose_end (basic_register, reg,
-									class_type, basic_type, f)
+									class_type, basic_type, buf)
 					release_hector_protection
 				end
 			else
@@ -373,14 +373,14 @@ end
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 			-- Generate final portion of C code.
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
 			if not is_class_separate then
 				if not is_attribute then
-					f := generated_file
-					f.putchar ('(')
+					buf := buffer
+					buf.putchar ('(')
 				end
 				if is_feature_call then
 					gen_reg.print_register
@@ -389,13 +389,13 @@ end
 					generate_parameters_list
 				end
 				if not is_attribute then
-					f.putchar (')')
+					buf.putchar (')')
 				end
 			end
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; file: INDENT_FILE) is
+		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		local
 			is_class_separate: BOOLEAN
@@ -406,9 +406,9 @@ end
 
 				-- Now generate the parameters of the call, if needed.
 			if not is_class_separate then
-				file.putstring (");")
-				file.new_line
-				basic_type.end_of_metamorphose (basic_register, meta_reg, file)
+				buf.putstring (");")
+				buf.new_line
+				basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
 			end
 		end
 

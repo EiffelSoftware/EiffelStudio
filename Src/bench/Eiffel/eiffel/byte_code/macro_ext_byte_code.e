@@ -17,14 +17,17 @@ inherit
 feature -- Code generation
 
 	generate is
+		local
+			buf: GENERATION_BUFFER
 		do
 			generate_include_files
 			if not shared_include_queue.has (special_file_name) then
 				shared_include_queue.extend (special_file_name)
 				if not context.final_mode then
-					generated_file.putstring ("#include ");
-					generated_file.putstring (special_file_name);
-					generated_file.new_line;
+					buf := buffer
+					buf.putstring ("#include ");
+					buf.putstring (special_file_name);
+					buf.new_line;
 				end
 			end
 			generate_signature
@@ -44,11 +47,14 @@ feature -- Code generation
 
 	generate_arguments_with_cast is
 			-- Generate the arguments list if there is one
+		local
+			buf: GENERATION_BUFFER
 		do
 			if arguments /= Void then
-				generated_file.putchar ('(')
+				buf := buffer
+				buf.putchar ('(')
 				generate_basic_arguments_with_cast
-				generated_file.putchar (')')
+				buf.putchar (')')
 			end
 		end
 

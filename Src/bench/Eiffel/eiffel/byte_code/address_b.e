@@ -73,21 +73,21 @@ feature
 			entry: POLY_TABLE [ENTRY];
 			internal_name, table_name: STRING;
 			rout_table: ROUT_TABLE;
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			if context.workbench_mode then
-				f.putstring ("(EIF_POINTER) RTWPP(");
-				context.current_type.associated_class_type.id.generated_id (f)
-				f.putstring (gc_comma);
-				f.putint (feature_id);
-				f.putchar (')');
+				buf.putstring ("(EIF_POINTER) RTWPP(");
+				context.current_type.associated_class_type.id.generated_id (buf)
+				buf.putstring (gc_comma);
+				buf.putint (feature_id);
+				buf.putchar (')');
 			else
 				entry := Eiffel_table.poly_table (rout_id);
 				if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					f.putstring ("(char *(*)()) 0");
+					buf.putstring ("(char *(*)()) 0");
 				else
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id);
@@ -96,8 +96,8 @@ feature
 					table_name.append (context.current_type.
 						associated_class_type.id.address_table_name (feature_id))
 
-					f.putstring ("(EIF_POINTER) ");
-					f.putstring (table_name);
+					buf.putstring ("(EIF_POINTER) ");
+					buf.putstring (table_name);
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (type, table_name);

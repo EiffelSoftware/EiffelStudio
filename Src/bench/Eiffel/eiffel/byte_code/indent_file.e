@@ -41,14 +41,14 @@ feature -- Open, close features for C files
 			-- in case a C++ compiler is used.
 		do
 			open_write
-			putstring ("#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
+			put_string ("#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
 		end
 
 	close_c is
 			-- Close a C-file with the extern C declaration
 			-- in case a C++ compiler is used.
 		do
-			putstring ("%N#ifdef __cplusplus%N}%N#endif%N")
+			put_string ("%N#ifdef __cplusplus%N}%N#endif%N")
 			close
 		end
 
@@ -262,15 +262,15 @@ feature {INDENT_FILE} -- prototype code generation
 			i, nb: INTEGER
 		do
 			if extern then
-				putstring ("extern ")
+				put_string ("extern ")
 			else
-				putstring ("static ")
+				put_string ("static ")
 			end
 
-			putstring (type)
-			putstring (" ")
-			putstring (f_name)
-			putstring ("(")
+			put_string (type)
+			put_string (" ")
+			put_string (f_name)
+			put_string ("(")
 			from
 				i := 1
 				nb := arg_types.count
@@ -278,12 +278,12 @@ feature {INDENT_FILE} -- prototype code generation
 				i > nb
 			loop
 				if i /= 1 then
-					putstring (", ")
+					put_string (", ")
 				end
-				putstring (arg_types @ i)
+				put_string (arg_types @ i)
 				i := i + 1
 			end
-			putstring (");%N")
+			put_string (");%N")
 			end
 
 feature -- prototype code generation
@@ -323,28 +323,28 @@ feature -- prototype code generation
 		do
 			extern_dec_file.generate_function_declaration (type, f_name, extern, arg_types)
 			if not extern then
-				putstring ("static ")
+				put_string ("static ")
 			end
-			putstring (type)
+			put_string (type)
 			putchar (' ')
-			putstring (f_name)
-			putstring (" (")
+			put_string (f_name)
+			put_string (" (")
 			from
 				i := 1
 				nb := arg_names.count
 			until
 				i > nb
 			loop
-				putstring (arg_types @ i)
+				put_string (arg_types @ i)
 					putchar (' ')
-					putstring (arg_names @ i)
+					put_string (arg_names @ i)
 				if i /= nb then
-					putstring (", ")
+					put_string (", ")
 				end
 				i := i + 1
 			end
 
-			putstring (")%N{%N%TGTCX") -- ss MT: GET CONTEXT
+			put_string (")%N{%N%TGTCX") -- ss MT: GET CONTEXT
 			-- ss MT: the pattern 'GTCX%N' will be removed in emain.c
 			new_line
 		end

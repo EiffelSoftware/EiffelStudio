@@ -21,24 +21,24 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" / ");
+			buffer.putstring (" / ");
 		end;
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			generated_file.putstring (" /= ");
+			buffer.putstring (" /= ");
 		end;
 
 	print_register is
 			-- Print expression value
 		do
 			if left.type.is_long and then right.type.is_long then
-				generated_file.putstring (" ((EIF_DOUBLE)");
+				buffer.putstring (" ((EIF_DOUBLE)");
 				left.print_register;
 				generate_operator;
 				right.print_register;
-				generated_file.putchar (')');
+				buffer.putchar (')');
 			else
 				left.print_register;
 				generate_operator;

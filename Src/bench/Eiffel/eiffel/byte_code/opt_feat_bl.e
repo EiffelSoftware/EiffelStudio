@@ -112,44 +112,46 @@ feature -- Code generation
 		local
 			expr: EXPR_B
 			id: INTEGER;
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			id := array_desc.array_descriptor;
 			if is_item then
 				if access_area then
-					generated_file.putstring ("RTAA(");
+					buf.putstring ("RTAA(");
 				else
-					generated_file.putstring ("RTAUA(");
+					buf.putstring ("RTAUA(");
 				end;
 			else
 				if access_area then
-					generated_file.putstring ("RTAP(");
+					buf.putstring ("RTAP(");
 				else
-					generated_file.putstring ("RTAUP(");
+					buf.putstring ("RTAUP(");
 				end;
 			end;
-			type_c (id).generate (generated_file)
-			generated_file.putstring (gc_comma);
-			generated_file.putstring (external_reg_name (id));
-			generated_file.putstring (gc_comma);
+			type_c (id).generate (buf)
+			buf.putstring (gc_comma);
+			buf.putstring (external_reg_name (id));
+			buf.putstring (gc_comma);
 			if not access_area then
-				generated_file.putstring (register_acces (id));
-				generated_file.putstring (gc_comma);
+				buf.putstring (register_acces (id));
+				buf.putstring (gc_comma);
 			end;
 
 			expr := parameters @ 1;
 			expr.print_register
 
 			if not is_item then
-				generated_file.putstring (gc_comma);
+				buf.putstring (gc_comma);
 					-- Index
 				expr := parameters @ 2
 				expr.print_register
 			end
-			generated_file.put_character (')');
+			buf.putchar (')');
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; file: INDENT_FILE) is
+		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type, class_type.is_separate)

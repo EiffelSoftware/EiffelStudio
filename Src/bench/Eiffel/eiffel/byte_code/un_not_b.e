@@ -13,7 +13,7 @@ feature
 	generate_operator is
 			-- Generate the unary operator
 		do
-			generated_file.putchar ('!');
+			buffer.putchar ('!');
 		end;
 
 	is_built_in: BOOLEAN is

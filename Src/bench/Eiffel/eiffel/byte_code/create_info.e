@@ -64,11 +64,11 @@ feature -- Generic conformance
 		deferred
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
 		require
-			valid_file : f /= Void
+			valid : buffer /= Void
 		do
 			-- Do nothing
 		end

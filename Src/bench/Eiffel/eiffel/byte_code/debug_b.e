@@ -74,6 +74,7 @@ feature
 			-- Generation of debug compound
 		local
 			static_type: STRING;
+			buf: GENERATION_BUFFER
 		do
 			generate_line_info;
 
@@ -83,46 +84,47 @@ feature
 						compound.generate;
 					end;
 				else
+					buf := buffer
 						-- Generation of the debug compound in workbench
 						-- mode
 					static_type := context.current_type.associated_class_type.id.generated_id_string;
-					generated_file.putstring (gc_if_l_paran);
-					generated_file.new_line;
-					generated_file.indent;
+					buf.putstring (gc_if_l_paran);
+					buf.new_line;
+					buf.indent;
 					if keys = Void then
 							-- No keys
-						generated_file.putstring ("WDBG(RTUD(");
-						generated_file.putstring (static_type);
-						generated_file.putstring ("), (char *) 0)");
+						buf.putstring ("WDBG(RTUD(");
+						buf.putstring (static_type);
+						buf.putstring ("), (char *) 0)");
 					else
 						from
 							keys.start
 						until
 							keys.after
 						loop
-							generated_file.putstring ("WDBG(RTUD(");
-							generated_file.putstring (static_type);
-							generated_file.putstring ("),%"");
-							generated_file.putstring (keys.item);
-							generated_file.putstring ("%")");
+							buf.putstring ("WDBG(RTUD(");
+							buf.putstring (static_type);
+							buf.putstring ("),%"");
+							buf.putstring (keys.item);
+							buf.putstring ("%")");
 							keys.forth;
 							if not keys.after then
-								generated_file.putstring (" ||");
-								generated_file.new_line;
+								buf.putstring (" ||");
+								buf.new_line;
 							end;
 						end;
 					end;
-					generated_file.new_line;
-					generated_file.exdent;
-					generated_file.putstring (") {");
-					generated_file.new_line;
-					generated_file.indent;
+					buf.new_line;
+					buf.exdent;
+					buf.putstring (") {");
+					buf.new_line;
+					buf.indent;
 								
 					compound.generate;
 	
-					generated_file.exdent;
-					generated_file.putchar ('}');
-					generated_file.new_line;
+					buf.exdent;
+					buf.putchar ('}');
+					buf.new_line;
 				end;
 			end;
 		end;

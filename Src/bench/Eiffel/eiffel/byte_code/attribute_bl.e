@@ -44,7 +44,7 @@ feature
 			-- Print register or generate
 		do
 			if real_type (type).is_none then
-				generated_file.putstring ("(char *) 0")
+				buffer.putstring ("(char *) 0")
 			else
 				{ATTRIBUTE_B} Precursor
 			end
@@ -169,7 +169,7 @@ end
 			r: REGISTER;	-- For debug
 		do
 			if type.is_none then
-				generated_file.putstring ("(char *) 0")
+				buffer.putstring ("(char *) 0")
 			else
 					-- Generate attribute
 				do_generate (reg)
@@ -184,9 +184,9 @@ end
 			offset_class_type: CLASS_TYPE
 			type_c: TYPE_C
 			type_i: TYPE_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			type_i := real_type (type)
 			type_c := type_i.c_type
 			entry := Eiffel_table.poly_table (rout_id)
@@ -194,37 +194,37 @@ end
 				-- or if it is a bit.
 			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				f.putchar ('*')
+				buf.putchar ('*')
 					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (f)
+				type_c.generate_access_cast (buf)
 			end
-			f.putchar ('(')
+			buf.putchar ('(')
 			reg.print_register
 --			if reg.is_predefined or reg.register /= No_register then
---				f.putstring (gc_plus)
+--				buf.putstring (gc_plus)
 --			else
---				f.putstring (" +")
---				f.new_line
---				f.indent
+--				buf.putstring (" +")
+--				buf.new_line
+--				buf.indent
 --			end
 			if entry.is_polymorphic (typ.type_id) then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := rout_id.table_name
-				f.putstring (" + (")
-				f.putstring (table_name)
-				f.putchar ('-')
-				f.putint (entry.min_type_id - 1)
-				f.putchar (')')
-				f.putchar ('[')
+				buf.putstring (" + (")
+				buf.putstring (table_name)
+				buf.putchar ('-')
+				buf.putint (entry.min_type_id - 1)
+				buf.putchar (')')
+				buf.putchar ('[')
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					f.putstring (gc_upper_dtype_lparan)
+					buf.putstring (gc_upper_dtype_lparan)
 					reg.print_register
-					f.putchar (')')
+					buf.putchar (')')
 				end
-				f.putchar (']')
+				buf.putchar (']')
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (rout_id)
 					-- Remember external attribute offset declaration
@@ -236,11 +236,11 @@ end
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
-				offset_class_type.skeleton.generate_offset (f, attribute_id, False)
+				offset_class_type.skeleton.generate_offset (buf, attribute_id, False)
 			end
-			f.putchar (')')
+			buf.putchar (')')
 --			if not (reg.is_predefined or reg.register /= No_register) then
---				f.exdent
+--				buf.exdent
 --			end
 		end
 

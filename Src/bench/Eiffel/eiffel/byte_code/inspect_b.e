@@ -73,34 +73,37 @@ feature
 		end;
 
 	generate is
-			-- Generate C code in `generated_file'.
+			-- Generate C code in `buffer'.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			generate_line_info;
-			generated_file.new_line;
+			buf.new_line;
 			switch.generate;
-			generated_file.putstring ("switch (");
+			buf.putstring ("switch (");
 			switch.print_register;
-			generated_file.putstring (") {");
-			generated_file.new_line;
+			buf.putstring (") {");
+			buf.new_line;
 			if case_list /= Void then
 				case_list.generate;
 			end;
 			if else_part = Void or else not else_part.empty then
-				generated_file.putstring ("default:");
-				generated_file.new_line;
-				generated_file.indent;
+				buf.putstring ("default:");
+				buf.new_line;
+				buf.indent;
 				if else_part = Void then
 						-- Raise an exception
-					generated_file.putstring ("RTEC(EN_WHEN);");
+					buf.putstring ("RTEC(EN_WHEN);");
 				else
 					else_part.generate;
-					generated_file.putstring ("break;");
+					buf.putstring ("break;");
 				end;
-				generated_file.new_line;
-				generated_file.exdent;
+				buf.new_line;
+				buf.exdent;
 			end;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf.putchar ('}');
+			buf.new_line;
 		end;
 
 feature -- Byte code generation

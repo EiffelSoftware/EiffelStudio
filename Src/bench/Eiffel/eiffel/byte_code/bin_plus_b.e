@@ -28,19 +28,19 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (gc_plus)
+			buffer.putstring (gc_plus)
 		end
 
 	generate_simple is
 			-- Generate a simple assignment operation
 		do
-			generated_file.putstring (" += ")
+			buffer.putstring (" += ")
 		end
 
 	generate_plus_plus is
 			-- Generate a ++ operation
 		do
-			generated_file.putstring ("++")
+			buffer.putstring ("++")
 		end
 
 end

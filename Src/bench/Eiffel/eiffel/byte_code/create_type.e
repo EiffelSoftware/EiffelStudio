@@ -36,22 +36,22 @@ feature -- C code generation
 		local
 			cl_type_i: CL_TYPE_I;
 			gen_type_i: GEN_TYPE_I;
-			gen_file: INDENT_FILE;
+			buffer: GENERATION_BUFFER;
 		do
 			cl_type_i ?= context.real_type (type);
 			gen_type_i ?= cl_type_i;
 
-			gen_file := context.generated_file;
+			buffer := context.buffer;
 
 			if gen_type_i /= Void then
-				gen_file.putstring ("typres");
+				buffer.putstring ("typres");
 			else
 				if context.workbench_mode then
-					gen_file.putstring ("RTUD(");
-					cl_type_i.associated_class_type.id.generated_id (gen_file)
-					gen_file.putchar (')');
+					buffer.putstring ("RTUD(");
+					cl_type_i.associated_class_type.id.generated_id (buffer)
+					buffer.putchar (')');
 				else
-					gen_file.putint (cl_type_i.type_id - 1);
+					buffer.putint (cl_type_i.type_id - 1);
 				end;
 			end;
 		end;
@@ -91,7 +91,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid (f : INDENT_FILE; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		local
 			cl_type_i : CL_TYPE_I;
@@ -101,14 +101,14 @@ feature -- Generic conformance
 			gen_type  ?= cl_type_i;
 
 			if gen_type /= Void then
-				f.putstring ("typres");
+				buffer.putstring ("typres");
 			else
 				if context.workbench_mode then
-					f.putstring ("RTUD(")
-					cl_type_i.associated_class_type.id.generated_id (f)
-					f.putchar (')')
+					buffer.putstring ("RTUD(")
+					cl_type_i.associated_class_type.id.generated_id (buffer)
+					buffer.putchar (')')
 				else
-					f.putint (cl_type_i.type_id - 1);
+					buffer.putint (cl_type_i.type_id - 1);
 				end
 			end
 		end;

@@ -45,64 +45,70 @@ feature
 	
 	generate is
 			-- Generate variant initializations
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 			register.print_register;
-			generated_file.putstring (" = -1L;");
-			generated_file.new_line;
+			buf.putstring (" = -1L;");
+			buf.new_line;
 		end;
 
 	print_register is
 			-- Generate variant tests
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Assertion recording on stack
 			if tag /= Void then
-				generated_file.putstring ("RTCT(");
-				generated_file.putchar ('"');
-				generated_file.putstring (tag);
-				generated_file.putchar ('"');
-				generated_file.putstring (gc_comma);
+				buf.putstring ("RTCT(");
+				buf.putchar ('"');
+				buf.putstring (tag);
+				buf.putchar ('"');
+				buf.putstring (gc_comma);
 			else
-				generated_file.putstring ("RTCS(");
+				buf.putstring ("RTCS(");
 			end;
 			generate_assertion_code (In_loop_variant);
-			generated_file.putstring (gc_rparan_comma);
-			generated_file.new_line;
+			buf.putstring (gc_rparan_comma);
+			buf.new_line;
 			expr.generate;
 			new_register.print_register;
-			generated_file.putstring (" = ");
+			buf.putstring (" = ");
 			expr.print_register;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
 				-- Variant check
-			generated_file.putstring ("if ((");
+			buf.putstring ("if ((");
 			register.print_register;
-			generated_file.putstring (" == -1L || ");
+			buf.putstring (" == -1L || ");
 			register.print_register;
-			generated_file.putstring (" > ");
+			buf.putstring (" > ");
 			new_register.print_register;
-			generated_file.putstring (") && ");
+			buf.putstring (") && ");
 			new_register.print_register;
-			generated_file.putstring (" >= 0) {");
-			generated_file.new_line;
-			generated_file.indent;
-			generated_file.putstring ("RTCK;");
-			generated_file.new_line;
+			buf.putstring (" >= 0) {");
+			buf.new_line;
+			buf.indent;
+			buf.putstring ("RTCK;");
+			buf.new_line;
 			register.print_register;
-			generated_file.putstring (" = ");
+			buf.putstring (" = ");
 			new_register.print_register;
-			generated_file.putchar (';');
-			generated_file.new_line;
-			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
-			generated_file.putstring ("else {");
-			generated_file.new_line;
-			generated_file.indent;
-			generated_file.putstring ("RTCF;");
-			generated_file.new_line;
-			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
+			buf.exdent;
+			buf.putchar ('}');
+			buf.new_line;
+			buf.putstring ("else {");
+			buf.new_line;
+			buf.indent;
+			buf.putstring ("RTCF;");
+			buf.new_line;
+			buf.exdent;
+			buf.putchar ('}');
+			buf.new_line;
 		end;
 
 	free_register is

@@ -16,12 +16,14 @@ feature
 			left_type: TYPE_I;
 			right_type: TYPE_I;
 			result_type: TYPE_I;
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("(EIF_DOUBLE) math_power ((EIF_DOUBLE)");
+			buf := buffer
+			buf.putstring ("(EIF_DOUBLE) math_power ((EIF_DOUBLE)");
 			left.print_register;
-			generated_file.putstring (",(EIF_DOUBLE)");
+			buf.putstring (",(EIF_DOUBLE)");
 			right.print_register;
-			generated_file.putchar (')');
+			buf.putchar (')');
 		end;
 
 end

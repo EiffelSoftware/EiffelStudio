@@ -28,35 +28,35 @@ feature
 			-- Generate test at the head of once routines
 		local
 			type_i: TYPE_I;
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 			type_i := real_type (result_type);
-			f.putstring ("if (MTOG((");
-			type_i.c_type.generate (f);
-			f.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
-			f.putint (context.once_index);
-			f.putstring ("),PResult))");
-			f.new_line;
-			f.indent;
+			buf.putstring ("if (MTOG((");
+			type_i.c_type.generate (buf);
+			buf.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
+			buf.putint (context.once_index);
+			buf.putstring ("),PResult))");
+			buf.new_line;
+			buf.indent;
 				-- Full generation for a once function, but a single
 				-- return for procedures.
-			f.putstring ("return");
+			buf.putstring ("return");
 			if result_type /= Void and then not result_type.is_void then
-				f.putchar (' ');
+				buf.putchar (' ');
 				if context.result_used then
-					f.putstring ("*PResult");
+					buf.putstring ("*PResult");
 				else
-					type_i.c_type.generate_cast (f);
-					f.putchar ('0');
+					type_i.c_type.generate_cast (buf);
+					buf.putchar ('0');
 				end;
 			end;
-			f.putstring (";%N");
-			f.exdent;
+			buf.putstring (";%N");
+			buf.exdent;
 				-- Detach this block
-			f.new_line;
-			f.putstring ("PResult = (");
-			type_i.c_type.generate (f);
+			buf.new_line;
+			buf.putstring ("PResult = (");
+			type_i.c_type.generate (buf);
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
 						-- Record once by allocating room in once_set stack.
@@ -64,32 +64,32 @@ feature
 						-- only if it is a reference. This will raise an
 						-- exception if the address cannot be recorded and
 						-- 'PResult' won't be set via the key.
-					f.putstring ("*) RTOC(0);");
+					buf.putstring ("*) RTOC(0);");
 				else
 					-- If not a reference, we need to allocate some place
 					-- where to store the Result (We can't store Result
 					-- directly, since it might be 0...)
-					f.putstring ("*) cmalloc(sizeof(");
-					type_i.c_type.generate (f);
-					f.putstring ("*));");
+					buf.putstring ("*) cmalloc(sizeof(");
+					type_i.c_type.generate (buf);
+					buf.putstring ("*));");
 				end;
 			else
-				f.putstring ("*) 1;");
+				buf.putstring ("*) 1;");
 			end;
-			f.new_line;
-			f.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
-			f.putint (context.once_index);
-			f.putstring ("),PResult);");
-			f.new_line;
+			buf.new_line;
+			buf.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
+			buf.putint (context.once_index);
+			buf.putstring ("),PResult);");
+			buf.new_line;
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
-				f.putstring ("RTWO(");
-				real_body_id.generated_id (f)
-				f.putstring (gc_rparan_comma);
-				f.new_line
+				buf.putstring ("RTWO(");
+				real_body_id.generated_id (buf)
+				buf.putstring (gc_rparan_comma);
+				buf.new_line
 			end;
 			init_dtype;
 		end;
@@ -97,7 +97,7 @@ feature
 	generate_result_declaration is
 			-- Generate declaration of the Result entity
 		do
-			generated_file.putstring ("%N#define Result *PResult%N");
+			buffer.putstring ("%N#define Result *PResult%N");
 		end;
 
 feature -- Inlining

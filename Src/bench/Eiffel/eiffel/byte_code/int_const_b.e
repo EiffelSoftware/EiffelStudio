@@ -30,12 +30,12 @@ feature
 			--| The '()' are present for the case where int_val=INT32_MIN,
 			--| ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
-			f.putchar ('(')
-			f.putint (value)
-			f.putstring ("L)")
+			buf := buffer
+			buf.putchar ('(')
+			buf.putint (value)
+			buf.putstring ("L)")
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

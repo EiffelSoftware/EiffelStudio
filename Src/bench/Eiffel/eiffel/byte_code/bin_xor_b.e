@@ -16,12 +16,15 @@ feature
 
 	print_register is
 			-- Print the expression
+		local
+			buf: GENERATION_BUFFER
 		do
-			generated_file.putstring ("((");
+			buf := buffer
+			buf.putstring ("((");
 			left.print_register;
-			generated_file.putstring (") != (");
+			buf.putstring (") != (");
 			right.print_register;
-			generated_file.putstring ("))");
+			buf.putstring ("))");
 		end;
 
 end

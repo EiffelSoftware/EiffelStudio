@@ -66,24 +66,24 @@ feature
 		end;
 
 	generate is
-			-- Generate C code in `generated_file'.
+			-- Generate C code in `buffer'.
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			generate_line_info;
 			interval.generate;
-			f := generated_file
+			buf := buffer
 			if compound /= Void then
-				f.indent;
+				buf.indent;
 				compound.generate;
-				f.putstring ("break;");
-				f.new_line;
-				f.exdent;
+				buf.putstring ("break;");
+				buf.new_line;
+				buf.exdent;
 			else
-				f.indent;
-				f.putstring ("break;");
-				f.new_line;
-				f.exdent;
+				buf.indent;
+				buf.putstring ("break;");
+				buf.new_line;
+				buf.exdent;
 			end;
 		end;
 

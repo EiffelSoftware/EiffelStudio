@@ -16,26 +16,26 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" != ");
+			buffer.putstring (" != ");
 		end;
 
 	generate_boolean_constant is
 			-- Generate true constant
 		do
-			generated_file.putstring ("EIF_TRUE");
+			buffer.putstring ("EIF_TRUE");
 		end;
 	
 	generate_equal is
 			-- Generate non-equality.
 		do
-			generated_file.putchar ('!');
+			buffer.putchar ('!');
 			{BIN_EQUAL_B} Precursor;
 		end;
 
 	generate_bit_equal is
 			-- Generate non-equality for bits.
 		do
-			generated_file.putchar ('!');
+			buffer.putchar ('!');
 			{BIN_EQUAL_B} Precursor;
 		end;
 

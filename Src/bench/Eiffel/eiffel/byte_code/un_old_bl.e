@@ -40,14 +40,16 @@ feature
 			-- Initialize the value of the old variable.
 		local
 			target_type: TYPE_I
+			buf: GENERATION_BUFFER
 		do
 			expr.generate;
 			target_type := Context.real_type (type);
 			register.print_register;
-			generated_file.putstring (" = ");
+			buf := buffer
+			buf.putstring (" = ");
 			expr.print_register;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			buf.putchar (';');
+			buf.new_line;
 		end;
 
 	unanalyze is

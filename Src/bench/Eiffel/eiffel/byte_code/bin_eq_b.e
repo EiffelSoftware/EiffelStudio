@@ -14,13 +14,13 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" == ");
+			buffer.putstring (" == ");
 		end;
 
 	generate_boolean_constant is
 			-- Generate false constant
 		do
-			generated_file.putstring ("EIF_FALSE");
+			buffer.putstring ("EIF_FALSE");
 		end;
 
 	enlarged: BIN_EQ_BL is

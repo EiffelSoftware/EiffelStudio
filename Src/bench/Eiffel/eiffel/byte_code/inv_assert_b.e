@@ -24,30 +24,33 @@ feature
 
 	 generate is
 			-- Generate assertion
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
 				-- Generate the recording of the assertion
 			if tag /= Void then
-				generated_file.putstring ("RTIT(");
-				generated_file.putchar ('"');
-				generated_file.putstring (tag);
-				generated_file.putchar ('"');
-				generated_file.putstring (gc_comma);
+				buf.putstring ("RTIT(");
+				buf.putchar ('"');
+				buf.putstring (tag);
+				buf.putchar ('"');
+				buf.putstring (gc_comma);
 			else
-				generated_file.putstring ("RTIS(");
+				buf.putstring ("RTIS(");
 			end;
 			context.Current_register.print_register_by_name;
-			generated_file.putstring (gc_rparan_comma);
-			generated_file.new_line;
+			buf.putstring (gc_rparan_comma);
+			buf.new_line;
 				-- Now evaluate the expression
 			expr.generate;
-			generated_file.putstring (gc_if_l_paran);
+			buf.putstring (gc_if_l_paran);
 			expr.print_register;
-			generated_file.putstring (") {");
+			buf.putstring (") {");
 			generate_sucess;
-			generated_file.putstring (gc_lacc_else_r_acc);
+			buf.putstring (gc_lacc_else_r_acc);
 			generate_failure;
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			buf.putchar ('}');
+			buf.new_line;
 		end;
 
 end

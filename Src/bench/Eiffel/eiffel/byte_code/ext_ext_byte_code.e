@@ -56,14 +56,14 @@ feature -- Code generation
 			i, nb: INTEGER
 			include_file: STRING
 			queue: like shared_include_queue
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			if header_files /= Void then
 				from
 					i := header_files.lower
 					nb := header_files.upper
 					queue := shared_include_queue
-					f := generated_file
+					buf := buffer
 				until
 					i > nb
 				loop
@@ -71,9 +71,9 @@ feature -- Code generation
 					if not queue.has (include_file) then
 						queue.extend (include_file)
 						if not context.final_mode then
-							f.putstring ("#include ");
-							f.putstring (include_file);
-							f.new_line;
+							buf.putstring ("#include ");
+							buf.putstring (include_file);
+							buf.new_line;
 						end
 					end
 					i := i + 1
@@ -93,14 +93,14 @@ feature -- Code generation
 	generate_arguments_with_cast is
 			-- Generate C arguments, if any, with casts if there's a signature
 		local
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
-			f.putchar ('(')
+			buf := buffer
+			buf.putchar ('(')
 			if arguments /= Void then
 				generate_basic_arguments_with_cast
 			end
-			f.putchar (')')
+			buf.putchar (')')
 		end
 
 	generate_body is
@@ -120,9 +120,9 @@ feature -- Basic routine
 			internal_name: STRING;
 			i: INTEGER;
 			ext: EXTERNAL_EXT_I
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 
 				-- Generate the header "int foo(Current, args)"
 			type_i := real_type (result_type);
@@ -134,12 +134,12 @@ feature -- Basic routine
 			add_in_log (internal_name);
 
 				-- Generate function signature
-			 f.generate_function_signature
+			 buf.generate_function_signature
 				(type_i.c_type.c_string, internal_name, True,
-				 Context.extern_declaration_file, argument_names, std_argument_types)
+				 Context.header_buffer, argument_names, std_argument_types)
 
 				-- Starting body of C routine
-			f.indent;
+			buf.indent;
 
 				-- Clone expanded parameters, raise exception in caller if
 				-- needed (void assigned to expanded).
@@ -157,10 +157,10 @@ feature -- Basic routine
 
 				-- Now we want the body
 			generate_body;
-			f.exdent;
+			buf.exdent;
 
 				-- Leave a blank line after function definition
-			f.putstring ("}%N%N");
+			buf.putstring ("}%N%N");
 			Context.inherited_assertion.wipe_out;
 		end
 
@@ -168,16 +168,16 @@ feature -- Basic routine
 			-- Generate the body for an external function
 		local
 			i, count: INTEGER;
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
-			f := generated_file
+			buf := buffer
 
 			if not result_type.is_void or else has_return_type then
-				f.putstring ("return ");
+				buf.putstring ("return ");
 			end
 
 			if has_return_type then
-				result_type.c_type.generate_cast (f)
+				result_type.c_type.generate_cast (buf)
 			end
 
 				--| External procedure will be generated as:
@@ -186,11 +186,11 @@ feature -- Basic routine
 				--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
 				--| Without the parenthesis, the cast is done only on the first
 				--| argument, not the entire expression (affectation)
-			f.putchar ('(');
-			f.putstring (external_name);
+			buf.putchar ('(');
+			buf.putstring (external_name);
 			generate_arguments_with_cast;
-			f.putstring (");");
-			f.new_line;
+			buf.putstring (");");
+			buf.new_line;
 		end;
 
 	generate_basic_arguments_with_cast is
@@ -199,25 +199,25 @@ feature -- Basic routine
 			arguments_not_void: arguments /= Void
 		local
 			i,count: INTEGER;
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			from
 				i := arguments.lower
 				count := arguments.count
-				f := generated_file
+				buf := buffer
 			until
 				i > count
 			loop
 				if has_arg_list then
-					f.putchar ('(')
-					f.putstring (argument_types.item (i))
-					f.putstring (") ")
+					buf.putchar ('(')
+					buf.putstring (argument_types.item (i))
+					buf.putstring (") ")
 				end
-				f.putstring ("arg")
-				f.putint (i)
+				buf.putstring ("arg")
+				buf.putint (i)
 				i := i + 1
 				if i <= count then
-					f.putstring (gc_comma)
+					buf.putstring (gc_comma)
 				end
 			end
 		end

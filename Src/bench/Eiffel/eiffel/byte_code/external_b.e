@@ -405,11 +405,11 @@ feature -- Concurrent Eiffel
 			expr: PARAMETER_B;
 			para_type: TYPE_I;
 			loc_idx: INTEGER
-			f: INDENT_FILE
+			buf: GENERATION_BUFFER
 		do
 			if system.has_separate and  parameters /= Void then
 				from
-					f := generated_file
+					buf := buffer
 					parameters.start;
 				until
 					parameters.after
@@ -424,10 +424,10 @@ feature -- Concurrent Eiffel
 								loc_idx := -1;
 							end;
 							if loc_idx /= -1 then
-								f.putstring ("l[");
-								f.putint (context.ref_var_used + loc_idx);
-								f.putstring ("] = (char *)0;");
-								f.new_line;
+								buf.putstring ("l[");
+								buf.putint (context.ref_var_used + loc_idx);
+								buf.putstring ("] = (char *)0;");
+								buf.new_line;
 							end
 						end
 					end

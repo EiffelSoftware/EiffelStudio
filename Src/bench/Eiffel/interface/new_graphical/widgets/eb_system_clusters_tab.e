@@ -77,6 +77,9 @@ feature -- Location access
 	all_check, library_check: EV_CHECK_BUTTON
 			-- Is cluster using `all' or `library' specification.
 
+	namespace_name: EV_TEXT_FIELD
+			-- Name of namespace (MSIL only).
+
 feature -- Option access
 
 	override_default_assertions, check_check, require_check, ensure_check,
@@ -300,7 +303,6 @@ feature {NONE} -- Filling
 					is_item_removable := True
 				end
 			end
-
 		end
 
 feature {NONE} -- Cluster display and saving
@@ -319,6 +321,7 @@ feature {NONE} -- Cluster display and saving
 			default_options: LACE_LIST [D_OPTION_SD]
 			l_item: EV_LIST_ITEM
 			cl_name: STRING
+			l_namespace: NAMESPACE_SD
 		do
 			reset_cluster_info
 
@@ -408,6 +411,8 @@ feature {NONE} -- Cluster display and saving
 							enable_select (override_default_trace)
 							set_selected (trace_check, default_options.item.value.is_yes)
 							is_item_removable := True
+						elseif default_options.item.option.is_namespace then
+							namespace_name.set_text (default_options.item.value.value)
 						end
 						if is_item_removable then
 							default_options.remove
@@ -434,6 +439,8 @@ feature {NONE} -- Cluster display and saving
 				is_item_removable := True
 				enable_select (override_default_profile)
 				set_selected (profile_check, val.is_yes)
+			elseif free_option.code = feature {FREE_OPTION_SD}.Namespace then
+				namespace_name.set_text (val.value)
 			end
 		end
 
@@ -477,6 +484,7 @@ feature {NONE} -- Cluster display and saving
 			l_visible: LACE_LIST [CLAS_VISI_SD]
 			default_options: LACE_LIST [D_OPTION_SD]
 			cl_name: STRING
+			l_d_option: D_OPTION_SD
 		do
 				-- Setting cluster basics.
 			cl_name := tree_item.text
@@ -549,6 +557,23 @@ feature {NONE} -- Cluster display and saving
 			if default_options = Void then
 				create default_options.make (10)
 				prop.set_default_option (default_options)
+			end
+
+			if System.il_generation and then not namespace_name.text.is_empty then
+				from
+					default_options.start
+				until
+					default_options.after
+				loop				
+					if default_options.item.option.is_namespace then
+						default_options.remove 
+					else
+						default_options.forth
+					end
+				end
+				create l_d_option.initialize (create {NAMESPACE_SD}.default_create, 
+					create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
+				default_options.extend (l_d_option)
 			end
 
 			store_cluster_assertions (prop)
@@ -709,6 +734,9 @@ feature {NONE} -- Initialization
 				-- Cluster identification
 			cluster_name.remove_text
 			cluster_path.remove_text
+			if namespace_name /= Void then
+				namespace_name.remove_text
+			end
 
 			current_cluster := Void
 		end
@@ -779,6 +807,18 @@ feature {NONE} -- Initialization
 			vbox.extend (cluster_path)
 			vbox.disable_item_expand (cluster_path)
 			
+			if Platform_constants.is_windows then
+				create label.make_with_text ("Namespace name:")
+				label.align_text_left
+				vbox.extend (label)
+				vbox.disable_item_expand (label)
+				
+				create namespace_name
+				vbox.extend (namespace_name)
+				vbox.disable_item_expand (namespace_name)
+				msil_specific_widgets.extend (namespace_name)
+			end
+	
 			create hbox
 			override_cluster_check := new_check_button (hbox, "override", False)
 			override_cluster_check.select_actions.extend (~select_current_for_override)

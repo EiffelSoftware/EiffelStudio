@@ -1,4 +1,7 @@
 #include "eiffel.h"
+#ifdef __WATCOMC__
+#include <windows.h>
+#endif
 
 public EIF_REFERENCE eif_dot_e ()
 {
@@ -70,12 +73,14 @@ public EIF_REFERENCE eif_timeout_msg ()
 	 */
 
 #ifdef __WATCOMC__
-	extern *appl_ini_file ();
+	extern char *appl_ini_file ();
+	char eif_timeout[10];
+#else
+	char *eif_timeout;
 #endif
 	extern char *getenv();				/* Get environment variable value */
 
 	char s[512];
-	char *eif_timeout;
 
 	strcpy(s, "Couldn't launch system in allotted time.\n");
 	strcat(s, "Try restarting ebench after setting ");
@@ -85,6 +90,13 @@ public EIF_REFERENCE eif_timeout_msg ()
 	strcat(s, "environment\nvariable ");
 #endif
 	strcat(s, "EIF_TIMEOUT to a value larger than\n");
+#ifdef __WATCOMC__
+	GetPrivateProfileString ("Communications", "EIF_TIMEOUT", "15000", eif_timeout, 10 ,appl_ini_file());
+	strcat(s, eif_timeout);
+	strcat(s, " in the [Communications] section\nof the file ");
+	strcat(s, appl_ini_file());
+	strcat(s, "\n");
+#else
 	eif_timeout = getenv("EIF_TIMEOUT");
 	if (eif_timeout != (char *) 0) {	/* Environment variable set */
 		strcat(s, "current value ");
@@ -92,11 +104,6 @@ public EIF_REFERENCE eif_timeout_msg ()
 	} else {
 		strcat(s, "the default 120");
 	}
-#ifdef __WATCOMC__
-	strcat(s, " in the [Environment] section\nof the file ");
-	strcat(s, appl_ini_file());
-	strcat(s, "\n");
-#else
 	strcat(s, ".\n");
 #endif
 	return RTMS (s);

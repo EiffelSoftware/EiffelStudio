@@ -9,30 +9,18 @@ inherit
 
 	TWO_WAY_LIST [STONE]
 		rename
-			make as twl_make,
 			extend as twl_extend
 		export
 			{NONE} all;
 			{ANY} item, forth, back, isfirst, islast, wipe_out, empty;
-			{ANY} after, before, index, go_i_th, start, finish
-		end
+			{ANY} after, before, index, go_i_th, start, finish, make
+		end;
+
+	SHARED_RESOURCES
 
 creation
 
 	make
-
-feature -- Initialization
-
-	make (nb: INTEGER) is
-			-- Make an history of at most `nb' items.
-		require
-			positive_nb: nb > 0
-		do
-			twl_make;
-			capacity := nb
-		ensure
-			capacity_set: capacity = nb
-		end;
 
 feature -- Element change
 
@@ -53,8 +41,15 @@ feature -- Element change
 
 feature {NONE} -- Measurement
 
-	capacity: INTEGER;
+	capacity: INTEGER is
 			-- Maximum number of items
+		once
+			Result := resources.get_integer (r_History_size, 10);
+			if Result < 1 or Result > 100 then
+					-- Just in case the user specified some weird values.
+				Result := 10
+			end
+		end;
 
 feature -- Synchronization
 

@@ -1,5 +1,9 @@
 class SHARED_FORMAT_TABLES
 
+inherit
+
+	SHARED_RESOURCES
+
 feature
 
 	flat_context (stone: CLASSC_STONE): FORMAT_CONTEXT is
@@ -135,7 +139,15 @@ feature
 
 feature {NONE} -- Implementation
 
-	History_size: INTEGER is 30;
+	History_size: INTEGER is
+		once
+			Result := resources.get_integer (r_History_size, 10);
+			if Result < 1 or Result > 100 then
+					-- Just in case the user specified some weird values.
+				Result := 10
+			end;
+			Result := Result * 3
+		end;
 
 	flat_table: HASH_TABLE [FORMAT_CONTEXT, CLASSC_STONE] is
 			-- Table of the last flat formats

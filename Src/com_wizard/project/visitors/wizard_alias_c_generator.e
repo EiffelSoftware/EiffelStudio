@@ -24,8 +24,7 @@ feature -- Access
 			c_writer := Alias_c_writer
 			a_data_type_descriptor := alias_descriptor.type_descriptor
 
-			create a_data_visitor
-			a_data_visitor.visit (a_data_type_descriptor)
+			a_data_visitor := a_data_type_descriptor.visitor
 
 			included_name := a_data_visitor.c_header_file
 			if not (included_name = Void or else included_name.empty) then

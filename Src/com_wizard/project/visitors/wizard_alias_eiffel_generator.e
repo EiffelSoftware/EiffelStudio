@@ -58,8 +58,7 @@ feature -- Processing
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			an_eiffel_type: STRING
 		do
-			create a_data_type_visitor
-			a_data_type_visitor.visit (a_safearray_descriptor)
+			a_data_type_visitor := a_safearray_descriptor.visitor
 			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
 
 			create inherit_clause.make
@@ -86,8 +85,7 @@ feature -- Processing
 		do
 			create inherit_clause.make
 
-			create a_data_type_visitor
-			a_data_type_visitor.visit (an_automation_descriptor)
+			a_data_type_visitor := an_automation_descriptor.visitor
 
 			a_type := a_data_type_visitor.vt_type
 
@@ -132,8 +130,7 @@ feature -- Processing
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			an_eiffel_type: STRING
 		do
-			create a_data_type_visitor
-			a_data_type_visitor.visit (an_array_descriptor)
+			a_data_type_visitor := an_array_descriptor.visitor
 			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
 
 			create inherit_clause.make
@@ -164,8 +161,7 @@ feature -- Processing
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			an_eiffel_type: STRING
 		do
-			create a_data_type_visitor
-			a_data_type_visitor.visit (a_user_defined_descriptor)
+			a_data_type_visitor := a_user_defined_descriptor.visitor
 			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
 
 			create inherit_clause.make
@@ -203,8 +199,7 @@ feature -- Processing
 			a_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			an_eiffel_type: STRING
 		do
-			create a_data_type_visitor
-			a_data_type_visitor.visit (a_pointed_descriptor)
+			a_data_type_visitor := a_pointed_descriptor.visitor
 			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
 
 			create inherit_clause.make

@@ -117,7 +117,7 @@ extern "C" {
  */
 
 RT_LNK char *file_open_mode(int how, char mode);
-RT_LNK EIF_POINTER	file_open(char *name, int how);
+RT_LNK EIF_POINTER file_open(char *name, int how);
 RT_LNK EIF_POINTER file_dopen(int fd, int how);
 RT_LNK EIF_POINTER file_reopen(char *name, int how, FILE *old);
 RT_LNK EIF_POINTER file_binary_open(char *name, int how);

@@ -226,7 +226,7 @@ feature -- Status report
 				--| MSDN. For now, if `Current' is italic then we add 1/6 of the
 				--| height. Julian 11/01/2001
 			if shape = shape_italic then
-				Result.force (Result.integer_item (2) // 6 +
+				Result.put (Result.integer_item (2) // 6 +
 					Result.integer_item (1), 1)
 			end
 		end

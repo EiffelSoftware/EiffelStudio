@@ -97,8 +97,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Update)
+			Result := bm_Update
 		end;
  
 	

@@ -361,7 +361,7 @@ feature
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
 				-- Update `Tmp_body_server'.
-debug ("REPLICATION")
+debug ("HAS_CALLS")
 			resulting_table.trace_replications;
 end;
 			update_body_server;
@@ -839,13 +839,13 @@ end;
 			feature_i := feature_table.item (feature_name);
 			if feature_i /= Void then
 				old_feature_in_class := feature_i.written_in = a_class.id;
+				old_body_id := feature_i.original_body_id;
 				if 	
 					old_feature_in_class and then 
 					not feature_i.is_code_replicated 
 				then
 						-- Found a feature of same name and written in the
 						-- same class.
-					old_body_id := feature_i.original_body_id;
 					old_description := Body_server.server_item (old_body_id);
 						-- Incrementality of the workbench is here: we
 						-- compare the content of a new feature and the
@@ -1046,11 +1046,6 @@ end;
 			loop
 				feature_name := changed_features.item;
 				a_class.insert_changed_feature (feature_name);
-debug ("REPLICATION")
-	io.error.putstring ("changed routine: ");
-	io.error.putstring (feature_name);
-	io.error.new_line;
-end;
 				if rep_dep /= Void then
 					feat_rep_dep := rep_dep.item (feature_name);
 					if feat_rep_dep /= Void then
@@ -1368,7 +1363,9 @@ end;
 					then
 						written_in_cont := rep_feat.written_in;
 						if tmp_rep_class_info.has (written_in_cont) then
-							s_rep_name_list := tmp_rep_class_info.item (written_in_cont)
+							s_rep_name_list := tmp_rep_class_info.item (written_in_cont);
+io.error.putstring ("retrieving list: ");
+io.error.new_line;
 						else
 							!!s_rep_name_list.make (
 								rep_name_list.parent_clause.parent_id);
@@ -1379,6 +1376,8 @@ end;
 													written_in_cont);
 							rep_name_list.update_new_features (f_table,
 													written_in_cont);
+io.error.putstring ("creating list: ");
+io.error.new_line;
 						end;
 						f_name := rep_feat.feature_name;
 debug ("REPLICATION")
@@ -1400,10 +1399,6 @@ end;
 							end;
 							calls_list.wipe_out;
 							feature_as.fill_calls_list (calls_list);
-debug ("REPLICATION")
-							calls_list.trace;
-end;
-								
 							if rep_name_list.has_calls (calls_list) then
 debug ("ACTUAL_REPLICATION")
 		io.error.putstring ("%Tfeature going to be rep: ");
@@ -1413,6 +1408,7 @@ debug ("ACTUAL_REPLICATION")
 		io.error.new_line;
 end;
 debug ("REPLICATION")
+		--calls_list.trace;
 		io.error.putstring ("%Tfeature going to be rep: ");
 		io.error.putstring (rep_name.new_feature.feature_name);
 		io.error.putstring (" ");
@@ -1430,12 +1426,18 @@ end;
 						if new_list then
 							s_rep_name_list.update (rep_name_list);
 							new_list := False;
-							rep_class_info.add_front (s_rep_name_list);
+							rep_class_info.put (s_rep_name_list, 	
+												written_in_cont);
+io.error.putstring ("add_front to rep_class_info%N");
+						elseif not rep_class_info.has (written_in_cont) then
+							rep_class_info.put (s_rep_name_list,
+												written_in_cont);
 						end;
 						!!s_rep_name;
 						s_rep_name.set_old_feature (rep_name.old_feature);
 						s_rep_name.set_new_feature (rep_name.new_feature);
 						s_rep_name_list.add_replicated_feature (s_rep_name);
+s_rep_name_list.trace;
 						needs_replication := False;
 					end;
 					rep_name_list.forth;
@@ -1445,6 +1447,7 @@ end;
 			end;
 			if rep_class_info.count > 0 then
 				Tmp_rep_info_server.put (rep_class_info);
+rep_class_info.trace
 			elseif Tmp_rep_info_server.has (a_class.id) then
 debug ("REPLICATION")
 	io.error.putstring ("removing class ");

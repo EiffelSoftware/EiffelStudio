@@ -7,7 +7,7 @@ inherit
 	UN_OLD_B
 		redefine
 			register, set_register,
-			analyze, generate, unanalyze,
+			generate, unanalyze,
 			print_register, free_register
 		end;
 	
@@ -23,7 +23,7 @@ feature
 			register := r;
 		end;
 
-	analyze is
+	special_analyze is
 			-- Analyze expression and get a register
 		local
 			target_type: TYPE_I
@@ -31,11 +31,9 @@ feature
 			target_type := Context.real_type (type);
 			context.init_propagation;
 			expr.propagate (No_register);
+			get_register;
 			expr.analyze;
-			if not target_type.is_basic then
-				expr.free_register;
-				get_register;
-			end;
+			expr.free_register;
 		end;
 
 	initialize is
@@ -45,15 +43,17 @@ feature
 		do
 			expr.generate;
 			target_type := Context.real_type (type);
+			register.print_register;
+			generated_file.putstring (" = ");
 			if not target_type.is_basic then
-				register.print_register;
-				generated_file.putstring (" = ");
 				generated_file.putstring ("RTCL(");
 				expr.print_register;
 				generated_file.putchar(')');
-				generated_file.putchar (';');
-				generated_file.new_line;
+			else
+				expr.print_register;	
 			end;
+			generated_file.putchar (';');
+			generated_file.new_line;
 		end;
 
 	unanalyze is
@@ -73,12 +73,7 @@ feature
 	print_register is
 			-- Print the value of the old variable
 		do
-			if register = Void then
-				-- Old value of basic 
-				expr.print_register
-			else
-				register.print_register;
-			end;
+			register.print_register;
 		end;
 
 	free_register is

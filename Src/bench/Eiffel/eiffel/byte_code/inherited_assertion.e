@@ -405,6 +405,41 @@ feature -- inherited postcondition
 			end;
 		end;
 
+	analyze_old_expressions is
+			-- Analyze inherited old expressions
+		require
+			types_and_assert_count_same: valid_post_count
+		local
+			old_expressions: LINKED_LIST [UN_OLD_B];
+			old_exp: UN_OLD_BL;
+		do
+			from
+				postcondition_start
+			until
+				postcondition_after	
+			loop
+				postcondition_context_init;
+				old_expressions := old_expression_list.item;
+				if old_expressions /= Void then
+					--! Old expressions can be void
+					postcondition_context_init;
+					from
+						old_expressions.start
+					until
+						old_expressions.after
+					loop
+						old_exp ?= old_expressions.item; -- Cannot fail
+						old_exp.special_analyze;
+						old_expressions.forth;
+					end;
+				end;
+				postcondition_forth
+			end;
+			restore_current_context;
+		ensure
+			context_restored: restored
+		end;
+
 	analyze_postcondition is
 			-- Analyze inherited postconditions
 		require

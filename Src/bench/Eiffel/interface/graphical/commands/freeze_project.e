@@ -90,8 +90,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Freeze) 
+			Result := bm_Freeze 
 		end; 
 
 	

@@ -20,8 +20,7 @@ feature
 	symbol: PIXMAP is
 			-- Icon for the system tool
 		once
-			!!Result.make;
-			Result.read_from_file (bm_System)
+			Result := bm_System
 		end;
 
 	

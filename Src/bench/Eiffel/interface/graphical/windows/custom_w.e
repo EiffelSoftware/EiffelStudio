@@ -370,15 +370,12 @@ dummy_choice.set_text ("GAGAGAG");
 			catalog_label.set_text (l_recorded);
 			record_push.set_text (l_record);
 			remove_push.set_text (l_remove);
-			!!a_pixmap.make;
-			a_pixmap.read_from_file (bm_format);
-			bitmap_bitmap.set_pixmap (a_pixmap);
-			!!a_pixmap.make;
-			a_pixmap.read_from_file (bm_showcustom);
-			hole.set_pixmap (a_pixmap);
-			!!a_pixmap.make;
-			a_pixmap.read_from_file (bm_quit);
-			--exit_command.set_pixmap (a_pixmap);
+			--if bm_format.is_valid then
+				--bitmap_bitmap.set_pixmap (bm_format);
+			--end;
+			--if bm_showcustom.is_valid then
+				--hole.set_pixmap (bm_showcustom);
+			--end;
 		end;
 
 	call (a_command: SHOW_CUSTOM) is

@@ -18,8 +18,7 @@ feature
 	symbol: PIXMAP is
 			-- Icon for the object tool
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Object)
+			Result := bm_Object
 		end;
 
 	

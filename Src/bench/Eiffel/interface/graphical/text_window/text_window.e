@@ -211,9 +211,11 @@ feature {NONE}
 			!!modifier;
 			!!grabber;
 			!!new_tooler;
+			!!raise_proj_window;
 			add_modify_action (Current, modifier);
 			set_action ("<Btn3Down>", Current, grabber);
 			set_action ("!c<Btn3Down>", Current, new_tooler);
+			set_action ("Ctrl<Key>p", Current, raise_proj_window);
 		end;
 
 	c_widget: POINTER;
@@ -299,6 +301,8 @@ feature {NONE}
 						project_tool.receive (focus);
 						deselect_all
 					end
+				elseif argument = raise_proj_window then
+					project_tool.raise
 				end
 			end
 		end;
@@ -308,6 +312,7 @@ feature {NONE}
 	modifier: ANY;
 	grabber: ANY;
 	new_tooler: ANY;
+	raise_proj_window: ANY;
 
 feature {NONE} -- External features
 

@@ -5,7 +5,7 @@ class REP_CLASS_INFO
 
 inherit
 
-	LINKED_LIST [S_REP_NAME_LIST]
+	EXTEND_TABLE [S_REP_NAME_LIST, INTEGER]
 		rename
 			make as ll_make
 		end;
@@ -31,8 +31,21 @@ feature
 		require
 			valid_arg1: class_id > 0;
 		do
-			ll_make;
+			ll_make (2);
 			id := class_id;
+		end;
+
+	trace is
+		do
+			io.error.putstring ("REP CLASS INFO%N");
+			from
+				start
+			until
+				after
+			loop
+				item_for_iteration.trace;
+				forth
+			end
 		end;
 
 end

@@ -70,18 +70,28 @@ feature
 
 	trace is
 		do
-			io.putstring ("S_REP_NAME_LIST%N");
+			io.error.putstring ("S_REP_NAME_LIST%N");
+			from
+				replicated_features.start
+			until
+				replicated_features.after
+			loop
+				io.error.putstring ("replicated feature: ");
+				io.error.putstring (replicated_features.item.new_feature.feature_name);
+				io.error.new_line;
+				replicated_features.forth
+			end;
 			from
 				start
 			until
 				after
 			loop
-				io.putstring ("old feature name: ");
-				io.putstring (item.old_feature.feature_name);
-				io.new_line;
-				io.putstring ("new feature name: ");
-				io.putstring (item.new_feature.feature_name);
-				io.new_line;
+				io.error.putstring ("old feature name: ");
+				io.error.putstring (item.old_feature.feature_name);
+				io.error.new_line;
+				io.error.putstring ("new feature name: ");
+				io.error.putstring (item.new_feature.feature_name);
+				io.error.new_line;
 				forth
 			end
 		end;

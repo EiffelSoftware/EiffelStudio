@@ -40,8 +40,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Debug_quit) 
+			Result := bm_Debug_quit 
 		end;
  
 	

@@ -44,8 +44,7 @@ feature
 	symbol: PIXMAP is
 			-- Empty symbol
 		do
-			!!Result.make;
-			Result.read_from_file (bm_default)
+			Result := bm_default
 		end;
 
 	

@@ -105,6 +105,7 @@ feature {NONE}
 			-- Build formatting buttons in `format_bar'.
 		do
 			!!showtext_command.make (format_bar, text_window);
+			text_window.set_show_text_format (showtext_command);
 			!!showflat_command.make (format_bar, text_window);
 			!!showflatshort_command.make (format_bar, text_window);
 			!!showancestors_command.make (format_bar, text_window);

@@ -28,6 +28,7 @@ feature
 			feat: FEATURE_I;
 			have_assert: BOOLEAN;
 			inh_assert: INHERITED_ASSERTION;
+			old_exp: UN_OLD_BL;
 		do
 			workbench_mode := context.workbench_mode;
 			feat := Context.associated_class.feature_table.item (feature_name);
@@ -67,11 +68,22 @@ feature
 				if workbench_mode then
 					context.add_dt_current;
 				end;
-				if postcondition /= Void then
-					postcondition.analyze;
+				if old_expressions /= Void then
+					from
+						old_expressions.start
+					until
+						old_expressions.after
+					loop
+						--| Need to do a special analyze for the old
+						--| expressions so that the registers being used
+						--| to store the old values will not be reused.
+						old_exp ?= old_expressions.item; -- Cannot fail
+						old_exp.special_analyze;
+						old_expressions.forth
+					end
 				end;
 				if inh_assert.has_postcondition then
-					inh_assert.analyze_postcondition;
+					inh_assert.analyze_old_expressions;
 				end	
 			end;
 				-- If result is expanded or a bit, we need to create it anyway
@@ -81,9 +93,7 @@ feature
 					context.mark_result_used;
 				end;
 			end;
-				-- Look at the compound after postconditions have been
-				-- analyzed, so that the registers used for "old" expressions
-				-- are not clobbered in any way.
+
 			if compound /= Void then
 					-- Look for all instances of assignments in Result
 					-- in last instructions and set `last_in_result' iff
@@ -94,6 +104,18 @@ feature
 					compound.item.mark_last_instruction;
 				end;
 				compound.analyze;
+			end;
+				-- Analyze postconditions
+			if 	have_assert then
+				if workbench_mode then
+					context.add_dt_current;
+				end;
+				if postcondition /= Void then
+					postcondition.analyze;
+				end;
+				if inh_assert.has_postcondition then
+					inh_assert.analyze_postcondition;
+				end	
 			end;
 			if rescue_clause /= Void then
 				rescue_clause.analyze;
@@ -121,6 +143,9 @@ feature
 				body_id);
 
 				-- Generate function name
+io.error.putstring ("generating ");
+io.error.putstring (feature_name);
+io.error.new_line;
 			generated_file.putstring (internal_name);
 			generated_file.putchar ('(');
 			generate_arguments;

@@ -20,8 +20,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Showclients) 
+			Result := bm_Showclients 
 		end;
  
 	

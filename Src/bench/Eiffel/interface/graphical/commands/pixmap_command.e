@@ -20,7 +20,7 @@ feature {NONE}
 			-- `a_text_window' is passed as argument to the activation action
 		do
 			pict_create (new_name, a_composite);
-			set_pixmap (symbol);
+			set_symbol (symbol);
 			!!get_in; !!get_out;
 			add_enter_action (Current, get_in);
 			add_leave_action (Current, get_out);
@@ -67,6 +67,17 @@ feature
 	
 feature {NONE}
 
+	set_symbol (p: PIXMAP) is
+			-- Set the pixmap if it it valid
+		require
+			non_void_arg: p /= Void
+		do
+			if p.is_valid then
+				set_pixmap (p)
+			end;
+		end;
+
+
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'
 		do
@@ -80,10 +91,10 @@ feature
 			-- Darken the symbol of current button if `b', lighten it otherwize
 		do
 			if b then
-				set_pixmap (dark_symbol)
+				set_symbol (dark_symbol)
 			else
-				set_pixmap (symbol)
+				set_symbol (symbol)
 			end
-		end
+		end;
 
 end

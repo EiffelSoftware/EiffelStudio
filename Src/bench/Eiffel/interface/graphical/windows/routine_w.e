@@ -86,7 +86,11 @@ feature {NONE}
 				format_bar.attach_left_widget (debug_showbreak, debug_quit_command, 0);
 			!!break_command.make (format_bar, text_window);
 				format_bar.attach_top (break_command, 0);
-				format_bar.attach_right (break_command, 0);
+				format_bar.detach_left (break_command);
+			!!shell_command.make (format_bar, text_window);
+				format_bar.attach_top (shell_command, 0);
+				format_bar.attach_left_widget (break_command, shell_command, 5);
+				format_bar.attach_right (shell_command, 0);
 		end;
 
 	build_edit_bar is
@@ -129,5 +133,6 @@ feature {NONE}
 	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showfuture_command: SHOW_FUTURE;
+	shell_command: SHELL_COMMAND;
 
 end

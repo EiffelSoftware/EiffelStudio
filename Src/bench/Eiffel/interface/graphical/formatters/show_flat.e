@@ -22,8 +22,7 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			!!Result.make; 
-			Result.read_from_file (bm_Showflat) 
+			Result := bm_Showflat 
 		end;
  
 	

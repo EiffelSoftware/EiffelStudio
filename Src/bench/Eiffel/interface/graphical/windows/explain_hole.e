@@ -19,8 +19,7 @@ feature
 	symbol: PIXMAP is
 			-- Icon for the explain tool
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Explain)
+			Result := bm_Explain
 		end;
 
 	compatible (dropped: STONE): BOOLEAN is

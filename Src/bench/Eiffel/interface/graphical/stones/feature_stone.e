@@ -67,12 +67,37 @@ feature -- dragging
 	clickable: BOOLEAN is
 		do
 			Result := True
-		end
+		end;
 
-feature {NONE} -- secret
+	line_number: INTEGER is
+			-- Line number of feature text.
+		require
+			valid_start_position: start_position > 0;
+			valid_feature: feature_i /= Void 
+		local
+			file: UNIX_FILE;
+			start_line_pos: INTEGER;
+		do
+			!!file.make_open_read (file_name);
+			from
+			until
+				file.position > start_position or else file.end_of_file
+			loop
+				start_line_pos := file.position;
+				Result := Result + 1;
+				file.readline;
+			end;
+			file.close;
+		end;
 
 	start_position, end_position: INTEGER;
             -- Start and end of the text of the feature in origin file
 			-- (in fact, to get origin text...)
+
+	is_valid: BOOLEAN is
+			-- Does Current have a corresponding feature_i?
+		do
+			Result := feature_i /= Void
+		end;
  
 end

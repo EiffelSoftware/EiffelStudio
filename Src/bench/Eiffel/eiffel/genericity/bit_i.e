@@ -120,12 +120,11 @@ feature
 	(reg, value: REGISTRABLE; file: UNIX_FILE; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 		   	-- put result in register `reg'. The value of the basic type is
-		   	-- held in `value'. For bits do a clone.
+		   	-- held in `value'. 
 		do
 			reg.print_register;
-			file.putstring (" = RTCB(");
+			file.putstring (" = ");
 			value.print_register;
-			file.putchar (')');
 		end;
 
 	generate_union (file: UNIX_FILE) is

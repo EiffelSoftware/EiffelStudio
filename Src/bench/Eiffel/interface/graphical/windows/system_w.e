@@ -47,6 +47,7 @@ feature
 			elseif not shown then
 				show
 			end;
+			raise;
 		end;
 	
 feature {NONE}

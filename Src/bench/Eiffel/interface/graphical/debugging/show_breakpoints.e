@@ -19,8 +19,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			!!Result.make;
-			Result.read_from_file (bm_Breakpoint)
+			Result := bm_Breakpoint
 		end;
 
 feature {NONE}

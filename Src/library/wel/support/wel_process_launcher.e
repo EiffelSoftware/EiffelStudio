@@ -34,15 +34,25 @@ feature -- Basic Operations
 
 	spawn (a_command_line, a_working_directory: STRING) is
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
+		require
+			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
+			non_void_working_directory: a_working_directory /= Void
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
 			create process_info.make
-			create a_wel_string1.make (a_command_line)
-			create a_wel_string2.make (a_working_directory)
-			last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-				default_pointer, default_pointer, True, 0, default_pointer, a_wel_string2.item,
-				startup_info.item, process_info.item)
+			create a_wel_string1.make (a_command_line)	
+			if not a_working_directory.is_empty then
+				create a_wel_string2.make (a_working_directory)
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, cwin_detached_process, default_pointer, a_wel_string2.item,
+							startup_info.item, process_info.item)
+			else
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, detached_process, default_pointer, default_pointer,
+							startup_info.item, process_info.item)
+			end
 		end
 
 	launch (a_command_line, a_working_directory: STRING; a_output_handler: ROUTINE [ANY, TUPLE [STRING]]) is
@@ -50,8 +60,8 @@ feature -- Basic Operations
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
 			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
 			non_void_working_directory: a_working_directory /= Void
-			valid_working_directory: not a_working_directory.is_empty
 		do
 			spawn (a_command_line, a_working_directory)
 			output_pipe.close_input
@@ -74,7 +84,45 @@ feature -- Basic Operations
 			input_pipe.close_input
 			input_pipe.close_output
 		end
-		
+	
+	launch_and_refresh (a_command_line, a_working_directory: STRING; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
+			-- Launch process described in `a_command_line' from `a_working_directory'.
+			-- Refresh current development window while process is active.
+			-- Wait for end of process and terminate it.
+		require
+			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
+			non_void_working_directory: a_working_directory /= Void
+		local
+			an_integer: INTEGER
+			a_boolean: BOOLEAN
+			finished: BOOLEAN
+		do
+			spawn (a_command_line, a_working_directory)
+			from
+			until
+				finished
+			loop
+				a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+				check
+					valid_external_call_2: a_boolean
+				end
+				if last_process_result = cwin_still_active then
+					an_integer := cwin_wait_for_single_object (process_info.process_handle, 1)
+					if an_integer = cwin_wait_object_0 then
+						finished := True
+					else
+						if a_refresh_handler /= Void then
+							a_refresh_handler.call (create {TUPLE}.make)
+						end
+					end
+				else
+					finished := True
+				end
+			end
+			terminate_process			
+		end
+			
 feature -- Access
 
 	last_launch_successful: BOOLEAN
@@ -98,8 +146,8 @@ feature {NONE} -- Implementation
 			create output_pipe.make
 			create Result.make
 			Result.set_flags (Startf_use_std_handles)
-			Result.set_show_command (Sw_hide)
-			Result.add_flag (Startf_use_show_window)
+		--	Result.set_show_command (Sw_hide)
+		--	Result.add_flag (Startf_use_show_window)
 			Result.set_std_input (input_pipe.input_handle)
 			Result.set_std_output(output_pipe.input_handle)
 			Result.set_std_error (output_pipe.input_handle)
@@ -110,6 +158,25 @@ feature {NONE} -- Implementation
 
 	Block_size: INTEGER is 255
 			-- Read block size
+
+	terminate_process is
+			-- Terminate current process (corresponding to `process_info').
+		local
+			a_boolean: BOOLEAN
+			terminated: BOOLEAN		
+		do
+			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+			check
+				valid_external_call_2: a_boolean
+			end
+			cwin_close_handle (process_info.process_handle)
+			if last_process_result = cwin_still_active then
+				terminated := cwin_terminate_process (process_info.process_handle, 0)
+				check
+					valid_external_call_3: terminated
+				end
+			end
+		end
 
 feature {NONE} -- Externals
 
@@ -161,6 +228,30 @@ feature {NONE} -- Externals
 			"INFINITE"
 		end
 
+	cwin_terminate_process (handle, exit_code: INTEGER): BOOLEAN is
+			-- SDK TerminateProcess
+		external
+			"C [macro <winbase.h>] (HANDLE, DWORD): EIF_BOOLEAN"
+		alias
+			"TerminateProcess"
+		end
+
+	cwin_still_active: INTEGER is
+			-- SDK STILL_ACTIVE constant
+		external
+			"C [macro <windows.h>]: EIF_INTEGER"
+		alias
+			"STILL_ACTIVE"
+		end
+
+	cwin_detached_process: INTEGER is
+			-- SDK DETACHED_PROCESS constant
+		external
+			"C [macro <winbase.h>]: EIF_INTEGER"
+		alias
+			"DETACHED_PROCESS"
+		end
+		
 end -- class PROCESS_LAUNCHER
 
 --|----------------------------------------------------------------

@@ -367,6 +367,7 @@ feature -- Title part
 	t_Clients_of: STRING is				"Clients of class ";
 	t_Clusters_hierarchy: STRING is		"Cluster Hierarchy";
 	t_Clusters_of: STRING is			"Clusters in universe ";
+	t_Configuration_error: STRING is			"An error occured while loading the configuration for your profiler";
 	t_Confirm: STRING is				"Please confirm";
 	t_Custom_of: STRING is				"Custom view of class ";
 	t_Deferreds_of: STRING is			"Deferred routines of class ";

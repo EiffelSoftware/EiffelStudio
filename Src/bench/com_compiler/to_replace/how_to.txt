@@ -1,1 +1,2 @@
-Replace generated "ceiffel_project_coclass_imp.e" (in Server\Component) and "ieiffel_system_browser_interface", "ieiffel_project_properties_interface" (in Common\Interfaces) with files in this directory.
+run moving.bat that is located in com_compiler.
+It will regenerate files and move them into correct location.

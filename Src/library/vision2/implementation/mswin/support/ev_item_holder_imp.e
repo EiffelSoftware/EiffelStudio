@@ -17,6 +17,8 @@ inherit
 		redefine
 			initialize,
 			interface
+		select
+			interface
 		end
 
 	EV_DYNAMIC_LIST_IMP [G, EV_ITEM_IMP]
@@ -25,6 +27,11 @@ inherit
 			item,
 			insert_i_th,
 			remove_i_th
+		end
+
+	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+		rename
+			interface as old_interface
 		end
 
 feature {NONE} -- Initialization
@@ -126,6 +133,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/11 17:04:37  rogers
+--| Added inheritance from EV_PICK_AND_dROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.27  2000/04/05 21:16:11  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

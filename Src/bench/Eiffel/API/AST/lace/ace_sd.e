@@ -484,7 +484,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						Error_handler.raise_error
 					elseif l_old_assembly = Void then
 							-- Add it to top cluster list of system and to universe.
-						if l_compiled_assembly.is_local then
+						if not l_compiled_assembly.has_gac_specification then
 							l_local_assemblies.extend (l_compiled_assembly)
 						end
 						l_new_assemblies.extend (l_compiled_assembly)

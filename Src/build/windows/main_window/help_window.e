@@ -88,7 +88,8 @@ feature {NONE}
 
 			!!delete_com.make (Current);
 			set_delete_command (delete_com);
-			initialize_window_attributes
+			initialize_window_attributes;
+			set_x_y (screen.x, screen.y)
 		end;
 
 feature
@@ -103,6 +104,7 @@ feature
 		do
 			!! mp;
 			mp.set_watch_shape;
+			help_hole.set_full_symbol;
 			text.set_text (data.help_text);
 			mp.restore
 		end;

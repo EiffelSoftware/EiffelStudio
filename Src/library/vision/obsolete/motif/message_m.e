@@ -11,7 +11,7 @@ class
  
 inherit
  
-	PROMPT_I;
+	MESSAGE_I;
 
 	MESSAGE_BOX_M
 

@@ -138,13 +138,15 @@ feature -- Basic Operations
 			build_toolbar_assembly_viewer
 			
 			create import_toolbar_button.make_toolbarbutton
-			create separator.make_toolbarbutton			
-			import_toolbar_button.set_imageindex (6)
+			create separator.make_toolbarbutton
+			import_toolbar_button.set_imageindex (7)
 			import_toolbar_button.set_tooltiptext (dictionary.Import_menu_item)
 			import_toolbar_button.set_style (dictionary.Push_button)
 			separator.set_style (dictionary.Separator)
 				
 				-- Add buttons to `toolbar'.
+			added := toolbar.buttons.add_toolbarbutton (separator)
+			added := toolbar.buttons.add_toolbarbutton (dependancy_viewer_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (separator)
 			added := toolbar.buttons.add_toolbarbutton (import_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (separator)
@@ -162,7 +164,7 @@ feature -- Basic Operations
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST 
 		do
 			build_image_list_assembly_viewer
-			set_icon (dictionary.Import_tool_icon)
+			set_icon (dictionary.Import_tool_icon)		
 			import_image := image_factory.fromfile (dictionary.Import_icon_filename)
 			image_list := toolbar.imagelist
 			images := image_list.images
@@ -530,8 +532,10 @@ feature -- Event handling
 			when 4 then
 				display_dependancies (sender, args)
 			when 6 then
-				import (sender, args)
+				show_dependancy_viewer (sender, args)
 			when 8 then
+				import (sender, args)
+			when 10 then
 				display_help (sender, args)
 			end
 		end		

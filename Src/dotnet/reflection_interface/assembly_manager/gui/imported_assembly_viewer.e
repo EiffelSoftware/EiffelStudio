@@ -243,11 +243,11 @@ feature -- Basic Operations
 			create separator.make_toolbarbutton
 			
 				-- Set icons to toolbar buttons.
-			path_toolbar_button.set_imageindex (6)
-			edit_toolbar_button.set_imageindex (7)
-			remove_toolbar_button.set_imageindex (8)
-			eiffel_generation_toolbar_button.set_imageindex (9)
-			import_toolbar_button.set_imageindex (10)
+			path_toolbar_button.set_imageindex (7)
+			edit_toolbar_button.set_imageindex (8)
+			remove_toolbar_button.set_imageindex (9)
+			eiffel_generation_toolbar_button.set_imageindex (10)
+			import_toolbar_button.set_imageindex (11)
 			
 				-- Set tooltips.
 			path_toolbar_button.set_tooltiptext (dictionary.Path_menu_item)
@@ -269,6 +269,8 @@ feature -- Basic Operations
 			
 				-- Add buttons to `toolbar'.
 			added := toolbar.buttons.add_toolbarbutton (path_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (separator)
+			added := toolbar.buttons.add_toolbarbutton (dependancy_viewer_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (separator)
 			added := toolbar.buttons.add_toolbarbutton (edit_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (remove_toolbar_button)
@@ -693,47 +695,53 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			selected_row: INTEGER
-			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			an_assembly: ISE_REFLECTION_EIFFELASSEMBLY
 			a_type_list: SYSTEM_COLLECTIONS_ARRAYLIST
+			an_assembly: ISE_REFLECTION_EIFFELASSEMBLY
 			assembly_view: ASSEMBLY_VIEW
+			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			returned_value: INTEGER
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			retried: BOOLEAN
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
 			if not retried then
 				selected_row := data_grid.CurrentRowIndex
-				a_descriptor := current_assembly (selected_row)
-				if a_descriptor /= Void then
-					if is_non_editable_assembly (a_descriptor) then
-						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-					else
-						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Edit_type_message, dictionary.Confirmation_caption, dictionary.Ok_cancel_message_box_buttons, dictionary.Question_icon)
-						if returned_value /= dictionary.Cancel then
-							an_assembly := reflection_interface.assembly (a_descriptor)
-							if an_assembly /= Void then
-								a_type_list := an_assembly.types
-								if a_type_list /= Void then
-									create assembly_view.make (an_assembly)
-								end
-							else
-								if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-									returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
-								end
+				current_descriptor := current_assembly (selected_row)
+				if current_descriptor /= Void then
+					if is_non_editable_assembly (current_descriptor) then
+						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					else			
+						wait_cursor := cursors.WaitCursor
+						set_cursor (wait_cursor)
+						an_assembly := reflection_interface.assembly (current_descriptor)
+						if an_assembly /= Void then
+							a_type_list := an_assembly.types
+							if a_type_list /= Void then
+								create assembly_view.make (an_assembly)	
+								normal_cursor := cursors.Arrow
+								set_cursor (normal_cursor)
+							end
+						else
+							normal_cursor := cursors.Arrow
+							set_cursor (normal_cursor)
+							if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
+								returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 							end
 						end
 					end
 				end
 			else
 				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 				end
 			end
 		rescue
 			retried := True
 			retry
 		end
-
+		
 	remove (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Remove currently selected assembly (available only if assembly has been imported)."
@@ -775,8 +783,15 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			import_tool: IMPORT_TOOL
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
+			wait_cursor := cursors.WaitCursor
+			set_cursor (wait_cursor)
 			create import_tool.make
+			normal_cursor := cursors.Arrow
+			set_cursor (normal_cursor)
 		end
 
 	eiffel_generation (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -829,14 +844,16 @@ feature -- Event handling
 			when 5 then	
 				display_path (sender, args)
 			when 7 then
+				show_dependancy_viewer (sender, args)
+			when 9 then
 				edit (sender, args)
-			when 8 then
-				remove (sender, args)
 			when 10 then
-				eiffel_generation (sender, args)
+				remove (sender, args)
 			when 12 then
-				import (sender, args)
+				eiffel_generation (sender, args)
 			when 14 then
+				import (sender, args)
+			when 16 then
 				display_help (sender, args)
 			end
 		end		

@@ -133,35 +133,54 @@ feature {NONE} -- Implementation
 		require	
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 		local
+			message_box: MESSAGE_BOX	
+			generate_delegate: SYSTEM_EVENTHANDLER
+		do
+			create generate_delegate.make_eventhandler (Current, $generate_classes)
+			create message_box.make (dictionary.Assembly_generation_message, generate_delegate)
+		end
+	
+	generate_classes (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+			-- Generate Eiffel classes for the assembly corresponding to `assembly_descriptor' without its dependancies.
+		indexing
+			external_name: "GenerateClasses"
+		require	
+			non_void_assembly_descriptor: assembly_descriptor /= Void
+			non_void_sender: sender /= Void
+		local
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			emitter: NEWEIFFELCLASSGENERATOR
 			returned_value: INTEGER
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 			retried: BOOLEAN
-		do
-			if not retried then
-				create conversion_support.make_conversionsupport
-				assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
-				assembly := assembly.load (assembly_name)
-				returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Assembly_generation_message, dictionary.Confirmation_caption, dictionary.Ok_cancel_message_box_buttons, dictionary.Question_icon)
-				close
-				if returned_value /= dictionary.Cancel then
+			message_box: MESSAGE_BOX
+		do	
+			message_box ?= sender
+			if message_box /= Void then
+				message_box.refresh
+				if not retried then
+					create conversion_support.make_conversionsupport
+					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					assembly := assembly.load (assembly_name)
+					close
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						put_environment_variable
 						if destination_path_text_box.text.tolower.equals_string (eiffel_path.tolower) then
 							emitter.generateeiffelclassesfromxml (assembly)
+							message_box.close
 						else
-						--	Pb: Update xml files (with correct path to Eiffel sources)
+							emitter.generateeiffelclassesfromxmlandpathname (assembly, destination_path_text_box.text)
+							message_box.close
 						end
 					else
-						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.No_path, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 					end	
+				else
+					message_box.close
+					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Eiffel_generation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 				end
-			else
-				returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Eiffel_generation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 			end
 		rescue
 			retried := True

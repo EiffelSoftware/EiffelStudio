@@ -183,7 +183,6 @@ feature {NONE} -- Implementation
 			external_name: "UpdateClass"
 		require
 			non_void_new_name: type_modifications.new_name /= Void
-			not_empty_new_name: type_modifications.new_name.length > 0
 		local
 			new_name: STRING
 		do
@@ -357,7 +356,6 @@ feature {NONE} -- Implementation
 			external_name: "ClassExists"
 		require
 			non_void_class_name: a_class_name /= Void
-			not_empty_class_name: a_class_name.length > 0
 		local
 			i: INTEGER
 			a_type: ISE_REFLECTION_EIFFELCLASS
@@ -380,7 +378,6 @@ feature {NONE} -- Implementation
 			external_name: "RenameClass"
 		require
 			non_void_name: new_name /= Void
-			not_empty_name: new_name.length > 0 
 		local
 			i: INTEGER
 			a_class: ISE_REFLECTION_EIFFELCLASS
@@ -408,7 +405,6 @@ feature {NONE} -- Implementation
 			external_name: "RenameChildrenParent"
 		require
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 		local
 			i: INTEGER
 			a_child: ISE_REFLECTION_EIFFELCLASS
@@ -441,7 +437,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_class: a_class /= Void
 			non_void_feature_name: a_feature_name /= Void
-			not_empty_feature_name: a_feature_name.length > 0
 		do
 			Result := has_feature (a_class.initializationfeatures, a_feature_name)
 					or has_feature (a_class.accessfeatures, a_feature_name)
@@ -459,7 +454,6 @@ feature {NONE} -- Implementation
 			external_name: "RecursiveExists"
 		require
 			non_void_feature_name: a_feature_name /= Void
-			not_empty_feature_name: a_feature_name.length > 0
 			non_void_children_list: children /= Void
 		local
 			i: INTEGER
@@ -488,7 +482,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_list: a_list /= Void
 			non_void_feature_name: a_feature_name /= Void
-			not_empty_feature_name: a_feature_name.length > 0
 		local
 			i: INTEGER
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
@@ -518,7 +511,6 @@ feature {NONE} -- Implementation
 			external_name: "RenameFeatureInChildren"
 		require
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 		local
 			children_to_change: SYSTEM_COLLECTIONS_HASHTABLE
 			i: INTEGER
@@ -556,7 +548,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_old_name: old_name /= Void
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0	
 		local
 			parents_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
 			a_parent_name: STRING
@@ -597,9 +588,7 @@ feature {NONE} -- Implementation
 			external_name: "UpdateInheritanceClauses"
 		require
 			non_void_parent_name: parent_name /= Void
-			not_empty_parent_name: parent_name.length > 0
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 			non_void_old_name: old_name /= Void
 		local
 			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
@@ -626,7 +615,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_old_name: old_name /= Void
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 		local
 			added: INTEGER
 			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
@@ -670,7 +658,6 @@ feature {NONE} -- Implementation
 			external_name: "CommitParentChanges"
 		require
 			non_void_parent_name: parent_name /= Void
-			not_empty_parent_name: parent_name.length > 0
 			non_void_inheritance_clauses: new_inheritance_clauses /= Void
 		do
 			if new_inheritance_clauses.contains (parent_name) then
@@ -717,7 +704,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_old_name: old_name /= Void
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 		local
 			tmp_children: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
@@ -761,7 +747,6 @@ feature {NONE} -- Implementation
 			external_name: "BuildInheritanceClauses"
 		require
 			non_void_parent_name: parent_name /= Void
-			not_empty_parent_name: parent_name.length > 0
 		local
 			parents: SYSTEM_COLLECTIONS_HASHTABLE
 			clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
@@ -816,7 +801,6 @@ feature {NONE} -- Implementation
 			external_name: "IsInList"
 		require
 			non_void_feature_name: a_feature_name /= Void
-			not_empty_feature_name: a_feature_name.length > 0
 			non_void_clauses: a_list /= Void
 		local
 			i: INTEGER
@@ -847,7 +831,6 @@ feature {NONE} -- Implementation
 			external_name: "HasRenameClause"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
 		local
 			i: INTEGER
 			an_item: ISE_REFLECTION_RENAMECLAUSE			
@@ -880,7 +863,6 @@ feature {NONE} -- Implementation
 			external_name: "ArgumentExists"
 		require
 			non_void_new_name: new_name /= Void
-			not_empty_new_name: new_name.length > 0
 			non_void_feature: a_feature /= Void	
 		local
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST

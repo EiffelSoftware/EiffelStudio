@@ -119,6 +119,12 @@ feature -- Access
 			external_name: "ToolsMenuItem"
 		end
 
+	dependancy_viewer_menu_item: SYSTEM_WINDOWS_FORMS_MENUITEM	
+		indexing
+			description: "Dependancy viewer menu item"
+			external_name: "DependancyViewerMenuItem"
+		end
+		
 	import_menu_item: SYSTEM_WINDOWS_FORMS_MENUITEM
 		indexing
 			description: "Import menu item"
@@ -183,6 +189,12 @@ feature -- Access
 		indexing
 			description: "Import toolbar button"
 			external_name: "ImportToolbarButton"
+		end
+
+	dependancy_viewer_toolbar_button: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
+		indexing
+			description: "Dependancy viewer toolbar button"
+			external_name: "DependancyViewerToolbarButton"
 		end
 		
 	help_toolbar_button: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTON
@@ -311,7 +323,6 @@ feature -- Basic Operations
 			set_size (a_size)
 			--set_borderstyle (dictionary.Border_style)
 			set_icon (dictionary.Assembly_manager_icon)
-			set_maximizebox (False)
 
 			build_menu
 			set_menu_actions
@@ -376,7 +387,13 @@ feature -- Basic Operations
 			added := view_menu_item.menuitems.add (culture_menu_item)	
 			added := view_menu_item.menuitems.add (public_key_menu_item)				
 			added := view_menu_item.menuitems.add (dependancies_menu_item)
-						
+					
+				-- Build Tools menu
+			create dependancy_viewer_menu_item.make_menuitem_1 (dictionary.Dependancy_viewer_menu_item)
+			dependancy_viewer_menu_item.set_shortcut (dictionary.Ctrl_D_shortcut)
+			added := tools_menu_item.menuitems.add (dependancy_viewer_menu_item)
+			separator := tools_menu_item.menuitems.add_string ("-")
+			
 				-- Build Help menu item.
 			create help_topics_menu_item.make_menuitem_1 (dictionary.Help_topics_menu_item)
 			create about_menu_item.make_menuitem_1 (dictionary.About_menu_item)
@@ -403,6 +420,7 @@ feature -- Basic Operations
 			culture_delegate: SYSTEM_EVENTHANDLER
 			public_key_delegate: SYSTEM_EVENTHANDLER
 			dependancies_delegate: SYSTEM_EVENTHANDLER
+			dependancy_viewer_delegate: SYSTEM_EVENTHANDLER
 			show_all_delegate: SYSTEM_EVENTHANDLER
 			help_topics_delegate: SYSTEM_EVENTHANDLER
 			about_delegate: SYSTEM_EVENTHANDLER		
@@ -424,7 +442,11 @@ feature -- Basic Operations
 			public_key_menu_item.add_click (public_key_delegate)			
 			dependancies_menu_item.add_click (dependancies_delegate)	
 			show_all_menu_item.add_click (show_all_delegate)
-						
+				
+				-- Tools menu
+			create dependancy_viewer_delegate.make_eventhandler (Current, $show_dependancy_viewer)
+			dependancy_viewer_menu_item.add_click (dependancy_viewer_delegate)
+			
 				-- Help menu
 			create help_topics_delegate.make_eventhandler (Current, $display_help)
 			create about_delegate.make_eventhandler (Current, $about_assembly_manager)
@@ -491,6 +513,7 @@ feature -- Basic Operations
 			create culture_toolbar_button.make_toolbarbutton
 			create public_key_toolbar_button.make_toolbarbutton
 			create dependancies_toolbar_button.make_toolbarbutton
+			create dependancy_viewer_toolbar_button.make_toolbarbutton
 			create help_toolbar_button.make_toolbarbutton
 			create separator.make_toolbarbutton
 			
@@ -500,7 +523,8 @@ feature -- Basic Operations
 			culture_toolbar_button.set_imageindex (2)
 			public_key_toolbar_button.set_imageindex (3)
 			dependancies_toolbar_button.set_imageindex (4)
-			help_toolbar_button.set_imageindex (5)
+			dependancy_viewer_toolbar_button.set_imageindex (5)
+			help_toolbar_button.set_imageindex (6)
 			
 				-- Set tooltips.
 			name_toolbar_button.set_tooltiptext (dictionary.Name_menu_item)
@@ -508,6 +532,7 @@ feature -- Basic Operations
 			culture_toolbar_button.set_tooltiptext (dictionary.Culture_menu_item)
 			public_key_toolbar_button.set_tooltiptext (dictionary.Public_key_menu_item)
 			dependancies_toolbar_button.set_tooltiptext (dictionary.Dependancies_menu_item)
+			dependancy_viewer_toolbar_button.set_tooltiptext (dictionary.Dependancy_viewer_menu_item)
 			help_toolbar_button.set_tooltiptext (dictionary.Help_menu_item)
 			
 				-- Set button style.
@@ -516,6 +541,7 @@ feature -- Basic Operations
 			culture_toolbar_button.set_style (dictionary.Toggle_button)
 			public_key_toolbar_button.set_style (dictionary.Toggle_button)
 			dependancies_toolbar_button.set_style (dictionary.Toggle_button)
+			dependancy_viewer_toolbar_button.set_style (dictionary.Push_button)
 			help_toolbar_button.set_style (dictionary.Push_button)
 			separator.set_style (dictionary.Separator)
 			
@@ -544,21 +570,30 @@ feature -- Basic Operations
 			description: "Build toolbar image list."
 			external_name: "BuildImageListAssemblyViewer"
 		local
+			resources: SYSTEM_RESOURCES_RESOURCEMANAGER
+			name_icon: SYSTEM_DRAWING_ICON
 			name_image: SYSTEM_DRAWING_IMAGE
 			version_image: SYSTEM_DRAWING_IMAGE
 			culture_image: SYSTEM_DRAWING_IMAGE
 			public_key_image: SYSTEM_DRAWING_IMAGE
 			dependancies_image: SYSTEM_DRAWING_IMAGE
+			dependancy_viewer_image: SYSTEM_DRAWING_IMAGE
 			help_image: SYSTEM_DRAWING_IMAGE	
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST 
 		do
+		--	create resources.make_2 (Current.GetType)
+		--	name_icon ?= resources.getobject ("assembly_name_icon")
+		--	 System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ScrollBarCtl));
+ 		--	statusBarPanel1.Icon = (System.Drawing.Icon)resources.GetObject("statusBarPanel1.Icon");
+ 
 				-- Create icons
 			name_image := image_factory.fromfile (dictionary.Name_icon_filename)
 			version_image := image_factory.fromfile (dictionary.Version_icon_filename)
 			culture_image := image_factory.fromfile (dictionary.Culture_icon_filename)
 			public_key_image := image_factory.fromfile (dictionary.Public_key_icon_filename)
 			dependancies_image := image_factory.fromfile (dictionary.Dependancies_icon_filename)
+			dependancy_viewer_image := image_factory.fromfile (dictionary.Dependancy_viewer_icon_filename)
 			help_image := image_factory.fromfile (dictionary.Help_icon_filename)
 			
 				-- Add icons to `imagelist'.
@@ -570,6 +605,7 @@ feature -- Basic Operations
 			images.add (culture_image)
 			images.add (public_key_image)
 			images.add (dependancies_image)
+			images.add (dependancy_viewer_image)
 			images.add (help_image)
 		end
 
@@ -604,7 +640,7 @@ feature -- Basic Operations
 			a_point: SYSTEM_DRAWING_POINT
 			added: INTEGER
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			on_cell_delegate: SYSTEM_EVENTHANDLER
+			--on_cell_delegate: SYSTEM_EVENTHANDLER
 			a_color: SYSTEM_DRAWING_COLOR
 		do
 				-- Build data grid	
@@ -676,8 +712,8 @@ feature -- Basic Operations
 				added := data_grid.TableStyles.Add (data_grid_table_style)
 			end	
 
-			create on_cell_delegate.make_eventhandler (Current, $on_cell)			
-			data_grid.add_click (on_cell_delegate)				
+			--create on_cell_delegate.make_eventhandler (Current, $on_cell)			
+			--data_grid.add_click (on_cell_delegate)				
 		end
 		
 	build_assemblies_table is
@@ -902,42 +938,69 @@ feature -- Event handling
 		deferred
 		end
 
-	on_cell (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+--	on_cell (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+--		indexing
+--			description: "If selected cell is in the dependancies column then display dependancies"
+--			external_name: "OnCell"
+--		require
+--			non_void_sender: sender /= Void
+--			non_void_arguments: arguments /= Void
+--		local
+--			selected_row: INTEGER
+--			selected_column: INTEGER
+--			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+--			assembly_dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
+--			dependancy_viewer: DEPENDANCY_VIEWER
+--			on_close_delegate: SYSTEM_EVENTHANDLER
+--			support: SUPPORT
+--		do
+--			if dependancies_menu_item.checked then
+--				create support
+--				selected_row := data_grid.CurrentRowIndex
+--				if selected_row /= -1 then
+--					if data_grid.CurrentCell /= Void and then data_grid.currentcell.columnnumber /= Void then
+--						selected_column := data_grid.currentcell.columnnumber
+--						a_descriptor := current_assembly (selected_row)	
+--						if a_descriptor /= Void then
+--							if selected_column = dictionary.Dependancies_column_number then
+--								assembly_dependancies := support.dependancies_from_info (a_descriptor)
+--								if assembly_dependancies /= Void and then assembly_dependancies.count > 0 then
+--									create dependancy_viewer.make (a_descriptor, assembly_dependancies)
+--								end
+--							end
+--						end
+--					end
+--				end
+--			end
+--		end
+
+	show_dependancy_viewer (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "If selected cell is in the dependancies column then display dependancies"
-			external_name: "OnCell"
+			external_name: "ShowDependancyViewer"
 		require
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
 			selected_row: INTEGER
-			selected_column: INTEGER
 			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			assembly_dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
 			dependancy_viewer: DEPENDANCY_VIEWER
-			on_close_delegate: SYSTEM_EVENTHANDLER
 			support: SUPPORT
 		do
-			if dependancies_menu_item.checked then
-				create support
-				selected_row := data_grid.CurrentRowIndex
-				if selected_row /= -1 then
-					if data_grid.CurrentCell /= Void and then data_grid.currentcell.columnnumber /= Void then
-						selected_column := data_grid.currentcell.columnnumber
-						a_descriptor := current_assembly (selected_row)	
-						if a_descriptor /= Void then
-							if selected_column = dictionary.Dependancies_column_number then
-								assembly_dependancies := support.dependancies_from_info (a_descriptor)
-								if assembly_dependancies /= Void and then assembly_dependancies.count > 0 then
-									create dependancy_viewer.make (a_descriptor, assembly_dependancies)
-								end
-							end
-						end
+			create support
+			selected_row := data_grid.CurrentRowIndex
+			if selected_row /= -1 then
+				a_descriptor := current_assembly (selected_row)	
+				if a_descriptor /= Void then
+					assembly_dependancies := support.dependancies_from_info (a_descriptor)
+					if assembly_dependancies /= Void and then assembly_dependancies.count > 0 then
+						create dependancy_viewer.make (a_descriptor, assembly_dependancies)
 					end
 				end
 			end
 		end
-
+		
 	update_add (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Update `assemblies_table'."

@@ -93,7 +93,11 @@ struct conform {
 	char *co_tab;		/* Conformance table (mapped on eight bits packs) */
 };
 
+#ifdef TEST
+int scount = 100;
+#else
 extern int scount;				/* Number of dynamic types */
+#endif
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */

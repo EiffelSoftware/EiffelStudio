@@ -52,7 +52,7 @@ feature {NONE}
 		do
 			new_name := context.icon_pixmap_name; 
 			if old_pixmap_name /= Void then
-				context.set_icon_name (old_pixmap_name);
+				context.set_icon_pixmap (old_pixmap_name);
 			else
 				ext_name := MiconPixmap.to_c;
 				c_set_pixmap (context.widget.implementation.screen_object, pixmap_value, $ext_name);

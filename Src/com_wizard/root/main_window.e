@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_RESCUABLE
+		export
+			{NONE} all
+		end
+
 	APPLICATION_IDS
 		export
 			{NONE} all
@@ -69,8 +74,8 @@ feature {NONE} -- Initialization
 		do
 			state := Initial_state
 			create previous_states.make
-			create msg_box.make
 			make_top (Title)
+			create msg_box.make
 			create output_edit.make (Current, rebar.height)
 			set_menu (main_menu)
 			create introduction_dialog.make (Current)
@@ -107,9 +112,8 @@ feature -- GUI Elements
 			create separator_button.make_separator
 			create tool_bar_bitmap.make (Toolbar_bitmap_constant)
 			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
-			create clear_button.make_button (tool_bar.last_bitmap_index, Clear_id)
 			create launch_button.make_button (tool_bar.last_bitmap_index + 1, Launch_id)
-			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button, clear_button>>)
+			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button>>)
 			create rebar_info.make
 			rebar_info.set_unpositionable_child (tool_bar)
 			rebar_info.set_child_minimum_width (100)
@@ -164,7 +168,6 @@ feature -- GUI Elements
 		once
 			create Result.make
 			Result.append_string ("&Launch Wizard", Launch_id)
-			Result.append_string ("&Clear Output", Clear_id)
 		ensure
 			buil_menu_not_void: Result /= Void
 		end
@@ -256,6 +259,7 @@ feature {NONE} -- State management
 	start is
 			-- Start state machine.
 		do
+			clear
 			from
 				previous_states.extend (Abort_state)
 				state := Introduction_state
@@ -364,8 +368,10 @@ feature {NONE} -- Implementation
 				project_retrieved := False
 			end
 		rescue
-			retried := True
-			retry
+			if not failed_on_rescue then
+				retried := True
+				retry
+			end
 		end
 
 	save_project (a_project: STRING) is

@@ -19,6 +19,7 @@ inherit
 			plateform_build,
 			add_child,
 			child_minheight_changed,
+			child_minwidth_changed,
 			on_first_display
 		end
 
@@ -169,8 +170,15 @@ feature -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_minwidth_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
+			-- the child changed his wn minimum value.
+		do
+			set_minimum_width (value + 6)
+		end
+
+	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the minimum height of the container because
 			-- the child changed his own minimum width.
 		do
 			set_minimum_height (value + tab_height)

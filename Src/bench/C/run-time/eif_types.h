@@ -122,4 +122,88 @@ struct stochunk {
 };
 
 
+	/* ----------------------------------------------------------------- */
+	/*	malloc.h */
+	/* ----------------------------------------------------------------- */
+
+/* Overhead for each memory segment allocated. All these objects
+ * are linked by size when they are free. This link field is used
+ * by Eiffel objects to store some flags. One bit is used to indicate
+ * C objects, so the garbage collector will skip them. Another field
+ * is used to store the size of the block. Only the lowest 27 bits are
+ * used (thus limiting the size of an object to 2^27 bytes). The upper
+ * 5 bits are used to store the status of the blocks. See below.
+ */
+union overhead {
+	struct {
+		union {
+			union overhead *ovu_next;	/* Next block with same size */
+			uint32 ovu_flags;			/* Eiffel flags */
+			char *ovu_fwd;				/* Forwarding pointer */
+		} ovu;
+		uint32 ovs_size;				/* Size of block, plus flags */
+	} ov_head;
+#if MEM_ALIGNBYTES > 8
+	double ov_padding;					/* Alignment restrictions */
+#endif
+};
+
+
+/*
+ * General information structure.
+ */
+struct emallinfo {
+	int ml_chunk;			/* Number of chunks */
+	long ml_total;			/* Total space used by malloc */
+	long ml_used;			/* Real space used, in bytes */
+	long ml_over;			/* Overhead space, in bytes */
+};
+
+/*
+ * Structure at the beginning of each big chunk. A chunk usually
+ * holds more than one Eiffel object. They are linked together
+ * in a double linked list.
+ */
+struct chunk {
+	int32 ck_type;			/* Chunk's type */
+	struct chunk *ck_next;	/* Next chunk in list */
+	struct chunk *ck_prev;	/* Previous chunk in list */
+	struct chunk *ck_lnext;	/* Next chunk of same type */
+	struct chunk *ck_lprev;	/* Previous chunk of same type */
+	int32 ck_length;		/* Length of block (w/o size of this struct) */
+							/* int's are split around the chunk pointers */
+							/*to provide correct padding for 64 bit machines*/
+#if MEM_ALIGNBYTES > 8
+	double ck_padding;		/* Alignment restrictions */
+#endif
+};
+
+/* The following structure records the head and the tail of the
+ * chunk list (blocks obtained via the sbrk() system call). The
+ * list is useful when doing garbage collection, because it is
+ * the only way we can walk through all the objects (using the
+ * ov_size field and its flags).
+ */
+struct ck_list {
+	struct chunk *ck_head;		/* Head of list */
+	struct chunk *ck_tail;		/* Tail of list */
+	struct chunk *cck_head;		/* Head of C list */
+	struct chunk *cck_tail;		/* Tail of C list */
+	struct chunk *eck_head;		/* Head of Eiffel list */
+	struct chunk *eck_tail;		/* Tail of Eiffel list */
+};
+
+/* Description of a scavenging space */
+struct sc_zone {
+	int sc_size;				/* Space's size (in bytes) */
+	char *sc_arena;				/* Base address of zone */
+	char *sc_top;				/* Pointer to first free location */
+	char *sc_mark;				/* Water-mark level */
+	char *sc_end;				/* First location beyond space */
+	uint32 sc_flgs;				/* ov_size in the selected malloc block */
+};
+
+
+
+
 #endif	 /* _eif_types_h */

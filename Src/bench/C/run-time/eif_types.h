@@ -478,9 +478,6 @@ struct dbglobalinfo {
 										/* application to stop after its end when garbage collector */
 										/* destroys objects                                         */
 	struct db_bpinfo **db_bpinfo;		/* breakpoints hash table */
-#ifdef EIF_THREADS
-	EIF_MUTEX_TYPE *db_mutex;			/* Mutex to protect `dstop' against concurrent accesses     */
-#endif /* EIF_THREADS */
 };
 #endif /* WORKBENCH */
 

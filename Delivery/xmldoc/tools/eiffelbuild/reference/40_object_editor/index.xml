@@ -209,6 +209,7 @@
 				</link>
 			</item>
 		</list>
+		<anchor>events</anchor>
 		<heading>
 			<size>2</size>Event connection
 		</heading>

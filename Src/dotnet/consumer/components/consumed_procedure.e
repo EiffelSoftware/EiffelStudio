@@ -2,7 +2,7 @@ indexing
 	description: ".NET method as seen by Eiffel"
 
 class
-	CONSUMED_METHOD
+	CONSUMED_PROCEDURE
 
 inherit
 	CONSUMED_MEMBER
@@ -54,4 +54,4 @@ feature -- Access
 invariant
 	non_void_arguments: arguments /= Void
 
-end -- class CONSUMED_METHOD
+end -- class CONSUMED_PROCEDURE

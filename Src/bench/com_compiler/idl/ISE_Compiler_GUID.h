@@ -159,6 +159,7 @@ enum
 	DISPID_EiffelComCompiler_TargetFeature,
 	DISPID_EiffelComCompiler_FlushCompletionFeatures,
 	DISPID_EiffelComCompiler_InitializeFeature,
+	DISPID_EiffelComCompiler_SetupRenameTables,
 
 	// IEiffelHtmlDocumentationGenerator dispatch ID's
 

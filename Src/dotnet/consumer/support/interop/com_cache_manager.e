@@ -2,16 +2,31 @@ indexing
 	description: "COM interface for metadata consumer"
 	date: "$Date$"
 	revision: "$Revision$"
-	metadata:
-		create {COM_VISIBLE_ATTRIBUTE}.make (True) end
 	class_metadata:
+		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
 		create {GUID_ATTRIBUTE}.make ("E1FFE1DE-1816-4209-AF21-FC599DAE7CAA") end
-	interface_metadata:
-		create {GUID_ATTRIBUTE}.make ("E1FFE1FC-11B7-4757-88F7-9DAD46A40C44") end
 
 class
 	COM_CACHE_MANAGER
+
+inherit
+	I_COM_CACHE_MANAGER
+		redefine
+			initialize,
+			initialize_with_path,
+			unload,
+			consume_assembly,
+			consume_assembly_from_path,
+			relative_folder_name,
+			relative_folder_name_from_path,
+			assembly_info_from_assembly,
+			is_successful,
+			is_initialized,
+			last_error_message,
+			clr_version,
+			eac_path
+		end
 
 feature -- Access
 
@@ -28,26 +43,13 @@ feature -- Basic Exportations
 
 	initialize (a_clr_version: SYSTEM_STRING) is
 			-- initialize the object using default path to EAC
-		require
-			not_already_initialized: not is_initialized
-			not_void_clr_version: a_clr_version /= Void
-			valid_clr_version: a_clr_version.length > 0
 		do
 			clr_version := a_clr_version
 			is_initialized := True
-		ensure
-			clr_version_set: clr_version = a_clr_version
-			current_initialized: is_initialized
 		end
 		
 	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
-		require
-			not_already_initialized: not is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-			not_void_clr_version: a_clr_version /= Void
-			valid_clr_version: a_clr_version.length > 0
 		local
 			cr: CACHE_READER
 		do
@@ -61,10 +63,6 @@ feature -- Basic Exportations
 				cr.absolute_info_path)
 			end
 			is_initialized := True
-		ensure
-			clr_version_set: clr_version = a_clr_version
-			eac_path_set: eac_path = a_path
-			current_initialized: is_initialized
 		end
 		
 	unload is
@@ -86,10 +84,6 @@ feature -- Basic Exportations
 	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING) is
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
-		require
-			current_initialized: is_initialized
-			non_void_name: a_name /= Void
-			valid_name: a_name.length > 0
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do				
@@ -101,10 +95,6 @@ feature -- Basic Exportations
 		
 	consume_assembly_from_path (a_path: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
-		require
-			current_initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
 		local
 			i, nb: INTEGER
 			l_impl: MARSHAL_CACHE_MANAGER
@@ -145,10 +135,6 @@ feature -- Basic Exportations
 		
 	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
 			-- returns the relative path to an assembly using at least `a_name'
-		require
-			current_initialized: is_initialized
-			non_void_name: a_name /= Void
-			valid_name: a_name.length > 0
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do			
@@ -156,18 +142,10 @@ feature -- Basic Exportations
 			Result := l_impl.relative_folder_name (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
 		end
 		
 	relative_folder_name_from_path (a_path: SYSTEM_STRING): SYSTEM_STRING is
 			-- Relative path to consumed assembly metadata given `a_path'
-		require
-			current_initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-			path_exists: (create {FILE_INFO}.make (a_path)).exists
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do			
@@ -175,17 +153,10 @@ feature -- Basic Exportations
 			Result := l_impl.relative_folder_name_from_path (a_path)
 
 			update_current (l_impl)
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
 		end
 
-	assembly_info_from_assembly (a_path: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
+	assembly_info_from_assembly (a_path: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
-		require
-			current_initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do		
@@ -193,8 +164,6 @@ feature -- Basic Exportations
 			Result := l_impl.assembly_info_from_assembly (a_path)
 
 			update_current (l_impl)
-		ensure
-			non_void_result: Result /= Void
 		end
 
 feature {NONE} -- Implementation

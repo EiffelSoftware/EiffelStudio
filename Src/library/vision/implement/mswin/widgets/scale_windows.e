@@ -15,6 +15,9 @@ inherit
 		end						
 
 	PRIMITIVE_WINDOWS
+		redefine
+			on_size
+		end
 
 	WEL_CONTROL_WINDOW
 		rename
@@ -48,6 +51,8 @@ inherit
 				on_right_button_up,
 				on_mouse_move
 		undefine
+			on_size,
+			on_move,
 			on_destroy,
 			on_left_button_up,
 			on_key_up,
@@ -317,6 +322,7 @@ feature {NONE} -- Implementation
 			update_value_static
 			private_attributes.set_width (a_width)
 			private_attributes.set_height (a_height)
+			resize_actions.execute (Current, Void)
 		end
 
 	on_vertical_scroll_control (scroll_code, a_position: INTEGER;

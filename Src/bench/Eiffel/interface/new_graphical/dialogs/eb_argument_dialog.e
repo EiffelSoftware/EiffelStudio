@@ -13,7 +13,6 @@ inherit
 	EV_DIALOG
 	EB_SHARED_INTERFACE_TOOLS
 	NEW_EB_CONSTANTS
---	WINDOW_ATTRIBUTES
 
 creation
 	make_default
@@ -32,15 +31,17 @@ feature -- Initialization
 			make (par)
 			set_title (Interface_names.t_Argument_w)
 			create f.make_with_text (display_area, Interface_names.l_Specify_arguments)
-			create selection_label.make_with_text (f, Argument_list)
+			create selection_text.make_with_text (f, Argument_list)
 
-			create b.make_with_text (action_area, Interface_names.b_Run)
-			b.add_click_command (Current, apply_and_run_it)
+			run := cmd
+			if run /= Void then
+				create b.make_with_text (action_area, Interface_names.b_Run)
+				b.add_click_command (Current, apply_and_run_it)
+			end
 			create b.make_with_text (action_area, Interface_names.b_Apply)
 			b.add_click_command (Current, apply_it)
 			create b.make_with_text (action_area, Interface_names.b_Cancel)
 			b.add_click_command (Current, Void)
-			run := cmd
 --			set_composite_attributes (Current)
 			show
 		end
@@ -56,7 +57,7 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	selection_label: EV_TEXT_FIELD
+	selection_text: EV_TEXT_FIELD
 
 	apply_it, apply_and_run_it: EV_ARGUMENT1 [ANY] is
 			-- Arguments for the command
@@ -74,12 +75,12 @@ feature {NONE} -- Implementation
 		do
 			hide
 			if arg /= Void then
-					-- User selected "Run" or "Apply"
+					--| User selected "Run" or "Apply".
 				arg_list := Argument_list
 				arg_list.wipe_out
-				arg_list.append (clone (selection_text))
-					-- trick for changing `Argument_list'
-				if argument = Apply_and_run_it then
+				arg_list.append (clone (selection_text.text))
+					--| Trick for changing `Argument_list'
+				if arg = Apply_and_run_it then
 					run.execute (Void, data)
 				end
 			end

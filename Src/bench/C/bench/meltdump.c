@@ -38,7 +38,7 @@ static  void    panic ();
 /*------------------------------------------------------------------*/
 
 static  EIF_CHARACTER rchar (void);
-static  EIF_INTEGER rlong (void);
+static  EIF_INTEGER_32 rlong (void);
 static  EIF_INTEGER_16 rshort (void);
 static  uint32  ruint32 (void);
 static  BODY_INDEX  rbody_index (void);
@@ -52,8 +52,7 @@ static  void    print_ctype (short);
 
 #define MAX_TYPE 256
 
-main (int argc, char **argv)
-
+int main (int argc, char **argv)
 {
 	if (argc > 1)
 	{
@@ -277,20 +276,20 @@ static  void    analyze_file ()
 	
 	print_line ();
 
-	fprintf (mfp,"Root class origin       : %ld\n", rlong ());
-	fprintf (mfp,"Root class dynamic type : %ld\n", rlong ());
-	fprintf (mfp,"Root class offset       : %ld\n", rlong ());
-	fprintf (mfp,"Root class arguments    : %ld\n", rlong ());
+	fprintf (mfp,"Root class origin       : %d\n", rlong ());
+	fprintf (mfp,"Root class dynamic type : %d\n", rlong ());
+	fprintf (mfp,"Root class offset       : %d\n", rlong ());
+	fprintf (mfp,"Root class arguments    : %d\n", rlong ());
 
 	print_line ();
 
-	fprintf (mfp,"Nr. of class types             : %ld\n", rlong ());
-	fprintf (mfp,"Nr. of classes                 : %ld\n", rlong ());
-	fprintf (mfp,"Nr. of original routine bodies : %ld\n", rlong ());
+	fprintf (mfp,"Nr. of class types             : %d\n", rlong ());
+	fprintf (mfp,"Nr. of classes                 : %d\n", rlong ());
+	fprintf (mfp,"Nr. of original routine bodies : %d\n", rlong ());
 
 	print_line ();
 
-	fprintf (mfp,"Profile level : %ld\n", rlong ());
+	fprintf (mfp,"Profile level : %d\n", rlong ());
 
 	print_line ();
 
@@ -418,13 +417,13 @@ static  void    analyze_cnodes ()
 
 		while (i--)
 		{
-			fprintf (mfp,"    Id             : %ld\n", ruint32 ());                
+			fprintf (mfp,"    Id             : %d\n", ruint32 ());                
 		}
 
-		fprintf (mfp,"Reference number   : %ld\n", rlong ());
-		fprintf (mfp,"Node size          : %ld\n", rlong ());
+		fprintf (mfp,"Reference number   : %d\n", rlong ());
+		fprintf (mfp,"Node size          : %d\n", rlong ());
 
-		fprintf (mfp,"Creation id        : %ld\n", ruint32 ());
+		fprintf (mfp,"Creation id        : %d\n", ruint32 ());
 
 		ctype = rlong ();
 
@@ -622,7 +621,7 @@ static  void    read_byte_code ()
 		bsize = rlong ();
 
 		fprintf (mfp,"    Size       : %ld\n", bsize);
-		fprintf (mfp,"    Pattern id : %ld\n", rlong ());
+		fprintf (mfp,"    Pattern id : %d\n", rlong ());
 
 		melt [body_id] = rbuf ((int) bsize);
 
@@ -812,7 +811,7 @@ static  void    analyze_routinfo ()
 	{
 		org = (long) rshort ();
 		off = (long) rshort ();
-		fprintf (mfp,"%8ld:   %5ld  %5ld\n", (int) rid, (int) org, (int) off);
+		fprintf (mfp,"%8ld:   %5ld  %5ld\n", rid, org, off);
 
 		++rid;
 	}
@@ -848,7 +847,7 @@ static  void    analyze_desc ()
 			{
 				org_id = rshort ();
 
-				fprintf (mfp,"Origin_id %5d  Dtype_id %8d\n", (int) org_id, tid);
+				fprintf (mfp,"Origin_id %5d  Dtype_id %8ld\n", (int) org_id, tid);
 
 				info_count = rshort ();
 
@@ -884,14 +883,14 @@ static  void    analyze_desc ()
 						;
 				}
 
-				fprintf (mfp, "desc_tab [%d][%d] = ", org_id, tid-1);
+				fprintf (mfp, "desc_tab [%d][%ld] = ", org_id, tid-1);
 
 				for (i = 0; i < info_count; ++i)
 				{
 					if ((i % 8) == 0)
 						fprintf (mfp, "\n  ");
 
-					fprintf (mfp, "%ld: (%ld,%ld) ",
+					fprintf (mfp, "%ld: (%d,%d) ",
 							 i, dinfo [2*i], dinfo [2*i+1]);
 				}
 
@@ -921,13 +920,13 @@ static EIF_CHARACTER rchar ()
 }
 /*------------------------------------------------------------------*/
 
-static EIF_INTEGER rlong ()
+static EIF_INTEGER_32 rlong ()
 {
-	EIF_INTEGER result;
+	EIF_INTEGER_32 result;
 
-	if (fread (&result, sizeof (EIF_INTEGER), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_INTEGER_32), 1, ifp) != 1)
 	{
-		fprintf (stderr, "Read error (EIF_INTEGER)\n");
+		fprintf (stderr, "Read error (EIF_INTEGER_32)\n");
 		panic ();
 	}
 

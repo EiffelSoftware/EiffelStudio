@@ -606,9 +606,9 @@ feature -- Basic operations
 					%%>%N%T%T%
 					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%N%T%T%T%
 						%(eif_access (eif_safe_array), eif_access (eif_index)));%N%T%T%
-					%an_element = (" + tmp_element_c_type + " *) eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%N%T%T%
+					%an_element = (" + tmp_element_c_type + ") eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%N%T%T%
 					%eif_wean (eif_element);%N%T%T%
-					%an_element.AddRef ();%N%T%T%
+					%an_element->AddRef ();%N%T%T%
 					%hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);%N%T%T%
 					%if (FAILED (hr))%N%T%T%
 					%%<%N%T%T%T%

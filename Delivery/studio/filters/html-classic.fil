@@ -1,0 +1,34 @@
+-- EFF (Eiffel Filter Format) - ISE Eiffel 4
+-- Classic HTML filter
+
+-- Major syntactical constructs
+
+suffix						|html
+file_separator				|/
+
+class_declaration, cluster_declaration		|%
+							%<html>%N%
+							%<head><title>Eiffel Class</title></head>%N%
+							%<body>%N%
+							%<pre>%N%
+							%<i>*</i>%N%
+							%</pre>%N%
+							%</body>%N%
+							%</html>%N
+
+class_name, cluster_name	|<a href="$file$">*</a>
+
+-- General specifications
+
+keyword						|</i><b>*</b><i>
+symbol						|</i>*<i>
+comment						|</i>*<i>
+
+-- Symbols
+.							|</i><b><bigger>.</bigger></b><i>
+
+-- Meta-characters
+
+Escape>						|&gt;
+Escape<						|&lt;
+Escape&						|&#38;

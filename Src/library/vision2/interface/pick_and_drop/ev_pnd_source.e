@@ -30,7 +30,7 @@ feature -- Access
 	transportable: BOOLEAN is
 			-- Is the data transportable.
 		do
-			Result := implementation.transportable
+			Result := transported_data /= Void and then data_type /= Void
 		end
 
 	default_activate_pnd (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
@@ -38,7 +38,6 @@ feature -- Access
 			-- the current stone may be dragged and
 			-- dropped, when right clicking.
 		require
-			valid_data: dt /= Void
 			valid_type: dt_type /= Void
 		do
 			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, Void, Void)
@@ -50,7 +49,6 @@ feature -- Access
 			-- Add `cmd' (if not Void) to the list of commands to be
 			-- executed when initializing the transport.
 		require
-			valid_data: dt /= Void
 			valid_type: dt_type /= Void
 		do
 			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, cmd, args)

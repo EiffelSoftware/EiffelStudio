@@ -27,7 +27,7 @@ feature -- Access
 	transportable: BOOLEAN is
 			-- Is the data transportable.
 		do
-			Result := transported_data /= Void and then data_type /= Void
+			Result := interface.transportable
 		end
 
 	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
@@ -36,7 +36,6 @@ feature -- Access
 			-- Add `cmd' (if not Void) to the list of commands to be
 			-- executed when initializing the transport.
 		require
-			valid_data: dt /= Void
 			valid_type: dt_type /= Void	
 		local
 			com: EV_ROUTINE_COMMAND
@@ -94,6 +93,10 @@ feature {EV_PND_SOURCE_I} -- Implementation
 
 	initialize_transport (args: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
+		deferred
+		end
+
+	interface: EV_PND_SOURCE is
 		deferred
 		end
 

@@ -21,7 +21,7 @@ feature -- Access
 		once
 			Result := Eiffel_project.ace
 		ensure
-			result_is_sys: Result = Eiffel_project.ace;
+			result_is_set: Result = Eiffel_project.ace;
 			result_is_not_void: Result /= Void
 		end;
 	
@@ -31,10 +31,8 @@ feature -- Access
 		do
 			Result := Eiffel_project.dynamic_lib
 		ensure
-			result_is_sys: Result = Eiffel_project.dynamic_lib
-			result_is_not_void: Result /= Void
+			result_is_set: Result = Eiffel_project.dynamic_lib
 		end;
-			
 
 	Eiffel_system: E_SYSTEM is
 			-- Eiffel system
@@ -44,7 +42,7 @@ feature -- Access
 		once
 			Result := Eiffel_project.system
 		ensure
-			result_is_sys: Result = Eiffel_project.system;
+			result_is_set: Result = Eiffel_project.system;
 			result_is_not_void: Result /= Void
 		end;
 
@@ -55,7 +53,7 @@ feature -- Access
 		once
 			Result := Eiffel_project.universe
 		ensure
-			result_is_universe: Result = Eiffel_project.universe;
+			result_is_set: Result = Eiffel_project.universe;
 			result_is_not_void: Result /= Void
 		end;
 

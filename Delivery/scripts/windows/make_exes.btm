@@ -2,7 +2,8 @@ REM Clean up the files
 remtrace Update all source files.
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
-exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
+cvs checkout -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
+cvs up -r Eiffel_53_54 dotnet/consumer
 exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
 exprt -r %DEFAULT_CVS_TAG -d com_compiler "Src/bench/com_compiler"
 

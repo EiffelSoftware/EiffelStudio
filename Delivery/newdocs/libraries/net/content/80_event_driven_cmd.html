@@ -50,53 +50,53 @@
         <p>Here is the reader command for clients:
         <code>
         <ul>
-              <p>class<br>
-              &nbsp;&nbsp;&nbsp; CLIENT_DATAGRAM_READER</p>
-              <p>inherit</p>
+              <p><span CLASS="ekeyword">class</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="eclass">CLIENT_DATAGRAM_READER</span></p>
+              <p><span CLASS="ekeyword">inherit</span></p>
               <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>
               <br>
-              &nbsp;&nbsp;&nbsp; redefine<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active_medium<br>
-              &nbsp;&nbsp;&nbsp; end</p>
-              <p>creation<br>
-              &nbsp;&nbsp;&nbsp; make</p>
-              <p>feature</p>
-              <p>	&nbsp;&nbsp;&nbsp; active_medium: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
-              <p>	&nbsp;&nbsp;&nbsp; execute is<br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">redefine</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="efeature">active_medium</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">creation</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">active_medium</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">execute </span><span CLASS="ekeyword">is</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Obtain a packet of ten characters and print them.<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              <span CLASS="ecomment">-- Obtain a packet of ten characters and print them.</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              rec_pack: <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+              <span CLASS="elocal">rec_pack</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              i: INTEGER<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              <span CLASS="elocal">i</span><span CLASS="esymbol">:</span><a CLASS="eclass" href="../../../base/reference/kernel/integer_chart.html"> INTEGER</a><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              rec_pack := active_medium.received (10, 0)<br>
+              <span CLASS="elocal">rec_pack</span> <span CLASS="esymbol">:=</span> <span CLASS="efeature">active_medium</span><span CLASS="esymbol">.</span><span CLASS="efeature">received </span><span CLASS="esymbol">(</span><span CLASS="enumber">10</span><span CLASS="esymbol">,</span><span CLASS="enumber"> 0</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io.putint (rec_pack.packet_number)<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putint </span><span CLASS="esymbol">(</span><span CLASS="elocal">rec_pack</span><span CLASS="esymbol">.</span><span CLASS="efeature">packet_number</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io.new_line<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              from<br>
+              <span CLASS="ekeyword">from</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              i := 0<br>
+              <span CLASS="elocal">i</span> <span CLASS="esymbol">:=</span> <span CLASS="enumber">0</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              until<br>
+              <span CLASS="ekeyword">until</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              i &gt; 9<br>
+              <span CLASS="elocal">i</span> &gt; <span CLASS="enumber">9</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              loop<br>
+              <span CLASS="ekeyword">loop</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io.putchar (rec_pack.element (i)); i := i + 1<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">putchar </span><span CLASS="esymbol">(</span><span CLASS="elocal">rec_pack</span><span CLASS="esymbol">.</span><span CLASS="efeature">element </span><span CLASS="esymbol">(</span><span CLASS="elocal">i</span><span CLASS="esymbol">)</span><span CLASS="esymbol">)</span><span CLASS="esymbol">;</span> <span CLASS="elocal">i</span> <span CLASS="esymbol">:=</span> <span CLASS="elocal">i</span> <span CLASS="esymbol">+</span> <span CLASS="enumber">1</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end<br>
+              <span CLASS="ekeyword">end</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              io.new_line<br>
+              io<span CLASS="esymbol">.</span><span CLASS="efeature">new_line</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end</p>
-              <p>end</p>
+              <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
         </ul>
          </code>
        <p>The <i>execute</i> procedure reads a packet of ten characters and
@@ -104,55 +104,55 @@
         produce these ten packets:
         <code>
         <ul>
-              <p>class<br>
-              &nbsp;&nbsp;&nbsp; CLIENT_DATAGRAM_WRITER</p>
-              <p>inherit</p>
+              <p><span CLASS="ekeyword">class</span><br>
+              &nbsp;&nbsp;&nbsp;<span CLASS="eclass"> CLIENT_DATAGRAM_WRITER</span></p>
+              <p><span CLASS="ekeyword">inherit</span></p>
               <p>	&nbsp;&nbsp;&nbsp;	<a CLASS="eclass" href="../reference/polling/abstract/poll_command_chart.html">POLL_COMMAND</a>
               <br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; redefine<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">redefine</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              active_medium<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
-              <p>	&nbsp;&nbsp;&nbsp; BASIC_ROUTINES</p>
-              <p>creation<br>
-              &nbsp;&nbsp;&nbsp; make</p>
-              <p>feature</p>
-              <p>	&nbsp;&nbsp;&nbsp; active_medium: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
-              <p>	&nbsp;&nbsp;&nbsp; execute is<br>
+              <span CLASS="efeature">active_medium</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="eclass">BASIC_ROUTINES</span></p>
+              <p><span CLASS="ekeyword">creation</span><br>
+              &nbsp;&nbsp;&nbsp;<span CLASS="efeature"> make</span></p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">active_medium</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">execute</span> <span CLASS="ekeyword">is</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Make a packet with characters 'a' to 'k' in successive
-              positions.<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              <span CLASS="ecomment">-- Make a packet with characters 'a' to 'k' in successive
+              positions.</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              sen_pack: <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
+              <span CLASS="elocal">sen_pack</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/abstract/socket/datagram_packet_chart.html">DATAGRAM_PACKET</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ccode: INTEGER<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              <span CLASS="elocal">ccode</span><span CLASS="esymbol">:</span><a CLASS="eclass" href="../../../base/reference/kernel/integer_chart.html"> INTEGER</a><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create sen_pack.make (10)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">sen_pack</span><span CLASS="esymbol">.</span><span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="enumber">10</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              from<br>
+              <span CLASS="ekeyword">from</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ccode := charcode ('a')<br>
+              <span CLASS="elocal">ccode</span> <span CLASS="esymbol">:=</span> <span CLASS="efeature">charcode</span> <span CLASS="esymbol">(</span><span CLASS="echar">'a'</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              until<br>
+              <span CLASS="ekeyword">until</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ccode &gt; charcode ('k')<br>
+              <span CLASS="elocal">ccode</span> &gt; <span CLASS="efeature">charcode</span> <span CLASS="esymbol">(</span><span CLASS="echar">'k'</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              loop<br>
+              <span CLASS="ekeyword">loop</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              sen_pack.put_element (charconv (ccode), ccode -- charcode ('a'))<br>
+              <span CLASS="elocal">sen_pack</span><span CLASS="esymbol">.</span><span CLASS="efeature">put_element</span> <span CLASS="esymbol">(</span><span CLASS="efeature">charconv</span> <span CLASS="esymbol">(</span><span CLASS="elocal">ccode</span><span CLASS="esymbol">)</span><span CLASS="esymbol">,</span> <span CLASS="elocal">ccode</span> -- charcode <span CLASS="esymbol">(</span>'a'<span CLASS="esymbol">)</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ccode := ccode + 1<br>
+              <span CLASS="elocal">ccode</span> <span CLASS="esymbol">:=</span> <span CLASS="elocal">ccode</span> <span CLASS="esymbol">+</span> <span CLASS="enumber">1</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end<br>
+              <span CLASS="ekeyword">end</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              sen_pack.set_packet_number (1)<br>
+              <span CLASS="elocal">sen_pack</span><span CLASS="esymbol">.</span><span CLASS="efeature">set_packet_number</span> <span CLASS="esymbol">(</span><span CLASS="enumber">1</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              active_medium.send (sen_pack, Void, 0)<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
-              <p>end</p>
+              <span CLASS="efeature">active_medium</span><span CLASS="esymbol">.</span><span CLASS="efeature">send</span> <span CLASS="esymbol">(</span><span CLASS="elocal">sen_pack</span><span CLASS="esymbol">,</span> Void<span CLASS="esymbol">,</span> <span CLASS="enumber">0</span><span CLASS="esymbol">)</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
         </ul>
         </code>
         <h3>9.3 The server and the client</h3>
@@ -170,45 +170,45 @@
         <p>Here is the server built with this mechanism:
         <code>
         <ul>
-              <p>class</p>
-              <p>	&nbsp;&nbsp;&nbsp; POLLING_SERVER</p>
-              <p>creation<br>
-              &nbsp;&nbsp;&nbsp; make</p>
-              <p>feature</p>
-              <p>	&nbsp;&nbsp;&nbsp; make is<br>
+              <p><span CLASS="ekeyword">class</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="eclass">POLLING_SERVER</span></p>
+              <p><span CLASS="ekeyword">creation</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make </span><span CLASS="ekeyword">is</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Create read and write commands, attach them to a poller,<br>
+              <span CLASS="ecomment">-- Create read and write commands, attach them to a poller,<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- set up the poller for execution.<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              -- set up the poller for execution.</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
+              <span CLASS="elocal">soc</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller: <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              readcomm: SERVER_DATAGRAM_READER<br>
+              <span CLASS="elocal">readcomm</span><span CLASS="esymbol">:</span> <span CLASS="eclass">SERVER_DATAGRAM_READER</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              writecomm: SERVER_DATAGRAM_WRITER<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              <span CLASS="elocal">writecomm</span><span CLASS="esymbol">:</span> <span CLASS="eclass">SERVER_DATAGRAM_WRITER</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create soc.make_server_by_port (6530)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_server_by_port </span><span CLASS="esymbol">(</span><span CLASS="enumber">6530</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create poller.make<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create readcomm.make (soc); poller.put_read_command (readcomm)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">readcomm</span><span CLASS="esymbol">.</span><span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="elocal">soc</span><span CLASS="esymbol">)</span><span CLASS="esymbol">;</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">put_read_command </span><span CLASS="esymbol">(</span><span CLASS="elocal">readcomm</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create writecomm.make (soc); poller.put_write_command (writecomm)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">writecomm</span><span CLASS="esymbol">.</span><span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="elocal">soc</span><span CLASS="esymbol">)</span><span CLASS="esymbol">;</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">put_write_command </span><span CLASS="esymbol">(</span><span CLASS="elocal">writecomm</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.make_read_only; poller.execute (15, 20000)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_read_only</span><span CLASS="esymbol">;</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">execute </span><span CLASS="esymbol">(</span><span CLASS="enumber">15</span><span CLASS="esymbol">,</span> <span CLASS="enumber">20000</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.make_write_only; poller.execute (15, 20000)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_write_only</span><span CLASS="esymbol">;</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">execute </span><span CLASS="esymbol">(</span><span CLASS="enumber">15</span><span CLASS="esymbol">,</span> <span CLASS="enumber">20000</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc.close<br>
+              <span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">close</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end</p>
-              <p>end</p>
+              <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
         </ul>
          </code>
        <p>Procedure <i>make</i> creates three objects: a socket, which it
@@ -230,59 +230,59 @@
         write operations:
         <code>
         <ul>
-              <p>class</p>
-              <p>	&nbsp;&nbsp;&nbsp; POLLING_CLIENT</p>
-              <p>creation<br>
-              &nbsp;&nbsp;&nbsp; make</p>
-              <p>feature</p>
-              <p>	&nbsp;&nbsp;&nbsp; make is<br>
+              <p><span CLASS="ekeyword">class</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="eclass">POLLING_CLIENT</span></p>
+              <p><span CLASS="ekeyword">creation</span><br>
+              &nbsp;&nbsp;&nbsp; <span CLASS="efeature">make</span></p>
+              <p><span CLASS="ekeyword">feature</span></p>
+              <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">make </span><span CLASS="ekeyword">is</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- Create read and write commands, attach them to a poller,<br>
+              <span CLASS="ecomment">-- Create read and write commands, attach them to a poller,<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              -- set up the poller for execution.<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+              -- set up the poller for execution.</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">local</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc: <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
+              <span CLASS="elocal">soc</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/network/socket/network_datagram_socket_chart.html">NETWORK_DATAGRAM_SOCKET</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller&gt;: <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">:</span> <a CLASS="eclass" href="../reference/polling/abstract/medium_poller_chart.html">MEDIUM_POLLER</a>
               <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              readcomm: DATAGRAM_READER<br>
+              <span CLASS="elocal">readcomm</span><span CLASS="esymbol">:</span> <span CLASS="eclass">DATAGRAM_READER</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              writecomm&gt;: DATAGRAM_WRITER<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+              <span CLASS="elocal">writecomm</span><span CLASS="esymbol">:</span> <span CLASS="eclass">DATAGRAM_WRITER</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">do</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create soc.make_client_by_port (6530, &quot;serverhost&quot;)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_client_by_port </span><span CLASS="esymbol">(</span><span CLASS="enumber">6530</span><span CLASS="esymbol">,</span> <span CLASS="estring">&quot;serverhost&quot;</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create poller.make<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create readcomm.make (soc)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">readcomm</span><span CLASS="esymbol">.</span><span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="elocal">soc</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.put_read_command (readcomm)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">put_read_command </span><span CLASS="esymbol">(</span><span CLASS="elocal">readcomm</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              create writecomm.make (soc)<br>
+              <span CLASS="ekeyword">create</span> <span CLASS="elocal">writecomm</span><span CLASS="esymbol">.</span><span CLASS="efeature">make </span><span CLASS="esymbol">(</span><span CLASS="elocal">soc</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.put_write_command (writecomm)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">put_write_command </span><span CLASS="esymbol">(</span><span CLASS="efeature"><span CLASS="elocal">writecomm</span></span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.make_write_only<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_write_only</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.execute (15, 20000)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">execute </span><span CLASS="esymbol">(</span><span CLASS="enumber">15</span><span CLASS="esymbol">,</span> <span CLASS="enumber">20000</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.make_read_only<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">make_read_only</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              poller.execute (15, 20000)<br>
+              <span CLASS="elocal">poller</span><span CLASS="esymbol">.</span><span CLASS="efeature">execute </span><span CLASS="esymbol">(</span><span CLASS="enumber">15</span><span CLASS="esymbol">,</span> <span CLASS="enumber">20000</span><span CLASS="esymbol">)</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc.close<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rescue<br>
+              <span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">close</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">rescue</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              if soc /= Void and then not soc.is_closed then<br>
+              <span CLASS="ekeyword">if</span> <span CLASS="elocal">soc</span> <span CLASS="esymbol">/=</span> Void <span CLASS="ekeyword">and then not </span><span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">is_closed </span><span CLASS="ekeyword">then</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              soc.close<br>
+              <span CLASS="elocal">soc</span><span CLASS="esymbol">.</span><span CLASS="efeature">close</span><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              end<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</p>
-              <p>end</p>
+              <span CLASS="ekeyword">end</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">end</span></p>
+              <p><span CLASS="ekeyword">end</span></p>
         </ul>
          </code>
        <h3>9.4 A less deterministic scheme</h3>

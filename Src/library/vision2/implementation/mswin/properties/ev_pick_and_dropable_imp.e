@@ -423,7 +423,7 @@ feature {EV_ANY_I} -- Implementation
 		ensure then
 			original_window_void: original_top_level_window_imp = Void
 			press_action_Reset: press_action = Ev_pnd_start_transport
-			not_has_capture: internal_capture_status = False
+			not_has_capture: internal_capture_status.item = False
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is

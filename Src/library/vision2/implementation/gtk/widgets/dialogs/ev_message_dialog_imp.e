@@ -232,41 +232,42 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "OK" button is pressed.
 		do
-			check False end
+			remove_user_commands ("OK")
 		end
 
 	remove_cancel_commands is
 			-- Empty the list of commands to be executed when
 			-- "Cancel" button is pressed.
 		do
-			check False end
+			remove_user_commands ("Cancel")
 		end
 
 	remove_yes_commands is
 			-- Empty the list of commands to be executed when
 			-- "Yes" button is pressed.
 		do
-			check False end
+			remove_user_commands ("Yes")
 		end
 
 	remove_no_commands is
 			-- Empty the list of commands to be executed when
 			-- "No" button is pressed.
 		do
-			check False end
+			remove_user_commands ("No")
 		end
 
 	remove_abort_commands is
 			-- Empty the list of commands to be executed when
 			-- "Abort" button is pressed.
 		do
-			check False end
+			remove_user_commands ("Abort")
 		end
 
 	remove_retry_commands is
 			-- Empty the list of commands to be executed when
 			-- "Retry" button is pressed.
 		do
+			remove_user_commands ("Retry")
 			check False end
 		end
 
@@ -274,14 +275,14 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "Ignore" button is pressed.
 		do
-			check False end
+			remove_user_commands ("Ignore")
 		end
 
 	remove_help_commands is
 			-- Empty the list of commands to be executed when
 			-- "Help" button is pressed.
 		do
-			check False end
+			remove_user_commands ("Help")
 		end
 
 feature {NONE} -- Basic operation
@@ -362,6 +363,19 @@ feature {NONE} -- Basic operation
 				second_button.add_click_command (cmd, arg)
 			elseif third_button /= Void and then third_button.text.is_equal (name) then
 				third_button.add_click_command (cmd, arg)
+			end
+		end
+
+	remove_user_commands (name: STRING) is
+			-- remove all commands associated to the button called
+			-- `name'.
+		do
+			if first_button /= Void and then first_button.text.is_equal (name) then
+				first_button.remove_click_commands
+			elseif second_button /= Void and then second_button.text.is_equal (name) then
+				second_button.remove_click_commands
+			elseif third_button /= Void and then third_button.text.is_equal (name) then
+				third_button.remove_click_commands
 			end
 		end
 

@@ -73,6 +73,9 @@ end;
 	root_ast: ACE_SD;
 			-- Root of last parsed ACE
 
+	ace_options: ACE_OPTIONS;
+			-- Options explicitly set in the ace file
+
 	do_recompilation is
 			-- Recompile ACE description
 		do
@@ -99,6 +102,10 @@ end;
 			sys: SYSTEM_I
 		do
 			if root_ast /= Void then
+					-- Options explicitely set in the ace file
+					--| Processing is done in `build_universe' in ACE_SD
+				!! ace_options
+
 				if not_first_parsing = False then
 					precomp_project_name := root_ast.precomp_project_name;
 					extendible_project_name := root_ast.extendible_project_name;
@@ -174,23 +181,11 @@ end;
 			Result := root_ast.compile_all_classes
 		end;
 
-feature 
+feature -- Access
 
 	has_assertions: BOOLEAN is
-			-- Has assertion checking explicitely been requested
-			-- in the Ace file?
-		local
-			clusters: LINKED_LIST [CLUSTER_I];
 		do
-			from
-				clusters := Universe.clusters;
-				clusters.start
-			until
-				clusters.after or else Result
-			loop
-				Result := clusters.item.has_assertions;
-				clusters.forth
-			end	
+			Result := ace_options.has_assertion
 		end
 
 feature {NONE} -- Externals

@@ -39,6 +39,16 @@ feature {NONE} -- Initialization
                         widget := gtk_button_new_with_label ($a)
                 end
 	
+feature -- Event - command association
+	
+	add_click_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the button is pressed
+		do
+			add_command ( "clicked", command,  arguments )
+		end
+			
 feature {NONE} -- Implementation
 	
 	gtk_command_id: INTEGER

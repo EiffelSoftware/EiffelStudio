@@ -43,9 +43,19 @@ feature -- Access
 --	pixmap: PIXMAP
 			-- Pixmap inside button
 	
-feature -- Status setting
 	
+feature -- Event - command association
 	
+	add_click_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the button is pressed
+		require
+			valid_command: command /= Void
+		do
+			implementation.add_click_command ( command, 
+							   arguments )
+		end	
 	
 feature {NONE} -- Implementation
 

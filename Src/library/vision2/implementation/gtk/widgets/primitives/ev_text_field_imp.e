@@ -84,6 +84,16 @@ feature -- Status setting
 			gtk_entry_select_region (widget, start_pos-1, end_pos-1)
 		end	
 	
+feature -- Event - command association
+	
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the button is pressed
+		do
+			add_command ( "activate", command,  arguments )
+		end
+
 end -- class EV_TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------

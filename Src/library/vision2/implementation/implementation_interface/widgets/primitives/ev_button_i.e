@@ -23,6 +23,12 @@ feature {NONE} -- Initialization
                         -- Create a push button implementation.
 		deferred
                 end	
+feature -- Event - command association
+	
+	add_click_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		deferred
+		end
 	
 end -- class EV_BUTTON_I
 

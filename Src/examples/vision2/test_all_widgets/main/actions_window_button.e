@@ -22,14 +22,10 @@ feature {NONE} --Initialization
 	
 	make_button (par: EV_CONTAINER; button_name: STRING; 
 		     args: EV_ARGUMENTS; cmd: EV_COMMAND) is
-		local
-
-			e: EV_EVENT
 		do
-			make_with_label (par, button_name)
+			make_with_text (par, button_name)
 			
-			!!e.make ("clicked")
-			add_command (e, cmd, args)
+			add_click_command (cmd, args)
 		end
 	
 end

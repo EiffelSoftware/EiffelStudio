@@ -54,7 +54,6 @@ feature -- Initialization
 			!!c5.make
 			!!c6.make
 			
-			!!buttons.make
 			!!b.make_button (Current, "Label", c1)
 			!!b.make_button (Current, "Fixed", c2)
 			!!b.make_button (Current, "Box", c3)

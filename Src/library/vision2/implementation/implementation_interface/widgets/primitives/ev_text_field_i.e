@@ -17,7 +17,13 @@ inherit
 
 	EV_BAR_ITEM_I
 	
-
+feature -- Event - command association
+	
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENTS) is	
+		deferred
+		end
+	
 end --class EV_TEXT_FIELD_I
 
 

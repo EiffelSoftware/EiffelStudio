@@ -122,13 +122,14 @@ feature
 	set_name is
 			-- set the name to text value
 		local
-			namer_cmd: NAMER_CMD
+			namer_cmd: NAMER_CMD;
+			context: CONTEXT
+			tmp_width, tmp_height: INTEGER
 		do
 			namable.check_new_name (text.text);
 			if namable.is_valid_new_name then
 				!! namer_cmd;
-				namer_cmd.execute (Void);
-				namable.set_visual_name(text.text)
+				namer_cmd.execute (text.text);
 			end
 		end;
 

@@ -149,7 +149,6 @@ feature
 			else
 				group_c.oui_create (parent_context.widget);
 				create_oui_group (group_c);
-
 				!!create_command;
 				create_command.group_create (group_c, context_list);
 				create_command.execute (group_c);

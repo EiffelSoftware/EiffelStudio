@@ -68,8 +68,9 @@ feature -- Modification & Insertion
 		do
 			drawing := a_drawing.implementation;
 			set_conf_modified
-		ensure
-			drawing = a_drawing.implementation
+			check
+				drawing = a_drawing.implementation
+			end
 		end;
 
 	set_plane (p: INTEGER) is
@@ -97,7 +98,7 @@ feature -- Output
 	draw is
 			-- Draw the figure in `drawing'.
 		require
-			a_drawing_attached: not (drawing = Void)
+			a_drawing_attached: drawing /= Void
 		deferred
 		end;
 

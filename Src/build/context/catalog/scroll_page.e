@@ -59,6 +59,10 @@ feature {NONE}
 			rectangle.set_interior (interior);
 			circle.set_path (path);
 			circle.set_interior (interior);
+
+			rectangle.attach_drawing (drawing_area);
+			circle.attach_drawing (drawing_area);
+
 			drawing_area.add_figure (rectangle);
 			drawing_area.add_figure (circle);
 

@@ -59,6 +59,8 @@ feature {NONE}
 	original_stone: like Current;
 	
 	process_stone is
+		require else
+			valid_stone: stone /= Void;
 		local
 			cmd_type: CMD;
 			cmd_inst: CMD_INSTANCE

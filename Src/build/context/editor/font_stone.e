@@ -32,11 +32,7 @@ feature
 			cmd: ATTRIB_CMD;
 		do
 			font_name := editor.edited_context.font_name;
-				io.putstring ("copying font%N");
 			if not (font_name = Void) and then not font_name.empty then
-				io.putstring ("context is ");
-				io.putstring (new_context.label);
-				io.new_line;
 				!!cmd.make (command);
 				cmd.execute (new_context);
 				modify_contexts (new_context);

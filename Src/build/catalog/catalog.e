@@ -163,7 +163,7 @@ feature
 			update_type_label
 		ensure
 			initial_page_defined: current_page = page
-					and type_label.text = current_page.page_name
+					and type_label.text.is_equal(current_page.page_name)
 		end; -- set_initial_page
 
 	

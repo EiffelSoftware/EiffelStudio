@@ -319,9 +319,8 @@ feature {NONE}
 
 	key_press_data (widget_oui: WIDGET): KYPRESS_DATA is
 			--
-		
 		do
-			!!Result.make (widget_oui, c_event_keypress_code, c_event_keypress_string, modifiers_state)
+			--!!Result.make (widget_oui, c_event_keypress_code, c_event_keypress_string, modifiers_state);
 		end;
 
 	key_release_data (widget_oui: WIDGET): KEYREL_DATA is

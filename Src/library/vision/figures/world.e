@@ -72,7 +72,7 @@ feature -- Initialization
 				off
 			loop
 				!! ll.make;
-				al_put (ll);
+				al_replace (ll);
 				al_forth
 			end;
 			start;
@@ -83,8 +83,6 @@ feature -- Initialization
 			set_conf_receive;
 			set_conf_not_notify;
 			conf_notified := Current;
-		ensure
-			empty
 		end;
 
 	make_with_plane (plane_number: INTEGER) is

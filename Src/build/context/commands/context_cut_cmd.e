@@ -41,8 +41,10 @@ feature {NONE}
 			until
 				deleted_contexts.after
 			loop
-				deleted_contexts.item.widget.destroy;
-				deleted_contexts.forth
+				if deleted_contexts.item.widget /= void then
+					deleted_contexts.item.widget.destroy;
+					deleted_contexts.forth;
+				end;
 			end;
 		end;
 

@@ -65,7 +65,7 @@ feature {NONE}
 
 	process_stone is
 		require else
-			not_void_page: not (page = Void)
+			not_void_page: page /= Void;
 		local
 			p2: like page;
 			com_is: CAT_COM_IS;
@@ -90,6 +90,7 @@ feature {NONE}
 					then
 						p2.remove;
 						page.extend (temp_cmd);
+						page.hide;
 					end
 				end
 			elseif

@@ -82,7 +82,7 @@ feature
 			-- Merge right of cursor position put `l'. Construct label_names
 			-- from `l'.
 		require else
-			not_void_l: not (l = Void)
+			not_void_l: l /= Void;
 		do
 				l.start;
 				label_names := l.duplicate (l.count);	

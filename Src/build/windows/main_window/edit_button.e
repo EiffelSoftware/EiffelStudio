@@ -13,8 +13,6 @@ inherit
 		end;
 	ICON_HOLE;
 	FOCUSABLE
-		rename
-			focus_source as button
 		export
 			{NONE} all
 		end;
@@ -37,6 +35,11 @@ feature
 			--set_symbol (Edit_stone_pixmap);
 			--initialize_focus
 		--end;
+
+	focus_source: PICT_COLOR_B is
+		do
+			Result := button;
+		end;
 
 	
 feature {NONE}

@@ -458,7 +458,8 @@ feature -- Windowing
 		do
 			implementation.show
 		ensure
-			Shown: shown
+			Shown: (parent /= Void and then not parent.shown implies shown) or else
+				(parent = Void implies shown)
 		end;
 
 	shown: BOOLEAN is

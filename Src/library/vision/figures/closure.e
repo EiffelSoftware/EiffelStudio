@@ -162,8 +162,6 @@ feature -- Modification & Insertion
 			else
 				set_infinite
 			end
-		ensure
-			empty = (old empty) and (other.empty)
 		end; -- merge
 
 	merge_clip (clip: CLIP) is

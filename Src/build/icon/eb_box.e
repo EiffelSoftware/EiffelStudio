@@ -6,14 +6,28 @@ inherit
 	ROW_COLUMN
 		rename
 			make as make_box,
-			cursor as row_column_cursor
+			cursor as row_column_cursor,
+			show as row_show,
+			hide as row_hide
 		export
 			{NONE} all
 		end;
+
+	ROW_COLUMN
+		rename 
+			make as make_box,
+			cursor as row_column_cursor
+		redefine
+			show, hide
+		select
+			show, hide
+		end;
+
 	EB_LINKED_LIST [T]
 		rename
 			extend as list_extend,
 			add_right as list_add_right,
+			put_right as list_put_right,
 			remove as list_remove,
 			wipe_out as list_wipe_out,
 			go_i_th as list_go_i_th,
@@ -24,7 +38,8 @@ inherit
 		end;
 	EB_LINKED_LIST [T]
 		rename
-			make as linked_list_make
+			make as linked_list_make,
+			put_right as list_put_right
 		undefine
 			add_right, extend
 		redefine
@@ -65,7 +80,7 @@ feature -- List operations
 				until
 					other.after
 				loop
-					list_add_right (other.item.original_stone);
+					list_put_right (other.item.original_stone);
 					other.forth;
 					forth
 				end;
@@ -170,6 +185,42 @@ feature {NONE}
 
 feature -- Other features
 
+	show is
+		do
+			row_show
+			from
+				start;
+				icons.start
+			until
+				after
+			loop
+				if icons.item.realized and then not icons.item.shown then
+					icons.item.show
+				end;
+				forth
+				icons.forth
+			end;
+		end;
+
+	hide is
+		do
+			row_hide;
+			from
+				start;
+				icons.start
+			until
+				after
+			loop
+				if icons.item.realized then
+					icons.item.hide;
+				end;
+				forth;
+				icons.forth;
+			end;
+		
+			
+		end;
+
 	insert_after (dest_stone, moved_stone: T) is
 			-- Insert `moved_stone' to the right 
 			-- of `dest_stone' depending on `to_right' value.
@@ -218,7 +269,7 @@ feature -- Other features
 			until
 				other.after
 			loop
-				list_add_right (other.item.original_stone);
+				list_put_right (other.item.original_stone);
 				other.forth;
 				forth
 			end;

@@ -138,10 +138,10 @@ feature {NONE}
 				end;
 				handle_error (msg)
 			end
-		rescue
-			mp.restore;
-			rescued := True;
-			retry
+		--rescue
+		--	mp.restore;
+		--	rescued := True;
+		--	retry
 		end;
 
 	retrieve_project (dir: STRING) is
@@ -174,11 +174,11 @@ feature {NONE}
 				msg.append (dir);	
 				handle_error (msg)
 			end;
-		rescue
-			main_panel.set_title ("EiffelBuild");
-			mp.restore;
-			rescued := True;
-			retry
+		--rescue
+		--	main_panel.set_title ("EiffelBuild");
+		--	mp.restore;
+		--	rescued := True;
+		--	retry
 		end;
 
 	handle_error (arg: STRING) is

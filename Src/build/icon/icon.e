@@ -122,7 +122,7 @@ feature
 				icon_label.set_left_alignment;
 				icon_label.allow_recompute_size;
 				icon_label.set_y (init_y);
-				if not (label = Void) and not label.empty then
+				if (label /= Void) and then not label.empty then
 					icon_label.set_text (label);
 				else
 					icon_label.set_text ("");

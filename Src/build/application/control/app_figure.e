@@ -79,6 +79,10 @@ feature
 
 	draw is
 			-- Draw the figure. 
+		require else 
+			valid_outer: outer_figure /= Void;
+			valid_inner: inner_figure /= Void;
+			valid_text: text_image /= Void; 
 		do
 			outer_figure.draw;
 			inner_figure.draw;

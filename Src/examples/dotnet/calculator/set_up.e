@@ -36,11 +36,8 @@ feature -- Basic Operations
 			non_void_command: c /= Void
 			non_void_message: m /= Void
 			not_empty_message: m.get_length > 0
-		local
-			i: INTERFACE
 		do
-			create i
-			interface := i
+			create interface
 			interface.set_interface (k, m, c)
 			associated_operator.put (interface, interface.operator_key)
 		ensure

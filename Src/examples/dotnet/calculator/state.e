@@ -24,12 +24,9 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		require
 			non_void_operation: op /= Void
-		local
-			console: CONSOLE
 		do
 			operand_stack := op
-			create console
-			io := console
+			create io
 		ensure
 			non_void_operand_stack: operand_stack /= Void
 			non_void_console: io /= Void

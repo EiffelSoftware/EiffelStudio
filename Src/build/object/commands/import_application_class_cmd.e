@@ -56,21 +56,36 @@ feature {NONE} -- Implementation
 			key_value, value: STRING
 		do
 			if a_line.has (':') then
-				a_line.prune_all (' ')
+				a_line.left_adjust
+				a_line.right_adjust
 				i := a_line.index_of (':', 1)
 				key_value := a_line.substring (1, i - 1)
 				value := a_line.substring (i + 1, a_line.count)
 				if key_value.substring_index (classname_keyword, 1) > 0 then
 					process_class_name (value)
-				elseif key_value.substring_index (query_keyword, 1) > 0 then
-					process_query (value)
-				elseif key_value.substring_index (command_keyword, 1) > 0 then
-					process_command (value)
-				elseif key_value.substring_index (routine_keyword, 1) > 0 then
-					process_routine (value)
+				elseif key_value.substring_index (infix_keyword, 1) > 0 then
 				elseif key_value.substring_index (precondition_keyword, 1) > 0 then
 					process_precondition (value)
-				end			
+				elseif key_value.substring_index (postcondition_keyword, 1) > 0  
+					or else key_value.substring_index (creation_keyword, 1) > 0
+				then
+					--| do nothing
+				elseif a_line.has ('(') and then a_line.has (')') then
+					i := a_line.index_of (')', 1)
+					if i = a_line.count then
+							--| not a fonction
+						if a_line.has (',') or else a_line.has (';') then
+							process_routine (a_line)
+						else
+							process_command (a_line)
+						end
+					end
+				elseif a_line.substring_index (" is ", 1) < 1 then
+						--| not a constant
+					process_query (a_line)
+				end
+			elseif not a_line.empty then
+				process_routine (a_line)
 			end
 		end
 
@@ -111,6 +126,7 @@ feature {NONE} -- Implementation
 			lower, upper: INTEGER
 			cmd_name, arg_name, arg_type: STRING
 		do
+			signature.prune_all (' ')
 			lower := 1
 			upper := signature.index_of ('(', 1)
 			if (upper <= 1) or (upper > (signature.count - 5)) then
@@ -144,6 +160,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			q_name, q_type: STRING
 		do
+			declaration.prune_all (' ')
 			i := declaration.index_of (':', 1)
 			if (i <= 1) or (i > (declaration.count - 2)) then
 				display_error_message
@@ -164,11 +181,13 @@ feature {NONE} -- Implementation
 		local
 			app_routine: APPLICATION_ROUTINE
 			lower, upper: INTEGER
+			arg_lower, arg_upper: INTEGER
 			cmd_name, arg_type, arg_name: STRING
 			arg_list: LINKED_LIST [APPLICATION_ARGUMENT]
 			arg: APPLICATION_ARGUMENT
 			finished, error: BOOLEAN
 		do
+			signature.prune_all (' ')
 			lower := 1
 			upper := signature.index_of ('(', 1)
 			if (upper <= 1) then
@@ -210,8 +229,19 @@ feature {NONE} -- Implementation
 							error := True
 						else
 							arg_type := signature.substring (lower, upper - 1)
-							!! arg.make (arg_name, arg_type)
-							arg_list.extend (arg)
+							from
+							until
+								arg_upper > arg_name.count
+							loop
+								arg_lower := arg_upper + 1
+								arg_upper := arg_name.index_of (',', arg_lower)
+								if arg_upper < 1 then
+									arg_upper := arg_name.count + 1
+								end
+								!! arg.make (arg_name.substring (arg_lower, arg_upper - 1),
+											arg_type)
+								arg_list.extend (arg)
+							end
 						end
 					end
 				end
@@ -227,10 +257,25 @@ feature {NONE} -- Implementation
 			-- Add a precondition to the currently edited APPLICATION_ROUTINE object.
 		local
 			a_precondition: APPLICATION_PRECONDITION
+			lower, upper, semi_column_index: INTEGER
 		do
-			if current_application_method /= Void then		
-				!! a_precondition.make (expression)
-				current_application_method.add_precondition (a_precondition)
+			if current_application_method /= Void then
+				from
+				until
+					upper > expression.count
+				loop
+					lower := upper + 1
+					upper := expression.index_of (';', lower)
+					if upper <= 1 then
+						upper := expression.count + 1
+					end
+					semi_column_index := expression.index_of (':', lower)
+					if semi_column_index > 0 and then semi_column_index < upper then
+						lower := semi_column_index + 2
+					end
+						!! a_precondition.make (expression.substring (lower, upper - 1))
+						current_application_method.add_precondition (a_precondition)
+				end
 			end
 		end
 
@@ -280,19 +325,20 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Constants
 
-	query_keyword: STRING is "<query>"
-			-- Keyword "<query>"
 
-	command_keyword: STRING is "<command>"
-			-- Keyword "<command>"
-
-	classname_keyword: STRING is "<class_name>"
+	classname_keyword: STRING is "<class>"
 			-- Keyword "<class_name>"
 
-	routine_keyword: STRING is "<routine>"
-			-- Keyword "<routine>"
+	creation_keyword: STRING is "<creation>"
+			-- Keyword "<creation>"
+
+	infix_keyword: STRING is "<infix>"
+			-- Keyword "<infix>"
 
 	precondition_keyword: STRING is "<require>"
 			-- Keyword "<require>"
+
+	postcondition_keyword: STRING is "<ensure>"
+			-- Keyword "<ensure>"
 
 end -- class IMPORT_APPLICATION_CLASS_CMD	

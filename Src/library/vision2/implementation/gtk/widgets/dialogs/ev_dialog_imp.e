@@ -20,8 +20,7 @@ inherit
 		redefine
 			make,
 			interface,
-			call_close_request_actions,
-			set_position
+			call_close_request_actions
 		end
 
 create
@@ -62,14 +61,6 @@ feature -- Status Setting
 			-- Set the window not to be closeable by the user
 		do
 			set_closeable (False)
-		end
-	
-	set_position (a_x, a_y: INTEGER) is
-			-- Set horizontal offset to parent to `a_x'.
-			-- Set vertical offset to parent to `a_y'.
-		do
-			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
-			Precursor (a_x, a_y)
 		end
 
 feature -- Basic operations

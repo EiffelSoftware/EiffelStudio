@@ -94,6 +94,7 @@ class ecom_runtime_ec
     IUnknown * ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dimension, IUnknown * old);
     LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension, LPWSTR * old);
     LPSTR * ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension, LPSTR * old);
+    void* ccom_ec_array_record (EIF_REFERENCE a_ref, int dimension, void* old);
     BSTR * ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, BSTR * old);
     unsigned char * ccom_ec_array_unsigned_character (EIF_REFERENCE a_ref, int dimension, unsigned char * old);
     unsigned long * ccom_ec_array_unsigned_long (EIF_REFERENCE a_ref, int dimension, unsigned long * old);

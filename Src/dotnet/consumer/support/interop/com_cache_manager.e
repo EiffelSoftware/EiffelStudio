@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
 				l_inst_obj_handle ?= app_domain.create_instance_from (
 					to_dotnet.get_type.assembly.location,
-					"EiffelSoftware.MetadataConsumer.MARSHAL_CACHE_MANAGER")
+					(create {MARSHAL_CACHE_MANAGER}).to_dotnet.get_type.full_name)
 				check
 					created_new_cache_manager: l_inst_obj_handle /= Void
 				end

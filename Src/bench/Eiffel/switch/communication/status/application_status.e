@@ -285,7 +285,7 @@ feature -- Access
 
 feature -- Update
 
-	update is
+	update_on_stopped_state is
 			-- Update data which need update after application is really stopped
 		do
 		end

@@ -13,7 +13,7 @@ inherit
 			display_status,
 			current_call_stack_element,
 			current_call_stack,
-			update,
+			update_on_stopped_state,
 			set_current_thread_id
 		end
 		
@@ -81,11 +81,13 @@ feature -- Values
 
 feature -- Update
 
-	update is
+	update_on_stopped_state is
 			-- Update data once the application is really stopped
 		do
 			if application.imp_dotnet.exception_occurred and is_stopped then
-				exception_tag := application.imp_dotnet.exception_message			
+				exception_tag := application.imp_dotnet.exception_message
+			else
+				exception_tag := Void
 			end
 		end
 		

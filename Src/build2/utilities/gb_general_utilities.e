@@ -54,4 +54,20 @@ feature -- Basic operations
 			end
 		end
 		
+	remove_leading_and_trailing_spaces (string: STRING): STRING is
+			-- Remove leading and trailing spaces from `string'.
+			-- i.e. "   a_string   " becomes "a_string"
+		require
+			string_not_void: string /= Void
+		local
+			counter: INTEGER
+		do
+			Result := string
+			Result.prune_all_trailing (' ')
+			Result.prune_all_leading (' ')
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+		
 end -- class GB_GENERAL_UTILITIES

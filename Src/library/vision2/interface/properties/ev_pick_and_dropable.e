@@ -109,6 +109,9 @@ feature -- Access
 				not_destroyed: not is_destroyed
 			end
 			Result := implementation.accept_cursor
+			if Result = Void then
+				Result := Default_pixmaps.Standard_cursor
+			end
 		ensure then
 			bridge_ok: Result = implementation.accept_cursor
 		end
@@ -121,6 +124,9 @@ feature -- Access
 				not_destroyed: not is_destroyed
 			end
 			Result := implementation.deny_cursor
+			if Result = Void then
+				Result := Default_pixmaps.No_cursor
+			end
 		ensure then
 			bridge_ok: Result = implementation.deny_cursor
 		end

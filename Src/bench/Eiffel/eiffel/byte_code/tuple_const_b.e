@@ -157,7 +157,6 @@ feature -- Byte code generation
 			-- Generate byte code for a manifest tuple
 		local
 			real_ty: TUPLE_TYPE_I;
-			actual_type: CL_TYPE_I;
 			expr: EXPR_B;
 			base_class: CLASS_C;
 		do
@@ -171,13 +170,8 @@ feature -- Byte code generation
 			until
 				expressions.before
 			loop
-				expr ?= expressions.item;
-				actual_type ?= context.real_type (expr.type);
-				expr.make_byte_code (ba);
-
-				if actual_type = Void then
-					ba.append (Bc_void)
-				end;
+				expr ?= expressions.item
+				expr.make_byte_code (ba)
 				expressions.back;
 			end;
 			if base_class.is_precompiled then

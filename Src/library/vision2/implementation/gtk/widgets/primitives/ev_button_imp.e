@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions (
 				"clicked",
 				interface.select_actions,
-				default_translate
+				Void
 			)
 			is_initialized := True
 			align_text_center
@@ -180,6 +180,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/20 00:28:41  oconnor
+--| fixed signal connection
+--|
 --| Revision 1.30  2000/04/04 20:51:57  oconnor
 --| updated signal connection for new marshaling scheme
 --|

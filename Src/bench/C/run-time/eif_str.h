@@ -19,9 +19,6 @@ extern "C" {
 
 #include "eif_portable.h"
 
-/* Numeric code of 'i'-th EIF_CHARACTER in 'str' */
-#define str_code(str,i) (EIF_INTEGER) ((EIF_CHARACTER *) (str))[((EIF_INTEGER)(i))-1]
-
 RT_LNK EIF_INTEGER str_left(register EIF_CHARACTER *str, EIF_INTEGER length);
 RT_LNK void str_ljustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF_INTEGER capacity);
 RT_LNK void str_rjustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF_INTEGER capacity);

@@ -12,6 +12,8 @@ inherit
 
 	EIFFEL_PARSER_SKELETON
 
+	SHARED_NAMES_HEAP
+
 creation
 
 	make, make_il_parser
@@ -133,7 +135,8 @@ creation
 %type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Undefine Undefine_opt Redefine
 										Redefine_opt Select Select_opt Creation_constraint
 %type <EIFFEL_LIST [FORMAL_DEC_AS]>		Formal_generics Formal_generic_list_opt Formal_generic_list
-%type <EIFFEL_LIST [ID_AS]>				Client_list Class_list Identifier_list Strip_identifier_list
+%type <EIFFEL_LIST [ID_AS]>				Client_list Class_list 
+%type <ARRAYED_LIST [INTEGER]>			Identifier_list Strip_identifier_list
 %type <INDEXING_CLAUSE_AS>			Indexing Index_list Dotnet_indexing_opt Dotnet_indexing
 %type <EIFFEL_LIST [INSTRUCTION_AS]>	Rescue Compound Instruction_list Else_part
 										Inspect_default
@@ -853,18 +856,20 @@ Local_entity_declaration_group: Identifier_list TE_COLON Type ASemi
 
 Identifier_list: Identifier
 			{
-				$$ := new_eiffel_list_id_as (Initial_identifier_list_size)
-				$$.extend ($1)
+				create $$.make (Initial_identifier_list_size)
+				Names_heap.put ($1)
+				$$.extend (Names_heap.found_item)
 			}
 	|	Identifier_list TE_COMMA Identifier
 			{
 				$$ := $1
-				$$.extend ($3)
+				Names_heap.put ($3)
+				$$.extend (Names_heap.found_item)
 			}
 	;
 
 Strip_identifier_list: -- Empty
-			{ $$ := new_eiffel_list_id_as (0) }
+			{ create $$.make (0) }
 	|	Identifier_list
 			{ $$ := $1 }
 	;

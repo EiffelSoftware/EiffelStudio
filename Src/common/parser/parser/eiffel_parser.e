@@ -11,6 +11,8 @@ inherit
 
 	EIFFEL_PARSER_SKELETON
 
+	SHARED_NAMES_HEAP
+
 creation
 
 	make, make_il_parser
@@ -39,1390 +41,1390 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 172
+--|#line 175
 	yy_do_action_1
 when 2 then
---|#line 214
+--|#line 217
 	yy_do_action_2
 when 3 then
---|#line 223
+--|#line 226
 	yy_do_action_3
 when 4 then
---|#line 225
+--|#line 228
 	yy_do_action_4
 when 5 then
---|#line 227
+--|#line 230
 	yy_do_action_5
 when 6 then
---|#line 229
+--|#line 232
 	yy_do_action_6
 when 7 then
---|#line 231
+--|#line 234
 	yy_do_action_7
 when 8 then
---|#line 233
+--|#line 236
 	yy_do_action_8
 when 9 then
---|#line 235
+--|#line 238
 	yy_do_action_9
 when 10 then
---|#line 237
+--|#line 240
 	yy_do_action_10
 when 11 then
---|#line 239
+--|#line 242
 	yy_do_action_11
 when 12 then
---|#line 241
+--|#line 244
 	yy_do_action_12
 when 13 then
---|#line 243
+--|#line 246
 	yy_do_action_13
 when 14 then
---|#line 245
+--|#line 248
 	yy_do_action_14
 when 15 then
---|#line 249
+--|#line 252
 	yy_do_action_15
 when 16 then
---|#line 253
+--|#line 256
 	yy_do_action_16
 when 17 then
---|#line 257
+--|#line 260
 	yy_do_action_17
 when 18 then
---|#line 261
+--|#line 264
 	yy_do_action_18
 when 19 then
---|#line 265
+--|#line 268
 	yy_do_action_19
 when 20 then
---|#line 269
+--|#line 272
 	yy_do_action_20
 when 21 then
---|#line 273
+--|#line 276
 	yy_do_action_21
 when 22 then
---|#line 277
+--|#line 280
 	yy_do_action_22
 when 23 then
---|#line 281
+--|#line 284
 	yy_do_action_23
 when 24 then
---|#line 285
+--|#line 288
 	yy_do_action_24
 when 25 then
---|#line 289
+--|#line 292
 	yy_do_action_25
 when 26 then
---|#line 293
+--|#line 296
 	yy_do_action_26
 when 28 then
---|#line 303
+--|#line 306
 	yy_do_action_28
 when 31 then
---|#line 311
+--|#line 314
 	yy_do_action_31
 when 32 then
---|#line 313
+--|#line 316
 	yy_do_action_32
 when 34 then
---|#line 319
+--|#line 322
 	yy_do_action_34
 when 35 then
---|#line 321
+--|#line 324
 	yy_do_action_35
 when 36 then
---|#line 325
+--|#line 328
 	yy_do_action_36
 when 37 then
---|#line 330
+--|#line 333
 	yy_do_action_37
 when 38 then
---|#line 337
+--|#line 340
 	yy_do_action_38
 when 39 then
---|#line 341
+--|#line 344
 	yy_do_action_39
 when 41 then
---|#line 347
+--|#line 350
 	yy_do_action_41
 when 42 then
---|#line 352
+--|#line 355
 	yy_do_action_42
 when 43 then
---|#line 357
+--|#line 360
 	yy_do_action_43
 when 44 then
---|#line 364
+--|#line 367
 	yy_do_action_44
 when 45 then
---|#line 366
+--|#line 369
 	yy_do_action_45
 when 46 then
---|#line 368
+--|#line 371
 	yy_do_action_46
 when 47 then
---|#line 378
+--|#line 381
 	yy_do_action_47
 when 48 then
---|#line 384
+--|#line 387
 	yy_do_action_48
 when 49 then
---|#line 391
+--|#line 394
 	yy_do_action_49
 when 50 then
---|#line 397
+--|#line 400
 	yy_do_action_50
 when 51 then
---|#line 405
+--|#line 408
 	yy_do_action_51
 when 52 then
---|#line 409
+--|#line 412
 	yy_do_action_52
 when 53 then
---|#line 420
+--|#line 423
 	yy_do_action_53
 when 54 then
---|#line 424
+--|#line 427
 	yy_do_action_54
 when 56 then
---|#line 441
+--|#line 444
 	yy_do_action_56
 when 58 then
---|#line 450
+--|#line 453
 	yy_do_action_58
 when 59 then
---|#line 459
+--|#line 462
 	yy_do_action_59
 when 60 then
---|#line 464
+--|#line 467
 	yy_do_action_60
 when 61 then
---|#line 471
+--|#line 474
 	yy_do_action_61
 when 62 then
---|#line 473
+--|#line 476
 	yy_do_action_62
 when 63 then
---|#line 477
+--|#line 480
 	yy_do_action_63
 when 64 then
---|#line 477
+--|#line 480
 	yy_do_action_64
 when 66 then
---|#line 488
+--|#line 491
 	yy_do_action_66
 when 67 then
---|#line 492
+--|#line 495
 	yy_do_action_67
 when 68 then
---|#line 497
+--|#line 500
 	yy_do_action_68
 when 69 then
---|#line 501
+--|#line 504
 	yy_do_action_69
 when 70 then
---|#line 507
+--|#line 510
 	yy_do_action_70
 when 71 then
---|#line 515
+--|#line 518
 	yy_do_action_71
 when 72 then
---|#line 520
+--|#line 523
 	yy_do_action_72
 when 77 then
---|#line 535
+--|#line 538
 	yy_do_action_77
 when 78 then
---|#line 548
+--|#line 551
 	yy_do_action_78
 when 79 then
---|#line 550
+--|#line 553
 	yy_do_action_79
 when 80 then
---|#line 557
+--|#line 560
 	yy_do_action_80
 when 81 then
---|#line 561
+--|#line 564
 	yy_do_action_81
 when 82 then
---|#line 563
+--|#line 566
 	yy_do_action_82
 when 83 then
---|#line 567
+--|#line 570
 	yy_do_action_83
 when 84 then
---|#line 569
+--|#line 572
 	yy_do_action_84
 when 85 then
---|#line 571
+--|#line 574
 	yy_do_action_85
 when 86 then
---|#line 575
+--|#line 578
 	yy_do_action_86
 when 87 then
---|#line 580
+--|#line 583
 	yy_do_action_87
 when 88 then
---|#line 584
+--|#line 587
 	yy_do_action_88
 when 89 then
---|#line 588
+--|#line 591
 	yy_do_action_89
 when 90 then
---|#line 590
+--|#line 593
 	yy_do_action_90
 when 91 then
---|#line 594
+--|#line 597
 	yy_do_action_91
 when 92 then
---|#line 599
+--|#line 602
 	yy_do_action_92
 when 93 then
---|#line 604
+--|#line 607
 	yy_do_action_93
 when 95 then
---|#line 617
+--|#line 620
 	yy_do_action_95
 when 96 then
---|#line 619
+--|#line 622
 	yy_do_action_96
 when 97 then
---|#line 623
+--|#line 626
 	yy_do_action_97
 when 98 then
---|#line 628
+--|#line 631
 	yy_do_action_98
 when 99 then
---|#line 635
+--|#line 638
 	yy_do_action_99
 when 100 then
---|#line 640
+--|#line 643
 	yy_do_action_100
 when 101 then
---|#line 648
+--|#line 651
 	yy_do_action_101
 when 102 then
---|#line 653
+--|#line 656
 	yy_do_action_102
 when 103 then
---|#line 658
+--|#line 661
 	yy_do_action_103
 when 104 then
---|#line 663
+--|#line 666
 	yy_do_action_104
 when 105 then
---|#line 668
+--|#line 671
 	yy_do_action_105
 when 106 then
---|#line 673
+--|#line 676
 	yy_do_action_106
 when 107 then
---|#line 678
+--|#line 681
 	yy_do_action_107
 when 109 then
---|#line 688
+--|#line 691
 	yy_do_action_109
 when 110 then
---|#line 692
+--|#line 695
 	yy_do_action_110
 when 111 then
---|#line 697
+--|#line 700
 	yy_do_action_111
 when 112 then
---|#line 704
+--|#line 707
 	yy_do_action_112
 when 114 then
---|#line 710
+--|#line 713
 	yy_do_action_114
 when 115 then
---|#line 714
+--|#line 717
 	yy_do_action_115
 when 117 then
---|#line 720
+--|#line 723
 	yy_do_action_117
 when 118 then
---|#line 725
+--|#line 728
 	yy_do_action_118
 when 119 then
---|#line 732
+--|#line 735
 	yy_do_action_119
 when 120 then
---|#line 736
+--|#line 739
 	yy_do_action_120
 when 121 then
---|#line 738
+--|#line 741
 	yy_do_action_121
 when 122 then
---|#line 742
+--|#line 745
 	yy_do_action_122
 when 123 then
---|#line 747
+--|#line 750
 	yy_do_action_123
 when 125 then
---|#line 756
+--|#line 759
 	yy_do_action_125
 when 127 then
---|#line 762
+--|#line 765
 	yy_do_action_127
 when 129 then
---|#line 768
+--|#line 771
 	yy_do_action_129
 when 131 then
---|#line 774
+--|#line 777
 	yy_do_action_131
 when 133 then
---|#line 780
+--|#line 783
 	yy_do_action_133
 when 135 then
---|#line 786
+--|#line 789
 	yy_do_action_135
 when 137 then
---|#line 796
+--|#line 799
 	yy_do_action_137
 when 139 then
---|#line 802
+--|#line 805
 	yy_do_action_139
 when 140 then
---|#line 806
+--|#line 809
 	yy_do_action_140
 when 141 then
---|#line 811
+--|#line 814
 	yy_do_action_141
 when 142 then
---|#line 818
+--|#line 821
 	yy_do_action_142
 when 144 then
---|#line 823
+--|#line 826
 	yy_do_action_144
 when 146 then
---|#line 834
+--|#line 837
 	yy_do_action_146
 when 147 then
---|#line 838
+--|#line 841
 	yy_do_action_147
 when 148 then
---|#line 843
+--|#line 846
 	yy_do_action_148
 when 149 then
---|#line 850
+--|#line 853
 	yy_do_action_149
 when 150 then
---|#line 854
+--|#line 857
 	yy_do_action_150
 when 151 then
---|#line 859
+--|#line 863
 	yy_do_action_151
 when 152 then
---|#line 866
+--|#line 871
 	yy_do_action_152
 when 153 then
---|#line 868
+--|#line 873
 	yy_do_action_153
 when 155 then
---|#line 874
+--|#line 879
 	yy_do_action_155
 when 156 then
---|#line 878
+--|#line 883
 	yy_do_action_156
 when 157 then
---|#line 878
+--|#line 883
 	yy_do_action_157
 when 158 then
---|#line 890
+--|#line 895
 	yy_do_action_158
 when 159 then
---|#line 892
+--|#line 897
 	yy_do_action_159
 when 160 then
---|#line 894
+--|#line 899
 	yy_do_action_160
 when 161 then
---|#line 898
+--|#line 903
 	yy_do_action_161
 when 162 then
---|#line 902
+--|#line 907
 	yy_do_action_162
 when 163 then
---|#line 902
+--|#line 907
 	yy_do_action_163
 when 165 then
---|#line 910
+--|#line 915
 	yy_do_action_165
 when 166 then
---|#line 914
+--|#line 919
 	yy_do_action_166
 when 167 then
---|#line 916
+--|#line 921
 	yy_do_action_167
 when 169 then
---|#line 922
+--|#line 927
 	yy_do_action_169
 when 171 then
---|#line 928
+--|#line 933
 	yy_do_action_171
 when 172 then
---|#line 932
+--|#line 937
 	yy_do_action_172
 when 173 then
---|#line 937
+--|#line 942
 	yy_do_action_173
 when 174 then
---|#line 944
+--|#line 949
 	yy_do_action_174
 when 177 then
---|#line 952
+--|#line 957
 	yy_do_action_177
 when 178 then
---|#line 954
+--|#line 959
 	yy_do_action_178
 when 179 then
---|#line 956
+--|#line 961
 	yy_do_action_179
 when 180 then
---|#line 958
+--|#line 963
 	yy_do_action_180
 when 181 then
---|#line 960
+--|#line 965
 	yy_do_action_181
 when 182 then
---|#line 962
+--|#line 967
 	yy_do_action_182
 when 183 then
---|#line 964
+--|#line 969
 	yy_do_action_183
 when 184 then
---|#line 966
+--|#line 971
 	yy_do_action_184
 when 185 then
---|#line 968
+--|#line 973
 	yy_do_action_185
 when 186 then
---|#line 970
+--|#line 975
 	yy_do_action_186
 when 188 then
---|#line 976
+--|#line 981
 	yy_do_action_188
 when 189 then
---|#line 976
+--|#line 981
 	yy_do_action_189
 when 190 then
---|#line 983
+--|#line 988
 	yy_do_action_190
 when 191 then
---|#line 983
+--|#line 988
 	yy_do_action_191
 when 193 then
---|#line 994
+--|#line 999
 	yy_do_action_193
 when 194 then
---|#line 994
+--|#line 999
 	yy_do_action_194
 when 195 then
---|#line 1001
+--|#line 1006
 	yy_do_action_195
 when 196 then
---|#line 1001
+--|#line 1006
 	yy_do_action_196
 when 198 then
---|#line 1012
+--|#line 1017
 	yy_do_action_198
 when 199 then
---|#line 1021
+--|#line 1026
 	yy_do_action_199
 when 200 then
---|#line 1026
+--|#line 1031
 	yy_do_action_200
 when 201 then
---|#line 1033
+--|#line 1038
 	yy_do_action_201
 when 202 then
---|#line 1037
+--|#line 1042
 	yy_do_action_202
 when 203 then
---|#line 1039
+--|#line 1044
 	yy_do_action_203
 when 205 then
---|#line 1049
+--|#line 1054
 	yy_do_action_205
 when 206 then
---|#line 1051
+--|#line 1056
 	yy_do_action_206
 when 207 then
---|#line 1055
+--|#line 1060
 	yy_do_action_207
 when 208 then
---|#line 1057
+--|#line 1062
 	yy_do_action_208
 when 209 then
---|#line 1059
+--|#line 1064
 	yy_do_action_209
 when 210 then
---|#line 1061
+--|#line 1066
 	yy_do_action_210
 when 211 then
---|#line 1063
+--|#line 1068
 	yy_do_action_211
 when 212 then
---|#line 1065
+--|#line 1070
 	yy_do_action_212
 when 213 then
---|#line 1069
+--|#line 1074
 	yy_do_action_213
 when 214 then
---|#line 1071
+--|#line 1076
 	yy_do_action_214
 when 215 then
---|#line 1073
+--|#line 1078
 	yy_do_action_215
 when 216 then
---|#line 1075
+--|#line 1080
 	yy_do_action_216
 when 217 then
---|#line 1077
+--|#line 1082
 	yy_do_action_217
 when 218 then
---|#line 1079
+--|#line 1084
 	yy_do_action_218
 when 219 then
---|#line 1081
+--|#line 1086
 	yy_do_action_219
 when 220 then
---|#line 1083
+--|#line 1088
 	yy_do_action_220
 when 221 then
---|#line 1085
+--|#line 1090
 	yy_do_action_221
 when 222 then
---|#line 1087
+--|#line 1092
 	yy_do_action_222
 when 223 then
---|#line 1089
+--|#line 1094
 	yy_do_action_223
 when 224 then
---|#line 1091
+--|#line 1096
 	yy_do_action_224
 when 227 then
---|#line 1099
+--|#line 1104
 	yy_do_action_227
 when 228 then
---|#line 1103
+--|#line 1108
 	yy_do_action_228
 when 229 then
---|#line 1108
+--|#line 1113
 	yy_do_action_229
 when 230 then
---|#line 1119
+--|#line 1124
 	yy_do_action_230
 when 231 then
---|#line 1125
+--|#line 1130
 	yy_do_action_231
 when 233 then
---|#line 1135
+--|#line 1140
 	yy_do_action_233
 when 234 then
---|#line 1139
+--|#line 1144
 	yy_do_action_234
 when 235 then
---|#line 1144
+--|#line 1149
 	yy_do_action_235
 when 236 then
---|#line 1151
+--|#line 1156
 	yy_do_action_236
 when 237 then
---|#line 1151
+--|#line 1156
 	yy_do_action_237
 when 238 then
---|#line 1161
+--|#line 1166
 	yy_do_action_238
 when 239 then
---|#line 1163
+--|#line 1168
 	yy_do_action_239
 when 241 then
---|#line 1173
+--|#line 1178
 	yy_do_action_241
 when 242 then
---|#line 1181
+--|#line 1186
 	yy_do_action_242
 when 244 then
---|#line 1190
+--|#line 1195
 	yy_do_action_244
 when 245 then
---|#line 1194
+--|#line 1199
 	yy_do_action_245
 when 246 then
---|#line 1199
+--|#line 1204
 	yy_do_action_246
 when 247 then
---|#line 1206
+--|#line 1211
 	yy_do_action_247
 when 249 then
---|#line 1212
+--|#line 1217
 	yy_do_action_249
 when 250 then
---|#line 1216
+--|#line 1221
 	yy_do_action_250
 when 252 then
---|#line 1225
+--|#line 1230
 	yy_do_action_252
 when 253 then
---|#line 1229
+--|#line 1234
 	yy_do_action_253
 when 254 then
---|#line 1234
+--|#line 1239
 	yy_do_action_254
 when 255 then
---|#line 1241
+--|#line 1246
 	yy_do_action_255
 when 256 then
---|#line 1245
+--|#line 1250
 	yy_do_action_256
 when 257 then
---|#line 1250
+--|#line 1255
 	yy_do_action_257
 when 258 then
---|#line 1257
+--|#line 1262
 	yy_do_action_258
 when 259 then
---|#line 1259
+--|#line 1264
 	yy_do_action_259
 when 260 then
---|#line 1261
+--|#line 1266
 	yy_do_action_260
 when 261 then
---|#line 1263
+--|#line 1268
 	yy_do_action_261
 when 262 then
---|#line 1265
+--|#line 1270
 	yy_do_action_262
 when 263 then
---|#line 1267
+--|#line 1272
 	yy_do_action_263
 when 264 then
---|#line 1269
+--|#line 1274
 	yy_do_action_264
 when 265 then
---|#line 1271
+--|#line 1276
 	yy_do_action_265
 when 266 then
---|#line 1273
+--|#line 1278
 	yy_do_action_266
 when 267 then
---|#line 1275
+--|#line 1280
 	yy_do_action_267
 when 269 then
---|#line 1281
+--|#line 1286
 	yy_do_action_269
 when 270 then
---|#line 1290
+--|#line 1295
 	yy_do_action_270
 when 272 then
---|#line 1299
+--|#line 1304
 	yy_do_action_272
 when 274 then
---|#line 1305
+--|#line 1310
 	yy_do_action_274
 when 275 then
---|#line 1305
+--|#line 1310
 	yy_do_action_275
 when 277 then
---|#line 1317
+--|#line 1322
 	yy_do_action_277
 when 278 then
---|#line 1319
+--|#line 1324
 	yy_do_action_278
 when 279 then
---|#line 1323
+--|#line 1328
 	yy_do_action_279
 when 282 then
---|#line 1334
+--|#line 1339
 	yy_do_action_282
 when 283 then
---|#line 1338
+--|#line 1343
 	yy_do_action_283
 when 284 then
---|#line 1343
+--|#line 1348
 	yy_do_action_284
 when 285 then
---|#line 1350
+--|#line 1355
 	yy_do_action_285
 when 287 then
---|#line 1356
+--|#line 1361
 	yy_do_action_287
 when 288 then
---|#line 1365
+--|#line 1370
 	yy_do_action_288
 when 289 then
---|#line 1367
+--|#line 1372
 	yy_do_action_289
 when 290 then
---|#line 1371
+--|#line 1376
 	yy_do_action_290
 when 291 then
---|#line 1373
+--|#line 1378
 	yy_do_action_291
 when 293 then
---|#line 1379
+--|#line 1384
 	yy_do_action_293
 when 294 then
---|#line 1383
+--|#line 1388
 	yy_do_action_294
 when 295 then
---|#line 1388
+--|#line 1393
 	yy_do_action_295
 when 296 then
---|#line 1395
+--|#line 1400
 	yy_do_action_296
 when 297 then
---|#line 1401
+--|#line 1406
 	yy_do_action_297
 when 298 then
---|#line 1406
+--|#line 1411
 	yy_do_action_298
 when 299 then
---|#line 1411
+--|#line 1416
 	yy_do_action_299
 when 300 then
---|#line 1416
+--|#line 1421
 	yy_do_action_300
 when 301 then
---|#line 1421
+--|#line 1426
 	yy_do_action_301
 when 302 then
---|#line 1428
+--|#line 1433
 	yy_do_action_302
 when 303 then
---|#line 1431
+--|#line 1436
 	yy_do_action_303
 when 304 then
---|#line 1433
+--|#line 1438
 	yy_do_action_304
 when 305 then
---|#line 1435
+--|#line 1440
 	yy_do_action_305
 when 306 then
---|#line 1437
+--|#line 1442
 	yy_do_action_306
 when 307 then
---|#line 1439
+--|#line 1444
 	yy_do_action_307
 when 308 then
---|#line 1441
+--|#line 1446
 	yy_do_action_308
 when 309 then
---|#line 1443
+--|#line 1448
 	yy_do_action_309
 when 310 then
---|#line 1445
+--|#line 1450
 	yy_do_action_310
 when 311 then
---|#line 1447
+--|#line 1452
 	yy_do_action_311
 when 312 then
---|#line 1449
+--|#line 1454
 	yy_do_action_312
 when 313 then
---|#line 1451
+--|#line 1456
 	yy_do_action_313
 when 314 then
---|#line 1453
+--|#line 1458
 	yy_do_action_314
 when 315 then
---|#line 1455
+--|#line 1460
 	yy_do_action_315
 when 317 then
---|#line 1461
+--|#line 1466
 	yy_do_action_317
 when 318 then
---|#line 1465
+--|#line 1470
 	yy_do_action_318
 when 319 then
---|#line 1470
+--|#line 1475
 	yy_do_action_319
 when 320 then
---|#line 1477
+--|#line 1482
 	yy_do_action_320
 when 321 then
---|#line 1479
+--|#line 1484
 	yy_do_action_321
 when 322 then
---|#line 1481
+--|#line 1486
 	yy_do_action_322
 when 323 then
---|#line 1483
+--|#line 1488
 	yy_do_action_323
 when 324 then
---|#line 1485
+--|#line 1490
 	yy_do_action_324
 when 325 then
---|#line 1487
+--|#line 1492
 	yy_do_action_325
 when 326 then
---|#line 1489
+--|#line 1494
 	yy_do_action_326
 when 327 then
---|#line 1491
+--|#line 1496
 	yy_do_action_327
 when 328 then
---|#line 1493
+--|#line 1498
 	yy_do_action_328
 when 329 then
---|#line 1495
+--|#line 1500
 	yy_do_action_329
 when 330 then
---|#line 1497
+--|#line 1502
 	yy_do_action_330
 when 331 then
---|#line 1499
+--|#line 1504
 	yy_do_action_331
 when 332 then
---|#line 1501
+--|#line 1506
 	yy_do_action_332
 when 333 then
---|#line 1503
+--|#line 1508
 	yy_do_action_333
 when 334 then
---|#line 1505
+--|#line 1510
 	yy_do_action_334
 when 335 then
---|#line 1509
+--|#line 1514
 	yy_do_action_335
 when 336 then
---|#line 1511
+--|#line 1516
 	yy_do_action_336
 when 337 then
---|#line 1513
+--|#line 1518
 	yy_do_action_337
 when 338 then
---|#line 1517
+--|#line 1522
 	yy_do_action_338
 when 339 then
---|#line 1519
+--|#line 1524
 	yy_do_action_339
 when 341 then
---|#line 1525
+--|#line 1530
 	yy_do_action_341
 when 342 then
---|#line 1529
+--|#line 1534
 	yy_do_action_342
 when 343 then
---|#line 1531
+--|#line 1536
 	yy_do_action_343
 when 345 then
---|#line 1537
+--|#line 1542
 	yy_do_action_345
 when 346 then
---|#line 1545
+--|#line 1550
 	yy_do_action_346
 when 347 then
---|#line 1547
+--|#line 1552
 	yy_do_action_347
 when 348 then
---|#line 1549
+--|#line 1554
 	yy_do_action_348
 when 349 then
---|#line 1551
+--|#line 1556
 	yy_do_action_349
 when 350 then
---|#line 1553
+--|#line 1558
 	yy_do_action_350
 when 351 then
---|#line 1555
+--|#line 1560
 	yy_do_action_351
 when 352 then
---|#line 1557
+--|#line 1562
 	yy_do_action_352
 when 353 then
---|#line 1561
+--|#line 1566
 	yy_do_action_353
 when 354 then
---|#line 1572
+--|#line 1577
 	yy_do_action_354
 when 355 then
---|#line 1574
+--|#line 1579
 	yy_do_action_355
 when 356 then
---|#line 1576
+--|#line 1581
 	yy_do_action_356
 when 357 then
---|#line 1578
+--|#line 1583
 	yy_do_action_357
 when 358 then
---|#line 1580
+--|#line 1585
 	yy_do_action_358
 when 359 then
---|#line 1582
+--|#line 1587
 	yy_do_action_359
 when 360 then
---|#line 1584
+--|#line 1589
 	yy_do_action_360
 when 361 then
---|#line 1586
+--|#line 1591
 	yy_do_action_361
 when 362 then
---|#line 1588
+--|#line 1593
 	yy_do_action_362
 when 363 then
---|#line 1590
+--|#line 1595
 	yy_do_action_363
 when 364 then
---|#line 1592
+--|#line 1597
 	yy_do_action_364
 when 365 then
---|#line 1594
+--|#line 1599
 	yy_do_action_365
 when 366 then
---|#line 1596
+--|#line 1601
 	yy_do_action_366
 when 367 then
---|#line 1598
+--|#line 1603
 	yy_do_action_367
 when 368 then
---|#line 1600
+--|#line 1605
 	yy_do_action_368
 when 369 then
---|#line 1602
+--|#line 1607
 	yy_do_action_369
 when 370 then
---|#line 1604
+--|#line 1609
 	yy_do_action_370
 when 371 then
---|#line 1606
+--|#line 1611
 	yy_do_action_371
 when 372 then
---|#line 1608
+--|#line 1613
 	yy_do_action_372
 when 373 then
---|#line 1610
+--|#line 1615
 	yy_do_action_373
 when 374 then
---|#line 1612
+--|#line 1617
 	yy_do_action_374
 when 375 then
---|#line 1614
+--|#line 1619
 	yy_do_action_375
 when 376 then
---|#line 1616
+--|#line 1621
 	yy_do_action_376
 when 377 then
---|#line 1618
+--|#line 1623
 	yy_do_action_377
 when 378 then
---|#line 1620
+--|#line 1625
 	yy_do_action_378
 when 379 then
---|#line 1622
+--|#line 1627
 	yy_do_action_379
 when 380 then
---|#line 1624
+--|#line 1629
 	yy_do_action_380
 when 381 then
---|#line 1626
+--|#line 1631
 	yy_do_action_381
 when 382 then
---|#line 1628
+--|#line 1633
 	yy_do_action_382
 when 383 then
---|#line 1630
+--|#line 1635
 	yy_do_action_383
 when 384 then
---|#line 1632
+--|#line 1637
 	yy_do_action_384
 when 385 then
---|#line 1634
+--|#line 1639
 	yy_do_action_385
 when 386 then
---|#line 1636
+--|#line 1641
 	yy_do_action_386
 when 387 then
---|#line 1638
+--|#line 1643
 	yy_do_action_387
 when 388 then
---|#line 1640
+--|#line 1645
 	yy_do_action_388
 when 389 then
---|#line 1642
+--|#line 1647
 	yy_do_action_389
 when 390 then
---|#line 1646
+--|#line 1651
 	yy_do_action_390
 when 391 then
---|#line 1654
+--|#line 1659
 	yy_do_action_391
 when 392 then
---|#line 1656
+--|#line 1661
 	yy_do_action_392
 when 393 then
---|#line 1658
+--|#line 1663
 	yy_do_action_393
 when 394 then
---|#line 1660
+--|#line 1665
 	yy_do_action_394
 when 395 then
---|#line 1662
+--|#line 1667
 	yy_do_action_395
 when 396 then
---|#line 1664
+--|#line 1669
 	yy_do_action_396
 when 397 then
---|#line 1666
+--|#line 1671
 	yy_do_action_397
 when 398 then
---|#line 1668
+--|#line 1673
 	yy_do_action_398
 when 399 then
---|#line 1670
+--|#line 1675
 	yy_do_action_399
 when 400 then
---|#line 1672
+--|#line 1677
 	yy_do_action_400
 when 401 then
---|#line 1676
+--|#line 1681
 	yy_do_action_401
 when 402 then
---|#line 1680
+--|#line 1685
 	yy_do_action_402
 when 403 then
---|#line 1684
+--|#line 1689
 	yy_do_action_403
 when 404 then
---|#line 1688
+--|#line 1693
 	yy_do_action_404
 when 405 then
---|#line 1692
+--|#line 1697
 	yy_do_action_405
 when 406 then
---|#line 1696
+--|#line 1701
 	yy_do_action_406
 when 407 then
---|#line 1698
+--|#line 1703
 	yy_do_action_407
 when 408 then
---|#line 1700
+--|#line 1705
 	yy_do_action_408
 when 409 then
---|#line 1702
+--|#line 1707
 	yy_do_action_409
 when 410 then
---|#line 1704
+--|#line 1709
 	yy_do_action_410
 when 411 then
---|#line 1706
+--|#line 1711
 	yy_do_action_411
 when 412 then
---|#line 1708
+--|#line 1713
 	yy_do_action_412
 when 413 then
---|#line 1710
+--|#line 1715
 	yy_do_action_413
 when 414 then
---|#line 1712
+--|#line 1717
 	yy_do_action_414
 when 415 then
---|#line 1714
+--|#line 1719
 	yy_do_action_415
 when 416 then
---|#line 1716
+--|#line 1721
 	yy_do_action_416
 when 417 then
---|#line 1718
+--|#line 1723
 	yy_do_action_417
 when 418 then
---|#line 1720
+--|#line 1725
 	yy_do_action_418
 when 419 then
---|#line 1722
+--|#line 1727
 	yy_do_action_419
 when 420 then
---|#line 1726
+--|#line 1731
 	yy_do_action_420
 when 421 then
---|#line 1728
+--|#line 1733
 	yy_do_action_421
 when 422 then
---|#line 1732
+--|#line 1737
 	yy_do_action_422
 when 423 then
---|#line 1734
+--|#line 1739
 	yy_do_action_423
 when 424 then
---|#line 1738
+--|#line 1743
 	yy_do_action_424
 when 425 then
---|#line 1751
+--|#line 1756
 	yy_do_action_425
 when 428 then
---|#line 1759
+--|#line 1764
 	yy_do_action_428
 when 429 then
---|#line 1763
+--|#line 1768
 	yy_do_action_429
 when 430 then
---|#line 1768
+--|#line 1773
 	yy_do_action_430
 when 431 then
---|#line 1775
+--|#line 1780
 	yy_do_action_431
 when 432 then
---|#line 1777
+--|#line 1782
 	yy_do_action_432
 when 433 then
---|#line 1781
+--|#line 1786
 	yy_do_action_433
 when 434 then
---|#line 1786
+--|#line 1791
 	yy_do_action_434
 when 435 then
---|#line 1797
+--|#line 1802
 	yy_do_action_435
 when 436 then
---|#line 1799
+--|#line 1804
 	yy_do_action_436
 when 437 then
---|#line 1801
+--|#line 1806
 	yy_do_action_437
 when 438 then
---|#line 1803
+--|#line 1808
 	yy_do_action_438
 when 439 then
---|#line 1805
+--|#line 1810
 	yy_do_action_439
 when 440 then
---|#line 1807
+--|#line 1812
 	yy_do_action_440
 when 441 then
---|#line 1809
+--|#line 1814
 	yy_do_action_441
 when 442 then
---|#line 1811
+--|#line 1816
 	yy_do_action_442
 when 443 then
---|#line 1813
+--|#line 1818
 	yy_do_action_443
 when 444 then
---|#line 1815
+--|#line 1820
 	yy_do_action_444
 when 445 then
---|#line 1817
+--|#line 1822
 	yy_do_action_445
 when 446 then
---|#line 1819
+--|#line 1824
 	yy_do_action_446
 when 447 then
---|#line 1823
+--|#line 1828
 	yy_do_action_447
 when 448 then
---|#line 1825
+--|#line 1830
 	yy_do_action_448
 when 449 then
---|#line 1827
+--|#line 1832
 	yy_do_action_449
 when 450 then
---|#line 1829
+--|#line 1834
 	yy_do_action_450
 when 451 then
---|#line 1831
+--|#line 1836
 	yy_do_action_451
 when 452 then
---|#line 1833
+--|#line 1838
 	yy_do_action_452
 when 453 then
---|#line 1837
+--|#line 1842
 	yy_do_action_453
 when 454 then
---|#line 1839
+--|#line 1844
 	yy_do_action_454
 when 455 then
---|#line 1841
+--|#line 1846
 	yy_do_action_455
 when 456 then
---|#line 1856
+--|#line 1861
 	yy_do_action_456
 when 457 then
---|#line 1858
+--|#line 1863
 	yy_do_action_457
 when 458 then
---|#line 1860
+--|#line 1865
 	yy_do_action_458
 when 459 then
---|#line 1864
+--|#line 1869
 	yy_do_action_459
 when 460 then
---|#line 1866
+--|#line 1871
 	yy_do_action_460
 when 461 then
---|#line 1870
+--|#line 1875
 	yy_do_action_461
 when 462 then
---|#line 1877
+--|#line 1882
 	yy_do_action_462
 when 463 then
---|#line 1892
+--|#line 1897
 	yy_do_action_463
 when 464 then
---|#line 1907
+--|#line 1912
 	yy_do_action_464
 when 465 then
---|#line 1925
+--|#line 1930
 	yy_do_action_465
 when 466 then
---|#line 1927
+--|#line 1932
 	yy_do_action_466
 when 467 then
---|#line 1929
+--|#line 1934
 	yy_do_action_467
 when 468 then
---|#line 1936
+--|#line 1941
 	yy_do_action_468
 when 469 then
---|#line 1940
+--|#line 1945
 	yy_do_action_469
 when 470 then
---|#line 1942
+--|#line 1947
 	yy_do_action_470
 when 471 then
---|#line 1944
+--|#line 1949
 	yy_do_action_471
 when 472 then
---|#line 1948
+--|#line 1953
 	yy_do_action_472
 when 473 then
---|#line 1950
+--|#line 1955
 	yy_do_action_473
 when 474 then
---|#line 1952
+--|#line 1957
 	yy_do_action_474
 when 475 then
---|#line 1954
+--|#line 1959
 	yy_do_action_475
 when 476 then
---|#line 1956
+--|#line 1961
 	yy_do_action_476
 when 477 then
---|#line 1958
+--|#line 1963
 	yy_do_action_477
 when 478 then
---|#line 1960
+--|#line 1965
 	yy_do_action_478
 when 479 then
---|#line 1962
+--|#line 1967
 	yy_do_action_479
 when 480 then
---|#line 1964
+--|#line 1969
 	yy_do_action_480
 when 481 then
---|#line 1966
+--|#line 1971
 	yy_do_action_481
 when 482 then
---|#line 1968
+--|#line 1973
 	yy_do_action_482
 when 483 then
---|#line 1970
+--|#line 1975
 	yy_do_action_483
 when 484 then
---|#line 1972
+--|#line 1977
 	yy_do_action_484
 when 485 then
---|#line 1974
+--|#line 1979
 	yy_do_action_485
 when 486 then
---|#line 1976
+--|#line 1981
 	yy_do_action_486
 when 487 then
---|#line 1978
+--|#line 1983
 	yy_do_action_487
 when 488 then
---|#line 1980
+--|#line 1985
 	yy_do_action_488
 when 489 then
---|#line 1982
+--|#line 1987
 	yy_do_action_489
 when 490 then
---|#line 1984
+--|#line 1989
 	yy_do_action_490
 when 491 then
---|#line 1986
+--|#line 1991
 	yy_do_action_491
 when 492 then
---|#line 1988
+--|#line 1993
 	yy_do_action_492
 when 493 then
---|#line 1992
+--|#line 1997
 	yy_do_action_493
 when 494 then
---|#line 1994
+--|#line 1999
 	yy_do_action_494
 when 495 then
---|#line 1996
+--|#line 2001
 	yy_do_action_495
 when 496 then
---|#line 1998
+--|#line 2003
 	yy_do_action_496
 when 497 then
---|#line 2002
+--|#line 2007
 	yy_do_action_497
 when 498 then
---|#line 2004
+--|#line 2009
 	yy_do_action_498
 when 499 then
---|#line 2006
+--|#line 2011
 	yy_do_action_499
 when 500 then
---|#line 2008
+--|#line 2013
 	yy_do_action_500
 when 501 then
---|#line 2010
+--|#line 2015
 	yy_do_action_501
 when 502 then
---|#line 2012
+--|#line 2017
 	yy_do_action_502
 when 503 then
---|#line 2014
+--|#line 2019
 	yy_do_action_503
 when 504 then
---|#line 2016
+--|#line 2021
 	yy_do_action_504
 when 505 then
---|#line 2018
+--|#line 2023
 	yy_do_action_505
 when 506 then
---|#line 2020
+--|#line 2025
 	yy_do_action_506
 when 507 then
---|#line 2022
+--|#line 2027
 	yy_do_action_507
 when 508 then
---|#line 2024
+--|#line 2029
 	yy_do_action_508
 when 509 then
---|#line 2026
+--|#line 2031
 	yy_do_action_509
 when 510 then
---|#line 2028
+--|#line 2033
 	yy_do_action_510
 when 511 then
---|#line 2030
+--|#line 2035
 	yy_do_action_511
 when 512 then
---|#line 2032
+--|#line 2037
 	yy_do_action_512
 when 513 then
---|#line 2034
+--|#line 2039
 	yy_do_action_513
 when 514 then
---|#line 2036
+--|#line 2041
 	yy_do_action_514
 when 515 then
---|#line 2040
+--|#line 2045
 	yy_do_action_515
 when 516 then
---|#line 2044
+--|#line 2049
 	yy_do_action_516
 when 517 then
---|#line 2048
+--|#line 2053
 	yy_do_action_517
 when 518 then
---|#line 2052
+--|#line 2057
 	yy_do_action_518
 			else
 					-- No action
@@ -1431,24 +1433,24 @@ when 518 then
 		end
 
 	yy_do_action_1 is
-			--|#line 172
+			--|#line 175
 		local
 
 		do
 			yyval := yyval_default;
-				root_node := new_class_description (yytype83 (yyvs.item (yyvsp - 12)), yytype54 (yyvs.item (yyvsp - 10)),
+				root_node := new_class_description (yytype85 (yyvs.item (yyvsp - 12)), yytype54 (yyvs.item (yyvsp - 10)),
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
-					yytype72 (yyvs.item (yyvsp - 15)), yytype72 (yyvs.item (yyvsp - 1)), yytype70 (yyvs.item (yyvsp - 11)), yytype76 (yyvs.item (yyvsp - 8)), yytype62 (yyvs.item (yyvsp - 6)), yytype67 (yyvs.item (yyvsp - 5)), yytype39 (yyvs.item (yyvsp - 3)), suppliers, yytype54 (yyvs.item (yyvsp - 9)), click_list
+					yytype74 (yyvs.item (yyvsp - 15)), yytype74 (yyvs.item (yyvsp - 1)), yytype70 (yyvs.item (yyvsp - 11)), yytype78 (yyvs.item (yyvsp - 8)), yytype62 (yyvs.item (yyvsp - 6)), yytype67 (yyvs.item (yyvsp - 5)), yytype39 (yyvs.item (yyvsp - 3)), suppliers, yytype54 (yyvs.item (yyvsp - 9)), click_list
 				)
 
 				if real_class_end_position = 0 then
 					root_node.set_text_positions (
 						start_position,
-						yytype88 (yyvs.item (yyvsp - 4)).start_position,
-						yytype88 (yyvs.item (yyvsp - 7)).start_position,
+						yytype90 (yyvs.item (yyvsp - 4)).start_position,
+						yytype90 (yyvs.item (yyvsp - 7)).start_position,
 						formal_generics_start_position,
 						formal_generics_end_position,
-						yytype88 (yyvs.item (yyvsp - 2)).start_position
+						yytype90 (yyvs.item (yyvsp - 2)).start_position
 					)
 				else
 					root_node.set_text_positions (
@@ -1465,7 +1467,7 @@ when 518 then
 		end
 
 	yy_do_action_2 is
-			--|#line 214
+			--|#line 217
 		local
 
 		do
@@ -1479,321 +1481,321 @@ when 518 then
 		end
 
 	yy_do_action_3 is
-			--|#line 223
+			--|#line 226
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_4 is
-			--|#line 225
+			--|#line 228
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_5 is
-			--|#line 227
+			--|#line 230
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_6 is
-			--|#line 229
+			--|#line 232
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_7 is
-			--|#line 231
+			--|#line 234
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_8 is
-			--|#line 233
+			--|#line 236
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_9 is
-			--|#line 235
+			--|#line 238
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_10 is
-			--|#line 237
+			--|#line 240
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_11 is
-			--|#line 239
+			--|#line 242
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_12 is
-			--|#line 241
+			--|#line 244
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_13 is
-			--|#line 243
+			--|#line 246
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_14 is
-			--|#line 245
+			--|#line 248
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := yytype83 (yyvs.item (yyvsp)) 
-			yyval := yyval83
+yyval85 := yytype85 (yyvs.item (yyvsp)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_15 is
-			--|#line 249
+			--|#line 252
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_id_as (token_buffer)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_id_as (token_buffer)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_16 is
-			--|#line 253
+			--|#line 256
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_boolean_id_as) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_boolean_id_as) 
+			yyval := yyval85
 		end
 
 	yy_do_action_17 is
-			--|#line 257
+			--|#line 260
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_character_id_as (False)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_character_id_as (False)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_18 is
-			--|#line 261
+			--|#line 264
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_character_id_as (True)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_character_id_as (True)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_19 is
-			--|#line 265
+			--|#line 268
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_double_id_as) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_double_id_as) 
+			yyval := yyval85
 		end
 
 	yy_do_action_20 is
-			--|#line 269
+			--|#line 272
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_integer_id_as (8)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_integer_id_as (8)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_21 is
-			--|#line 273
+			--|#line 276
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_integer_id_as (16)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_integer_id_as (16)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_22 is
-			--|#line 277
+			--|#line 280
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_integer_id_as (32)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_integer_id_as (32)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_23 is
-			--|#line 281
+			--|#line 284
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_integer_id_as (64)) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_integer_id_as (64)) 
+			yyval := yyval85
 		end
 
 	yy_do_action_24 is
-			--|#line 285
+			--|#line 288
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_none_id_as) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_none_id_as) 
+			yyval := yyval85
 		end
 
 	yy_do_action_25 is
-			--|#line 289
+			--|#line 292
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_pointer_id_as) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_pointer_id_as) 
+			yyval := yyval85
 		end
 
 	yy_do_action_26 is
-			--|#line 293
+			--|#line 296
 		local
-			yyval83: PAIR [ID_AS, CLICK_AST]
+			yyval85: PAIR [ID_AS, CLICK_AST]
 		do
 
-yyval83 := new_clickable_id (new_real_id_as) 
-			yyval := yyval83
+yyval85 := new_clickable_id (new_real_id_as) 
+			yyval := yyval85
 		end
 
 	yy_do_action_28 is
-			--|#line 303
+			--|#line 306
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-yyval72 := yytype72 (yyvs.item (yyvsp)) 
-			yyval := yyval72
+yyval74 := yytype74 (yyvs.item (yyvsp)) 
+			yyval := yyval74
 		end
 
 	yy_do_action_31 is
-			--|#line 311
+			--|#line 314
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-yyval72 := yytype72 (yyvs.item (yyvsp)) 
-			yyval := yyval72
+yyval74 := yytype74 (yyvs.item (yyvsp)) 
+			yyval := yyval74
 		end
 
 	yy_do_action_32 is
-			--|#line 313
+			--|#line 316
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-yyval72 := Void 
-			yyval := yyval72
+yyval74 := Void 
+			yyval := yyval74
 		end
 
 	yy_do_action_34 is
-			--|#line 319
+			--|#line 322
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-yyval72 := yytype72 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval72
+yyval74 := yytype74 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval74
 		end
 
 	yy_do_action_35 is
-			--|#line 321
+			--|#line 324
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-yyval72 := Void 
-			yyval := yyval72
+yyval74 := Void 
+			yyval := yyval74
 		end
 
 	yy_do_action_36 is
-			--|#line 325
+			--|#line 328
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-				yyval72 := new_eiffel_list_index_as (Initial_index_list_size)
-				yyval72.extend (yytype32 (yyvs.item (yyvsp)))
+				yyval74 := new_eiffel_list_index_as (Initial_index_list_size)
+				yyval74.extend (yytype32 (yyvs.item (yyvsp)))
 			
-			yyval := yyval72
+			yyval := yyval74
 		end
 
 	yy_do_action_37 is
-			--|#line 330
+			--|#line 333
 		local
-			yyval72: INDEXING_CLAUSE_AS
+			yyval74: INDEXING_CLAUSE_AS
 		do
 
-				yyval72 := yytype72 (yyvs.item (yyvsp - 1))
-				yyval72.extend (yytype32 (yyvs.item (yyvsp)))
+				yyval74 := yytype74 (yyvs.item (yyvsp - 1))
+				yyval74.extend (yytype32 (yyvs.item (yyvsp)))
 			
-			yyval := yyval72
+			yyval := yyval74
 		end
 
 	yy_do_action_38 is
-			--|#line 337
+			--|#line 340
 		local
 			yyval32: INDEX_AS
 		do
@@ -1803,7 +1805,7 @@ yyval32 := new_index_as (yytype30 (yyvs.item (yyvsp - 2)), yytype60 (yyvs.item (
 		end
 
 	yy_do_action_39 is
-			--|#line 341
+			--|#line 344
 		local
 			yyval30: ID_AS
 		do
@@ -1813,7 +1815,7 @@ yyval30 := yytype30 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_41 is
-			--|#line 347
+			--|#line 350
 		local
 			yyval60: EIFFEL_LIST [ATOMIC_AS]
 		do
@@ -1825,7 +1827,7 @@ yyval30 := yytype30 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_42 is
-			--|#line 352
+			--|#line 355
 		local
 			yyval60: EIFFEL_LIST [ATOMIC_AS]
 		do
@@ -1837,7 +1839,7 @@ yyval30 := yytype30 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_43 is
-			--|#line 357
+			--|#line 360
 		local
 			yyval60: EIFFEL_LIST [ATOMIC_AS]
 		do
@@ -1849,7 +1851,7 @@ yyval30 := yytype30 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_44 is
-			--|#line 364
+			--|#line 367
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -1859,7 +1861,7 @@ yyval6 := yytype30 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_45 is
-			--|#line 366
+			--|#line 369
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -1869,7 +1871,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_46 is
-			--|#line 368
+			--|#line 371
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -1880,7 +1882,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_47 is
-			--|#line 378
+			--|#line 381
 		local
 
 		do
@@ -1893,7 +1895,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_48 is
-			--|#line 384
+			--|#line 387
 		local
 
 		do
@@ -1907,7 +1909,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_49 is
-			--|#line 391
+			--|#line 394
 		local
 
 		do
@@ -1920,7 +1922,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_50 is
-			--|#line 397
+			--|#line 400
 		local
 
 		do
@@ -1933,7 +1935,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_51 is
-			--|#line 405
+			--|#line 408
 		local
 
 		do
@@ -1944,7 +1946,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_52 is
-			--|#line 409
+			--|#line 412
 		local
 
 		do
@@ -1960,7 +1962,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_53 is
-			--|#line 420
+			--|#line 423
 		local
 
 		do
@@ -1971,7 +1973,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_54 is
-			--|#line 424
+			--|#line 427
 		local
 
 		do
@@ -1987,7 +1989,7 @@ yyval6 := yytype6 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_56 is
-			--|#line 441
+			--|#line 444
 		local
 			yyval54: STRING_AS
 		do
@@ -1997,7 +1999,7 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_58 is
-			--|#line 450
+			--|#line 453
 		local
 			yyval67: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
@@ -2011,7 +2013,7 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_59 is
-			--|#line 459
+			--|#line 462
 		local
 			yyval67: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
@@ -2023,7 +2025,7 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_60 is
-			--|#line 464
+			--|#line 467
 		local
 			yyval67: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
@@ -2035,7 +2037,7 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_61 is
-			--|#line 471
+			--|#line 474
 		local
 			yyval27: FEATURE_CLAUSE_AS
 		do
@@ -2045,7 +2047,7 @@ yyval27 := new_feature_clause_as (Void, new_eiffel_list_feature_as (0), fclause_
 		end
 
 	yy_do_action_62 is
-			--|#line 473
+			--|#line 476
 		local
 			yyval27: FEATURE_CLAUSE_AS
 		do
@@ -2055,7 +2057,7 @@ yyval27 := new_feature_clause_as (yytype14 (yyvs.item (yyvsp - 1)), yytype66 (yy
 		end
 
 	yy_do_action_63 is
-			--|#line 477
+			--|#line 480
 		local
 			yyval14: CLIENT_AS
 		do
@@ -2065,7 +2067,7 @@ yyval14 := yytype14 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_64 is
-			--|#line 477
+			--|#line 480
 		local
 
 		do
@@ -2077,7 +2079,7 @@ yyval14 := yytype14 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_66 is
-			--|#line 488
+			--|#line 491
 		local
 			yyval14: CLIENT_AS
 		do
@@ -2087,7 +2089,7 @@ yyval14 := new_client_as (yytype71 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_67 is
-			--|#line 492
+			--|#line 495
 		local
 			yyval71: EIFFEL_LIST [ID_AS]
 		do
@@ -2099,7 +2101,7 @@ yyval14 := new_client_as (yytype71 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_68 is
-			--|#line 497
+			--|#line 500
 		local
 			yyval71: EIFFEL_LIST [ID_AS]
 		do
@@ -2109,33 +2111,33 @@ yyval71 := yytype71 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_69 is
-			--|#line 501
+			--|#line 504
 		local
 			yyval71: EIFFEL_LIST [ID_AS]
 		do
 
 				yyval71 := new_eiffel_list_id_as (Initial_class_list_size)
-				yyval71.extend (yytype83 (yyvs.item (yyvsp)).first)
-				yytype83 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype83 (yyvs.item (yyvsp)).first, Void))
+				yyval71.extend (yytype85 (yyvs.item (yyvsp)).first)
+				yytype85 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype85 (yyvs.item (yyvsp)).first, Void))
 			
 			yyval := yyval71
 		end
 
 	yy_do_action_70 is
-			--|#line 507
+			--|#line 510
 		local
 			yyval71: EIFFEL_LIST [ID_AS]
 		do
 
 				yyval71 := yytype71 (yyvs.item (yyvsp - 2))
-				yyval71.extend (yytype83 (yyvs.item (yyvsp)).first)
-				yytype83 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype83 (yyvs.item (yyvsp)).first, Void))
+				yyval71.extend (yytype85 (yyvs.item (yyvsp)).first)
+				yytype85 (yyvs.item (yyvsp)).second.set_node (new_class_type_as (yytype85 (yyvs.item (yyvsp)).first, Void))
 			
 			yyval := yyval71
 		end
 
 	yy_do_action_71 is
-			--|#line 515
+			--|#line 518
 		local
 			yyval66: EIFFEL_LIST [FEATURE_AS]
 		do
@@ -2147,7 +2149,7 @@ yyval71 := yytype71 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_72 is
-			--|#line 520
+			--|#line 523
 		local
 			yyval66: EIFFEL_LIST [FEATURE_AS]
 		do
@@ -2159,7 +2161,7 @@ yyval71 := yytype71 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_77 is
-			--|#line 535
+			--|#line 538
 		local
 			yyval26: FEATURE_AS
 		do
@@ -2167,49 +2169,49 @@ yyval71 := yytype71 (yyvs.item (yyvsp - 1))
 					-- Generate a syntax error when `feature_indexes' is not
 					-- Void and it applies to synonyms of the current feature
 					-- declaration.
-				if (il_parser and feature_indexes /= Void and yytype86 (yyvs.item (yyvsp - 2)).first.count /= 1) then
+				if (il_parser and feature_indexes /= Void and yytype88 (yyvs.item (yyvsp - 2)).first.count /= 1) then
 					raise_error
 				end
-				yyval26 := new_feature_declaration (yytype86 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp - 1)), feature_indexes)
+				yyval26 := new_feature_declaration (yytype88 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp - 1)), feature_indexes)
 				feature_indexes := Void
 			
 			yyval := yyval26
 		end
 
 	yy_do_action_78 is
-			--|#line 548
+			--|#line 551
 		local
-			yyval86: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+			yyval88: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
 		do
 
-yyval86 := new_clickable_feature_name_list (yytype84 (yyvs.item (yyvsp)), Initial_new_feature_list_size) 
-			yyval := yyval86
+yyval88 := new_clickable_feature_name_list (yytype86 (yyvs.item (yyvsp)), Initial_new_feature_list_size) 
+			yyval := yyval88
 		end
 
 	yy_do_action_79 is
-			--|#line 550
+			--|#line 553
 		local
-			yyval86: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+			yyval88: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
 		do
 
-				yyval86 := yytype86 (yyvs.item (yyvsp - 2))
-				yyval86.first.extend (yytype84 (yyvs.item (yyvsp)).first)
+				yyval88 := yytype88 (yyvs.item (yyvsp - 2))
+				yyval88.first.extend (yytype86 (yyvs.item (yyvsp)).first)
 			
-			yyval := yyval86
+			yyval := yyval88
 		end
 
 	yy_do_action_80 is
-			--|#line 557
+			--|#line 560
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := yytype84 (yyvs.item (yyvsp)) 
-			yyval := yyval84
+yyval86 := yytype86 (yyvs.item (yyvsp)) 
+			yyval := yyval86
 		end
 
 	yy_do_action_81 is
-			--|#line 561
+			--|#line 564
 		local
 
 		do
@@ -2219,7 +2221,7 @@ is_frozen := False
 		end
 
 	yy_do_action_82 is
-			--|#line 563
+			--|#line 566
 		local
 
 		do
@@ -2229,77 +2231,77 @@ is_frozen := True
 		end
 
 	yy_do_action_83 is
-			--|#line 567
+			--|#line 570
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := new_clickable_feature_name (yytype83 (yyvs.item (yyvsp))) 
-			yyval := yyval84
+yyval86 := new_clickable_feature_name (yytype85 (yyvs.item (yyvsp))) 
+			yyval := yyval86
 		end
 
 	yy_do_action_84 is
-			--|#line 569
+			--|#line 572
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := yytype84 (yyvs.item (yyvsp)) 
-			yyval := yyval84
+yyval86 := yytype86 (yyvs.item (yyvsp)) 
+			yyval := yyval86
 		end
 
 	yy_do_action_85 is
-			--|#line 571
+			--|#line 574
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := yytype84 (yyvs.item (yyvsp)) 
-			yyval := yyval84
+yyval86 := yytype86 (yyvs.item (yyvsp)) 
+			yyval := yyval86
 		end
 
 	yy_do_action_86 is
-			--|#line 575
+			--|#line 578
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := new_clickable_infix (yytype85 (yyvs.item (yyvsp))) 
-			yyval := yyval84
+yyval86 := new_clickable_infix (yytype87 (yyvs.item (yyvsp))) 
+			yyval := yyval86
 		end
 
 	yy_do_action_87 is
-			--|#line 580
+			--|#line 583
 		local
-			yyval84: PAIR [FEATURE_NAME, CLICK_AST]
+			yyval86: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 
-yyval84 := new_clickable_prefix (yytype85 (yyvs.item (yyvsp))) 
-			yyval := yyval84
+yyval86 := new_clickable_prefix (yytype87 (yyvs.item (yyvsp))) 
+			yyval := yyval86
 		end
 
 	yy_do_action_88 is
-			--|#line 584
+			--|#line 587
 		local
 			yyval8: BODY_AS
 		do
 
-yyval8 := new_declaration_body (yytype81 (yyvs.item (yyvsp - 2)), yytype57 (yyvs.item (yyvsp - 1)), yytype15 (yyvs.item (yyvsp))) 
+yyval8 := new_declaration_body (yytype83 (yyvs.item (yyvsp - 2)), yytype57 (yyvs.item (yyvsp - 1)), yytype15 (yyvs.item (yyvsp))) 
 			yyval := yyval8
 		end
 
 	yy_do_action_89 is
-			--|#line 588
+			--|#line 591
 		local
 			yyval15: CONTENT_AS
 		do
 
-feature_indexes := yytype72 (yyvs.item (yyvsp)) 
+feature_indexes := yytype74 (yyvs.item (yyvsp)) 
 			yyval := yyval15
 		end
 
 	yy_do_action_90 is
-			--|#line 590
+			--|#line 593
 		local
 			yyval15: CONTENT_AS
 		do
@@ -2309,241 +2311,241 @@ yyval15 := yytype15 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_91 is
-			--|#line 594
+			--|#line 597
 		local
 			yyval15: CONTENT_AS
 		do
 
 				yyval15 := new_constant_as (new_value_as (yytype6 (yyvs.item (yyvsp - 1))))
-				feature_indexes := yytype72 (yyvs.item (yyvsp))
+				feature_indexes := yytype74 (yyvs.item (yyvsp))
 			
 			yyval := yyval15
 		end
 
 	yy_do_action_92 is
-			--|#line 599
+			--|#line 602
 		local
 			yyval15: CONTENT_AS
 		do
 
 				yyval15 := new_constant_as (new_value_as (new_unique_as))
-				feature_indexes := yytype72 (yyvs.item (yyvsp))
+				feature_indexes := yytype74 (yyvs.item (yyvsp))
 			
 			yyval := yyval15
 		end
 
 	yy_do_action_93 is
-			--|#line 604
+			--|#line 607
 		local
 			yyval15: CONTENT_AS
 		do
 
 				yyval15 := yytype52 (yyvs.item (yyvsp))
-				feature_indexes := yytype72 (yyvs.item (yyvsp - 1))
+				feature_indexes := yytype74 (yyvs.item (yyvsp - 1))
 			
 			yyval := yyval15
 		end
 
 	yy_do_action_95 is
-			--|#line 617
+			--|#line 620
 		local
-			yyval76: EIFFEL_LIST [PARENT_AS]
+			yyval78: EIFFEL_LIST [PARENT_AS]
 		do
 
-yyval76 := yytype76 (yyvs.item (yyvsp)) 
-			yyval := yyval76
+yyval78 := yytype78 (yyvs.item (yyvsp)) 
+			yyval := yyval78
 		end
 
 	yy_do_action_96 is
-			--|#line 619
+			--|#line 622
 		local
-			yyval76: EIFFEL_LIST [PARENT_AS]
+			yyval78: EIFFEL_LIST [PARENT_AS]
 		do
 
-yyval76 := new_eiffel_list_parent_as (0) 
-			yyval := yyval76
+yyval78 := new_eiffel_list_parent_as (0) 
+			yyval := yyval78
 		end
 
 	yy_do_action_97 is
-			--|#line 623
+			--|#line 626
 		local
-			yyval76: EIFFEL_LIST [PARENT_AS]
+			yyval78: EIFFEL_LIST [PARENT_AS]
 		do
 
-				yyval76 := new_eiffel_list_parent_as (Initial_parent_list_size)
-				yyval76.extend (yytype44 (yyvs.item (yyvsp)))
+				yyval78 := new_eiffel_list_parent_as (Initial_parent_list_size)
+				yyval78.extend (yytype44 (yyvs.item (yyvsp)))
 			
-			yyval := yyval76
+			yyval := yyval78
 		end
 
 	yy_do_action_98 is
-			--|#line 628
+			--|#line 631
 		local
-			yyval76: EIFFEL_LIST [PARENT_AS]
+			yyval78: EIFFEL_LIST [PARENT_AS]
 		do
 
-				yyval76 := yytype76 (yyvs.item (yyvsp - 1))
-				yyval76.extend (yytype44 (yyvs.item (yyvsp)))
+				yyval78 := yytype78 (yyvs.item (yyvsp - 1))
+				yyval78.extend (yytype44 (yyvs.item (yyvsp)))
 			
-			yyval := yyval76
+			yyval := yyval78
 		end
 
 	yy_do_action_99 is
-			--|#line 635
+			--|#line 638
 		local
 			yyval44: PARENT_AS
 		do
 
 				yyval44 := yytype44 (yyvs.item (yyvsp))
-				yytype44 (yyvs.item (yyvsp)).set_text_positions (yytype88 (yyvs.item (yyvsp - 1)).start_position)
+				yytype44 (yyvs.item (yyvsp)).set_text_positions (yytype90 (yyvs.item (yyvsp - 1)).start_position)
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_100 is
-			--|#line 640
+			--|#line 643
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
 				yyval44 := yytype44 (yyvs.item (yyvsp - 1))
-				yytype44 (yyvs.item (yyvsp - 1)).set_text_positions (yytype88 (yyvs.item (yyvsp - 2)).start_position)
+				yytype44 (yyvs.item (yyvsp - 1)).set_text_positions (yytype90 (yyvs.item (yyvsp - 2)).start_position)
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_101 is
-			--|#line 648
+			--|#line 651
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 1)), yytype80 (yyvs.item (yyvsp)), Void, Void, Void, Void, Void)
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 1)), yytype82 (yyvs.item (yyvsp)), Void, Void, Void, Void, Void)
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_102 is
-			--|#line 653
+			--|#line 656
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 7)), yytype80 (yyvs.item (yyvsp - 6)), yytype77 (yyvs.item (yyvsp - 5)), yytype64 (yyvs.item (yyvsp - 4)), yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 7)), yytype82 (yyvs.item (yyvsp - 6)), yytype79 (yyvs.item (yyvsp - 5)), yytype64 (yyvs.item (yyvsp - 4)), yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_103 is
-			--|#line 658
+			--|#line 661
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 6)), yytype80 (yyvs.item (yyvsp - 5)), Void, yytype64 (yyvs.item (yyvsp - 4)), yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 6)), yytype82 (yyvs.item (yyvsp - 5)), Void, yytype64 (yyvs.item (yyvsp - 4)), yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_104 is
-			--|#line 663
+			--|#line 666
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 5)), yytype80 (yyvs.item (yyvsp - 4)), Void, Void, yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 5)), yytype82 (yyvs.item (yyvsp - 4)), Void, Void, yytype69 (yyvs.item (yyvsp - 3)), yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_105 is
-			--|#line 668
+			--|#line 671
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 4)), yytype80 (yyvs.item (yyvsp - 3)), Void, Void, Void, yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 4)), yytype82 (yyvs.item (yyvsp - 3)), Void, Void, Void, yytype69 (yyvs.item (yyvsp - 2)), yytype69 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_106 is
-			--|#line 673
+			--|#line 676
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := False
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 3)), yytype80 (yyvs.item (yyvsp - 2)), Void, Void, Void, Void, yytype69 (yyvs.item (yyvsp - 1)))
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 3)), yytype82 (yyvs.item (yyvsp - 2)), Void, Void, Void, Void, yytype69 (yyvs.item (yyvsp - 1)))
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_107 is
-			--|#line 678
+			--|#line 681
 		local
 			yyval44: PARENT_AS
 		do
 
 				inherit_context := True
 				real_class_end_position := end_position - 3
-				yyval44 := new_parent_clause (yytype83 (yyvs.item (yyvsp - 2)), yytype80 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void, Void)
+				yyval44 := new_parent_clause (yytype85 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void, Void)
 			
 			yyval := yyval44
 		end
 
 	yy_do_action_109 is
-			--|#line 688
+			--|#line 691
 		local
-			yyval77: EIFFEL_LIST [RENAME_AS]
+			yyval79: EIFFEL_LIST [RENAME_AS]
 		do
 
-yyval77 := yytype77 (yyvs.item (yyvsp)) 
-			yyval := yyval77
+yyval79 := yytype79 (yyvs.item (yyvsp)) 
+			yyval := yyval79
 		end
 
 	yy_do_action_110 is
-			--|#line 692
+			--|#line 695
 		local
-			yyval77: EIFFEL_LIST [RENAME_AS]
+			yyval79: EIFFEL_LIST [RENAME_AS]
 		do
 
-				yyval77 := new_eiffel_list_rename_as (Initial_rename_list_size)
-				yyval77.extend (yytype47 (yyvs.item (yyvsp)))
+				yyval79 := new_eiffel_list_rename_as (Initial_rename_list_size)
+				yyval79.extend (yytype47 (yyvs.item (yyvsp)))
 			
-			yyval := yyval77
+			yyval := yyval79
 		end
 
 	yy_do_action_111 is
-			--|#line 697
+			--|#line 700
 		local
-			yyval77: EIFFEL_LIST [RENAME_AS]
+			yyval79: EIFFEL_LIST [RENAME_AS]
 		do
 
-				yyval77 := yytype77 (yyvs.item (yyvsp - 2))
-				yyval77.extend (yytype47 (yyvs.item (yyvsp)))
+				yyval79 := yytype79 (yyvs.item (yyvsp - 2))
+				yyval79.extend (yytype47 (yyvs.item (yyvsp)))
 			
-			yyval := yyval77
+			yyval := yyval79
 		end
 
 	yy_do_action_112 is
-			--|#line 704
+			--|#line 707
 		local
 			yyval47: RENAME_AS
 		do
 
-yyval47 := new_rename_pair (yytype84 (yyvs.item (yyvsp - 2)), yytype84 (yyvs.item (yyvsp))) 
+yyval47 := new_rename_pair (yytype86 (yyvs.item (yyvsp - 2)), yytype86 (yyvs.item (yyvsp))) 
 			yyval := yyval47
 		end
 
 	yy_do_action_114 is
-			--|#line 710
+			--|#line 713
 		local
 			yyval64: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
@@ -2553,7 +2555,7 @@ yyval64 := yytype64 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_115 is
-			--|#line 714
+			--|#line 717
 		local
 			yyval64: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
@@ -2563,7 +2565,7 @@ yyval64 := yytype64 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_117 is
-			--|#line 720
+			--|#line 723
 		local
 			yyval64: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
@@ -2575,7 +2577,7 @@ yyval64 := yytype64 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_118 is
-			--|#line 725
+			--|#line 728
 		local
 			yyval64: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
@@ -2587,7 +2589,7 @@ yyval64 := yytype64 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_119 is
-			--|#line 732
+			--|#line 735
 		local
 			yyval22: EXPORT_ITEM_AS
 		do
@@ -2597,7 +2599,7 @@ yyval22 := new_export_item_as (new_client_as (yytype71 (yyvs.item (yyvsp - 2))),
 		end
 
 	yy_do_action_120 is
-			--|#line 736
+			--|#line 739
 		local
 			yyval28: FEATURE_SET_AS
 		do
@@ -2607,7 +2609,7 @@ yyval28 := new_all_as
 		end
 
 	yy_do_action_121 is
-			--|#line 738
+			--|#line 741
 		local
 			yyval28: FEATURE_SET_AS
 		do
@@ -2617,31 +2619,31 @@ yyval28 := new_feature_list_as (yytype69 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_122 is
-			--|#line 742
+			--|#line 745
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
 
 				yyval69 := new_eiffel_list_feature_name (Initial_feature_list_size)
-				yyval69.extend (yytype84 (yyvs.item (yyvsp)).first)
+				yyval69.extend (yytype86 (yyvs.item (yyvsp)).first)
 			
 			yyval := yyval69
 		end
 
 	yy_do_action_123 is
-			--|#line 747
+			--|#line 750
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
 
 				yyval69 := yytype69 (yyvs.item (yyvsp - 2))
-				yyval69.extend (yytype84 (yyvs.item (yyvsp)).first)
+				yyval69.extend (yytype86 (yyvs.item (yyvsp)).first)
 			
 			yyval := yyval69
 		end
 
 	yy_do_action_125 is
-			--|#line 756
+			--|#line 759
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2651,7 +2653,7 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_127 is
-			--|#line 762
+			--|#line 765
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2661,7 +2663,7 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_129 is
-			--|#line 768
+			--|#line 771
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2671,7 +2673,7 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_131 is
-			--|#line 774
+			--|#line 777
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2681,7 +2683,7 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_133 is
-			--|#line 780
+			--|#line 783
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2691,7 +2693,7 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_135 is
-			--|#line 786
+			--|#line 789
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -2701,61 +2703,61 @@ yyval69 := yytype69 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_137 is
-			--|#line 796
+			--|#line 799
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-yyval81 := yytype81 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval81
+yyval83 := yytype83 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval83
 		end
 
 	yy_do_action_139 is
-			--|#line 802
+			--|#line 805
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-yyval81 := yytype81 (yyvs.item (yyvsp)) 
-			yyval := yyval81
+yyval83 := yytype83 (yyvs.item (yyvsp)) 
+			yyval := yyval83
 		end
 
 	yy_do_action_140 is
-			--|#line 806
+			--|#line 809
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-				yyval81 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
-				yyval81.extend (yytype58 (yyvs.item (yyvsp)))
+				yyval83 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
+				yyval83.extend (yytype58 (yyvs.item (yyvsp)))
 			
-			yyval := yyval81
+			yyval := yyval83
 		end
 
 	yy_do_action_141 is
-			--|#line 811
+			--|#line 814
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-				yyval81 := yytype81 (yyvs.item (yyvsp - 1))
-				yyval81.extend (yytype58 (yyvs.item (yyvsp)))
+				yyval83 := yytype83 (yyvs.item (yyvsp - 1))
+				yyval83.extend (yytype58 (yyvs.item (yyvsp)))
 			
-			yyval := yyval81
+			yyval := yyval83
 		end
 
 	yy_do_action_142 is
-			--|#line 818
+			--|#line 821
 		local
 			yyval58: TYPE_DEC_AS
 		do
 
-yyval58 := new_type_dec_as (yytype71 (yyvs.item (yyvsp - 4)), yytype57 (yyvs.item (yyvsp - 1))) 
+yyval58 := new_type_dec_as (yytype73 (yyvs.item (yyvsp - 4)), yytype57 (yyvs.item (yyvsp - 1))) 
 			yyval := yyval58
 		end
 
 	yy_do_action_144 is
-			--|#line 823
+			--|#line 826
 		local
 
 		do
@@ -2769,95 +2771,97 @@ yyval58 := new_type_dec_as (yytype71 (yyvs.item (yyvsp - 4)), yytype57 (yyvs.ite
 		end
 
 	yy_do_action_146 is
-			--|#line 834
+			--|#line 837
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-yyval81 := yytype81 (yyvs.item (yyvsp)) 
-			yyval := yyval81
+yyval83 := yytype83 (yyvs.item (yyvsp)) 
+			yyval := yyval83
 		end
 
 	yy_do_action_147 is
-			--|#line 838
+			--|#line 841
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-				yyval81 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
-				yyval81.extend (yytype58 (yyvs.item (yyvsp)))
+				yyval83 := new_eiffel_list_type_dec_as (Initial_entity_declaration_list_size)
+				yyval83.extend (yytype58 (yyvs.item (yyvsp)))
 			
-			yyval := yyval81
+			yyval := yyval83
 		end
 
 	yy_do_action_148 is
-			--|#line 843
+			--|#line 846
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-				yyval81 := yytype81 (yyvs.item (yyvsp - 1))
-				yyval81.extend (yytype58 (yyvs.item (yyvsp)))
+				yyval83 := yytype83 (yyvs.item (yyvsp - 1))
+				yyval83.extend (yytype58 (yyvs.item (yyvsp)))
 			
-			yyval := yyval81
+			yyval := yyval83
 		end
 
 	yy_do_action_149 is
-			--|#line 850
+			--|#line 853
 		local
 			yyval58: TYPE_DEC_AS
 		do
 
-yyval58 := new_type_dec_as (yytype71 (yyvs.item (yyvsp - 3)), yytype57 (yyvs.item (yyvsp - 1))) 
+yyval58 := new_type_dec_as (yytype73 (yyvs.item (yyvsp - 3)), yytype57 (yyvs.item (yyvsp - 1))) 
 			yyval := yyval58
 		end
 
 	yy_do_action_150 is
-			--|#line 854
+			--|#line 857
 		local
-			yyval71: EIFFEL_LIST [ID_AS]
+			yyval73: ARRAYED_LIST [INTEGER]
 		do
 
-				yyval71 := new_eiffel_list_id_as (Initial_identifier_list_size)
-				yyval71.extend (yytype30 (yyvs.item (yyvsp)))
+				create yyval73.make (Initial_identifier_list_size)
+				Names_heap.put (yytype30 (yyvs.item (yyvsp)))
+				yyval73.extend (Names_heap.found_item)
 			
-			yyval := yyval71
+			yyval := yyval73
 		end
 
 	yy_do_action_151 is
-			--|#line 859
+			--|#line 863
 		local
-			yyval71: EIFFEL_LIST [ID_AS]
+			yyval73: ARRAYED_LIST [INTEGER]
 		do
 
-				yyval71 := yytype71 (yyvs.item (yyvsp - 2))
-				yyval71.extend (yytype30 (yyvs.item (yyvsp)))
+				yyval73 := yytype73 (yyvs.item (yyvsp - 2))
+				Names_heap.put (yytype30 (yyvs.item (yyvsp)))
+				yyval73.extend (Names_heap.found_item)
 			
-			yyval := yyval71
+			yyval := yyval73
 		end
 
 	yy_do_action_152 is
-			--|#line 866
+			--|#line 871
 		local
-			yyval71: EIFFEL_LIST [ID_AS]
+			yyval73: ARRAYED_LIST [INTEGER]
 		do
 
-yyval71 := new_eiffel_list_id_as (0) 
-			yyval := yyval71
+create yyval73.make (0) 
+			yyval := yyval73
 		end
 
 	yy_do_action_153 is
-			--|#line 868
+			--|#line 873
 		local
-			yyval71: EIFFEL_LIST [ID_AS]
+			yyval73: ARRAYED_LIST [INTEGER]
 		do
 
-yyval71 := yytype71 (yyvs.item (yyvsp)) 
-			yyval := yyval71
+yyval73 := yytype73 (yyvs.item (yyvsp)) 
+			yyval := yyval73
 		end
 
 	yy_do_action_155 is
-			--|#line 874
+			--|#line 879
 		local
 			yyval57: TYPE
 		do
@@ -2867,17 +2871,17 @@ yyval57 := yytype57 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_156 is
-			--|#line 878
+			--|#line 883
 		local
 			yyval52: ROUTINE_AS
 		do
 
-yyval52 := new_routine_as (yytype54 (yyvs.item (yyvsp - 7)), yytype48 (yyvs.item (yyvsp - 5)), yytype81 (yyvs.item (yyvsp - 4)), yytype51 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp - 1)), fbody_pos) 
+yyval52 := new_routine_as (yytype54 (yyvs.item (yyvsp - 7)), yytype48 (yyvs.item (yyvsp - 5)), yytype83 (yyvs.item (yyvsp - 4)), yytype51 (yyvs.item (yyvsp - 3)), yytype21 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp - 1)), fbody_pos) 
 			yyval := yyval52
 		end
 
 	yy_do_action_157 is
-			--|#line 878
+			--|#line 883
 		local
 
 		do
@@ -2887,7 +2891,7 @@ fbody_pos := current_position.start_position
 		end
 
 	yy_do_action_158 is
-			--|#line 890
+			--|#line 895
 		local
 			yyval51: ROUT_BODY_AS
 		do
@@ -2897,7 +2901,7 @@ yyval51 := yytype37 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_159 is
-			--|#line 892
+			--|#line 897
 		local
 			yyval51: ROUT_BODY_AS
 		do
@@ -2907,7 +2911,7 @@ yyval51 := yytype24 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_160 is
-			--|#line 894
+			--|#line 899
 		local
 			yyval51: ROUT_BODY_AS
 		do
@@ -2917,7 +2921,7 @@ yyval51 := new_deferred_as
 		end
 
 	yy_do_action_161 is
-			--|#line 898
+			--|#line 903
 		local
 			yyval24: EXTERNAL_AS
 		do
@@ -2927,7 +2931,7 @@ yyval24 := new_external_as (yytype25 (yyvs.item (yyvsp - 1)), yytype54 (yyvs.ite
 		end
 
 	yy_do_action_162 is
-			--|#line 902
+			--|#line 907
 		local
 			yyval25: EXTERNAL_LANG_AS
 		do
@@ -2937,7 +2941,7 @@ yyval25 := new_external_lang_as (yytype54 (yyvs.item (yyvsp)), yacc_position)
 		end
 
 	yy_do_action_163 is
-			--|#line 902
+			--|#line 907
 		local
 
 		do
@@ -2947,7 +2951,7 @@ set_position (current_position)
 		end
 
 	yy_do_action_165 is
-			--|#line 910
+			--|#line 915
 		local
 			yyval54: STRING_AS
 		do
@@ -2957,71 +2961,71 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_166 is
-			--|#line 914
+			--|#line 919
 		local
 			yyval37: INTERNAL_AS
 		do
 
-yyval37 := new_do_as (yytype73 (yyvs.item (yyvsp))) 
+yyval37 := new_do_as (yytype75 (yyvs.item (yyvsp))) 
 			yyval := yyval37
 		end
 
 	yy_do_action_167 is
-			--|#line 916
+			--|#line 921
 		local
 			yyval37: INTERNAL_AS
 		do
 
-yyval37 := new_once_as (yytype73 (yyvs.item (yyvsp))) 
+yyval37 := new_once_as (yytype75 (yyvs.item (yyvsp))) 
 			yyval := yyval37
 		end
 
 	yy_do_action_169 is
-			--|#line 922
+			--|#line 927
 		local
-			yyval81: EIFFEL_LIST [TYPE_DEC_AS]
+			yyval83: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 
-yyval81 := yytype81 (yyvs.item (yyvsp)) 
-			yyval := yyval81
+yyval83 := yytype83 (yyvs.item (yyvsp)) 
+			yyval := yyval83
 		end
 
 	yy_do_action_171 is
-			--|#line 928
+			--|#line 933
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-yyval73 := yytype73 (yyvs.item (yyvsp)) 
-			yyval := yyval73
+yyval75 := yytype75 (yyvs.item (yyvsp)) 
+			yyval := yyval75
 		end
 
 	yy_do_action_172 is
-			--|#line 932
+			--|#line 937
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-				yyval73 := new_eiffel_list_instruction_as (Initial_compound_size)
-				yyval73.extend (yytype35 (yyvs.item (yyvsp)))
+				yyval75 := new_eiffel_list_instruction_as (Initial_compound_size)
+				yyval75.extend (yytype35 (yyvs.item (yyvsp)))
 			
-			yyval := yyval73
+			yyval := yyval75
 		end
 
 	yy_do_action_173 is
-			--|#line 937
+			--|#line 942
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-				yyval73 := yytype73 (yyvs.item (yyvsp - 1))
-				yyval73.extend (yytype35 (yyvs.item (yyvsp)))
+				yyval75 := yytype75 (yyvs.item (yyvsp - 1))
+				yyval75.extend (yytype35 (yyvs.item (yyvsp)))
 			
-			yyval := yyval73
+			yyval := yyval75
 		end
 
 	yy_do_action_174 is
-			--|#line 944
+			--|#line 949
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3031,7 +3035,7 @@ yyval35 := yytype35 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_177 is
-			--|#line 952
+			--|#line 957
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3041,7 +3045,7 @@ yyval35 := yytype17 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_178 is
-			--|#line 954
+			--|#line 959
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3051,7 +3055,7 @@ yyval35 := yytype34 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_179 is
-			--|#line 956
+			--|#line 961
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3061,7 +3065,7 @@ yyval35 := yytype5 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_180 is
-			--|#line 958
+			--|#line 963
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3071,7 +3075,7 @@ yyval35 := yytype50 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_181 is
-			--|#line 960
+			--|#line 965
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3081,7 +3085,7 @@ yyval35 := yytype31 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_182 is
-			--|#line 962
+			--|#line 967
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3091,7 +3095,7 @@ yyval35 := yytype33 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_183 is
-			--|#line 964
+			--|#line 969
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3101,7 +3105,7 @@ yyval35 := yytype40 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_184 is
-			--|#line 966
+			--|#line 971
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3111,7 +3115,7 @@ yyval35 := yytype19 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_185 is
-			--|#line 968
+			--|#line 973
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3121,7 +3125,7 @@ yyval35 := yytype13 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_186 is
-			--|#line 970
+			--|#line 975
 		local
 			yyval35: INSTRUCTION_AS
 		do
@@ -3131,19 +3135,19 @@ yyval35 := yytype49 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_188 is
-			--|#line 976
+			--|#line 981
 		local
 			yyval48: REQUIRE_AS
 		do
 
 				id_level := Normal_level
-				yyval48 := new_require_as (yytype79 (yyvs.item (yyvsp)))
+				yyval48 := new_require_as (yytype81 (yyvs.item (yyvsp)))
 			
 			yyval := yyval48
 		end
 
 	yy_do_action_189 is
-			--|#line 976
+			--|#line 981
 		local
 
 		do
@@ -3153,19 +3157,19 @@ id_level := Assert_level
 		end
 
 	yy_do_action_190 is
-			--|#line 983
+			--|#line 988
 		local
 			yyval48: REQUIRE_AS
 		do
 
 				id_level := Normal_level
-				yyval48 := new_require_else_as (yytype79 (yyvs.item (yyvsp)))
+				yyval48 := new_require_else_as (yytype81 (yyvs.item (yyvsp)))
 			
 			yyval := yyval48
 		end
 
 	yy_do_action_191 is
-			--|#line 983
+			--|#line 988
 		local
 
 		do
@@ -3175,19 +3179,19 @@ id_level := Assert_level
 		end
 
 	yy_do_action_193 is
-			--|#line 994
+			--|#line 999
 		local
 			yyval21: ENSURE_AS
 		do
 
 				id_level := Normal_level
-				yyval21 := new_ensure_as (yytype79 (yyvs.item (yyvsp)))
+				yyval21 := new_ensure_as (yytype81 (yyvs.item (yyvsp)))
 			
 			yyval := yyval21
 		end
 
 	yy_do_action_194 is
-			--|#line 994
+			--|#line 999
 		local
 
 		do
@@ -3197,19 +3201,19 @@ id_level := Assert_level
 		end
 
 	yy_do_action_195 is
-			--|#line 1001
+			--|#line 1006
 		local
 			yyval21: ENSURE_AS
 		do
 
 				id_level := Normal_level
-				yyval21 := new_ensure_then_as (yytype79 (yyvs.item (yyvsp)))
+				yyval21 := new_ensure_then_as (yytype81 (yyvs.item (yyvsp)))
 			
 			yyval := yyval21
 		end
 
 	yy_do_action_196 is
-			--|#line 1001
+			--|#line 1006
 		local
 
 		do
@@ -3219,45 +3223,45 @@ id_level := Assert_level
 		end
 
 	yy_do_action_198 is
-			--|#line 1012
+			--|#line 1017
 		local
-			yyval79: EIFFEL_LIST [TAGGED_AS]
+			yyval81: EIFFEL_LIST [TAGGED_AS]
 		do
 
-				yyval79 := yytype79 (yyvs.item (yyvsp))
-				if yyval79.is_empty then
-					yyval79 := Void
+				yyval81 := yytype81 (yyvs.item (yyvsp))
+				if yyval81.is_empty then
+					yyval81 := Void
 				end
 			
-			yyval := yyval79
+			yyval := yyval81
 		end
 
 	yy_do_action_199 is
-			--|#line 1021
+			--|#line 1026
 		local
-			yyval79: EIFFEL_LIST [TAGGED_AS]
+			yyval81: EIFFEL_LIST [TAGGED_AS]
 		do
 
-				yyval79 := new_eiffel_list_tagged_as (Initial_assertion_list_size)
-				add_to_assertion_list (yyval79, yytype55 (yyvs.item (yyvsp)))
+				yyval81 := new_eiffel_list_tagged_as (Initial_assertion_list_size)
+				add_to_assertion_list (yyval81, yytype55 (yyvs.item (yyvsp)))
 			
-			yyval := yyval79
+			yyval := yyval81
 		end
 
 	yy_do_action_200 is
-			--|#line 1026
+			--|#line 1031
 		local
-			yyval79: EIFFEL_LIST [TAGGED_AS]
+			yyval81: EIFFEL_LIST [TAGGED_AS]
 		do
 
-				yyval79 := yytype79 (yyvs.item (yyvsp - 1))
-				add_to_assertion_list (yyval79, yytype55 (yyvs.item (yyvsp)))
+				yyval81 := yytype81 (yyvs.item (yyvsp - 1))
+				add_to_assertion_list (yyval81, yytype55 (yyvs.item (yyvsp)))
 			
-			yyval := yyval79
+			yyval := yyval81
 		end
 
 	yy_do_action_201 is
-			--|#line 1033
+			--|#line 1038
 		local
 			yyval55: TAGGED_AS
 		do
@@ -3267,7 +3271,7 @@ yyval55 := yytype55 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_202 is
-			--|#line 1037
+			--|#line 1042
 		local
 			yyval55: TAGGED_AS
 		do
@@ -3277,7 +3281,7 @@ yyval55 := new_tagged_as (Void, yytype23 (yyvs.item (yyvsp)), yacc_position, yac
 		end
 
 	yy_do_action_203 is
-			--|#line 1039
+			--|#line 1044
 		local
 			yyval55: TAGGED_AS
 		do
@@ -3287,7 +3291,7 @@ yyval55 := new_tagged_as (yytype30 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_205 is
-			--|#line 1049
+			--|#line 1054
 		local
 			yyval57: TYPE
 		do
@@ -3297,7 +3301,7 @@ yyval57 := yytype57 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_206 is
-			--|#line 1051
+			--|#line 1056
 		local
 			yyval57: TYPE
 		do
@@ -3307,27 +3311,27 @@ yyval57 := yytype57 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_207 is
-			--|#line 1055
+			--|#line 1060
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_expanded_type (yytype83 (yyvs.item (yyvsp - 1)), yytype80 (yyvs.item (yyvsp))) 
+yyval57 := new_expanded_type (yytype85 (yyvs.item (yyvsp - 1)), yytype82 (yyvs.item (yyvsp))) 
 			yyval := yyval57
 		end
 
 	yy_do_action_208 is
-			--|#line 1057
+			--|#line 1062
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_separate_type (yytype83 (yyvs.item (yyvsp - 1)), yytype80 (yyvs.item (yyvsp))) 
+yyval57 := new_separate_type (yytype85 (yyvs.item (yyvsp - 1)), yytype82 (yyvs.item (yyvsp))) 
 			yyval := yyval57
 		end
 
 	yy_do_action_209 is
-			--|#line 1059
+			--|#line 1064
 		local
 			yyval57: TYPE
 		do
@@ -3337,7 +3341,7 @@ yyval57 := new_bits_as (yytype36 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_210 is
-			--|#line 1061
+			--|#line 1066
 		local
 			yyval57: TYPE
 		do
@@ -3347,7 +3351,7 @@ yyval57 := new_bits_symbol_as (yytype30 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_211 is
-			--|#line 1063
+			--|#line 1068
 		local
 			yyval57: TYPE
 		do
@@ -3357,7 +3361,7 @@ yyval57 := new_like_id_as (yytype30 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_212 is
-			--|#line 1065
+			--|#line 1070
 		local
 			yyval57: TYPE
 		do
@@ -3367,161 +3371,161 @@ yyval57 := new_like_current_as
 		end
 
 	yy_do_action_213 is
-			--|#line 1069
+			--|#line 1074
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_class_type (yytype83 (yyvs.item (yyvsp - 1)), yytype80 (yyvs.item (yyvsp))) 
+yyval57 := new_class_type (yytype85 (yyvs.item (yyvsp - 1)), yytype82 (yyvs.item (yyvsp))) 
 			yyval := yyval57
 		end
 
 	yy_do_action_214 is
-			--|#line 1071
+			--|#line 1076
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_boolean_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void) 
+yyval57 := new_boolean_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void) 
 			yyval := yyval57
 		end
 
 	yy_do_action_215 is
-			--|#line 1073
+			--|#line 1078
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_character_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, False) 
+yyval57 := new_character_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, False) 
 			yyval := yyval57
 		end
 
 	yy_do_action_216 is
-			--|#line 1075
+			--|#line 1080
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_character_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, True) 
+yyval57 := new_character_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, True) 
 			yyval := yyval57
 		end
 
 	yy_do_action_217 is
-			--|#line 1077
+			--|#line 1082
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_double_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void) 
+yyval57 := new_double_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void) 
 			yyval := yyval57
 		end
 
 	yy_do_action_218 is
-			--|#line 1079
+			--|#line 1084
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_integer_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, 8) 
+yyval57 := new_integer_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, 8) 
 			yyval := yyval57
 		end
 
 	yy_do_action_219 is
-			--|#line 1081
+			--|#line 1086
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_integer_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, 16) 
+yyval57 := new_integer_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, 16) 
 			yyval := yyval57
 		end
 
 	yy_do_action_220 is
-			--|#line 1083
+			--|#line 1088
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_integer_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, 32) 
+yyval57 := new_integer_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, 32) 
 			yyval := yyval57
 		end
 
 	yy_do_action_221 is
-			--|#line 1085
+			--|#line 1090
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_integer_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void, 64) 
+yyval57 := new_integer_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void, 64) 
 			yyval := yyval57
 		end
 
 	yy_do_action_222 is
-			--|#line 1087
+			--|#line 1092
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_none_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void) 
+yyval57 := new_none_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void) 
 			yyval := yyval57
 		end
 
 	yy_do_action_223 is
-			--|#line 1089
+			--|#line 1094
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_pointer_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void) 
+yyval57 := new_pointer_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void) 
 			yyval := yyval57
 		end
 
 	yy_do_action_224 is
-			--|#line 1091
+			--|#line 1096
 		local
 			yyval57: TYPE
 		do
 
-yyval57 := new_real_type (yytype83 (yyvs.item (yyvsp - 1)).second, yytype80 (yyvs.item (yyvsp)) /= Void) 
+yyval57 := new_real_type (yytype85 (yyvs.item (yyvsp - 1)).second, yytype82 (yyvs.item (yyvsp)) /= Void) 
 			yyval := yyval57
 		end
 
 	yy_do_action_227 is
-			--|#line 1099
+			--|#line 1104
 		local
-			yyval80: EIFFEL_LIST [TYPE]
+			yyval82: EIFFEL_LIST [TYPE]
 		do
 
-yyval80 := yytype80 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval80
+yyval82 := yytype82 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval82
 		end
 
 	yy_do_action_228 is
-			--|#line 1103
+			--|#line 1108
 		local
-			yyval80: EIFFEL_LIST [TYPE]
+			yyval82: EIFFEL_LIST [TYPE]
 		do
 
-				yyval80 := new_eiffel_list_type (Initial_type_list_size)
-				yyval80.extend (yytype57 (yyvs.item (yyvsp)))
+				yyval82 := new_eiffel_list_type (Initial_type_list_size)
+				yyval82.extend (yytype57 (yyvs.item (yyvsp)))
 			
-			yyval := yyval80
+			yyval := yyval82
 		end
 
 	yy_do_action_229 is
-			--|#line 1108
+			--|#line 1113
 		local
-			yyval80: EIFFEL_LIST [TYPE]
+			yyval82: EIFFEL_LIST [TYPE]
 		do
 
-				yyval80 := yytype80 (yyvs.item (yyvsp - 2))
-				yyval80.extend (yytype57 (yyvs.item (yyvsp)))
+				yyval82 := yytype82 (yyvs.item (yyvsp - 2))
+				yyval82.extend (yytype57 (yyvs.item (yyvsp)))
 			
-			yyval := yyval80
+			yyval := yyval82
 		end
 
 	yy_do_action_230 is
-			--|#line 1119
+			--|#line 1124
 		local
 			yyval70: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
@@ -3534,20 +3538,20 @@ yyval80 := yytype80 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_231 is
-			--|#line 1125
+			--|#line 1130
 		local
 			yyval70: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
 
 				yyval70 := yytype70 (yyvs.item (yyvsp - 1))
-				formal_generics_start_position := yytype88 (yyvs.item (yyvsp - 3)).start_position
+				formal_generics_start_position := yytype90 (yyvs.item (yyvsp - 3)).start_position
 				formal_generics_end_position := start_position
 			
 			yyval := yyval70
 		end
 
 	yy_do_action_233 is
-			--|#line 1135
+			--|#line 1140
 		local
 			yyval70: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
@@ -3557,7 +3561,7 @@ yyval70 := yytype70 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_234 is
-			--|#line 1139
+			--|#line 1144
 		local
 			yyval70: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
@@ -3569,7 +3573,7 @@ yyval70 := yytype70 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_235 is
-			--|#line 1144
+			--|#line 1149
 		local
 			yyval70: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
@@ -3581,19 +3585,19 @@ yyval70 := yytype70 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_236 is
-			--|#line 1151
+			--|#line 1156
 		local
 			yyval29: FORMAL_DEC_AS
 		do
 
 				check formal_exists: not formal_parameters.is_empty end
-				yyval29 := new_formal_dec_as (formal_parameters.last, yytype87 (yyvs.item (yyvsp)).first, yytype87 (yyvs.item (yyvsp)).second, formal_parameters.count)
+				yyval29 := new_formal_dec_as (formal_parameters.last, yytype89 (yyvs.item (yyvsp)).first, yytype89 (yyvs.item (yyvsp)).second, formal_parameters.count)
 			
 			yyval := yyval29
 		end
 
 	yy_do_action_237 is
-			--|#line 1151
+			--|#line 1156
 		local
 
 		do
@@ -3603,30 +3607,30 @@ formal_parameters.extend (new_id_as (token_buffer))
 		end
 
 	yy_do_action_238 is
-			--|#line 1161
+			--|#line 1166
 		local
-			yyval87: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			yyval89: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
 		do
 
-create yyval87 
-			yyval := yyval87
+create yyval89 
+			yyval := yyval89
 		end
 
 	yy_do_action_239 is
-			--|#line 1163
+			--|#line 1168
 		local
-			yyval87: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			yyval89: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
 		do
 
-				create yyval87
-				yyval87.set_first (yytype57 (yyvs.item (yyvsp - 1)))
-				yyval87.set_second (yytype69 (yyvs.item (yyvsp)))
+				create yyval89
+				yyval89.set_first (yytype57 (yyvs.item (yyvsp - 1)))
+				yyval89.set_second (yytype69 (yyvs.item (yyvsp)))
 			
-			yyval := yyval87
+			yyval := yyval89
 		end
 
 	yy_do_action_241 is
-			--|#line 1173
+			--|#line 1178
 		local
 			yyval69: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -3636,19 +3640,19 @@ yyval69 := yytype69 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_242 is
-			--|#line 1181
+			--|#line 1186
 		local
 			yyval31: IF_AS
 		do
 
-				set_position (yytype88 (yyvs.item (yyvsp - 7)))
-				yyval31 := new_if_as (yytype23 (yyvs.item (yyvsp - 5)), yytype73 (yyvs.item (yyvsp - 3)), yytype63 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
+				set_position (yytype90 (yyvs.item (yyvsp - 7)))
+				yyval31 := new_if_as (yytype23 (yyvs.item (yyvsp - 5)), yytype75 (yyvs.item (yyvsp - 3)), yytype63 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
 			
 			yyval := yyval31
 		end
 
 	yy_do_action_244 is
-			--|#line 1190
+			--|#line 1195
 		local
 			yyval63: EIFFEL_LIST [ELSIF_AS]
 		do
@@ -3658,7 +3662,7 @@ yyval63 := yytype63 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_245 is
-			--|#line 1194
+			--|#line 1199
 		local
 			yyval63: EIFFEL_LIST [ELSIF_AS]
 		do
@@ -3670,7 +3674,7 @@ yyval63 := yytype63 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_246 is
-			--|#line 1199
+			--|#line 1204
 		local
 			yyval63: EIFFEL_LIST [ELSIF_AS]
 		do
@@ -3682,39 +3686,39 @@ yyval63 := yytype63 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_247 is
-			--|#line 1206
+			--|#line 1211
 		local
 			yyval20: ELSIF_AS
 		do
 
-yyval20 := new_elseif_as (yytype23 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp)), yacc_line_number) 
+yyval20 := new_elseif_as (yytype23 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp)), yacc_line_number) 
 			yyval := yyval20
 		end
 
 	yy_do_action_249 is
-			--|#line 1212
+			--|#line 1217
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-yyval73 := yytype73 (yyvs.item (yyvsp)) 
-			yyval := yyval73
+yyval75 := yytype75 (yyvs.item (yyvsp)) 
+			yyval := yyval75
 		end
 
 	yy_do_action_250 is
-			--|#line 1216
+			--|#line 1221
 		local
 			yyval33: INSPECT_AS
 		do
 
-				set_position (yytype88 (yyvs.item (yyvsp - 5)))
-				yyval33 := new_inspect_as (yytype23 (yyvs.item (yyvsp - 3)), yytype61 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
+				set_position (yytype90 (yyvs.item (yyvsp - 5)))
+				yyval33 := new_inspect_as (yytype23 (yyvs.item (yyvsp - 3)), yytype61 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
 			
 			yyval := yyval33
 		end
 
 	yy_do_action_252 is
-			--|#line 1225
+			--|#line 1230
 		local
 			yyval61: EIFFEL_LIST [CASE_AS]
 		do
@@ -3724,7 +3728,7 @@ yyval61 := yytype61 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_253 is
-			--|#line 1229
+			--|#line 1234
 		local
 			yyval61: EIFFEL_LIST [CASE_AS]
 		do
@@ -3736,7 +3740,7 @@ yyval61 := yytype61 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_254 is
-			--|#line 1234
+			--|#line 1239
 		local
 			yyval61: EIFFEL_LIST [CASE_AS]
 		do
@@ -3748,41 +3752,41 @@ yyval61 := yytype61 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_255 is
-			--|#line 1241
+			--|#line 1246
 		local
 			yyval11: CASE_AS
 		do
 
-yyval11 := new_case_as (yytype74 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp)), yacc_line_number) 
+yyval11 := new_case_as (yytype76 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp)), yacc_line_number) 
 			yyval := yyval11
 		end
 
 	yy_do_action_256 is
-			--|#line 1245
+			--|#line 1250
 		local
-			yyval74: EIFFEL_LIST [INTERVAL_AS]
+			yyval76: EIFFEL_LIST [INTERVAL_AS]
 		do
 
-				yyval74 := new_eiffel_list_interval_as (Initial_choices_size)
-				yyval74.extend (yytype38 (yyvs.item (yyvsp)))
+				yyval76 := new_eiffel_list_interval_as (Initial_choices_size)
+				yyval76.extend (yytype38 (yyvs.item (yyvsp)))
 			
-			yyval := yyval74
+			yyval := yyval76
 		end
 
 	yy_do_action_257 is
-			--|#line 1250
+			--|#line 1255
 		local
-			yyval74: EIFFEL_LIST [INTERVAL_AS]
+			yyval76: EIFFEL_LIST [INTERVAL_AS]
 		do
 
-				yyval74 := yytype74 (yyvs.item (yyvsp - 2))
-				yyval74.extend (yytype38 (yyvs.item (yyvsp)))
+				yyval76 := yytype76 (yyvs.item (yyvsp - 2))
+				yyval76.extend (yytype38 (yyvs.item (yyvsp)))
 			
-			yyval := yyval74
+			yyval := yyval76
 		end
 
 	yy_do_action_258 is
-			--|#line 1257
+			--|#line 1262
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3792,7 +3796,7 @@ yyval38 := new_interval_as (yytype36 (yyvs.item (yyvsp)), Void)
 		end
 
 	yy_do_action_259 is
-			--|#line 1259
+			--|#line 1264
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3802,7 +3806,7 @@ yyval38 := new_interval_as (yytype12 (yyvs.item (yyvsp)), Void)
 		end
 
 	yy_do_action_260 is
-			--|#line 1261
+			--|#line 1266
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3812,7 +3816,7 @@ yyval38 := new_interval_as (yytype30 (yyvs.item (yyvsp)), Void)
 		end
 
 	yy_do_action_261 is
-			--|#line 1263
+			--|#line 1268
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3822,7 +3826,7 @@ yyval38 := new_interval_as (yytype36 (yyvs.item (yyvsp - 2)), yytype36 (yyvs.ite
 		end
 
 	yy_do_action_262 is
-			--|#line 1265
+			--|#line 1270
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3832,7 +3836,7 @@ yyval38 := new_interval_as (yytype36 (yyvs.item (yyvsp - 2)), yytype30 (yyvs.ite
 		end
 
 	yy_do_action_263 is
-			--|#line 1267
+			--|#line 1272
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3842,7 +3846,7 @@ yyval38 := new_interval_as (yytype30 (yyvs.item (yyvsp - 2)), yytype36 (yyvs.ite
 		end
 
 	yy_do_action_264 is
-			--|#line 1269
+			--|#line 1274
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3852,7 +3856,7 @@ yyval38 := new_interval_as (yytype30 (yyvs.item (yyvsp - 2)), yytype30 (yyvs.ite
 		end
 
 	yy_do_action_265 is
-			--|#line 1271
+			--|#line 1276
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3862,7 +3866,7 @@ yyval38 := new_interval_as (yytype12 (yyvs.item (yyvsp - 2)), yytype12 (yyvs.ite
 		end
 
 	yy_do_action_266 is
-			--|#line 1273
+			--|#line 1278
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3872,7 +3876,7 @@ yyval38 := new_interval_as (yytype30 (yyvs.item (yyvsp - 2)), yytype12 (yyvs.ite
 		end
 
 	yy_do_action_267 is
-			--|#line 1275
+			--|#line 1280
 		local
 			yyval38: INTERVAL_AS
 		do
@@ -3882,56 +3886,56 @@ yyval38 := new_interval_as (yytype12 (yyvs.item (yyvsp - 2)), yytype30 (yyvs.ite
 		end
 
 	yy_do_action_269 is
-			--|#line 1281
+			--|#line 1286
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-				yyval73 := yytype73 (yyvs.item (yyvsp))
-				if yyval73 = Void then
-					yyval73 := new_eiffel_list_instruction_as (0)
+				yyval75 := yytype75 (yyvs.item (yyvsp))
+				if yyval75 = Void then
+					yyval75 := new_eiffel_list_instruction_as (0)
 				end
 			
-			yyval := yyval73
+			yyval := yyval75
 		end
 
 	yy_do_action_270 is
-			--|#line 1290
+			--|#line 1295
 		local
 			yyval40: LOOP_AS
 		do
 
-				set_position (yytype88 (yyvs.item (yyvsp - 9)))
-				yyval40 := new_loop_as (yytype73 (yyvs.item (yyvsp - 7)), yytype79 (yyvs.item (yyvsp - 6)), yytype59 (yyvs.item (yyvsp - 5)), yytype23 (yyvs.item (yyvsp - 3)), yytype73 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
+				set_position (yytype90 (yyvs.item (yyvsp - 9)))
+				yyval40 := new_loop_as (yytype75 (yyvs.item (yyvsp - 7)), yytype81 (yyvs.item (yyvsp - 6)), yytype59 (yyvs.item (yyvsp - 5)), yytype23 (yyvs.item (yyvsp - 3)), yytype75 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
 			
 			yyval := yyval40
 		end
 
 	yy_do_action_272 is
-			--|#line 1299
+			--|#line 1304
 		local
-			yyval79: EIFFEL_LIST [TAGGED_AS]
+			yyval81: EIFFEL_LIST [TAGGED_AS]
 		do
 
-yyval79 := yytype79 (yyvs.item (yyvsp)) 
-			yyval := yyval79
+yyval81 := yytype81 (yyvs.item (yyvsp)) 
+			yyval := yyval81
 		end
 
 	yy_do_action_274 is
-			--|#line 1305
+			--|#line 1310
 		local
 			yyval39: INVARIANT_AS
 		do
 
 				id_level := Normal_level
 				inherit_context := False
-				yyval39 := new_invariant_as (yytype79 (yyvs.item (yyvsp)))
+				yyval39 := new_invariant_as (yytype81 (yyvs.item (yyvsp)))
 			
 			yyval := yyval39
 		end
 
 	yy_do_action_275 is
-			--|#line 1305
+			--|#line 1310
 		local
 
 		do
@@ -3941,7 +3945,7 @@ id_level := Invariant_level
 		end
 
 	yy_do_action_277 is
-			--|#line 1317
+			--|#line 1322
 		local
 			yyval59: VARIANT_AS
 		do
@@ -3951,7 +3955,7 @@ yyval59 := new_variant_as (yytype30 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_278 is
-			--|#line 1319
+			--|#line 1324
 		local
 			yyval59: VARIANT_AS
 		do
@@ -3961,53 +3965,53 @@ yyval59 := new_variant_as (Void, yytype23 (yyvs.item (yyvsp)), yacc_position, ya
 		end
 
 	yy_do_action_279 is
-			--|#line 1323
+			--|#line 1328
 		local
 			yyval19: DEBUG_AS
 		do
 
-				set_position (yytype88 (yyvs.item (yyvsp - 4)))
-				yyval19 := new_debug_as (yytype78 (yyvs.item (yyvsp - 2)), yytype73 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
+				set_position (yytype90 (yyvs.item (yyvsp - 4)))
+				yyval19 := new_debug_as (yytype80 (yyvs.item (yyvsp - 2)), yytype75 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
 			
 			yyval := yyval19
 		end
 
 	yy_do_action_282 is
-			--|#line 1334
+			--|#line 1339
 		local
-			yyval78: EIFFEL_LIST [STRING_AS]
+			yyval80: EIFFEL_LIST [STRING_AS]
 		do
 
-yyval78 := yytype78 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval78
+yyval80 := yytype80 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval80
 		end
 
 	yy_do_action_283 is
-			--|#line 1338
+			--|#line 1343
 		local
-			yyval78: EIFFEL_LIST [STRING_AS]
+			yyval80: EIFFEL_LIST [STRING_AS]
 		do
 
-				yyval78 := new_eiffel_list_string_as (Initial_debug_key_list_size)
-				yyval78.extend (yytype54 (yyvs.item (yyvsp)))
+				yyval80 := new_eiffel_list_string_as (Initial_debug_key_list_size)
+				yyval80.extend (yytype54 (yyvs.item (yyvsp)))
 			
-			yyval := yyval78
+			yyval := yyval80
 		end
 
 	yy_do_action_284 is
-			--|#line 1343
+			--|#line 1348
 		local
-			yyval78: EIFFEL_LIST [STRING_AS]
+			yyval80: EIFFEL_LIST [STRING_AS]
 		do
 
-				yyval78 := yytype78 (yyvs.item (yyvsp - 2))
-				yyval78.extend (yytype54 (yyvs.item (yyvsp)))
+				yyval80 := yytype80 (yyvs.item (yyvsp - 2))
+				yyval80.extend (yytype54 (yyvs.item (yyvsp)))
 			
-			yyval := yyval78
+			yyval := yyval80
 		end
 
 	yy_do_action_285 is
-			--|#line 1350
+			--|#line 1355
 		local
 			yyval49: RETRY_AS
 		do
@@ -4017,21 +4021,21 @@ yyval49 := new_retry_as (yacc_line_number)
 		end
 
 	yy_do_action_287 is
-			--|#line 1356
+			--|#line 1361
 		local
-			yyval73: EIFFEL_LIST [INSTRUCTION_AS]
+			yyval75: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 
-				yyval73 := yytype73 (yyvs.item (yyvsp))
-				if yyval73 = Void then
-					yyval73 := new_eiffel_list_instruction_as (0)
+				yyval75 := yytype75 (yyvs.item (yyvsp))
+				if yyval75 = Void then
+					yyval75 := new_eiffel_list_instruction_as (0)
 				end
 			
-			yyval := yyval73
+			yyval := yyval75
 		end
 
 	yy_do_action_288 is
-			--|#line 1365
+			--|#line 1370
 		local
 			yyval5: ASSIGN_AS
 		do
@@ -4041,7 +4045,7 @@ yyval5 := new_assign_as (new_access_id_as (yytype30 (yyvs.item (yyvsp - 2)), Voi
 		end
 
 	yy_do_action_289 is
-			--|#line 1367
+			--|#line 1372
 		local
 			yyval5: ASSIGN_AS
 		do
@@ -4051,7 +4055,7 @@ yyval5 := new_assign_as (new_result_as, yytype23 (yyvs.item (yyvsp)), yacc_posit
 		end
 
 	yy_do_action_290 is
-			--|#line 1371
+			--|#line 1376
 		local
 			yyval50: REVERSE_AS
 		do
@@ -4061,7 +4065,7 @@ yyval50 := new_reverse_as (new_access_id_as (yytype30 (yyvs.item (yyvsp - 2)), V
 		end
 
 	yy_do_action_291 is
-			--|#line 1373
+			--|#line 1378
 		local
 			yyval50: REVERSE_AS
 		do
@@ -4071,7 +4075,7 @@ yyval50 := new_reverse_as (new_result_as, yytype23 (yyvs.item (yyvsp)), yacc_pos
 		end
 
 	yy_do_action_293 is
-			--|#line 1379
+			--|#line 1384
 		local
 			yyval62: EIFFEL_LIST [CREATE_AS]
 		do
@@ -4081,7 +4085,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_294 is
-			--|#line 1383
+			--|#line 1388
 		local
 			yyval62: EIFFEL_LIST [CREATE_AS]
 		do
@@ -4093,7 +4097,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_295 is
-			--|#line 1388
+			--|#line 1393
 		local
 			yyval62: EIFFEL_LIST [CREATE_AS]
 		do
@@ -4105,7 +4109,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_296 is
-			--|#line 1395
+			--|#line 1400
 		local
 			yyval16: CREATE_AS
 		do
@@ -4117,7 +4121,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_297 is
-			--|#line 1401
+			--|#line 1406
 		local
 			yyval16: CREATE_AS
 		do
@@ -4129,7 +4133,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_298 is
-			--|#line 1406
+			--|#line 1411
 		local
 			yyval16: CREATE_AS
 		do
@@ -4141,7 +4145,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_299 is
-			--|#line 1411
+			--|#line 1416
 		local
 			yyval16: CREATE_AS
 		do
@@ -4153,7 +4157,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_300 is
-			--|#line 1416
+			--|#line 1421
 		local
 			yyval16: CREATE_AS
 		do
@@ -4165,7 +4169,7 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_301 is
-			--|#line 1421
+			--|#line 1426
 		local
 			yyval16: CREATE_AS
 		do
@@ -4177,181 +4181,181 @@ yyval62 := yytype62 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_302 is
-			--|#line 1428
-		local
-			yyval53: ROUTINE_CREATION_AS
-		do
-
-yyval53 := new_routine_creation_as (new_result_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
-			yyval := yyval53
-		end
-
-	yy_do_action_303 is
-			--|#line 1431
-		local
-			yyval53: ROUTINE_CREATION_AS
-		do
-
-yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
-			yyval := yyval53
-		end
-
-	yy_do_action_304 is
 			--|#line 1433
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, yytype30 (yyvs.item (yyvsp - 3)), Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_result_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
+			yyval := yyval53
+		end
+
+	yy_do_action_303 is
+			--|#line 1436
+		local
+			yyval53: ROUTINE_CREATION_AS
+		do
+
+yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
+			yyval := yyval53
+		end
+
+	yy_do_action_304 is
+			--|#line 1438
+		local
+			yyval53: ROUTINE_CREATION_AS
+		do
+
+yyval53 := new_routine_creation_as (new_operand_as (Void, yytype30 (yyvs.item (yyvsp - 3)), Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_305 is
-			--|#line 1435
+			--|#line 1440
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, Void, yytype23 (yyvs.item (yyvsp - 4))), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (Void, Void, yytype23 (yyvs.item (yyvsp - 4))), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_306 is
-			--|#line 1437
+			--|#line 1442
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (yytype57 (yyvs.item (yyvsp - 4)), Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (yytype57 (yyvs.item (yyvsp - 4)), Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_307 is
-			--|#line 1439
+			--|#line 1444
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (Void, yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (Void, yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_308 is
-			--|#line 1441
+			--|#line 1446
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_309 is
-			--|#line 1443
+			--|#line 1448
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_result_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_result_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_310 is
-			--|#line 1445
+			--|#line 1450
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_311 is
-			--|#line 1447
+			--|#line 1452
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, yytype30 (yyvs.item (yyvsp - 3)), Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (Void, yytype30 (yyvs.item (yyvsp - 3)), Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_312 is
-			--|#line 1449
+			--|#line 1454
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_As (new_operand_as (Void, Void, yytype23 (yyvs.item (yyvsp - 4))), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_As (new_operand_as (Void, Void, yytype23 (yyvs.item (yyvsp - 4))), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_313 is
-			--|#line 1451
+			--|#line 1456
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (yytype57 (yyvs.item (yyvsp - 3)), Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (yytype57 (yyvs.item (yyvsp - 3)), Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_314 is
-			--|#line 1453
+			--|#line 1458
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (Void, yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (Void, yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_315 is
-			--|#line 1455
+			--|#line 1460
 		local
 			yyval53: ROUTINE_CREATION_AS
 		do
 
-yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype75 (yyvs.item (yyvsp))) 
+yyval53 := new_routine_creation_as (new_operand_as (Void, Void, Void), yytype30 (yyvs.item (yyvsp - 1)), yytype77 (yyvs.item (yyvsp))) 
 			yyval := yyval53
 		end
 
 	yy_do_action_317 is
-			--|#line 1461
+			--|#line 1466
 		local
-			yyval75: EIFFEL_LIST [OPERAND_AS]
+			yyval77: EIFFEL_LIST [OPERAND_AS]
 		do
 
-yyval75 := yytype75 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval75
+yyval77 := yytype77 (yyvs.item (yyvsp - 1)) 
+			yyval := yyval77
 		end
 
 	yy_do_action_318 is
-			--|#line 1465
+			--|#line 1470
 		local
-			yyval75: EIFFEL_LIST [OPERAND_AS]
+			yyval77: EIFFEL_LIST [OPERAND_AS]
 		do
 
-				yyval75 := new_eiffel_list_operand_as (Initial_operand_list_size)
-				yyval75.extend (yytype43 (yyvs.item (yyvsp)))
+				yyval77 := new_eiffel_list_operand_as (Initial_operand_list_size)
+				yyval77.extend (yytype43 (yyvs.item (yyvsp)))
 			
-			yyval := yyval75
+			yyval := yyval77
 		end
 
 	yy_do_action_319 is
-			--|#line 1470
+			--|#line 1475
 		local
-			yyval75: EIFFEL_LIST [OPERAND_AS]
+			yyval77: EIFFEL_LIST [OPERAND_AS]
 		do
 
-				yyval75 := yytype75 (yyvs.item (yyvsp - 2))
-				yyval75.extend (yytype43 (yyvs.item (yyvsp)))
+				yyval77 := yytype77 (yyvs.item (yyvsp - 2))
+				yyval77.extend (yytype43 (yyvs.item (yyvsp)))
 			
-			yyval := yyval75
+			yyval := yyval77
 		end
 
 	yy_do_action_320 is
-			--|#line 1477
+			--|#line 1482
 		local
 			yyval43: OPERAND_AS
 		do
@@ -4361,7 +4365,7 @@ yyval43 := new_operand_as (Void, Void, Void)
 		end
 
 	yy_do_action_321 is
-			--|#line 1479
+			--|#line 1484
 		local
 			yyval43: OPERAND_AS
 		do
@@ -4371,127 +4375,127 @@ yyval43 := new_operand_as (Void, Void, yytype23 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_322 is
-			--|#line 1481
+			--|#line 1486
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_class_type (yytype83 (yyvs.item (yyvsp - 2)), yytype80 (yyvs.item (yyvsp - 1))), Void, Void) 
+yyval43 := new_operand_as (new_class_type (yytype85 (yyvs.item (yyvsp - 2)), yytype82 (yyvs.item (yyvsp - 1))), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_323 is
-			--|#line 1483
+			--|#line 1488
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_boolean_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
+yyval43 := new_operand_as (new_boolean_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_324 is
-			--|#line 1485
+			--|#line 1490
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_character_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, False), Void, Void) 
+yyval43 := new_operand_as (new_character_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, False), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_325 is
-			--|#line 1487
+			--|#line 1492
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_character_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, True), Void, Void) 
+yyval43 := new_operand_as (new_character_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, True), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_326 is
-			--|#line 1489
+			--|#line 1494
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_double_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
+yyval43 := new_operand_as (new_double_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_327 is
-			--|#line 1491
+			--|#line 1496
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_integer_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, 8), Void, Void) 
+yyval43 := new_operand_as (new_integer_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, 8), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_328 is
-			--|#line 1493
+			--|#line 1498
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_integer_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, 16), Void, Void) 
+yyval43 := new_operand_as (new_integer_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, 16), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_329 is
-			--|#line 1495
+			--|#line 1500
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_integer_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, 32), Void, Void) 
+yyval43 := new_operand_as (new_integer_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, 32), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_330 is
-			--|#line 1497
+			--|#line 1502
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_integer_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void, 64), Void, Void) 
+yyval43 := new_operand_as (new_integer_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void, 64), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_331 is
-			--|#line 1499
+			--|#line 1504
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_none_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
+yyval43 := new_operand_as (new_none_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_332 is
-			--|#line 1501
+			--|#line 1506
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_pointer_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
+yyval43 := new_operand_as (new_pointer_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_333 is
-			--|#line 1503
+			--|#line 1508
 		local
 			yyval43: OPERAND_AS
 		do
 
-yyval43 := new_operand_as (new_real_type (yytype83 (yyvs.item (yyvsp - 2)).second, yytype80 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
+yyval43 := new_operand_as (new_real_type (yytype85 (yyvs.item (yyvsp - 2)).second, yytype82 (yyvs.item (yyvsp - 1)) /= Void), Void, Void) 
 			yyval := yyval43
 		end
 
 	yy_do_action_334 is
-			--|#line 1505
+			--|#line 1510
 		local
 			yyval43: OPERAND_AS
 		do
@@ -4501,7 +4505,7 @@ yyval43 := new_operand_as (yytype57 (yyvs.item (yyvsp - 1)), Void, Void)
 		end
 
 	yy_do_action_335 is
-			--|#line 1509
+			--|#line 1514
 		local
 			yyval17: CREATION_AS
 		do
@@ -4511,7 +4515,7 @@ yyval17 := new_creation_as (yytype57 (yyvs.item (yyvsp - 3)), yytype1 (yyvs.item
 		end
 
 	yy_do_action_336 is
-			--|#line 1511
+			--|#line 1516
 		local
 			yyval17: CREATION_AS
 		do
@@ -4521,7 +4525,7 @@ yyval17 := new_creation_as (Void, yytype1 (yyvs.item (yyvsp - 1)), yytype3 (yyvs
 		end
 
 	yy_do_action_337 is
-			--|#line 1513
+			--|#line 1518
 		local
 			yyval17: CREATION_AS
 		do
@@ -4531,7 +4535,7 @@ yyval17 := new_creation_as (yytype57 (yyvs.item (yyvsp - 3)), yytype1 (yyvs.item
 		end
 
 	yy_do_action_338 is
-			--|#line 1517
+			--|#line 1522
 		local
 			yyval18: CREATION_EXPR_AS
 		do
@@ -4541,7 +4545,7 @@ yyval18 := new_creation_expr_as (yytype57 (yyvs.item (yyvsp - 2)), yytype3 (yyvs
 		end
 
 	yy_do_action_339 is
-			--|#line 1519
+			--|#line 1524
 		local
 			yyval18: CREATION_EXPR_AS
 		do
@@ -4551,7 +4555,7 @@ yyval18 := new_creation_expr_as (yytype57 (yyvs.item (yyvsp - 2)), yytype3 (yyvs
 		end
 
 	yy_do_action_341 is
-			--|#line 1525
+			--|#line 1530
 		local
 			yyval57: TYPE
 		do
@@ -4561,7 +4565,7 @@ yyval57 := yytype57 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_342 is
-			--|#line 1529
+			--|#line 1534
 		local
 			yyval1: ACCESS_AS
 		do
@@ -4571,7 +4575,7 @@ yyval1 := new_access_id_as (yytype30 (yyvs.item (yyvsp)), Void)
 		end
 
 	yy_do_action_343 is
-			--|#line 1531
+			--|#line 1536
 		local
 			yyval1: ACCESS_AS
 		do
@@ -4581,7 +4585,7 @@ yyval1 := new_result_as
 		end
 
 	yy_do_action_345 is
-			--|#line 1537
+			--|#line 1542
 		local
 			yyval3: ACCESS_INV_AS
 		do
@@ -4591,7 +4595,7 @@ yyval3 := new_access_inv_as (yytype30 (yyvs.item (yyvsp - 1)), yytype65 (yyvs.it
 		end
 
 	yy_do_action_346 is
-			--|#line 1545
+			--|#line 1550
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4601,7 +4605,7 @@ yyval34 := new_instr_call_as (yytype1 (yyvs.item (yyvsp)), yacc_position, yacc_l
 		end
 
 	yy_do_action_347 is
-			--|#line 1547
+			--|#line 1552
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4611,7 +4615,7 @@ yyval34 := new_instr_call_as (yytype41 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_348 is
-			--|#line 1549
+			--|#line 1554
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4621,7 +4625,7 @@ yyval34 := new_instr_call_as (yytype41 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_349 is
-			--|#line 1551
+			--|#line 1556
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4631,7 +4635,7 @@ yyval34 := new_instr_call_as (yytype41 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_350 is
-			--|#line 1553
+			--|#line 1558
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4641,7 +4645,7 @@ yyval34 := new_instr_call_as (yytype42 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_351 is
-			--|#line 1555
+			--|#line 1560
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4651,7 +4655,7 @@ yyval34 := new_instr_call_as (yytype45 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_352 is
-			--|#line 1557
+			--|#line 1562
 		local
 			yyval34: INSTR_CALL_AS
 		do
@@ -4661,19 +4665,19 @@ yyval34 := new_instr_call_as (yytype41 (yyvs.item (yyvsp)), yacc_position, yacc_
 		end
 
 	yy_do_action_353 is
-			--|#line 1561
+			--|#line 1566
 		local
 			yyval13: CHECK_AS
 		do
 
-				set_position (yytype88 (yyvs.item (yyvsp - 3)))
-				yyval13 := new_check_as (yytype79 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
+				set_position (yytype90 (yyvs.item (yyvsp - 3)))
+				yyval13 := new_check_as (yytype81 (yyvs.item (yyvsp - 1)), yacc_position, yacc_line_number)
 			
 			yyval := yyval13
 		end
 
 	yy_do_action_354 is
-			--|#line 1572
+			--|#line 1577
 		local
 			yyval23: EXPR_AS
 		do
@@ -4683,7 +4687,7 @@ yyval23 := new_value_as (yytype6 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_355 is
-			--|#line 1574
+			--|#line 1579
 		local
 			yyval23: EXPR_AS
 		do
@@ -4693,7 +4697,7 @@ yyval23 := new_value_as (yytype4 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_356 is
-			--|#line 1576
+			--|#line 1581
 		local
 			yyval23: EXPR_AS
 		do
@@ -4703,7 +4707,7 @@ yyval23 := new_value_as (yytype56 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_357 is
-			--|#line 1578
+			--|#line 1583
 		local
 			yyval23: EXPR_AS
 		do
@@ -4713,7 +4717,7 @@ yyval23 := new_expr_call_as (yytype10 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_358 is
-			--|#line 1580
+			--|#line 1585
 		local
 			yyval23: EXPR_AS
 		do
@@ -4723,7 +4727,7 @@ yyval23 := yytype53 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_359 is
-			--|#line 1582
+			--|#line 1587
 		local
 			yyval23: EXPR_AS
 		do
@@ -4733,7 +4737,7 @@ yyval23 := new_paran_as (yytype23 (yyvs.item (yyvsp - 1)))
 		end
 
 	yy_do_action_360 is
-			--|#line 1584
+			--|#line 1589
 		local
 			yyval23: EXPR_AS
 		do
@@ -4743,7 +4747,7 @@ yyval23 := new_bin_plus_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.ite
 		end
 
 	yy_do_action_361 is
-			--|#line 1586
+			--|#line 1591
 		local
 			yyval23: EXPR_AS
 		do
@@ -4753,7 +4757,7 @@ yyval23 := new_bin_minus_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.it
 		end
 
 	yy_do_action_362 is
-			--|#line 1588
+			--|#line 1593
 		local
 			yyval23: EXPR_AS
 		do
@@ -4763,7 +4767,7 @@ yyval23 := new_bin_star_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.ite
 		end
 
 	yy_do_action_363 is
-			--|#line 1590
+			--|#line 1595
 		local
 			yyval23: EXPR_AS
 		do
@@ -4773,7 +4777,7 @@ yyval23 := new_bin_slash_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.it
 		end
 
 	yy_do_action_364 is
-			--|#line 1592
+			--|#line 1597
 		local
 			yyval23: EXPR_AS
 		do
@@ -4783,7 +4787,7 @@ yyval23 := new_bin_mod_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_365 is
-			--|#line 1594
+			--|#line 1599
 		local
 			yyval23: EXPR_AS
 		do
@@ -4793,7 +4797,7 @@ yyval23 := new_bin_div_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_366 is
-			--|#line 1596
+			--|#line 1601
 		local
 			yyval23: EXPR_AS
 		do
@@ -4803,7 +4807,7 @@ yyval23 := new_bin_power_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.it
 		end
 
 	yy_do_action_367 is
-			--|#line 1598
+			--|#line 1603
 		local
 			yyval23: EXPR_AS
 		do
@@ -4813,7 +4817,7 @@ yyval23 := new_bin_and_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_368 is
-			--|#line 1600
+			--|#line 1605
 		local
 			yyval23: EXPR_AS
 		do
@@ -4823,7 +4827,7 @@ yyval23 := new_bin_and_then_as (yytype23 (yyvs.item (yyvsp - 3)), yytype23 (yyvs
 		end
 
 	yy_do_action_369 is
-			--|#line 1602
+			--|#line 1607
 		local
 			yyval23: EXPR_AS
 		do
@@ -4833,7 +4837,7 @@ yyval23 := new_bin_or_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_370 is
-			--|#line 1604
+			--|#line 1609
 		local
 			yyval23: EXPR_AS
 		do
@@ -4843,7 +4847,7 @@ yyval23 := new_bin_or_else_as (yytype23 (yyvs.item (yyvsp - 3)), yytype23 (yyvs.
 		end
 
 	yy_do_action_371 is
-			--|#line 1606
+			--|#line 1611
 		local
 			yyval23: EXPR_AS
 		do
@@ -4853,7 +4857,7 @@ yyval23 := new_bin_implies_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.
 		end
 
 	yy_do_action_372 is
-			--|#line 1608
+			--|#line 1613
 		local
 			yyval23: EXPR_AS
 		do
@@ -4863,7 +4867,7 @@ yyval23 := new_bin_xor_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_373 is
-			--|#line 1610
+			--|#line 1615
 		local
 			yyval23: EXPR_AS
 		do
@@ -4873,7 +4877,7 @@ yyval23 := new_bin_ge_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_374 is
-			--|#line 1612
+			--|#line 1617
 		local
 			yyval23: EXPR_AS
 		do
@@ -4883,7 +4887,7 @@ yyval23 := new_bin_gt_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_375 is
-			--|#line 1614
+			--|#line 1619
 		local
 			yyval23: EXPR_AS
 		do
@@ -4893,7 +4897,7 @@ yyval23 := new_bin_le_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_376 is
-			--|#line 1616
+			--|#line 1621
 		local
 			yyval23: EXPR_AS
 		do
@@ -4903,7 +4907,7 @@ yyval23 := new_bin_lt_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_377 is
-			--|#line 1618
+			--|#line 1623
 		local
 			yyval23: EXPR_AS
 		do
@@ -4913,7 +4917,7 @@ yyval23 := new_bin_eq_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_378 is
-			--|#line 1620
+			--|#line 1625
 		local
 			yyval23: EXPR_AS
 		do
@@ -4923,7 +4927,7 @@ yyval23 := new_bin_ne_as (yytype23 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item 
 		end
 
 	yy_do_action_379 is
-			--|#line 1622
+			--|#line 1627
 		local
 			yyval23: EXPR_AS
 		do
@@ -4933,7 +4937,7 @@ yyval23 := new_bin_free_as (yytype23 (yyvs.item (yyvsp - 2)), yytype30 (yyvs.ite
 		end
 
 	yy_do_action_380 is
-			--|#line 1624
+			--|#line 1629
 		local
 			yyval23: EXPR_AS
 		do
@@ -4943,7 +4947,7 @@ yyval23 := new_un_minus_as (yytype23 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_381 is
-			--|#line 1626
+			--|#line 1631
 		local
 			yyval23: EXPR_AS
 		do
@@ -4953,7 +4957,7 @@ yyval23 := new_un_plus_as (yytype23 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_382 is
-			--|#line 1628
+			--|#line 1633
 		local
 			yyval23: EXPR_AS
 		do
@@ -4963,7 +4967,7 @@ yyval23 := new_un_not_as (yytype23 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_383 is
-			--|#line 1630
+			--|#line 1635
 		local
 			yyval23: EXPR_AS
 		do
@@ -4973,7 +4977,7 @@ yyval23 := new_un_old_as (yytype23 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_384 is
-			--|#line 1632
+			--|#line 1637
 		local
 			yyval23: EXPR_AS
 		do
@@ -4983,27 +4987,27 @@ yyval23 := new_un_free_as (yytype30 (yyvs.item (yyvsp - 1)), yytype23 (yyvs.item
 		end
 
 	yy_do_action_385 is
-			--|#line 1634
+			--|#line 1639
 		local
 			yyval23: EXPR_AS
 		do
 
-yyval23 := new_un_strip_as (yytype71 (yyvs.item (yyvsp - 1))) 
+yyval23 := new_un_strip_as (yytype73 (yyvs.item (yyvsp - 1))) 
 			yyval := yyval23
 		end
 
 	yy_do_action_386 is
-			--|#line 1636
+			--|#line 1641
 		local
 			yyval23: EXPR_AS
 		do
 
-yyval23 := new_address_as (yytype84 (yyvs.item (yyvsp)).first) 
+yyval23 := new_address_as (yytype86 (yyvs.item (yyvsp)).first) 
 			yyval := yyval23
 		end
 
 	yy_do_action_387 is
-			--|#line 1638
+			--|#line 1643
 		local
 			yyval23: EXPR_AS
 		do
@@ -5013,7 +5017,7 @@ yyval23 := new_expr_address_as (yytype23 (yyvs.item (yyvsp - 1)))
 		end
 
 	yy_do_action_388 is
-			--|#line 1640
+			--|#line 1645
 		local
 			yyval23: EXPR_AS
 		do
@@ -5023,7 +5027,7 @@ yyval23 := new_address_current_as
 		end
 
 	yy_do_action_389 is
-			--|#line 1642
+			--|#line 1647
 		local
 			yyval23: EXPR_AS
 		do
@@ -5033,7 +5037,7 @@ yyval23 := new_address_result_as
 		end
 
 	yy_do_action_390 is
-			--|#line 1646
+			--|#line 1651
 		local
 			yyval30: ID_AS
 		do
@@ -5043,7 +5047,7 @@ yyval30 := new_id_as (token_buffer)
 		end
 
 	yy_do_action_391 is
-			--|#line 1654
+			--|#line 1659
 		local
 			yyval10: CALL_AS
 		do
@@ -5053,7 +5057,7 @@ yyval10 := yytype41 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_392 is
-			--|#line 1656
+			--|#line 1661
 		local
 			yyval10: CALL_AS
 		do
@@ -5063,7 +5067,7 @@ yyval10 := yytype41 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_393 is
-			--|#line 1658
+			--|#line 1663
 		local
 			yyval10: CALL_AS
 		do
@@ -5073,7 +5077,7 @@ yyval10 := yytype41 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_394 is
-			--|#line 1660
+			--|#line 1665
 		local
 			yyval10: CALL_AS
 		do
@@ -5083,7 +5087,7 @@ yyval10 := new_current_as
 		end
 
 	yy_do_action_395 is
-			--|#line 1662
+			--|#line 1667
 		local
 			yyval10: CALL_AS
 		do
@@ -5093,7 +5097,7 @@ yyval10 := new_result_as
 		end
 
 	yy_do_action_396 is
-			--|#line 1664
+			--|#line 1669
 		local
 			yyval10: CALL_AS
 		do
@@ -5103,7 +5107,7 @@ yyval10 := yytype1 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_397 is
-			--|#line 1666
+			--|#line 1671
 		local
 			yyval10: CALL_AS
 		do
@@ -5113,7 +5117,7 @@ yyval10 := yytype42 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_398 is
-			--|#line 1668
+			--|#line 1673
 		local
 			yyval10: CALL_AS
 		do
@@ -5123,7 +5127,7 @@ yyval10 := yytype45 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_399 is
-			--|#line 1670
+			--|#line 1675
 		local
 			yyval10: CALL_AS
 		do
@@ -5133,7 +5137,7 @@ yyval10 := yytype41 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_400 is
-			--|#line 1672
+			--|#line 1677
 		local
 			yyval10: CALL_AS
 		do
@@ -5143,7 +5147,7 @@ yyval10 := yytype18 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_401 is
-			--|#line 1676
+			--|#line 1681
 		local
 			yyval41: NESTED_AS
 		do
@@ -5153,7 +5157,7 @@ yyval41 := new_nested_as (new_current_as, yytype10 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_402 is
-			--|#line 1680
+			--|#line 1685
 		local
 			yyval41: NESTED_AS
 		do
@@ -5163,7 +5167,7 @@ yyval41 := new_nested_as (new_result_as, yytype10 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_403 is
-			--|#line 1684
+			--|#line 1689
 		local
 			yyval41: NESTED_AS
 		do
@@ -5173,7 +5177,7 @@ yyval41 := new_nested_as (yytype1 (yyvs.item (yyvsp - 2)), yytype10 (yyvs.item (
 		end
 
 	yy_do_action_404 is
-			--|#line 1688
+			--|#line 1693
 		local
 			yyval42: NESTED_EXPR_AS
 		do
@@ -5183,7 +5187,7 @@ yyval42 := new_nested_expr_as (yytype23 (yyvs.item (yyvsp - 3)), yytype10 (yyvs.
 		end
 
 	yy_do_action_405 is
-			--|#line 1692
+			--|#line 1697
 		local
 			yyval41: NESTED_AS
 		do
@@ -5193,7 +5197,7 @@ yyval41 := new_nested_as (yytype45 (yyvs.item (yyvsp - 2)), yytype10 (yyvs.item 
 		end
 
 	yy_do_action_406 is
-			--|#line 1696
+			--|#line 1701
 		local
 			yyval45: PRECURSOR_AS
 		do
@@ -5203,137 +5207,137 @@ yyval45 := new_precursor_as (Void, yytype65 (yyvs.item (yyvsp)))
 		end
 
 	yy_do_action_407 is
-			--|#line 1698
+			--|#line 1703
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 4)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 4)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_408 is
-			--|#line 1700
+			--|#line 1705
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 2)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 2)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_409 is
-			--|#line 1702
+			--|#line 1707
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_410 is
-			--|#line 1704
+			--|#line 1709
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_411 is
-			--|#line 1706
+			--|#line 1711
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_412 is
-			--|#line 1708
+			--|#line 1713
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_413 is
-			--|#line 1710
+			--|#line 1715
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_414 is
-			--|#line 1712
+			--|#line 1717
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_415 is
-			--|#line 1714
+			--|#line 1719
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_416 is
-			--|#line 1716
+			--|#line 1721
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_417 is
-			--|#line 1718
+			--|#line 1723
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_418 is
-			--|#line 1720
+			--|#line 1725
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_419 is
-			--|#line 1722
+			--|#line 1727
 		local
 			yyval45: PRECURSOR_AS
 		do
 
-yyval45 := new_precursor (yytype83 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
+yyval45 := new_precursor (yytype85 (yyvs.item (yyvsp - 3)), yytype65 (yyvs.item (yyvsp))) 
 			yyval := yyval45
 		end
 
 	yy_do_action_420 is
-			--|#line 1726
+			--|#line 1731
 		local
 			yyval10: CALL_AS
 		do
@@ -5343,7 +5347,7 @@ yyval10 := yytype41 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_421 is
-			--|#line 1728
+			--|#line 1733
 		local
 			yyval10: CALL_AS
 		do
@@ -5353,7 +5357,7 @@ yyval10 := yytype2 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_422 is
-			--|#line 1732
+			--|#line 1737
 		local
 			yyval41: NESTED_AS
 		do
@@ -5363,7 +5367,7 @@ yyval41 := new_nested_as (yytype2 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (y
 		end
 
 	yy_do_action_423 is
-			--|#line 1734
+			--|#line 1739
 		local
 			yyval41: NESTED_AS
 		do
@@ -5373,7 +5377,7 @@ yyval41 := new_nested_as (yytype2 (yyvs.item (yyvsp - 2)), yytype41 (yyvs.item (
 		end
 
 	yy_do_action_424 is
-			--|#line 1738
+			--|#line 1743
 		local
 			yyval1: ACCESS_AS
 		do
@@ -5391,7 +5395,7 @@ yyval41 := new_nested_as (yytype2 (yyvs.item (yyvsp - 2)), yytype41 (yyvs.item (
 		end
 
 	yy_do_action_425 is
-			--|#line 1751
+			--|#line 1756
 		local
 			yyval2: ACCESS_FEAT_AS
 		do
@@ -5401,7 +5405,7 @@ yyval2 := new_access_feat_as (yytype30 (yyvs.item (yyvsp - 1)), yytype65 (yyvs.i
 		end
 
 	yy_do_action_428 is
-			--|#line 1759
+			--|#line 1764
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5411,7 +5415,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_429 is
-			--|#line 1763
+			--|#line 1768
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5423,7 +5427,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_430 is
-			--|#line 1768
+			--|#line 1773
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5435,7 +5439,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_431 is
-			--|#line 1775
+			--|#line 1780
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5445,7 +5449,7 @@ yyval65 := new_eiffel_list_expr_as (0)
 		end
 
 	yy_do_action_432 is
-			--|#line 1777
+			--|#line 1782
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5455,7 +5459,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_433 is
-			--|#line 1781
+			--|#line 1786
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5467,7 +5471,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_434 is
-			--|#line 1786
+			--|#line 1791
 		local
 			yyval65: EIFFEL_LIST [EXPR_AS]
 		do
@@ -5479,7 +5483,7 @@ yyval65 := yytype65 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_435 is
-			--|#line 1797
+			--|#line 1802
 		local
 			yyval30: ID_AS
 		do
@@ -5489,7 +5493,7 @@ yyval30 := new_id_as (token_buffer)
 		end
 
 	yy_do_action_436 is
-			--|#line 1799
+			--|#line 1804
 		local
 			yyval30: ID_AS
 		do
@@ -5499,7 +5503,7 @@ yyval30 := new_boolean_id_as
 		end
 
 	yy_do_action_437 is
-			--|#line 1801
+			--|#line 1806
 		local
 			yyval30: ID_AS
 		do
@@ -5509,7 +5513,7 @@ yyval30 := new_character_id_as (False)
 		end
 
 	yy_do_action_438 is
-			--|#line 1803
+			--|#line 1808
 		local
 			yyval30: ID_AS
 		do
@@ -5519,7 +5523,7 @@ yyval30 := new_character_id_as (True)
 		end
 
 	yy_do_action_439 is
-			--|#line 1805
+			--|#line 1810
 		local
 			yyval30: ID_AS
 		do
@@ -5529,7 +5533,7 @@ yyval30 := new_double_id_as
 		end
 
 	yy_do_action_440 is
-			--|#line 1807
+			--|#line 1812
 		local
 			yyval30: ID_AS
 		do
@@ -5539,7 +5543,7 @@ yyval30 := new_integer_id_as (8)
 		end
 
 	yy_do_action_441 is
-			--|#line 1809
+			--|#line 1814
 		local
 			yyval30: ID_AS
 		do
@@ -5549,7 +5553,7 @@ yyval30 := new_integer_id_as (16)
 		end
 
 	yy_do_action_442 is
-			--|#line 1811
+			--|#line 1816
 		local
 			yyval30: ID_AS
 		do
@@ -5559,7 +5563,7 @@ yyval30 := new_integer_id_as (32)
 		end
 
 	yy_do_action_443 is
-			--|#line 1813
+			--|#line 1818
 		local
 			yyval30: ID_AS
 		do
@@ -5569,7 +5573,7 @@ yyval30 := new_integer_id_as (64)
 		end
 
 	yy_do_action_444 is
-			--|#line 1815
+			--|#line 1820
 		local
 			yyval30: ID_AS
 		do
@@ -5579,7 +5583,7 @@ yyval30 := new_none_id_as
 		end
 
 	yy_do_action_445 is
-			--|#line 1817
+			--|#line 1822
 		local
 			yyval30: ID_AS
 		do
@@ -5589,7 +5593,7 @@ yyval30 := new_pointer_id_as
 		end
 
 	yy_do_action_446 is
-			--|#line 1819
+			--|#line 1824
 		local
 			yyval30: ID_AS
 		do
@@ -5599,7 +5603,7 @@ yyval30 := new_real_id_as
 		end
 
 	yy_do_action_447 is
-			--|#line 1823
+			--|#line 1828
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5609,7 +5613,7 @@ yyval6 := yytype9 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_448 is
-			--|#line 1825
+			--|#line 1830
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5619,7 +5623,7 @@ yyval6 := yytype12 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_449 is
-			--|#line 1827
+			--|#line 1832
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5629,7 +5633,7 @@ yyval6 := yytype36 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_450 is
-			--|#line 1829
+			--|#line 1834
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5639,7 +5643,7 @@ yyval6 := yytype46 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_451 is
-			--|#line 1831
+			--|#line 1836
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5649,7 +5653,7 @@ yyval6 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_452 is
-			--|#line 1833
+			--|#line 1838
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5659,7 +5663,7 @@ yyval6 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_453 is
-			--|#line 1837
+			--|#line 1842
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5669,7 +5673,7 @@ yyval6 := yytype9 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_454 is
-			--|#line 1839
+			--|#line 1844
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5679,7 +5683,7 @@ yyval6 := yytype12 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_455 is
-			--|#line 1841
+			--|#line 1846
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5701,7 +5705,7 @@ yyval6 := yytype12 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_456 is
-			--|#line 1856
+			--|#line 1861
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5711,7 +5715,7 @@ yyval6 := new_real_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_457 is
-			--|#line 1858
+			--|#line 1863
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5721,7 +5725,7 @@ yyval6 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_458 is
-			--|#line 1860
+			--|#line 1865
 		local
 			yyval6: ATOMIC_AS
 		do
@@ -5731,7 +5735,7 @@ yyval6 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_459 is
-			--|#line 1864
+			--|#line 1869
 		local
 			yyval9: BOOL_AS
 		do
@@ -5741,7 +5745,7 @@ yyval9 := new_boolean_as (False)
 		end
 
 	yy_do_action_460 is
-			--|#line 1866
+			--|#line 1871
 		local
 			yyval9: BOOL_AS
 		do
@@ -5751,7 +5755,7 @@ yyval9 := new_boolean_as (True)
 		end
 
 	yy_do_action_461 is
-			--|#line 1870
+			--|#line 1875
 		local
 			yyval12: CHAR_AS
 		do
@@ -5763,7 +5767,7 @@ yyval9 := new_boolean_as (True)
 		end
 
 	yy_do_action_462 is
-			--|#line 1877
+			--|#line 1882
 		local
 			yyval36: INTEGER_AS
 		do
@@ -5785,7 +5789,7 @@ yyval9 := new_boolean_as (True)
 		end
 
 	yy_do_action_463 is
-			--|#line 1892
+			--|#line 1897
 		local
 			yyval36: INTEGER_AS
 		do
@@ -5807,7 +5811,7 @@ yyval9 := new_boolean_as (True)
 		end
 
 	yy_do_action_464 is
-			--|#line 1907
+			--|#line 1912
 		local
 			yyval36: INTEGER_AS
 		do
@@ -5830,7 +5834,7 @@ yyval9 := new_boolean_as (True)
 		end
 
 	yy_do_action_465 is
-			--|#line 1925
+			--|#line 1930
 		local
 			yyval46: REAL_AS
 		do
@@ -5840,7 +5844,7 @@ yyval46 := new_real_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_466 is
-			--|#line 1927
+			--|#line 1932
 		local
 			yyval46: REAL_AS
 		do
@@ -5850,7 +5854,7 @@ yyval46 := new_real_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_467 is
-			--|#line 1929
+			--|#line 1934
 		local
 			yyval46: REAL_AS
 		do
@@ -5862,7 +5866,7 @@ yyval46 := new_real_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_468 is
-			--|#line 1936
+			--|#line 1941
 		local
 			yyval7: BIT_CONST_AS
 		do
@@ -5872,7 +5876,7 @@ yyval7 := new_bit_const_as (new_id_as (token_buffer))
 		end
 
 	yy_do_action_469 is
-			--|#line 1940
+			--|#line 1945
 		local
 			yyval54: STRING_AS
 		do
@@ -5882,7 +5886,7 @@ yyval54 := yytype54 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_470 is
-			--|#line 1942
+			--|#line 1947
 		local
 			yyval54: STRING_AS
 		do
@@ -5892,7 +5896,7 @@ yyval54 := new_empty_string_as
 		end
 
 	yy_do_action_471 is
-			--|#line 1944
+			--|#line 1949
 		local
 			yyval54: STRING_AS
 		do
@@ -5902,7 +5906,7 @@ yyval54 := new_empty_verbatim_string_as (cloned_string (verbatim_marker))
 		end
 
 	yy_do_action_472 is
-			--|#line 1948
+			--|#line 1953
 		local
 			yyval54: STRING_AS
 		do
@@ -5912,7 +5916,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_473 is
-			--|#line 1950
+			--|#line 1955
 		local
 			yyval54: STRING_AS
 		do
@@ -5922,7 +5926,7 @@ yyval54 := new_verbatim_string_as (cloned_string (token_buffer), cloned_string (
 		end
 
 	yy_do_action_474 is
-			--|#line 1952
+			--|#line 1957
 		local
 			yyval54: STRING_AS
 		do
@@ -5932,7 +5936,7 @@ yyval54 := new_lt_string_as
 		end
 
 	yy_do_action_475 is
-			--|#line 1954
+			--|#line 1959
 		local
 			yyval54: STRING_AS
 		do
@@ -5942,7 +5946,7 @@ yyval54 := new_le_string_as
 		end
 
 	yy_do_action_476 is
-			--|#line 1956
+			--|#line 1961
 		local
 			yyval54: STRING_AS
 		do
@@ -5952,7 +5956,7 @@ yyval54 := new_gt_string_as
 		end
 
 	yy_do_action_477 is
-			--|#line 1958
+			--|#line 1963
 		local
 			yyval54: STRING_AS
 		do
@@ -5962,7 +5966,7 @@ yyval54 := new_ge_string_as
 		end
 
 	yy_do_action_478 is
-			--|#line 1960
+			--|#line 1965
 		local
 			yyval54: STRING_AS
 		do
@@ -5972,7 +5976,7 @@ yyval54 := new_minus_string_as
 		end
 
 	yy_do_action_479 is
-			--|#line 1962
+			--|#line 1967
 		local
 			yyval54: STRING_AS
 		do
@@ -5982,7 +5986,7 @@ yyval54 := new_plus_string_as
 		end
 
 	yy_do_action_480 is
-			--|#line 1964
+			--|#line 1969
 		local
 			yyval54: STRING_AS
 		do
@@ -5992,7 +5996,7 @@ yyval54 := new_star_string_as
 		end
 
 	yy_do_action_481 is
-			--|#line 1966
+			--|#line 1971
 		local
 			yyval54: STRING_AS
 		do
@@ -6002,7 +6006,7 @@ yyval54 := new_slash_string_as
 		end
 
 	yy_do_action_482 is
-			--|#line 1968
+			--|#line 1973
 		local
 			yyval54: STRING_AS
 		do
@@ -6012,7 +6016,7 @@ yyval54 := new_mod_string_as
 		end
 
 	yy_do_action_483 is
-			--|#line 1970
+			--|#line 1975
 		local
 			yyval54: STRING_AS
 		do
@@ -6022,7 +6026,7 @@ yyval54 := new_div_string_as
 		end
 
 	yy_do_action_484 is
-			--|#line 1972
+			--|#line 1977
 		local
 			yyval54: STRING_AS
 		do
@@ -6032,7 +6036,7 @@ yyval54 := new_power_string_as
 		end
 
 	yy_do_action_485 is
-			--|#line 1974
+			--|#line 1979
 		local
 			yyval54: STRING_AS
 		do
@@ -6042,7 +6046,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_486 is
-			--|#line 1976
+			--|#line 1981
 		local
 			yyval54: STRING_AS
 		do
@@ -6052,7 +6056,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_487 is
-			--|#line 1978
+			--|#line 1983
 		local
 			yyval54: STRING_AS
 		do
@@ -6062,7 +6066,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_488 is
-			--|#line 1980
+			--|#line 1985
 		local
 			yyval54: STRING_AS
 		do
@@ -6072,7 +6076,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_489 is
-			--|#line 1982
+			--|#line 1987
 		local
 			yyval54: STRING_AS
 		do
@@ -6082,7 +6086,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_490 is
-			--|#line 1984
+			--|#line 1989
 		local
 			yyval54: STRING_AS
 		do
@@ -6092,7 +6096,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_491 is
-			--|#line 1986
+			--|#line 1991
 		local
 			yyval54: STRING_AS
 		do
@@ -6102,7 +6106,7 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_492 is
-			--|#line 1988
+			--|#line 1993
 		local
 			yyval54: STRING_AS
 		do
@@ -6112,227 +6116,227 @@ yyval54 := new_string_as (cloned_string (token_buffer))
 		end
 
 	yy_do_action_493 is
-			--|#line 1992
+			--|#line 1997
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_minus_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_minus_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_494 is
-			--|#line 1994
+			--|#line 1999
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_plus_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_plus_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_495 is
-			--|#line 1996
+			--|#line 2001
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_not_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_not_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_496 is
-			--|#line 1998
+			--|#line 2003
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
+			yyval := yyval87
 		end
 
 	yy_do_action_497 is
-			--|#line 2002
+			--|#line 2007
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_lt_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_lt_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_498 is
-			--|#line 2004
+			--|#line 2009
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_le_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_le_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_499 is
-			--|#line 2006
+			--|#line 2011
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_gt_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_gt_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_500 is
-			--|#line 2008
+			--|#line 2013
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_ge_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_ge_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_501 is
-			--|#line 2010
+			--|#line 2015
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_minus_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_minus_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_502 is
-			--|#line 2012
+			--|#line 2017
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_plus_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_plus_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_503 is
-			--|#line 2014
+			--|#line 2019
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_star_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_star_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_504 is
-			--|#line 2016
+			--|#line 2021
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_slash_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_slash_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_505 is
-			--|#line 2018
+			--|#line 2023
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_mod_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_mod_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_506 is
-			--|#line 2020
+			--|#line 2025
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_div_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_div_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_507 is
-			--|#line 2022
+			--|#line 2027
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_power_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_power_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_508 is
-			--|#line 2024
+			--|#line 2029
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_and_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_and_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_509 is
-			--|#line 2026
+			--|#line 2031
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_and_then_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_and_then_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_510 is
-			--|#line 2028
+			--|#line 2033
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_implies_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_implies_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_511 is
-			--|#line 2030
+			--|#line 2035
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_or_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_or_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_512 is
-			--|#line 2032
+			--|#line 2037
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_or_else_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_or_else_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_513 is
-			--|#line 2034
+			--|#line 2039
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_xor_string_as) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_xor_string_as) 
+			yyval := yyval87
 		end
 
 	yy_do_action_514 is
-			--|#line 2036
+			--|#line 2041
 		local
-			yyval85: PAIR [STRING_AS, CLICK_AST]
+			yyval87: PAIR [STRING_AS, CLICK_AST]
 		do
 
-yyval85 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
-			yyval := yyval85
+yyval87 := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) 
+			yyval := yyval87
 		end
 
 	yy_do_action_515 is
-			--|#line 2040
+			--|#line 2045
 		local
 			yyval4: ARRAY_AS
 		do
@@ -6342,7 +6346,7 @@ yyval4 := new_array_as (yytype65 (yyvs.item (yyvsp - 1)))
 		end
 
 	yy_do_action_516 is
-			--|#line 2044
+			--|#line 2049
 		local
 			yyval56: TUPLE_AS
 		do
@@ -6352,7 +6356,7 @@ yyval56 := new_tuple_as (yytype65 (yyvs.item (yyvsp - 1)))
 		end
 
 	yy_do_action_517 is
-			--|#line 2048
+			--|#line 2053
 		local
 
 		do
@@ -6362,13 +6366,13 @@ set_position (current_position)
 		end
 
 	yy_do_action_518 is
-			--|#line 2052
+			--|#line 2057
 		local
-			yyval88: TOKEN_LOCATION
+			yyval90: TOKEN_LOCATION
 		do
 
-yyval88 := clone (current_position) 
-			yyval := yyval88
+yyval90 := clone (current_position) 
+			yyval := yyval90
 		end
 
 feature {NONE} -- Table templates
@@ -8640,24 +8644,25 @@ feature {NONE} -- Conversion
 			Result := (u = v)
 		end
 
-	yytype72 (v: ANY): INDEXING_CLAUSE_AS is
+	yytype72 (v: ANY): INTEGER is
 		require
 			valid_type: yyis_type72 (v)
+		local
+			ref: INTEGER_REF
 		do
-			Result ?= v
-		ensure
-			definition: Result = v
+			ref ?= v
+			Result := ref.item
 		end
 
 	yyis_type72 (v: ANY): BOOLEAN is
 		local
-			u: INDEXING_CLAUSE_AS
+			u: INTEGER_REF
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype73 (v: ANY): EIFFEL_LIST [INSTRUCTION_AS] is
+	yytype73 (v: ANY): ARRAYED_LIST [INTEGER] is
 		require
 			valid_type: yyis_type73 (v)
 		do
@@ -8668,13 +8673,13 @@ feature {NONE} -- Conversion
 
 	yyis_type73 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [INSTRUCTION_AS]
+			u: ARRAYED_LIST [INTEGER]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype74 (v: ANY): EIFFEL_LIST [INTERVAL_AS] is
+	yytype74 (v: ANY): INDEXING_CLAUSE_AS is
 		require
 			valid_type: yyis_type74 (v)
 		do
@@ -8685,13 +8690,13 @@ feature {NONE} -- Conversion
 
 	yyis_type74 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [INTERVAL_AS]
+			u: INDEXING_CLAUSE_AS
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype75 (v: ANY): EIFFEL_LIST [OPERAND_AS] is
+	yytype75 (v: ANY): EIFFEL_LIST [INSTRUCTION_AS] is
 		require
 			valid_type: yyis_type75 (v)
 		do
@@ -8702,13 +8707,13 @@ feature {NONE} -- Conversion
 
 	yyis_type75 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [OPERAND_AS]
+			u: EIFFEL_LIST [INSTRUCTION_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype76 (v: ANY): EIFFEL_LIST [PARENT_AS] is
+	yytype76 (v: ANY): EIFFEL_LIST [INTERVAL_AS] is
 		require
 			valid_type: yyis_type76 (v)
 		do
@@ -8719,13 +8724,13 @@ feature {NONE} -- Conversion
 
 	yyis_type76 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [PARENT_AS]
+			u: EIFFEL_LIST [INTERVAL_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype77 (v: ANY): EIFFEL_LIST [RENAME_AS] is
+	yytype77 (v: ANY): EIFFEL_LIST [OPERAND_AS] is
 		require
 			valid_type: yyis_type77 (v)
 		do
@@ -8736,13 +8741,13 @@ feature {NONE} -- Conversion
 
 	yyis_type77 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [RENAME_AS]
+			u: EIFFEL_LIST [OPERAND_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype78 (v: ANY): EIFFEL_LIST [STRING_AS] is
+	yytype78 (v: ANY): EIFFEL_LIST [PARENT_AS] is
 		require
 			valid_type: yyis_type78 (v)
 		do
@@ -8753,13 +8758,13 @@ feature {NONE} -- Conversion
 
 	yyis_type78 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [STRING_AS]
+			u: EIFFEL_LIST [PARENT_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype79 (v: ANY): EIFFEL_LIST [TAGGED_AS] is
+	yytype79 (v: ANY): EIFFEL_LIST [RENAME_AS] is
 		require
 			valid_type: yyis_type79 (v)
 		do
@@ -8770,13 +8775,13 @@ feature {NONE} -- Conversion
 
 	yyis_type79 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [TAGGED_AS]
+			u: EIFFEL_LIST [RENAME_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype80 (v: ANY): EIFFEL_LIST [TYPE] is
+	yytype80 (v: ANY): EIFFEL_LIST [STRING_AS] is
 		require
 			valid_type: yyis_type80 (v)
 		do
@@ -8787,13 +8792,13 @@ feature {NONE} -- Conversion
 
 	yyis_type80 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [TYPE]
+			u: EIFFEL_LIST [STRING_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype81 (v: ANY): EIFFEL_LIST [TYPE_DEC_AS] is
+	yytype81 (v: ANY): EIFFEL_LIST [TAGGED_AS] is
 		require
 			valid_type: yyis_type81 (v)
 		do
@@ -8804,13 +8809,13 @@ feature {NONE} -- Conversion
 
 	yyis_type81 (v: ANY): BOOLEAN is
 		local
-			u: EIFFEL_LIST [TYPE_DEC_AS]
+			u: EIFFEL_LIST [TAGGED_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype82 (v: ANY): CLICK_AST is
+	yytype82 (v: ANY): EIFFEL_LIST [TYPE] is
 		require
 			valid_type: yyis_type82 (v)
 		do
@@ -8821,13 +8826,13 @@ feature {NONE} -- Conversion
 
 	yyis_type82 (v: ANY): BOOLEAN is
 		local
-			u: CLICK_AST
+			u: EIFFEL_LIST [TYPE]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype83 (v: ANY): PAIR [ID_AS, CLICK_AST] is
+	yytype83 (v: ANY): EIFFEL_LIST [TYPE_DEC_AS] is
 		require
 			valid_type: yyis_type83 (v)
 		do
@@ -8838,13 +8843,13 @@ feature {NONE} -- Conversion
 
 	yyis_type83 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [ID_AS, CLICK_AST]
+			u: EIFFEL_LIST [TYPE_DEC_AS]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype84 (v: ANY): PAIR [FEATURE_NAME, CLICK_AST] is
+	yytype84 (v: ANY): CLICK_AST is
 		require
 			valid_type: yyis_type84 (v)
 		do
@@ -8855,13 +8860,13 @@ feature {NONE} -- Conversion
 
 	yyis_type84 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [FEATURE_NAME, CLICK_AST]
+			u: CLICK_AST
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype85 (v: ANY): PAIR [STRING_AS, CLICK_AST] is
+	yytype85 (v: ANY): PAIR [ID_AS, CLICK_AST] is
 		require
 			valid_type: yyis_type85 (v)
 		do
@@ -8872,13 +8877,13 @@ feature {NONE} -- Conversion
 
 	yyis_type85 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [STRING_AS, CLICK_AST]
+			u: PAIR [ID_AS, CLICK_AST]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype86 (v: ANY): PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST] is
+	yytype86 (v: ANY): PAIR [FEATURE_NAME, CLICK_AST] is
 		require
 			valid_type: yyis_type86 (v)
 		do
@@ -8889,13 +8894,13 @@ feature {NONE} -- Conversion
 
 	yyis_type86 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+			u: PAIR [FEATURE_NAME, CLICK_AST]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype87 (v: ANY): PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]] is
+	yytype87 (v: ANY): PAIR [STRING_AS, CLICK_AST] is
 		require
 			valid_type: yyis_type87 (v)
 		do
@@ -8906,13 +8911,13 @@ feature {NONE} -- Conversion
 
 	yyis_type87 (v: ANY): BOOLEAN is
 		local
-			u: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+			u: PAIR [STRING_AS, CLICK_AST]
 		do
 			u ?= v
 			Result := (u = v)
 		end
 
-	yytype88 (v: ANY): TOKEN_LOCATION is
+	yytype88 (v: ANY): PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST] is
 		require
 			valid_type: yyis_type88 (v)
 		do
@@ -8922,6 +8927,40 @@ feature {NONE} -- Conversion
 		end
 
 	yyis_type88 (v: ANY): BOOLEAN is
+		local
+			u: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]
+		do
+			u ?= v
+			Result := (u = v)
+		end
+
+	yytype89 (v: ANY): PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]] is
+		require
+			valid_type: yyis_type89 (v)
+		do
+			Result ?= v
+		ensure
+			definition: Result = v
+		end
+
+	yyis_type89 (v: ANY): BOOLEAN is
+		local
+			u: PAIR [TYPE, EIFFEL_LIST [FEATURE_NAME]]
+		do
+			u ?= v
+			Result := (u = v)
+		end
+
+	yytype90 (v: ANY): TOKEN_LOCATION is
+		require
+			valid_type: yyis_type90 (v)
+		do
+			Result ?= v
+		ensure
+			definition: Result = v
+		end
+
+	yyis_type90 (v: ANY): BOOLEAN is
 		local
 			u: TOKEN_LOCATION
 		do

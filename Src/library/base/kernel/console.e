@@ -81,6 +81,7 @@ feature -- Removal
 	dispose is
 			-- This is closed by the operating system at completion.
 		do
+			-- file_close (file_pointer)
 		end
 
 feature -- Input

@@ -44,6 +44,11 @@ feature -- Element change
 		deferred
 		end
 
+	remove_all_items is
+			-- Remove all items without destroying them.
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	item_type: EV_ITEM_IMP is

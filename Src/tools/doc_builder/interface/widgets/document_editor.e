@@ -123,17 +123,13 @@ feature -- Editing
 		do
 			l_widget := current_widget.internal_edit_widget
 			if l_widget /= Void then
-				if l_widget.has_selection then
-					l_text := l_widget.selected_text
-				else
-					l_widget.select_all
-					l_text := l_widget.selected_text	
-				end				
+				l_widget.select_all
+				l_text := l_widget.selected_text	
 				
 				if l_widget.can_insert (l_text) then
 					l_widget.cut_selection
 					l_text := l_widget.pretty_xml (l_text)
-					l_widget.insert_text (l_text)
+					l_widget.append_text (l_text)
 					current_document.set_text (l_widget.text)
 				else
 					l_widget.deselect_all
@@ -262,17 +258,7 @@ feature -- Commands
 		do
 			current_document.set_text (current_widget.internal_edit_widget.text)
 			current_document.save
-		end			
-		
-	format_tags is
-			-- Called by `select actions' of `menu_uppercase_tags'
-		do
-			if Shared_constants.Application_constants.tags_uppercase then
-				current_widget.internal_edit_widget.set_tag_case (True)
-			else
-				current_widget.internal_edit_widget.set_tag_case (False)
-			end
-		end		
+		end				
 		
 	validate_document is
 			-- Validate current document to loaded schema

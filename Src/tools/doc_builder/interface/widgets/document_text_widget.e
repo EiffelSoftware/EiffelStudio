@@ -7,10 +7,11 @@ class
 	DOCUMENT_TEXT_WIDGET
 
 inherit	
-	EV_TEXT
+	EV_RICH_TEXT
 		redefine
 			initialize,
-			is_in_default_state
+			is_in_default_state,
+			set_font
 		end
 
 	OBSERVER
@@ -38,6 +39,12 @@ inherit
 			copy,
 			default_create
 		end
+		
+	GRAPHICAL_CONSTANTS
+		undefine 
+			copy,
+			default_create
+		end
 
 create
 	make
@@ -45,12 +52,13 @@ create
 feature -- Creation
 
 	make (a_document: DOCUMENT) is
-			-- Make Current with `text'
+			-- Make Current with `a_document'
 		do
 			document := a_document	
 			default_create
 			document.attach (Current)
 			attach (application_window)
+			set_tab_width (18)
 		end
 
 feature {NONE} -- Initialization
@@ -58,9 +66,10 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialization
 		do	
-			Precursor {EV_TEXT}						
+			Precursor {EV_RICH_TEXT}						
 			if document.text /= Void then				
-				append_text (document.text)
+				append_rich_text (document.text)
+				highlight
 			end
 			should_update := True
 			create schema_validator
@@ -73,6 +82,7 @@ feature {NONE} -- Initialization
 			
 				-- Agents
 			change_actions.extend (agent internal_update_subject)
+			key_press_actions.extend (agent key_pressed)
 			key_release_actions.extend (agent update_subject)
 			pointer_button_release_actions.force_extend (agent internal_update_subject)
 			pointer_button_release_actions.force_extend (agent pointer_released)
@@ -149,7 +159,24 @@ feature -- Query
 			end
 		end
 
-feature -- Status report	
+feature -- Commands	
+	
+	highlight is
+			-- Highlight output sections		
+		local
+			l_highlight_filter: OUTPUT_FORMAT_FILTER
+			l_parser: XM_EIFFEL_PARSER
+		do			
+			if is_valid_xml then
+				create l_highlight_filter.make (Current)
+				create l_parser.make
+				l_parser.set_callbacks (l_highlight_filter)
+				l_parser.parse_from_string (text)
+				flush_buffer
+			else
+				append_rich_text (document.text)
+			end	
+		end
 
 	highlight_error is
 			-- Highlight error.		
@@ -188,73 +215,16 @@ feature -- Status report
 
 feature -- Status Setting
 
-	save is
-			-- Save current to disk
-		do
-			document.save
-		end	
-		
-	add_tabs_to_text (txt: STRING; tab_no: INTEGER): STRING is
-			-- Apply tabbing to 'txt'.  Start from end and
-			-- insert 'tab_no' tabs
+	set_font (a_font: EV_FONT) is
+			-- Assign `a_font' to `font'.
 		local
-			cnt: INTEGER
+			l_format: EV_CHARACTER_FORMAT
 		do
-			from
-				cnt := 0
-				create Result.make_from_string (txt)
-			until
-				cnt = tab_no
-			loop
-				Result.extend ('%T')
-				cnt := cnt + 1
-			end
-		end	
-		
-	set_tag_case (to_upper: BOOLEAN) is
-			-- Make XML tags `to_upper'
-		local
-			new_xml: STRING
-			curr_char: CHARACTER
-			char_cursor: INTEGER
-			in_tag, at_attributes: BOOLEAN
-		do
-			create new_xml.make_empty
-			from
-				char_cursor := 1
-			until
-				char_cursor > text.count
-			loop
-				curr_char := text.item (char_cursor)
-				if curr_char = '<' and not in_tag then
-					in_tag := True
-				elseif curr_char = '>' and in_tag then
-					in_tag := False
-					at_attributes := False
-				end
-				if in_tag and then not at_attributes and then 
-					not (text.item (char_cursor + 1) = '?') and then
-					not (text.item (char_cursor + 1) = '!') then
-					if curr_char.is_alpha then
-						if to_upper then
-							curr_char := curr_char.upper
-						else
-							curr_char := curr_char.lower
-						end						
-					end
-					if curr_char = ' ' then
-						at_attributes := True
-					end
-				elseif in_tag and then
-					((text.item (char_cursor + 1) = '?') or (text.item (char_cursor + 1) = '!')) then
-					at_attributes := True
-				end
-				char_cursor := char_cursor + 1
-				new_xml.extend (curr_char)
-			end
-			set_text ("")
-			insert_text (new_xml)
-		end		
+			create l_format
+			l_format.set_font (a_font)
+			modify_region (1, text.count, l_format, create {EV_CHARACTER_FORMAT_RANGE_INFORMATION}.make_with_flags 
+				(feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family))
+		end
 
 	tag_selection (a_tag: STRING) is
 			-- Enclose `selected_text' in `a_tag'.  Eg, `some_text'
@@ -329,6 +299,18 @@ feature -- Status Setting
 			end
 		end
 
+	key_pressed (a_key: EV_KEY) is
+			-- A key was pressed
+		local
+			l_format: EV_CHARACTER_FORMAT
+		do
+			l_format := character_format (caret_position)
+			if l_format /= Void then				
+				l_format.set_color (content_color)
+				set_current_format (l_format)	
+			end
+		end
+		
 	update_subject (a_key: EV_KEY) is
 			-- Update the observed subjects of changes so it can update
 			-- all of it observers
@@ -401,9 +383,9 @@ feature {OBSERVED} -- Observer Pattern
 	update is
 			-- Update Current
 		do
-			if not text.is_equal (document.text) then
-				set_text (document.text)				
-			end
+--			if not text.is_equal (document.text) then
+				highlight
+--			end				
 		end
 	
 feature {NONE} -- Implementation
@@ -585,7 +567,33 @@ feature {NONE} -- Implementation
     enter_key_code: INTEGER is
     		-- Enter key
     	once    		
-    		Result := (create {EV_KEY_CONSTANTS}).key_enter	
+    		Result := key_constants.key_enter	
     	end
+
+	append_rich_text (a_text: STRING) is
+			-- Append `a_text', formatted
+		local			
+			l_xml_filter: XML_FORMAT_FILTER
+			l_parser: XM_EIFFEL_PARSER
+			l_unformattable_text: STRING
+		do
+			create l_xml_filter.make (Current)
+			create l_parser.make
+			l_parser.set_callbacks (l_xml_filter)
+			l_parser.set_string_mode_mixed
+			l_parser.parse_from_string (a_text)
+			flush_buffer
+			if not l_parser.is_correct then
+				print ("Gobo Error description: " + l_parser.last_error_extended_description)
+				l_unformattable_text := a_text.substring (text.count + 1, a_text.count)
+				append_text (l_unformattable_text)
+			end			
+		end		
+
+	key_constants: EV_KEY_CONSTANTS is
+			-- Key constants
+		once
+			create Result
+		end
 
 end -- class DOCUMENT_TEXT_WIDGET

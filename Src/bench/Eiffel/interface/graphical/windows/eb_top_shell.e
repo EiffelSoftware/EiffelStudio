@@ -62,15 +62,12 @@ feature -- Display
 		do
 
 			if realized then
-				if shown then
-					raise
-				else
-					show
-				end
+				show
 			else
 				realize;
 				focus_label.initialize_focusables (Current)
-			end
+			end;
+			raise
 		end;
 
 feature {NONE} -- Implementation

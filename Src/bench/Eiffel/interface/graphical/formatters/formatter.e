@@ -19,7 +19,7 @@ inherit
 	SHARED_CONFIGURE_RESOURCES;
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as loose_changes
+			execute_warner_ok as save_changes
 		end
 
 feature -- Properties
@@ -37,7 +37,7 @@ feature -- Callbacks
 		do
 		end;
 
-	loose_changes (argument: ANY) is
+	save_changes (argument: ANY) is
 			-- If it comes here this means ok has
 			-- been pressed in the warner window
 			-- for file modification (only showtext
@@ -46,6 +46,10 @@ feature -- Callbacks
 			old_do_format: BOOLEAN;
 			mp: MOUSE_PTR
 		do
+			if tool.save_cmd_holder /= Void then
+				tool.save_cmd_holder.associated_command.execute (Void)
+			end
+
 			!! mp.set_watch_cursor;
 			text_window.set_changed (false);
 				-- Because the text in the window has been changed,

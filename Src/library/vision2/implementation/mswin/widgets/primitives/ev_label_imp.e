@@ -85,8 +85,7 @@ inherit
 		redefine
 			default_style,
 			wel_background_color,
-			wel_foreground_color,
-			wel_set_text
+			wel_foreground_color
 		end
 
 creation
@@ -128,15 +127,15 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
+			accomodate_text (a_text)
 			Precursor (a_text)
-			set_default_minimum_size
 		end
 
 	remove_text is
 			-- Make `text' `Void'.
 		do
-			Precursor
 			set_default_minimum_size
+			Precursor
 		end
 
 feature -- Status setting
@@ -162,27 +161,29 @@ feature -- Status setting
 			invalidate
 		end
 
+feature {EV_ANY_I} -- Initialization
+
 	set_default_minimum_size is
-		-- Resize to a default size.
-		local
-			fw: EV_FONT_IMP
-			t: TUPLE [INTEGER, INTEGER]
+			-- Resize to a default size.
 		do
-			fw ?= font.implementation
-			check
-				font_not_void: fw /= Void
-			end
-			t := fw.string_width_and_height (wel_text)
-			internal_set_minimum_size (t.integer_item (1), t.integer_item (2))
+			internal_set_minimum_size (16, 10)
 		end
 
-feature -- Element change
-
-	wel_set_text (txt: STRING) is
-			-- Set the window text
+	accomodate_text (a_text: STRING) is
+			-- Change internal minimum size to make `a_text' fit.
+		require
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.empty
+		local
+			font_imp: EV_FONT_IMP
+			t: TUPLE [INTEGER, INTEGER]
 		do
-			{WEL_STATIC} Precursor (txt)
-			set_default_minimum_size
+			font_imp ?= font.implementation
+			check
+				font_imp_not_void: font_imp /= Void
+			end
+			t := font_imp.string_width_and_height (wel_text)
+			internal_set_minimum_size (t.integer_item (1), t.integer_item (2))
 		end
 
 feature {NONE} -- WEL Implementation
@@ -285,11 +286,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.40  2000/04/18 23:32:51  brendel
---| Added redefinition of set_text and remove_text. set_default_minimum_size
---| is called after setting/removing. This is to avoid windows from trying to
---| be smart and wrap the text which works quite well until the line should be
---| split over more than 2 lines.
+--| Revision 1.41  2000/04/18 23:46:41  brendel
+--| Last revision did not really change anything.
+--| Widget is now resized *before* the text is passed to WEL.
 --|
 --| Revision 1.39  2000/03/29 20:31:45  brendel
 --| Added compiler workaround. See code.

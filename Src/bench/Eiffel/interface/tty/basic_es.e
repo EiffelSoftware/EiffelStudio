@@ -133,8 +133,10 @@ feature -- License manager
 
 	init_licence: BOOLEAN is
 			-- Initialization of the license
+		local
+			
 		do
-			licence.set_version (3.5);
+			licence.set_version (4.0);
 			licence.set_application_name ("eiffelbench");
 			licence.get_licence;
 			Result := licence.licensed;
@@ -216,6 +218,20 @@ feature -- Access
 			!!s.make (8);
 			s.extend ('-');
 			s.append_integer (6851006);
+			Result := option.is_equal (s)
+		end;
+
+	is_precompiled_licensed_option: BOOLEAN is
+			-- Is the current option `precompile_licensed'?
+			--| Encoded key for precompilation for
+			--| personal version
+		local
+			s: STRING
+		do
+			!!s.make (18);
+			s.extend ('-');
+			s.append_integer (6851006);
+			s.append ("_licensed");
 			Result := option.is_equal (s)
 		end;
 
@@ -704,7 +720,13 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_PRECOMP!command
+					!EWB_PRECOMP!command.make (False)
+				end
+			elseif is_precompiled_licensed_option then
+				if command /= Void then
+					option_error := True
+				else
+					!EWB_PRECOMP!command.make (True)
 				end
 			else
 				process_special_options

@@ -17,23 +17,25 @@ deferred class TERMINAL  inherit
 			action
 		end
 
-feature 
+feature -- Access
 
 	token: TOKEN; 
 			-- Token associated with terminal
 
+feature -- Status report
+
 	token_type: INTEGER is
 			-- Token code associated with terminal
 		deferred 
-		end -- token_type
+		end 
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	production: LINKED_LIST [CONSTRUCT] is
 			-- Void
 			-- (Meaningless for terminal constructs)
 		once 
-		end; -- production
+		end; 
 
 	no_left_recursion: BOOLEAN is true;
 
@@ -41,12 +43,12 @@ feature {NONE}
 			-- Do nothing.
 			-- (Meaningless for terminal constructs)
 		do
-		end; -- check_recursion
+		end; 
 
 	expand is
 			-- Do nothing.
 		do
-		end; -- expand
+		end; 
 
 	parse_body is
 			-- Parse a terminal construct.
@@ -58,23 +60,23 @@ feature {NONE}
 			else
 				complete := false
 			end
-		end; -- parse_body
+		end; 
 
 	token_correct: BOOLEAN is
 			-- Is token recognized?
 		do  
 			Result := document.token.type = token_type
-		end; -- token_correct
+		end; 
 
    action is
 			-- To be redefined in descendants.
 		do
-		end; -- action
+		end; 
 
 	in_action is
 			-- Do nothing.
 		do
-		end -- in_action
+		end 
 
 end -- class TERMINAL
  

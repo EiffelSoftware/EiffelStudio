@@ -10,7 +10,7 @@ indexing
 deferred class
 	AUTOMATON
 
-feature
+feature -- Access
 
 	greatest_input: INTEGER;
 			-- Greatest input used for the transitions from state
@@ -18,34 +18,38 @@ feature
 
 	start_number: INTEGER;
 			-- Unique start state used for the beginning of
-			-- the course through the automaton
+			-- the automaton's operation
+
+feature -- Measurement
 
 	nb_states: INTEGER;
 			-- Number of states in the automaton
 
+feature -- Status setting
+
 	set_start (n: INTEGER) is
-			-- Set the nth state as start.
+			-- Select state `n' as the starting state.
 		require
 			no_other_start: start_number = 0 or start_number = n;
 			is_in_automaton: n <= nb_states and n >= 1
 		do
 			start_number := n
-		end; -- set_start
+		end; 
 
-	set_transition (source, inp_ut, target: INTEGER) is
-			-- Set transition from source to target on inp_ut.
+	set_transition (source, input_doc, target: INTEGER) is
+			-- Set transition from source to target on `input_doc'.
 		deferred
-		end; -- set_transition
+		end; 
 
 	set_final (state, f: INTEGER) is
-			-- Set the attribute "final" of state as f.
+			-- Set to `f' the `final' value of `state'.
 		deferred
-		end; -- set_final
+		end; 
 
 	set_state is
 			-- Make a new state.
 		deferred
-		end -- set_state
+		end 
 
 end -- class AUTOMATON
  

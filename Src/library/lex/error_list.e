@@ -18,7 +18,7 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make is
 		do
@@ -26,7 +26,9 @@ feature
 			display := true
 		ensure
 			display = true
-		end; -- make
+		end; 
+
+feature -- Status setting
 
 	display_message is
 			-- From now, display new messages on standard output.
@@ -34,7 +36,7 @@ feature
 			display := true
 		ensure
 			display
-		end; -- display_message
+		end; 
 
 	do_not_display_message is
 			-- From now, do not display new messages on standard output.
@@ -42,7 +44,9 @@ feature
 			display := false
 		ensure
 			not display
-		end; -- do_not_display_message
+		end; 
+
+feature -- Element change
 
 	add_message (message: STRING) is
 			-- Add message in list and display it or not.
@@ -55,9 +59,9 @@ feature
 					output.new_line
 				end
 			end
-		end -- add_message
+		end; 
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	display: BOOLEAN;
 			-- Are the messages to be displayed?
@@ -68,7 +72,7 @@ feature {NONE}
 		once
 			!!Result;
 			Result.set_error_default
-		end -- output
+		end;
 
 end -- ERROR_LIST
  

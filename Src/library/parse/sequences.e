@@ -4,8 +4,7 @@ indexing
 	
 deferred class SEQUENCES obsolete
 
-	"Use REPETITION %N%
-	%(same semantics, but new name ensures more consistent terminology)."
+	"Use class REPETITION instead.  Same features, more consistent name."
 
 inherit
 

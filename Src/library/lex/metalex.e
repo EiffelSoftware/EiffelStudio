@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -11,6 +10,8 @@ indexing
 class METALEX inherit
 
 	HIGH_BUILDER
+		export
+			{NONE} freeze_lexical
 		redefine
 			raise_error
 		end
@@ -19,19 +20,27 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make_analyzer is
 			-- Create analyzer (if Void) and initialize it.
+		require
+			not_initialized: not initialized
 		do
-			freeze;
+			freeze_lexical;
 			if analyzer = Void then
-				!!analyzer.make
+				!! analyzer.make
 			end;
 			analyzer.initialize_attributes (dfa, categories_table,
 				keyword_h_table, keywords_case_sensitive);
 			initialized := True
-		end; -- make_analyzer
+		ensure
+			initialized;
+			analyzer_created: analyzer /= Void;
+			lexical_frozen
+		end; 
+
+feature -- Element change
 
 	put_expression (s: STRING; n: INTEGER; c: STRING) is
 			-- Record the regular expression described by `s',
@@ -41,25 +50,7 @@ feature
 		do
 			construct := c;
 			put_nameless_expression (s, n)
-		end; -- put_expression
-
-	read_grammar (token_file_name: STRING) is
-			-- Create lexical analyzer for grammar
-			-- given in file of name `token_file_name'.
-			-- The file should be structured as follows:
-			-- One or more lines of the form
-			-- `name regular_expression',
-			-- Then a line beginning with two dashes --,
-			-- Then zero or more lines containing one
-			-- keyword each.
-		do
-			!!token_file.make_open_read (token_file_name);
-			record_atomics;
-			record_keywords;
-			make_analyzer
-		ensure
-			analyzer_exists: analyzer /= Void
-		end; -- read_grammar
+		end; 
 
 	add_word (s: STRING; n: INTEGER) is
 			-- Record the word `s',
@@ -71,11 +62,29 @@ feature
 			set_word (s);
 			select_tool (last_created_tool);
 			associate (last_created_tool, n)
-		end; -- add_word
+		end; 
+
+feature -- Input
+
+	read_grammar (token_file_name: STRING) is
+			-- Create lexical analyzer for grammar in file of name
+			-- `token_file_name'. File structure:
+			-- One or more lines of the form
+			-- `name'  `regular_expression'
+			-- then a line beginning with two dashes --
+			-- then zero or more lines containing one keyword each.
+		do
+			!! token_file.make_open_read (token_file_name);
+			record_atomics;
+			record_keywords;
+			make_analyzer
+		ensure
+			analyzer_exists: analyzer /= Void
+		end; 
 
 	No_token: INTEGER is 0
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	construct: STRING;
 			-- Construct including description
@@ -83,10 +92,10 @@ feature {NONE}
 
 	give_h_table (d: HASH_TABLE [INTEGER, STRING]) is
 			-- Set the h_table to d.
-			-- Used when the h_table is not built by a LEX_BUILDER.
+			-- Used when the h_table is not built by a `LEX_BUILDER'.
 		do
 			keyword_h_table := d
-		end; -- give_h_table
+		end; 
 
 	token_file: UNIX_FILE;
 
@@ -113,7 +122,7 @@ feature {NONE}
 				regular := clone (token_file.laststring);
 				id := id + 1
 			end
-		end; -- record_atomics
+		end; 
 
 	record_keywords is
 			-- Record the keywords with their names, with type
@@ -135,7 +144,7 @@ feature {NONE}
 				token_file.readword;
 				keyword_name := clone (token_file.laststring)
 			end
-		end; -- record_keywords
+		end; 
 
 	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING) is
 			-- Print an error message and stop parsing.
@@ -146,7 +155,7 @@ feature {NONE}
 			error_position: INTEGER;
 			message: STRING
 		do
-			!!message.make (0);
+			!! message.make (0);
 			if description_length = 1 or pos < 1 then
 				error_position := 1
 			elseif pos < description_length then
@@ -171,11 +180,7 @@ feature {NONE}
 			message.append ("%NParsing of the grammar stopped.%N");
 			error_list.add_message (message);
 			parsing_stopped := True
-		end -- raise_error
-
-invariant
-
-	cursor_not_too_far: cursor <= description_length
+		end 
 
 end -- METALEX
  

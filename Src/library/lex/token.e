@@ -7,20 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TOKEN feature
+class TOKEN 
 
-	set (typ, lin, pos, key: INTEGER; str: STRING) is
-		do
-			type := typ;
-			line_number := lin;
-			position_in_line := pos;
-			keyword_code := key;
-			if type = 0 then
-				string_value := ""
-			else
-				string_value := str
-			end
-		end; -- set
+feature -- Access
 
 	type: INTEGER;
 			-- Type of the token
@@ -28,7 +17,7 @@ class TOKEN feature
 	line_number: INTEGER;
 			-- Line number in the parsed text
 
-	position_in_line: INTEGER;
+	column_number: INTEGER;
 			-- Column number in the parsed text
 
 	keyword_code: INTEGER;
@@ -42,7 +31,33 @@ class TOKEN feature
 			-- is `i' its identification number?
 		do
 			Result := (i = keyword_code)
-		end -- is_keyword
+		end 
+
+feature -- Status setting
+
+	set (typ, lin, col, key: INTEGER; str: STRING) is
+		-- Reset the contents of the token:
+		-- type `type', line number `lin',
+		-- column number `col', keyword value `key'.
+		do
+			type := typ;
+			line_number := lin;
+			column_number := col;
+			keyword_code := key;
+			if type = 0 then
+				string_value := ""
+			else
+				string_value := str
+			end
+		end
+
+feature -- Obsolete
+
+	position_in_line:INTEGER is
+		obsolete "Use ``column_number'' instead"
+	do
+		Result := column_number
+	end
 
 end -- class TOKEN
  

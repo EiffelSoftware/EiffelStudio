@@ -20,71 +20,65 @@ creation
 
 	make
 
-feature {NONE}
+feature  -- Access
 
 	analyzer: LEXICAL;
 			-- Lexical analyzer used
 
-	file_name : STRING is
-			-- Name of the file read by the lexical analyser
+	keyword_code (s: STRING) : INTEGER is
+			-- Keyword code corresponding to `s';
+			-- -1 if no specimen of `s' is found.
+		require
+			lex_not_void: analyzer /= Void
 		do  
-			Result := analyzer.file_name
-		end -- file_name
+			Result := analyzer.keyword_code (s)
+		end;
 
-feature 
+	keyword_string (code: INTEGER): STRING is
+			-- Keyword string corresponding to `code'
+		require
+			lex_not_void: analyzer /= Void
+		do
+			Result := analyzer.keyword_string (code)
+		end;
+
+	set_lexical (lexical: LEXICAL) is
+			-- Assign `lexical' to `analyzer'.
+		require
+			lex_not_void: analyzer /= Void
+		do
+			analyzer := lexical
+		end;
+
+feature  -- Status report
+
+	end_of_document : BOOLEAN is
+			-- Has end of document been reached?
+		do
+			Result := analyzer.end_of_text
+		end;
+
+feature  -- Status setting
 
 	set_input_file (filename: STRING) is
 			-- Set the name of the input file to be read
 			-- by the lexical analyser.
 		require
-			not_lex_void: not (analyzer = Void);
-			not_name_void: not (filename = Void);
+			lex_not_void: analyzer /= Void;
+			name_not_void: filename /= Void;
 		do
 			check not (analyzer = Void) end;
 			analyzer.set_file (filename)
-		end; -- set_input_file
+		end;
 
 	set_input_string (stringname: STRING) is
 			-- Set the name of the input string to be read
 			-- by the lexical analyser.
 		do
 			analyzer.set_string (stringname)
-		end; -- set_input_string
+		end;
 
-	end_of_document : BOOLEAN is
-			-- Has end of document been reached?
-		do
-			Result := analyzer.end_of_text
-		end; -- end_of_document
-
-	keyword_code (s: STRING) : INTEGER is
-			-- Keyword code corresponding to `s';
-			-- -1 if no specimen of `s' is found.
-		do  
-			Result := analyzer.keyword_code (s)
-		end; -- keyword_code
-
-	keyword_string (code: INTEGER): STRING is
-			-- Keyword string corresponding to code
-		do
-			Result := analyzer.keyword_string (code)
-		end; -- keyword_string
-
-	set_lexical (lexical: LEXICAL) is
-			-- Assign `lexical' to `analyzer'.
-		do
-			analyzer := lexical
-		end -- set_lexical
-
-feature {NONE}
-
-	line_number : INTEGER is
-			-- Line number of token
-		do
-			Result := analyzer.token_line_number
-		end -- line_number
-
-feature 
+feature  -- Input
 
 	get_token is
 			-- Make next token accessible with ``token''
@@ -94,7 +88,7 @@ feature
 			if empty or else islast then
 				analyzer.get_token;
 				if analyzer.last_token.type = 0 then
-					io.putstring("unrecognised_tokens%N");
+					io.putstring("unrecognized_tokens%N");
 					raise_error
 						("Unrecognized token(s) found (and ignored)");
 					from
@@ -108,23 +102,24 @@ feature
 				put_right (new_token)
 			end;
 			forth
-		end; -- get_token
+		end;
 	
 	retrieve_lex (filename: STRING) is
 			-- Retrieve `analyzer' from filename if exists.
 		require
-			not_lex_void: not (analyzer = Void);
-			not_name_void: not (filename = Void);
+			name_not_void: filename /= Void
 		local
 			retrieved_file: UNIX_FILE
 		do
 			if analyzer = Void then
-				!!analyzer.make
+				!! analyzer.make
 			end;
-			!!retrieved_file.make_open_read (filename);
+			!! retrieved_file.make_open_read (filename);
 			analyzer ?= analyzer.retrieved (retrieved_file);
 			retrieved_file.close
-		end; -- retrieve_lex
+		end;
+
+feature  -- Output
 
 	out_list is
 			-- Output tokens recognized so far.
@@ -142,24 +137,12 @@ feature
 					forth
 				end
 			end
-		end -- out_list
+		end;
 
-feature {NONE}
-
-	error_message : STRING is
-			-- Last error message output
-		once
-			!!Result.make(120)
-		end
-
-feature 
 
 	raise_error (s: STRING) is
 			-- Print error message s.
-		local
-			b: BASIC_ROUTINES
 		do  
-			!!b;
 			error_message.wipe_out;
 			error_message.append (file_name); 
 			error_message.append (" (line "); 
@@ -168,7 +151,29 @@ feature
 			error_message.append (s); 
 			io.error.putstring (error_message);
 			io.error.new_line
-		end  -- raise_syntax_error
+		end;
+
+feature {NONE}
+
+
+	error_message : STRING is
+			-- Last error message output
+		once
+			!! Result.make (120)
+		end
+
+	file_name : STRING is
+			-- Name of the file read by the lexical analyser
+		do  
+			Result := analyzer.file_name
+		end;
+
+	line_number : INTEGER is
+			-- Line number of token
+		do
+			Result := analyzer.token_line_number
+		end;
+
 
 end -- class INPUT
  

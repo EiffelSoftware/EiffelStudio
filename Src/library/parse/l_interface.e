@@ -14,7 +14,7 @@ deferred class L_INTERFACE inherit
 			make as metalex_make
 		end
 
-feature 
+feature -- Initialization
 
 	build (doc: INPUT) is
 			-- Create lexical analyzer and set `doc'
@@ -26,9 +26,16 @@ feature
 			obtain_analyzer;
 			make_analyzer;
 			doc.set_lexical (analyzer)
-		end -- build
+		end;
 
-feature {NONE}
+	obtain_analyzer is
+			-- Build lexical analyzer.
+		deferred
+		ensure
+			analyzer /= Void
+		end
+
+feature {NONE} -- Implementation
 
 	set_separator_type (type: INTEGER) is
 			-- Make tokens of type `type' to be separators.
@@ -37,16 +44,7 @@ feature {NONE}
 				!!analyzer.make
 			end;
 			analyzer.set_separator_type (type)
-		end -- set_separator_type
-
-feature 
-
-	obtain_analyzer is
-			-- Build lexical analyzer.
-		deferred
-		ensure
-			analyzer /= Void
-		end -- obtain_analyzer
+		end;
 
 end -- class L_INTERFACE
  

@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -12,7 +11,7 @@ class LINKED_DFA inherit
 
 	DFA;
 
-	LINK_AUTOMAT [STATE_OF_DFA]
+	LINKED_AUTOMATON [STATE_OF_DFA]
 		rename
 			set_final as l_set_final,
 			make as link_make
@@ -26,16 +25,37 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (i: INTEGER) is
-			-- Create with inputs 0 to i possibles.
+			-- Create automaton, enabling 0 to `i' inputs.
 		require
 			i_positive: i >= 0
 		do
 			link_make;
 			greatest_input := i
-		end; -- make
+		end; 
+
+feature -- Access
+
+	find_successor (source, input_doc: INTEGER): STATE_OF_DFA is
+			-- Successor of `source' for `input_doc';
+			-- void if no successor
+		require else
+			source_in_automaton: source >= 1 and source <= nb_states;
+			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
+		local
+			memory: INTEGER
+		do
+			memory := index;
+			go_i_th (source);
+			Result := item.successor (input_doc);
+			go_i_th (memory)
+		ensure then
+			same_index: old index = index
+		end; 
+
+feature -- Status setting
 
 	set_state is
 			-- Create a new state.
@@ -49,14 +69,15 @@ feature
 			finish
 		ensure then
 			current_state_is_last: islast
-		end; -- set_state
+		end; 
 
-	set_transition (source, inp_ut, target: INTEGER) is
-			-- Set transition from source to target on inp_ut.
+	set_transition (source, input_doc, target: INTEGER) is
+		-- Make a transition from `source' to `target'
+		-- for `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states;
-			possible_inp_ut: inp_ut >= 0 and inp_ut <= greatest_input
+			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		local
 			memory: INTEGER;
 			target_state: STATE_OF_DFA
@@ -65,28 +86,19 @@ feature
 			go_i_th (target);
 			target_state := item;
 			go_i_th (source);
-			item.append_transition (inp_ut, target_state);
+			item.append_transition (input_doc, target_state);
 			go_i_th (memory)
 		ensure then
 			same_index: old index = index
-		end; -- set_transition
+		end;
 
-	find_successor (source, inp_ut: INTEGER): STATE_OF_DFA is
-			-- Successor of source on inp_ut;
-			-- void if no successor
-		require else
-			source_in_automaton: source >= 1 and source <= nb_states;
-			possible_inp_ut: inp_ut >= 0 and inp_ut <= greatest_input
-		local
-			memory: INTEGER
+	set_final (state, f: INTEGER) is
+			-- Assign f to the attribute "final" of state.
 		do
-			memory := index;
-			go_i_th (source);
-			Result := item.successor (inp_ut);
-			go_i_th (memory)
-		ensure then
-			same_index: old index = index
-		end; -- find_successor
+			l_set_final (state, f)
+		end 
+
+feature -- Duplication
 
 	lcopy: FIXED_DFA is
 			-- Copy of Current in a fixed_dfa
@@ -100,15 +112,9 @@ feature
 				Result.add_right (item);
 				forth
 			end
-		end; -- copy
+		end
 
-	set_final (state, f: INTEGER) is
-			-- Assign f to the attribute "final" of state.
-		do
-			l_set_final (state, f)
-		end -- set_final
-
-feature {NONE}
+feature {NONE} -- Implementation
 
 	start_state: STATE_OF_DFA is
 			-- Start_number-th state
@@ -123,7 +129,7 @@ feature {NONE}
 			go_i_th (memory)
 		ensure then
 			old index = index
-		end -- start_state
+		end 
 
 invariant
 

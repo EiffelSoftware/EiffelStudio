@@ -69,7 +69,7 @@
 	/* XmRowColumnCallbackStruct */
 
 #define c_widget(_ptr_) (_ptr_)->widget
-#define c_data(_ptr_) (_ptr_)->data
+#define c_mdata(_ptr_) (_ptr_)->data
 #define c_callback_struct(_ptr_) (_ptr_)->callbackstruct
 
 	/* XmScrollBarCallbackStruct */

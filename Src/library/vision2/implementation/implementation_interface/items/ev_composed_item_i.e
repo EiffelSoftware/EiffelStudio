@@ -15,6 +15,8 @@ deferred class
 inherit
 	EV_ITEM_I
 
+
+
 feature {NONE} -- Initialization
 
 --	make_with_text (txt: ARRAY [STRING]) is
@@ -76,7 +78,7 @@ feature -- Element change
 			-- When there is a parent, the item has the
 			-- count done by the parent.
 		require
-			no_parent: parent_imp = Void
+			--no_parent: parent_imp = Void
 			valid_value: value > 0
 		deferred
 		ensure
@@ -250,6 +252,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/16 20:27:37  king
+--| Commented out no_parent in set_count
+--|
 --| Revision 1.7  2000/02/14 11:40:33  oconnor
 --| merged changes from prerelease_20000214
 --|

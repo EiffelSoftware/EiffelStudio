@@ -21,7 +21,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAP_CONTAINER) is
+	make (par: EV_PIXMAPABLE) is
 			-- Pixmap with 'par' as parent and 'txt' as 
 			-- text label
 		do
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			par.implementation.add_pixmap (Current)
 		end			
 	
-	make_from_file (par: EV_PIXMAP_CONTAINER; file_name: STRING) is
+	make_from_file (par: EV_PIXMAPABLE; file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is
 			-- raised, (but the pixmap object is created 

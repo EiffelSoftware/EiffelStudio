@@ -3,7 +3,7 @@ indexing
 				%when a redeclaration has a not an expanded type but the precursor does. %
 				%Note that expanded type doen't refer to the simple types..."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	VE02

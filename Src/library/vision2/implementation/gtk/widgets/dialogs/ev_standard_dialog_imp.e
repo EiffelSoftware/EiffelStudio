@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_GTK_WINDOW_IMP}	
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (event_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 		end
 
 feature -- Access

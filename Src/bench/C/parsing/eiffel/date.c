@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 
 #ifdef EIF_WIN32
-#define NOGDI
+/*#define NOGDI*/
 #include <windows.h>
 #endif
 

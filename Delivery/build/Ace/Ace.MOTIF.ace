@@ -8,12 +8,12 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/vision");
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision");
 
 cluster
 
 -- EiffelBuild Library
-	build_library:			"$EIFFEL5/build/library";
+	build_library:			"$ISE_EIFFEL/build/library";
 	eb_command(build_library):	"$/command";
 	eb_control(build_library):	"$/control";
 	eb_widget(build_library):	"$/widget";
@@ -32,16 +32,16 @@ cluster
 
 
 -- EiffelBase:
-        base:                           "$EIFFEL5/library/base";
-	structures(base):               "$/structures";
+	base:						"$ISE_EIFFEL/library/base";
+	structures(base):			"$/structures";
 	
-	kernel(base):           	"$/kernel";
-	support(base):          	"$/support";
-	access(structures):     	"$/access";
-	cursors(structures):    	"$/cursors";
+	kernel(base):				"$/kernel";
+	support(base):				"$/support";
+	access(structures):			"$/access";
+	cursors(structures):		"$/cursors";
 	
 	dispenser(structures):  	"$/dispenser";
-        list(structures):               "$/list";
+	list(structures):               "$/list";
 	set(structures):                "$/set";
 	sort(structures):               "$/sort";
 	storage(structures):    	"$/storage";
@@ -51,7 +51,11 @@ cluster
 
 
 -- MEL
+<<<<<<< Ace.MOTIF.ace
+	mel:             		"$ISE_EIFFEL/library/mel";
+=======
 	mel:             		"$EIFFEL5/library/mel";
+>>>>>>> 1.3
 	mel_callback_structs (mel):   	"$/callback_structs";
 	mel_constants (mel):          	"$/constants";
 	mel_events (mel):             	"$/events";
@@ -64,38 +68,38 @@ cluster
 
 
 -- EiffelVision
-        vision:                     "$EIFFEL5/library/vision";
-    vision_kernel (vision):         "$/oui/kernel";
-    vision_widgets (vision):        "$/oui/widgets";
-    vision_context_data (vision):   "$/oui/context_data";
+	vision:                     "$ISE_EIFFEL/library/vision";
+	vision_kernel (vision):         "$/oui/kernel";
+	vision_widgets (vision):        "$/oui/widgets";
+	vision_context_data (vision):   "$/oui/context_data";
 
-    vision_figures (vision):    "$/figures";
-    vision_tools (vision):      "$/tools";
+	vision_figures (vision):    "$/figures";
+	vision_tools (vision):      "$/tools";
 
   -- Toolkit
-    vision_toolkit (vision):        "$/implement/toolkit";
-    vision_toolkit_kernel (vision_toolkit): "$/kernel";
-    vision_toolkit_widgets (vision_toolkit):    "$/widgets";
-    vision_toolkit_support (vision_toolkit):    "$/support";
+	vision_toolkit (vision):        "$/implement/toolkit";
+	vision_toolkit_kernel (vision_toolkit): "$/kernel";
+	vision_toolkit_widgets (vision_toolkit):    "$/widgets";
+	vision_toolkit_support (vision_toolkit):    "$/support";
 
   -- Implementation clusters for x/Motif
-    vision_imp (vision):                "$/implement/motif";
-    vision_imp_kernel (vision_imp):         "$/kernel";
-    vision_imp_widgets (vision_imp):        "$/widgets";
-    vision_imp_support (vision_imp):        "$/support";
+	vision_imp (vision):                "$/implement/motif";
+	vision_imp_kernel (vision_imp):         "$/kernel";
+	vision_imp_widgets (vision_imp):        "$/widgets";
+	vision_imp_support (vision_imp):        "$/support";
 
-        vision_imp_x (vision):              "$/implement/x";
-        vision_imp_x_kernel (vision_imp_x):     "$/kernel";
---      vision_imp_x_widgets (vision_imp_x):    "$/widgets";
-        vision_imp_x_support (vision_imp_x):    "$/support";
+	vision_imp_x (vision):              "$/implement/x";
+	vision_imp_x_kernel (vision_imp_x):     "$/kernel";
+--	vision_imp_x_widgets (vision_imp_x):    "$/widgets";
+	vision_imp_x_support (vision_imp_x):    "$/support";
 
 
 external
-	include_path: "\$(EIFFEL5)/library/mel/Clib";
+	include_path: "\$(ISE_EIFFEL)/library/mel/Clib";
 
 	object:
-		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
 		"-lXm -lXt -lX11";
 
 end

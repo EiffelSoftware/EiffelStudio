@@ -295,10 +295,10 @@ feature {NONE} -- Implementation
 			frame.set_style (1)
 			create padding_box
 			padding_box.set_minimum_height (2)
-			tool_holder.extend (padding_box)
-			tool_holder.disable_item_expand (padding_box)
-			tool_holder.extend (horizontal_box)
-			tool_holder.disable_item_expand (horizontal_box)
+			the_tool_holder.extend (padding_box)
+			the_tool_holder.disable_item_expand (padding_box)
+			the_tool_holder.extend (horizontal_box)
+			the_tool_holder.disable_item_expand (horizontal_box)
 			frame.extend (status_bar_label)
 			frame.set_minimum_height (frame.minimum_height + 3)
 			

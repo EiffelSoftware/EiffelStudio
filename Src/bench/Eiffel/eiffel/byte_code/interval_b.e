@@ -7,11 +7,6 @@ inherit
 		undefine
 			is_equal
 		end;
-	BASIC_ROUTINES
-		rename
-			min as basic_min,
-			max as basic_max
-		end;
 	
 feature 
 

@@ -23,10 +23,6 @@ inherit
 		rename
 			same_type as general_same_type
 		end;
-	BASIC_ROUTINES
-		rename
-			same_type as general_same_type
-		end;
 	SHARED_ERROR_HANDLER
 		rename
 			same_type as general_same_type

@@ -52,7 +52,11 @@ feature -- Access
 			when double_code then Result := double_item (index)
 			when real_code then Result := real_item (index)
 			when pointer_code then Result := pointer_item (index)
-			when integer_code then Result := integer_32_item (index)
+			when natural_32_code then Result := natural_32_item (index)
+			when natural_8_code then Result := natural_8_item (index)
+			when natural_16_code then Result := natural_16_item (index)
+			when natural_64_code then Result := natural_64_item (index)
+			when integer_32_code then Result := integer_32_item (index)
 			when integer_8_code then Result := integer_8_item (index)
 			when integer_16_code then Result := integer_16_item (index)
 			when integer_64_code then Result := integer_64_item (index)
@@ -92,13 +96,49 @@ feature -- Access
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_numeric: is_numeric_item (index)
+			is_numeric: is_double_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	natural_8_item (index: INTEGER): NATURAL_8 is
+			-- NATURAL_8 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_8_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	natural_16_item (index: INTEGER): NATURAL_16 is
+			-- NATURAL_16 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_16_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	natural_32_item (index: INTEGER): NATURAL_32 is
+			-- NATURAL_32 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_32_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	natural_64_item (index: INTEGER): NATURAL_64 is
+			-- NATURAL_64 item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_natural_64_item (index)
 		do
 			Result ?= fast_item (index - 1)
 		end
 
 	integer_8_item (index: INTEGER): INTEGER_8 is
-			-- Integer item at `index'.
+			-- INTEGER_8 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_8_item (index)
@@ -107,7 +147,7 @@ feature -- Access
 		end
 
 	integer_16_item (index: INTEGER): INTEGER_16 is
-			-- Integer item at `index'.
+			-- INTEGER_16 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_16_item (index)
@@ -116,16 +156,16 @@ feature -- Access
 		end
 
 	integer_item, integer_32_item (index: INTEGER): INTEGER is
-			-- Integer item at `index'.
+			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_integer: is_integer_item (index)
+			is_integer: is_integer_32_item (index)
 		do
 			Result ?= fast_item (index - 1)
 		end
 
 	integer_64_item (index: INTEGER): INTEGER_64 is
-			-- Integer item at `index'.
+			-- INTEGER_64 item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_integer: is_integer_64_item (index)
@@ -146,7 +186,7 @@ feature -- Access
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
+			is_real_or_integer: is_real_item (index)
 		do
 			Result ?= fast_item (index - 1)
 		end
@@ -356,12 +396,48 @@ feature -- Element change
 		do
 			native_array.put (index - 1, v)
 		end
+
+	put_natural_8 (v: NATURAL_8; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_8_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
 		
+	put_natural_16 (v: NATURAL_16; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_16_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+
+	put_natural_32 (v: NATURAL_32; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_32_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_natural_64 (v: NATURAL_64; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_natural_64_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+
 	put_integer, put_integer_32 (v: INTEGER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
-			valid_type: is_integer_item (index)
+			valid_type: is_integer_32_item (index)
 		do
 			native_array.put (index - 1, v)
 		end
@@ -419,6 +495,38 @@ feature -- Type queries
 			Result := (generic_typecode (index - 1) = double_code)
 		end
 
+	is_natural_8_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_8?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (generic_typecode (index - 1) = natural_8_code)
+		end
+
+	is_natural_16_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_16?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (generic_typecode (index - 1) = natural_16_code)
+		end
+
+	is_natural_32_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_32?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (generic_typecode (index - 1) = natural_32_code)
+		end
+
+	is_natural_64_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' an NATURAL_64?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (generic_typecode (index - 1) = natural_64_code)
+		end
+
 	is_integer_8_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' an INTEGER?
 		require
@@ -440,7 +548,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = integer_code)
+			Result := (generic_typecode (index - 1) = integer_32_code)
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN is
@@ -477,6 +585,8 @@ feature -- Type queries
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' a number?
+		obsolete
+			"Use the precise type query instead."
 		require
 			valid_index: valid_index (index)
 		local
@@ -485,7 +595,7 @@ feature -- Type queries
 			tcode := generic_typecode (index - 1)
 			inspect tcode
 			when
-				integer_8_code, integer_16_code, integer_code,
+				integer_8_code, integer_16_code, integer_32_code,
 				integer_64_code, real_code, double_code
 			then
 				Result := True
@@ -526,6 +636,38 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
+	is_uniform_natural_8: BOOLEAN is
+			-- Are all items of type NATURAL_8?
+		do
+			Result := is_tuple_uniform (natural_8_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_16: BOOLEAN is
+			-- Are all items of type NATURAL_16?
+		do
+			Result := is_tuple_uniform (natural_16_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_32: BOOLEAN is
+			-- Are all items of type NATURAL_32?
+		do
+			Result := is_tuple_uniform (natural_32_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_natural_64: BOOLEAN is
+			-- Are all items of type NATURAL_64?
+		do
+			Result := is_tuple_uniform (natural_64_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
 	is_uniform_integer_8: BOOLEAN is
 			-- Are all items of type INTEGER_8?
 		do
@@ -545,7 +687,7 @@ feature -- Type queries
 	is_uniform_integer, is_uniform_integer_32: BOOLEAN is
 			-- Are all items of type INTEGER?
 		do
-			Result := is_tuple_uniform (integer_code)
+			Result := is_tuple_uniform (integer_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -586,6 +728,8 @@ feature -- Type conversion queries
 
 	convertible_to_double: BOOLEAN is
 			-- Is current convertible to an array of doubles?
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			tcode: INTEGER_8
@@ -600,7 +744,7 @@ feature -- Type conversion queries
 				tcode := generic_typecode (i)
 				inspect tcode
 				when
-					integer_8_code, integer_16_code, integer_code,
+					integer_8_code, integer_16_code, integer_32_code,
 					integer_64_code, real_code, double_code
 				then
 					Result := True
@@ -615,6 +759,8 @@ feature -- Type conversion queries
 
 	convertible_to_real: BOOLEAN is
 			-- Is current convertible to an array of reals?
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			tcode: INTEGER_8
@@ -629,7 +775,7 @@ feature -- Type conversion queries
 				tcode := generic_typecode (i)
 				inspect tcode
 				when
-					integer_8_code, integer_16_code, integer_code,
+					integer_8_code, integer_16_code, integer_32_code,
 					integer_64_code, real_code
 				then
 					Result := True
@@ -646,6 +792,8 @@ feature -- Conversion
 
 	arrayed: ARRAY [ANY] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			a: ANY
@@ -669,6 +817,8 @@ feature -- Conversion
 
 	boolean_arrayed: ARRAY [BOOLEAN] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_boolean: is_uniform_boolean
 		local
@@ -692,6 +842,8 @@ feature -- Conversion
 
 	character_arrayed: ARRAY [CHARACTER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_character: is_uniform_character
 		local
@@ -715,6 +867,8 @@ feature -- Conversion
 
 	double_arrayed: ARRAY [DOUBLE] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			convertible: convertible_to_double
 		local
@@ -738,6 +892,8 @@ feature -- Conversion
 
 	integer_arrayed: ARRAY [INTEGER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_integer: is_uniform_integer
 		local
@@ -750,7 +906,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				Result.put (integer_item (i), i)
+				Result.put (integer_32_item (i), i)
 				i := i + 1
 			end
 		ensure
@@ -761,6 +917,8 @@ feature -- Conversion
 
 	pointer_arrayed: ARRAY [POINTER] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			is_uniform_pointer: is_uniform_pointer
 		local
@@ -784,6 +942,8 @@ feature -- Conversion
 
 	real_arrayed: ARRAY [REAL] is
 			-- Items of Current as array
+		obsolete
+			"Will be removed in future releases"
 		require
 			convertible: convertible_to_real
 		local
@@ -809,6 +969,8 @@ feature -- Conversion
 			-- Items of Current as array
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
+		obsolete
+			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
 			s: STRING
@@ -866,8 +1028,12 @@ feature {ROUTINE, TUPLE}
 	pointer_code: INTEGER_8 is 0x05
 	integer_8_code: INTEGER_8 is 0x06
 	integer_16_code: INTEGER_8 is 0x07
-	integer_code: INTEGER_8 is 0x08
+	integer_32_code: INTEGER_8 is 0x08
 	integer_64_code: INTEGER_8 is 0x09
+	natural_8_code: INTEGER_8 is 0x0A
+	natural_16_code: INTEGER_8 is 0x0B
+	natural_32_code: INTEGER_8 is 0x0C
+	natural_64_code: INTEGER_8 is 0x0D
 	any_code: INTEGER_8 is 0xFF
 			-- Code used to identify type in tuple.
 
@@ -949,11 +1115,15 @@ feature {NONE} -- Implementation
 			Result.set_item (feature {TYPE}.get_type_string (("System.Char").to_cil), character_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), double_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Single").to_cil), real_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Int32").to_cil), integer_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), pointer_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Object").to_cil), reference_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Byte").to_cil), integer_8_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Byte").to_cil), natural_8_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.UInt16").to_cil), natural_16_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.UInt32").to_cil), natural_32_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.UInt64").to_cil), natural_64_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.SByte").to_cil), integer_8_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Int16").to_cil), integer_16_code)
+			Result.set_item (feature {TYPE}.get_type_string (("System.Int32").to_cil), integer_32_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Int64").to_cil), integer_64_code)
 		end
 		
@@ -965,11 +1135,15 @@ feature {NONE} -- Implementation
 			Result.put (character_code, feature {TYPE}.get_type_string (("System.Char").to_cil))
 			Result.put (double_code, feature {TYPE}.get_type_string (("System.Double").to_cil))
 			Result.put (real_code, feature {TYPE}.get_type_string (("System.Single").to_cil))
-			Result.put (integer_code, feature {TYPE}.get_type_string (("System.Int32").to_cil))
 			Result.put (pointer_code, feature {TYPE}.get_type_string (("System.IntPtr").to_cil))
 			Result.put (reference_code, feature {TYPE}.get_type_string (("System.Object").to_cil))
-			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))
+			Result.put (natural_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))
+			Result.put (natural_16_code, feature {TYPE}.get_type_string (("System.UInt16").to_cil))
+			Result.put (natural_32_code, feature {TYPE}.get_type_string (("System.UInt32").to_cil))
+			Result.put (natural_64_code, feature {TYPE}.get_type_string (("System.UInt64").to_cil))
+			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.SByte").to_cil))
 			Result.put (integer_16_code, feature {TYPE}.get_type_string (("System.Int16").to_cil))
+			Result.put (integer_32_code, feature {TYPE}.get_type_string (("System.Int32").to_cil))
 			Result.put (integer_64_code, feature {TYPE}.get_type_string (("System.Int64").to_cil))
 		end
 

@@ -35,8 +35,8 @@ feature -- Creation
 			example.set_minimum_width (120)
 			create change_b.make_with_text_and_action ("Change ...",~change)
 			h2.extend (change_b)
-			h2.disable_child_expand (change_b)
-			h2.disable_child_expand (example)
+			h2.disable_item_expand (change_b)
+			h2.disable_item_expand (example)
 		end
 
 feature -- Commands

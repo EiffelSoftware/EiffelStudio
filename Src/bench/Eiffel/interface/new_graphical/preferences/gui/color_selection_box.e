@@ -34,14 +34,14 @@ feature -- Creation
 			h2.extend (color_b)
 --			color_b.disable_vertical_resize
 --			color_b.disable_horizontal_resize
-			h2.disable_child_expand (color_b)
+			h2.disable_item_expand (color_b)
 			color_b.set_minimum_size (30, 30)
 
 			create change_b.make_with_text_and_action ("Change ...",~change)
 			h2.extend (change_b)
 --			change_b.disable_vertical_resize
 --			change_b.disable_horizontal_resize
-			h2.disable_child_expand (change_b)
+			h2.disable_item_expand (change_b)
 		end
 
 feature -- Commands

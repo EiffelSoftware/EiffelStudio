@@ -107,6 +107,9 @@ feature -- Status report
 			
 	is_resize_enabled: BOOLEAN
 			-- Is resizing enabled?
+			
+	is_scrollbar_enabled: BOOLEAN
+			-- Are scrollbars visible?
 		
 feature -- Access
 
@@ -155,7 +158,29 @@ feature -- Status setting
 		ensure
 			set: is_resize_enabled = True
 		end
-			
+		
+	disable_scrollbars is
+			-- Hide scrollbars.
+		do
+			horizontal_scrollbar.hide
+			vertical_scrollbar.hide
+			is_scrollbar_enabled := False
+		ensure
+			hide: not horizontal_scrollbar.is_show_requested and not vertical_scrollbar.is_show_requested
+			set: not is_scrollbar_enabled
+		end
+		
+	enable_scrollbars is
+			-- Show scrollbars.
+		do
+			horizontal_scrollbar.show
+			vertical_scrollbar.show
+			is_scrollbar_enabled := True
+		ensure
+			show: horizontal_scrollbar.is_show_requested and vertical_scrollbar.is_show_requested
+			set: is_scrollbar_enabled
+		end
+
 feature -- Element change
 
 	set_scroll_speed (a_scroll_speed: like scroll_speed) is
@@ -179,6 +204,26 @@ feature -- Element change
 			set: world = a_world
 		end
 		
+	set_world_border (a_border: like world_border) is
+			-- Set `world_border' to `a_border'.
+		require
+			a_border_positive: a_border >= 0
+		do
+			world_border := a_border
+		ensure
+			set: world_border = a_border
+		end
+		
+	set_autoscroll_border (a_border: like autoscroll_border) is
+			-- Set `autoscroll_border' to `a_border'.
+		require
+			a_border_positive: a_border >= 0
+		do
+			autoscroll_border := a_border
+		ensure
+			set: autoscroll_border = a_border
+		end
+
 	crop is
 			-- Resize Scrollbars such that world plus `world_border' plus `autoscroll_border' fits in cell.
 		local
@@ -268,12 +313,14 @@ feature -- Element change
 			bbox := world.bounding_box
 			l_width := (width - autoscroll_border - world_border)
 			l_height := (height - autoscroll_border - world_border)
-			new_scale_factor := (l_width / bbox.width).min (l_height / bbox.height)
-			world.scale (new_scale_factor)
-			crop
-			vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower + vertical_scrollbar.value_range.count // 2)
-			horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower + horizontal_scrollbar.value_range.count // 2)
-			projector.full_project
+			if bbox.width /= 0 and then bbox.height /= 0 then
+				new_scale_factor := (l_width / bbox.width).min (l_height / bbox.height)
+				world.scale (new_scale_factor)
+				crop
+				vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower + vertical_scrollbar.value_range.count // 2)
+				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower + horizontal_scrollbar.value_range.count // 2)
+				projector.full_project
+			end
 		end
 
 feature {NONE} -- Implementation

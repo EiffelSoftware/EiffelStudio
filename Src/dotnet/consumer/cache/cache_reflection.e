@@ -13,6 +13,9 @@ inherit
 			assembly_types
 		end
 
+create
+	make
+
 feature -- Redefined
 
 	consumed_type (t: TYPE): CONSUMED_TYPE is

@@ -13,7 +13,8 @@ inherit
 		
 	EV_SPLIT_AREA_IMP
 		redefine
-			child_minheight_changed
+			child_minheight_changed,
+			child_minwidth_changed
 		end
 	
 creation
@@ -121,6 +122,21 @@ feature {NONE} -- Implementation fo automatic size compute
 			end
 			set_minimum_height (local_height + size)
 		end
+
+	child_minwidth_changed  (value: INTEGER; the_child: EV_SIZEABLE_IMP) is
+   			-- Change the minimum width of the container because
+   			-- the child changed his own minimum width.
+		local
+			temp: INTEGER
+   		do
+			if child1 /= Void then
+				temp := child1.minimum_width
+			end
+			if child2 /= Void then
+	 			temp := temp.max (child2.minimum_width)
+			end
+			set_minimum_width (temp)
+ 		end
 
 feature {NONE} -- Implementation
 

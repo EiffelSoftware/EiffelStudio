@@ -310,15 +310,16 @@ feature {NONE} -- Implementation
 		
 	on_change_clr_version_combo is
 			-- Action to perform when user changes the CLR version check button
-		do
+		do			
 			if clr_version_check.is_selected then
 				clr_version_lab.disable_sensitive
-				clr_version_cb.disable_sensitive
+				clr_version_cb.disable_sensitive				
 			else
 				clr_version_lab.enable_sensitive
 				clr_version_cb.enable_sensitive
 			end	
-		end		
+			wizard_information.set_is_most_recent_clr_version (clr_version_check.is_selected)
+		end			
 
 feature {NONE} -- Constants
 

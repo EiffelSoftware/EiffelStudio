@@ -78,6 +78,16 @@ feature -- Setting
 			clr_version_set: equal (clr_version, a_version)
 		end
 
+	set_is_most_recent_clr_version (a_flag: BOOLEAN) is
+			-- Set `is_most_recent_clr_version' to `a_flag'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			is_most_recent_clr_version := a_flag
+		ensure
+			set: is_most_recent_clr_version = a_flag
+		end		
+
 feature -- Access
 
 	icon_location: STRING

@@ -141,7 +141,13 @@ feature {NONE} -- Constants
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
 			Result.append (New_line)
-			Result.append ("Targetted CLR version: " + Tab + wizard_information.clr_version + New_line)
+			Result.append ("Targetted CLR version:" + Tab)
+			if wizard_information.is_most_recent_clr_version then
+				Result.append ("Most recent clr version")
+			else
+				Result.append (wizard_information.clr_version)
+			end 
+			Result.append (New_line)
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty

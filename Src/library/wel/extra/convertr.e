@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 end -- class CONVERTER
 
 --|---------------------------------------------------------------- 
---| Copyright (C) 1995, Interactive Software Engineering Inc.
+--| Copyright (C) 1995-1997, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

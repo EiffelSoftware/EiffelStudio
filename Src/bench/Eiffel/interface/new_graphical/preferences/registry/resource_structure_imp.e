@@ -6,9 +6,11 @@ class
 	RESOURCE_STRUCTURE_IMP
 
 inherit
-	RESOURCE_STRUCTURE
+	RESOURCE_STRUCTURE_I
+		rename
+			root_folder_i as root_folder_imp
 		redefine
-			root_folder
+			root_folder_imp
 		end
 
 create
@@ -16,140 +18,132 @@ create
 
 feature -- Initialization
 
-	make is
+	make (in: like interface) is
+		do
+			interface := in
+		end
+
+	initialize (default_file: STRING) is
 		local
 			file_name: FILE_NAME
 		do
-			make_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+			make_default (default_file)
+			if root_folder /= Void then
+				update_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+			else
+				make_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
+			end
 		end
 
 	make_from_location (loc: STRING) is
-				-- Initialize Current from file
-				-- named `file_name'.
+				-- Initialize Current from registry key `loc'.
 		local
 			s: STRING
 		do
 			location := loc
 			create table.make (100)
-			create root_folder.make_root (loc, Current)
+			create root_folder_imp.make_root (loc, interface)
+			root_folder_imp.create_interface
+			root_folder := root_folder_imp.interface
+		end
+
+	update_from_location (loc: STRING) is
+				-- Initialize Current from registry key `loc'.
+		local
+			s: STRING
+			folder_imp: RESOURCE_FOLDER_IMP
+		do
+			location := loc
+--			folder_imp ?= root_folder.implementation
+			root_folder_imp.update_root (loc)
 		end
 
 feature -- Access
 
-	item, resource (resource_name: STRING): RESOURCE is
-			-- Resource named `resource_name'.
-			-- Name includes path.
-		local
-			rl: LINKED_LIST [RESOURCE]
-			last_sep, pos: INTEGER
-			f: RESOURCE_FOLDER
-		do
-			Result := table.item (resource_name)
---			if Result = Void then
---				last_sep := resource_name.last_index_of ('/', resource_name.count)
---				f := folder (resource_name.substring (1, last_sep))
---				if f.loading_not_done then
---					f.load_attributes (Current)
---					Result := table.item (resource_name)
---				end
---			end
-		end
+	location: STRING
 
-	has_folder (s: STRING): BOOLEAN is
-		do
-			Result := (folder (s) /= Void)
-		end
-
-	folder (path: STRING): RESOURCE_FOLDER is
-			-- Folder at location `path'
-		local
-			i, j: INTEGER
-			s: STRING
-			f: RESOURCE_FOLDER
-			loop_must_end: BOOLEAN
-		do
-			from
-				i := 1
-				j := 1
-				s := path
-				f := root_folder
-				loop_must_end := s.empty
-			until
-				loop_must_end
-			loop
-				j := s.index_of ('/', i)
-				if j > i then
-					f := folder_child (f, s.substring (i, j - 1))
-					i := j + 1
-					loop_must_end := (f = Void) or else (i = s.count)
-				end
-				loop_must_end := loop_must_end or else (j < 1)
-			end
-			if i + 1 < s.count then
-				f := folder_child (f, s.substring (i, s.count))
-			end
-			Result := f
-		end
-
-	child_list (path: STRING): LINKED_LIST [RESOURCE_FOLDER] is
-		local
-			f: RESOURCE_FOLDER
-		do
-			f := folder (path)
-			Result := f.child_list
-		end
-
-	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
-		local
-			f: RESOURCE_FOLDER
-		do
-			f := folder (path)
-			Result := f.resource_list
-		end
+	root_folder_imp: RESOURCE_FOLDER_IMP
 
 feature -- Saving
 
 	save is
 		do
-			root_folder.root_save (location)
+			root_folder_imp.root_save (location)
 		end
 
-feature -- Status report
-
-	root_folder: RESOURCE_FOLDER_IMP
-
-feature -- Implementation
-
-	add_error_message (s:STRING) is
-		require
-			not_void: s /= Void
+	save_resource (res: RESOURCE) is
+			-- save `res' at the position `path')
 		do
-			error_message.append ("%N")
-			error_message.append (s)
+--			root_folder.save_resource (res, location, path)
 		end
 
-feature {NONE} -- Implementation
+feature -- Modification
 
-	folder_child (par: RESOURCE_FOLDER; child_name: STRING): RESOURCE_FOLDER is
-			-- Child of `par' with name `child_name'
-			-- Void if `par' has no child called `child_name'.
-		local
-			l: linked_list [RESOURCE_FOLDER]
-			f: RESOURCE_FOLDER
-			s: STRING
-		do
-			l := par.child_list
-			from
-				l.start
-			until
-				(Result /= Void) or else l.after
-			loop
-				f := l.item
-				if equal (f.name, child_name) then
-					Result := f
-				end
-				l.forth
-			end
-		end
+--	put (res: RESOURCE; path: STRING) is
+--			-- Put `res' in Current.
+--		local
+--			f: like folder
+--		do
+--			table.put_resource (res)
+--			put_folder (path)
+--			f := folder (path)
+--			if f = Void then
+--				check
+--					Folder_not_created: false
+--				end
+--			end
+--			f.resource_list.extend (res)
+--		end
+
+--	put_folder (path: STRING) is
+--			-- Make sure a folder exists at location `path',
+--			-- creating folders iteratively if needed.
+--		local
+--			i, j: INTEGER
+--			s: STRING
+--			f, f_child: like folder
+--			terra_incognita: BOOLEAN
+--		do
+--			from
+--				i := 1
+--				j := 1
+--				s := path
+--				if s.empty then j := 0 end
+--				f := root_folder
+--			until
+--				j < 1
+--			loop
+--				j := s.index_of ('/', i)
+--				if j > i then
+--					if not terra_incognita then
+--						f_child := folder_child (f, s.substring (i, j - 1))
+--						if (f_child = Void) then
+--								-- no folders anymore: from now on, we'll have
+--								-- to create them.
+--							terra_incognita := True
+--							create f_child.make_from_scratch (s.substring (i, j - 1), Current)
+--							f.child_list.extend (f_child)
+--						end
+--					else
+--						create f_child.make_from_scratch (s.substring (i, j - 1), Current)
+--						f.child_list.extend (f_child)
+--					end
+--					i := j + 1
+--					f := f_child
+--				end
+--			end
+--			if i + 1 < s.count then
+--				if not terra_incognita then
+--					f_child := folder_child (f, s.substring (i, s.count))
+--					if f_child = Void then
+--						create f_child.make_from_scratch (s.substring (i, s.count), Current)
+--						f.child_list.extend (f_child)
+--					end
+--				else
+--					create f_child.make_from_scratch (s.substring (i, s.count), Current)
+--					f.child_list.extend (f_child)
+--				end
+--			end
+--		end
 
 end -- class RESOURCE_STRUCTURE_IMP

@@ -152,7 +152,7 @@ feature -- Eiffel source line information
 
 			if not context.final_mode then
 				lnr := context.get_breakpoint_slot
-					-- if lnr=0 or -1 then we do nothing.
+					-- if lnr = 0 or -1 then we do nothing.
 				if lnr > 0 then
 					buffer.putstring("RTNHOOK(")
 					buffer.putint(lnr)
@@ -160,6 +160,40 @@ feature -- Eiffel source line information
 					buffer.new_line
 				end
 			end
+		end
+
+	generate_melted_debugger_hook (ba: BYTE_ARRAY) is
+			-- Record breakable point (standard)
+		require
+			melting: not context.final_mode
+		local
+			lnr: INTEGER
+		do
+			lnr := context.get_next_breakpoint_slot
+			check
+				lnr > 0
+			end
+			ba.generate_melted_debugger_hook (lnr)
+		end
+
+	generate_melted_debugger_hook_nested (ba: BYTE_ARRAY) is
+			-- Record breakable point for nested call
+		local
+			l_line: INTEGER
+		do
+			l_line := context.get_breakpoint_slot
+			if l_line > 0 then
+					-- Generate a hook when there is really need for one.
+					-- (E.g. we do not need a hook for the code generation
+					-- of an invariant).
+				ba.generate_melted_debugger_hook_nested (l_line)
+			end
+		end
+
+	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
+			-- Record the breakable point corresponding to the end of the feature.
+		do
+			ba.generate_melted_debugger_hook (context.current_feature.number_of_breakpoint_slots)
 		end
 
 feature 

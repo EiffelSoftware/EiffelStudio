@@ -1214,24 +1214,6 @@ feature -- Debugger
 			breakpoint_slots_number := a_number
 		end
 
-	generate_melted_debugger_hook (ba: BYTE_ARRAY) is
-			-- Record breakable point (standard)
-		do
-			ba.generate_melted_debugger_hook(get_next_breakpoint_slot)
-		end
-
-	generate_melted_debugger_hook_nested (ba: BYTE_ARRAY) is
-			-- Record breakable point for nested call
-		do
-			ba.generate_melted_debugger_hook_nested(get_breakpoint_slot)
-		end
-
-	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
-			-- Record the breakable point corresponding to the end of the feature.
-		do
-			ba.generate_melted_debugger_hook (current_feature.number_of_breakpoint_slots)
-		end
-
 	byte_prepend (ba, array: BYTE_ARRAY) is
 			-- Prepend `array' to byte array `ba' and update positions in the
 			-- breakable point list (provided we are in debug mode).

@@ -76,7 +76,7 @@ feature -- Byte code generation
 			source_type: TYPE_I;
 			target_type: TYPE_I;
 		do
-			context.generate_melted_debugger_hook (ba);
+			generate_melted_debugger_hook (ba);
 
 				-- Generate expression byte code
 			source.make_byte_code (ba);

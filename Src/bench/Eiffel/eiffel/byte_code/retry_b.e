@@ -53,7 +53,7 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a retry instruction
 		do
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 			ba.append (Bc_retry)
 			ba.write_retry
 		end

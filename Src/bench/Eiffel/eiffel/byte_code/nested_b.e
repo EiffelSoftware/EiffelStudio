@@ -148,7 +148,7 @@ feature -- Byte code generation
 
 			if target.is_feature then
 					-- insert a debugger hook without increasing the line number
-				context.generate_melted_debugger_hook_nested (ba); 
+				generate_melted_debugger_hook_nested (ba); 
 			end
 	
 				-- generate the call byte code
@@ -163,7 +163,7 @@ feature -- Byte code generation
 
 			if target.is_feature then
 					-- insert a debugger hook without increasing the line number
-				context.generate_melted_debugger_hook_nested (ba); 
+				generate_melted_debugger_hook_nested (ba); 
 			end
 
 				-- generate the call byte code

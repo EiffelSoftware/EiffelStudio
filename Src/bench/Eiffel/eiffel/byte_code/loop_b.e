@@ -215,7 +215,7 @@ feature -- Byte code generation
 
 				-- Generate byte code for exit expression
 			ba.mark_backward
-			context.generate_melted_debugger_hook (ba)
+			generate_melted_debugger_hook (ba)
 			stop.make_byte_code (ba)
 
 				-- Generate a test

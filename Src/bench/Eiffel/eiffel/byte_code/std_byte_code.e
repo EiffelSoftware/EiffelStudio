@@ -1692,7 +1692,7 @@ feature -- Byte code generation
 			end
 
 				-- Generate the hook corresponding to the final end.
-			context.generate_melted_end_debugger_hook (ba)
+			generate_melted_end_debugger_hook (ba)
 		end
 
 feature -- Array optimization

@@ -163,6 +163,9 @@ feature -- Default values
 		
 	Spacing_to_holder_tool_bar: INTEGER is 8
 		-- The distance between a tool holders label and any associated tool bar.
+		
+	Tool_minimum_height: INTEGER is 50
+		-- The minimum height of each main tool.
 
 feature -- Generation constants
 		

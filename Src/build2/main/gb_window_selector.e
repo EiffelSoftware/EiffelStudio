@@ -175,7 +175,7 @@ feature -- Access
 		end
 
 	directory_names: ARRAYED_LIST [STRING] is
-			-- Names of all directories contained.
+			-- Names of all root directories contained.
 		local
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			a_cursor: EV_DYNAMIC_LIST_CURSOR [EV_TREE_NODE]
@@ -676,6 +676,154 @@ feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 					layout_constructor.first.enable_select
 				end
 				Command_handler.update
+			end
+		end
+		
+feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
+
+	item_added_to_directory (directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM; new_item: EV_TREE_NODE) is
+			-- `new_item' has been added to `directory' so ensure all nodes are highlighted.
+		require
+			directory_not_void: directory /= Void
+			new_item_not_void: new_item /= Void
+			directory_has_new_item: directory.has (new_item)
+		local
+			parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			window: GB_WINDOW_SELECTOR_ITEM
+		do
+			window ?= new_item
+			if window /= Void then
+					-- Only update directories if the item added was a window, and not a directory.
+					-- As we know all directories from `Current' up to `directory' must be highlighted
+					-- we simply traverse and update these.
+				from
+					parent_directory := directory	
+				until
+					parent_directory = Void		
+				loop
+					if parent_directory.is_grayed_out then
+						parent_directory.display_in_color
+					end
+					parent_directory ?= parent_directory.parent
+				end
+			end
+		end
+		
+	item_removed_from_directory (directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM; item_for_removal: EV_TREE_NODE) is
+			-- `item_for_removal' has been removed from `directory' so update directories to reflect this.
+		require
+			directory_not_void: directory /= Void
+			structure_contained_in_tree: directory.parent_tree /= Void
+			item_for_removal_not_void: item_for_removal /= Void
+			item_for_removal_not_parented: item_for_removal.parent = Void
+		local
+			all_branch_nodes: ARRAYED_LIST [GB_WINDOW_SELECTOR_DIRECTORY_ITEM]
+			top_node, tree_node: EV_TREE_NODE
+			top_node_list: EV_TREE_NODE_LIST
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			parent_tree: EV_TREE
+		do
+			main_window.lock_update
+			parent_tree := directory.parent_tree
+			create all_branch_nodes.make (20)
+			top_node ?= directory
+			check
+				directory_was_node: top_node /= Void
+			end
+				-- Firstly retrieve the root node associated with `directory'.
+			from
+			until
+				top_node.parent = parent_tree
+			loop
+				top_node ?= top_node.parent
+			end
+			
+				-- Now retrieve a list of all end nodes that contain children. 
+			retrieve_all_branch_nodes (top_node, all_branch_nodes)
+			
+				-- Gray out all nodes recursively from `top_node'.
+			top_node.recursive_do_all (agent gray_node)
+			gray_node (top_node)
+			
+				-- Now highlight all nodes from `top_node' down to each item within `all_branch_nodes'.
+			from
+				all_branch_nodes.start
+			until
+				all_branch_nodes.off
+			loop
+				from
+						-- Start at the current branch node
+					top_node_list ?= all_branch_nodes.item
+				until
+						-- We haev traversed the structure from the branch node to the root of the tree.
+					top_node_list = parent_tree
+				loop
+					directory_item ?= top_node_list
+					check
+						node_was_directory: directory_item /= Void
+					end
+						-- Add color to the node if not already colored. We may
+						-- visit the same node multiple times, as different branch nodes may have the
+						-- same nodes within their path.
+					if directory_item.is_grayed_out then	
+						directory_item.display_in_color
+					end
+					tree_node ?= top_node_list
+					check
+						tree_node_not_void: tree_node /= Void
+					end
+						-- Get the next node in the traversal towards the root node.
+					top_node_list ?= tree_node.parent
+				end
+				
+				all_branch_nodes.forth
+			end
+			main_window.unlock_update
+		end
+		
+	gray_node (node: EV_TREE_NODE) is
+			-- Ensure `display_in_gray' is called on `node' it is of type GB_WINDOW_SELECTOR_DIRECTORY_ITEM.
+		require
+			node_not_void: NODE /= Void
+		local
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
+			directory_item ?= node
+			if directory_item /= Void then
+				directory_item.display_in_gray
+			end
+		end
+		
+	retrieve_all_branch_nodes (tree_node: EV_TREE_NODE_LIST; all_branch_nodes: ARRAYED_LIST [GB_WINDOW_SELECTOR_DIRECTORY_ITEM]) is
+			-- For all items recursively in `tree_node' add all final directory nodes in the tree that contain items
+			-- that are not directories to `all_branch_nodes'. These are the nodes that must be highlighted.
+		require
+			tree_node_not_void: tree_node /= Void
+			all_branch_nodes_not_void: all_branch_nodes /= Void
+		local
+			current_item: EV_TREE_NODE
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			window_item: GB_WINDOW_SELECTOR_ITEM
+		do
+			from
+				tree_node.start
+			until
+				tree_node.off
+			loop
+				current_item := tree_node.item
+				if current_item.is_empty then
+					window_item ?= current_item
+					if window_item /= Void then
+						directory_item ?= window_item.parent
+						check
+							parent_was_a_directory_item: directory_item /= Void
+						end
+						all_branch_nodes.extend (directory_item)
+					end
+				else
+					retrieve_all_branch_nodes (current_item, all_branch_nodes)
+				end
+				tree_node.forth
 			end
 		end
 

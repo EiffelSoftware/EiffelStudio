@@ -29,4 +29,7 @@ cluster
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
 
+assembly
+	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+
 end

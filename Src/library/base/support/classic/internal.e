@@ -38,10 +38,18 @@ feature -- Creation
 		require
 			class_type_not_void: class_type /= Void
 		local
-			a: ANY
+			l_cstr: C_STRING
+			l_table: like internal_dynamic_type_string_table
 		do
-			a := class_type.to_c
-			Result := feature {ISE_RUNTIME}.type_id_from_name ($a)
+			l_table := internal_dynamic_type_string_table
+			l_table.search (class_type)
+			if l_table.found then
+				Result := l_table.found_item
+			else
+				create l_cstr.make (class_type)
+				Result := {ISE_RUNTIME}.type_id_from_name (l_cstr.item)
+				l_table.put (Result, class_type)
+			end
 		ensure
 			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
 		end
@@ -126,13 +134,11 @@ feature -- Access
 
 	Boolean_type: INTEGER is 3
 
-	Integer_type: INTEGER is 4
+	Integer_type, integer_32_type: INTEGER is 4
 	
-	Integer_32_type: INTEGER is 4
+	Real_type, real_32_type: INTEGER is 5
 
-	Real_type: INTEGER is 5
-
-	Double_type: INTEGER is 6
+	Double_type, real_64_type: INTEGER is 6
 
 	Expanded_type: INTEGER is 7
 
@@ -145,6 +151,14 @@ feature -- Access
 	Integer_64_type: INTEGER is 11
 
 	Wide_character_type: INTEGER is 12
+	
+	natural_8_type: INTEGER is 13
+	
+	natural_16_type: INTEGER is 14
+	
+	natural_32_type: INTEGER is 15
+	
+	natural_64_type: INTEGER is 16
 
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
@@ -159,7 +173,7 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := feature {ISE_RUNTIME}.c_generator_of_type (type_id)
+			Result := {ISE_RUNTIME}.c_generator_of_type (type_id)
 		end
 
 	type_name (object: ANY): STRING is
@@ -177,7 +191,7 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := feature {ISE_RUNTIME}.c_generating_type_of_type (type_id)
+			Result := {ISE_RUNTIME}.c_generating_type_of_type (type_id)
 		end
 
 	dynamic_type (object: ANY): INTEGER is
@@ -185,7 +199,7 @@ feature -- Access
 		require
 			object_not_void: object /= Void
 		do
-			Result := feature {ISE_RUNTIME}.dynamic_type ($object)
+			Result := {ISE_RUNTIME}.dynamic_type ($object)
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
@@ -195,7 +209,7 @@ feature -- Access
 		require
 			obj_not_void: obj /= Void
 		do
-			Result := eif_gen_count_with_dftype (feature {ISE_RUNTIME}.dynamic_type ($obj))
+			Result := eif_gen_count_with_dftype ({ISE_RUNTIME}.dynamic_type ($obj))
 		end
 
 	generic_count_of_type (type_id: INTEGER): INTEGER is
@@ -214,7 +228,7 @@ feature -- Access
 			object_generic: generic_count (object) > 0
 			i_valid: i > 0 and i <= generic_count (object)
 		do
-			Result := eif_gen_param_id (- 1, feature {ISE_RUNTIME}.dynamic_type ($object), i)
+			Result := eif_gen_param_id (- 1, {ISE_RUNTIME}.dynamic_type ($object), i)
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
@@ -251,7 +265,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			not_special: not is_special (object)
 		do
-			create Result.make_from_c (c_field_name_of_type (i - 1, feature {ISE_RUNTIME}.dynamic_type ($object)))
+			create Result.make_from_c (c_field_name_of_type (i - 1, {ISE_RUNTIME}.dynamic_type ($object)))
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -284,7 +298,7 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 		do
-			Result := c_field_type_of_type (i - 1, feature {ISE_RUNTIME}.dynamic_type ($object))
+			Result := c_field_type_of_type (i - 1, {ISE_RUNTIME}.dynamic_type ($object))
 		ensure
 			field_type_nonnegative: Result >= 0
 		end
@@ -349,8 +363,52 @@ feature -- Access
 			Result := c_boolean_field (i - 1, $object)
 		end
 
+	natural_8_field (i: INTEGER; object: ANY): NATURAL_8 is
+			-- NATURAL_8 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_8_field: field_type (i, object) = natural_8_type
+		do
+			Result := c_natural_8_field (i - 1, $object)
+		end
+
+	natural_16_field (i: INTEGER; object: ANY): NATURAL_16 is
+			-- NATURAL_16 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_16_field: field_type (i, object) = natural_16_type
+		do
+			Result := c_natural_16_field (i - 1, $object)
+		end
+
+	natural_32_field (i: INTEGER; object: ANY): NATURAL_32 is
+			-- NATURAL_32 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_32_field: field_type (i, object) = natural_32_type
+		do
+			Result := c_natural_32_field (i - 1, $object)
+		end
+
+	natural_64_field (i: INTEGER; object: ANY): NATURAL_64 is
+			-- NATURAL_64 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_64_field: field_type (i, object) = natural_64_type
+		do
+			Result := c_natural_64_field (i - 1, $object)
+		end
+
 	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
-			-- Integer value of `i'-th field of `object'
+			-- INTEGER_8 value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -361,7 +419,7 @@ feature -- Access
 		end
 
 	integer_16_field (i: INTEGER; object: ANY): INTEGER_16 is
-			-- Integer value of `i'-th field of `object'
+			-- INTEGER_16 value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -371,19 +429,19 @@ feature -- Access
 			Result := c_integer_16_field (i - 1, $object)
 		end
 
-	integer_field (i: INTEGER; object: ANY): INTEGER is
-			-- Integer value of `i'-th field of `object'
+	integer_field, integer_32_field (i: INTEGER; object: ANY): INTEGER is
+			-- INTEGER_32 value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_type
+			integer_32_field: field_type (i, object) = Integer_32_type
 		do
-			Result := c_integer_field (i - 1, $object)
+			Result := c_integer_32_field (i - 1, $object)
 		end
 
 	integer_64_field (i: INTEGER; object: ANY): INTEGER_64 is
-			-- Integer value of `i'-th field of `object'
+			-- INTEGER_64 value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -482,12 +540,52 @@ feature -- Element change
 			c_set_boolean_field (i - 1, $object, value)
 		end
 
+	set_natural_8_field (i: INTEGER; object: ANY; value: NATURAL_8) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_8_field: field_type (i, object) = natural_8_type
+		do
+			c_set_natural_8_field (i - 1, $object, value)
+		end
+
+	set_natural_16_field (i: INTEGER; object: ANY; value: NATURAL_16) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_16_field: field_type (i, object) = natural_16_type
+		do
+			c_set_natural_16_field (i - 1, $object, value)
+		end
+
+	set_natural_32_field (i: INTEGER; object: ANY; value: NATURAL_32) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_32_field: field_type (i, object) = natural_32_type
+		do
+			c_set_natural_32_field (i - 1, $object, value)
+		end
+
+	set_natural_64_field (i: INTEGER; object: ANY; value: NATURAL_64) is
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			natural_64_field: field_type (i, object) = natural_64_type
+		do
+			c_set_natural_64_field (i - 1, $object, value)
+		end
+
 	set_integer_8_field (i: INTEGER; object: ANY; value: INTEGER_8) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_8_type
+			integer_8_field: field_type (i, object) = Integer_8_type
 		do
 			c_set_integer_8_field (i - 1, $object, value)
 		end
@@ -497,19 +595,19 @@ feature -- Element change
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_16_type
+			integer_16_field: field_type (i, object) = Integer_16_type
 		do
 			c_set_integer_16_field (i - 1, $object, value)
 		end
 
-	set_integer_field (i: INTEGER; object: ANY; value: INTEGER) is
+	set_integer_field, set_integer_32_field (i: INTEGER; object: ANY; value: INTEGER) is
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_type
+			integer_32_field: field_type (i, object) = Integer_32_type
 		do
-			c_set_integer_field (i - 1, $object, value)
+			c_set_integer_32_field (i - 1, $object, value)
 		end
 
 	set_integer_64_field (i: INTEGER; object: ANY; value: INTEGER_64) is
@@ -517,7 +615,7 @@ feature -- Element change
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			integer_field: field_type (i, object) = Integer_64_type
+			integer_64_field: field_type (i, object) = Integer_64_type
 		do
 			c_set_integer_64_field (i - 1, $object, value)
 		end
@@ -549,7 +647,7 @@ feature -- Measurement
 		require
 			object_not_void: object /= Void
 		do
-			Result := field_count_of_type (feature {ISE_RUNTIME}.dynamic_type ($object))
+			Result := field_count_of_type ({ISE_RUNTIME}.dynamic_type ($object))
 		end
 
 	field_count_of_type (type_id: INTEGER): INTEGER is
@@ -601,6 +699,16 @@ feature -- Marking
 			c_unmark ($obj)
 		end
 
+feature {NONE} -- Cached data
+
+	internal_dynamic_type_string_table: HASH_TABLE [INTEGER, STRING] is
+			-- Table of dynamic type indexed by type name
+		once
+			create Result.make (100)
+		ensure
+			internal_dynamic_type_string_table_not_void: Result /= Void
+		end
+		
 feature {NONE} -- Implementation
 
 	c_is_instance_of (type1: INTEGER; obj: POINTER): BOOLEAN is
@@ -667,6 +775,38 @@ feature {NONE} -- Implementation
 			"ei_bool_field"
 		end
 
+	c_natural_8_field (i: INTEGER; object: POINTER): NATURAL_8 is
+			-- NATURAL_8 value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_NATURAL_8 use %"eif_internal.h%""
+		alias
+			"ei_uint_8_field"
+		end
+
+	c_natural_16_field (i: INTEGER; object: POINTER): NATURAL_16 is
+			-- NATURAL_16 value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_NATURAL_16 use %"eif_internal.h%""
+		alias
+			"ei_uint_16_field"
+		end
+
+	c_natural_32_field (i: INTEGER; object: POINTER): NATURAL_32 is
+			-- NATURAL_32 value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_NATURAL_32 use %"eif_internal.h%""
+		alias
+			"ei_uint_32_field"
+		end
+
+	c_natural_64_field (i: INTEGER; object: POINTER): NATURAL_64 is
+			-- NATURAL_64 value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_NATURAL_64 use %"eif_internal.h%""
+		alias
+			"ei_uint_64_field"
+		end
+
 	c_integer_8_field (i: INTEGER; object: POINTER): INTEGER_8 is
 			-- Integer value of `i'-th field of `object'
 		external
@@ -683,12 +823,12 @@ feature {NONE} -- Implementation
 			"ei_int_16_field"
 		end
 
-	c_integer_field (i: INTEGER; object: POINTER): INTEGER is
+	c_integer_32_field (i: INTEGER; object: POINTER): INTEGER is
 			-- Integer value of `i'-th field of `object'
 		external
 			"C macro signature (long, EIF_REFERENCE): EIF_INTEGER use %"eif_internal.h%""
 		alias
-			"ei_int_field"
+			"ei_int_32_field"
 		end
 
 	c_integer_64_field (i: INTEGER; object: POINTER): INTEGER_64 is
@@ -783,6 +923,34 @@ feature {NONE} -- Implementation
 			"ei_set_boolean_field"
 		end
 
+	c_set_natural_8_field (i: INTEGER; object: POINTER; value: NATURAL_8) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_NATURAL_8) use %"eif_internal.h%""
+		alias
+			"ei_set_natural_8_field"
+		end
+
+	c_set_natural_16_field (i: INTEGER; object: POINTER; value: NATURAL_16) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_NATURAL_16) use %"eif_internal.h%""
+		alias
+			"ei_set_natural_16_field"
+		end
+
+	c_set_natural_32_field (i: INTEGER; object: POINTER; value: NATURAL_32) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_NATURAL_32) use %"eif_internal.h%""
+		alias
+			"ei_set_natural_32_field"
+		end
+
+	c_set_natural_64_field (i: INTEGER; object: POINTER; value: NATURAL_64) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_NATURAL_64) use %"eif_internal.h%""
+		alias
+			"ei_set_natural_64_field"
+		end
+
 	c_set_integer_8_field (i: INTEGER; object: POINTER; value: INTEGER_8) is
 		external
 			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER_8) use %"eif_internal.h%""
@@ -797,11 +965,11 @@ feature {NONE} -- Implementation
 			"ei_set_integer_16_field"
 		end
 
-	c_set_integer_field (i: INTEGER; object: POINTER; value: INTEGER) is
+	c_set_integer_32_field (i: INTEGER; object: POINTER; value: INTEGER) is
 		external
 			"C macro signature (long, EIF_REFERENCE, EIF_INTEGER) use %"eif_internal.h%""
 		alias
-			"ei_set_integer_field"
+			"ei_set_integer_32_field"
 		end
 
 	c_set_integer_64_field (i: INTEGER; object: POINTER; value: INTEGER_64) is

@@ -58,7 +58,7 @@ feature
 			
 feature {NONE}
 
-	mark (f: INTEGER;body_index: BODY_INDEX; body_id: BODY_ID static_class_id: CLASS_ID; original_class_id: CLASS_ID; rout_id_val: ROUTINE_ID) is
+	mark (f: INTEGER;body_index: BODY_INDEX; body_id: BODY_ID; static_class_id: CLASS_ID; original_class_id: CLASS_ID; rout_id_val: ROUTINE_ID) is
 			-- Mark feature and its redefinitions
 		local
 			table: ROUT_TABLE;
@@ -90,16 +90,7 @@ DEBUG ("DEAD_CODE")
 	io.putstring ("%N")
 end
 								body_id_unit := body_index_table.item (unit.body_index)
-								if unit.is_attribute then
-DEBUG ("DEAD_CODE")
-	io.putstring ("birth of attribute of body id: ")
-	io.putint (body_id_unit.id)
-	io.putstring ("%N")
-end
-									mark_alive (body_id_unit.id);
-								else
-									mark (unit.feature_id, unit.body_index, body_id_unit, unit.id, unit.written_in, rout_id_val);
-								end;
+								mark (unit.feature_id, unit.body_index, body_id_unit, unit.id, unit.written_in, rout_id_val);
 						end;
 						table.go_to (old_position);
 					end;
@@ -153,7 +144,7 @@ DEBUG("DEAD_CODE")
 end
 
 			if just_born then
-			mark_alive (body_id.id);
+				mark_alive (body_id.id);
 
 					-- Take care of dependances
 				static_dependances := Depend_server.item (actual_class_id)
@@ -204,7 +195,7 @@ feature
 			tmp: ROUT_ID_SET
 		do
 			tmp := marked_table.item (body_id)
-			if (tmp = Void) then
+			if tmp = Void then
 				!! tmp.make (1);
 				marked_table.put (tmp, body_id)
 			end

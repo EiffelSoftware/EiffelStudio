@@ -18,7 +18,6 @@ inherit
 	GB_SHARED_TOOLS
 
 create
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -29,8 +28,7 @@ feature {NONE} -- Initialization
 		do
 			original_type := an_original_type
 			new_type := a_new_type
-			layout_item := an_object.layout_item
-			old_object := an_object
+			original_id := an_object.id
 		end
 		
 
@@ -38,16 +36,33 @@ feature -- Basic Operation
 
 	execute is
 			-- Execute `Current'.
+		local
+			original_object, new_object: GB_OBJECT
 		do
+			original_object := Object_handler.deep_object_from_id (original_id)
+			
 				-- Call delete on object.
-			layout_item.object.delete
+			original_object.delete
+			
 				-- We do not call `mark_as_deleted' here, as this would
 				-- mark all the children as deleted also. Only the
 				-- actual object should be marked as deleted.
-			object_handler.objects.prune_all (layout_item.object)
-			object_handler.deleted_objects.extend (layout_item.object)
-			object_handler.replace_object_type (layout_item.object, new_type)
-			layout_item.update_pixmap
+			object_handler.objects.prune_all (original_object)
+			object_handler.deleted_objects.extend (original_object)
+			
+				-- `new_id' is 0, the first time that we execute this command. In this case, we
+				-- build a new object to replace the current one. Subsequent calls to `execute' will
+				-- no longer build new objects, but will use the previously created object, referenced
+				-- by `new_id'.
+			if new_id = 0 then
+				new_object := object_handler.build_object_from_string_and_assign_id (new_type)
+				new_id := new_object.id
+			else
+				new_object := object_handler.deep_object_from_id (new_id)
+			end
+			object_handler.replace_object (original_object, new_object)
+			original_object.layout_item.update_pixmap
+			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -57,9 +72,14 @@ feature -- Basic Operation
 	undo is
 			-- Undo `Current'.
 			-- Must restore state to that before `execute'.
+		local
+			original_object, current_object: GB_OBJECT
 		do
-			object_handler.replace_object (layout_item.object, old_object)
-			layout_item.update_pixmap
+			original_object := Object_handler.deep_object_from_id (original_id)
+			current_object := Object_handler.deep_object_from_id (new_id)
+
+			object_handler.replace_object (current_object, original_object)
+			current_object.layout_item.update_pixmap
 			command_handler.update
 		end
 		
@@ -73,20 +93,18 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	old_object: GB_OBJECT
-		-- Original object that was repaced.
-		-- We restore this when we undo.
+	original_id: INTEGER
+		-- Id of object whose type was changed.
+		
+	new_id: INTEGER
+		-- Id of new object created to replace the original object. This
+		-- will be 0, until `execute' has been called. This then allows us
+		-- use the same object as the history is traversed multiple times.
 
 	original_type: STRING
 		-- String representation of original object type.
 
 	new_type: STRING
 		-- String representation of type changed to.
-	
-	layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout item representing the object `Current' refers to.
-		-- We cannot store the object, as changing the type
-		-- creates a new object, therefore we have to do `layout_item.object'
-		-- to retrieve the current object we are working with.
 
 end -- class GB_COMMAND_CHANGE_TYPE

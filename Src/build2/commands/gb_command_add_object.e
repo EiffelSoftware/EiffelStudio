@@ -20,7 +20,6 @@ inherit
 	GB_WIDGET_UTILITIES
 	
 create
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -35,23 +34,17 @@ feature {NONE} -- Initialization
 		local
 			previous_parent_object: GB_OBJECT
 		do
-			parent_layout_item := parent.layout_item
-			child_layout_item := child.layout_item
-			child_object := child
+			parent_id := parent.id
+			child_id := child.id
 			previous_parent_object := child.parent_object
 			if previous_parent_object /= Void then
-				previous_parent_layout_item := previous_parent_object.layout_item			
+				previous_parent_id := previous_parent_object.id
 			end
 			insert_position := an_insert_position
 			if previous_parent_object /= Void then
 				previous_position_in_parent := previous_parent_object.layout_item.index_of (child.layout_item, 1)	
 			end
-		ensure
-			parent_layout_item = parent.layout_item
-			child_layout_item = child.layout_item
-			insert_position = an_insert_position
 		end
-		
 
 feature -- Basic Operation
 
@@ -59,20 +52,22 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			a_previous_parent: GB_OBJECT
+			child_object: GB_OBJECT
+			parent_object: GB_OBJECT
 		do
-			if previous_parent_layout_item /= Void then
-				a_previous_parent := child_layout_item.object.parent_object
-				child_layout_item.object.unparent
-				update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
+			child_object := Object_handler.deep_object_from_id (child_id)
+			parent_object := Object_handler.deep_object_from_id (parent_id)
+			
+				-- `previous_parent_id' will be greater than 0 when we are moving an object
+				-- from within one abject to another. In this case, we unparent first.
+			if previous_parent_id > 0 then
+				a_previous_parent := child_object.parent_object
+				child_object.unparent
+				update_parent_object_editors (child_object, a_previous_parent, all_editors)
 			end
-			if child_layout_item = Void then
-					-- As the child layout item is void, this means we have picked from the type selector.
-					-- We then use the actual object, and then store the layout item.
-				object_handler.add_object (parent_layout_item.object, child_object, insert_position)
-				child_layout_item := child_object.layout_item
-			else
-				object_handler.add_object (parent_layout_item.object, child_layout_item.object, insert_position)
-			end
+
+			object_handler.add_object (parent_object, child_object, insert_position)
+
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -84,19 +79,22 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			a_previous_parent: GB_OBJECT
+			child_object, parent_object, a_previous_parent: GB_OBJECT
 			-- `previous_parent_layout_item' is Void when we first execute, so
 			-- we store our own local for passing to `update_object_editors_for_delete'.
 			-- We must store it, as the unparenting which must occur first if we are to see any changes
 			-- will change the parent.
 		do
-			a_previous_parent := child_layout_item.object.parent_object
-			child_layout_item.object.unparent
-			update_parent_object_editors (child_layout_item.object, a_previous_parent, all_editors)
+			child_object := Object_handler.deep_object_from_id (child_id)
+			parent_object := Object_handler.deep_object_from_id (parent_id)
+
+			a_previous_parent := child_object.parent_object
+			child_object.unparent
+			update_parent_object_editors (child_object, a_previous_parent, all_editors)
 
 				-- If the object had a previous parent, we must put it back.
-			if previous_parent_layout_item /= Void then
-				object_handler.add_object (previous_parent_layout_item.object, child_layout_item.object, previous_position_in_parent)
+			if previous_parent_id > 0 then
+				object_handler.add_object (object_handler.deep_object_from_id (previous_parent_id), child_object, previous_position_in_parent)
 			end
 			command_handler.update
 		end
@@ -105,38 +103,39 @@ feature -- Basic Operation
 			-- Text representation of command exectuted.
 		local
 			child_name, parent_name: STRING
+			child_object, parent_object: GB_OBJECT
 		do
-			if not child_layout_item.object.name.is_empty then
-				child_name := child_layout_item.object.name
+			child_object := Object_handler.deep_object_from_id (child_id)
+			parent_object := Object_handler.deep_object_from_id (parent_id)
+
+			if not child_object.name.is_empty then
+				child_name := child_object.name
 			else
-				child_name := child_layout_item.object.short_type
+				child_name := child_object.short_type
 			end
-			
-			if not parent_layout_item.object.name.is_empty then
-				parent_name := parent_layout_item.object.name
+
+			if not parent_object.name.is_empty then
+				parent_name := parent_object.name
 			else
-				parent_name := parent_layout_item.object.short_type
+				parent_name := parent_object.short_type
 			end
 			Result := child_name  + " added to " + parent_name
 		end
-		
-		
+
 feature {NONE} -- Implementation
 
-	child_object: GB_OBJECT
-		-- Object to be added to `parent_object'.
+	child_id: INTEGER
+		-- Id of child object for addition.
 
-	parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `parent_object'.
+	parent_id: INTEGER
+		-- Id of parent object into which chld is inserted.
 		
-	child_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `child_object'.
-		
-	previous_parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `previous_parent_object'.
+	previous_parent_id: INTEGER
+		-- Id of parent object which contained the child object
+		-- previously. 0 if none.
 	
 	previous_position_in_parent: INTEGER
-		-- If `child_object' object was parented before `execute' then this is
+		-- If `previous_parent_id' /= 0 then this is
 		-- the index of `child_object' within `previous_parent_object'.
 	
 	insert_position: INTEGER

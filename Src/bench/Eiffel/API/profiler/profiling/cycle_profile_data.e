@@ -67,24 +67,18 @@ feature -- Status report
 	number: INTEGER is
 			-- The number of this cycle.
 		do
-			Result := cycle_number;
+			Result := int_function.cycle_number;
 		end;
 
 	name: STRING is
 			-- The name of this cycle.
 		do
-			Result := cycle_name;
+			Result := int_function.name;
 		end;
 
 feature {NONE} -- Attributes
 
 	functions: LINKED_CIRCULAR [FUNCTION]
 		-- Functions in this cycle
-
-	cycle_name: STRING
-		-- Name of the cycle
-
-	cycle_number: INTEGER
-		-- Number of the cycle
 
 end -- class CYCLE

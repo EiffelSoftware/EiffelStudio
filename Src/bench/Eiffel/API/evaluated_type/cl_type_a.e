@@ -130,10 +130,9 @@ feature {COMPILER_EXPORTER}
 	type_i: CL_TYPE_I is
 			-- C type
 		do
-			create Result
+			create Result.make (base_class_id)
 			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
-			Result.set_base_id (base_class_id)
 		end
 
 	meta_type: TYPE_I is

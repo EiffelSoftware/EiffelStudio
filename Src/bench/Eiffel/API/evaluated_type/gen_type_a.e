@@ -269,8 +269,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i := i + 1
 			end
 
-			create Result
-			Result.set_base_id (base_class_id)
+			create Result.make (base_class_id)
 			Result.set_meta_generic (meta_generic)
 			Result.set_true_generics (true_generics)
 			Result.set_is_true_expanded (is_true_expanded)

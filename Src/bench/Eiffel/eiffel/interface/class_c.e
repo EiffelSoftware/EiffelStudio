@@ -78,6 +78,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CASING
+		export
+			{NONE} all
+		end
+
 create
 	make
 	
@@ -3828,6 +3833,59 @@ feature -- Properties
 		do
 			Result := lace_class.text
 		end
+
+feature -- IL code generation
+
+	il_data_name: STRING is
+			-- IL class name of class data
+		require
+			not_is_external: not is_external
+		local
+			namespace: STRING
+			class_name: STRING
+			use_dotnet_naming: BOOLEAN
+		do
+			if is_precompiled then
+				namespace := precompiled_namespace
+				class_name := precompiled_class_name
+				use_dotnet_naming := is_dotnet_naming
+			else
+				namespace := lace_class.actual_namespace
+				class_name := name.as_lower
+				use_dotnet_naming := System.dotnet_naming_convention
+			end
+			Result := il_casing.type_name (namespace, data_prefix, class_name, use_dotnet_naming)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	set_il_name is
+			-- Store basic information that will help us reconstruct
+			-- a complete name.
+		require
+			not_is_precompiled: not is_precompiled
+		do
+			is_dotnet_naming := System.dotnet_naming_convention
+			precompiled_namespace := lace_class.actual_namespace.twin
+			precompiled_class_name := il_casing.type_name (Void, Void, name.as_lower, is_dotnet_naming)
+		end
+
+	assembly_info: ASSEMBLY_INFO
+			-- Information about assembly in which current class is being generated
+
+	is_dotnet_naming: BOOLEAN
+			-- Is current class being generated using dotnet naming convention?
+
+feature {NONE} -- IL code generation
+
+	precompiled_namespace: STRING
+			-- Namespace of this class when it is precompiled
+
+	precompiled_class_name: STRING
+			-- Name of this class when it is precompiled
+
+	data_prefix: STRING is "Data"
+			-- Prefix in a name of class data
 
 feature -- status
 

@@ -665,6 +665,9 @@ feature {NONE} -- Type description
 			loop
 				class_c := classes.item (i)
 				if is_class_generated (class_c) then
+					if not class_c.is_precompiled and then not class_c.is_external then
+						il_generator.generate_once_data (class_c)
+					end
 					from
 						types := class_c.types
 						types.start

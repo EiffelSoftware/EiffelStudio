@@ -86,6 +86,10 @@ feature -- Initialization
 
 				set_text (private_text)
 
+				if private_foreground_color /= Void then
+					set_foreground_color (private_foreground_color)
+				end
+
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end

@@ -9,6 +9,7 @@ inherit
 			execute
 		end;
 	SHARED_WORKBENCH;
+	SHARED_RESCUE_STATUS
 	
 feature 
 
@@ -21,7 +22,9 @@ feature
 				(argument /= get_in) and
 				(argument /= get_out)
 			then
-				warner.popdown;
+				if last_warner /= Void then
+					last_warner.popdown
+				end
 			end;
 
 			if argument = get_in then
@@ -34,7 +37,7 @@ feature
 					license_window.set_exclusive_grab;
 					license_window.popup
 				end
-			elseif argument = warner then
+			elseif last_warner /= Void and argument = last_warner then
 					--| If it comes here this means ok has
 					--| been pressed in the warner window
 					--| for file modification (only showtext
@@ -55,8 +58,7 @@ feature
 					execute_licenced (formatted);
 					restore_cursors;
 				else
-					warner.set_window (text_window);
-					warner.call (Current, l_File_changed)
+					warner (text_window).call (Current, l_File_changed)
 				end
 			end
 		end;
@@ -77,28 +79,45 @@ feature
 	format (stone: STONE) is
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
+		local
+			retried: BOOLEAN;
+			tool: BAR_AND_TEXT
 		do
-			if 
-				do_format or else filtered or else
-				(text_window.last_format /= Current or
-				not equal (stone, text_window.root_stone))
-			then
+			if not retried then 
 				if 
-					stone /= Void and then
-					(stone.is_valid and stone.clickable)
+					do_format or else filtered or else
+					(text_window.last_format /= Current or
+					not equal (stone, text_window.root_stone))
 				then
-					set_global_cursor (watch_cursor);
-					text_window.clean;
-					text_window.set_root_stone (stone);
-					display_header (stone);
-					display_info (0, stone);
-					text_window.set_editable;
-					text_window.show_image;
-					text_window.set_read_only;
-					text_window.set_last_format (Current);
-					filtered := false;
-					restore_cursors
+					if stone /= Void and then stone.is_valid then
+						if stone.clickable then
+							set_global_cursor (watch_cursor);
+							text_window.clean;
+							text_window.set_root_stone (stone);
+							display_header (stone);
+							display_info (0, stone);
+							text_window.set_editable;
+							text_window.show_image;
+							text_window.set_read_only;
+							text_window.set_last_format (Current);
+							filtered := false;
+							restore_cursors
+						else
+							tool ?= text_window.tool;
+							if tool /= Void then
+								tool.showtext_command.execute (stone)
+							end
+						end
+					end
 				end
+			else
+				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
+				restore_cursors
+			end
+		rescue
+			if not Rescue_status.fail_on_rescue then
+				retried := true;
+				retry
 			end
 		end;
 
@@ -115,8 +134,7 @@ feature -- Filters
 			current_format: text_window.last_format = Current
 		do
 			if text_window.root_stone /= Void then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Not_a_filterable_format)
+				warner (text_window).gotcha_call (w_Not_a_filterable_format)
 			end
 		end;
 

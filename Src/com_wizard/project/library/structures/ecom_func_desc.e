@@ -24,6 +24,14 @@ inherit
 creation
 	make, make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Access
 
 	member_id: INTEGER is
@@ -156,14 +164,6 @@ feature -- Status setting
 		do
 			parent := a_parent
 			is_parent_valid := true
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature -- Measurement

@@ -17,7 +17,9 @@
 		An event is considered to be an external action that occurs during a program's execution. Correctly dealing with events is an important part of developing
 		a Vision2 application. For example, if a user clicks on a button, you
         will want to respond to this event by calling a routine that deals with
-        the request.
+        the request.&nbsp; Vision2 contains action sequences for all kinds of
+        widget events, to view the kind of events available to every widget,
+        click <a href="../../reference/interface/events/ev_widget_action_sequences_chart.html">here</a>.
 	</p>
 	<H2>How do I connect to an event?</H2>
         <p>Every widget and item has an action sequence associated with it that
@@ -25,7 +27,7 @@
         select_actions action sequence.&nbsp; This gets fired when the user
         clicks/selects the button.&nbsp; To have a procedure called on this
         event, you need to create an agent based on this procedure, and then add
-        this to the action sequence (via extend).
+        this to the action sequence (via extend).&nbsp; For a more detailed description of agents and their uses click <a href="/general/guided_tour/language/invitation-09.html">here</a>.
 	
 	</p>
 	
@@ -45,14 +47,21 @@
 	
 	</p>
 	
-	<p>
-        &nbsp;
+        <p>&nbsp;
 	
 	</p>
 	
-	<p>
+        <p>
  All Vision2 action sequences inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/events/ev_action_sequence_chart.html">EV_ACTION_SEQUENCE</A> and
-		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.
+		when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter.&nbsp;
+        When you want an agent to be called from a certain action sequence and
+        the signatures do not match, you may use force_extend, this will call
+        your agent but has no guarantees on the argument passed to your
+        procedure.
+	
+	</p>
+	
+        <p>&nbsp;
 	
 	</p>
 	

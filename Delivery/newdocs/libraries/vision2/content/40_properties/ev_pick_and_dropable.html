@@ -2,12 +2,12 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>PICK AND DROP</TITLE>
+		<TITLE>Pick and Drop</TITLE>
 		<LINK REL=StyleSheet HREF="/default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>PICK_AND_DROP</H1>
+		<H1>Pick And Drop Overview</H1>
 			<P>Pick and drop is a mechanism which allows data to be transported from a <B>source</B> object to a <B>target</B>. Any Vision2 object inheriting
 			<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_pick_and_dropable_chart.html">EV_PICK_AND_DROPABLE</A>
 			can be used to transport or receive data.
@@ -21,9 +21,19 @@
 			<LI>Set one or more <B>targets</B> by adding a function to their <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_drop_actions">drop_actions</A>. The arguments of the function must
 			match the type of the <B>pebble</B> to be transported for the <B>source</B> otherwise the transport will not be permitted.
 		</UL>
-		Right clicking on the <B>source</B> will start the transport, and right clicking on a valid <B>target</B> will end the transport.
+        <p>A simple example of this is demonstrated here:</p>
+        <SPAN Class="code"><SPAN Class="efeature">button1.set_pebble</SPAN> (<SPAN Class="estring">&quot;A
+        PND transport has occured%N&quot;</SPAN>)<BR> <SPAN Class="efeature">button2.drop_actions.extend</SPAN> (<SPAN Class="ekeyword">agent</SPAN> <SPAN Class="efeature">print</SPAN> (?))</SPAN>
+        <P>As print takes an argument of type
+        <a href="../../../base/reference/kernel/string_chart.html">STRING</a>, button2 becomes a
+        valid target for the pebble contained in button1.&nbsp; Right clicking
+        the mouse pointer over the <B>source</B> will start the transport, and right clicking
+        with the mouse pointer a valid <B>target</B> will end the transport.&nbsp;
+        The transport can be cancelled anytime with a left click, just as you
+        would do in Eiffel Studio.</p>
 
-		<P CLASS="note"><B>Note</B>: When a transport completes, the <B>pebble</B> that was transported is passed as an argument to all features in the <B>targets</B> <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_drop_actions">drop_actions</A> whose arguments match the <B>pebble</B></P>
+		<P CLASS="note"><B>Note</B>: When a transport completes, the <B>pebble</B> that was transported is passed as an argument to all features in the <B>targets</B> <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_drop_actions">drop_actions</A> whose
+        argument type matches the <B>pebble</B></P>
 		<H2>Three different modes of transport</H2>
 		<P>There are three different modes of transport available for pick and drop. They are listed below with details of their use:
 		<UL>
@@ -34,7 +44,6 @@
 			<LI>Target menu mode<br>This mode can be set with <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_set_target_menu_mode">set_target_menu_mode</A>. Right clicking on a <B>source</B> brings up a menu of all the valid drop <B>targets</B> in the system. Selecting one
 			of these targets completes the transport.
 		</UL>
-		</P>
 		<H2>Accept and deny cursors</H2>
 		<P> When <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_mode_is_pick_and_drop">mode_is_pick_and_drop</A> or <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_mode_is_drag_and_drop">mode_is_drag_and_drop</A> then the shape of the
 		mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling <A CLASS="efeature" HREF=/libraries/vision2/reference/interface/properties/ev_pick_and_dropable.html#f_set_accept_cursor">set_accept_cursor</A> allows you to customize this cursor used to represent a valid <B>target</B> while

@@ -8,29 +8,31 @@
 
 	<BODY>
 		<H1>Items Overview</H1>
-		<P>All vision2 items inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_item_chart.html">EV_ITEM</A>. Click <A HREF="/libraries/vision2/reference/interface/items/index.html">here</A> to browse the items cluster.</P>
-		</P>
+        <P>All Vision2 items inherit <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_item_chart.html">EV_ITEM</A>.&nbsp;
+        To view the classes contained in the items cluster, click <A HREF="/libraries/vision2/reference/interface/items/index.html">here</A>.</P>
 		<H2>What is an item?</H2>
 		<p>
-		A vision2 item is an object that is used to display information within certain primitives. For example, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_list_chart.html">EV_LIST</A>
-		may hold items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_item_chart.html">EV_LIST_ITEM</A>. All vision2 items are descendants of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_pixmapable_chart.html">EV_PIXMAPABLE</A> meaning they can
+		A Vision2 item is an object that is used to display information within certain primitives. For example, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_list_chart.html">EV_LIST</A>
+		may hold items of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_item_chart.html">EV_LIST_ITEM</A>. All
+        Vision2 items are descendants of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/properties/ev_pixmapable_chart.html">EV_PIXMAPABLE</A> meaning they can
 		display an <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_pixmap_chart.html">EV_PIXMAP</A>.
 		</P>
 		<H2>Item holders</H2>
 		<P>
-		Below is a structure showing the vision2 components and the items that they accept. All the vision2 items are included in this diagram:
+		Below is a structure showing the Vision2 components and the items that they
+        accept, all the items types available in Vision2 are included:
 			<UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/widgets/primitives/ev_list_chart.html">EV_LIST</A> accepts items of type:
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_list_chart.html">EV_LIST</A> accepts items of type:
 					<UL>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_list_item_chart.html">EV_LIST_ITEM</A>
 					</UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/widgets/primitives/ev_combo_box_chart.html">EV_COMBO_BOX</A> accepts items of type:
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_combo_box_chart.html">EV_COMBO_BOX</A> accepts items of type:
 					<UL>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_list_item_chart.html">EV_LIST_ITEM</A>
 					</UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/widgets/containers/ev_window_chart.html">EV_WINDOW</A> accepts items of type (Use <A CLASS="efeature" HREF="/libraries/vision2/references/interface/widgets/containers/ev_window.html#f_set_menu_bar">set_menu_bar</A>):
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_window_chart.html">EV_WINDOW</A> accepts items of type (Use <A CLASS="efeature" HREF="/libraries/vision2/references/interface/widgets/containers/ev_window.html#f_set_menu_bar">set_menu_bar</A>):
 					<UL>
-					<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/items/ev_menu_bar_chart.html">EV_MENU_BAR</A> accepts items of type:
+					<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_menu_bar_chart.html">EV_MENU_BAR</A> accepts items of type:
 						<UL>
 							<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_menu_chart.html">EV_MENU</A> accepts items of type:
 							<UL>
@@ -43,18 +45,18 @@
 							</UL>
 						</UL>
 					</UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/support/ev_multi_column_list_chart.html">EV_MULTI_COLUMN_LIST</A> accepts items of type:
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/support/ev_multi_column_list_chart.html">EV_MULTI_COLUMN_LIST</A> accepts items of type:
 					<UL>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_multi_column_list_row_chart.html">EV_MULTI_COLUMN_LIST_ROW</A>
 					</UL>	
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/support/ev_tool_bar_chart.html">EV_TOOL_BAR</A> accepts items of type:
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/support/ev_tool_bar_chart.html">EV_TOOL_BAR</A> accepts items of type:
 					<UL>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tool_bar_button_chart.html">EV_TOOL_BAR_BUTTON</A>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tool_bar_select_button_chart.html">EV_TOOL_BAR_SELECT_BUTTON</A>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tool_bar_separator_chart.html">EV_TOOL_BAR_SEPARATOR</A>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tool_bar_toggle_button_chart.html">EV_TOOL_BAR_TOGGLE_BUTTON</A>
 					</UL>
-				<LI><A CLASS="eclass" HREF="/libraries/vision2/references/interface/support/ev_tree_chart.html">EV_TREE</A> accepts items of type:
+				<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/support/ev_tree_chart.html">EV_TREE</A> accepts items of type:
 					<UL>
 						<LI><A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_dynamic_tree_item_chart.html">EV_DYNAMIC_TREE_ITEM</A> accepts items of type:
 							<UL>
@@ -69,8 +71,8 @@
 					</UL>
 				
 			</UL>
-		</P>
 		<P CLASS="note"><B>Note:</B> <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_menu_chart.html">EV_MENU</A>, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_tree_item_chart.html">EV_TREE_ITEM</A> and
-		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_dynamic_tree_item_chart.html">EV_DYNAMIC_TREE_ITEM</A> all may contain items of the same type as themselves. This is to due to the recursive nature of trees and menus.<P>
+		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/items/ev_dynamic_tree_item_chart.html">EV_DYNAMIC_TREE_ITEM</A> all may contain items of the same type as themselves. This is
+        due to the recursive nature of trees and menus.<P>
 	</BODY>
 </HTML>

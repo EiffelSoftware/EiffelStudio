@@ -132,7 +132,7 @@ library EiffelCompiler
                         [in] long FeatureID, 
                         [in] long TypeID, 
                         [in] long CodeFeatureID);
-        HRESULT _stdcall GenerateFeatureInternalClone([in] long FeatureID);
+        HRESULT _stdcall generate_feature_internal_duplicate([in] long FeatureID);
         HRESULT _stdcall GenerateImplementationFeatureIL([in] long FeatureID);
         HRESULT _stdcall GenerateMethodImpl(
                         [in] long FeatureID, 

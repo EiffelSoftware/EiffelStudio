@@ -409,8 +409,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_feature_internal_clone_user_precondition (feature_id: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `generate_feature_internal_clone'.
+	generate_feature_internal_duplicate_user_precondition (feature_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_feature_internal_duplicate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -1739,11 +1739,11 @@ feature -- Basic Operations
 
 		end
 
-	generate_feature_internal_clone (feature_id: INTEGER) is
+	generate_feature_internal_duplicate (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		require
-			generate_feature_internal_clone_user_precondition: generate_feature_internal_clone_user_precondition (feature_id)
+			generate_feature_internal_duplicate_user_precondition: generate_feature_internal_duplicate_user_precondition (feature_id)
 		deferred
 
 		end

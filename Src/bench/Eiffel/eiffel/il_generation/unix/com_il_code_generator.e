@@ -367,7 +367,7 @@ feature -- IL Generation
 		do
 		end
 
-	generate_feature_internal_clone (feature_id: INTEGER) is
+	generate_feature_internal_duplicate (feature_id: INTEGER) is
 		do
 		end
 

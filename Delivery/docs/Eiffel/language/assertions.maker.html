@@ -5,73 +5,65 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<title>An Invitation to Eiffel: Assertions</title>
+<title>Assertions</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../../styles/tech.css">
+<link rel="stylesheet" type="text/css" href="../../styles/tech.css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Assertions</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
 <table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
-<H1><A HREF="exceptions.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table of Contents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="types.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H1>
-
-<P>
-<HR><!-- This file was created with the fm2html filter.
-The filter is copyright Norwegian Telecom Research and
-was programmed by Jon Stephenson von Tetzchner. -->
-
-<h2><A NAME="HDR0"></A>5 ASSERTIONS </h2>
+<h2><A NAME="HDR0">5 ASSERTIONS</A></h2>
 
 <P>If classes are to deserve their definition as abstract data type implementations,
 they must be known not just by the available operations, but also by the
 formal properties of these operations, which did not appear in the above
 example. </P>
 
-<H4><A NAME="HDR1"></A>5.1 The role of assertions</H4>
+<H4><A NAME="HDR1">5.1 The role of assertions</A></H4>
 
 <P>Eiffel encourages software developers to express formal properties of
 classes by writing <B>assertions</B>, which may in particular appear in
 the following roles: </P>
 
-<UL>
-<LI>Routine <B>preconditions</B> express the requirements that clients
+    <ul>
+      <li>Routine <B>preconditions</B> express the requirements that clients
 must satisfy whenever they call a routine. For example the designer of
 <I>ACCOUNT</I> may wish to permit a withdrawal operation only if it keeps
 the account's balance at or above the minimum. Preconditions are introduced
 by the keyword <B><FONT COLOR="#0000FF">require</FONT></B>. <BR>
 <BR>
-</LI>
-
-<LI>Routine <B>postconditions</B>, introduced by the keyword <B><FONT COLOR="#0000FF">ensure</FONT></B>,
+      </li>
+      <li>Routine <B>postconditions</B>, introduced by the keyword <B><FONT COLOR="#0000FF">ensure</FONT></B>,
 express conditions that the routine (the supplier) guarantees on return,
 if the precondition was satisfied on entry.<BR>
 <BR>
-</LI>
-
-<LI>A class <B>invariant</B> must be satisfied by every instance of the
+      </li>
+      <li>A class <B>invariant</B> must be satisfied by every instance of the
 class whenever the instance is externally accessible: after creation, and
 after any call to an exported routine of the class. The invariant appears
 in a clause introduced by the keyword <B><FONT COLOR="#0000FF">invariant</FONT></B>,
 and represents a general consistency constraint imposed on all routines
 of the class. <BR>
-</LI>
-</UL>
+      </li>
+    </ul>
 
 <P>With appropriate assertions, the <I>ACCOUNT</I> class becomes: </P>
 
-<UL>
+    <ul>
 <DL>
 <DT><B><FONT COLOR="#0000FF">class </FONT></B><I>ACCOUNT </I><B><FONT COLOR="#0000FF">creation
 </FONT></B><BR>
@@ -162,7 +154,7 @@ the account.<I> </I></FONT></DT>
 </DD>
 </DL>
 
-<DD><I>may_withdraw ... </I>-- As before<I> </I><BR>
+<DD><I>may_withdraw ... </I>-- As before<BR>
 <BR>
 </DD>
 
@@ -209,13 +201,13 @@ As before<I> </I></FONT><BR>
 
 <DL>
 <DD><I>balance &gt;= minimum_balance</I></DD>
-<I></I></DL>
+</DL>
 
 <DT><B><FONT COLOR="#0000FF">end </FONT></B><I>-- </I>class<I> ACCOUNT
 </I></DT>
 </DL>
 </DL>
-</UL>
+    </ul>
 
 <P>The notation <B><FONT COLOR="#0000FF">old</FONT> </B><I>attribute_name</I>
 may only be used in a routine postcondition. It denotes the value the attribute
@@ -233,11 +225,11 @@ the default initializations. The effect of <BR>
 <BR>
 </P>
 
-<UL>
+    <ul>
 <DL>
 <DT>!!<I> acc1.make (5_500)</I> </DT>
 </DL>
-</UL>
+    </ul>
 
 <P>is to allocate the object (as with the default creation) and to call
 procedure <I>make</I> on this object, with the argument given. This call
@@ -253,11 +245,11 @@ appears in a clause starting with <B><FONT COLOR="#0000FF">feature </FONT></B>{<
 so it would be invalid for a client to include a call such as <BR>
 </P>
 
-<UL>
+    <ul>
 <DL>
 <DT><I>acc.make (8_000)</I> </DT>
 </DL>
-</UL>
+    </ul>
 
 <P>To make such a call valid, it would suffice to move the declaration
 of <I>make</I> to the first <B><FONT COLOR="#0000FF">feature </FONT></B>clause
@@ -302,7 +294,7 @@ as <B><I><FONT COLOR="#0000FF">do</FONT></I></B> clauses of routines, but
 keeping interface information and in particular assertions. Here is the
 short form of the above class: </P>
 
-<UL>
+    <ul>
 <DL>
 <DT><B><FONT COLOR="#0000FF">class interface </FONT></B><I>ACCOUNT </I><B><FONT COLOR="#0000FF">creation
 </FONT></B><BR>
@@ -375,13 +367,15 @@ the account.<I> </I></FONT></DT>
 - sum </I></DD>
 </DL>
 </DL>
-<I></I>
 <DD><I>may_withdraw ... </I></DD>
-<I></I></DL>
+      </DL>
+
+      <dl>
 
 <DT><B><FONT COLOR="#0000FF">end </FONT></B><I>--</I> class<I> ACCOUNT
 </I></DT>
-</UL>
+      </dl>
+    </ul>
 
 <P>This is not actual Eiffel, only documentation of Eiffel classes, hence
 the use of slightly different syntax to avoid any confusion (<B><FONT COLOR="#0000FF">class
@@ -420,11 +414,5 @@ role as design and documentation aids, as part of the theory of Design
 by Contract, exerts a pervasive influence on the Eiffel style of software
 development. </P>
 
-<CENTER><P><A HREF="types.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="types.maker.html">Previous
-Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
-of Contents</A> <A HREF="exceptions.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="exceptions.maker.html">Next
-</CENTER>
-
-</td></tr></table>
-</BODY>
+<CENTER><P><A HREF="types.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A> <A HREF="exceptions.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A></CENTER></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

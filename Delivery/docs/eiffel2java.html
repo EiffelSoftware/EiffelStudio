@@ -7,29 +7,28 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 <p align="center">
 <font color="#000000" size="6"><b>
 The Java Interface</b></font>
-<p align="center">
-&nbsp;
 <h1>
-Introduction
-
-</h1>
+Introduction</h1>
 
 <p>
 	The Java interface allows you to call Java routines or attributes from your Eiffel
@@ -46,24 +45,22 @@ code. It uses the Java Native Interface (JNI) provided by the Java Development K
 
 </blockquote>
 <h2>
-Requirements
+Requirements</h2>
 
-</h2>
-
-<ul>
-  <li>JDK 1.1.4 correctly set (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
-  <li>the Java classes you want to use must be in the environment variable CLASSPATH</li>
-</ul>
+    <ul>
+      <li>JDK 1.1.4 correctly set (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
+      <li>the Java classes you want to use must be in the environment variable CLASSPATH</li>
+    </ul>
 <h2> Limitations</h2>
-<ul>
-  <li>In this version, you can only use one JNI environment.</li>
-  <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
-  <li>It is not possible to call Eiffel features from Java program.</li>
-  <li>The Eiffel side cannot deal with 'long' integer (64 bits)</li>
-  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 1.1.4.
+    <ul>
+      <li>In this version, you can only use one JNI environment.</li>
+      <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
+      <li>It is not possible to call Eiffel features from Java program.</li>
+      <li>The Eiffel side cannot deal with 'long' integer (64 bits)</li>
+      <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 1.1.4.
     This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 1.1.4. For further information, go on the&nbsp;JNI pages at the address
     above.&nbsp;</li>
-</ul>
+    </ul>
 <p>&nbsp;</p>
 <h1>Interface classes</h1>
 <h3>
@@ -73,13 +70,11 @@ Requirements
   <ul>
     <li>creation of instances of Java Classes</li>
     <li>exceptions mechanism</li>
-    <li>destruction of the JVM
-    </li>
+    <li>destruction of the JVM</li>
   </ul>
 </blockquote>
 <h3>
-	SHARED_JNI_ENVIRONMENT
-</h3>
+	SHARED_JNI_ENVIRONMENT</h3>
 <blockquote>
 <p>
     Shared JNI environment. Since one JNI is needed per thread we limit&nbsp; Eiffel to having one thread that deals with Java.
@@ -87,8 +82,7 @@ Requirements
 </p>
 </blockquote>
 <h3>
-	JAVA_VM
-</h3>
+	JAVA_VM</h3>
 <blockquote>
 <p>
     This class is used to initially load the JVM into the running program. This
@@ -96,8 +90,7 @@ Requirements
 </p>
 </blockquote>
 <h3>
-	JAVA_CLASS
-</h3>
+	JAVA_CLASS</h3>
 <blockquote>
 <p>
     Access to Java classes. Static methods and attributes are accessed&nbsp;via this class.This
@@ -105,8 +98,7 @@ Requirements
 </p>
 </blockquote>
 <h3>
-	JAVA_OBJECT
-</h3>
+	JAVA_OBJECT</h3>
 <blockquote>
 
 <p>
@@ -122,9 +114,7 @@ Requirements
 </blockquote>
 
 <h3>
-	JAVA_EXTERNALS
-
-</h3>
+	JAVA_EXTERNALS</h3>
 
 <blockquote>
 
@@ -135,9 +125,7 @@ Requirements
 </blockquote>
 
 <h3>
-	JAVA_***_ARRAY
-
-</h3>
+	JAVA_***_ARRAY</h3>
 
 <blockquote>
 
@@ -148,9 +136,7 @@ int, float, double, char, boolean) or object if it is an array of Java Object (a
 
 </blockquote>
 <h3>
-	JAVA_ARGS
-
-</h3>
+	JAVA_ARGS</h3>
 
 <blockquote>
   <p>Class representing the arguments that can be passed to a Java method. See below about the signature of the methods
@@ -159,9 +145,7 @@ int, float, double, char, boolean) or object if it is an array of Java Object (a
 
 </blockquote>
 <h3>
-	JAVA_OBJECT_TABLE
-
-</h3>
+	JAVA_OBJECT_TABLE</h3>
 
 <blockquote>
   <p>This class provides a mapping between Java and Eiffel objects
@@ -174,7 +158,7 @@ int, float, double, char, boolean) or object if it is an array of Java Object (a
 	The following table describes the mapping of Java primitive types and classes&nbsp;to Eiffel classes.&nbsp;
 
 <center>
-  <table border="1" width="300">
+    <table border="1" width="300">
     <tr>
       <td width="50%" bgcolor="#FFFFCC"><b>Java type/class</b></td>
       <td width="50%" bgcolor="#FFFFCC"><b>Eiffel class</b></td>
@@ -334,10 +318,8 @@ int, float, double, char, boolean) or object if it is an array of Java Object (a
 
 </p>
 
-<h1>An example
-
-</h1>
-<pre>
+<h1>An example</h1>
+    <pre>
 			## the Java Class ##
 class test {
 	test () {}
@@ -371,12 +353,12 @@ feature -- Creation
 		do
 			--| Creation of the Java object
 
-			class_test := jni.find_class ("test")
-			!! instance_of_class_test.create_instance (class_test, "()V", Void)
+			class_test := jni.find_class (&quot;test&quot;)
+			!! instance_of_class_test.create_instance (class_test, &quot;()V&quot;, Void)
 				
 			--| Access to a public attribute
 
-			fid := instance_of_class_test.field_id ("my_integer", "I")
+			fid := instance_of_class_test.field_id (&quot;my_integer&quot;, &quot;I&quot;)
 				-- 'fid' contains the id of the field 'my_integer'
 
 			value := instance_of_class_test.integer_attribute (fid)
@@ -386,23 +368,23 @@ feature -- Creation
 
 			--| Access to a static attribute using directly the JAVA_CLASS
 
-			fid := class_test.field_id ("my_static_integer", "I")
+			fid := class_test.field_id (&quot;my_static_integer&quot;, &quot;I&quot;)
 			value := class_test.integer_attribute (fid)
 			...
 
 			--| Access to a static attribute using the attribute 'jclass'
 
-			fid := instance_of_class_test.jclass.field_id ("my_static_integer", "I")
+			fid := instance_of_class_test.jclass.field_id (&quot;my_static_integer&quot;, &quot;I&quot;)
 			value := instance_of_class_test.jclass.integer_attribute (fid)
 			...
 
 			--| Access to the method 'my_method'
-			fid := instance_of_class_test.method_id ("my_method", "(ILjava/lang/String;)V")
+			fid := instance_of_class_test.method_id (&quot;my_method&quot;, &quot;(ILjava/lang/String;)V&quot;)
 				-- Get the id of 'my_method'
 
 			!! j_args.make(2)
 			j_args.push_int (2)
-			j_args.push_string("String test")
+			j_args.push_string(&quot;String test&quot;)
 				-- Create the set of arguments for 'my_method'
 
 			instance_of_class_test.void_method (fid, j_args)
@@ -412,9 +394,6 @@ feature -- Creation
 		end -- make
 
 end -- class EIFFEL_TO_JAVA
-</pre>
-
-</td></tr></table>
-</body>
+</pre></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

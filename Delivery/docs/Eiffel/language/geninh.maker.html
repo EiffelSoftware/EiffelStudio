@@ -5,68 +5,59 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<TITLE>An Invitation to Eiffel: Genericity and inheritance</TITLE>
+<TITLE>Genericity and Inheritance</TITLE>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../../styles/tech.css">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Genericity and Inheritance</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
-
-
-
-<H1>
-<A HREF="deferred.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-next.gif" ALT="Next page" width="16" height="16"></A>
-<A HREF="BOOK.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-toc.gif" ALT="Table of
-Contents" width="16" height="16"></A>
-<A HREF="polymorphism.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-previous.gif" ALT="Previous section" width="16" height="16"></A>
-<A NAME="REF98317">
-AN INVITATION TO EIFFEL</A>
-</H1>
-<HR>
-<!-- This file was created with the fm2html filter.
-The filter is copyright Norwegian Telecom Research and
-was programmed by Jon Stephenson von Tetzchner. -->
 
 <H2><A NAME="HDR0"> 10  COMBINING GENERICITY AND INHERITANCE </A></H2>
 <P>Genericity and inheritance, the two fundamental mechanisms for generalizing classes, may be combined in two fruitful ways. 
 <P>The first technique yields <B>polymorphic data structures</B>. Assume that in the generic class <I>LIST </I>[<I>G</I>] the insertion procedure put has a formal argument of type G, representing the element to be inserted. Then with a declaration such as
-<UL><DL>
+    <ul>
+      <DL>
 <DT><I>pl: LIST </I>[<I>POLYGON</I>] 
-</DL></UL>
+</DL>
+    </ul>
 <P>the type rules imply that in a call <I>pl.put</I> ("...") the argument may be not just of type <I>POLYGON</I>, but also of type <I>RECTANGLE</I> (an heir of <I>POLYGON</I>) or any other type conforming to <I>POLYGON</I> through inheritance. 
 <P>The conformance requirement used here is the inheritance-based type compatibility rule; in simple cases, <I>V</I> conforms to <I>T </I>if and only if <I>V</I> is a descendant of <I>T</I>.
-<P>Structures such as <I>pl</I> may contain objects of different types, hence the name "polymorphic data structure". Such polymorphism is, again, made safe by the type rules: by choosing an actual generic parameter (<I>POLYGON</I> in the example) based higher or lower in the inheritance graph, you extend or restrict the permissible types of objects in <I>pl</I>. A fully general list would be declared as 
-<UL><DL>
+<P>Structures such as <I>pl</I> may contain objects of different types, hence the name "polymorphic data structure". Such polymorphism is, again, made safe by the type rules: by choosing an actual generic parameter (<I>POLYGON</I> in the example) based higher or lower in the inheritance graph, you extend or restrict the permissible types of objects in <I>pl</I>. A fully general list would be declared as
+    <ul>
+      <DL>
 <DT><I>LIST </I>[<I>ANY</I>]<I> 
-</DL></UL>
+</DL>
+      </ul>
 <P></I>where <I>ANY</I>, a Kernel Library class, is automatically an ancestor of any class that you may write. 
 <P>The other mechanism for combining genericity and inheritance is <B>constrained genericity</B>. By indicating a class name after a formal generic parameter, as in
-<UL><DL>
+    <ul>
+      <DL>
 <DT><I>VECTOR </I>[<I>T -&gt; ADDABLE</I>]
-</DL></UL>
+</DL>
+    </ul>
 <P>you express that only descendants of that class (here <I>ADDABLE</I>) may be used as the corresponding actual generic parameters. This makes it possible to use the corresponding operations. Here, for example, class <I>VECTOR</I> may define a routine <I><B>infix</B> "+"</I> for adding vectors, based on the corresponding routine from <I>ADDABLE</I> for adding vector elements. Then by making <I>VECTOR</I> itself inherit from <I>ADDABLE</I>, you ensure that it satisfies its own generic constraint and enable the definition of types such as <I>VECTOR </I>[<I>VECTOR </I>[<I>T</I>]]. 
 <P>As you have perhaps guessed, unconstrained genericity, as in <I>LIST </I>[<I>G</I>], may be viewed as an abbreviation for genericity constrained by <I>ANY</I>, as in
-<UL><DL>
-<DT><I> <DD><DD>LIST </I><B></B>[<I>G -&gt; <I>ANY</I></I>].
-</DL></UL>
+    <ul>
+      <DL>
+<DT><I> <DD>&nbsp;<DD>LIST </I>[<I>G -&gt; <I>ANY</I></I>].
+</DL>
+    </ul>
 
 <center><P>
-<A HREF="polymorphism.maker.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous Chapter</A>
-<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
-<A HREF="deferred.maker.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next Chapter</A>
-</center>
-  
-</td></tr></table>
-
-</BODY>
+<A HREF="polymorphism.maker.html"><IMG SRC="fm2html-previous.gif" width="16" height="16"></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" width="16" height="16"></A>
+<A HREF="deferred.maker.html"><IMG SRC="fm2html-next.gif" width="16" height="16"></A></center></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

@@ -6,35 +6,34 @@
 <TITLE>CECIL: Using Eiffel from C, C++ and other languages</TITLE>
 
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+
 
 <meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
 
 
     <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
 </HEAD>
 
-<BODY BGCOLOR="#F9EFE9" text="#000000">
-
-<P>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-
-<p>
-<table cols="1" cellpadding="0" cellspacing="0" border="0"><tr><td>
+<BODY><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0"><tr><td>
 
 
 <H1>
-<A NAME="introduction"></A>CECIL: using Eiffel from other languages</H1>
+CECIL: using Eiffel from other languages</H1>
 <IMG SRC="images/power.gif" ALT="Eiffel Power (TM) from ISE"  ALIGN=RIGHT width="109" height="226">
-<UL>
 Important note: this document is regularly updated (corrections, examples, 
 bug report, suggestions from customers). Please make sure that you have
  downloaded the latest version.
@@ -54,7 +53,9 @@ Eiffel: The Environment and on ISE's FTP server. In particular, the FTP
 server contains a complete example which you are strongly encouraged to
 download if you plan to make serious use of CECIL. You can find the examples
 in
-<UL><A HREF="ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip">ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip</A></UL>
+        <ul>
+          <A HREF="ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip">ftp://ftp.eiffel.com/pub/examples/cecil/cecil.zip</A>
+        </ul>
 (This is a zip of the entire example directory. You can also retrieve individual
 files from that directory by looking at <A HREF="ftp://ftp.eiffel.com/pub/examples/cecil">ftp://ftp.eiffel.com/pub/examples/cecil</A>
 and ignoring cecil.zip.)
@@ -77,85 +78,138 @@ Index</H1>
 <A HREF="#introduction">Introduction</A>
 <BR><A HREF="#Index">Index</A>
 <BR><A HREF="#run_cecil">How to run a CECIL program</A>
-<UL><A HREF="#using_cecil">Using CECIL</A>
+        <ul>
+          <A HREF="#using_cecil">Using CECIL</A>
 <BR><A HREF="#compile_eiffel_system">Compiling your Eiffel system for CECIL</A>
 <BR><A HREF="#build_archive">Building a CECIL archive</A>
 <BR><A HREF="#using_archive">Using a CECIL archive</A>
-<UL><A HREF="#link_cecil">Linking the CECIL archive into a program</A>
-<UL><A HREF="#compiling_notes">Notes for compiling CECIL C files</A></UL>
-</UL>
+          <ul>
+            <A HREF="#link_cecil">Linking the CECIL archive into a program</A>
+            <ul>
+              <A HREF="#compiling_notes">Notes for compiling CECIL C files</A>
+            </ul>
+          </ul>
 <A HREF="#initialize_runtime">Initializing the Eiffel 4 run-time</A>
-<UL><A HREF="#restrictions">Restrictions</A>
-<BR><A HREF="#notes">Notes</A></UL>
+          <ul>
+            <A HREF="#restrictions">Restrictions</A>
+<BR><A HREF="#notes">Notes</A>
+          </ul>
 <A HREF="#overview">The CECIL interface overview</A>
-<UL><A HREF="#basic_types">Eiffel basic types macros</A>
-<UL>Example
-<BR>Eiffel basic types mapping to C types</UL>
-<UL><A HREF="#EIF_OBJECT">More about EIF_OBJECT, EIF_REFERENCE and basic expanded types</A>
-</UL>
+          <ul>
+            <A HREF="#basic_types">Eiffel basic types macros</A>
+            <ul>
+              Example
+<BR>Eiffel basic types mapping to C types
+            </ul>
+            <ul>
+              <A HREF="#EIF_OBJECT">More about EIF_OBJECT, EIF_REFERENCE and basic expanded types</A>
+            </ul>
 <A HREF="#protecting_objects">Protecting the Eiffel objects</A>
-<UL><A HREF="#object_in_c_externals">Eiffel objects passed in a C external</A>
+            <ul>
+              <A HREF="#object_in_c_externals">Eiffel objects passed in a C external</A>
 <BR><A HREF="#eif_access">Accessing the direct reference to an Eiffel object:eif_access</A>
-<UL>Example
+              <ul>
+                Example
 <BR><A HREF="#eif_access_important_rules">Important rules when using eif_access</A>
-<UL>Never precompute the value returned by eif_access
-<BR>Never use eif_access with encapsulated eiffel calls</UL>
-</UL>
+                <ul>
+                  Never precompute the value returned by eif_access
+<BR>Never use eif_access with encapsulated eiffel calls
+                </ul>
+              </ul>
 <A HREF="#eif_adopt">Keeping a reference from C after an external call:
 eif_adopt</A>
-<UL>Example</UL>
-</UL>
+              <ul>
+                Example
+              </ul>
+            </ul>
 <A HREF="#other_functions">Other CECIL functions:</A>
-<UL><A HREF="#eif_create">Creating Eiffel objects from C: eif_create</A>
-<UL>Example</UL>
+            <ul>
+              <A HREF="#eif_create">Creating Eiffel objects from C: eif_create</A>
+              <ul>
+                Example
+              </ul>
 <A HREF="#henter">Protecting the objects returned by Eiffel functions:eif_protect</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_type_id">Getting the type id of an Eiffel type: eif_type_id</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_generic_id">Getting the type id of a generic type (on 4.2
 and lower only): eif_generic_type</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_panic">Raising an eiffel panic</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_wean">Releasing an Eiffel indirection pointer: eif_wean</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_field">Getting the attribute from an Eiffel object: eif_attribute</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_procedure">Getting the address of an Eiffel routine</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_enable_visible_exception">Enabling/Disabling the visible
 exception</A>
 <BR><A HREF="#RTMS">Creating an Eiffel string: eif_string</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_attribute_type">Getting the return-type of an attribute: eif_attribute_type</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_name">Getting the class name corresponding to a type id:
 eif_name</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#eif_type">Getting the type id of an Eiffel object: eif_type</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#converting_array">Converting a C array into an Eiffel array</A>
-</UL>
+            </ul>
 <A HREF="#restrictionsinCECIL">Restrictions in CECIL</A>
-<UL><A HREF="#declaring_routine_with_real_arguments">Declaring routines
+            <ul>
+              <A HREF="#declaring_routine_with_real_arguments">Declaring routines
 taking real as argument</A>
 <BR><A HREF="#Eiffel_routine_cast">Cast of the Eiffel routines in C</A>
-<UL>Example</UL>
+              <ul>
+                Example
+              </ul>
 <A HREF="#Visibility">Visible classes</A>
-<UL><A HREF="#visible_exception">Visible exception</A></UL>
+              <ul>
+                <A HREF="#visible_exception">Visible exception</A>
+              </ul>
 <A HREF="#visible_features">Visible features</A>
-<UL><A HREF="#overriding_export_clause">Overriding export clause in Ace
+              <ul>
+                <A HREF="#overriding_export_clause">Overriding export clause in Ace
 file</A>
-<UL>Example</UL>
-</UL>
-</UL>
+                <ul>
+                  Example
+                </ul>
+              </ul>
+            </ul>
 <A HREF="#bugs">Bugs</A>
-<UL><A HREF="#bug_in_exported_clause">Bug in export clause</A></UL>
-<UL><A HREF="#bug_in_eif_cecil_h">Bad macros in eif_cecil.h</A></UL>
-</UL>
+            <ul>
+              <A HREF="#bug_in_exported_clause">Bug in export clause</A>
+            </ul>
+            <ul>
+              <A HREF="#bug_in_eif_cecil_h">Bad macros in eif_cecil.h</A>
+            </ul>
+          </ul>
 <A HREF="http://support.eiffel.com">Send a bug report</A>
-<BR><A HREF="mailto:manuelt@eiffel.com">Suggestions and comments</A></UL>
-</UL>
+<BR><A HREF="mailto:manuelt@eiffel.com">Suggestions and comments</A>
+        </ul>
 
 <H1>
 <A NAME="run_cecil"></A>How to run a CECIL program</H1>
@@ -163,34 +217,35 @@ file</A>
 <H2>
 <A NAME="using_cecil"></A>1 - Using CECIL</H2>
 
-<UL>To access Eiffel mechanisms from C or other external languages:
-<UL>
-<LI>
+      <ul>
+        To access Eiffel mechanisms from C or other external languages:
+        <ul>
+          <li>
 &nbsp;1. Compile your Eiffel system so as to generate "Cecilized" code,
 that is to say code callable from the outside See <A HREF="#compile_eiffel_system">Compiling
-your Eiffel system for CECIL</A>.</LI>
+your Eiffel system for CECIL</A>.</li>
 
 <BR>&nbsp;
-<LI>
+          <li>
 &nbsp;2. In writing the external code that will use the facilities of the
 Eiffel system, use the CECIL functions as specified in chapter 24 of <I>Eiffel:
-The Language</I> . See also <A HREF="#overview">The CECIL interface overview</A>.</LI>
+The Language</I> . See also <A HREF="#overview">The CECIL interface overview</A>.</li>
 
 <BR>&nbsp;
-<LI>
+          <li>
 &nbsp;3. C-compile and link that code. See <A HREF="#build_archive">Building</A>
-and <A HREF="#using_archive">Using a CECIL archive</A>.</LI>
-</UL>
+and <A HREF="#using_archive">Using a CECIL archive</A>.</li>
+        </ul>
 
 <P><BR>For step 1, note that through CECIL you can use an Eiffel system
 compiled in any of the Eiffel compilation modes:
 <BR>&nbsp;
-<UL>
-<LI>
-Finalized C code.</LI>
+        <ul>
+          <li>
+Finalized C code.</li>
 
 <BR>&nbsp;
-<LI>
+          <li>
 &nbsp;Workbench (melted/frozen) code, usually for development purposes.
 In this case you must copy the <I>&lt;system name>.melted</I> file ( where
 <I>&lt;system
@@ -198,22 +253,24 @@ name></I> is the name of your system)
 located in EIFGEN\W_code
 to the directory where you intend to execute your C application from. Note
 that each time you melt the Eiffel system, the <I>&lt;system name>.melted</I>
-(<I>melted.eif</I> ) file is updated.</LI>
-</UL>
+(<I>melted.eif</I> ) file is updated.</li>
+        </ul>
 CAVEAT: in the second case (workbench mode), it is not possible to call
 through the CECIL interface any routine that has been melted in the last
 compilation; this would raise the run-time exception
-<UL>
-<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ applied to melted routine</PRE>
-</UL>
+        <ul>
+          <PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ applied to melted routine</PRE>
+        </ul>
 The solution is simply to refreeze the system.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+      </ul>
 
 <H2>
 <A NAME="compile_eiffel_system"></A>2 - Compiling your Eiffel system for
 CECIL</H2>
 
-<UL>It is very simple to "Cecilize" your Eiffel system, that is to say
+      <ul>
+        It is very simple to "Cecilize" your Eiffel system, that is to say
 make its features available from the outside through CECIL. You will compile
 it as you normally would - either freeze it or finalize it. The only supplementary
 precaution is to protect from the dead-code remover any Eiffel features
@@ -221,8 +278,8 @@ that are not called from the Eiffel system's root, and might thus be dead-code-r
 by the optimization mechanism.
 <P>To do this, include the appropriate features and classes in the <I>visible</I>
 clause of the Ace file, as in
-<UL>
-<PRE>&nbsp;&nbsp;&nbsp; <B><FONT COLOR="#000080">system
+        <ul>
+          <PRE>&nbsp;&nbsp;&nbsp; <B><FONT COLOR="#000080">system
 </FONT></B><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; system_name
 &nbsp;&nbsp;&nbsp; </I><B><FONT COLOR="#000080">root
 </FONT></B><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...
@@ -247,7 +304,7 @@ clause of the Ace file, as in
 &nbsp;
 &nbsp;&nbsp;&nbsp; ...
 &nbsp;&nbsp;&nbsp; <B><FONT COLOR="#000080">end</FONT></B></PRE>
-</UL>
+        </ul>
 Here all features of <I>CLASS1</I> are available to the external software;
 for <I>CLASS2</I>, only <I>other_make</I> (for creation) and <I>feat1</I>
 and <I>feat2</I> (for normal call) are available. For the full set of <B><FONT COLOR="#000080">visible</FONT></B>
@@ -256,13 +313,15 @@ the clause <B><FONT COLOR="#333333">export </FONT></B>, only the features
 with no export clause in the Eiffel code, will be available<B><FONT COLOR="#333333">.
 </FONT></B>The
 creation procedure of a visible class is always available 
-See also <A HREF="#Visibility">visible classes</A><A HREF="#Visibility"></A>
-<P><A HREF="#Index">Back to index</A></UL>
+See also <A HREF="#Visibility">visible classes</A>
+<P><A HREF="#Index">Back to index</A>
+      </ul>
 
 <H2>
 <A NAME="build_archive"></A>3 -Building a CECIL archive</H2>
 
-<UL>The ISE-EiffelBench&nbsp; 4.x&nbsp; compiler produces both C code and
+      <ul>
+        The ISE-EiffelBench&nbsp; 4.x&nbsp; compiler produces both C code and
 a "Makefile". The Makefile&nbsp; compiles and link s that C code in a subdirectory
 one level below the EIFGEN directory of a project. For frozen/melted code,
 the Makefile is located in the W_code subdirectory. For finalized code,
@@ -270,13 +329,17 @@ it is in the F_code subdirectory.
 <P>To produce a CECIL library, you must: open a shell (unix) or the MS-DOS
 prompt (Windows), go to the subdirectory that contains the Makefile, and
 then type:
-<UL><B>make cecil </B>(on unix)
-<BR><B>nmake cecil </B>(on windows, with VC++)</UL>
+        <ul>
+          <B>make cecil </B>(on unix)
+<BR><B>nmake cecil </B>(on windows, with VC++)
+        </ul>
 
 <P><BR>This generates a CECIL archive whose name derived from the name
 &lt;system nameof the Eiffel system, as follows:
-<UL>lib&lt;system name>.a&nbsp; (on unix)
-<BR>&lt;system name>.lib (on Windows)</UL>
+        <ul>
+          lib&lt;system name>.a&nbsp; (on unix)
+<BR>&lt;system name>.lib (on Windows)
+        </ul>
 For example, the corresponding archive&nbsp; for an Eiffel system called
 "test", would&nbsp; be called either "libtest.a" (Unix) or test.lib&nbsp;
 (Windows.)
@@ -291,7 +354,8 @@ melted routines through the CECIL interface is not supported in the current
 version&nbsp; - calling a melted routine raises the exception "$ applied
 to melted routine".
 <P><A HREF="#Index">Back to index</A>
-<BR>&nbsp;</UL>
+<BR>&nbsp;
+      </ul>
 
 <H2>
 <A NAME="using_archive"></A>4 - Using a CECIL archive</H2>
@@ -299,7 +363,8 @@ to melted routine".
 <H3>
 <A NAME="link_cecil"></A>4.1 - Linking the CECIL archive into a program</H3>
 
-<UL>The CECIL archive already incorporates the Eiffel 4.x run-time. To
+      <ul>
+        The CECIL archive already incorporates the Eiffel 4.x run-time. To
 use the functions provided in the CECIL archive, simply write the C programs
 according to the CECIL specifications of ETL, and then include the cecil
 archive in the linking line of your C application.
@@ -310,27 +375,25 @@ the standard math libraries.You may need to link with other libraries (for
 example, on linux: with "-lbsd", in MT mode with "-lpthread" (posix threads)
 or "-lthread" (solaris)) .
 <P><FONT SIZE=+0>On Windows, go to the appropriate directory (W_code or
-F_code) and locate the file:</FONT>
-<FONT SIZE=+0>
+F_code) and locate the file:
 <P>
 <system_name>.lnk</FONT>
 <BR><FONT SIZE=+0>&nbsp;To have a Cecilized version (that is to say, a
-version usable from external&nbsp; software ) you should:</FONT>
-<FONT SIZE=+0>
+version usable from external&nbsp; software ) you should:
 <P>
-- Copy system_name.lnk into a new file cecil.lnk in the same directory.</FONT>
-<FONT SIZE=+0>
+- Copy system_name.lnk into a new file cecil.lnk in the same directory.
 <P>
 - To use the current MS-DOS shell as the default console add the directive "console_application (yes) in your Ace file.
 <P>
 - and replace the line:</FONT>
-<UL>e1\emain.obj
-</UL>
+        <ul>
+          e1\emain.obj
+        </ul>
 <P>
-by</FONT>
-<UL>
+by
+        <ul>
 ..\..\main.obj
-</UL>
+        </ul>
 
 <P><FONT SIZE=+0>assuming that the main.obj object file is in the project
 directory; update the above path if it is in another directory.</FONT>
@@ -374,12 +437,14 @@ directory. You should not give to the CECIL executable the same name as
 your system, because it will be replaced by the Eiffel executable when
 you run another compilation.
 <BR>&nbsp;
-<A HREF="#Index">Back to index</A></UL>
+<A HREF="#Index">Back to index</A>
+      </ul>
 
 <H3>
 <A NAME="initialize_runtime"></A>4.2 - Initializing the Eiffel 4 run-time</H3>
 
-<UL>Even though the main thread of control resides in the "C side" of the
+      <ul>
+        Even though the main thread of control resides in the "C side" of the
 program, the Eiffel 4 run-time must be intialized correctly before it case
 use CECIL facilities to communicate with the Eiffel world.
 <P>In the C file containing the "main" C function, you must add the following
@@ -424,22 +489,27 @@ work correctly.
 directories in which the C compiler searches for include files. You can
 do so by using the "-I" option of your C compiler.
 <P>See also <A HREF="#link_cecil">Linking the CECIL archive into a program</A>.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+      </ul>
 
 <H2>
 <A NAME="restrictions"></A>5 - Restrictions</H2>
 
-<UL>You can only link one CECIL library into your C applications at the
+      <ul>
+        You can only link one CECIL library into your C applications at the
 time.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+      </ul>
 
 <H2>
 <A NAME="notes"></A>6 - Notes</H2>
 
-<UL>Even though external object files and archives are correctly specified
+      <ul>
+        Even though external object files and archives are correctly specified
 in the "object" clause of the Ace file, you will need to explicitely link
 them to your C application.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+      </ul>
 
 <H1>
 <A NAME="overview"></A>Overview of the CECIL Interface</H1>
@@ -447,7 +517,8 @@ them to your C application.
 <H2>
 <A NAME="basic_types"></A>1 - Eiffel basic types</H2>
 
-<UL>The EIFFEL include files define types for every EIFFEL types:
+      <ul>
+        The EIFFEL include files define types for every EIFFEL types:
 <P>An Eiffel INTEGER is an <I>EIF_INTEGER</I>,
 <BR>An Eiffel CHARACTER is an <I>EIF_CHARACTER</I>,
 <BR>An Eiffel REAL is an <I>EIF_REAL</I>,
@@ -464,7 +535,8 @@ objects from the C side. EIF_REFERENCE, EIF_OBJECT, EIF_POINTER
 all correspond in C to a (char *), but their semantic remains different
 in Eiffel.
 <BR><U>Example:</U>
-<UL>Calling C external `foo' from Eiffel, which takes a pointer and an
+        <ul>
+          Calling C external `foo' from Eiffel, which takes a pointer and an
 eiffel object of type OBJECT as arguments and returns an INTEGER.
 <font color="#008080">
 <P><I>c_foo (ptr: POINTER; obj: OBJECT): INTEGER is</I>
@@ -480,32 +552,38 @@ eiffel object of type OBJECT as arguments and returns an INTEGER.
 <FONT color="#008080">
 <P><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_INTEGER foo (EIF_POINTER
 ptr, EIF_OBJECT obj)
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-/* some code */</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</I></UL>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* some code */
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+</ul>
+</i>
 </FONT>
+    <I>
 In some cases, you may not be able to change the signature of a C function
 you want to use. In this case, you must described its actual signature
 in the Eiffel code.
 <P>On the C side, foo is already defined as below:
 <font color="#008080">
-<UL><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int foo (void *arg1,
-char c, FILE *file)</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-/* some code */</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</I></UL>
+<ul>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int foo (void *arg1,
+char c, FILE *file)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/* some code */
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+</ul>
 </font>
 To match the signature, you must declare it in Eiffel as:
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <font color="#008080">
-c_foo (arg1: POINTER; c: CHARACTER; file: POINTER): INTEGER is</I>
+c_foo (arg1: POINTER; c: CHARACTER; file: POINTER): INTEGER is
 </font>
-<UL><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </I>
+        <ul>
+          <I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <font color="#008080">
-external</I>
-</font>
+external</font></I>
 <font color="#008080">
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "C (void *, char, FILE *) : int | %""your_file.h%""</I>
@@ -514,25 +592,28 @@ alias</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "foo"</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-end</I></UL>
-</font>
+end</I>
+          </ul>
 Not doing this would generally produce warnings during the C compilation,
 and it could crash with some C compilers.
 <P>To perform the conversion, here is the actual Eiffel types mapping to
 C types:
-<UL><I>POINTER</I> is compatible with any C pointer (<I>char *</I>).
+          <ul>
+          <I>POINTER</I> is compatible with any C pointer (<I>char *</I>).
 <BR><I>INTEGER</I> is a long.
 <BR><I>CHARACTER</I> is an <I>unsigned char.</I>
 <BR><I>DOUBLE</I> is a <I>double</I>.
 <BR><I>REAL</I> is a <I>float</I>.
 <BR><I>BOOLEAN</I> is an <I>unsigned char (EIF_TRUE = '\01', EIF_FALSE
-= '\0') </I>.</UL>
+= '\0') </I>.
+          </ul>
 These are the current correspondances but they may change.The definition
 of each Eiffel&nbsp; types is located in&nbsp; $EIFFEL4/bench/spec/$PLATFORM/include/eif_portable.h.
-<P><FONT SIZE=+0><A HREF="#Index">Back to index</A></FONT></UL>
+<P><FONT SIZE=+0><A HREF="#Index">Back to index</A></FONT>
+        </ul>
 
 <H3><A NAME="EIF_OBJECT"></A>1.1 - More about EIF_OBJECT, EIF_REFERENCE, and basic expanded types</H3>
-<UL>
+        <ul>
 It is sometimes difficult to tell the difference between an 
 <I>EIF_OBJECT</I> 
 and an <I>EIF_REFERENCE</I>.
@@ -571,18 +652,17 @@ The basic expanded types are <I>INTEGER, REAL, DOUBLE, CHARACTER, BOOLEAN,
 POINTER</I>. They are passed to C externals by values. There is no need 
 to protect an <I>INTEGER, REAL, DOUBLE, CHARACTER, or a BOOLEAN</I>.
 When the POINTER is a
-pointer to an Eiffel object (ex:  
-<font color="#008080">
+pointer to an Eiffel object (ex:
 $my_object
-</font>
 ), then the direct Eiffel reference is passed to C, with no protection and this reference may move. Use  <I>eif_protect</I> to manually protect it.
 To unprotect it, call  <I>eif_wean</I>
-</UL>
+        </ul>
 <P><FONT SIZE=+0><A HREF="#Index">Back to index</A></FONT>
 <H2>
 <A NAME="protecting_objects"></A>2 - Protecting the Eiffel objects</H2>
 
-<UL>You can use the CECIL functions directly from a C&nbsp; program as
+        <ul>
+        You can use the CECIL functions directly from a C&nbsp; program as
 well as in a C external called from Eiffel. If you encounter problems,
 they may be related to the handling of garbage collection The programmer,
 who uses CECIL, has to be aware that all Eiffel objects can be moved or
@@ -590,12 +670,12 @@ collected asynchronously&nbsp; by the Garbage Collector (GC).
 <P>The cecil library provides the user with numorous macros and functions,
 which relieves the programmer from these kinds of low-level considerations
 (most of them are declared in $EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h).
-</UL>
+        </ul>
 <P><A HREF="#Index">Back to index</A>
 <H3>
 <A NAME="object_in_c_externals"></A>2.1 - Eiffel objects passed in a C external</H3>
 
-<UL>
+        <ul>
 An Eiffel object which is passed as an argument of a C external is 
 automatically protected: the value passed to C is not direct 
 Eiffel reference. In fact, it is a 
@@ -603,10 +683,8 @@ temporary indirection pointer, which is only valid until the
 C external returned. This indirection pointer is to be used  
 to access the direct reference of the Eiffel object 
 with
-<font color="#008080">
 <I>eif_access (eiffel_object)</I> 
 
-</font> 
 where <I>eiffel_object</I> is the argument (an <I>EIF_OBJECT </I> of the C external, which corresponds to the Eiffel object. 
 Only Eiffel objects
 passed to C is automatically protected.  
@@ -615,14 +693,15 @@ expanded types, since they cannot move.
 
 <P><A HREF="#Exampleeif_access">Example</A>
 
-</UL>
+        </ul>
 
 <P><FONT SIZE=+0><A HREF="#Index">Back to index</A></FONT>
 <H3>
 <A NAME="eif_access"></A>2.2 - Accessing the direct reference to an Eiffel
 object: eif_access</H3>
 
-<UL>&nbsp;&nbsp;&nbsp;<B> <FONT SIZE=+1># include "eif_hector.h"</FONT></B>
+        <ul>
+        &nbsp;&nbsp;&nbsp;<B> <FONT SIZE=+1># include "eif_hector.h"</FONT></B>
 <P><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=+1>EIF_REFERENCE eif_access
 (EIF_OBJECT object)&nbsp;&nbsp;&nbsp; /* Macro */ </FONT></B>
 <P>
@@ -633,10 +712,9 @@ than <I>eif_access</I>). Thus, it may be unsafe to access a "raw" reference to a
 To avoid this, you must access a direct reference through a "protection",
 which is a safe, non-moving pointer (of type <I>EIF_OBJECT</I>).
 Call the macro <I>eif_access</I> as follows:
-<FONT color="#008080">
 <I>eif_access (protection)</I> 
 
-</FONT>,
+ ,
 where <I> protection </I> is either a value
 returned by <I><A HREF="#eif_create">eif_create</A></I>, <I><A HREF="#eif_adopt">eif_adopt</A></I>, <I><A HREF="#henter">eif_protect</A></I> or an Eiffel object, which is an argument of a C external. 
 <P>Use <I>eif_access</I>
@@ -646,18 +724,15 @@ of a C external. It is also unsafe to pass a direct Eiffel reference (<I>EIF_REF
 However, if you still intend to pass a direct reference, be very careful and
 make sure that you do not perform any Eiffel call after passing  the reference to the C function and before reading it.
 <P><U><A NAME="Exampleeif_access">For example, in the following external:</A></U>
-<font color="#008080">
 <P><I>c_foo (ptr: POINTER; obj: OBJECT): INTEGER is</I>
 <BR><I>&nbsp;&nbsp;&nbsp; external</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "C | %"your_file.h%""</I>
 <BR><I>&nbsp;&nbsp;&nbsp; alias</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "foo"</I>
 <BR><I>&nbsp;&nbsp;&nbsp; end</I>
-</font>
 <P>the Eiffel run-time will protect obj ,which can asynchronously move,
 and give a static and safe indirection to C.
 <P><U>Here is an example of how accessing obj: OBJECT:</U>
-<font color="#008080">
 <P><I>EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);</I>
 <BR><I>{</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Print the Eiffel object
@@ -674,7 +749,6 @@ Ace.ace file.</I>
 tid);</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ep) (eif_access(obj),eif_access(obj));</I>
 <BR><I>}</I>
-</font>
 <P>NB: The first argument of <I>(ep)</I> is the target of the function
 (the eiffel object to which you want to apply the Eiffel feature <I>(ep)</I>)
 and the second argument corresponds to the first argument of `<I>print</I>'.
@@ -685,16 +759,15 @@ since all of them inherit from <I>GENERAL</I>.
 <P><A NAME="eif_access_important_rules"></A><B><U>Important rules when using
 eif_access:</U></B>
 <P>
-<LI>
-<B>Never precompute the value returned by eif_access.</B></LI>
+&nbsp;
+          <li>
+<B>Never precompute the value returned by eif_access.</B></li>
 
 <BR><U>Example:</U>
 <BR>Instead of the code above, it would have been dangerous to write:
-<font color="#008080">
 <P><I>EIF_REFERENCE e_ref = eif_access (obj);</I>
 <BR><I>...</I>
 <BR><I>(ep) (e_ref, e_ref);</I>
-</font>
 <P>because e_ref is the direct reference to the Eiffel object when calling
 <I>eif_access().
 </I>There
@@ -702,33 +775,29 @@ is not guarantee that it will still be valid when the call to
 <I>(ep)</I>
 is done: meanwhile, e_ref may have been moved by the GC.
 <BR>&nbsp;
-<LI>
-<B>Never use eif_access with encapsulated eiffel calls:</B></LI>
+          <li>
+<B>Never use eif_access with encapsulated eiffel calls:</B></li>
 
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (eif_access in not an eiffel
 call)
 <BR><U>Example:</U>
-<font color="#008080">
 <P><I>(ep) (eif_access (a), eif_string ("Hello world"));</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* eif_string is a macro returning
 a direct reference to an Eiffel string,</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * which corresponds
 to the C string passed as its argument.</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</I>
-</font>
-<BR>Nothing guarantees that the direct reference returned by `<I>eif_access
-(a)</I>' will be still valid when executing <I>(ep)</I>: it may be obsolete
-after the Eiffel call <I>eif_string ("Hello world"), </I>which may invoke a collection
+<BR>Nothing guarantees that the direct reference returned by `eif_access
+(a)' will be still valid when executing (ep): it may be obsolete
+after the Eiffel call eif_string ("Hello world"), which may invoke a collection
 cycle.
 <P>The correct code is
-<font color="#008080">
 <P><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_REFERENCE my_string;</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* some code */</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; my_string =&nbsp; eif_string
 ("Hello world");</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ep) (eif_access (a),
 my_string);</I>
-</font>
 <P>In this case, you do not need to protect `my_string' since the GC is
 not likely to be triggered after the call to <I>eif_string
 </I> and before 
@@ -736,7 +805,6 @@ not likely to be triggered after the call to <I>eif_string
 only during Eiffel calls.&nbsp; If an Eiffel call had been performed, you
 would have had to use `<I><A HREF="#henter">eif_protect</A>'</I>
 (see paragraph 3.2):
-<font color="#008080">
 <P><I>&nbsp;&nbsp;&nbsp; EIF_REFERENCE my_string;</I>
 <BR><I>&nbsp;&nbsp;&nbsp; EIF_OBJECT i_my_string;</I>
 <P><I>&nbsp;&nbsp;&nbsp; /* some code */</I>
@@ -748,15 +816,16 @@ would have had to use `<I><A HREF="#henter">eif_protect</A>'</I>
 <BR><I>&nbsp;&nbsp;&nbsp; (ep) (eif_access (a), eif_access (i_my_string));</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp; eif_wean (i_my_string); /* Release protection.
 */</I>
-</font>
 <P>&nbsp;&nbsp;&nbsp; See also <I><A HREF="#henter">eif_protect.</A></I>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+        </ul>
 
 <H3>
 <A NAME="eif_adopt"></A>2.3 - Keeping a reference from C after an external
 call: eif_adopt</H3>
 
-<UL><B>&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_hector.h"</FONT></B>
+        <ul>
+        <B>&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_hector.h"</FONT></B>
 <P><B>&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=+1>EIF_OBJECT eif_adopt (EIF_OBJECT
 object)&nbsp;&nbsp;&nbsp;</FONT></B>
 <P>When passing Eiffel objects to C, you may need to keep a reference to them
@@ -771,32 +840,22 @@ Called within a C external, the function
 passed
 to C (<I>object</I> is a C external argument). This way,  
 the GC cannot collect the Eiffel reference  returned by
-<font color="#008080">
 <I>eif_access(object)</I> 
-</font>
 when the C external returned. 
 It tells the GC to keep artificially a reference to this Eiffel reference 
   from C. It returns the new indirection pointer 
 (say <I>returned_value</I>) that must be used afterwards to
-access this direct Eiffel reference with 
-<font color="#008080">
+access this direct Eiffel reference with
 <I>eif_access (return_value)</I>.
-</font>
 It is important to note that <I>eif_adopt</I>
 already takes an indirection pointer 
 as unique argument . This is a temporary protection pointer: 
-you can access the direct Eiffel reference with 
-<font color="#008080">
+you can access the direct Eiffel reference with
 <I>eif_access (object)</I>.
-</font>
-only within the code of the C external. When the C external returned, 
-<font color="#008080">
+only within the code of the C external. When the C external returned,
 <I>eif_access (object)</I> 
-</font>
 is NULL but
-<font color="#008080">
  <I>eif_access (returned_value)</I> 
-</font>
  remains
 valid until you release it with `<I><A HREF="#eif_wean">eif_wean'</A></I>.
 <P>See also <A HREF="#eif_access"><I>eif_access</I></A>, 
@@ -806,7 +865,6 @@ valid until you release it with `<I><A HREF="#eif_wean">eif_wean'</A></I>.
 
 <P><U>Example</U>:
 <P>In Eiffel:
-<font color="#008080">
 <P><I>c_foo (ptr: POINTER; obj: OBJECT): INTEGER is</I>
 <BR><I>&nbsp;&nbsp;&nbsp; external</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "C | %"your_file.h%""</I>
@@ -821,9 +879,7 @@ valid until you release it with `<I><A HREF="#eif_wean">eif_wean'</A></I>.
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "display_and_release_obj"</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</I>
-</font>
 <P>On the C side:
-<font color="#008080">
 <P><I>&nbsp;&nbsp;&nbsp; EIF_OBJECT my_obj;&nbsp; /* Protection
 of the object of type OBJECT. */</I>
 <P><I>&nbsp;&nbsp;&nbsp; EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj)</I>
@@ -854,13 +910,13 @@ ep = eif_procedure ("print", tid);
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 eif_wean (my_obj); /* Remove the protection on global object.*/</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp; }</I>
-</font>
 <P>Between the call of `<I>c_foo</I>' and `<I>c_display_obj'</I>, the global
 object <I>(eif_access (my_obj))&nbsp;</I> may not be referenced from Eiffel
 any longer. To prevent the GC from collecting it before the call to `<I>c_display_and_release_obj'</I>,
 you must protect it with `<I>eif_adopt</I>' in the C function `<I>foo'.</I>
 <P><A HREF="#Index">Back to index</A>
-<BR>&nbsp;</UL>
+<BR>&nbsp;
+        </ul>
 
 <H2>
 <A NAME="other_functions"></A>3 - Other CECIL functions:</H2>
@@ -868,7 +924,8 @@ you must protect it with `<I>eif_adopt</I>' in the C function `<I>foo'.</I>
 <H3>
 <A NAME="eif_create"></A>3.1 - Creating Eiffel objects from C: eif_create</H3>
 
-<UL><B><I>&nbsp;&nbsp;</I>&nbsp; <FONT SIZE=+1># include "eif_cecil.h"</FONT></B>
+        <ul>
+        <B><I>&nbsp;&nbsp;</I>&nbsp; <FONT SIZE=+1># include "eif_cecil.h"</FONT></B>
 <P><B>&nbsp;&nbsp;&nbsp; <FONT SIZE=+1>EIF_OBJECT eif_create ( EIF_TYPE_ID
 type_id)</FONT></B>
 <P>All CECIL calls are not completed using C external. It is possible to create
@@ -881,293 +938,292 @@ returned by <I><A HREF="#eif_type_id">eif_type_id</A></I>).
 It returns a static indirection pointer which is to be used afterwards 
 to access the newly created Eiffel object 
 with
-<font color="#008080">
 <I>eif_access (returned_value)</I> 
-</font> 
 where <I>returned_value</I> is the value returned by <I>eif_create</I> . 
 This means that when creating
 an eiffel object from C, the eiffel object is automatically protected:
 there is no need to call <I><A HREF="#eif_adopt">eif_adopt</A></I> or 
-<A HREF="#henter"><I>eif_protect</A></I> on
+<A HREF="#henter"><I>eif_protect</i></A> <I> on
 it. This function does not call any creation procedure. To do so, you need
-to explicitly call it&nbsp; with <I><A HREF="#eif_procedure">eif_procedure</A></I>.
+to explicitly call it&nbsp; with <A HREF="#eif_procedure">eif_procedure</A>.
 The garbage collector will not collect the newly created object until you
 call <A HREF="#eif_wean"><I>eif_wean</I></A> on it.
 <P>See also <A HREF="#EIF_OBJECT"><I>More about Eiffel types</I></A>.
 <P><U>Example:</U>
 <P>Creating an object of type "OBJECT":
-<font color="#008080">
-<P><I>#include eif_setup.h" /* for EIF_INITIALIZE and EIF_DISPOSE_ALL */</I>
-<BR><I>#include "eif_eiffel.h" /* for other exported routines from the
-Eiffel run-time */</I>
-<P><I>main (int argc,char **argv,char **envp)</I>
-<BR><I>{</I>
-<BR><I>EIF_TYPE_ID tid;</I>
-<BR><I>EIF_OBJECT my_obj;</I>
-<P><I>EIF_INITIALIZE(failure) /* Initialization of Eiffel run-time.</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-* This is to be done before any CECIL call.</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-*/</I>
+<P>#include eif_setup.h" /* for EIF_INITIALIZE and EIF_DISPOSE_ALL */
+<BR>#include "eif_eiffel.h" /* for other exported routines from the
+Eiffel run-time */
+<P>main (int argc,char **argv,char **envp)
+<BR>{
+<BR>EIF_TYPE_ID tid;
+<BR>EIF_OBJECT my_obj;
+<P>EIF_INITIALIZE(failure) /* Initialization of Eiffel run-time.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* This is to be done before any CECIL call.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+*/
 <BR>&nbsp;
-<P><I>tid = eif_type_id ("OBJECT");</I>
-<BR><I>if (tid == EIF_NO_TYPE)</I>
-<BR><I>&nbsp;&nbsp;&nbsp; eif_panic ("No type id.");</I>
-<P><I>my_obj = eif_create (tid); /* Create eiffel object, returns an indirection.
-*/</I>
-<BR><I>/* some code */</I>
-<BR><I>eif_wean (my_obj); /* We do not need it any more. */</I>
-<P><I>EIF_DISPOSE_ALL /* Reclaim memory allocated by Eiffel run-time. */</I>
-<BR><I>}</I>
-</font>
-<P>Note: `<I>eif_create</I>' does not call any creation procedure. It just
+<P>tid = eif_type_id ("OBJECT");
+<BR>if (tid == EIF_NO_TYPE)
+<BR>&nbsp;&nbsp;&nbsp; eif_panic ("No type id.");
+<P>my_obj = eif_create (tid); /* Create eiffel object, returns an indirection.
+*/
+<BR>/* some code */
+<BR>eif_wean (my_obj); /* We do not need it any more. */
+<P>EIF_DISPOSE_ALL /* Reclaim memory allocated by Eiffel run-time. */
+<BR>}
+<P>Note: `eif_create' does not call any creation procedure. It just
 allocates
 <BR>memory and initializes an object.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+          </ul>
 
 <H3>
 <A NAME="henter"></A>3.2 - Protecting the objects returned by Eiffel functions.</H3>
 
-<UL>&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_hector.h"</FONT></B>
+          <ul>
+        &nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_hector.h"</FONT></B>
 <BR><FONT SIZE=+1><B>&nbsp;&nbsp;&nbsp; EIF_OBJECT eif_protect (EIF_REFERENCE
 object)&nbsp;&nbsp;&nbsp; </B></FONT>
 <P>This function is used to tell explicitely the GC that you
 want to keep a reference to an eiffel object from the C. 
 It returns a static indirection pointer which is to be used afterwards 
-to access the direct Eiffel reference 
-<I>object</I> with
-<font color="#008080">
-<I>eif_access (returned_value)</I> 
-</font> 
-where <I>returned_value</I> is the value returned by <I>eif_protect 
-</I> . With this call, the GC 
-artificially references <I>object</I>, 
-so that it cannot collect it. It is unsafe to access directly (i.e without using <I>eif_access</I>) the
-Eiffel reference <I>object</I>, which may be obsolete after any collection
+to access the direct Eiffel reference object with eif_access (returned_value) 
+where returned_value is the value returned by eif_protect . With this call, the GC 
+artificially references object, 
+so that it cannot collect it. It is unsafe to access directly (i.e without using
+eif_access) the
+Eiffel reference object, which may be obsolete after any collection
 cycle (the GC moves the objects). Ignore this rule, if you are sure that 
  there is no Eiffel call after you pass the direct Eiffel reference to a C function and before you read it. 
-<P>To release this articifial reference, call
-<font color="#008080">
-<I>eif_wean (returned_value)</I> 
-</font> 
+<P>To release this articifial reference, call eif_wean (returned_value) 
  
-<P><I>eif_protect</I> is to be called on  an <I>EIF_REFERENCE</I> returned by <I><A HREF="#eif_field">eif_attribute</I></A>, <I><A HREF="#RTMS">eif_string</I></A>, or the returned value of <I><A HREF="#eif_procedure">eif_reference_function</I></A>.
+<P>eif_protect is to be called on  an EIF_REFERENCE returned by <A HREF="#eif_field">eif_attribute,
+</a><A HREF="#RTMS">eif_string, or the returned value of </a><A HREF="#eif_procedure">eif_reference_function.
 <P>
-See also 
-<I><A HREF="#eif_adopt">eif_adopt</A></I>,
-<I><A HREF="#eif_create">eif_create</A></I>,
-<I><A HREF="#eif_wean">eif_wean</A></I>,
-<I><A HREF="#eif_access">eif_access</A></I>.
-<I><A HREF="#EIF_OBJECT">More about Eiffel types</A></I>.
+See also </a><A HREF="#eif_adopt">eif_adopt</A>, <A HREF="#eif_create">eif_create</A>,
+<A HREF="#eif_wean">eif_wean</A>, <A HREF="#eif_access">eif_access</A>. <A HREF="#EIF_OBJECT">More about Eiffel types</A>.
 
 <P><A NAME="Examplehentereif_field"></A><U>Example</U>: Assume that you
-want to access an attribute `<I>tab</I>' of type ARRAY [INTEGER] in
+want to access an attribute `tab' of type ARRAY [INTEGER] in
 the class OBJECT.
-<font color="#008080">
-<P><I>#include eif_setup.h"</I>
-<BR><I>#include "eif_eiffel.h"</I>
-<P><I>main (int argc,char **argv,char **envp)</I>
-<BR><I>{</I>
-<BR><I>EIF_TYPE_ID tid;</I>
-<BR><I>EIF_OBJECT my_obj;
-</I>
-<BR><I>EIF_PROCEDURE emake; /* Creation procedure of "OBJECT".  */</I>
-<BR><I>EIF_REFERENCE tab; /* direct reference to `tab' from "OBJECT". */</I>
-<BR><I>EIF_OBJECT i_tab; /* Protected indirection to `tab'. */</I>
-<P><I>EIF_INITIALIZE(failure)</I>
-<P><I>tid = eif_type_id ("OBJECT");</I>
-<BR><I>if (tid == EIF_NO_TYPE)</I>
-<BR><I>&nbsp;&nbsp;&nbsp; eif_panic ("No type Id.");</I>
-<P><I>my_obj = eif_create (tid);</I>
-<BR><I>emake = eif_procedure ("make", tid); /* On the eiffel side: make
-is do ... end.. */</I>
-<BR><I>(emake) (eif_access (my_obj)); /* Call `make' on `eif_access(my_obj)'.*/</I>
-<BR><I>tab = eif_attribute( eif_access (my_obj), "tab", EIF_REFERENCE, NULL);</I>
-<BR><I>/* Return the attribute `tab' of type EIF_REFERENCE</I>
-<BR><I>* of the object `eif_access (my_obj)'.</I>
-<BR><I>*/</I>
-<BR><I>i_tab = eif_protect (tab); /* Here, protect `tab'.  */</I>
-<P><I>/* some code */</I>
-<P><I>eif_wean (my_obj);</I>
-<BR><I>eif_wean (i_tab); /* We do not need it any more. */</I>
-<P><I>EIF_DISPOSE_ALL /* Reclaim memory allocated by Eiffel run-time. */</I>
-<BR><I>}</I>
-</font>
-<P>Note: Although you must protect Eiffel references returned by <I><A HREF="#eif_field">eif_attribute</A></I>.
+<P>#include eif_setup.h"
+<BR>#include "eif_eiffel.h"
+<P>main (int argc,char **argv,char **envp)
+<BR>{
+<BR>EIF_TYPE_ID tid;
+<BR>EIF_OBJECT my_obj;
+<BR>EIF_PROCEDURE emake; /* Creation procedure of "OBJECT".  */
+<BR>EIF_REFERENCE tab; /* direct reference to `tab' from "OBJECT". */
+<BR>EIF_OBJECT i_tab; /* Protected indirection to `tab'. */
+<P>EIF_INITIALIZE(failure)
+<P>tid = eif_type_id ("OBJECT");
+<BR>if (tid == EIF_NO_TYPE)
+<BR>&nbsp;&nbsp;&nbsp; eif_panic ("No type Id.");
+<P>my_obj = eif_create (tid);
+<BR>emake = eif_procedure ("make", tid); /* On the eiffel side: make
+is do ... end.. */
+<BR>(emake) (eif_access (my_obj)); /* Call `make' on `eif_access(my_obj)'.*/
+<BR>tab = eif_attribute( eif_access (my_obj), "tab", EIF_REFERENCE, NULL);
+<BR>/* Return the attribute `tab' of type EIF_REFERENCE
+<BR>* of the object `eif_access (my_obj)'.
+<BR>*/
+<BR>i_tab = eif_protect (tab); /* Here, protect `tab'.  */
+<P>/* some code */
+<P>eif_wean (my_obj);
+<BR>eif_wean (i_tab); /* We do not need it any more. */
+<P>EIF_DISPOSE_ALL /* Reclaim memory allocated by Eiffel run-time. */
+<BR>}
+<P>Note: Although you must protect Eiffel references returned by <A HREF="#eif_field">eif_attribute</A>.
 You must not protect attributes of basic types - they are not Eiffel references
 and not supposed to move.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+          </ul>
 
 <H3>
 <A NAME="eif_type_id"></A>3.3 - Getting the type id of an Eiffel type:
 eif_type_id</H3>
 
-<UL>&nbsp;&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_gen_conf.h" </B>i</FONT>
+          <ul>
+        &nbsp;&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_gen_conf.h" </font> </B><FONT SIZE=+1># include "eif_gen_conf.h"
+            i
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type_id (char *type_string)</FONT></B>
 <P>&nbsp;&nbsp;&nbsp; Returns the type identifier corresponding to the
-type described in <I>type_string. </I>If the type does not exists , is
+type described in type_string. If the type does not exists , is
 not visible or an instance of it is not declared in the root class (see
 <A HREF="#Visibility">visible
-classes</A>),&nbsp; it returns <I>EIF_NO_TYPE.</I>
+classes</A>),&nbsp; it returns EIF_NO_TYPE.
 <P>COMPATIBILITY:
-</UL>
-<UL><I>eif_type_id</I> is equivalent to <I>eif_type_by_name</I>
+            </ul>
+            <ul>
+        eif_type_id is equivalent to eif_type_by_name
 <P><A NAME="Exampletypeid"></A><U>Example</U>: type_id of STD_FILES so
-as to call '<I>put_string</I>'.
-<font color="#008080">
-<P><I>&nbsp;&nbsp;&nbsp; EIF_PROCEDURE p_put_string;&nbsp;&nbsp;&nbsp;&nbsp;
-/* 'put_string' from STD_FILES. */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID tid;</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_REFERENCE_FUNCTION fn_io;&nbsp;&nbsp;&nbsp;
+as to call 'put_string'.
+<P>&nbsp;&nbsp;&nbsp; EIF_PROCEDURE p_put_string;&nbsp;&nbsp;&nbsp;&nbsp;
+/* 'put_string' from STD_FILES. */
+<BR>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID tid;
+<BR>&nbsp;&nbsp;&nbsp; EIF_REFERENCE_FUNCTION fn_io;&nbsp;&nbsp;&nbsp;
 /* once function `io' from GENERAL (and STD_FILES by inheritance). 
-*/</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_REFERENCE o_io;&nbsp;&nbsp;&nbsp; /* Eiffel
-object `io'&nbsp; returned by once function*/</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_REFERENCE o_str;&nbsp;&nbsp;&nbsp;&nbsp;
-/* Eiffel string */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_OBJECT i_io, i_str;&nbsp;&nbsp;&nbsp; /*
+*/
+<BR>&nbsp;&nbsp;&nbsp; EIF_REFERENCE o_io;&nbsp;&nbsp;&nbsp; /* Eiffel
+object `io'&nbsp; returned by once function*/
+<BR>&nbsp;&nbsp;&nbsp; EIF_REFERENCE o_str;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Eiffel string */
+<BR>&nbsp;&nbsp;&nbsp; EIF_OBJECT i_io, i_str;&nbsp;&nbsp;&nbsp; /*
 safe indirection pointers to ``io' and Eiffel string.
-*/</I>
-<P><I>&nbsp;&nbsp;&nbsp; tid = eif_type_id ("STD_FILES");</I>
-<BR><I>&nbsp;&nbsp;&nbsp; if (tid == EIF_NO_TYPE)</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eif_panic ("Type not
-in system.");</I>
-<BR><I>&nbsp;&nbsp;&nbsp; fn_io = eif_reference_function ("io", tid);</I>
-<BR><I>&nbsp;&nbsp;&nbsp; o_io = (fn_io) (root_obj);&nbsp;&nbsp;&nbsp;
-/* `root_obj' is the root object of the CECIL system</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-* automatically initialized in EIF_INITIALIZED</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-* if it does not exists */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; i_io = eif_protect (o_io);&nbsp;&nbsp;&nbsp;
-/* Protect `io' . */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; o_str = eif_string ("Hello World");&nbsp;&nbsp;&nbsp;
-/* Create Eiffel string */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; i_str = eif_protect (o_str);&nbsp;&nbsp;&nbsp;
-/* Protect Eiffel string. */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; p_put_string = eif_procedure ("put_string", tid);</I>
-<BR><I>&nbsp;&nbsp;&nbsp; if (p_put_string == (EIF_PROCEDURE) 0) /* No routine found. */
+*/
+<P>&nbsp;&nbsp;&nbsp; tid = eif_type_id ("STD_FILES");
+<BR>&nbsp;&nbsp;&nbsp; if (tid == EIF_NO_TYPE)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eif_panic ("Type not
+in system.");
+<BR>&nbsp;&nbsp;&nbsp; fn_io = eif_reference_function ("io", tid);
+<BR>&nbsp;&nbsp;&nbsp; o_io = (fn_io) (root_obj);&nbsp;&nbsp;&nbsp;
+/* `root_obj' is the root object of the CECIL system
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* automatically initialized in EIF_INITIALIZED
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* if it does not exists */
+<BR>&nbsp;&nbsp;&nbsp; i_io = eif_protect (o_io);&nbsp;&nbsp;&nbsp;
+/* Protect `io' . */
+<BR>&nbsp;&nbsp;&nbsp; o_str = eif_string ("Hello World");&nbsp;&nbsp;&nbsp;
+/* Create Eiffel string */
+<BR>&nbsp;&nbsp;&nbsp; i_str = eif_protect (o_str);&nbsp;&nbsp;&nbsp;
+/* Protect Eiffel string. */
+<BR>&nbsp;&nbsp;&nbsp; p_put_string = eif_procedure ("put_string", tid);
+<BR>&nbsp;&nbsp;&nbsp; if (p_put_string == (EIF_PROCEDURE) 0) /* No routine found. */
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; eif_panic ("put_string not visible"); /* Raised if "visible exception" disabled. */
-<BR><I>&nbsp;&nbsp;&nbsp; (p_put_string) (eif_access (i_io), eif_access
-(i_str));</I>
-</FONT>
+<BR>&nbsp;&nbsp;&nbsp; (p_put_string) (eif_access (i_io), eif_access
+(i_str));
 <BR>&nbsp;
-<P>&nbsp;&nbsp;&nbsp; <I>eif_type_id</I>
+<P>&nbsp;&nbsp;&nbsp; eif_type_id
 is also used for returning the type identifier of generic types but you
 need to specify the generic parameter, otherwise it returns EIF_NO_TYPE.
 <P>&nbsp;&nbsp;&nbsp; <U>Example</U>:
-<font color="#008080">
-<P><I>&nbsp;&nbsp;&nbsp; EIF_PROCEDURE p_make;&nbsp;&nbsp;&nbsp;&nbsp;
-/* 'make' from ARRAY [INTEGER] . */</I>
-<BR><I>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID tid;</I>
-<P><I>&nbsp;&nbsp;&nbsp; tid = eif_type_id ("ARRAY[INTEGER]");
-<BR><I>&nbsp;&nbsp;&nbsp; p_make = eif_procedure ("make", tid);</I>
-
-</FONT>
-<P><I>&nbsp;&nbsp;&nbsp; </I>See also<I> <A HREF="#eif_procedure">eif_procedure,
-eif_xx_function</A></I>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+<P>&nbsp;&nbsp;&nbsp; EIF_PROCEDURE p_make;&nbsp;&nbsp;&nbsp;&nbsp;
+/* 'make' from ARRAY [INTEGER] . */
+<BR>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID tid;
+<P>&nbsp;&nbsp;&nbsp; tid = eif_type_id ("ARRAY[INTEGER]");
+<BR>&nbsp;&nbsp;&nbsp; p_make = eif_procedure ("make", tid);
+<P>&nbsp;&nbsp;&nbsp; See also <A HREF="#eif_procedure">eif_procedure,
+eif_xx_function</A>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 &nbsp;<A NAME="eif_generic_id"></A>3.4 - Getting the type id of a generic
 type : eif_generic_type.</H3>
-<UL>Obsolete: see <I>eif_type_id</I>
-</UL>
+            <ul>
+          Obsolete: see eif_type_id
+            </ul>
 <H3>
 <A NAME="eif_panic"></A>3.5 - Raising an eiffel panic: eif_panic.</H3>
 
-<UL><B>&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_except.h"</FONT></B>
+            <ul>
+          <B>&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_except.h"</FONT></B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp; void eif_panic(char *msg)</FONT></B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp; #include "eif_threads.h"</FONT></B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp; void eif_thr_panic (char *msg)</FONT></B>
 <P>&nbsp;&nbsp;&nbsp; Raise an Eiffel panic with Eiffel exception trace
-with message <I>msg</I> . In MT mode, use <I>eif_thr_panic </I>instead.
+with message msg . In MT mode, use eif_thr_panic instead.
 <P>&nbsp;&nbsp;&nbsp; <A HREF="#Exampletypeid">Example</A>.
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_wean"></A>3.6 - Releasing an Eiffel indirection pointer: eif_wean</H3>
 
-<UL>&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_hector.h"</FONT></B>
-<P><FONT SIZE=+1><B>&nbsp;&nbsp;&nbsp; EIF_REFERENCE eif_wean(EIF_OBJECT
-object)&nbsp;&nbsp;&nbsp; </B></FONT>
-<P><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT>
+            <ul>
+          &nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_hector.h"</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; EIF_REFERENCE eif_wean(EIF_OBJECT
+object)&nbsp;&nbsp;&nbsp; </B>
+<P>&nbsp;&nbsp;&nbsp;
 Tells the  GC to remove the artificial reference to the nested
-Eiffel reference returned by <I>eif_access (object)</I>. Then, the GC will be able collect this nested object,
+Eiffel reference returned by eif_access (object). Then, the GC will be able collect this nested object,
 as soon as it is not referenced from Eiffel any longer.<BR>
- Note that <I>object</I> must be previously created with <I><A HREF="#eif_adopt">eif_adopt</A></I>, <I><A HREF="#henter">eif_protect</A></I> or <I><A HREF="#eif_create">eif_create</A></I>.<BR>
-<I>eif_wean (object)</I> returns an Eiffel reference, which corresponds to <I>eif_access (object)</I>. After a call to <I>eif_wean (object)</I>, <I>eif_access (object)</I> is NULL, which does not mean that the nested Eiffel object is Void, but that the indirection pointer does not reference it any longer. It is possible to reuse <I>object</I> later on. <BR>
-Calling <I>eif_wean (external_argument)</I> where <I>external_argument</I> is an Eiffel object given by a C external can cause erratic behaviors. Indeed, <I>external_argument</I> is an indirection pointer, which is automatically deleted after the external call (not the nested Eiffel object), deleting it prematuraly can corrupt the indirection pointers stack.<BR>
+ Note that object must be previously created with <A HREF="#eif_adopt">eif_adopt</A>,
+<A HREF="#henter">eif_protect</A> or <A HREF="#eif_create">eif_create</A>.<BR>
+eif_wean (object) returns an Eiffel reference, which corresponds to eif_access (object). After a call to
+eif_wean (object), eif_access (object) is NULL, which does not mean that the nested Eiffel object is Void, but that the indirection pointer does not reference it any longer. It is possible to reuse
+object later on. <BR>
+Calling eif_wean (external_argument) where external_argument is an Eiffel object given by a C external can cause erratic behaviors. Indeed,
+external_argument is an indirection pointer, which is automatically deleted after the external call (not the nested Eiffel object), deleting it prematuraly can corrupt the indirection pointers stack.<BR>
 See also <A HREF="#eif_access"><I>eif_access</I></A>. 
 <P><A NAME="Exampleeif_weanRTMS"></A><U>Example</U>: C external returning
 an Eiffel string.
 <P>In Eiffel:
-<font color="#008080">
-<BR><I>&nbsp;&nbsp;&nbsp; foo : STRING is</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; external</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "C
-| %"a file.h%""</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</I>
+<BR>&nbsp;&nbsp;&nbsp; foo : STRING is
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; external
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "C
+| %"a file.h%""
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end
 <BR>In C:
-<P><I>&nbsp;&nbsp;&nbsp; EIF_REFERENCE foo () {</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_REFERENCE str;</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_OBJECT i_str;</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; str = eif_string ("Hello world");</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i_str = eif_protect(str);</I>
+<P>&nbsp;&nbsp;&nbsp; EIF_REFERENCE foo () {
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_REFERENCE str;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EIF_OBJECT i_str;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; str = eif_string ("Hello world");
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i_str = eif_protect(str);
 
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Some operations on
-`i_str' */</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return eif_wean (i_str);&nbsp;&nbsp;&nbsp;
-/* Returns direct reference to the Eiffel string.</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-* No need to keep an extra reference from the C. */</I>
-</font>
-<BR><I>&nbsp;&nbsp;&nbsp; }</I>
-<P><A HREF="#Index">Back to index</A></UL>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Some operations on
+`i_str' */
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return eif_wean (i_str);&nbsp;&nbsp;&nbsp;
+/* Returns direct reference to the Eiffel string.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* No need to keep an extra reference from the C. */
+<BR>&nbsp;&nbsp;&nbsp; }
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_field"></A>3.7 - Getting the attribute from an Eiffel object:
 eif_attribute</H3>
 
-<UL><B>&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_cecil.h"</FONT></B>
-<P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIFFEL_TYPE eif_attribute (EIF_REFERENCE object, char *name, EIFFEL_TYPE, int *status)
-</FONT></>
+            <ul>
+          <B>&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=+1># include "eif_cecil.h"</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; EIFFEL_TYPE eif_attribute (EIF_REFERENCE object, char *name, EIFFEL_TYPE, int *status)</>
 </B>
 <P>Return the attribute of an Eiffel object. 
-<P> The `eif_attribute' macro returns the attribute of <I>object</I> of name <I>name</I>, which is of type <I>EIFFEL_TYPE</I>. 
-<P><I>EIFFEL_TYPE</I> is the type of the Eiffel attribute. It can be:
-<I>EIF_INTEGER, EIF_POINTER, EIF_CHARACTER, EIF_BOOLEAN, EIF_DOUBLE, EIF_REAL</I> or <I>EIF_REFERENCE</I>.
-<P>If <I>status</I> is NULL then no status is set. Otherwise the status of the function is put in <I>*status</I>:
+<P> The `eif_attribute' macro returns the attribute of object of name name, which is of type
+EIFFEL_TYPE. 
+<P>EIFFEL_TYPE is the type of the Eiffel attribute. It can be: EIF_INTEGER, EIF_POINTER, EIF_CHARACTER, EIF_BOOLEAN, EIF_DOUBLE, EIF_REAL or
+EIF_REFERENCE.
+<P>If status is NULL then no status is set. Otherwise the status of the function is put in
+*status:
 <BR>*status = EIF_NO_ATTRIBUTE => no attribute found.
 <BR>*status = EIF_CECIL_OK => attribute found.
-<BR>*status = EIF_CECIL_ERROR => an undefined error occured, <I>object</I> may be invalid.
+<BR>*status = EIF_CECIL_ERROR => an undefined error occured, object may be invalid.
 <P>If the visible exception is enabled, then a <A HREF="#visible_exception">visible exception</A> is raised upon failure (EIF_NO_ATTRIBUTE, EIF_CECIL_ERROR).
-<P> RETURN VALUE: 
-<UL>upon failure, it returns (EIFFEL_TYPE) 0, otherwise, the attribute is returned. If the return value is not a <A HREF="#basic_types">basic types</A>, you must protect it with <I><A HREF="#henter">eif_protect </A></I>
-</UL>
-<P>COMPATIBILITY: 
-<UL>eif_attribute (object, name, type, NULL) is equivalent to eif_field (object, name, type)
-</UL>
-<P>NOTE: 
-<UL>you cannot access a constant attribute,  or the result of a function 
-(once or not) with <I>eif_attribute</I>. 
-</UL>
+<P> RETURN VALUE:
+              <ul>
+            upon failure, it returns (EIFFEL_TYPE) 0, otherwise, the attribute is returned. If the return value is not a <A HREF="#basic_types">basic types</A>, you must protect it with
+            <A HREF="#henter">eif_protect </A>
+              </ul>
+<P>COMPATIBILITY:
+              <ul>
+            eif_attribute (object, name, type, NULL) is equivalent to eif_field (object, name, type)
+              </ul>
+<P>NOTE:
+              <ul>
+            you cannot access a constant attribute,  or the result of a function 
+(once or not) with eif_attribute.
+              </ul>
 <P>OTHER:
-<UL>
-<I>EIF_BOOLEAN attribute_exists (EIF_REFERENCE object, char *name)</I> returns <I>EIF_TRUE</I> or <I>EIF_FALSE</I> depending if the attribute exists or not, is visible or not.
-</UL>
-<P>See also
-<I><A HREF="#eif_procedure">eif_procedure</A></I>,
-<I><A HREF="#eif_procedure">eif_xx_function.</A></I>
-<P><I>&nbsp;&nbsp;&nbsp; </I><A HREF="#Examplehentereif_field">Example</A>
-<P><A HREF="#Index">Back to index</A></UL>
+              <ul>
+            EIF_BOOLEAN attribute_exists (EIF_REFERENCE object, char *name) returns
+            EIF_TRUE or EIF_FALSE depending if the attribute exists or not, is visible or not.
+              </ul>
+<P>See also <A HREF="#eif_procedure">eif_procedure</A>, <A HREF="#eif_procedure">eif_xx_function.</A>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Examplehentereif_field">Example</A>
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_procedure"></A>3.8 - Getting the address of an Eiffel routine</H3>
 
-<UL><B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
+            <ul>
+          <B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
 <BR>&nbsp;
-<P><FONT SIZE=+1><B><I>&nbsp;&nbsp;&nbsp; </I></B></FONT>
+<P><B><I>&nbsp;&nbsp;&nbsp; </I></B>
 <BR><B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>EIF_PROCEDURE eif_procedure
 (char *rout_name, EIF_TYPE_ID type_id)</FONT></B>
 <BR><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_REFERENCE_FUNCTION eif_reference_function
@@ -1187,72 +1243,80 @@ eif_attribute</H3>
 <BR><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_POINTER_FUNCTION eif_pointer_function
 (char *rout_name, EIF_TYPE_ID type_id)</FONT></B>
 <P><B><I><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT></I></B>Returns the address
-of the Eiffel routine by giving its name <I>rout_name</I> and the type
-id <I>type_id </I>of the class, in which it is declared. Returns a NULL
+of the Eiffel routine by giving its name rout_name and the type
+id type_id of the class, in which it is declared. Returns a NULL
 pointer or raises a <A HREF="#visible_exception">visible exception</A>
-(if enabled) when there is no corresponding routine with name <I>rout_name</I>
+(if enabled) when there is no corresponding routine with name rout_name
 or the routine is not visible. The first argument of an Eiffel routine
 has to be the target of the Eiffel routine.
 <P>The&nbsp; Eiffel object returned by an Eiffel function&nbsp; must be
-protected afterwards with '<I><A HREF="#henter">eif_protect</A></I>'
-(this only applies for functions, which address is returned by `<I>eif_reference_function</I>'
+protected afterwards with '<A HREF="#henter">eif_protect</A>'
+(this only applies for functions, which address is returned by `eif_reference_function'
 since the other function types returns&nbsp; basic types, which are not
 Eiffel objects).
-<P>NOTES: 
-<UL>
+<P>NOTES:
+              <ul>
 The address returned by these functions must be called between
 parenthesis.
-<P>Be sure that the Eiffel routine is not a C External. In this case, you must call directly the C External instead of its Eiffel wrapper. 
-</UL>
+<P>Be sure that the Eiffel routine is not a C External. In this case, you must call directly the C External instead of its Eiffel wrapper.
+              </ul>
 <P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <U><A HREF="#Exampletypeid">Example</A></U>
 <P>&nbsp;&nbsp;&nbsp; See also <A HREF="#declaring_routine_with_real_arguments">Declaring
 routines taking real as argument</A>, <A HREF="#Eiffel_routine_cast">Cast
 of the Eiffel routines in C</A>, <A HREF="#bug_in_eif_cecil_h">Bad macros in eif_cecil.h</A>.
-<P><A HREF="#Index">Back to index</A></UL>
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_enable_visible_exception"></A>3.9 - Enabling/Disabling the
-visible exception </H3>
+visible exception</H3>
 
-<UL><B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
-<P><FONT SIZE=+1><B>&nbsp;&nbsp;&nbsp; void eif_enable_visible_exception
-()&nbsp;&nbsp;&nbsp;</B> </FONT>
+            <ul>
+          <B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; void eif_enable_visible_exception
+()&nbsp;&nbsp;&nbsp;</B> 
 <BR><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; void eif_disable_visible_exception
-()&nbsp;&nbsp;&nbsp; </FONT></B><FONT SIZE=+1></FONT>
+()&nbsp;&nbsp;&nbsp; </FONT></B>
 <P><B><I><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT></I></B>Respectively,
 enables and disables the visible exception. See <A HREF="#visible_exception">visible
 exception</A>
 <BR>&nbsp;&nbsp;&nbsp;&nbsp; By default, the visible exception is disabled (since v4.5).
 
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="RTMS"></A>3.10 - Creating an Eiffel string: eif_string</H3>
 
-<UL>&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1>#include "eif_plug.h"</FONT></B>
-<P><FONT SIZE=+1><B>&nbsp;&nbsp;&nbsp; EIF_REFERENCE eif_string (char
-*string)&nbsp;&nbsp;&nbsp; /* Macro */ </B></FONT>
+            <ul>
+          &nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1>#include "eif_plug.h"</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; EIF_REFERENCE eif_string (char
+*string)&nbsp;&nbsp;&nbsp; /* Macro */ </B>
 <P><B><I><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT></I></B>Returns the direct
-reference to an Eiffel string by giving the corresponding C string <I>string</I>
+reference to an Eiffel string by giving the corresponding C string string
 .
-The result of <I>eif_string</I> does not reference the C string passed as argument: it copies it, before creating the Eiffel string. 
+The result of eif_string does not reference the C string passed as argument: it copies it, before creating the Eiffel string. 
 <P>NOTE:
-<UL>The return value must be protected with <I><A HREF="#henter">eif_protect</A></I> for later use. The C string must be manually freed by the
+              <ul>
+            The return value must be protected with <A HREF="#henter">eif_protect</A> for later use. The C string must be manually freed by the
 user, if it has been dynamically allocated.
-</UL>
+              </ul>
 <P>COMPATIBILITY:
-<UL><I>eif_string ("ABC")</I> is equivalent to <I>RTMS ("ABC")</I> and <I>eif_make_string ("ABC", strlen ("ABC"))</I>.
-</UL>
+              <ul>
+            eif_string ("ABC") is equivalent to RTMS ("ABC") and eif_make_string ("ABC", strlen ("ABC")).
+              </ul>
 <P>&nbsp;&nbsp; <A HREF="#Exampleeif_weanRTMS">Example</A>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_attribute_type"></A>3.11 - Getting the return-type of an
 attribute: eif_attribute_type</H3>
 
-<UL><B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
-<P><FONT SIZE=+1><B>&nbsp;&nbsp;&nbsp; int eif_attribute_type (char *attr_name,
-EIF_TYPE_ID tid)&nbsp;&nbsp;&nbsp; </B></FONT>
+            <ul>
+          <B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; int eif_attribute_type (char *attr_name,
+EIF_TYPE_ID tid)&nbsp;&nbsp;&nbsp; </B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; #define EIF_REFERENCE_TYPE&nbsp;&nbsp;
 1</FONT></B>
 <BR><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; #define EIF_CHARACTER_TYPE&nbsp;
@@ -1275,78 +1339,85 @@ EIF_TYPE_ID tid)&nbsp;&nbsp;&nbsp; </B></FONT>
 (-1)</FONT></B>
 <BR>&nbsp;
 <P>&nbsp;&nbsp;&nbsp; Returns the type of the&nbsp; attribute described
-by its name <I>attr_name</I> and the type identifier of the class where
-it is defined
-<I>tid</I>. The return type is an int (see above for correspondances).
+by its name attr_name and the type identifier of the class where
+it is defined tid. The return type is an int (see above for correspondances).
 In case of failure, EIF_NO_TYPE is returned - not such given attribute
 name, routine name instead of attribute name, or so on.
-<P>&nbsp;&nbsp;&nbsp; <U>Example</U>: Get the type of&nbsp; <I>count</I>
-from&nbsp; <I>STRING</I>
-<font color="#008080">
-<P><I>&nbsp;&nbsp;&nbsp; int i;</I>
-<P><I>&nbsp;&nbsp;&nbsp; i = eif_attribute_type ("count", eif_type_id ("STRING");</I>
-<BR><I>&nbsp;&nbsp;&nbsp; printf ("type is %d\n");&nbsp;&nbsp;&nbsp; /*
-</font>
-Should be EIF_INTEGER_TYPE since it returns an Eiffel Integer */</I>
+<P>&nbsp;&nbsp;&nbsp; <U>Example</U>: Get the type of&nbsp; count
+from&nbsp; STRING
+<P>&nbsp;&nbsp;&nbsp; int i;
+<P>&nbsp;&nbsp;&nbsp; i = eif_attribute_type ("count", eif_type_id ("STRING");
+<BR>&nbsp;&nbsp;&nbsp; printf ("type is %d\n");&nbsp;&nbsp;&nbsp; /*
+Should be EIF_INTEGER_TYPE since it returns an Eiffel Integer */
 <P>OTHER:
-<UL>
-<I>*(EIFFEL_TYPE *) eif_attribute_safe (EIF_REFERENCE object, char *name, int type_int, int *status)</I> can be used for debugging or type checking. It returns the attribute reference of name <I>name</I> from the object <I>object</I> of type <I>type_int</I>. <I>status</I> contains the status of the function call: it can be EIF_CECIL_OK, EIF_CECIL_ERROR, EIF_NO_ATTRIBUTE, or EIF_WRONG_TYPE (<I>type_int</I> does not match with real type of object).
-</UL>
+              <ul>
+            *(EIFFEL_TYPE *) eif_attribute_safe (EIF_REFERENCE object, char *name, int type_int, int *status) can be used for debugging or type checking. It returns the attribute reference of name
+            name from the object object of type type_int. status contains the status of the function call: it can be EIF_CECIL_OK, EIF_CECIL_ERROR, EIF_NO_ATTRIBUTE, or EIF_WRONG_TYPE (type_int does not match with real type of object).
+              </ul>
 <P>See also:
-<UL>
+              <ul>
 <A HREF="#eif_field">eif_attribute</A>
-</UL>
-<P><A HREF="#Index">Back to index</A></UL>
+              </ul>
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_name"></A>3.12 - Getting the class name corresponding to a
 type id: eif_name</H3>
 
-<UL><B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
+            <ul>
+          <B><FONT SIZE=+1><I>&nbsp;&nbsp;&nbsp; </I>#include "eif_cecil.h"</FONT></B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; char *eif_name (EIF_TYPE_ID tid)</FONT></B>
 <P>&nbsp;&nbsp;&nbsp; Returns the corresponding name (C string) of the
-Eiffel class, given a type identifier <I>type_id.</I> If the type identifier
+Eiffel class, given a type identifier type_id. If the type identifier
 is a generic type identifier, no generic parameter type is given. Returns
 NULL if an invalid type idientifer is given.
 <P>&nbsp;&nbsp;&nbsp; <U>Example</U>:
-<font color="#008080">
-<P><I>&nbsp;&nbsp;&nbsp; printf ("the class name with type id 1 is %s\n",
+<P>&nbsp;&nbsp;&nbsp; printf ("the class name with type id 1 is %s\n",
 eif_name (1);&nbsp;&nbsp;&nbsp; /* Should print "PLATFORM"&nbsp; on most
-compiler versions*/</I>
-</font>
+compiler versions*/
 <P>COMPATIBILITY:
-<UL><I>eif_name</I> is equivalent to <I>eif_name_by_tid</I>
-</UL>
-<P><B><I><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT></I></B>See also <I><A HREF="#eif_type">eif_type</A></I>,
-<I><A HREF="#eif_type_id">eif_type_id</A></I>
-<P><A HREF="#Index">Back to index</A></UL>
+              <ul>
+            eif_name is equivalent to eif_name_by_tid
+              </ul>
+<P><B><I><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; </FONT></I></B>See also <A HREF="#eif_type">eif_type</A>,
+<A HREF="#eif_type_id">eif_type_id</A>
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="eif_type"></A>3.13 - Getting the type id of an Eiffel object:
 eif_type, eif_type_by_reference.</H3>
 
-<UL><B><FONT SIZE=+1><I>&nbsp;&nbsp;</I>&nbsp; #include "eif_cecil.h"</FONT></B>
+            <ul>
+          <B><FONT SIZE=+1><I>&nbsp;&nbsp;</I>&nbsp; #include "eif_cecil.h"</FONT></B>
 <P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type (EIF_OBJECT
-object)&nbsp;&nbsp;&nbsp; </FONT></B><FONT SIZE=+1></FONT>
-<P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE reference)&nbsp;&nbsp;&nbsp; </FONT></B><FONT SIZE=+1></FONT>
-<P>&nbsp;&nbsp;&nbsp; <I>eif_type</I> returns the type identifier, given an indirection
+object)&nbsp;&nbsp;&nbsp; </FONT></B>
+<P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE reference)&nbsp;&nbsp;&nbsp; </FONT></B>
+<P>&nbsp;&nbsp;&nbsp; eif_type returns the type identifier, given an indirection
 pointer to an Eiffel object. 
-<P><I>eif_type_by_reference</I> returns the type identifier, given the direct reference to an Eiffel object <I>reference</I>.
+<P>eif_type_by_reference returns the type identifier, given the direct reference to an Eiffel object
+reference.
 <P>COMPATIBILITY:
-<UL>
-<I>eif_type</I> is equivalent to <I>eif_type_by_object</I>. <I>eif_type (object)</I> is equivalent to <I>eif_type_by_reference (eif_access (object))</I>.
-</UL>
-See also <I><A HREF="#eif_name">eif_name</A></I>,
-<I><A HREF="#eif_type_id">eif_type_id</A></I>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+              <ul>
+            eif_type is equivalent to eif_type_by_object. eif_type (object) is equivalent to
+            eif_type_by_reference (eif_access (object)).
+              </ul>
+See also <A HREF="#eif_name">eif_name</A>, <A HREF="#eif_type_id">eif_type_id</A>
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="converting_array"></A>3.14 - Converting a C array into an Eiffel array: eif_make_from_c.</H3>
 
-<UL><B><FONT SIZE=+1>eif_make_from_c(eif_array, c_array, int nelts, int type) /* Macro */ </B>(since 4.5)</FONT>
-<P>Not on ISE Eiffel compilers prior to 4.5. However, its definition is available at <I><A HREF="ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt">ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt</A></I>
-. <I>eif_array</I> is an EIF_REFERENCE, <I>c_array</I> is a C array of type (<I>type</I> *), <I>nelts</I> is the number of elements in the array.
-<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A></UL>
+            <ul>
+          <B><FONT SIZE=+1>eif_make_from_c(eif_array, c_array, int nelts, int type) /* Macro */ </B>eif_make_from_c(eif_array, c_array, int nelts, int type) /* Macro */
+              (since 4.5)
+<P>Not on ISE Eiffel compilers prior to 4.5. However, its definition is available at
+<A HREF="ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt">ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt</A>
+. eif_array is an EIF_REFERENCE, c_array is a C array of type (type *), nelts is the number of elements in the array.
+<P>&nbsp;&nbsp;&nbsp; <A HREF="#Index">Back to index</A>
+            </ul>
 
 <H2>
 <A NAME="restrictionsinCECIL"></A>4 - Restrictions in CECIL</H2>
@@ -1355,40 +1426,41 @@ See also <I><A HREF="#eif_name">eif_name</A></I>,
 <A NAME="declaring_routine_with_real_arguments"></A>4.1 - Declaring routines
 taking real as argument</H3>
 
-<UL>&nbsp;
+            <ul>
+          &nbsp;
 <BR>The EIF_PROCECURE, EIF_XX_FUNCTION types match to most of the procedures and functions.
 However,
 if you want to use an Eiffel routine taking a real as one of its arguments,
 you must be very careful. You need to define explicitely a typedef that
 corresponds to the exact signature of the routine.
-<P><U>Example</U>: call to<I> put (r: REAL ; index: INTEGER) from ARRAY
-[REAL])</I>
-<font color="#008080">
-<P><I>typedef void (*EIF_PROCEDURE_REAL_INTEGER)(EIF_REFERENCE, EIF_REAL, EIF_INTEGER);</I>
-<BR><I>EIF_PROC_REAL_INTEGER eput;</I>
-<P><I>/* some code */</I>
-<BR><I>eput = (EIF_PROCEDURE_REAL_INTEGER) eif_procedure ("put", eif_type_id ("ARRAY
-[REAL]"));</I>
-</font>
-<P><A HREF="#Index">Back to index</A></UL>
+<P><U>Example</U>: call to put (r: REAL ; index: INTEGER) from ARRAY
+[REAL])
+<P>typedef void (*EIF_PROCEDURE_REAL_INTEGER)(EIF_REFERENCE, EIF_REAL, EIF_INTEGER);
+<BR>EIF_PROC_REAL_INTEGER eput;
+<P>/* some code */
+<BR>eput = (EIF_PROCEDURE_REAL_INTEGER) eif_procedure ("put", eif_type_id ("ARRAY
+[REAL]"));
+<P><A HREF="#Index">Back to index</A>
+            </ul>
 
 <H3>
 <A NAME="Eiffel_routine_cast"></A>4.2 - Cast of the Eiffel routines in
 C.</H3>
 
-<UL>There are nine typedefs defined for the Eiffel routines.
-<BR><I>EIF_PROCEDURE: </I>Eiffel procedure
-<BR><I>EIF_INTEGER_FUNCTION: </I>Eiffel functions returning an Eiffel Integer
-<BR><I>EIF_BOOLEAN_FUNCTIONL: </I>Eiffel functions returning an Eiffel
+            <ul>
+          There are nine typedefs defined for the Eiffel routines.
+<BR>EIF_PROCEDURE: Eiffel procedure
+<BR>EIF_INTEGER_FUNCTION: Eiffel functions returning an Eiffel Integer
+<BR>EIF_BOOLEAN_FUNCTIONL: Eiffel functions returning an Eiffel
 Boolean
-<BR><I>EIF_CHARACTER_FUNCTION </I>Eiffel functions returning an Eiffel
+<BR>EIF_CHARACTER_FUNCTION Eiffel functions returning an Eiffel
 Character
-<BR><I>EIF_REAL_FUNCTION: </I>Eiffel functions returning an Eiffel real
-<BR><I>EIF_DOUBLE_FUNCTION </I>Eiffel functions returning an Eiffel double
-<BR><I>EIF_REFERENCE_FUNCTION: </I>Eiffel functions returning an Eiffel
+<BR>EIF_REAL_FUNCTION: Eiffel functions returning an Eiffel real
+<BR>EIF_DOUBLE_FUNCTION Eiffel functions returning an Eiffel double
+<BR>EIF_REFERENCE_FUNCTION: Eiffel functions returning an Eiffel
 references (e.g an Eiffel object, which is not an instance of a basic type)
-<BR><I>EIF_POINTER_FUNCTION: </I>Eiffel functions returning an Eiffel pointer
-<BR><I>EIF_BIT_FUNCTION: </I>Eiffel functions returning an Eiffel bit.
+<BR>EIF_POINTER_FUNCTION: Eiffel functions returning an Eiffel pointer
+<BR>EIF_BIT_FUNCTION: Eiffel functions returning an Eiffel bit.
 <P>These typedefs do not perform&nbsp; the type checking of the arguments.
 The typedefs only cast the result of the Eiffel routine (void if it is
 an Eiffel procedure). For more information on the previous definitions,
@@ -1399,81 +1471,81 @@ the typedefs to properly cast the pointer type to the Eiffel routine. This
 way, during compilation, a warning or an error is raised if arguments with
 incorrect types are passed to the Eiffel routine.
 <P><U>Example</U>:
-<P>Let the Eiffel function `<I>foo</I>' :
-<P><I>foo (c: CHARACTER; a: ARRAY [INTEGER]): POINTER is</I>
-<UL><I>do ... end</I></UL>
+<P>Let the Eiffel function `foo' :
+<P>foo (c: CHARACTER; a: ARRAY [INTEGER]): POINTER is
+              <ul>
+            do ... end
+              </ul>
 It is declared in C:
-<P><I>typedef EIF_POINTER (*EIF_FOO_TYPE)(EIF_REFERENCE /* Current object
-*/,</I>
-<UL>
-<UL>
-<UL>
-<UL>
-<UL>
-<UL><I>EIF_CHARACTER /* 1rst argument */,</I>
-<P><I>EIF_REFERENCE /* 2d argument */);</I>
-<BR>&nbsp;</UL>
-</UL>
-</UL>
-</UL>
-</UL>
-</UL>
+<P>typedef EIF_POINTER (*EIF_FOO_TYPE)(EIF_REFERENCE /* Current object
+*/,
+              <ul>
+                <ul>
+                  <ul>
+                    <ul>
+                      <ul>
+                        <ul>
+                      EIF_CHARACTER /* 1rst argument */,
+<P>EIF_REFERENCE /* 2d argument */);
+<BR>&nbsp;
+                        </ul>
+                      </ul>
+                    </ul>
+                  </ul>
+                </ul>
+              </ul>
 The first argument of an Eiffel routine is always the current object -
 the target of the call. This object is either the one, which precedes the
-"<FONT SIZE=+1>.</FONT>foo(..)" if it is a nested call, or <I>Current
-</I>if
-it is called without the <FONT SIZE=+1>"."</FONT>
-<P>NOTE: 
-<UL>Do not forget to call all the Eiffel routines from C within parenthesis.
+".foo(..)" if it is a nested call, or Current if
+it is called without the "."
+<P>NOTE:
+              <ul>
+            Do not forget to call all the Eiffel routines from C within parenthesis.
 Otherwise, they will return the address of the Eiffel routine, instead of 
 performing an action.
 <P>
-You cannot use the Eiffel routine types for the routines, which are Eiffel External routines. The cast would be incorrect since these routines do not take an <I>EIF_REFERENCE</I> as first argument, but the actual first argument of the Eiffel signature. It is recommended to use directly the C function instead. 
+You cannot use the Eiffel routine types for the routines, which are Eiffel External routines. The cast would be incorrect since these routines do not take an
+EIF_REFERENCE as first argument, but the actual first argument of the Eiffel signature. It is recommended to use directly the C function instead. 
 <P><A HREF="#Index">Back to index</A>
-<BR>&nbsp;</UL>
+<BR>&nbsp;
+              </ul>
 
 <H3>
 <A NAME="Visibility"></A>4.3 - Visible classes</H3>
 
-<UL>You must declare in your Ace file all the Eiffel types you want to
+              <ul>
+            You must declare in your Ace file all the Eiffel types you want to
 use in CECIL as visible.&nbsp; See also ETL appendice D.
 <P>- Using a non-generic type, declare:
-<font color="#008080">
-<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <I>dummy: SIMPLE_TYPE</I>
-</font>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy: SIMPLE_TYPE
 <BR>&nbsp;&nbsp;&nbsp; in your root class.
-<font color="#008080">
-<P><I>a_cluster: "A_PATH"</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; visible</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-SIMPLE_TYPE</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</I>
-<BR><I>end;</I>
-</font>
+<P>a_cluster: "A_PATH"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; visible
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SIMPLE_TYPE
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end
+<BR>end;
 <BR>in your Ace file.
 <P>- Using Generic types , declare for example:
-<font color="#008080">
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy1: GEN_TYPE [INTEGER]
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy2: GEN_TYPE [OTHER_TYPE]
-</font>
 <BR>&nbsp;&nbsp;&nbsp; in the root class.
 <P>and
-<font color="#008080">
-<P><I>an_other_cluster:&nbsp;&nbsp;&nbsp; "AN_OTHER_PATH"</I>
-<BR><I>&nbsp;&nbsp;&nbsp; visible</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GEN_TYPE&nbsp;&nbsp;&nbsp;
--- Do not specify any generic parameter.</I>
-<BR><I>&nbsp;&nbsp;&nbsp; end</I>
-<BR><I>end;</I>
-</font>
+<P>an_other_cluster:&nbsp;&nbsp;&nbsp; "AN_OTHER_PATH"
+<BR>&nbsp;&nbsp;&nbsp; visible
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GEN_TYPE&nbsp;&nbsp;&nbsp;
+-- Do not specify any generic parameter.
+<BR>&nbsp;&nbsp;&nbsp; end
+<BR>end;
 <P>in your Ace file.
 <P>This is necessary to tell the compiler to generate the C code corresponding
 to GEN_TYPE[INTEGER] or GEN_TYPE[OTHER_TYPE] and make it available to CECIL.&nbsp;
-Otherwise, <I><A HREF="#eif_type_id">eif_type_id</A></I> will returns EIF_NO_TYPE,
-and <I><A HREF="#eif_procedure">eif_procedure/eif_function_xx</A></I> will
+Otherwise, <A HREF="#eif_type_id">eif_type_id</A> will returns EIF_NO_TYPE,
+and <A HREF="#eif_procedure">eif_procedure/eif_function_xx</A> will
 return a NULL pointer or raise a visible exception.
 <P><A NAME="visible_exception"></A><B><U>Visible exception:</U></B>
-<UL>&nbsp;
+                <ul>
+              &nbsp;
 <BR>If you try to access a feature, which is not exported in the visible
 clause of an Ace file (through its class or an export clause in the visible
 clause), then a visible exception is raised. This exception can also be
@@ -1482,29 +1554,29 @@ instead of a routine, or so on) , when the routine is not exported (see
 <A HREF="#visible_features">visible
 features</A>), or when you forgot to declare an instance of the class that
 implements the routine (see above).
-<P>You can disable this exception by calling <I><A HREF="#eif_enable_visible_exception">eif_disable_visible_exception</A>.
-</I>You
-can also enable it with <I><A HREF="#eif_enable_visible_exception">eif_enable_visible_exception</A>.</I>
-<P>If you try to call<I> <A HREF="#eif_procedure">eif_procedure
-</A></I>or
-<I><A HREF="#eif_procedure">eif_xx_function</A></I>
+<P>You can disable this exception by calling <A HREF="#eif_enable_visible_exception">eif_disable_visible_exception</A>.
+You
+can also enable it with <A HREF="#eif_enable_visible_exception">eif_enable_visible_exception</A>.
+<P>If you try to call <A HREF="#eif_procedure">eif_procedure
+</A>or <A HREF="#eif_procedure">eif_xx_function</A>
 to get the pointer on a non visible routine, they will return a NULL pointer.
 <P><A HREF="#Index">Back to index</A>
-<H3>
-</H3>
-</UL>
-</UL>
+<H3>&nbsp;</H3>
+                </ul>
+              </ul>
 
 <H3>
 <A NAME="visible_features"></A>4.4 - Visible features</H3>
 
-<UL>Only the Eiffel features, with no export clause (even if it is {ANY}),
+              <ul>
+            Only the Eiffel features, with no export clause (even if it is {ANY}),
 and which are declared in a visible class, are available (visible) to CECIL.
 The creation procedure of a visible class is automatically exported to CECIL (unless there is
 an export clause in the Ace file, which does not specify to export it)
 <P><A NAME="overriding_export_clause"></A><B><U>Exporting features to CECIL,
 overriding the export clause in the Ace file:</U></B>
-<UL>&nbsp;&nbsp;&nbsp; You can specify the CECIL routines you want to export
+                <ul>
+              &nbsp;&nbsp;&nbsp; You can specify the CECIL routines you want to export
 to CECIL in your Ace file by adding a custom export clause in your Ace
 file. This overrides all the export clauses specified in the Eiffel code.
 When there is an export clause in a visible clause, all the feature of
@@ -1512,39 +1584,37 @@ the class are not visible by default, even its creation procedure.
 <P><U>Example:</U> export the feature foo from&nbsp; class A which has
 an export clause.
 <P>In Eiffel:
-<font color="#008080">
-<BR><I>&nbsp;&nbsp;&nbsp; feature {B,C}&nbsp;&nbsp;&nbsp; -- Only exported
-to classes B and C</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; foo is</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-do</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-...</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-end</I>
-</font>
+<BR>&nbsp;&nbsp;&nbsp; feature {B,C}&nbsp;&nbsp;&nbsp; -- Only exported
+to classes B and C
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; foo is
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+do
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+...
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end
 <P>In the Ace file:
-<font color="#008080">
-<BR><I>&nbsp;&nbsp;&nbsp; ....</I>
-<BR><I>&nbsp;&nbsp;&nbsp; visible</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-export</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"make",&nbsp;&nbsp;&nbsp; -- creation procedure</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"foo"</I>
-<BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-end</I>
-<BR><I>&nbsp;&nbsp;&nbsp; end</I>
-<BR><I>&nbsp;&nbsp;&nbsp; ...</I>
+<BR>&nbsp;&nbsp;&nbsp; ....
+<BR>&nbsp;&nbsp;&nbsp; visible
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+export
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"make",&nbsp;&nbsp;&nbsp; -- creation procedure
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"foo"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end
+<BR>&nbsp;&nbsp;&nbsp; end
+<BR>&nbsp;&nbsp;&nbsp; ...
 <BR>&nbsp;
-</font>
-<P>In this case, only <I>foo</I> and <I>make</I> are exported to CECIL.
+<P>In this case, only foo and make are exported to CECIL.
 All other features from class A are no longer available.&nbsp; See also
 ETL Part E,&nbsp; appendice D and bug in export clause.
-<BR>&nbsp;</UL>
-<A HREF="#Index">Back to index</A></UL>
+<BR>&nbsp;
+                </ul>
+<A HREF="#Index">Back to index</A>
+              </ul>
 
 <H2>
 <A NAME="bugs"></A>5 - Bugs</H2>
@@ -1552,98 +1622,99 @@ ETL Part E,&nbsp; appendice D and bug in export clause.
 <H3>
 <A NAME="bug_in_exported_clause"></A>5.1 - Bug in export clause</H3>
 
-<UL>Be very careful when enumerating the Eiffel features that you want
+              <ul>
+            Be very careful when enumerating the Eiffel features that you want
 to export in the visible clause. The compiler does not check the validity
 of the feature names. If&nbsp; you put a wrong name (typo, or if you are
 not taking care of the renaming in Eiffel, for example).&nbsp; All features
 of the class will be invisible from CECIL.
-<P>The name of the features to export should be put between <FONT SIZE=+1>"
-"</FONT> to avoid any confusion with Lace keywords.
+<P>The name of the features to export should be put between "
+" to avoid any confusion with Lace keywords.
 
 <P>By default, the creation procedure(s) of a visible class is/are exported and
 visible in CECIL. However, if the creation procedure is defined in a parent and
 has an export clause in the Eiffel code, you must explicitely 
 export it to CECIL in the Ace file.
-</UL>
+              </ul>
 <A HREF="#Index">Back to index</A>
 
 <H3>
 <A NAME="bug_in_eif_cecil_h"></A>5.2 - Bad macros in eif_cecil.h</H3>
-<UL>
+              <ul>
 Some new macros have been incorrectly set in v4.3. 
-In the file 
-<UL><B>$EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h </B>(unix) 
-<BR></UL>or
-<UL><B><INSTALLATION_DIR>/bench/spec/windows/include/eif_cecil.h </B>(windows) 
-</UL>
+In the file
+                <ul>
+              <B>$EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h </B>(unix) 
+<BR>
+                </ul>
+            or
+                <ul>
+              <B><INSTALLATION_DIR>/bench/spec/windows/include/eif_cecil.h </B>(windows)
+                </ul>
 <BR>
 replace the lines:
 <P>
-<I><font color="#008080">
-<UL>#define eif_double_function   eifreal /* Get an Eiffel function returning an Eiffel Double */
+&nbsp;
+                <ul>
+  #define eif_double_function   eifreal /* Get an Eiffel function returning an Eiffel Double */
 <BR>
 #define eif_reference_function        eifreal /* Get an Eiffel function returning an Eiffel Double */
-</font></I>
-</UL>by
-<UL>
-<I><font color="#008080">
+                </ul>
+            by
+                <ul>
 #define eif_double_function   eifdouble       /* Get an Eiffel function returning an Eiffel Double */
 <BR>
 #define eif_reference_function        eifref  /* Get an Eiffel function returning an Eiffel Reference */
 <P>
-</font></I>
-</UL>
+&nbsp;
+                </ul>
 the line:
 <P>
-<UL>
-<I><font color="#008080">
+&nbsp;
+                <ul>
 <P>
 #define eif_fn_pointer      eifpointer  /* Use `eif_pointer_function' instead */
-</font></I>
-</UL>by
-<UL>
-<I><font color="#008080">
+                </ul>
+            by
+                <ul>
 <P>
 #define eif_fn_pointer      eifptr  /* Use `eif_pointer_function' instead */
 <P>
-</UL>
-</font></I>
+&nbsp;
+                </ul>
 the line:
 <P>
-<I><font color="#008080">
+&nbsp;
 <P>
-<UL>
+&nbsp;
+                <ul>
 #define EIF_FN_INT EIF_INTEGER_PROCEDURE        /* Use EIF_INTEGER_PROCEDURE instead */
-</font></I>
-</UL>by
-<I><font color="#008080">
+                </ul>
+            by
 <P>
-<UL>
+&nbsp;
+                <ul>
 #define EIF_FN_INT EIF_INTEGER_FUNCTION        /* Use EIF_INTEGER_FUNCTION instead */
-</UL>
+                </ul>
 <P>
-</font></I>
 and the lines:
 <P>
-<I><font color="#008080">
-<UL>#define eif_fn_float  eifreal /* Use `eif_double_function' instead */
+&nbsp;
+                <ul>
+  #define eif_fn_float  eifreal /* Use `eif_double_function' instead */
 <BR>#define eif_fn_double eifreal /* Use `eif_double_function' instead *
-</font></I>
-</UL>by
-<UL>
-<I><font color="#008080">
+                </ul>
+            by
+                <ul>
 #define eif_fn_float  eifreal /* Use `eif_real_function' instead */
 <BR>
 #define eif_fn_double eifdouble       /* Use `eif_double_function' instead */
-</font></I>
 <P>
-</UL>
-
-</UL>
+&nbsp;
+                </ul>
+              </ul>
 <A HREF="#Index">Back to index</A>
 
-</td></tr></table>
-
-
-</BODY>
+            </ul>
+        </font></i></font></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

@@ -1,44 +1,46 @@
+body {
+background-color: linen;
+font-family: arial, helvetica;
+font-size: small; 
+margin-left: 0;
+margin-top: 0;
 
-BODY {
-  background: linen;
-  font-family: arial, helvetica;
-  font-size: small;
-  margin: 5%;
-  }
+	}
 
 P,UL,OL,TABLE {
-    font-family: Arial, Helvetica;
-    font-size: x-small;
-    }
+font-family: Arial, Helvetica;
+font-size: x-small;
+}
 
 PRE {
-    font-family: Courrier;
-    font-size: x-small;
-    }
+font-family: Courrier;
+font-size: x-small;
+}
 
 H5 {
-  font-size: x-large;
-  font-family: arial, helvetica;
-  color: white;
-  background: teal;
-  }
+font-size: x-large;
+font-family: arial, helvetica;
+color: white;
+background: teal;
+}
 
 H1 {
-  font-family: arial, helvetica;
-  font-size: x-large;
-  font-weight: bold;
-  color: "AA0000";
-  background-repeat: repeat-x, repeat-y;
-  }
+font-family: arial, helvetica;
+font-size: x-large;
+font-weight: bold;
+color: "AA0000";
+background-repeat: repeat-x, repeat-y;
+}
 
 H2 {
-  font-family: arial, helvetica;
-  font-size: large;
-  font-weight: bold;
-  color: navy;
-  }
+font-family: arial, helvetica;
+font-size: large;
+font-weight: bold;
+color: navy;
+}
 
 H3 {
-  font-family: arial, helvetica;
-  font-size: medium;
-  }
+font-family: arial, helvetica;
+font-size: medium;
+}
+

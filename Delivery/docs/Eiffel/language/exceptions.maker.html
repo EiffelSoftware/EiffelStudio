@@ -5,36 +5,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<TITLE>An Invitation to Eiffel: Exceptions</TITLE>
+<TITLE>Exceptions</TITLE>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../../styles/tech.css">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Exceptions</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
-<P>&nbsp;</P>
-
-<H1><A HREF="genericity.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="assertions.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H1>
-
-<P>
-<HR><!-- This file was created with the fm2html filter.
-The filter is copyright Norwegian Telecom Research and
-was programmed by Jon Stephenson von Tetzchner. -->
-
-<H2><A NAME="HDR0"></A>6 EXCEPTIONS </H2>
+<H2><A NAME="HDR0"></A>6 EXCEPTIONS</H2>
 
 <P>Whenever there is a contract, the risk exists that someone will break
 it. This is where exceptions come in. </P>
@@ -55,23 +46,22 @@ an exception in its caller. </P>
 up&quot; by bringing the current object to a stable state (one satisfying
 the class invariant). Then it can terminate in either of two ways: </P>
 
-<UL>
-<LI>The <B><FONT COLOR="#0000FF">rescue </FONT></B>clause may execute a
+    <ul>
+      <li>The <B><FONT COLOR="#0000FF">rescue </FONT></B>clause may execute a
 <B><FONT COLOR="#0000FF">retry </FONT></B>instruction, which causes the
 routine to restart its execution from the beginning, attempting again to
 fulfil its contract, usually through another strategy. This assumes that
 the instructions of the <B><FONT COLOR="#0000FF">rescue </FONT></B>clause,
 before the <B><FONT COLOR="#0000FF">retry </FONT></B>, have attempted to
 correct the cause of the exception. <BR>
-</LI>
-
-<LI>If the <B><FONT COLOR="#0000FF">rescue </FONT></B>clause does not end
+      </li>
+      <li>If the <B><FONT COLOR="#0000FF">rescue </FONT></B>clause does not end
 with <B><FONT COLOR="#0000FF">retry </FONT></B>, then the routine fails:
 it returns to its caller, immediately signaling an exception. (The caller's
 <B><FONT COLOR="#0000FF">rescue </FONT></B>clause will be executed according
 to the same rules.) <BR>
-</LI>
-</UL>
+      </li>
+    </ul>
 
 <P>The principle is that <B>a routine must either succeed or fail</B>:
 either it fulfils its contract, or it does not; in the latter case it must
@@ -93,7 +83,7 @@ transmission at most 50 times; before returning to its caller, it sets
 a boolean attribute <I>successful</I> to <B><I>true </I></B>or <B><I>false
 </I></B>depending on the outcome. Here is the text of the routine: </P>
 
-<UL>
+    <ul>
 <DL>
 <DT><I>attempt_transmission </I>(<I>message: STRING</I>)<I> </I><B><FONT COLOR="#0000FF">is
 </FONT></B></DT>
@@ -144,7 +134,7 @@ at most 50 times. </FONT></DT>
 <DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
 </DL>
 </DL>
-</UL>
+    </ul>
 
 <P>Initialization rules ensure that <I>failures</I>, a local entity, is
 set to zero on entry. </P>
@@ -161,12 +151,7 @@ who need protection against unexpected events, but cannot be expected to
 sacrifice safety and simplicity to pay for this protection. </P>
 
 <center>
-<P><A HREF="assertions.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="assertions.maker.html">Previous
-Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
-of Contents</A> <A HREF="genericity.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="genericity.maker.html">Next
-Chapter</A>
+<P><A HREF="assertions.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A> <A HREF="genericity.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A>
 </center>
-</td></tr></table>
-
-</BODY>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

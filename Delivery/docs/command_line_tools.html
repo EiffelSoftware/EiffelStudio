@@ -7,22 +7,25 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 <h1>Eiffel batch compiler - es4</h1>
-<pre>Usage:
+    <pre>Usage:
 	es4 [-help | -version | -batch -freeze | -finalize [-keep] | -precompile |
 	-loop | -quick_melt | -clients [-filter filtername] class |
 	-suppliers [-filter filtername] class |
@@ -68,16 +71,22 @@ Options:
 	-suppliers: show the suppliers of a class.
 	-version: show compiler version number.
 </pre>
+For example:
+    <ul>
+      <li>to freeze a project from scratch: es4 -project_path /your_path -ace my_ace.ace</li>
+      <li>to freeze an existing project: es4 -project your_project.epr -freeze</li>
+      <li>to finalize a project from scratch: es4 -finalize -project_path /your_path -ace my_ace.ace</li>
+    </ul>
 
 <h1>finish_freezing</h1>
 
 <p>On Unix there is no option for finish_freezing, on Windows they are the following:
-<ul>
-  <li><b>-location</b> location_path: enables to launch `finish_freezing' on a
+    <ul>
+      <li><b>-location</b> location_path: enables to launch `finish_freezing' on a
     remote directory.</li>
-  <li><b>-silent</b>: does not prompt the user to tell him if the compilation
+      <li><b>-silent</b>: does not prompt the user to tell him if the compilation
     either succeeded or failed.</li>
-</ul>
+    </ul>
 <p>&nbsp;</p>
 
 
@@ -93,7 +102,6 @@ otherwise the Eiffel compilation will be blocked. When compiling</p>
 <p>&nbsp;</p>
 <h2>Windows</h2>
 
-</td></tr></table>
-</body>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

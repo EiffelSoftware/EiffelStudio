@@ -5,52 +5,45 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<TITLE>An Invitation to Eiffel: Genericity</TITLE>
+<TITLE>Genericity</TITLE>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../../styles/tech.css">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Genericity</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
-
-
-<H1>
-<A HREF="inheritance.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-next.gif" ALT="Next page" width="16" height="16"></A>
-<A HREF="BOOK.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-toc.gif" ALT="Table of
-Contents" width="16" height="16"></A>
-<A HREF="exceptions.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-previous.gif" ALT="Previous section" width="16" height="16"></A>
-<A NAME="REF98317">
-AN INVITATION TO EIFFEL</A>
-</H1>
-<HR>
-<!-- This file was created with the fm2html filter.
-The filter is copyright Norwegian Telecom Research and
-was programmed by Jon Stephenson von Tetzchner. -->
 
 <H2><A NAME="HDR0"> 7  GENERICITY</A></H2>
 <P>Building software components (classes) as implementations of abstract data types yields systems with a solid architecture but does not in itself suffice to ensure reusability and extendibility. Two key techniques address the problem: genericity (unconstrained or constrained) and inheritance. Let us look first at the unconstrained form. 
-<P>To make a class generic is to give it <B>formal generic parameters</B> representing arbitrary types, as in these examples from the Kernel and Data Structure Libraries of EiffelBase: 
-<UL><DL>
+<P>To make a class generic is to give it <B>formal generic parameters</B> representing arbitrary types, as in these examples from the Kernel and Data Structure Libraries of EiffelBase:
+    <ul>
+      <DL>
 <DT><I>ARRAY </I>[<I>G</I>]
 <DT><I>LIST </I>[<I>G</I>]
 <DT><I>LINKED_LIST </I>[<I>G</I>]
-</DL></UL>
+</DL>
+    </ul>
 <P>These classes describe data structures -- arrays, lists without commitment to a specific representation, lists in linked representation -- containing objects of a certain type. The formal generic parameter <I>G</I> represents this type. 
-<P>Each of these classes describes a type template. To derive a directly usable type, you must provide a type corresponding to <I>G</I>, called an <B>actual generic parameter</B>; this may be either a basic expanded type (such as <I>INTEGER</I>) or a reference type. Here are some possible generic derivations: 
-<UL><DL>
+<P>Each of these classes describes a type template. To derive a directly usable type, you must provide a type corresponding to <I>G</I>, called an <B>actual generic parameter</B>; this may be either a basic expanded type (such as <I>INTEGER</I>) or a reference type. Here are some possible generic derivations:
+    <ul>
+      <DL>
 <DT><I>il</I>:<I> LIST</I> [<I>INTEGER</I>]<I>
 <DT>aa: ARRAY</I> [<I>ACCOUNT</I>]<I>
 <DT>aal: LIST</I> [<I>ARRAY </I>[[<I>G</I>]]<I></I>
-</DL></UL>
+</DL>
+    </ul>
 <P>As the last example indicates, an actual generic parameter may itself be generically derived. 
 <P>Without genericity, it would be impossible to obtain static type checking in a realistic object-oriented language. 
 <P>A variant of this mechanism, <I>constrained</I> genericity, will enable
@@ -59,12 +52,7 @@ parameters. Constrained genericity will be introduced <A
 HREF="geninh.maker.html">below</A>, after inheritance. 
 
 <center><P>
-<A HREF="exceptions.maker.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous Chapter</A>
-<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
-<A HREF="inheritance.maker.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next Chapter</A>
-</center>
- 
-
-</td></tr></table>
-</BODY>
+<A HREF="exceptions.maker.html"><IMG SRC="fm2html-previous.gif" width="16" height="16"></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" width="16" height="16"></A>
+<A HREF="inheritance.maker.html"><IMG SRC="fm2html-next.gif" width="16" height="16"></A></center></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

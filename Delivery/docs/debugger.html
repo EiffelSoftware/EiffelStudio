@@ -7,19 +7,22 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <h1>
@@ -41,11 +44,11 @@ Debugging facilities</h1>
 1  INTRODUCTION</a></h2>
 <p>
    To debug an Eiffel system and, more generally, monitor its execution, you will use a combination of:</p>
-<ul>
-  <li>The Project Tool, to start execution steps.</li>
-  <li>One or more Feature Tools, to follow execution of instructions.</li>
-  <li>One or more Object Tools, to inspect the contents of objects at run time.</li>
-</ul>
+    <ul>
+      <li>The Project Tool, to start execution steps.</li>
+      <li>One or more Feature Tools, to follow execution of instructions.</li>
+      <li>One or more Object Tools, to inspect the contents of objects at run time.</li>
+    </ul>
 <p>&nbsp;</p>
 <h2><a name="tools">
 2  ATTACHED TOOLS</a></h2>
@@ -55,10 +58,10 @@ tools, which will reflect the state of the execution. By default, on screen
    larger than 800x600 they will be displayed as shown <a href="#project_tool">below</a>.</p>
 <p>
    There are 2 buttons in the middle of the command bar in the Project Tool <img border="0" src="images/debugg5.gif" width="52" height="23">:&nbsp;</p>
-<ul>
-  <li>the left one is to display the attached Object Tool.</li>
-  <li>the right one is to display the attached Feature Tool.</li>
-</ul>
+    <ul>
+      <li>the left one is to display the attached Object Tool.</li>
+      <li>the right one is to display the attached Feature Tool.</li>
+    </ul>
 <p>
    When displayed, the Feature tool will, whenever execution stops, show the current execution position, using the Stop Points
    format as shown <a href="#project_tool">below</a>:</p>
@@ -80,10 +83,10 @@ tools, which will reflect the state of the execution. By default, on screen
    <img border="0" src="images/debugg9.gif" width="708" height="350"></p>
 <p>
    To terminate execution :</p>
-<ul>
-  <li>Ctrl-click the Terminate button in the Project Tool (top-right bar).</li>
-  <li>accelerator: Ctrl+E</li>
-</ul>
+    <ul>
+      <li>Ctrl-click the Terminate button in the Project Tool (top-right bar).</li>
+      <li>accelerator: Ctrl+E</li>
+    </ul>
 <p>&nbsp;</p>
 <h2><a name="stoppoints">4 STOP POINTS AND STOPPABLE ROUTINES</a></h2>
 <p>
@@ -111,10 +114,10 @@ A stoppable routine is show as below when clicking on <img border="0" src="image
    You set a stop point by drag-and-dropping an appropriate element to a Stop Point hole.
    The elements that can be drag-and-dropped in this
 manner are:</p>
-<ul>
-  <li>Entire routines.</li>
-  <li>Individual instructions of a routine, which you obtain by targeting a Feature Tool to the routine and selecting the Stop Points format.&nbsp;The clickable element in that case is the three consecutive dots ...&nbsp;that appear to the left of the instruction.&nbsp;</li>
-</ul>
+    <ul>
+      <li>Entire routines.</li>
+      <li>Individual instructions of a routine, which you obtain by targeting a Feature Tool to the routine and selecting the Stop Points format.&nbsp;The clickable element in that case is the three consecutive dots ...&nbsp;that appear to the left of the instruction.&nbsp;</li>
+    </ul>
 <p>
    If a stop point has already been set on instruction, the three dots <img border="0" src="images/debugg12.gif" width="30" height="15">
    are replaced by three vertical bars <img border="0" src="images/debugg13.gif" width="27" height="15">, as illustrated by the last
@@ -131,14 +134,14 @@ or a stop point indicator appearing in the Project Tool as shown in the last fig
 <p>
    When you click the Run button, execution starts or, if previously&nbsp;interrupted, restarts. If it proceeds with interruption and terminates,&nbsp;the message `System terminated' will appear in the Project Tool. But any&nbsp;of the following events may cause execution to stop before
 termination:</p>
-<ul>
-  <li>You click Interrupt .</li>
-  <li>An exception occurs. (In this case the execution will be interrupted just before the exception, so that you can use the environment's<br>
+    <ul>
+      <li>You click Interrupt .</li>
+      <li>An exception occurs. (In this case the execution will be interrupted just before the exception, so that you can use the environment's<br>
 	 mechanisms to browse classes, features and objects. If you click Run once more the exception will be triggered for good.)</li>
-  <li>Execution reaches a stop point (except in Ignore Stop Points format).</li>
-  <li>The next instruction is executed (in Step-by-step  format).</li>
-  <li>The end of the routine is reached (in To End of Routine  format).</li>
-</ul>
+      <li>Execution reaches a stop point (except in Ignore Stop Points format).</li>
+      <li>The next instruction is executed (in Step-by-step  format).</li>
+      <li>The end of the routine is reached (in To End of Routine  format).</li>
+    </ul>
 <p>
    In any case, the display will show the execution status and the call stack.</p>
 <p>
@@ -161,7 +164,6 @@ from the class THREAD, if it is not called in the execution of a thread.</p>
 
 </p>
 
-</td></tr></table>
-</body>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

@@ -6,28 +6,31 @@ Before installing the Eiffel53.tgz package you need to install the following com
 
 	Available from Apple web site at:
 	http://www.apple.com/macosx/x11/ 
+	http://www.apple.com/macosx/x11/download/
+
+	You also need the X11 SDK in order to develop graphical application
+	with EiffelVision2 at:
+	http://www.apple.com/macosx/x11/download/
+	
 
 2 - Install GTK 1.2.10:
 
-	Web site address for download:
-	http://www.opendarwin.org/projects/darwinports/en/x11.php
+	You need to download GTK 1.2.10 by following the instructions located at:
+	http://packages.opendarwin.org
 
-	Actual file to download in order to install GTK:
-	http://www.opendarwin.org/projects/darwinports/packages/usr/gtk.dmg
+	The package is located under:
+	http://packages.opendarwin.org/mpkgs/x11/gtk-1.2.10.mpkg
+
 
 3 - Install `libcompat':
 
-	We did not find a better way for that but to install the DarwinPorts available at:
+	Follow the same instructions as for downloading GTK and download the libcompat
+	package from:
+	http://packages.opendarwin.org/mpkgs/devel/libcompat-4.6.2-RELEASE.mpkg
 	
-	http://www.opendarwin.org/projects/darwinports/
-	
-	Follow their instructions on how to install and configure it. Then when everything is
-	properly installed, type:
-	
-	port install libcompat
-
 	Once this is done, update your profile to set the environment variable DYLD_LIBRARY_PATH
-	with /opt/local/lib which is the default location for `port'.
+	with /opt/local/lib which is the default location when installing this package.
+
 
 4 - Install GNU tar:
 

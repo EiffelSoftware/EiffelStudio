@@ -18,13 +18,13 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- Default background.
 		local
-			windows_color: WEL_COLOR_REF
+			windows_color: COLOR_WINDOWS
 		do
 			if private_background_color = Void then
 				!! Result.make_by_sys_color (Color_window + 1)
 			else
 				windows_color ?= private_background_color.implementation
-				!! Result.make_solid (windows_color)
+				Result := windows_color.brush
 			end
 		end
 

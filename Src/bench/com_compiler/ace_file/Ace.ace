@@ -5,88 +5,30 @@ root
 	ECOM_EIF_COMPILER_REGISTRATION: make
 
 default
+	assertion(check)
 	assertion(require)
 	assertion(ensure)
-	assertion(check)
+	arguments("-embedding")
+	arguments("-regserver")
+	arguments("-unregserver")
+	arguments(" ")
+	disabled_debug(yes)
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(no)
 	address_expression(no)
 	array_optimization(no)
-	console_application(no)
 	dead_code_removal(yes)
 	dynamic_runtime(no)
 	exception_trace(no)
 	inlining(no)
 	multithreaded(no)
 	shared_library_definition("Eif_compiler.def")
-	check_vape(yes)
-	arguments("-embedding")
-	arguments("-regserver")
-	arguments("-unregserver")
-	arguments(" ")
-	disabled_debug(yes)
-	disabled_debug("jvmgen")
-	disabled_debug("check_expanded")
-	disabled_debug("liman")
-	disabled_debug("dead_code")
-	disabled_debug("type_check")
-	disabled_debug("jvm_dbc")
-	disabled_debug("wel")
-	disabled_debug("remove_class")
-	disabled_debug("jvm_gen2")
-	disabled_debug("comments")
-	disabled_debug("debbugger_hook")
-	disabled_debug("debugger_hook")
-	disabled_debug("cache_compiler")
-	disabled_debug("wel_gdi_references")
-	disabled_debug("cecil")
-	disabled_debug("gdi_count")
-	disabled_debug("verbose")
-	disabled_debug("wel_gdi_count")
-	disabled_debug("replication")
-	disabled_debug("cache")
-	disabled_debug("hide_option")
-	disabled_debug("jvm_gen [ ]")
-	disabled_debug("class_of_id")
-	disabled_debug("actual_replication")
-	disabled_debug("flat_short")
-	disabled_debug("jvm_agen")
-	disabled_debug("jvm_once")
-	disabled_debug("parse")
-	disabled_debug("skeleton")
-	disabled_debug("activity")
-	disabled_debug("local_feat_adaptation")
-	disabled_debug("trace_table")
-	disabled_debug("documentation")
-	disabled_debug("dollar")
-	disabled_debug("cache_server")
-	disabled_debug("c_debugger")
-	disabled_debug("genericity")
-	disabled_debug("win_dispatcher")
-	disabled_debug("server")
-	disabled_debug("dead_code_removal")
-	disabled_debug("document")
-	disabled_debug("cache_stat")
-	disabled_debug("dle topo")
-	disabled_debug("dlg_dispatcher")
-	disabled_debug("gelex")
-	disabled_debug("cache_research")
-	disabled_debug("optimization")
-	disabled_debug("geyacc")
-	disabled_debug("flush_file")
-	disabled_debug("byte_code")
-	disabled_debug("transfer")
-	disabled_debug("has_calls")
-	disabled_debug("jvm_gen")
-	disabled_debug("sep_debug")
-	disabled_debug("assertion")
-	disabled_debug("filters")
-	disabled_debug("count")
-	disabled_debug("options")
-	disabled_debug("assertions")
-	disabled_debug("jvm_stack")
-	debug(no)
-	line_generation(no)
-	profile(no)
-	trace(no)
 
 
 -- BAS
@@ -95,9 +37,10 @@ default
 -- CO
 
 cluster
-	all com_generated:	"$EIFFEL_SRC\Src\bench\dll_compiler"
+	all com_generated:		"$EIFFEL_SRC\dll_compiler"
 		exclude
 			"EIFGEN"; 
+			"to_replace";
 		visible
 			ieiffel_compiler_events_impl_proxy
 				end
@@ -152,7 +95,7 @@ cluster
 			ieiffel_project_properties_impl_stub
 				end
 			ieiffel_cluster_properties_impl_stub
-				end				
+				end
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
@@ -178,6 +121,7 @@ cluster
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
+
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
@@ -243,6 +187,7 @@ cluster
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
+
 	interface_switch (switch):		"$\interface\batch_only"
 
 	communications (switch):		"$\no_communication"
@@ -257,7 +202,8 @@ cluster
 
 	debuging_formatters (communications):		"$\formatters"
 
-	"beurk":		"$EIFFEL_SRC\Eiffel\beurk"
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
 
 	"common":		"$EIFFEL_SRC\Eiffel\common"
 
@@ -267,7 +213,8 @@ cluster
 
 	common_eiffel_parser (common_parser):		"$\parser"
 
-	"yacc":		"$EIFFEL_SRC\Eiffel\yacc"
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
+
 
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude
@@ -276,17 +223,21 @@ cluster
 
 	liman:		"$EIFFEL_SRC\Eiffel\limand"
 
+
 	liman_bench (liman):		"$\bench"
 
 	liman_abstract (liman):		"$\abstract"
 
 	interface_shared:		"$EIFFEL_SRC\Eiffel\interface\shared"
 
+
 	documentation_main:		"$EIFFEL_SRC\Eiffel\case\documentation\main"
+
 
 	all "compiler_support":		"$EIFFEL_SRC\Eiffel\support"
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
 
 	flat_short (common_parser):		"$\flat_short"
 		exclude
@@ -297,12 +248,14 @@ cluster
 
 	const:		"$EIFFEL_SRC\Eiffel\const"
 
+
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; 
 		end
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
+
 
 external
 
@@ -311,25 +264,27 @@ external
 		"$EIFFEL_SRC\library\com\spec\windows\include",
 		"$EIFFEL_SRC\library\time\Clib",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib",
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\C\bench",
-		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib"
+		"$(EIFFEL_SRC)\dll_compiler\Clib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
 		"$(EIFFEL_SRC)\library\com\Clib\com.lib",
 		"$(EIFFEL_SRC)\library\com\Clib_runtime\com_runtime.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
-		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib\ecom_client.lib",
+		"$(EIFFEL_SRC)\dll_compiler\Clib\ecom_client.lib",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
 		"$(EIFFEL_SRC)\C\idrs\idr.lib",
 		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"$(EIFFEL_SRC)\Src\bench\dll_compiler\Clib\ecom_server.lib"
+		"$(EIFFEL_SRC)\dll_compiler\Clib\ecom_server.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib"
 
 end

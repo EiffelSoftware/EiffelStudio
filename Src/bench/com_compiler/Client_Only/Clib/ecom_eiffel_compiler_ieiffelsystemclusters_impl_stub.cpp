@@ -5,9 +5,9 @@ Implemented `IEiffelSystemClusters' Interface.
 #include "ecom_eiffel_compiler_IEiffelSystemClusters_impl_stub.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelSystemClusters_ = {0xd2773adf,0xfd21,0x4cfa,{0x9a,0x4f,0x87,0x73,0xcf,0xf6,0x2c,0xfd}};
+static const IID IID_IEiffelSystemClusters_ = {0xcd49d55e,0x5467,0x4058,{0xa9,0x99,0x1d,0x35,0xb9,0x05,0x76,0x4e}};
 
-static const IID LIBID_eiffel_compiler_ = {0xa81ca1a9,0x3eef,0x4e47,{0xbe,0xae,0xc1,0x63,0x25,0xee,0xfa,0x3f}};
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,7 +54,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_tree
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_179 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -84,7 +84,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::flat_cluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_179 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -202,7 +202,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_182 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_186 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -235,7 +235,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::cluster_prop
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_182 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_186 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -445,7 +445,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 	switch (dispID)
 	{
 		
-		case 1610743808:
+		case 10024:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -474,14 +474,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}
 			break;
 
-		case 1610743809:
+		case 10025:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -510,14 +510,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 13;
-					pVarResult->punkVal = result;
+					pVarResult->vt = 9;
+					pVarResult->pdispVal = result;
 				}
 					
 			}
 			break;
 
-		case 1610743810:
+		case 10026:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -545,7 +545,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743811:
+		case 10027:
 			{
 				if (pDispParams->cArgs != 3)
 					return DISP_E_BADPARAMCOUNT;
@@ -629,7 +629,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743812:
+		case 10028:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -687,7 +687,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743813:
+		case 10029:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -753,7 +753,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743814:
+		case 10030:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -819,7 +819,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743815:
+		case 10031:
 			{
 				if (pDispParams->cArgs != 2)
 					return DISP_E_BADPARAMCOUNT;
@@ -890,7 +890,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743816:
+		case 10032:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -956,7 +956,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemClusters_impl_stub::Invoke( DISP
 			}
 			break;
 
-		case 1610743817:
+		case 10033:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;

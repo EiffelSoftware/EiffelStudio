@@ -5,7 +5,9 @@ Implemented `IEnumClusterProp' Interface.
 #include "ecom_eiffel_compiler_IEnumClusterProp_impl_stub.h"
 static int return_hr_value;
 
-static const IID IID_IEnumClusterProp_ = {0x57c162f4,0x18a3,0x4abd,{0xbd,0xb1,0x3e,0x8b,0x75,0x9c,0x3e,0x4d}};
+static const IID IID_IEnumClusterProp_ = {0xc5b13566,0x8a44,0x40e1,{0xa0,0x90,0x3e,0x5c,0xc3,0x6c,0xa7,0x2d}};
+
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +19,7 @@ ecom_eiffel_compiler::IEnumClusterProp_impl_stub::IEnumClusterProp_impl_stub( EI
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	pTypeInfo = 0;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,6 +30,8 @@ ecom_eiffel_compiler::IEnumClusterProp_impl_stub::~IEnumClusterProp_impl_stub()
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	if (pTypeInfo)
+		pTypeInfo->Release ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -41,7 +46,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_183 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_187 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -58,7 +63,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_183 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_187 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -114,7 +119,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	EIF_OBJECT tmp_ppenum = NULL;
 	if (ppenum != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_180 (ppenum, NULL));
+		tmp_ppenum = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_184 (ppenum, NULL));
 		if (*ppenum != NULL)
 			(*ppenum)->AddRef ();
 	}
@@ -126,7 +131,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	
 	if (*ppenum != NULL)
 		(*ppenum)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_180 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_184 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
 	
 	END_ECATCH;
 	return S_OK;
@@ -145,7 +150,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_183 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_187 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -157,7 +162,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE_c.ccom_ec_pointed_cell_183 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_187 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;
@@ -187,6 +192,112 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::count(  /* [out, 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
+
+/*-----------------------------------------------------------
+	Get type info
+-----------------------------------------------------------*/
+{
+	if ((itinfo != 0) || (pptinfo == NULL))
+		return E_INVALIDARG;
+	*pptinfo = NULL;
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEnumClusterProp_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	(*pptinfo = pTypeInfo)->AddRef ();
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::GetTypeInfoCount( unsigned int * pctinfo )
+
+/*-----------------------------------------------------------
+	Get type info count
+-----------------------------------------------------------*/
+{
+	if (pctinfo == NULL)
+		return E_NOTIMPL;
+	*pctinfo = 1;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
+
+/*-----------------------------------------------------------
+	IDs of function names 'rgszNames'
+-----------------------------------------------------------*/
+{
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEnumClusterProp_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	return pTypeInfo->GetIDsOfNames (rgszNames, cNames, rgdispid);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
+
+/*-----------------------------------------------------------
+	Invoke function.
+-----------------------------------------------------------*/
+{
+	HRESULT hr = 0;
+	int i = 0;
+
+	unsigned int uArgErr;
+	if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+		return ResultFromScode (E_INVALIDARG);
+
+	if (puArgErr == NULL)
+		puArgErr = &uArgErr;
+
+	VARIANTARG * rgvarg = pDispParams->rgvarg;
+	DISPID * rgdispidNamedArgs = pDispParams->rgdispidNamedArgs;
+	unsigned int cArgs = pDispParams->cArgs;
+	unsigned int cNamedArgs = pDispParams->cNamedArgs;
+	VARIANTARG ** tmp_value = NULL;
+
+	if (pExcepInfo != NULL)
+	{
+		pExcepInfo->wCode = 0;
+		pExcepInfo->wReserved = 0;
+		pExcepInfo->bstrSource = NULL;
+		pExcepInfo->bstrDescription = NULL;
+		pExcepInfo->bstrHelpFile = NULL;
+		pExcepInfo->dwHelpContext = 0;
+		pExcepInfo->pvReserved = NULL;
+		pExcepInfo->pfnDeferredFillIn = NULL;
+		pExcepInfo->scode = 0;
+	}
+	
+	switch (dispID)
+	{
+		
+		default:
+			return DISP_E_MEMBERNOTFOUND;
+	}
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Release()
 
 /*-----------------------------------------------------------
@@ -196,6 +307,11 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Release()
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
+		if (pTypeInfo !=NULL)
+		{
+			pTypeInfo->Release ();
+			pTypeInfo = NULL;
+		}
 		delete this;
 	}
 	return res;
@@ -219,6 +335,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::QueryInterface( R
 -----------------------------------------------------------*/
 {
 	if (riid == IID_IUnknown)
+		*ppv = static_cast<ecom_eiffel_compiler::IEnumClusterProp*>(this);
+	else if (riid == IID_IDispatch)
 		*ppv = static_cast<ecom_eiffel_compiler::IEnumClusterProp*>(this);
 	else if (riid == IID_IEnumClusterProp_)
 		*ppv = static_cast<ecom_eiffel_compiler::IEnumClusterProp*>(this);

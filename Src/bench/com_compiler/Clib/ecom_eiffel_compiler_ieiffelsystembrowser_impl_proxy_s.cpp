@@ -75,7 +75,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -141,7 +141,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -174,7 +174,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_extern
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_43 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -207,7 +207,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_assemb
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_46 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_46 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -273,7 +273,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_root_c
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -309,7 +309,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_cluste
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_50 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -345,7 +345,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_class_
 	
 	rt_ce.free_memory_bstr (tmp_class_name1);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_53 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_53 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -384,7 +384,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_featur
 	rt_ce.free_memory_bstr (tmp_class_name1);
 rt_ce.free_memory_bstr (tmp_feature_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_56 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_56 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -422,7 +422,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_search
 	
 	rt_ce.free_memory_bstr (tmp_a_string);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_39 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -460,7 +460,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_search
 	
 	rt_ce.free_memory_bstr (tmp_a_string);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_59 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -499,7 +499,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_descri
 	rt_ce.free_memory_bstr (tmp_a_assembly_name);
 rt_ce.free_memory_bstr (tmp_a_full_dotnet_type);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -542,7 +542,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_descri
 rt_ce.free_memory_bstr (tmp_a_full_dotnet_type);
 rt_ce.free_memory_bstr (tmp_a_feature_signature);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };

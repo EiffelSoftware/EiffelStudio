@@ -1,11 +1,11 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_CEiffelCompiler.h"
-static const CLSID CLSID_CEiffelCompiler_ = {0x86d23c62,0xe03d,0x4a16,{0x83,0xf6,0x8f,0x79,0xd6,0x28,0x11,0x0e}};
+static const CLSID CLSID_CEiffelCompiler_ = {0xca54edd7,0x9fde,0x4260,{0x90,0x55,0x9a,0xb7,0xe9,0x21,0x22,0xcd}};
 
-static const IID IID_IEiffelCompiler_ = {0x590282fd,0x2bee,0x44a1,{0x91,0xb3,0x61,0xc9,0x26,0xba,0xd5,0x12}};
+static const IID IID_IEiffelCompiler_ = {0x51b87f1b,0xa2e4,0x4f29,{0x88,0x91,0xaf,0x26,0x54,0xb5,0x0b,0x6b}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -306,7 +306,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompiler::ccom_compiler_version(  )
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -343,7 +343,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompiler::ccom_expand_path(  /* [in] 
 	
 	rt_ce.free_memory_bstr (tmp_a_path);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -410,7 +410,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompiler::ccom_freeze_command_name(  
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -444,7 +444,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompiler::ccom_freeze_command_argumen
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -538,7 +538,7 @@ EIF_REFERENCE ecom_eiffel_compiler::CEiffelCompiler::ccom_output_pipe_name(  )
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
 };
@@ -659,7 +659,7 @@ void ecom_eiffel_compiler::CEiffelCompiler::ccom_enable_call_back_on_ieiffel_com
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	IConnectionPoint * pcp = 0;
-	IID temp_IID = {0xb16070bd,0xdece,0x4e7a,{0x80,0x3c,0xf7,0xa4,0x59,0x24,0xcb,0x88}};
+	IID temp_IID = {0x75b32e73,0xa00e,0x4bcf,{0x9a,0x7a,0x13,0xd4,0x1e,0x63,0x59,0xb4}};
 	hr = pcpc->FindConnectionPoint (temp_IID, &pcp);
 	if (FAILED (hr))
 	{
@@ -695,7 +695,7 @@ void ecom_eiffel_compiler::CEiffelCompiler::ccom_disable_call_back_on_ieiffel_co
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	IConnectionPoint * pcp = 0;
-	IID temp_IID = {0xb16070bd,0xdece,0x4e7a,{0x80,0x3c,0xf7,0xa4,0x59,0x24,0xcb,0x88}};
+	IID temp_IID = {0x75b32e73,0xa00e,0x4bcf,{0x9a,0x7a,0x13,0xd4,0x1e,0x63,0x59,0xb4}};
 	hr = pcpc->FindConnectionPoint (temp_IID, &pcp);
 	if (FAILED (hr))
 	{

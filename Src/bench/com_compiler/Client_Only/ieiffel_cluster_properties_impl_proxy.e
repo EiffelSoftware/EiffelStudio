@@ -110,7 +110,7 @@ feature -- Access
 		end
 
 	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
-			-- List of subclusters (list of IEiffelClusterProperties*).
+			-- List subclusters (list of IEiffelClusterProperties*).
 		do
 			Result := ccom_subclusters (initializer)
 		end
@@ -383,7 +383,7 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_subclusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
-			-- List of subclusters (list of IEiffelClusterProperties*).
+			-- List subclusters (list of IEiffelClusterProperties*).
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy.h%"](): EIF_REFERENCE"
 		end

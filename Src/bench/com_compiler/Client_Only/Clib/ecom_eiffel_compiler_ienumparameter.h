@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Feature paramaters enumeration.  Help file: 
+Feature paramaters enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumParameter_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumParameter : public IUnknown
+class IEnumParameter : public IDispatch
 {
 public:
 	IEnumParameter () {};

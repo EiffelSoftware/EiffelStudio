@@ -1828,21 +1828,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert VARIANT *  to ECOM_VARIANT.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_231( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_record_231( VARIANT * a_record_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert VARIANT *  to ECOM_VARIANT.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_232( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_record_232( VARIANT * a_record_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert VARIANT *  to ECOM_VARIANT.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_233( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_record_233( VARIANT * a_record_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1852,81 +1852,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_235( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_235( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_236( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_236( BSTR * a_pointer );
+	void ccom_free_memory_pointed_235( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_237( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_record_238( VARIANT * a_record_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_record_239( VARIANT * a_record_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_record_240( VARIANT * a_record_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_241( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_242( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_243( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_236( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert ecom_eiffel_compiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_245( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_238( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_246( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_239( VARIANT_BOOL * a_pointer );
 
 
 

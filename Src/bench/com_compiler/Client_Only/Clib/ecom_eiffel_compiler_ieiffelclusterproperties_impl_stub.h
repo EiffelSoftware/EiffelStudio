@@ -171,7 +171,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of subclusters (list of IEiffelClusterProperties*).
+	List subclusters (list of IEiffelClusterProperties*).
 	-----------------------------------------------------------*/
 	STDMETHODIMP subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value );
 

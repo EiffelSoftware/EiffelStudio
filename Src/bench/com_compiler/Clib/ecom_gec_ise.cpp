@@ -3059,63 +3059,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_229( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_235( EIF_REFERENCE eif_ref, BSTR * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	BSTR * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (*result != NULL)
-	{
-		rt_ce.free_memory_bstr(*result);
-		*result = NULL;
-	}
-	if (cell_item != NULL)
-		*result = rt_ec.ccom_ec_bstr (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_236( EIF_REFERENCE eif_ref, BSTR * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	BSTR * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (*result != NULL)
-	{
-		rt_ce.free_memory_bstr(*result);
-		*result = NULL;
-	}
-	if (cell_item != NULL)
-		*result = rt_ec.ccom_ec_bstr (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_238( EIF_REFERENCE eif_ref )
+VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_231( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert ECOM_VARIANT to VARIANT *.
@@ -3138,7 +3082,7 @@ VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_238( EIF_REFERENCE eif_ref )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_239( EIF_REFERENCE eif_ref )
+VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_232( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert ECOM_VARIANT to VARIANT *.
@@ -3161,7 +3105,7 @@ VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_239( EIF_REFERENCE eif_ref )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_240( EIF_REFERENCE eif_ref )
+VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_233( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert ECOM_VARIANT to VARIANT *.
@@ -3184,7 +3128,7 @@ VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_240( EIF_REFERENCE eif_ref )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_interface_245( EIF_REFERENCE eif_ref )
+ecom_eiffel_compiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_interface_238( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocEvents *.

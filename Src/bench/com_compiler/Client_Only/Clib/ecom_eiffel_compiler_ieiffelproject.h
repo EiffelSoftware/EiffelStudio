@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project.  Help file: 
+Eiffel Project. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELPROJECT_H__
@@ -26,6 +26,16 @@ class IEiffelProject;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifndef __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEiffelException;
+}
+#endif
+
+
 
 #ifndef __ecom_eiffel_compiler_IEiffelCompiler_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEiffelCompiler_FWD_DEFINED__
@@ -83,22 +93,22 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelProject_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelProject : public IUnknown
+class IEiffelProject : public IDispatch
 {
 public:
 	IEiffelProject () {};
 	~IEiffelProject () {};
 
 	/*-----------------------------------------------------------
-	Retrieve project.
+	Retrieve Eiffel Project
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP retrieve_project(  /* [in] */ BSTR a_project_file_name ) = 0;
+	virtual STDMETHODIMP retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Create new project.
+	Create new Eiffel project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP create_project(  /* [in] */ BSTR an_ace_file_name, /* [in] */ BSTR project_directory_path ) = 0;
+	virtual STDMETHODIMP create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -126,9 +136,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Last error message.
+	Last exception raised
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP last_error_message(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP last_exception(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelException * * a_result ) = 0;
 
 
 	/*-----------------------------------------------------------

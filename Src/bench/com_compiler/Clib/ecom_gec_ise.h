@@ -760,39 +760,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
+	Convert ECOM_VARIANT to VARIANT *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_235( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_236( EIF_REFERENCE eif_ref, BSTR * old );
+	VARIANT * ccom_ec_pointed_record_231( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert ECOM_VARIANT to VARIANT *.
 	-----------------------------------------------------------*/
-	VARIANT * ccom_ec_pointed_record_238( EIF_REFERENCE eif_ref );
+	VARIANT * ccom_ec_pointed_record_232( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert ECOM_VARIANT to VARIANT *.
 	-----------------------------------------------------------*/
-	VARIANT * ccom_ec_pointed_record_239( EIF_REFERENCE eif_ref );
-
-
-	/*-----------------------------------------------------------
-	Convert ECOM_VARIANT to VARIANT *.
-	-----------------------------------------------------------*/
-	VARIANT * ccom_ec_pointed_record_240( EIF_REFERENCE eif_ref );
+	VARIANT * ccom_ec_pointed_record_233( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocEvents *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelHTMLDocEvents * ccom_ec_pointed_interface_245( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelHTMLDocEvents * ccom_ec_pointed_interface_238( EIF_REFERENCE eif_ref );
 
 
 

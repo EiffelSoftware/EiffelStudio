@@ -197,7 +197,7 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of subclusters (list of IEiffelClusterProperties*).
+	List subclusters (list of IEiffelClusterProperties*).
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_subclusters(  );
 

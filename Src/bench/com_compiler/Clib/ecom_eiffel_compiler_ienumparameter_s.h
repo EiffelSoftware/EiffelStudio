@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumParameter_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumParameter : public IUnknown
+class IEnumParameter : public IDispatch
 {
 public:
 	IEnumParameter () {};

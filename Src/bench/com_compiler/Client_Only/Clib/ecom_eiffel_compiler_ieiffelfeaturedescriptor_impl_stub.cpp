@@ -5,7 +5,9 @@ Implemented `IEiffelFeatureDescriptor' Interface.
 #include "ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_stub.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelFeatureDescriptor_ = {0x2cb5c09a,0x2222,0x42f7,{0x93,0x71,0x39,0x8f,0xb7,0x1e,0xbb,0x93}};
+static const IID IID_IEiffelFeatureDescriptor_ = {0x75550181,0x6a69,0x43d5,{0xaa,0x40,0x51,0xee,0xc3,0xe2,0xd1,0x9f}};
+
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +19,7 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::IEiffelFeatureDescript
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	pTypeInfo = 0;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,6 +30,8 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::~IEiffelFeatureDescrip
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	if (pTypeInfo)
+		pTypeInfo->Release ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -229,7 +234,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::parameter
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*params = grt_ec_ISE_c.ccom_ec_pointed_interface_89 (eif_access (tmp_object));
+		*params = grt_ec_ISE_c.ccom_ec_pointed_interface_94 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -281,7 +286,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	EIF_OBJECT tmp_file_path = NULL;
 	if (file_path != NULL)
 	{
-		tmp_file_path = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_92 (file_path, NULL));
+		tmp_file_path = eif_protect (grt_ce_ISE_c.ccom_ce_pointed_cell_97 (file_path, NULL));
 	}
 	EIF_OBJECT tmp_line_number = NULL;
 	if (line_number != NULL)
@@ -296,7 +301,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	
 	if (*file_path != NULL)
 		rt_ce.free_memory_bstr (*file_path);
-	grt_ec_ISE_c.ccom_ec_pointed_cell_92 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
+	grt_ec_ISE_c.ccom_ec_pointed_cell_97 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
 	
 	END_ECATCH;
@@ -323,7 +328,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_calle
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -376,7 +381,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_cal
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -429,7 +434,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -482,7 +487,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implement
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -535,7 +540,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -588,7 +593,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE_c.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -967,6 +972,112 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::has_postc
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
+
+/*-----------------------------------------------------------
+	Get type info
+-----------------------------------------------------------*/
+{
+	if ((itinfo != 0) || (pptinfo == NULL))
+		return E_INVALIDARG;
+	*pptinfo = NULL;
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelFeatureDescriptor_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	(*pptinfo = pTypeInfo)->AddRef ();
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::GetTypeInfoCount( unsigned int * pctinfo )
+
+/*-----------------------------------------------------------
+	Get type info count
+-----------------------------------------------------------*/
+{
+	if (pctinfo == NULL)
+		return E_NOTIMPL;
+	*pctinfo = 1;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
+
+/*-----------------------------------------------------------
+	IDs of function names 'rgszNames'
+-----------------------------------------------------------*/
+{
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelFeatureDescriptor_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	return pTypeInfo->GetIDsOfNames (rgszNames, cNames, rgdispid);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
+
+/*-----------------------------------------------------------
+	Invoke function.
+-----------------------------------------------------------*/
+{
+	HRESULT hr = 0;
+	int i = 0;
+
+	unsigned int uArgErr;
+	if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+		return ResultFromScode (E_INVALIDARG);
+
+	if (puArgErr == NULL)
+		puArgErr = &uArgErr;
+
+	VARIANTARG * rgvarg = pDispParams->rgvarg;
+	DISPID * rgdispidNamedArgs = pDispParams->rgdispidNamedArgs;
+	unsigned int cArgs = pDispParams->cArgs;
+	unsigned int cNamedArgs = pDispParams->cNamedArgs;
+	VARIANTARG ** tmp_value = NULL;
+
+	if (pExcepInfo != NULL)
+	{
+		pExcepInfo->wCode = 0;
+		pExcepInfo->wReserved = 0;
+		pExcepInfo->bstrSource = NULL;
+		pExcepInfo->bstrDescription = NULL;
+		pExcepInfo->bstrHelpFile = NULL;
+		pExcepInfo->dwHelpContext = 0;
+		pExcepInfo->pvReserved = NULL;
+		pExcepInfo->pfnDeferredFillIn = NULL;
+		pExcepInfo->scode = 0;
+	}
+	
+	switch (dispID)
+	{
+		
+		default:
+			return DISP_E_MEMBERNOTFOUND;
+	}
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::Release()
 
 /*-----------------------------------------------------------
@@ -976,6 +1087,11 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::R
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
+		if (pTypeInfo !=NULL)
+		{
+			pTypeInfo->Release ();
+			pTypeInfo = NULL;
+		}
 		delete this;
 	}
 	return res;
@@ -999,6 +1115,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::QueryInte
 -----------------------------------------------------------*/
 {
 	if (riid == IID_IUnknown)
+		*ppv = static_cast<ecom_eiffel_compiler::IEiffelFeatureDescriptor*>(this);
+	else if (riid == IID_IDispatch)
 		*ppv = static_cast<ecom_eiffel_compiler::IEiffelFeatureDescriptor*>(this);
 	else if (riid == IID_IEiffelFeatureDescriptor_)
 		*ppv = static_cast<ecom_eiffel_compiler::IEiffelFeatureDescriptor*>(this);

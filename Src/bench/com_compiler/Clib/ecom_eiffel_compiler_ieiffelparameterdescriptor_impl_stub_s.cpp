@@ -7,6 +7,8 @@ static int return_hr_value;
 
 static const IID IID_IEiffelParameterDescriptor_ = {0x7857e992,0xd5eb,0x434b,{0x9d,0x21,0xec,0x3e,0x4f,0xf0,0x05,0x8f}};
 
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,6 +19,7 @@ ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::IEiffelParameterDesc
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
+	pTypeInfo = 0;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,6 +30,8 @@ ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::~IEiffelParameterDes
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
+	if (pTypeInfo)
+		pTypeInfo->Release ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -90,6 +95,112 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::display
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
+
+/*-----------------------------------------------------------
+	Get type info
+-----------------------------------------------------------*/
+{
+	if ((itinfo != 0) || (pptinfo == NULL))
+		return E_INVALIDARG;
+	*pptinfo = NULL;
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelParameterDescriptor_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	(*pptinfo = pTypeInfo)->AddRef ();
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::GetTypeInfoCount( unsigned int * pctinfo )
+
+/*-----------------------------------------------------------
+	Get type info count
+-----------------------------------------------------------*/
+{
+	if (pctinfo == NULL)
+		return E_NOTIMPL;
+	*pctinfo = 1;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
+
+/*-----------------------------------------------------------
+	IDs of function names 'rgszNames'
+-----------------------------------------------------------*/
+{
+	if (pTypeInfo == 0)
+	{
+		HRESULT tmp_hr = 0;
+		ITypeLib *pTypeLib = 0;
+		tmp_hr = LoadRegTypeLib (LIBID_eiffel_compiler_, 0, 0, 0, &pTypeLib);
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelParameterDescriptor_, &pTypeInfo);
+		pTypeLib->Release ();
+		if (FAILED(tmp_hr))
+			return tmp_hr;
+	}
+	return pTypeInfo->GetIDsOfNames (rgszNames, cNames, rgdispid);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
+
+/*-----------------------------------------------------------
+	Invoke function.
+-----------------------------------------------------------*/
+{
+	HRESULT hr = 0;
+	int i = 0;
+
+	unsigned int uArgErr;
+	if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+		return ResultFromScode (E_INVALIDARG);
+
+	if (puArgErr == NULL)
+		puArgErr = &uArgErr;
+
+	VARIANTARG * rgvarg = pDispParams->rgvarg;
+	DISPID * rgdispidNamedArgs = pDispParams->rgdispidNamedArgs;
+	unsigned int cArgs = pDispParams->cArgs;
+	unsigned int cNamedArgs = pDispParams->cNamedArgs;
+	VARIANTARG ** tmp_value = NULL;
+
+	if (pExcepInfo != NULL)
+	{
+		pExcepInfo->wCode = 0;
+		pExcepInfo->wReserved = 0;
+		pExcepInfo->bstrSource = NULL;
+		pExcepInfo->bstrDescription = NULL;
+		pExcepInfo->bstrHelpFile = NULL;
+		pExcepInfo->dwHelpContext = 0;
+		pExcepInfo->pvReserved = NULL;
+		pExcepInfo->pfnDeferredFillIn = NULL;
+		pExcepInfo->scode = 0;
+	}
+	
+	switch (dispID)
+	{
+		
+		default:
+			return DISP_E_MEMBERNOTFOUND;
+	}
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::Release()
 
 /*-----------------------------------------------------------
@@ -100,6 +211,11 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub:
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
+		if (pTypeInfo !=NULL)
+		{
+			pTypeInfo->Release ();
+			pTypeInfo = NULL;
+		}
 		delete this;
 	}
 	return res;
@@ -124,6 +240,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelParameterDescriptor_impl_stub::QueryIn
 -----------------------------------------------------------*/
 {
 	if (riid == IID_IUnknown)
+		*ppv = static_cast<ecom_eiffel_compiler::IEiffelParameterDescriptor*>(this);
+	else if (riid == IID_IDispatch)
 		*ppv = static_cast<ecom_eiffel_compiler::IEiffelParameterDescriptor*>(this);
 	else if (riid == IID_IEiffelParameterDescriptor_)
 		*ppv = static_cast<ecom_eiffel_compiler::IEiffelParameterDescriptor*>(this);

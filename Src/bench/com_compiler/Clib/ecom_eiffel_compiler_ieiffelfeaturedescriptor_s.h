@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelFeatureDescriptor_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelFeatureDescriptor : public IUnknown
+class IEiffelFeatureDescriptor : public IDispatch
 {
 public:
 	IEiffelFeatureDescriptor () {};

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Object File Enumeration.  Help file: 
+Object File Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMOBJECTFILES_H__
@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumObjectFiles_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumObjectFiles : public IUnknown
+class IEnumObjectFiles : public IDispatch
 {
 public:
 	IEnumObjectFiles () {};

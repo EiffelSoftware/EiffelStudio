@@ -27,21 +27,11 @@ class IEiffelSystemAssemblies;
 extern "C" {
 #endif
 
-#ifndef __ecom_eiffel_compiler_IEiffelAssemblyProperties_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEiffelAssemblyProperties_FWD_DEFINED__
+#ifndef __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelException_FWD_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelAssemblyProperties;
-}
-#endif
-
-
-
-#ifndef __ecom_eiffel_compiler_IEnumAssembly_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEnumAssembly_FWD_DEFINED__
-namespace ecom_eiffel_compiler
-{
-class IEnumAssembly;
+class IEiffelException;
 }
 #endif
 
@@ -60,81 +50,27 @@ public:
 	~IEiffelSystemAssemblies () {};
 
 	/*-----------------------------------------------------------
+	Wipe out current list of assemblies
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP wipe_out( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Add an assembly to the project.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP add_assembly(  /* [in] */ BSTR a_prefix, /* [in] */ BSTR a_cluster_name, /* [in] */ BSTR a_path, /* [in] */ VARIANT_BOOL a_copy ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Last execption to occur
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP last_exception(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelException * * p_exception ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Save changes.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP store( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Add a signed assembly to the project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Add a local assembly to the project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_local_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_path ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Remove an assembly from the project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_assembly(  /* [in] */ BSTR assembly_identifier ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Assembly properties.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_properties(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelAssemblyProperties * * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a assembly cluster name is valid
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_valid_cluster_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a assembly cluster name has already been added to the project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP contains_assembly(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a signed assembly has already been added to the project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP contains_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a unsigned assembly has already been added to the project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP contains_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Retrieves the cluster name for a signed assembly in the project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_name_from_gac_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Retrieves the cluster name for a unsigned assembly in the project
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_name_from_local_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Is 'prefix' a valid assembly prefix
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_valid_prefix(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Returns all of the assemblies in an enumerator
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumAssembly * * return_value ) = 0;
 
 
 

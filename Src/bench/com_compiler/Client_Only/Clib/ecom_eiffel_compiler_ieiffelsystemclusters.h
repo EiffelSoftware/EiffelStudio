@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel System Clusters.  Help file: 
+Eiffel System Clusters. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMCLUSTERS_H__

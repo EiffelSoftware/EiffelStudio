@@ -12,106 +12,32 @@ inherit
 
 feature -- Access
 
-	assemblies: IENUM_ASSEMBLY_INTERFACE is
-			-- Returns all of the assemblies in an enumerator
+	last_exception: IEIFFEL_EXCEPTION_INTERFACE is
+			-- Last execption to occur
 		do
 			-- Put Implementation here.
 		end
 
 feature -- Basic Operations
 
+	wipe_out is
+			-- Wipe out current list of assemblies
+		do
+			-- Put Implementation here.
+		end
+
+	add_assembly (a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN) is
+			-- Add an assembly to the project.
+			-- `a_prefix' [in].  
+			-- `a_cluster_name' [in].  
+			-- `a_path' [in].  
+			-- `a_copy' [out].  
+		do
+			-- Put Implementation here.
+		end
+
 	store is
 			-- Save changes.
-		do
-			-- Put Implementation here.
-		end
-
-	add_assembly (assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
-			-- Add a signed assembly to the project.
-			-- `assembly_prefix' [in].  
-			-- `cluster_name' [in].  
-			-- `a_name' [in].  
-			-- `a_version' [in].  
-			-- `a_culture' [in].  
-			-- `a_publickey' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	add_local_assembly (assembly_prefix: STRING; cluster_name: STRING; a_path: STRING) is
-			-- Add a local assembly to the project.
-			-- `assembly_prefix' [in].  
-			-- `cluster_name' [in].  
-			-- `a_path' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	remove_assembly (assembly_identifier: STRING) is
-			-- Remove an assembly from the project.
-			-- `assembly_identifier' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	assembly_properties (cluster_name: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
-			-- Assembly properties.
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	is_valid_cluster_name (cluster_name: STRING): BOOLEAN is
-			-- Checks to see if a assembly cluster name is valid
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	contains_assembly (cluster_name: STRING): BOOLEAN is
-			-- Checks to see if a assembly cluster name has already been added to the project
-			-- `cluster_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	contains_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
-			-- Checks to see if a signed assembly has already been added to the project
-			-- `a_name' [in].  
-			-- `a_version' [in].  
-			-- `a_culture' [in].  
-			-- `a_publickey' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	contains_local_assembly (a_path: STRING): BOOLEAN is
-			-- Checks to see if a unsigned assembly has already been added to the project
-			-- `a_path' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	cluster_name_from_gac_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
-			-- Retrieves the cluster name for a signed assembly in the project
-			-- `a_name' [in].  
-			-- `a_version' [in].  
-			-- `a_culture' [in].  
-			-- `a_publickey' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	cluster_name_from_local_assembly (a_path: STRING): STRING is
-			-- Retrieves the cluster name for a unsigned assembly in the project
-			-- `a_path' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	is_valid_prefix (assembly_prefix: STRING): BOOLEAN is
-			-- Is 'prefix' a valid assembly prefix
-			-- `assembly_prefix' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumClusterProp_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumClusterProp : public IUnknown
+class IEnumClusterProp : public IDispatch
 {
 public:
 	IEnumClusterProp () {};

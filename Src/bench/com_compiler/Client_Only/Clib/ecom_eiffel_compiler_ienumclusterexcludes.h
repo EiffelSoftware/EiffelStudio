@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Exluded Directories Enumeration.  Help file: 
+Eiffel Cluster Exluded Directories Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMCLUSTEREXCLUDES_H__
@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumClusterExcludes_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumClusterExcludes : public IUnknown
+class IEnumClusterExcludes : public IDispatch
 {
 public:
 	IEnumClusterExcludes () {};

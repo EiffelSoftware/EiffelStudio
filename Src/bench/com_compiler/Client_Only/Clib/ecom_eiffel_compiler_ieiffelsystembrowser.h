@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-System Browser.  Help file: 
+System Browser. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMBROWSER_H__
@@ -103,7 +103,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelSystemBrowser_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelSystemBrowser : public IUnknown
+class IEiffelSystemBrowser : public IDispatch
 {
 public:
 	IEiffelSystemBrowser () {};

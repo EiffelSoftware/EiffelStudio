@@ -25,7 +25,7 @@ feature -- Access
 	eif_exceptions_unable_to_remove_project: INTEGER is 5
 			-- No description available.
 
-	eif_exceptions_unable_to_create_project: INTEGER is 5
+	eif_exceptions_unable_to_create_project: INTEGER is 6
 			-- No description available.
 
 	eif_exceptions_invalid_ace_file: INTEGER is 7
@@ -47,6 +47,12 @@ feature -- Access
 			-- No description available.
 
 	eif_exceptions_non_dotnet_project: INTEGER is 13
+			-- No description available.
+
+	eif_exceptions_assembly_already_added: INTEGER is 14
+			-- No description available.
+
+	eif_exceptions_invalid_assembly_prefix: INTEGER is 15
 			-- No description available.
 
 end -- ECOM_EIF_EXCEPTIONS_ENUM

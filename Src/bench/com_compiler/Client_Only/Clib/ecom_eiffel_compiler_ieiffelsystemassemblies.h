@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel System Assemblies.  Help file: 
+Eiffel System Assemblies. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMASSEMBLIES_H__

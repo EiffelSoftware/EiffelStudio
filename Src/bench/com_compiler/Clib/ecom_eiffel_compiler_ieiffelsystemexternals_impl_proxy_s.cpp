@@ -35,15 +35,60 @@ ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::IEiffelSystemExternals_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
+	excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
+	if (excepinfo != NULL)
+		memset (excepinfo, '\0', sizeof (EXCEPINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::~IEiffelSystemExternals_impl_proxy()
 {
 	p_unknown->Release ();
+	
+	CoTaskMemFree ((void *)excepinfo);
 	if (p_IEiffelSystemExternals!=NULL)
 		p_IEiffelSystemExternals->Release ();
 	CoUninitialize ();
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_code()
+
+/*-----------------------------------------------------------
+	Last error code
+-----------------------------------------------------------*/
+{
+	return (EIF_INTEGER) excepinfo->wCode;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_source_of_exception()
+
+/*-----------------------------------------------------------
+	Last source of exception
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrSource);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_description()
+
+/*-----------------------------------------------------------
+	Last error description
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrDescription);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_help_file()
+
+/*-----------------------------------------------------------
+	Last error help file
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrHelpFile);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -204,7 +249,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_incl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_218 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_218 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -339,7 +384,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_obje
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_221 (ret_value));
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_221 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

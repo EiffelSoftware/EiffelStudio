@@ -162,6 +162,30 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Get type info
+	-----------------------------------------------------------*/
+	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );
+
+
+	/*-----------------------------------------------------------
+	Get type info count
+	-----------------------------------------------------------*/
+	STDMETHODIMP GetTypeInfoCount( unsigned int * pctinfo );
+
+
+	/*-----------------------------------------------------------
+	IDs of function names 'rgszNames'
+	-----------------------------------------------------------*/
+	STDMETHODIMP GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid );
+
+
+	/*-----------------------------------------------------------
+	Invoke function.
+	-----------------------------------------------------------*/
+	STDMETHODIMP Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr );
+
+
+	/*-----------------------------------------------------------
 	EnumConnectionPoints of IConnectionPointContainer.
 	-----------------------------------------------------------*/
 	STDMETHODIMP EnumConnectionPoints( /* [out] */ IEnumConnectionPoints ** ppEnum );
@@ -230,6 +254,12 @@ private:
 	Connection point implemntation for Source Interface IEiffelCompilerEvents.
 	-----------------------------------------------------------*/
 	ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler * p_ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler;
+
+
+	/*-----------------------------------------------------------
+	Type information
+	-----------------------------------------------------------*/
+	ITypeInfo * pTypeInfo;
 
 
 

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Assembly Enumeration.  Help file: 
+Eiffel Assembly Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMASSEMBLY_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumAssembly_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumAssembly : public IUnknown
+class IEnumAssembly : public IDispatch
 {
 public:
 	IEnumAssembly () {};

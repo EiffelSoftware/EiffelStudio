@@ -43,7 +43,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEnumClusterExcludes_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEnumClusterExcludes : public IUnknown
+class IEnumClusterExcludes : public IDispatch
 {
 public:
 	IEnumClusterExcludes () {};

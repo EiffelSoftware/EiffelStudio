@@ -22,9 +22,7 @@ class IEiffelSystemAssemblies_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelSystemAssemblies_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelAssemblyProperties_s.h"
-
-#include "ecom_eiffel_compiler_IEnumAssembly_s.h"
+#include "ecom_eiffel_compiler_IEiffelException_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,81 +63,27 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Wipe out current list of assemblies
+	-----------------------------------------------------------*/
+	void ccom_wipe_out();
+
+
+	/*-----------------------------------------------------------
+	Add an assembly to the project.
+	-----------------------------------------------------------*/
+	void ccom_add_assembly(  /* [in] */ EIF_OBJECT a_prefix,  /* [in] */ EIF_OBJECT a_cluster_name,  /* [in] */ EIF_OBJECT a_path,  /* [in] */ EIF_BOOLEAN a_copy );
+
+
+	/*-----------------------------------------------------------
+	Last execption to occur
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_exception(  );
+
+
+	/*-----------------------------------------------------------
 	Save changes.
 	-----------------------------------------------------------*/
 	void ccom_store();
-
-
-	/*-----------------------------------------------------------
-	Add a signed assembly to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
-
-
-	/*-----------------------------------------------------------
-	Add a local assembly to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_local_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT a_path );
-
-
-	/*-----------------------------------------------------------
-	Remove an assembly from the project.
-	-----------------------------------------------------------*/
-	void ccom_remove_assembly(  /* [in] */ EIF_OBJECT assembly_identifier );
-
-
-	/*-----------------------------------------------------------
-	Assembly properties.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_properties(  /* [in] */ EIF_OBJECT cluster_name );
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a assembly cluster name is valid
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_valid_cluster_name(  /* [in] */ EIF_OBJECT cluster_name );
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a assembly cluster name has already been added to the project
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_assembly(  /* [in] */ EIF_OBJECT cluster_name );
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a signed assembly has already been added to the project
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
-
-
-	/*-----------------------------------------------------------
-	Checks to see if a unsigned assembly has already been added to the project
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_local_assembly(  /* [in] */ EIF_OBJECT a_path );
-
-
-	/*-----------------------------------------------------------
-	Retrieves the cluster name for a signed assembly in the project
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_name_from_gac_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
-
-
-	/*-----------------------------------------------------------
-	Retrieves the cluster name for a unsigned assembly in the project
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_name_from_local_assembly(  /* [in] */ EIF_OBJECT a_path );
-
-
-	/*-----------------------------------------------------------
-	Is 'prefix' a valid assembly prefix
-	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_valid_prefix(  /* [in] */ EIF_OBJECT assembly_prefix );
-
-
-	/*-----------------------------------------------------------
-	Returns all of the assemblies in an enumerator
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assemblies(  );
 
 
 	/*-----------------------------------------------------------

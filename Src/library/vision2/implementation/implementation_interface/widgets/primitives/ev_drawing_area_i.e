@@ -41,11 +41,28 @@ feature -- Event - command association
 		deferred
 		end
 
+	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
 feature -- Event - command removal
 
 	remove_resize_commands is
 			-- Remove the list of commands to be executed when
 			-- current area is resized.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	remove_paint_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn.
 		require
 			exists: not destroyed
 		deferred

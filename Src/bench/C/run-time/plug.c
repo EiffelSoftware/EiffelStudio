@@ -43,11 +43,6 @@ rt_public void discard_breakpoints(void);
 rt_public void undiscard_breakpoints(void);
 #endif
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="nstcall" return_type="int" export="public">
@@ -122,12 +117,12 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	long nbr_attr, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
-	register5 long *offsets;
+	long *offsets;
 #else
-	register6 int32 *rout_ids;
+	int32 *rout_ids;
 	long offset;
 #endif
-	register7 char** attr_names;
+	char** attr_names;
 	int i;
 	char found;
 	uint32 type, *types;
@@ -247,7 +242,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	return array;
 }
 
-rt_public EIF_REFERENCE makestr(register char *s, register int len)
+rt_public EIF_REFERENCE makestr(register char *s, register size_t len)
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -256,7 +251,7 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 	return makestr_with_hash (s, len, 0);
 }
 
-rt_public EIF_REFERENCE makestr_with_hash (register char *s, register int len, register int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash (register char *s, register size_t len, register int a_hash)
 	/* Makes an Eiffel STRING object from a C string with precomputed hash code value `a_hash'.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -295,7 +290,7 @@ rt_public EIF_REFERENCE makestr_with_hash (register char *s, register int len, r
 doc:	<routine name="makestr_with_hash_as_old" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Makes an Eiffel STRING object from a C string with precomputed hash code value `a_hash'. The Eiffel object is allocated as an old object as we know it will last for the complete execution of the system. It is mostly used for once manifest strings so that the GC only mark the object while doing a full collection, not for the small collections.</summary>
 doc:		<param name="s" type="char *">C string used to create the Eiffel string.</param>
-doc:		<param name="len" type="int">Length of the C string `s'.</param>
+doc:		<param name="len" type="size_t">Length of the C string `s'.</param>
 doc:		<param name="a_hash" type="int">Hashcode of `s'.</param>
 doc:		<return>A newly allocated string with the same content as `s' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -304,7 +299,7 @@ doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register int len, register int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register size_t len, register int a_hash)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
@@ -523,7 +518,7 @@ void init_exp (EIF_REFERENCE obj)
 	}
 #else
 	int dtype = Dtype(obj);
-	register1 struct cnode *exp_desc;	/* Expanded object description */
+	struct cnode *exp_desc;	/* Expanded object description */
 	exp_desc = &System(Dtype(obj));
 
 	if (exp_desc->cn_routids) {
@@ -598,7 +593,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			{
 			struct cnode *exp_desc;			/* Expanded object description */
 			/* char *OLD_IC; */ /* %%ss removed */
-			long exp_offset;				/* Attribute offset */
+			uint32 exp_offset;				/* Attribute offset */
 			int orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
 			int16 *cid, dftype;
 
@@ -619,7 +614,8 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			zone = HEADER(obj + exp_offset);
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = exp_offset + (obj - parent);
+			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
+			zone->ov_size = exp_offset + (uint32) (obj - parent);
 
 			/* If expanded object is composite also, initialize it. */
 			if (EIF_IS_COMPOSITE_TYPE(System(orig_exp_dtype))) {
@@ -647,14 +643,15 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			break;
 		case SK_BIT:
 			{
-			long offset;					/* Attribute offset */
+			uint32 offset;					/* Attribute offset */
 		
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(obj + offset);
 			zone->ov_flags = egc_bit_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = offset + (obj - parent);
+			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
+			zone->ov_size = offset + (uint32) (obj - parent);
 			
 			*(uint32 *)(obj + offset) = type & SK_BMASK; /* Write bit size */
 

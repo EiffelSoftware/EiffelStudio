@@ -250,7 +250,6 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 						 omap: ARRAY [INTEGER]) is
 			-- Initialize object. 
 		require
-			handle_not_void: handle /= Void
 			args_not_void: args /= Void
 		local
 			i, nb: INTEGER

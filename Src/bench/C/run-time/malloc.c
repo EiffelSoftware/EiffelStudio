@@ -1198,9 +1198,11 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_fla
 		return result;
 	}
 }
-#endif
 
 rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
+#else
+rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
+#endif
 						/* Number of bytes requested */
 		 				/* Type of block */
 						/* Garbage collector on/off */

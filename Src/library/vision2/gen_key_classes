@@ -57,7 +57,7 @@ while (<>) {
 		# Create GTK-code with GDK external.
 		$gtk_code = shift (@fields);
 		$gdk_ext = $gtk_code;
-		$gdk_ext =~ tr/[a-z]/[A-Z]/;
+		$gtk_code =~ tr/[A-Z]/[a-z]/;
 		$gtk_code = "$gtk_code\_enum";
 		
 		$wel_code = shift (@fields);
@@ -81,7 +81,7 @@ while (<>) {
 		$eif_statement = "$identifier: INTEGER is unique";
 		$key_constants = "$key_constants\n\t$eif_statement\n\t\t\t$comment\n";
 
-		$eif_statement = "\t$gtk_code: INTEGER is\n\t\texternal\n\t\t\t\"C [macro <gdk/gdkkeysyms.h>]\"\n\t\talias\n\t\t\t\"$gdk_ext\"\n\t\tend\n";
+		$eif_statement = "\n\t$gtk_code: INTEGER is\n\t\texternal\n\t\t\t\"C [macro <gdk/gdkkeysyms.h>]\"\n\t\talias\n\t\t\t\"$gdk_ext\"\n\t\tend";
 		$gdk_externals = "$gdk_externals$eif_statement\n";
 	}
 }
@@ -179,6 +179,7 @@ feature -- Contract support
 			-- Is ``a_wel_code'' valid?
 		do
 			Result := True
+			--| FIXME To be implemented
 		end
 
 feature {NONE} -- Implementation
@@ -254,6 +255,7 @@ feature -- Contract support
 			-- Is ``a_gtk_code'' valid?
 		do
 			Result := True
+			--| FIXME To be implemented
 		end
 
 feature {NONE} -- Implementation
@@ -267,7 +269,7 @@ $v2_to_gtk_array		end
 	gtk_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- Vision2 keycodes indexed by GTK key code.
 		once
-		create Result.make (10)
+			create Result.make (10)
 $gtk_to_v2_array		end
 
 feature {NONE} -- Externals
@@ -297,6 +299,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.5  2000/03/17 18:07:03  brendel
+# Fixed cosmetics in generated code.
+#
 # Revision 1.4  2000/03/17 17:41:01  brendel
 # Fixed compiler errors in generated code.
 # Defined GDK externals in EV_GTK_KEY_CONVERSION.

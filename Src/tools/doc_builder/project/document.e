@@ -6,14 +6,8 @@ indexing
 class
 	DOCUMENT
 
-inherit
-	OBSERVED
-	
+inherit	
 	SHARED_OBJECTS
-		undefine 
-			copy,
-			default_create
-		end
 	
 	UTILITY_FUNCTIONS
 		undefine 
@@ -21,9 +15,7 @@ inherit
 			default_create
 		end
 	
-	XML_ROUTINES
-		rename
-			is_valid_xml as is_valid_xml_text
+	XML_ROUTINES		
 		undefine 
 			copy,
 			default_create		
@@ -39,11 +31,11 @@ feature -- Creation
 			-- Make new document
 		require
 			a_name_not_void: a_name /= Void
-		do
-			initialize
+		do			
 			name := a_name
 			create text.make_empty
 			create saved_text.make_empty
+			create schema_validator	
 		end
 		
 	make_from_file (a_file: PLAIN_TEXT_FILE) is
@@ -55,20 +47,10 @@ feature -- Creation
 			name := a_file.name
 			file := a_file
 			read
-			initialize
+			create schema_validator	
 		ensure
 			has_file: file /= Void
 		end		
-			
-	initialize is
-			-- Initialization
-		do		
-			create schema_validator	
-			if shared_constants.application_constants.is_gui_mode then				
-				attach (application_window)	
-			end
---			attach (shared_web_browser)
-		end
 
 feature -- Access	
 	
@@ -78,6 +60,9 @@ feature -- Access
 	text: STRING
 			-- Text			
 
+	widget: TEXT_PANEL_HEADER_ITEM
+			-- Widget representing Current in editor, if any
+
 feature -- File
 
 	file: PLAIN_TEXT_FILE
@@ -85,32 +70,16 @@ feature -- File
 
 feature --Validation
 
-	error_report: ERROR_REPORT
-			-- Validation error string
-		
 	is_valid_to_schema: BOOLEAN is
 			-- Is Current valid to the loaded schema?
 		do
-			if is_valid_xml then
+			if is_valid_xml (text) then
 				if shared_document_manager.has_schema then
 					schema_validator.validate_against_text (text, Shared_document_manager.schema.name)
 				end				
-				Result := schema_validator.is_valid
-				if not Result then
-					error_report := schema_validator.error_report	
-				end			
+				Result := schema_validator.is_valid					
 			end
-		end
-
-	is_valid_xml: BOOLEAN is
-			-- Valid XML?		
-		do
-			Result := xml /= Void			
-			if not Result then
-				create error_report.make ("Invalid Document")
-				error_report.append_error (create {ERROR}.make ("Document is not valid XML"))
-			end
-		end		
+		end	
 		
 feature -- XML
 
@@ -184,15 +153,6 @@ feature -- XML
 		end		
 			
 feature -- GUI
-	
-	widget: DOCUMENT_WIDGET is
-			-- Widget
-		do
-			if internal_widget = Void then
-				create internal_widget.make (Current)
-			end
-			Result := internal_widget
-		end
 
 	properties: DOCUMENT_PROPERTIES_DIALOG is
 			-- Properties dialog for Current
@@ -207,8 +167,8 @@ feature -- Query
 	is_modified: BOOLEAN is
 			-- Has current been modified since last save?
 		do
-			if internal_widget /= Void then
-				Result := not saved_text.is_equal (internal_widget.internal_edit_widget.text)
+			if widget /= Void and widget.data /= Void then
+				Result := not saved_text.is_equal (widget.data)
 			else				
 				Result := not saved_text.is_equal (text)	
 			end
@@ -258,11 +218,20 @@ feature -- Status Setting
 			end
 		end		
 
+	set_widget (a_widget: like widget) is
+			-- Set `widget'
+		require
+			widget_not_void: widget /= Void
+		do
+			widget := a_widget
+		ensure
+			widget_set: widget = a_widget
+		end		
+
 	set_text (a_text: STRING) is
 			-- Set `text'
 		do			
 			text := a_text
-			notify_observers
 		end
 
 	save is
@@ -296,10 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_xml: like xml
-			-- Internal XML
-			
-	internal_widget: like widget
-			-- Widget
+			-- Internal XML			
 			
 	saved_text: STRING
 			-- Last saved text value
@@ -314,7 +280,6 @@ feature {NONE} -- Implementation
 				name := a_filename
 			end
 			write_to_disk
-			notify_observers
 			internal_xml := Void
 		end		
 

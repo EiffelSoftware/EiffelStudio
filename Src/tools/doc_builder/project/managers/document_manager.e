@@ -39,7 +39,7 @@ feature -- Schema
 			if schema.is_valid then
 				set_schema (schema)
 			else				
-				schema.validator.error_report.show
+				shared_error_reporter.show
 				set_schema (Void)				
 			end
 		end
@@ -162,22 +162,12 @@ feature -- Document Manipulation
 				editor.load_document (document)
 			end		
 		end
-
+		
 	load_image_document (a_filename: STRING) is
-			-- Load document as image
+			-- Load image
 		local
-			l_container: EV_VERTICAL_BOX
-			l_button: EV_BUTTON
-			l_pixmap: EV_PIXMAP
 		do
-			create l_container
-			create l_pixmap
-			create l_button
-			l_button.set_background_color ((create {EV_STOCK_COLORS}).white)
-			l_container.extend (l_button)
-			l_pixmap.set_with_named_file (a_filename)			
-			l_button.set_pixmap (l_pixmap)
-			editor.notebook.extend (l_container)
+			--not implemented
 		end
 
 feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONTENTS} -- Document Manipulation

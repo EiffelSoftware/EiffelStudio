@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 	in_pre_tag: BOOLEAN is
 			-- Are we inside a tag which should be treated as a pre tag?
 		do
-			Result := Previous_elements.has ("code_block")
+			Result := Previous_elements.has ("code_block") or previous_elements.has ("code")
 		end
 
 	restore_attribute_value: INTEGER

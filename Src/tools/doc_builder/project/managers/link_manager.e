@@ -29,16 +29,18 @@ feature -- Commands
 		local
 			l_link: DOCUMENT_LINK
 			l_links: like document_links
+			l_xml_routines: XML_ROUTINES
 		do
 			if documents /= Void then
 				invalid_links.wipe_out
 				invalid_files.wipe_out
+				create l_xml_routines
 				from
 					documents.start
 				until
 					documents.after
 				loop
-					if documents.item.is_valid_xml then					
+					if l_xml_routines.is_valid_xml (documents.item.text) then					
 						l_links := document_links (documents.item)
 						if not l_links.is_empty then
 							from
@@ -150,7 +152,6 @@ feature -- Access
 			-- Retrieved links from `a_doc', if any
 		require
 			document_not_void: a_doc /= Void
-			document_valid: a_doc.is_valid_xml
 		local
 			l_formatter: XM_LINK_FORMATTER
 		do
@@ -165,7 +166,6 @@ feature -- Access
 			-- Retrieved images from `a_doc', if any
 		require
 			document_not_void: a_doc /= Void
-			document_valid: a_doc.is_valid_xml
 		local
 			l_formatter: XM_LINK_FORMATTER
 		do

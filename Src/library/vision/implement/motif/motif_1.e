@@ -246,6 +246,12 @@ oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_M is
 			!! Result.make (a_text_field, managed, oui_parent)
 		end; 
 
+    password (a_password: PASSWORD; managed: BOOLEAN; oui_parent: COMPOSITE): PASSWORD_M is
+            -- Motif implementation of `a_password'
+        do
+            !! Result.make (a_password, managed, oui_parent)
+        end; 
+
 	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN; oui_parent: COMPOSITE): TOGGLE_B_M is
 			-- Motif implementation of `a_toggle_b'
 		do

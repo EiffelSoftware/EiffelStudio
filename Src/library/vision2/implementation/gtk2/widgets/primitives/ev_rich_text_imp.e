@@ -33,6 +33,16 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_IMP}
 		end
 
+	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a caret move action sequence.
+		do
+		end
+			
+	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a selection change action sequence.
+		do
+		end
+
 feature -- Status Report
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -138,6 +148,12 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_current_format (format: EV_CHARACTER_FORMAT) is
+			-- apply `format' to current caret position, applicable
+			-- to next typed characters.
+		do
+		end
 		
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.

@@ -18,8 +18,6 @@ creation
 
 feature {NONE} -- Initialization
 
-xxxxxx: WEL_COMMAND_LIST
-
 	make is
 			-- Create the main dialog and the commands.
 		local

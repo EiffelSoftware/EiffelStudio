@@ -19,6 +19,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_generic_interface
 {
 	public:
@@ -32,5 +36,9 @@ class E_generic_interface
 	private:
 		IUnknown * item;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_GENERIC_INTERFACE_H_INC__

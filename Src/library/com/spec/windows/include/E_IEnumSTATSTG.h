@@ -19,6 +19,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_IEnumSTATSTG
 {
 public:
@@ -32,8 +36,10 @@ public:
 	IEnumSTATSTG * ccom_item();
 private:
 	IEnumSTATSTG * pIEnum;
-
-
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_IENUM_STATSTG_H_INC__

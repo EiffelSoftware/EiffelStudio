@@ -19,7 +19,7 @@
 #include <OBJBASE.H>
 #include <OBJIDL.H>
 #include <oleauto.h>
-
+#include <OLECTL.H>
 
 #endif // !__EIF_COM_H_INC__
 

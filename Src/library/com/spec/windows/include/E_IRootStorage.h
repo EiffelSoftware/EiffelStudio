@@ -18,6 +18,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_IRootStorage
 {
 public:
@@ -32,5 +36,9 @@ public:
 private:	
 	IRootStorage * pIRootStorage;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_IROOT_STORAGE_H_INC__

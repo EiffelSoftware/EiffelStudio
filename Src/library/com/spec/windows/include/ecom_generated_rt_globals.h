@@ -17,7 +17,15 @@
 #include "ecom_generated_ce.h"
 #include "objbase.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern ecom_generated_ec rt_generated_ec;
 extern ecom_generated_ce rt_generated_ce;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_GENERATED_RUNTIME_GLOBALS_H_INC__

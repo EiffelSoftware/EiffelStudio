@@ -20,6 +20,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_IStream
 {
 public:
@@ -54,4 +58,9 @@ public:
 private:
 	IStream * pStream;
 };
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // !__ECOM_E_ISTREAM_H_INC__

@@ -17,6 +17,10 @@
 #include <stdlib.h> 
 #include <malloc.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class E_STATSTG
 {
 public:
@@ -37,7 +41,10 @@ public:
 	CLSID * ccom_clsid ();
 private:
 	STATSTG * pSTATSTG;
-
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_STATSTG_H_INC__

@@ -18,6 +18,10 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct FUNCDESCLISTITEM;
 typedef struct FUNCDESCLISTITEM {
 	FUNCDESC * item;
@@ -86,6 +90,10 @@ private:
 	void release_func_descs ();
 	void release_var_descs ();
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_E_ITYPEINFO_H_INC__
 

@@ -20,7 +20,9 @@
 #include "E_bstr.h"
 #include "eif_except.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))
 
@@ -149,5 +151,9 @@ public:
 	// Interface
 };
 #include "ecom_rt_globals.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_RUNTIME_CE_H_INC__

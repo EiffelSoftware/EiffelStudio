@@ -23,6 +23,9 @@ class ecom_runtime_ec;
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 class ecom_runtime_ec
 {
@@ -101,5 +104,8 @@ class ecom_runtime_ec
 		SAFEARRAY * ccom_ec_safearray_unknown (EIF_REFERENCE a_ref);
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // !__ECOM_RUNTIME_EC_H_INC__

@@ -638,6 +638,51 @@ feature -- Array optimization
 				Result_type.conforms_to_array
 		end;
 
+	perform_array_optimization (opt: ARRAY_OPTIMIZER) is
+		local
+			array_desc: TWO_WAY_SORTED_SET [INTEGER]
+		do
+			array_desc := array_descendants
+		end;
+
+	array_descendants: TWO_WAY_SORTED_SET [INTEGER] is
+			-- attribute: >0; Result = 0; local < 0
+		local
+			i, n: INTEGER
+		do
+			!!Result.make;
+			if arguments /= Void then
+				from
+					n := arguments.count
+					i := 1;
+				until
+					i > n
+				loop
+					if arguments.item (i).conforms_to_array then
+						Result.extend (i)
+					end;
+					i := i + 1
+				end;
+			end;
+			if locals /= Void then
+				from
+					n := locals.count
+					i := 1;
+				until
+					i > n
+				loop
+					if locals.item (i).conforms_to_array then
+						Result.extend (-i)
+					end;
+					i := i + 1
+				end;
+			end;
+			if result_type /= Void and then
+				result_type.conforms_to_array then
+				Result.extend (0)
+			end;
+		end;
+
 feature {NONE} -- Array optimization
 
 	has_array_as_item (a: ARRAY [TYPE_I]): BOOLEAN is

@@ -101,6 +101,10 @@ feature
 
 feature -- Array optimization
 
+	calls_forbidden_features (s: FORBIDDEN_FEATURES): BOOLEAN is
+		do
+		end;
+
 	has_loop: BOOLEAN is
 			-- Does this byte node use loops?
 		do

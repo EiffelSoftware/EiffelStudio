@@ -1,0 +1,12 @@
+<html>
+	<head>	
+		<title>[!Title!]</title>
+		<link rel="stylesheet" href="[!Stylesheet!]" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			[!Content!]
+		</pre>
+	</body>
+</html>

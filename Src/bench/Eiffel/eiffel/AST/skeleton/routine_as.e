@@ -319,6 +319,10 @@ feature -- Type check, byte code and dead code removal
 					context.set_level3 (False)
 				end
 			end
+			
+			if locals /= Void then
+				check_unused_locals
+			end
 		end
 
 	byte_node: BYTE_CODE is
@@ -549,6 +553,34 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
+	check_unused_locals is
+			-- Check that all locals are used in Current. If not raise
+			-- a warning.
+		local
+			l_locals: HASH_TABLE [LOCAL_INFO, STRING]
+			l_local: LOCAL_INFO
+			l_warning: UNUSED_LOCAL_WARNING
+		do
+			from
+				l_locals := context.locals
+				l_locals.start
+			until
+				l_locals.after
+			loop
+				l_local := l_locals.item_for_iteration
+				if not l_local.is_used then
+					if l_warning = Void then
+						create l_warning.make (context.current_class, context.current_feature)
+					end
+					l_warning.add_unused_local (l_locals.key_for_iteration, l_local.type)
+				end
+				l_locals.forth
+			end
+			if l_warning /= Void then
+				error_handler.insert_warning (l_warning)
+			end
+		end
+		
 	local_table (a_feature: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table for dead code removal
 		local

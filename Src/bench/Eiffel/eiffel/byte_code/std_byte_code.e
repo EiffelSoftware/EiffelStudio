@@ -756,7 +756,6 @@ end
 			type_i		: TYPE_I
 			buf			: GENERATION_BUFFER
 			used_local	: BOOLEAN
-			unused_locals: ARRAYED_LIST [INTEGER]
 			wkb_mode	: BOOLEAN
 			used_upper: INTEGER
 			has_rescue: BOOLEAN
@@ -799,30 +798,7 @@ end
 						buf.putstring (" 0;")
 						buf.new_line
 					end
-
-							-- Issue a warning message if the local is not used
-							-- (for the moment, we remember the local variable
-							-- number and we will issue the warning at the
-							-- end of the loop).
-					if wkb_mode and (not used_local) then
-						if unused_locals = Void then
-							create unused_locals.make (2)
-						end
-						unused_locals.force (i)
-					end
 					i := i + 1
-				end
-
-					-- Issue a warning for each unused local variable.
-				if unused_locals /= Void then
-					from
-						unused_locals.start
-					until
-						unused_locals.after
-					loop
-						issue_unused_local_warning (unused_locals.item)
-						unused_locals.forth
-					end
 				end
 			end
 
@@ -924,51 +900,6 @@ end
 
 				-- Separate declarations and body with a blank line
 			buf.new_line
-		end
-
-	issue_unused_local_warning (an_index: INTEGER) is
-		local
-			feature_as	: FEATURE_AS
-			routine_as	: ROUTINE_AS
-			i			: INTEGER
-			id_list		: ARRAYED_LIST [INTEGER]
-			rout_locals	: EIFFEL_LIST [TYPE_DEC_AS]
-			good_id		: INTEGER
-			warning_msg	: UNUSED_LOCAL_WARNING
-		do
-			feature_as := System.Body_server.item (body_index)
-			routine_as ?= feature_as.body.content
-			if routine_as /= Void then
-				rout_locals := routine_as.locals
-				rout_locals.start
-				from
-					i := 0
-				until
-					i = an_index or else rout_locals.after
-				loop
-					id_list := rout_locals.item.id_list
-					from
-						id_list.start
-					until	
-						i = an_index or else id_list.after
-					loop
-						i := i + 1
-						if i = an_index then 
-							good_id := id_list.item
-						end
-						id_list.forth
-					end
-					rout_locals.forth
-				end
-
-				if good_id > 0 then
-					create warning_msg
-					warning_msg.set_associated_local (good_id)
-					warning_msg.set_associated_type (context.current_type.type_a)
-					warning_msg.set_associated_feature_i (context.current_feature)
-					Error_handler.insert_warning (warning_msg)
-				end
-			end
 		end
 
 	generate_result_declaration (may_need_volatile: BOOLEAN) is

@@ -369,7 +369,7 @@ feature -- Access
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
-			-- Position is relative to the toolbar.
+			-- Position is relative to the multi-column list.
 		local
 			pt: WEL_POINT
 			info: WEL_LV_HITTESTINFO
@@ -641,10 +641,10 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
-	on_size (size_type, a_height, a_width: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER) is
 			-- List resized.
 		do
-			Precursor (size_type, a_height, a_width)
+			Precursor (size_type, a_width, a_height)
 			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
 
@@ -765,6 +765,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.80  2000/04/18 21:25:39  pichery
+--| - Fixed bug in `on_size' (swap of parameters)
+--| - Cosmetics
+--|
 --| Revision 1.79  2000/04/17 23:30:35  rogers
 --| Added wel_window_parent fix.
 --|

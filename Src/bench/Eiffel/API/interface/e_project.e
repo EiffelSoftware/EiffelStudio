@@ -490,7 +490,13 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			Compilation_modes.set_is_quick_melt (True);
+			if 
+				System_defined and then 
+				Ace.successful and then
+				not Ace.date_has_changed
+			then
+				Compilation_modes.set_is_quick_melt (True);
+			end
 			melt;
 		ensure
 			was_saved: successful and then not

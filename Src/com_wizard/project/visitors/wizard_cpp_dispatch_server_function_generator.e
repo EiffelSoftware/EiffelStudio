@@ -10,10 +10,99 @@ class
 inherit
 	WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 		redefine
+			generate,
+			signature,
 			body
 		end
 
+feature -- Basic operation
+
+	generate (a_coclass_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+			--Generate C server feature
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
+			tmp_signature, tmp_string: STRING
+		do
+			func_desc := a_descriptor
+			coclass_name := a_coclass_name
+
+			create ccom_feature_writer.make
+			create c_header_files.make
+
+			ccom_feature_writer.set_name (func_desc.name)
+			ccom_feature_writer.set_comment (func_desc.description)
+
+			-- Set return type.
+			ccom_feature_writer.set_result_type (Std_method_imp)
+
+			-- Set signature.
+			ccom_feature_writer.set_signature (signature)
+
+			-- Set body.
+			ccom_feature_writer.set_body (body)
+		end
 feature {NONE} -- Implementation
+
+	signature: STRING is
+			-- Set server signature
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			create Result.make (0)
+			if func_desc.arguments.empty and func_desc.return_type.name.is_equal (Void_c_keyword) then
+				Result.append (Void_c_keyword)					
+			else
+				from
+					func_desc.arguments.start
+				until
+					func_desc.arguments.off
+				loop
+					create visitor
+					visitor.visit (func_desc.arguments.item.type)
+
+					Result.append (Beginning_comment_paramflag)
+
+					if is_paramflag_fout (func_desc.arguments.item.flags) then
+						if is_paramflag_fin (func_desc.arguments.item.flags) then
+							Result.append (Inout)
+						else
+							Result.append (Out_keyword)
+						end
+					else
+						Result.append (In)
+					end
+					Result.append (End_comment_paramflag)
+
+					Result.append (visitor.c_type)
+					Result.append (Space)
+
+					if visitor.is_array_basic_type or visitor.is_array_type then
+						Result.append (Asterisk)
+					end
+
+					Result.append (func_desc.arguments.item.name)
+
+					Result.append (Comma)
+					func_desc.arguments.forth
+				end
+
+				if func_desc.return_type.name.is_equal (Void_c_keyword) then
+					Result.remove (Result.count)
+				else
+					create visitor
+					visitor.visit (func_desc.return_type)
+					Result.append (Beginning_comment_paramflag)
+					Result.append (Out_keyword)
+					Result.append (Comma_space)
+					Result.append (Retval)
+					Result.append (End_comment_paramflag)
+					Result.append (visitor.c_type)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Return_value_name)
+				end
+			end
+		end
 
 	body: STRING is
 			-- Feature body
@@ -22,31 +111,19 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			Result := clone (Tab)
-			Result.append (Ecatch_auto)
-			Result.append (Open_parenthesis)
-			create visitor
+			Result := clone (Ecatch)
 
-			visitor.visit (func_desc.return_type)
-			if not is_void (visitor.vt_type) then
-				Result.append (Open_parenthesis)
-				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Zero)
-			end
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			if func_desc.argument_count > 0 then
+			if func_desc.argument_count = 0 and func_desc.return_type.name.is_equal (Void_c_keyword) then
+				Result.append (New_line_tab)
+				Result.append (empty_argument_body)
+			else
 				arguments := clone (Space_open_parenthesis)
 				arguments.append (Eif_access)
 				arguments.append (Space_open_parenthesis)
 				arguments.append (Eiffel_object)
 				arguments.append (Close_parenthesis)
 
-				create cecil_call.make (0)
-				create variables.make (0)				
+				create variables.make (0)
 				create out_value.make (0)
 				create free_object.make (0)
 
@@ -119,132 +196,65 @@ feature {NONE} -- Implementation
 
 					func_desc.arguments.forth
 				end
-			else
-				Result.append (empty_argument_body_code)
-			end
 
-			create visitor
-
-			visitor.visit (func_desc.return_type)
-
-			if func_desc.argument_count > 0 then
-				if visitor.c_type.is_equal (Hresult) then
-					cecil_call.append (cecil_procedure_set_up)
+				create visitor
+				visitor.visit (func_desc.return_type)
+				if visitor.c_type.is_equal (Void_c_keyword) then
+					cecil_call := cecil_procedure_set_up
 				else
-					cecil_call.append (cecil_function_set_up (visitor))
+					cecil_call := cecil_function_set_up (visitor)
 				end
-
+	
 				arguments.append (Close_parenthesis)
 				arguments.append (Semicolon)
 
 				Result.append (New_line_tab)
-				Result.append (variables)
-				Result.append (New_line_tab)
+				if variables.count > 0 then
+					Result.append (variables)
+					Result.append (New_line_tab)
+				end
+
 				Result.append (cecil_call)
 				Result.append (arguments)
 				Result.append (New_line_tab)
 
-				if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
-					Result.append (Eif_object)
-					Result.append (Space)
-					Result.append (Tmp_eif_object)
+				if not visitor.c_type.is_equal (Void_c_keyword) then
+					Result.append (Asterisk)
+					Result.append (Return_value_name)
 					Result.append (Space_equal_space)
-					Result.append (Eif_protect)
-					Result.append (Space_open_parenthesis)
-					Result.append (Tmp_variable_name)
+					Result.append (Open_parenthesis)
+					Result.append (visitor.c_type)
 					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
+
+					if visitor.is_basic_type then
+						Result.append (Tmp_variable_name)
+						Result.append (Semicolon)
+					else
+						if visitor.need_generate_ec then
+							Result.append (Generated_ec_mapper)
+						else
+							Result.append (Ec_mapper)
+						end
+						Result.append (Dot)
+						Result.append (visitor.ec_function_name)
+						Result.append (Space_open_parenthesis)
+						Result.append (Tmp_variable_name)
+						Result.append (Close_parenthesis)
+						Result.append (Semicolon)
+					end
+					Result.append (New_line)
 				end
-				
-				Result.append (out_value)
-				Result.append (free_object)
+
+				if func_desc.arguments.count > 0 or not visitor.c_type.is_equal (Void_c_keyword) then
+					Result.append (out_value)
+					Result.append (free_object)
+				end
 			end
 
-			Result.append (return_value (visitor))
+			Result.append (New_line_tab)
+			Result.append (End_ecatch)
+			Result.append (Return_s_ok)
 		end
-
-	empty_argument_body_code: STRING is
-			-- Code for empty argument body
-		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			pointed_data_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-		do
-			create visitor
-			visitor.visit (func_desc.return_type)
-
-			if visitor.c_type.is_equal (Hresult) or else visitor.c_type.is_equal (Void_c_keyword) then
-				Result := empty_argument_body
-			else
-				create visitor
-				pointed_data_type ?= func_desc.return_type
-				if pointed_data_type /= Void then
-					visitor.visit (pointed_data_type.pointed_data_type_descriptor)
-				else
-					visitor.visit (func_desc.return_type)
-				end
-				Result := cecil_function_set_up (visitor)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (Eiffel_object)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (New_line_tab)
-				if not visitor.is_basic_type then
-					Result.append (Eif_object)
-					Result.append (Space)
-					Result.append (Tmp_eif_object)
-					Result.append (Space_equal_space)
-					Result.append (Eif_protect)
-					Result.append (Space_open_parenthesis)
-					Result.append (Tmp_variable_name)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
-				end
-			end
-		end
-
-	return_value (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
-			-- Code to return value
-		require
-			non_void_visitor: visitor /= Void
-		do
-			Result := clone (End_ecatch)
-			Result.append (Return)
-			if is_hresult (visitor.vt_type) then
-				Result.append (Space)
-				Result.append (S_ok)
-			elseif visitor.is_basic_type or else visitor.is_basic_type_ref then
-				Result.append (Space_open_parenthesis)
-				Result.append (visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Tmp_variable_name)
-			else
-				Result.append (Space)
-				if visitor.need_generate_ec then
-					Result.append (Generated_ec_mapper)
-				else
-					Result.append (Ec_mapper)
-				end
-				Result.append (Dot)
-				Result.append (visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
-				if is_boolean (visitor.vt_type) then
-					Result.append (Tmp_variable_name)
-				else
-					Result.append (Eif_wean)
-					Result.append (Space_open_parenthesis)
-					Result.append (Tmp_eif_object)
-					Result.append (Close_parenthesis)
-				end
-				Result.append (Close_parenthesis)
-			end
-
-			Result.append (Semicolon)
-		end
-
 end -- class WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 
 --|----------------------------------------------------------------

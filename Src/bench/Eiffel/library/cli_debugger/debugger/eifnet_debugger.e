@@ -559,6 +559,19 @@ feature -- Easy access
 			Result := l_icd_module.get_class_from_token (l_class_token)
 		end
 		
+feature -- Bridge to MD_IMPORT
+
+	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): INTEGER is
+			-- Find class token using Meta Data.
+		local
+			l_icd_module: ICOR_DEBUG_MODULE
+		do
+			l_icd_module := icor_debug_module (a_mod_name)
+			if l_icd_module /= Void then
+				Result := l_icd_module.md_class_token_by_type_name (a_class_type.full_il_implementation_type_name)
+			end
+		end
+
 feature -- Function Evaluation
 
 	icd_function_by_feature (icdv: ICOR_DEBUG_VALUE; ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is

@@ -31,7 +31,7 @@ feature
 
 feature {NONE}
 
-	text: TEXT
+	text: TEXT_FIELD
 
 	make (a_screen: SCREEN) is
 		local
@@ -73,7 +73,7 @@ feature {NONE}
 
 			-- add callbacks and modal behaviour
 			text.add_activate_action (Current, Current);
-			text.set_single_line_mode;
+			--++-- text.set_single_line_mode;
 			!! del_com.make (Current);
 			set_delete_command (del_com);
 			initialize_window_attributes

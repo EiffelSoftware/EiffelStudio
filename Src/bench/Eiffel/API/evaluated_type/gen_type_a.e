@@ -86,7 +86,7 @@ feature -- Output
 		local
 			i, count: INTEGER
 		do
-			Result := {CL_TYPE_A} precursor
+			Result := {CL_TYPE_A} Precursor
 			Result.append (" [")
 			from
 				i := 1
@@ -107,7 +107,7 @@ feature -- Output
 		local
 			i, count: INTEGER
 		do
-			{CL_TYPE_A} precursor (st)
+			{CL_TYPE_A} Precursor (st)
 			st.add_string (" [")
 			from
 				i := 1
@@ -171,7 +171,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			from
-				Result := {CL_TYPE_A} precursor
+				Result := {CL_TYPE_A} Precursor
 				i := 1
 				count := generics.count
 			until
@@ -438,11 +438,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Check the constrained genericity validity rule
 		local
 			i, count: INTEGER
-			gen_param, to_check, constraint_type: TYPE_A
-			constraint_info: CONSTRAINT_INFO
-			formal_type: FORMAL_A
+			gen_param, to_check: TYPE_A
+			original_gen_param, constraint_type: TYPE_A
+			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
+			conformance_on_formal: BOOLEAN
 		do
 			from
 				i := 1
@@ -460,30 +461,36 @@ feature {COMPILER_EXPORTER} -- Primitives
 					formal_type ?= gen_param
 					to_check := context_class.generics.i_th (formal_type.position).constraint_type
 				else
+					formal_type := Void
 					to_check := gen_param
 				end
 
-					-- Evaluation of the constraint
+					-- Evaluation of the constraint in the associated class
 				constraint_type := associated_class.generics.i_th (i).constraint_type
+				conformance_on_formal := False
 
 				if constraint_type.is_formal then
-					formal_type ?= constraint_type
-					pos := formal_type.position
-					constraint_type := generics.item (pos)
+					conformance_on_formal := True
+					other_formal_type ?= constraint_type
+					pos := other_formal_type.position
+					if formal_type /= Void then
+						if not formal_type.same_as (generics.item (pos)) then
+							generate_constraint_error (formal_type, constraint_type, i)
+						end
+					else
+						if not to_check.conform_to (generics.item (pos)) then
+							generate_constraint_error (to_check, constraint_type, i)
+						end
+					end
 				elseif constraint_type.generics /= Void then
 					gen_type ?= deep_clone (constraint_type)
 					gen_type.substitute (generics)
 					constraint_type := gen_type
 				end
 				
-				if not to_check.conform_to (constraint_type) then
+				if not conformance_on_formal and then not to_check.conform_to (constraint_type) then
 						-- Error
-					!!constraint_info
-					constraint_info.set_type (Current)
-					constraint_info.set_actual_type (to_check)
-					constraint_info.set_formal_number (i)
-					constraint_info.set_constraint_type (constraint_type)
-					Constraint_error_list.put_front (constraint_info)
+					generate_constraint_error (to_check, constraint_type, i)
 				end
 
 					-- Recursion
@@ -561,7 +568,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 		do
 			from
-				Result := {CL_TYPE_A} precursor
+				Result := {CL_TYPE_A} Precursor
 				i := 1
 				nb := generics.count
 			until
@@ -583,7 +590,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 		do
 			from
-				Result := {CL_TYPE_A} precursor (a_class)
+				Result := {CL_TYPE_A} Precursor (a_class)
 				i := 1
 				nb := generics.count
 			until
@@ -670,6 +677,21 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			end
 			Result.set_generics (gens)
         end
+
+feature {NONE} -- Error generation
+
+	generate_constraint_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
+			-- Build the error corresponding to the VTCG error
+		local
+			constraint_info: CONSTRAINT_INFO
+		do
+			!! constraint_info
+			constraint_info.set_type (Current)
+			constraint_info.set_actual_type (current_type)
+			constraint_info.set_formal_number (position)
+			constraint_info.set_constraint_type (constraint_type)
+			Constraint_error_list.extend (constraint_info)
+		end
 
 invariant
 

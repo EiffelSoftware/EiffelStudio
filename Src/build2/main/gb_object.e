@@ -37,7 +37,7 @@ inherit
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
-			{GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER} object_handler
+			{ANY} object_handler
 		end
 	
 	GB_SHARED_XML_HANDLER
@@ -61,6 +61,11 @@ inherit
 		end
 	
 	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
+		end
+		
+	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		end
@@ -202,9 +207,6 @@ feature -- Access
 		
 	children: ARRAYED_LIST [GB_OBJECT]
 			-- `Result' is all children of `Current'.
-			--| FIXME, this should no longer be a query, allowing the
-			-- display in the layout constructor to be decoupled from the
-			-- actual widget structure.		
 		
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 
@@ -283,7 +285,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			end
 		end
 
-feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR} -- Status setting
+feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
 
 	set_layout_item (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Assign `a_layout_item' to `layout_item'.
@@ -473,8 +475,13 @@ feature -- Basic operations
 			-- Add `a_component' to parent of `Current', before `Current'.
 		require
 			object_parent_not_full: not parent_object.is_full
+		local
+			an_object: GB_OBJECT
 		do
-			add_new_object_in_parent (a_component.object)
+			an_object := a_component.object
+			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
+			ensure_names_unique (an_object)
+			add_new_object_in_parent (an_object)
 		end
 
 	add_new_object_in_parent (an_object: GB_OBJECT) is
@@ -502,8 +509,13 @@ feature -- Basic operations
 			-- Add object representation of `a_component' to `Current'.
 		require
 			object_not_full: not is_full
+		local
+			an_object: GB_OBJECT
 		do
-			add_new_object (a_component.object)
+			an_object := a_component.object
+			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
+			ensure_names_unique (an_object)
+			add_new_object (an_object)
 		end
 
 	add_new_object (an_object: GB_OBJECT) is
@@ -549,7 +561,7 @@ feature {GB_ID_COMPRESSOR}
 			id := conversion_data @ id
 		end
 
-feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic operation
+feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER, GB_OBJECT} -- Basic operation
 
 	set_name (new_name: STRING) is
 			-- Assign `new_name' to `name'.
@@ -559,6 +571,7 @@ feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic opera
 		do
 			name := new_name
 			edited_name := new_name
+			layout_item.set_text (name_and_type_from_object (Current))
 		ensure
 			name_assigned: name.is_equal (new_name)
 		end
@@ -875,6 +888,29 @@ feature {NONE} -- Implementation
 			an_object.set_parent (Current)
 		ensure
 			contained: children.has (an_object)
+		end
+		
+	ensure_names_unique (an_object: GB_OBJECT) is
+			-- Ensure that name of `an_object' is unique, and does not
+			-- clash with any feature names also.
+		local
+			temp_name, original_name: STRING
+			counter: INTEGER
+		do
+			if not an_object.name.is_empty then
+				from
+					original_name := an_object.name
+					temp_name := original_name
+					counter := 1
+				until
+					not object_handler.string_is_feature_name (temp_name, top_level_parent_object) and
+					not object_handler.string_is_object_name (temp_name, top_level_parent_object, False)
+				loop
+					temp_name := original_name + counter.out
+					counter := counter + 1
+				end
+				an_object.set_name (temp_name)	
+			end
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation

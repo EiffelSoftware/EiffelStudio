@@ -18,6 +18,7 @@ inherit
 			{ANY} all
 		end;
 	IDABLE;
+	COMPILER_EXPORTER
 
 feature 
 

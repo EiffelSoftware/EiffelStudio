@@ -45,7 +45,11 @@ inherit
 	SHARED_RESCUE_STATUS
 		undefine
 			copy, is_equal
-		end
+		end;
+	COMPILER_EXPORTER
+        undefine
+            copy, is_equal
+        end;
 
 creation
 

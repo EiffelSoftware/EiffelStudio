@@ -16,7 +16,8 @@ inherit
 		redefine
 			trace
 		end;
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	COMPILER_EXPORTER
 
 creation
 

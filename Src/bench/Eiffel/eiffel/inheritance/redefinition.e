@@ -17,7 +17,7 @@ inherit
 		end;
 	SHARED_WORKBENCH;
 	SHARED_ERROR_HANDLER;
-
+	COMPILER_EXPORTER
 
 creation
 

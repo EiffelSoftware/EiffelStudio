@@ -32,13 +32,15 @@
 #endif
 #include "err_msg.h"
 
-EIF_INTEGER eif_profiler_level;
+
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
 					 */
 
 rt_public struct stack *prof_stack;
+
+EIF_INTEGER prof_enabled;
 
 /* INTERNAL TRACE VARIABLES */
 

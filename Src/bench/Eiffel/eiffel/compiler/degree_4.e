@@ -89,7 +89,6 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
-						System.set_current_class (a_class)
 
 						if (j \\ 1000) = 0 then
 							mem.full_collect
@@ -98,6 +97,7 @@ feature -- Processing
 						j := j + 1
 
 						Degree_output.put_degree_4 (a_class, count - nb)
+						System.set_current_class (a_class)
 						process_class (a_class)
 						a_class.set_degree_4_processed
 					end

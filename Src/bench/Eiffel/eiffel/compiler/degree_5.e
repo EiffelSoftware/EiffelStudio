@@ -59,8 +59,8 @@ feature -- Processing
 				from i := 1 until i > class_counter.count loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_5_needed then
-						System.set_current_class (a_class)
 						Degree_output.put_degree_5 (a_class, count)
+						System.set_current_class (a_class)
 						process_class (a_class)
 							-- Remove class if not already done.
 						if a_class.degree_5_needed then

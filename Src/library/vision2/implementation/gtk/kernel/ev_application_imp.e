@@ -415,8 +415,8 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 		end
 
 	reusable_color_struct: POINTER is
-			-- 
-		do
+			-- Persistent GdkColorStruct
+		once
 			Result := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 		end
 

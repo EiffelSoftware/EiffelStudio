@@ -10,7 +10,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node,
 			fill_calls_list, replicate
 		end
 
@@ -91,24 +91,6 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if class_type /= Void then
-				-- FIXME
-			else
-				if expression /= Void then
-					expression.format (ctxt)
-				else
-					if target /= Void then
-						-- FIXME
-					else
-						ctxt.put_string (".")   -- ???
-					end
-				end
-			end
-		end
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -155,7 +137,26 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			-- FIXME
+			if class_type /= Void then
+					-- We print an open operand on `class_type'
+				ctxt.put_text_item (Ti_L_curly)
+				ctxt.format_ast (class_type)
+				ctxt.put_text_item (Ti_R_curly)
+			else
+				if expression /= Void then
+						-- Closed operand on an expression
+					expression.format (ctxt)
+				else
+					if target /= Void then
+							-- Closed operand on a target
+						ctxt.format_ast (target)
+					else
+							-- This is an open operand without
+							-- any `class_type'
+						ctxt.put_text_item (Ti_question)
+					end
+				end
+			end
 		end
 
 feature {OPERAND_AS, ROUTINE_CREATION_AS} -- Type

@@ -102,16 +102,16 @@ feature {EV_ANY_I} -- Access
 			Result := internal_arrows_control.maximum
 		end
 
-feature {EV_SPIN_BUTTON_I}-- Status setting
+feature {EV_SPIN_BUTTON_I} -- Status setting.
 
 	wel_set_leap (i :INTEGER) is
-			-- Assign `i' to leap.
+			-- Assign `i' to `leap'.
 		do
 			leap := i
 		end
 		
 	wel_set_step (i :INTEGER) is
-			-- Assign `i' to step.
+			-- Assign `i' to `step'.
 		do
 			step := i
 		end
@@ -125,7 +125,8 @@ feature {EV_SPIN_BUTTON_I}-- Status setting
 		end
 
 	wel_set_range (i, j: INTEGER) is
-			-- 
+			-- Assign `i' and `j' as
+			-- bounds of `Current'. 
 		local
 			bounds: INTEGER_INTERVAL
 		do
@@ -134,7 +135,7 @@ feature {EV_SPIN_BUTTON_I}-- Status setting
 		end
 
 	destroy is
-			-- Destroy the widget, but set the parent sensitive
+			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
@@ -207,7 +208,8 @@ feature {NONE} -- WEL Implementation
 		-- Are we updating the control to move the rest of the step?
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- We check if the enter key is pressed
+			-- A key has been pressed.
+			-- If `virtual_key' is Return then we update `Current' accordingly.
 		do
 			manually_updating := True
 			{EV_GAUGE_IMP} Precursor (virtual_key, key_data)
@@ -231,7 +233,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-	repaint: BOOLEAN) is
+		repaint: BOOLEAN) is
 			-- Move and resize `Current' and `internal_arrows_control'.
 		do
 			{EV_TEXT_FIELD_IMP} Precursor (0, 0, a_width - 20, a_height,
@@ -298,6 +300,9 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/05/01 22:09:18  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.11  2000/04/20 00:17:09  rogers
 --| modifications to on_en_change.
 --|

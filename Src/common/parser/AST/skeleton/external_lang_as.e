@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			language_name ?= yacc_arg (0);
+			start_position := yacc_position;
 			parse;
 		ensure then
 			language_name /= Void;
@@ -29,12 +30,15 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	extension: EXTERNAL_EXTENSION_AS;
+			-- Parsed external extension
+
 	language_name: STRING_AS;
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 
-	extension: EXTERNAL_EXTENSION_AS;
-			-- Parsed external extension
+	start_position: INTEGER;
+			-- Start position of AST
 
 feature -- Comparison
 

@@ -11,9 +11,6 @@ class
 
 inherit
 	DOUBLE_MATH
-		export
-			{NONE} all
-		end
 
 feature -- Implementation
 

@@ -1432,22 +1432,27 @@ feature -- Conversion
 			positive_position: position >= 1
 			pivot_not_space: pivot /= ' '
 			not_empty: not is_empty
+		local
+			l_index_of_pivot: INTEGER
 		do
-			if index_of (pivot, 1) < position then
-				from
-					precede (' ')
-				until
-					index_of (pivot, 1) = position
-				loop
-					precede (' ')
-				end
-			elseif index_of (pivot, 1) > position then
-				from
-					remove (1)
-				until
-					index_of (pivot, 1) = position
-				loop
-					remove (1)
+			l_index_of_pivot := index_of (pivot, 1)
+			if l_index_of_pivot /= 0 then
+				if l_index_of_pivot < position then
+					from
+						precede (' ')
+					until
+						index_of (pivot, 1) = position
+					loop
+						precede (' ')
+					end
+				elseif l_index_of_pivot > position then
+					from
+						remove (1)
+					until
+						index_of (pivot, 1) = position
+					loop
+						remove (1)
+					end
 				end
 			end
 			from

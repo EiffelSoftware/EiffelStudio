@@ -444,6 +444,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
 			conformance_on_formal: BOOLEAN
+--			creation_constraint_list: LINKED_LIST [FEATURE_I]
+			error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
 			from
 				i := 1
@@ -467,6 +469,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 					-- Evaluation of the constraint in the associated class
 				constraint_type := associated_class.generics.i_th (i).constraint_type
+--				creation_constraint_list := associated_class.generics.i_th (i).constraint_creation_list
 				conformance_on_formal := False
 
 				if constraint_type.is_formal then
@@ -502,10 +505,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 					generate_constraint_error (Result, to_check, constraint_type, i)
 				end
 
-					-- Recursion
-					-- FIXME: We need to append the list coming from the recursive
-					-- call to the parent one
-				Result := gen_param.check_constraints (context_class)
+					-- We append the list coming from the recursive call
+				error_list := gen_param.check_constraints (context_class)
+				if error_list /= Void then
+					if Result = void then
+						!! Result.make
+					end
+					Result.append (error_list)
+				end
 
 				i := i + 1
 			end

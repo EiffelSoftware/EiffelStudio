@@ -51,7 +51,7 @@ feature -- Status report
 	is_drawable: BOOLEAN is
 			-- Is the device drawable?
 		require
-			exitst: not destroyed
+			exists: not destroyed
 		deferred
 		end
 

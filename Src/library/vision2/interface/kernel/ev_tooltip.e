@@ -134,7 +134,7 @@ feature -- Element change
 feature -- Implementation
 
 	implementation: EV_TOOLTIP_I
-			-- Pltform dependant access.
+			-- Platform dependant access.
 
 end -- class EV_TOOLTIP
 

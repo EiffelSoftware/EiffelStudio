@@ -439,8 +439,7 @@ EIF_REFERENCE eif_root_directory_name(void)
  
 /* Routines to split a PATH_NAME in its different parts */
  
-EIF_REFERENCE eif_volume_name(p)
-EIF_POINTER p;
+EIF_REFERENCE eif_volume_name(EIF_POINTER p)
 {
 	/* Returns p's violume name as an EIFFEL string */
  
@@ -454,15 +453,14 @@ EIF_POINTER p;
 #endif
 }
  
-EIF_REFERENCE eif_extracted_paths(p)
-EIF_POINTER p;
+EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 {
 	/* Returns p's directory components as a manifest array */
  
 	EIF_REFERENCE array;
  
 	array = emalloc(arr_dtype);
-	epush(&loc_stack, &array);
+	epush(&loc_stack, (char *) (&array));
  
 #if defined EIF_WINDOWS || defined EIF_OS2
 	implement

@@ -922,14 +922,11 @@ rt_public void reclaim(void)
 #ifdef EIF_THREADS 
 	CHECK ("Root thread", eif_thr_is_root ());
 #endif	/* EIF_THREADS */
-	{
-		eif_free (starting_working_directory);
-		eif_gen_conf_cleanup ();
+	eif_free (starting_working_directory);
+	eif_gen_conf_cleanup ();
 #ifdef EIF_WIN32
-		eif_cleanup(); 
+	eif_cleanup(); 
 #endif /* EIF_WIN32 */
-
-	}	/* if eif_thr_is_root () */
 
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
 		cn = c->ck_next;

@@ -773,10 +773,11 @@ feature {NONE} -- Implementation
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class.e_class;
-				ot.make (f_name, feature_i.api_feature (c.id), c)
+				!! ot.make (f_name, feature_i.api_feature (c.id), c)
 				if is_key then
 					ot.set_is_keyword
 				end;
+				item := ot
 			elseif is_key then
 				!KEYWORD_TEXT! item.make (f_name)
 			else

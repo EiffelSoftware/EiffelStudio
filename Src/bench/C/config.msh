@@ -35,10 +35,18 @@ link32= '$compiler_path\bin\link'
 #link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS)'
 #
+#-- DLL: no MT no debug
+#--------
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo'
+#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS)'
+#link_eline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(EOBJECTS)'
+#
 #-- no MT debug
 #--------
 #ccflags='-W3 -Zi -nologo'
-#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
+#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -DEBUG'
 #link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS) -DEBUGTYPE:BOTH'
 #link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
 #link_eline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(EOBJECTS) -DEBUGTYPE:BOTH'

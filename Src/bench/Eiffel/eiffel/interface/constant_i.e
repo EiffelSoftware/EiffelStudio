@@ -325,18 +325,18 @@ feature -- IL Code generation
 				il_generator.generate_once_test
 				il_generator.branch_on_false (il_label_compute)
 				il_generator.generate_once_result
-				il_generator.generate_return
+				il_generator.generate_return (True)
 				il_generator.mark_label (il_label_compute)
 				il_generator.generate_once_computed
 				value.generate_il
 				il_generator.duplicate_top
 				il_generator.generate_once_store_result
-				il_generator.generate_return
+				il_generator.generate_return (True)
 				il_generator.set_once_generation (False)
 			else
 				il_generator.put_result_info (type_i)
 				value.generate_il
-				il_generator.generate_return
+				il_generator.generate_return (True)
 			end
 			Byte_context.clear_all
 		end

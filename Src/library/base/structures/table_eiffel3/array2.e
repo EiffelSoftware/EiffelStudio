@@ -25,8 +25,8 @@ class ARRAY2 [G] inherit
 			item as array_item,
 			put as array_put,
 			force as array_force,
-			wipe_out as array_wipe_out,
-			resize as array_resize
+			resize as array_resize,
+			wipe_out as array_wipe_out
 		export
 			{NONE}
 				all;
@@ -34,26 +34,6 @@ class ARRAY2 [G] inherit
 				array_put;
 			{ANY}
 				area
-		end;
-
-	ARRAY [G]
-		rename
-			make as array_make,
-			item as array_item,
-			put as array_put,
-			force as array_force,
-			resize as array_resize
-		export
-			{NONE}
-				all;
-			{ARRAY2}
-				array_put;
-			{ANY}
-				area
-		redefine
-			wipe_out
-		select
-			wipe_out
 		end
 
 creation
@@ -76,7 +56,6 @@ feature -- Initialization
 		ensure
 			new_count: count = height * width
 		end;
-
 
 	initialize (v: G) is
 			-- Make each entry have value `v'.
@@ -148,7 +127,7 @@ feature -- Removal
 		do
 			height := 0;
 			width := 0;
-			array_wipe_out
+			discard_items
 		end;
 
 feature -- Resizing

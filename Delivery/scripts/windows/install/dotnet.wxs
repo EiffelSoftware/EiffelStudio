@@ -142,6 +142,7 @@
 									<File Id="dotnet_double.e" Name="DOTNET~3.E" LongName="dotnet_double.e" />
 									<File Id="dotnet_boolean.e" Name="DOTNET~1.E" LongName="dotnet_boolean.e" />
 									<File Id="dotnet_real.e" Name="DO9EFE~1.E" LongName="dotnet_real.e" />
+									<File Id="type_e" Name="type.e" />
 								</Component>
 							</Directory>
 							<Directory Id="exceptions" Name="EXCEPT~1" LongName="exceptions" />

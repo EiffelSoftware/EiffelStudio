@@ -1,5 +1,5 @@
 indexing
-	description: "Abstract representation of an interval for `inspect' clauses."
+	description: "Abstract representation of an interval value for `inspect' clauses."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,6 +30,13 @@ feature -- Comparison
 		deferred
 		end
 		
+	is_allowed_unique_value: BOOLEAN is
+			-- Does `Current' represent an allowed unique value?
+			-- (This is now true for positive integers.)
+		do
+			-- False by default.
+		end
+
 feature -- Measurement
 
 	distance (other: like Current): DOUBLE is
@@ -54,10 +61,11 @@ feature -- Iteration
 
 feature -- Evaluation
 
-	make_interval (upper: like Current): INTERVAL_B is
-			-- Create a new interval with lower set to `Current' and upper set to `upper'.
+	inspect_interval (upper: like Current): INTERVAL_B is
+			-- Interval with lower set to `Current' and upper set to `upper'
 		require
 			upper_not_void: upper /= Void
+			compatible_type: conforms_to (upper) or upper.conforms_to (Current)
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -77,7 +85,9 @@ feature -- IL code generation
 		end
 
 	generate_il_subtract (is_included: BOOLEAN) is
-			-- Generate code to subtract this value if `is_included' is true or next value if `is_included' is false from top of IL stack.
+			-- Generate code to subtract this value if `is_included' is true or
+			-- next value if `is_included' is false from top of IL stack.
+			-- Ensure that resulting value on the stack is UInt32.
 		deferred
 		end
 

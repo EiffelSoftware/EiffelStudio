@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
             -- List of children C widget points to be used
             -- for resouce settting
         do
-            Result := descendents
+            Result := descendants
         end
 
 end -- class SEARCH_REPLACE_DIALOG_M

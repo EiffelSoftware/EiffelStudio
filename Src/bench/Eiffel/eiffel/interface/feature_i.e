@@ -762,18 +762,20 @@ feature -- Conveniences
 	has_static_access: BOOLEAN is
 			-- Can Current be access in a static manner?
 		local
-			l_extension: IL_EXTENSION_I
+			l_ext: IL_EXTENSION_I
 		do
-			if System.il_generation then
-				l_extension ?= extension
-				if not Result then
-					Result :=  (l_extension /= Void and then
-						not l_extension.need_current (l_extension.type)) or
-						is_constant and then not is_once
+			Result := (is_constant and not is_once)
+			if not Result then
+				if System.il_generation then
+					l_ext ?= extension
+						 -- Static access only if it is a C external (l_ext = Void)
+						 -- or if IL external does not need an object.
+					Result := (l_ext = Void and is_external) or
+						(l_ext /= Void and then not l_ext.need_current (l_ext.type))
+				else
+					Result := is_external
 				end
-			else
-				Result := is_external or (is_constant and then not is_once)
-			end			
+			end
 		end
 		
 	frozen has_precondition: BOOLEAN is

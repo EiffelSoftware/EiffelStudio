@@ -117,7 +117,7 @@ feature -- Access
 			ace_accesser.apply
 		end
 	
-	add_assembly(a_prefix, a_cluster_name, name, version, culture, public_key:STRING) is
+	add_assembly (a_prefix, a_cluster_name, name, version, culture, public_key:STRING) is
 			-- Add an assembly to the list of assemblies
 		local
 			assembly: ASSEMBLY_PROPERTIES

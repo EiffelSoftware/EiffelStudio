@@ -89,6 +89,21 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	destroy is
+			-- Destroy `Current'.
+		local
+			envir: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+		do
+				-- Remove `internal_tooltip' from `all_tooltips' in
+				-- EV_APPLICATION_IMP.
+			create envir
+			app_imp ?= envir.application.implementation
+			app_imp.all_tooltips.prune (internal_tooltip.item)
+			is_destroyed := True
+		end
+		
+
 	internal_tooltip_string: STRING
 		-- Internal text of tooltip assigned to `Current'.
 

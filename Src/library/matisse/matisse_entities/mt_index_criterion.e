@@ -9,10 +9,10 @@ inherit
 
 	MT_NAME_EXTERNAL
 	
-	INTERNAL
-		export 
-			{NONE} all 
-		end
+	--INTERNAL
+	--	export 
+	--		{NONE} all 
+	--	end
 	
 creation
 	make

@@ -508,6 +508,8 @@ feature -- IL code generation
 			cl_type: CL_TYPE_I
 			call_access: CALL_ACCESS_B
 			l_nested: NESTED_B
+			l_ext: EXTERNAL_B
+			l_il_ext: IL_EXTENSION_I
 		do
 			cl_type ?= real_type (type)
 			Result := is_target_of_call and then cl_type.is_expanded
@@ -523,12 +525,22 @@ feature -- IL code generation
 
 					-- We do not load the address if it is an optimized call of the compiler.
 				Result := not call_access.is_il_feature_special (cl_type)
-				if Result and then call_access /= Void and then cl_type.is_basic then
-					if call_access.written_in > 0 then
-							-- Find location of feature to find out if the address needs
-							-- to be loaded. True when written in the same class, False
-							-- otherwise.
-						Result := cl_type.same_as (il_generator.implemented_type (call_access.written_in, cl_type))
+				if Result then
+					if call_access /= Void and then cl_type.is_basic then
+						if call_access.written_in > 0 then
+								-- Find location of feature to find out if the address needs
+								-- to be loaded. True when written in the same class, False
+								-- otherwise.
+							Result := cl_type.same_as (
+								il_generator.implemented_type (call_access.written_in, cl_type))
+						end
+					else
+						l_ext ?= call_access
+						if l_ext /= Void then
+							l_il_ext ?= l_ext.extension
+							Result := l_il_ext = Void or else l_il_ext.type /= 
+								feature {SHARED_IL_CONSTANTS}.Operator_type
+						end
 					end
 				end
 			end

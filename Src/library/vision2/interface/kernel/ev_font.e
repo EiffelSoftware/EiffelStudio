@@ -334,20 +334,12 @@ feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
+			
 		do
 			Result := Precursor {EV_ANY} and then
-				family = ev_default_fonts.Screen_font.family and then
-				weight = ev_default_fonts.Screen_font.weight and then
-				shape = ev_default_fonts.Screen_font.shape and then
-				height = ev_default_fonts.Screen_font.height and then
 				preferred_families /= Void and then preferred_families.is_empty
 		end
 
-	Ev_default_fonts: EV_STOCK_FONTS is
-		once
-			create Result
-		end
-		
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_FONT_I

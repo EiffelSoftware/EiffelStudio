@@ -44,7 +44,7 @@ BEGIN
                     Destination_Folder_Input_Static,115,115,100,10
     PUSHBUTTON      "Browse",Destination_Folder_Browse_Button,290,125,50,14
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     LTEXT           "A Definition Files is either an Interface Definition Language (IDL) file or a Type Library (.tlb) file. A type library could be linked to an executable or dll as a resource. ",
                     Definition_File_Static,115,10,220,25
     LTEXT           "The destination folder is the folder where the wizard will place all generated files.",
@@ -57,7 +57,7 @@ CAPTION "Marshalling"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     CONTROL         116,Wizard3_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     EDITTEXT        Proxy_Stub_Input_Edit,115,135,170,15,ES_AUTOHSCROLL | 
@@ -89,7 +89,7 @@ CAPTION "Marshalling"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Next >",IDOK,180,160,50,14
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     CONTROL         115,Wizard2_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
@@ -116,7 +116,7 @@ CAPTION "Output Messages"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&Finish",IDOK,180,160,50,14
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14
     CONTROL         117,Wizard4_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,5,5,100,145
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
@@ -127,7 +127,7 @@ BEGIN
                     Output_Static,120,10,220,20
     LTEXT           "Do you want to see:",Output_Question_Static,120,35,220,
                     10
-    CONTROL         "Warning?",Warnings_Check,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Warnings?",Warnings_Check,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,140,50,95,10
     CONTROL         "Extra information?",Information_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,140,65,95,10
@@ -149,7 +149,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,20,149,10
     CONTROL         "Server code for a new component?",Server_Check,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,135,35,130,10
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
     LTEXT           "Do you want to generate:",Code_Type_Static,120,5,95,10
     LTEXT           "(You may generate both for a new component)",
                     Code_Type_Info_Static,135,50,155,10
@@ -189,9 +189,9 @@ BEGIN
     CONTROL         "Create a new project",Create_Project_Check,"Button",
                     BS_AUTORADIOBUTTON | WS_TABSTOP,125,60,145,10
     PUSHBUTTON      "Help",Help_Button,290,160,50,14
-    PUSHBUTTON      "< &Back",IDBACK,130,160,50,14,WS_DISABLED
-    CTEXT           "Welcome to the EiffelCOM Wizard",Title_Static,110,5,225,
-                    10
+    PUSHBUTTON      "< &Back",ID_BACK,130,160,50,14,WS_DISABLED
+    CTEXT           "Welcome to the EiffelCOM Wizard!",Title_Static,110,5,
+                    225,10
     LTEXT           "What would you like to do?",Title_Question_Static,115,
                     25,220,10
 END

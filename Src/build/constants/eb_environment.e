@@ -13,7 +13,7 @@ feature -- Directory name constants
 	Ace_name: STRING is "Ace";
 	Application_name: STRING is "app";
 	-- Old Application_name: STRING is "Application";
-	Bitmaps_name: STRING is "bitmaps/xpm";
+	Bitmaps_name: STRING is "bitmaps";
 	Bin_name: STRING is "bin";
 	Build_name: STRING is "build";
 	Buildgen_name: STRING is "BUILDGEN";

@@ -31,7 +31,7 @@ feature -- Access
 
 	horizontal_step: INTEGER is
 			-- Number of pixels scrolled up or down when user clicks
-			-- an arrow on the horizontal scroll bar.
+			-- an arrow on horizontal scroll bar.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -42,7 +42,7 @@ feature -- Access
 
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
-			-- an arrow on the vertical scroll bar.
+			-- an arrow on vertical scroll bar.
 		require
 			not_destroyed: not is_destroyed
 		do

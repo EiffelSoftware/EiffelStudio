@@ -1,7 +1,9 @@
 indexing
 
 	description:
-			"Shell widget meant to contain popup and popdown menu panes.";
+		"Shell widget meant to contain popup and popdown menu panes. %
+		%This is an opaque class for menus and callbacks should not be %
+		%added to this class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -18,13 +20,14 @@ inherit
 
 	MEL_OVERRIDE_SHELL
 		redefine
-			make
+			make, make_from_existing
 		end
 
 creation
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif menu shell widget.
@@ -39,7 +42,16 @@ feature {NONE} -- Initialization
 			screen_object := xm_create_menu_shell 
 						(a_parent.screen_object, $widget_name, 
 						default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add_popup_shell (Current);
+			set_default
+		end;
+
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+			-- Create a mel widget from existing widget `a_screen_object'.
+		do
+			screen_object := a_screen_object;
+			parent := a_parent;
+			a_parent.add_popup_child (Current);
 			set_default
 		end;
 
@@ -50,6 +62,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
+		ensure
+			button_font_list_is_valid: Result /= Void and then Result.is_valid
 		end;
 
 	default_font_list: MEL_FONT_LIST is
@@ -57,6 +72,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xm_font_list (screen_object, XmNdefaultFontList)
+		ensure
+			default_font_list_is_valid: Result /= Void and then Result.is_valid
 		end;
 
 	label_font_list: MEL_FONT_LIST is
@@ -64,6 +82,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xm_font_list (screen_object, XmNlabelFontList)
+		ensure
+			label_font_list_is_valid: Result /= Void and then Result.is_valid
 		end;
 
 feature -- Status setting
@@ -71,17 +92,20 @@ feature -- Status setting
 	set_button_font_list (a_font_list: MEL_FONT_LIST) is
 			-- Set `button_font_list' to `a_font_list'.
 		require
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
 		do
-		ensure
+			set_xm_font_list (screen_object, XmNbuttonFontList, a_font_list)
 		end;
 
 	set_label_font_list (a_font_list: MEL_FONT_LIST) is
 			-- Set `label_font_list' to `a_font_list'.
-	   require
+		require
 			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+
 		do
-		ensure
+			set_xm_font_list (screen_object, XmNlabelFontList, a_font_list)
 		end;
 
 feature {NONE} -- Implementation

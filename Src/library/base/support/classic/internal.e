@@ -27,7 +27,7 @@ feature -- Conformance
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
 		external
-			"C | %"eif_gen_conf.h%""
+			"C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
 		alias
 			"eif_gen_conf"
 		end

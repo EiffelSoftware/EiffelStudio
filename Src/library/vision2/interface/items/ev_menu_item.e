@@ -1,5 +1,6 @@
 indexing	
-	description: "Eiffel Vision menu item."
+	description:
+		"Eiffel Vision menu item."
 	status: "See notice at end of class"
 	keywords: "menu, item, dropdown, popup"
 	date: "$Date$"
@@ -92,6 +93,9 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.31  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

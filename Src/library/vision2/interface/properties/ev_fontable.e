@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision fontable, objects that have a font."
+	description:
+		"Eiffel Vision fontable, objects that have a font."
 	status: "See notice at end of class"
 	keywords: "font, name, property"
 	date: "$Date$"
@@ -70,6 +71,9 @@ end -- class EV_FONTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.8  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

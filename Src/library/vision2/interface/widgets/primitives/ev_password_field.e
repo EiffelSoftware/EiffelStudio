@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision password field. A text field%
+	description:
+		"EiffelVision password field. A text field%
 		% That displays always the same character."
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -87,6 +88,9 @@ end -- class EV_PASSWORD_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.6  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

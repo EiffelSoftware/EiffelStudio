@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision menu. Menu items that can have a submenu."
+	description:
+		"Eiffel Vision menu. Menu items that can have a submenu."
 	status: "See notice at end of class"
 	keywords: "menu, bar, drop down, popup"
 	date: "$Date$"
@@ -68,6 +69,9 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/29 18:09:11  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.20  2000/02/19 20:24:43  brendel
 --| Updated copyright to 1986-2000.
 --|

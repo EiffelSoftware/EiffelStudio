@@ -1,8 +1,10 @@
 indexing
-	description: "EiffelVision2 arc-figure. Represented by 2 endpoints%
+	description:
+	"EiffelVision2 arc-figure. Represented by 2 endpoints%
 		% plus one point on the arc. The arc is defined as a part of a%
 		% circle that starts at point a, goes through point b and ends in%
 		% point c."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

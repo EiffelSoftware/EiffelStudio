@@ -1,6 +1,8 @@
 indexing
-	description: "Objects that represent a world of figures.%
+	description:
+		"Objects that represent a world of figures.%
 		%It is up to the projection object what to do with it."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

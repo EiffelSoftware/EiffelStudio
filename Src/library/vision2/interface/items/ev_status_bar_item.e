@@ -1,6 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Eiffel Vision status bar item."
+	description:
+		"Eiffel Vision status bar item."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,6 +84,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.13  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

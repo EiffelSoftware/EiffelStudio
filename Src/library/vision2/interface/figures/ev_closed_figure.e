@@ -1,6 +1,8 @@
 indexing
-	description: "Closed figures like ellipse and polygon.%
+	description:
+		"Closed figures like ellipse and polygon.%
 		%May be filled with a color."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,6 +70,9 @@ end -- class EV_CLOSED_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.5  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

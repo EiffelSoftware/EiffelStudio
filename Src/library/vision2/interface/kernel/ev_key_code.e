@@ -1,6 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Code that represent the keys of the keyboard."
+	description:
+		"Code that represent the keys of the keyboard."
 	note: "Do not inherit from this class."
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -690,6 +691,9 @@ end -- class EV_KEY_CODE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.4  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

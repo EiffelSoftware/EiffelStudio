@@ -1,6 +1,8 @@
 indexing
-	description: "Group of EV_FIGURE's. If a figure is added to%
+	description:
+		"Group of EV_FIGURE's. If a figure is added to%
 		%this group, it is removed from its previous group first."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

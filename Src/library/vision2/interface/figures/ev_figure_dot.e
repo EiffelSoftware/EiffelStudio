@@ -1,5 +1,7 @@
 indexing
-	description: "A figure that is a pixel or a dot."
+	description:
+		"A figure that is a pixel or a dot."
+	status: "See notive at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

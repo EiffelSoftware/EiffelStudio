@@ -1,5 +1,6 @@
 indexing
-	description: "Base Eiffel Vision action sequence."
+	description:
+		"Base Eiffel Vision action sequence."
 	status: "See notice at end of file."
 	keywords: "event, action, sequence"
 	date: "$Date$"
@@ -40,6 +41,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 18:09:06  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.6  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

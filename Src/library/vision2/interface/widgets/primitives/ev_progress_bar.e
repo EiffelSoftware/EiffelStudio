@@ -1,5 +1,6 @@
 indexing 
-	description: "Eiffel Vision progress bar. Gauge displaying a bar graph."
+	description:
+		"Eiffel Vision progress bar. Gauge displaying a bar graph."
 	note: "Default step is 10."
 	status: "See notice at end of class"
 	keywords: "status, progress, bar"
@@ -96,6 +97,9 @@ end -- class EV_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.8  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-	"Eiffel Vision text component. Base class for text editing widgets."
+		"Eiffel Vision text component. Base class for text editing widgets."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -333,6 +333,9 @@ end -- class EV_TEXT_COMPONENT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/29 18:09:11  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.26  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

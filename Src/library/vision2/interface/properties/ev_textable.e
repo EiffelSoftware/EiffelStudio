@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision textable. Objects that have a text label."
+	description:
+		"Eiffel Vision textable. Objects that have a text label."
 	status: "See notice at end of class"
 	keywords: "text, label, font, name, property"
 	date: "$Date$"
@@ -142,6 +143,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.14  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

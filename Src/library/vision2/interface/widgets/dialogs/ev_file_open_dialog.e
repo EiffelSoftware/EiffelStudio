@@ -1,5 +1,6 @@
 indexing 
-	description: "Eiffel Vision file open dialog."
+	description:
+		"Eiffel Vision file open dialog."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +49,9 @@ end -- class EV_FILE_OPEN_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/29 18:09:09  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.9  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|

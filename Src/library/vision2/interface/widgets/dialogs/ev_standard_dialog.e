@@ -1,5 +1,6 @@
 indexing
-	description: "EiffelVision standard dialog."
+	description:
+		"EiffelVision standard dialog."
 	status: "See notice at end of class"
 	keywords: "modal, ok, cancel"
 	date: "$Date$"
@@ -116,6 +117,9 @@ end -- class EV_STANDARD_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/29 18:09:09  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.9  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|

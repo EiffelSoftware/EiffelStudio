@@ -1,5 +1,6 @@
 indexing
-	description: "Objects that represent a position.%
+	description:
+		"Objects that represent a position.%
 		% Takes another relative point as origin and then defines a%
 		% hor. & vert. scaling factor, x, y and angle.%
 		% You can then access absolute scale_x, scale_y, x, y and angle%
@@ -10,6 +11,7 @@ indexing
 		% The x and y are transformed by the angle and scaling of the origin.%
 		% This implies that the scale_x, scale_y and angle features of this%
 		% object are only for propagation to referring points."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -665,6 +667,9 @@ end -- class EV_RELATIVE_POINT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.5  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

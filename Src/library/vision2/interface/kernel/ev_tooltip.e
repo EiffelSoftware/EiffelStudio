@@ -1,6 +1,7 @@
 --| FIXME Not for release
 indexing
-	description: "Eiffel Vision tooltip."
+	description:
+		"Eiffel Vision tooltip."
 	status: "See notice at end of class."
 	keywords: "tip, popup, text, help"
 	date: "$Date$"
@@ -35,6 +36,9 @@ end -- class EV_TOOLTIP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 18:09:08  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.8  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

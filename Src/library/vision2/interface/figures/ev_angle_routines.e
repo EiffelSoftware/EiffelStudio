@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Set of trigonometric routines."
+	description:
+		"Set of trigonometric routines."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +78,9 @@ end -- class EV_ANGLE_ROUTINES
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.9  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

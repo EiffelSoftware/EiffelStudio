@@ -1,5 +1,7 @@
 indexing
-	description: "Facilities class for EV_FIGURE."
+	description:
+		"Facilities class for EV_FIGURE."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

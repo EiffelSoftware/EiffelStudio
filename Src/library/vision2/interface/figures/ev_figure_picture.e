@@ -1,6 +1,8 @@
 indexing
-	description: "EiffelVision2 pixmap figure. A pixmap is defined by one point, its%
+	description:
+		"EiffelVision2 pixmap figure. A pixmap is defined by one point, its%
 		% top-left corner, and by a pixmap and font attribute."
+	status: "See notice at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

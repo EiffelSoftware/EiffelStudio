@@ -1,7 +1,8 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision closure. Closure of a figure."
+	description:
+		"EiffelVision closure. Closure of a figure."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -261,6 +262,9 @@ end -- class EV_CLOSURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.6  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

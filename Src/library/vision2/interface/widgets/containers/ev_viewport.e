@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision viewport."
+	description:
+		"Eiffel Vision viewport."
 	status: "See notice at end of class"
 	keywords: "container, virtual, display"
 	date: "$Date$"
@@ -101,6 +102,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/29 18:09:10  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.3  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

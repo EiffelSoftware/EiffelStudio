@@ -1,6 +1,8 @@
 indexing
-	description: "EiffelVision2 polyline figure. Consists of (n-1) lines when%
+	description:
+		"EiffelVision2 polyline figure. Consists of (n-1) lines when%
 		% not closed and n if closed and n > 2."
+	status: "See notie at end of file"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,5 +1,6 @@
 indexing
-	description:"Eiffel Vision menu bar."
+	description:
+		"Eiffel Vision menu bar."
 	status: "See notice at end of class"
 	keywords: "menu, bar, item, file, edit, help"
 	date: "$Date$"
@@ -52,6 +53,9 @@ end -- class EV_MENU BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/29 18:09:11  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.9  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

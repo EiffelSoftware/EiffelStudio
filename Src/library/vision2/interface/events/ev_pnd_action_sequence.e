@@ -1,5 +1,6 @@
 indexing
-	description: "Action sequence for PND drop events."
+	description:
+		"Action sequence for PND drop events."
 	status: "See notice at end of file."
 	keywords: "pick and drop, drag and drop, PND, DND, drop"
 	date: "$Date$"
@@ -139,6 +140,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/29 18:09:06  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.7  2000/02/26 05:05:10  oconnor
 --| fixed item.vail_operands to snapshot.item.valid_operands in call
 --|

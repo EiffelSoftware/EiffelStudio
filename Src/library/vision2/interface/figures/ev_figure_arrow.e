@@ -1,8 +1,10 @@
 --| FIXME Not for release
 indexing
-	description: "EiffelVision2 arrow figure. Represented by two points: a is%
+	description:
+		"EiffelVision2 arrow figure. Represented by two points: a is%
 		% the origin of the arrow and b is the point it points to.%
 		% specify your own arrowhead in the form of angle and proportion."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

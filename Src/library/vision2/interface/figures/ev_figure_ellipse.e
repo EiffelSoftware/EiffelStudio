@@ -1,7 +1,9 @@
 indexing
-	description: "Figure that represents an ellipse as 2 points.%
+	description:
+		"Figure that represents an ellipse as 2 points.%
 		%The points represent an imaginary rectangle in which%
 		%the ellipse fits exactly."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

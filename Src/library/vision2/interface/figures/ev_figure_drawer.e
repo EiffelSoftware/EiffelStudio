@@ -1,5 +1,6 @@
 indexing
-	description: "EiffelVision figure drawer. Adapters that take %N%
+	description:
+		"EiffelVision figure drawer. Adapters that take %N%
 		%a drawable (screen, drawing area or pixmap) and use %N%
 		%it to draw the figures from the figure cluster in it."
 	status: "See notice at end of class"

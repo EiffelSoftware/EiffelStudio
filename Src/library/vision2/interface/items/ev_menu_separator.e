@@ -1,5 +1,6 @@
 indexing
-	description: "Eiffel Vision menu separator."
+	description:
+		"Eiffel Vision menu separator."
 	status: "See notice at end of class."
 	keywords: "menu, item, separator"
 	date: "$Date$"
@@ -53,6 +54,9 @@ end -- class EV_MENU_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 18:09:07  oconnor
+--| reformatted indexing cluase
+--|
 --| Revision 1.5  2000/02/22 19:53:41  brendel
 --| Changed export status of implementation.
 --|

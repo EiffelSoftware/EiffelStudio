@@ -219,6 +219,12 @@ rt_public void init_bench(int argc, char **argv)
 		strcat (ewb_path, " -project ");
 		strcat (ewb_path, argv [1]);
 	}
+	if ((argc == 3) && strcmp (argv[1], "-create") == 0) {
+			/* It means that we try to create a project from the command line or from
+			 * ebench or with EiffelBench */
+		strcat (ewb_path, " -create ");
+		strcat (ewb_path, argv [2]);
+	}
 
 /* FIXME: check that es4 exists */
 

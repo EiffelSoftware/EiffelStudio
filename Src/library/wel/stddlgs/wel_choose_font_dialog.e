@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		do
 			standard_dialog_make
 			cwel_choose_font_set_lstructsize (item, structure_size)
-			!! lf.make (10, "System")
+			create lf.make (10, "System")
 			set_log_font (lf)
 			set_flags (Cf_screenfonts + Cf_effects + Cf_inittologfontstruct)
 		end
@@ -97,7 +97,7 @@ feature -- Access
 		require
 			exits: exists
 		do
-			!! Result.make_by_color (cwel_choose_font_get_rgbcolors (item))
+			create Result.make_by_color (cwel_choose_font_get_rgbcolors (item))
 		ensure
 			result_not_void: Result /= Void
 		end

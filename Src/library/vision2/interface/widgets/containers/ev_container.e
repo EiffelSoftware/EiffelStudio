@@ -144,7 +144,8 @@ feature -- Status setting
 			other_not_merged: other.merged_radio_button_groups = Void
 			not_contained_in_this_group: merged_radio_button_groups /= Void implies
 				not merged_radio_button_groups.has (other)
-			first_radio_button_now_selected: not old other.has_selected_radio_button implies
+			first_radio_button_now_selected: not old other.has_selected_radio_button and
+				old other.has_radio_button implies
 				other.first_radio_button_selected
 			original_radio_button_still_selected: old has_selected_radio_button implies
 				has_selected_radio_button
@@ -312,6 +313,13 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		do
 			Result := implementation.has_selected_radio_button
 		end
+		
+	has_radio_button: BOOLEAN is
+			-- Does `Current' contain one or more radio buttons?
+		do
+			Result := implementation.has_radio_button
+		end
+		
 		
 feature {NONE} -- Contract support
 

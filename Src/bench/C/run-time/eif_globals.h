@@ -57,23 +57,14 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct xstack eif_trace;		/* Unsolved exception trace */
 	struct eif_except exdata;		/* Exception handling global flags */
 	unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
-	struct exprint except;		/* Where exception has been raised */
-	int print_history_table = ~0;   /* Enable/disable printing of hist. table */
+	struct exprint except;			/* Where exception has been raised */
+	int print_history_table;		/* Enable/disable printing of hist. table */
 	SMART_STRING ex_string;			/* Container of the exception trace */
 
-#ifdef WORKBENCH
-
-		/* except.c */
-	unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
-
-#endif
-
-#ifdef EIF_WINDOWS
-
-		/* except.c */
-	char *exception_trace_string;
-
-#endif
+		/* garcol.c */
+	struct gacinfo g_data;			/* Global status */
+	struct gacstat g_stat[GST_NBR];	/* Run-time statistics */
+	struct stack loc_stack;			/* Local indirection stack */
 
 		/* interp.c */
 	struct opstack op_stack;		/* Operational stack */
@@ -84,22 +75,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int locnum;						/* Number of locals */
 	unsigned long tagval;			/* Records number of interpreter's call */
 	char *inv_mark_table;			/* Marking table to avoid checking the same invariant several times */
-
-/* plug.c */
-int nstcall;            /* Nested call global variable: signals a nested call and
-* trigger an invariant check in generated C routines  */
-char *inv_mark_tablep;  /* Marking table to avoid checking the same invariant several times */
- 
-/* pattern.c */
-uint32 delta[ASIZE];    /* Records shifting deltas */
-uint32 **darray;        /* Pointer to array recording shifting tables */
- 
-/* out.c */
-char buffero[TAG_SIZE]; /* Buffer for printing an object in a string */ /* %%ss renamed */
-char *tagged_out;       /* String where the tagged out is written */
-int tagged_max;         /* Actual maximum size of `tagged_out' */
-int tagged_len;         /* Actual length of `tagged_out' */
-
 
 		/* malloc.c */
 	struct emallinfo m_data;		/* general information about the memory */
@@ -123,54 +98,74 @@ int tagged_len;         /* Actual length of `tagged_out' */
 	struct gacstat gc_stats;			/* GC statistics.*/
 	long gc_count;						/* GC statistics.*/
 
+		/* out.c */
+	char buffero[TAG_SIZE];	/* Buffer for printing an object in a string */ /* %%ss renamed */
+	char *tagged_out;		/* String where the tagged out is written */
+	int tagged_max;			/* Actual maximum size of `tagged_out' */
+	int tagged_len;			/* Actual length of `tagged_out' */
 
+		/* pattern.c */
+	uint32 delta[ASIZE];	/* Records shifting deltas */
+	uint32 **darray;		/* Pointer to array recording shifting tables */
+
+		/* plug.c */
+	int nstcall;			/* Nested call global variable: signals a nested call and
+							 * trigger an invariant check in generated C routines  */
+	char *inv_mark_tablep;	/* Marking table to avoid checking the same invariant several times */
+
+#ifdef WORKBENCH
+		/* except.c */
+	unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
+#endif
+
+#ifdef EIF_WINDOWS
+		/* except.c */
+	char *exception_trace_string;
+#endif
+
+#ifdef ITERATIVE_MARKING
+		/* garcol.c */
+	struct stack path_stack;				/* Keeps track of explored nodes */
+	struct stack parent_expanded_stack;		/* Records expanded parents */
+#endif
 
 } eif_global_context_t;
 
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */
-#define eif_stack (eif_globals->eif_stack)	/* Calling stack (rt_public) */
-#define eif_trace (eif_globals->eif_trace)	/* Unsolved exception trace */
-#define exdata (eif_globals->exdata)	/* Exception handling global flags */
-#define ex_ign (eif_globals->ex_ign)	/* Item set to 1 to ignore exception */
-#define except (eif_globals->except)	/* Where exception has been raised */
-#define print_history_table (eif_globals->print_history_table)   /* Enable/disable printing of hist. table */ /* %%zs added 'int' type */
-#define ex_string (eif_globals->ex_string)		/* Container of the exception trace */
-
+#define eif_stack	(eif_globals->eif_stack)	/* rt_public */
+#define eif_trace	(eif_globals->eif_trace)	/* rt_public */
+#define ex_ign		(eif_globals->ex_ign)		/* rt_public */
+#define exdata		(eif_globals->exdata)		/* rt_public */
+#define except		(eif_globals->except)		/* rt_private */
+#define print_history_table (eif_globals->print_history_table)   /* rt_private */
+#define ex_string	(eif_globals->ex_string)	/* rt_public */
 #ifdef WORKBENCH
-
-	/* except.c */
-#define db_ign (eif_globals->db_ign)	/* Item set to 1 to ignore exception */ /* %%zmt used only once ! */
-
+#define db_ign (eif_globals->db_ign)	/* rt_public */
 #endif
-
 #ifdef EIF_WINDOWS
-
-	/* except.c */
-#define exception_trace_string (eif_globals->exception_trace_string)
-
+#define exception_trace_string (eif_globals->exception_trace_string)	/* no rt_ */
 #endif
 
-#define op_stack	          (eif_globals->op_stack)         /* rt_shared */
-#define IC                    (eif_globals->IC)               /* rt_public */
-#define iregs			      (eif_globals->iregs)            /* rt_private */
-#define iregsz                (eif_globals->iregsz)           /* rt_private */
-#define argnum                (eif_globals->argnum)           /* rt_private */
-#define locnum                (eif_globals->locnum)           /* rt_private */
-#define tagval                (eif_globals->tagval)           /* rt_private */
-#define inv_mark_table        (eif_globals->inv_mark_table)   /* rt_private */
- 
-#define nstcall               (eif_globals->nstcall)          /* rt_public */
-#define inv_mark_tablep       (eif_globals->inv_mark_tablep)  /* rt_private */
- 
-#define delta				  (eif_globals->delta)            /* rt_private */
-#define darray                (eif_globals->darray)           /* rt_private */
+	/* garcol.c */
+#define g_data		(eif_globals->g_data)			/* rt_shared */
+#define g_stat		(eif_globals->g_stat)			/* rt_shared */
+#define loc_stack	(eif_globals->loc_stack)		/* rt_shared */
+#ifdef ITERATIVE_MARKING
+#define path_stack	(eif_globals->path_stack)		/* rt_private */
+#define parent_expanded_stack (eif_globals->parent_expanded_stack)	/* rt_private */
+#endif
 
-#define buffero               (eif_globals->buffero)          /* rt_private */
-#define tagged_out            (eif_globals->tagged_out)       /* rt_private */
-#define tagged_max            (eif_globals->tagged_max)       /* rt_private */
-#define tagged_len            (eif_globals->tagged_len)       /* rt_private */
+	/* interp.c */
+#define op_stack	(eif_globals->op_stack)         /* rt_shared */
+#define IC			(eif_globals->IC)               /* rt_public */
+#define iregs		(eif_globals->iregs)            /* rt_private */
+#define iregsz		(eif_globals->iregsz)           /* rt_private */
+#define argnum		(eif_globals->argnum)           /* rt_private */
+#define locnum		(eif_globals->locnum)           /* rt_private */
+#define tagval		(eif_globals->tagval)           /* rt_private */
+#define inv_mark_table	(eif_globals->inv_mark_table)   /* rt_private */
 
 	/* malloc.c */
 #define m_data					(eif_globals->m_data)         /* rt_shared */
@@ -194,9 +189,29 @@ int tagged_len;         /* Actual length of `tagged_out' */
 #define gc_stats				(eif_globals->gc_stats)		  /* rt_private */
 #define gc_count				(eif_globals->gc_count)		  /* rt_private */
 
+	/* out.c */
+#define buffero		(eif_globals->buffero)		/* rt_private */
+#define tagged_out	(eif_globals->tagged_out)	/* rt_private */
+#define tagged_max	(eif_globals->tagged_max)	/* rt_private */
+#define tagged_len	(eif_globals->tagged_len)	/* rt_private */
+
+	/* pattern.c */
+#define delta	(eif_globals->delta)	/* rt_private */
+#define darray	(eif_globals->darray)	/* rt_private */
+
+	/* plug.c */
+#define nstcall			(eif_globals->nstcall)			/* rt_public */
+#define inv_mark_tablep	(eif_globals->inv_mark_tablep)	/* rt_private */
 
 
 #else
+
+/******************************************
+ *                                        *
+ *    Traditional run-time definitions    *
+ *                                        *
+ ******************************************/
+
 
 #define EIF_DECL_GLOBAL(x) x
 #define MTC_NOARG
@@ -209,26 +224,25 @@ int tagged_len;         /* Actual length of `tagged_out' */
 #define EIF_END_GET_CONTEXT
 
 
+	/* err_msg.h */
+#ifdef EIF_WINDOWS
+extern char *exception_trace_string;
+#endif
+
 	/* except.c */
 /* Exported data structures (used by the generated C code) */
 extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
 extern struct xstack eif_trace;	/* Unsolved exception trace */
 extern struct eif_except exdata;	/* Exception handling global flags */
 
-#ifdef EIF_WINDOWS
+	/* garcol.c */
+extern struct gacinfo g_data;			/* Garbage collection status */
+extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
+extern struct stack loc_stack;			/* Local indirection stack */
 
-	/* err_msg.h */
-extern char *exception_trace_string;
-
-#endif
-
-/* interp.h */
-extern char *IC;
-extern struct opstack op_stack;
-
-/* plug.c */
-extern int nstcall;
-
+	/* interp.h */
+extern struct opstack op_stack;	/* Operational stack */
+extern char *IC;				/* Interpreter Counter (like PC on a CPU) */
 
 	/* malloc.h */
 extern struct emallinfo m_data;		/* Accounting info from malloc */
@@ -240,6 +254,9 @@ extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
 extern long eiffel_usage;			/* For memory statistics */
 
+	/* plug.c */
+extern int nstcall;	/* Nested call global variable: signals a nested call and
+					 * trigger an invariant check in generated C routines  */
 
 
 #endif	/* EIF_REENTRANT */

@@ -587,6 +587,7 @@ rt_public EIF_BIT eifbcln(EIF_BIT bit)
 	 */
 
 	bcopy((char *) bit, (char *) new_bit, size);
+	return (new_bit);
 }
 
 /*

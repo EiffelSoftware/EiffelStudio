@@ -77,6 +77,7 @@ inherit
 		redefine
 			class_name,
 			default_style,
+			default_ex_style,
 			horizontal_update,
 			vertical_update,
 			on_size
@@ -124,7 +125,7 @@ feature -- Initialization
 				realize_current
 				realize_children
 				shown := true
---				resize_for_working_area
+			--	resize_for_working_area
 				update_scrolling
 			end
 				-- set initial focus
@@ -381,8 +382,13 @@ feature {NONE} -- Implementation
 			-- Maximum scrolling value in x axis
 
 	default_style: INTEGER is
-		once
+		do
 			Result := Ws_child + Ws_visible + Ws_border
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_clientedge
 		end
 
 	class_name: STRING is

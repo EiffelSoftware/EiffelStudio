@@ -1,6 +1,9 @@
--- Argument which is instantiated.
--- It may not be instantiated if the
--- corresponding context was deleted.
+indexing
+	description: "Argument which can be instantiated. It may not be instantiated %
+				% if the corresponding context was deleted."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARG_INSTANCE 
 
@@ -12,68 +15,98 @@ creation
 
 	session_init, storage_init
 	
-feature 
+feature -- creation
 
 	session_init (other: ARG) is
 		do
 			type := other.type
-		end;
+		end
 
-	storage_init (t: CONTEXT_TYPE; c: CONTEXT) is
+	storage_init (t: CONTEXT_TYPE c: CONTEXT) is
+			-- Create `Current' as an instantiated argument
+			-- after retrieving information from the BUILDGEN.
 		do
-			type := t;
+			type := t
+--			!! argument_type.storage_init (t)
 			context := c
-		end;
+		end
+
+--  	formal_storage_init (other: CONTEXT_TYPE) is
+--  			-- Create `Current' as a formal argument (not instantiated)
+--  			-- after rtrieving the information from the BUILDGEN.
+--  		do
+--  			!! argument_type.storage_init (other)
+--  		ensure
+--  			Type_set: type /= Void 
+--  		end
+--  
+--  	set (t: CONTEXT_TYPE p: CMD) is
+--  			-- Set type to `t' and 
+--  			-- parent `p'
+--  		do
+-- 			type := t
+-- 			set_parent (p)
+-- 			!! argument_type.set (t, p)
+--  		end
+
+feature -- Argument Instance part
 
 	instantiated: BOOLEAN is
+			-- Is current argument instantiated?
 		do
 			Result := not (context = Void or else
 				context.deleted)
-		end;
+		end
 
-feature {NONE}
+feature {NONE} -- Attributes
 
-	associated_icon_stone: ARG_INST_ICON;
+	associated_icon_stone: ARG_INST_ICON
 
-feature 
+feature -- Attributes
+
+	type: CONTEXT_TYPE 
+			-- Type of current argument
+
+	context: CONTEXT
+			-- Context that Current represents when instantiated 
+
+feature -- Access
 
 	reset_context is 
+			-- Reset `context'.
 		do
-			context := Void;
+			context := Void
 			if associated_icon_stone /= Void then
-				associated_icon_stone.set_symbol (type.symbol);
-				associated_icon_stone.set_label (type.label);
+				associated_icon_stone.set_symbol (type.symbol)
+				associated_icon_stone.set_label (type.label)
 			end
-		end;
+		end
 
 	reset is 
+			-- Reset Current.
 		do
 			associated_icon_stone := Void
-		end;
+		end
 
 	set_icon_stone (i: ARG_INST_ICON) is
+			-- Set `associated_icon_stone' to `i'.
 		do
 			associated_icon_stone := i
-		end;
+		end
 
 	set_context (other: CONTEXT_STONE) is
+			-- Set `context'.
 		require
 			not_void_other: not (other = Void)
 		do
-			context := other.data;
+			context := other.data
 			if associated_icon_stone /= Void then
-				associated_icon_stone.set_symbol (context.symbol);
-				associated_icon_stone.set_label (context.title_label);
+				associated_icon_stone.set_symbol (context.symbol)
+				associated_icon_stone.set_label (context.title_label)
 			end
-		end;
+		end
 
-	type: CONTEXT_TYPE;
-
-	context: CONTEXT;
-
--- **************
--- Stone features
--- **************
+feature -- Identification
 
 	identifier: INTEGER is
 			-- Unique identifier for storage
@@ -84,12 +117,12 @@ feature
 			else
 				Result := - type.identifier
 			end
-		end;
+		end
 
 	data: ARG_INSTANCE is
 		do
 			Result := Current
-		end;
+		end
 
 	label: STRING is
 		do
@@ -97,8 +130,8 @@ feature
 				Result := context.title_label
 			else
 				Result := type.label
-			end;
-		end;
+			end
+		end
 
 	symbol: PIXMAP is
 		do
@@ -106,15 +139,15 @@ feature
 				Result := context.symbol
 			else
 				Result := type.symbol
-			end;
-		end;
+			end
+		end
 
 	source: WIDGET is
 		do
 			if instantiated then
 				Result := context.widget
-			end;
-		end;
+			end
+		end
 
 feature -- Code generation
 
@@ -125,6 +158,37 @@ feature -- Code generation
 			else
 				Result := ""
 			end
-		end;
+		end
+
+feature -- Argument part
+
+--  	eiffel_type: STRING is
+--  			-- Eiffel type of the argument
+--  		do
+--  			Result := type.eiffel_type
+--  		end
+--  
+--  	parent_type: CMD is
+--  		-- Command which defines
+--  		-- Current argument if
+--  		-- introduced by inheritance
+-- 		do
+-- 			Result := argument_type.parent_type
+-- 		end
+--  
+--  	set_parent (c: CMD) is
+-- 		require
+-- 			argument_type_not_void: argument_type /= Void
+--  		do
+--  			argument_type.set_parent (c)
+--  		end
+--  
+--  	inherited: BOOLEAN is
+--  		do
+--  			Result := not (parent_type = Void)
+--  		end
+-- 
+--		argument_type: ARG 
+			-- Type of Current argument
 
 end

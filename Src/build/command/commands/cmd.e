@@ -3,53 +3,31 @@ deferred class CMD
 
 inherit
 
-	DATA;
-	SHARED_APPLICATION;
-	WINDOWS;
+	DATA
+	SHARED_APPLICATION
+	WINDOWS
 	EDITABLE
 	
 feature -- Editable
 
 	create_editor is
 		local
-			ed: CMD_EDITOR;
+			ed: COMMAND_TOOL
 		do
 			if command_editor = Void then
-				ed := window_mgr.cmd_editor;
-				ed.set_command (Current);
-			end;
-			window_mgr.display (command_editor);
-		end
-
-feature -- Instances
-
-	associated_instance_editors: LINKED_LIST [CMD_INST_EDITOR] is
-			-- Instance editor that has Current command
-		local
-			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
-			ed: CMD_INST_EDITOR
-		do
-			!! Result.make;
-			inst_editors := window_mgr.instance_editors;
-			from
-				inst_editors.start
-			until
-				inst_editors.after
-			loop
-				ed := inst_editors.item;
-				if ed.command_instance /= Void and then
-					(ed.command_instance.associated_command = Current) 
-				then
-					Result.extend (ed)
-				end;
-				inst_editors.forth
+				ed := window_mgr.command_tool
+				ed.set_command (Current)
+			else
+				ed := command_editor.command_tool
 			end
-		end;
+--			window_mgr.display (ed)
+			ed.display
+		end
 
 	has_instances: BOOLEAN is
 			-- Does Current have instances?
 		local
-			s: STATE;
+			s: STATE
 			b: BEHAVIOR
 		do
 			from
@@ -57,7 +35,7 @@ feature -- Instances
 			until
 				Shared_app_graph.off or Result
 			loop
-				s ?= Shared_app_graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration
 				if s /= Void then
 					from
 						s.start
@@ -65,38 +43,38 @@ feature -- Instances
 						s.after or Result
 					loop
 						if not s.input.deleted then
-							b := s.output.data;
+							b := s.output.data
 							from
 								b.start
 							until
 								b.after or
 								Result
 							loop
-								Result := (b.output.associated_command = Current);
+								Result := (b.output.associated_command = Current)
 								b.forth
-							end;
-						end;
+							end
+						end
 						s.forth
-					end;
-				end;
+					end
+				end
 				Shared_app_graph.forth
 			end
-		end;
+		end
 
 	contexts_with_instances: LINKED_LIST [CONTEXT] is
 			-- Contexts that use Current command instances
 		local
-			s: STATE;
-			b: BEHAVIOR;
+			s: STATE
+			b: BEHAVIOR
 			found: BOOLEAN
 		do
-			!! Result.make;
+			!! Result.make
 			from
 				Shared_app_graph.start
 			until
 				Shared_app_graph.off 
 			loop
-				s ?= Shared_app_graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration
 				if s /= Void then
 					from
 						s.start
@@ -104,44 +82,46 @@ feature -- Instances
 						s.after
 					loop
 						if not s.input.deleted then
-							b := s.output.data;
+							b := s.output.data
 							from
-								b.start;
-								found := False;
+								b.start
+								found := False
 							until
 								b.after or else found
 							loop
-								found := (b.output.associated_command = Current);
+								found := (b.output.associated_command = Current)
 								b.forth
-							end;
+							end
 							if found then
 								if not Result.has (s.input) then
 									Result.extend (s.input)
 								end
-							end;
-						end;
+							end
+						end
 						s.forth
-					end;
-				end;
+					end
+				end
 				Shared_app_graph.forth
 			end
-		end;
+		end
 
 	instances: LINKED_LIST [CMD_INSTANCE] is
 			-- Instances for Current command
 		local
-			s: STATE;
-			b: BEHAVIOR;
-			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
-			ed: CMD_INST_EDITOR		
+			s: STATE
+			b: BEHAVIOR
+--			command_tools: LINKED_LIST [COMMAND_TOOL]
+			command_tools: LINKED_LIST [COMMAND_TOOL]
+			ed: COMMAND_TOOL		
+			cmd_tool: COMMAND_TOOL
 		do
-			!! Result.make;
+			!! Result.make
 			from
 				Shared_app_graph.start
 			until
 				Shared_app_graph.off 
 			loop
-				s ?= Shared_app_graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration
 				if s /= Void then
 					from
 						s.start
@@ -149,7 +129,7 @@ feature -- Instances
 						s.after
 					loop
 						if not s.input.deleted then
-							b := s.output.data;
+							b := s.output.data
 							from
 								b.start
 							until
@@ -161,120 +141,163 @@ feature -- Instances
 									end
 								end
 								b.forth
-							end;
-						end;
+							end
+						end
 						s.forth
-					end;
-				end;
+					end
+				end
 				Shared_app_graph.forth
-			end;
+			end
 				-- Get instances that hasn't been
 				-- inserted into a behaviour yet
-			inst_editors := associated_instance_editors;
+--			command_tools := associated_instance_editors
+--			from
+--				command_tools.start
+--			until
+--				command_tools.after
+--			loop
+--				ed := command_tools.item
+--				if not Result.has (ed.command_instance) then
+--					Result.extend (ed.command_instance)
+--				end
+--				command_tools.forth
+--			end
+			command_tools := associated_command_tools
 			from
-				inst_editors.start
+				command_tools.start
 			until
-				inst_editors.after
+				command_tools.after
 			loop
-				ed := inst_editors.item;
-				if not Result.has (ed.command_instance) then
-					Result.extend (ed.command_instance)
+				cmd_tool := command_tools.item
+				if not Result.has (cmd_tool.command_instance) then
+					Result.extend (cmd_tool.command_instance)
 				end
-				inst_editors.forth
+				command_tools.forth
 			end
-		end;
+		end
 
-	instance_counter: INT_GENERATOR;
+	associated_command_tools: LINKED_LIST [COMMAND_TOOL] is
+			-- Command tools having an instance of Current command.
+		local
+			tool_list: LINKED_LIST [COMMAND_TOOL]
+			a_tool: COMMAND_TOOL
+		do
+			!! Result.make
+			tool_list := window_mgr.command_tools
+			from
+				tool_list.start
+			until
+				tool_list.after
+			loop
+				a_tool := tool_list.item
+				if a_tool.command_instance /= Void and then a_tool.edited_command = Current then
+					Result.extend (a_tool)
+				end
+				tool_list.forth
+			end
+			a_tool := main_panel.command_tool
+			if  a_tool.command_instance /= Void and then a_tool.edited_command = Current then
+				Result.extend (a_tool)
+			end
+		end
+
+	instance_counter: INT_GENERATOR
 
 	instance_count: INTEGER is
 		do
 			if instance_counter = Void then
-				!!instance_counter;
-			end;
-			Result := instance_counter.value;
-			instance_counter.next;
-		end;
+				!! instance_counter
+			end
+			Result := instance_counter.value
+			instance_counter.next
+		end
 
 feature -- Stone
 
 	identifier: INTEGER is
 		deferred
-		end;
+		end
 
 	eiffel_type: STRING is
 			-- Name of the class representing
 			-- Current command
 		deferred
-		end;
+		end
 
 	eiffel_type_to_lower: STRING is
 			-- Name of the class representing
 			-- Current command in lower case
 		do
-			Result := clone (eiffel_type);
+			Result := clone (eiffel_type)
 			Result.to_lower
-		end;
+		end
 
 	eiffel_type_to_upper: STRING is
 			-- Name of the class representing
 			-- Current command in upper case
 		do
-			Result := clone (eiffel_type);
+			Result := clone (eiffel_type)
 			Result.to_upper
-		end;
+		end
 
 	arguments: EB_LINKED_LIST [ARG] is
 			-- Arguments of Current command
 			-- (Currently restricted to contexts)
 		deferred
-		end;
+		end
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is
 			-- Exit labels of Current command
 		deferred
-		end;
+		end
 
 	eiffel_text: STRING is
 			-- Eiffel class text of Current
 			-- command
 		deferred
-		end;
+		end
 
 	data: CMD is
 		do
 			Result := Current
-		end;
+		end
 
 	symbol: PIXMAP is
 		deferred
-		end;
+		end
 
 feature -- Editing
 
 	set_eiffel_text (s: STRING) is
 		do
-		end;
+		end
 
-	command_editor: CMD_EDITOR;
+	command_editor: COMMAND_EDITOR
 			-- Associated command_editor
 
-	set_editor (ed: CMD_EDITOR) is
+	set_editor (ed: like command_editor) is
 			-- Set command_editor to `ed'.
 		do
+			-- TODO: when setting an editor, it has to:
+			-- 1. check that it is not currently edited in another editor
+			-- 2a. If so, ask the question to the user if he wants to create
+			--     a new command, of if his changes must be apllied to each
+			--     instance of the command.
+			-- 2b. If not, just edit the command
 			command_editor := ed
-		end;
+		end
 
 	reset is
 			-- `Forget' command_editor.
 		do
 			command_editor := Void
-		end;
+		end
 
 	edited: BOOLEAN is
 			-- Is Current command being edited?
 		do
 			Result := not (command_editor = Void)
-		end;
+		end
 
 
 feature -- Code Generation
@@ -283,110 +306,90 @@ feature -- Code Generation
 			-- Code generation for the 
 			-- inherit clause of Current.
 		local
-			old_label, temp: STRING;
-			n: LOCAL_NAMER;
+			old_label, temp: STRING
+			n: LOCAL_NAMER
 		do
-			!!n.make ("argument");
-			!!Result.make (0);
-			Result.append (eiffel_type_to_upper);
-			Result.append ("%N%T%Trename%N%T%T%Texecute as ");
-			temp := eiffel_type_to_lower;
-			Result.append (temp);
-			Result.append ("_execute,");
-			Result.append ("%N%T%T%Tmake as ");
-			Result.append (temp);
-			Result.append ("_make");
-			from
-				arguments.start
-			until
-				arguments.after
-			loop
-				Result.append (",%N%T%T%T");
-				n.next;
-				Result.append (n.value);
-				Result.append (" as ");
-				Result.append (temp);
-				Result.append ("_");
-				Result.append (n.value);
-				arguments.forth
-			end;
-			Result.append ("%N%T%Tend;%N%T");
-				temp.to_upper;
-			Result.append (temp);
-			Result.append ("%N%T%Trename%N%T%T%Tmake as ");
-				temp.to_lower;
-			Result.append (temp);
-			Result.append ("_make");
-			from 
-				n.reset;
-				arguments.start
-			until
-				arguments.after
-			loop
-				Result.append (", %N%T%T%T");
-				n.next;
-				Result.append (n.value);
-				Result.append (" as ");
-				Result.append (temp);
-				Result.append ("_");
-				Result.append (n.value);
-				arguments.forth
-			end;
-			Result.append ("%N%T%Tredefine%N%T%T%Texecute");
-			Result.append ("%N%T%Tselect%N%T%T%Texecute%N%T%Tend");
-		end;
+			!! n.make ("argument")
+			!! Result.make (0)
+			Result.append (eiffel_type_to_upper)
+			if arguments.count > 0 then
+				Result.append ("%N%T%Trename%N%T%T%T")
+				temp := eiffel_type_to_lower
+				Result.append ("argument1 as ")
+				Result.append (temp)
+				Result.append ("_argument1")
+				from
+					arguments.start
+					arguments.forth
+					n.next
+				until
+					arguments.after
+				loop
+					Result.append (",%N%T%T%T")
+					n.next
+					Result.append (n.value)
+					Result.append (" as ")
+					Result.append (temp)
+					Result.append ("_")
+					Result.append (n.value)
+					arguments.forth
+				end
+			end
+			Result.append ("%N%T%Tredefine%N%T%T%Texecute,%N%T%T%Tmake%N%T%Tend")
+		end
 
 	eiffel_body_text: STRING is
 			-- Code generation for the 
 			-- body of the command. 
 		local
-			temp: STRING;
+			temp: STRING
 		do
-			!!Result.make (0);
-			Result.append ("%Texecute is%N%T%Tdo%N%T%T%T");
-				temp := clone (eiffel_type);
-				temp.to_lower;
-			Result.append (temp);
-			Result.append ("_execute;%N%T%Tend;%N%N");
-		end;
+			!! Result.make (0)
+			Result.append ("%Texecute is%N%T%Tdo%N%T%T%TPrecursor%N%T%Tend")
+-- 				temp := clone (eiffel_type)
+-- 				temp.to_lower
+-- 			Result.append (temp)
+-- 			Result.append ("_execute%N%T%Tend%N%N")
+		end
 
 	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is
 			-- Code generation for the 
 			-- creation clause of Current.
 		do
-			!!Result.make (0);
-			Result.append ("%T%T%T");
-			Result.append (eiffel_type_to_lower);
-			Result.append ("_make");
+			!! Result.make (0)
+			Result.append ("%T%T%T")
+-- 			Result.append (eiffel_type_to_lower)
+-- 			Result.append ("_make")
+			Result.append ("Precursor")
 			if not l.empty then
-				Result.append (" (");
+				Result.append (" (")
 				from
 					l.start
 				until
 					l.after
 				loop
-					Result.append (l.item);
-					l.forth;
+					Result.append (l.item)
+					l.forth
 					if not l.after then
-						Result.append (", ");
-					end;
-				end;
-				Result.append (")");
-			end;
-			Result.append (";%N");
-		end;
+						Result.append (", ")
+					end
+				end
+				Result.append (")")
+			end
+			Result.append ("%N")
+		end
 
 	remove_class is
 			-- Remove associated class file when command
 			-- is deleted.
 		deferred
-		end;
+		end
 
 	recreate_class is
 			-- Regenerate associated class file when class
 			-- is undeleted
 		deferred
-		end;
+		end
 
 feature {NONE}
 

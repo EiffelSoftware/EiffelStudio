@@ -40,6 +40,8 @@ feature {NONE}
 			Result := label.hash_code
 		end;
 
+feature {NEW_LABEL_BOX, LABEL_BOX} -- Comparison
+
 	same (other: CMD_LABEL): BOOLEAN is
 		do
 			Result := not (other = Void) and then

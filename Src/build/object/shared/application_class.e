@@ -35,6 +35,7 @@ feature -- Creation
 			class_name := a_name
 			!! query_list.make
 			!! command_list.make
+			!! routine_list.make
 		end
 
 feature -- Attributes
@@ -47,6 +48,9 @@ feature -- Attributes
 
 	command_list: LINKED_LIST [APPLICATION_COMMAND]
 			-- List of commands
+
+	routine_list: LINKED_LIST [APPLICATION_ROUTINE]
+			-- List of routines
 
 feature -- Access
 
@@ -64,6 +68,14 @@ feature -- Access
 			valid_query: a_query /= Void 
 		do
 			query_list.extend (a_query)
+		end
+
+	add_routine (a_routine: APPLICATION_ROUTINE) is
+			-- Add `a_routine' to the list of routines.
+		require
+			valid_routine: a_routine /= Void 
+		do
+			routine_list.extend (a_routine)
 		end
 
 feature -- SCROLLABLE_LIST_ELEMENT

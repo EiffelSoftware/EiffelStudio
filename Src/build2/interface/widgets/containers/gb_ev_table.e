@@ -8,10 +8,10 @@ class
 	GB_EV_TABLE
 
 	-- The following properties from EV_TABLE are manipulated by `Current'.
---	-- item_x_position - Performed on the real object and the display_object child.
---	-- item_y_position - Performed on the real object and the display_object child
---	-- item_width - Performed on the real object and the display_object child
---	-- item_height - Performed on the real object and the display_object child
+	-- border_width - Performed on the real object and the display_object child.
+	-- row_spacing - Performed on the real object and the display_object child.
+	-- column_spacing - Performed on the real object and the display_object child.
+	-- is_homogeneous - Performed on the real object and the display_object child.
 
 inherit
 	
@@ -78,10 +78,10 @@ feature -- Access
 			create homogeneous_button.make_with_text ("Enable_homogeneous")
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
 			Result.extend (homogeneous_button)
---			create button.make_with_text ("Position items")
---
---			Result.extend (button)
---			button.select_actions.extend (agent show_layout_window)
+			create layout_button.make_with_text ("Position children")
+			layout_button.select_actions.extend (agent show_layout_window)
+			Result.extend (layout_button)
+			
 			update_attribute_editor
 		end
 		
@@ -314,33 +314,34 @@ feature {NONE} -- Implementation
 			list_item: EV_LIST_ITEM
 			grid_control_holder: EV_FRAME
 		do
---			create Result
---			create vertical_box
---			Result.extend (vertical_box)
---			create horizontal_box
---			vertical_box.extend (horizontal_box)
---			create drawing_area
---			
---			drawing_area.pointer_motion_actions.force_extend (agent track_movement (?, ?))
---			drawing_area.pointer_button_press_actions.force_extend (agent button_pressed (?, ?, ?))
---			drawing_area.pointer_button_release_actions.force_extend (agent button_released (?, ?, ?))
+			create Result
+			create vertical_box
+			Result.extend (vertical_box)
+			create horizontal_box
+			vertical_box.extend (horizontal_box)
+			create drawing_area
+			drawing_area.set_minimum_size (200, 200)
+			
+			drawing_area.pointer_motion_actions.force_extend (agent track_movement (?, ?))
+			drawing_area.pointer_button_press_actions.force_extend (agent button_pressed (?, ?, ?))
+			drawing_area.pointer_button_release_actions.force_extend (agent button_released (?, ?, ?))
 --			create list
 --			
---			create world
---			create pixmap
---			drawing_area.resize_actions.force_extend (agent update_pixmap_size)
---			drawing_area.resize_actions.force_extend (agent draw_widgets)
---			create projector.make_with_buffer (world, pixmap, drawing_area)
+			create world
+			create pixmap
+			drawing_area.resize_actions.force_extend (agent update_pixmap_size)
+			drawing_area.resize_actions.force_extend (agent draw_widgets)
+			create projector.make_with_buffer (world, pixmap, drawing_area)
 --			
---			create scrollable_area
---			scrollable_area.set_minimum_size (200, 200)
---			create ok_button.make_with_text ("OK")
---			ok_button.select_actions.extend (agent Result.destroy)
---			vertical_box.extend (ok_button)
---			vertical_box.disable_item_expand (ok_button)
---			horizontal_box.extend (scrollable_area)
---			scrollable_area.extend (drawing_area)
---			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
+			create scrollable_area
+			scrollable_area.set_minimum_size (200, 200)
+			create ok_button.make_with_text ("OK")
+			ok_button.select_actions.extend (agent Result.destroy)
+			vertical_box.extend (ok_button)
+			vertical_box.disable_item_expand (ok_button)
+			horizontal_box.extend (scrollable_area)
+			scrollable_area.extend (drawing_area)
+			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
 --			
 --			create vertical_box
 --			horizontal_box.extend (vertical_box)
@@ -414,12 +415,12 @@ feature {NONE} -- Implementation
 --			if biggest_x > scrollable_area.width then
 --				drawing_area.set_minimum_width (biggest_x)
 --			else
---				drawing_area.set_minimum_width (scrollable_area.width)
+				drawing_area.set_minimum_width (scrollable_area.width)
 --			end
 --			if biggest_y > scrollable_area.height then
 --				drawing_area.set_minimum_height (biggest_y)
 --			else
---				drawing_area.set_minimum_height (scrollable_area.height)
+				drawing_area.set_minimum_height (scrollable_area.height)
 --			end
 		end
 		
@@ -427,12 +428,12 @@ feature {NONE} -- Implementation
 	update_pixmap_size (x, y, width, height: INTEGER) is
 			-- Resize `pixmap' to `width', `height'.
 		do
---				-- A pixmap is 1x1 as default, 
---				-- and you can not set the size to 0x0.
---				-- Why is this?
---			if width >= 1 and height >=1 then
---				pixmap.set_size (width, height)	
---			end
+				-- A pixmap is 1x1 as default, 
+				-- and you can not set the size to 0x0.
+				-- Why is this?
+			if width >= 1 and height >=1 then
+				pixmap.set_size (width, height)	
+			end
 		end
 		
 	draw_widgets is
@@ -441,18 +442,40 @@ feature {NONE} -- Implementation
 			listi: EV_LIST_ITEM
 			relative_pointa, relative_pointb: EV_RELATIVE_POINT
 			figure_rectangle: EV_FIGURE_RECTANGLE
+			widgets: ARRAYED_LIST [EV_WIDGET]
+			widget: EV_WIDGET
 		do
---				-- Remove all previous figures from `world'.
---			world.wipe_out
---				-- We must  draw the grid if necessary.
---			if grid_visible_control.is_selected then
---				draw_grid	
---			end	
---			from
---				first.start
---			until
---				first.off
---			loop
+			io.putstring ("draw widgets called")
+				-- Remove all previous figures from `world'.
+			world.wipe_out
+				-- We must  draw the grid if necessary.
+			draw_grid	
+			
+			widgets := first.item_list
+			from
+				widgets.start
+			until
+				widgets.off
+			loop
+				widget := widgets.item
+				if widget /= selected_item then
+					create relative_pointa.make_with_position ((first.item_column_position (widget) - 1) * grid_size, (first.item_row_position (widget) - 1) * grid_size)
+					create relative_pointb.make_with_position ((first.item_column_position (widget) - 1) * grid_size + (first.item_column_span (widget)) * grid_size, (first.item_row_position (widget) - 1) * grid_size + (first.item_row_span (widget)) * grid_size)
+					create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
+					figure_rectangle.set_foreground_color (black)
+					figure_rectangle.remove_background_color
+					world.extend (figure_rectangle)
+				end
+				widgets.forth
+			end
+			if selected_item /= Void then
+					create relative_pointa.make_with_position ((first.item_column_position (selected_item) - 1) * grid_size, (first.item_row_position (selected_item) - 1) * grid_size)
+					create relative_pointb.make_with_position ((first.item_column_position (selected_item) - 1) * grid_size + (first.item_column_span (selected_item)) * grid_size, (first.item_row_position (selected_item) - 1) * grid_size + (first.item_row_span (selected_item)) * grid_size)
+					create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
+					figure_rectangle.remove_background_color
+					figure_rectangle.set_foreground_color (red)
+					world.extend (figure_rectangle)
+			end
 --				listi := list.selected_item
 --				if list.selected_item /= Void and then first.item = list.selected_item.data then
 --					selected_item_index := first.index
@@ -477,7 +500,7 @@ feature {NONE} -- Implementation
 --						world.extend (figure_rectangle)
 --					end
 --					
---			projector.project
+			projector.project
 		end
 		
 	draw_grid is
@@ -488,38 +511,43 @@ feature {NONE} -- Implementation
 			figure_dot: EV_FIGURE_DOT
 			color: EV_COLOR
 			relative_point: EV_RELATIVE_POINT
+			rows_size, columns_size: INTEGER
 		do
---			-- Create a light green for the grid color.
---			create color.make_with_8_bit_rgb (196, 244, 204)
---		from
---			counter := 0
---		until
---			counter > drawing_area.width
---		loop
---			create figure_line.make_with_positions (counter, 0, counter, drawing_area.height)
---			figure_line.set_foreground_color (color)
---			create relative_point.make_with_position (drawing_area.width, counter)
---			world.extend (figure_line)
---			counter := counter + grid_size	
---		end
---		from
---			counter := 0
---		until
---			counter > drawing_area.height
---		loop
---			create figure_line.make_with_positions (0, counter, drawing_area.width, counter)
---			figure_line.set_foreground_color (color)
---			figure_line.set_foreground_color (color)
---			world.extend (figure_line)
---			counter := counter + grid_size
---		end
+				-- Create a light green for the grid color.
+			create color.make_with_8_bit_rgb (196, 244, 204)
+			
+				-- compute commonly requested values.
+			rows_size := first.rows * grid_size
+			columns_size := first.columns * grid_size
+			
+			from
+				counter := 0
+			until
+				counter > columns_size
+			loop
+				create figure_line.make_with_positions (counter, 0, counter, rows_size)
+				figure_line.set_foreground_color (color)
+				create relative_point.make_with_position (drawing_area.width, counter)
+				world.extend (figure_line)
+				counter := counter + grid_size	
+			end
+			from
+				counter := 0
+			until
+				counter > rows_size
+			loop
+				create figure_line.make_with_positions (0, counter, columns_size, counter)
+				figure_line.set_foreground_color (color)
+				world.extend (figure_line)
+				counter := counter + grid_size
+			end
 		end
 		
 --	set_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
 --			-- Set x_position of `widget' in `first' to `x_pos'.
 --		do
 --			--| FIXME
---			first.set_item_x_position (widget, x_pos)
+--			first.set_item_span_item_x_position (widget, x_pos)
 --			--second.set_item_x_position (widget, x_pos)
 --		end
 --		
@@ -527,7 +555,7 @@ feature {NONE} -- Implementation
 --			-- Set y_position of `widget' in `first' to `y_pos'.
 --		do
 --			--| FIXME
---			first.set_item_y_position (widget, y_pos)										
+--			first.set_item_span_item_y_position (widget, y_pos)										
 --			--second.set_item_y_position (widget, y_pos)
 --		end
 --		
@@ -535,7 +563,7 @@ feature {NONE} -- Implementation
 --			-- Set width of `widget' in `first' to `new_width'.
 --		do
 --			--| FIXME
---			first.set_item_width (widget, new_width)
+--			first.set_item_span_item_width (widget, new_width)
 --			--second.set_item_width (widget, new_width)
 --		end
 --		
@@ -543,10 +571,36 @@ feature {NONE} -- Implementation
 --			-- Set height of `widget' in `first' to `new_height'.
 --		do
 --			--| FIXME
---			first.set_item_height (widget, new_height)
+--			first.set_item_span_item_height (widget, new_height)
 --			--second.set_item_height (widget, new_height)
 --		end	
 		
+	set_item_span (v: EV_WIDGET; columns, rows: INTEGER) is
+			-- Adjust `v' so that it spans `columns', `rows' within
+			-- objects.
+		local
+			second_widget: EV_WIDGET
+		do
+			first.set_item_span (v, columns, rows)
+				-- Now we need to get the widget represented in objects at the
+				-- second place.
+			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+			(objects @ 2).set_item_span (second_widget, columns, rows)
+		end
+		
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+			-- Adjust `v' so that its new position is  `a_column', `a_row' within
+			-- objects.
+		local
+			second_widget: EV_WIDGET
+		do
+				-- Now we need to get the widget represented in objects at the
+				-- second place. We must do this before we move the first widget.
+			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+
+			first.set_item_position (v, a_column, a_row)
+			(objects @ 2).set_item_position (second_widget, a_column, a_row)
+		end
 
 	track_movement (x, y: INTEGER) is
 			-- Track `x', `y' position of cursor, and 
@@ -556,7 +610,15 @@ feature {NONE} -- Implementation
 			temp: INTEGER
 			temp_x, temp_y: INTEGER
 			new_x, new_y: INTEGER
+			column_position, row_position, end_row_position, end_column_position: INTEGER
+			new_column, new_row: INTEGER
 		do
+			if selected_item /= Void then
+				column_position := (first.item_column_position (selected_item) - 1) * grid_size
+				row_position := (first.item_row_position (selected_item) - 1) * grid_size
+				end_column_position := column_position + first.item_column_span (selected_item) * grid_size
+				end_row_position := row_position + first.item_row_span (selected_item) * grid_size				
+
 --				-- Store `x' and `y' for use elsewhere.
 --			last_x := x
 --			last_y := y
@@ -564,11 +626,11 @@ feature {NONE} -- Implementation
 --				-- is selected for manipulation.
 --			if selected_item_index > 0  then
 --				widget := first.i_th (selected_item_index)
---				if close_to (x, y, widget.x_position + widget.width, widget.y_position + widget.height) or
---					close_to (x, y, widget.x_position, widget.y_position) then
---					if not resizing_widget then
---						set_all_pointer_styles (sizenwse_cursor)	
---					end
+				if close_to (x, y, end_column_position, end_row_position) or
+					close_to (x, y, column_position, row_position) then
+					if not resizing_widget then
+						set_all_pointer_styles (sizenwse_cursor)	
+					end
 --				elseif close_to (x, y, widget.x_position, widget.y_position + widget.height) or
 --					close_to (x, y, widget.x_position + widget.width, widget.y_position) then
 --					if not resizing_widget then
@@ -584,30 +646,30 @@ feature {NONE} -- Implementation
 --					if not resizing_widget then
 --						set_all_pointer_styles (sizewe_cursor)	
 --					end
---				elseif x > widget.x_position and x < widget.x_position + widget.width and y > widget.y_position and y < widget.y_position + widget.height then
---					if not resizing_widget then
---						set_all_pointer_styles (sizeall_cursor)	
---					end
---				else
---					if not resizing_widget or not moving_widget then
---						set_all_pointer_styles (standard_cursor)
---					end
---				end
---			end
---			if resizing_widget then
---					-- Update scrolling status.
---				update_scrolling (x, y)
---				temp_x := x				
---				if snap_button.is_selected then
---					new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
---					new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
---				else
---					new_x := temp_x
---					new_y := y
---				end
---				widget := first.i_th (selected_item_index)
---
---				if x_scale /= 0 then
+				elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
+
+					if not resizing_widget then
+						set_all_pointer_styles (sizeall_cursor)	
+					end
+				else
+					if not resizing_widget or not moving_widget then
+						set_all_pointer_styles (standard_cursor)
+					end
+				end
+			end
+			
+			if resizing_widget then
+					-- Update scrolling status.
+	--			update_scrolling (x, y)
+				temp_x := x				
+				new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
+				new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
+					
+				if x_scale /= 0 then
+					new_column := new_x // grid_size.max (first.columns - first.item_column_position (selected_item) + 1)
+					if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
+						set_item_span (selected_item, new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item))	
+					end
 --				if x_offset = 0 then
 --					if new_x < widget.x_position + widget.width - widget.minimum_width then
 --						if widget.x_position + (new_x - widget.x_position) > 0 then
@@ -626,9 +688,14 @@ feature {NONE} -- Implementation
 --				else
 --					set_item_width (widget, (new_x - widget.x_position).max (widget.minimum_width))
 --				end
---				end
---				
---				if y_scale /= 0 then
+				--	first.set_item_span_item_
+				end
+				
+				if y_scale /= 0 then
+					new_row := new_y // grid_size.max (first.rows - first.item_row_position (selected_item) + 1)
+					if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
+						first.set_item_span (selected_item, first.item_column_span (selected_item), new_row.max (1).min (first.rows - first.item_row_position (selected_item) + 1))	
+					end
 --				if y_offset = 0 then
 --					if new_y < widget.y_position + widget.height - widget.minimum_height then
 --						if widget.y_position + (new_y - widget.y_position) > 0 then
@@ -647,31 +714,27 @@ feature {NONE} -- Implementation
 --				else
 --					set_item_height (widget, (new_y - widget.y_position).max (widget.minimum_height))
 --				end
---				end								
---				draw_widgets
---			end
---			if moving_widget then
---					-- Update scrolling status.
---				update_scrolling (x, y)
---				if snap_button.is_selected then
---					new_x := x - ((x - x_offset) \\ grid_size)
---					new_y := y - ((y - y_offset) \\ grid_size)	
---				else
---					new_x := x
---					new_y := y
---				end
---				if new_x - x_offset > 0 then	
---					set_x_position (widget, new_x - x_offset)
---				else
---					set_x_position (widget, 0)
---				end
---				if new_y - y_offset > 0 then
---					set_y_position (widget,  new_y - y_offset)	
---				else
---					set_y_position (widget, 0)
---				end
---				draw_widgets
---			end
+				end								
+				draw_widgets
+			end
+			if moving_widget then
+					-- Update scrolling status.
+	--			update_scrolling (x, y)
+	
+				new_x := x - ((x - x_offset) \\ grid_size)
+				new_y := y - ((y - y_offset) \\ grid_size)	
+				io.putstring ("New positions : " + new_x.out + " : " + new_y.out + "%N")
+				io.putstring ("Column information : " + first.columns.out + " : " + first.item_column_span (selected_item).out + "%N")
+				io.putstring ("Row information : " + first.rows.out + " : " + first.item_row_span (selected_item).out + "%N")
+				temp_x := ((new_x - x_offset) // grid_size + 1).min (first.columns - first.item_column_span (selected_item) + 1).max (1)
+				temp_y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
+				io.putstring ("Track movement info : " + temp_x.out + " : " + temp_y.out + " : " + first.item_column_span (selected_item).out + " : " + first.item_row_span (selected_item).out + "%N")
+				if (first.item_column_position (selected_item) /= temp_x or first.item_row_position (selected_item) /= temp_y) and
+					first.area_clear_excluding_widget (selected_item, temp_x, temp_y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
+					set_item_position (selected_item, temp_x, temp_y)
+				end
+				draw_widgets
+			end
 		end
 		
 --	x_scrolling_velocity: INTEGER is
@@ -851,20 +914,20 @@ feature {NONE} -- Implementation
 --		
 --		
 --		
---	close_to (current_x, current_y, desired_x, desired_y: INTEGER): BOOLEAN is
---			-- Is position `current_x', `current_y' within `accuracy_value' of `desired_x', `desired_y'.
---		do
---			if (current_x - desired_x).abs < accuracy_value and (current_y - desired_y).abs < accuracy_value then
---				Result := True
---			end
---		end
---
---	close_to_line (coordinate_a, coordinate_b, line_offset, line_start, line_end: INTEGER): BOOLEAN is
---		do
---			if coordinate_a > line_start and coordinate_a < line_end and (coordinate_b - line_offset).abs < accuracy_value then
---				Result := True
---			end
---		end
+	close_to (current_x, current_y, desired_x, desired_y: INTEGER): BOOLEAN is
+			-- Is position `current_x', `current_y' within `accuracy_value' of `desired_x', `desired_y'.
+		do
+			if (current_x - desired_x).abs < accuracy_value and (current_y - desired_y).abs < accuracy_value then
+				Result := True
+			end
+		end
+
+	close_to_line (coordinate_a, coordinate_b, line_offset, line_start, line_end: INTEGER): BOOLEAN is
+		do
+			if coordinate_a > line_start and coordinate_a < line_end and (coordinate_b - line_offset).abs < accuracy_value then
+				Result := True
+			end
+		end
 --		
 --	grid_size: INTEGER is
 --			-- Size of current grid from
@@ -873,40 +936,55 @@ feature {NONE} -- Implementation
 --			Result := grid_size_control.value
 --		end
 --		
---	half_grid_size: INTEGER is
---			-- Half size of current grid.
---		do
---			Result := grid_size // 2
---		end
---	
---	button_pressed (x, y, a_button: INTEGER) is
---			-- A button has been pressed. If `a_button' = 1 then
---			-- check for movement/resizing.
---		local
---			widget: EV_WIDGET
---		do
---			if selected_item_index > 0 then
+	half_grid_size: INTEGER is
+			-- Half size of current grid.
+		do
+			Result := grid_size // 2
+		end
+	
+	button_pressed (x, y, a_button: INTEGER) is
+			-- A button has been pressed. If `a_button' = 1 then
+			-- check for movement/resizing.
+		local
+			widget: EV_WIDGET
+			widget_list: ARRAYED_LIST [EV_WIDGET]
+			column_position, row_position, column_span, row_span, end_column_position, end_row_position: INTEGER
+		do
+			--if selected_item = Void then
+				
+			--end
+			if selected_item /= Void then
+				column_position := (first.item_column_position (selected_item) - 1) * grid_size
+				row_position := (first.item_row_position (selected_item) - 1) * grid_size
+				end_column_position := column_position + first.item_column_span (selected_item) * grid_size
+				end_row_position := row_position + first.item_row_span (selected_item) * grid_size
+				row_span := first.item_row_span (selected_item) * grid_size
+				column_span := first.item_column_span (selected_item) * grid_size
+				--column_span := (first.item_row_span (selected_item) - 1) * grid_size
+				
+				
 --				widget := first.i_th (selected_item_index)
---				if a_button = 1 and not resizing_widget and not moving_widget then
---						-- Unset this, if this is not the case, as we have 8 checks which would need it
---						-- assigning otherwise
---					resizing_widget := True
---					if close_to (x, y, widget.x_position + widget.width, widget.y_position + widget.height) then
---						x_offset := widget.width
---						y_offset := widget.height
---						x_scale := 1; y_scale := 1
---					elseif close_to (x, y, widget.x_position, widget.y_position) then
---						x_offset := 0
---						y_offset := 0
---						x_scale := 1; y_scale := 1
---					elseif close_to (x, y, widget.x_position, widget.y_position + widget.height) then
---						x_offset := 0
---						y_offset := widget.height
---						x_scale := 1; y_scale := 1
---					elseif close_to (x, y, widget.x_position + widget.width, widget.y_position) then
---						x_offset := widget.width
---						y_offset := 0
---						x_scale := 1; y_scale := 1
+				if a_button = 1 and not resizing_widget and not moving_widget then
+						-- Unset this, if this is not the case, as we have 8 checks which would need it
+						-- assigning otherwise
+					io.putstring ("resizing widget True in `button_pressed%N")
+					resizing_widget := True
+					if close_to (x, y, end_column_position, end_row_position) then
+						x_offset := column_span
+						y_offset := row_span
+						x_scale := 1; y_scale := 1
+					elseif close_to (x, y, column_position, row_position) then
+						x_offset := 0
+						y_offset := 0
+						x_scale := 1; y_scale := 1
+					elseif close_to (x, y, column_position, end_row_position) then
+						x_offset := 0
+						y_offset := row_span
+						x_scale := 1; y_scale := 1
+					elseif close_to (x, y, end_column_position, row_position) then
+						x_offset := column_span
+						y_offset := 0
+						x_scale := 1; y_scale := 1
 --					elseif close_to_line (x, y, widget.y_position + widget.height, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
 --						x_offset := x - widget.x_position
 --						y_offset := widget.height
@@ -923,64 +1001,76 @@ feature {NONE} -- Implementation
 --						x_offset := widget.width
 --						y_offset := y
 --						x_scale := 1; y_scale := 0
---					elseif x > widget.x_position and x < widget.x_position + widget.width and y > widget.y_position and y < widget.y_position + widget.height then
---						moving_widget := True
---						resizing_widget := False
---						x_offset := x - widget.x_position
---						y_offset := y - widget.y_position
---					else
---						resizing_widget := False
---					end
---					if resizing_widget or moving_widget then
+--					--elseif
+					elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
+						moving_widget := True
+						io.putstring ("Resizing widget now false in `button_pressed'.%N")
+						resizing_widget := False
+						x_offset := x - column_position
+						y_offset := y - row_position
+						io.putstring ("Started moving widget")
+					else
+						resizing_widget := False
+					end
+					if resizing_widget or moving_widget then
 --						drawing_area.enable_capture	
---					end
---				end
---			end
---		end
+					end
+				end
+			
+			end
+				-- We need to highlight a widget if the action is
+				-- to select a widget.
+			io.putstring (resizing_widget.out + " " + moving_widget.out + "%N")
+			if a_button = 1 and not resizing_widget and not moving_widget then
+				selected_item := first.item (x // grid_size + 1, y // grid_size + 1)
+				draw_widgets
+			end
+		end
 --		
---	button_released (x, y, a_button: INTEGER) is
---			-- A button has been released on `drawing_area'
---			-- If `a_button' = 1, check for end of resize/movement.
---		do
+	button_released (x, y, a_button: INTEGER) is
+			-- A button has been released on `drawing_area'
+			-- If `a_button' = 1, check for end of resize/movement.
+		do
 --			scrolled_x_once := False
---			if a_button = 1 then
+			if a_button = 1 then
 --				if scrolling_x then
 --					end_x_scrolling
 --				end
---				if resizing_widget then
---					resizing_widget := False
---					set_all_pointer_styles (standard_cursor)
+				if resizing_widget then
+					io.putstring ("Resizing widget now false in `button_released'.%N")
+					resizing_widget := False
+					set_all_pointer_styles (standard_cursor)
 --					drawing_area.disable_capture
---				elseif moving_widget then
---					moving_widget := False
---					set_all_pointer_styles (standard_cursor)
+				elseif moving_widget then
+					moving_widget := False
+					set_all_pointer_styles (standard_cursor)
 --					drawing_area.disable_capture
---				end
+				end
 --			set_initial_area_size
---			draw_widgets
---			end
---		end
---		
---	show_layout_window is
---			-- Display window allowing placement of widgets.
---		do
---			layout_window.show_modal_to_window (parent_window (parent_editor))
---		end
---		
---	set_all_pointer_styles (cursor: EV_CURSOR) is
---			-- Assign a pointer style to all figures in
---			-- `world' and `drawing_area'.
---		do
---			from
---				world.start
---			until
---				world.off				
---			loop
---				world.item.set_pointer_style (cursor)
---				world.forth
---			end
---			drawing_area.set_pointer_style (cursor)
---		end
+			draw_widgets
+			end
+		end
+		
+	show_layout_window is
+			-- Display window allowing placement of widgets.
+		do
+			layout_window.show_modal_to_window (parent_window (parent_editor))
+		end
+		
+	set_all_pointer_styles (cursor: EV_CURSOR) is
+			-- Assign a pointer style to all figures in
+			-- `world' and `drawing_area'.
+		do
+			from
+				world.start
+			until
+				world.off				
+			loop
+				world.item.set_pointer_style (cursor)
+				world.forth
+			end
+			drawing_area.set_pointer_style (cursor)
+		end
 
 	set_rows (row_value: INTEGER) is
 			-- Resize table to accomodate `row_value' rows.
@@ -991,7 +1081,7 @@ feature {NONE} -- Implementation
 	set_columns (column_value: INTEGER) is
 			-- Resize table to accomodate `column_value' columns.
 		do
-			for_all_objects (agent {EV_TABLE}.resize (column_value, first.columns))
+			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
 		end
 		
 	set_border_width (border_width: INTEGER) is
@@ -1054,6 +1144,9 @@ feature {NONE} -- Attributes
 		
 	homogeneous_button: EV_BUTTON
 		-- Toggles `is_homogeneous' for table.
+		
+	layout_button: EV_BUTTON
+		-- Provides access to the layout window.
 
 --	last_x, last_y: INTEGER
 --		-- Last known cooridnates of mouse pointer.
@@ -1106,52 +1199,58 @@ feature {NONE} -- Attributes
 --	grid_spacing: INTEGER
 --		-- Spacing used for grid.
 --	
---	resizing_widget: BOOLEAN
---		-- Is a widget currently being resized?
---		
---	moving_widget: BOOLEAN
---		-- Is a widget currently being moved?
---	
---	x_offset, y_offset: INTEGER
---		-- Offsets used to hold cursor distance from
---		-- point being targeted.
---
---	x_scale, y_scale: INTEGER
---		-- Amount to scale movement in the X or Y axis by.
---		-- Should be 1 or 0. 1 means full movement, 0 means
---		-- that axis is ignored.
---		
+	resizing_widget: BOOLEAN
+		-- Is a widget currently being resized?
+		
+	moving_widget: BOOLEAN
+		-- Is a widget currently being moved?
+	
+	x_offset, y_offset: INTEGER
+		-- Offsets used to hold cursor distance from
+		-- point being targeted.
+
+	x_scale, y_scale: INTEGER
+		-- Amount to scale movement in the X or Y axis by.
+		-- Should be 1 or 0. 1 means full movement, 0 means
+		-- that axis is ignored.
+		
 --	selected_item_index: INTEGER
 --		-- Index of item currently selected in 
 --		
---	drawing_area: EV_DRAWING_AREA
---		-- Drawing area used to represent `world'
---	
---	scrollable_area: EV_SCROLLABLE_AREA
---		-- A scrollable area which contains `drawing_area'.
---	
+	drawing_area: EV_DRAWING_AREA
+		-- Drawing area used to represent `world'
+	
+	scrollable_area: EV_SCROLLABLE_AREA
+		-- A scrollable area which contains `drawing_area'.
+	
 --	grid_color: EV_COLOR is
 --			-- Color used for grid.
 --		do
 --			create Result.make_with_8_bit_rgb (196, 244, 204)
 --		end
 --	
---	accuracy_value: INTEGER is 3
---			-- Value which determines how close pointer must be
---			-- to lines/points for resizing.
---
+	accuracy_value: INTEGER is 3
+			-- Value which determines how close pointer must be
+			-- to lines/points for resizing.
+
 --	list: EV_LIST
 --		-- Contains all children of represented EV_FIXED.
 --	
---	projector: EV_DRAWING_AREA_PROJECTOR
---		-- Projector used for `world'
---	
---	pixmap: EV_PIXMAP
---		-- Pixmap for double buffering `world'.
---			
---	world: EV_FIGURE_WORLD
---		-- Figure world containg all widget representations.
---		
+	projector: EV_DRAWING_AREA_PROJECTOR
+		-- Projector used for `world'
+	
+	pixmap: EV_PIXMAP
+		-- Pixmap for double buffering `world'.
+			
+	world: EV_FIGURE_WORLD
+		-- Figure world containg all widget representations.
+		
+	grid_size: INTEGER is 20
+		-- Size of grid representing the table.
+		
+	selected_item: EV_WIDGET
+		-- Item that is currently selected for movement.
+		
 --	x_position_string: STRING is "Children_x_position"
 --	
 --	y_position_string: STRING is "Children_y_position"

@@ -6,6 +6,18 @@ indexing
 deferred class
 	CONVERSION_INFO
 
+feature {NONE} -- Initialization
+
+	make (a_target_type: like target_type) is
+			-- New instance of ANY to SYSTEM_OBJECT conversion.
+		require
+			a_target_type_not_void: a_target_type /= Void
+		do
+			target_type := a_target_type
+		ensure
+			target_type_set: target_type = a_target_type
+		end
+
 feature -- Access
 
 	target_type: TYPE_A

@@ -11,7 +11,7 @@
 	<paragraph>
 		<paragraph>Building software components (classes) as implementations of abstract data types yields systems with a solid architecture but does not in itself ensure reusability and extendibility.  Two key techniques address the problem: generosity (unconstrained or constrained) and inheritance.  Let us look first at the unconstrained form.  </paragraph>
 		<paragraph>To make a class generic is to give it 
-			<bold>formal generic parameters</bold>  representing as unknown types, as in these examples from Eiffel Software's EiffelBase, an open-source library covering basic data structures and algorithms:
+			<bold>formal generic parameters</bold>  representing as unknown types, as in these examples from EiffelBase, an open-source library covering basic data structures and algorithms:
 		</paragraph>
 		<code_block><class_name>ARRAY</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
 <class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>

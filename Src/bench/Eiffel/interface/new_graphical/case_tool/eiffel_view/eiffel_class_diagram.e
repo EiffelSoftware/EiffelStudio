@@ -24,6 +24,13 @@ inherit
 		undefine
 			default_create
 		end
+
+	EB_CLUSTER_MANAGER_OBSERVER
+		undefine
+			default_create
+		redefine
+			on_class_added
+		end
 	
 feature {NONE} -- Initialization
 
@@ -33,6 +40,7 @@ feature {NONE} -- Initialization
 			Precursor {EIFFEL_WORLD}
 			drop_actions.extend (agent on_class_drop)
 			drop_actions.extend (agent on_new_class_drop)
+			manager.add_observer (Current)
 		end
 		
 feature -- Access
@@ -48,6 +56,7 @@ feature -- Element change
 			Precursor {EIFFEL_WORLD}
 			drop_actions.prune_all (agent on_class_drop)
 			drop_actions.prune_all (agent on_new_class_drop)
+			manager.remove_observer (Current)
 		end
 			
 feature {EB_CONTEXT_EDITOR} -- Save/Restore
@@ -172,52 +181,67 @@ feature {NONE} -- Implementation
 			dial: EB_CREATE_CLASS_DIALOG
 			drop_x, drop_y: INTEGER
 		do
+			is_new_dropped := True
 			drop_x := context_editor.pointer_position.x
 			drop_y := context_editor.pointer_position.y
 			create dial.make_default (context_editor.development_window)
 			dial.preset_cluster (model.center_class.class_i.cluster)
 			dial.call_default
-			include_new_dropped_class (dial, drop_x, drop_y)
+			if not dial.cancelled then
+				include_new_class (dial.class_i, drop_x, drop_y)
+			end
+			is_new_dropped := False
 		end
 		
-	include_new_dropped_class (a_create_class_dialog: EB_CREATE_CLASS_DIALOG; a_x, a_y: INTEGER) is
+	is_new_dropped: BOOLEAN
+			-- Is new added class to system dropped by user onto the diagram tool?
+		
+	include_new_class (a_class: CLASS_I; a_x, a_y: INTEGER) is
 			-- Add `a_class' to the diagram if not already present.
 		require
-			a_create_class_dialog: a_create_class_dialog /= Void
+			a_class_exists: a_class /= Void
 		local
-			a_class: CLASS_I
 			cf: EIFFEL_CLASS_FIGURE
 			es_class: ES_CLASS
 			remove_links: LIST [ES_ITEM]
 		do
-			if not a_create_class_dialog.cancelled then
-				a_class := a_create_class_dialog.class_i
-				if a_class /= Void then
-					es_class := model.class_from_interface (a_class)
-					if es_class = Void then
-						create es_class.make (a_class)
-						model.add_node (es_class)
-					else
-						es_class.enable_needed_on_diagram
-						enable_all_links (es_class)
-						model.add_ancestor_relations (es_class)
-						model.add_descendant_relations (es_class)
-						model.add_client_relations (es_class)
-						model.add_supplier_relations (es_class)
-					end
-					cf ?= figure_from_model (es_class)
-					check cf_not_void: cf /= Void end
-					cf.set_port_position (a_x, a_y)
-					remove_links := es_class.needed_links
-					update_cluster_legend
-					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_include_class_cmd (es_class.name),
-						[<<agent reinclude_class (cf, remove_links, a_x, a_y), agent update_cluster_legend>>],
-						[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
+			if a_class /= Void then
+				es_class := model.class_from_interface (a_class)
+				if es_class = Void then
+					create es_class.make (a_class)
+					model.add_node (es_class)
+				else
+					es_class.enable_needed_on_diagram
+					enable_all_links (es_class)
+					model.add_ancestor_relations (es_class)
+					model.add_descendant_relations (es_class)
+					model.add_client_relations (es_class)
+					model.add_supplier_relations (es_class)
 				end
-				if is_right_angles then
-					apply_right_angles
-				end
+				cf ?= figure_from_model (es_class)
+				check cf_not_void: cf /= Void end
+				cf.set_port_position (a_x, a_y)
+				remove_links := es_class.needed_links
+				update_cluster_legend
+				context_editor.history.register_named_undoable (
+					interface_names.t_diagram_include_class_cmd (es_class.name),
+					[<<agent reinclude_class (cf, remove_links, a_x, a_y), agent update_cluster_legend>>],
+					[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
+			end
+			if is_right_angles then
+				apply_right_angles
+			end
+		end
+		
+	on_class_added (a_class: CLASS_I) is
+			-- `a_class' was added to the system.
+		local
+			ax, ay: INTEGER
+		do
+			if not is_new_dropped and then model.center_class /= Void then
+				ax := context_editor.widget.width // 2 + context_editor.projector.area_x
+				ay := context_editor.widget.height // 2 + context_editor.projector.area_y
+				include_new_class (a_class, ax, ay)
 			end
 		end
 

@@ -29,22 +29,19 @@ feature -- Element change
 			exists: not destroyed
 			valid_pixmap: is_valid (pix)
 			valid_size: pixmap_size_ok (pix)
-			free_pixmap: pix.is_free
+			free_pixmap: not pix.is_locked
 		deferred
 		ensure then
 			pixmap_set: pixmap = pix
-			not_free_pixmap: not pixmap.is_free
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		require
 			has_pixmap: pixmap /= Void
-			not_free_pixmap: not pixmap.is_free
 		deferred
 		ensure then
 			pixmap_removed: pixmap = Void
-			free_pixmap: (old pixmap).is_free
 		end
 
 feature -- Assertion features

@@ -143,6 +143,9 @@ feature -- Default values
 		
 	Default_height_of_type_selector: INTEGER is 250
 		-- The default_height of the type selector.
+		
+	Default_window_dimension: INTEGER is 125
+		-- Default sizes of builder and display window when displayed.
 
 feature -- Generation constants
 

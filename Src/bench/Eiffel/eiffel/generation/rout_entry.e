@@ -113,7 +113,7 @@ feature -- DLE
 			remover: REMOVER;
 			old_body_id: BODY_ID
 		do
-			if type_id <= System.dle_max_dr_type_id then
+			if type_id < System.min_type_id then
 				remover := System.dle_remover;
 				old_body_id := System.dle_finalized_nobid_table.item (body_id);
 				Result := 	remover = Void or else

@@ -13,6 +13,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_SHARED_COMPONENT_VIEWER
+		undefine
+			default_create, copy
+		end
 	
 	GB_XML_OBJECT_BUILDER
 		undefine
@@ -44,11 +49,28 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	generate_pebble: GB_OBJECT is
+	generate_pebble: GB_COMPONENT is
 			-- `Result' is used for a pick and drop.
+		local
+			environment: EV_ENVIRONMENT
+			an_object: GB_OBJECT
+			widget: EV_WIDGET
+			component: GB_COMPONENT
 		do
-			Result := new_object (xml_handler.xml_element_representing_named_component (text))
-			object_handler.for_all_objects_build_drop_actions_for_new_object
+			an_object ?= new_object (xml_handler.xml_element_representing_named_component (text))
+			create environment
+			if environment.application.ctrl_pressed then				
+				widget ?= an_object.display_object
+				check
+					widget_not_void: widget /= Void
+				end
+				create component.make_with_name (text)
+				component_viewer.set_component (component)
+				component_viewer.show
+			else
+				create Result.make_with_name (text)
+				object_handler.for_all_objects_build_drop_actions_for_new_object
+			end
 		end
 
 end -- class GB_COMPONENT

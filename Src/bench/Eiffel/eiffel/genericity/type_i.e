@@ -154,8 +154,14 @@ feature -- Status report
 			-- Do nothing
 		end
 
-	is_long: BOOLEAN is
-			-- Is the type a long type ?
+	is_natural: BOOLEAN is
+			-- Is the type a NATURAL type ?
+		do
+			-- Do nothing
+		end
+
+	is_integer: BOOLEAN is
+			-- Is the type a INTEGER type ?
 		do
 			-- Do nothing
 		end
@@ -355,7 +361,7 @@ feature -- Code generation
 	minimum_interval_value: INTERVAL_VAL_B is
 			-- Minimum value in inspect interval for current type
 		require
-			valid_type: is_long or else is_char
+			valid_type: is_integer or else is_char
 		do
 				-- Implementation is provided by descendants that meet precondition
 		ensure
@@ -365,20 +371,11 @@ feature -- Code generation
 	maximum_interval_value: INTERVAL_VAL_B is
 			-- Maximum value in inspect interval for current type
 		require
-			valid_type: is_long or else is_char
+			valid_type: is_integer or else is_char
 		do
 				-- Implementation is provided by descendants that meet precondition
 		ensure
 			result_not_void: Result /= Void
-		end
-
-feature -- IL code generation
-
-	il_convert_from (source: TYPE_I) is
-			-- Generate convertion from Current to `source' if needed.
-		require
-			source_not_void: source /= Void
-		do
 		end
 
 feature -- Array optimization

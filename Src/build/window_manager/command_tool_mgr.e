@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	editor_type: COMMAND_TOOL_TOP_SHELL
+	editor_type: COMMAND_TOOL
 
 	clear_editor (ed: like editor_type) is
 		do

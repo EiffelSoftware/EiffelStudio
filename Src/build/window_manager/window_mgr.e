@@ -48,13 +48,13 @@ feature
 			Result := context_editors_list.active_editors
 		end
 
-	command_tools: LINKED_LIST [COMMAND_TOOL_TOP_SHELL] is
+	command_tools: LINKED_LIST [COMMAND_TOOL] is
 			-- Command tools shown
 		do
 			Result := command_tools_list.active_editors
 		end
 
-	command_tool: COMMAND_TOOL_TOP_SHELL is
+	command_tool: COMMAND_TOOL is
 			-- Create a command tool
 		do
 			Result := command_tools_list.editor
@@ -91,7 +91,7 @@ feature
 			-- Close `ed'. 
 		local
 		 	s_ed: STATE_EDITOR
-			cmd_tool: COMMAND_TOOL_TOP_SHELL
+			cmd_tool: COMMAND_TOOL
 			con_ed: CONTEXT_EDITOR_TOP_SHELL			
 		do
 			s_ed ?= ed

@@ -576,22 +576,16 @@ feature {NONE}
 
 	pixmap_file_content (fn: STRING): PIXMAP is
 		local
-			full_path: STRING;
-			c: CHARACTER
+			full_path: FILE_NAME;
 		do
-			c := Directory_separator;
-			full_path := clone (Eiffel3_dir_name)
-			full_path.extend (c);
-			full_path.append ("bench");
-			full_path.extend (c);
-			full_path.append ("bitmaps");
-			full_path.extend (c);
-			full_path.append (fn);
+			!!full_path.make_from_string (Eiffel3_dir_name);
+			full_path.extend_from_array (<<"bench", "bitmaps">>);
+			full_path.set_file_name (fn);
 			!!Result.make;
-			Result.read_from_file (full_path);
+			Result.read_from_file (full_path.path);
 			if not Result.last_operation_correct then
 				io.error.putstring ("Warning: cannot read pixmap file ");
-				io.error.putstring (full_path);
+				io.error.putstring (full_path.path);
 				io.error.new_line;
 			end;
 		end;

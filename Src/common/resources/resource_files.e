@@ -34,18 +34,13 @@ feature -- File names
 			-- General system level resource specification file
 			-- ($EIFFEL3/defauls.eif/application_name/general)
 		local
-			c: CHARACTER
+			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Eiffel3);
-				Result.extend (c);
-				Result.append ("defaults.eif");
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("general")
+				!!fn.make_from_string (Eiffel3);
+				fn.extend_from_array (<<"defaults.eif", application_name>>);
+				fn.set_file_name ("general");
+				Result := fn.path
 			end
 		end;
 
@@ -53,20 +48,13 @@ feature -- File names
 			-- Platform specific system level resource specification file
 			-- ($EIFFEL3/defauls.eif/application_name/spec/$PLATFORM)
 		local
-			c: CHARACTER
+			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void and Platform /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Eiffel3);
-				Result.extend (c);
-				Result.append ("defaults.eif");
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("spec");
-				Result.extend (c);
-				Result.append (Platform)
+				!!fn.make_from_string (Eiffel3);
+				fn.extend_from_array (<<"defaults.eif", application_name, "spec">>);
+				fn.set_file_name (Platform);
+				Result := fn.path
 			end
 		end;
 
@@ -75,26 +63,18 @@ feature -- File names
 			-- ($EIFDEFAULTS/application_name/general or
 			-- $HOME/defaults.eif/application_name/general)
 		local
-			c: CHARACTER
+			fn: FILE_NAME
 		do
 			if Eifdefaults /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Eifdefaults);
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("general")
+				!!fn.make_from_string (Eifdefaults);
 			elseif Home /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Home);
-				Result.extend (c);
-				Result.append ("defaults.eif");
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("general")
+				!!fn.make_from_string (Home);
+				fn.extend ("defaults.eif");
+			end
+			if fn /= Void then
+				fn.extend (application_name);
+				fn.set_file_name ("general");
+				Result := fn.path
 			end
 		end;
 
@@ -103,30 +83,19 @@ feature -- File names
 			-- ($EIFDEFAULTS/application_name/spec/$PLATFORM or
 			-- $HOME/defaults.eif/application_name/spec/$PLATFORM)
 		local
-			c: CHARACTER
+			fn: FILE_NAME
 		do
 			if Eifdefaults /= Void and Platform /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Eifdefaults);
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("spec");
-				Result.extend (c);
-				Result.append (Platform)
+				!!fn.make_from_string (Eifdefaults);
 			elseif Home /= Void and Platform /= Void then
-				c := Directory_separator;
-				!! Result.make (30);
-				Result.append (Home);
-				Result.extend (c);
-				Result.append ("defaults.eif");
-				Result.extend (c);
-				Result.append (application_name);
-				Result.extend (c);
-				Result.append ("spec");
-				Result.extend (c);
-				Result.append (Platform)
+				!!fn.make_from_string (Home);
+				fn.extend ("defaults.eif");
+			end
+			if fn /= Void then
+				fn.extend (application_name);
+				fn.extend ("spec");
+				fn.set_file_name (Platform);
+				Result := fn.path
 			end
 		end;
 

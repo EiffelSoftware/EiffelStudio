@@ -344,7 +344,9 @@ feature -- Generation
 			-- doesnot exist yet.
 		local
 			subdirectory: STRING;
-			dir: DIRECTORY
+			dir: DIRECTORY;
+			f_name: FILE_NAME;
+			dir_name: DIRECTORY_NAME
 		do
 			if System.in_final_mode then
 				Result := Final_generation_path
@@ -354,12 +356,16 @@ feature -- Generation
 			!!subdirectory.make (5);
 			subdirectory.append (sub_dir_prefix);
 			subdirectory.append_integer (packet_number);
-			Result := build_path (Result, subdirectory);
-			!!dir.make (Result);
+
+			!!dir_name.make_from_string (Result);
+			dir_name.extend (subdirectory);
+			!!dir.make (dir_name.path);
 			if not dir.exists then
 				dir.create
 			end;
-			Result := build_path (Result, base_file_name)
+			!!f_name.make_from_string (dir_name.path);
+			f_name.set_file_name (base_file_name);
+			Result := f_name.path
 		end;
 
 	base_file_name: STRING is
@@ -381,16 +387,28 @@ feature -- Generation
 		end;
 
 	relative_file_name: STRING is
+			-- Relative path of the generation file
+		local
+			f_name: FILE_NAME;
+			temp: STRING
 		do
-			!!Result.make (10);
-			Result.append (Class_suffix);
-			Result.append_integer (packet_number);
-			Result := build_path (Result, base_file_name);
+				-- Subdirectory
+			!!temp.make (10);
+			temp.append (Class_suffix);
+			temp.append_integer (packet_number);
+
+			!!f_name.make_from_string (temp);
+
+				-- File name
+			temp := clone (base_file_name);
 			if byte_context.final_mode then
-				Result.append (Dot_x)
+				temp.append (Dot_x)
 			else
-				Result.append (Dot_c);
+				temp.append (Dot_c);
 			end;
+
+			f_name.set_file_name (temp);
+			Result := f_name.path
 		end
 
 	has_creation_routine: BOOLEAN is

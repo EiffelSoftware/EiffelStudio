@@ -118,6 +118,7 @@ feature
 
 	work (argument: ANY) is
 		local
+			f_name: FILE_NAME;
 			fname: STRING;
 			file: PLAIN_TEXT_FILE;
 			str: STRING;
@@ -129,17 +130,15 @@ feature
 				if aok then
 					!!class_i.make;
 					class_i.set_class_name (class_name);
-					!!fname.make(0);
-					fname.append (cluster.path);
-					fname.extend (Directory_separator);
-					fname.append (file_name);
+					!!f_name.make_from_string (cluster.path);
+					f_name.set_file_name (file_name);
+					fname := f_name.path;
 					base_name := file_name;
 					!!file.make (fname);
 					class_i.set_base_name (base_name);
 					class_i.set_cluster (cluster);
 					class_i.set_date;
 					if cluster.classes.has (fname) then
-						fname.wipe_out;
 						warner (class_text).gotcha_call (w_Class_already_in_cluster (class_name));
 					elseif
 						(not file.exists and then not file.is_creatable)

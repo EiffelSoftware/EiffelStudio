@@ -17,37 +17,7 @@ feature {NONE}
 			Result := Platform_constants.Copy_cmd
 		end;
 
-	Default_Ace_file: STRING is
-		local
-			c: CHARACTER
-		once
-			c := Directory_separator;
-			!!Result.make (0);
-			Result.append ("bench");
-			Result.extend (c);
-			Result.append ("help");
-			Result.extend (c);
-			Result.append ("defaults");
-			Result.extend (c);
-			Result.append ("default.ace");
-		end;
-
-	Default_precompiled_location: STRING is
-		local
-			c: CHARACTER
-		once
-			c := Directory_separator;
-			!!Result.make (0);
-			Result.append ("$EIFFEL3");
-			Result.extend (c);
-			Result.append ("precomp");
-			Result.extend (c);
-			Result.append ("spec");
-			Result.extend (c);
-			Result.append ("$PLATFORM");
-			Result.extend (c);
-			Result.append ("base");
-		end;
+	Default_Ace_file: STRING is "default.ace";
 
 	Descriptor_file_suffix: CHARACTER is 'd'
 

@@ -26,6 +26,12 @@ inherit
 			{ANY} valid_dib_colors_constant
 		end
 
+	WEL_STRETCH_MODE_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_stretch_mode_constant
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -318,6 +324,19 @@ feature -- Status report
 			exists: exists
 		do
 			Result := cwin_get_map_mode (item)
+		end
+
+	stretch_blt_mode: INTEGER is
+			-- Current stretching mode. The stretching mode
+			-- defines how color data is added to or removed from
+			-- bitmaps that are stretched or compressed when
+			-- `stretch_blt' is called.
+		require
+			exists: exists
+		do
+			Result := cwin_get_stretch_blt_mode (item)
+		ensure
+			valid_stretch_mode: valid_stretch_mode_constant (Result)
 		end
 
 	text_face: STRING is
@@ -1021,12 +1040,12 @@ feature -- Basic operations
 
 	stretch_di_bits (x_destination, y_destination, width, height, x_source,
 				y_source, dib_width, dib_height: INTEGER;
-				a_dib: WEL_DIB; rgb_mode,
-				raster_operation: INTEGER) is
+				dib: WEL_DIB; bitmap_info: WEL_BITMAP_INFO;
+				rgb_mode, raster_operation: INTEGER) is
 			-- Copy a dib to the current device context, from
 			-- `x_source', `y_source' to `x_destination',
 			-- `y_destination', using `width' and `height'
-			-- with `raster_operation' and 'rgb_mode'
+			-- with `raster_operation' and `rgb_mode'
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operations' values
 			-- See class WEL_DIB_COLORS_CONSTANTS for
@@ -1035,22 +1054,28 @@ feature -- Basic operations
 			exists: exists
 			positive_width: width >= 0
 			positive_height: height >= 0
-			a_dib_not_void: a_dib /= Void
+			dib_not_void: dib /= Void
+			bitmap_not_void: bitmap_info /= Void
+			valid_rgb_mode: valid_dib_colors_constant (rgb_mode)
 		do
 			cwin_stretch_di_bits (item, x_destination,
 				y_destination, width, height, x_source,
 				y_source, dib_width, dib_height,
-				a_dib.item_bits, a_dib.item, rgb_mode,
+				dib.item_bits, bitmap_info.item, rgb_mode,
 				raster_operation)
 		end
 
 	set_stretch_blt_mode (a_mode: INTEGER) is
-			-- See class WEL_DIB_COLORS_CONSTANTS
-			-- for `a_mode' values.
+			-- Set the bitmap stretching mode with `a_mode'.
+			-- See class WEL_STRETCH_MODE_CONSTANTS for `a_mode'
+			-- values.
 		require
 			exists: exists
+			valid_stretch_mode_constant: valid_stretch_mode_constant (a_mode)
 		do
 			cwin_set_stretch_blt_mode (item, a_mode)
+		ensure
+			stretch_blt_mode_set: stretch_blt_mode = a_mode
 		end
 
 	pat_blt (x_destination, y_destination, width, height: INTEGER;
@@ -1470,6 +1495,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetMapMode"
+		end
+
+	cwin_get_stretch_blt_mode (hdc: POINTER): INTEGER is
+			-- SDK GetStretchBltMode
+		external
+			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+		alias
+			"GetStretchBltMode"
 		end
 
 	cwin_set_window_ext_ex (hdc: POINTER; x_extent, y_extent: INTEGER;

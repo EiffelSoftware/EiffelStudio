@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!PICT_COLOR_B_IMP!implementation.make (Current, man, a_parent);
+			!PICT_COLOR_B_IMP!implementation.make (Current, a_parent, man);
 			implementation.set_widget_default;
 			set_default
 		end;

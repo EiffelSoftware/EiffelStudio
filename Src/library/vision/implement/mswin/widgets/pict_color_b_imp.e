@@ -32,7 +32,7 @@ creation
 
 feature -- Initialization
 
-	make (a_picture_color_button: PICT_COLOR_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_picture_color_button: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create the pict color b
 		do
 			!! private_attributes

@@ -349,11 +349,13 @@ interface IEiffelCompilerEvents: IDispatch
 	[id (DISPID_EiffelComCompiler_OutputString), helpstring ("Output string.")]
 	HRESULT OutputString ([in] BSTR bstrOutput);
 
+	// We use LONG for line and col instead of ULONG so that the .NET wrapper can be consumed from Eiffel
 	[id (DISPID_EiffelComCompiler_OutputError), helpstring ("Last error.")]
-	HRESULT OutputError ([in] BSTR bstrFullError, [in] BSTR bstrShortError, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
+	HRESULT OutputError ([in] BSTR bstrFullError, [in] BSTR bstrShortError, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] LONG ulLine, [in] LONG ulCol);
 
+	// We use LONG for line and col instead of ULONG so that the .NET wrapper can be consumed from Eiffel
 	[id (DISPID_EiffelComCompiler_OutputWarning), helpstring ("Last warning.")]
-	HRESULT OutputWarning ([in] BSTR bstrFullWarning, [in] BSTR bstrShortWarning, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] ULONG ulLine, [in] ULONG ulCol);
+	HRESULT OutputWarning ([in] BSTR bstrFullWarning, [in] BSTR bstrShortWarning, [in] BSTR bstrCode, [in] BSTR bstrFileName, [in] LONG ulLine, [in] LONG ulCol);
 };
 
 //---------------------------------------------------------------------

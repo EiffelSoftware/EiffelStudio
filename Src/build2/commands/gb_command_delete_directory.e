@@ -38,11 +38,18 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_directory: STRING) is
+	make (a_directory, parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
 			-- Create `Current' with directory named `a_directory'.
+		require
+			a_directory_not_void: a_directory /= Void
+			void_parent_implies_window_selector: parent_directory = Void implies a_directory.parent = window_selector
+			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= window_selector
 		do
 			History.cut_off_at_current_position
-			directory_name := a_directory
+			directory_name := a_directory.path
+			if parent_directory /= Void then
+				parent_directory_name := parent_directory.path
+			end
 		end
 
 feature -- Basic Operation
@@ -56,7 +63,14 @@ feature -- Basic Operation
 		do
 				-- Now actually remove the directory from the disk.
 			create temp_file_name.make_from_string (generated_path.string)
-			temp_file_name.extend (directory_name)	
+			from
+				directory_name.start
+			until
+				directory_name.off
+			loop
+				temp_file_name.extend (directory_name.item)
+				directory_name.forth
+			end
 			create directory.make (temp_file_name)
 			if directory.exists and directory.is_empty then
 					-- Only remove the directory if it is present on the disk.
@@ -65,7 +79,10 @@ feature -- Basic Operation
 			end
 				-- Now remove the representation from the directory selector.
 			directory_item := window_selector.directory_object_from_name (directory_name)
-			Window_selector.prune_all (directory_item)
+			check
+				directory_item_found: directory_item /= Void
+			end
+			directory_item.parent.prune_all (directory_item)
 			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
@@ -84,7 +101,14 @@ feature -- Basic Operation
 				-- Only restore the directory to the disk if it was actually
 				-- removed previously.
 			create temp_file_name.make_from_string (generated_path.string)
-			temp_file_name.extend (directory_name)	
+			from
+				directory_name.start
+			until
+				directory_name.off
+			loop
+				temp_file_name.extend (directory_name.item)
+				directory_name.forth
+			end
 			create directory.make (temp_file_name)
 			if not directory.exists then
 				create_directory (directory)	
@@ -96,7 +120,7 @@ feature -- Basic Operation
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		do
-			Result := "directory %"" + directory_name + "%" removed from project."
+			Result := "directory %"" + directory_name.last + "%" removed from project."
 		end
 
 feature {NONE} -- Implementation
@@ -108,9 +132,11 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	parent_directory_name: ARRAYED_LIST [STRING]
+		-- Name of parent directory in which `directory_name' is contained.
 
-	directory_name: STRING
-		-- Name of directory that was deleted. Only the actual name,
-		-- and not the full name, as all directories are relative to the project.
+	directory_name: ARRAYED_LIST [STRING]
+		-- Name of directory that was deleted.
 
 end -- class GB_COMMAND_DELETE_DIRECTORY

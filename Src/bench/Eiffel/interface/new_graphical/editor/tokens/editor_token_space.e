@@ -8,13 +8,7 @@ class
 	EDITOR_TOKEN_SPACE
 
 inherit
-	EDITOR_TOKEN
-		redefine
-			display_selected,
-			display_half_selected,
-			text_color,
-			background_color
-		end
+	EDITOR_TOKEN_BLANK
 
 create
 	make
@@ -30,44 +24,6 @@ feature -- Initialisation
 
 			create alternate_image.make(number)
 			alternate_image.fill_character(space_symbol)
-		end
-
-feature -- Display
-
-	display(d_y: INTEGER; a_dc: WEL_DC) is
-		local
-			local_position: INTEGER
-		do
-			local_position := display_spaces(position, d_y, a_dc, False, 1, length)
-		end
-
-	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
-		local
-			local_position: INTEGER
-		do
-			local_position := display_spaces(position, d_y, a_dc, True, 1, length)
-		end
-
-	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
-		local
-			local_position: INTEGER
-		do
-			local_position := position
-
-				-- if the selection do not start at the beginning of the token,
-				-- display the first 'non selected' area
-			if start_selection /= 1 then
-				local_position := display_spaces(local_position, d_y, a_dc, False, 1, start_selection-1)
-			end
-
-				-- Display the 'selected' area
-			local_position := display_spaces(local_position, d_y, a_dc, True, start_selection, end_selection-1)
-
-				-- if the selection do not end at the end of the token,
-				-- Display the last 'non selected' area
-			if end_selection <= length then
-				local_position := display_spaces(local_position, d_y, a_dc, False, end_selection,length)
-			end
 		end
 
 feature -- Width & Height
@@ -95,7 +51,7 @@ feature -- Width & Height
 
 feature {NONE} -- Implementation
 
-	display_spaces(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
+	display_blanks(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; char_start, char_end: INTEGER): INTEGER is
 		local
 			old_text_color		: WEL_COLOR_REF
 			old_background_color: WEL_COLOR_REF
@@ -156,17 +112,5 @@ feature {NONE} -- Private Constants
 			-- String representation of what is displayed
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
-
-feature {NONE} -- Implementation
-	
-	text_color: WEL_COLOR_REF is
-		do
-			Result := editor_preferences.spaces_text_color
-		end
-
-	background_color: WEL_COLOR_REF is
-		do
-			Result := editor_preferences.spaces_background_color
-		end
 
 end -- class EDITOR_TOKEN_SPACE

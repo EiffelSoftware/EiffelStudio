@@ -54,11 +54,15 @@ feature -- test features
 		end
 
 	forth is
+		require
+			not after
 		do
 			item := item.next
 		end
 
 	go_i_th (i: INTEGER) is
+		require
+			valid_i: i >= 1 and then i <= count
 		do
 			item := chapter.item (i)
 		end
@@ -66,6 +70,13 @@ feature -- test features
 	last_line: EDITOR_LINE is
 		do
 			Result := chapter.last_line
+		end
+
+	start is
+		require
+			count >= 1
+		do
+			go_i_th(1)
 		end
 
 feature -- Element Change
@@ -168,6 +179,28 @@ feature -- Basic Operations
 			-- is commented. Same for the last line of the selection.
 		do
 			unsymbol_selection(start_selection, end_selection, "%T")
+		end
+
+	search_string(searched_string: STRING): TEXT_CURSOR is
+			-- Search the text for the string `searched_string'.
+			-- Return a cursor on the beggining of the string if found,
+			-- Void otherwise.
+		local
+			found		: BOOLEAN
+			line_string	: STRING
+			found_index : INTEGER
+		do
+			from
+				start
+			until
+				found_index /= 0 or else after
+			loop
+				line_string := item.image
+				found_index := line_string.substring_index(searched_string, 1)
+			end
+
+			if found_index /= 0 then
+			end
 		end
 
 	string_selected (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR): STRING is

@@ -1,5 +1,5 @@
 system
-	configure_all
+	"configure_all"
 
 root
 	ROOT_CLASS: make
@@ -21,7 +21,6 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	working_directory ("D:\InstalledEiffel50")
 	il_verifiable (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
@@ -38,7 +37,7 @@ default
 -- EiffelBase
 
 cluster
-	root_cluster:		"d:\Projects\configure_all"
+	root_cluster:		"."
 
 
 	all base:		"$ISE_EIFFEL\library\base"
@@ -48,5 +47,14 @@ cluster
 
 	thread:		"$ISE_EIFFEL\library\thread"
 
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\$ISE_PLATFORM\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$ISE_C_COMPILER\lib\wel.lib"
 
 end

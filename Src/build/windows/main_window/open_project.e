@@ -21,13 +21,13 @@ inherit
 
 	ERROR_POPUPER
 
-feature {NONE} -- Command
+feature {WINDOWS} -- Command
 
 	rescued: BOOLEAN
 
 	to_create_project: BOOLEAN
 			-- Create project?
-	execute (arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]; ev_data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]; ev_data: EV_EVENT_DATA) is
 		do
 			open_project (arg.first.directory)
 		end
@@ -111,9 +111,9 @@ feature {NONE} -- Command
 
 	question_cancel_action is
 		local
-			dialog: EV_DIRECTORY_SELECTION_DIALOG
+			dialog: EV_DIRECTORY_DIALOG
 			cmd: OPEN_PROJECT
-			arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]
+			arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]
 		do
 			if to_create_project then
 				create dialog.make_with_text (main_window,

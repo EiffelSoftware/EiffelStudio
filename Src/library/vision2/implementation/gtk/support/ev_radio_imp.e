@@ -75,10 +75,14 @@ feature -- Element change
 			end
 		end
 
+	text: STRING is
+		deferred
+		end
+
 feature {EV_RADIO_GROUP_IMP} -- Implementation
 
-	on_unselect is
-			-- Called when the item is unselected.
+	on_unselect (an_item: EV_RADIO_IMP [EV_ANY]) is
+			-- Sets button state to flag when the item is selected.
 		deferred
 		end
 

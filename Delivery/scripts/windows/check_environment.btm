@@ -48,12 +48,6 @@ iff not defined NO_DOCUMENTATION then
 		echo Warning: %DOCUMENT_DIR\newdocs will be erased by this script!
 	endiff
 endiff	
-iff not defined NO_INSTALL then
-	iff "%@SEARCH[WfWI.exe]" == "" then
-		echo Cannot find a version of WISE Installer. Cannot continue
-		CANCEL
-	endiff
-endiff	
 iff "%@SEARCH[upx.exe]" == "" then
 	echo Cannot find a version of upx packager. Cannot continue
 	CANCEL

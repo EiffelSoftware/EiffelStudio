@@ -385,6 +385,7 @@ invariant
 	weight_valid: is_initialized implies valid_weight (weight)
 	shape_valid: is_initialized implies valid_shape (shape)
 	height_positive: is_initialized implies height > 0
+	height_in_points_positive: is_initialized implies height_in_points > 0
 	ascent_not_negative: is_initialized implies ascent >= 0
 	descent_not_negative: is_initialized implies descent >= 0
 	width_of_empty_string_equals_zero: is_initialized implies string_width("") = 0

@@ -139,8 +139,6 @@ feature -- Deletion
 			-- (According to the currently adopted
 			-- discrimination rule in `search')
 			-- Leave cursor `off'.
-		require
-			contractable: contractable
 		do
 			from
 				start;

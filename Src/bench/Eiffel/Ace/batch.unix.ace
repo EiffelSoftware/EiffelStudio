@@ -59,7 +59,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "others";
 		end
 
 	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
@@ -133,8 +133,7 @@ external
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
 		"\$(EIFFEL_SRC)/C/platform",
-		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib",
-		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include"
+		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib"
 
 	object:
 		"$(EIFFEL_SRC)/C/bench/libcompiler.a",

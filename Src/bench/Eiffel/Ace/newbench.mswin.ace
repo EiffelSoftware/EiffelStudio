@@ -5,6 +5,7 @@ root
 	eb_kernel: make
 
 default
+	arguments ("-from_bench")
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
@@ -51,6 +52,7 @@ default
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("md out-of-order")
 	disabled_debug ("once")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
@@ -72,17 +74,18 @@ default
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_parser")
 	line_generation (no)
 	profile (no)
 	trace (no)
 	check_vape (yes)
 	console_application (yes)
+	syntax_warning (yes)
 	array_optimization (no)
 	dead_code_removal (yes)
 	exception_trace (yes)
 	inlining (yes)
 	inlining_size ("0")
-	arguments ("-from_bench")
 
 
 cluster
@@ -146,7 +149,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"
@@ -234,7 +237,6 @@ external
 	include_path:
 		"$(EIFFEL_SRC)\library\encryption\Clib",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
 		"$(EIFFEL_SRC)\C\bench",

@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			make_display (app_context, a_screen.screen_name, 
 					application_class, application_class);
 			if is_valid then
-				make_gc (default_screen);
+				create_gc (default_screen);
 				display_cell.put (Current)
 			end
 		end;

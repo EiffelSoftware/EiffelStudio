@@ -73,7 +73,7 @@ LPARAM lparam;
 		return FALSE;
 }
 
-BOOL cwel_wait_message (void)
+EIF_BOOLEAN cwel_wait_message (void)
 {
 	/*
 	 * Shell around `WaitMessage' since this function does not return anything
@@ -81,10 +81,10 @@ BOOL cwel_wait_message (void)
 	 */
 
 #ifdef WIN32
-	return WaitMessage ();
+	return (EIF_BOOLEAN) WaitMessage ();
 #else
 	WaitMessage ();
-	return TRUE;
+	return (EIF_BOOLEAN) TRUE;
 #endif
 }
 

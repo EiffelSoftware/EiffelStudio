@@ -580,7 +580,7 @@ feature -- Element change
 			-- Replace current item by `v'.
 		do
 			if realized then
-				if index >= 0 and then index < wel_count then
+				if 1 <= index and then index <= wel_count then
 					private_delete (index)
 				end
 				private_add (an_item.value, index)
@@ -775,8 +775,8 @@ feature {NONE} -- Implementation
 			-- Delete a string and resize if necessary.
 		require
 			exists: exists
-			pos_large_enough: pos >= 0
-			pos_small_enough: pos < wel_count
+			pos_large_enough: pos >= 1
+			pos_small_enough: pos <= wel_count
 		local
 			s: STRING
 			a_font_windows: FONT_IMP
@@ -817,9 +817,9 @@ feature {NONE} -- Implementation
 		do
 			a_font_windows ?= font.implementation
 			from
-				i :=0
+				i := 0
 			until
-				i >= count
+				i >= wel_count
 			loop
 				Result := Result.max (a_font_windows.string_width (parent,
 					i_th_text (i)))

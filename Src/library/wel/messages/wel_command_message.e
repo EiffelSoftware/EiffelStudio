@@ -35,7 +35,7 @@ feature -- Access
 		require
 			from_control: from_control
 		do
-			Result ?= windows.item (h_window)
+			Result ?= window_of_item (h_window)
 		end
 
 	notify_code: INTEGER is

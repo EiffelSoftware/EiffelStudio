@@ -11,10 +11,14 @@ class EV_RADIO_MENU_ITEM_IMP
 
 inherit
 	EV_RADIO_MENU_ITEM_I
+		redefine
+			parent_imp
+		end
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
-			make_with_text
+			make_with_text,
+			parent_imp
 		end
 
 creation
@@ -39,6 +43,11 @@ feature {NONE} -- Initialization
 			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
 		end		
+
+feature -- Access
+
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+			-- Parent of the item
 
 feature -- Status report
 

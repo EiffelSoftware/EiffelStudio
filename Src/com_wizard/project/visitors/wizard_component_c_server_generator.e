@@ -60,7 +60,11 @@ feature -- Basic Operations
 			cpp_class_writer.set_header_file_name (a_component.c_header_file_name)
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
 
-			-- Add jmp_buf variable and integer value
+			if shared_wizard_environment.server then
+				cpp_class_writer.add_import ("server_registration.h")
+			end
+
+			-- Add jmp_buf variable
 			cpp_class_writer.add_other_source ("static int return_hr_value;")
 
 			-- member (LONG Ref_count)

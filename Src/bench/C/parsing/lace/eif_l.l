@@ -21,7 +21,7 @@
 
 /* private functions for lex */
 static int get_string();
-static int eif_char();
+static int eif_char(char);
 
 %}
 

@@ -40,7 +40,7 @@ Ftp server: ftp.eiffel.com
 
 static int get_string();		/* Read a string (after a double quote) */
 static int get_char();			/* Read a char (after a single quote) */
-static int eif_char();			/* Eiffel character value */
+static int eif_char(char);		/* Eiffel character value */
 
 static int	process();			/* Update position marks */
 static int 	process_name();		/* Update position marks for ids */

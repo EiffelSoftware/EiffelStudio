@@ -143,11 +143,7 @@ feature -- Status setting
 			-- Associate current formatter with non-compiled `a_class'.
 		do		
 			class_i ?= a_class
-			if a_class = Void then
-				class_cmd := Void
-			else
-				create_class_cmd
-			end
+			class_cmd := Void
 			must_format := True
 			format
 			if selected then

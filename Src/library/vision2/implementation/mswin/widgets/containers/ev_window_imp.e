@@ -246,51 +246,6 @@ feature -- Status setting
 			ev_move_and_resize (x_position, y_position, width, height, False)
 		end
 
-	destroy is
-			-- Destroy `Current', but set the parent sensitive
-			-- in case it was set insensitive by the child.
-		local
-			app_i: EV_APPLICATION_I
-			app_imp: EV_APPLICATION_IMP
-		do
-			if not is_destroyed then
-				app_i := (create {EV_ENVIRONMENT}).application.implementation
-				app_imp ?= app_i
-				check
-					implementation_not_void: app_imp /= Void
-				end
-				app_imp.remove_root_window (Current)
-	
-					-- Remove parent/children relationship
-				interface.wipe_out
-	
-					-- No one should be referencing Current anymore.
-				is_destroyed := True	
-					
-					--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
-					--| We do about the same except we do not quit the application
-					--| if `Current' is application main window, since Vision2
-					--| Does not have such a concept.
-				wel_destroy_window
-			end
-		end
-
-	wel_destroy_window is
-			-- Destroy the window-widget
-		do
-			cwin_destroy_window (wel_item)
-		end
-
-	on_wm_close is
-			-- User clicked on "close" ('X').
-		do
-			if close_request_actions_internal /= Void then
-				close_request_actions_internal.call ([])
-			end
-				-- Do not actually close the window.
-			set_default_processing (False)
-		end
-
 	set_default_minimum_size is
 			-- Initialize the size of `Current'.
 		do
@@ -495,6 +450,12 @@ feature -- Status Report
 		end
 
 feature {NONE} -- Implementation
+
+	wel_destroy_window is
+			-- Destroy the window-widget
+		do
+			cwin_destroy_window (wel_item)
+		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
 			a_width, a_height: INTEGER; repaint: BOOLEAN) is
@@ -835,6 +796,16 @@ feature {EV_ANY_I} -- Implementation
 				parent_imp.is_sensitive then
 				parent_imp.disable_sensitive
 			end
+		end
+
+	on_wm_close is
+			-- User clicked on "close" ('X').
+		do
+			if close_request_actions_internal /= Void then
+				close_request_actions_internal.call ([])
+			end
+				-- Do not actually close the window.
+			set_default_processing (False)
 		end
 
 	on_wm_mouseactivate (wparam, lparam: INTEGER) is
@@ -1211,9 +1182,38 @@ feature {NONE} -- Features that should be directly implemented by externals
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-feature -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WINDOW
+
+	destroy is
+			-- Destroy `Current', but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		local
+			app_i: EV_APPLICATION_I
+			app_imp: EV_APPLICATION_IMP
+		do
+			if not is_destroyed then
+				app_i := (create {EV_ENVIRONMENT}).application.implementation
+				app_imp ?= app_i
+				check
+					implementation_not_void: app_imp /= Void
+				end
+				app_imp.remove_root_window (Current)
+	
+					-- Remove parent/children relationship
+				interface.wipe_out
+	
+					-- No one should be referencing Current anymore.
+				is_destroyed := True	
+					
+					--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
+					--| We do about the same except we do not quit the application
+					--| if `Current' is application main window, since Vision2
+					--| Does not have such a concept.
+				wel_destroy_window
+			end
+		end
 
 end -- class EV_WINDOW_IMP
 
@@ -1239,6 +1239,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2001/06/13 20:16:37  pichery
+--| Moved features to their right "feature" clause.
+--|
 --| Revision 1.54  2001/06/08 18:55:48  pichery
 --| Removed useless code
 --|

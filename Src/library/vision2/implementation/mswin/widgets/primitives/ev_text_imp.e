@@ -462,7 +462,9 @@ feature {NONE} -- WEL Implementation
 		do
 			create default_colors
 			cwin_enable_window (wel_item, True)
-			set_background_color (default_colors.Color_read_write)
+			if is_editable then
+				set_background_color (default_colors.Color_read_write)
+			end
 		end
 
 	disable is

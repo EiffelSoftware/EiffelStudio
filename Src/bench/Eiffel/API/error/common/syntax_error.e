@@ -103,9 +103,7 @@ feature -- Output
 			end;
 			file.close;
 
-			st.add_string ("Syntax error number `")
-			st.add_int (error_code)
-			st.add_string ("' at line ");
+			st.add_string ("Syntax error at line ");
 			st.add_int (line_number);
 			if Lace.parsed then
 				if Lace.successful then

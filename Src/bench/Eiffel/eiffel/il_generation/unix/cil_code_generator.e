@@ -454,6 +454,16 @@ feature -- Class info
 		do
 		end
 
+	define_system_object_features (class_type: CLASS_TYPE) is
+			-- Define all features of SYSTEM_OBJECT on Eiffel types so that
+			-- they have a meaning. It includes:
+			-- to_string, finalize, equals, get_hash_code
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		do
+		end
+		
 	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C) is
 			-- Generate ancestors map of `class_c'.
 			-- (export status {NONE})

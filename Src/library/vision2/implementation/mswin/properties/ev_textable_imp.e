@@ -13,19 +13,32 @@ deferred class
 inherit
 	EV_TEXT_CONTAINER_I
 
-
-feature -- Access
-
-	wel_window: WEL_WINDOW is
-			-- Actual wel_window
-		deferred
+	WEL_WINDOW
+		rename
+			parent as wel_parent
+		undefine
+			-- We undefine the features that are redefine by WEL_ objects
+			call_default_window_procedure,
+			set_default_window_procedure,
+			-- We undefine the features redefined by EV_WIDGET_IMP,
+			-- and EV_PRIMITIVE_IMP
+			remove_command,
+			set_width,
+			set_height,
+			destroy,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_char,
+			on_key_up
+		redefine
+			set_text
 		end
 
-	text: STRING is 
-		do
-			Result := wel_window.text
-		end
-	
 feature -- Status setting
 
 	set_center_alignment is
@@ -67,9 +80,15 @@ feature -- Element change
 	
 	set_text (t: STRING) is
 		do
-			wel_window.set_text (t)
+			{WEL_WINDOW} Precursor (t)
 			set_default_size
 		end
+
+--feature {NONE} -- Implementation : wel_feature
+
+--	wel_set_text (t: STRING) is
+--		deferred
+--		end
 	
 end -- class EV_TEXT_CONTAINER_IMP
 

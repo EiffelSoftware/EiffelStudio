@@ -10,6 +10,7 @@ all:
 	make -C implementation/gtk/Clib
 	grep -x -L "\--| FIXME Not for release" `find interface -name "*.e"` > list_released
 	grep -x -l "\--| FIXME Not for release" `find interface -name "*.e"` > list_unreleased
+	./gen_key_classes < keys.def
 
 clean:
 	make -C interface/events clean

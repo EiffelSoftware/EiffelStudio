@@ -115,7 +115,7 @@ feature -- Status setting
 			until 
 				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
 			loop
-				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 

@@ -161,7 +161,7 @@ feature -- Status setting
 			until
 				is_destroyed or else not is_show_requested
 			loop
-				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 

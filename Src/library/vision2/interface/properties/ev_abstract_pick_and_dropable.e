@@ -143,11 +143,11 @@ feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 		do
 			pnd_targets := (create {EV_ENVIRONMENT})
 				.application.implementation.pnd_targets
-			a_drop_actions.not_empty_actions.extend (
-					pnd_targets~extend (object_id)
+			a_drop_actions.not_empty_actions.extend (agent
+					pnd_targets.extend (object_id)
 			)
-			a_drop_actions.empty_actions.extend (
-					pnd_targets~prune_all (object_id)
+			a_drop_actions.empty_actions.extend (agent
+					pnd_targets.prune_all (object_id)
 			)
 		end
 

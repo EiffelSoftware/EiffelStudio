@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 		do
 			set_icon_pixmap (default_pixmaps.Default_window_icon)
 			accelerators.add_actions.extend
-				(implementation~connect_accelerator (?))
+				(agent implementation.connect_accelerator (?))
 			accelerators.remove_actions.extend
-				(implementation~disconnect_accelerator (?))
+				(agent implementation.disconnect_accelerator (?))
 			Precursor {EV_WINDOW}
 		end
 

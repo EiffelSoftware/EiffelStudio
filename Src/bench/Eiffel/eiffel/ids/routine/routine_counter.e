@@ -4,21 +4,12 @@ class ROUTINE_COUNTER
 
 inherit
 
-	COMPILER_COUNTER [ROUTINE_ID]
+	COMPILER_COUNTER
 		rename
 			make as old_make,
 			next_id as next_rout_id
 		redefine
-			current_subcounter
-		end;
-
-	COMPILER_COUNTER [ROUTINE_ID]
-		rename
-			next_id as next_rout_id
-		redefine
-			make, current_subcounter
-		select
-			make
+			next_rout_id, current_subcounter
 		end
 
 creation
@@ -43,13 +34,19 @@ feature -- Initialization
 			if Compilation_modes.is_precompiling then
 				!P_ROUTINE_SUBCOUNTER! Result.make (compilation_id)
 			elseif Compilation_modes.is_extending then
-				!P_ROUTINE_SUBCOUNTER! Result.make (compilation_id)
+				!DLE_ROUTINE_SUBCOUNTER! Result.make
 			else
 				!ROUTINE_SUBCOUNTER! Result.make
 			end
 		end
 
 feature -- Access
+
+	next_rout_id: ROUTINE_ID is
+			-- Next routine id
+		do
+			Result := current_subcounter.next_rout_id
+		end
 
 	next_attr_id: ATTRIBUTE_ID is
 			-- Next attribute id

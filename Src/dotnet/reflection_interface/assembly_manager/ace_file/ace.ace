@@ -7,7 +7,7 @@ root
 default
 	assertion (all)
 	line_generation (yes)
-	il_generation ("exe")
+	msil_generation ("exe")
 
 cluster	
 	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\gui"

@@ -1,4 +1,9 @@
--- Error object sent by the compiler to the workbench
+indexing
+
+	description: 
+		"Error object sent by the compiler to the workbench.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ERROR_STONE
 
@@ -15,16 +20,18 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (an_errori: ERROR) is
 		do
 			error_i := an_errori
 		end;
  
+feature -- Properties
+
 	error_i: ERROR;
 
-feature
+feature -- Access
 
 	code: STRING is
 			-- Code error
@@ -85,4 +92,19 @@ feature
 			-- Do nothing
 		end
 
-end
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Explain
+		end;
+
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			hole.process_error (Current)
+		end;
+
+end -- class ERROR_STONE

@@ -5218,9 +5218,6 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 
 	hashable_type: CL_TYPE_I is
 			-- Type `HASHABLE', Void otherwise.
-		local
-			l_hash_classes: LIST [CLASS_I]
-			l_hash_class: CLASS_I
 		once
 			if hashable_class_id > 0 then
 				create Result.make (hashable_class_id)

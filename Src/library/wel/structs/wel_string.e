@@ -97,7 +97,7 @@ feature -- Element change
 			a: CHARACTER
 		do
 			a := '%U'
-			c_memcpy (item.offset_pointer (offset, 1), $a, 1)
+			c_memcpy (item + offset, $a, 1)
 		end
 
 	set_size_in_string (n: INTEGER) is

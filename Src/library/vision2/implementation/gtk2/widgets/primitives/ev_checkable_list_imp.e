@@ -13,7 +13,8 @@ inherit
 		undefine
 			wipe_out,
 			selected_items,
-			call_pebble_function
+			call_pebble_function,
+			disable_default_key_processing
 		redefine
 			interface
 		end

@@ -247,14 +247,6 @@ cluster
 
 	yacc:	 "$EIFFEL_SRC\Eiffel\yacc"
 
-	xml:		"$EIFFEL_SRC\library\exml"
-
-	xml_main (xml):	 "$\main"
-
-	xml_tree_parser (xml_main):	 "$\tree_parser"
-
-	xml_spec (xml):	 "$\compiler_specific\ise"
-
 	all gobo:	 "$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS";	"EiffelBase"; "EiffelTime"

@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	update_visual_aspects is
 			-- Update the visual aspects.
 		do
-			holder.associated_button.set_pixmap (symbol);
+			holder.associated_button.set_symbol (symbol);
 			holder.associated_menu_entry.set_text (name)
 		end;
 

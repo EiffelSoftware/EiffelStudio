@@ -17,12 +17,8 @@ feature {ICOR_EXPORTER} -- Extra Properties
 			
 	set_associated_frame (f: like associated_frame) is
 			-- Set `associated_frame' value
-		require
-			f_not_void: f /= Void
 		do
 			associated_frame := f
-		ensure
-			associated_frame_not_void:  associated_frame /= Void
 		end	
 
 end

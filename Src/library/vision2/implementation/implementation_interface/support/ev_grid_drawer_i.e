@@ -272,6 +272,7 @@ feature -- Basic operations
 			first_tree_node_indent: INTEGER
 			node_pixmap_width, node_pixmap_height: INTEGER
 			parent_row_i: EV_GRID_ROW_I
+			l_pixmap: EV_PIXMAP
 			
 			row_vertical_center: INTEGER
 			row_vertical_bottom: INTEGER
@@ -489,14 +490,21 @@ feature -- Basic operations
 											if current_row.subrow_count > 0 then
 													-- Note we add 1 to account for rounding errors when odd values.
 												if current_row.is_expanded then
-													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, collapse_pixmap)
+													l_pixmap := collapse_pixmap
 													grid.drawable.set_foreground_color (black)
-													
 													grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
 														-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
 												else
-													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, expand_pixmap)
-												end	
+													l_pixmap := expand_pixmap
+												end
+													-- Now check if we must clip the pixmap vertically
+												if node_pixmap_height > current_row_height then
+														-- In this situation, the height of the expand image is greater than the current row height,
+														-- so we only draw the part that fits within the node.
+													grid.drawable.draw_sub_pixmap (horizontal_node_pixmap_left_offset, current_item_y_position, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
+												else
+													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
+												end
 											end
 												-- We must now draw the lines for the tree structure.
 											

@@ -125,7 +125,7 @@ feature -- Status setting
 			-- 2: Center,
 		require
 			exists: not destroyed
-			column_exists: column > 1 and column <= columns
+			column_exists: column > 0 and column <= columns
 		deferred
 		end
 

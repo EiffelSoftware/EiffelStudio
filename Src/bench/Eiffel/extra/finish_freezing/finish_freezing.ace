@@ -24,7 +24,7 @@ default
 --	debug ("translate_appl");
 --	debug ("translate_cecil");
 
-	assertion (all);
+	assertion (no);
 	multithreaded (no);
 	inlining (yes);
 	inlining_size ("8");

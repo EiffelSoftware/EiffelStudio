@@ -24,7 +24,7 @@ feature -- Initialization
 			end
 
 			make_util := translator.options.get_string ("make", "make utility")
-			!!status_box.make (make_util, error, c_error)
+			!! status_box.make (make_util, error, c_error)
 
 		rescue
 			error := true
@@ -43,11 +43,10 @@ feature -- Access
 
 	c_compilation_error: BOOLEAN is
 			-- check if the c-compilation went ok
-
 		local
 			completed: PLAIN_TEXT_FILE
 		do
-			!!completed.make("completd.eif")
+			!!completed.make("completed.eif")
 			if not completed.exists then
 				Result := true
 			else

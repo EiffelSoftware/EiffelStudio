@@ -440,6 +440,22 @@ feature -- Properties
 			end
 		end
 
+	add_unref_class (a_class: CLASS_I) is
+			-- Add `a_class' to list of non-referenced classes
+			-- that needs to be compiled.
+			-- Force a recompilation of `a_class' for next
+			-- compilation of system.
+		require
+			a_class_not_void: a_class /= Void
+		do
+				-- Force a recompilation of the system.
+			set_melt
+			unref_classes.extend (a_class)
+		ensure
+			unref_classes_updated: unref_classes.has (a_class)
+			melt_forced: private_melt
+		end
+
 	protected_classes_level: INTEGER
 			-- Useful for remove_useless_classes
 			-- Protected classes are ANY, DOUBLE, REAL,
@@ -496,185 +512,8 @@ end
 			-- it has syntactical_clients.
 		require
 			 good_argument: a_class /= Void
-		local
-			compiled_root_class: CLASS_C
-			supplier: CLASS_C
-			supplier_clients: LINKED_LIST [CLASS_C]
-			related_classes: LINKED_SET [CLASS_C]
-			finished: BOOLEAN
-			ftable: FEATURE_TABLE
-			id: INTEGER
-			types: TYPE_LIST
-			f: FEATURE_I
-			ext: EXTERNAL_I
 		do
-			if a_class.is_removable then
-				id := a_class.class_id
-
-				a_class.remove_c_generated_files
-
-					-- Update control flags of the topological sort
-				moved := True
-
-					-- Remove type check relations
-				if a_class.parents /= Void then
-					a_class.remove_relations
-				end
-
-					-- Remove one occurrence for each external written
-					-- in the class
-				if Feat_tbl_server.has (id) then
-					from
-						ftable := Feat_tbl_server.item (id)
-						ftable.start
-					until
-						ftable.after
-					loop
-						f := ftable.item_for_iteration
-						if f.is_external and then f.written_in = id then
-							ext ?= f
-								-- If the external is encapsulated then it was not added to
-								-- the list of new externals in inherit_table. Same thing
-								-- if it has to be removed
-							if not ext.encapsulated then
-								Externals.remove_occurence (ext.external_name)
-							end
-						end
-						ftable.forth
-					end
-				end
-
-					-- Remove class `a_class' from the lists of changed classes
-				Degree_5.remove_class (a_class)
-				Degree_4.remove_class (a_class)
-				Degree_3.remove_class (a_class)
-				Degree_2.remove_class (a_class)
-
-					-- Mark the class to remove uncompiled
-				a_class.lace_class.reset_compiled_class
-
-					-- Remove its types
-				from
-					types := a_class.types
-					types.start
-				until
-					types.after
-				loop
-					class_types.put (Void, types.item.type_id)
-					types.forth
-				end
-
-					-- Remove if from the servers
-				Inv_byte_server.remove (id)
-				Ast_server.remove (id)
-				Feat_tbl_server.remove (id)
-				Class_info_server.remove (id)
-				Inv_ast_server.remove (id)
-				Depend_server.remove (id)
-				Rep_depend_server.remove (id)
-				M_rout_id_server.remove (id)
-				M_desc_server.remove (id)
-				if Compilation_modes.is_precompiling then
-						-- Do not need to remove id from
-						-- Class_comments_server since
-						-- we are not able to remove a
-						-- precompiled class
-					Tmp_class_comments_server.remove (id)
-				end
-				Tmp_inv_byte_server.remove (id)
-				Tmp_ast_server.remove (id)
-				Tmp_feat_tbl_server.remove (id)
-				Tmp_class_info_server.remove (id)
-				Tmp_inv_ast_server.remove (id)
-				Tmp_depend_server.remove (id)
-				Tmp_rep_depend_server.remove (id)
-				Tmp_m_rout_id_server.remove (id)
-				Tmp_m_desc_server.remove (id)
-
-				Degree_1.remove_class (a_class)
-				Degree_minus_1.remove_class (a_class)
-				classes.remove (id)
-
-					-- Create linked_set of classes that depends on current class.
-					-- We use `syntactical_suppliers', `syntactical_clients' and `clients'.
-				from
-					a_class.syntactical_suppliers.start
-					a_class.syntactical_clients.start
-					a_class.clients.start
-					create related_classes.make
-				until
-					finished
-				loop
-					finished := True
-					if not a_class.syntactical_suppliers.after then
-						supplier := a_class.syntactical_suppliers.item.supplier
-						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.syntactical_suppliers.forth
-						finished := False
-					end
-					if not a_class.syntactical_clients.after then
-						supplier := a_class.syntactical_clients.item
-						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.syntactical_clients.forth
-						finished := False
-					end
-					if not a_class.clients.after then
-						supplier := a_class.clients.item
-						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.clients.forth
-						finished := False
-					end
-				end
-
-					-- Remove supplier/clients syntactical relations of `a_class'
-					-- and remove classes recursively if needed.
-				from
-					related_classes.start
-					if root_class /= Void then
-						compiled_root_class := root_class.compiled_class
-					end
-				until
-					related_classes.after
-				loop
-					supplier := related_classes.item
-
-						-- Remove from `syntactical_clients'
-					supplier_clients := supplier.syntactical_clients
-					supplier_clients.start
-					supplier_clients.compare_references
-					supplier_clients.search (a_class)
-					if not supplier_clients.after then
-						supplier_clients.remove
-					end
-
-					if
-						supplier_clients.is_empty and then
-							-- The root class is not removed
-							-- true only if the root class has changed and
-							-- was a client for a removed class
-						supplier /= compiled_root_class and then
-							-- Cannot propagate for a protected class
-						supplier.class_id > protected_classes_level and then
-							-- A recursion may occur when removing a cluster
-						class_of_id (supplier.class_id) /= Void
-					then
-							-- Recursively remove class.
-						remove_class (supplier)
-					elseif supplier.has_dep_class (a_class) then
-							-- Is it enough to remove the dependecies only on a class
-							-- which is still in the system, or should we do it for
-							-- all the classes even the ones that we just removed from
-							-- the system? In the last case, we should put the previous
-							-- test one level up.
-						supplier.remove_dep_class (a_class)
-					end
-
-					related_classes.forth
-				end
-			end
+			internal_remove_class (a_class, 0)
 		end
 
 	class_of_id (id: INTEGER): CLASS_C is
@@ -1013,8 +852,25 @@ end
 
 	process_degree_5 is
 			-- Process Degree 5.
-			-- Syntax analysis: This may add new classes to the system.
+			-- Syntax analysis: This may add new classes to system.
+			-- Unref classes analyzis: This may add new classes to system.
+		local
+			class_i: CLASS_I
 		do
+				-- Force unref classes to be compiled with Current system.
+			from
+				unref_classes.start
+			until
+				unref_classes.after
+			loop
+				class_i := unref_classes.item
+				if class_i.compiled_class = Void then
+					Workbench.change_class (class_i)
+				end
+				unref_classes.forth
+			end
+				
+				-- Launch syntax analyzis of modified/added classes to system.
 			Degree_5.execute
 		end
 
@@ -1132,6 +988,20 @@ end
 				routine_class.compiled_class.mark_class (marked_classes)
 				procedure_class.compiled_class.mark_class (marked_classes)
 				function_class.compiled_class.mark_class (marked_classes)
+			end
+
+				-- Now mark all classes reachable from `unref_classes'.
+			from
+				unref_classes.start
+			until
+				unref_classes.after
+			loop
+				check
+					unref_class_compiled:
+						unref_classes.item.compiled_class /= Void
+				end
+				unref_classes.item.compiled_class.mark_class (marked_classes)
+				unref_classes.forth
 			end
 
 				-- Now mark all classes reachable from visible classes.
@@ -1900,6 +1770,206 @@ feature -- Final mode generation
 				error_handler.trace
 				set_current_class (Void)
 				retry
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_remove_class (a_class: CLASS_C; a_depth: INTEGER) is
+			-- Remove class `a_class' from the system even if
+			-- it has syntactical_clients.
+		require
+			 good_argument: a_class /= Void
+			 valid_depth: a_depth >= 0
+		local
+			compiled_root_class: CLASS_C
+			supplier: CLASS_C
+			supplier_clients: LINKED_LIST [CLASS_C]
+			related_classes: LINKED_SET [CLASS_C]
+			finished: BOOLEAN
+			ftable: FEATURE_TABLE
+			id: INTEGER
+			types: TYPE_LIST
+			f: FEATURE_I
+			ext: EXTERNAL_I
+		do
+			if a_class.is_removable then
+					-- Force a recompilation
+				set_melt
+
+					-- Remove class from `unref_classes' if it is referenced.
+					-- It is only done if class is directly removed. Removing
+					-- `a_class' does not remove any subclasses from `unref_classes',
+					-- so that they are recompiled back
+				if a_depth = 0 then
+					unref_classes.prune_all (a_class.lace_class)
+				end
+
+				id := a_class.class_id
+
+				a_class.remove_c_generated_files
+
+					-- Update control flags of the topological sort
+				moved := True
+
+					-- Remove type check relations
+				if a_class.parents /= Void then
+					a_class.remove_relations
+				end
+
+					-- Remove one occurrence for each external written
+					-- in the class
+				if Feat_tbl_server.has (id) then
+					from
+						ftable := Feat_tbl_server.item (id)
+						ftable.start
+					until
+						ftable.after
+					loop
+						f := ftable.item_for_iteration
+						if f.is_external and then f.written_in = id then
+							ext ?= f
+								-- If the external is encapsulated then it was not added to
+								-- the list of new externals in inherit_table. Same thing
+								-- if it has to be removed
+							if not ext.encapsulated then
+								Externals.remove_occurence (ext.external_name)
+							end
+						end
+						ftable.forth
+					end
+				end
+
+					-- Remove class `a_class' from the lists of changed classes
+				Degree_5.remove_class (a_class)
+				Degree_4.remove_class (a_class)
+				Degree_3.remove_class (a_class)
+				Degree_2.remove_class (a_class)
+
+					-- Mark the class to remove uncompiled
+				a_class.lace_class.reset_compiled_class
+
+					-- Remove its types
+				from
+					types := a_class.types
+					types.start
+				until
+					types.after
+				loop
+					class_types.put (Void, types.item.type_id)
+					types.forth
+				end
+
+					-- Remove if from the servers
+				Inv_byte_server.remove (id)
+				Ast_server.remove (id)
+				Feat_tbl_server.remove (id)
+				Class_info_server.remove (id)
+				Inv_ast_server.remove (id)
+				Depend_server.remove (id)
+				Rep_depend_server.remove (id)
+				M_rout_id_server.remove (id)
+				M_desc_server.remove (id)
+				if Compilation_modes.is_precompiling then
+						-- Do not need to remove id from
+						-- Class_comments_server since
+						-- we are not able to remove a
+						-- precompiled class
+					Tmp_class_comments_server.remove (id)
+				end
+				Tmp_inv_byte_server.remove (id)
+				Tmp_ast_server.remove (id)
+				Tmp_feat_tbl_server.remove (id)
+				Tmp_class_info_server.remove (id)
+				Tmp_inv_ast_server.remove (id)
+				Tmp_depend_server.remove (id)
+				Tmp_rep_depend_server.remove (id)
+				Tmp_m_rout_id_server.remove (id)
+				Tmp_m_desc_server.remove (id)
+
+				Degree_1.remove_class (a_class)
+				Degree_minus_1.remove_class (a_class)
+				classes.remove (id)
+
+					-- Create linked_set of classes that depends on current class.
+					-- We use `syntactical_suppliers', `syntactical_clients' and `clients'.
+				from
+					a_class.syntactical_suppliers.start
+					a_class.syntactical_clients.start
+					a_class.clients.start
+					create related_classes.make
+				until
+					finished
+				loop
+					finished := True
+					if not a_class.syntactical_suppliers.after then
+						supplier := a_class.syntactical_suppliers.item.supplier
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_suppliers.forth
+						finished := False
+					end
+					if not a_class.syntactical_clients.after then
+						supplier := a_class.syntactical_clients.item
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_clients.forth
+						finished := False
+					end
+					if not a_class.clients.after then
+						supplier := a_class.clients.item
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.clients.forth
+						finished := False
+					end
+				end
+
+					-- Remove supplier/clients syntactical relations of `a_class'
+					-- and remove classes recursively if needed.
+				from
+					related_classes.start
+					if root_class /= Void then
+						compiled_root_class := root_class.compiled_class
+					end
+				until
+					related_classes.after
+				loop
+					supplier := related_classes.item
+
+						-- Remove from `syntactical_clients'
+					supplier_clients := supplier.syntactical_clients
+					supplier_clients.start
+					supplier_clients.compare_references
+					supplier_clients.search (a_class)
+					if not supplier_clients.after then
+						supplier_clients.remove
+					end
+
+					if
+						supplier_clients.is_empty and then
+							-- The root class is not removed
+							-- true only if the root class has changed and
+							-- was a client for a removed class
+						supplier /= compiled_root_class and then
+							-- Cannot propagate for a protected class
+						supplier.class_id > protected_classes_level and then
+							-- A recursion may occur when removing a cluster
+						class_of_id (supplier.class_id) /= Void
+					then
+							-- Recursively remove class.
+						internal_remove_class (supplier, a_depth + 1)
+					elseif supplier.has_dep_class (a_class) then
+							-- Is it enough to remove the dependecies only on a class
+							-- which is still in the system, or should we do it for
+							-- all the classes even the ones that we just removed from
+							-- the system? In the last case, we should put the previous
+							-- test one level up.
+						supplier.remove_dep_class (a_class)
+					end
+
+					related_classes.forth
+				end
 			end
 		end
 

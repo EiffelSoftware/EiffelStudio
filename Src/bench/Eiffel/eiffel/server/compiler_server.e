@@ -4,7 +4,7 @@ deferred class
 	COMPILER_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-	SERVER [SERVER_INFO, T, H]
+	ISE_SERVER [SERVER_INFO, T, H]
 		redefine
 			make,
 			clear,
@@ -257,7 +257,7 @@ end
 				forth
 			end
 			file_ids.wipe_out
-			{SERVER} Precursor
+			{ISE_SERVER} Precursor
 				-- Take a new file
 			set_current_id
 		end

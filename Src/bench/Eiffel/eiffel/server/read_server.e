@@ -4,7 +4,7 @@ deferred class
 	READ_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-	SERVER [READ_INFO, T, H]
+	ISE_SERVER [READ_INFO, T, H]
 
 feature -- Access
 

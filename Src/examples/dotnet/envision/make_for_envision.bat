@@ -222,10 +222,9 @@ rem del %EIFFEL_SRC%\examples\dotnet\envision\envision.ace
 mkdir gdi
 cd gdi
 copy %EIFFEL_SRC%\examples\dotnet\winforms\gdi_plus\text\*.e
+copy %EIFFEL_SRC%\examples\dotnet\winforms\gdi_plus\text\*.jpg
 mkdir debug
 mkdir release
-copy %EIFFEL_SRC%\examples\dotnet\winforms\gdi_plus\text\*.jpg .\debug
-copy %EIFFEL_SRC%\examples\dotnet\winforms\gdi_plus\text\*.jpg .\release
 cd ..
 call es_to_envision.exe "EIFFEL_SRC\examples\dotnet\winforms\gdi_plus\text\ace.ace" "$ISE_EIFFEL\examples\winforms\gdi" "debug"
 copy %EIFFEL_SRC%\examples\dotnet\envision\envision.ace .\\gdi\\debug\\ace.ace

@@ -468,14 +468,14 @@ public void cnode_updt()
 
 	wread(&node->cn_deferred, 1);		/* Deferred flag */
 	wread(&node->cn_composite, 1);		/* Composite flag */
-	node->cn_creation_id = wint32();	/* Creation feature id */
-	node->static_id = wint32();			/* Static id of Class */
+	node->exp_info.noprecomp.cn_creation_id = wint32();/* Creation feature id */
+	node->exp_info.noprecomp.static_id = wint32();		/* Static id of Class */
 	wread(&node->cn_disposed, 1);		/* Dispose flag */ 
 #ifdef DEBUG
 	dprintf(4)("\tdeferred = %ld\n", node->cn_deferred);
 	dprintf(4)("\tcomposite = %ld\n", node->cn_composite);
-	dprintf(4)("\tcreation_id = %ld\n", node->cn_creation_id);
-	dprintf(4)("\tstatic_id = %ld\n", node->static_id);
+	dprintf(4)("\tcreation_id = %ld\n",node->exp_info.noprecomp.cn_creation_id);
+	dprintf(4)("\tstatic_id = %ld\n", node->exp_info.noprecomp.static_id);
 	dprintf(4)("\tdispose_id = %ld\n", node->cn_disposed);
 #endif
 }
@@ -498,10 +498,14 @@ public void routid_updt()
 	dprintf(4)("Updating rids of class of id %ld [%ld]\n",
 		class_id, array_size);
 #endif
-		cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
-		if (cn_eroutid == (int32 *) 0)
-			enomem();
-		wread(cn_eroutid, array_size * sizeof(int32));
+		if (array_size > 0) {
+			cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
+			if (cn_eroutid == (int32 *) 0)
+				enomem();
+			wread(cn_eroutid, array_size * sizeof(int32));
+		} else {
+			 cn_eroutid = (int32 *) 0;
+		}
 #ifdef DEBUG
 {
 	long i;

@@ -524,7 +524,21 @@ EIF_REFERENCE arg;
 	l[1] = arg;
 	l[0] = RTLN(dtype);
 	dle_node = &System(dtype);
-	((void (*)()) RTWF(dle_node->static_id, dle_node->cn_creation_id, dtype))(l[0], l[1]);
+	if (dle_node->cn_routids) {
+		int32 feature_id;				/* Creation procedure feature id */
+		int32 static_id;				/* Creation procedure static id */
+
+		feature_id = dle_node->exp_info.noprecomp.cn_creation_id;
+		static_id = dle_node->exp_info.noprecomp.static_id;
+		((void (*)()) RTWF(static_id, feature_id, dtype))(l[0], l[1]);
+	} else {							/* precompiled creation routine */
+		int32 origin;					/* Origin class id */
+		int32 offset;					/* Offset in origin class */
+ 
+		origin = dle_node->exp_info.precomp.origin;
+		offset = dle_node->exp_info.precomp.offset;
+		((void (*)()) RTWPF(origin, offset, dtype))(l[0], l[1]);
+	}
 	RTCI(l[0]);
 	RTLE;
 	return l[0];

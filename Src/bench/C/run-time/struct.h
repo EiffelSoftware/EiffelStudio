@@ -44,8 +44,16 @@ struct cnode {
 	long nb_ref;				/* Number of references in the object */
 	char cn_deferred;			/* Is the class type deferred ? */
 	char cn_composite;			/* is the class type a composite one ? */
-	int32 cn_creation_id;		/* Creation feature id for expanded types */
-	int32 static_id;			/* Static id of class (used for expanded types) */
+	union {
+		struct {
+			int32 cn_creation_id;	/* Creation feature id for expanded types */
+			int32 static_id; /* Static id of class (used for expanded types) */
+		} noprecomp;		/* Not precompiled creation routine of expanded */
+		struct {
+			int32 origin;		/* Origin class id */
+			int32 offset;		/* Offset in origin class */
+		} precomp;				/* Precompiled creation routine for expanded */
+	} exp_info;					/* Info for creation routine of expanded */
 	char cn_disposed;			/* Does class type have a dispose routine? */ 
 	int32 *cn_routids;   		/* Pointer on routine id array */
 	struct ctable cn_cecil;		/* Cecil hash table */

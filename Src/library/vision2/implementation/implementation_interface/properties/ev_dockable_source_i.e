@@ -60,21 +60,30 @@ feature -- Status report
 		local
 			container: EV_CONTAINER
 			target: EV_DOCKABLE_TARGET
+			parent_widget: EV_WIDGET
 		do
 			from
 					-- We check the `parent' of `current_target' to
 					-- avoid entering the loop unless necessary.
-				container := a_widget.parent
+				parent_widget := a_widget.parent
+				container ?= parent_widget
 				target ?= container
-				if target /= Void and then target.is_docking_enabled then
+				if parent_widget /= Void and then parent_widget.real_target /= Void and then
+					parent_widget.real_target.is_docking_enabled then
+					Result := parent_widget.real_target
+				elseif target /= Void and then target.is_docking_enabled then
 					Result := target
 				end
 			until
 				Result /= Void or container = Void
 			loop
-				container := container.parent
+				parent_widget := container.parent
+				container ?= parent_widget
 				target ?= container
-				if target /= Void and then target.is_docking_enabled then
+				if parent_widget /= Void and then parent_widget.real_target /= Void and then
+					parent_widget.real_target.is_docking_enabled then
+					Result := parent_widget.real_target
+				elseif target /= Void and then target.is_docking_enabled then
 					Result := target
 				end
 			end
@@ -94,7 +103,10 @@ feature -- Status report
 			widget_imp_at_cursor_position := widget_imp_at_pointer_position
 			if widget_imp_at_cursor_position /= Void then
 				current_target ?= widget_imp_at_cursor_position.interface
-				if current_target /= Void and then current_target.is_docking_enabled then
+				if widget_imp_at_cursor_position.real_target /= Void and
+					widget_imp_at_cursor_position.real_target.is_docking_enabled then
+					Result := widget_imp_at_cursor_position.real_target
+				elseif current_target /= Void and then current_target.is_docking_enabled then
 					Result := current_target
 				else
 					Result:= get_next_target (widget_imp_at_cursor_position.interface)
@@ -320,6 +332,9 @@ feature -- Basic operations
 							-- we simply move the existing dialog.
 						move_dialog_to_pointer (dockable_dialog_source)
 					end
+					if dock_ended_actions_internal /= Void then
+						dock_ended_actions_internal.call ([])
+					end
 				end
 			else
 				dropping_in_source := True
@@ -341,6 +356,9 @@ feature -- Basic operations
 					end
 					if dockable_dialog_source /= Void then
 						dockable_dialog_source.destroy
+					end
+					if dock_ended_actions_internal /= Void then
+						dock_ended_actions_internal.call ([])
 					end
 				else
 					move_dialog_to_pointer (dockable_dialog_source)
@@ -434,6 +452,9 @@ feature -- Basic operations
 					update_buttons (tool_bar, insert_index, insert_index)
 				end
 				end
+				end
+				if dock_ended_actions_internal /= Void then
+					dock_ended_actions_internal.call ([])
 				end
 			end
 			
@@ -668,7 +689,6 @@ feature {NONE} -- Implementation
 			a_screen_x, a_screen_y: INTEGER)
 		is
 			-- Executed when `pebble' is being moved.
-			-- Draw a rubber band from pick position to pointer position.
 		local
 			counter: INTEGER
 			target: EV_DOCKABLE_TARGET

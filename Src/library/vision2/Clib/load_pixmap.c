@@ -1182,11 +1182,19 @@ unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
 void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 	{
 	long iOff = iData / 8;	/* Offset of the bit in byte */
+#ifdef EIF_WIN32
 	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
+#else
+	long iBitPos = iData % 8;		/* Position of the bit within the byte */
+#endif
 	unsigned char bitValue;
 
 	bitValue = (unsigned char)(1 << iBitPos);
+#ifdef EIF_WIN32
 	if (bit == 0)
+#else
+	if (bit == 1)
+#endif
 		pData[iOff] = (unsigned char) (pData[iOff] & (~bitValue));
 	else
 		pData[iOff] = (unsigned char) (pData[iOff] | bitValue);
@@ -1218,10 +1226,10 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned char 	*pImage;		/* Pointer on a DIB structure */
 	unsigned char 	*pAlphaData;	/* Pointer on the Alpha data */
 	unsigned char 	*pAlphaImage;	/* Pointer on a DIB structure */
-#ifdef EIF_WIN32
 	unsigned char	bAlphaImage = FALSE;/* Is there a mask for this image? */
+	unsigned long 	iAlphaData = 0;
+#ifdef EIF_WIN32
 	unsigned long 	iData;
-	unsigned long 	iAlphaData;
 #endif
 	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
 	unsigned long 	row;			/* Current scan line */
@@ -1341,7 +1349,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	sRowSize = 4 * ((width + 31) / 32);
 	pAlphaImage = (unsigned char *) malloc(sRowSize * height + 40 + 8);
 	pAlphaData = pAlphaImage;
-	iAlphaData = 0;
 
 	/* Create a Windows DIB Header for the color bitmap */
 	*((DWORD *)pData) = 40;			pData += 4;				/* Size of header */
@@ -1417,19 +1424,11 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			iData++;
 			}
 		}
-	
-	/* The mast is empty, remove it */
-	if (bAlphaImage == FALSE)
-		{
-		free (pAlphaImage);
-		pAlphaImage = NULL;
-		}
-	
 #else
 	pImage = (unsigned char *) malloc(width * height * 3);
 	pData = pImage;
 
-	pAlphaImage = (unsigned char *) malloc(width * height);
+	pAlphaImage = (unsigned char *) malloc(1 + ((width * height) >> 3));
 	pAlphaData = pAlphaImage;
 
 	for (row = 0; row < height; row++)
@@ -1442,16 +1441,29 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			/* Copy the RGB data */
 			memcpy(pData, pSrc, 3);
 			pData += 3;
-			pSrc += 3;
 
-			/* Copy the Alpha data */
-			memcpy(pAlphaData, pSrc, 1);
-			pSrc++;
-			pAlphaData++;
+			/* Copy the alpha channel */
+			if (*(pSrc + 3) > 0x7F)
+				c_ev_set_bit(0, pAlphaData, iAlphaData);
+			else
+				{
+				c_ev_set_bit(1, pAlphaData, iAlphaData);
+				bAlphaImage = TRUE;
+				}
+
+			pSrc += 4;
+			iAlphaData++;
 			}
 		}
 #endif /* EIF_WIN32 */
 
+	/* The mast is empty, remove it */
+	if (bAlphaImage == FALSE)
+		{
+		free (pAlphaImage);
+		pAlphaImage = NULL;
+		}
+	
 	/* Free the memory */
 	for (row = 0; row < height; row++)
 		{

@@ -41,14 +41,12 @@ feature -- Basic operations
 		
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
-		require
-			object_empty: object.is_empty
-			correct_type: type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_PRIMITIVE_OBJECT")) or
-				type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_CELL_OBJECT")) or
-				type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_CONTAINER_OBJECT"))
 		local
 			widget: EV_WIDGET
 		do
+			check
+				object_empty: object.is_empty
+			end
 			widget ?= an_object.object
 			check
 				object_is_a_widget: widget /= Void
@@ -63,7 +61,8 @@ feature -- Basic operations
 				layout_item.extend (an_object.layout_item)
 			end
 		ensure
-			object_not_empty: not object.is_empty
+				-- If we are adding a menu bar, then the normal rule does not apply.
+			object_not_empty: not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies not object.is_empty
 		end
 		
 		

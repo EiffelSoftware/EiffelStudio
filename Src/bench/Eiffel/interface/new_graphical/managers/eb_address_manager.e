@@ -38,6 +38,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EV_UTILITIES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -1857,13 +1862,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		end
 
 	set_mode (for_context_tool: BOOLEAN) is
-			-- Define `Current's execution mode (generated widgets are different).
+			-- Define `Current's execution mode (generated parent_windows are different).
 		do
 			mode := for_context_tool
 		end
 
 	generate_header_info is
-			-- Create all widgets used in `header_info'.
+			-- Create all parent_windows used in `header_info'.
 		local
 			def_col: EV_STOCK_COLORS
 			hb: EV_HORIZONTAL_BOX
@@ -2057,15 +2062,15 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			for_context_tool: mode
 		local
 			start_x: INTEGER
-			parent_window: EV_WINDOW
+			window: EV_WINDOW
 		do
 			start_x := header_info.screen_x
-			parent_window := parent.window
+			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
 			address_dialog.set_position (start_x, header_info.screen_y)
-			address_dialog.set_size (parent_window.width + parent_window.screen_x - start_x, header_info.height)
+			address_dialog.set_size (window.width + window.screen_x - start_x, header_info.height)
 			address_dialog.show
 		end
 

@@ -17,9 +17,7 @@ feature -- Access
 			-- Text displayed in `Current'.
 		do
 			Result := wel_text
-			if Result.empty then
-				Result := Void
-			else
+			if not Result.empty then
 				unescape_ampersands (Result)
 			end
 		end 
@@ -178,6 +176,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/07 22:50:00  brendel
+--| Implementation improvement.
+--|
 --| Revision 1.21  2000/04/05 19:43:21  rogers
 --| Minor formatting and comment change.
 --|

@@ -70,18 +70,23 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_WIDGET_IMP
 			a_child: POINTER
+			a_index: INTEGER
 		do
+			a_index := index
+				-- Store the index in case it is changed as a result of an event on the pass back to gtk
 			v_imp ?= i_th (i).implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
 			child_array.go_i_th (i)
 			child_array.remove
-			on_removed_item (v_imp.interface)
+			on_removed_item (v_imp)
 			a_child := v_imp.c_object
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
 			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
 			feature {EV_GTK_EXTERNALS}.set_gtk_widget_struct_parent (a_child, NULL)
+			index := a_index
+				-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure
 		end
 
 feature {NONE} -- Implementation

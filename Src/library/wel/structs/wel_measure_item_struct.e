@@ -140,7 +140,7 @@ end -- class WEL_MEASURE_ITEM_STRUCT
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>

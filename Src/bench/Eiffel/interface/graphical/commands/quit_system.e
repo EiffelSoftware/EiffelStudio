@@ -11,7 +11,7 @@ inherit
 
 	QUIT_FILE
 		redefine 
-			work, make, text_window, loose_changes
+			work, make, loose_changes
 		end
 
 creation
@@ -31,15 +31,9 @@ feature -- Callbacks
 	loose_changes (argument: ANY) is
 			-- The user has been warned that he will lose his stuff
 		do
-			text_window.clean;
-			text_window.tool.hide;
-			text_window.set_in_use (false)
+			text_window.clear_window;
+			tool.hide;
 		end;
-
-feature -- Properties
-
-	text_window: SYSTEM_TEXT;
-			-- Window with the text of the Ace file.
 
 feature {NONE} -- Implementation
 
@@ -50,12 +44,11 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (text_window).call (Current, l_File_changed)
+					warner (popup_parent).call (Current, l_File_changed)
 				else
-					text_window.clean;
-					text_window.tool.hide;
-					text_window.tool.close_windows;
-					text_window.set_in_use (false)
+					text_window.clear_window;
+					tool.hide;
+					tool.close_windows;
 				end
 			end
 		end;

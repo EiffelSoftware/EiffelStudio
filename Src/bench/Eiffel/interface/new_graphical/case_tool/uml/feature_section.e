@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that is a named section of features in a class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

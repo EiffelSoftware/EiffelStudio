@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that is a UML view for an Eiffel class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

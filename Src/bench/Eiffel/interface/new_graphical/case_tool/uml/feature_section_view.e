@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that is a view for a FEATURE_SECTION."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

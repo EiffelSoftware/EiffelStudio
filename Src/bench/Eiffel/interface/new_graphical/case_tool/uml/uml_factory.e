@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that creates uml figures for models."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

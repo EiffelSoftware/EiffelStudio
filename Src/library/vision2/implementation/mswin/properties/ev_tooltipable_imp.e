@@ -24,7 +24,7 @@ feature -- Initialization
 	tooltip: STRING is
 			-- Text of tooltip assigned to `Current'.
 		do
-			Result := internal_tooltip_string
+			Result := clone (internal_tooltip_string)
 			if Result = Void then
 				Result := ""
 			end

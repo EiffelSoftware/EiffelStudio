@@ -19,8 +19,8 @@ EIF_INTEGER size;
 	EIF_INTEGER i;
 
 	if (size > old_size) {
-		free_parameter_array(*arr, old_size); /* eiffel_free old */
-		*arr = (PARAMETER *)eiffel_malloc(size * sizeof(PARAMETER));
+		free_parameter_array(*arr, old_size); /* eif_free old */
+		*arr = (PARAMETER *)eif_malloc(size * sizeof(PARAMETER));
 		valid_memory(*arr);
 		for(i=0; i<size; i++) /* initialization */
 			(*arr)[i].str_len = 0;	
@@ -37,7 +37,7 @@ EIF_INTEGER size;
 
 	if (size > _concur_paras_size) {
 		free_parameter_array(_concur_paras, _concur_paras_size); 
-		_concur_paras = (PARAMETER *)eiffel_malloc(size * sizeof(PARAMETER));
+		_concur_paras = (PARAMETER *)eif_malloc(size * sizeof(PARAMETER));
 		valid_memory(_concur_paras);
 		_concur_paras_size = size;
 		for(i=0; i<_concur_paras_size; i++) 
@@ -50,17 +50,17 @@ void free_parameter_array(ary, size)
 PARAMETER *ary;
 EIF_INTEGER size;
 {
-/* not only eiffel_free the space occured by the array, but also 
+/* not only eif_free the space occured by the array, but also 
  * the space allocated to each cell to store string data.
 */
 	EIF_INTEGER i;
 	
 	for(i=0; i<size; i++) {
 		if (ary[i].str_len)
-		/* there is a string buffer in the cell, eiffel_free it */
-			eiffel_free(ary[i].str_val);
+		/* there is a string buffer in the cell, eif_free it */
+			eif_free(ary[i].str_val);
 	}
-	eiffel_free(ary);
+	eif_free(ary);
 }
 
 
@@ -78,7 +78,7 @@ char *str;
 			para->str_len = - abs(para->str_len);
 		else {
 			para->str_len = - constant_min_str_len;
-			para->str_val = (char *)eiffel_malloc(constant_min_str_len);
+			para->str_val = (char *)eif_malloc(constant_min_str_len);
 			valid_memory(para->str_val);
 		}
 		(para->str_val)[0] = '\0';
@@ -89,11 +89,11 @@ char *str;
 		if (para->str_len <= (int)(strlen(str))) {
 		/* if the string buffer is not big enough, adjust it */
 			if (para->str_len)
-				eiffel_free(para->str_val);
+				eif_free(para->str_val);
 			para->str_len = strlen(str) + 1 ;
 			if (para->str_len < constant_min_str_len)
 				para->str_len = constant_min_str_len ;
-			para->str_val = (char *)eiffel_malloc(para->str_len);
+			para->str_val = (char *)eif_malloc(para->str_len);
 			valid_memory(para->str_val);
 		}
 		strcpy(para->str_val, str);

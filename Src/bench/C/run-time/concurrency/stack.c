@@ -10,14 +10,14 @@ void extend_string(MY_STRING *my_s, char *str) {
 	}
 	else {
 		my_s->size = my_s->size + strlen(str) + constant_memory_increment;
-		tmp = (char *)eiffel_malloc(my_s->size);
+		tmp = (char *)eif_malloc(my_s->size);
 		valid_memory(tmp);
 		if (my_s->info) 
 			strcpy(tmp, my_s->info);
 		strcpy(tmp+my_s->used, str);
 		my_s->used += strlen(str);
 		if (my_s->info) 
-			eiffel_free(my_s->info);
+			eif_free(my_s->info);
 		my_s->info = tmp;
 	}
 }
@@ -31,14 +31,14 @@ void extend_string_with_length(MY_STRING *my_s, char *str, long len) {
 	}
 	else {
 		my_s->size = my_s->size + len + constant_memory_increment;
-		tmp = (char *)eiffel_malloc(my_s->size);
+		tmp = (char *)eif_malloc(my_s->size);
 		valid_memory(tmp);
 		if (my_s->info && my_s->used) 
 			memcpy(tmp, my_s->info, my_s->used);
 		memcpy(tmp+my_s->used, str, len);
 		my_s->used += len;
 		if (my_s->info) 
-			eiffel_free(my_s->info);
+			eif_free(my_s->info);
 		my_s->info = tmp;
 	}
 }

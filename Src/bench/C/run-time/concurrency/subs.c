@@ -759,12 +759,12 @@ EIF_INTEGER len;
 
 	if (_concur_buffer_len <= len+33) {
 		if (_concur_buffer)
-			eiffel_free(_concur_buffer);
+			eif_free(_concur_buffer);
 		if (len+33 < 1024) 
 			_concur_buffer_len = 1024;
 		else
 			_concur_buffer_len = len + 33;
-		_concur_buffer = (EIF_POINTER)eiffel_malloc(_concur_buffer_len);
+		_concur_buffer = (EIF_POINTER)eif_malloc(_concur_buffer_len);
 		valid_memory(_concur_buffer);
 	}
 	while (got < len) {
@@ -887,7 +887,7 @@ EIF_INTEGER sock;
 				_concur_ser_list = ser->next;	
 			if (_concur_end_of_ser_list == ser)
 				_concur_end_of_ser_list = tmp;
-			eiffel_free(ser);
+			eif_free(ser);
 			(_concur_ser_list_count)--;
 		}
 /*

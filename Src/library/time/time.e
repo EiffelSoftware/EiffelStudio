@@ -31,6 +31,7 @@ create
 	make,
 	make_fine,
 	make_now,
+	make_now_utc,
 	make_by_seconds,
 	make_by_fine_seconds,
 	make_from_string,
@@ -77,6 +78,16 @@ feature -- Initialization
 			l_date: C_DATE
 		do
 			create l_date
+			make (l_date.hour_now, l_date.minute_now, l_date.second_now)
+			fractional_second := l_date.millisecond_now / 1000
+		end
+
+	make_now_utc is
+			-- Set the current object to today's date in utc format.
+		local
+			l_date: C_DATE
+		do
+			create l_date.make_utc
 			make (l_date.hour_now, l_date.minute_now, l_date.second_now)
 			fractional_second := l_date.millisecond_now / 1000
 		end

@@ -710,7 +710,7 @@ uint32 len;
 			loop_c = count;
 			while (loop_c) {
 
-				run_int (idrf.i_encode, iptr, write_size);
+				run_int (&idrf.i_encode, iptr, write_size);
 				iptr += write_size;
 				loop_c--;
 			} 

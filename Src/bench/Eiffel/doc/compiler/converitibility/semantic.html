@@ -87,6 +87,20 @@ degree 4, we can perform the same&nbsp;process as for creation procedure to
 propagate the type checking of code at degree 3 to ensure all the code is still 
 valid.</p>
 <p>&nbsp;</p>
+<h2>Convertibility checking</h2>
+<h3>Definition</h3>
+<p>How do we know if given two types A and B, if A converts to B?</p>
+<p>We check that if B has a convert_from structure, that it contains A, if not 
+we check that if A has a convert_to structure, that it contains B.</p>
+<p>&nbsp;</p>
+<h3>When check it?</h3>
+<p>We need to check convertibility after conformance in:</p>
+<ul>
+  <li>binary operators (for target only)</li>
+  <li>assignments</li>
+  <li>argument passing</li>
+  <li>manifest tuple creation where given type does not match expected type.</li>
+</ul>
 <h2>Generated code</h2>
 <p>Nothing special, at degree 3 during byte code generation we have inserted the 
 required byte code information for this. We do a blind generation.</p>

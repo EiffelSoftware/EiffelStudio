@@ -15,7 +15,7 @@ inherit
 	
 	EV_PRIMITIVE_IMP
 		undefine
-			initialize_colors
+			build
 		end
 
 feature -- status settings

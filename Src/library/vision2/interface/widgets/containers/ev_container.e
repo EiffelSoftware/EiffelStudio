@@ -139,7 +139,6 @@ feature -- Measurement
 			Result := implementation.client_width
 		ensure
 			bridge_ok: Result = implementation.client_width
-			positive: Result >= 0
 		end
 	
 	client_height: INTEGER is
@@ -149,7 +148,6 @@ feature -- Measurement
 			Result := implementation.client_height
 		ensure
 			bridge_ok: Result = implementation.client_height
-			positive: Result >= 0	
 		end
 		
 feature -- Basic operations
@@ -335,6 +333,11 @@ feature {NONE} -- Inapplicable
 		end
 
 invariant
+	client_width_within_bounds: is_useable implies
+		client_width >= 0 and client_width <= width
+	client_height_within_bounds: is_useable implies
+		client_height >= 0 and client_height <= height
+
 	all_radio_buttons_connected: is_useable implies all_radio_buttons_connected
 	parent_of_items_is_current: is_useable implies parent_of_items_is_current
 	items_unique: is_useable implies items_unique
@@ -362,6 +365,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/21 18:14:47  brendel
+--| Improved contracts for client_width/height.
+--|
 --| Revision 1.30  2000/04/07 01:34:28  brendel
 --| Improved contracts.
 --|

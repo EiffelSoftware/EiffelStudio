@@ -15,7 +15,7 @@ inherit
 
 	NAME_SOLVER
 	
-	PROCEDURE_RETRIVER
+	METHOD_RETRIVER
 
 create
 	make

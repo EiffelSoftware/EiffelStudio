@@ -118,7 +118,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %driver.res: driver.rc%N%
 %%Trc -r driver.rc%N%
 %%N%
-%precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
+%precomp.lib: $(C_OBJECTS)%N%
 %%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
@@ -132,7 +132,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Techo driver.res >> $@"
 
 -- cecil
-cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs%N%
+cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EIFLIB) $precompilelibs%N%
 %%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
 

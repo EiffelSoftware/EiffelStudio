@@ -77,10 +77,8 @@ feature -- Execution
 						create wd.make_with_text (Warning_messages.w_MakefileSH_more_recent)
 						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					else
-						appl_name.extend (' ')
-						appl_name.append (current_cmd_line_argument)
 						create cmd_exec
-						cmd_exec.execute (appl_name)
+						cmd_exec.execute_with_args (appl_name, current_cmd_line_argument)
 					end
 				end
 			end

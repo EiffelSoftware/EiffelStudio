@@ -56,8 +56,8 @@ feature -- Register and code generation
 			current_reg: REGISTRABLE
 		do
 			--Context.current_register.print_register
-			--System.inliner.inlined_feature.current_reg.print_register
-			inlined_feature := System.inliner.inlined_feature
+			--System.remover.inliner.inlined_feature.current_reg.print_register
+			inlined_feature := System.remover.inliner.inlined_feature
 
 			current_type := Context.current_type
 			current_reg := Context.inlined_current_register
@@ -75,7 +75,7 @@ feature -- Register and code generation
 	register_name: STRING is
 		do
 			--Result := Context.current_register.register_name
-			Result := System.inliner.inlined_feature.current_reg.register_name
+			Result := System.remover.inliner.inlined_feature.current_reg.register_name
 		end
 
 end

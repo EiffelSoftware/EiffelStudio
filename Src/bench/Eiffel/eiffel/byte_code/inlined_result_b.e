@@ -48,14 +48,14 @@ feature -- Register and code generation
 
 	print_register is
 		do
-			System.inliner.inlined_feature.result_reg.print_register
+			System.remover.inliner.inlined_feature.result_reg.print_register
 		end;
 
 feature
 
 	type: TYPE_I is
 		do
-			Result := System.inliner.inlined_feature.type
+			Result := System.remover.inliner.inlined_feature.type
 		end
 
 end

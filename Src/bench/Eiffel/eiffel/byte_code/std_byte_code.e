@@ -1388,7 +1388,7 @@ feature -- Inlining
 			if rescue_clause /= Void then
 				rescue_clause := rescue_clause.inlined_byte_code
 			end
-			inliner := System.inliner
+			inliner := System.remover.inliner
 			if inliner.current_feature_inlined then
 					-- If something has been inlined, create
 					-- a new byte code

@@ -60,19 +60,7 @@ public:
 	/*-----------------------------------------------------------
 	Assembly public key token
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_public_key(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Assembly path
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_path(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Assembly path
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_assembly_path(  /* [in] */ BSTR return_value ) = 0;
+	virtual STDMETHODIMP assembly_public_key_token(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -88,9 +76,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Assembly identifier.
+	Assembly cluster name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_identifier(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP assembly_cluster_name(  /* [out, retval] */ BSTR * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

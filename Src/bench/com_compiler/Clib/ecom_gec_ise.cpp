@@ -2631,7 +2631,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_210( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_211( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_213( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -2687,35 +2687,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_214( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_215( EIF_REFERENCE eif_ref, BSTR * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	BSTR * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (*result != NULL)
-	{
-		rt_ce.free_memory_bstr(*result);
-		*result = NULL;
-	}
-	if (cell_item != NULL)
-		*result = rt_ec.ccom_ec_bstr (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-ecom_eiffel_compiler::IEnumCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_interface_219( EIF_REFERENCE eif_ref )
+ecom_eiffel_compiler::IEnumCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_interface_218( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert IENUM_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEnumCompletionEntry *.
@@ -2743,7 +2715,7 @@ ecom_eiffel_compiler::IEnumCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_inter
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_cell_220( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old )
+ecom_eiffel_compiler::IEnumCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_cell_219( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [IENUM_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEnumCompletionEntry * *.
@@ -2760,13 +2732,13 @@ ecom_eiffel_compiler::IEnumCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_cel
 		result = (ecom_eiffel_compiler::IEnumCompletionEntry * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumCompletionEntry *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_219 (cell_item);
+		*result = ccom_ec_pointed_interface_218 (cell_item);
 	eif_wean (eif_object);
 	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_interface_222( EIF_REFERENCE eif_ref )
+ecom_eiffel_compiler::IEiffelCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_interface_221( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
 	Convert IEIFFEL_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEiffelCompletionEntry *.
@@ -2794,7 +2766,7 @@ ecom_eiffel_compiler::IEiffelCompletionEntry * ecom_gec_ISE::ccom_ec_pointed_int
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old )
+ecom_eiffel_compiler::IEiffelCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_cell_222( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEiffelCompletionEntry * *.
@@ -2811,7 +2783,7 @@ ecom_eiffel_compiler::IEiffelCompletionEntry * * ecom_gec_ISE::ccom_ec_pointed_c
 		result = (ecom_eiffel_compiler::IEiffelCompletionEntry * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelCompletionEntry *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_222 (cell_item);
+		*result = ccom_ec_pointed_interface_221 (cell_item);
 	eif_wean (eif_object);
 	return result;
 };

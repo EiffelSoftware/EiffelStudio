@@ -73,13 +73,7 @@ public:
 	/*-----------------------------------------------------------
 	Add a signed assembly to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_signed_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
-
-
-	/*-----------------------------------------------------------
-	Add a unsigned (local) assembly to the project.
-	-----------------------------------------------------------*/
-	void ccom_add_unsigned_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_path );
+	void ccom_add_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
 
 
 	/*-----------------------------------------------------------
@@ -89,21 +83,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Cluster properties.
+	Assembly properties.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_properties(  /* [in] */ EIF_OBJECT assembly_identifier );
+	EIF_REFERENCE ccom_assembly_properties(  /* [in] */ EIF_OBJECT cluster_name );
 
 
 	/*-----------------------------------------------------------
-	Checks to see if a assembly identifier is valid
+	Checks to see if a assembly cluster name is valid
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_is_valid_identifier(  /* [in] */ EIF_OBJECT assembly_identifier );
+	EIF_BOOLEAN ccom_is_valid_cluster_name(  /* [in] */ EIF_OBJECT cluster_name );
 
 
 	/*-----------------------------------------------------------
-	Checks to see if a assembly identifier has already been added to the project
+	Checks to see if a assembly cluster name has already been added to the project
 	-----------------------------------------------------------*/
-	EIF_BOOLEAN ccom_contains_assembly(  /* [in] */ EIF_OBJECT assembly_identifier );
+	EIF_BOOLEAN ccom_contains_assembly(  /* [in] */ EIF_OBJECT cluster_name );
 
 
 	/*-----------------------------------------------------------
@@ -119,15 +113,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Retrieves the identifier for a signed assembly in the project
+	Retrieves the cluster name for a signed assembly in the project
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_identifier_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
+	EIF_REFERENCE ccom_cluster_name_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey );
 
 
 	/*-----------------------------------------------------------
-	Retrieves the identifier for a unsigned assembly in the project
+	Retrieves the cluster name for a unsigned assembly in the project
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_identifier_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path );
+	EIF_REFERENCE ccom_cluster_name_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path );
 
 
 	/*-----------------------------------------------------------
@@ -140,12 +134,6 @@ public:
 	Has the 'prefix' already been allocated to another assembly
 	-----------------------------------------------------------*/
 	EIF_BOOLEAN ccom_is_prefix_allocated(  /* [in] */ EIF_OBJECT assembly_prefix );
-
-
-	/*-----------------------------------------------------------
-	Rename the assembly identifier
-	-----------------------------------------------------------*/
-	void ccom_rename_assembly(  /* [in] */ EIF_OBJECT assembly_new_identifier,  /* [in] */ EIF_OBJECT assembly_old_identifier );
 
 
 	/*-----------------------------------------------------------

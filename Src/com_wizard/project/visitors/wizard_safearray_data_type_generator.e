@@ -65,11 +65,11 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_safearray_int64")
 				ec_function_name.append ("ccom_ec_safearray_uint64")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER_64%)")
-			elseif is_real4 (an_element_type) then
+			elseif is_real (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_float")
 				ec_function_name.append ("ccom_ec_safearray_float")
 				eiffel_type.append ("ECOM_ARRAY %(REAL%)")
-			elseif is_real8 (an_element_type) then
+			elseif is_double (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_double")
 				ec_function_name.append ("ccom_ec_safearray_double")
 				eiffel_type.append ("ECOM_ARRAY %(DOUBLE%)")
@@ -97,11 +97,11 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_safearray_bstr")
 				ec_function_name.append ("ccom_ec_safearray_bstr")
 				eiffel_type.append ("ECOM_ARRAY %(STRING%)")
-			elseif is_dispatch (an_element_type) then
+			elseif is_idispatch (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_dispatch")
 				ec_function_name.append ("ccom_ec_safearray_dispatch")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_AUTOMATION_INTERFACE%)")
-			elseif is_unknown (an_element_type) then
+			elseif is_iunknown (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_unknown")
 				ec_function_name.append ("ccom_ec_safearray_unknown")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_UNKNOWN_INTERFACE%)")

@@ -554,10 +554,10 @@ feature {NONE} -- Implementation
 				elseif is_character (visitor.vt_type) or is_unsigned_char (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_character_function, Eif_character_function_name)	
 					
-				elseif is_real4 (visitor.vt_type) then
+				elseif is_real (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_real_function, Eif_real_function_name)
 					
-				elseif is_real8 (visitor.vt_type) then
+				elseif is_double (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_double_function, Eif_double_function_name)
 					
 				elseif is_byref (visitor.vt_type) or is_void (visitor.vt_type) then

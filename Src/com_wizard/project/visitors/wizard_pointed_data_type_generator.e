@@ -30,7 +30,7 @@ feature -- Basic operations
 			need_free_memory := True
 			need_generate_free_memory := True
 
-			if (pointed_visitor.is_interface or pointed_visitor.is_coclass) and (is_unknown (pointed_visitor.vt_type) or is_dispatch (pointed_visitor.vt_type)) then
+			if (pointed_visitor.is_interface or pointed_visitor.is_coclass) and (is_iunknown (pointed_visitor.vt_type) or is_idispatch (pointed_visitor.vt_type)) then
 				vt_type := pointed_visitor.vt_type
 			else
 				vt_type := binary_or (pointed_visitor.vt_type, Vt_byref)
@@ -218,12 +218,12 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_ulong_long")
 					ce_function_name.append ("ccom_ce_pointed_ulong_long")
 
-				elseif is_real4 (a_type) then 
+				elseif is_real (a_type) then 
 					eiffel_type.append ("REAL_REF")
 					ec_function_name.append ("ccom_ec_pointed_real")
 					ce_function_name.append ("ccom_ce_pointed_real")
 
-				elseif is_real8 (a_type) then
+				elseif is_double (a_type) then
 					eiffel_type.append ("DOUBLE_REF")
 					ec_function_name.append ("ccom_ec_pointed_double")
 					ce_function_name.append ("ccom_ce_pointed_double")
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 				Result.append ("if (*result != NULL)%N%T%
 							%{%N%T%T")
 				if a_visitor.need_generate_free_memory then
-					Result.append (a_visitor.ec_mapper.variable_name)
+					Result.append (a_visitor.ce_mapper.variable_name)
 					Result.append (".")
 				end
 				Result.append (a_visitor.free_memory_function_name) 

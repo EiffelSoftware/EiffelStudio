@@ -38,7 +38,7 @@ feature
 	update_text is
 		deferred
 		end;
-	
+
 	attach_drawing (a_drawing: DRAWING) is
 			-- Attach a drawing to the figure
 		do
@@ -61,7 +61,7 @@ feature
 		do
 			Result := outer_figure.center	
 		end;
-	
+
 	deselect is
 			-- Set the foreground color of interior and text_image 
 			-- to white and draw itself.

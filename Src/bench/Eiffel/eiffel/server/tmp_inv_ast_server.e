@@ -46,6 +46,7 @@ feature
 			if not to_remove.has (i) then
 				to_remove.add_front (i);
 			end;
+			remove (i);
 		end;
 
 	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
@@ -67,7 +68,7 @@ feature
 				Inv_ast_server.remove (to_remove.item);
 				to_remove.forth;
 			end;
-				
+
 			Inv_ast_server.merge (Current);
 
 				-- Update cache

@@ -34,7 +34,9 @@ feature -- Access
 			create a_visible.make
 			a_visible.set_name (a_descriptor.eiffel_class_name)
 			a_visible.add_feature ("make")
-			a_visible.add_feature ("make_by_pointer")
+			a_visible.add_feature ("make_from_pointer")
+			a_visible.add_feature ("set_shared")
+			a_visible.add_feature ("set_unshared")
 			system_descriptor.add_visible_class_common (a_visible)
 
 			create eiffel_writer.make

@@ -1,20 +1,44 @@
+indexing
+
+	description: 
+		"Finalize eiffel system.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_FINALIZE
 
 inherit
 
 	EWB_COMP
+		rename
+			make as comp_make
 		redefine
 			name, help_message, abbreviation,
-			execute, loop_execute
+			execute, loop_action
 		end;
 	SHARED_ERROR_HANDLER
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature -- Initialization
+
+	make (k: BOOLEAN; proj: like project) is
+			-- Initialize Current with keep_assertions as `k'
+			-- and project `proj'.
+		do
+			keep_assertions := k;
+			project := proj
+		ensure
+			set: keep_assertions = k and then
+				project = proj
+		end;
+
+feature -- Properties
+
+	keep_assertions: BOOLEAN;
+			-- Keep assertions in finalize code generation
 
 	name: STRING is
 		do
@@ -31,27 +55,21 @@ feature
 			Result := finalize_abb
 		end;
 
-feature
+feature {NONE} -- Execution
 
-	make (k: BOOLEAN) is
-		do
-			keep_assertions := k
-		end;
-
-	keep_assertions: BOOLEAN;
-
-	loop_execute is
+	loop_action is
+			-- Execute Current batch command form -loop.
 		local
 			answer: STRING
 		do
 			if Project_read_only.item then
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			elseif 
-				confirmed ("Finalizing implies some C compilation and linking.%
+				command_line_io.confirmed ("Finalizing implies some C compilation and linking.%
 							%%NDo you want to do it now") 
 			then
 				io.putstring ("--> Keep assertions (y/n): ");
-				wait_for_return;
+				command_line_io.wait_for_return;
 				answer := io.laststring;
 				answer.to_lower;
 				if answer.is_equal ("y") or else answer.is_equal ("yes") then
@@ -64,16 +82,19 @@ feature
 		end;
 
 	execute is
-		local
-			rescued: BOOLEAN
+			-- Execute Current batch command.
 		do
-			if not rescued then
+			if Project_read_only.item then
+				io.error.put_string ("Read-only project: cannot compile.%N")
+			else
 				init;
-				if not error_occurred and then Lace.file_name /= Void then
+				if Lace.file_name /= Void then
 					finalization_compile
 				end;
 			end
 		end;
+
+feature -- Update
 
 	finalization_compile is
 			-- Finalize the system.
@@ -88,7 +109,7 @@ feature
 					if stop_on_error then
 						lic_die (-1);
 					end;
-					if termination_requested then
+					if command_line_io.termination_requested then
 						--lic_die (0);
 						-- es3 -loop does NOT like lic_die(0)
 						exit := true
@@ -106,10 +127,10 @@ feature
 						-- Save the project before the finalization in order to
 						-- be able to use the project for other melting/freezing
 						-- or finalization afterwards.
-						terminate_project;
+						project.save_project;
 						System.finalized_generation (keep_assertions);
 						if System.extendible then
-							terminate_project
+							project.save_project
 						end;
 						if
 							System.poofter_finalization and
@@ -146,4 +167,4 @@ feature
 			end
 		end;
 
-end
+end -- class EWB_FINALIZE

@@ -11,7 +11,8 @@ inherit
 	CREATE_TYPE
 		redefine
 			generate, generate_gen_type_conversion,
-			generate_cid, type_to_create, make_byte_code
+			generate_cid, type_to_create, make_byte_code,
+			analyze
 		end
 
 creation
@@ -35,6 +36,13 @@ feature -- Access
 				-- Position of the formal in the current type.
 
 feature -- C code generation
+
+	analyze is
+		do
+				-- Current is always used to generate the correct generic parameter.
+			context.mark_current_used
+		end;
+	
 
 	generate is
 			-- Generate the creation type

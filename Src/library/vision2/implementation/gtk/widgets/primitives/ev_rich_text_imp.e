@@ -36,7 +36,7 @@ feature -- Status Report
 		do
 		end
 		
-	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I is
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
@@ -79,7 +79,7 @@ feature -- Status Report
 		do
 		end
 
-	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	internal_paragraph_format, paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		do
 		end
@@ -89,7 +89,7 @@ feature -- Status Report
 		do
 		end
 
-	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
+	internal_paragraph_format_contiguous, paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
 			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
 		do
 		end

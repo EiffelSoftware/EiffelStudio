@@ -73,6 +73,42 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	name: STRING
+			-- Face name used by `Current'.
+		
+	family: INTEGER
+			-- Family used by `Current'.
+		
+	height: INTEGER
+			--  Height of `Current'.
+		
+	weight: INTEGER
+			-- Weight of `Current'.
+		
+	is_bold: BOOLEAN
+			-- Is `Current' bold?
+		
+	shape: INTEGER
+			-- Shape of `Current'.
+
+	char_set: INTEGER
+			-- Char set used by `Current'.
+		
+	is_underlined: BOOLEAN
+			-- Is `Current' underlined?
+		
+	is_striked_out: BOOLEAN
+			-- Is `Current' striken out?
+		
+	vertical_offset: INTEGER
+			-- Vertical offset of `Current'.
+
+	fcolor: INTEGER
+			-- foreground color RGB packed into 24 bit.
+		
+	bcolor: INTEGER
+			-- background color RGB packed into 24 bit.
+
 	destroy is
 			-- 
 		do

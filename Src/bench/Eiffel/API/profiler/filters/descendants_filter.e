@@ -1,12 +1,12 @@
 indexing
 
 	description:
-		"Profile filter to check whether the time spent in the descendents %
+		"Profile filter to check whether the time spent in the descendants %
 		%of a function is equal to that what the user specified.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DESCENDENTS_FILTER
+class DESCENDANTS_FILTER
 
 inherit
 	COMPARING_FILTER
@@ -35,7 +35,7 @@ feature -- Checking
 
 	copy_value (item: PROFILE_DATA) is
 		do
-			item_value := item.descendents_sec;
+			item_value := item.descendants_sec;
 		end
 
 	filtering_is_allowed: BOOLEAN is
@@ -121,4 +121,4 @@ feature {NONE} -- Attributes
 
 	lower_interval, upper_interval: REAL
 
-end -- class DESCENDENTS_FILTER
+end -- class DESCENDANTS_FILTER

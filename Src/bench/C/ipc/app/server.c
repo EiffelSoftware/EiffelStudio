@@ -15,7 +15,10 @@
 #include "proto.h"
 #include "ewbio.h"
 #include "stream.h"
+#include "com.h"
+#include "identify.h"
 #include "transfer.h"
+#include "listen.h"
 #include "eif_logfile.h"
 #include "rqst_const.h"
 

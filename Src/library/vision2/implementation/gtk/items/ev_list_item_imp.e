@@ -20,7 +20,7 @@ inherit
 			create_text_label
 		end
 
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		rename
 			make as old_make,
 			interface as widget_interface,

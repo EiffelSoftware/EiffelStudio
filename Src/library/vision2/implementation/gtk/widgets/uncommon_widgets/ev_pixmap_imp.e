@@ -26,7 +26,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (parent: EV_PIXMAP_CONTAINER) is
+	make (parent: EV_PIXMAPABLE) is
                         -- Create a gtk pixmap.
                 local
 			par_imp: EV_WIDGET_IMP

@@ -17,12 +17,12 @@ inherit
 	
 	EV_BAR_ITEM_IMP
         
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
 		redefine
 			make
 		end
 
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
 		end

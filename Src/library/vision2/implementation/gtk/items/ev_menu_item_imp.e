@@ -28,7 +28,7 @@ inherit
 			set_interface as set_widget_interface
 		end
 
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		rename
 			make as old_make,
 			interface as widget_interface,

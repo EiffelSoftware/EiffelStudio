@@ -40,7 +40,7 @@ feature -- Status report
 	empty: BOOLEAN is
 			-- Is the list of actions empty?
 		do
-			Result := actions.empty
+			Result := actions.is_empty
 		end
 
 feature -- Element change
@@ -51,7 +51,7 @@ feature -- Element change
 		local
 			action: ACTION_WINDOWS
 		do
-			if actions.empty then
+			if actions.is_empty then
 				application.enable_idle_action
 			end
 			check
@@ -72,7 +72,7 @@ feature -- Element change
 			end
 			!! action.make (a_command, an_argument)
 			actions.prune_all (action)
-			if actions.empty then
+			if actions.is_empty then
 				application.disable_idle_action
 			end
 		end
@@ -84,7 +84,7 @@ feature -- Basic operations
 		local
 			c: CURSOR
 		do
-			if not actions.empty then
+			if not actions.is_empty then
 				from
 					c := actions.cursor
 					actions.start

@@ -48,7 +48,7 @@ feature -- Initialization
 			ww: WEL_WINDOW;
 			wcw: WEL_COMPOSITE_WINDOW;
 		do
-			if not fs_list.empty then
+			if not fs_list.is_empty then
 				wcw ?= initializer.tooltip_parent.implementation;
 				if tooltip = Void then
 					!! tooltip.make (wcw, -1);

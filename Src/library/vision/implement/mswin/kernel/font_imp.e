@@ -294,7 +294,7 @@ feature -- Status report
 				dc := screen_dc
 			end
 			dc.select_font (wel_font)
-			if a_text.empty then
+			if a_text.is_empty then
 				Result := dc.string_height ("I")
 			else
 				Result := dc.string_height (a_text)
@@ -320,7 +320,7 @@ feature -- Status report
 			ww: WEL_WINDOW
 			number_of_lines: INTEGER
 		do
-			if not a_text.empty then
+			if not a_text.is_empty then
 				ww ?= a_widget
 				if ww /= Void and then ww.exists then
 					!! client_dc.make (ww)
@@ -352,7 +352,7 @@ feature -- Status report
 			screen_dc: WEL_SCREEN_DC
 			number_of_lines: INTEGER
 		do
-			if not a_text.empty then
+			if not a_text.is_empty then
 				!! screen_dc
 				screen_dc.get
 				screen_dc.select_font (wel_font)
@@ -517,7 +517,7 @@ feature -- Status setting
 				number := number+1
 				pos := new_pos
 			end
-			if not (parsed @ 1).empty then
+			if not (parsed @ 1).is_empty then
 				wel_log_font.set_face_name (parsed @ 1)
 			end
 			set_height (parsed @ 2)

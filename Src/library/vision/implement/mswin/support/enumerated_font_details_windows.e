@@ -74,7 +74,7 @@ feature -- Status setting
 		local
 			c: CURSOR
 		do
-			if sizes.empty then
+			if sizes.is_empty then
 				!! Result.make (size.to_integer * 2, name)
 				Result.set_not_underlined
 				Result.set_not_strike_out
@@ -134,7 +134,7 @@ feature -- Status setting
 		end
 
 invariant
-	truetype_no_sizes: truetype_log_font /= Void implies sizes.empty
+	truetype_no_sizes: truetype_log_font /= Void implies sizes.is_empty
 
 end -- class ENUMERATED_FONT_DETAILS_WINDOWS
  

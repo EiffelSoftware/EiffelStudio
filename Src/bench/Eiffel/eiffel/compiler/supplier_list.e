@@ -97,6 +97,20 @@ end;
 			end
 		end;
 
+	e_classes: LINKED_LIST [E_CLASS] is
+			-- List of `E_CLASS'es
+		do
+			from
+				!! Result.make
+				start
+			until
+				after
+			loop
+				Result.extend (item.supplier);
+				forth
+			end
+		end;
+
 feature {NONE}
 
 	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [CLASS_ID] is

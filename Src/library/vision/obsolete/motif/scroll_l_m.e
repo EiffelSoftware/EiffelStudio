@@ -21,10 +21,23 @@ inherit
 		rename
 			get_int as p_get_int,
 			set_int as p_set_int,
-			set_unsigned_char as p_set_unsigned_char
+			set_unsigned_char as p_set_unsigned_char,
+			clean_up as primitive_clean_up
 		redefine
 			action_target, set_foreground, update_foreground,
 			set_background_color, update_background_color
+		end;
+	PRIMITIVE_M
+		rename
+			get_int as p_get_int,
+			set_int as p_set_int,
+			set_unsigned_char as p_set_unsigned_char
+		redefine
+			action_target, set_foreground, update_foreground,
+			set_background_color, update_background_color,
+			clean_up
+		select
+			clean_up
 		end;
 
 	FONTABLE_M
@@ -54,9 +67,10 @@ feature -- Creation
         local
             ext_name: ANY
         do
+			widget_index := widget_manager.last_inserted_position;
             ext_name := a_list.identifier.to_c;
             list_screen_object := create_scroll_list ($ext_name,
-					a_list.parent.implementation.screen_object);
+					parent_screen_object (a_list, widget_index));
             screen_object := xt_parent (list_screen_object);
             a_list.set_list_imp (Current);
             a_list.set_font_imp (Current);
@@ -151,6 +165,16 @@ feature
 		ensure then
 			background_color = a_color;
 			(background_pixmap = Void)
+		end;
+
+feature {NONE}
+
+	clean_up is
+		do
+			primitive_clean_up;
+			if single_actions /= Void then
+				single_actions.free_cdfd
+			end;
 		end;
 
 feature {COLOR_X}

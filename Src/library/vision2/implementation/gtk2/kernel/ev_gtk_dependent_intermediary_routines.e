@@ -47,6 +47,18 @@ feature {EV_ANY_I} -- Implementation
 			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
 		end
 
+	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER) is
+			-- 
+		local
+			a_pnd_widget: EV_PND_DEFERRED_ITEM_PARENT
+		do
+			a_pnd_widget ?= eif_id_object (a_object_id)
+			if a_pnd_widget /= Void then
+				a_pnd_widget.call_selection_action_sequences
+			end
+		end
+		
+
 feature {EV_ANY_I} -- Externals
 
 	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is

@@ -96,8 +96,6 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget.
 
-	header: EV_FRAME
-		-- First item, Void if none
 
 	associated_command: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 				-- Command associated with Current.
@@ -530,13 +528,6 @@ feature {NONE} -- Implementation
 		do
 			is_maximized := True
 			is_minimized := False
-		end
-
-feature {NONE} -- Constants
-
-	Frame_constants: EV_FRAME_CONSTANTS is
-		once
-			create Result
 		end
 
 invariant

@@ -35,8 +35,6 @@ feature -- Access
 
 	Title: STRING is
 			-- Window title
-		local
-			creation_time: WEL_SYSTEM_TIME
 		do
 			Result := stream.name
 		end

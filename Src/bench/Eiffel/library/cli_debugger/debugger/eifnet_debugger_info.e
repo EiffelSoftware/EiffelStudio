@@ -29,7 +29,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
-			{ANY} Application
+			{EIFNET_DEBUGGER_INFO_ACCESSOR} Application
 		end
 
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS

@@ -21,14 +21,6 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		require
-			valid_text: txt /= Void
-		deferred
-		end
-
 feature -- Access
 
 	text: STRING is

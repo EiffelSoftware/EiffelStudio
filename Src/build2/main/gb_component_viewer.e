@@ -9,28 +9,42 @@ class
 
 inherit
 	EV_TITLED_WINDOW
+		export
+			{NONE} all
+			{ANY} is_show_requested, show, hide
 		redefine
 			initialize
 		end
 	
 	GB_COMMAND_HANDLER
+		export {NONE}
+			all
 		undefine
 			copy, default_create
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		undefine
 			copy, default_create
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 	
 	EIFFEL_ENV
+		export
+			{NONE} all
 		undefine
 			copy, default_create
 		end
@@ -93,7 +107,7 @@ feature {NONE} -- Implementation
 			vertical_box.extend (component_holder)
 			set_minimum_size (300, 400)
 			is_initialized := True
-			display_view := True
+			display_view_enabled := True
 			close_request_actions.extend (agent (show_hide_component_viewer_command).execute)
 		end
 
@@ -101,6 +115,16 @@ feature -- Access
 
 	component: GB_COMPONENT
 		-- Component in `Current'.
+		
+	display_view_enabled: BOOLEAN
+		-- Is `Current' in display view?
+		
+	build_view_enabled: BOOLEAN is
+			-- Is `Current' in build view?
+		do
+			Result := not display_view_enabled
+		end
+		
 		
 feature -- Basic operation
 		
@@ -211,7 +235,7 @@ feature -- Basic operation
 					widget_not_void: widget /= Void
 				end
 				component_holder.extend (widget)
-				if display_view then
+				if display_view_enabled then
 					display_widget := component_holder.item
 				else
 					builder_widget := component_holder.item
@@ -227,6 +251,67 @@ feature -- Basic operation
 			update
 			unlock_update
 		end
+		
+feature -- Status setting
+	
+	set_display_view is
+			-- Set `display_view' to `True' and reflect in `Current'.
+		local
+			widget: EV_WIDGET
+		do
+			if not display_view_enabled then
+				display_view_enabled := True
+				if component /= Void then
+					lock_update
+					component_holder.wipe_out
+					if display_widget = Void then
+						widget ?= component.object.object
+						check
+							widget_not_void: widget /= Void
+						end
+						component_holder.extend (widget)
+						display_widget := component_holder.item
+					else
+						component_holder.extend (display_widget)
+					end
+					unlock_update
+				end
+			end
+		ensure
+			display_view_set: display_view_enabled
+		end
+		
+	set_build_view is
+			-- Set `display_view' to `False' and reflect in `Current'.
+		local
+			widget: EV_WIDGET
+			new_object: GB_OBJECT
+		do
+			if display_view_enabled then
+				display_view_enabled := False
+				if component /= Void then
+					lock_update
+					component_holder.wipe_out
+					if builder_widget = Void then
+							new_object := component.object
+							object_handler.recursive_do_all (new_object, agent force_object_to_component)
+							widget ?= new_object.display_object
+						check
+							widget_not_void: widget /= Void
+						end
+						component_holder.extend (widget)
+						builder_widget := component_holder.item
+					else
+						component_holder.extend (builder_widget)
+					end
+					unlock_update
+				end
+			end
+		ensure
+			build_view_set: not display_view_enabled
+		end
+		
+feature {NONE} -- Implementation
 		
 	force_object_to_component (an_object: GB_OBJECT) is
 			-- Remove `an_object' from the object list,
@@ -255,9 +340,7 @@ feature -- Basic operation
 			end
 			widget ?= an_object.display_object
 		end
-	
-feature {NONE} -- Implementation
-
+		
 	show_usage_dialog is
 				-- Show an information dialog explaining usage
 				-- of the component button.
@@ -267,69 +350,6 @@ feature {NONE} -- Implementation
 				create dialog.make_with_text (Component_tool_button_warning)
 				dialog.show_modal_to_window (Current)
 			end
-
-	set_display_view is
-			-- Set `display_view' to `True' and reflect in `Current'.
-		local
-			widget: EV_WIDGET
-		do
-			if not display_view then
-				display_view := True
-				if component /= Void then
-					lock_update
-					component_holder.wipe_out
-					if display_widget = Void then
-						widget ?= component.object.object
-						check
-							widget_not_void: widget /= Void
-						end
-						component_holder.extend (widget)
-						display_widget := component_holder.item
-					else
-						component_holder.extend (display_widget)
-					end
-					unlock_update
-				end
-			end
-		ensure
-			display_view_set: display_view
-		end
-		
-	set_build_view is
-			-- Set `display_view' to `False' and reflect in `Current'.
-		local
-			widget: EV_WIDGET
-			new_object: GB_OBJECT
-		do
-			if display_view then
-				display_view := False
-				if component /= Void then
-					lock_update
-					component_holder.wipe_out
-					if builder_widget = Void then
-							new_object := component.object
-							object_handler.recursive_do_all (new_object, agent force_object_to_component)
-							widget ?= new_object.display_object
-						check
-							widget_not_void: widget /= Void
-						end
-						component_holder.extend (widget)
-						builder_widget := component_holder.item
-					else
-						component_holder.extend (builder_widget)
-					end
-					unlock_update
-				end
-			end
-		ensure
-			build_view_set: display_view = False
-		end
-		
-
-	display_view: BOOLEAN
-		-- Current display mode for component.
-		-- If `Result' `True' then display mode.
-		-- If `Result' `False' then build mode.
 
 	component_holder: EV_CELL
 		-- The current component representation is

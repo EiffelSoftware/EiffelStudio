@@ -4,7 +4,6 @@ class ICE
 
 inherit
  
-	SHARED_WORKBENCH;
 	ICONED_COMMAND
  
 creation

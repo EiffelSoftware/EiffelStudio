@@ -70,6 +70,8 @@ feature -- Basic Operations
 		local
 			retried: BOOLEAN
 		do
+			-- set `stop_compilation' to false so compilation will succeeded
+			stop_compilation := False 
 			if not retried then
 				if ieiffel_compiler_events_call_back_interface_table /= Void then
 					from

@@ -162,6 +162,9 @@ feature -- Access
 
 	Wm_notify: INTEGER is 78
 			-- Declared in Windows as WM_NOTIFY
+		
+	Wm_displaychange: INTEGER is 126
+			-- Declared in Windows as WM_DISPLAYCHANGE
 
 	Wm_geticon: INTEGER is 127
 			-- Declared in Windows as WM_GETICON
@@ -464,6 +467,7 @@ feature -- Access
 
 	Wm_user: INTEGER is 1024
 			-- Declared in Windows as WM_USER
+
 
 end -- class WEL_WM_CONSTANTS
 

@@ -688,24 +688,33 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			first_type, type: TYPE
+			l_val: SYSTEM_OBJECT
 		do
+			Result := True
 			if count > 0 then
 				from
 					i := 2
 					nb := count
 					if code = any_code then
-						first_type := fast_item (0).get_type
+						l_val := fast_item (0)
+						if l_val /= Void then
+							first_type := l_val.get_type
+						end
 					else
 						first_type := codemap.item (code)
 					end
 				until
 					i > nb or not Result
 				loop
-					Result := first_type.equals_object (fast_item (i - 1))
+					l_val := fast_item (i - 1)
+					if l_val /= Void then
+						type := l_val.get_type
+					else
+						type := Void
+					end
+					Result := feature {SYSTEM_OBJECT}.equals_object_object (first_type, type)
 					i := i + 1
 				end
-			else
-				Result := True
 			end
 		end
 

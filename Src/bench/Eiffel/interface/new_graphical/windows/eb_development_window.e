@@ -2712,7 +2712,7 @@ feature {NONE} -- Implementation: Editor commands
 					cv_ced.find_next
 				end
 			else
-				search_tool.set_focus
+				search_tool.show_and_set_focus
 			end
 		end
 
@@ -2727,7 +2727,7 @@ feature {NONE} -- Implementation: Editor commands
 					cv_ced.find_previous
 				end
 			else
-				search_tool.set_focus
+				search_tool.show_and_set_focus
 			end
 		end
 

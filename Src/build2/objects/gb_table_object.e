@@ -30,7 +30,6 @@ feature -- Basic operation
 			-- in the layout tree.
 		local
 			widget: EV_WIDGET
-			temp_coordinate: EV_COORDINATE
 			table: EV_TABLE
 		do
 			widget ?= an_object.object

@@ -221,6 +221,8 @@ feature -- Status setting
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_left (a_column)
+		ensure
+			left_aligned: column_alignment (a_column).is_left_aligned
 		end
 
 	align_text_center (a_column: INTEGER) is
@@ -231,6 +233,8 @@ feature -- Status setting
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_center (a_column)
+		ensure
+			center_aligned: column_alignment (a_column).is_center_aligned
 		end
 	
 	align_text_right (a_column: INTEGER) is
@@ -241,6 +245,8 @@ feature -- Status setting
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_right (a_column)
+		ensure
+			right_aligned: column_alignment (a_column).is_right_aligned
 		end
 
 feature -- Element change
@@ -255,6 +261,7 @@ feature -- Element change
 			implementation.set_column_title (a_title, a_column)
 		ensure
 			a_title_assigned: a_title.is_equal (column_title (a_column))
+			column_count_valid: column_count >= a_column
 			cloned: column_title (a_column) /= a_title
 		end
 
@@ -268,6 +275,7 @@ feature -- Element change
 		do
 			implementation.set_column_titles (titles)
 		ensure
+			column_count_valid: column_count >= titles.count
 			column_titles_assigned: column_titles_assigned (titles)
 		end
 
@@ -275,11 +283,12 @@ feature -- Element change
 			-- Assign `a_width' `column_width'(`a_column').
 		require
 			not_destroyed: not is_destroyed
-			a_column_within_range: a_column > 0 and a_column <= column_count
+			a_column_within_range: a_column > 0
 			a_width_positive: a_width >= 0
 		do
 			implementation.set_column_width (a_width, a_column)
 		ensure
+			column_count_valid: column_count >= a_column
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
@@ -300,6 +309,7 @@ feature -- Element change
 		do
 			implementation.set_column_widths (widths)
 		ensure
+			column_count_valid: column_count >= widths.count
 			column_widths_assigned: column_widths_assigned (widths)
 		end
 
@@ -349,7 +359,8 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
+			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and title_shown and
+				not multiple_selection_enabled
 		end
 
 feature {NONE} -- Contract support

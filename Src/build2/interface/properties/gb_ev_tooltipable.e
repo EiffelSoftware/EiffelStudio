@@ -22,11 +22,6 @@ inherit
 		undefine
 			default_create
 		end
-		
-	CDATA_HANDLER
-		undefine
-			default_create
-		end
 
 feature {GB_XML_STORE} -- Output
 	
@@ -34,7 +29,7 @@ feature {GB_XML_STORE} -- Output
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if not objects.first.tooltip.is_empty or uses_constant (Tooltip_string) then
-				add_string_element (element, Tooltip_string, enclose_in_cdata (objects.first.tooltip))	
+				add_string_element (element, Tooltip_string, objects.first.tooltip)
 			end
 		end
 		
@@ -46,7 +41,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (strip_cdata (retrieve_and_set_string_value (Tooltip_string))))
+				for_all_objects (agent {EV_TOOLTIPABLE}.set_tooltip (retrieve_and_set_string_value (Tooltip_string)))
 			end
 		end
 

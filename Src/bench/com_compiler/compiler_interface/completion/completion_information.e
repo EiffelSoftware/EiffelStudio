@@ -608,9 +608,6 @@ feature {NONE} -- Implementation
         local
             l_retriever: FEATURE_RETRIEVER
         do
-            if feature_name.is_empty then
-                trigger (E_invalidarg)
-            end
             create l_retriever.make (file_name)
             l_retriever.set_locals (locals)
             l_retriever.set_arguments (arguments)
@@ -619,8 +616,6 @@ feature {NONE} -- Implementation
             l_retriever.find (target, use_overloading)
             if l_retriever.found then
                 Result := l_retriever.found_item
-            else
-            	trigger (E_fail)
             end
         end
 

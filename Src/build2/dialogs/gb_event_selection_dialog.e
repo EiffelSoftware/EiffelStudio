@@ -53,6 +53,13 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	EV_STOCK_COLORS
+		rename
+			implementation as stock_colors_implementation
+		undefine
+			copy, default_create, is_equal
+		end
 
 create
 	make_with_object
@@ -540,20 +547,5 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-		
-		
-	red: EV_COLOR is
-			-- `Result' is red EV_COLOR.
-		once
-			Result := (create {EV_STOCK_COLORS}).red
-		end
-		
-	black: EV_COLOR is
-			-- `Result' is black EV_COLOR.
-		once
-			Result := (create {EV_STOCK_COLORS}).black
-		end
-		
-		
 
 end -- class GB_EVENT_SELECTION_DIALOG

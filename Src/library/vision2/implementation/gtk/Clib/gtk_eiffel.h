@@ -514,6 +514,21 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
 
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
 
+
+/*==============================================================================
+ gtk_file_selection functions
+==============================================================================*/
+
+/* Pointer to the gtk_button `OK'. */
+#define c_gtk_file_selection_get_ok_button(p)      (GTK_FILE_SELECTION(p)->ok_button)      /*GtkWidget*/
+
+/* Pointer to the gtk_button `Cancel'. */
+#define c_gtk_file_selection_get_cancel_button(p)      (GTK_FILE_SELECTION(p)->cancel_button)      /*GtkWidget*/
+
+/* Pointer to the text of the entry of the file selection dialog. */
+EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog);
+
+
 /*==============================================================================
  gtk_style functions
 ==============================================================================*/

@@ -188,7 +188,7 @@ feature -- Setting
 			is_library_set: is_library = flag
 		end
 
-feature {CLUSTER_SD} -- Setting
+feature -- Setting
 
 	set_parent_name (name: like parent_name) is
 			-- Assgin `name' to `parent_name'.

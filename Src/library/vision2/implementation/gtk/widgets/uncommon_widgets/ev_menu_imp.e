@@ -112,7 +112,9 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
 			if an_item_imp.key /= 0 then
-				accel_group := C.gtk_menu_ensure_uline_accel_group (list_widget)
+				if accel_group = NULL then
+					accel_group := C.gtk_menu_ensure_uline_accel_group (list_widget)
+				end
 				menu_imp ?= an_item_imp
 				if menu_imp = Void then
 					activate_string := ("activate").to_c

@@ -48,7 +48,15 @@ inherit
 		undefine
 			default_create
 		end
-		
+
+	ES_DIAGRAM_BUFFER_MANAGER
+		export
+			{NONE} set_drawable_position;
+			{EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} set_drawable_cell_and_position
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_tool: like context_editor) is
@@ -210,9 +218,6 @@ feature -- Access
 	projector: EV_WIDGET_PROJECTOR
 			-- Projector of `Current'on `drawable'.
 			
-	drawable: EV_DRAWABLE
-			-- Area where `Current' is drawn.
-
 	has_linkable_figure (a_figure: LINKABLE_FIGURE): BOOLEAN is
 			-- Is `a_figure' present on `Current'?
 		require
@@ -286,16 +291,12 @@ feature -- Access
 
 feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Element change
 
-	set_drawable (a_drawable: EV_DRAWABLE) is
-			-- Set `a_drawable' to `drawable'.
-		require
-			a_drawable_not_void: a_drawable /= Void
-		do
-			drawable := a_drawable
-		ensure
-			assigned: drawable = a_drawable
-		end
-	
+--	set_drawable (a_drawable: EV_DRAWABLE) is
+--			-- Set `a_drawable' to `drawable'.
+--		do
+--			drawable := a_drawable
+--		end
+
 	set_projector (a_projector: EV_WIDGET_PROJECTOR) is
 			-- Set `a_projector' to `projector'.
 		require

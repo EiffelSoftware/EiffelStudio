@@ -47,12 +47,14 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Build `diagram'.
+		local
+			cell: CELL [EV_DRAWABLE]
 		do
 			create {BON_CLUSTER_DIAGRAM} diagram.make (Void)
 			create pixmap
 			create {EV_PIXMAP_PROJECTOR} projector.make (diagram, pixmap)			
-			
-			diagram.set_drawable (pixmap)
+			create cell.put (pixmap)
+			diagram.set_drawable_cell_and_position (cell, create {EV_COORDINATE})
 			diagram.set_projector (projector)
 			diagram.set_cluster (cluster)
 			diagram.reset

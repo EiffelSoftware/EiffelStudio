@@ -5,6 +5,9 @@ indexing
 
 deferred class
 	BON_DIAGRAM_FACTORY
+	
+inherit
+	ES_DIAGRAM_BUFFER_MANAGER
 
 feature -- Implementation
 
@@ -12,11 +15,6 @@ feature -- Implementation
 			-- Projector of `Current' client.
 		deferred
 		end
-
-	drawable: EV_DRAWABLE is
-			-- Output for `Current'client.
-		deferred
-		end	
 
 feature -- Factory
 
@@ -34,7 +32,8 @@ feature -- Factory
 			-- Create a concrete inheritance figure.
 		do
 			create Result.make_with_classes (a_descendant, a_ancestor)
-			Result.set_drawable (drawable)
+			Result.set_drawable_cell (drawable_cell)
+			Result.set_drawable_position (drawable_position)
 			projector.register_figure (Result, draw_bon_inheritance_figure_agent)
 		end
 
@@ -42,7 +41,8 @@ feature -- Factory
 			-- Create a concrete client-supplier figure.
 		do
 			create Result.make_with_classes (a_client, a_supplier, data)
-			Result.set_drawable (drawable)
+			Result.set_drawable_cell (drawable_cell)
+			Result.set_drawable_position (drawable_position)
 			projector.register_figure (Result, draw_bon_cs_figure_agent)
 		end
 

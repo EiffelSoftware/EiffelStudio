@@ -26,7 +26,8 @@ feature -- Factory
 			-- Create a concrete class figure.
 		do
 			create Result.make_with_class (a_class)
-			Result.set_drawable (drawable)
+			Result.set_drawable_cell (drawable_cell)
+			Result.set_drawable_position (drawable_position)
 			projector.register_figure (Result, draw_bon_class_figure_agent)
 		end
 
@@ -34,7 +35,8 @@ feature -- Factory
 			-- Create a concrete cluster figure.
 		do
 			create Result.make_with_cluster (a_cluster)
-			Result.set_drawable (drawable)
+			Result.set_drawable_cell (drawable_cell)
+			Result.set_drawable_position (drawable_position)
 			projector.register_figure (Result, draw_bon_cluster_figure_agent)
 		end
 

@@ -39,7 +39,6 @@ feature -- Setting
 			fg_color: COLOR;
 			font: FONT
 			color_imp: COLOR_IMP
-			my_brush: WEL_BRUSH
 		do
 			fg_color := Graphical_resources.foreground_color.actual_value;
 			font := Graphical_resources.font.actual_value;

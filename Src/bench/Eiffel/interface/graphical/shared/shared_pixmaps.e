@@ -163,6 +163,11 @@ feature -- Access
 			Result := pixmap_file_content ("histfort")
 		end
 
+	bm_disabled_next_target: PIXMAP is
+		once
+			Result := pixmap_file_content ("dis_histfort")
+		end
+
 	bm_Object: PIXMAP is
 		once
 			Result := pixmap_file_content ("object")

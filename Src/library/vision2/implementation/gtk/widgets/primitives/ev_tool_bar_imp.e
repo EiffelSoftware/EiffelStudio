@@ -17,7 +17,7 @@ inherit
 
 creation
 	make,
-	make_with_bitmap_size
+	make_with_size
 
 feature {NONE} -- Implementation
 
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	make_with_bitmap_size (w, h: INTEGER) is
+	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
 		do
 		end

@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			Result := [gtk_value_pointer (args)]
+			Result := [gtk_marshal.gtk_value_pointer (args)]
 		end
 
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is

@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			if not avoid_callback then
 					--	Precursor (n, an_item)
 				if select_actions_internal /= Void and then select_actions_internal.count > 0 then
-				 	triggering_item ?= eif_object_from_c (gtk_value_pointer (an_item))
+				 	triggering_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (an_item))
 					timer.set_interval (1)
 				 	if not button_pressed then
 						popwin := C.gtk_combo_struct_popwin (container_widget)

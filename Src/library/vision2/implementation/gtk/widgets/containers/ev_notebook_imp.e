@@ -259,7 +259,7 @@ feature {EV_ANY_I} -- Implementation
 	page_switch_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Retrieve index of switched page.
 		do
-			Result := [gtk_value_pointer (p)]
+			Result := [gtk_marshal.gtk_value_pointer (p)]
 		end
 
 	on_new_item (an_item: EV_WIDGET) is

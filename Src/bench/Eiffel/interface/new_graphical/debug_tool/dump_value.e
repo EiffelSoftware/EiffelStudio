@@ -395,7 +395,6 @@ feature -- Status report
 	formatted_truncated_string_representation (min, max: INTEGER): STRING is
 		do
 			Result := truncated_string_representation (min, max)
---			Result.prune_all ('%U')
 			Result.replace_substring_all ("%U", "%%U")
 		end
 		

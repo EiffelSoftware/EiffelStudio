@@ -31,6 +31,9 @@ extern int ht_create();				/* Create H table */
 extern char *ht_value();			/* Get value given some key */
 extern char *ht_first();			/* Get item address */
 extern char *ht_put();				/* Insert value in H table */
+extern void ht_force();				/* Insert value in H table (extending
+									 * hash table if needed) */
+extern void ht_remove();			/* Remove value in H table */
 extern int ht_xtend();				/* Extend size of full H table */
 extern void ht_zero();				/* Initialize H table to zero */
 extern void ht_free();				/* Free hash table */

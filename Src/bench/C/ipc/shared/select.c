@@ -512,8 +512,9 @@ rt_public int do_select(struct timeval *timeout)
 			if (timeout == (struct timeval *) 0) {
 				first_timeout.tv_sec = 0;
 				first_timeout.tv_usec = TMP_TIMEOUT;
-			} else
+			} else {
 				memcpy (&first_timeout, timeout, sizeof(struct timeval));
+			}
 			memcpy (&read_mask, &rd_tmask, sizeof(fd_set));
 			nfd = select(nfds, &read_mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &first_timeout);
 		} else {
@@ -521,18 +522,20 @@ rt_public int do_select(struct timeval *timeout)
 			nfd = select(nfds, &read_mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, timeout);
 		}
 
-		if (nfd == -1)
+		if (nfd == -1) {
 			if (errno != EINTR) {		/* Not interrupted by a signal */
 				s_errno = S_SELECT;		/* Signals: select failed */
 				return -1;				/* Propagate error status */
-			} else
+			} else {
 				continue;				/* Re-issue the system call */
+			}
+		}
 
 		if (isfirst) {
-			memcpy (&rd_tmask, &rd_tmask, sizeof(fd_set));
 			isfirst = 0;
-			if (nfd == 0 && timeout == (struct timeval *) 0)
+			if (nfd == 0 && timeout == (struct timeval *) 0) {
 				continue;				/* First select timed out */
+			}
 		}
 		break;							/* Exit from loop */
 #endif

@@ -216,17 +216,17 @@ oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_M is
 			!! Result.make (a_separator, managed, oui_parent)
 		end; 
 
-	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_M is
-			-- Motif implementation of `a_text'
-		do
-			!! Result.make (a_text, managed, oui_parent)
-		end
+-- 	tabbed_text (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_M is
+-- 			-- Motif implementation of `a_text'
+-- 		do
+-- 			!! Result.make (a_text, managed, oui_parent)
+-- 		end
 
-	tabbed_text_word_wrapped (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_M is
-			-- Motif implementation of `a_text'
-		do
-			!! Result.make_word_wrapped (a_text, managed, oui_parent)
-		end
+-- 	tabbed_text_word_wrapped (a_text: TABBED_TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TABBED_TEXT_M is
+-- 			-- Motif implementation of `a_text'
+-- 		do
+-- 			!! Result.make_word_wrapped (a_text, managed, oui_parent)
+-- 		end
 
 	text (a_text: TEXT; managed: BOOLEAN; oui_parent: COMPOSITE): TEXT_M is
 			-- Motif implementation of `a_text'

@@ -156,6 +156,7 @@ create
 										Clickable_integer_8 Clickable_integer_16
 										Clickable_integer_64 Clickable_wide_char
 										Clickable_none Clickable_pointer Clickable_real
+
 %type <PAIR [FEATURE_NAME, CLICK_AST]>					Infix Prefix Feature_name New_feature
 %type <PAIR [STRING_AS, CLICK_AST]>						Infix_operator Prefix_operator
 %type <PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]>	New_feature_list
@@ -312,7 +313,6 @@ Clickable_pointer: TE_POINTER_ID
 Clickable_real: TE_REAL_ID
 			{ $$ := new_clickable_id (new_real_id_as) }
 	;
-
 
 -- Indexing
 
@@ -1441,26 +1441,35 @@ Creation_clause:
 				inherit_context := False
 				$$ := new_create_as (new_client_as ($2), Void)
 			}
-	|	 TE_CREATION
+	|	 Position TE_CREATION
 			{
 				inherit_context := False
 				$$ := new_create_as (Void, Void)
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($1.start_position,
+					$1.end_position, filename, 0, "Use keyword `create' instead."))
 			}
-	|	TE_CREATION Clients Feature_list
+	|	Position TE_CREATION Clients Feature_list
 			{
 				inherit_context := False
-				$$ := new_create_as ($2, $3)
+				$$ := new_create_as ($3, $4)
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($1.start_position,
+					$1.end_position, filename, 0, "Use keyword `create' instead."))
 			}
-	|	TE_CREATION Client_list 
+	|	Position TE_CREATION Client_list 
 			{
 				inherit_context := False
-				$$ := new_create_as (new_client_as ($2), Void)
+				$$ := new_create_as (new_client_as ($3), Void)
+				Error_handler.insert_warning (
+					create {SYNTAX_WARNING}.make ($1.start_position,
+					$1.end_position, filename, 0, "Use keyword `create' instead."))
 			}
 	;
 
 Agent_call:
 		TE_AGENT TE_RESULT TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_result_operand_as (Void, Void, Void), $4, $5) }
+		{ $$ := new_routine_creation_as (new_result_operand_as, $4, $5) }
 	|	TE_AGENT TE_CURRENT TE_DOT Identifier Delayed_actuals
 		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5) }
 	|	TE_AGENT Identifier TE_DOT Identifier Delayed_actuals
@@ -1472,21 +1481,57 @@ Agent_call:
 	|	TE_AGENT TE_QUESTION TE_DOT Identifier Delayed_actuals
 		{ $$ := new_routine_creation_as (Void, $4, $5) }
 	|	TE_AGENT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
-	|	TE_RESULT TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_result_operand_as (Void, Void, Void), $3, $4) }
-	|	TE_CURRENT TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $3, $4) }
-	|	Identifier TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, $1, Void), $3, $4) }
-	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_As (new_operand_as (Void, Void, $2), $5, $6) }
-	|	TE_LCURLY Type TE_CURLYTILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as ($2, Void, Void), $4, $5) }
-	|	TE_QUESTION TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (Void, $3, $4) }
-	|	TE_TILDE Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
+		{ $$ := new_unqualified_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
+	|	TE_RESULT TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_as (new_result_operand_as, $4, $5)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($3.start_position,
+				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
+	|	TE_CURRENT TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($3.start_position,
+				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
+	|	Identifier TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_as (new_operand_as (Void, $1, Void), $4, $5)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($3.start_position,
+				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+			
+		}
+	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_As (new_operand_as (Void, Void, $2), $6, $7)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($5.start_position,
+				$5.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
+	|	TE_LCURLY Type TE_CURLYTILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_as (new_operand_as ($2, Void, Void), $5, $6)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($4.start_position,
+				$4.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
+	|	TE_QUESTION TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_routine_creation_as (Void, $4, $5)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($3.start_position,
+				$3.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
+	|	TE_TILDE Position Identifier Delayed_actuals
+		{
+			$$ := new_unqualified_routine_creation_as (new_operand_as (Void, Void, Void), $3, $4)
+			Error_handler.insert_warning (
+				create {SYNTAX_WARNING}.make ($2.start_position,
+				$2.end_position, filename, 0, "Use keyword `agent' instead."))
+		}
 	;
 
 Delayed_actuals: -- Empty
@@ -1511,31 +1556,7 @@ Delayed_actual: TE_QUESTION
 			{ $$ := new_operand_as (Void, Void, Void) }
 	|	Expression
 			{ $$ := new_operand_as (Void, Void, $1) }
-	|	TE_LCURLY Clickable_id Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, $3), Void, Void) }
-	|	TE_LCURLY Clickable_boolean Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_boolean_type ($2.second, $3 /= Void), Void, Void) }
-	|	TE_LCURLY Clickable_character Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void, False), Void, Void) }
-	|	TE_LCURLY Clickable_wide_char Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void, True), Void, Void) }
-	|	TE_LCURLY Clickable_double Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_double_type ($2.second, $3 /= Void), Void, Void) }
-	|	TE_LCURLY Clickable_integer_8 Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 8), Void, Void) }
-	|	TE_LCURLY Clickable_integer_16 Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 16), Void, Void) }
-	|	TE_LCURLY Clickable_integer Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 32), Void, Void) }
-	|	TE_LCURLY Clickable_integer_64 Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void, 64), Void, Void) }
-	|	TE_LCURLY Clickable_none Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_none_type ($2.second, $3 /= Void), Void, Void) }
-	|	TE_LCURLY Clickable_pointer Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_pointer_type ($2.second, $3 /= Void), Void, Void) }
-	|	TE_LCURLY Clickable_real Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_real_type ($2.second, $3 /= Void), Void, Void) }
-	|	TE_LCURLY Non_class_type TE_RCURLY
+	|	TE_LCURLY Type TE_RCURLY
 			{ $$ := new_operand_as ($2, Void, Void) }
 	;
 
@@ -1733,32 +1754,34 @@ Call_on_precursor: A_precursor TE_DOT Remote_call
 
 A_precursor: TE_PRECURSOR Parameters
 			{ $$ := new_precursor_as (Void, $2) }
-	|	TE_LCURLY TE_LCURLY Clickable_identifier TE_RCURLY TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($3, $7) }
 	|	TE_PRECURSOR TE_LCURLY Clickable_identifier TE_RCURLY Parameters
-			{ $$ := new_precursor ($3, $5) }
-	|	TE_LCURLY Clickable_id TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_boolean TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_character TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_double TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_integer_8 TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_integer_16 TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_integer TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_integer_64 TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_none TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_pointer TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
-	|	TE_LCURLY Clickable_real TE_RCURLY TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $5) }
+			{ $$ := new_precursor ($3, $5, Void) }
+	|	TE_LCURLY TE_LCURLY Clickable_identifier TE_RCURLY TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($3, $8, $6) }
+	|	TE_LCURLY Clickable_id TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_boolean TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_character TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_wide_char TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_double TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_integer_8 TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_integer_16 TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_integer TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_integer_64 TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_none TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_pointer TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
+	|	TE_LCURLY Clickable_real TE_RCURLY Position TE_PRECURSOR Parameters
+			{ $$ := new_precursor ($2, $6, $4) }
 	;
 
 Call_on_static: A_static_call TE_DOT Remote_call

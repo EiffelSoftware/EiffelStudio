@@ -9,12 +9,20 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_lv_hittestinfo_set_pt(_ptr_, _value_) (((LVHITTESTINFO *) _ptr_)->pt = *((POINT *) (_value_)))
 
 #define cwel_lv_hittestinfo_get_pt(_ptr_) (&(((LVHITTESTINFO *) _ptr_)->pt))
 #define cwel_lv_hittestinfo_get_flags(_ptr_) (((LVHITTESTINFO *) _ptr_)->flags)
 #define cwel_lv_hittestinfo_get_iitem(_ptr_) (((LVHITTESTINFO *) _ptr_)->iItem)
 #define cwel_lv_hittestinfo_get_isubitem(_ptr_) (((LVHITTESTINFO *) _ptr_)->iSubItem)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LVHITTESTINFO__ */
 

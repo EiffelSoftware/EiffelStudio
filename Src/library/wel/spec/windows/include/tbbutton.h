@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tbbutton_set_ibitmap(_ptr_,_value_) (((TBBUTTON *) _ptr_)->iBitmap = (int) (_value_))
 #define cwel_tbbutton_set_idcommand(_ptr_,_value_) (((TBBUTTON *) _ptr_)->idCommand = (int) (_value_))
 #define cwel_tbbutton_set_fsstate(_ptr_,_value_) (((TBBUTTON *) _ptr_)->fsState = (int) (_value_))
@@ -22,6 +26,10 @@
 #define cwel_tbbutton_get_fsstyle(_ptr_) ((((TBBUTTON *) _ptr_)->fsStyle))
 #define cwel_tbbutton_get_dwdata(_ptr_) ((((TBBUTTON *) _ptr_)->dwData))
 #define cwel_tbbutton_get_istring(_ptr_) ((((TBBUTTON *) _ptr_)->iString))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TOOLBAR_BUTTON__ */
 

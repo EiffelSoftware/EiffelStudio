@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tooltiptext_set_lpsztext(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->lpszText = (LPSTR) (_value_))
 #define cwel_tooltiptext_set_hinst(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->hinst = (HINSTANCE) (_value_))
 #define cwel_tooltiptext_set_uflags(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->uFlags = (UINT) (_value_))
@@ -17,6 +21,10 @@
 #define cwel_tooltiptext_get_lpsztext(_ptr_) ((((TOOLTIPTEXT *) _ptr_)->lpszText))
 #define cwel_tooltiptext_get_hinst(_ptr_) ((((TOOLTIPTEXT *) _ptr_)->hinst))
 #define cwel_tooltiptext_get_uflags(_ptr_) ((((TOOLTIPTEXT *) _ptr_)->uFlags))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TOOLTIPTEXT__ */
 

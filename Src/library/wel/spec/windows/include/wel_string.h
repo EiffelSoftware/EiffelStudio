@@ -9,8 +9,16 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int cwel_string_length();
 void cwel_set_string_length (int length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_STRING__ */
 

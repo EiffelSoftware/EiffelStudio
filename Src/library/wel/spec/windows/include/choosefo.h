@@ -9,6 +9,10 @@
 #	include <cdlg.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_choose_font_set_lstructsize(_ptr_, _value_) (((CHOOSEFONT *) _ptr_)->lStructSize = (DWORD) (_value_))
 #define cwel_choose_font_set_hwndowner(_ptr_, _value_) (((CHOOSEFONT *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_choose_font_set_hdc(_ptr_, _value_) (((CHOOSEFONT *) _ptr_)->hDC = (HDC) (_value_))
@@ -40,6 +44,10 @@
 #define cwel_choose_font_get_nfonttype(_ptr_) ((EIF_INTEGER) (((CHOOSEFONT *) _ptr_)->nFontType))
 #define cwel_choose_font_get_nsizemin(_ptr_) ((EIF_INTEGER) (((CHOOSEFONT *) _ptr_)->nSizeMin))
 #define cwel_choose_font_get_nsizemax(_ptr_) ((EIF_INTEGER) (((CHOOSEFONT *) _ptr_)->nSizeMax))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_CHOOSEFONT__ */
 

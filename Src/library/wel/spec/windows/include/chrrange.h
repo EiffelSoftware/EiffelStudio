@@ -9,11 +9,19 @@
 #	include <redit.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_charrange_set_cpmin(_ptr_, _value_) (((CHARRANGE *) _ptr_)->cpMin = (LONG) (_value_))
 #define cwel_charrange_set_cpmax(_ptr_, _value_) (((CHARRANGE *) _ptr_)->cpMax = (LONG) (_value_))
 
 #define cwel_charrange_get_cpmin(_ptr_) (((CHARRANGE *) _ptr_)->cpMin)
 #define cwel_charrange_get_cpmax(_ptr_) (((CHARRANGE *) _ptr_)->cpMax)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_CHARRANGE__ */
 

@@ -13,6 +13,10 @@
 #	include <windowsx.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwin_get_wm_vscroll_pos(wparam, lparam) ( \
 		(EIF_INTEGER) (SHORT) GET_WM_VSCROLL_POS (wparam, lparam) \
 	)
@@ -20,6 +24,10 @@
 #define cwin_get_wm_hscroll_pos(wparam, lparam) ( \
 		(EIF_INTEGER) (SHORT) GET_WM_HSCROLL_POS (wparam, lparam) \
 	)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_WINDOWSX__ */
 

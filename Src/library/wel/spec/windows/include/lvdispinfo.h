@@ -9,8 +9,16 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_lv_dispinfo_get_hdr(_ptr_) (&(((LV_DISPINFO *) _ptr_)->hdr))
 #define cwel_lv_dispinfo_get_item(_ptr_) (&(((LV_DISPINFO *) _ptr_)->item))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LV_DISPINFO__ */
 

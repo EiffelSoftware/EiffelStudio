@@ -9,11 +9,19 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tv_hittestinfo_set_pt(_ptr_, _value_) (((TVHITTESTINFO *) _ptr_)->pt = *((POINT *) (_value_)))
 
 #define cwel_tv_hittestinfo_get_pt(_ptr_) (&(((TVHITTESTINFO *) _ptr_)->pt))
 #define cwel_tv_hittestinfo_get_flags(_ptr_) (((TVHITTESTINFO *) _ptr_)->flags)
 #define cwel_tv_hittestinfo_get_hitem(_ptr_) (((TVHITTESTINFO *) _ptr_)->hItem)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TVHITTESTINFO__ */
 

@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_comboboxex_item_set_mask(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_comboboxex_item_set_iitem(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->iItem = (int) (_value_))
 #define cwel_comboboxex_item_set_psztext(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->pszText = (LPSTR) (_value_))
@@ -28,6 +32,10 @@
 #define cwel_comboboxex_item_get_ioverlay(_ptr_) (((COMBOBOXEXITEM *) _ptr_)->iOverlay)
 #define cwel_comboboxex_item_get_iindent(_ptr_) (((COMBOBOXEXITEM *) _ptr_)->iIndent)
 #define cwel_comboboxex_item_get_lparam(_ptr_) (((COMBOBOXEXITEM *) _ptr_)->lParam)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_COMBOBOXEXITEM__ */
 

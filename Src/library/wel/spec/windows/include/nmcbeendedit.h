@@ -9,11 +9,19 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nm_cbeendedit_get_hdr(_ptr_) (&(((NMCBEENDEDIT *) _ptr_)->hdr))
 #define cwel_nm_cbeendedit_get_fchanged(_ptr_) (((NMCBEENDEDIT *) _ptr_)->fChanged)
 #define cwel_nm_cbeendedit_get_inewselection(_ptr_) (((NMCBEENDEDIT *) _ptr_)->iNewSelection)
 #define cwel_nm_cbeendedit_get_tchar(_ptr_) (&(((NMCBEENDEDIT *) _ptr_)->szText))
 #define cwel_nm_cbeendedit_get_iwhy(_ptr_) (((NMCBEENDEDIT *) _ptr_)->iWhy)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NM_CBEENDEDIT__ */
 

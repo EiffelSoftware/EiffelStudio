@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_log_font_set_height(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfHeight = (LONG) (_value_))
 #define cwel_log_font_set_width(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfWidth = (LONG) (_value_))
 #define cwel_log_font_set_escapement(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfEscapement = (LONG) (_value_))
@@ -40,6 +44,11 @@
 #define cwel_log_font_get_pitch(_ptr_) (LOWORD((((LOGFONT *) _ptr_)->lfPitchAndFamily)))
 #define cwel_log_font_get_family(_ptr_) (HIWORD((((LOGFONT *) _ptr_)->lfPitchAndFamily)))
 #define cwel_log_font_get_facename(_ptr_) ((((LOGFONT *) _ptr_)->lfFaceName))
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LOG_FONT__ */
 

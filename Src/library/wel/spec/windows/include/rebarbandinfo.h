@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_rebarbandinfo_set_cbsize(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->cbSize = (UINT) (_value_))
 #define cwel_rebarbandinfo_set_fmask(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->fMask = (UINT) (_value_))
 #define cwel_rebarbandinfo_set_fstyle(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->fStyle = (UINT) (_value_))
@@ -38,6 +42,10 @@
 #define cwel_rebarbandinfo_get_cx(_ptr_) (((REBARBANDINFO *) _ptr_)->cx)
 #define cwel_rebarbandinfo_get_hbmback(_ptr_) (((REBARBANDINFO *) _ptr_)->hbmBack)
 #define cwel_rebarbandinfo_get_wid(_ptr_) (((REBARBANDINFO *) _ptr_)->wID)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_REBARBANDINFO__ */
 

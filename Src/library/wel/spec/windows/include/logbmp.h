@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_logbitmap_set_type(_ptr_, _value_) (((BITMAP *) _ptr_)->bmType = (LONG) (_value_))
 #define cwel_logbitmap_set_width(_ptr_, _value_) (((BITMAP *) _ptr_)->bmWidth = (LONG) (_value_))
 #define cwel_logbitmap_set_height(_ptr_, _value_) (((BITMAP *) _ptr_)->bmHeight = (LONG) (_value_))
@@ -24,6 +28,11 @@
 #define cwel_logbitmap_get_planes(_ptr_) ((EIF_INTEGER) (((BITMAP *) _ptr_)->bmPlanes))
 #define cwel_logbitmap_get_bits_pixel(_ptr_) ((EIF_INTEGER) (((BITMAP *) _ptr_)->bmBitsPixel))
 #define cwel_logbitmap_get_bits(_ptr_) ((EIF_POINTER) (((BITMAP *) _ptr_)->bmBits))
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LOGBITMAP__ */
 

@@ -34,10 +34,7 @@
 #	include "estream.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-	
+
 #include "eif_portable.h"
 #include "eif_constants.h"
 #include "eif_types.h"
@@ -48,6 +45,9 @@ extern "C" {
 #endif
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 

@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_bitmapinfoheader_set_size(_ptr_, _value_) (((BITMAPINFOHEADER *) _ptr_)->biSize = (DWORD) (_value_))
 #define cwel_bitmapinfoheader_set_width(_ptr_, _value_) (((BITMAPINFOHEADER *) _ptr_)->biWidth = (LONG) (_value_))
 #define cwel_bitmapinfoheader_set_height(_ptr_, _value_) (((BITMAPINFOHEADER *) _ptr_)->biHeight = (LONG) (_value_))
@@ -32,6 +36,10 @@
 #define cwel_bitmapinfoheader_get_ypelspermeter(_ptr_) ((EIF_INTEGER)((BITMAPINFOHEADER *) _ptr_)->biYPelsPerMeter)
 #define cwel_bitmapinfoheader_get_clrused(_ptr_) ((EIF_INTEGER)((BITMAPINFOHEADER *) _ptr_)->biClrUsed)
 #define cwel_bitmapinfoheader_get_clrimportant(_ptr_) ((EIF_INTEGER)((BITMAPINFOHEADER *) _ptr_)->biClrImportant)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_BITMAPINFOHEADER__ */
 

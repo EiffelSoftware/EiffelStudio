@@ -9,6 +9,10 @@
 #	include <redit.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_paraformat_set_cbsize(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->cbSize = (UINT) (_value_))
 #define cwel_paraformat_set_dwmask(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->dwMask = (DWORD) (_value_))
 #define cwel_paraformat_set_wnumbering(_ptr_, _value_) (((PARAFORMAT *) _ptr_)->wNumbering = (WORD) (_value_))
@@ -27,6 +31,10 @@
 #define cwel_paraformat_get_walignment(_ptr_) ((((PARAFORMAT *) _ptr_)->wAlignment))
 #define cwel_paraformat_get_ctabcount(_ptr_) ((((PARAFORMAT *) _ptr_)->cTabCount))
 #define cwel_paraformat_get_rgxtabs(_ptr_,_index_) ((((PARAFORMAT *) _ptr_)->rgxTabs[_index_]))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_PARAFORMAT__ */
 

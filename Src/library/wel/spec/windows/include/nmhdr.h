@@ -9,9 +9,17 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nmhdr_get_hwndfrom(_ptr_) ((((NMHDR *) _ptr_)->hwndFrom))
 #define cwel_nmhdr_get_idfrom(_ptr_) ((((NMHDR *) _ptr_)->idFrom))
 #define cwel_nmhdr_get_code(_ptr_) ((((NMHDR *) _ptr_)->code))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NMHDR__ */
 

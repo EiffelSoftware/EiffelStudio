@@ -5,6 +5,10 @@
 #ifndef __WEL_PROCESS_INFORMATION__
 #define __WEL_PROCESS_INFORMATION__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_process_info_set_process_handle(_ptr_, _value_) (((PROCESS_INFORMATION *) _ptr_)->hProcess = (HANDLE) (_value_))
 #define cwel_process_info_set_thread_handle(_ptr_, _value_) (((PROCESS_INFORMATION *) _ptr_)->hThread = (HANDLE) (_value_))
 #define cwel_process_info_set_process_id(_ptr_, _value_) (((PROCESS_INFORMATION *) _ptr_)->dwProcessId = (DWORD) (_value_))
@@ -15,6 +19,9 @@
 #define cwel_process_info_get_process_id(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->dwProcessId))
 #define cwel_process_info_get_thread_id(_ptr_) ((EIF_INTEGER)(((PROCESS_INFORMATION *) _ptr_)->dwThreadId))
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __WEL_PROCESS_INFORMATION__ */
 
 /*

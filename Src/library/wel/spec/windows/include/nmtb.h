@@ -9,11 +9,19 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nmtoolbar_get_hdr(_ptr_) (&(((NMTOOLBAR *) _ptr_)->hdr))
 #define cwel_nmtoolbar_get_iitem(_ptr_) (((NMTOOLBAR *) _ptr_)->iItem)
 #define cwel_nmtoolbar_get_tbbutton(_ptr_) (&(((NMTOOLBAR *) _ptr_)->tbButton))
 #define cwel_nmtoolbar_get_cchtext(_ptr_) ((((NMTOOLBAR *) _ptr_)->cchText))
 #define cwel_nmtoolbar_get_psztext(_ptr_) (&(((NMTOOLBAR *) _ptr_)->pszText))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NMTOOLBAR__ */
 

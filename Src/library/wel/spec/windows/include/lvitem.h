@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_lv_item_set_mask(_ptr_, _value_) 	 	(((LV_ITEM *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_lv_item_set_iitem(_ptr_, _value_)	 	(((LV_ITEM *) _ptr_)->iItem = (int) (_value_))
 #define cwel_lv_item_set_isubitem(_ptr_, _value_)	(((LV_ITEM *) _ptr_)->iSubItem = (int) (_value_))
@@ -28,6 +32,10 @@
 #define cwel_lv_item_get_cchtextmax(_ptr_)	(((LV_ITEM *) _ptr_)->cchTextMax)
 #define cwel_lv_item_get_iimage(_ptr_) 		(((LV_ITEM *) _ptr_)->iImage)
 #define cwel_lv_item_get_lparam(_ptr_) 		(((LV_ITEM *) _ptr_)->lParam)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LISTVIEWITEM__ */
 

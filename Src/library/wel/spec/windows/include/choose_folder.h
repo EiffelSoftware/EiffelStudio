@@ -10,6 +10,10 @@
 #include <shlobj.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_browse_info_set_hwndowner(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_browse_info_set_pidlroot (_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pidlRoot = (LPCITEMIDLIST) (_value_))
 #define cwel_browse_info_set_pszdisplayname(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pszDisplayName = (LPSTR) (_value_))
@@ -27,6 +31,10 @@
 #define cwel_browse_info_get_lpfn(_ptr_) ((((BROWSEINFO *) _ptr_)->lpfn))
 #define cwel_browse_info_get_lparam(_ptr_) ((((BROWSEINFO *) _ptr_)->lParam))
 #define cwel_browse_info_get_iimage(_ptr_) ((((BROWSEINFO *) _ptr_)->iImage))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_BROWSEINFO__ */
 

@@ -9,8 +9,16 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tv_keydown_get_hdr(_ptr_) (&(((TV_KEYDOWN *) _ptr_)->hdr))
 #define cwel_tv_keydown_get_wvkey(_ptr_) (((TV_KEYDOWN *) _ptr_)->wVKey)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TV_KEYDOWN__ */
 

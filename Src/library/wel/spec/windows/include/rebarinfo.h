@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #define cwel_rebarinfo_set_cbsize(_ptr_, _value_) (((REBARINFO *) _ptr_)->cbSize = (UINT) (_value_))
 #define cwel_rebarinfo_set_fmask(_ptr_, _value_) (((REBARINFO *) _ptr_)->fMask = (UINT) (_value_))
@@ -17,6 +21,10 @@
 #define cwel_rebarinfo_get_cbsize(_ptr_) ((((REBARINFO *) _ptr_)->cbSize))
 #define cwel_rebarinfo_get_fmask(_ptr_) ((((REBARINFO *) _ptr_)->fMask))
 #define cwel_rebarinfo_get_himl(_ptr_) ((((REBARINFO *) _ptr_)->himl))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_REBARINFO__ */
 

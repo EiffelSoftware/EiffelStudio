@@ -9,9 +9,18 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_enumlogfont_get_elflogfont(_ptr_) (&(((ENUMLOGFONT *) _ptr_)->elfLogFont))
 #define cwel_enumlogfont_get_elffullname(_ptr_) ((((ENUMLOGFONT *) _ptr_)->elfFullName))
 #define cwel_enumlogfont_get_elfstyle(_ptr_) ((((ENUMLOGFONT *) _ptr_)->elfStyle))
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_ENUMLOGFONT__ */
 

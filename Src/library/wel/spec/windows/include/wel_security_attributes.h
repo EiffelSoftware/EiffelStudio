@@ -5,11 +5,19 @@
 #ifndef __WEL_SECURITY_ATTRIBUTES__
 #define __WEL_SECURITY_ATTRIBUTES__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_security_attributes_set_length(_ptr_, _value_) (((SECURITY_ATTRIBUTES *) _ptr_)->nLength = (DWORD) (_value_))
 #define cwel_security_attributes_set_security_descriptor(_ptr_, _value_) (((SECURITY_ATTRIBUTES *) _ptr_)->lpSecurityDescriptor = (LPVOID) (_value_))
 #define cwel_security_attributes_set_inherit_handle(_ptr_, _value_) (((SECURITY_ATTRIBUTES *) _ptr_)->bInheritHandle = (BOOL) (_value_))
 
 #define cwel_security_attributes_get_inherit_handle(_ptr_) ((((SECURITY_ATTRIBUTES *) _ptr_)->bInheritHandle))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_SECURITY_ATTRIBUTES__ */
 

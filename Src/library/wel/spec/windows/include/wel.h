@@ -5,6 +5,10 @@
 #ifndef __WEL__
 #define __WEL__
 
+#ifndef STRICT
+#	define STRICT
+#endif
+
 #ifdef _WIN32
 #	ifndef WIN32
 #		define WIN32
@@ -23,6 +27,11 @@
 #	include "wel_lang.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define cwel_pointer_to_integer(_ptr_) ((EIF_INTEGER) _ptr_)
 #define cwel_integer_to_pointer(_int_) ((EIF_POINTER) _int_)
 
@@ -36,6 +45,10 @@
 #define c_mouse_message_y(_lparam_) ((short) HIWORD(_lparam_))
 
 #define cwel_menu_item_not_found 0xFFFFFFFF
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL__ */
 

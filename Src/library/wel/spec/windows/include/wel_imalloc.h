@@ -7,6 +7,10 @@
 
 #include <objidl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_imalloc_alloc(_ptr_, _value_) (((*(LPMALLOC*) _ptr_)->lpVtbl->Alloc(_ptr_,_value_)))
 #define cwel_imalloc_realloc(_ptr_, _value1_, _value2_) ((((LPMALLOC) _ptr_)->lpVtbl->Realloc(_ptr_,_value1_, _value2_)))
 #define cwel_imalloc_did_alloc(_ptr_, _value_) (((*(LPMALLOC*) _ptr_)->lpVtbl->DidAlloc(_ptr_,_value_)))
@@ -14,6 +18,9 @@
 #define cwel_imalloc_free(_ptr_, _value_) (((*(LPMALLOC*) _ptr_)->lpVtbl->Free(_ptr_,_value_)))
 #define cwel_imalloc_release(_ptr_) (((*(LPMALLOC*) _ptr_)->lpVtbl->Release(_ptr_)))
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __WEL_IMALLOC__ */
 
 /*

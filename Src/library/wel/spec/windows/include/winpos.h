@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_windowpos_set_hwnd(_ptr_, _value_) (((WINDOWPOS *) _ptr_)->hwnd = (HWND) (_value_))
 #define cwel_windowpos_set_hwndinsertafter(_ptr_, _value_) (((WINDOWPOS *) _ptr_)->hwndInsertAfter = (HWND) (_value_))
 #define cwel_windowpos_set_x(_ptr_, _value_) (((WINDOWPOS *) _ptr_)->x = (int) (_value_))
@@ -24,6 +28,10 @@
 #define cwel_windowpos_get_width(_ptr_) ((((WINDOWPOS *) _ptr_)->cx))
 #define cwel_windowpos_get_height(_ptr_) ((((WINDOWPOS *) _ptr_)->cy))
 #define cwel_windowpos_get_flags(_ptr_) ((((WINDOWPOS *) _ptr_)->flags))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_WINDOWPOS__ */
 

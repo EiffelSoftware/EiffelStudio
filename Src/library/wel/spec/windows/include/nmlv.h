@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nm_listview_get_hdr(_ptr_) (&(((NM_LISTVIEW *) _ptr_)->hdr))
 #define cwel_nm_listview_get_iitem(_ptr_) (((NM_LISTVIEW *) _ptr_)->iItem)
 #define cwel_nm_listview_get_isubitem(_ptr_) (((NM_LISTVIEW *) _ptr_)->iSubItem)
@@ -17,6 +21,10 @@
 #define cwel_nm_listview_get_uchanged(_ptr_) (((NM_LISTVIEW *) _ptr_)->uChanged)
 #define cwel_nm_listview_get_ptaction(_ptr_) (&(((NM_LISTVIEW *) _ptr_)->ptAction))
 #define cwel_nm_listview_get_lparam(_ptr_) (((NM_LISTVIEW *) _ptr_)->lParam)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NM_LISTVIEW__ */
 

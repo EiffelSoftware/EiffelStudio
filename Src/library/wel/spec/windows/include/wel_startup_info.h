@@ -5,6 +5,10 @@
 #ifndef __WEL_STARTUPINFO__
 #define __WEL_STARTUPINFO__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_startup_info_set_title(_ptr_, _value_) (((STARTUPINFO *) _ptr_)->lpTitle = (LPTSTR) (_value_))
 #define cwel_startup_info_set_x_offset(_ptr_, _value_) (((STARTUPINFO *) _ptr_)->dwX = (DWORD) (_value_))
 #define cwel_startup_info_set_y_offset(_ptr_, _value_) (((STARTUPINFO *) _ptr_)->dwY = (DWORD) (_value_))
@@ -32,6 +36,10 @@
 #define cwel_startup_info_std_input(_ptr_) ((((STARTUPINFO *) _ptr_)->hStdInput))
 #define cwel_startup_info_std_output(_ptr_) ((((STARTUPINFO *) _ptr_)->hStdOutput))
 #define cwel_startup_info_std_error(_ptr_) ((((STARTUPINFO *) _ptr_)->hStdError))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_STARTUPINFO__ */
 

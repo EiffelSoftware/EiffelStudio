@@ -9,6 +9,10 @@
 
 #include "wel.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_compare_file_time(_pft1_, _pft2_) (CompareFileTime ((FILETIME *)_pft1_, (FILETIME *)_pft2_))
 #define cwel_system_time_to_file_time(_pst_, _pft_) (SystemTimeToFileTime ((SYSTEMTIME *)_pst_, (LPFILETIME)_pft_))
 #define cwel_file_time_to_system_time(_pft_, _pst_) (FileTimeToSystemTime ((FILETIME *)_pft_, (LPSYSTEMTIME)_pst_))
@@ -25,6 +29,10 @@
 #define cwel_system_time_minute(_pst_) ((EIF_INTEGER)(((SYSTEMTIME *)_pst_)->wMinute))
 #define cwel_system_time_second(_pst_) ((EIF_INTEGER)(((SYSTEMTIME *)_pst_)->wSecond))
 #define cwel_system_time_milliseconds(_pst_) ((EIF_INTEGER)(((SYSTEMTIME *)_pst_)->wMilliseconds))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TIME__  */
 

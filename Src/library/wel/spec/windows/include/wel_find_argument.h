@@ -13,6 +13,10 @@
 #   include <redit.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_findargument_set_range(_ptr_, _value_) (((FINDTEXTEX *) _ptr_)->chrg = *((CHARRANGE*) (_value_)))
 #define cwel_findargument_set_string_to_find(_ptr_, _value_) (((FINDTEXTEX *) _ptr_)->lpstrText = (LPSTR) (_value_))
 #define cwel_findargument_initialize_range_out_min(_ptr_) (((FINDTEXTEX *) _ptr_)->chrgText.cpMin = (LONG)0)
@@ -21,6 +25,10 @@
 #define cwel_findargument_get_range(_ptr_) (&(((FINDTEXTEX *) _ptr_)->chrg))
 #define cwel_findargument_get_string_to_find(_ptr_) ((((FINDTEXTEX *) _ptr_)->lpstrText))
 #define cwel_findargument_get_range_out(_ptr_) (&(((FINDTEXTEX *) _ptr_)->chrgText))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_FIND_ARGUMENT__ */
 

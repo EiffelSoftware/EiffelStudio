@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_insertstruct_set_hparent(_ptr_, _value_) (((TV_INSERTSTRUCT *) _ptr_)->hParent = (HTREEITEM) (_value_))
 #define cwel_insertstruct_set_hinsertafter(_ptr_, _value_) (((TV_INSERTSTRUCT *) _ptr_)->hInsertAfter = (HTREEITEM) (_value_))
 
@@ -25,6 +29,10 @@
 #define cwel_insertstruct_get_item(_ptr_) (&(((TV_INSERTSTRUCT *) _ptr_)->DUMMYUNIONNAME.item))
 #else
 #define cwel_insertstruct_get_item(_ptr_) (&(((TV_INSERTSTRUCT *) _ptr_)->item))
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __WEL_TREEVIEWINSERTSTRUCT__ */

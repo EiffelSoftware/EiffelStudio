@@ -9,6 +9,10 @@
 #	include <cdlg.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_print_dlg_set_lstructsize(_ptr_, _value_) (((PRINTDLG *) _ptr_)->lStructSize = (DWORD) (_value_))
 #define cwel_print_dlg_set_hwndowner(_ptr_, _value_) (((PRINTDLG *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_print_dlg_set_flags(_ptr_, _value_) (((PRINTDLG *) _ptr_)->Flags = (DWORD) (_value_))
@@ -25,6 +29,10 @@
 #define cwel_print_dlg_get_nmaxpage(_ptr_) ((EIF_INTEGER) (((PRINTDLG *) _ptr_)->nMaxPage))
 #define cwel_print_dlg_get_ncopies(_ptr_) ((EIF_INTEGER) (((PRINTDLG *) _ptr_)->nCopies))
 #define cwel_print_dlg_get_hdc(_ptr_) ((EIF_POINTER) (((PRINTDLG *) _ptr_)->hDC))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_PRINTDLG__ */
 

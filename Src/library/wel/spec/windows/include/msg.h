@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_msg_set_hwnd(_ptr_, _value_) (((MSG *) _ptr_)->hwnd = (HWND) (_value_))
 #define cwel_msg_set_message(_ptr_, _value_) (((MSG *) _ptr_)->message = (UINT) (_value_))
 #define cwel_msg_set_wparam(_ptr_, _value_) (((MSG *) _ptr_)->wParam = (WPARAM) (_value_))
@@ -18,6 +22,10 @@
 #define cwel_msg_get_message(_ptr_) (((MSG *) _ptr_)->message)
 #define cwel_msg_get_wparam(_ptr_) (((MSG *) _ptr_)->wParam)
 #define cwel_msg_get_lparam(_ptr_) (((MSG *) _ptr_)->lParam)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_MSG__ */
 

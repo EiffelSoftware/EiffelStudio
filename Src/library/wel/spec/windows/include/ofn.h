@@ -9,6 +9,10 @@
 #	include <cdlg.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_open_file_name_set_lstructsize(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->lStructSize = (DWORD) (_value_))
 #define cwel_open_file_name_set_hwndowner(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_open_file_name_set_hinstance(_ptr_, _value_) (((OPENFILENAME *) _ptr_)->hInstance = (HINSTANCE) (_value_))
@@ -50,6 +54,10 @@
 // #define cwel_open_file_name_get_lcustdata(_ptr_) ((((OPENFILENAME *) _ptr_)->lCustData))
 // #define cwel_open_file_name_get_lpfnhook(_ptr_) ((((OPENFILENAME *) _ptr_)->lpfnHook))
 // #define cwel_open_file_name_get_lptemplatename(_ptr_) ((((OPENFILENAME *) _ptr_)->lpTemplateName))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_OPENFILENAME__ */
 

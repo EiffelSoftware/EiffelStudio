@@ -21,7 +21,7 @@ deferred class SET [G] inherit
 feature -- Measurement
 
 	count: INTEGER is
-		-- Number of items
+			-- Number of items
 		deferred
 		end
 

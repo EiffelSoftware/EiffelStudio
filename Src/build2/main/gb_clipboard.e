@@ -99,11 +99,22 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND} --
 			an_object_not_void: an_object /= Void
 		local
 			xml_store: GB_XML_STORE
+			xm_element: XM_ELEMENT
+			element: XM_ELEMENT
 		do
 			object_type := an_object.type
 			create xml_store
 			xml_store.store_individual_object (an_object)
-			contents_cell.put (xml_store.last_stored_individual_object)
+			xm_element := xml_store.last_stored_individual_object
+			
+			if an_object.is_top_level_object then
+				-- We must now parse the XML and set the first object as a reference
+				-- object and remove the deeper references.
+				element ?= xm_element.first
+				convert_element_to_instance (element, an_object.id, 1)
+			end
+			
+			contents_cell.put (xm_element)
 		ensure
 			contents_cell_not_empty: contents_cell.item /= Void
 		end

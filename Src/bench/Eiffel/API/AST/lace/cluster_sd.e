@@ -24,6 +24,10 @@ feature {NONE} -- Initialization
 			cluster_name.to_lower;
 			directory_name ?= yacc_arg (1);
 			cluster_properties ?= yacc_arg (2)
+			parent_name ?= yacc_arg (3)
+			if parent_name /= Void then
+				parent_name.to_lower
+			end
 		ensure then
 			directory_name_exists: directory_name /= Void;
 			cluster_name_exists: cluster_name /= Void;
@@ -39,6 +43,9 @@ feature -- Properties
 
 	cluster_properties: CLUST_PROP_SD;
 			-- Cluster properties
+
+	parent_name: ID_SD;
+			-- Name of the parent cluster
 
 feature {COMPILER_EXPORTER} -- Lace recompilation
 

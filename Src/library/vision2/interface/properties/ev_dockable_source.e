@@ -148,11 +148,16 @@ feature -- Contract support
 			widget: EV_WIDGET
 			tool_bar_button: EV_TOOL_BAR_BUTTON
 			container: EV_CONTAINER
+			tool_bar : EV_TOOL_BAR
 		do
 			widget ?= Current
 			if widget = Void then
 				tool_bar_button ?= Current
-				widget := tool_bar_button.parent
+				tool_bar ?= tool_bar_button.parent
+				Result := tool_bar.has (tool_bar_button)
+				if not Result then
+					widget := tool_bar_button.parent
+				end
 			end
 			if widget /= Void then
 				container ?= source

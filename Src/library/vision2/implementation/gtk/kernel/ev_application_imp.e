@@ -62,6 +62,10 @@ feature {NONE} -- Initialization
 			create gtk_marshal
 		end
 		
+		
+	a_idle_timeout_imp: EV_TIMEOUT_IMP
+			-- Timeout used to delay idle actions so widgets are resized.
+			
 	a_timeout_imp: EV_TIMEOUT_IMP
 			-- Timeout used to call post_launch_actions
 
@@ -101,6 +105,15 @@ feature {NONE} -- Initialization
 			-- Unhook marshal object.
 			gtk_marshal.destroy
 			is_destroyed := True
+		end
+		
+	initialize_idle_actions is
+			-- Initialize timeout for idle actions so call is made after gtk resize.
+		do
+			a_idle_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			a_idle_timeout_imp.interface.actions.extend (agent internal_idle_actions.call (empty_tuple))
+			a_idle_timeout_imp.set_interval_kamikaze (75)
+				-- This allows gtk to perform sizing calculations before idle is called.
 		end
 
 	call_post_launch_actions is
@@ -189,7 +202,7 @@ feature -- Basic operation
 				until 
 					feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
 				loop
-					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
+					main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 				end
 				processing_events := False
 			end
@@ -358,7 +371,7 @@ feature -- Implementation
 			if internal_idle_actions_connection_id = 0 then
 				internal_idle_actions_connection_id :=
 					gtk_marshal.c_ev_gtk_callback_marshal_idle_connect (
-						agent internal_idle_actions.call (empty_tuple) 
+						agent initialize_idle_actions--internal_idle_actions.call (empty_tuple) 
 					)
 			end
 		ensure

@@ -160,7 +160,7 @@ feature -- Access
 feature -- Status setting
 
 	set_default_minimum_size is
-		-- Reset `Current' to its default minimum size.
+			-- Reset `Current' to its default minimum size.
 		local
 			font_imp: EV_FONT_IMP
 			w,h: INTEGER
@@ -186,7 +186,7 @@ feature -- Status setting
 				else
 					w := w + internal_pixmap.width + pixmap_border
 				end
-				h := internal_pixmap.height + pixmap_border * 2
+				h := h.max (internal_pixmap.height + pixmap_border * 2)
 			end
 			if text.is_empty and pixmap_imp = Void then
 				w := w + extra_width
@@ -297,7 +297,6 @@ feature -- Element change
 			end
 			set_default_minimum_size
 		end
-		
 
 	internal_pixmap: EV_PIXMAP
 

@@ -387,6 +387,9 @@ feature -- Access
 
 	Wm_queryuistate: INTEGER is 297
 			-- Declared in Windows as WM_QUERYUISTATE
+			
+	Wm_ctlcolordialog: INTEGER is 310
+			-- Declared in Windows as WM_CTLCOLORDIALOG
 
 	Wm_mousemove: INTEGER is 512
 			-- Declared in Windows as WM_MOUSEMOVE

@@ -14,14 +14,14 @@ inherit
 
 feature -- Basic operations
 
-	generate (interface_name: STRING; lcid: INTEGER; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; lcid: INTEGER; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate C client access and setting features.
 		require
 			non_void_interface_name: interface_name /= Void
 			non_void_descriptor: a_descriptor /= Void
 			valid_interface_name: not interface_name.empty
 		local
-			tmp_string: STRING
+			tmp_string, access_feature_name, set_feature_name: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create c_access_feature.make
@@ -29,8 +29,16 @@ feature -- Basic operations
 			create visitor
 
 			-- Access feature (get_  function)
-			tmp_string := external_feature_name (a_descriptor.name)
-			c_access_feature.set_name (tmp_string)
+
+			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
+				access_feature_name := clone (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
+			else
+				access_feature_name := a_descriptor.interface_eiffel_name
+			end
+			set_feature_name := clone (Set_clause)
+			set_feature_name.append (access_feature_name)
+			c_access_feature.set_name (external_feature_name (access_feature_name))
+			c_setting_feature.set_name (external_feature_name (set_feature_name))
 
 			visitor.visit (a_descriptor.data_type)
 			if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
@@ -51,10 +59,6 @@ feature -- Basic operations
 			set_access_body (interface_name, lcid, a_descriptor.member_id, a_descriptor.data_type.type, visitor)
 
 			-- Setting function
-			tmp_string := clone (Ccom_clause)
-			tmp_string.append (Set_clause)
-			tmp_string.append (name_for_feature (a_descriptor.name))
-			c_setting_feature.set_name (tmp_string)
 
 			-- Set comment
 			tmp_string := clone (a_descriptor.description)

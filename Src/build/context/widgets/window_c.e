@@ -9,108 +9,79 @@ deferred class WINDOW_C
 inherit
 	CONTAINER_C
 		rename
-			position_modified as default_position,
-			link_to_parent as add_to_window_list
+			position_modified as default_position
 		redefine
-			gui_object, cut, undo_cut, position_initialization,
+			create_context,
+			gui_object, position_initialization,
+			copy_attributes, 
 			is_in_a_group, set_position,
 			intermediate_name, --is_selectionable,
-			full_name, deleted, group_name,
+			full_name, group_name,
 			set_x_y, set_size, set_visual_name,
 			reset_modified_flags,
 			is_window,
-			add_to_window_list, --retrieve_set_visual_name, 
-			shown, is_able_to_be_grouped, title_label,
-			show, hide,
-			add_gui_callbacks
+			--retrieve_set_visual_name, 
+			update_visual_name_in_editor,
+			is_able_to_be_grouped, title_label,
+			add_gui_callbacks,
+			option_list
 		end
-
-	SHARED_CONTEXT
 
 	CLOSEABLE
 
 	EV_COMMAND
 
--- feature -- Context creation
--- 
--- 	remove_yourself is
--- 		local
--- 			command: CONTEXT_CUT_CMD
--- 		do
--- 			create command
--- 			command.execute (Current)
--- --			tree.display (Current)
--- 		end
+feature -- Context creation
+
+	create_context (a_parent: WINDOW_C): like Current is
+			-- Create a context of the same type
+		local
+			create_cmd: CONTEXT_CREATE_CMD
+		do
+			Result := New
+			Result.set_parent (a_parent)
+			Result.generate_internal_name
+			if a_parent /= Void then
+				Result.oui_create (a_parent.gui_object)
+			else
+				Result.oui_create (Void)
+			end
+				-- Void if context created for catalog
+			if gui_object /= Void then
+				Result.set_size (width, height)
+				copy_attributes (Result)
+			end
+			create create_cmd.make (Result)
+			create_cmd.work
+			create_cmd.update_history
+		end
+
+--	remove_yourself is
+--		local
+--			command: CONTEXT_CUT_CMD
+--		do
+--			create command
+--			command.execute (Current)
+----			tree.display (Current)
+--		end
 
 feature -- Basic operations
 
-	cut is
-		require else
-			no_parent: True
+	raise is
 		do
-			hide
-			Shared_window_list.start
-			Shared_window_list.prune (Current)
-			tree_element.destroy
---			context_catalog.clear_editors (Current)
-		ensure then
-			not_in_window_list: not Shared_window_list.has (Current)
+--			if not shown then
+				show
+--			end
+--			gui_object.raise
 		end
 
-	undo_cut is
-		do
-			Precursor
-			show
-		ensure then
-			in_window_list: Shared_window_list.has (Current)
-		end
+feature -- Access
 
-	shown: BOOLEAN is
+	option_list: ARRAY [INTEGER] is
 		do
-			Result := gui_object.shown
-		end
-
-	show is
-		do
-			Precursor
-			update_label (True)
-		end
-
-	hide is
-		do
-			Precursor
-			update_label (False)
-		end
-
--- 	raise is
--- 		do
--- 			if not shown then
--- 				show
--- 			end
--- 			widget.raise
--- 		end
-
-	update_label (is_shown: BOOLEAN) is
-			-- Update label for window visibility.
-		local
-			cur: CURSOR
-		do
-			is_really_shown := is_shown
-			cur := Shared_window_list.cursor
-			update_tree_element
-			Shared_window_list.go_to (cur)
-		end
-
-	add_to_window_list is
-		require else
-			always_true: True
-		do
-			Shared_window_list.extend (Current)
-		end
-
-	deleted: BOOLEAN is
-		do
-			Result := not Shared_window_list.has (Current)
+			Result := Precursor
+			Result.put (Context_const.window_att_form_nbr,
+						Context_const.attribute_format_nbr)
 		end
 
 feature -- Status report
@@ -130,9 +101,10 @@ feature -- Status report
 		do
 			Result := {CONTAINER_C} Precursor
 				-- Only concerned after Current is retrieved
---			if retrieved_node = Void and then not is_really_shown then
---				Result.extend ('*')
---			end
+--			if retrieved_node = Void and then
+			if not is_really_shown then
+				Result.extend ('*')
+			end
 		end
 
 	title: STRING is
@@ -141,8 +113,6 @@ feature -- Status report
 		end
 
 	title_modified: BOOLEAN
-
-	resize_policy_modified: BOOLEAN
 
 	resize_policy_disabled: BOOLEAN
 
@@ -161,17 +131,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_perm_window: BOOLEAN is
-			-- Is Current context a permanent window ?
-		do
-			Result := True
-		end
-
-	is_perm_window: BOOLEAN is
-			-- Is `gui_object' a permanent window ?
-		do
-		end
-
 	is_in_a_group: BOOLEAN is
 			-- Is Current in a group ?
 		do
@@ -181,6 +140,31 @@ feature -- Status report
 			-- Is Current able to be grouped ?
 		do
 		end
+
+	icon_name_modified: BOOLEAN
+
+	icon_name: STRING
+
+	icon_pixmap_name: STRING
+
+	icon_pixmap: EV_PIXMAP is
+		do
+			Result := gui_object.icon_pixmap
+		end
+
+	icon_pixmap_modified: BOOLEAN
+
+	iconic_state_modified: BOOLEAN
+
+	is_iconic_state: BOOLEAN
+
+	is_maximize_state: BOOLEAN
+
+	maximize_state_modified: BOOLEAN
+
+	is_modal: BOOLEAN
+
+	modal_modified: BOOLEAN
 
 feature -- Status setting
 
@@ -261,6 +245,59 @@ feature -- Status setting
 			if flag then
 					-- The current size must be saved
 				size_modified := True
+				gui_object.forbid_resize
+			else
+				gui_object.allow_resize
+			end
+		end
+
+	set_icon_name (a_name: STRING) is
+		do
+			icon_name := a_name
+			icon_name_modified := True
+			gui_object.set_icon_name (a_name)
+		end
+
+	set_icon_pixmap (a_name: STRING) is
+		local
+			a_pixmap: EV_PIXMAP
+		do
+			icon_pixmap_name := a_name
+			icon_pixmap_modified := False
+			if icon_pixmap_name /= Void
+			and then not icon_pixmap_name.empty
+			then
+				icon_pixmap_modified := True
+				create a_pixmap.make_from_file (a_name)
+				gui_object.set_icon_pixmap (a_pixmap)
+			end
+		end
+
+	set_iconic_state (flag: BOOLEAN) is
+			-- Set iconic state to `flag'.
+			-- Do not call actual function for window
+		do
+			iconic_state_modified := True
+			is_iconic_state := flag
+		end
+
+	set_maximize_state (flag: BOOLEAN) is
+			-- Set maximize state to `flag'.
+			-- Do not call actual function for window
+		do
+			maximize_state_modified := True
+			is_maximize_state := flag
+		end
+
+	set_modal (flag: BOOLEAN) is
+			-- Change the window to be modal.
+		do
+			is_modal := flag
+			modal_modified := True
+			if flag then
+				gui_object.set_modal
+			else
+				--XX set_normal
 			end
 		end
 
@@ -270,14 +307,28 @@ feature -- Status setting
 			start_hidden := False
 			title_modified := False
 			resize_policy_modified := False
+			icon_name_modified := False
+			iconic_state_modified := False
+			maximize_state_modified := False
+			modal_modified := False
+		end
+
+	update_visual_name_in_editor is
+		local
+			editor: CONTEXT_EDITOR
+		do
+			editor := context_catalog.editor (Current)
+			if editor /= Void then
+				editor.reset_form (Context_const.window_att_form_nbr)
+			end
 		end
 
 feature -- Default event
 
--- 	default_event: MOUSE_ENTER_EV is
--- 		do
--- 			Result := mouse_enter_ev
--- 		end	
+--	default_event: MOUSE_ENTER_EV is
+--		do
+--			Result := mouse_enter_ev
+--		end	
 
 feature -- File names
 
@@ -299,6 +350,27 @@ feature {CONTEXT}
 		end
 
 feature {NONE} -- Code generation
+
+	copy_attributes (other_context: like Current) is
+		do
+			if title_modified then
+				other_context.set_title (title)
+			end
+			if resize_policy_modified then
+				other_context.disable_resize_policy (resize_policy_disabled)
+			end
+			if icon_name_modified then
+				other_context.set_icon_name (icon_name)
+			end
+			if iconic_state_modified then
+				other_context.set_iconic_state (is_iconic_state)
+			end
+			if icon_pixmap_modified then
+				other_context.set_icon_pixmap (icon_pixmap_name)
+			end
+			other_context.set_start_hidden (start_hidden)
+			Precursor (other_context)
+		end
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context

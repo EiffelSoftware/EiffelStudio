@@ -8,9 +8,18 @@ class
 	VERTICAL_BOX_C
 
 inherit
-	INVISIBLE_CONTAINER_C
+	BOX_C
 		redefine
 			gui_object
+		end
+
+feature -- GUI object creation
+
+	create_gui_object (a_parent: EV_CONTAINER) is
+		do
+			create gui_object.make (a_parent)
+			gui_object.set_border_width (5)
+			gui_object.set_spacing (5)
 		end
 
 feature -- Type data
@@ -23,15 +32,6 @@ feature -- Type data
 	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.container_page.vbox_type
-		end
-
-feature -- GUI object creation
-
-	create_gui_object (a_parent: EV_CONTAINER) is
-		do
-			create gui_object.make (a_parent)
-			gui_object.set_border_width (5)
-			gui_object.set_spacing (5)
 		end
 
 feature {NONE} -- Internal namer

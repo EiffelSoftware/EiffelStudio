@@ -8,7 +8,7 @@ class
 	MULTI_COLUMN_ROW_C
 
 inherit
-	CONTEXT
+	COMPOSED_ITEM_C
 		redefine
 			gui_object,
 			create_context
@@ -31,7 +31,7 @@ feature -- Context creation
 	create_context (a_parent: MULTI_COLUMN_LIST_C): like Current is
 			-- Create a context of the same type.
 		do
-			Result ?= {CONTEXT} Precursor (a_parent)
+			Result ?= {COMPOSED_ITEM_C} Precursor (a_parent)
 			a_parent.append (Result)
 		end
 
@@ -40,34 +40,6 @@ feature -- GUI object creation
 	create_gui_object (a_parent: EV_MULTI_COLUMN_LIST) is
 		do
 			create gui_object.make (a_parent)
-		end
-
-feature {NONE} 
-
-	copy_attributes (other_context: like Current) is
-			-- Copy the attributes of Current to `other_context'.
-		do
-		end
-
-feature {NONE} -- Callbacks
-
-	add_gui_callbacks is
-			-- Define the general behavior of the GUI object.
-		do
-		end
-
-	initialize_transport is
-			-- Initialize the mechanism through which
-			-- the current context may be dragged and
-			-- dropped.
-		do
-		end
-
-	remove_gui_callbacks is
-			-- Remove callbacks.
-			-- (Need to only remove callbacks part of a list
-			-- since set_action will overwrite previous callbacks).
-		do
 		end
 
 feature -- Status report

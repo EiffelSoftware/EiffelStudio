@@ -12,7 +12,8 @@ inherit
 		redefine
 			gui_object,
 			symbol, type,
-			namer, eiffel_type, full_type_name
+			namer, eiffel_type, full_type_name,
+			reset_modified_flags
 		end
 
 	LIST_C
@@ -22,7 +23,8 @@ inherit
 		redefine
 			gui_object,
 			symbol, type,
-			namer, eiffel_type, full_type_name
+			namer, eiffel_type, full_type_name,
+			reset_modified_flags
 		end
 
 feature -- Type data
@@ -35,6 +37,14 @@ feature -- Type data
 	type: CONTEXT_TYPE is
 		do
 			Result := context_catalog.text_page.combo_box_type
+		end
+
+feature -- Status setting
+
+	reset_modified_flags is
+		do
+			{TEXT_FIELD_C} Precursor
+			{LIST_C} Precursor
 		end
 
 feature {NONE} -- Internal namer

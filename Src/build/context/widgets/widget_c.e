@@ -17,15 +17,21 @@ inherit
 			is_able_to_be_grouped
 		end
 
-	UNDO_REDO_ACCELERATOR
+	ERROR_POPUPER
+
+--	UNDO_REDO_ACCELERATOR
 
 feature -- Context creation
 
 	create_context (a_parent: CONTAINER_C): like Current is
-			-- Create a context of the same type
+			-- Create a context of the same type.
 		do
-			Result ?= {CONTEXT} Precursor (a_parent)
-			a_parent.append (Result)
+			if a_parent.accept_child then
+				Result ?= {CONTEXT} Precursor (a_parent)
+				a_parent.append (Result)
+			else
+				error_dialog.popup (Current, messages.cannot_create_new_child_er, Void)
+			end
 		end
 
 feature {NONE} 
@@ -135,7 +141,9 @@ feature {NONE} -- Callbacks
 		local
 			routine_cmd: EV_ROUTINE_COMMAND
 		do
-			gui_object.activate_pick_and_drop (3, Current, Pnd_types.context_type)
+			gui_object.activate_pick_and_drop (Void, Void)
+			gui_object.set_data_type (Pnd_types.context_type)
+			gui_object.set_transported_data (Current)
 --			create routine_cmd.make (~process_attribute)
 --			gui_object.add_pnd_command (Pnd_types.attribute_type, routine_cmd, Void)
 --			create routine_cmd.make (~process_instance)
@@ -182,6 +190,20 @@ feature -- Status report
 
 	size_modified: BOOLEAN
 
+	minimum_width: INTEGER is
+			-- Minimum width of `gui_object'
+		do
+			Result := gui_object.minimum_width
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum height of `gui_object'
+		do
+			Result := gui_object.minimum_height
+		end
+
+	minimum_size_modified: BOOLEAN
+
 -- 	real_x: INTEGER is
 -- 			-- Vertical position relative to root window
 -- 		do
@@ -194,9 +216,35 @@ feature -- Status report
 -- 			Result := gui_object.real_y
 -- 		end
 
+	horizontal_resizable: BOOLEAN is
+			-- Is the widget horizontal resizable
+		do
+			Result := gui_object.horizontal_resizable
+		end
+
+	vertical_resizable: BOOLEAN is
+			-- Is the widget verticla resizable
+		do
+			Result := gui_object.vertical_resizable
+		end
+
+	expandable: BOOLEAN is
+			-- Is the widget expandable
+		do
+			Result := gui_object.expandable
+		end
+
+	resize_policy_modified: BOOLEAN
+
 	shown: BOOLEAN is
 		do
 			Result := gui_object.shown
+		end
+
+	managed: BOOLEAN is
+			-- Is the geometry of current widget managed by its container?
+		do
+			Result := gui_object.managed
 		end
 
 	is_able_to_be_grouped: BOOLEAN is
@@ -241,55 +289,86 @@ feature -- Status setting
 
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of `gui_object'.
-		require
-			valid_parent: parent /= Void
-		local
--- 			eb_bulletin: SCALABLE
--- 			was_managed: BOOLEAN
 		do
 			gui_object.set_x_y (new_x, new_y)
--- 			position_modified := True
--- 			if parent.is_bulletin then
--- 				if gui_object.managed then
--- 					was_managed := True
--- 					gui_object.unmanage
--- 				end
--- 				gui_object.set_x_y (new_x, new_y)
--- 				if was_managed then
--- 					gui_object.manage
--- 				end
--- 				eb_bulletin ?= parent.gui_object
--- 				eb_bulletin.update_ratios (gui_object)
--- 			else
--- 				gui_object.set_x_y (new_x, new_y)
--- 			end
+			position_modified := True
+		end
+
+	set_x (new_x: INTEGER) is
+			-- Set the new x of `gui_object'.
+		do
+			gui_object.set_x (new_x)
+			position_modified := True
+		end
+
+	set_y (new_y: INTEGER) is
+			-- Set the new y of `gui_object'.
+		do
+			gui_object.set_y (new_y)
+			position_modified := True
 		end
 
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of `gui_object'.
-		require
-			valid_parent: parent /= Void
-		local
--- 			eb_bulletin: SCALABLE
--- 			not_managed: BOOLEAN
--- 			group_composite: GROUP_COMPOSITE_C
 		do
 			gui_object.set_size (new_w, new_h)
--- 			size_modified := True
--- 			if parent.is_bulletin then
--- 				if gui_object.managed then
--- 					not_managed := True
--- 					gui_object.unmanage
--- 				end
--- 				gui_object.set_size (new_w, new_h)
--- 				eb_bulletin ?= parent.gui_object
--- 				eb_bulletin.update_ratios (gui_object)
--- 				if not_managed then
--- 					gui_object.manage
--- 				end
--- 			else
--- 				gui_object.set_size (new_w, new_h)
--- 			end
+			size_modified := True
+		end
+
+	set_width (new_w: INTEGER) is
+			-- Set new width of `gui_object'.
+		do
+			gui_object.set_width (new_w)
+			size_modified := True
+		end
+
+	set_height (new_h: INTEGER) is
+			-- Set new height of `gui_object'.
+		do
+			gui_object.set_height (new_h)
+			size_modified := True
+		end
+
+	set_minimum_size (w, h: INTEGER) is
+			-- Set new minimum size of `gui_object'.
+		do
+			gui_object.set_minimum_size (w, h)
+			minimum_size_modified := True
+		end
+
+	set_minimum_width (w: INTEGER) is
+			-- Set `w' the new minimum width.
+		do
+			gui_object.set_minimum_width (w)
+			minimum_size_modified := True
+		end
+
+	set_minimum_height (h: INTEGER) is
+			-- Set `h' the new minimum height.
+		do
+			gui_object.set_minimum_height (h)
+			minimum_size_modified := True
+		end
+
+	set_horizontal_resize (flag: BOOLEAN) is
+			-- Set `horizontal_resizable' to `flag'.
+		do
+			gui_object.set_horizontal_resize (flag)
+			resize_policy_modified := True
+		end
+
+	set_vertical_resize (flag: BOOLEAN) is
+			-- Set `vertical_resizable' to `flag'.
+		do
+			gui_object.set_vertical_resize (flag)
+			resize_policy_modified := True
+		end
+
+	set_expand (flag: BOOLEAN) is
+			-- Set `expandable' to `flag'.
+		do
+			gui_object.set_expand (flag)
+			resize_policy_modified := True
 		end
 
 	hide is

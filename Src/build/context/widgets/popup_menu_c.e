@@ -8,25 +8,21 @@ class
 	POPUP_MENU_C
 
 inherit
-	WIDGET_C
-		redefine
-			gui_object
-		end
-
 	MENU_ITEM_HOLDER_C
-		undefine
-			create_context,
-			set_modified_flags,
-			reset_modified_flags
 		redefine
 			gui_object
 		end
 
 feature -- Type data
 
-	symbol_file: FILE_NAME is
+	symbol: EV_PIXMAP is
 		do
-			!! Result.make
+			create Result.make_with_size (0, 0)
+		end
+
+	type: CONTEXT_TYPE is
+		do
+			Result := context_catalog.menu_page.popup_menu_type
 		end
 
 feature -- GUI object creation
@@ -34,6 +30,33 @@ feature -- GUI object creation
 	create_gui_object (a_parent: EV_CONTAINER) is
 		do
 			create gui_object.make (a_parent)
+		end
+
+	add_gui_callbacks is
+		do
+		end
+
+	remove_gui_callbacks is
+		do
+		end
+
+	copy_attributes (other: like Current) is
+		do
+		end
+
+feature -- Status setting
+
+	shown: BOOLEAN is
+		do
+			Result := False
+		end
+
+	hide is
+		do
+		end
+
+	show is
+		do
 		end
 
 feature {NONE} -- Internal namer

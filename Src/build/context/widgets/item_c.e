@@ -1,5 +1,5 @@
 indexing
-	description: "Context that represents an item (EV_ITEM)."
+	description: "Context that represents an abstract item (EV_ITEM)."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

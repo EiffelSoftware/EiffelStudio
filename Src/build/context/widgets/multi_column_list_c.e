@@ -72,6 +72,5 @@ feature -- Implementation
 
 	gui_object: EV_MULTI_COLUMN_LIST
 
-
 end -- class MULTI_COLUMN_LIST_C
 

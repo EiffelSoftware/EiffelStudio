@@ -8,13 +8,19 @@ class PERM_WIND_C
 
 inherit
 	WINDOW_C
+		rename
+			link_to_parent as add_to_window_list
 		redefine
-			create_context, root,
-			reset_modified_flags, copy_attributes, 
-			context_initialization, 
-			remove_yourself, is_perm_window, 
-			update_visual_name_in_editor, description_text
+			add_to_window_list,
+			root,
+			context_initialization,
+			cut, undo_cut, deleted,
+			is_perm_window,
+			show, hide,
+			description_text
 		end
+
+	SHARED_CONTEXT
 
 feature -- Type data
 
@@ -29,26 +35,6 @@ feature -- Type data
 		end
 
 feature -- Context creation
-
-	create_context (a_parent: like Current): like Current is
-			-- Create a context of the same type
-		local
-			create_cmd: CONTEXT_CREATE_CMD
-		do
-			Result := New
-			Result.generate_internal_name
-			Result.oui_create (Void)
-				-- Void if context created for catalog
-			if gui_object /= Void then
-				Result.set_size (width, height)
-				copy_attributes (Result)
-			end
-			create create_cmd.make (Result)
-			create_cmd.work
-			create_cmd.update_history
-		ensure then
-			in_window_list: Shared_window_list.has (Result)
-		end
 
 	root: CONTEXT is
 		require else
@@ -67,78 +53,74 @@ feature -- GUI object creation
 --			if retrieved_node = Void then
 					-- Not retrieving widget from project
 				set_size (400, 500)
-				old_x := eb_screen.x + 10
-				old_y := eb_screen.y + 10
-				set_x_y (old_x, old_y)
+--				old_x := eb_screen.x + 10
+--				old_y := eb_screen.y + 10
+--				set_x_y (old_x, old_y)
 --			end
 			add_to_window_list
 			gui_object.show
 		end
 
-feature -- Status setting
+feature -- Basic operations
 
-	update_visual_name_in_editor is
+	add_to_window_list is
+		require else
+			always_true: True
+		do
+			Shared_window_list.extend (Current)
+		ensure then
+			in_window_list: Shared_window_list.has (Current)
+		end
+
+	show is
+		do
+			Precursor
+			update_label (True)
+		end
+
+	hide is
+		do
+			Precursor
+			update_label (False)
+		end
+
+	update_label (is_shown: BOOLEAN) is
+			-- Update label for window visibility.
 		local
---			editor: CONTEXT_EDITOR
+			cur: CURSOR
 		do
--- 			editor := context_catalog.editor (Current, 
--- 					Context_const.perm_wind_att_form_nbr)
--- 			if editor /= Void then
--- 				editor.reset_current_form
--- 			end
+			is_really_shown := is_shown
+			cur := Shared_window_list.cursor
+			update_tree_element
+			Shared_window_list.go_to (cur)
 		end
 
-	set_icon_name (a_name: STRING) is
+	cut is
+		require else
+			no_parent: True
 		do
-			icon_name := a_name
-			icon_name_modified := True
-			gui_object.set_icon_name (a_name)
+			hide
+			Shared_window_list.start
+			Shared_window_list.prune (Current)
+			if not tree_element.destroyed then
+				tree_element.destroy
+			end
+--			context_catalog.clear_editors (Current)
+		ensure then
+			not_in_window_list: not Shared_window_list.has (Current)
 		end
 
-
-	set_icon_pixmap (a_name: STRING) is
-		local
-			a_pixmap: EV_PIXMAP
+	undo_cut is
 		do
-			icon_pixmap_name := a_name
-			icon_pixmap_modified := False
---			if icon_pixmap_name /= Void and then 
---				not icon_pixmap_name.empty
---			then
---				icon_pixmap_modified := True
---				!!a_pixmap.make
---				a_pixmap.read_from_file (a_name)
---				if a_pixmap.is_valid then
---					gui_object.set_icon_pixmap (a_pixmap)
---				end
---			end
+			Precursor
+			show
+		ensure then
+			in_window_list: Shared_window_list.has (Current)
 		end
 
-	icon_name_modified: BOOLEAN
-
-	icon_name: STRING
-
-	icon_pixmap_name: STRING
-
-	icon_pixmap_modified: BOOLEAN
-
-	set_iconic_state (flag: BOOLEAN) is
-			-- Set iconic state to `flag'.
-			-- Do not call actual function for top_shell
+	deleted: BOOLEAN is
 		do
-			iconic_state_modified := True
-			is_iconic_state := flag
-		end
-
-	iconic_state_modified: BOOLEAN
-
-	is_iconic_state: BOOLEAN
-
-	reset_modified_flags is
-		do
-			Precursor 
-			icon_name_modified := False
-			iconic_state_modified := False
+			Result := not Shared_window_list.has (Current)
 		end
 
 feature {NONE}  -- Internal namer
@@ -151,18 +133,6 @@ feature {NONE}  -- Internal namer
 		once
 			create Result.make (Window_seed)
 		end
-
-	-- ***********************
-	-- * specific attributes *
-	-- ***********************
-
--- 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
--- 		do
--- 			opt_list.put (Context_const.geometry_form_nbr,
--- 					Context_const.geometry_format_nbr)
--- 			opt_list.put (Context_const.perm_wind_att_form_nbr,
--- 					Context_const.attribute_format_nbr)
--- 		end
 
 feature -- Code generation
 
@@ -180,28 +150,6 @@ feature -- Code generation
 	full_type_name: STRING is "Permanent window"
 
 	eiffel_type: STRING is "PERM_WIND"
-
-	remove_yourself is
-		local
-			window_c: WINDOW_C
-		do
-			from 
-				Shared_window_list.start
-			until
-				Shared_window_list.after
-			loop
-				window_c := Shared_window_list.item
-				if window_c.parent = Current then
-						-- Remove all children popups
-					window_c.remove_yourself
-					if not Shared_window_list.before then
-						Shared_window_list.start
-					end
-				end	
-				Shared_window_list.forth
-			end
-			Precursor
-		end
 
 	is_perm_window: BOOLEAN is
 		do
@@ -231,27 +179,6 @@ feature {CONTEXT}
 		end
 
 feature {NONE} -- Code generation
-
-	copy_attributes (other_context: like Current) is
-		do
-			if title_modified then
-				other_context.set_title (title)
-			end
-			if resize_policy_modified then
-				other_context.disable_resize_policy (resize_policy_disabled)
-			end
-			if icon_name_modified then
-				other_context.set_icon_name (icon_name)
-			end
-			if iconic_state_modified then
-				other_context.set_iconic_state (is_iconic_state)
-			end
-			if icon_pixmap_modified then
-				other_context.set_icon_pixmap (icon_pixmap_name)
-			end
-			other_context.set_start_hidden (start_hidden)
-			Precursor (other_context)
-		end
 
 	description_text: STRING is
 			-- Description text in indexing clause.

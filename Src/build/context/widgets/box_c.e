@@ -1,67 +1,63 @@
 indexing
-	description: "Context that represents an invisible container (EV_INVISIBLE_CONTAINER)"
+	description: "Context that represents a box (EV_BOX)."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	INVISIBLE_CONTAINER_C
+deferred class BOX_C
 
 inherit
-	CONTAINER_C
+	INVISIBLE_CONTAINER_C
 		redefine
-			gui_object,
-			is_invisible_container
+			gui_object
 		end
 
 feature -- Status report
 
-	is_invisible_container: BOOLEAN is
-		do
-			Result := True
-		end
-
 	border_width: INTEGER is
 			-- Border width of the container
-		deferred
+		do
+			Result := gui_object.border_width
 		end
-
-	border_width_modified: BOOLEAN
 
 	spacing: INTEGER is
 			-- Spacing of the container
-		deferred
+		do
+--			Result := gui_object.spacing
 		end
-
-	spacing_modified: BOOLEAN
 
 	is_homogeneous: BOOLEAN is
 			-- Is the container homogeneous
-		deferred
+		do
+			Result := gui_object.is_homogeneous
 		end
-
-	homogeneous_modified: BOOLEAN
 
 feature -- Status setting
 
 	set_border_width (w: INTEGER) is
 			-- Set the border width of the container.
-		deferred
+		do
+			gui_object.set_border_width (w)
+			border_width_modified := True
 		end
 
 	set_spacing (value: INTEGER) is
 			-- Set the spacing of the container
-		deferred
+		do
+			gui_object.set_spacing (value)
+			spacing_modified := True
 		end
 
 	set_homogeneous (flag: BOOLEAN) is
 			-- Set `is_homogeneous' to `flag'.
-		deferred
+		do
+			gui_object.set_homogeneous (flag)
+			homogeneous_modified := True
 		end
 
 feature -- Implementation
 
-	gui_object: EV_INVISIBLE_CONTAINER
+	gui_object: EV_BOX
 
-end -- class INVISIBLE_CONTAINER_C
+end -- class BOX_C
 

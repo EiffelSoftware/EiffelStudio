@@ -15,7 +15,7 @@ feature -- Access
 		indexing
 			once_status: "global"
 		once
-			create Result.make (False, "2F168FCD-732A-403a-BC44-945CB09BA43E")
+			create Result.make (False)
 		end
 
 end -- class CODE_SHARED_ACCESS_MUTEX

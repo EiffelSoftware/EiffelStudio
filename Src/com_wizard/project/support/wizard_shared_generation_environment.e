@@ -270,6 +270,10 @@ feature -- Access
 			tmp_string.to_lower
 			Result.force (tmp_string)
 
+			tmp_string := clone (Eof_word)
+			tmp_string.to_lower
+			Result.force (tmp_string)
+
 			Result.force (clone (Make_word))
 			Result.force (clone (Make_from_other))
 			Result.force (clone (Make_from_pointer))

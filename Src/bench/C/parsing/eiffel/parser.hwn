@@ -5,7 +5,11 @@ typedef union
 #endif
  {
 	char *node;
-	int32  value;
+
+	int32 value;
+
+	struct location *loc;
+
 	struct cr_struct {		/* Structure used for resolving conflicts on
 							 * feature declaration body 
 							 */

@@ -30,6 +30,7 @@ Ftp server: ftp.eiffel.com
 #include "eif_rtlimits.h" 	
 #include "eif_macros.h"
 #include "parser.h"
+#include "yacc.h"
 
 #define MAX_CHAR	256			/* Ascii limit */
 
@@ -52,8 +53,7 @@ static int 	process_bit();		/* Process bit value */
 
 extern int inherit_context;		/* Flag for context sensitivity of
 								 * token TE_END */
-extern int 	start_position,
-			end_position;		/* Position marks */
+extern struct location *current_location;		/* Position marks */
 
 extern char token_str[];		/* Buffer for ids and strings */
 
@@ -88,10 +88,12 @@ T		[0-9][0-9][0-9]
 U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
---.*						{	start_position = end_position;
-								end_position += yyleng;}
-[ \t\n\r]+					{	start_position = end_position;
-								end_position += yyleng;}
+--.*						{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;}
+[ \t\n\r]+					{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;}
 {D}+/".."					{return process_name(TE_INTEGER);}
 ";"							{return process(TE_SEMICOLON);}
 ":"							{return process(TE_COLON);}
@@ -142,8 +144,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 								} else
 									yyterminate();
 							}
-.							{	start_position = end_position;
-								end_position += yyleng;
+.							{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;
 								yyerror ((char *) 0);}
 %%
 
@@ -158,8 +161,9 @@ int token_code;
 	 * `end_position'.
 	 */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position += yyleng;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position += yyleng;
+	current_location->line_number = yylineno;
 	return token_code;
 }
 
@@ -245,10 +249,11 @@ static int get_char()
 
 	s = token_str;		/* Statically allocated buffer */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
+	current_location->line_number = yylineno;
 
-	c = input(); end_position++;
+	c = input(); current_location->end_position++;
 	if (c == 0 || c == (char) EOF)
 		/* Flex and lex don't return the same value on EOF */
 		/* Bad character: no more input */
@@ -260,7 +265,7 @@ static int get_char()
 			return EIF_ERROR5;
 		else {
 			*s++ = (int) char_value;
-			c = input(); end_position++;
+			c = input(); current_location->end_position++;
 			if (c == '\'') {
 				/* Recognition successfull */
 				*s = '\0';
@@ -282,16 +287,17 @@ static int get_string()
 
 	s = token_str;			/* Statically allocated buffer */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
+	current_location->line_number = yylineno;
 
 	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH && c != '\n') {
-		end_position++;
+		current_location->end_position++;
 		if (c == '%') {
 			extension = 0;
 			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
-				end_position++;
+				current_location->end_position++;
 			}
 			if (0 == extension) {
 				/* It is not an extension: unput read character and try
@@ -312,7 +318,7 @@ static int get_string()
 					/* Bad extension */
 					return EIF_ERROR3;
 				else
-					end_position++;
+					current_location->end_position++;
 			}
 		} else {
 			*s++ = c; n++;
@@ -325,7 +331,7 @@ static int get_string()
 			/* No final double-quote */
 		return EIF_ERROR4;
 	} else {
-		end_position++;
+		current_location->end_position++;
 		*s= '\0';
 		if (s == token_str)
 				/* empty string (it is allowed only in some
@@ -345,7 +351,7 @@ char c;
 	if (c != '%')
 		return (isprint(c) ? (int) c : -1);
 	else {
-		c = input(); end_position++;
+		c = input(); current_location->end_position++;
 		switch (c) {
 		case 'A': return (int) '@';
 		case 'B': return (int) '\b';
@@ -371,13 +377,13 @@ char c;
 		case '\000': return -1;
 		case '/':
             c = input();
-			end_position++;
+			current_location->end_position++;
 			for (i=1; i<4 && c != '/'; i++) {
 				if (c && (c >= '0' && c <= '9'))
 					dec_value =  dec_value * 10 + ((int) (c - '0')) ;
 				else
 					return -1;
-				c = input(); end_position++;
+				c = input(); current_location->end_position++;
 			}
 			return (((c == '/') && (i > 1) &&  (dec_value < MAX_CHAR)) ? dec_value : -1);
 		default: return -1;

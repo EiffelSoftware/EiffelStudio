@@ -16,6 +16,7 @@
 #include "eif_rtlimits.h"
 #include "eif_err_msg.h"
 #include <ctype.h>
+#include "yacc.h"
 
 /* private functions for lex */
 static int process();
@@ -24,7 +25,9 @@ static int get_string();
 static int eif_char();
 
 /* Global variables */
-extern int start_position, end_position;
+extern struct location *current_location;   /* Record the position of the first, and the 
+											 * last character in last token 
+											 * Record also the line number of the token */
 extern char token_str[];
 
 /* For gperf */
@@ -38,20 +41,20 @@ extern struct token *in_word_set2();
 %}
 
 %%
-[ \t\n\r]+								{	start_position = end_position;
-											end_position += xxleng;}
+[ \t\n\r]+								{	current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;}
 :										return process(LAC_COLUMN);
 ","										return process(LAC_COMMA);
---.*									{	start_position = end_position;
-											end_position += xxleng;}
+--.*									{	current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;}
 "("										return process(LAC_LEFT_PARAM);
 ")"										return process(LAC_RIGHT_PARAM);
 ";"										return process(LAC_SEMICOLON);
 \"										return get_string();
 ([a-z]|[A-Z])([a-z]|_|[A-Z]|[0-9])*		return process_name(LAC_IDENTIFIER);
 .										{	/* Unknown character */
-											start_position = end_position;
-											end_position += xxleng;
+											current_location->start_position = current_location->end_position;
+											current_location->end_position += xxleng;
 											xxerror ((char *) 0);}
 
 %%
@@ -62,8 +65,8 @@ int token_code;
 	/* Process a token updating global variables `start_position' and
 	 * `end_position'.
 	 */
-	start_position = end_position;
-	end_position += xxleng;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position += xxleng;
 	return token_code;
 }
 
@@ -118,16 +121,16 @@ static int get_string()
 	int		extension, n=0, char_value;
 
 	s = token_str;			/* Statically allocated buffer */
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
 
 	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH) {
-		end_position++;
+		current_location->end_position++;
 		if (c == '%') {
 			extension = 0;
 			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
-				end_position++;
+				current_location->end_position++;
 			}
 			if (0 == extension) {
 				/* It is not an extension: unput read character and try
@@ -148,7 +151,7 @@ static int get_string()
 					/* Bad extension */
 					return LAC_ERROR3;
 				else
-					end_position++;
+					current_location->end_position++;
 			}
 		} else {
 			*s++ = c; n++;
@@ -165,7 +168,7 @@ static int get_string()
 		if (s == token_str)
 			return LAC_ERROR6;
 		else
-			end_position++;
+			current_location->end_position++;
 			return LAC_STRING;
 	}
 }
@@ -179,7 +182,7 @@ char c;
 	if (c != '%')
 		return (isprint(c) ? (int) c : -1);
 	else {
-		c = input(); end_position++;
+		c = input(); current_location->end_position++;
 		switch (c) {
 		case 'A': return (int) '@';
 		case 'B': return (int) '\t';
@@ -205,14 +208,14 @@ char c;
 		case '\000': return -1;
 		case '/':
 			for (i=1; i<4; i++) {
-				c = input(); end_position++;
+				c = input(); current_location->end_position++;
 				if (c && (c >= '0' && c <= '9'))
 					dec_value += ((int) (c - '0')) *
 						(100 * (i == 1) + 10 * (i == 2) + (i == 3));
 				else
 					return -1;
 			}
-			c = input(); end_position++;
+			c = input(); current_location->end_position++;
 			return (((c == '/') && dec_value < 256) ? dec_value : -1);
 		default: return -1;
 		}

@@ -873,6 +873,7 @@ Ftp server: ftp.eiffel.com
 #include "eif_rtlimits.h" 	
 #include "eif_macros.h"
 #include "parser.h"
+#include "yacc.h"
 
 #define MAX_CHAR	256			/* Ascii limit */
 
@@ -895,8 +896,7 @@ static int 	process_bit();		/* Process bit value */
 
 extern int inherit_context;		/* Flag for context sensitivity of
 								 * token TE_END */
-extern int 	start_position,
-			end_position;		/* Position marks */
+extern struct location *current_location;		/* Position marks */
 
 extern char token_str[];		/* Buffer for ids and strings */
 
@@ -1136,212 +1136,214 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_USER_ACTION
 # line 91 "lexic.l"
-{	start_position = end_position;
-								end_position += yyleng;}
+{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;}
 	YY_BREAK
 case 2:
 YY_USER_ACTION
-# line 93 "lexic.l"
-{	start_position = end_position;
-								end_position += yyleng;}
+# line 94 "lexic.l"
+{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;}
 	YY_BREAK
 case 3:
 YY_USER_ACTION
-# line 95 "lexic.l"
+# line 97 "lexic.l"
 {return process_name(TE_INTEGER);}
 	YY_BREAK
 case 4:
 YY_USER_ACTION
-# line 96 "lexic.l"
+# line 98 "lexic.l"
 {return process(TE_SEMICOLON);}
 	YY_BREAK
 case 5:
 YY_USER_ACTION
-# line 97 "lexic.l"
+# line 99 "lexic.l"
 {return process(TE_COLON);}
 	YY_BREAK
 case 6:
 YY_USER_ACTION
-# line 98 "lexic.l"
+# line 100 "lexic.l"
 {return process(TE_COMMA);}
 	YY_BREAK
 case 7:
 YY_USER_ACTION
-# line 99 "lexic.l"
+# line 101 "lexic.l"
 {return process(TE_DOTDOT);}
 	YY_BREAK
 case 8:
 YY_USER_ACTION
-# line 100 "lexic.l"
+# line 102 "lexic.l"
 {return process(TE_DOT);}
 	YY_BREAK
 case 9:
 YY_USER_ACTION
-# line 101 "lexic.l"
+# line 103 "lexic.l"
 {return process(TE_ADDRESS);}
 	YY_BREAK
 case 10:
 YY_USER_ACTION
-# line 102 "lexic.l"
+# line 104 "lexic.l"
 {return process(TE_ASSIGN);}
 	YY_BREAK
 case 11:
 YY_USER_ACTION
-# line 103 "lexic.l"
+# line 105 "lexic.l"
 {return process(TE_ACCEPT);}
 	YY_BREAK
 case 12:
 YY_USER_ACTION
-# line 104 "lexic.l"
+# line 106 "lexic.l"
 {return process(TE_EQ);}
 	YY_BREAK
 case 13:
 YY_USER_ACTION
-# line 105 "lexic.l"
+# line 107 "lexic.l"
 {return process(TE_LT);}
 	YY_BREAK
 case 14:
 YY_USER_ACTION
-# line 106 "lexic.l"
+# line 108 "lexic.l"
 {return process(TE_GT);}
 	YY_BREAK
 case 15:
 YY_USER_ACTION
-# line 107 "lexic.l"
+# line 109 "lexic.l"
 {return process(TE_LE);}
 	YY_BREAK
 case 16:
 YY_USER_ACTION
-# line 108 "lexic.l"
+# line 110 "lexic.l"
 {return process(TE_GE);}
 	YY_BREAK
 case 17:
 YY_USER_ACTION
-# line 109 "lexic.l"
+# line 111 "lexic.l"
 {return process(TE_NE);}
 	YY_BREAK
 case 18:
 YY_USER_ACTION
-# line 110 "lexic.l"
+# line 112 "lexic.l"
 {return process(TE_LPARAN);}
 	YY_BREAK
 case 19:
 YY_USER_ACTION
-# line 111 "lexic.l"
+# line 113 "lexic.l"
 {return process(TE_RPARAN);}
 	YY_BREAK
 case 20:
 YY_USER_ACTION
-# line 112 "lexic.l"
+# line 114 "lexic.l"
 {return process(TE_LCURLY);}
 	YY_BREAK
 case 21:
 YY_USER_ACTION
-# line 113 "lexic.l"
+# line 115 "lexic.l"
 {return process(TE_RCURLY);}
 	YY_BREAK
 case 22:
 YY_USER_ACTION
-# line 114 "lexic.l"
+# line 116 "lexic.l"
 {return process(TE_LSQURE);}
 	YY_BREAK
 case 23:
 YY_USER_ACTION
-# line 115 "lexic.l"
+# line 117 "lexic.l"
 {return process(TE_RSQURE);}
 	YY_BREAK
 case 24:
 YY_USER_ACTION
-# line 116 "lexic.l"
+# line 118 "lexic.l"
 {return process(TE_PLUS);}
 	YY_BREAK
 case 25:
 YY_USER_ACTION
-# line 117 "lexic.l"
+# line 119 "lexic.l"
 {return process(TE_MINUS);}
 	YY_BREAK
 case 26:
 YY_USER_ACTION
-# line 118 "lexic.l"
+# line 120 "lexic.l"
 {return process(TE_STAR);}
 	YY_BREAK
 case 27:
 YY_USER_ACTION
-# line 119 "lexic.l"
+# line 121 "lexic.l"
 {return process(TE_SLASH);}
 	YY_BREAK
 case 28:
 YY_USER_ACTION
-# line 120 "lexic.l"
+# line 122 "lexic.l"
 {return process(TE_POWER);}
 	YY_BREAK
 case 29:
 YY_USER_ACTION
-# line 121 "lexic.l"
+# line 123 "lexic.l"
 {return process(TE_CONSTRAIN);}
 	YY_BREAK
 case 30:
 YY_USER_ACTION
-# line 122 "lexic.l"
+# line 124 "lexic.l"
 {return process(TE_BANG);}
 	YY_BREAK
 case 31:
 YY_USER_ACTION
-# line 123 "lexic.l"
+# line 125 "lexic.l"
 {return process(TE_LARRAY);}
 	YY_BREAK
 case 32:
 YY_USER_ACTION
-# line 124 "lexic.l"
+# line 126 "lexic.l"
 {return process(TE_RARRAY);}
 	YY_BREAK
 case 33:
 YY_USER_ACTION
-# line 125 "lexic.l"
+# line 127 "lexic.l"
 {return process_name(TE_FREE);}
 	YY_BREAK
 case 34:
 YY_USER_ACTION
-# line 126 "lexic.l"
+# line 128 "lexic.l"
 {return process(TE_DIV);}
 	YY_BREAK
 case 35:
 YY_USER_ACTION
-# line 127 "lexic.l"
+# line 129 "lexic.l"
 {return process(TE_MOD);}
 	YY_BREAK
 case 36:
 YY_USER_ACTION
-# line 128 "lexic.l"
+# line 130 "lexic.l"
 {return process_name(TE_ID);}
 	YY_BREAK
 case 37:
 YY_USER_ACTION
-# line 129 "lexic.l"
+# line 131 "lexic.l"
 {return process_bit();}
 	YY_BREAK
 case 38:
 YY_USER_ACTION
-# line 130 "lexic.l"
+# line 132 "lexic.l"
 {return process_int();}
 	YY_BREAK
 case 39:
 YY_USER_ACTION
-# line 131 "lexic.l"
+# line 133 "lexic.l"
 {return process_name(TE_REAL); }
 	YY_BREAK
 case 40:
 YY_USER_ACTION
-# line 132 "lexic.l"
+# line 134 "lexic.l"
 {return get_string();}
 	YY_BREAK
 case 41:
 YY_USER_ACTION
-# line 133 "lexic.l"
+# line 135 "lexic.l"
 {return get_char();}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-# line 134 "lexic.l"
+# line 136 "lexic.l"
 {
 								/* This rule has to be removed when compiling with `lex'.
 								 * and the extra rule: \1	{return process(TE_END);} has to be added
@@ -1356,14 +1358,15 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 42:
 YY_USER_ACTION
-# line 145 "lexic.l"
-{	start_position = end_position;
-								end_position += yyleng;
+# line 147 "lexic.l"
+{	current_location->start_position = current_location->end_position;
+								current_location->end_position += yyleng;
+								current_location->line_number = yylineno;
 								yyerror ((char *) 0);}
 	YY_BREAK
 case 43:
 YY_USER_ACTION
-# line 148 "lexic.l"
+# line 151 "lexic.l"
 ECHO;
 	YY_BREAK
 
@@ -2056,7 +2059,7 @@ void *ptr;
 	{
 	free( ptr );
 	}
-# line 148 "lexic.l"
+# line 151 "lexic.l"
 
 
 /*
@@ -2070,8 +2073,9 @@ int token_code;
 	 * `end_position'.
 	 */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position += yyleng;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position += yyleng;
+	current_location->line_number = yylineno;
 	return token_code;
 }
 
@@ -2157,10 +2161,11 @@ static int get_char()
 
 	s = token_str;		/* Statically allocated buffer */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
+	current_location->line_number = yylineno;
 
-	c = input(); end_position++;
+	c = input(); current_location->end_position++;
 	if (c == 0 || c == (char) EOF)
 		/* Flex and lex don't return the same value on EOF */
 		/* Bad character: no more input */
@@ -2172,7 +2177,7 @@ static int get_char()
 			return EIF_ERROR5;
 		else {
 			*s++ = (int) char_value;
-			c = input(); end_position++;
+			c = input(); current_location->end_position++;
 			if (c == '\'') {
 				/* Recognition successfull */
 				*s = '\0';
@@ -2194,16 +2199,17 @@ static int get_string()
 
 	s = token_str;			/* Statically allocated buffer */
 	inherit_context = 0;
-	start_position = end_position;
-	end_position++;
+	current_location->start_position = current_location->end_position;
+	current_location->end_position++;
+	current_location->line_number = yylineno;
 
 	while ((c = input()) != 0 && c != (char) EOF && c != '"' && n < STRINGLENGTH && c != '\n') {
-		end_position++;
+		current_location->end_position++;
 		if (c == '%') {
 			extension = 0;
 			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
-				end_position++;
+				current_location->end_position++;
 			}
 			if (0 == extension) {
 				/* It is not an extension: unput read character and try
@@ -2224,7 +2230,7 @@ static int get_string()
 					/* Bad extension */
 					return EIF_ERROR3;
 				else
-					end_position++;
+					current_location->end_position++;
 			}
 		} else {
 			*s++ = c; n++;
@@ -2237,7 +2243,7 @@ static int get_string()
 			/* No final double-quote */
 		return EIF_ERROR4;
 	} else {
-		end_position++;
+		current_location->end_position++;
 		*s= '\0';
 		if (s == token_str)
 				/* empty string (it is allowed only in some
@@ -2257,7 +2263,7 @@ char c;
 	if (c != '%')
 		return (isprint(c) ? (int) c : -1);
 	else {
-		c = input(); end_position++;
+		c = input(); current_location->end_position++;
 		switch (c) {
 		case 'A': return (int) '@';
 		case 'B': return (int) '\b';
@@ -2283,13 +2289,13 @@ char c;
 		case '\000': return -1;
 		case '/':
             c = input();
-			end_position++;
+			current_location->end_position++;
 			for (i=1; i<4 && c != '/'; i++) {
 				if (c && (c >= '0' && c <= '9'))
 					dec_value =  dec_value * 10 + ((int) (c - '0')) ;
 				else
 					return -1;
-				c = input(); end_position++;
+				c = input(); current_location->end_position++;
 			}
 			return (((c == '/') && (i > 1) &&  (dec_value < MAX_CHAR)) ? dec_value : -1);
 		default: return -1;

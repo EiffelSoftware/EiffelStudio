@@ -22,7 +22,6 @@ extern char	*lace_id();
  */
 
 extern char *token_string;	/* characters of the last recognized token */
-extern int start_position;	/* Position in text of the first character
-							 * in last token */
-extern int end_position;	/* Position in text of the last character in
-							 * last token */
+extern struct location *current_location;	/* Record the position of the first, and the
+											 * last character in last token
+											 * Record also the line number of the token */

@@ -29,8 +29,8 @@ feature {NONE} -- Implementation
 	loop_action is
 			-- Execute Current batch command.
 		do
-			if Eiffel_project.is_read_only then
-				io.error.put_string ("Read-only project: cannot compile.%N")
+			if not workbench_mode and then Eiffel_project.is_read_only then
+				io.error.put_string ("Read-only project: no C code to compile in F_code.%N")
 			else
 				Eiffel_project.call_finish_freezing_and_wait (workbench_mode)
 			end

@@ -93,9 +93,9 @@ feature {NONE} -- Implementation
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
-			--|FIXME Implement
+			--| FIXME To be implemented for pick-and-dropable.
 			check
-				False
+				to_be_implemented: False
 			end
 		end
 
@@ -103,9 +103,9 @@ feature {NONE} -- Implementation
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
-			--|FIXME Implement
+			--| FIXME To be implemented for pick-and-dropable.
 			check
-				False
+				to_be_implemented: False
 			end
 		end
 
@@ -115,27 +115,30 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_MENU_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/11 19:02:16  brendel
+--| Improved FIXME's and Copyright notice.
+--|
 --| Revision 1.20  2000/04/11 16:53:09  rogers
 --| Added internal_propagate_pointer_press and client_to_screen.
 --|

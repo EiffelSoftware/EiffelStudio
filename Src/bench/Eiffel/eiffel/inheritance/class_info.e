@@ -80,12 +80,12 @@ feature -- Access
 			if creators = Void then
 				-- Do nothing
 			elseif a_class.is_deferred then
-				!!vgcp1;
+				create vgcp1;
 				vgcp1.set_class (a_class);
 				Error_handler.insert_error (vgcp1);
 			else
 				from
-					!! Result.make (creators.count);
+					create Result.make (creators.count);
 					creators.start;
 				until
 					creators.after
@@ -107,13 +107,13 @@ feature -- Access
 							feature_name := feature_list.item.internal_name;
 							a_feature := feat_table.item (feature_name);
 							if a_feature = Void then
-								!!vgcp2;
+								create vgcp2;
 								vgcp2.set_class (a_class);
 								vgcp2.set_feature_name (feature_name);
 								Error_handler.insert_error (vgcp2);
 							else
 								if Result.has (feature_name) then
-									!!vgcp3;
+									create vgcp3;
 									vgcp3.set_class (a_class);
 									vgcp3.set_feature_name (feature_name);
 									Error_handler.insert_error (vgcp3);
@@ -121,7 +121,7 @@ feature -- Access
 									Result.put (export_status, feature_name);
 								end;
 								if not a_feature.type.is_void then
-									!!vgcp21;
+									create vgcp21;
 									vgcp21.set_class (a_class);
 									vgcp21.set_feature_name (feature_name);
 									Error_handler.insert_error (vgcp21);
@@ -134,7 +134,7 @@ feature -- Access
 										a_feature.argument_count > 0
 									)
 								then
-									!!vgcp4;
+									create vgcp4;
 									vgcp4.set_class (a_class);
 									vgcp4.set_feature_name (feature_name);
 									Error_handler.insert_error (vgcp4);

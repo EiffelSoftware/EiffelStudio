@@ -147,7 +147,7 @@ feature
 				end
 			end
  
-			{FEATURE_BL} Precursor (reg, typ)
+			Precursor {FEATURE_BL} (reg, typ)
  
 			buf.putchar ('(')
 			buf.putstring ("CURPROXY_OBJ(")

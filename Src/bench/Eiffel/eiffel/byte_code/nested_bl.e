@@ -169,7 +169,7 @@ feature
 		do
 			if message.target = message then
 					-- Reached last call
-				{NESTED_B} precursor
+				precursor {NESTED_B}
 					-- Free those registers which where kept because No_register
 					-- was propagated, hence call was meant to be expanded
 					-- in-line.

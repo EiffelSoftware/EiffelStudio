@@ -24,7 +24,7 @@ feature -- Access
 			body: FEATURE_AS
 			is_global_once: BOOLEAN
 		do
-			!! Result
+			create Result
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 			end

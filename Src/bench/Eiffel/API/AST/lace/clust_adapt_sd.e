@@ -27,13 +27,13 @@ feature {COMPILER_EXPORTER}
 			Result := True;
 				-- Existence of cluster
 			if cluster = Void then
-				!!vd03;
+				create vd03;
 				vd03.set_cluster_name (cluster_name);
 				Error_handler.insert_error (vd03);
 				Result := False;
 			elseif cluster = context.current_cluster then
 					-- Check if `cluster' is not the current analyzed one
-				!!vd05;
+				create vd05;
 				vd05.set_cluster_name (cluster_name);
 				Error_handler.insert_error (vd05);
 				Result := False;

@@ -57,7 +57,7 @@ feature -- Type check and byte code
 	byte_node: REAL_CONST_B is
 			-- Associated byte code
 		do
-			!! Result
+			create Result
 			Result.set_value (value)
 		end
 

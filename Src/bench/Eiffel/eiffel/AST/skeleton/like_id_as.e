@@ -87,13 +87,13 @@ feature -- Implementation of inherited deferred features
 						-- Update anchored type controler
 					Like_control.put (rout_id)
 						-- Create instance of LIKE_FEATURE
-					!! like_feature.make (anchor_feature)
+					create like_feature.make (anchor_feature)
 					like_feature.set_actual_type (anchor_type.solved_type (feat_table, anchor_feature).actual_type)
 					Result := like_feature
 					if System.in_pass3 then
 							-- There is a dependance between `f' and the `anchor_feature'
 							-- Record it for the propagation of the recompilations
-						!! depend_unit.make (context.current_class.class_id, anchor_feature)
+						create depend_unit.make (context.current_class.class_id, anchor_feature)
 						context.supplier_ids.extend (depend_unit)
 					end
 				end
@@ -115,14 +115,14 @@ feature -- Implementation of inherited deferred features
 						end
 						Like_control.arguments.put (argument_position)	
 						anchor_type := f.arguments.i_th (argument_position)
-						!!like_argument
+						create like_argument
 						like_argument.set_position (argument_position)
 						like_argument.set_actual_type
 						(anchor_type.solved_type (feat_table, f).actual_type)
 						Result := like_argument
 					end
 				else
-					!!veen
+					create veen
 					veen.set_class (System.current_class)
 					veen.set_feature (f)
 					veen.set_identifier (anchor)
@@ -140,7 +140,7 @@ feature -- Output
 	dump: STRING is
 			-- Dump string
 		do
-			!! Result.make (5 + anchor.count)
+			create Result.make (5 + anchor.count)
 			Result.append ("like ")
 			Result.append (anchor)
 		end

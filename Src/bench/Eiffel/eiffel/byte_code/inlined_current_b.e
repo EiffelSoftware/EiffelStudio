@@ -26,7 +26,7 @@ feature -- Register and code generation
 
 	Current_register: INLINED_CURRENT_B is
 		once
-			!!Result
+			create Result
 		end
 
 	propagate (r: REGISTRABLE) is

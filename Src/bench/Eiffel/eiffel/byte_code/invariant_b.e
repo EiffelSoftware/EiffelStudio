@@ -192,7 +192,7 @@ feature -- Byte code geenration
 	Temp_byte_code_array: BYTE_ARRAY is
 			-- Temporary byte code array
 		once
-			!!Result.make;
+			create Result.make;
 		end;
 
 end

@@ -50,7 +50,7 @@ feature -- Type check, byte code and dead code removal
 	byte_node: PARAN_B is
 			-- Associated byte code
 		do
-			!! Result
+			create Result
 			Result.set_expr (expr.byte_node)
 		end
 

@@ -310,11 +310,11 @@ feature -- Settings
 			if arguments /= Void then
 				count := arguments.count
 				if generate_current then
-					!! Result.make (1, count + 1)
+					create Result.make (1, count + 1)
 					Result.put ("Current", 1)
 					j := 2
 				else
-					!! Result.make (1, count)
+					create Result.make (1, count)
 					j := 1
 				end
 				from
@@ -329,10 +329,10 @@ feature -- Settings
 					j := j + 1
 				end
 			elseif generate_current then
-				!! Result.make (1, 1)
+				create Result.make (1, 1)
 				Result.put ("Current", 1)
 			else
-				!! Result.make (1, 0)
+				create Result.make (1, 0)
 			end
 		end
 
@@ -376,11 +376,11 @@ feature -- Settings
 			if arguments /= Void then
 				count := arguments.count
 				if generate_current then
-					!! Result.make (1, count + 1)
+					create Result.make (1, count + 1)
 					Result.put ("EIF_REFERENCE", 1)
 					j := 2
 				else
-					!! Result.make (1, count)
+					create Result.make (1, count)
 					j := 1
 				end
 				from
@@ -394,10 +394,10 @@ feature -- Settings
 					j := j + 1
 				end
 			elseif generate_current then
-				!! Result.make (1, 1)
+				create Result.make (1, 1)
 				Result.put ("EIF_REFERENCE", 1)
 			else
-				!! Result.make (1, 0)
+				create Result.make (1, 0)
 			end
 		ensure
 			argument_types_not_void: Result /= Void
@@ -1114,7 +1114,7 @@ end
 	Temp_byte_code_array: BYTE_ARRAY is
 			-- Temporary byte code array
 		once
-			!!Result.make
+			create Result.make
 		end
 
 feature -- Array optimization

@@ -66,7 +66,7 @@ feature -- Type check and byte code
 					context.current_feature.argument_position (id_as) /= 0
 					or else context.locals.item (id_as) /= Void
 				then
-					!!vomb2
+					create vomb2
 					context.init_error (vomb2)
 					if Inspect_control.integer_type then
 						vomb2.set_type (integer_type)
@@ -75,7 +75,7 @@ feature -- Type check and byte code
 					end
 					Error_handler.insert_error (vomb2)
 				elseif not context.current_class.feature_table.has (id_as) then
-					!! veen
+					create veen
 					context.init_error (veen)
 					veen.set_identifier (id_as)
 					Error_handler.insert_error (veen)
@@ -130,7 +130,7 @@ feature -- Type check and byte code
 				end
 			end;	
 			if error_found then
-				!!vomb2
+				create vomb2
 				context.init_error (vomb2)
 				vomb2.set_type (error_type)
 				Error_handler.insert_error (vomb2)

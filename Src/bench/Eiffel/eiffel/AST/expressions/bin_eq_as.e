@@ -49,7 +49,7 @@ feature -- Type check, byte code and dead code removal
 			if not (left_type.conform_to (right_type.actual_type)
 					or else right_type.conform_to (left_type.actual_type))
 			then
-				!! vweq
+				create vweq
 				context.init_error (vweq)
 				vweq.set_left_type (left_type)
 				vweq.set_right_type (right_type)
@@ -72,7 +72,7 @@ feature -- Type check, byte code and dead code removal
 	byte_anchor: BIN_EQUAL_B is
 			-- Byte code type
 		do
-			!BIN_EQ_B! Result
+			create {BIN_EQ_B} Result
 		end
  
 end -- class BIN_EQ_AS

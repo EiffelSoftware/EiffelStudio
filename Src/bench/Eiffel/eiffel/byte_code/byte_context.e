@@ -13,7 +13,7 @@ inherit
 	SHARED_GENERATION
 	COMPILER_EXPORTER
 
-creation
+create
 	make, make_from_context
 
 feature -- Initialization
@@ -252,7 +252,7 @@ feature -- Setting
 
 	Current_b: CURRENT_BL is
 		once
-			!! Result
+			create Result
 		end
 
 	Result_register: RESULT_B is
@@ -267,8 +267,8 @@ feature -- Setting
 				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
-			!! dummy
-			!RESULT_BL! Result.make (dummy)
+			create dummy
+			create {RESULT_BL} Result.make (dummy)
 		end
 
 	register_server: REGISTER_SERVER
@@ -800,7 +800,7 @@ feature -- Setting
 		do
 				--! Did this so it won't effect any old_expression
 				--! referencing this object.
-			!!old_expressions.make
+			create old_expressions.make
 		end
 
 	clear_all is
@@ -893,7 +893,7 @@ feature -- Setting
 			-- (In case GC hooks are needed, we might need to refer to the
 			-- variable via the local l[] array.)
 		once
-			!!Result
+			create Result
 		end
 
 	Arg_var: ARGUMENT_B is
@@ -902,7 +902,7 @@ feature -- Setting
 			-- variable via the local l[] array.)
 		once
 				-- FIXME???? -- at least the comment part
-			!!Result
+			create Result
 		end
 
 	generate_current_dtype is

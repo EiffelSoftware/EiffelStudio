@@ -60,7 +60,7 @@ feature -- Type check, byte code and dead code removal
 			t := context.item
 			if t.is_separate then
 				if not target.is_argument then
-					!! not_supported
+					create not_supported
 					context.init_error (not_supported)
 					not_supported.set_message ("Invalid separate call")
 					Error_handler.insert_error (not_supported)
@@ -84,7 +84,7 @@ feature -- Type check, byte code and dead code removal
 			t: ACCESS_B
 			m: CALL_B
 		do
-			!! Result
+			create Result
 			t := target.byte_node
 			t.set_parent (Result)
 			Result.set_target (t)

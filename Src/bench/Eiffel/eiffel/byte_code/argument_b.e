@@ -53,7 +53,7 @@ feature
 		local
 			arg_bl: ARGUMENT_BL
 		do
-			!!arg_bl;
+			create arg_bl;
 			arg_bl.fill_from (Current);
 			Result := arg_bl
 		end;
@@ -61,7 +61,7 @@ feature
 	register_name: STRING is
 			-- The "arg<num>" string
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.append ("arg");
 			Result.append (position.out);
 		end;
@@ -104,7 +104,7 @@ feature -- Inlining
 
 	pre_inlined_code: INLINED_ARG_B is
 		do
-			!!Result;
+			create Result;
 			Result.fill_from (Current)
 		end
 

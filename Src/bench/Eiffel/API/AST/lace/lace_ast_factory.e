@@ -61,7 +61,7 @@ feature -- Access
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		do
-			!! Result.initialize (s)
+			create Result.initialize (s)
 			if is_str then
 				Result.set_is_string
 			end
@@ -75,7 +75,7 @@ feature -- Access
 		require
 			cn_not_void: cn /= Void
 		do
-			!! Result.initialize (cn, vn, cr, er, r)
+			create Result.initialize (cn, vn, cr, er, r)
 		ensure
 			clas_visi_sd_not_void: Result /= Void
 			class_name_set: Result.class_name = cn

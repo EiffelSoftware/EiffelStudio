@@ -28,13 +28,13 @@ feature
 	type: POINTER_I is
 			-- Address type
 		once
-			!!Result;
+			create Result;
 		end;
 
 	enlarged: EXPR_ADDRESS_BL is
 			-- Enlarge the expression
 		do
-			!! Result;
+			create Result;
 			Result.set_expr (expr.enlarged)
 		end;
 

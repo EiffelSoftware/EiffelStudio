@@ -249,17 +249,17 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			cluster := context.current_cluster;
 			if use_name /= Void then
 				path := Environ.interpreted_string (use_name);
-				!!use_file_path.make_from_string (cluster.path);
+				create use_file_path.make_from_string (cluster.path);
 				use_file_path.set_file_name (path);
-				!! use_file.make (use_file_path);
+				create use_file.make (use_file_path);
 				if (not use_file.exists) or else use_file.is_directory then
-					!!vd02;
+					create vd02;
 					vd02.set_cluster (cluster);
 					vd02.set_use_name (use_file_path);
 					Error_handler.insert_error (vd02);
 					Error_handler.raise_error;
 				elseif not use_file.is_readable then
-					!!vd21;
+					create vd21;
 					vd21.set_file_name (use_file_path);
 					vd21.set_cluster (cluster);
 					Error_handler.insert_error (vd21);
@@ -271,7 +271,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					if cluster_prop /= Void then	
 							-- Local ace cannot have a use clause
 						if cluster_prop.use_name /= Void then
-							!!vduc;
+							create vduc;
 							vduc.set_cluster (cluster);
 							vduc.set_use_name (cluster_prop.use_name);
 							Error_handler.insert_error (vduc);
@@ -370,13 +370,13 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				d := l.item;
 				if d.option.is_valid then
 					if d.option.is_system_level_only then
-						!!vd36;
+						create vd36;
 						vd36.set_cluster (context.current_cluster);
 						vd36.set_option_name (d.option.option_name);
 						Error_handler.insert_error (vd36);
 					end;
 				else
-					!!vd32;
+					create vd32;
 					vd32.set_option_name (d.option.option_name);
 					Error_handler.insert_error (vd32);
 				end

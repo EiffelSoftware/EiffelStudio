@@ -96,7 +96,7 @@ feature -- Type check, byte code and dead code removal
 				Result.set_compound (compound.byte_node)
 				if keys /= Void then
 					from
-						!!node_keys.make (0)
+						create node_keys.make (0)
 						node_keys.start
 						keys.start
 					until

@@ -141,7 +141,7 @@ feature -- Status report
 		local
 			omap_enl : ARRAY_CONST_B
 		do
-			!!Result
+			create Result
 
 			if open_positions /= Void then
 				omap_enl := open_positions.enlarged

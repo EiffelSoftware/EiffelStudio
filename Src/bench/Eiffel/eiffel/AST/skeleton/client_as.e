@@ -91,11 +91,11 @@ feature -- Initialization
 			if clients.count = 1 and then ("none").is_equal (clients.first) then
 			   Result := Export_none
 			else
-				!!client_i
+				create client_i
 				client_i.set_clients (clients)
 					-- Current class in second pass...
 				client_i.set_written_in (System.current_class.class_id)
-				!!export_set.make
+				create export_set.make
 				export_set.compare_objects
 				export_set.put (client_i)
 				Result := export_set

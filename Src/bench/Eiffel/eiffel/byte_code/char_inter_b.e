@@ -7,7 +7,7 @@ inherit
 			lower, upper, generate
 		end
 
-creation
+create
 
 	make
 	
@@ -94,7 +94,7 @@ feature -- Checking
 			else
 				new_upper := other.upper;
 			end;
-			!!Result.make (new_lower, new_upper);
+			create Result.make (new_lower, new_upper);
 		end;
 
 invariant

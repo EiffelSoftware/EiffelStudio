@@ -919,8 +919,8 @@ feature {NONE} -- Initialization
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			!! token_buffer.make (Initial_buffer_size)
-			!! current_position.reset
+			create token_buffer.make (Initial_buffer_size)
+			create current_position.reset
 		end
 
 feature -- Initialization

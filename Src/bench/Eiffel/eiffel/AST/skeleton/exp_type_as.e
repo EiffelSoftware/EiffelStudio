@@ -38,7 +38,7 @@ feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
-			Result := {CLASS_TYPE_AS} Precursor (feat_table, f)
+			Result := Precursor {CLASS_TYPE_AS} (feat_table, f)
 			if not Result.is_basic then
 				Result.set_is_true_expanded (True)
 			end
@@ -48,7 +48,7 @@ feature
 	actual_type: CL_TYPE_A is
 			-- Expanded actual class type
 		do
-			Result := {CLASS_TYPE_AS} Precursor
+			Result := Precursor {CLASS_TYPE_AS}
 			if not Result.is_basic then
 				Result.set_is_true_expanded (True)
 			end
@@ -60,9 +60,9 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!! Result.make (class_name.count + 9)
+			create Result.make (class_name.count + 9)
 			Result.append ("expanded ")
-			Result.append ({CLASS_TYPE_AS} Precursor)
+			Result.append (Precursor {CLASS_TYPE_AS})
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -72,7 +72,7 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_text_item (ti_Expanded_keyword)
 			ctxt.put_space
-			{CLASS_TYPE_AS} Precursor (ctxt)
+			Precursor {CLASS_TYPE_AS} (ctxt)
 		end
 
 end -- class EXP_TYPE_AS

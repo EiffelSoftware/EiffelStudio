@@ -57,7 +57,7 @@ feature -- Type check, byte code and dead code removal
 
 			internal_name := feature_name.internal_name
 
-			!! access_address.make (internal_name)
+			create access_address.make (internal_name)
 			id_type := access_address.access_type
 
 			access_b := context.access_line.access
@@ -67,7 +67,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			if access_b.is_external then
-				!! not_supported
+				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("The $ operator is not supported on external features")
 				Error_handler.insert_error (not_supported)
@@ -96,7 +96,7 @@ feature -- Type check, byte code and dead code removal
 				create address.make (context.current_class.class_id, a_feature)
 				Result := address
 			else
-				!! hector.make (access)
+				create hector.make (access)
 				Result := hector
 			end
 		end

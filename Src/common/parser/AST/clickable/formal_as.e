@@ -54,7 +54,7 @@ feature -- Output
 
 	dump: STRING is
 		do
-			!!Result.make (12);
+			create Result.make (12);
 			Result.append ("Generic #");
 			Result.append_integer (position);
 		end

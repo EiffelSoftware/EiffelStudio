@@ -21,7 +21,7 @@ feature -- Properties
 	byte_anchor: BIN_EQUAL_B is
 			-- Byte code type
 		do
-			!BIN_NE_B! Result
+			create {BIN_NE_B} Result
 		end
 
 end -- class BIN_NE_AS

@@ -40,7 +40,7 @@ feature
 		do
 			context.init_propagation;
 			expr.analyze;
-			!!ref_register.make (Reference_c_type);
+			create ref_register.make (Reference_c_type);
 			register := ref_register;
 		end;
 

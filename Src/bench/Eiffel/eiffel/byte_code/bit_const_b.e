@@ -36,14 +36,14 @@ feature -- Status report
 	type: BIT_I is
 			-- Integer type
 		do
-			!!Result;
+			create Result;
 			Result.set_size (value.count);
 		end;
 
 	enlarged: BIT_CONST_BL is
 			-- Enlarged node
 		do
-			!!Result;
+			create Result;
 			Result.set_value (value)
 		end;
 

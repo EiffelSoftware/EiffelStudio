@@ -105,9 +105,9 @@ feature -- Byte code generation
 			unary_not: UN_NOT_B;
 			binary_or_else: B_OR_ELSE_B;
 		do
-			!!unary_not;
+			create unary_not;
 			unary_not.set_expr (left);
-			!!binary_or_else;
+			create binary_or_else;
 			binary_or_else.set_left (unary_not);
 			binary_or_else.set_right (right);
 			binary_or_else.make_standard_byte_code (ba);

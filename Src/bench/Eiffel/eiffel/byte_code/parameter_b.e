@@ -87,7 +87,7 @@ feature
 	enlarged:  PARAMETER_BL is
 			-- Enlarge the expression
 		do
-			!!Result;
+			create Result;
 			Result.fill_from (Current);
 		end;
 

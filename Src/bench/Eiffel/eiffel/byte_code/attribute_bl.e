@@ -46,14 +46,14 @@ feature
 			if real_type (type).is_none then
 				buffer.putstring ("(EIF_REFERENCE) 0")
 			else
-				{ATTRIBUTE_B} Precursor
+				Precursor {ATTRIBUTE_B}
 			end
 		end
 
 	free_register is
 			-- Free registers
 		do
-			{ATTRIBUTE_B} Precursor	
+			Precursor {ATTRIBUTE_B}	
 			if basic_register /= Void then
 				basic_register.free_register
 			end
@@ -97,7 +97,7 @@ end
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				!!tmp_register.make (Reference_c_type)
+				create tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
 			end
 debug
@@ -111,7 +111,7 @@ end
 			-- Generation of access
 		do
 			if not real_type (type).is_none then
-				{ATTRIBUTE_B} Precursor
+				Precursor {ATTRIBUTE_B}
 			end
 		end
 

@@ -83,7 +83,7 @@ feature
 			tmp_register: REGISTER;
 		do
 			if left_register = Void then
-				!!tmp_register.make (Reference_c_type);
+				create tmp_register.make (Reference_c_type);
 				set_left_register (tmp_register);
 			end;
 		end;
@@ -94,7 +94,7 @@ feature
 			tmp_register: REGISTER;
 		do
 			if right_register = Void then
-				!!tmp_register.make (Reference_c_type);
+				create tmp_register.make (Reference_c_type);
 				set_right_register (tmp_register);
 			end;
 		end;

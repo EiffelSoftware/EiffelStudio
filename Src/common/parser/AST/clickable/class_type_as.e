@@ -117,7 +117,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 		local
 			dumped_class_name: STRING;
 		do
-			!!Result.make (class_name.count);
+			create Result.make (class_name.count);
 			create dumped_class_name.make_from_string (class_name)
 			dumped_class_name.to_upper;
 			Result.append (dumped_class_name);

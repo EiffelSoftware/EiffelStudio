@@ -26,7 +26,7 @@ feature {COMPILER_EXPORTER}
 			if value /= Void then
 				document_name := value.value;	
 				if list = Void then
-					!! d_name.make_from_string (document_name);
+					create d_name.make_from_string (document_name);
 				else
 					error_raised := True;
 					error (value);

@@ -34,9 +34,9 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			!! token_buffer.make (Initial_buffer_size)
-			!! verbatim_marker.make (Initial_verbatim_marker_size)
-			!! current_position.reset
+			create token_buffer.make (Initial_buffer_size)
+			create verbatim_marker.make (Initial_verbatim_marker_size)
+			create current_position.reset
 			line_number := 1
 			filename := ""
 		end
@@ -101,7 +101,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -111,7 +111,7 @@ feature -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -127,7 +127,7 @@ feature -- Error handling
 		local
 			an_error: BAD_CHARACTER
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -141,7 +141,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -154,7 +154,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -169,7 +169,7 @@ feature -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -188,7 +188,7 @@ feature -- Error handling
 		local
 			an_error: VERBATIM_STRING_UNCOMPLETED
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -205,7 +205,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			!! Result.make (a_string.count)
+			create Result.make (a_string.count)
 			Result.append_string (a_string)
 		ensure
 			cloned_string_not_void: Result /= Void
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		do
-			!! Result.make (a_string.count)
+			create Result.make (a_string.count)
 			Result.append_string (a_string)
 			Result.to_lower
 		ensure

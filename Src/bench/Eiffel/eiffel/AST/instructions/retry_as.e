@@ -48,7 +48,7 @@ feature -- Type check and byte code
 	byte_node: RETRY_B is
 			-- Associated byte code
 		do
-			!!Result
+			create Result
 			Result.set_line_number (line_number)
 		end
 
@@ -59,7 +59,7 @@ feature -- Type check and byte code
 		do
 			if not context.level3 then
 					-- Retry instruction outside a recue clause
-				!!vxrt
+				create vxrt
 				context.init_error (vxrt)
 				Error_handler.insert_error (vxrt)
 			end

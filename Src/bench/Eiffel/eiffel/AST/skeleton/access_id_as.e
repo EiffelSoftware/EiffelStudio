@@ -65,7 +65,7 @@ feature
 				Result ?= a_feature.arguments.i_th (argument_position)
 				Result := Result.actual_type.instantiation_in (last_type, last_id)
 				error_found := parameters /= Void
-				!! argument_b
+				create argument_b
 				argument_b.set_position (argument_position)
 				context.access_line.insert (argument_b)
 			else
@@ -76,7 +76,7 @@ feature
 					error_found := parameters /= Void
 					Result := local_info.actual_type
 					Result := Result.actual_type.instantiation_in (last_type, last_id)
-					!! local_b
+					create local_b
 					local_b.set_position (local_info.position)
 					context.access_line.insert (local_b)
 		
@@ -86,7 +86,7 @@ feature
 							--|in the context of assertions we would have
 							--|ACCESS_ASSERT_AS and not ACCESS_ID_AS objects.
 							--|(Fred)
-						!! veen2B
+						create veen2B
 						context.init_error (veen2B)
 						veen2B.set_identifier (feature_name)
 						Error_handler.insert_error (veen2B)
@@ -97,7 +97,7 @@ feature
 				end
 			end
 			if error_found then
-				!! vuar1
+				create vuar1
 				if argument_position /= 0 then
 					vuar1.set_arg_name (feature_name)
 				else

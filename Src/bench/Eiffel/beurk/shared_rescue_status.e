@@ -5,7 +5,7 @@ feature
 
 	Rescue_status: RESCUE_STATUS is
 		once
-			!! Result
+			create Result
 		end
 
 end

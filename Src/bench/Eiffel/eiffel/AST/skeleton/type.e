@@ -91,7 +91,7 @@ feature
 			vcfg3: VCFG3;
 		do
 			if has_like then
-				!!vcfg3;
+				create vcfg3;
 				vcfg3.set_class (a_class);
 				vcfg3.set_formal_name ("Constraint genericity");
 				Error_handler.insert_error (vcfg3);

@@ -89,7 +89,7 @@ feature -- Type check, byte code and dead code removal
 				if expression /= Void then
 					expression.type_check
 				else
-					!!open_type
+					create open_type
 					context.put (open_type)
 				end
 			end
@@ -99,12 +99,12 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte code.
 		do
 			if class_type /= Void then
-				!OPERAND_B!Result
+				create {OPERAND_B} Result
 			else
 				if expression /= Void then
 					Result := expression.byte_node
 				else
-					!OPERAND_B!Result
+					create {OPERAND_B} Result
 				end
 			end
 		end
@@ -197,7 +197,7 @@ feature {NONE}  -- Type
 			if ttype.has_like then
 				-- Not supported - doesn't make sense
 				-- anyway.
-				!!not_supported
+				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Type qualifiers in delayed calls may not involve anchors.")
 				Error_handler.insert_error (not_supported)
@@ -225,7 +225,7 @@ feature {NONE}  -- Type
 				-- Not supported. May change in the future - M.S.
 				-- Reason: We cannot call a feature with basic
 				-- call target!
-				!!not_supported
+				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Type qualifiers in delayed calls may not be a basic type.")
 				Error_handler.insert_error (not_supported)

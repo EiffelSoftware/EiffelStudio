@@ -277,7 +277,7 @@ feature -- Conveniences
 			is_tuple_type : BOOLEAN
 		do
 			if has_like then
-				!!vcfg3
+				create vcfg3
 				vcfg3.set_class (a_class)
 				vcfg3.set_formal_name ("Constraint genericity")
 				Error_handler.insert_error (vcfg3)
@@ -285,7 +285,7 @@ feature -- Conveniences
 				cluster := a_class.cluster
 				class_i := Universe.class_named (class_name, cluster)
 				if class_i = Void then
-					!!vtct
+					create vtct
 					vtct.set_class (a_class)
 					vtct.set_class_name (class_name)
 					Error_handler.insert_error (vtct)
@@ -298,12 +298,12 @@ feature -- Conveniences
 					if not is_tuple_type then
 						if generics /= Void then
 							if (cl_generics = Void) then
-								!VTUG1!vtug
+								create {VTUG1} vtug
 							elseif (cl_generics.count /= generics.count) then
-								!VTUG2!vtug
+								create {VTUG2} vtug
 							end
 						elseif cl_generics /= Void then
-							!VTUG2!vtug
+							create {VTUG2} vtug
 						end
 					end
 					if vtug /= Void then
@@ -315,7 +315,7 @@ feature -- Conveniences
 						if not is_tuple_type then
 							from
 								temp := cl_generics
-								!! cl_generics.make_filled (temp.count)
+								create cl_generics.make_filled (temp.count)
 								pos := temp.index
 								temp.start
 							until
@@ -384,11 +384,11 @@ feature -- Conveniences
 				c_class.set_has_expanded
 				a_class.set_is_used_as_expanded
 				if System.in_pass3 then
-					!!d.make_expanded_unit (a_class.class_id)
+					create d.make_expanded_unit (a_class.class_id)
 					context.supplier_ids.extend (d)
 					f := a_class.creation_feature
 					if f /= Void then
-						!!d.make (a_class.class_id, f)
+						create d.make (a_class.class_id, f)
 						context.supplier_ids.extend (d)
 					end
 				end
@@ -499,7 +499,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 		local
 			dumped_class_name: STRING
 		do
-			!! Result.make (class_name.count)
+			create Result.make (class_name.count)
 			dumped_class_name := clone (class_name)
 			dumped_class_name.to_upper
 			Result.append (dumped_class_name)

@@ -20,11 +20,11 @@ feature
 			attr_bws: ATTRIBUTE_BWS
 		do
 			if context.final_mode then
-				!! attr_bls
+				create attr_bls
 				attr_bls.fill_from (Current)
 				Result := attr_bls
 			else
-				!! attr_bws
+				create attr_bws
 				attr_bws.fill_from (Current)
 				Result := attr_bws
 			end

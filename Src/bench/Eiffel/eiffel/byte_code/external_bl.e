@@ -49,7 +49,7 @@ feature
 	free_register is
 			-- Free registers
 		do
-			{EXTERNAL_B} Precursor;
+			Precursor {EXTERNAL_B};
 			if basic_register /= Void then
 				basic_register.free_register;
 			end;
@@ -72,7 +72,7 @@ feature
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				!!tmp_register.make (Reference_c_type);
+				create tmp_register.make (Reference_c_type);
 				basic_register := tmp_register;
 			end;
 			if parameters /= Void then
@@ -472,7 +472,7 @@ feature
 					then
 						parameters.replace (expr_b.enlarged);
 					else
-						!!protect_b;
+						create protect_b;
 						protect_b.set_expr (expr_b.enlarged);
 						parameters.replace (protect_b);
 					end;

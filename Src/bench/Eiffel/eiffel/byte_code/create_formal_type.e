@@ -14,7 +14,7 @@ inherit
 			analyze, generate_il, type
 		end
 
-creation
+create
 	make
 
 feature -- Access

@@ -47,7 +47,7 @@ feature
 	creation_access (t: TYPE_I): LOCAL_CR_B is
 			-- Creation access for a local variable
 		do
-			!!Result.make (t)
+			create Result.make (t)
 			Result.set_position (position)
 		end
 
@@ -67,7 +67,7 @@ feature
 		local
 			loc_bl: LOCAL_BL
 		do
-			!!loc_bl
+			create loc_bl
 			loc_bl.fill_from (Current)
 			Result := loc_bl
 		end
@@ -75,7 +75,7 @@ feature
 	register_name: STRING is
 			-- The "loc<num>" string
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.append ("loc")
 			Result.append (position.out)
 		end
@@ -159,7 +159,7 @@ feature -- Inlining
 
 	pre_inlined_code: INLINED_LOCAL_B is
 		do
-			!!Result
+			create Result
 			Result.fill_from (Current)
 		end
 

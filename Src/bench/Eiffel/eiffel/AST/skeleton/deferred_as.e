@@ -51,7 +51,7 @@ feature -- byte code
 	byte_node: DEF_BYTE_CODE is
 			-- Byte code for deferred feature
 		do
-			!! Result
+			create Result
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -172,7 +172,7 @@ feature {COMPILER_EXPORTER}
 				loop
 					if clusters.item.classes.has (root_name) then
 						if found then
-							!!vd29;
+							create vd29;
 							vd29.set_cluster (cluster);
 							vd29.set_second_cluster_name (clusters.item.cluster_name);
 							vd29.set_root_class_name (root_name);
@@ -186,7 +186,7 @@ feature {COMPILER_EXPORTER}
 					clusters.forth;
 				end;
 				if not found then
-					!!vd30;
+					create vd30;
 					vd30.set_root_class_name (root_name);
 					Error_handler.insert_error (vd30);
 					Error_handler.checksum;
@@ -195,14 +195,14 @@ feature {COMPILER_EXPORTER}
 				cluster := Universe.cluster_of_name (cluster_mark);
 			end;
 			if cluster = Void then
-				!!vd19;
+				create vd19;
 				vd19.set_root_cluster_name (cluster_mark);
 				Error_handler.insert_error (vd19);
 			else
 				System.set_root_cluster (cluster);
 				a_class := cluster.classes.item (root_name);
 				if a_class = Void then
-					!!vd20;
+					create vd20;
 					vd20.set_cluster (cluster);
 					vd20.set_class_name (root_name);
 					Error_handler.insert_error (vd20);
@@ -226,13 +226,13 @@ feature {NONE}
 
 	any_sd: ID_SD is
 		once
-			!!Result.make (3);
+			create Result.make (3);
 			Result.append ("any")
 		end;
 
 	none_sd: ID_SD is
 		once
-			!!Result.make (4);
+			create Result.make (4);
 			Result.append ("none")
 		end;
 

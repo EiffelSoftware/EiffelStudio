@@ -37,9 +37,9 @@ feature {NONE} -- Initialization
 		do
 			make_eiffel_scanner
 			make_parser_skeleton
-			!! click_list.make (Initial_click_list_capacity)
-			!! suppliers.make
-			!! formal_parameters.make (Initial_formal_parameters_capacity)
+			create click_list.make (Initial_click_list_capacity)
+			create suppliers.make
+			create formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
 			id_level := Normal_level
 		end
@@ -70,8 +70,8 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			!! click_list.make (Initial_click_list_capacity)
-			!! suppliers.make
+			create click_list.make (Initial_click_list_capacity)
+			create suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
 			real_class_end_position := 0
@@ -618,7 +618,7 @@ feature {NONE} -- Clickable factory
 			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
 				current_position.start_position, current_position.end_position)
 			click_list.extend (click_ast)
-			!! Result
+			create Result
 			Result.set_first (an_id)
 			Result.set_second (click_ast)
 		ensure
@@ -638,7 +638,7 @@ feature {NONE} -- Clickable factory
 			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
 				current_position.start_position, current_position.end_position)
 			click_list.extend (click_ast)
-			!! Result
+			create Result
 			Result.set_first (a_string)
 			Result.set_second (click_ast)
 		ensure
@@ -660,7 +660,7 @@ feature {NONE} -- Clickable factory
 			click_ast := ci.second
 			feature_name := new_feature_name_id_as (ci.first, is_frozen)
 			click_ast.set_node (feature_name)
-			!! Result
+			create Result
 			Result.set_first (feature_name)
 			Result.set_second (click_ast)
 		ensure
@@ -682,7 +682,7 @@ feature {NONE} -- Clickable factory
 			click_ast := cs.second
 			feature_name := new_infix_as (cs.first, is_frozen)
 			click_ast.set_node (feature_name)
-			!! Result
+			create Result
 			Result.set_first (feature_name)
 			Result.set_second (click_ast)
 		ensure
@@ -704,7 +704,7 @@ feature {NONE} -- Clickable factory
 			click_ast := cs.second
 			feature_name := new_prefix_as (cs.first, is_frozen)
 			click_ast.set_node (feature_name)
-			!! Result
+			create Result
 			Result.set_first (feature_name)
 			Result.set_second (click_ast)
 		ensure
@@ -725,7 +725,7 @@ feature {NONE} -- Clickable factory
 		do
 			feature_name_list := new_eiffel_list_feature_name (n)
 			feature_name_list.extend (fn.first)
-			!! Result
+			create Result
 			Result.set_first (feature_name_list)
 			Result.set_second (fn.second)
 		ensure
@@ -853,7 +853,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: BASIC_GEN_TYPE_ERR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -866,7 +866,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -879,7 +879,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -890,7 +890,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
+			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

@@ -78,7 +78,7 @@ feature -- Code generation
 	enlarged: TUPLE_CONST_BL is
 			-- Enlarge node
 		do
-			!!Result;
+			create Result;
 			Result.set_expressions (expressions);
 			Result.set_type (type);
 			Result.enlarge_tree;

@@ -52,7 +52,7 @@ feature -- Type check, byte code, dead code removal and formatter
 			from
 				nb := expressions.count
 				i := nb
-				!! generics.make (1, nb)
+				create generics.make (1, nb)
 			until
 				i < 1
 			loop
@@ -71,7 +71,7 @@ feature -- Type check, byte code, dead code removal and formatter
 	byte_node: TUPLE_CONST_B is
 			-- Byte code for a manifest tuple
 		do
-			!! Result
+			create Result
 			Result.set_expressions (expressions.byte_node)
 			Result.set_type (tuple_line.item.type_i)
 				-- Update the tuple_type stack

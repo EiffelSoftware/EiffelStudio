@@ -92,36 +92,36 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				from
 					cluster := Universe.cluster_of_name (cluster_name);
 					current_cluster := context.current_cluster;
-					!! renamed_classes.make (renamings.count);
+					create renamed_classes.make (renamings.count);
 					renamed_classes.compare_objects;
 					renamings.start
 				until
 					renamings.after
 				loop
 					renaming := renamings.item;
-					!! old_name.make (10);
+					create old_name.make (10);
 					old_name.append (renaming.old_name);
 					old_name.to_lower;
-					!! new_name.make (10);
+					create new_name.make (10);
 					new_name.append (renaming.new_name);
 					new_name.to_lower;
 						-- Check physical existence of class named `old_name'
 						-- in cluster
 					a_class := cluster.classes.item (old_name);
 					if a_class = Void then
-						!!vd04;
+						create vd04;
 						vd04.set_old_name (renaming.old_name);
 						vd04.set_cluster (cluster);
 						Error_handler.insert_error (vd04);
 					elseif renamed_classes.has_item (new_name) then
 							-- `new_name' listed twice in the rename list.
-						!!vd46;
+						create vd46;
 						vd46.set_new_name (renaming.new_name);
 						vd46.set_cluster (cluster);
 						Error_handler.insert_error (vd46);
 					elseif renamed_classes.has (old_name) then
 							-- `old_name' listed twice in the rename list.
-						!!vd47;
+						create vd47;
 						vd47.set_old_name (renaming.old_name);
 						vd47.set_cluster (cluster);
 						Error_handler.insert_error (vd47);
@@ -147,7 +147,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					then
 							-- Two classes with name `new_name'
 							-- in cluster `cluster'.
-						!!vscn;
+						create vscn;
 						vscn.set_cluster (cluster);
 						vscn.set_first (classes.found_item);
 						vscn.set_second (classes.item (renamed_classes.key_for_iteration));

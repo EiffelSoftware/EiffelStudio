@@ -59,7 +59,7 @@ feature
 	actual_type: FORMAL_A is
 			-- Actual type for formal generic
 		do
-			!! Result
+			create Result
 			Result.set_position (position)
 		end
 
@@ -92,7 +92,7 @@ feature -- Output
 
 	dump: STRING is
 		do
-			!! Result.make (12)
+			create Result.make (12)
 			Result.append ("Generic #")
 			Result.append_integer (position)
 		end

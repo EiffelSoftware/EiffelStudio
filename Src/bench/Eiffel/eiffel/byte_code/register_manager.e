@@ -2,7 +2,7 @@
 
 class REGISTER_MANAGER
 
-creation
+create
 
 	make
 
@@ -19,7 +19,7 @@ feature
 	init is
 			-- Initialize array
 		do
-			!!registers.make (1, 10);
+			create registers.make (1, 10);
 		end;
 
 	registers: ARRAY [BOOLEAN];
@@ -46,7 +46,7 @@ feature
 	duplicate: like Current is
 			-- Duplicate of current instance
 		do
-			!!Result.make (false);
+			create Result.make (false);
 			Result.set_registers (clone (registers))
 			Result.set_needed_registers (needed_registers);
 		end;

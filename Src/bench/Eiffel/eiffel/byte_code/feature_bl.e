@@ -44,7 +44,7 @@ feature
 	free_register is
 			-- Free registers
 		do
-			{FEATURE_B} Precursor
+			Precursor {FEATURE_B}
 			if basic_register /= Void then
 				basic_register.free_register
 			end
@@ -87,7 +87,7 @@ end
 					-- the call...
 					-- We need it only when a metamorphose occurs or if we 
 					-- are handling BIT objects.
-				!!tmp_register.make (Reference_c_type)
+				create tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
 			end
 			if parameters /= Void then

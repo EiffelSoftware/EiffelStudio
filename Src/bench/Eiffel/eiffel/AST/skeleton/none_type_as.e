@@ -23,7 +23,7 @@ feature
 	actual_type: NONE_A is
 			-- Actual integer type
 		once
-			!! Result
+			create Result
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

@@ -154,7 +154,7 @@ feature -- Inlining
 		do
 			Result := Precursor
 			if Result.has_inlined_code then
-				!!inlined_once_byte_code
+				create inlined_once_byte_code
 				inlined_once_byte_code.fill_from (Result)
 				Result := inlined_once_byte_code
 			end;

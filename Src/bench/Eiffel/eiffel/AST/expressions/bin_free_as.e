@@ -62,7 +62,7 @@ feature -- Byte Node
 	byte_anchor: BIN_FREE_B is
 			-- Byte code type
 		do
-			!! Result
+			create Result
 		end
 
 feature {BINARY_AS}

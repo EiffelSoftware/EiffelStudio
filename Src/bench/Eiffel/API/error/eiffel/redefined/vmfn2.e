@@ -80,7 +80,7 @@ feature {COMPILER_EXPORTER}
 			features_list: like features
 		do
 			from
-				!! features_list.make;
+				create features_list.make;
 				fs.start
 			until
 				fs.after
@@ -95,7 +95,7 @@ feature {COMPILER_EXPORTER}
 					-- using parent class it will crash when trying to display the second
 					-- generic parameter which does not exist in B, only in A.
 				e_feature := inh_info.a_feature.api_feature (class_c.class_id);
-				!! cell2.make (e_feature, parent);
+				create cell2.make (e_feature, parent);
 				features_list.extend (cell2);
 				features_list.forth
 				fs.forth

@@ -87,7 +87,6 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token		TE_BANG
 %token		TE_BIT
 %token		TE_SEMICOLON
-%token		TE_TILDE
 %token		TE_COLON
 %token		TE_COMMA
 %token 		TE_CREATION
@@ -96,6 +95,7 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token 		TE_RPARAN
 %token		TE_LCURLY
 %token		TE_RCURLY
+%token 		TE_CURLYDOTDOT
 %token		TE_LSQURE
 %token		TE_RSQURE
 %token		TE_CONSTRAIN
@@ -143,7 +143,6 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token		TE_RETRY
 %token		TE_SELECT
 %token		TE_SEPARATE
-%token		TE_SIGNATURE
 %token		TE_THEN
 %token		TE_UNDEFINE
 %token		TE_UNIQUE
@@ -175,7 +174,8 @@ Formal_generics Formal_generic Constraint Creation_constraint Conditional Elsif 
 Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
 Creation Creation_type Creation_target Creation_call Creation_expression
-Routine_creation Expression Actual_parameter
+Delayed_call Delayed_qualifier Delayed_actuals Delayed_actual_list
+Delayed_actual Expression Actual_parameter
 Manifest_array Manifest_tuple Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
@@ -829,10 +829,6 @@ Type:
 		{
 		$$ = create_node(LIKE_CUR_AS);
 		yacc_error_code=171;}
-	| TE_SIGNATURE Identifier
-		{
-		$$ = create_node1(SIGNATURE_AS, $2);
-		yacc_error_code=3;}
 	;
 
 Class_type:
@@ -1097,10 +1093,40 @@ Creation_clause:			TE_CREATION
 								yacc_error_code=273;}
 	;
 
-Routine_creation:			TE_TILDE TE_LCURLY Type TE_RCURLY Feature_name Parameters
-								{$$ = create_routine_object($3,click_list_elem($<value>5),$6);}
-	|						TE_TILDE Feature_name Parameters
-								{$$ = create_routine_object(NULL,click_list_elem($<value>2),$3);}
+Delayed_call:				Delayed_qualifier Identifier Delayed_actuals
+								{$$ = create_routine_object($1,$2,$3);}
+	;
+
+Delayed_qualifier:			Identifier TE_DOTDOT
+								{$$ = create_node1(OPERAND_AS,$1);}
+	|						TE_LPARAN Expression TE_RPARAN TE_DOTDOT
+								{$$ = create_node1(OPERAND_AS,$2);}
+	|						TE_LCURLY Type TE_CURLYDOTDOT
+								{$$ = create_node1(OPERAND_AS,$2);}
+	|						TE_DOTDOT
+								{$$ = NULL;}
+	|						TE_DOT
+								{$$ = create_node1(OPERAND_AS,NULL);}
+	;
+
+Delayed_actuals:			/* empty */
+								{$$ = NULL;}
+	|						TE_LPARAN {list_init();} Delayed_actual_list TE_RPARAN
+								{$$ = list_new(CONSTRUCT_LIST_AS);}
+	;
+
+Delayed_actual_list:		Delayed_actual
+								{list_push($1);}
+	|						Delayed_actual_list TE_COMMA Delayed_actual
+								{list_push($3);}
+	;
+
+Delayed_actual:				TE_DOT
+								{$$ = create_node1 (OPERAND_AS,NULL);}
+	|						Expression
+								{$$ = create_node1 (OPERAND_AS,$1);}
+	|						TE_LCURLY Type TE_RCURLY
+								{$$ = create_node1 (OPERAND_AS,$2);}
 	;
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
@@ -1171,7 +1197,7 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node1(VALUE_AS,$1);yacc_error_code=291;}
 	|						Feature_call
 								{$$ = create_node1(EXPR_CALL_AS, $1);yacc_error_code=292;}
-	|						Routine_creation
+	|						Delayed_call
 								{$$ = $1;}
 	|						TE_LPARAN Expression TE_RPARAN
 								{$$ = create_node1(PARAN_AS, $2);yacc_error_code=293;}

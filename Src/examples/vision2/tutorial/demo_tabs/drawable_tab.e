@@ -27,7 +27,9 @@ feature -- Initialization
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 				-- Commands used by tab.
 			counter, xpos, ypos, txpos, typos: INTEGER
-			
+			l1: EV_LIST_ITEM
+				-- List of drawing styles.
+
 		do
 			{ANY_TAB} Precursor (Void)
 			create n1.make (Current)
@@ -37,22 +39,6 @@ feature -- Initialization
 			create t2.make (n1)
 			n1.append_page (t1, "Attributes")
 			n1.append_page (t2, "Geometrics")
-			create cmd2.make (~back_color)
-			create f1.make (t1, 0, 0, "Background Color", cmd2, cmd2)
-			create cmd2.make (~fore_color)
-			create f2.make (t1, 1, 0, "Foreground Color", cmd2, cmd2)
-			available_colors:= all_colors
-			from
-				available_colors.start
-			until
-				available_colors.off
-			loop
-				create l1.make_with_text (f1.combo, available_colors.item.name)
-				l1.set_data (available_colors.item)
-				create l1.make_with_text (f2.combo, available_colors.item.name)
-				l1.set_data (available_colors.item)
-				available_colors.forth
-			end
 			create cmd1.make (~set_line_width)
 			create cmd2.make (~get_line_width)		
 			create f3.make (t1, 2, 0, "Line Width", cmd1, cmd2)
@@ -66,7 +52,7 @@ feature -- Initialization
 			create list1.make (t2)
 			t2.set_child_position (list1, 0, 0, 2, 2)
 			create cmd1.make (~select_drawing_item)
-			list1.add_selection_command (cmd1, Void)
+			list1.add_select_command (cmd1, Void)
 			create i1.make_with_text (list1, "Point")
 			create i1.make_with_text (list1, "Text")
 			create i1.make_with_text (list1, "Segment")
@@ -150,8 +136,6 @@ feature -- Access
 
 	current_widget: EV_DRAWING_AREA
 		-- Current demo.
-	f1,f2: COMBO_FEATURE_MODIFIER
-		--  Combo feature modifiers for `action_window'.
 	f3,f4,f5: TEXT_FEATURE_MODIFIER
 		-- Text feature modifiers for `action_window'.
 	list1,list2: EV_LIST
@@ -162,10 +146,6 @@ feature -- Access
 		-- notebook inside `drawable_tab'.
 	t1,t2: EV_TABLE
 		-- Two tabs for notebook inside `drawable_tab'.
-	available_colors: LINKED_LIST[EV_COLOR]
-		-- Basic colors available for 'Current_widget'.
-	l1: EV_LIST_ITEM
-		-- List of drawing styles.
 	current_pixmap: EV_PIXMAP
 		-- Pixmap to display.
 	text1: EV_TEXT_FIELD
@@ -519,30 +499,6 @@ feature -- Execution Feature
 				text_fields.item (8).show
 				text_labels.item (7).show
 				text_labels.item (8).show	
-			end
-		end
-
-	back_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Set background color.
-		local
-			current_color: EV_COLOR
-		do
-			if f1.combo.selected then
-				current_color ?= f1.combo.selected_item.data
-				current_widget.set_background_color(current_color)
-				current_widget.clear
-			end
-		end
-
-	fore_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Set foreground color.
-		local
-			current_color: EV_COLOR
-		do
-			if f2.combo.selected then
-				current_color ?= f2.combo.selected_item.data
-				current_widget.set_foreground_color(current_color)
-				current_widget.clear
 			end
 		end
 

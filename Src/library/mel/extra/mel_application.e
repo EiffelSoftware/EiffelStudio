@@ -50,7 +50,7 @@ feature -- Status setting
 	set_application_name (a_string: STRING) is
 			-- Set the name of the application.
 		require
-			a_string_is_not_void: a_string /= Void
+			string_is_not_void: a_string /= Void
 		do
 			application_name := a_string
 		ensure
@@ -60,7 +60,7 @@ feature -- Status setting
 	set_application_class_name (a_string: STRING) is
 			-- Set the class name of the application.
 		require
-			a_string_is_not_void: a_string /= Void
+			string_is_not_void: a_string /= Void
 		do
 			application_class_name := a_string
 		ensure

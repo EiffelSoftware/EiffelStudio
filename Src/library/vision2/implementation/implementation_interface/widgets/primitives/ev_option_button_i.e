@@ -9,9 +9,8 @@ deferred class
 	EV_OPTION_BUTTON_I
 
 inherit
-	EV_MENU_HOLDER_I
+	EV_MENU_ITEM_LIST_I
 		redefine
-			add_menu_ok,
 			interface
 		end
 
@@ -87,6 +86,9 @@ end -- class EV_OPTION_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/19 01:58:52  oconnor
+--| inherit EV_MENU_ITEM_LIST_I not EV_MENU_HOLDER_I
+--|
 --| Revision 1.10  2000/02/14 11:40:38  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -65,6 +65,8 @@
 #define SUBLANG_KOREAN                   0x01    /* Korean (Extended Wansung) */
 #define SUBLANG_KOREAN_JOHAB             0x02    /* Korean (Johab) */
 
+#endif /* MVC 4.2 */
+
 /*
 --|-------------------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

@@ -9,7 +9,8 @@ inherit
 			enlarged, make_byte_code, make_creation_byte_code,
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
-			is_special_feature
+			is_special_feature, size, pre_inlined_code,
+			inlined_byte_code
 		end
 	
 feature 
@@ -148,7 +149,7 @@ feature -- Array optimization
 		local
 			opt_context: OPTIMIZATION_CONTEXT;
 			array_desc: INTEGER;
-			optimize: BOOLEAN;
+			optimize, access_area: BOOLEAN;
 			optimizer: ARRAY_OPTIMIZER;
 			opt_feat_b: OPT_FEAT_B;
 			m: CALL_B;
@@ -160,16 +161,18 @@ feature -- Array optimization
 				array_desc := target.array_descriptor;
 				opt_context := optimizer.optimization_context;
 				if opt_context.generated_array_desc.has (array_desc) then
-					if check_message then
-						optimize := True
-					end;
+					access_area := True
+					optimize := check_message;
+				elseif opt_context.generated_offsets.has (array_desc) then
+					optimize := check_message;
 				end;
 			end;
 			if optimize then
 				optimizer.set_current_feature_optimized;
 
 				!!opt_feat_b;
-				opt_feat_b.set_array_target (array_desc);
+				opt_feat_b.set_array_target (target);
+				opt_feat_b.set_access_area (access_area);
 				m := message;
 				t := m.target;
 
@@ -193,8 +196,6 @@ feature -- Array optimization
 						-- Re-attach the message
 					message.set_parent (Current)
 				end;
-
-				io.error.putstring ("NOT IMPLEMENTED%N");
 			else
 				Result := Current;
 				message := message.optimized_byte_node
@@ -207,5 +208,64 @@ feature -- Array optimization
 		do
 			Result := message.is_special_feature
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := target.size + message.size + 1
+		end
+
+	pre_inlined_code: like Current is
+		local
+			nested_b: NESTED_B
+			inlined_current_b: INLINED_CURRENT_B
+			access: like target
+		do
+			if parent /= Void then
+				Result := Current
+			else
+					-- First call
+				access := target;
+
+				if
+					access.is_argument or else
+					access.is_local or else
+					access.is_result or else
+					access.is_current
+				then
+						-- `pre_inlined_code' in the target will take
+						-- care of the special byte code
+					Result := Current
+				else
+						-- The first call is a feature
+						-- Create a dummy nested call:
+						-- Current.feature
+						-- (Current is in fact inlined_current_b)
+
+					!!nested_b;
+
+					nested_b.set_message (Current);
+					parent := nested_b;
+
+					!!inlined_current_b;
+					nested_b.set_target (inlined_current_b);
+					inlined_current_b.set_parent (nested_b);
+
+					Result := nested_b
+				end;
+			end;
+				-- Cannot fail: `parent' of `target' is Current, thus not void
+				-- (no NESTED_B is created)
+			target ?= target.pre_inlined_code
+			message := message.pre_inlined_code
+		end;
+
+	inlined_byte_code: NESTED_B is
+		do
+			Result := Current
+			target := target.inlined_byte_code;
+			message := message.inlined_byte_code;
+		end
 
 end

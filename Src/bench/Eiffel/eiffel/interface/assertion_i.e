@@ -136,8 +136,8 @@ feature -- Generation
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.putstring ("(int16) ")
-			buffer.putint (level)
+			buffer.put_string ("(int16) ")
+			buffer.put_integer (level)
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -51,26 +51,26 @@ feature
 
 				if is_visible (a_feature, class_id) then
 debug ("DEAD_CODE_REMOVAL")
-	io.error.putstring (generator);
-	io.error.putstring (": Recording feature ");
-	io.error.putstring (a_feature.feature_name);
-	io.error.putstring (" of class ");
-	io.error.putstring (a_feature.written_class.name);
-	io.error.new_line;
+	io.error.put_string (generator);
+	io.error.put_string (": Recording feature ");
+	io.error.put_string (a_feature.feature_name);
+	io.error.put_string (" of class ");
+	io.error.put_string (a_feature.written_class.name);
+	io.error.put_new_line;
 end;
 					remover.record (a_feature, a_feature.written_class)
 else
 debug ("DEAD_CODE_REMOVAL")
-	io.error.putstring (generator);
-	io.error.putstring ("Export	status of: ");
-	io.error.putstring (a_feature.feature_name);
-	io.error.putstring (" of class ");
-	io.error.putstring (a_feature.written_class.name);
-	io.error.putstring (" is ");
-	io.error.putstring (a_feature.export_status.generator);
-	io.error.putstring (" ");
+	io.error.put_string (generator);
+	io.error.put_string ("Export	status of: ");
+	io.error.put_string (a_feature.feature_name);
+	io.error.put_string (" of class ");
+	io.error.put_string (a_feature.written_class.name);
+	io.error.put_string (" is ");
+	io.error.put_string (a_feature.export_status.generator);
+	io.error.put_string (" ");
 	a_feature.export_status.trace;
-	io.error.new_line;
+	io.error.put_new_line;
 end;
 				end;
 

@@ -52,15 +52,15 @@ feature
 			old_cursor: CURSOR;
 		do
 			from
-				io.error.putstring ("tags: ");
+				io.error.put_string ("tags: ");
 				l := tags;
 				old_cursor := l.cursor;
 				l.start;
 			until
 				l.after
 			loop
-				io.error.putstring (l.item);
-				io.error.putstring (" ");
+				io.error.put_string (l.item);
+				io.error.put_string (" ");
 				l.forth;
 			end;
 			l.go_to (old_cursor);
@@ -69,11 +69,11 @@ feature
 	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		do
-			buffer.putstring ("{OPT_ALL, (int16) ");
-			buffer.putint (tags.count);
-			buffer.putstring (", keys");
-			buffer.putint (id);
-			buffer.putstring ("}");
+			buffer.put_string ("{OPT_ALL, (int16) ");
+			buffer.put_integer (tags.count);
+			buffer.put_string (", keys");
+			buffer.put_integer (id);
+			buffer.put_string ("}");
 		end;
 
 	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER) is
@@ -83,21 +83,21 @@ feature
 		local
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do
-			buffer.putstring ("static char *keys");
-			buffer.putint (id);
-			buffer.putstring ("[] = {");
+			buffer.put_string ("static char *keys");
+			buffer.put_integer (id);
+			buffer.put_string ("[] = {");
 			from
 				l := tags;
 				l.start
 			until
 				l.after
 			loop
-				buffer.putchar ('"');
-				buffer.putstring (l.item);
-				buffer.putstring ("%", ");
+				buffer.put_character ('"');
+				buffer.put_string (l.item);
+				buffer.put_string ("%", ");
 				l.forth;		
 			end;
-			buffer.putstring ("};%N%N");
+			buffer.put_string ("};%N%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

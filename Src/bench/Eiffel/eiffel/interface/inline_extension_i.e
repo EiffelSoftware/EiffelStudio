@@ -72,12 +72,12 @@ feature -- Code generation
 			if not l_ret_type.is_void then
 				l_is_func := True
 				a_result.print_register
-				l_buffer.putstring (" = ")
+				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 			internal_generate_inline (Void, l_ret_type)
-			l_buffer.putchar (';')
-			l_buffer.new_line
+			l_buffer.put_character (';')
+			l_buffer.put_new_line
 		end
 
 	generate_access (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
@@ -212,14 +212,14 @@ feature {NONE} -- Implementation
 	
 				l_buffer := Context.buffer
 				if a_ret_type.is_void then
-					l_buffer.putstring (l_code)
+					l_buffer.put_string (l_code)
 				else
 					if a_ret_type.is_boolean then
-						l_buffer.putstring ("EIF_TEST")
+						l_buffer.put_string ("EIF_TEST")
 					end
-					l_buffer.putchar ('(')
-					l_buffer.putstring (l_code)
-					l_buffer.putchar (')')
+					l_buffer.put_character ('(')
+					l_buffer.put_string (l_code)
+					l_buffer.put_character (')')
 				end
 			end
 		end

@@ -81,7 +81,7 @@ feature
 
 	trace is
 		do
-			io.error.putstring (generator);
+			io.error.put_string (generator);
 		end;
 
 end

@@ -62,12 +62,12 @@ feature -- Code generation
 			l_ret_type := struct_byte_code.result_type
 			if not l_ret_type.is_void then
 				a_result.print_register
-				l_buffer.putstring (" = ")
+				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 			internal_generate (struct_byte_code.external_name, Void, l_ret_type)
-			l_buffer.putchar (';')
-			l_buffer.new_line
+			l_buffer.put_character (';')
+			l_buffer.put_new_line
 		end
 
 	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
@@ -119,41 +119,41 @@ feature {NONE} -- Code generation helper
 			arg_types := argument_types
 			if not setter then
 				if a_ret_type.is_boolean then
-					l_buffer.putstring ("EIF_TEST")
+					l_buffer.put_string ("EIF_TEST")
 				elseif name.item (1) = '&' and then name.count > 1 then
 						-- It cannot be of type `BOOLEAN' and be retrieving the
 						-- address of a struct.
-					l_buffer.putchar ('&')
+					l_buffer.put_character ('&')
 					special_access := True
 				end
 					--| External structure access will be generated as:
 					--| (type_2) (((type_1 *) arg1)->alias_name);
-				l_buffer.putstring ("(((")
-				l_buffer.putstring (l_names_heap.item (arg_types.item (1)))
-				l_buffer.putstring (" *)")
+				l_buffer.put_string ("(((")
+				l_buffer.put_string (l_names_heap.item (arg_types.item (1)))
+				l_buffer.put_string (" *)")
 				generate_i_th_parameter (parameters, 1)
-				l_buffer.putstring (")->")
+				l_buffer.put_string (")->")
 				if not special_access then
-					l_buffer.putstring (name)
+					l_buffer.put_string (name)
 				else
-					l_buffer.putstring (name.substring (2, name.count))
+					l_buffer.put_string (name.substring (2, name.count))
 				end
-				l_buffer.putchar (')')
+				l_buffer.put_character (')')
 			else
 					--| External structure setting will be generated as:
 					--| ((type_1 *) arg1)->alias_name = (type_2) (arg2);
-				l_buffer.putstring ("(((")
-				l_buffer.putstring (l_names_heap.item (arg_types.item (1)))
-				l_buffer.putstring (" *)")
+				l_buffer.put_string ("(((")
+				l_buffer.put_string (l_names_heap.item (arg_types.item (1)))
+				l_buffer.put_string (" *)")
 				generate_i_th_parameter (parameters, 1)
-				l_buffer.putstring (")->")
-				l_buffer.putstring (name)
-				l_buffer.putstring (" = (")
-				l_buffer.putstring (l_names_heap.item (arg_types.item (2)))
-				l_buffer.putstring (")(")
+				l_buffer.put_string (")->")
+				l_buffer.put_string (name)
+				l_buffer.put_string (" = (")
+				l_buffer.put_string (l_names_heap.item (arg_types.item (2)))
+				l_buffer.put_string (")(")
 				generate_i_th_parameter (parameters, 2)
-				l_buffer.putchar (')')
-				l_buffer.putchar (')')
+				l_buffer.put_character (')')
+				l_buffer.put_character (')')
 			end
 		end
 

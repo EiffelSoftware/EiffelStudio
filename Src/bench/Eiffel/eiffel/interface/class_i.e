@@ -222,7 +222,7 @@ feature -- Status report
 				create a_file.make (file_name)
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read
-					a_file.readstream (a_file.count)
+					a_file.read_stream (a_file.count)
 					a_file.close
 						-- No need to duplicate `last_string' since
 						-- its owner, the file will not go outside this

@@ -514,20 +514,20 @@ feature -- Automatic backup
 			c: CLUSTER_I
 		do
 			create file.make_open_write (backup_info_file_name)
-			file.putstring ("Compiler version: ")
-			file.putstring (Version_number)
-			file.new_line
-			file.putstring ("batch mode: ")
-			file.putbool (Eiffel_project.batch_mode)
-			file.new_line
-			file.putstring ("new session: ")
-			file.putbool (new_session)
-			file.new_line
-			file.putstring ("successful: ")
-			file.putbool (successful)
-			file.new_line
-			file.putstring ("Cluster table:")
-			file.new_line
+			file.put_string ("Compiler version: ")
+			file.put_string (Version_number)
+			file.put_new_line
+			file.put_string ("batch mode: ")
+			file.put_boolean (Eiffel_project.batch_mode)
+			file.put_new_line
+			file.put_string ("new session: ")
+			file.put_boolean (new_session)
+			file.put_new_line
+			file.put_string ("successful: ")
+			file.put_boolean (successful)
+			file.put_new_line
+			file.put_string ("Cluster table:")
+			file.put_new_line
 
 			from
 				l := Universe.clusters
@@ -537,8 +537,8 @@ feature -- Automatic backup
 			loop
 				c := l.item
 				if not c.belongs_to_all then
-					file.putstring (c.cluster_name)
-					file.new_line
+					file.put_string (c.cluster_name)
+					file.put_new_line
 				end
 				l.forth
 			end

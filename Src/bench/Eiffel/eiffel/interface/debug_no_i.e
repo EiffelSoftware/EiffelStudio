@@ -23,13 +23,13 @@ feature
 
 	trace is
 		do
-			io.error.putstring ("no debug");
+			io.error.put_string ("no debug");
 		end;
 
 	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		do
-			buffer.putstring ("{OPT_NO, (int16) 0, (char **) 0}");
+			buffer.put_string ("{OPT_NO, (int16) 0, (char **) 0}");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -55,14 +55,14 @@ feature -- Code generation
 			l_buffer := Context.buffer
 			if not l_ret_type.is_void then
 				a_result.print_register
-				l_buffer.putstring (" = ")
+				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 			
 			nb := macro_byte_code.argument_count
 			internal_generate_access (macro_byte_code.external_name, Void, nb, l_ret_type)
-			l_buffer.putchar (';')
-			l_buffer.new_line
+			l_buffer.put_character (';')
+			l_buffer.put_new_line
 		end
 
 	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
@@ -99,16 +99,16 @@ feature {NONE} -- Implementation
 			if a_ret_type.is_boolean then
 					-- Only in case of a macro which is a function that we can generate paranthesis
 					-- around `external_name', as a procedure might be a multiline macro.
-				buffer.putstring ("EIF_TEST(")
+				buffer.put_string ("EIF_TEST(")
 			end
-			buffer.putstring (external_name)
+			buffer.put_string (external_name)
 			if nb > 0 then
-				buffer.putchar ('(')
+				buffer.put_character ('(')
 				generate_parameter_list (parameters, nb)
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 			if a_ret_type.is_boolean then
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 		end
 

@@ -18,7 +18,7 @@ feature -- Output
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate assertion value in `buffer'.
 		do
-			buffer.putstring ("(int16) 1")
+			buffer.put_string ("(int16) 1")
 		end
 
 end -- class OPTION_ALL_I

@@ -130,14 +130,14 @@ feature
 			-- Debug purpose
 		do
 			Precursor {VISIBLE_I}
-			io.error.putstring (" for ");
+			io.error.put_string (" for ");
 			from
 				visible_features.start;
 			until
 				visible_features.after
 			loop
-				io.error.putstring (visible_features.item_for_iteration);
-				io.error.putchar (' ');
+				io.error.put_string (visible_features.item_for_iteration);
+				io.error.put_character (' ');
 				visible_features.forth;
 			end;
 		end;

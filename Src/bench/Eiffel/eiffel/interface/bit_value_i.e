@@ -81,12 +81,12 @@ feature -- Code generation
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		do
-			buffer.putstring ("RTMB(%"")
+			buffer.put_string ("RTMB(%"")
 			buffer.escape_string (bit_value)
-			buffer.putchar ('"')
-			buffer.putstring (", ")
-			buffer.putint (bit_count)
-			buffer.putchar (')')
+			buffer.put_character ('"')
+			buffer.put_string (", ")
+			buffer.put_integer (bit_count)
+			buffer.put_character (')')
 		end
 
 	generate_il is

@@ -124,16 +124,16 @@ feature -- Code generation
 			else
 				l_val := real_value.out
 			end
-			l_buf.putstring (l_val)
+			l_buf.put_string (l_val)
 			l_nb := l_val.count
 			if
 				l_val.last_index_of ('.', l_nb) = 0 and
 				l_val.last_index_of ('e', l_nb) = 0
 			then
-				l_buf.putchar ('.')
+				l_buf.put_character ('.')
 			end
 			if is_real then
-				l_buf.putchar ('f')
+				l_buf.put_character ('f')
 			end
 		end
 

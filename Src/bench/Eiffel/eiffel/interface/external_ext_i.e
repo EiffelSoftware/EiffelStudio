@@ -259,16 +259,16 @@ feature -- Code generation
 					i > nb
 				loop
 					if has_cast then
-						buffer.putchar ('(')
-						buffer.putstring (l_names_heap.item (arg_types.item (j)))
-						buffer.putchar (')')
-						buffer.putchar (' ')
+						buffer.put_character ('(')
+						buffer.put_string (l_names_heap.item (arg_types.item (j)))
+						buffer.put_character (')')
+						buffer.put_character (' ')
 						j := j + 1
 					end
 					generate_i_th_parameter (parameters, i)
 					i := i + 1
 					if i <= nb then
-						buffer.putstring (gc_comma)
+						buffer.put_string (gc_comma)
 					end
 				end
 			end
@@ -287,10 +287,10 @@ feature -- Code generation
 			else
 				l_buffer := Context.buffer
 				if context.is_argument_protected then
-					l_buffer.putchar ('l')
+					l_buffer.put_character ('l')
 				end
-				l_buffer.putstring ("arg")
-				l_buffer.putint (i)
+				l_buffer.put_string ("arg")
+				l_buffer.put_integer (i)
 			end
 		end
 

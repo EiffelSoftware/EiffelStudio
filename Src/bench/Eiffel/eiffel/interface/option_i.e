@@ -19,16 +19,16 @@ feature -- Output
 		require
 			good_argument: buffer /= Void;
 		do
-			buffer.putstring ("(int16) 0");
+			buffer.put_string ("(int16) 0");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code representation of the assertion
 		do
 debug ("OPTIONS");
-	io.error.putstring ("Make byte code: ");
-	io.error.putchar (byte_code);
-	io.error.new_line;
+	io.error.put_string ("Make byte code: ");
+	io.error.put_character (byte_code);
+	io.error.put_new_line;
 end;
 			ba.append (byte_code)
 		end;

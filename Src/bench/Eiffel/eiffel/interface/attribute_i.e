@@ -174,14 +174,14 @@ feature -- Element Change
 				<<"Current">>, <<"EIF_REFERENCE">>)
 			buffer.indent
 			if not result_type.is_true_expanded and then not result_type.is_bit then
-				buffer.putstring ("return *")
+				buffer.put_string ("return *")
 				result_type.c_type.generate_access_cast (buffer)
 			else
 					-- We do not need to generate a cast since what we are computed is
 					-- already good.
-				buffer.putstring ("return ")
+				buffer.put_string ("return ")
 			end
-			buffer.putstring ("(Current")
+			buffer.put_string ("(Current")
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
@@ -190,11 +190,11 @@ feature -- Element Change
 					
 						-- Generate following dispatch:
 						-- table [Actual_offset - base_offset]
-					buffer.putstring (" + ")
-					buffer.putstring (table_name)
-					buffer.putstring ("[Dtype(Current) - ")
-					buffer.putint (array_index)
-					buffer.putchar (']')
+					buffer.put_string (" + ")
+					buffer.put_string (table_name)
+					buffer.put_string ("[Dtype(Current) - ")
+					buffer.put_integer (array_index)
+					buffer.put_character (']')
 					
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)
@@ -212,24 +212,24 @@ feature -- Element Change
 				class_type.associated_class.is_precompiled
 			then
 				rout_info := System.rout_info_table.item (rout_id)
-				buffer.putstring (" + RTWPA(")
-				buffer.generate_class_id (rout_info.origin)
-				buffer.putchar (',')
-				buffer.putint (rout_info.offset)
-				buffer.putstring (", Dtype(Current))")
+				buffer.put_string (" + RTWPA(")
+				buffer.put_class_id (rout_info.origin)
+				buffer.put_character (',')
+				buffer.put_integer (rout_info.offset)
+				buffer.put_string (", Dtype(Current))")
 			else
-				buffer.putstring (" + RTWA(")
-				buffer.putint (class_type.static_type_id - 1)
-				buffer.putchar (',')
-				buffer.putint (feature_id)
-				buffer.putstring (", Dtype(Current))")
+				buffer.put_string (" + RTWA(")
+				buffer.put_static_type_id (class_type.static_type_id)
+				buffer.put_character (',')
+				buffer.put_integer (feature_id)
+				buffer.put_string (", Dtype(Current))")
 			end;
-			buffer.putstring(");")
+			buffer.put_string(");")
 			buffer.exdent
-			buffer.new_line
-			buffer.putchar ('}')
-			buffer.new_line
-			buffer.new_line
+			buffer.put_new_line
+			buffer.put_character ('}')
+			buffer.put_new_line
+			buffer.put_new_line
 		end
 
 	replicated: FEATURE_I is

@@ -213,7 +213,7 @@ feature -- Debugging
 
 	trace is
 		do
-			io.error.putstring (dump)
+			io.error.put_string (dump)
 		end
 
 end

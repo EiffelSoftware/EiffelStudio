@@ -16,6 +16,21 @@ inherit
 creation
 	make, do_nothing
 
+feature -- Status report
+
+	feature_clause_order: ARRAY [STRING]
+			-- Array of orderd feature clause comments
+
+feature -- Status setting
+
+	set_feature_clause_order (fco: like feature_clause_order) is
+			-- Set `feature_clause_order' to `fco'.
+		do
+			feature_clause_order := fco
+		ensure
+			set: feature_clause_order = fco
+		end;
+
 feature -- Output
 
 	execute is
@@ -25,7 +40,7 @@ feature -- Output
 		do
 			!! ctxt;
 			ctxt.set_is_short;
-			ctxt.set_order_same_as_text;
+			ctxt.set_feature_clause_order (feature_clause_order);
 			ctxt.set_one_class_only;
 			ctxt.format (current_class);
 			if not ctxt.error then

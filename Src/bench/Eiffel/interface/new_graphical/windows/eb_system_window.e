@@ -115,6 +115,7 @@ feature -- Actions
 				cmd_string.replace_substring_all ("$line", "1")
 				create cmd_exec
 				cmd_exec.execute (cmd_string)
+				window.hide
 			end
 		end
 

@@ -91,9 +91,6 @@ feature {GB_XML_LOAD} -- Implementation
 			-- its current `parent'.
 		require
 			an_item_not_void: an_item /= Void
-		local
-			tree: EV_TREE
-			tree_item: EV_TREE_ITEM
 		do
 			unparent_tree_node (an_item)
 			extend (an_item)

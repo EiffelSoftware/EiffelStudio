@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 		local
 			li: EV_LIST_ITEM
 			cl: LINKED_LIST [CLUSTER_I]
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			all_tags: LINKED_LIST [STRING]
 			old_exclude: LINKED_LIST [STRING]
 			l_cluster: CLUSTER_I

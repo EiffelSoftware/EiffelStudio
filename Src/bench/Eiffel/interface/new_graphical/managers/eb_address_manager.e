@@ -995,7 +995,7 @@ feature {NONE} -- open new class
 			cluster: CLUSTER_I
 			cluster_name: STRING
 			matcher: KMP_WILD
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			wd: EV_WARNING_DIALOG
 		do
 			class_i := Void

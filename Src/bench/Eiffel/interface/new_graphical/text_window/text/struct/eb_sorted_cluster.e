@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			sorted_clusters: SORTABLE_ARRAY [CLUSTER_I]
 			clusters_count: INTEGER
-			sub_classes: EXTEND_TABLE [CLASS_I, STRING]
+			sub_classes: HASH_TABLE [CLASS_I, STRING]
 			sorted_classes: SORTABLE_ARRAY [CLASS_I]
 			classes_count: INTEGER
 			a_cluster: EB_SORTED_CLUSTER

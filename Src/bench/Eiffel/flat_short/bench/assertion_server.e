@@ -95,7 +95,7 @@ feature -- Properties
 	current_assertion: CHAINED_ASSERTIONS
 			-- Chained assertion for a feature 
 
-	feature_adapter_table: EXTEND_TABLE [FEATURE_ADAPTER, INTEGER]
+	feature_adapter_table: HASH_TABLE [FEATURE_ADAPTER, INTEGER]
 			-- Feature adapters hash on `body_index'
 
 feature -- Element change

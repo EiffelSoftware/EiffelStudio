@@ -268,7 +268,7 @@ feature -- Detailed column list
 			effective_class_scope: a_class_scope /= Void and then a_class_scope.index = Class_scope
 --									and then a_class_scope.class_c /= Void
 		local
-			classes_in_cluster: EXTEND_TABLE [CLASS_I, STRING]
+			classes_in_cluster: HASH_TABLE [CLASS_I, STRING]
 			x_pos, y_pos, i, progress_value: INTEGER
 			row_array: ARRAY [STRING]
 			row:  EV_MULTI_COLUMN_LIST_ROW

@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			-- activated, or the list of routines whose stop points have been
 			-- deactivated.
 		local
-			table: EXTEND_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], INTEGER]
+			table: HASH_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], INTEGER]
 			stwl: PART_SORTED_TWO_WAY_LIST [E_FEATURE]
 			f: E_FEATURE
 			c: CLASS_C

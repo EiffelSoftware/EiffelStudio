@@ -418,7 +418,7 @@ feature -- Basic Operations
 			feat				: E_FEATURE
 			cls_c				: CLASS_C
 			type				: TYPE_A
-			crtrs				: EXTEND_TABLE [EXPORT_I, STRING]
+			crtrs				: HASH_TABLE [EXPORT_I, STRING]
 			externals			: ARRAYED_LIST [E_FEATURE]
 			par_cnt				: INTEGER
 			par_token			: EDITOR_TOKEN
@@ -672,7 +672,7 @@ feature -- Class names completion
 			cname: STRING
 			clusters: LINKED_LIST [CLUSTER_I]
 			class_list: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			token				: EDITOR_TOKEN
 			complete, show_all	: BOOLEAN
 			class_name: EB_NAME_FOR_COMPLETION

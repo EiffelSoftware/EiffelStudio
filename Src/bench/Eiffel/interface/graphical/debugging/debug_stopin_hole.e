@@ -106,7 +106,7 @@ feature -- Output
 	display_breakpoints (st: STRUCTURED_TEXT; routine_list: LIST [E_FEATURE]; display_mode:INTEGER) is
 			-- Display the list of routines whose stop points are activated
 		local
-			table: EXTEND_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], INTEGER]
+			table: HASH_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], INTEGER]
 			stwl: PART_SORTED_TWO_WAY_LIST[E_FEATURE]
 			f: E_FEATURE
 			c: CLASS_C

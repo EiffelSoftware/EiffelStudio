@@ -253,7 +253,7 @@ feature -- Routines
 	append_general_info (text: STRUCTURED_TEXT; class_i: CLASS_I) is
 			-- Append "General" item for class charts.
 		local
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			s: STRING
 			class_c: CLASS_C
 		do
@@ -326,7 +326,7 @@ feature -- Routines
 	append_creators (text: STRUCTURED_TEXT; class_c: CLASS_C) is
 			-- Append creators list.
 		local
-			cr: EXTEND_TABLE [EXPORT_I, STRING]
+			cr: HASH_TABLE [EXPORT_I, STRING]
 			f_name: STRING
 		do
 			cr := class_c.creators

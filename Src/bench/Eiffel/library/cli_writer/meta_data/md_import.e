@@ -692,8 +692,6 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation : helper
 
---0x0010
-
 	frozen fdStatic: INTEGER is
 		external
 			"[

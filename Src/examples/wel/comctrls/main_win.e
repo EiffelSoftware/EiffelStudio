@@ -9,7 +9,8 @@ inherit
 			on_control_id_command,
 			on_size,
 			on_menu_select,
-			on_notify
+			on_notify,
+			background_brush
 		end
 
 	APPLICATION_IDS
@@ -54,36 +55,36 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			set_menu (main_menu)
 			resize (450, 400)
-			!! static.make (Current,
+			create static.make (Current,
 				"To see tooltip controls, move the mouse on %
 				%the track bar, the progress bar or the toolbar %
 				%buttons.", 200, 50, 200, 70, -1)
 
 			-- Create a track bar
-			!! track_bar.make_horizontal (Current, 10, 40, 110, 40, -1)
+			create track_bar.make_horizontal (Current, 10, 40, 110, 40, -1)
 			track_bar.set_range (0, 100)
 
 			-- Create a progress bar
-			!! progress_bar.make (Current, 10, 110, 110, 20, -1)
+			create progress_bar.make (Current, 10, 110, 110, 20, -1)
 
 			-- Create a status window
-			!! status_window.make (Current, -1)
+			create status_window.make (Current, -1)
 			status_window.set_multiple_mode
 			status_window.set_parts (<<300, 350, -1>>)
 
 			-- Create a rich edit control
-			!! rich_edit.make (Current, "", 5, 150, 200, 150, -1)
-			!! char_format.make
+			create rich_edit.make (Current, "", 5, 150, 200, 150, -1)
+			create char_format.make
 			char_format.set_face_name ("Arial")
-			char_format.set_height (12 * 20)
+			char_format.set_height (12)
 			rich_edit.set_character_format_selection (char_format)
 			rich_edit.set_text ("Rich edit control")
 
 			-- Create a toolbar and buttons
-			!! tool_bar.make (Current, -1)
+			create tool_bar.make (Current, -1)
 
-			!! tool_bar_bitmap.make (Bmp_toolbar)
-			!! standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
+			create tool_bar_bitmap.make (Bmp_toolbar)
+			create standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
 
 			tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
 			bitmap_index1 := tool_bar.last_bitmap_index
@@ -91,19 +92,13 @@ feature {NONE} -- Initialization
 			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
 			bitmap_index2 := tool_bar.last_bitmap_index
 
-			!! tool_bar_button1.make_button (bitmap_index1 + Std_fileopen, Cmd_open)
-			!! tool_bar_button2.make_button (bitmap_index1 + Std_filesave, Cmd_save)
-			!! tool_bar_button3.make_separator
-			!! tool_bar_button4.make_check (bitmap_index2 + 0, Cmd_bold)
-			!! tool_bar_button5.make_check (bitmap_index2 + 1, Cmd_italic)
-			!! tool_bar_button6.make_separator
-			!! tool_bar_button7.make_button (bitmap_index2 + 2, Cmd_progress_bar)
-			!! tool_bar_button8.make_button (bitmap_index2 + 3, Cmd_exit)
+			create tool_bar_button4.make_check (bitmap_index2 + 0, Cmd_bold)
+			create tool_bar_button5.make_check (bitmap_index2 + 1, Cmd_italic)
+			create tool_bar_button6.make_separator
+			create tool_bar_button7.make_button (bitmap_index2 + 2, Cmd_progress_bar)
+			create tool_bar_button8.make_button (bitmap_index2 + 3, Cmd_exit)
 
 			tool_bar.add_buttons (<<
-				tool_bar_button1,
-				tool_bar_button2,
-				tool_bar_button3,
 				tool_bar_button4,
 				tool_bar_button5,
 				tool_bar_button6,
@@ -111,16 +106,16 @@ feature {NONE} -- Initialization
 				tool_bar_button8>>)
 
 			-- Create a tooltip
-			!! tooltip.make (Current, -1)
+			create tooltip.make (Current, -1)
 
-			!! tool_info1.make
+			create tool_info1.make
 			tool_info1.set_window (track_bar)
 			tool_info1.set_flags (Ttf_subclass)
 			tool_info1.set_rect (track_bar.client_rect)
 			tool_info1.set_text_id (Str_tooltip) -- Use a string resource id
 			tooltip.add_tool (tool_info1)
 
-			!! tool_info2.make
+			create tool_info2.make
 			tool_info2.set_window (progress_bar)
 			tool_info2.set_flags (Ttf_subclass)
 			tool_info2.set_rect (progress_bar.client_rect)
@@ -146,9 +141,6 @@ feature -- Access
 
 	tool_bar_bitmap, standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 
-	tool_bar_button1,
-	tool_bar_button2,
-	tool_bar_button3,
 	tool_bar_button4,
 	tool_bar_button5,
 	tool_bar_button6,
@@ -159,6 +151,13 @@ feature -- Access
 
 	char_format: WEL_CHARACTER_FORMAT
 
+	background_brush: WEL_BRUSH is
+			-- Dialog boxes background color is the same than
+			-- button color.
+		once
+			create Result.make_by_sys_color (Color_btnface + 1)
+		end
+
 feature {NONE} -- Implementation
 
 	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
@@ -167,7 +166,7 @@ feature {NONE} -- Implementation
 			tt: WEL_TOOLTIP_TEXT
 		do
 			if info.code = Ttn_needtext then
-				!! tt.make_by_nmhdr (info)
+				create tt.make_by_nmhdr (info)
 				-- Set resource string id.
 				tt.set_text_id (tt.hdr.id_from)
 			end
@@ -197,7 +196,7 @@ feature {NONE} -- Implementation
 					i := i + 10
 				end
 			when Cmd_bold then
-				!! char_format.make
+				create char_format.make
 				if tool_bar.button_checked (Cmd_bold) then
 					char_format.set_bold
 
@@ -206,7 +205,7 @@ feature {NONE} -- Implementation
 				end
 				rich_edit.set_character_format_selection (char_format)
 			when Cmd_italic then
-				!! char_format.make
+				create char_format.make
 				if tool_bar.button_checked (Cmd_italic) then
 					char_format.set_italic
 				else
@@ -240,13 +239,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

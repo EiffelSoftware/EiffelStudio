@@ -9,9 +9,6 @@ feature -- Access
 
 	Id_ico_application: INTEGER is 1
 	Id_main_menu: INTEGER is 1
-	Cmd_open: INTEGER is 1001
-	Cmd_save: INTEGER is 1002
-	Cmd_print: INTEGER is 1003
 	Cmd_bold: INTEGER is 1004
 	Cmd_italic: INTEGER is 1005
 	Cmd_progress_bar: INTEGER is 1006

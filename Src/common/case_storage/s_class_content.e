@@ -9,7 +9,7 @@ feature -- Specification
 	features: ARRAYED_LIST [S_FEATURE_DATA];
 			-- Features of class
 
-	invariants: FIXED_LIST [S_ASSERTION_DATA];
+	invariants: FIXED_LIST [S_TAG_DATA];
 			-- Invariants of the current class
 
 	chart: S_CLASS_CHART
@@ -28,6 +28,7 @@ feature -- Setting values
 	set_invariants (l: like invariants) is
 			-- Set invariants to `l'.
 		do
+io.error.putstring ("");
 			invariants := l
 		end;
  

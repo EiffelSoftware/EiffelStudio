@@ -18,10 +18,10 @@ feature
 	comments: S_FREE_TEXT_DATA;
 			-- Comment associated to the feature
 
-	preconditions: FIXED_LIST [S_ASSERTION_DATA];
+	preconditions: FIXED_LIST [S_TAG_DATA];
 			-- Pre-conditions
 
-	postconditions: FIXED_LIST [S_ASSERTION_DATA];
+	postconditions: FIXED_LIST [S_TAG_DATA];
 			-- Post-conditions
 
 	is_attribute: BOOLEAN;
@@ -113,9 +113,9 @@ feature -- Setting values
 			l_not_empty: not l.empty;
 			not_have_void: not l.has (Void)
 		do
-			--arguments := l
+			arguments := l
 		ensure
-			--arguments_set: arguments = l
+			arguments_set: arguments = l
 		end;
 
 	set_comments (l: like comments) is

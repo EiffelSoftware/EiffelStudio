@@ -75,10 +75,10 @@ feature
 				else
                 	Result.append ("...");
 				end;
+                generics.forth;
                 if not generics.after then
                     Result.append (", ")
                 end
-                generics.forth
             end;
             Result.append ("]");
 		end;

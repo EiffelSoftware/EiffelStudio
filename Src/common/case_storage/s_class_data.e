@@ -139,7 +139,7 @@ feature
 			Result := disk_content.features
 		end;
  
-	invariants: FIXED_LIST [S_ASSERTION_DATA] is
+	invariants: FIXED_LIST [S_TAG_DATA] is
 			-- Invariants of the current class
 		do
 			Result := disk_content.invariants
@@ -170,6 +170,7 @@ feature
 			l_not_empty: not l.empty;
 			not_have_void: not l.has (Void)
 		do
+io.error.putstring ("");
 			disk_content.set_invariants (l)
 		ensure
 			invariants_set: invariants = l

@@ -1,6 +1,11 @@
+indexing
+	description: "";
+	date: "$Date$";
+	revision: "$Revision$"
 
-class CMD_ED_POPUP_CONTEXT 
- 
+class
+	CMD_ED_POPUP_CONTEXT
+
 inherit
 	WINDOWS
 		select
@@ -14,9 +19,9 @@ creation
 
 feature {NONE}
 
-	command_editor: CMD_EDITOR;
+	command_editor: COMMAND_TOOL;
 
-	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+	make (ed: COMMAND_TOOL; a_parent: COMPOSITE) is
 		do
 			command_editor := ed;
 			make_visible (a_parent);
@@ -42,11 +47,11 @@ feature {NONE}
 		local
 			list: LINKED_LIST [CONTEXT];
 		do
-			if command_editor.current_command /= Void then
-				list := command_editor.current_command.contexts_with_instances;
-				!! edit_list.make (command_editor);	
-				edit_list.popup_with_list (list);
-			end
+--			if command_editor.current_command /= Void then
+--				list := command_editor.current_command.contexts_with_instances;
+--				!! edit_list.make (command_editor);	
+--				edit_list.popup_with_list (list);
+--			end
 		end;
 
 feature
@@ -59,4 +64,5 @@ feature
 			end
 		end;
 
-end
+
+end -- class CMD_ED_POPUP_CONTEXT

@@ -1,6 +1,11 @@
+indexing
+	description: "";
+	date: "$Date$";
+	revision: "$Revision$"
 
-class CMD_ED_POPUP_CLASS_NAME 
- 
+class
+	CMD_ED_POPUP_CLASS_NAME
+
 inherit
 	WINDOWS
 		select
@@ -15,9 +20,9 @@ creation
 
 feature {NONE}
 
-	command_editor: CMD_EDITOR;
+	command_editor: COMMAND_TOOL;
 
-	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+	make (ed: COMMAND_TOOL; a_parent: COMPOSITE) is
 		do
 			command_editor := ed;
 			make_visible (a_parent);
@@ -69,7 +74,7 @@ feature {NONE}
 						if cmd.edited then
 							cmd.command_editor.clear
 						end;
-						command_editor.set_command (cmd)
+--						command_editor.set_command (cmd)
 						mp.restore;
 					end
 				end;
@@ -87,10 +92,9 @@ feature {NONE}
             	!!fname_popup.make (Widget_names.file_popup_for_command, command_editor);
             	fname_popup.set_title(Widget_names.file_popup_for_command);
             	fname_popup.set_selection_label (Widget_names.enter_command_class_name_label);
-				if command_editor.edited_command /= Void then
-					fname_popup.set_selection_text 
-						(command_editor.edited_command.eiffel_type_to_upper)
-				end;
+--				if command_editor.edited_command /= Void then
+--					fname_popup.set_selection_text (command_editor.edited_command.eiffel_type_to_upper)
+--				end;
             	fname_popup.hide_apply_button;
             	fname_popup.hide_help_button;
             	fname_popup.add_ok_action (Current, Ok);
@@ -109,4 +113,4 @@ feature {NONE}
 			Result := command_editor
 		end;
 
-end
+end -- class CMD_ED_POPUP_CLASS_NAME

@@ -1,6 +1,10 @@
+indexing
+	description: "";
+	date: "$Date$";
+	revision: "$Revision$"
 
-
-class CMD_INH_HOLE 
+class
+	CMD_INH_HOLE
 
 inherit
 
@@ -30,7 +34,7 @@ feature {NONE}
 			end
 		end
 
-	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
+	make (ed: like command_editor; a_parent: COMPOSITE) is
 		do
 			old_make (ed, a_parent);
 			initialize_transport;
@@ -73,7 +77,7 @@ feature {NONE}
 			command_editor.remove_parent
 		end;
 
-feature {CMD_EDITOR}
+feature {CMD_EDITOR, COMMAND_EDITOR}
 
 	update_symbol is
 		do
@@ -98,4 +102,4 @@ feature {CMD_EDITOR}
 			end
 		end
 
-end
+end -- class CMD_INH_HOLE

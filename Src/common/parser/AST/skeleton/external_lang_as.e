@@ -3,7 +3,8 @@ class EXTERNAL_LANG_AS
 inherit
 
 	AST_EIFFEL;
-	EXTERNAL_CONSTANTS
+	EXTERNAL_CONSTANTS;
+	COMPILER_EXPORTER
 
 feature -- Attributes
 
@@ -200,7 +201,7 @@ feature -- Parsing
 									loc_end := loc_begin + special_file_name.count - 1;
 										-- file name including macro is not valid (> or %" missing)
 									raise_external_error ("Illegal file name for macro specification%N%
-															%(a %" or > may be missing)%N",loc_begin,loc_end);
+															%(a %" or > may be missing)",loc_begin,loc_end);
 								end;
 							elseif lower_copy.is_equal (dll16_type) or lower_copy.is_equal (dll32_type) then
 									-- get the file name and the extra arg for dll
@@ -218,7 +219,7 @@ feature -- Parsing
 										loc_begin := source.substring_index (rest,1);
 										loc_end := loc_begin + rest.count - 1;
 										raise_external_error ("Illegal file name for dll specification%N%
-																%(a %" may be missing)%N",loc_begin,loc_end);
+																%(a %" may be missing)",loc_begin,loc_end);
 									end;
 								else
 									i := rest.index_of (' ',1);
@@ -241,7 +242,7 @@ feature -- Parsing
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin + segment.count - 1;
 									raise_external_error ("Illegal dll declaration for external%N%
-															%(It must be of the form [dll16/dll32 filename])%N",
+															%(It must be of the form [dll16/dll32 filename])",
 															loc_begin,loc_end);
 								end;
 									-- if we reached this point, everything seems to be OK
@@ -253,7 +254,7 @@ feature -- Parsing
 								loc_end := loc_begin + special_type.count - 1;
 									-- special_type is not "macro"
 								raise_external_error ("Illegal type declaration for external file%N%
-														%(type must be one of: macro, dll16, dll32%N",loc_begin,loc_end);
+														%(type must be one of: macro, dll16, dll32)",loc_begin,loc_end);
 							end;
 								-- updating image for next operation
 							image.tail (image.count - pos);
@@ -264,21 +265,21 @@ feature -- Parsing
 								--  no space found between [ and ]; something's missing
 							raise_external_error ("Missing file name: only one word between brackets%N%
 													%(file declaration must be of the form [type file],%N%
-													%where type is one of: macro, dll16, dll32)%N", loc_begin,
+													%where type is one of: macro, dll16, dll32)", loc_begin,
 loc_end);
 						end;
 					else
 						if pos = 0 then
 							loc_begin := source.index_of ('[', 1);
 							loc_end := offset;
-							raise_external_error ("Missing closing bracket ']'%N", loc_begin, loc_end);
+							raise_external_error ("Missing closing bracket ']'", loc_begin, loc_end);
 						else	-- pos =1 and it must be []
 							loc_begin := source.index_of ('[', 1);
 							loc_end := loc_begin + 1;
 								-- situation where []
 							raise_external_error ("Empty file declaration: nothing between the brackets%N%
 													%(file declaration must be of the form [type file],%N%
-													%where type is one of: macro dll16, dll32)%N", loc_begin,
+													%where type is one of: macro dll16, dll32)", loc_begin,
 loc_end);
 						end;
 					end;
@@ -306,7 +307,7 @@ loc_end);
 								loc_begin := source.index_of (')', 1) - 1;
 								loc_end := loc_begin;
 									-- extra ',' at the end of signature
-								raise_external_error ("Extra comma at end of signature declaration%N", loc_begin, loc_end);
+								raise_external_error ("Extra comma at end of signature declaration", loc_begin, loc_end);
 								stop := True;
 							elseif place > 1 then
 								argument := segment.substring (1, place - 1);
@@ -320,7 +321,7 @@ loc_end);
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin + segment.count - 1;
 										-- nothing between two ','
-									raise_external_error ("Extra comma in signature declaration%N", loc_begin, loc_end);
+									raise_external_error ("Extra comma in signature declaration", loc_begin, loc_end);
 									stop := True;
 								end;
 							else
@@ -333,7 +334,7 @@ loc_end);
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin;
 										-- case "(,"
-									raise_external_error ("Extra comma in signature declaration%N", loc_begin, loc_end);
+									raise_external_error ("Extra comma in signature declaration", loc_begin, loc_end);
 									stop := True;
 								end;
 							end;
@@ -343,7 +344,7 @@ loc_end);
 						if pos = 0 then
 							loc_begin := source.index_of ('(', 1);
 							loc_end := offset;
-							raise_external_error ("Missing closing parenthesis ) at end of signature declaration%N", loc_begin, loc_end);
+							raise_external_error ("Missing closing parenthesis ) at end of signature declaration", loc_begin, loc_end);
 						end;	-- pos = 1 not handled since () accepted; do nothing
 					end;
 						-- cleaning image for next operation
@@ -374,8 +375,8 @@ loc_end);
 					else
 							-- nothing after ':'
 						raise_external_error ("Missing return type afer colon in signature declaration%N%
-												%(If present, the colon : must be followed by the return type)%N",
-loc_begin, loc_end);
+									%(If present, the colon : must be followed by the return type)",
+									loc_begin, loc_end);
 					end;
 				end;
 					-- look for include files
@@ -409,7 +410,7 @@ loc_begin, loc_end);
 								else
 									loc_begin := source.substring_index (segment,1);
 									loc_end := loc_begin + segment.count - 1;
-									raise_external_error ("Missing > in include file name%N", loc_begin, loc_end);
+									raise_external_error ("Missing > in include file name", loc_begin, loc_end);
 									stop := True;
 								end;
 							when '%"' then
@@ -424,7 +425,7 @@ loc_begin, loc_end);
 								else
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin + segment.count - 1;
-									raise_external_error ("Missing %" in include file name%N", loc_begin, loc_end);
+									raise_external_error ("Missing %" in include file name", loc_begin, loc_end);
 									stop := True;
 								end;
 							else
@@ -455,7 +456,7 @@ loc_begin, loc_end);
 							-- nothing after '|'
 						raise_external_error ("Missing include file declaration%N%
 												%(If present, the bar | must be followed by the names%N%
-												%of one or more include files)%N", loc_begin, loc_end);
+												%of one or more include files)", loc_begin, loc_end);
 					end;
 						-- cleaning image for next operation
 					image.wipe_out;	-- nothing must be after include file declaration
@@ -466,7 +467,7 @@ loc_begin, loc_end);
 					loc_end := offset;
 						-- at this point nothing should remain in the parsed string
 						-- if it's not the case, there must be an error
-					raise_external_error ("Extra text at end of external language specification%N", loc_begin, loc_end);
+					raise_external_error ("Extra text at end of external language specification", loc_begin, loc_end);
 				end;
 debug ("EXTERNAL_PARSING")
 	display_results;
@@ -481,7 +482,7 @@ end;
 				end;
 					-- if the language name has not the required form
 				raise_external_error ("Unrecognized external language%N%
-										%(external language must be C)%N", loc_begin, loc_end);
+										%(external language must be C)", loc_begin, loc_end);
 			end;
 		end;
 

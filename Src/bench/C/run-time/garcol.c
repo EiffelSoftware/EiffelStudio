@@ -3542,7 +3542,9 @@ rt_private int find_scavenge_spaces(void)
 	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
-#ifdef EIF_NO_SCAVENGING
+#if defined EIF_NO_SCAVENGING  || defined EIF_THREADS
+	/* In MT mode, we do not want the object out of the scavenge zone 
+	 * to move. */
 	return -1;
 #else	/* EIF_NO_SCAVENGING */
 	EIF_GET_CONTEXT

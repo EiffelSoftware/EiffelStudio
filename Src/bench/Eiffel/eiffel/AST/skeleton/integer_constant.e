@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			-- Create an integer constant of size 32.
 		do
 			size := 32
+			compatibility_size := 32
 		ensure
 			size_set: size = 32
 		end
@@ -84,8 +85,15 @@ feature -- Properties
 	lower, upper: INTEGER
 			-- Representation of integers.
 	
-	size: INTEGER
-			-- Is current representation using 64 bits?
+	size: INTEGER_8
+			-- Current is stored on `size' bits.
+	
+	compatibility_size: INTEGER_8
+			-- Minimum integer size that can hold current.
+			-- Used for manifest integers that are of size `32' or `64'
+			-- by default, but their value might be able to fit
+			-- on an integer of size `8' or `16' as well.
+
 
 	is_integer: BOOLEAN is True
 			-- Is it an integer value ?
@@ -108,6 +116,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := lower = other.lower and then upper = other.upper and then size = other.size
+				and then compatibility_size = other.compatibility_size
 		end
 
 feature -- Type checking
@@ -120,7 +129,7 @@ feature -- Type checking
 			Result := t.is_integer 
 			if Result then
 				int_a ?= t
-				Result := int_a.compatibility_size >= size
+				Result := int_a.compatibility_size >= compatibility_size
 			end
 		end
 
@@ -128,12 +137,7 @@ feature -- Type checking
 			-- Type check an integer type
 		do
 				-- Put onto the type stack an integer actual type
-			inspect size
-			when 8 then ast_context.put (Integer_8_constant_type)
-			when 16 then ast_context.put (Integer_16_constant_type)
-			when 32 then ast_context.put (Integer_type)
-			when 64 then ast_context.put (Integer_64_type)
-			end
+			ast_context.put (create {INTEGER_A}.make_for_constant (size, compatibility_size))
 		end
 
 	byte_node: INTEGER_CONSTANT is
@@ -214,9 +218,12 @@ feature -- Settings
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
 		do
+			check
+				compatible: t.compatibility_size >= compatibility_size
+			end
 			size := t.compatibility_size
 		ensure then
-			size_set: size = t.size
+			size_set: size = t.compatibility_size
 		end
 
 feature -- Output
@@ -254,23 +261,14 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			inspect size
-			when 8 then
-				buf.putstring (integer_8_cast)
-				buf.append_character ('(')
-				buf.putstring (lower.out)
-			when 16 then
-				buf.putstring (integer_16_cast)
-				buf.append_character ('(')
-				buf.putstring (lower.out)
-			when 32 then
-				buf.putstring (integer_32_cast)
-				buf.append_character ('(')
-				buf.putstring (lower.out)
-			when 64 then
+			if size = 64 then
 				buf.putstring (integer_64_cast)
 				buf.append_character ('(')
 				buf.putstring (to_integer_64.out)
+			else
+				buf.putstring (integer_32_cast)
+				buf.append_character ('(')
+				buf.putstring (lower.out)
 			end
 			buf.putchar ('L')
 			buf.append_character (')')
@@ -279,30 +277,22 @@ feature -- Generation
 	generate_il is
 			-- Generate IL code for integer constant value.
 		do
-			inspect size 
-			when 8 then il_generator.put_integer_8_constant (lower)
-			when 16 then il_generator.put_integer_16_constant (lower)
-			when 32 then il_generator.put_integer_32_constant (lower)
-			when 64 then il_generator.put_integer_64_constant (to_integer_64)
+			if size = 64 then
+				il_generator.put_integer_64_constant (to_integer_64)
+			else
+				il_generator.put_integer_32_constant (lower)
 			end
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an integer constant value.
 		do
-			inspect size
-			when 8 then
-				ba.append (Bc_int8)
-				ba.append (lower.to_character)
-			when 16 then
-				ba.append (Bc_int16)
-				ba.append_short_integer (lower)
-			when 32 then
-				ba.append (Bc_int)
-				ba.append_integer (lower)
-			when 64 then
+			if size = 64 then
 				ba.append (Bc_int64)
 				ba.append_integer_64 (to_integer_64)
+			else
+				ba.append (Bc_int32)
+				ba.append_integer (lower)
 			end
 		end
 
@@ -321,24 +311,8 @@ feature {COMPILER_EXPORTER}
 			Result := size <= 32
 		end
 
-feature {NONE} -- Integer_type constants
-
-	integer_8_constant_type: INTEGER_A is
-			-- Type of a manifest integer 8 constant.
-		once
-			create Result.make_for_constant (32, 8)
-		end
-
-	integer_16_constant_type: INTEGER_A is
-			-- Type of a manifest integer 16 constant.
-		once
-			create Result.make_for_constant (32, 16)
-		end
-
 feature {NONE} -- Code generation string constants
 
-	integer_8_cast: STRING is "(EIF_INTEGER_8) "
-	integer_16_cast: STRING is "(EIF_INTEGER_16) "
 	integer_32_cast: STRING is "(EIF_INTEGER_32) "
 	integer_64_cast: STRING is "(EIF_INTEGER_64) "
 			-- String used to generate a cast.
@@ -416,17 +390,19 @@ feature {NONE} -- Translation
 				end
 				upper := last_integer
 				size := 64
+				compatibility_size := 64
 			else
 					-- Force size of integer constant depending on number
 					-- of hexadecimal character in hex string.
 				if j <= 3 then
-					size := 8
+					compatibility_size := 8
 				elseif j <= 5 then
-					size := 16
+					compatibility_size := 16
 				else
 					check j <= 9 end
-					size := 32
+					compatibility_size := 32
 				end
+				size := 32
 			end
 		end
 
@@ -453,6 +429,7 @@ feature {NONE} -- Translation
 					is_32bits := s < largest_integer_32
 					if not is_32bits and then s.is_equal (largest_integer_32) then
 						done := True
+						compatibility_size := 32
 						size := 32
 						lower := 0x80000000
 					end
@@ -476,14 +453,15 @@ feature {NONE} -- Translation
 					lower := last_integer
 
 					if -128 <= lower and lower <= 127 then
-						size := 8
+						compatibility_size := 8
 					elseif -32768 <= lower and lower <= 32767 then
-						size := 16
+						compatibility_size := 16
 					elseif -2147483648 <= lower and lower <= 2147483647 then
-						size := 32
+						compatibility_size := 32
 					else
 						check False end
 					end
+					size := 32
 				else
 					from
 					until
@@ -498,6 +476,7 @@ feature {NONE} -- Translation
 					end
 
 					size := 64
+					compatibility_size := 64
 					lower := (last_int_64 & 0x00000000FFFFFFFF).to_integer
 					upper := ((last_int_64 |>> 32) & 0x00000000FFFFFFFF).to_integer
 				end

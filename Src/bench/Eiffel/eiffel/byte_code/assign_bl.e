@@ -158,6 +158,8 @@ feature
 			result_used: BOOLEAN;
 			source_type: TYPE_I;
 			target_type: TYPE_I;
+			call_b: CALL_B
+			expr_b: EXPR_B
 			saved_context: like context
 		do
 				-- The target is always expanded in-line for de-referencing.
@@ -267,8 +269,15 @@ feature
 				-- If source has GCable variables and is not a single call or
 				-- access, then we cannot expand that in a return after the
 				-- GC hooks have been removed.
-			source_has_gcable := source.has_gcable_variable and not
-				source.is_simple_expr;
+			call_b ?= source
+			if call_b /= Void and then call_b.is_single then
+				source_has_gcable := call_b.has_gcable_variable and not
+					call_b.is_simple_expr
+			else
+				expr_b ?= source
+ 				source_has_gcable := expr_b.has_call or expr_b.allocates_memory
+			end
+
 				-- Mark Result used only if not the last instruction (in which
 				-- case we'll generate a direct return, hence Result won't be
 				-- needed).

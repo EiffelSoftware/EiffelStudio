@@ -7,7 +7,7 @@ inherit
 			set, process_system_level_options, is_system_level,
 			is_valid, is_free_option, is_precompiled
 		end;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
 
 feature
 
@@ -83,7 +83,6 @@ feature
 		local
 			error_found: BOOLEAN;
 			vd37: VD37;
-			val: STRING
 		do
 			inspect
 				valid_options.item (option_name)
@@ -101,19 +100,9 @@ feature
 				if value = Void then
 					error_found := True
 				elseif value.is_no then
-					System.set_array_optimization_level (0)
-				elseif value.is_name then
-					val := clone (value.value);
-					val.to_lower;
-					if val.is_equal ("level0") then
-						System.set_array_optimization_level (0)
-					elseif val.is_equal ("level1") then
-						System.set_array_optimization_level (1)
-					elseif val.is_equal ("level2") then
-						System.set_array_optimization_level (2)
-					else
-						error_found := True;
-					end;
+					System.set_array_optimization_on (False)
+				elseif value.is_yes then
+					System.set_array_optimization_on (True)
 				else
 					error_found := True;
 				end;

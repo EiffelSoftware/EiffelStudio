@@ -13,7 +13,6 @@ inherit
 			current_mode as editing_or_executing_mode
 		end
 	MODE_CONSTANTS
-	SHARED_INSTANTIATOR
 	
 feature {NONE}
 

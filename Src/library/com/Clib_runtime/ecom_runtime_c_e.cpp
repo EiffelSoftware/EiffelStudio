@@ -330,6 +330,22 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 };
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_interface (void * a_interface_pointer, char * a_class_name)
+
+// Create Eiffel object from COM interface.
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID type_id;
+	EIF_PROC make;
+				
+	type_id = eif_type_id (a_class_name);
+	make = eif_proc ("make_from_pointer", type_id);
+	result = eif_create (type_id);
+	make (eif_access (result), (EIF_POINTER)a_interface_pointer);
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short (short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count)
 
 // Create Eiffel ARRAY from C array of short.
